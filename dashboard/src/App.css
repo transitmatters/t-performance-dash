@@ -1,0 +1,16 @@
+.App {
+  text-align: center;
+  padding: 10px;
+}
+
+.charts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+canvas {
+  margin-left: auto;
+  margin-right: auto;
+  float: left;
+}
