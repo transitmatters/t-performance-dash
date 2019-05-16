@@ -4,6 +4,8 @@ import 'flatpickr/dist/themes/material_red.css';
 import Line from './line';
 import './App.css';
 
+const APP_DATA_BASE_PATH = '/t-performance-dash/puller';
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -27,7 +29,7 @@ export default class App extends React.Component {
   }
 
   fetchDataset(name) {
-    fetch(`/${name}/${this.state.selectedDate}`)
+    fetch(`${APP_DATA_BASE_PATH}/${name}/${this.state.selectedDate}`)
         .then(resp => resp.json())
         .then(data => {
           this.setState({
