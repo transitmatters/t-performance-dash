@@ -4,7 +4,9 @@ import 'flatpickr/dist/themes/material_red.css';
 import Line from './line';
 import './App.css';
 
-const APP_DATA_BASE_PATH = '/t-performance-dash/puller';
+const APP_DATA_BASE_PATH = (window.location.hostname === "localhost" ||
+                          window.location.hostname === "127.0.0.1") ? 
+                          '' : '/t-performance-dash/puller';
 
 export default class App extends React.Component {
   constructor(props) {
