@@ -9,6 +9,10 @@
   justify-content: center;
 }
 
+.picker-station {
+  width: 200px;
+}
+
 canvas {
   margin-left: auto;
   margin-right: auto;

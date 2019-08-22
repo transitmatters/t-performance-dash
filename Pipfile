@@ -9,6 +9,8 @@ pylint = "*"
 [packages]
 flask = "*"
 gunicorn = "*"
+requests = "*"
+json-api-doc = "*"
 
 [requires]
 python_version = "3.7"

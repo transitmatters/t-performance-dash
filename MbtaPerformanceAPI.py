@@ -7,6 +7,7 @@ Created on Fri May  3 19:14:26 2019
 
 import os
 import json
+import secrets
 from datetime import datetime, timedelta, time
 from urllib.request import Request, urlopen
 from urllib.parse import urlencode
@@ -30,7 +31,6 @@ def get_datetimes(day):
 
 def get_url(day, module, params):
     # import api key & set base url
-    api_key = os.environ['MBTA_PERFORMANCE_API_KEY']
     base_url_v2 = "http://realtime.mbta.com/developer/api/v2.1/{command}?{parameters}"
 
     # get datetimes
@@ -38,7 +38,7 @@ def get_url(day, module, params):
 
     # format parameters
     params["format"] = "json"
-    params["api_key"] = api_key
+    params["api_key"] = secrets.MBTA_V2_API_KEY
     params["from_datetime"] = dt_str.get("from_dt_str")
     params["to_datetime"] = dt_str.get("to_dt_str")
 
