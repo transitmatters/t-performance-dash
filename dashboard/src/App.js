@@ -90,10 +90,16 @@ export default class App extends React.Component {
         let to = this.state.selectedStationTo.value;
 
         // Major hack so we don't have to hard code all of the NB stop ids...
-        if (to < from) {
+        if (to < from && this.state.selectedLine.value !== 'Blue' && this.state.selectedLine.value !== 'Orange') {
           to++;
           from++;
         }
+        else if (from < to && this.state.selectedLine.value === 'Blue') {
+          to++;
+          from++;
+        }
+
+        console.log(`from ${from} to ${to}`);
 
         this.fetchDataset('traveltimes', {
           station_from: from,
