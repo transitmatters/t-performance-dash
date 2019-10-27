@@ -7,8 +7,8 @@ import { lines } from './constants';
 import './App.css';
 
 const APP_DATA_BASE_PATH = (window.location.hostname === "localhost" ||
-                          window.location.hostname === "127.0.0.1") ? 
-                          '' : '/t-performance-dash/puller';
+  window.location.hostname === "127.0.0.1") ?
+  '' : '/t-performance-dash/puller';
 
 const lineSelectOptions = lines.map((line) => {
   return {
@@ -66,12 +66,12 @@ export default class App extends React.Component {
     Object.keys(options).forEach(key => url.searchParams.append(key, options[key]));
 
     fetch(url)
-        .then(resp => resp.json())
-        .then(data => {
-          this.setState({
-            [name]: data
-          });
+      .then(resp => resp.json())
+      .then(data => {
+        this.setState({
+          [name]: data
         });
+      });
   }
 
   download() {
@@ -140,20 +140,26 @@ export default class App extends React.Component {
   render() {
     return (
       <div className='App'>
+        <div id='options'>
+          <div className="option">
+            <div className='picker-line'>
+              Line<Select options={lineSelectOptions} onChange={this.onLineChange} />
+            </div>
+          </div>
 
-        <div className='picker-line'>
-          Line: <Select options={lineSelectOptions} onChange={this.onLineChange} />
+          <div className="option">
+            <div className='picker-station'>
+              From<Select options={stationOptionsForLine(this.state.selectedLine)} onChange={this.onStationFromChange} /> to <Select options={stationOptionsForLine(this.state.selectedLine)} onChange={this.onStationToChange} />
+            </div>
+          </div>
+
+          <div className="option">
+            <div className='picker-date'>
+              Date <input type='date' ref={this.flatpickr} placeholder='Select date...' />
+            </div>
+          </div>
         </div>
 
-        <div className='picker-station'>
-          From <Select options={stationOptionsForLine(this.state.selectedLine)} onChange={this.onStationFromChange} /> to <Select options={stationOptionsForLine(this.state.selectedLine)} onChange={this.onStationToChange} />
-        </div>
-
-        <div className='picker-date'>
-          Select date:{' '}
-          <input type='date' ref={this.flatpickr} placeholder='Select date...' />
-        </div>
-        
         <div className='charts'>
           <Line
             title={'Travel Times'}
@@ -162,7 +168,6 @@ export default class App extends React.Component {
             xFieldLabel={'Time of day'}
             yField={'travel_time_sec'}
             yFieldLabel={'Minutes'}
-            // seriesName={'Harvard to South'}
           />
 
           <Line
@@ -172,7 +177,6 @@ export default class App extends React.Component {
             xFieldLabel={'Time of day'}
             yField={'headway_time_sec'}
             yFieldLabel={'Minutes'}
-            // seriesName={'Harvard to South'}
           />
 
           <Line
@@ -182,8 +186,7 @@ export default class App extends React.Component {
             xFieldLabel={'Time of day'}
             yField={'dwell_time_sec'}
             yFieldLabel={'Minutes'}
-            // seriesName={'Harvard to South'}
-          />  
+          />
         </div>
       </div>
     );

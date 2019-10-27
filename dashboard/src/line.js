@@ -13,19 +13,11 @@ class LineClass extends React.Component {
     */
 
     let labels = this.props.data.map(item => item[this.props.xField]);
-
-    // Prune half of the labels off
-
-    labels.forEach(function(_, i) {
-      if (i % 2 === 1) {
-        labels[i] = '';
-      }
-    });
     return (
       <div>
         <Line
-          width={600}
-          height={400}
+          width={1000}
+          height={300}
           legend={{ display: false }}
           data={{
             labels,
@@ -34,17 +26,15 @@ class LineClass extends React.Component {
                 label: this.props.seriesName,
                 fill: false,
                 lineTension: 0.1,
-                backgroundColor: 'rgba(75,192,192,0.4)',
-                borderColor: 'rgba(75,192,192,1)',
+                borderColor: '#828282',
                 borderCapStyle: 'butt',
-                borderDash: [],
-                borderDashOffset: 0.0,
                 borderJoinStyle: 'miter',
-                pointBorderColor: 'rgba(75,192,192,1)',
-                pointBackgroundColor: '#fff',
+                borderWidth: 1,
+                pointBorderColor: '#1c1c1c',
+                pointBackgroundColor: '#1c1c1c',
                 pointBorderWidth: 2,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+                pointHoverRadius: 3,
+                pointHoverBackgroundColor: 'rgba(75,192,192,0)',
                 pointHoverBorderColor: 'rgba(220,220,220,1)',
                 pointHoverBorderWidth: 2,
                 pointRadius: 2,
@@ -70,6 +60,7 @@ class LineClass extends React.Component {
               ],
               xAxes: [
                 {
+                  type: 'time',
                   scaleLabel: {
                     display: true,
                     labelString: this.props.xFieldLabel

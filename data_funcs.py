@@ -1,6 +1,6 @@
 from MbtaPerformanceAPI import *
 
-DATE_FORMAT = "%l:%M %p"
+DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
 def headways(day, params):

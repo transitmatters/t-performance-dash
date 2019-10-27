@@ -1,16 +1,23 @@
 .App {
+  display: flex;
   text-align: center;
   padding: 10px;
 }
 
 .charts {
-  display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.picker-station {
+#options {
   width: 200px;
+  float: left;
+  margin-right: 10px;
+}
+.option {
+  margin-top: 30px;
+  padding: 4px;
+  border: 1px solid #dadada;
 }
 
 canvas {
