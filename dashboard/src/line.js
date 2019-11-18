@@ -39,7 +39,7 @@ class LineClass extends React.Component {
                 pointHoverBorderWidth: 2,
                 pointRadius: 2,
                 pointHitRadius: 10,
-                data: this.props.data.map(item => item[this.props.yField] / 60)
+                data: this.props.data.map(item => (item[this.props.yField] / 60).toFixed(2))
               }
             ]
           }}

@@ -1,36 +1,42 @@
 import React from 'react';
 import flatpickr from 'flatpickr';
 import Select from 'react-select'
-import 'flatpickr/dist/themes/material_red.css';
+import 'flatpickr/dist/themes/material_blue.css';
 import Line from './line';
-import { lines } from './constants';
+import { all_lines, options_station, options_direction } from './stations';
 import './App.css';
 
 const APP_DATA_BASE_PATH = (window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1") ?
   '' : '/t-performance-dash/puller';
 
-const lineSelectOptions = lines.map((line) => {
+
+const options_lines = all_lines().map((line) => {
+  console.log(`options_lines()`)
   return {
-    value: line.name,
-    label: line.name_human_readable
+    value: line,
+    label: line
   }
 });
 
-const stationOptionsForLine = (line) => {
-  if (line) {
-    const lineObject = lines.find((i) => i.name === line.value);
-    return Object.entries(lineObject.stop_ids).map((entry) => {
-      return {
-        label: entry[0],
-        value: entry[1],
-      }
-    });
+const options_direction_ui = (line) => options_direction(line).map((direction) => {
+  console.log(`Processing direction option: ${direction}`);
+  return {
+    value: direction,
+    label: direction
   }
-  else {
-    return [];
-  }
+});
+
+const options_station_ui = (line, direction, from) => {
+  return options_station(line, direction, from).map((station) => {
+    console.log(`Processing station option: ${station}`);
+    return {
+      value: station,
+      label: station.stop_name
+    }
+  })
 };
+
 
 export default class App extends React.Component {
   constructor(props) {
@@ -38,10 +44,15 @@ export default class App extends React.Component {
     this.flatpickr = React.createRef();
 
     this.state = {
-      selectedDate: null,
-      selectedLine: null,
-      selectedStationFrom: null,
-      selectedStationTo: null,
+      date: null,
+      line: null,
+      direction: null,
+      from: null,
+      to: null,
+
+      options_direction: null,
+      options_from: null,
+      options_to: null,
 
       headways: [],
       traveltimes: [],
@@ -51,8 +62,51 @@ export default class App extends React.Component {
     this.download = this.download.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
     this.onLineChange = this.onLineChange.bind(this);
+    this.onDirectionChange = this.onDirectionChange.bind(this);
     this.onStationFromChange = this.onStationFromChange.bind(this);
     this.onStationToChange = this.onStationToChange.bind(this);
+  }
+
+  onDateChange(_, dateStr, __) {
+    this.setState(
+      {
+        date: dateStr
+      },
+      () => {
+        this.download();
+      }
+    );
+  }
+
+  onLineChange(line) {
+    this.setState({
+      line: line.value,
+      options_direction: options_direction_ui(line.value)
+    });
+  }
+
+  onDirectionChange(direction) {
+    this.setState({
+      direction: direction.value,
+      options_from: options_station_ui(this.state.line, direction.value, null)
+    });
+  }
+
+  onStationFromChange(station) {
+    this.setState({
+      options_to: options_station_ui(this.state.line, this.state.direction, this.state.from),
+      from: station.value
+    }, () => {
+      this.download();
+    });
+  }
+
+  onStationToChange(station) {
+    this.setState({
+      to: station.value
+    }, () => {
+      this.download();
+    });
   }
 
   componentDidMount() {
@@ -62,7 +116,7 @@ export default class App extends React.Component {
   }
 
   fetchDataset(name, options) {
-    let url = new URL(`${APP_DATA_BASE_PATH}/${name}/${this.state.selectedDate}`, window.location.origin);
+    let url = new URL(`${APP_DATA_BASE_PATH}/${name}/${this.state.date}`, window.location.origin);
     Object.keys(options).forEach(key => url.searchParams.append(key, options[key]));
 
     fetch(url)
@@ -75,72 +129,19 @@ export default class App extends React.Component {
   }
 
   download() {
-    if (this.state.selectedDate) {
-      if (this.state.selectedStationFrom) {
-        this.fetchDataset('headways', {
-          station: this.state.selectedStationFrom.value,
-        });
-        this.fetchDataset('dwells', {
-          station: this.state.selectedStationFrom.value,
-        });
-      }
-
-      if (this.state.selectedStationFrom && this.state.selectedStationTo) {
-        let from = this.state.selectedStationFrom.value;
-        let to = this.state.selectedStationTo.value;
-
-        // Major hack so we don't have to hard code all of the NB stop ids...
-        if (to < from && this.state.selectedLine.value !== 'Blue' && this.state.selectedLine.value !== 'Orange') {
-          to++;
-          from++;
-        }
-        else if (from < to && this.state.selectedLine.value === 'Blue') {
-          to++;
-          from++;
-        }
-
-        console.log(`from ${from} to ${to}`);
-
-        this.fetchDataset('traveltimes', {
-          station_from: from,
-          station_to: to,
-        });
-      }
-
+    if (this.state.date && this.state.direction && this.state.from) {
+      console.log("this.state.from: ", this.state.from);
+      this.fetchDataset('headways', {
+        station: this.state.from.stop_id,
+      });
+      this.fetchDataset('dwells', {
+        station: this.state.from.stop_id,
+      });
+      this.fetchDataset('traveltimes', {
+        station_from: this.state.from.stop_id,
+        station_to: this.state.to.stop_id,
+      });
     }
-  }
-
-  onDateChange(_, dateStr, __) {
-    this.setState(
-      {
-        selectedDate: dateStr
-      },
-      () => {
-        this.download();
-      }
-    );
-  }
-
-  onLineChange(line) {
-    this.setState({
-      selectedLine: line
-    });
-  }
-
-  onStationFromChange(station) {
-    this.setState({
-      selectedStationFrom: station
-    }, () => {
-      this.download();
-    });
-  }
-
-  onStationToChange(station) {
-    this.setState({
-      selectedStationTo: station
-    }, () => {
-      this.download();
-    });
   }
 
   render() {
@@ -149,13 +150,16 @@ export default class App extends React.Component {
         <div id='options'>
           <div className="option">
             <div className='picker-line'>
-              Line<Select options={lineSelectOptions} onChange={this.onLineChange} />
+              Line<Select options={options_lines} onChange={this.onLineChange} />
+            </div>
+            <div className='picker-direction'>
+              Direction<Select options={this.state.options_direction} onChange={this.onDirectionChange} />
             </div>
           </div>
 
           <div className="option">
             <div className='picker-station'>
-              From<Select options={stationOptionsForLine(this.state.selectedLine)} onChange={this.onStationFromChange} /> to <Select options={stationOptionsForLine(this.state.selectedLine)} onChange={this.onStationToChange} />
+              From<Select options={this.state.options_from} onChange={this.onStationFromChange} /> to <Select options={this.state.options_to} onChange={this.onStationToChange} />
             </div>
           </div>
 
