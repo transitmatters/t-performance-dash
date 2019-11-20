@@ -173,29 +173,35 @@ export default class App extends React.Component {
         <div className='charts'>
           <Line
             title={'Travel Times'}
+            seriesName={'traveltimes'}
             data={this.state.traveltimes}
             xField={'arr_dt'}
             xFieldLabel={'Time of day'}
             yField={'travel_time_sec'}
             yFieldLabel={'Minutes'}
+            benchmarkField={'benchmark_travel_time_sec'}
           />
 
           <Line
             title={'Headways'}
+            seriesName={'headways'}
             data={this.state.headways}
             xField={'current_dep_dt'}
             xFieldLabel={'Time of day'}
             yField={'headway_time_sec'}
             yFieldLabel={'Minutes'}
+            benchmarkField={'benchmark_headway_time_sec'}
           />
 
           <Line
             title={'Dwell Times'}
+            seriesName={'dwells'}
             data={this.state.dwells}
             xField={'arr_dt'}
             xFieldLabel={'Time of day'}
             yField={'dwell_time_sec'}
             yFieldLabel={'Minutes'}
+            benchmarkField={null}
           />
         </div>
       </div>

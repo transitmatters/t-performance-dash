@@ -2,6 +2,25 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 
 class LineClass extends React.Component {
+
+  pointColors(data, metric_field, benchmark_field) {
+    return data.map(point => {
+      const ratio = point[metric_field]/point[benchmark_field];
+      console.log(ratio);
+      if(ratio <= 1.25) {
+        return '#75c400'; //green
+      }
+      else if(ratio <= 1.5) {
+        return '#e5a70b'; //yellow
+      }
+      else if(ratio > 1.5) {
+        return '#e53a0b'; //red
+      }
+
+      return '#1c1c1c'; //whatever
+    });
+  }
+
   render() {
     /*
     Props:
@@ -10,6 +29,7 @@ class LineClass extends React.Component {
       xFieldLabel
       yField
       yFieldLabel
+      benchmarkField
     */
 
     let labels = this.props.data.map(item => item[this.props.xField]);
@@ -26,20 +46,17 @@ class LineClass extends React.Component {
                 label: this.props.seriesName,
                 fill: false,
                 lineTension: 0.1,
-                borderColor: '#828282',
-                borderCapStyle: 'butt',
-                borderJoinStyle: 'miter',
-                borderWidth: 1,
-                pointBorderColor: '#1c1c1c',
-                pointBackgroundColor: '#1c1c1c',
-                pointBorderWidth: 2,
+                pointBackgroundColor: this.pointColors(this.props.data, this.props.yField, this.props.benchmarkField),
                 pointHoverRadius: 3,
-                pointHoverBackgroundColor: 'rgba(75,192,192,0)',
-                pointHoverBorderColor: 'rgba(220,220,220,1)',
-                pointHoverBorderWidth: 2,
-                pointRadius: 2,
+                pointHoverBackgroundColor: this.pointColors(this.props.data, this.props.yField, this.props.benchmarkField),
+                pointRadius: 3,
                 pointHitRadius: 10,
                 data: this.props.data.map(item => (item[this.props.yField] / 60).toFixed(2))
+              },
+              {
+                label: `${this.props.seriesName}_benchmark`,
+                data: this.props.data.map(item => item[this.props.benchmarkField]/60),
+                pointRadius: 0
               }
             ]
           }}

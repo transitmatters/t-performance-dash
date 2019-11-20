@@ -15,9 +15,9 @@ const options_station = (line, direction, station_orig = null) => {
     if (station_array.length !== 1) {
       return [];
     }
-    const station = station_array[0];
+    // const station = station_array[0];
 
-    const selectable = stations.filter(x => x.line === line && x.direction === direction && x.stop_order > station.stop_order);
+    const selectable = stations.filter(x => x.line === line && x.direction === direction && x.stop_order > station_orig.stop_order);
     return selectable;
 
   }

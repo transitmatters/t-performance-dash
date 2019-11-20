@@ -2,7 +2,7 @@ const stations = [
     {
       "stop_id": "70094",
       "stop_name": "Ashmont",
-      "line": "Red-A",
+      "line": "Red",
       "direction": "North",
       "stop_order": "1",
       "last_stop": "0"
@@ -10,7 +10,7 @@ const stations = [
     {
       "stop_id": "70092",
       "stop_name": "Shawmut",
-      "line": "Red-A",
+      "line": "Red",
       "direction": "North",
       "stop_order": "2",
       "last_stop": "0"
@@ -18,7 +18,7 @@ const stations = [
     {
       "stop_id": "70090",
       "stop_name": "Fields Corner",
-      "line": "Red-A",
+      "line": "Red",
       "direction": "North",
       "stop_order": "3",
       "last_stop": "0"
@@ -26,7 +26,7 @@ const stations = [
     {
       "stop_id": "70088",
       "stop_name": "Savin Hill",
-      "line": "Red-A",
+      "line": "Red",
       "direction": "North",
       "stop_order": "4",
       "last_stop": "0"
@@ -34,7 +34,7 @@ const stations = [
     {
       "stop_id": "70086",
       "stop_name": "JFK/UMass",
-      "line": "Red-A",
+      "line": "Red",
       "direction": "North",
       "stop_order": "5",
       "last_stop": "0"
@@ -128,9 +128,17 @@ const stations = [
       "last_stop": "1"
     },
     {
+      "stop_id": "70061",
+      "stop_name": "Alewife",
+      "line": "Red",
+      "direction": "North",
+      "stop_order": "1",
+      "last_stop": "0"
+    },
+    {
       "stop_id": "70105",
       "stop_name": "Braintree",
-      "line": "Red-B",
+      "line": "Red",
       "direction": "North",
       "stop_order": "1",
       "last_stop": "0"
@@ -138,7 +146,7 @@ const stations = [
     {
       "stop_id": "70104",
       "stop_name": "Quincy Adams",
-      "line": "Red-B",
+      "line": "Red",
       "direction": "North",
       "stop_order": "2",
       "last_stop": "0"
@@ -146,7 +154,7 @@ const stations = [
     {
       "stop_id": "70102",
       "stop_name": "Quincy Center",
-      "line": "Red-B",
+      "line": "Red",
       "direction": "North",
       "stop_order": "3",
       "last_stop": "0"
@@ -154,7 +162,7 @@ const stations = [
     {
       "stop_id": "70098",
       "stop_name": "North Quincy",
-      "line": "Red-B",
+      "line": "Red",
       "direction": "North",
       "stop_order": "4",
       "last_stop": "0"
@@ -162,7 +170,7 @@ const stations = [
     {
       "stop_id": "70096",
       "stop_name": "JFK/UMass",
-      "line": "Red-B",
+      "line": "Red",
       "direction": "North",
       "stop_order": "5",
       "last_stop": "0"
@@ -258,7 +266,7 @@ const stations = [
     {
       "stop_id": "70083",
       "stop_name": "Andrew",
-      "line": "Red-A",
+      "line": "Red",
       "direction": "South",
       "stop_order": "12",
       "last_stop": "0"
@@ -266,7 +274,7 @@ const stations = [
     {
       "stop_id": "70085",
       "stop_name": "JFK/UMass",
-      "line": "Red-A",
+      "line": "Red",
       "direction": "South",
       "stop_order": "13",
       "last_stop": "0"
@@ -274,7 +282,7 @@ const stations = [
     {
       "stop_id": "70087",
       "stop_name": "Savin Hill",
-      "line": "Red-A",
+      "line": "Red",
       "direction": "South",
       "stop_order": "14",
       "last_stop": "0"
@@ -282,7 +290,7 @@ const stations = [
     {
       "stop_id": "70089",
       "stop_name": "Fields Corner",
-      "line": "Red-A",
+      "line": "Red",
       "direction": "South",
       "stop_order": "15",
       "last_stop": "0"
@@ -290,7 +298,7 @@ const stations = [
     {
       "stop_id": "70091",
       "stop_name": "Shawmut",
-      "line": "Red-A",
+      "line": "Red",
       "direction": "South",
       "stop_order": "16",
       "last_stop": "1"
@@ -298,7 +306,7 @@ const stations = [
     {
       "stop_id": "70083",
       "stop_name": "Andrew",
-      "line": "Red-B",
+      "line": "Red",
       "direction": "South",
       "stop_order": "12",
       "last_stop": "0"
@@ -306,7 +314,7 @@ const stations = [
     {
       "stop_id": "70095",
       "stop_name": "JFK/UMass",
-      "line": "Red-B",
+      "line": "Red",
       "direction": "South",
       "stop_order": "13",
       "last_stop": "0"
@@ -314,7 +322,7 @@ const stations = [
     {
       "stop_id": "70097",
       "stop_name": "North Quincy",
-      "line": "Red-B",
+      "line": "Red",
       "direction": "South",
       "stop_order": "14",
       "last_stop": "0"
@@ -322,7 +330,7 @@ const stations = [
     {
       "stop_id": "70101",
       "stop_name": "Quincy Center",
-      "line": "Red-B",
+      "line": "Red",
       "direction": "South",
       "stop_order": "15",
       "last_stop": "0"
@@ -330,10 +338,18 @@ const stations = [
     {
       "stop_id": "70103",
       "stop_name": "Quincy Adams",
-      "line": "Red-B",
+      "line": "Red",
       "direction": "South",
       "stop_order": "16",
       "last_stop": "1"
+    },
+    {
+      "stop_id": "70105",
+      "stop_name": "Braintree",
+      "line": "Red",
+      "direction": "South",
+      "stop_order": "1",
+      "last_stop": "0"
     },
     {
       "stop_id": "70036",
