@@ -139,12 +139,13 @@ export default class App extends React.Component {
     }
   }
 
-  graphTitle(prefix, from, to) {
+  graphTitle(prefix, from, to, direction) {
+    const direction_display = direction ? ` ${direction}bound` : "";
     if(from && to) {
       return `${prefix} (${from.stop_name} to ${to.stop_name})`;
     }
     else if(from) {
-      return `${prefix} (${from.stop_name})`;
+      return `${prefix} (${from.stop_name}${direction_display})`;
     }
     return prefix;
   }
@@ -177,7 +178,7 @@ export default class App extends React.Component {
 
         <div className='charts'>
           <Line
-            title={this.graphTitle('Travel Times', this.state.from, this.state.to)}
+            title={this.graphTitle('Travel Times', this.state.from, this.state.to, this.state.direction)}
             seriesName={'traveltimes'}
             data={this.state.traveltimes}
             xField={'arr_dt'}
@@ -188,7 +189,7 @@ export default class App extends React.Component {
           />
 
           <Line
-            title={this.graphTitle('Headways', this.state.from)}
+            title={this.graphTitle('Headways', this.state.from, null, this.state.direction)}
             seriesName={'headways'}
             data={this.state.headways}
             xField={'current_dep_dt'}
@@ -199,7 +200,7 @@ export default class App extends React.Component {
           />
 
           <Line
-            title={this.graphTitle('Dwell Times', this.state.from)}
+            title={this.graphTitle('Dwell Times', this.state.from, null, this.state.direction)}
             seriesName={'dwells'}
             data={this.state.dwells}
             xField={'arr_dt'}
