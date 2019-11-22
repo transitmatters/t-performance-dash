@@ -33,10 +33,8 @@ class LineClass extends React.Component {
 
     let labels = this.props.data.map(item => item[this.props.xField]);
     return (
-      <div>
+      <div className="chart-container">
         <Line
-          width={1000}
-          height={300}
           legend={{ display: false }}
           data={{
             labels,
@@ -60,10 +58,11 @@ class LineClass extends React.Component {
             ]
           }}
           options={{
-            responsive: false,
+            responsive: true,
             title: {
               display: true,
-              text: this.props.title
+              text: this.props.title,
+              fontSize: 16
             },
             tooltips: {
               callbacks: {
@@ -77,6 +76,7 @@ class LineClass extends React.Component {
                 {
                   scaleLabel: {
                     display: true,
+                    fontSize: 14,
                     labelString: this.props.yFieldLabel
                   }
                 }
@@ -86,6 +86,7 @@ class LineClass extends React.Component {
                   type: 'time',
                   scaleLabel: {
                     display: true,
+                    fontSize: 14,
                     labelString: this.props.xFieldLabel
                   }
                 }

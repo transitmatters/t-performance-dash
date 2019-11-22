@@ -4,24 +4,24 @@
   padding: 10px;
 }
 
-.charts {
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
 #options {
   width: 200px;
   float: left;
   margin-right: 10px;
 }
+
 .option {
   margin-top: 30px;
   padding: 4px;
   border: 1px solid #dadada;
 }
 
-canvas {
-  margin-left: auto;
-  margin-right: auto;
-  float: left;
+.charts {
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.chart-container {
+  width: 80%;
 }
