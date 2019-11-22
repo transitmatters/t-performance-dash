@@ -132,7 +132,7 @@ const stations = [
       "stop_name": "Alewife",
       "line": "Red",
       "direction": "North",
-      "stop_order": 1,
+      "stop_order": 17,
       "last_stop": "0"
     },
     {
