@@ -46,9 +46,9 @@ export default class App extends React.Component {
       from: null,
       to: null,
 
-      options_direction: null,
-      options_from: null,
-      options_to: null,
+      options_direction: [],
+      options_from: [],
+      options_to: [],
 
       headways: [],
       traveltimes: [],
