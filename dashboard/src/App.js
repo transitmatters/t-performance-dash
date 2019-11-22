@@ -132,10 +132,13 @@ export default class App extends React.Component {
       this.fetchDataset('dwells', {
         station: this.state.from.stop_id,
       });
-      this.fetchDataset('traveltimes', {
-        station_from: this.state.from.stop_id,
-        station_to: this.state.to.stop_id,
-      });
+      
+      if (this.state.to) {
+        this.fetchDataset('traveltimes', {
+          station_from: this.state.from.stop_id,
+          station_to: this.state.to.stop_id,
+        });
+      }
     }
   }
 
