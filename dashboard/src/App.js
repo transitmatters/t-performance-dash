@@ -12,7 +12,6 @@ const APP_DATA_BASE_PATH = (window.location.hostname === "localhost" ||
 
 
 const options_lines = all_lines().map((line) => {
-  console.log(`options_lines()`)
   return {
     value: line,
     label: line
@@ -20,7 +19,6 @@ const options_lines = all_lines().map((line) => {
 });
 
 const options_direction_ui = (line) => options_direction(line).map((direction) => {
-  console.log(`Processing direction option: ${direction}`);
   return {
     value: direction,
     label: direction
@@ -29,7 +27,6 @@ const options_direction_ui = (line) => options_direction(line).map((direction) =
 
 const options_station_ui = (line, direction, from) => {
   return options_station(line, direction, from).map((station) => {
-    console.log(`Processing station option: ${station}`);
     return {
       value: station,
       label: station.stop_name
@@ -130,7 +127,6 @@ export default class App extends React.Component {
 
   download() {
     if (this.state.date && this.state.direction && this.state.from) {
-      console.log("this.state.from: ", this.state.from);
       this.fetchDataset('headways', {
         station: this.state.from.stop_id,
       });
@@ -142,6 +138,16 @@ export default class App extends React.Component {
         station_to: this.state.to.stop_id,
       });
     }
+  }
+
+  graphTitle(prefix, from, to) {
+    if(from && to) {
+      return `${prefix} (${from.stop_name} to ${to.stop_name})`;
+    }
+    else if(from) {
+      return `${prefix} (${from.stop_name})`;
+    }
+    return prefix;
   }
 
   render() {
@@ -172,7 +178,7 @@ export default class App extends React.Component {
 
         <div className='charts'>
           <Line
-            title={'Travel Times'}
+            title={this.graphTitle('Travel Times', this.state.from, this.state.to)}
             seriesName={'traveltimes'}
             data={this.state.traveltimes}
             xField={'arr_dt'}
@@ -183,7 +189,7 @@ export default class App extends React.Component {
           />
 
           <Line
-            title={'Headways'}
+            title={this.graphTitle('Headways', this.state.from)}
             seriesName={'headways'}
             data={this.state.headways}
             xField={'current_dep_dt'}
@@ -194,7 +200,7 @@ export default class App extends React.Component {
           />
 
           <Line
-            title={'Dwell Times'}
+            title={this.graphTitle('Dwell Times', this.state.from)}
             seriesName={'dwells'}
             data={this.state.dwells}
             xField={'arr_dt'}

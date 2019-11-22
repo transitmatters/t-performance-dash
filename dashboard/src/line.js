@@ -6,7 +6,6 @@ class LineClass extends React.Component {
   pointColors(data, metric_field, benchmark_field) {
     return data.map(point => {
       const ratio = point[metric_field]/point[benchmark_field];
-      console.log(ratio);
       if(ratio <= 1.25) {
         return '#75c400'; //green
       }
@@ -65,6 +64,13 @@ class LineClass extends React.Component {
             title: {
               display: true,
               text: this.props.title
+            },
+            tooltips: {
+              callbacks: {
+                title: (tooltipItem, _) => {
+                  return new Date(tooltipItem[0].xLabel).toLocaleTimeString();
+                }
+              }
             },
             scales: {
               yAxes: [
