@@ -356,7 +356,7 @@ const stations = [
       "stop_name": "Braintree",
       "line": "Red",
       "direction": "South",
-      "stop_order": 1,
+      "stop_order": 17,
       "last_stop": "0"
     },
     {
@@ -768,7 +768,7 @@ const stations = [
       "last_stop": "0"
     },
     {
-      "stop_id": "70038",
+      "stop_id": "70838",
       "stop_name": "Bowdoin",
       "line": "Blue",
       "direction": "South",
@@ -861,8 +861,16 @@ const stations = [
       "line": "Blue",
       "direction": "North",
       "stop_order": 11,
+      "last_stop": "0"
+    },
+    {
+      "stop_id": "70060",
+      "stop_name": "Wonderland",
+      "line": "Blue",
+      "direction": "North",
+      "stop_order": 12,
       "last_stop": "1"
-    }
+    },
   ];
 
 export {
