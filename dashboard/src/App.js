@@ -90,7 +90,7 @@ export default class App extends React.Component {
 
   onStationFromChange(station) {
     this.setState({
-      options_to: options_station_ui(this.state.line, this.state.direction, this.state.from),
+      options_to: options_station_ui(this.state.line, this.state.direction, station.value),
       from: station.value
     }, () => {
       this.download();

@@ -4,7 +4,7 @@ const stations = [
       "stop_name": "Ashmont",
       "line": "Red",
       "direction": "North",
-      "stop_order": "1",
+      "stop_order": 1,
       "last_stop": "0"
     },
     {
@@ -12,7 +12,7 @@ const stations = [
       "stop_name": "Shawmut",
       "line": "Red",
       "direction": "North",
-      "stop_order": "2",
+      "stop_order": 2,
       "last_stop": "0"
     },
     {
@@ -20,7 +20,7 @@ const stations = [
       "stop_name": "Fields Corner",
       "line": "Red",
       "direction": "North",
-      "stop_order": "3",
+      "stop_order": 3,
       "last_stop": "0"
     },
     {
@@ -28,7 +28,7 @@ const stations = [
       "stop_name": "Savin Hill",
       "line": "Red",
       "direction": "North",
-      "stop_order": "4",
+      "stop_order": 4,
       "last_stop": "0"
     },
     {
@@ -36,7 +36,7 @@ const stations = [
       "stop_name": "JFK/UMass",
       "line": "Red",
       "direction": "North",
-      "stop_order": "5",
+      "stop_order": 5,
       "last_stop": "0"
     },
     {
@@ -44,7 +44,7 @@ const stations = [
       "stop_name": "Andrew",
       "line": "Red",
       "direction": "North",
-      "stop_order": "6",
+      "stop_order": 6,
       "last_stop": "0"
     },
     {
@@ -52,7 +52,7 @@ const stations = [
       "stop_name": "Broadway",
       "line": "Red",
       "direction": "North",
-      "stop_order": "7",
+      "stop_order": 7,
       "last_stop": "0"
     },
     {
@@ -60,7 +60,7 @@ const stations = [
       "stop_name": "South Station",
       "line": "Red",
       "direction": "North",
-      "stop_order": "8",
+      "stop_order": 8,
       "last_stop": "0"
     },
     {
@@ -68,7 +68,7 @@ const stations = [
       "stop_name": "Downtown Crossing",
       "line": "Red",
       "direction": "North",
-      "stop_order": "9",
+      "stop_order": 9,
       "last_stop": "0"
     },
     {
@@ -76,7 +76,7 @@ const stations = [
       "stop_name": "Park Street",
       "line": "Red",
       "direction": "North",
-      "stop_order": "10",
+      "stop_order": 10,
       "last_stop": "0"
     },
     {
@@ -84,7 +84,7 @@ const stations = [
       "stop_name": "Charles/MGH",
       "line": "Red",
       "direction": "North",
-      "stop_order": "11",
+      "stop_order": 11,
       "last_stop": "0"
     },
     {
@@ -92,7 +92,7 @@ const stations = [
       "stop_name": "Kendall/MIT",
       "line": "Red",
       "direction": "North",
-      "stop_order": "12",
+      "stop_order": 12,
       "last_stop": "0"
     },
     {
@@ -100,7 +100,7 @@ const stations = [
       "stop_name": "Central",
       "line": "Red",
       "direction": "North",
-      "stop_order": "13",
+      "stop_order": 13,
       "last_stop": "0"
     },
     {
@@ -108,7 +108,7 @@ const stations = [
       "stop_name": "Harvard",
       "line": "Red",
       "direction": "North",
-      "stop_order": "14",
+      "stop_order": 14,
       "last_stop": "0"
     },
     {
@@ -116,7 +116,7 @@ const stations = [
       "stop_name": "Porter",
       "line": "Red",
       "direction": "North",
-      "stop_order": "15",
+      "stop_order": 15,
       "last_stop": "0"
     },
     {
@@ -124,7 +124,7 @@ const stations = [
       "stop_name": "Davis",
       "line": "Red",
       "direction": "North",
-      "stop_order": "16",
+      "stop_order": 16,
       "last_stop": "1"
     },
     {
@@ -132,7 +132,7 @@ const stations = [
       "stop_name": "Alewife",
       "line": "Red",
       "direction": "North",
-      "stop_order": "1",
+      "stop_order": 1,
       "last_stop": "0"
     },
     {
@@ -140,7 +140,7 @@ const stations = [
       "stop_name": "Braintree",
       "line": "Red",
       "direction": "North",
-      "stop_order": "1",
+      "stop_order": 1,
       "last_stop": "0"
     },
     {
@@ -148,7 +148,7 @@ const stations = [
       "stop_name": "Quincy Adams",
       "line": "Red",
       "direction": "North",
-      "stop_order": "2",
+      "stop_order": 2,
       "last_stop": "0"
     },
     {
@@ -156,7 +156,7 @@ const stations = [
       "stop_name": "Quincy Center",
       "line": "Red",
       "direction": "North",
-      "stop_order": "3",
+      "stop_order": 3,
       "last_stop": "0"
     },
     {
@@ -164,7 +164,7 @@ const stations = [
       "stop_name": "North Quincy",
       "line": "Red",
       "direction": "North",
-      "stop_order": "4",
+      "stop_order": 4,
       "last_stop": "0"
     },
     {
@@ -172,7 +172,7 @@ const stations = [
       "stop_name": "JFK/UMass",
       "line": "Red",
       "direction": "North",
-      "stop_order": "5",
+      "stop_order": 5,
       "last_stop": "0"
     },
     {
@@ -180,7 +180,7 @@ const stations = [
       "stop_name": "Alewife",
       "line": "Red",
       "direction": "South",
-      "stop_order": "1",
+      "stop_order": 1,
       "last_stop": "0"
     },
     {
@@ -188,7 +188,7 @@ const stations = [
       "stop_name": "Davis",
       "line": "Red",
       "direction": "South",
-      "stop_order": "2",
+      "stop_order": 2,
       "last_stop": "0"
     },
     {
@@ -196,7 +196,7 @@ const stations = [
       "stop_name": "Porter",
       "line": "Red",
       "direction": "South",
-      "stop_order": "3",
+      "stop_order": 3,
       "last_stop": "0"
     },
     {
@@ -204,7 +204,7 @@ const stations = [
       "stop_name": "Harvard",
       "line": "Red",
       "direction": "South",
-      "stop_order": "4",
+      "stop_order": 4,
       "last_stop": "0"
     },
     {
@@ -212,7 +212,7 @@ const stations = [
       "stop_name": "Central",
       "line": "Red",
       "direction": "South",
-      "stop_order": "5",
+      "stop_order": 5,
       "last_stop": "0"
     },
     {
@@ -220,7 +220,7 @@ const stations = [
       "stop_name": "Kendall/MIT",
       "line": "Red",
       "direction": "South",
-      "stop_order": "6",
+      "stop_order": 6,
       "last_stop": "0"
     },
     {
@@ -228,7 +228,7 @@ const stations = [
       "stop_name": "Charles/MGH",
       "line": "Red",
       "direction": "South",
-      "stop_order": "7",
+      "stop_order": 7,
       "last_stop": "0"
     },
     {
@@ -236,7 +236,7 @@ const stations = [
       "stop_name": "Park Street",
       "line": "Red",
       "direction": "South",
-      "stop_order": "8",
+      "stop_order": 8,
       "last_stop": "0"
     },
     {
@@ -244,7 +244,7 @@ const stations = [
       "stop_name": "Downtown Crossing",
       "line": "Red",
       "direction": "South",
-      "stop_order": "9",
+      "stop_order": 9,
       "last_stop": "0"
     },
     {
@@ -252,7 +252,7 @@ const stations = [
       "stop_name": "South Station",
       "line": "Red",
       "direction": "South",
-      "stop_order": "10",
+      "stop_order": 10,
       "last_stop": "0"
     },
     {
@@ -260,7 +260,7 @@ const stations = [
       "stop_name": "Broadway",
       "line": "Red",
       "direction": "South",
-      "stop_order": "11",
+      "stop_order": 11,
       "last_stop": "0"
     },
     {
@@ -268,7 +268,7 @@ const stations = [
       "stop_name": "Andrew",
       "line": "Red",
       "direction": "South",
-      "stop_order": "12",
+      "stop_order": 12,
       "last_stop": "0"
     },
     {
@@ -276,7 +276,7 @@ const stations = [
       "stop_name": "JFK/UMass",
       "line": "Red",
       "direction": "South",
-      "stop_order": "13",
+      "stop_order": 13,
       "last_stop": "0"
     },
     {
@@ -284,7 +284,7 @@ const stations = [
       "stop_name": "Savin Hill",
       "line": "Red",
       "direction": "South",
-      "stop_order": "14",
+      "stop_order": 14,
       "last_stop": "0"
     },
     {
@@ -292,7 +292,7 @@ const stations = [
       "stop_name": "Fields Corner",
       "line": "Red",
       "direction": "South",
-      "stop_order": "15",
+      "stop_order": 15,
       "last_stop": "0"
     },
     {
@@ -300,7 +300,15 @@ const stations = [
       "stop_name": "Shawmut",
       "line": "Red",
       "direction": "South",
-      "stop_order": "16",
+      "stop_order": 16,
+      "last_stop": "0"
+    },
+    {
+      "stop_id": "70093",
+      "stop_name": "Ashmont",
+      "line": "Red",
+      "direction": "South",
+      "stop_order": 17,
       "last_stop": "1"
     },
     {
@@ -308,7 +316,7 @@ const stations = [
       "stop_name": "Andrew",
       "line": "Red",
       "direction": "South",
-      "stop_order": "12",
+      "stop_order": 12,
       "last_stop": "0"
     },
     {
@@ -316,7 +324,7 @@ const stations = [
       "stop_name": "JFK/UMass",
       "line": "Red",
       "direction": "South",
-      "stop_order": "13",
+      "stop_order": 13,
       "last_stop": "0"
     },
     {
@@ -324,7 +332,7 @@ const stations = [
       "stop_name": "North Quincy",
       "line": "Red",
       "direction": "South",
-      "stop_order": "14",
+      "stop_order": 14,
       "last_stop": "0"
     },
     {
@@ -332,7 +340,7 @@ const stations = [
       "stop_name": "Quincy Center",
       "line": "Red",
       "direction": "South",
-      "stop_order": "15",
+      "stop_order": 15,
       "last_stop": "0"
     },
     {
@@ -340,7 +348,7 @@ const stations = [
       "stop_name": "Quincy Adams",
       "line": "Red",
       "direction": "South",
-      "stop_order": "16",
+      "stop_order": 16,
       "last_stop": "1"
     },
     {
@@ -348,7 +356,7 @@ const stations = [
       "stop_name": "Braintree",
       "line": "Red",
       "direction": "South",
-      "stop_order": "1",
+      "stop_order": 1,
       "last_stop": "0"
     },
     {
@@ -356,7 +364,7 @@ const stations = [
       "stop_name": "Oak Grove",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "1",
+      "stop_order": 1,
       "last_stop": "0"
     },
     {
@@ -364,7 +372,7 @@ const stations = [
       "stop_name": "Malden Center",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "2",
+      "stop_order": 2,
       "last_stop": "0"
     },
     {
@@ -372,7 +380,7 @@ const stations = [
       "stop_name": "Wellington",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "3",
+      "stop_order": 3,
       "last_stop": "0"
     },
     {
@@ -380,7 +388,7 @@ const stations = [
       "stop_name": "Assembly",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "4",
+      "stop_order": 4,
       "last_stop": "0"
     },
     {
@@ -388,7 +396,7 @@ const stations = [
       "stop_name": "Sullivan Square",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "5",
+      "stop_order": 5,
       "last_stop": "0"
     },
     {
@@ -396,7 +404,7 @@ const stations = [
       "stop_name": "Community College",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "6",
+      "stop_order": 6,
       "last_stop": "0"
     },
     {
@@ -404,7 +412,7 @@ const stations = [
       "stop_name": "North Station",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "7",
+      "stop_order": 7,
       "last_stop": "0"
     },
     {
@@ -412,7 +420,7 @@ const stations = [
       "stop_name": "Haymarket",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "8",
+      "stop_order": 8,
       "last_stop": "0"
     },
     {
@@ -420,7 +428,7 @@ const stations = [
       "stop_name": "State Street",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "9",
+      "stop_order": 9,
       "last_stop": "0"
     },
     {
@@ -428,7 +436,7 @@ const stations = [
       "stop_name": "Downtown Crossing",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "10",
+      "stop_order": 10,
       "last_stop": "0"
     },
     {
@@ -436,7 +444,7 @@ const stations = [
       "stop_name": "Chinatown",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "11",
+      "stop_order": 11,
       "last_stop": "0"
     },
     {
@@ -444,7 +452,7 @@ const stations = [
       "stop_name": "Tufts Medical Center",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "12",
+      "stop_order": 12,
       "last_stop": "0"
     },
     {
@@ -452,7 +460,7 @@ const stations = [
       "stop_name": "Back Bay",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "13",
+      "stop_order": 13,
       "last_stop": "0"
     },
     {
@@ -460,7 +468,7 @@ const stations = [
       "stop_name": "Massachusetts Avenue",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "14",
+      "stop_order": 14,
       "last_stop": "0"
     },
     {
@@ -468,7 +476,7 @@ const stations = [
       "stop_name": "Ruggles",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "15",
+      "stop_order": 15,
       "last_stop": "0"
     },
     {
@@ -476,7 +484,7 @@ const stations = [
       "stop_name": "Roxbury Crossing",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "16",
+      "stop_order": 16,
       "last_stop": "0"
     },
     {
@@ -484,7 +492,7 @@ const stations = [
       "stop_name": "Jackson Square",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "17",
+      "stop_order": 17,
       "last_stop": "0"
     },
     {
@@ -492,7 +500,7 @@ const stations = [
       "stop_name": "Stony Brook",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "18",
+      "stop_order": 18,
       "last_stop": "0"
     },
     {
@@ -500,15 +508,23 @@ const stations = [
       "stop_name": "Green Street",
       "line": "Orange",
       "direction": "South",
-      "stop_order": "19",
+      "stop_order": 19,
       "last_stop": "1"
     },
     {
       "stop_id": "70001",
       "stop_name": "Forest Hills",
       "line": "Orange",
+      "direction": "South",
+      "stop_order": 20,
+      "last_stop": "0"
+    },
+    {
+      "stop_id": "70001",
+      "stop_name": "Forest Hills",
+      "line": "Orange",
       "direction": "North",
-      "stop_order": "1",
+      "stop_order": 1,
       "last_stop": "0"
     },
     {
@@ -516,7 +532,7 @@ const stations = [
       "stop_name": "Green Street",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "2",
+      "stop_order": 2,
       "last_stop": "0"
     },
     {
@@ -524,7 +540,7 @@ const stations = [
       "stop_name": "Stony Brook",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "3",
+      "stop_order": 3,
       "last_stop": "0"
     },
     {
@@ -532,7 +548,7 @@ const stations = [
       "stop_name": "Jackson Square",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "4",
+      "stop_order": 4,
       "last_stop": "0"
     },
     {
@@ -540,7 +556,7 @@ const stations = [
       "stop_name": "Roxbury Crossing",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "5",
+      "stop_order": 5,
       "last_stop": "0"
     },
     {
@@ -548,7 +564,7 @@ const stations = [
       "stop_name": "Ruggles",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "6",
+      "stop_order": 6,
       "last_stop": "0"
     },
     {
@@ -556,7 +572,7 @@ const stations = [
       "stop_name": "Massachusetts Avenue",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "7",
+      "stop_order": 7,
       "last_stop": "0"
     },
     {
@@ -564,7 +580,7 @@ const stations = [
       "stop_name": "Back Bay",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "8",
+      "stop_order": 8,
       "last_stop": "0"
     },
     {
@@ -572,7 +588,7 @@ const stations = [
       "stop_name": "Tufts Medical Center",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "9",
+      "stop_order": 9,
       "last_stop": "0"
     },
     {
@@ -580,7 +596,7 @@ const stations = [
       "stop_name": "Chinatown",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "10",
+      "stop_order": 10,
       "last_stop": "0"
     },
     {
@@ -588,7 +604,7 @@ const stations = [
       "stop_name": "Downtown Crossing",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "11",
+      "stop_order": 11,
       "last_stop": "0"
     },
     {
@@ -596,7 +612,7 @@ const stations = [
       "stop_name": "State Street",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "12",
+      "stop_order": 12,
       "last_stop": "0"
     },
     {
@@ -604,7 +620,7 @@ const stations = [
       "stop_name": "Haymarket",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "13",
+      "stop_order": 13,
       "last_stop": "0"
     },
     {
@@ -612,7 +628,7 @@ const stations = [
       "stop_name": "North Station",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "14",
+      "stop_order": 14,
       "last_stop": "0"
     },
     {
@@ -620,7 +636,7 @@ const stations = [
       "stop_name": "Community College",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "15",
+      "stop_order": 15,
       "last_stop": "0"
     },
     {
@@ -628,7 +644,7 @@ const stations = [
       "stop_name": "Sullivan Square",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "16",
+      "stop_order": 16,
       "last_stop": "0"
     },
     {
@@ -636,7 +652,7 @@ const stations = [
       "stop_name": "Assembly",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "17",
+      "stop_order": 17,
       "last_stop": "0"
     },
     {
@@ -644,7 +660,7 @@ const stations = [
       "stop_name": "Wellington",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "18",
+      "stop_order": 18,
       "last_stop": "0"
     },
     {
@@ -652,7 +668,15 @@ const stations = [
       "stop_name": "Malden Center",
       "line": "Orange",
       "direction": "North",
-      "stop_order": "19",
+      "stop_order": 19,
+      "last_stop": "0"
+    },
+    {
+      "stop_id": "70036",
+      "stop_name": "Oak Grove",
+      "line": "Orange",
+      "direction": "North",
+      "stop_order": 20,
       "last_stop": "1"
     },
     {
@@ -660,7 +684,7 @@ const stations = [
       "stop_name": "Wonderland",
       "line": "Blue",
       "direction": "South",
-      "stop_order": "1",
+      "stop_order": 1,
       "last_stop": "0"
     },
     {
@@ -668,7 +692,7 @@ const stations = [
       "stop_name": "Revere Beach",
       "line": "Blue",
       "direction": "South",
-      "stop_order": "2",
+      "stop_order": 2,
       "last_stop": "0"
     },
     {
@@ -676,7 +700,7 @@ const stations = [
       "stop_name": "Beachmont",
       "line": "Blue",
       "direction": "South",
-      "stop_order": "3",
+      "stop_order": 3,
       "last_stop": "0"
     },
     {
@@ -684,7 +708,7 @@ const stations = [
       "stop_name": "Suffolk Downs",
       "line": "Blue",
       "direction": "South",
-      "stop_order": "4",
+      "stop_order": 4,
       "last_stop": "0"
     },
     {
@@ -692,7 +716,7 @@ const stations = [
       "stop_name": "Orient Heights",
       "line": "Blue",
       "direction": "South",
-      "stop_order": "5",
+      "stop_order": 5,
       "last_stop": "0"
     },
     {
@@ -700,7 +724,7 @@ const stations = [
       "stop_name": "Wood Island",
       "line": "Blue",
       "direction": "South",
-      "stop_order": "6",
+      "stop_order": 6,
       "last_stop": "0"
     },
     {
@@ -708,7 +732,7 @@ const stations = [
       "stop_name": "Airport",
       "line": "Blue",
       "direction": "South",
-      "stop_order": "7",
+      "stop_order": 7,
       "last_stop": "0"
     },
     {
@@ -716,7 +740,7 @@ const stations = [
       "stop_name": "Maverick",
       "line": "Blue",
       "direction": "South",
-      "stop_order": "8",
+      "stop_order": 8,
       "last_stop": "0"
     },
     {
@@ -724,7 +748,7 @@ const stations = [
       "stop_name": "Aquarium",
       "line": "Blue",
       "direction": "South",
-      "stop_order": "9",
+      "stop_order": 9,
       "last_stop": "0"
     },
     {
@@ -732,7 +756,7 @@ const stations = [
       "stop_name": "State Street",
       "line": "Blue",
       "direction": "South",
-      "stop_order": "10",
+      "stop_order": 10,
       "last_stop": "0"
     },
     {
@@ -740,7 +764,15 @@ const stations = [
       "stop_name": "Government Center",
       "line": "Blue",
       "direction": "South",
-      "stop_order": "11",
+      "stop_order": 11,
+      "last_stop": "0"
+    },
+    {
+      "stop_id": "70038",
+      "stop_name": "Bowdoin",
+      "line": "Blue",
+      "direction": "South",
+      "stop_order": 12,
       "last_stop": "1"
     },
     {
@@ -748,7 +780,7 @@ const stations = [
       "stop_name": "Bowdoin",
       "line": "Blue",
       "direction": "North",
-      "stop_order": "1",
+      "stop_order": 1,
       "last_stop": "0"
     },
     {
@@ -756,7 +788,7 @@ const stations = [
       "stop_name": "Government Center",
       "line": "Blue",
       "direction": "North",
-      "stop_order": "2",
+      "stop_order": 2,
       "last_stop": "0"
     },
     {
@@ -764,7 +796,7 @@ const stations = [
       "stop_name": "State Street",
       "line": "Blue",
       "direction": "North",
-      "stop_order": "3",
+      "stop_order": 3,
       "last_stop": "0"
     },
     {
@@ -772,7 +804,7 @@ const stations = [
       "stop_name": "Aquarium",
       "line": "Blue",
       "direction": "North",
-      "stop_order": "4",
+      "stop_order": 4,
       "last_stop": "0"
     },
     {
@@ -780,7 +812,7 @@ const stations = [
       "stop_name": "Maverick",
       "line": "Blue",
       "direction": "North",
-      "stop_order": "5",
+      "stop_order": 5,
       "last_stop": "0"
     },
     {
@@ -788,7 +820,7 @@ const stations = [
       "stop_name": "Airport",
       "line": "Blue",
       "direction": "North",
-      "stop_order": "6",
+      "stop_order": 6,
       "last_stop": "0"
     },
     {
@@ -796,7 +828,7 @@ const stations = [
       "stop_name": "Wood Island",
       "line": "Blue",
       "direction": "North",
-      "stop_order": "7",
+      "stop_order": 7,
       "last_stop": "0"
     },
     {
@@ -804,7 +836,7 @@ const stations = [
       "stop_name": "Orient Heights",
       "line": "Blue",
       "direction": "North",
-      "stop_order": "8",
+      "stop_order": 8,
       "last_stop": "0"
     },
     {
@@ -812,7 +844,7 @@ const stations = [
       "stop_name": "Suffolk Downs",
       "line": "Blue",
       "direction": "North",
-      "stop_order": "9",
+      "stop_order": 9,
       "last_stop": "0"
     },
     {
@@ -820,7 +852,7 @@ const stations = [
       "stop_name": "Beachmont",
       "line": "Blue",
       "direction": "North",
-      "stop_order": "10",
+      "stop_order": 10,
       "last_stop": "0"
     },
     {
@@ -828,7 +860,7 @@ const stations = [
       "stop_name": "Revere Beach",
       "line": "Blue",
       "direction": "North",
-      "stop_order": "11",
+      "stop_order": 11,
       "last_stop": "1"
     }
   ];
