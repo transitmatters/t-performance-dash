@@ -4,19 +4,23 @@
   "private": true,
   "dependencies": {
     "chart.js": "^2.8.0",
+    "concurrently": "^5.0.2",
     "flatpickr": "4.5.7",
     "react": "^16.8.6",
     "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.1.1",
+    "react-scripts": "^3.3.0",
     "react-select": "^3.0.8"
   },
   "homepage": ".",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently npm:start-python npm:start-react",
+    "start-python": "cd server && pipenv run python server.py",
+    "start-react": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "postinstall": "cd server && pipenv install"
   },
   "proxy": "http://localhost:5000",
   "eslintConfig": {
