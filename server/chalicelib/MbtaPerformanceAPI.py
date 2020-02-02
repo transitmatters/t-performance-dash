@@ -7,8 +7,8 @@ Created on Fri May  3 19:14:26 2019
 
 import os
 import json
-import secrets
-from datetime import datetime, timedelta, time
+import datetime
+from chalicelib import secrets
 from urllib.request import Request, urlopen
 from urllib.parse import urlencode
 from decimal import Decimal
@@ -16,11 +16,11 @@ from decimal import Decimal
 
 def get_datetimes(day):
     # has to start after 3:30am
-    start_time = time(3, 30, 1)
+    start_time = datetime.time(3, 30, 1)
 
     # build from and to datetimes for a single day
-    from_dt = datetime.combine(day, start_time)
-    to_dt = from_dt + timedelta(days=1, seconds=-1)
+    from_dt = datetime.datetime.combine(day, start_time)
+    to_dt = from_dt + datetime.timedelta(days=1, seconds=-1)
 
     # build dict to pass to next
     dt_str = {}

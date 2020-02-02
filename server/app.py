@@ -1,7 +1,7 @@
 import json
 from chalice import Chalice
 from datetime import datetime, timedelta, date, time
-import data_funcs
+from chalicelib import data_funcs
 
 app = Chalice(app_name='data-dashboard')
 

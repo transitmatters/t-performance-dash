@@ -1,11 +1,12 @@
-from MbtaPerformanceAPI import *
+import datetime
+from chalicelib import MbtaPerformanceAPI
 
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
 def headways(day, params):
     # get data
-    api_data = get_api_data(day, "headways", params)
+    api_data = MbtaPerformanceAPI.get_api_data(day, "headways", params)
 
     # just headways data
     headways = api_data.get("headways", {})
@@ -13,10 +14,10 @@ def headways(day, params):
     # conversion
     for headway_dict in headways:
         # convert to datetime
-        headway_dict["current_dep_dt"] = datetime.fromtimestamp(
+        headway_dict["current_dep_dt"] = datetime.datetime.fromtimestamp(
             int(headway_dict.get("current_dep_dt"))
         ).strftime(DATE_FORMAT)
-        headway_dict["previous_dep_dt"] = datetime.fromtimestamp(
+        headway_dict["previous_dep_dt"] = datetime.datetime.fromtimestamp(
             int(headway_dict.get("previous_dep_dt"))
         ).strftime(DATE_FORMAT)
         # convert to int
@@ -31,7 +32,7 @@ def headways(day, params):
 
 def travel_times(day, params):
     # get data
-    api_data = get_api_data(day, "traveltimes", params)
+    api_data = MbtaPerformanceAPI.get_api_data(day, "traveltimes", params)
 
     # just dwells data
     travel = api_data.get("travel_times", {})
@@ -39,10 +40,10 @@ def travel_times(day, params):
     # conversion
     for travel_dict in travel:
         # convert to datetime
-        travel_dict["arr_dt"] = datetime.fromtimestamp(
+        travel_dict["arr_dt"] = datetime.datetime.fromtimestamp(
             int(travel_dict.get("arr_dt"))
         ).strftime(DATE_FORMAT)
-        travel_dict["dep_dt"] = datetime.fromtimestamp(
+        travel_dict["dep_dt"] = datetime.datetime.fromtimestamp(
             int(travel_dict.get("dep_dt"))
         ).strftime(DATE_FORMAT)
         # convert to int
@@ -57,7 +58,7 @@ def travel_times(day, params):
 
 def dwells(day, params):
     # get data
-    api_data = get_api_data(day, "dwells", params)
+    api_data = MbtaPerformanceAPI.get_api_data(day, "dwells", params)
 
     # just dwells data
     dwells = api_data.get("dwell_times", {})
@@ -65,10 +66,10 @@ def dwells(day, params):
     # conversion
     for dwell_dict in dwells:
         # convert to datetime
-        dwell_dict["arr_dt"] = datetime.fromtimestamp(
+        dwell_dict["arr_dt"] = datetime.datetime.fromtimestamp(
             int(dwell_dict.get("arr_dt"))
         ).strftime(DATE_FORMAT)
-        dwell_dict["dep_dt"] = datetime.fromtimestamp(
+        dwell_dict["dep_dt"] = datetime.datetime.fromtimestamp(
             int(dwell_dict.get("dep_dt"))
         ).strftime(DATE_FORMAT)
         # convert to int
