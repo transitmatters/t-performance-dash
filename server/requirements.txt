@@ -1,0 +1,2 @@
+json-api-doc==0.11.0
+requests==2.22.0

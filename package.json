@@ -15,7 +15,7 @@
   "homepage": ".",
   "scripts": {
     "start": "concurrently npm:start-python npm:start-react",
-    "start-python": "cd server && pipenv run python server.py",
+    "start-python": "cd server && pipenv run chalice local --port=5000",
     "start-react": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
