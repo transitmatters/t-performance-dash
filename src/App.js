@@ -8,7 +8,7 @@ import './App.css';
 
 const APP_DATA_BASE_PATH = (window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1") ?
-  '' : '/t-performance-dash/puller';
+  '' : 'https://dashboard-api.transitmatters.org';
 
 const options_lines = all_lines().map((line) => {
   return {
