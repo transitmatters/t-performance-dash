@@ -1,5 +1,27 @@
 {
   "Resources": {
+    "FrontendCert": {
+      "Type": "AWS::CertificateManager::Certificate",
+      "Properties": {
+        "DomainName": "dashboard.transitmatters.org",
+        "DomainValidationOptions": [{
+          "DomainName": "dashboard.transitmatters.org",
+          "ValidationDomain": "dashboard.transitmatters.org"
+        }],
+        "ValidationMethod": "DNS"
+      }
+    },
+    "BackendCert": {
+      "Type": "AWS::CertificateManager::Certificate",
+      "Properties": {
+        "DomainName": "dashboard-api.transitmatters.org",
+        "DomainValidationOptions": [{
+          "DomainName": "dashboard-api.transitmatters.org",
+          "ValidationDomain": "dashboard-api.transitmatters.org"
+        }],
+        "ValidationMethod": "DNS"
+      }
+    },
     "FrontendBucket": {
       "Type": "AWS::S3::Bucket",
       "Properties": {
@@ -28,6 +50,44 @@
               ]
             }
           ]
+        }
+      }
+    },
+    "FrontendCloudFront": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "PriceClass": "PriceClass_100",
+        "DistributionConfig": {
+          "Aliases": [
+            "dashboard.transitmatters.org"
+          ],
+          "Enabled": "true",
+          "DefaultCacheBehavior": {
+            "ForwardedValues": {
+              "QueryString": "true"
+            },
+            "TargetOriginId": "only-origin",
+            "ViewerProtocolPolicy": "allow-all"
+          },
+          "DefaultRootObject": "index.html",
+          "Origins": [
+            {
+              "CustomOriginConfig": {
+                "HTTPPort": "80",
+                "HTTPSPort": "443",
+                "OriginProtocolPolicy": "http-only"
+              },
+              "DomainName": "dashboard.transitmatters.org.s3.amazonaws.com",
+              "Id": "only-origin"
+            }
+          ],
+          "ViewerCertificate": {
+            "MinimumProtocolVersion": "TLSv1.2_2018",
+            "AcmCertificateArn": {
+              "Ref": "FrontendCert"
+            },
+            "SslSupportMethod": "sni-only"
+          }
         }
       }
     }
