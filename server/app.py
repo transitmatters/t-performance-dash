@@ -6,7 +6,7 @@ from chalicelib import data_funcs
 app = Chalice(app_name='data-dashboard')
 
 cors_config = CORSConfig(
-    allow_origin='http://dashboard.transitmatters.org',
+    allow_origin='https://dashboard.transitmatters.org',
     max_age=3600
 )
 

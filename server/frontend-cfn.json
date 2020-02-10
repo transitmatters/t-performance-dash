@@ -56,7 +56,6 @@
     "FrontendCloudFront": {
       "Type": "AWS::CloudFront::Distribution",
       "Properties": {
-        "PriceClass": "PriceClass_100",
         "DistributionConfig": {
           "Aliases": [
             "dashboard.transitmatters.org"
@@ -67,7 +66,7 @@
               "QueryString": "true"
             },
             "TargetOriginId": "only-origin",
-            "ViewerProtocolPolicy": "allow-all"
+            "ViewerProtocolPolicy": "redirect-to-https"
           },
           "DefaultRootObject": "index.html",
           "Origins": [
@@ -81,6 +80,7 @@
               "Id": "only-origin"
             }
           ],
+          "PriceClass": "PriceClass_100",
           "ViewerCertificate": {
             "MinimumProtocolVersion": "TLSv1.2_2018",
             "AcmCertificateArn": {

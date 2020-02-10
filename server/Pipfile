@@ -12,6 +12,7 @@ gunicorn = "*"
 requests = "*"
 json-api-doc = "*"
 chalice = "*"
+pytz = "*"
 
 [requires]
 python_version = "3.7"

@@ -1,8 +1,11 @@
 import datetime
+import pytz
 from chalicelib import MbtaPerformanceAPI
 
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
+def stamp_to_dt(stamp):
+    return datetime.datetime.fromtimestamp(stamp, pytz.timezone("America/New_York"))
 
 def headways(day, params):
     # get data
@@ -14,10 +17,10 @@ def headways(day, params):
     # conversion
     for headway_dict in headways:
         # convert to datetime
-        headway_dict["current_dep_dt"] = datetime.datetime.fromtimestamp(
+        headway_dict["current_dep_dt"] = stamp_to_dt(
             int(headway_dict.get("current_dep_dt"))
         ).strftime(DATE_FORMAT)
-        headway_dict["previous_dep_dt"] = datetime.datetime.fromtimestamp(
+        headway_dict["previous_dep_dt"] = stamp_to_dt(
             int(headway_dict.get("previous_dep_dt"))
         ).strftime(DATE_FORMAT)
         # convert to int
@@ -40,10 +43,10 @@ def travel_times(day, params):
     # conversion
     for travel_dict in travel:
         # convert to datetime
-        travel_dict["arr_dt"] = datetime.datetime.fromtimestamp(
+        travel_dict["arr_dt"] = stamp_to_dt(
             int(travel_dict.get("arr_dt"))
         ).strftime(DATE_FORMAT)
-        travel_dict["dep_dt"] = datetime.datetime.fromtimestamp(
+        travel_dict["dep_dt"] = stamp_to_dt(
             int(travel_dict.get("dep_dt"))
         ).strftime(DATE_FORMAT)
         # convert to int
@@ -66,10 +69,10 @@ def dwells(day, params):
     # conversion
     for dwell_dict in dwells:
         # convert to datetime
-        dwell_dict["arr_dt"] = datetime.datetime.fromtimestamp(
+        dwell_dict["arr_dt"] = stamp_to_dt(
             int(dwell_dict.get("arr_dt"))
         ).strftime(DATE_FORMAT)
-        dwell_dict["dep_dt"] = datetime.datetime.fromtimestamp(
+        dwell_dict["dep_dt"] = stamp_to_dt(
             int(dwell_dict.get("dep_dt"))
         ).strftime(DATE_FORMAT)
         # convert to int
