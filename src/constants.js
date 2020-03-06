@@ -33,7 +33,7 @@ const stations = [
     },
     {
       "stop_id": "70086",
-      "stop_name": "JFK/UMass",
+      "stop_name": "JFK/UMass (Ashmont)",
       "line": "Red",
       "direction": "North",
       "stop_order": 5,
@@ -44,7 +44,7 @@ const stations = [
       "stop_name": "Andrew",
       "line": "Red",
       "direction": "North",
-      "stop_order": 6,
+      "stop_order": 10,
       "last_stop": "0"
     },
     {
@@ -52,7 +52,7 @@ const stations = [
       "stop_name": "Broadway",
       "line": "Red",
       "direction": "North",
-      "stop_order": 7,
+      "stop_order": 11,
       "last_stop": "0"
     },
     {
@@ -60,7 +60,7 @@ const stations = [
       "stop_name": "South Station",
       "line": "Red",
       "direction": "North",
-      "stop_order": 8,
+      "stop_order": 12,
       "last_stop": "0"
     },
     {
@@ -68,7 +68,7 @@ const stations = [
       "stop_name": "Downtown Crossing",
       "line": "Red",
       "direction": "North",
-      "stop_order": 9,
+      "stop_order": 13,
       "last_stop": "0"
     },
     {
@@ -76,7 +76,7 @@ const stations = [
       "stop_name": "Park Street",
       "line": "Red",
       "direction": "North",
-      "stop_order": 10,
+      "stop_order": 14,
       "last_stop": "0"
     },
     {
@@ -84,7 +84,7 @@ const stations = [
       "stop_name": "Charles/MGH",
       "line": "Red",
       "direction": "North",
-      "stop_order": 11,
+      "stop_order": 15,
       "last_stop": "0"
     },
     {
@@ -92,7 +92,7 @@ const stations = [
       "stop_name": "Kendall/MIT",
       "line": "Red",
       "direction": "North",
-      "stop_order": 12,
+      "stop_order": 16,
       "last_stop": "0"
     },
     {
@@ -100,7 +100,7 @@ const stations = [
       "stop_name": "Central",
       "line": "Red",
       "direction": "North",
-      "stop_order": 13,
+      "stop_order": 17,
       "last_stop": "0"
     },
     {
@@ -108,7 +108,7 @@ const stations = [
       "stop_name": "Harvard",
       "line": "Red",
       "direction": "North",
-      "stop_order": 14,
+      "stop_order": 18,
       "last_stop": "0"
     },
     {
@@ -116,7 +116,7 @@ const stations = [
       "stop_name": "Porter",
       "line": "Red",
       "direction": "North",
-      "stop_order": 15,
+      "stop_order": 19,
       "last_stop": "0"
     },
     {
@@ -124,7 +124,7 @@ const stations = [
       "stop_name": "Davis",
       "line": "Red",
       "direction": "North",
-      "stop_order": 16,
+      "stop_order": 20,
       "last_stop": "1"
     },
     {
@@ -132,7 +132,7 @@ const stations = [
       "stop_name": "Alewife",
       "line": "Red",
       "direction": "North",
-      "stop_order": 17,
+      "stop_order": 21,
       "last_stop": "0"
     },
     {
@@ -160,19 +160,27 @@ const stations = [
       "last_stop": "0"
     },
     {
-      "stop_id": "70098",
-      "stop_name": "North Quincy",
+      "stop_id": "70100",
+      "stop_name": "Wollaston",
       "line": "Red",
       "direction": "North",
       "stop_order": 4,
       "last_stop": "0"
     },
     {
-      "stop_id": "70096",
-      "stop_name": "JFK/UMass",
+      "stop_id": "70098",
+      "stop_name": "North Quincy",
       "line": "Red",
       "direction": "North",
       "stop_order": 5,
+      "last_stop": "0"
+    },
+    {
+      "stop_id": "70096",
+      "stop_name": "JFK/UMass (Braintree)",
+      "line": "Red",
+      "direction": "North",
+      "stop_order": 6,
       "last_stop": "0"
     },
     {
@@ -273,7 +281,7 @@ const stations = [
     },
     {
       "stop_id": "70085",
-      "stop_name": "JFK/UMass",
+      "stop_name": "JFK/UMass (Ashmont)",
       "line": "Red",
       "direction": "South",
       "stop_order": 13,
@@ -321,7 +329,7 @@ const stations = [
     },
     {
       "stop_id": "70095",
-      "stop_name": "JFK/UMass",
+      "stop_name": "JFK/UMass (Braintree)",
       "line": "Red",
       "direction": "South",
       "stop_order": 13,
@@ -336,11 +344,19 @@ const stations = [
       "last_stop": "0"
     },
     {
+      "stop_id": "70099",
+      "stop_name": "Wollaston",
+      "line": "Red",
+      "direction": "South",
+      "stop_order": 15,
+      "last_stop": "0"
+    },
+    {
       "stop_id": "70101",
       "stop_name": "Quincy Center",
       "line": "Red",
       "direction": "South",
-      "stop_order": 15,
+      "stop_order": 16,
       "last_stop": "0"
     },
     {
@@ -348,7 +364,7 @@ const stations = [
       "stop_name": "Quincy Adams",
       "line": "Red",
       "direction": "South",
-      "stop_order": 16,
+      "stop_order": 17,
       "last_stop": "1"
     },
     {
@@ -356,7 +372,7 @@ const stations = [
       "stop_name": "Braintree",
       "line": "Red",
       "direction": "South",
-      "stop_order": 17,
+      "stop_order": 18,
       "last_stop": "0"
     },
     {
