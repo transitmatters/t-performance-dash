@@ -16,11 +16,12 @@ from decimal import Decimal
 
 
 def get_datetimes(day):
-    # has to start after 3:30am
-    start_time = datetime.time(3, 30, 1, tzinfo=pytz.timezone("America/New_York"))
+    # has to start after 3:30am, east coast time
+    bos_tz = pytz.timezone("America/New_York")
+    start_time = datetime.time(3, 30, 1)
 
     # build from and to datetimes for a single day
-    from_dt = datetime.datetime.combine(day, start_time)
+    from_dt = bos_tz.localize(datetime.datetime.combine(day, start_time))
     to_dt = from_dt + datetime.timedelta(days=1, seconds=-1)
 
     # build dict to pass to next
