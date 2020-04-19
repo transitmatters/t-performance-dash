@@ -4,13 +4,14 @@
   "private": true,
   "dependencies": {
     "chart.js": "^2.8.0",
-    "concurrently": "^5.0.2",
+    "concurrently": "^5.1.0",
     "flatpickr": "4.5.7",
-    "react": "^16.8.6",
-    "react-chartjs-2": "^2.7.6",
-    "react-dom": "^16.8.6",
-    "react-scripts": "^3.3.0",
-    "react-select": "^3.0.8"
+    "react": "^16.13.1",
+    "react-chartjs-2": "^2.9.0",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.4.1",
+    "react-select": "^3.1.0"
   },
   "homepage": ".",
   "scripts": {

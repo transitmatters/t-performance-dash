@@ -1,118 +1,78 @@
 import React from 'react';
-import flatpickr from 'flatpickr';
-import Select from 'react-select'
-import 'flatpickr/dist/themes/material_blue.css';
 import Line from './line';
-import { all_lines, options_station, options_direction } from './stations';
+import StationConfiguration from './StationConfiguration';
+import { withRouter } from 'react-router-dom';
+import { lookup_station_by_id } from './stations';
 import './App.css';
 
 const APP_DATA_BASE_PATH = (window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1") ?
   '' : 'https://dashboard-api.transitmatters.org';
 
-const options_lines = all_lines().map((line) => {
+const stateFromURL = (config) => {
+  const [ line, direction, from_id, to_id, date ] = config.split(",");
+  const from = lookup_station_by_id(from_id);
+  const to = lookup_station_by_id(to_id);
   return {
-    value: line,
-    label: line
+    line,
+    direction,
+    from,
+    to,
+    date
   }
-});
-
-const options_direction_ui = (line) => options_direction(line).map((direction) => {
-  return {
-    value: direction,
-    label: direction
-  }
-});
-
-const options_station_ui = (line, direction, from) => {
-  return options_station(line, direction, from).map((station) => {
-    return {
-      value: station,
-      label: station.stop_name
-    }
-  })
 };
 
-
-export default class App extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
-    this.flatpickr = React.createRef();
 
     this.state = {
-      date: null,
-      line: null,
-      direction: null,
-      from: null,
-      to: null,
-
-      options_direction: [],
-      options_from: [],
-      options_to: [],
-
+      configuration: {},
       headways: [],
       traveltimes: [],
       dwells: []
     };
 
-    this.download = this.download.bind(this);
-    this.onDateChange = this.onDateChange.bind(this);
-    this.onLineChange = this.onLineChange.bind(this);
-    this.onDirectionChange = this.onDirectionChange.bind(this);
-    this.onStationFromChange = this.onStationFromChange.bind(this);
-    this.onStationToChange = this.onStationToChange.bind(this);
-  }
+    if (typeof this.props.match.params.config === "string") {
+      this.state.configuration = stateFromURL(this.props.match.params.config);
+    }
 
-  onDateChange(_, dateStr, __) {
-    this.setState(
-      {
-        date: dateStr
-      },
-      () => {
+    // Handle back/forward buttons
+    window.onpopstate = (e) => {
+      this.setState({
+        configuration: e.state.state,
+      }, () => {
         this.download();
-      }
-    );
-  }
+      });
+    };
 
-  onLineChange(line) {
-    this.setState({
-      line: line.value,
-      options_direction: options_direction_ui(line.value)
-    });
-  }
-
-  onDirectionChange(direction) {
-    this.setState({
-      direction: direction.value,
-      options_from: options_station_ui(this.state.line, direction.value, null)
-    });
-  }
-
-  onStationFromChange(station) {
-    this.setState({
-      options_to: options_station_ui(this.state.line, this.state.direction, station.value),
-      from: station.value
-    }, () => {
-      this.download();
-    });
-  }
-
-  onStationToChange(station) {
-    this.setState({
-      to: station.value
-    }, () => {
-      this.download();
-    });
+    this.download = this.download.bind(this);
+    this.updateConfiguration = this.updateConfiguration.bind(this);
   }
 
   componentDidMount() {
-    flatpickr(this.flatpickr.current, {
-      onChange: this.onDateChange
+    this.download();
+  }
+
+  updateConfiguration(config_change) {
+    this.setState({
+      configuration: {
+        ...this.state.configuration,
+        ...config_change
+      }
+    }, () => {
+      this.stateToURL();
+      this.download();
     });
   }
 
+  stateToURL() {
+    const { line, direction, from, to, date } = this.state.configuration;
+    this.props.history.push(`/rt/${line},${direction},${from?.stop_id},${to?.stop_id},${date}`, this.state.configuration);
+  }
+
   fetchDataset(name, options) {
-    let url = new URL(`${APP_DATA_BASE_PATH}/${name}/${this.state.date}`, window.location.origin);
+    let url = new URL(`${APP_DATA_BASE_PATH}/${name}/${this.state.configuration.date}`, window.location.origin);
     Object.keys(options).forEach(key => url.searchParams.append(key, options[key]));
 
     fetch(url)
@@ -125,18 +85,18 @@ export default class App extends React.Component {
   }
 
   download() {
-    if (this.state.date && this.state.direction && this.state.from) {
+    if (this.state.configuration.date && this.state.configuration.direction && this.state.configuration.from) {
       this.fetchDataset('headways', {
-        station: this.state.from.stop_id,
+        station: this.state.configuration.from.stop_id,
       });
       this.fetchDataset('dwells', {
-        station: this.state.from.stop_id,
+        station: this.state.configuration.from.stop_id,
       });
       
-      if (this.state.to) {
+      if (this.state.configuration.to) {
         this.fetchDataset('traveltimes', {
-          station_from: this.state.from.stop_id,
-          station_to: this.state.to.stop_id,
+          station_from: this.state.configuration.from.stop_id,
+          station_to: this.state.configuration.to.stop_id,
         });
       }
     }
@@ -157,31 +117,12 @@ export default class App extends React.Component {
     return (
       <div className='App'>
         <div id='options'>
-          <div className="option">
-            <div className='picker-line'>
-              Line<Select options={options_lines} onChange={this.onLineChange} />
-            </div>
-            <div className='picker-direction'>
-              Direction<Select options={this.state.options_direction} onChange={this.onDirectionChange} />
-            </div>
-          </div>
-
-          <div className="option">
-            <div className='picker-station'>
-              From<Select options={this.state.options_from} onChange={this.onStationFromChange} /> to <Select options={this.state.options_to} onChange={this.onStationToChange} />
-            </div>
-          </div>
-
-          <div className="option">
-            <div className='picker-date'>
-              Date <input type='date' ref={this.flatpickr} placeholder='Select date...' />
-            </div>
-          </div>
+          <StationConfiguration current={this.state.configuration} onConfigurationChange={this.updateConfiguration} />
         </div>
 
         <div className='charts'>
           <Line
-            title={this.graphTitle('Travel Times', this.state.from, this.state.to, this.state.direction)}
+            title={this.graphTitle('Travel Times', this.state.configuration.from, this.state.configuration.to, this.state.configuration.direction)}
             seriesName={'traveltimes'}
             data={this.state.traveltimes}
             xField={'arr_dt'}
@@ -192,7 +133,7 @@ export default class App extends React.Component {
           />
 
           <Line
-            title={this.graphTitle('Headways', this.state.from, null, this.state.direction)}
+            title={this.graphTitle('Headways', this.state.configuration.from, null, this.state.configuration.direction)}
             seriesName={'headways'}
             data={this.state.headways}
             xField={'current_dep_dt'}
@@ -203,7 +144,7 @@ export default class App extends React.Component {
           />
 
           <Line
-            title={this.graphTitle('Dwell Times', this.state.from, null, this.state.direction)}
+            title={this.graphTitle('Dwell Times', this.state.configuration.from, null, this.state.configuration.direction)}
             seriesName={'dwells'}
             data={this.state.dwells}
             xField={'arr_dt'}
@@ -217,3 +158,6 @@ export default class App extends React.Component {
     );
   }
 }
+
+export default withRouter(App);
+// export default App;
