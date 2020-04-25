@@ -1,6 +1,7 @@
 import React from 'react';
 import Line from './line';
 import StationConfiguration from './StationConfiguration';
+import PermalinkButton from './PermalinkButton';
 import { withRouter } from 'react-router-dom';
 import { lookup_station_by_id } from './stations';
 import './App.css';
@@ -33,8 +34,9 @@ class App extends React.Component {
       dwells: []
     };
 
-    if (typeof this.props.match.params.config === "string") {
-      this.state.configuration = stateFromURL(this.props.match.params.config);
+    const url_config = new URLSearchParams(props.location.search).get("config");
+    if (typeof url_config === "string") {
+      this.state.configuration = stateFromURL(url_config);
     }
 
     // Handle back/forward buttons
@@ -68,7 +70,7 @@ class App extends React.Component {
 
   stateToURL() {
     const { line, direction, from, to, date } = this.state.configuration;
-    this.props.history.push(`/rt/${line},${direction},${from?.stop_id},${to?.stop_id},${date}`, this.state.configuration);
+    this.props.history.push(`/rapidtransit?config=${line || ""},${direction || ""},${from?.stop_id || ""},${to?.stop_id || ""},${date || ""}`, this.state.configuration);
   }
 
   fetchDataset(name, options) {
@@ -105,10 +107,10 @@ class App extends React.Component {
   graphTitle(prefix, from, to, direction) {
     const direction_display = direction ? ` ${direction}bound` : "";
     if(from && to) {
-      return `${prefix} (${from.stop_name} to ${to.stop_name})`;
+      return `${prefix} from ${from.stop_name} to ${to.stop_name}`;
     }
     else if(from) {
-      return `${prefix} (${from.stop_name}${direction_display})`;
+      return `${prefix} at ${from.stop_name}${direction_display}`;
     }
     return prefix;
   }
@@ -118,11 +120,12 @@ class App extends React.Component {
       <div className='App'>
         <div id='options'>
           <StationConfiguration current={this.state.configuration} onConfigurationChange={this.updateConfiguration} />
+          <PermalinkButton />
         </div>
 
         <div className='charts'>
           <Line
-            title={this.graphTitle('Travel Times', this.state.configuration.from, this.state.configuration.to, this.state.configuration.direction)}
+            title={this.graphTitle('Travel times', this.state.configuration.from, this.state.configuration.to, this.state.configuration.direction)}
             seriesName={'traveltimes'}
             data={this.state.traveltimes}
             xField={'arr_dt'}
@@ -133,7 +136,7 @@ class App extends React.Component {
           />
 
           <Line
-            title={this.graphTitle('Headways', this.state.configuration.from, null, this.state.configuration.direction)}
+            title={this.graphTitle('Time between trains', this.state.configuration.from, null, this.state.configuration.direction)}
             seriesName={'headways'}
             data={this.state.headways}
             xField={'current_dep_dt'}
@@ -144,7 +147,7 @@ class App extends React.Component {
           />
 
           <Line
-            title={this.graphTitle('Dwell Times', this.state.configuration.from, null, this.state.configuration.direction)}
+            title={this.graphTitle('Time spent at station', this.state.configuration.from, null, this.state.configuration.direction)}
             seriesName={'dwells'}
             data={this.state.dwells}
             xField={'arr_dt'}

@@ -80,6 +80,14 @@
               "Id": "only-origin"
             }
           ],
+          "CustomErrorResponses": [
+            {
+              "ErrorCode": "404",
+              "ResponsePagePath": "/index.html",
+              "ResponseCode": "200",
+              "ErrorCachingMinTTL": "86400"
+            }
+          ],
           "PriceClass": "PriceClass_100",
           "ViewerCertificate": {
             "MinimumProtocolVersion": "TLSv1.2_2018",

@@ -8,6 +8,9 @@
   width: 200px;
   float: left;
   margin-right: 10px;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
 }
 
 .option {
