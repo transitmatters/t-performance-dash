@@ -1,6 +1,8 @@
 secrets.py
 .terraform
 deployment.zip
+.chalice
+cfn/
 
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
