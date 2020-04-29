@@ -1,7 +1,6 @@
 import React from 'react';
 import Line from './line';
 import StationConfiguration from './StationConfiguration';
-import PermalinkButton from './PermalinkButton';
 import { withRouter } from 'react-router-dom';
 import { lookup_station_by_id } from './stations';
 import './App.css';
@@ -57,12 +56,20 @@ class App extends React.Component {
   }
 
   updateConfiguration(config_change) {
-    this.setState({
+    let update = {
       configuration: {
         ...this.state.configuration,
         ...config_change
       }
-    }, () => {
+    };
+    if (config_change.line && config_change.line !== this.state.configuration.line) {
+      update.configuration.from = null;
+      update.configuration.to = null;
+      update.headways = [];
+      update.traveltimes = [];
+      update.dwells = [];
+    }
+    this.setState(update, () => {
       this.stateToURL();
       this.download();
     });
@@ -110,7 +117,7 @@ class App extends React.Component {
       return `${prefix} from ${from.stop_name} to ${to.stop_name}`;
     }
     else if(from) {
-      return `${prefix} at ${from.stop_name}${direction_display}`;
+      return `${prefix} at ${from.stop_name},${direction_display}`;
     }
     return prefix;
   }
@@ -120,12 +127,12 @@ class App extends React.Component {
       <div className='App'>
         <div id='options'>
           <StationConfiguration current={this.state.configuration} onConfigurationChange={this.updateConfiguration} />
-          <PermalinkButton />
         </div>
 
         <div className='charts'>
           <Line
             title={this.graphTitle('Travel times', this.state.configuration.from, this.state.configuration.to, this.state.configuration.direction)}
+            tooltipUnit={"travel time"}
             seriesName={'traveltimes'}
             data={this.state.traveltimes}
             xField={'arr_dt'}
@@ -136,7 +143,8 @@ class App extends React.Component {
           />
 
           <Line
-            title={this.graphTitle('Time between trains', this.state.configuration.from, null, this.state.configuration.direction)}
+            title={this.graphTitle('Time between trains (headways)', this.state.configuration.from, null, this.state.configuration.direction)}
+            tooltipUnit={"headway"}
             seriesName={'headways'}
             data={this.state.headways}
             xField={'current_dep_dt'}
@@ -147,7 +155,8 @@ class App extends React.Component {
           />
 
           <Line
-            title={this.graphTitle('Time spent at station', this.state.configuration.from, null, this.state.configuration.direction)}
+            title={this.graphTitle('Time spent at station (dwells)', this.state.configuration.from, null, this.state.configuration.direction)}
+            tooltipUnit={"dwell time"}
             seriesName={'dwells'}
             data={this.state.dwells}
             xField={'arr_dt'}
@@ -163,4 +172,3 @@ class App extends React.Component {
 }
 
 export default withRouter(App);
-// export default App;

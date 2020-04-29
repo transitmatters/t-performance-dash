@@ -57,7 +57,7 @@ export default class StationConfiguration extends React.Component {
 
   decode(property) {
     if (!this.props.current[property]) {
-      return undefined;
+      return null;
     }
 
     if (property === "line" || property === "direction") {
@@ -95,16 +95,16 @@ export default class StationConfiguration extends React.Component {
       <div>
         <div className="option">
           <div className='picker-line'>
-            Line<Select defaultValue={this.decode("line")} options={this.optionsForField("line")} onChange={this.handleSelectOption("line")} />
+            Line<Select value={this.decode("line")} options={this.optionsForField("line")} onChange={this.handleSelectOption("line")} />
           </div>
           <div className='picker-direction'>
-            Direction<Select defaultValue={this.decode("direction")} options={this.optionsForField("direction")} onChange={this.handleSelectOption("direction")} />
+            Direction<Select value={this.decode("direction")} options={this.optionsForField("direction")} onChange={this.handleSelectOption("direction")} />
           </div>
         </div>
 
         <div className="option">
           <div className='picker-station'>
-            From<Select defaultValue={this.decode("from")} options={this.optionsForField("from")} onChange={this.handleSelectOption("from")} /> to <Select value={this.decode("to")} options={this.optionsForField("to")} onChange={this.handleSelectOption("to")} />
+            From<Select value={this.decode("from")} options={this.optionsForField("from")} onChange={this.handleSelectOption("from")} /> to <Select value={this.decode("to")} options={this.optionsForField("to")} onChange={this.handleSelectOption("to")} />
           </div>
         </div>
 
