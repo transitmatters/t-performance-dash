@@ -4,6 +4,8 @@ set -e
 export AWS_PROFILE=transitmatters
 export AWS_REGION=us-east-1
 
+npm run build
+
 pushd server/ > /dev/null
 pipenv run chalice package --merge-template frontend-cfn.json cfn/
 aws cloudformation package --template-file cfn/sam.json --s3-bucket datadashboard-backend --output-template-file cfn/packaged.yaml
