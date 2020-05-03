@@ -62,8 +62,9 @@
           ],
           "Enabled": "true",
           "DefaultCacheBehavior": {
+            "Compress": true,
             "ForwardedValues": {
-              "QueryString": "true"
+              "QueryString": "false"
             },
             "TargetOriginId": "only-origin",
             "ViewerProtocolPolicy": "redirect-to-https"
