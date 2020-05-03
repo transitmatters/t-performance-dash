@@ -111,6 +111,10 @@ class LineClass extends React.Component {
               xAxes: [
                 {
                   type: 'time',
+                  time: {
+                    unit: 'hour',
+                    unitStepSize: 1
+                  },
                   scaleLabel: {
                     display: true,
                     fontSize: 14,
