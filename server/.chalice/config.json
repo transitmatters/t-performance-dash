@@ -1,6 +1,7 @@
 {
   "version": "2.0",
   "app_name": "data-dashboard",
+  "minimum_compression_size": 1000,
   "stages": {
     "dev": {
       "api_gateway_stage": "api"
