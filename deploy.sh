@@ -12,3 +12,9 @@ aws cloudformation package --template-file cfn/sam.json --s3-bucket datadashboar
 aws cloudformation deploy --template-file cfn/packaged.yaml --stack-name datadashboard --capabilities CAPABILITY_IAM
 popd > /dev/null
 aws s3 sync build/ s3://dashboard.transitmatters.org
+
+# Grab the cloudfront ID and invalidate its cache
+CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null] | [?contains(Aliases.Items, 'dashboard.transitmatters.org')].Id | [0]" --output text)
+aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths "/*"
+
+echo "\n\nComplete"
