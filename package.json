@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "chart.js": "^2.8.0",
-    "concurrently": "^5.1.0",
+    "concurrently": "^5.2.0",
     "flatpickr": "4.5.7",
     "react": "^16.13.1",
     "react-chartjs-2": "^2.9.0",
