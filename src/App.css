@@ -13,6 +13,38 @@
   align-self: flex-start;
 }
 
+.chart {
+  display: flex;
+}
+
+.legend {
+  width: 170px;
+  height: 130px;
+  margin-left: 8px;
+  margin-top: 38px;
+  text-align: left;
+  font-size: 12px;
+  padding: 4px;
+}
+
+.legend-dot {
+  height: 6px;
+  width: 6px;
+  background-color: #bbb;
+  border-radius: 50%;
+  margin-right: 4px;
+  display: inline-block;
+}
+
+.legend-line {
+  height: 3px;
+  width: 15px;
+  vertical-align: middle;
+  background-color: #bbb;
+  margin-right: 4px;
+  display: inline-block;
+}
+
 .option {
   margin-top: 30px;
   padding: 4px;
@@ -26,5 +58,6 @@
 }
 
 .chart-container {
-  width: 80%;
+  width: 70%;
+  height: 250px;
 }
