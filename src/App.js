@@ -135,11 +135,12 @@ class App extends React.Component {
             tooltipUnit={"travel time"}
             seriesName={'traveltimes'}
             data={this.state.traveltimes}
-            xField={'arr_dt'}
+            xField={'dep_dt'}
             xFieldLabel={'Time of day'}
             yField={'travel_time_sec'}
             yFieldLabel={'Minutes'}
             benchmarkField={'benchmark_travel_time_sec'}
+            legend={true}
           />
 
           <Line
@@ -152,6 +153,7 @@ class App extends React.Component {
             yField={'headway_time_sec'}
             yFieldLabel={'Minutes'}
             benchmarkField={'benchmark_headway_time_sec'}
+            legend={true}
           />
 
           <Line

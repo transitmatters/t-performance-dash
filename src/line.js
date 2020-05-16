@@ -129,7 +129,7 @@ class LineClass extends React.Component {
             }}
           />
         </div>
-        <Legend />
+        {this.props.legend && <Legend />}
       </div>
     );
   }
