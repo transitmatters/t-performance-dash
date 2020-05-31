@@ -17,4 +17,6 @@ aws s3 sync build/ s3://dashboard.transitmatters.org
 CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null] | [?contains(Aliases.Items, 'dashboard.transitmatters.org')].Id | [0]" --output text)
 aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths "/*"
 
-echo "\n\nComplete"
+echo
+echo
+echo "Complete"

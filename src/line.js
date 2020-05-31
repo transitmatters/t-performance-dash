@@ -44,7 +44,26 @@ class LineClass extends React.Component {
       yField
       yFieldLabel
       benchmarkField
+      alerts
     */
+
+    // const alert_annotations = this.props.alerts.map((alert, idx) => {
+    //   return {
+    //     type: 'line',
+    //     mode: 'vertical',
+    //     scaleID: 'x-axis-0',
+    //     value: alert.valid_from,
+    //     borderColor: 'red',
+    //     borderWidth: 1,
+    //     label: {
+    //       backgroundColor: "red",
+    //       yAdjust: idx * 30,
+    //       position: "top",
+    //       content: alertText(alert),
+    //       enabled: true
+    //     }
+    //   }
+    // });
 
     let labels = this.props.data.map(item => item[this.props.xField]);
     return (
@@ -75,6 +94,9 @@ class LineClass extends React.Component {
             }}
             options={{
               responsive: true,
+              // annotation: {
+              //   annotations: alert_annotations
+              // },
               maintainAspectRatio: false,
               title: {
                 display: true,
@@ -88,7 +110,6 @@ class LineClass extends React.Component {
                     return new Date(tooltipItems[0].xLabel).toLocaleTimeString();
                   },
                   label: (tooltipItem, _) => {
-                    console.log("tooltipItem: ", tooltipItem);
                     if (tooltipItem.datasetIndex === 0) {
                       return `Actual ${this.props.tooltipUnit}: ${parseFloat(tooltipItem.value).toFixed(2)}`;
                     }

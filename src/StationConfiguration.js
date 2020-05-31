@@ -33,6 +33,7 @@ export default class StationConfiguration extends React.Component {
     this.flatpickr = React.createRef();
 
     this.handleSelectDate = this.handleSelectDate.bind(this);
+    this.toggleAlerts = this.toggleAlerts.bind(this);
   }
 
   componentDidMount() {
@@ -46,15 +47,21 @@ export default class StationConfiguration extends React.Component {
   handleSelectDate(_, dateStr, __) {
     this.props.onConfigurationChange({
       date: dateStr
-    });
+    }, true);
   }
 
   handleSelectOption(field) {
     return (change) => {
       this.props.onConfigurationChange({
         [field]: change.value,
-      });
+      }, true);
     };
+  }
+
+  toggleAlerts() {
+    this.props.onConfigurationChange({
+      show_alerts: !this.props.current.show_alerts,
+    }, false);
   }
 
   decode(property) {
@@ -115,6 +122,7 @@ export default class StationConfiguration extends React.Component {
             Date <input defaultValue={this.decode("date")} onChange={() => {}} type='date' ref={this.flatpickr} placeholder='Select date...' />
           </div>
         </div>
+        <input type="checkbox" checked={this.props.current.show_alerts || false} onChange={this.toggleAlerts} /> Show incidents
       </div>
     );
   }

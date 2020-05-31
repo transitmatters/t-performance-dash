@@ -80,3 +80,17 @@ def dwells(day, params):
         dwell_dict["direction"] = int(dwell_dict.get("direction"))
 
     return dwells
+
+
+def alerts(day, params):
+    # get data
+    flat_alerts = []
+    alert_items = MbtaPerformanceAPI.get_api_data(day, "pastalerts", params)["past_alerts"]
+    for alert_item in alert_items:
+        for alert_version in alert_item["alert_versions"]:
+            flat_alerts.append({
+                "valid_from": stamp_to_dt(int(alert_version["valid_from"])).strftime(DATE_FORMAT),
+                "valid_to": stamp_to_dt(int(alert_version["valid_to"])).strftime(DATE_FORMAT),
+                "text": alert_version["header_text"]
+            })
+    return flat_alerts

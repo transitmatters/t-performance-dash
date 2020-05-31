@@ -5,6 +5,42 @@
   padding: 10px;
 }
 
+.right-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.alerts {
+  display: flex;
+  height: 16px;
+  position: sticky;
+  top: 0;
+}
+
+.alerts-bar-container {
+  width: 70%;
+  height: 16px;
+  padding-left: 44px;
+  position: sticky;
+  top: 0;
+}
+
+.alerts-bar {
+  float: left;
+  width: 100%;
+  height: 16px;
+}
+
+.alerts .legend {
+  float: right;
+  width: 230px;
+  height: 30px;
+
+  padding: 0px 0px 0px 12px;
+  margin: 0;
+}
+
 #options {
   width: 200px;
   float: left;
@@ -16,6 +52,7 @@
 
 .chart {
   display: flex;
+  justify-content: left;
 }
 
 .legend {
