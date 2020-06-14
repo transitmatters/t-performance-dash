@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@tippyjs/react": "^4.0.2",
     "chart.js": "^2.8.0",
     "concurrently": "^5.2.0",
     "flatpickr": "4.5.7",
