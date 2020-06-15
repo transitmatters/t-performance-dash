@@ -12,7 +12,7 @@ const APP_DATA_BASE_PATH = (window.location.hostname === "localhost" ||
   '' : 'https://dashboard-api.transitmatters.org';
 
 const stateFromURL = (config) => {
-  const [ line, direction, from_id, to_id, date, show_alerts ] = config.split(",");
+  const [line, direction, from_id, to_id, date, show_alerts] = config.split(",");
   const from = lookup_station_by_id(from_id);
   const to = lookup_station_by_id(to_id);
   return {
@@ -111,7 +111,7 @@ class App extends React.Component {
       this.fetchDataset('dwells', {
         station: this.state.configuration.from.stop_id,
       });
-      
+
       if (this.state.configuration.to) {
         this.fetchDataset('traveltimes', {
           station_from: this.state.configuration.from.stop_id,
@@ -132,10 +132,10 @@ class App extends React.Component {
 
   graphTitle(prefix, from, to, direction) {
     const direction_display = direction ? ` ${direction}bound` : "";
-    if(from && to) {
+    if (from && to) {
       return `${prefix} from ${from.stop_name} to ${to.stop_name}`;
     }
-    else if(from) {
+    else if (from) {
       return `${prefix} at ${from.stop_name},${direction_display}`;
     }
     return prefix;
@@ -153,14 +153,12 @@ class App extends React.Component {
     const recognized_alerts = this.state.alerts?.filter(recognize);
     return (
       <div className='App'>
-        <div id='options'>
-          <StationConfiguration current={this.state.configuration} onConfigurationChange={this.updateConfiguration} />
-        </div>
+        <StationConfiguration current={this.state.configuration} onConfigurationChange={this.updateConfiguration} />
         <div className='right-container'>
           {this.state.configuration.show_alerts &&
             <AlertBar
-            alerts={recognized_alerts}
-            timeframe={this.chartTimeframe()}
+              alerts={recognized_alerts}
+              timeframe={this.chartTimeframe()}
             />
           }
           <div className='charts'>
@@ -204,7 +202,7 @@ class App extends React.Component {
               benchmarkField={null}
               alerts={this.state.configuration.show_alerts ? recognized_alerts : []}
             />
-            </div>
+          </div>
         </div>
       </div>
     );

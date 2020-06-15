@@ -1,14 +1,18 @@
+:root {
+  --accent-primary: #d13434;
+  --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
 .App {
-  display: flex;
   text-align: center;
   font-size: 14px;
-  padding: 10px;
 }
 
 .right-container {
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding: 10px;
 }
 
 .alerts {
@@ -19,8 +23,6 @@
 }
 
 .alerts-bar-container {
-  width: 70%;
-  flex-shrink: 0;
   height: 16px;
   padding-left: 54px;
   padding-right: 1px;
@@ -51,25 +53,115 @@
   margin: 0;
 }
 
-#options {
-  width: 200px;
-  float: left;
-  margin-right: 10px;
-  position: sticky;
-  top: 0;
-  align-self: flex-start;
+.station-configuration {
+  color: white;
+  background-color: var(--accent-primary);
+  padding: 10px;
 }
 
-.chart {
+.station-configuration select,
+.station-configuration input {
+  box-shadow: var(--global-shadow);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  appearance: none;
+  padding: 3px;
+  padding-left: 10px;
+  font-size: 1em;
+  height: 30px;
+}
+
+.station-configuration select > * {
+  color: black;
+}
+
+.station-configuration .option {
   display: flex;
-  justify-content: left;
+  align-items: center;
+}
+
+@media screen and (min-width: 750px) {
+  .chart {
+    display: flex;
+    justify-content: left;
+  }
+
+  .legend {
+    width: 190px;
+    height: 130px;
+    margin-left: 8px;
+    margin-top: 38px;
+  }
+
+  .station-configuration,
+  .station-configuration > .option-group,
+  .station-configuration .option {
+    display: flex;
+    align-items: center;
+  }
+
+  .station-configuration .option-line {
+    width: 120px;
+  }
+
+  .station-configuration > .option:not(:first-child) {
+    margin-left: 20px;
+  }
+
+  .station-configuration .from-to-label {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  .station-configuration .option-select {
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .station-configuration {
+    display: grid;
+    grid-template-columns: 190px 1fr;
+    grid-template-areas:
+      'date line'
+      'stations stations';
+    column-gap: 10px;
+    row-gap: 10px;
+  }
+  .station-configuration .from-to-label,
+  .station-configuration .date-label {
+    width: 40px;
+    text-align: right;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  .station-configuration > .option-line {
+    grid-area: line;
+  }
+  .station-configuration > .option-stations-group {
+    display: grid;
+    row-gap: 10px;
+    grid-area: stations;
+  }
+  .station-configuration > .option-date {
+    grid-area: date;
+  }
+  .station-configuration > .option-date .option-select {
+    width: calc(100% - 50px);
+  }
+  .station-configuration > .option {
+    display: flex;
+    align-items: center;
+  }
+  .station-configuration .option-select {
+    width: 100%;
+  }
 }
 
 .legend {
-  width: 190px;
-  height: 130px;
-  margin-left: 8px;
-  margin-top: 38px;
   text-align: left;
   font-size: 12px;
   padding: 4px;
@@ -93,16 +185,6 @@
   display: inline-block;
 }
 
-.option {
-  margin-top: 30px;
-  padding: 4px;
-}
-
-.option select {
-  display: block;
-  margin: 0 auto 0 auto;
-}
-
 .charts {
   flex-wrap: wrap;
   justify-content: center;
@@ -110,7 +192,5 @@
 }
 
 .chart-container {
-  flex-shrink: 0;
-  width: 70%;
   height: 250px;
 }
