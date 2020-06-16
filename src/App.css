@@ -1,6 +1,8 @@
 :root {
   --accent-primary: #d13434;
   --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  --swap: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125'><path fill='white' transform='rotate(90 50 62)' style='text-indent:0;text-transform:none;block-progression:tb' d='M42 10a2 2 0 00-2 1l-8 9a2 2 0 000 3l9 10a2 2 0 103-3l-6-7h27c10 0 15 7 15 13s-5 12-15 12H35c-12 0-19 8-19 16 0 9 7 17 19 17h27l-5 5a2 2 0 103 3l8-9a2 2 0 000-3l-9-10a2 2 0 10-3 3l6 7H35c-10 0-15-6-15-13 0-6 5-12 15-12h30c12 0 19-8 19-16s-7-17-19-17H38l5-5a2 2 0 00-1-4z' fill-rule='evenodd' overflow='visible'/></svg>");
+  --arrow: url("data:image/svg+xml,<svg width='24' height='24' xmlns='http://www.w3.org/2000/svg'><path fill='white' d='m0,6l12,12l12,-12l-24,0z'/></svg>");
 }
 
 .App {
@@ -60,17 +62,61 @@
 }
 
 .station-configuration select,
-.station-configuration input {
-  box-shadow: var(--global-shadow);
+.station-configuration input,
+.station-configuration button {
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.6);
-  background-color: rgba(255, 255, 255, 0.3);
   border-radius: 4px;
   appearance: none;
   padding: 3px;
-  padding-left: 10px;
   font-size: 1em;
   height: 30px;
+}
+
+.station-configuration select,
+.station-configuration input {
+  box-shadow: var(--global-shadow);
+  background-color: rgba(255, 255, 255, 0.3);
+  padding-left: 10px;
+}
+
+.station-configuration button {
+  display: flex;
+  align-items: center;
+  background: none;
+  padding-left: 0;
+  padding-right: 6px;
+}
+
+.station-configuration button:not(:disabled):hover {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: var(--global-shadow);
+}
+
+.station-configuration .swap-stations-button .swap-icon {
+  background-image: var(--swap);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: center;
+  height: 24px;
+  width: 24px;
+}
+
+.station-configuration .swap-stations-button .swap-label {
+  margin-left: 6px;
+}
+
+.station-configuration select {
+  background-image: var(--arrow);
+  background-repeat: no-repeat;
+  background-size: 12px;
+  background-position: calc(100% - 10px) 50%;
+}
+
+.station-configuration select:disabled,
+.station-configuration button:disabled {
+  opacity: 0.5;
 }
 
 .station-configuration select > * {
@@ -102,17 +148,26 @@
     align-items: center;
   }
 
+  .station-configuration select:disabled {
+    width: 150px;
+  }
+
   .station-configuration .option-line {
-    width: 120px;
+    width: 150px;
   }
 
-  .station-configuration > .option:not(:first-child) {
-    margin-left: 20px;
+  .station-configuration > *:not(:last-child) {
+    margin-right: 30px;
   }
 
-  .station-configuration .from-to-label {
-    margin-left: 5px;
-    margin-right: 5px;
+  .station-configuration .option-stations-group {
+    margin-right: 10px;
+  }
+
+  .station-configuration .from-to-label,
+  .station-configuration .date-label {
+    margin-left: 7px;
+    margin-right: 7px;
   }
 
   .station-configuration .option-select {
@@ -124,10 +179,10 @@
 @media screen and (max-width: 750px) {
   .station-configuration {
     display: grid;
-    grid-template-columns: 190px 1fr;
+    grid-template-columns: 190px 1fr 40px;
     grid-template-areas:
-      'date line'
-      'stations stations';
+      'date line line'
+      'stations stations swap';
     column-gap: 10px;
     row-gap: 10px;
   }
@@ -149,7 +204,7 @@
   .station-configuration > .option-date {
     grid-area: date;
   }
-  .station-configuration > .option-date .option-select {
+  .station-configuration > .option-date input {
     width: calc(100% - 50px);
   }
   .station-configuration > .option {
@@ -158,6 +213,14 @@
   }
   .station-configuration .option-select {
     width: 100%;
+  }
+  .station-configuration .swap-stations-button {
+    grid-area: swap;
+    justify-content: center;
+    height: 100%;
+  }
+  .station-configuration .swap-stations-button .swap-label {
+    display: none;
   }
 }
 

@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/themes/material_blue.css';
-import { all_lines, options_station, options_direction } from './stations';
+import { all_lines, options_station } from './stations';
 
 const options_lines = all_lines().map((line) => {
   return {
@@ -20,17 +20,24 @@ const options_station_ui = (line, direction, from) => {
 };
 
 const Select = props => {
-  const { options, onChange, defaultLabel = "" } = props;
+  const { options, onChange, defaultLabel = "", value } = props;
   const elementRef = useRef(null);
 
   const handleChange = (evt) => {
-    console.log(options[evt.target.value]);
     onChange(options[evt.target.value]);
   }
 
-  return <select ref={elementRef} onChange={handleChange} className="option-select">
-    <option value="default" selected disabled hidden>{defaultLabel}</option>
-    {options.map((option, index) => <option value={index} key={index}>{option.label}</option>)}
+  return <select ref={elementRef} onChange={handleChange} disabled={options.length === 0} className="option-select">
+    <option value="default" selected={!value} disabled hidden>{defaultLabel}</option>
+    {options.map((option, index) =>
+      <option
+        value={index}
+        key={index}
+        selected={options[index] && options[index].value === value}
+      >
+        {option.label}
+      </option>
+    )}
   </select>
 }
 
@@ -41,6 +48,7 @@ export default class StationConfiguration extends React.Component {
 
     this.handleSelectDate = this.handleSelectDate.bind(this);
     this.toggleAlerts = this.toggleAlerts.bind(this);
+    this.handleSwapStations = this.handleSwapStations.bind(this);
   }
 
   componentDidMount() {
@@ -63,6 +71,15 @@ export default class StationConfiguration extends React.Component {
         [field]: change.value,
       }, true);
     };
+  }
+
+  handleSwapStations() {
+    const fromValue = this.decode("from");
+    const toValue = this.decode("to");
+    this.props.onConfigurationChange({
+      from: toValue,
+      to: fromValue
+    });
   }
 
   toggleAlerts() {
@@ -93,6 +110,7 @@ export default class StationConfiguration extends React.Component {
       <div className='station-configuration'>
         <div className="option option-line">
           <Select
+            value={this.decode("line")}
             options={this.optionsForField("line")}
             onChange={this.handleSelectOption("line")}
             defaultLabel="Select a line..."
@@ -104,20 +122,27 @@ export default class StationConfiguration extends React.Component {
             <span className="from-to-label">From</span>
             <Select
               className="option option-select"
+              value={this.decode("from")}
               options={this.optionsForField("from")}
               onChange={this.handleSelectOption("from")}
+              defaultLabel="Select a station..."
             />
           </div>
           <div className="option option-to-station" key={`to-${currentLine}`}>
             <span className="from-to-label">To</span>
             <Select
               classname="option-select"
+              value={this.decode("to")}
               options={this.optionsForField("to")}
               onChange={this.handleSelectOption("to")}
+              defaultLabel="Select a station..."
             />
           </div>
         </div>
-
+        <button className="swap-stations-button" onClick={this.handleSwapStations} disabled={!currentLine}>
+          <div className="swap-icon" />
+          <div className="swap-label">Swap</div>
+        </button>
         <div className="option option-date">
           <span className="date-label">Date</span>
           <input
