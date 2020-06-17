@@ -155,11 +155,13 @@ class App extends React.Component {
     }
   }
 
-  graphTitle(prefix, showDirection) {
+  graphTitle(prefix, showDirection, showTo) {
     const { from, to, line } = this.state.configuration;
     if (from && to) {
       const direction = showDirection ? ` ${station_direction(from, to, line)}` : ""
-      return `${prefix} from ${from.station_name}${direction} to ${to.station_name}`;
+      const preposition = showTo ? "from" : "at";
+      const suffix = showTo ? `to ${to.station_name}`: "";
+      return `${prefix} ${preposition} ${from.station_name}${direction} ${suffix}`;
     }
     return prefix;
   }
@@ -185,7 +187,7 @@ class App extends React.Component {
         </div>
         <div className='charts main-column'>
           <Line
-            title={this.graphTitle('Travel times')}
+            title={this.graphTitle('Travel times', false, true)}
             tooltipUnit={"travel time"}
             seriesName={'traveltimes'}
             data={this.state.traveltimes}
@@ -198,7 +200,7 @@ class App extends React.Component {
             legend={true}
           />
           <Line
-            title={this.graphTitle('Time between trains (headways)', true)}
+            title={this.graphTitle('Time between trains (headways)', true, false)}
             tooltipUnit={"headway"}
             seriesName={'headways'}
             data={this.state.headways}
@@ -211,7 +213,7 @@ class App extends React.Component {
             legend={true}
           />
           <Line
-            title={this.graphTitle('Time spent at station (dwells)', true)}
+            title={this.graphTitle('Time spent at station (dwells)', true, false)}
             tooltipUnit={"dwell time"}
             seriesName={'dwells'}
             data={this.state.dwells}
