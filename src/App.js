@@ -33,6 +33,7 @@ class App extends React.Component {
       configuration: {
         show_alerts: true,
       },
+      error: null,
       headways: [],
       traveltimes: [],
       dwells: [],
@@ -65,8 +66,9 @@ class App extends React.Component {
     this.download();
   }
 
-  updateConfiguration(config_change, refetch) {
+  updateConfiguration(config_change, refetch = true) {
     let update = {
+      error: null,
       configuration: {
         ...this.state.configuration,
         ...config_change
@@ -178,17 +180,31 @@ class App extends React.Component {
     return [];
   }
 
+  componentDidCatch(error) {
+    this.setState(currentState => {
+      const { configuration } = currentState;
+      return {
+        error,
+        configuration: {
+          ...configuration,
+          to: null,
+          from: null,
+        }
+      }
+    });
+  }
 
-  renderEmptyState() {
+  renderEmptyState(withError) {
     return <div className="main-column">
       <div className="empty-state">
-        See MBTA rapid transit performance data, including travel times between stations, headways,
-        and dwell times, for any given day. Looking for something interesting? Try one of these dates.
+        {withError && <>There was an error loading data for this date. Maybe try one of these?</>}
+        {!withError && <>See MBTA rapid transit performance data, including travel times between stations, headways,
+        and dwell times, for any given day. Looking for something interesting? Try one of these dates.</>}
         <Select
           onChange={value => {
             const { line, date, from, to } = value;
-            this.updateConfiguration({ line, date });
-            setTimeout(() => this.updateConfiguration({ from, to }, true));
+            this.updateConfiguration({ line, date }, false);
+            setTimeout(() => this.updateConfiguration({ from, to }));
           }}
           options={configPresets}
           className="date-selector"
@@ -198,10 +214,53 @@ class App extends React.Component {
     </div>
   }
 
+  renderCharts() {
+    return <div className='charts main-column'>
+      <Line
+        title={this.graphTitle('Travel times', false, true)}
+        tooltipUnit={"travel time"}
+        seriesName={'traveltimes'}
+        isLoading={this.getIsLoadingDataset('traveltimes')}
+        data={this.state.traveltimes}
+        xField={'dep_dt'}
+        xFieldLabel={'Time of day'}
+        yField={'travel_time_sec'}
+        yFieldLabel={'Minutes'}
+        benchmarkField={'benchmark_travel_time_sec'}
+        legend={true}
+      />
+      <Line
+        title={this.graphTitle('Time between trains (headways)', true, false)}
+        tooltipUnit={"headway"}
+        seriesName={'headways'}
+        isLoading={this.getIsLoadingDataset('headways')}
+        data={this.state.headways}
+        xField={'current_dep_dt'}
+        xFieldLabel={'Time of day'}
+        yField={'headway_time_sec'}
+        yFieldLabel={'Minutes'}
+        benchmarkField={'benchmark_headway_time_sec'}
+        legend={true}
+      />
+      <Line
+        title={this.graphTitle('Time spent at station (dwells)', true, false)}
+        tooltipUnit={"dwell time"}
+        seriesName={'dwells'}
+        isLoading={this.getIsLoadingDataset('dwells')}
+        data={this.state.dwells}
+        xField={'arr_dt'}
+        xFieldLabel={'Time of day'}
+        yField={'dwell_time_sec'}
+        yFieldLabel={'Minutes'}
+        benchmarkField={null}
+      />
+    </div>
+  }
+
   render() {
-    const { configuration } = this.state;
+    const { configuration, error } = this.state;
     const { from, to, date } = configuration;
-    const canShowCharts = from && to;
+    const canShowCharts = from && to && !error;
     const canShowAlerts = from && to && date;
     const recognized_alerts = this.state.alerts?.filter(recognize);
     const hasNoLoadedCharts = ['traveltimes', 'dwells', 'headways']
@@ -218,50 +277,8 @@ class App extends React.Component {
             isHidden={hasNoLoadedCharts}
           />}
         </div>
-        {!canShowCharts && this.renderEmptyState()}
-        {canShowCharts && <div className='charts main-column'>
-          <Line
-            title={this.graphTitle('Travel times', false, true)}
-            tooltipUnit={"travel time"}
-            seriesName={'traveltimes'}
-            isLoading={this.getIsLoadingDataset('traveltimes')}
-            data={this.state.traveltimes}
-            xField={'dep_dt'}
-            xFieldLabel={'Time of day'}
-            yField={'travel_time_sec'}
-            yFieldLabel={'Minutes'}
-            benchmarkField={'benchmark_travel_time_sec'}
-            alerts={this.state.configuration.show_alerts ? recognized_alerts : []}
-            legend={true}
-          />
-          <Line
-            title={this.graphTitle('Time between trains (headways)', true, false)}
-            tooltipUnit={"headway"}
-            seriesName={'headways'}
-            isLoading={this.getIsLoadingDataset('headways')}
-            data={this.state.headways}
-            xField={'current_dep_dt'}
-            xFieldLabel={'Time of day'}
-            yField={'headway_time_sec'}
-            yFieldLabel={'Minutes'}
-            benchmarkField={'benchmark_headway_time_sec'}
-            alerts={this.state.configuration.show_alerts ? recognized_alerts : []}
-            legend={true}
-          />
-          <Line
-            title={this.graphTitle('Time spent at station (dwells)', true, false)}
-            tooltipUnit={"dwell time"}
-            seriesName={'dwells'}
-            isLoading={this.getIsLoadingDataset('dwells')}
-            data={this.state.dwells}
-            xField={'arr_dt'}
-            xFieldLabel={'Time of day'}
-            yField={'dwell_time_sec'}
-            yFieldLabel={'Minutes'}
-            benchmarkField={null}
-            alerts={this.state.configuration.show_alerts ? recognized_alerts : []}
-          />
-        </div>}
+        {!canShowCharts && this.renderEmptyState(error)}
+        {canShowCharts && this.renderCharts()}
       </div>
     );
   }

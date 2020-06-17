@@ -280,6 +280,64 @@ export const stations = {
       stops: { northbound: "70001", southbound: "70001" },
     },
   ],
+  Green: [
+    {
+      station_name: "Lechmere",
+      order: 1,
+      stops: { northbound: "70210", southbound: "70210" },
+    },
+    {
+      station_name: "Kenmore",
+      order: 1,
+      stops: { northbound: "70150", southbound: "70150" },
+    },
+    {
+      station_name: "Science Park",
+      order: 2,
+      stops: { northbound: "70207", southbound: "70208" },
+    },
+    {
+      station_name: "North Station",
+      order: 3,
+      stops: { northbound: "70205", southbound: "70206" },
+    },
+    {
+      station_name: "Haymarket",
+      order: 4,
+      stops: { northbound: "70203", southbound: "70204" },
+    },
+    {
+      station_name: "Government Center",
+      order: 5,
+      stops: { northbound: "70201", southbound: "70202" },
+    },
+    {
+      station_name: "Park Street",
+      order: 6,
+      disabled: true,
+      stops: { northbound: "70200", southbound: "70196, 70197, 70198, 70199" },
+    },
+    {
+      station_name: "Boylston",
+      order: 7,
+      stops: { northbound: "70158", southbound: "70159" },
+    },
+    {
+      station_name: "Arlington",
+      order: 8,
+      stops: { northbound: "70156", southbound: "70157" },
+    },
+    {
+      station_name: "Copley",
+      order: 9,
+      stops: { northbound: "70154", southbound: "70155" },
+    },
+    {
+      station_name: "Hynes",
+      order: 10,
+      stops: { northbound: "70152", southbound: "70153" },
+    },
+  ],
 };
 
 const createConfigPresetValue = (line, fromStationName, toStationName, date) => {

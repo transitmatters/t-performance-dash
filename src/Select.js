@@ -24,6 +24,7 @@ const Select = props => {
                     <option
                         value={index}
                         key={index}
+                        disabled={option.disabled}
                     >
                         {option.label}
                     </option>

@@ -17,6 +17,7 @@ const options_station_ui = (line) => {
   return options_station(line).map((station) => {
     return {
       value: station,
+      disabled: station.disabled,
       label: station.station_name
     }
   })
@@ -28,7 +29,6 @@ export default class StationConfiguration extends React.Component {
     this.flatpickr = React.createRef();
 
     this.handleSelectDate = this.handleSelectDate.bind(this);
-    this.toggleAlerts = this.toggleAlerts.bind(this);
     this.handleSwapStations = this.handleSwapStations.bind(this);
   }
 
@@ -43,14 +43,14 @@ export default class StationConfiguration extends React.Component {
   handleSelectDate(_, dateStr, __) {
     this.props.onConfigurationChange({
       date: dateStr
-    }, true);
+    });
   }
 
   handleSelectOption(field) {
     return (value) => {
       this.props.onConfigurationChange({
         [field]: value,
-      }, true);
+      });
     };
   }
 
@@ -60,13 +60,7 @@ export default class StationConfiguration extends React.Component {
     this.props.onConfigurationChange({
       from: toValue,
       to: fromValue
-    }, true);
-  }
-
-  toggleAlerts() {
-    this.props.onConfigurationChange({
-      show_alerts: !this.props.current.show_alerts,
-    }, false);
+    });
   }
 
   decode(property) {

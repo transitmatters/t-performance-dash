@@ -3,7 +3,7 @@
   --red-line: #d13434;
   --orange-line: #e66f00;
   --blue-line: #0e3d8c;
-  --green-line: #114529;
+  --green-line: #159765;
   --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   --incident-color: #c02828;
   --incident-tooltip-color: #eaeaea;
@@ -128,6 +128,7 @@ body > #root {
 .top-sticky-container {
   position: sticky;
   top: 0;
+  z-index: 1;
 }
 
 .station-configuration-wrapper {
@@ -179,6 +180,7 @@ button:disabled,
 
 .select-component select {
   width: 100%;
+  padding-left: 10px;
   padding-right: 20px;
 }
 
