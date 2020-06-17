@@ -287,11 +287,6 @@ export const stations = {
       stops: { northbound: "70210", southbound: "70210" },
     },
     {
-      station_name: "Kenmore",
-      order: 1,
-      stops: { northbound: "70150", southbound: "70150" },
-    },
-    {
       station_name: "Science Park",
       order: 2,
       stops: { northbound: "70207", southbound: "70208" },
@@ -336,6 +331,11 @@ export const stations = {
       station_name: "Hynes",
       order: 10,
       stops: { northbound: "70152", southbound: "70153" },
+    },
+    {
+      station_name: "Kenmore",
+      order: 11,
+      stops: { northbound: "70150", southbound: "70150" },
     },
   ],
 };
