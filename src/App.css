@@ -1,5 +1,9 @@
 :root {
-  --accent-primary: #d31a2b;
+  --transitmatters-red: #d31a2b;
+  --red-line: #d13434;
+  --orange-line: #e66f00;
+  --blue-line: #0e3d8c;
+  --green-line: #114529;
   --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   --incident-color: #c02828;
   --incident-tooltip-color: #eaeaea;
@@ -127,8 +131,24 @@ body > #root {
 }
 
 .station-configuration-wrapper {
-  background-color: var(--accent-primary);
+  background-color: var(--transitmatters-red);
   box-shadow: var(--global-shadow);
+}
+
+.station-configuration-wrapper.Red {
+  background-color: var(--red-line);
+}
+
+.station-configuration-wrapper.Orange {
+  background-color: var(--orange-line);
+}
+
+.station-configuration-wrapper.Blue {
+  background-color: var(--blue-line);
+}
+
+.station-configuration-wrapper.Green {
+  background-color: var(--green-line);
 }
 
 .station-configuration {

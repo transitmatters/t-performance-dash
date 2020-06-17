@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/themes/light.css';
 
@@ -89,7 +90,7 @@ export default class StationConfiguration extends React.Component {
   render() {
     const currentLine = this.decode("line");
     return (
-      <div className='station-configuration-wrapper'>
+      <div className={classNames('station-configuration-wrapper', currentLine)}>
         <div className="station-configuration main-column">
           <div className="option option-line">
             <Select
