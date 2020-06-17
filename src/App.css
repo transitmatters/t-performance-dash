@@ -84,7 +84,7 @@
 .alerts {
   display: grid;
   grid-template-areas: 'left-gutter alerts right-gutter legend';
-  grid-template-columns: 54px 1fr 8px 190px;
+  grid-template-columns: 54px 1fr 20px 190px;
   height: 100%;
 }
 
