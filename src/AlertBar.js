@@ -50,7 +50,7 @@ export default function AlertBar(props) {
   }
 
     return (
-      <div className="alerts">
+      <div className="alerts main-column">
         <div className="alerts-bar-container">
           <div className="alerts-bar">
             {boxes}
