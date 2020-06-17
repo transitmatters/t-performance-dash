@@ -6,6 +6,8 @@ import { lookup_station_by_id, station_direction, get_stop_ids_for_stations } fr
 import { recognize } from './AlertFilter';
 import AlertBar from './AlertBar';
 import './App.css';
+import Select from './Select';
+import { configPresets } from './constants';
 
 const APP_DATA_BASE_PATH = (window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1") ?
@@ -113,11 +115,13 @@ class App extends React.Component {
   }
 
   setIsLoadingDataset(name, isLoading) {
-    const { datasetLoadingState } = this.state;
-    this.setState({
-      datasetLoadingState: {
-        ...datasetLoadingState,
-        [name]: isLoading
+    this.setState(currentState => {
+      const { datasetLoadingState } = currentState;
+      return {
+        datasetLoadingState: {
+          ...datasetLoadingState,
+          [name]: isLoading
+        }
       }
     });
   }
@@ -160,7 +164,7 @@ class App extends React.Component {
     if (from && to) {
       const direction = showDirection ? ` ${station_direction(from, to, line)}` : ""
       const preposition = showTo ? "from" : "at";
-      const suffix = showTo ? `to ${to.station_name}`: "";
+      const suffix = showTo ? `to ${to.station_name}` : "";
       return `${prefix} ${preposition} ${from.station_name}${direction} ${suffix}`;
     }
     return prefix;
@@ -174,22 +178,53 @@ class App extends React.Component {
     return [];
   }
 
+
+  renderEmptyState() {
+    return <div className="main-column">
+      <div className="empty-state">
+        See MBTA rapid transit performance data, including travel times between stations, headways,
+        and dwell times, for any given day. Looking for something interesting? Try one of these dates.
+        <Select
+          onChange={value => {
+            const { line, date, from, to } = value;
+            this.updateConfiguration({ line, date });
+            setTimeout(() => this.updateConfiguration({ from, to }, true));
+          }}
+          options={configPresets}
+          className="date-selector"
+          defaultLabel="Choose a date..."
+        />
+      </div>
+    </div>
+  }
+
   render() {
     const { configuration } = this.state;
     const { from, to, date } = configuration;
-    const hasNecessaryConfig = from && to && date;
+    const canShowCharts = from && to;
+    const canShowAlerts = from && to && date;
     const recognized_alerts = this.state.alerts?.filter(recognize);
+    const hasNoLoadedCharts = ['traveltimes', 'dwells', 'headways']
+      .every(kind => this.getIsLoadingDataset(kind));
+
     return (
       <div className='App'>
         <div className="top-sticky-container">
           <StationConfiguration current={configuration} onConfigurationChange={this.updateConfiguration} />
-          {hasNecessaryConfig && <AlertBar alerts={recognized_alerts} timeframe={this.chartTimeframe()} isLoading={this.getIsLoadingDataset("alerts")} />}
+          {canShowAlerts && <AlertBar
+            alerts={recognized_alerts}
+            timeframe={this.chartTimeframe()}
+            isLoading={this.getIsLoadingDataset("alerts")}
+            isHidden={hasNoLoadedCharts}
+          />}
         </div>
-        <div className='charts main-column'>
+        {!canShowCharts && this.renderEmptyState()}
+        {canShowCharts && <div className='charts main-column'>
           <Line
             title={this.graphTitle('Travel times', false, true)}
             tooltipUnit={"travel time"}
             seriesName={'traveltimes'}
+            isLoading={this.getIsLoadingDataset('traveltimes')}
             data={this.state.traveltimes}
             xField={'dep_dt'}
             xFieldLabel={'Time of day'}
@@ -203,6 +238,7 @@ class App extends React.Component {
             title={this.graphTitle('Time between trains (headways)', true, false)}
             tooltipUnit={"headway"}
             seriesName={'headways'}
+            isLoading={this.getIsLoadingDataset('headways')}
             data={this.state.headways}
             xField={'current_dep_dt'}
             xFieldLabel={'Time of day'}
@@ -216,6 +252,7 @@ class App extends React.Component {
             title={this.graphTitle('Time spent at station (dwells)', true, false)}
             tooltipUnit={"dwell time"}
             seriesName={'dwells'}
+            isLoading={this.getIsLoadingDataset('dwells')}
             data={this.state.dwells}
             xField={'arr_dt'}
             xFieldLabel={'Time of day'}
@@ -224,7 +261,7 @@ class App extends React.Component {
             benchmarkField={null}
             alerts={this.state.configuration.show_alerts ? recognized_alerts : []}
           />
-        </div>
+        </div>}
       </div>
     );
   }

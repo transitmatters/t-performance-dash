@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css'; // optional
 import LegendAlerts from './LegendAlerts';
@@ -26,7 +27,7 @@ function BoxSection(props) {
 }
 
 export default function AlertBar(props) {
-  const { alerts, isLoading } = props;
+  const { alerts, isLoading, isHidden } = props;
 
 
   const renderBoxes = () => {
@@ -40,6 +41,7 @@ export default function AlertBar(props) {
 
 
     const boxes = [];
+    let idx = 0;
     for (const alert of alerts) {
       const alert_start = new Date(alert.valid_from).getTime();
       const alert_end = new Date(alert.valid_to).getTime();
@@ -48,7 +50,8 @@ export default function AlertBar(props) {
       const left_pos = (alert_start - start) / (duration) * 100;
       const tooltip = `${new Date(alert.valid_from).toLocaleTimeString('en-US')} - ${new Date(alert.valid_to).toLocaleTimeString('en-US')}\n${alert.text}`;
 
-      boxes.push(<BoxSection title={tooltip} border={true} width={width} left={left_pos} />);
+      boxes.push(<BoxSection title={tooltip} border={true} width={width} left={left_pos} key={idx} />);
+      ++idx;
     }
 
     if (boxes.length > 0) {
@@ -58,7 +61,7 @@ export default function AlertBar(props) {
   }
 
   return (
-    <div className="alerts-wrapper">
+    <div className={classNames('alerts-wrapper', isHidden && 'hidden')}>
       <div className="alerts main-column">
         <div className="alerts-bar">
           {isLoading && <div className="loading-text">Loading incidents...</div>}

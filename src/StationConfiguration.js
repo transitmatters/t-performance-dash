@@ -1,6 +1,8 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/themes/light.css';
+
+import Select from './Select';
 import { all_lines, options_station } from './stations';
 
 const options_lines = all_lines().map((line) => {
@@ -18,35 +20,6 @@ const options_station_ui = (line) => {
     }
   })
 };
-
-const Select = props => {
-  const { options, onChange, defaultLabel = "", value } = props;
-  const elementRef = useRef(null);
-
-  const handleChange = (evt) => {
-    onChange(options[evt.target.value]);
-  }
-
-  const matchingIndex = options.findIndex(o => o.value === value);
-
-  return <select
-    className="option-select"
-    ref={elementRef}
-    onChange={handleChange}
-    disabled={options.length === 0}
-    value={matchingIndex === -1 ? "default" : matchingIndex}
-  >
-    <option value="default" disabled hidden>{defaultLabel}</option>
-    {options.map((option, index) =>
-      <option
-        value={index}
-        key={index}
-      >
-        {option.label}
-      </option>
-    )}
-  </select>
-}
 
 export default class StationConfiguration extends React.Component {
   constructor(props) {
@@ -73,9 +46,9 @@ export default class StationConfiguration extends React.Component {
   }
 
   handleSelectOption(field) {
-    return (change) => {
+    return (value) => {
       this.props.onConfigurationChange({
-        [field]: change.value,
+        [field]: value,
       }, true);
     };
   }
@@ -131,7 +104,6 @@ export default class StationConfiguration extends React.Component {
             <div className="option option-from-station">
               <span className="from-to-label">From</span>
               <Select
-                className="option option-select"
                 value={this.decode("from")}
                 options={this.optionsForField("from")}
                 onChange={this.handleSelectOption("from")}
@@ -141,7 +113,6 @@ export default class StationConfiguration extends React.Component {
             <div className="option option-to-station">
               <span className="from-to-label">To</span>
               <Select
-                classname="option-select"
                 value={this.decode("to")}
                 options={this.optionsForField("to")}
                 onChange={this.handleSelectOption("to")}
