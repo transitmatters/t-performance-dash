@@ -1,12 +1,13 @@
 :root {
   --accent-primary: #d31a2b;
   --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  --incident-color: #c02828;
+  --incident-tooltip-color: #eaeaea;
   --swap: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125'><path fill='white' transform='rotate(90 50 62)' style='text-indent:0;text-transform:none;block-progression:tb' d='M42 10a2 2 0 00-2 1l-8 9a2 2 0 000 3l9 10a2 2 0 103-3l-6-7h27c10 0 15 7 15 13s-5 12-15 12H35c-12 0-19 8-19 16 0 9 7 17 19 17h27l-5 5a2 2 0 103 3l8-9a2 2 0 000-3l-9-10a2 2 0 10-3 3l6 7H35c-10 0-15-6-15-13 0-6 5-12 15-12h30c12 0 19-8 19-16s-7-17-19-17H38l5-5a2 2 0 00-1-4z' fill-rule='evenodd' overflow='visible'/></svg>");
   --arrow: url("data:image/svg+xml,<svg width='24' height='24' xmlns='http://www.w3.org/2000/svg'><path fill='white' d='m0,6l12,12l12,-12l-24,0z'/></svg>");
 }
 
 .App {
-  text-align: center;
   font-size: 14px;
 }
 
@@ -22,28 +23,43 @@
   flex-grow: 1;
 }
 
-.alerts {
-  display: grid;
-  grid-template-areas: 'gutter alerts legend';
-  grid-template-columns: 44px 1fr 190px;
-  height: 16px;
+.alerts-wrapper {
+  background: white;
+  box-shadow: var(--global-shadow);
+  background-color: #eee;
 }
 
-.alerts-bar-container {
-  height: 16px;
-  padding-left: 54px;
-  padding-right: 1px;
-  position: sticky;
-  top: 0;
+.alerts {
+  display: grid;
+  grid-template-areas: 'left-gutter alerts right-gutter legend';
+  grid-template-columns: 54px 1fr 8px 190px;
+  height: 100%;
+}
+
+.alerts-bar {
+  grid-area: alerts;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .alerts .legend {
   grid-area: legend;
 }
 
+.alerts .legend .alert-incident-line,
+.alerts .incident-section {
+  background: var(--incident-color);
+}
+
 .tippy-box {
-  background-color: #eaeaea;
+  background-color: var(--incident-tooltip-color);
+  box-shadow: var(--global-shadow);
   color: black;
+}
+
+.tippy-box .tippy-arrow {
+  color: var(--incident-tooltip-color);
 }
 
 .top-sticky-container {
@@ -181,11 +197,25 @@
 }
 
 @media screen and (max-width: 750px) {
+  .alerts {
+    grid-template-areas: 'left-gutter alerts right-gutter';
+    grid-template-columns: 46px 1fr 8px;
+  }
+
+  .alerts-bar {
+    height: 30px;
+  }
+
+  .alerts .legend {
+    display: none;
+  }
+
   .legend {
     margin-left: 44px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
+
   .station-configuration {
     display: grid;
     grid-template-columns: 190px 1fr 40px;
@@ -195,6 +225,7 @@
     column-gap: 10px;
     row-gap: 10px;
   }
+
   .station-configuration .from-to-label,
   .station-configuration .date-label {
     width: 30px;
@@ -202,32 +233,40 @@
     margin-right: 10px;
     flex-shrink: 0;
   }
+
   .station-configuration > .option-line {
     grid-area: line;
   }
+
   .station-configuration > .option-stations-group {
     display: grid;
     row-gap: 10px;
     grid-area: stations;
   }
+
   .station-configuration > .option-date {
     grid-area: date;
   }
+
   .station-configuration > .option-date input {
     width: calc(100% - 40px);
   }
+
   .station-configuration > .option {
     display: flex;
     align-items: center;
   }
+
   .station-configuration .option-select {
     width: 100%;
   }
+
   .station-configuration .swap-stations-button {
     grid-area: swap;
     justify-content: center;
     height: 100%;
   }
+
   .station-configuration .swap-stations-button .swap-label {
     display: none;
   }

@@ -9,6 +9,9 @@ const lookup_station_by_id = (line, id) => {
 };
 
 const options_station = (line) => {
+  if (!line) {
+    return [];
+  }
   return stations[line];
 };
 

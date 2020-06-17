@@ -34,8 +34,8 @@ class App extends React.Component {
       headways: [],
       traveltimes: [],
       dwells: [],
-
       alerts: [],
+      datasetLoadingState: {},
     };
 
     const url_config = new URLSearchParams(props.location.search).get("config");
@@ -55,6 +55,8 @@ class App extends React.Component {
     this.download = this.download.bind(this);
     this.updateConfiguration = this.updateConfiguration.bind(this);
     this.chartTimeframe = this.chartTimeframe.bind(this);
+    this.setIsLoadingDataset = this.setIsLoadingDataset.bind(this);
+    this.getIsLoadingDataset = this.getIsLoadingDataset.bind(this);
   }
 
   componentDidMount() {
@@ -98,18 +100,35 @@ class App extends React.Component {
     let url = new URL(`${APP_DATA_BASE_PATH}/${name}/${this.state.configuration.date}`, window.location.origin);
     Object.keys(options).forEach(key => url.searchParams.append(key, options[key]));
 
+    this.setIsLoadingDataset(name, true);
+
     fetch(url)
       .then(resp => resp.json())
       .then(data => {
+        this.setIsLoadingDataset(name, false);
         this.setState({
           [name]: data
         });
       });
   }
 
+  setIsLoadingDataset(name, isLoading) {
+    const { datasetLoadingState } = this.state;
+    this.setState({
+      datasetLoadingState: {
+        ...datasetLoadingState,
+        [name]: isLoading
+      }
+    });
+  }
+
+  getIsLoadingDataset(name) {
+    return this.state.datasetLoadingState[name];
+  }
+
   download() {
-    const {configuration} = this.state;
-    const {fromStopId, toStopId} = get_stop_ids_for_stations(configuration.from, configuration.to);
+    const { configuration } = this.state;
+    const { fromStopId, toStopId } = get_stop_ids_for_stations(configuration.from, configuration.to);
     if (configuration.date && fromStopId && toStopId) {
       this.fetchDataset('headways', {
         station: fromStopId,
@@ -137,7 +156,7 @@ class App extends React.Component {
   }
 
   graphTitle(prefix, showDirection) {
-    const {from, to, line} = this.state.configuration;
+    const { from, to, line } = this.state.configuration;
     if (from && to) {
       const direction = showDirection ? ` ${station_direction(from, to, line)}` : ""
       return `${prefix} from ${from.station_name}${direction} to ${to.station_name}`;
@@ -155,12 +174,14 @@ class App extends React.Component {
 
   render() {
     const { configuration } = this.state;
+    const { from, to, date } = configuration;
+    const hasNecessaryConfig = from && to && date;
     const recognized_alerts = this.state.alerts?.filter(recognize);
     return (
       <div className='App'>
         <div className="top-sticky-container">
           <StationConfiguration current={configuration} onConfigurationChange={this.updateConfiguration} />
-          <AlertBar alerts={recognized_alerts} timeframe={this.chartTimeframe()} />
+          {hasNecessaryConfig && <AlertBar alerts={recognized_alerts} timeframe={this.chartTimeframe()} isLoading={this.getIsLoadingDataset("alerts")} />}
         </div>
         <div className='charts main-column'>
           <Line
