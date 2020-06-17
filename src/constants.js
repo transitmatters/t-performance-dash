@@ -284,7 +284,7 @@ export const stations = {
     {
       station_name: "Lechmere",
       order: 1,
-      stops: { northbound: "70210", southbound: "70210" },
+      stops: { northbound: "70209", southbound: "70210" },
     },
     {
       station_name: "Science Park",
@@ -335,7 +335,7 @@ export const stations = {
     {
       station_name: "Kenmore",
       order: 11,
-      stops: { northbound: "70150", southbound: "70150" },
+      stops: { northbound: "70150", southbound: "70151" },
     },
   ],
 };
