@@ -31,7 +31,7 @@ def get_single_url(day, module, params):
 
     # format parameters
     params["format"] = "json"
-    params["api_key"] = 'ssFWHiAXuEKz8qpfkBRPeQ'
+    params["api_key"] = secrets.MBTA_V2_API_KEY
     params["from_datetime"] = dt_str.get("from_dt_str")
     params["to_datetime"] = dt_str.get("to_dt_str")
 
