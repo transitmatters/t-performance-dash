@@ -2,7 +2,7 @@ export const stations = {
 	"Red": [{
 		"stop_name": "Alewife",
 		"branches": ["A", "B"],
-		"station": null,
+		"station": "place-alfcl",
 		"order": 1,
 		"stops": {
 			"northbound": ["70061"],
@@ -11,7 +11,7 @@ export const stations = {
 	}, {
 		"stop_name": "Davis",
 		"branches": ["A", "B"],
-		"station": null,
+		"station": "place-davis",
 		"order": 2,
 		"stops": {
 			"northbound": ["70064"],
@@ -20,7 +20,7 @@ export const stations = {
 	}, {
 		"stop_name": "Porter",
 		"branches": ["A", "B"],
-		"station": null,
+		"station": "place-portr",
 		"order": 3,
 		"stops": {
 			"northbound": ["70066"],
@@ -29,7 +29,7 @@ export const stations = {
 	}, {
 		"stop_name": "Harvard",
 		"branches": ["A", "B"],
-		"station": null,
+		"station": "place-harsq",
 		"order": 4,
 		"stops": {
 			"northbound": ["70068"],
@@ -38,7 +38,7 @@ export const stations = {
 	}, {
 		"stop_name": "Central",
 		"branches": ["A", "B"],
-		"station": null,
+		"station": "place-cntsq",
 		"order": 5,
 		"stops": {
 			"northbound": ["70070"],
@@ -47,7 +47,7 @@ export const stations = {
 	}, {
 		"stop_name": "Kendall/MIT",
 		"branches": ["A", "B"],
-		"station": null,
+		"station": "place-knncl",
 		"order": 6,
 		"stops": {
 			"northbound": ["70072"],
@@ -56,7 +56,7 @@ export const stations = {
 	}, {
 		"stop_name": "Charles/MGH",
 		"branches": ["A", "B"],
-		"station": null,
+		"station": "place-chmnl",
 		"order": 7,
 		"stops": {
 			"northbound": ["70074"],
@@ -65,7 +65,7 @@ export const stations = {
 	}, {
 		"stop_name": "Park Street",
 		"branches": ["A", "B"],
-		"station": null,
+		"station": "place-pktrm",
 		"order": 8,
 		"stops": {
 			"northbound": ["70076"],
@@ -74,7 +74,7 @@ export const stations = {
 	}, {
 		"stop_name": "Downtown Crossing",
 		"branches": ["A", "B"],
-		"station": null,
+		"station": "place-dwnxg",
 		"order": 9,
 		"stops": {
 			"northbound": ["70078"],
@@ -83,7 +83,7 @@ export const stations = {
 	}, {
 		"stop_name": "South Station",
 		"branches": ["A", "B"],
-		"station": null,
+		"station": "place-sstat",
 		"order": 10,
 		"stops": {
 			"northbound": ["70080"],
@@ -92,7 +92,7 @@ export const stations = {
 	}, {
 		"stop_name": "Broadway",
 		"branches": ["A", "B"],
-		"station": null,
+		"station": "place-brdwy",
 		"order": 11,
 		"stops": {
 			"northbound": ["70082"],
@@ -110,7 +110,7 @@ export const stations = {
 	}, {
 		"stop_name": "JFK/UMass (Ashmont)",
 		"branches": ["A"],
-		"station": null,
+		"station": "place-jfk",
 		"order": 101,
 		"stops": {
 			"northbound": ["70086"],
@@ -119,7 +119,7 @@ export const stations = {
 	}, {
 		"stop_name": "Savin Hill",
 		"branches": ["A"],
-		"station": null,
+		"station": "place-shmnl",
 		"order": 102,
 		"stops": {
 			"northbound": ["70088"],
@@ -128,7 +128,7 @@ export const stations = {
 	}, {
 		"stop_name": "Fields Corner",
 		"branches": ["A"],
-		"station": null,
+		"station": "place-fldcr",
 		"order": 103,
 		"stops": {
 			"northbound": ["70090"],
@@ -137,7 +137,7 @@ export const stations = {
 	}, {
 		"stop_name": "Shawmut",
 		"branches": ["A"],
-		"station": null,
+		"station": "place-smmnl",
 		"order": 104,
 		"stops": {
 			"northbound": ["70092"],
@@ -146,7 +146,7 @@ export const stations = {
 	}, {
 		"stop_name": "Ashmont",
 		"branches": ["A"],
-		"station": null,
+		"station": "place-asmnl",
 		"order": 105,
 		"stops": {
 			"northbound": ["70094"],
@@ -155,7 +155,7 @@ export const stations = {
 	}, {
 		"stop_name": "JFK/UMass (Braintree)",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-jfk",
 		"order": 201,
 		"stops": {
 			"northbound": ["70096"],
@@ -164,7 +164,7 @@ export const stations = {
 	}, {
 		"stop_name": "North Quincy",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-nqncy",
 		"order": 202,
 		"stops": {
 			"northbound": ["70098"],
@@ -173,7 +173,7 @@ export const stations = {
 	}, {
 		"stop_name": "Quincy Center",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-qnctr",
 		"order": 203,
 		"stops": {
 			"northbound": ["70102"],
@@ -182,7 +182,7 @@ export const stations = {
 	}, {
 		"stop_name": "Quincy Adams",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-qamnl",
 		"order": 204,
 		"stops": {
 			"northbound": ["70104"],
@@ -191,7 +191,7 @@ export const stations = {
 	}, {
 		"stop_name": "Braintree",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-brntn",
 		"order": 205,
 		"stops": {
 			"northbound": ["70105"],
@@ -201,7 +201,7 @@ export const stations = {
 	"Orange": [{
 		"stop_name": "Oak Grove",
 		"branches": null,
-		"station": null,
+		"station": "place-ogmnl",
 		"order": 1,
 		"stops": {
 			"northbound": ["70036"],
@@ -210,7 +210,7 @@ export const stations = {
 	}, {
 		"stop_name": "Malden Center",
 		"branches": null,
-		"station": null,
+		"station": "place-mlmnl",
 		"order": 2,
 		"stops": {
 			"northbound": ["70035"],
@@ -219,7 +219,7 @@ export const stations = {
 	}, {
 		"stop_name": "Wellington",
 		"branches": null,
-		"station": null,
+		"station": "place-welln",
 		"order": 3,
 		"stops": {
 			"northbound": ["70033"],
@@ -228,7 +228,7 @@ export const stations = {
 	}, {
 		"stop_name": "Assembly",
 		"branches": null,
-		"station": null,
+		"station": "place-astao",
 		"order": 4,
 		"stops": {
 			"northbound": ["70279"],
@@ -237,7 +237,7 @@ export const stations = {
 	}, {
 		"stop_name": "Sullivan Square",
 		"branches": null,
-		"station": null,
+		"station": "place-sull",
 		"order": 5,
 		"stops": {
 			"northbound": ["70031"],
@@ -246,7 +246,7 @@ export const stations = {
 	}, {
 		"stop_name": "Community College",
 		"branches": null,
-		"station": null,
+		"station": "place-ccmnl",
 		"order": 6,
 		"stops": {
 			"northbound": ["70029"],
@@ -255,7 +255,7 @@ export const stations = {
 	}, {
 		"stop_name": "North Station",
 		"branches": null,
-		"station": null,
+		"station": "place-north",
 		"order": 7,
 		"stops": {
 			"northbound": ["70027"],
@@ -264,7 +264,7 @@ export const stations = {
 	}, {
 		"stop_name": "Haymarket",
 		"branches": null,
-		"station": null,
+		"station": "place-haecl",
 		"order": 8,
 		"stops": {
 			"northbound": ["70025"],
@@ -273,7 +273,7 @@ export const stations = {
 	}, {
 		"stop_name": "State Street",
 		"branches": null,
-		"station": null,
+		"station": "place-state",
 		"order": 9,
 		"stops": {
 			"northbound": ["70023"],
@@ -282,7 +282,7 @@ export const stations = {
 	}, {
 		"stop_name": "Downtown Crossing",
 		"branches": null,
-		"station": null,
+		"station": "place-dwnxg",
 		"order": 10,
 		"stops": {
 			"northbound": ["70021"],
@@ -291,7 +291,7 @@ export const stations = {
 	}, {
 		"stop_name": "Chinatown",
 		"branches": null,
-		"station": null,
+		"station": "place-chncl",
 		"order": 11,
 		"stops": {
 			"northbound": ["70019"],
@@ -300,7 +300,7 @@ export const stations = {
 	}, {
 		"stop_name": "Tufts Medical Center",
 		"branches": null,
-		"station": null,
+		"station": "place-tumnl",
 		"order": 12,
 		"stops": {
 			"northbound": ["70017"],
@@ -309,7 +309,7 @@ export const stations = {
 	}, {
 		"stop_name": "Back Bay",
 		"branches": null,
-		"station": null,
+		"station": "place-bbsta",
 		"order": 13,
 		"stops": {
 			"northbound": ["70015"],
@@ -318,7 +318,7 @@ export const stations = {
 	}, {
 		"stop_name": "Massachusetts Avenue",
 		"branches": null,
-		"station": null,
+		"station": "place-masta",
 		"order": 14,
 		"stops": {
 			"northbound": ["70013"],
@@ -327,7 +327,7 @@ export const stations = {
 	}, {
 		"stop_name": "Ruggles",
 		"branches": null,
-		"station": null,
+		"station": "place-rugg",
 		"order": 15,
 		"stops": {
 			"northbound": ["70011"],
@@ -336,7 +336,7 @@ export const stations = {
 	}, {
 		"stop_name": "Roxbury Crossing",
 		"branches": null,
-		"station": null,
+		"station": "place-rcmnl",
 		"order": 16,
 		"stops": {
 			"northbound": ["70009"],
@@ -345,7 +345,7 @@ export const stations = {
 	}, {
 		"stop_name": "Jackson Square",
 		"branches": null,
-		"station": null,
+		"station": "place-jaksn",
 		"order": 17,
 		"stops": {
 			"northbound": ["70007"],
@@ -354,7 +354,7 @@ export const stations = {
 	}, {
 		"stop_name": "Stony Brook",
 		"branches": null,
-		"station": null,
+		"station": "place-sbmnl",
 		"order": 18,
 		"stops": {
 			"northbound": ["70005"],
@@ -363,7 +363,7 @@ export const stations = {
 	}, {
 		"stop_name": "Green Street",
 		"branches": null,
-		"station": null,
+		"station": "place-grnst",
 		"order": 19,
 		"stops": {
 			"northbound": ["70003"],
@@ -372,7 +372,7 @@ export const stations = {
 	}, {
 		"stop_name": "Forest Hills",
 		"branches": null,
-		"station": null,
+		"station": "place-forhl",
 		"order": 20,
 		"stops": {
 			"northbound": ["70001"],
@@ -382,7 +382,7 @@ export const stations = {
 	"Blue": [{
 		"stop_name": "Wonderland",
 		"branches": null,
-		"station": null,
+		"station": "place-wondl",
 		"order": 1,
 		"stops": {
 			"northbound": ["70060"],
@@ -391,7 +391,7 @@ export const stations = {
 	}, {
 		"stop_name": "Revere Beach",
 		"branches": null,
-		"station": null,
+		"station": "place-rbmnl",
 		"order": 2,
 		"stops": {
 			"northbound": ["70058"],
@@ -400,7 +400,7 @@ export const stations = {
 	}, {
 		"stop_name": "Beachmont",
 		"branches": null,
-		"station": null,
+		"station": "place-bmmnl",
 		"order": 3,
 		"stops": {
 			"northbound": ["70056"],
@@ -409,7 +409,7 @@ export const stations = {
 	}, {
 		"stop_name": "Suffolk Downs",
 		"branches": null,
-		"station": null,
+		"station": "place-sdmnl",
 		"order": 4,
 		"stops": {
 			"northbound": ["70054"],
@@ -418,7 +418,7 @@ export const stations = {
 	}, {
 		"stop_name": "Orient Heights",
 		"branches": null,
-		"station": null,
+		"station": "place-orhte",
 		"order": 5,
 		"stops": {
 			"northbound": ["70052"],
@@ -427,7 +427,7 @@ export const stations = {
 	}, {
 		"stop_name": "Wood Island",
 		"branches": null,
-		"station": null,
+		"station": "place-wimnl",
 		"order": 6,
 		"stops": {
 			"northbound": ["70050"],
@@ -436,7 +436,7 @@ export const stations = {
 	}, {
 		"stop_name": "Airport",
 		"branches": null,
-		"station": null,
+		"station": "place-aport",
 		"order": 7,
 		"stops": {
 			"northbound": ["70048"],
@@ -445,7 +445,7 @@ export const stations = {
 	}, {
 		"stop_name": "Maverick",
 		"branches": null,
-		"station": null,
+		"station": "place-mvbcl",
 		"order": 8,
 		"stops": {
 			"northbound": ["70046"],
@@ -454,7 +454,7 @@ export const stations = {
 	}, {
 		"stop_name": "Aquarium",
 		"branches": null,
-		"station": null,
+		"station": "place-aqucl",
 		"order": 9,
 		"stops": {
 			"northbound": ["70044"],
@@ -463,7 +463,7 @@ export const stations = {
 	}, {
 		"stop_name": "State Street",
 		"branches": null,
-		"station": null,
+		"station": "place-state",
 		"order": 10,
 		"stops": {
 			"northbound": ["70042"],
@@ -472,7 +472,7 @@ export const stations = {
 	}, {
 		"stop_name": "Government Center",
 		"branches": null,
-		"station": null,
+		"station": "place-gover",
 		"order": 11,
 		"stops": {
 			"northbound": ["70040"],
@@ -481,7 +481,7 @@ export const stations = {
 	}, {
 		"stop_name": "Bowdoin",
 		"branches": null,
-		"station": null,
+		"station": "place-bomnl",
 		"order": 12,
 		"stops": {
 			"northbound": ["70038"],
@@ -491,7 +491,7 @@ export const stations = {
 	"Green": [{
 		"stop_name": "Blandford Street",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-bland",
 		"order": 101,
 		"stops": {
 			"northbound": ["70148"],
@@ -500,7 +500,7 @@ export const stations = {
 	}, {
 		"stop_name": "Boston University East",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-buest",
 		"order": 102,
 		"stops": {
 			"northbound": ["70146"],
@@ -509,7 +509,7 @@ export const stations = {
 	}, {
 		"stop_name": "Boston University Central",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-bucen",
 		"order": 103,
 		"stops": {
 			"northbound": ["70144"],
@@ -518,7 +518,7 @@ export const stations = {
 	}, {
 		"stop_name": "Boston University West",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-buwst",
 		"order": 104,
 		"stops": {
 			"northbound": ["70142"],
@@ -527,7 +527,7 @@ export const stations = {
 	}, {
 		"stop_name": "Saint Paul Street (B)",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-stplb",
 		"order": 105,
 		"stops": {
 			"northbound": ["70140"],
@@ -536,7 +536,7 @@ export const stations = {
 	}, {
 		"stop_name": "Pleasant Street",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-plsgr",
 		"order": 106,
 		"stops": {
 			"northbound": ["70138"],
@@ -545,7 +545,7 @@ export const stations = {
 	}, {
 		"stop_name": "Babcock Street",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-babck",
 		"order": 107,
 		"stops": {
 			"northbound": ["70136"],
@@ -554,7 +554,7 @@ export const stations = {
 	}, {
 		"stop_name": "Packards Corner",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-brico",
 		"order": 108,
 		"stops": {
 			"northbound": ["70134"],
@@ -563,7 +563,7 @@ export const stations = {
 	}, {
 		"stop_name": "Harvard Avenue",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-harvd",
 		"order": 109,
 		"stops": {
 			"northbound": ["70130"],
@@ -572,7 +572,7 @@ export const stations = {
 	}, {
 		"stop_name": "Griggs Street",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-grigg",
 		"order": 110,
 		"stops": {
 			"northbound": ["70128"],
@@ -581,7 +581,7 @@ export const stations = {
 	}, {
 		"stop_name": "Allston Street",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-alsgr",
 		"order": 111,
 		"stops": {
 			"northbound": ["70126"],
@@ -590,7 +590,7 @@ export const stations = {
 	}, {
 		"stop_name": "Warren Street",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-wrnst",
 		"order": 112,
 		"stops": {
 			"northbound": ["70124"],
@@ -599,7 +599,7 @@ export const stations = {
 	}, {
 		"stop_name": "Washington Street",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-wascm",
 		"order": 113,
 		"stops": {
 			"northbound": ["70120"],
@@ -608,7 +608,7 @@ export const stations = {
 	}, {
 		"stop_name": "Sutherland Road",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-sthld",
 		"order": 114,
 		"stops": {
 			"northbound": ["70116"],
@@ -617,7 +617,7 @@ export const stations = {
 	}, {
 		"stop_name": "Chiswick Road",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-chswk",
 		"order": 115,
 		"stops": {
 			"northbound": ["70114"],
@@ -626,7 +626,7 @@ export const stations = {
 	}, {
 		"stop_name": "Chestnut Hill Avenue",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-chill",
 		"order": 116,
 		"stops": {
 			"northbound": ["70112"],
@@ -635,7 +635,7 @@ export const stations = {
 	}, {
 		"stop_name": "South Street",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-sougr",
 		"order": 117,
 		"stops": {
 			"northbound": ["70110"],
@@ -644,7 +644,7 @@ export const stations = {
 	}, {
 		"stop_name": "Boston College",
 		"branches": ["B"],
-		"station": null,
+		"station": "place-lake",
 		"order": 118,
 		"stops": {
 			"northbound": ["70106"],
@@ -653,7 +653,7 @@ export const stations = {
 	}, {
 		"stop_name": "Kenmore",
 		"branches": ["B", "C", "D"],
-		"station": null,
+		"station": "place-kencl",
 		"order": 11,
 		"stops": {
 			"northbound": ["70150", "71150"],
@@ -662,7 +662,7 @@ export const stations = {
 	}, {
 		"stop_name": "Hynes",
 		"branches": ["B", "C", "D"],
-		"station": null,
+		"station": "place-hymnl",
 		"order": 10,
 		"stops": {
 			"northbound": ["70152"],
@@ -671,7 +671,7 @@ export const stations = {
 	}, {
 		"stop_name": "Park Street",
 		"branches": ["B", "C", "D", "E"],
-		"station": null,
+		"station": "place-pktrm",
 		"order": 6,
 		"stops": {
 			"northbound": ["70200"],
@@ -680,7 +680,7 @@ export const stations = {
 	}, {
 		"stop_name": "Boylston",
 		"branches": ["B", "C", "D", "E"],
-		"station": null,
+		"station": "place-boyls",
 		"order": 7,
 		"stops": {
 			"northbound": ["70158"],
@@ -689,7 +689,7 @@ export const stations = {
 	}, {
 		"stop_name": "Arlington",
 		"branches": ["B", "C", "D", "E"],
-		"station": null,
+		"station": "place-armnl",
 		"order": 8,
 		"stops": {
 			"northbound": ["70156"],
@@ -698,7 +698,7 @@ export const stations = {
 	}, {
 		"stop_name": "Copley",
 		"branches": ["B", "C", "D", "E"],
-		"station": null,
+		"station": "place-coecl",
 		"order": 9,
 		"stops": {
 			"northbound": ["70154"],
@@ -707,7 +707,7 @@ export const stations = {
 	}, {
 		"stop_name": "Cleveland Circle",
 		"branches": ["C"],
-		"station": null,
+		"station": "place-clmnl",
 		"order": 213,
 		"stops": {
 			"northbound": ["70238"],
@@ -716,7 +716,7 @@ export const stations = {
 	}, {
 		"stop_name": "Englewood Avenue",
 		"branches": ["C"],
-		"station": null,
+		"station": "place-engav",
 		"order": 212,
 		"stops": {
 			"northbound": ["70236"],
@@ -725,7 +725,7 @@ export const stations = {
 	}, {
 		"stop_name": "Dean Road",
 		"branches": ["C"],
-		"station": null,
+		"station": "place-denrd",
 		"order": 211,
 		"stops": {
 			"northbound": ["70234"],
@@ -734,7 +734,7 @@ export const stations = {
 	}, {
 		"stop_name": "Tappan Street",
 		"branches": ["C"],
-		"station": null,
+		"station": "place-tapst",
 		"order": 210,
 		"stops": {
 			"northbound": ["70232"],
@@ -743,7 +743,7 @@ export const stations = {
 	}, {
 		"stop_name": "Washington Square",
 		"branches": ["C"],
-		"station": null,
+		"station": "place-bcnwa",
 		"order": 209,
 		"stops": {
 			"northbound": ["70230"],
@@ -752,7 +752,7 @@ export const stations = {
 	}, {
 		"stop_name": "Fairbanks Street",
 		"branches": ["C"],
-		"station": null,
+		"station": "place-fbkst",
 		"order": 208,
 		"stops": {
 			"northbound": ["70228"],
@@ -761,7 +761,7 @@ export const stations = {
 	}, {
 		"stop_name": "Brandon Hall",
 		"branches": ["C"],
-		"station": null,
+		"station": "place-bndhl",
 		"order": 207,
 		"stops": {
 			"northbound": ["70226"],
@@ -770,7 +770,7 @@ export const stations = {
 	}, {
 		"stop_name": "Summit Avenue",
 		"branches": ["C"],
-		"station": null,
+		"station": "place-sumav",
 		"order": 206,
 		"stops": {
 			"northbound": ["70224"],
@@ -779,7 +779,7 @@ export const stations = {
 	}, {
 		"stop_name": "Coolidge Corner",
 		"branches": ["C"],
-		"station": null,
+		"station": "place-cool",
 		"order": 205,
 		"stops": {
 			"northbound": ["70220"],
@@ -788,7 +788,7 @@ export const stations = {
 	}, {
 		"stop_name": "Saint Paul Street (C)",
 		"branches": ["C"],
-		"station": null,
+		"station": "place-stpul",
 		"order": 204,
 		"stops": {
 			"northbound": ["70218"],
@@ -797,7 +797,7 @@ export const stations = {
 	}, {
 		"stop_name": "Kent Street",
 		"branches": ["C"],
-		"station": null,
+		"station": "place-kntst",
 		"order": 203,
 		"stops": {
 			"northbound": ["70216"],
@@ -806,7 +806,7 @@ export const stations = {
 	}, {
 		"stop_name": "Hawes Street",
 		"branches": ["C"],
-		"station": null,
+		"station": "place-hwsst",
 		"order": 202,
 		"stops": {
 			"northbound": ["70214"],
@@ -815,7 +815,7 @@ export const stations = {
 	}, {
 		"stop_name": "Saint Marys Street",
 		"branches": ["C"],
-		"station": null,
+		"station": "place-smary",
 		"order": 201,
 		"stops": {
 			"northbound": ["70212"],
@@ -824,7 +824,7 @@ export const stations = {
 	}, {
 		"stop_name": "Government Center",
 		"branches": ["C", "D", "E"],
-		"station": null,
+		"station": "place-gover",
 		"order": 5,
 		"stops": {
 			"northbound": ["70201"],
@@ -833,7 +833,7 @@ export const stations = {
 	}, {
 		"stop_name": "North Station",
 		"branches": ["C", "E"],
-		"station": null,
+		"station": "place-north",
 		"order": 3,
 		"stops": {
 			"northbound": ["70205"],
@@ -851,7 +851,7 @@ export const stations = {
 	}, {
 		"stop_name": "Fenway",
 		"branches": ["D"],
-		"station": null,
+		"station": "place-fenwy",
 		"order": 301,
 		"stops": {
 			"northbound": ["70186"],
@@ -860,7 +860,7 @@ export const stations = {
 	}, {
 		"stop_name": "Longwood",
 		"branches": ["D"],
-		"station": null,
+		"station": "place-longw",
 		"order": 302,
 		"stops": {
 			"northbound": ["70182"],
@@ -869,7 +869,7 @@ export const stations = {
 	}, {
 		"stop_name": "Brookline Village",
 		"branches": ["D"],
-		"station": null,
+		"station": "place-bvmnl",
 		"order": 303,
 		"stops": {
 			"northbound": ["70180"],
@@ -878,7 +878,7 @@ export const stations = {
 	}, {
 		"stop_name": "Brookline Hills",
 		"branches": ["D"],
-		"station": null,
+		"station": "place-brkhl",
 		"order": 304,
 		"stops": {
 			"northbound": ["70178"],
@@ -887,7 +887,7 @@ export const stations = {
 	}, {
 		"stop_name": "Beaconsfield",
 		"branches": ["D"],
-		"station": null,
+		"station": "place-bcnfd",
 		"order": 305,
 		"stops": {
 			"northbound": ["70176"],
@@ -896,7 +896,7 @@ export const stations = {
 	}, {
 		"stop_name": "Reservoir",
 		"branches": ["D"],
-		"station": null,
+		"station": "place-rsmnl",
 		"order": 306,
 		"stops": {
 			"northbound": ["70174"],
@@ -905,7 +905,7 @@ export const stations = {
 	}, {
 		"stop_name": "Chestnut Hill",
 		"branches": ["D"],
-		"station": null,
+		"station": "place-chhil",
 		"order": 307,
 		"stops": {
 			"northbound": ["70172"],
@@ -914,7 +914,7 @@ export const stations = {
 	}, {
 		"stop_name": "Newton Centre",
 		"branches": ["D"],
-		"station": null,
+		"station": "place-newto",
 		"order": 308,
 		"stops": {
 			"northbound": ["70170"],
@@ -923,7 +923,7 @@ export const stations = {
 	}, {
 		"stop_name": "Newton Highlands",
 		"branches": ["D"],
-		"station": null,
+		"station": "place-newtn",
 		"order": 309,
 		"stops": {
 			"northbound": ["70168"],
@@ -932,7 +932,7 @@ export const stations = {
 	}, {
 		"stop_name": "Eliot",
 		"branches": ["D"],
-		"station": null,
+		"station": "place-eliot",
 		"order": 310,
 		"stops": {
 			"northbound": ["70166"],
@@ -941,7 +941,7 @@ export const stations = {
 	}, {
 		"stop_name": "Waban",
 		"branches": ["D"],
-		"station": null,
+		"station": "place-waban",
 		"order": 311,
 		"stops": {
 			"northbound": ["70164"],
@@ -950,7 +950,7 @@ export const stations = {
 	}, {
 		"stop_name": "Woodland",
 		"branches": ["D"],
-		"station": null,
+		"station": "place-woodl",
 		"order": 312,
 		"stops": {
 			"northbound": ["70162"],
@@ -959,7 +959,7 @@ export const stations = {
 	}, {
 		"stop_name": "Riverside",
 		"branches": ["D"],
-		"station": null,
+		"station": "place-river",
 		"order": 313,
 		"stops": {
 			"northbound": ["70160"],
@@ -968,7 +968,7 @@ export const stations = {
 	}, {
 		"stop_name": "Heath Street",
 		"branches": ["E"],
-		"station": null,
+		"station": "place-hsmnl",
 		"order": 411,
 		"stops": {
 			"northbound": ["70260"],
@@ -977,7 +977,7 @@ export const stations = {
 	}, {
 		"stop_name": "Back of the Hill",
 		"branches": ["E"],
-		"station": null,
+		"station": "place-bckhl",
 		"order": 410,
 		"stops": {
 			"northbound": ["70258"],
@@ -986,7 +986,7 @@ export const stations = {
 	}, {
 		"stop_name": "Riverway",
 		"branches": ["E"],
-		"station": null,
+		"station": "place-rvrwy",
 		"order": 409,
 		"stops": {
 			"northbound": ["70256"],
@@ -995,7 +995,7 @@ export const stations = {
 	}, {
 		"stop_name": "Mission Park",
 		"branches": ["E"],
-		"station": null,
+		"station": "place-mispk",
 		"order": 408,
 		"stops": {
 			"northbound": ["70254"],
@@ -1004,7 +1004,7 @@ export const stations = {
 	}, {
 		"stop_name": "Fenwood Road",
 		"branches": ["E"],
-		"station": null,
+		"station": "place-fenwd",
 		"order": 407,
 		"stops": {
 			"northbound": ["70252"],
@@ -1013,7 +1013,7 @@ export const stations = {
 	}, {
 		"stop_name": "Brigham Circle",
 		"branches": ["E"],
-		"station": null,
+		"station": "place-brmnl",
 		"order": 406,
 		"stops": {
 			"northbound": ["70250"],
@@ -1022,7 +1022,7 @@ export const stations = {
 	}, {
 		"stop_name": "Longwood Medical Area",
 		"branches": ["E"],
-		"station": null,
+		"station": "place-lngmd",
 		"order": 405,
 		"stops": {
 			"northbound": ["70248"],
@@ -1031,7 +1031,7 @@ export const stations = {
 	}, {
 		"stop_name": "Museum of Fine Arts",
 		"branches": ["E"],
-		"station": null,
+		"station": "place-mfa",
 		"order": 404,
 		"stops": {
 			"northbound": ["70246"],
@@ -1040,7 +1040,7 @@ export const stations = {
 	}, {
 		"stop_name": "Northeastern University",
 		"branches": ["E"],
-		"station": null,
+		"station": "place-nuniv",
 		"order": 403,
 		"stops": {
 			"northbound": ["70244"],
@@ -1049,7 +1049,7 @@ export const stations = {
 	}, {
 		"stop_name": "Symphony",
 		"branches": ["E"],
-		"station": null,
+		"station": "place-symcl",
 		"order": 402,
 		"stops": {
 			"northbound": ["70242"],
@@ -1058,7 +1058,7 @@ export const stations = {
 	}, {
 		"stop_name": "Prudential",
 		"branches": ["E"],
-		"station": null,
+		"station": "place-prmnl",
 		"order": 401,
 		"stops": {
 			"northbound": ["70240"],
@@ -1067,7 +1067,7 @@ export const stations = {
 	}, {
 		"stop_name": "Lechmere",
 		"branches": ["E"],
-		"station": null,
+		"station": "place-lech",
 		"order": 1,
 		"stops": {
 			"northbound": ["70209"],
@@ -1076,7 +1076,7 @@ export const stations = {
 	}, {
 		"stop_name": "Science Park",
 		"branches": ["E"],
-		"station": null,
+		"station": "place-spmnl",
 		"order": 2,
 		"stops": {
 			"northbound": ["70207"],
