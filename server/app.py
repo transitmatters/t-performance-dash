@@ -45,4 +45,4 @@ def traveltime_route(user_date):
 def alerts_route(user_date):
     route = app.current_request.query_params.get('route')
     parsed_date = destructure_date(user_date)
-    return data_funcs.alerts(date(year=parsed_date['year'], month=parsed_date['month'], day=parsed_date['day']), {'route': route})
+    return data_funcs.alerts(date(year=parsed_date['year'], month=parsed_date['month'], day=parsed_date['day']), {'route': [route]})
