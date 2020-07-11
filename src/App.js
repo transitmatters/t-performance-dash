@@ -2,26 +2,26 @@ import React from 'react';
 import Line from './line';
 import StationConfiguration from './StationConfiguration';
 import { withRouter } from 'react-router-dom';
-import { lookup_station_by_id } from './stations';
+import { lookup_station_by_id, station_direction, get_stop_ids_for_stations } from './stations';
 import { recognize } from './AlertFilter';
 import AlertBar from './AlertBar';
 import './App.css';
+import Select from './Select';
+import { configPresets } from './constants';
 
 const APP_DATA_BASE_PATH = (window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1") ?
   '' : 'https://dashboard-api.transitmatters.org';
 
 const stateFromURL = (config) => {
-  const [ line, direction, from_id, to_id, date, show_alerts ] = config.split(",");
-  const from = lookup_station_by_id(from_id);
-  const to = lookup_station_by_id(to_id);
+  const [line, from_id, to_id, date] = config.split(",");
+  const from = lookup_station_by_id(line, from_id);
+  const to = lookup_station_by_id(line, to_id);
   return {
     line,
-    direction,
     from,
     to,
     date,
-    show_alerts: show_alerts === 'true',
   }
 };
 
@@ -33,11 +33,12 @@ class App extends React.Component {
       configuration: {
         show_alerts: true,
       },
+      error: null,
       headways: [],
       traveltimes: [],
       dwells: [],
-
       alerts: [],
+      datasetLoadingState: {},
     };
 
     const url_config = new URLSearchParams(props.location.search).get("config");
@@ -57,14 +58,17 @@ class App extends React.Component {
     this.download = this.download.bind(this);
     this.updateConfiguration = this.updateConfiguration.bind(this);
     this.chartTimeframe = this.chartTimeframe.bind(this);
+    this.setIsLoadingDataset = this.setIsLoadingDataset.bind(this);
+    this.getIsLoadingDataset = this.getIsLoadingDataset.bind(this);
   }
 
   componentDidMount() {
     this.download();
   }
 
-  updateConfiguration(config_change, refetch) {
+  updateConfiguration(config_change, refetch = true) {
     let update = {
+      error: null,
       configuration: {
         ...this.state.configuration,
         ...config_change
@@ -86,57 +90,84 @@ class App extends React.Component {
   }
 
   stateToURL() {
-    const { line, direction, from, to, date, show_alerts } = this.state.configuration;
-    this.props.history.push(`/rapidtransit?config=${line || ""},${direction || ""},${from?.stop_id || ""},${to?.stop_id || ""},${date || ""},${show_alerts}`, this.state.configuration);
+    const { line, from, to, date, } = this.state.configuration;
+    const parts = [
+      line,
+      from?.stops.southbound,
+      to?.stops.southbound,
+      date
+    ].map(x => x || "").join(",");
+    this.props.history.push(`/rapidtransit?config=${parts}`, this.state.configuration);
   }
 
   fetchDataset(name, options) {
     let url = new URL(`${APP_DATA_BASE_PATH}/${name}/${this.state.configuration.date}`, window.location.origin);
     Object.keys(options).forEach(key => url.searchParams.append(key, options[key]));
 
+    this.setIsLoadingDataset(name, true);
+
     fetch(url)
       .then(resp => resp.json())
       .then(data => {
+        this.setIsLoadingDataset(name, false);
         this.setState({
           [name]: data
         });
       });
   }
 
+  setIsLoadingDataset(name, isLoading) {
+    this.setState(currentState => {
+      const { datasetLoadingState } = currentState;
+      return {
+        datasetLoadingState: {
+          ...datasetLoadingState,
+          [name]: isLoading
+        }
+      }
+    });
+  }
+
+  getIsLoadingDataset(name) {
+    return this.state.datasetLoadingState[name];
+  }
+
   download() {
-    if (this.state.configuration.date && this.state.configuration.direction && this.state.configuration.from) {
+    const { configuration } = this.state;
+    const { fromStopId, toStopId } = get_stop_ids_for_stations(configuration.from, configuration.to);
+    if (configuration.date && fromStopId && toStopId) {
       this.fetchDataset('headways', {
-        station: this.state.configuration.from.stop_id,
+        station: fromStopId,
       });
       this.fetchDataset('dwells', {
-        station: this.state.configuration.from.stop_id,
+        station: fromStopId,
       });
-      
+
       if (this.state.configuration.to) {
         this.fetchDataset('traveltimes', {
-          station_from: this.state.configuration.from.stop_id,
-          station_to: this.state.configuration.to.stop_id,
+          station_from: fromStopId,
+          station_to: toStopId,
         });
       }
 
-      if (this.state.configuration.line && this.state.configuration.date) {
+      if (configuration.line && configuration.date) {
         this.setState({
           alerts: null,
         });
         this.fetchDataset('alerts', {
-          route: this.state.configuration.line,
+          route: configuration.line,
         });
       }
     }
   }
 
-  graphTitle(prefix, from, to, direction) {
-    const direction_display = direction ? ` ${direction}bound` : "";
-    if(from && to) {
-      return `${prefix} from ${from.stop_name} to ${to.stop_name}`;
-    }
-    else if(from) {
-      return `${prefix} at ${from.stop_name},${direction_display}`;
+  graphTitle(prefix, showDirection, showTo) {
+    const { from, to, line } = this.state.configuration;
+    if (from && to) {
+      const direction = showDirection ? ` ${station_direction(from, to, line)}` : ""
+      const preposition = showTo ? "from" : "at";
+      const suffix = showTo ? `to ${to.station_name}` : "";
+      return `${prefix} ${preposition} ${from.station_name}${direction} ${suffix}`;
     }
     return prefix;
   }
@@ -149,63 +180,105 @@ class App extends React.Component {
     return [];
   }
 
+  componentDidCatch(error) {
+    this.setState(currentState => {
+      const { configuration } = currentState;
+      return {
+        error,
+        configuration: {
+          ...configuration,
+          to: null,
+          from: null,
+        }
+      }
+    });
+  }
+
+  renderEmptyState(withError) {
+    return <div className="main-column">
+      <div className="empty-state">
+        {withError && <>There was an error loading data for this date. Maybe try one of these?</>}
+        {!withError && <>See MBTA rapid transit performance data, including travel times between stations, headways,
+        and dwell times, for any given day. Looking for something interesting? Try one of these dates.</>}
+        <Select
+          onChange={value => {
+            const { line, date, from, to } = value;
+            this.updateConfiguration({ line, date }, false);
+            setTimeout(() => this.updateConfiguration({ from, to }));
+          }}
+          options={configPresets}
+          className="date-selector"
+          defaultLabel="Choose a date..."
+        />
+      </div>
+    </div>
+  }
+
+  renderCharts() {
+    return <div className='charts main-column'>
+      <Line
+        title={this.graphTitle('Travel times', false, true)}
+        tooltipUnit={"travel time"}
+        seriesName={'traveltimes'}
+        isLoading={this.getIsLoadingDataset('traveltimes')}
+        data={this.state.traveltimes}
+        xField={'dep_dt'}
+        xFieldLabel={'Time of day'}
+        yField={'travel_time_sec'}
+        yFieldLabel={'Minutes'}
+        benchmarkField={'benchmark_travel_time_sec'}
+        legend={true}
+      />
+      <Line
+        title={this.graphTitle('Time between trains (headways)', true, false)}
+        tooltipUnit={"headway"}
+        seriesName={'headways'}
+        isLoading={this.getIsLoadingDataset('headways')}
+        data={this.state.headways}
+        xField={'current_dep_dt'}
+        xFieldLabel={'Time of day'}
+        yField={'headway_time_sec'}
+        yFieldLabel={'Minutes'}
+        benchmarkField={'benchmark_headway_time_sec'}
+        legend={true}
+      />
+      <Line
+        title={this.graphTitle('Time spent at station (dwells)', true, false)}
+        tooltipUnit={"dwell time"}
+        seriesName={'dwells'}
+        isLoading={this.getIsLoadingDataset('dwells')}
+        data={this.state.dwells}
+        xField={'arr_dt'}
+        xFieldLabel={'Time of day'}
+        yField={'dwell_time_sec'}
+        yFieldLabel={'Minutes'}
+        benchmarkField={null}
+      />
+    </div>
+  }
+
   render() {
+    const { configuration, error } = this.state;
+    const { from, to, date } = configuration;
+    const canShowCharts = from && to && !error;
+    const canShowAlerts = from && to && date;
     const recognized_alerts = this.state.alerts?.filter(recognize);
+    const hasNoLoadedCharts = ['traveltimes', 'dwells', 'headways']
+      .every(kind => this.getIsLoadingDataset(kind));
+
     return (
       <div className='App'>
-        <div id='options'>
-          <StationConfiguration current={this.state.configuration} onConfigurationChange={this.updateConfiguration} />
-        </div>
-        <div className='right-container'>
-          {this.state.configuration.show_alerts &&
-            <AlertBar
+        <div className="top-sticky-container">
+          <StationConfiguration current={configuration} onConfigurationChange={this.updateConfiguration} />
+          {canShowAlerts && <AlertBar
             alerts={recognized_alerts}
             timeframe={this.chartTimeframe()}
-            />
-          }
-          <div className='charts'>
-            <Line
-              title={this.graphTitle('Travel times', this.state.configuration.from, this.state.configuration.to, this.state.configuration.direction)}
-              tooltipUnit={"travel time"}
-              seriesName={'traveltimes'}
-              data={this.state.traveltimes}
-              xField={'dep_dt'}
-              xFieldLabel={'Time of day'}
-              yField={'travel_time_sec'}
-              yFieldLabel={'Minutes'}
-              benchmarkField={'benchmark_travel_time_sec'}
-              alerts={this.state.configuration.show_alerts ? recognized_alerts : []}
-              legend={true}
-            />
-
-            <Line
-              title={this.graphTitle('Time between trains (headways)', this.state.configuration.from, null, this.state.configuration.direction)}
-              tooltipUnit={"headway"}
-              seriesName={'headways'}
-              data={this.state.headways}
-              xField={'current_dep_dt'}
-              xFieldLabel={'Time of day'}
-              yField={'headway_time_sec'}
-              yFieldLabel={'Minutes'}
-              benchmarkField={'benchmark_headway_time_sec'}
-              alerts={this.state.configuration.show_alerts ? recognized_alerts : []}
-              legend={true}
-            />
-
-            <Line
-              title={this.graphTitle('Time spent at station (dwells)', this.state.configuration.from, null, this.state.configuration.direction)}
-              tooltipUnit={"dwell time"}
-              seriesName={'dwells'}
-              data={this.state.dwells}
-              xField={'arr_dt'}
-              xFieldLabel={'Time of day'}
-              yField={'dwell_time_sec'}
-              yFieldLabel={'Minutes'}
-              benchmarkField={null}
-              alerts={this.state.configuration.show_alerts ? recognized_alerts : []}
-            />
-            </div>
+            isLoading={this.getIsLoadingDataset("alerts")}
+            isHidden={hasNoLoadedCharts}
+          />}
         </div>
+        {!canShowCharts && this.renderEmptyState(error)}
+        {canShowCharts && this.renderCharts()}
       </div>
     );
   }

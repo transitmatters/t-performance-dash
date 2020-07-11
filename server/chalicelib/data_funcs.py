@@ -2,7 +2,7 @@ import datetime
 import pytz
 from chalicelib import MbtaPerformanceAPI
 
-DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+DATE_FORMAT = "%Y/%m/%d %H:%M:%S"
 
 def stamp_to_dt(stamp):
     return datetime.datetime.fromtimestamp(stamp, pytz.timezone("America/New_York"))

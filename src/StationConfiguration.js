@@ -1,28 +1,24 @@
 import React from 'react';
-import Select from 'react-select';
+import classNames from 'classnames';
 import flatpickr from 'flatpickr';
-import 'flatpickr/dist/themes/material_blue.css';
-import { all_lines, options_station, options_direction } from './stations';
+import 'flatpickr/dist/themes/light.css';
+
+import Select from './Select';
+import { all_lines, options_station } from './stations';
 
 const options_lines = all_lines().map((line) => {
   return {
     value: line,
-    label: line
+    label: line.charAt(0) + line.slice(1) + ' Line',
   }
 });
 
-const options_direction_ui = (line) => options_direction(line).map((direction) => {
-  return {
-    value: direction,
-    label: direction
-  }
-});
-
-const options_station_ui = (line, direction, from) => {
-  return options_station(line, direction, from).map((station) => {
+const options_station_ui = (line) => {
+  return options_station(line).map((station) => {
     return {
       value: station,
-      label: station.stop_name
+      disabled: station.disabled,
+      label: station.station_name
     }
   })
 };
@@ -33,7 +29,7 @@ export default class StationConfiguration extends React.Component {
     this.flatpickr = React.createRef();
 
     this.handleSelectDate = this.handleSelectDate.bind(this);
-    this.toggleAlerts = this.toggleAlerts.bind(this);
+    this.handleSwapStations = this.handleSwapStations.bind(this);
   }
 
   componentDidMount() {
@@ -47,82 +43,92 @@ export default class StationConfiguration extends React.Component {
   handleSelectDate(_, dateStr, __) {
     this.props.onConfigurationChange({
       date: dateStr
-    }, true);
+    });
   }
 
   handleSelectOption(field) {
-    return (change) => {
+    return (value) => {
       this.props.onConfigurationChange({
-        [field]: change.value,
-      }, true);
+        [field]: value,
+      });
     };
   }
 
-  toggleAlerts() {
+  handleSwapStations() {
+    const fromValue = this.decode("from");
+    const toValue = this.decode("to");
     this.props.onConfigurationChange({
-      show_alerts: !this.props.current.show_alerts,
-    }, false);
+      from: toValue,
+      to: fromValue
+    });
   }
 
   decode(property) {
-    if (!this.props.current[property]) {
-      return null;
-    }
-
-    if (property === "line" || property === "direction") {
-      return {
-        value: this.props.current[property],
-        label: this.props.current[property]
-      }
-    }
-    else if (property === "date") {
-      return this.props.current[property];
-    }
-    else return {
-      value: this.props.current[property],
-      label: this.props.current[property].stop_name,
-    }
+    return this.props.current[property] || null;
   }
 
   optionsForField(type) {
     if (type === "line") {
       return options_lines;
     }
-    if (type === "direction" && this.props.current.line) {
-      return options_direction_ui(this.props.current.line);
+    if (type === "from") {
+      const toStation = this.decode("to");
+      return options_station_ui(this.props.current.line).filter(entry => entry.value !== toStation);
     }
-    if (type === "from" && this.props.current.direction) {
-      return options_station_ui(this.props.current.line, this.props.current.direction, null);
-    }
-    if (type === "to" && this.props.current.from) {
-      return options_station_ui(this.props.current.line, this.props.current.direction, this.props.current.from);
+    if (type === "to") {
+      const fromStation = this.decode("from");
+      return options_station_ui(this.props.current.line).filter(entry => entry.value !== fromStation);
     }
   }
 
   render() {
+    const currentLine = this.decode("line");
     return (
-      <div>
-        <div className="option">
-          <div className='picker-line'>
-            Line<Select value={this.decode("line")} options={this.optionsForField("line")} onChange={this.handleSelectOption("line")} />
+      <div className={classNames('station-configuration-wrapper', currentLine)}>
+        <div className="station-configuration main-column">
+          <div className="option option-line">
+            <Select
+              value={this.decode("line")}
+              options={this.optionsForField("line")}
+              onChange={this.handleSelectOption("line")}
+              defaultLabel="Select a line..."
+            />
           </div>
-          <div className='picker-direction'>
-            Direction<Select value={this.decode("direction")} options={this.optionsForField("direction")} onChange={this.handleSelectOption("direction")} />
-          </div>
-        </div>
 
-        <div className="option">
-          <div className='picker-station'>
-            From<Select value={this.decode("from")} options={this.optionsForField("from")} onChange={this.handleSelectOption("from")} /> to <Select value={this.decode("to")} options={this.optionsForField("to")} onChange={this.handleSelectOption("to")} />
+          <div className="option-group option-stations-group">
+            <div className="option option-from-station">
+              <span className="from-to-label">From</span>
+              <Select
+                value={this.decode("from")}
+                options={this.optionsForField("from")}
+                onChange={this.handleSelectOption("from")}
+                defaultLabel="Select a station..."
+              />
+            </div>
+            <div className="option option-to-station">
+              <span className="from-to-label">To</span>
+              <Select
+                value={this.decode("to")}
+                options={this.optionsForField("to")}
+                onChange={this.handleSelectOption("to")}
+                defaultLabel="Select a station..."
+              />
+            </div>
+          </div>
+          <button className="swap-stations-button" onClick={this.handleSwapStations} disabled={!currentLine}>
+            <div className="swap-icon" />
+            <div className="swap-label">Swap</div>
+          </button>
+          <div className="option option-date">
+            <span className="date-label">Date</span>
+            <input
+              defaultValue={this.decode("date")}
+              onChange={() => { }} type='date'
+              ref={this.flatpickr}
+              placeholder='Select date...'
+            />
           </div>
         </div>
-
-        <div className="option">
-          <div className='picker-date'>
-            Date <input defaultValue={this.decode("date")} onChange={() => {}} type='date' ref={this.flatpickr} placeholder='Select date...' />
-          </div>
-        </div>
-        <input type="checkbox" checked={this.props.current.show_alerts || false} onChange={this.toggleAlerts} /> Show incidents
       </div>
     );
   }

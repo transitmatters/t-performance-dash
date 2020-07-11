@@ -1,16 +1,17 @@
 import React from 'react';
+import classNames from 'classnames';
 import { Line } from 'react-chartjs-2';
 import Legend from './Legend';
 
 const departure_from_normal_string = (metric, benchmark) => {
-  const ratio = metric/benchmark;
-  if(ratio <= 1.25) {
+  const ratio = metric / benchmark;
+  if (ratio <= 1.25) {
     return '';
   }
-  else if(ratio <= 1.5) {
+  else if (ratio <= 1.5) {
     return '>25% longer than normal';
   }
-  else if(ratio > 1.5) {
+  else if (ratio > 1.5) {
     return '>50% longer than normal';
   }
 
@@ -18,14 +19,14 @@ const departure_from_normal_string = (metric, benchmark) => {
 
 const point_colors = (data, metric_field, benchmark_field) => {
   return data.map(point => {
-    const ratio = point[metric_field]/point[benchmark_field];
-    if(ratio <= 1.25) {
+    const ratio = point[metric_field] / point[benchmark_field];
+    if (ratio <= 1.25) {
       return '#75c400'; //green
     }
-    else if(ratio <= 1.5) {
+    else if (ratio <= 1.5) {
       return '#e5a70b'; //yellow
     }
-    else if(ratio > 1.5) {
+    else if (ratio > 1.5) {
       return '#e53a0b'; //red
     }
 
@@ -64,10 +65,10 @@ class LineClass extends React.Component {
     //     }
     //   }
     // });
-
+    const { isLoading } = this.props;
     let labels = this.props.data.map(item => item[this.props.xField]);
     return (
-      <div className="chart">
+      <div className={classNames('chart', isLoading && 'is-loading')}>
         <div className="chart-container">
           <Line
             legend={{ display: false }}
@@ -87,7 +88,7 @@ class LineClass extends React.Component {
                 },
                 {
                   label: `${this.props.seriesName}_benchmark`,
-                  data: this.props.data.map(item => item[this.props.benchmarkField]/60),
+                  data: this.props.data.map(item => item[this.props.benchmarkField] / 60),
                   pointRadius: 0
                 }
               ]

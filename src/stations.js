@@ -1,37 +1,42 @@
 import { stations } from './constants';
 
 const all_lines = () => {
-  return [...new Set(stations.map(station => station.line))];
+  return Object.keys(stations);
 };
 
-const lookup_station_by_id = (id) => {
-  return stations.filter(x => x.stop_id === id)[0];
+const lookup_station_by_id = (line, id) => {
+  return stations[line].find(x => [x.stops.northbound, x.stops.southbound].includes(id));
 };
 
-const options_direction = (line) => {
-  return [...new Set(stations.filter(station => station.line === line).map(station => station.direction))];
-};
-
-const options_station = (line, direction, station_orig = null) => {
-  // Find options from a certain station
-  if (station_orig !== null) {
-    const station_array = stations.filter(x => x.stop_id === station_orig.stop_id && x.direction === direction);
-    if (station_array.length !== 1) {
-      return [];
-    }
-    const selectable = stations.filter(x => x.line === line && x.direction === direction && x.stop_order > station_orig.stop_order);
-    return selectable;
-
+const options_station = (line) => {
+  if (!line) {
+    return [];
   }
-  else {
-    // Find all options
-    return stations.filter(x => x.line === line && x.direction === direction);
-  }
+  return stations[line];
 };
+
+const station_direction = (from, to, line) => {
+  if (from.order === to.order) {
+    return "";
+  }
+  return from.order > to.order ? "northbound" : "southbound";
+}
+
+const get_stop_ids_for_stations = (from, to) => {
+  if (!from || !to) {
+    return { fromStopId: null, toStopId: null };
+  }
+  const isSouthbound = from.order < to.order;
+  return {
+    fromStopId: isSouthbound ? from.stops.southbound : from.stops.northbound,
+    toStopId: isSouthbound ? to.stops.southbound : to.stops.northbound,
+  }
+}
 
 export {
   all_lines,
-  options_direction,
   options_station,
+  station_direction,
   lookup_station_by_id,
+  get_stop_ids_for_stations,
 };
