@@ -1,343 +1,1088 @@
 export const stations = {
-  Red: [
-    {
-      station_name: "Alewife",
-      order: 1,
-      stops: { northbound: "70061", southbound: "70061" },
-    },
-    {
-      station_name: "Davis",
-      order: 2,
-      stops: { northbound: "70064", southbound: "70063" },
-    },
-    {
-      station_name: "Porter",
-      order: 3,
-      stops: { northbound: "70066", southbound: "70065" },
-    },
-    {
-      station_name: "Harvard",
-      order: 4,
-      stops: { northbound: "70068", southbound: "70067" },
-    },
-    {
-      station_name: "Central",
-      order: 5,
-      stops: { northbound: "70070", southbound: "70069" },
-    },
-    {
-      station_name: "Kendall/MIT",
-      order: 6,
-      stops: { northbound: "70072", southbound: "70071" },
-    },
-    {
-      station_name: "Charles/MGH",
-      order: 7,
-      stops: { northbound: "70074", southbound: "70073" },
-    },
-    {
-      station_name: "Park Street",
-      order: 8,
-      stops: { northbound: "70076", southbound: "70075" },
-    },
-    {
-      station_name: "Downtown Crossing",
-      order: 9,
-      stops: { northbound: "70078", southbound: "70077" },
-    },
-    {
-      station_name: "South Station",
-      order: 10,
-      stops: { northbound: "70080", southbound: "70079" },
-    },
-    {
-      station_name: "Broadway",
-      order: 11,
-      stops: { northbound: "70082", southbound: "70081" },
-    },
-    {
-      station_name: "Andrew",
-      order: 12,
-      stops: { northbound: "70084", southbound: "70083" },
-    },
-    {
-      station_name: "JFK/UMass (Ashmont)",
-      order: 13,
-      stops: { northbound: "70086", southbound: "70085" },
-    },
-    {
-      station_name: "JFK/UMass (Braintree)",
-      order: 13,
-      stops: { northbound: "70096", southbound: "70095" },
-    },
-    {
-      station_name: "Savin Hill",
-      order: 14,
-      stops: { northbound: "70088", southbound: "70087" },
-    },
-    {
-      station_name: "North Quincy",
-      order: 14,
-      stops: { northbound: "70098", southbound: "70097" },
-    },
-    {
-      station_name: "Fields Corner",
-      order: 15,
-      stops: { northbound: "70090", southbound: "70089" },
-    },
-    {
-      station_name: "Wollaston",
-      order: 15,
-      stops: { northbound: "70100", southbound: "70099" },
-    },
-    {
-      station_name: "Shawmut",
-      order: 16,
-      stops: { northbound: "70092", southbound: "70091" },
-    },
-    {
-      station_name: "Quincy Center",
-      order: 16,
-      stops: { northbound: "70102", southbound: "70101" },
-    },
-    {
-      station_name: "Ashmont",
-      order: 17,
-      stops: { northbound: "70094", southbound: "70093" },
-    },
-    {
-      station_name: "Quincy Adams",
-      order: 17,
-      stops: { northbound: "70104", southbound: "70103" },
-    },
-    {
-      station_name: "Braintree",
-      order: 18,
-      stops: { northbound: "70105", southbound: "70105" },
-    },
-  ],
-  Blue: [
-    {
-      station_name: "Wonderland",
-      order: 1,
-      stops: { northbound: "70060", southbound: "70059" },
-    },
-    {
-      station_name: "Revere Beach",
-      order: 2,
-      stops: { northbound: "70058", southbound: "70057" },
-    },
-    {
-      station_name: "Beachmont",
-      order: 3,
-      stops: { northbound: "70056", southbound: "70055" },
-    },
-    {
-      station_name: "Suffolk Downs",
-      order: 4,
-      stops: { northbound: "70054", southbound: "70053" },
-    },
-    {
-      station_name: "Orient Heights",
-      order: 5,
-      stops: { northbound: "70052", southbound: "70051" },
-    },
-    {
-      station_name: "Wood Island",
-      order: 6,
-      stops: { northbound: "70050", southbound: "70049" },
-    },
-    {
-      station_name: "Airport",
-      order: 7,
-      stops: { northbound: "70048", southbound: "70047" },
-    },
-    {
-      station_name: "Maverick",
-      order: 8,
-      stops: { northbound: "70046", southbound: "70045" },
-    },
-    {
-      station_name: "Aquarium",
-      order: 9,
-      stops: { northbound: "70044", southbound: "70043" },
-    },
-    {
-      station_name: "State Street",
-      order: 10,
-      stops: { northbound: "70042", southbound: "70041" },
-    },
-    {
-      station_name: "Government Center",
-      order: 11,
-      stops: { northbound: "70040", southbound: "70039" },
-    },
-    {
-      station_name: "Bowdoin",
-      order: 12,
-      stops: { northbound: "70038", southbound: "70838" },
-    },
-  ],
-  Orange: [
-    {
-      station_name: "Oak Grove",
-      order: 1,
-      stops: { northbound: "70036", southbound: "70036" },
-    },
-    {
-      station_name: "Malden Center",
-      order: 2,
-      stops: { northbound: "70035", southbound: "70034" },
-    },
-    {
-      station_name: "Wellington",
-      order: 3,
-      stops: { northbound: "70033", southbound: "70032" },
-    },
-    {
-      station_name: "Assembly",
-      order: 4,
-      stops: { northbound: "70279", southbound: "70278" },
-    },
-    {
-      station_name: "Sullivan Square",
-      order: 5,
-      stops: { northbound: "70031", southbound: "70030" },
-    },
-    {
-      station_name: "Community College",
-      order: 6,
-      stops: { northbound: "70029", southbound: "70028" },
-    },
-    {
-      station_name: "North Station",
-      order: 7,
-      stops: { northbound: "70027", southbound: "70026" },
-    },
-    {
-      station_name: "Haymarket",
-      order: 8,
-      stops: { northbound: "70025", southbound: "70024" },
-    },
-    {
-      station_name: "State Street",
-      order: 9,
-      stops: { northbound: "70023", southbound: "70022" },
-    },
-    {
-      station_name: "Downtown Crossing",
-      order: 10,
-      stops: { northbound: "70021", southbound: "70020" },
-    },
-    {
-      station_name: "Chinatown",
-      order: 11,
-      stops: { northbound: "70019", southbound: "70018" },
-    },
-    {
-      station_name: "Tufts Medical Center",
-      order: 12,
-      stops: { northbound: "70017", southbound: "70016" },
-    },
-    {
-      station_name: "Back Bay",
-      order: 13,
-      stops: { northbound: "70015", southbound: "70014" },
-    },
-    {
-      station_name: "Massachusetts Avenue",
-      order: 14,
-      stops: { northbound: "70013", southbound: "70012" },
-    },
-    {
-      station_name: "Ruggles",
-      order: 15,
-      stops: { northbound: "70011", southbound: "70010" },
-    },
-    {
-      station_name: "Roxbury Crossing",
-      order: 16,
-      stops: { northbound: "70009", southbound: "70008" },
-    },
-    {
-      station_name: "Jackson Square",
-      order: 17,
-      stops: { northbound: "70007", southbound: "70006" },
-    },
-    {
-      station_name: "Stony Brook",
-      order: 18,
-      stops: { northbound: "70005", southbound: "70004" },
-    },
-    {
-      station_name: "Green Street",
-      order: 19,
-      stops: { northbound: "70003", southbound: "70002" },
-    },
-    {
-      station_name: "Forest Hills",
-      order: 20,
-      stops: { northbound: "70001", southbound: "70001" },
-    },
-  ],
-  Green: [
-    {
-      station_name: "Lechmere",
-      order: 1,
-      stops: { northbound: "70209", southbound: "70210" },
-    },
-    {
-      station_name: "Science Park",
-      order: 2,
-      stops: { northbound: "70207", southbound: "70208" },
-    },
-    {
-      station_name: "North Station",
-      order: 3,
-      stops: { northbound: "70205", southbound: "70206" },
-    },
-    {
-      station_name: "Haymarket",
-      order: 4,
-      stops: { northbound: "70203", southbound: "70204" },
-    },
-    {
-      station_name: "Government Center",
-      order: 5,
-      stops: { northbound: "70201", southbound: "70202" },
-    },
-    {
-      station_name: "Park Street",
-      order: 6,
-      disabled: true,
-      stops: { northbound: "70200", southbound: "70196, 70197, 70198, 70199" },
-    },
-    {
-      station_name: "Boylston",
-      order: 7,
-      stops: { northbound: "70158", southbound: "70159" },
-    },
-    {
-      station_name: "Arlington",
-      order: 8,
-      stops: { northbound: "70156", southbound: "70157" },
-    },
-    {
-      station_name: "Copley",
-      order: 9,
-      stops: { northbound: "70154", southbound: "70155" },
-    },
-    {
-      station_name: "Hynes",
-      order: 10,
-      stops: { northbound: "70152", southbound: "70153" },
-    },
-    {
-      station_name: "Kenmore",
-      order: 11,
-      stops: { northbound: "70150", southbound: "70151" },
-    },
-  ],
+	"Red": [{
+		"stop_name": "Alewife",
+		"branches": ["A", "B"],
+		"station": null,
+		"order": 1,
+		"stops": {
+			"northbound": ["70061"],
+			"southbound": ["70061"]
+		}
+	}, {
+		"stop_name": "Davis",
+		"branches": ["A", "B"],
+		"station": null,
+		"order": 2,
+		"stops": {
+			"northbound": ["70064"],
+			"southbound": ["70063"]
+		}
+	}, {
+		"stop_name": "Porter",
+		"branches": ["A", "B"],
+		"station": null,
+		"order": 3,
+		"stops": {
+			"northbound": ["70066"],
+			"southbound": ["70065"]
+		}
+	}, {
+		"stop_name": "Harvard",
+		"branches": ["A", "B"],
+		"station": null,
+		"order": 4,
+		"stops": {
+			"northbound": ["70068"],
+			"southbound": ["70067"]
+		}
+	}, {
+		"stop_name": "Central",
+		"branches": ["A", "B"],
+		"station": null,
+		"order": 5,
+		"stops": {
+			"northbound": ["70070"],
+			"southbound": ["70069"]
+		}
+	}, {
+		"stop_name": "Kendall/MIT",
+		"branches": ["A", "B"],
+		"station": null,
+		"order": 6,
+		"stops": {
+			"northbound": ["70072"],
+			"southbound": ["70071"]
+		}
+	}, {
+		"stop_name": "Charles/MGH",
+		"branches": ["A", "B"],
+		"station": null,
+		"order": 7,
+		"stops": {
+			"northbound": ["70074"],
+			"southbound": ["70073"]
+		}
+	}, {
+		"stop_name": "Park Street",
+		"branches": ["A", "B"],
+		"station": null,
+		"order": 8,
+		"stops": {
+			"northbound": ["70076"],
+			"southbound": ["70075"]
+		}
+	}, {
+		"stop_name": "Downtown Crossing",
+		"branches": ["A", "B"],
+		"station": null,
+		"order": 9,
+		"stops": {
+			"northbound": ["70078"],
+			"southbound": ["70077"]
+		}
+	}, {
+		"stop_name": "South Station",
+		"branches": ["A", "B"],
+		"station": null,
+		"order": 10,
+		"stops": {
+			"northbound": ["70080"],
+			"southbound": ["70079"]
+		}
+	}, {
+		"stop_name": "Broadway",
+		"branches": ["A", "B"],
+		"station": null,
+		"order": 11,
+		"stops": {
+			"northbound": ["70082"],
+			"southbound": ["70081"]
+		}
+	}, {
+		"stop_name": "Andrew",
+		"branches": ["A", "B"],
+		"station": "place-andrw",
+		"order": 12,
+		"stops": {
+			"northbound": ["70084"],
+			"southbound": ["70083"]
+		}
+	}, {
+		"stop_name": "JFK/UMass (Ashmont)",
+		"branches": ["A"],
+		"station": null,
+		"order": 101,
+		"stops": {
+			"northbound": ["70086"],
+			"southbound": ["70085"]
+		}
+	}, {
+		"stop_name": "Savin Hill",
+		"branches": ["A"],
+		"station": null,
+		"order": 102,
+		"stops": {
+			"northbound": ["70088"],
+			"southbound": ["70087"]
+		}
+	}, {
+		"stop_name": "Fields Corner",
+		"branches": ["A"],
+		"station": null,
+		"order": 103,
+		"stops": {
+			"northbound": ["70090"],
+			"southbound": ["70089"]
+		}
+	}, {
+		"stop_name": "Shawmut",
+		"branches": ["A"],
+		"station": null,
+		"order": 104,
+		"stops": {
+			"northbound": ["70092"],
+			"southbound": ["70091"]
+		}
+	}, {
+		"stop_name": "Ashmont",
+		"branches": ["A"],
+		"station": null,
+		"order": 105,
+		"stops": {
+			"northbound": ["70094"],
+			"southbound": ["70093"]
+		}
+	}, {
+		"stop_name": "JFK/UMass (Braintree)",
+		"branches": ["B"],
+		"station": null,
+		"order": 201,
+		"stops": {
+			"northbound": ["70096"],
+			"southbound": ["70095"]
+		}
+	}, {
+		"stop_name": "North Quincy",
+		"branches": ["B"],
+		"station": null,
+		"order": 202,
+		"stops": {
+			"northbound": ["70098"],
+			"southbound": ["70097"]
+		}
+	}, {
+		"stop_name": "Quincy Center",
+		"branches": ["B"],
+		"station": null,
+		"order": 203,
+		"stops": {
+			"northbound": ["70102"],
+			"southbound": ["70101"]
+		}
+	}, {
+		"stop_name": "Quincy Adams",
+		"branches": ["B"],
+		"station": null,
+		"order": 204,
+		"stops": {
+			"northbound": ["70104"],
+			"southbound": ["70103"]
+		}
+	}, {
+		"stop_name": "Braintree",
+		"branches": ["B"],
+		"station": null,
+		"order": 205,
+		"stops": {
+			"northbound": ["70105"],
+			"southbound": ["70105"]
+		}
+	}],
+	"Orange": [{
+		"stop_name": "Oak Grove",
+		"branches": null,
+		"station": null,
+		"order": 1,
+		"stops": {
+			"northbound": ["70036"],
+			"southbound": ["70036"]
+		}
+	}, {
+		"stop_name": "Malden Center",
+		"branches": null,
+		"station": null,
+		"order": 2,
+		"stops": {
+			"northbound": ["70035"],
+			"southbound": ["70034"]
+		}
+	}, {
+		"stop_name": "Wellington",
+		"branches": null,
+		"station": null,
+		"order": 3,
+		"stops": {
+			"northbound": ["70033"],
+			"southbound": ["70032"]
+		}
+	}, {
+		"stop_name": "Assembly",
+		"branches": null,
+		"station": null,
+		"order": 4,
+		"stops": {
+			"northbound": ["70279"],
+			"southbound": ["70278"]
+		}
+	}, {
+		"stop_name": "Sullivan Square",
+		"branches": null,
+		"station": null,
+		"order": 5,
+		"stops": {
+			"northbound": ["70031"],
+			"southbound": ["70030"]
+		}
+	}, {
+		"stop_name": "Community College",
+		"branches": null,
+		"station": null,
+		"order": 6,
+		"stops": {
+			"northbound": ["70029"],
+			"southbound": ["70028"]
+		}
+	}, {
+		"stop_name": "North Station",
+		"branches": null,
+		"station": null,
+		"order": 7,
+		"stops": {
+			"northbound": ["70027"],
+			"southbound": ["70026"]
+		}
+	}, {
+		"stop_name": "Haymarket",
+		"branches": null,
+		"station": null,
+		"order": 8,
+		"stops": {
+			"northbound": ["70025"],
+			"southbound": ["70024"]
+		}
+	}, {
+		"stop_name": "State Street",
+		"branches": null,
+		"station": null,
+		"order": 9,
+		"stops": {
+			"northbound": ["70023"],
+			"southbound": ["70022"]
+		}
+	}, {
+		"stop_name": "Downtown Crossing",
+		"branches": null,
+		"station": null,
+		"order": 10,
+		"stops": {
+			"northbound": ["70021"],
+			"southbound": ["70020"]
+		}
+	}, {
+		"stop_name": "Chinatown",
+		"branches": null,
+		"station": null,
+		"order": 11,
+		"stops": {
+			"northbound": ["70019"],
+			"southbound": ["70018"]
+		}
+	}, {
+		"stop_name": "Tufts Medical Center",
+		"branches": null,
+		"station": null,
+		"order": 12,
+		"stops": {
+			"northbound": ["70017"],
+			"southbound": ["70016"]
+		}
+	}, {
+		"stop_name": "Back Bay",
+		"branches": null,
+		"station": null,
+		"order": 13,
+		"stops": {
+			"northbound": ["70015"],
+			"southbound": ["70014"]
+		}
+	}, {
+		"stop_name": "Massachusetts Avenue",
+		"branches": null,
+		"station": null,
+		"order": 14,
+		"stops": {
+			"northbound": ["70013"],
+			"southbound": ["70012"]
+		}
+	}, {
+		"stop_name": "Ruggles",
+		"branches": null,
+		"station": null,
+		"order": 15,
+		"stops": {
+			"northbound": ["70011"],
+			"southbound": ["70010"]
+		}
+	}, {
+		"stop_name": "Roxbury Crossing",
+		"branches": null,
+		"station": null,
+		"order": 16,
+		"stops": {
+			"northbound": ["70009"],
+			"southbound": ["70008"]
+		}
+	}, {
+		"stop_name": "Jackson Square",
+		"branches": null,
+		"station": null,
+		"order": 17,
+		"stops": {
+			"northbound": ["70007"],
+			"southbound": ["70006"]
+		}
+	}, {
+		"stop_name": "Stony Brook",
+		"branches": null,
+		"station": null,
+		"order": 18,
+		"stops": {
+			"northbound": ["70005"],
+			"southbound": ["70004"]
+		}
+	}, {
+		"stop_name": "Green Street",
+		"branches": null,
+		"station": null,
+		"order": 19,
+		"stops": {
+			"northbound": ["70003"],
+			"southbound": ["70002"]
+		}
+	}, {
+		"stop_name": "Forest Hills",
+		"branches": null,
+		"station": null,
+		"order": 20,
+		"stops": {
+			"northbound": ["70001"],
+			"southbound": ["70001"]
+		}
+	}],
+	"Blue": [{
+		"stop_name": "Wonderland",
+		"branches": null,
+		"station": null,
+		"order": 1,
+		"stops": {
+			"northbound": ["70060"],
+			"southbound": ["70059"]
+		}
+	}, {
+		"stop_name": "Revere Beach",
+		"branches": null,
+		"station": null,
+		"order": 2,
+		"stops": {
+			"northbound": ["70058"],
+			"southbound": ["70057"]
+		}
+	}, {
+		"stop_name": "Beachmont",
+		"branches": null,
+		"station": null,
+		"order": 3,
+		"stops": {
+			"northbound": ["70056"],
+			"southbound": ["70055"]
+		}
+	}, {
+		"stop_name": "Suffolk Downs",
+		"branches": null,
+		"station": null,
+		"order": 4,
+		"stops": {
+			"northbound": ["70054"],
+			"southbound": ["70053"]
+		}
+	}, {
+		"stop_name": "Orient Heights",
+		"branches": null,
+		"station": null,
+		"order": 5,
+		"stops": {
+			"northbound": ["70052"],
+			"southbound": ["70051"]
+		}
+	}, {
+		"stop_name": "Wood Island",
+		"branches": null,
+		"station": null,
+		"order": 6,
+		"stops": {
+			"northbound": ["70050"],
+			"southbound": ["70049"]
+		}
+	}, {
+		"stop_name": "Airport",
+		"branches": null,
+		"station": null,
+		"order": 7,
+		"stops": {
+			"northbound": ["70048"],
+			"southbound": ["70047"]
+		}
+	}, {
+		"stop_name": "Maverick",
+		"branches": null,
+		"station": null,
+		"order": 8,
+		"stops": {
+			"northbound": ["70046"],
+			"southbound": ["70045"]
+		}
+	}, {
+		"stop_name": "Aquarium",
+		"branches": null,
+		"station": null,
+		"order": 9,
+		"stops": {
+			"northbound": ["70044"],
+			"southbound": ["70043"]
+		}
+	}, {
+		"stop_name": "State Street",
+		"branches": null,
+		"station": null,
+		"order": 10,
+		"stops": {
+			"northbound": ["70042"],
+			"southbound": ["70041"]
+		}
+	}, {
+		"stop_name": "Government Center",
+		"branches": null,
+		"station": null,
+		"order": 11,
+		"stops": {
+			"northbound": ["70040"],
+			"southbound": ["70039"]
+		}
+	}, {
+		"stop_name": "Bowdoin",
+		"branches": null,
+		"station": null,
+		"order": 12,
+		"stops": {
+			"northbound": ["70038"],
+			"southbound": ["70838"]
+		}
+	}],
+	"Green": [{
+		"stop_name": "Blandford Street",
+		"branches": ["B"],
+		"station": null,
+		"order": 101,
+		"stops": {
+			"northbound": ["70148"],
+			"southbound": ["70149"]
+		}
+	}, {
+		"stop_name": "Boston University East",
+		"branches": ["B"],
+		"station": null,
+		"order": 102,
+		"stops": {
+			"northbound": ["70146"],
+			"southbound": ["70147"]
+		}
+	}, {
+		"stop_name": "Boston University Central",
+		"branches": ["B"],
+		"station": null,
+		"order": 103,
+		"stops": {
+			"northbound": ["70144"],
+			"southbound": ["70145"]
+		}
+	}, {
+		"stop_name": "Boston University West",
+		"branches": ["B"],
+		"station": null,
+		"order": 104,
+		"stops": {
+			"northbound": ["70142"],
+			"southbound": ["70143"]
+		}
+	}, {
+		"stop_name": "Saint Paul Street (B)",
+		"branches": ["B"],
+		"station": null,
+		"order": 105,
+		"stops": {
+			"northbound": ["70140"],
+			"southbound": ["70141"]
+		}
+	}, {
+		"stop_name": "Pleasant Street",
+		"branches": ["B"],
+		"station": null,
+		"order": 106,
+		"stops": {
+			"northbound": ["70138"],
+			"southbound": ["70139"]
+		}
+	}, {
+		"stop_name": "Babcock Street",
+		"branches": ["B"],
+		"station": null,
+		"order": 107,
+		"stops": {
+			"northbound": ["70136"],
+			"southbound": ["70137"]
+		}
+	}, {
+		"stop_name": "Packards Corner",
+		"branches": ["B"],
+		"station": null,
+		"order": 108,
+		"stops": {
+			"northbound": ["70134"],
+			"southbound": ["70135"]
+		}
+	}, {
+		"stop_name": "Harvard Avenue",
+		"branches": ["B"],
+		"station": null,
+		"order": 109,
+		"stops": {
+			"northbound": ["70130"],
+			"southbound": ["70131"]
+		}
+	}, {
+		"stop_name": "Griggs Street",
+		"branches": ["B"],
+		"station": null,
+		"order": 110,
+		"stops": {
+			"northbound": ["70128"],
+			"southbound": ["70129"]
+		}
+	}, {
+		"stop_name": "Allston Street",
+		"branches": ["B"],
+		"station": null,
+		"order": 111,
+		"stops": {
+			"northbound": ["70126"],
+			"southbound": ["70127"]
+		}
+	}, {
+		"stop_name": "Warren Street",
+		"branches": ["B"],
+		"station": null,
+		"order": 112,
+		"stops": {
+			"northbound": ["70124"],
+			"southbound": ["70125"]
+		}
+	}, {
+		"stop_name": "Washington Street",
+		"branches": ["B"],
+		"station": null,
+		"order": 113,
+		"stops": {
+			"northbound": ["70120"],
+			"southbound": ["70121"]
+		}
+	}, {
+		"stop_name": "Sutherland Road",
+		"branches": ["B"],
+		"station": null,
+		"order": 114,
+		"stops": {
+			"northbound": ["70116"],
+			"southbound": ["70117"]
+		}
+	}, {
+		"stop_name": "Chiswick Road",
+		"branches": ["B"],
+		"station": null,
+		"order": 115,
+		"stops": {
+			"northbound": ["70114"],
+			"southbound": ["70115"]
+		}
+	}, {
+		"stop_name": "Chestnut Hill Avenue",
+		"branches": ["B"],
+		"station": null,
+		"order": 116,
+		"stops": {
+			"northbound": ["70112"],
+			"southbound": ["70113"]
+		}
+	}, {
+		"stop_name": "South Street",
+		"branches": ["B"],
+		"station": null,
+		"order": 117,
+		"stops": {
+			"northbound": ["70110"],
+			"southbound": ["70111"]
+		}
+	}, {
+		"stop_name": "Boston College",
+		"branches": ["B"],
+		"station": null,
+		"order": 118,
+		"stops": {
+			"northbound": ["70106"],
+			"southbound": ["70107"]
+		}
+	}, {
+		"stop_name": "Kenmore",
+		"branches": ["B", "C", "D"],
+		"station": null,
+		"order": 11,
+		"stops": {
+			"northbound": ["70150", "71150"],
+			"southbound": ["70151", "71151"]
+		}
+	}, {
+		"stop_name": "Hynes",
+		"branches": ["B", "C", "D"],
+		"station": null,
+		"order": 10,
+		"stops": {
+			"northbound": ["70152"],
+			"southbound": ["70153"]
+		}
+	}, {
+		"stop_name": "Park Street",
+		"branches": ["B", "C", "D", "E"],
+		"station": null,
+		"order": 6,
+		"stops": {
+			"northbound": ["70200"],
+			"southbound": ["70196", "70197", "70198", "70199"]
+		}
+	}, {
+		"stop_name": "Boylston",
+		"branches": ["B", "C", "D", "E"],
+		"station": null,
+		"order": 7,
+		"stops": {
+			"northbound": ["70158"],
+			"southbound": ["70159"]
+		}
+	}, {
+		"stop_name": "Arlington",
+		"branches": ["B", "C", "D", "E"],
+		"station": null,
+		"order": 8,
+		"stops": {
+			"northbound": ["70156"],
+			"southbound": ["70157"]
+		}
+	}, {
+		"stop_name": "Copley",
+		"branches": ["B", "C", "D", "E"],
+		"station": null,
+		"order": 9,
+		"stops": {
+			"northbound": ["70154"],
+			"southbound": ["70155"]
+		}
+	}, {
+		"stop_name": "Cleveland Circle",
+		"branches": ["C"],
+		"station": null,
+		"order": 213,
+		"stops": {
+			"northbound": ["70238"],
+			"southbound": ["70237"]
+		}
+	}, {
+		"stop_name": "Englewood Avenue",
+		"branches": ["C"],
+		"station": null,
+		"order": 212,
+		"stops": {
+			"northbound": ["70236"],
+			"southbound": ["70235"]
+		}
+	}, {
+		"stop_name": "Dean Road",
+		"branches": ["C"],
+		"station": null,
+		"order": 211,
+		"stops": {
+			"northbound": ["70234"],
+			"southbound": ["70233"]
+		}
+	}, {
+		"stop_name": "Tappan Street",
+		"branches": ["C"],
+		"station": null,
+		"order": 210,
+		"stops": {
+			"northbound": ["70232"],
+			"southbound": ["70231"]
+		}
+	}, {
+		"stop_name": "Washington Square",
+		"branches": ["C"],
+		"station": null,
+		"order": 209,
+		"stops": {
+			"northbound": ["70230"],
+			"southbound": ["70229"]
+		}
+	}, {
+		"stop_name": "Fairbanks Street",
+		"branches": ["C"],
+		"station": null,
+		"order": 208,
+		"stops": {
+			"northbound": ["70228"],
+			"southbound": ["70227"]
+		}
+	}, {
+		"stop_name": "Brandon Hall",
+		"branches": ["C"],
+		"station": null,
+		"order": 207,
+		"stops": {
+			"northbound": ["70226"],
+			"southbound": ["70225"]
+		}
+	}, {
+		"stop_name": "Summit Avenue",
+		"branches": ["C"],
+		"station": null,
+		"order": 206,
+		"stops": {
+			"northbound": ["70224"],
+			"southbound": ["70223"]
+		}
+	}, {
+		"stop_name": "Coolidge Corner",
+		"branches": ["C"],
+		"station": null,
+		"order": 205,
+		"stops": {
+			"northbound": ["70220"],
+			"southbound": ["70219"]
+		}
+	}, {
+		"stop_name": "Saint Paul Street (C)",
+		"branches": ["C"],
+		"station": null,
+		"order": 204,
+		"stops": {
+			"northbound": ["70218"],
+			"southbound": ["70217"]
+		}
+	}, {
+		"stop_name": "Kent Street",
+		"branches": ["C"],
+		"station": null,
+		"order": 203,
+		"stops": {
+			"northbound": ["70216"],
+			"southbound": ["70215"]
+		}
+	}, {
+		"stop_name": "Hawes Street",
+		"branches": ["C"],
+		"station": null,
+		"order": 202,
+		"stops": {
+			"northbound": ["70214"],
+			"southbound": ["70213"]
+		}
+	}, {
+		"stop_name": "Saint Marys Street",
+		"branches": ["C"],
+		"station": null,
+		"order": 201,
+		"stops": {
+			"northbound": ["70212"],
+			"southbound": ["70211"]
+		}
+	}, {
+		"stop_name": "Government Center",
+		"branches": ["C", "D", "E"],
+		"station": null,
+		"order": 5,
+		"stops": {
+			"northbound": ["70201"],
+			"southbound": ["70202"]
+		}
+	}, {
+		"stop_name": "North Station",
+		"branches": ["C", "E"],
+		"station": null,
+		"order": 3,
+		"stops": {
+			"northbound": ["70205"],
+			"southbound": ["70206"]
+		}
+	}, {
+		"stop_name": "Haymarket",
+		"branches": ["C", "E"],
+		"station": "place-haecl",
+		"order": 4,
+		"stops": {
+			"northbound": ["70203"],
+			"southbound": ["70204"]
+		}
+	}, {
+		"stop_name": "Fenway",
+		"branches": ["D"],
+		"station": null,
+		"order": 301,
+		"stops": {
+			"northbound": ["70186"],
+			"southbound": ["70187"]
+		}
+	}, {
+		"stop_name": "Longwood",
+		"branches": ["D"],
+		"station": null,
+		"order": 302,
+		"stops": {
+			"northbound": ["70182"],
+			"southbound": ["70183"]
+		}
+	}, {
+		"stop_name": "Brookline Village",
+		"branches": ["D"],
+		"station": null,
+		"order": 303,
+		"stops": {
+			"northbound": ["70180"],
+			"southbound": ["70181"]
+		}
+	}, {
+		"stop_name": "Brookline Hills",
+		"branches": ["D"],
+		"station": null,
+		"order": 304,
+		"stops": {
+			"northbound": ["70178"],
+			"southbound": ["70179"]
+		}
+	}, {
+		"stop_name": "Beaconsfield",
+		"branches": ["D"],
+		"station": null,
+		"order": 305,
+		"stops": {
+			"northbound": ["70176"],
+			"southbound": ["70177"]
+		}
+	}, {
+		"stop_name": "Reservoir",
+		"branches": ["D"],
+		"station": null,
+		"order": 306,
+		"stops": {
+			"northbound": ["70174"],
+			"southbound": ["70175"]
+		}
+	}, {
+		"stop_name": "Chestnut Hill",
+		"branches": ["D"],
+		"station": null,
+		"order": 307,
+		"stops": {
+			"northbound": ["70172"],
+			"southbound": ["70173"]
+		}
+	}, {
+		"stop_name": "Newton Centre",
+		"branches": ["D"],
+		"station": null,
+		"order": 308,
+		"stops": {
+			"northbound": ["70170"],
+			"southbound": ["70171"]
+		}
+	}, {
+		"stop_name": "Newton Highlands",
+		"branches": ["D"],
+		"station": null,
+		"order": 309,
+		"stops": {
+			"northbound": ["70168"],
+			"southbound": ["70169"]
+		}
+	}, {
+		"stop_name": "Eliot",
+		"branches": ["D"],
+		"station": null,
+		"order": 310,
+		"stops": {
+			"northbound": ["70166"],
+			"southbound": ["70167"]
+		}
+	}, {
+		"stop_name": "Waban",
+		"branches": ["D"],
+		"station": null,
+		"order": 311,
+		"stops": {
+			"northbound": ["70164"],
+			"southbound": ["70165"]
+		}
+	}, {
+		"stop_name": "Woodland",
+		"branches": ["D"],
+		"station": null,
+		"order": 312,
+		"stops": {
+			"northbound": ["70162"],
+			"southbound": ["70163"]
+		}
+	}, {
+		"stop_name": "Riverside",
+		"branches": ["D"],
+		"station": null,
+		"order": 313,
+		"stops": {
+			"northbound": ["70160"],
+			"southbound": ["70161"]
+		}
+	}, {
+		"stop_name": "Heath Street",
+		"branches": ["E"],
+		"station": null,
+		"order": 411,
+		"stops": {
+			"northbound": ["70260"],
+			"southbound": ["70260"]
+		}
+	}, {
+		"stop_name": "Back of the Hill",
+		"branches": ["E"],
+		"station": null,
+		"order": 410,
+		"stops": {
+			"northbound": ["70258"],
+			"southbound": ["70257"]
+		}
+	}, {
+		"stop_name": "Riverway",
+		"branches": ["E"],
+		"station": null,
+		"order": 409,
+		"stops": {
+			"northbound": ["70256"],
+			"southbound": ["70255"]
+		}
+	}, {
+		"stop_name": "Mission Park",
+		"branches": ["E"],
+		"station": null,
+		"order": 408,
+		"stops": {
+			"northbound": ["70254"],
+			"southbound": ["70253"]
+		}
+	}, {
+		"stop_name": "Fenwood Road",
+		"branches": ["E"],
+		"station": null,
+		"order": 407,
+		"stops": {
+			"northbound": ["70252"],
+			"southbound": ["70251"]
+		}
+	}, {
+		"stop_name": "Brigham Circle",
+		"branches": ["E"],
+		"station": null,
+		"order": 406,
+		"stops": {
+			"northbound": ["70250"],
+			"southbound": ["70249"]
+		}
+	}, {
+		"stop_name": "Longwood Medical Area",
+		"branches": ["E"],
+		"station": null,
+		"order": 405,
+		"stops": {
+			"northbound": ["70248"],
+			"southbound": ["70247"]
+		}
+	}, {
+		"stop_name": "Museum of Fine Arts",
+		"branches": ["E"],
+		"station": null,
+		"order": 404,
+		"stops": {
+			"northbound": ["70246"],
+			"southbound": ["70245"]
+		}
+	}, {
+		"stop_name": "Northeastern University",
+		"branches": ["E"],
+		"station": null,
+		"order": 403,
+		"stops": {
+			"northbound": ["70244"],
+			"southbound": ["70243"]
+		}
+	}, {
+		"stop_name": "Symphony",
+		"branches": ["E"],
+		"station": null,
+		"order": 402,
+		"stops": {
+			"northbound": ["70242"],
+			"southbound": ["70241"]
+		}
+	}, {
+		"stop_name": "Prudential",
+		"branches": ["E"],
+		"station": null,
+		"order": 401,
+		"stops": {
+			"northbound": ["70240"],
+			"southbound": ["70239"]
+		}
+	}, {
+		"stop_name": "Lechmere",
+		"branches": ["E"],
+		"station": null,
+		"order": 1,
+		"stops": {
+			"northbound": ["70209"],
+			"southbound": ["70210"]
+		}
+	}, {
+		"stop_name": "Science Park",
+		"branches": ["E"],
+		"station": null,
+		"order": 2,
+		"stops": {
+			"northbound": ["70207"],
+			"southbound": ["70208"]
+		}
+	}]
 };
 
 const createConfigPresetValue = (line, fromStationName, toStationName, date) => {
