@@ -88,9 +88,15 @@ def dwells(day, params):
     return dwells
 
 def alerts(day, params):
+    api_data = get_api_data(day, "pastalerts", params)
+    
+    # combine all alerts data
+    alert_items = []
+    for dict_data in api_data:
+        alert_items = alert_items + dict_data.get('past_alerts', [])
+    
     # get data
     flat_alerts = []
-    alert_items = MbtaPerformanceAPI.get_api_data(day, "pastalerts", params)["past_alerts"]
     for alert_item in alert_items:
         for alert_version in alert_item["alert_versions"]:
             flat_alerts.append({
