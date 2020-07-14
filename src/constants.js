@@ -1086,35 +1086,39 @@ export const stations = {
 };
 
 const createConfigPresetValue = (line, fromStationName, toStationName, date) => {
-  const fromStation = stations[line].find(s => s.station_name === fromStationName);
-  const toStation = stations[line].find(s => s.station_name === toStationName);
-  return {
-    line,
-    date,
-    from: fromStation,
-    to: toStation,
-  }
+	const fromStation = stations[line].find(s => s.stop_name === fromStationName);
+	const toStation = stations[line].find(s => s.stop_name === toStationName);
+	return {
+		line,
+		date,
+		from: fromStation,
+		to: toStation,
+	}
 }
 
 export const configPresets = [
-  {
-    label: "Nov 18 2019 — Red Line",
-    value: createConfigPresetValue("Red", "Central", "Andrew", '2019-11-18'),
-  },
-  {
-    label: "May 5 2019 — Orange Line",
-    value: createConfigPresetValue("Orange", "Wellington", "Stony Brook", '2019-05-05'),
-  },
-  {
-    label: "August 23 2019 — Orange Line",
-    value: createConfigPresetValue("Orange", "Forest Hills", "Chinatown", '2019-08-23'),
-  },
-  {
-    label: "June 20 2019 — Blue Line",
-    value: createConfigPresetValue("Blue", "Airport", "Bowdoin", '2019-06-20'),
-  },
-  {
-    label: "July 17 2019 — Blue Line",
-    value: createConfigPresetValue("Blue", "Government Center", "Wonderland", '2019-07-17'),
-  },
+	{
+		label: "Nov 18 2019 — Red Line",
+		value: createConfigPresetValue("Red", "Central", "Andrew", '2019-11-18'),
+	},
+	{
+		label: "May 5 2019 — Orange Line",
+		value: createConfigPresetValue("Orange", "Wellington", "Stony Brook", '2019-05-05'),
+	},
+	{
+		label: "August 23 2019 — Orange Line",
+		value: createConfigPresetValue("Orange", "Forest Hills", "Chinatown", '2019-08-23'),
+	},
+	{
+		label: "June 20 2019 — Blue Line",
+		value: createConfigPresetValue("Blue", "Airport", "Bowdoin", '2019-06-20'),
+	},
+	{
+		label: "July 17 2019 — Blue Line",
+		value: createConfigPresetValue("Blue", "Government Center", "Wonderland", '2019-07-17'),
+	},
+	{
+		label: "Testing GL",
+		value: createConfigPresetValue("Green", "Park Street", "Arlington", '2019-07-17'),
+	},
 ];
