@@ -654,6 +654,7 @@ export const stations = {
 		"stop_name": "Kenmore",
 		"branches": ["B", "C", "D"],
 		"station": "place-kencl",
+	        disabled: true,
 		"order": 11,
 		"stops": {
 			"northbound": ["70150", "71150"],
@@ -672,6 +673,7 @@ export const stations = {
 		"stop_name": "Park Street",
 		"branches": ["B", "C", "D", "E"],
 		"station": "place-pktrm",
+		disabled: true,
 		"order": 6,
 		"stops": {
 			"northbound": ["70200"],
