@@ -35,7 +35,7 @@ export default class StationConfiguration extends React.Component {
     flatpickr(this.flatpickr.current, {
       onChange: this.handleSelectDate,
       maxDate: 'today',
-      minDate: '2015-06-01',
+      minDate: new Date().fp_incr(-90),
     });
   }
 
