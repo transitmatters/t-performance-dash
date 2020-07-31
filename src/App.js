@@ -102,7 +102,13 @@ class App extends React.Component {
 
   fetchDataset(name, options) {
     let url = new URL(`${APP_DATA_BASE_PATH}/${name}/${this.state.configuration.date}`, window.location.origin);
-    Object.keys(options).forEach(key => url.searchParams.append(key, options[key]));
+    Object.entries(options).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach(subvalue => url.searchParams.append(key, subvalue))
+      } else {
+        url.searchParams.append(key, value);
+      }
+    });
 
     this.setIsLoadingDataset(name, true);
 
@@ -134,19 +140,19 @@ class App extends React.Component {
 
   download() {
     const { configuration } = this.state;
-    const { fromStopId, toStopId } = get_stop_ids_for_stations(configuration.from, configuration.to);
-    if (configuration.date && fromStopId && toStopId) {
+    const { fromStopIds, toStopIds } = get_stop_ids_for_stations(configuration.from, configuration.to);
+    if (configuration.date && fromStopIds && toStopIds) {
       this.fetchDataset('headways', {
-        station: fromStopId,
+        stop: fromStopIds,
       });
       this.fetchDataset('dwells', {
-        station: fromStopId,
+        stop: fromStopIds,
       });
 
       if (this.state.configuration.to) {
         this.fetchDataset('traveltimes', {
-          station_from: fromStopId,
-          station_to: toStopId,
+          from_stop: fromStopIds,
+          to_stop: toStopIds,
         });
       }
 
@@ -166,8 +172,8 @@ class App extends React.Component {
     if (from && to) {
       const direction = showDirection ? ` ${station_direction(from, to, line)}` : ""
       const preposition = showTo ? "from" : "at";
-      const suffix = showTo ? `to ${to.station_name}` : "";
-      return `${prefix} ${preposition} ${from.station_name}${direction} ${suffix}`;
+      const suffix = showTo ? `to ${to.stop_name}` : "";
+      return `${prefix} ${preposition} ${from.stop_name}${direction} ${suffix}`;
     }
     return prefix;
   }

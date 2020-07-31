@@ -18,16 +18,15 @@ const options_station_ui = (line) => {
     return {
       value: station,
       disabled: station.disabled,
-      label: station.station_name
+      label: station.stop_name
     }
-  })
+  }).sort((a, b) => a.value.order - b.value.order)
 };
 
 export default class StationConfiguration extends React.Component {
   constructor(props) {
     super(props);
     this.flatpickr = React.createRef();
-
     this.handleSelectDate = this.handleSelectDate.bind(this);
     this.handleSwapStations = this.handleSwapStations.bind(this);
   }
@@ -36,7 +35,7 @@ export default class StationConfiguration extends React.Component {
     flatpickr(this.flatpickr.current, {
       onChange: this.handleSelectDate,
       maxDate: 'today',
-      minDate: '2015-06-01',
+      minDate: new Date().fp_incr(-90),
     });
   }
 
@@ -77,8 +76,17 @@ export default class StationConfiguration extends React.Component {
     }
     if (type === "to") {
       const fromStation = this.decode("from");
-      return options_station_ui(this.props.current.line).filter(entry => entry.value !== fromStation);
+      return options_station_ui(this.props.current.line).filter(({ value }) => {
+        if (value === fromStation) {
+          return false;
+        }
+        if (fromStation && fromStation.branches && value.branches) {
+          return value.branches.some(entryBranch => fromStation.branches.includes(entryBranch));
+        }
+        return true
+      });
     }
+
   }
 
   render() {

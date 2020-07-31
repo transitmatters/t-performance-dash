@@ -28,8 +28,8 @@ const get_stop_ids_for_stations = (from, to) => {
   }
   const isSouthbound = from.order < to.order;
   return {
-    fromStopId: isSouthbound ? from.stops.southbound : from.stops.northbound,
-    toStopId: isSouthbound ? to.stops.southbound : to.stops.northbound,
+    fromStopIds: isSouthbound ? from.stops.southbound : from.stops.northbound,
+    toStopIds: isSouthbound ? to.stops.southbound : to.stops.northbound,
   }
 }
 

@@ -11,9 +11,11 @@ def headways(day, params):
     # get data
     api_data = MbtaPerformanceAPI.get_api_data(day, "headways", params)
 
-    # just headways data
-    headways = api_data.get("headways", {})
-
+    # combine all headways data
+    headways = []
+    for dict_data in api_data:
+        headways = headways + dict_data.get('headways', [])
+        
     # conversion
     for headway_dict in headways:
         # convert to datetime
@@ -37,8 +39,10 @@ def travel_times(day, params):
     # get data
     api_data = MbtaPerformanceAPI.get_api_data(day, "traveltimes", params)
 
-    # just dwells data
-    travel = api_data.get("travel_times", {})
+    # combine all travel times data
+    travel = []
+    for dict_data in api_data:
+        travel = travel + dict_data.get('travel_times', [])
 
     # conversion
     for travel_dict in travel:
@@ -63,8 +67,10 @@ def dwells(day, params):
     # get data
     api_data = MbtaPerformanceAPI.get_api_data(day, "dwells", params)
 
-    # just dwells data
-    dwells = api_data.get("dwell_times", {})
+    # combine all travel times data
+    dwells = []
+    for dict_data in api_data:
+        dwells = dwells + dict_data.get('dwell_times', [])
 
     # conversion
     for dwell_dict in dwells:
@@ -81,11 +87,16 @@ def dwells(day, params):
 
     return dwells
 
-
 def alerts(day, params):
+    api_data = MbtaPerformanceAPI.get_api_data(day, "pastalerts", params)
+    
+    # combine all alerts data
+    alert_items = []
+    for dict_data in api_data:
+        alert_items = alert_items + dict_data.get('past_alerts', [])
+    
     # get data
     flat_alerts = []
-    alert_items = MbtaPerformanceAPI.get_api_data(day, "pastalerts", params)["past_alerts"]
     for alert_item in alert_items:
         for alert_version in alert_item["alert_versions"]:
             flat_alerts.append({

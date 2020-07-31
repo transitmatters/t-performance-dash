@@ -3,6 +3,7 @@ set -e
 
 export AWS_PROFILE=transitmatters
 export AWS_REGION=us-east-1
+export AWS_PAGER=""
 
 npm run build
 
