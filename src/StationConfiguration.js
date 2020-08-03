@@ -6,6 +6,9 @@ import 'flatpickr/dist/themes/light.css';
 import Select from './Select';
 import { all_lines, options_station } from './stations';
 
+const ua = window.navigator.userAgent;
+const iOSDevice = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
+
 const options_lines = all_lines().map((line) => {
   return {
     value: line,
@@ -32,11 +35,13 @@ export default class StationConfiguration extends React.Component {
   }
 
   componentDidMount() {
-    flatpickr(this.flatpickr.current, {
-      onChange: this.handleSelectDate,
-      maxDate: 'today',
-      minDate: new Date().fp_incr(-90),
-    });
+    if (!iOSDevice) {
+      flatpickr(this.flatpickr.current, {
+        onChange: this.handleSelectDate,
+        maxDate: 'today',
+        minDate: new Date().fp_incr(-90),
+      });
+    }
   }
 
   handleSelectDate(_, dateStr, __) {
@@ -130,8 +135,9 @@ export default class StationConfiguration extends React.Component {
           <div className="option option-date">
             <span className="date-label">Date</span>
             <input
-              defaultValue={this.decode("date")}
-              onChange={() => { }} type='date'
+              value={this.decode("date")}
+              onChange={() => { }}
+              type='date'
               ref={this.flatpickr}
               placeholder='Select date...'
             />
