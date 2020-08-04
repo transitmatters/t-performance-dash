@@ -5,7 +5,7 @@ export default function legend_alerts() {
     <div className="legend">
       <p>
         <span className="legend-line alert-incident-line"></span>
-        MBTA incident
+        MBTA advisory
       </p>
     </div>
   );
