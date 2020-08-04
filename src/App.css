@@ -158,6 +158,10 @@ button {
   border: 1px solid currentColor;
 }
 
+select option:disabled {
+  color: grey;
+}
+
 button:disabled,
 .select-component.disabled {
   opacity: 0.5;
