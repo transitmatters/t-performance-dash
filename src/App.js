@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactGA from 'react-ga';
 import Line from './line';
 import StationConfiguration from './StationConfiguration';
 import { withRouter } from 'react-router-dom';
@@ -40,6 +41,9 @@ class App extends React.Component {
       alerts: [],
       datasetLoadingState: {},
     };
+
+    ReactGA.initialize("UA-71173708-2");
+    ReactGA.pageview("/rapidtransit");
 
     const url_config = new URLSearchParams(props.location.search).get("config");
     if (typeof url_config === "string") {
@@ -163,6 +167,7 @@ class App extends React.Component {
         this.fetchDataset('alerts', {
           route: configuration.line,
         });
+        ReactGA.pageview(window.location.pathname + window.location.search);
       }
     }
   }
