@@ -8,6 +8,7 @@ import { all_lines, options_station } from './stations';
 
 const ua = window.navigator.userAgent;
 const iOSDevice = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
+const useFlatPickr = !iOSDevice;
 
 const options_lines = all_lines().map((line) => {
   return {
@@ -31,11 +32,12 @@ export default class StationConfiguration extends React.Component {
     super(props);
     this.flatpickr = React.createRef();
     this.handleSelectDate = this.handleSelectDate.bind(this);
+    this.handleSelectRawDate = this.handleSelectRawDate.bind(this);
     this.handleSwapStations = this.handleSwapStations.bind(this);
   }
 
   componentDidMount() {
-    if (!iOSDevice) {
+    if (useFlatPickr) {
       flatpickr(this.flatpickr.current, {
         onChange: this.handleSelectDate,
         maxDate: 'today',
@@ -49,6 +51,13 @@ export default class StationConfiguration extends React.Component {
       date: dateStr
     });
   }
+
+  handleSelectRawDate(evt) {
+    this.props.onConfigurationChange({
+      date: evt.target.value
+    });
+  }
+
 
   handleSelectOption(field) {
     return (value) => {
@@ -136,7 +145,7 @@ export default class StationConfiguration extends React.Component {
             <span className="date-label">Date</span>
             <input
               value={this.decode("date")}
-              onChange={() => { }}
+              onChange={!useFlatPickr && this.handleSelectRawDate}
               type='date'
               ref={this.flatpickr}
               placeholder='Select date...'
