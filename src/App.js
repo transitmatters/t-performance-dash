@@ -210,7 +210,7 @@ class App extends React.Component {
       <div className="empty-state">
         {withError && <>There was an error loading data for this date. Maybe try one of these?</>}
         {!withError && <>See MBTA rapid transit performance data, including travel times between stations, headways,
-        and dwell times, for any given day. Looking for something interesting? Try one of these dates.</>}
+        and dwell times, for any given day. <span style={{fontWeight: "bold"}}>Select a line, station pair, and date above to get started.</span><div style={{marginTop: 10}}>Looking for something interesting? <span style={{fontWeight: "bold"}}>Try one of these dates:</span></div></>}
         <Select
           onChange={value => {
             const { line, date, from, to } = value;
