@@ -26,6 +26,10 @@ const stateFromURL = (config) => {
   }
 };
 
+const documentTitle = (config) => {
+  return `${config.line} Line - ${config.date} - TransitMatters Data Dashboard`;
+};
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -168,6 +172,7 @@ class App extends React.Component {
           route: configuration.line,
         });
         ReactGA.pageview(window.location.pathname + window.location.search);
+        document.title = documentTitle(this.state.configuration);
       }
     }
   }
