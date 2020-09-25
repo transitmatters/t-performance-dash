@@ -17,7 +17,7 @@ jobs:
           pip install flake8
           flake8 --ignore=E501,E731 server
 
-  javascipt:
+  javascript:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
