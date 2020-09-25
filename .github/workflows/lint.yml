@@ -1,0 +1,32 @@
+name: lint
+
+on: pull_request
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Lint with Flake8
+        run: |
+          pip install flake8
+          flake8 --ignore=E501,E731 server
+
+  javascipt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Set up Node 12.x
+        uses: actions/setup-node@v1
+        with:
+            node-version: 12.x
+      - name: Lint with ESLint
+        run: |
+          npm install eslint
+          npx eslint src
