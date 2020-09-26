@@ -13,3 +13,6 @@ This is the repository for the TransitMatters data dashboard. Client code is wri
 2. In the root directory, run `npm install` to install all frontend and backend dependencies
 3. Run `npm start` to start both the JavaScript development server and the Python backend at the same time.
 4. Navigate to [http://localhost:3000](http://localhost:3000) (or the url provided after running `npm start`)
+
+### Linting
+To lint frontend and backend code, run `npm lint` in the root directory
