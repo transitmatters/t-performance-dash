@@ -16,12 +16,16 @@
     "react-scripts": "^3.4.1",
     "react-select": "^3.1.0"
   },
+  "devDependencies" : {
+    "eslint": "^6.8.0"
+  },
   "homepage": ".",
   "scripts": {
     "start": "concurrently npm:start-python npm:start-react",
     "start-python": "cd server && pipenv run chalice local --port=5000",
     "start-react": "react-scripts start",
     "build": "react-scripts build",
+    "lint": "flake8 --ignore=E501,E731 server && npx eslint src",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "postinstall": "cd server && pipenv install"
