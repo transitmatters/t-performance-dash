@@ -31,13 +31,13 @@ def mutlidict_to_dict(mutlidict):
         res_dict[key] = mutlidict.getlist(key)
     return res_dict
 
-def use_historical(date):
+def use_S3(date):
     return (date.today() - date).days >= 90
 
 @app.route("/headways/{user_date}", cors=cors_config)
 def headways_route(user_date):
     date = parse_user_date(user_date)
-    if use_historical(date):
+    if use_S3(date):
         stop = app.current_request.query_params["stop"]
         return s3_historical.headways(stop, date.year, date.month, date.day)
     else:
@@ -49,7 +49,7 @@ def headways_route(user_date):
 @app.route("/dwells/{user_date}", cors=cors_config)
 def dwells_route(user_date):
     date = parse_user_date(user_date)
-    if use_historical(date):
+    if use_S3(date):
         stop = app.current_request.query_params["stop"]
         return s3_historical.dwells(stop, date.year, date.month, date.day)
     else:
@@ -59,7 +59,7 @@ def dwells_route(user_date):
 @app.route("/traveltimes/{user_date}", cors=cors_config)
 def traveltime_route(user_date):
     date = parse_user_date(user_date)
-    if use_historical(date):
+    if use_S3(date):
         from_stop = app.current_request.query_params["from_stop"]
         to_stop = app.current_request.query_params["to_stop"]
         return s3_historical.travel_times(from_stop, to_stop, date.year, date.month, date.day)
@@ -72,7 +72,7 @@ def traveltime_route(user_date):
 @app.route("/alerts/{user_date}", cors=cors_config)
 def alerts_route(user_date):
     date = parse_user_date(user_date)
-    if use_historical(date):
+    if use_S3(date):
         return []
     else:
         return data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params))

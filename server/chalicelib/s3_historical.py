@@ -42,8 +42,8 @@ def headways(stop_id, year, month, day):
     only_departures[i]["headway_time_sec"] = delta.total_seconds()
   
   # The first departure of the day has no headway..
-
   only_departures[0]["headway_time_sec"] = 0
+
   # Mapping here so we only send back what the MBTA Performance API usually does
   return list(map(lambda departure: {
     "route_id": departure["route_id"],
@@ -53,6 +53,7 @@ def headways(stop_id, year, month, day):
     "benchmark_headway_time_sec": None
   }, only_departures))
 
+# For a given trip ID and a list of events, find when that trip ARR'ed
 def find_trip_id_arrival(trip_id, event_list):
   arrival = list(filter(lambda event: event["trip_id"] == trip_id and event["event_type"] == "ARR", event_list))
   if len(arrival) == 1:

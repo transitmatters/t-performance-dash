@@ -3,16 +3,15 @@ import csv
 import zlib
 
 BUCKET = "tm-mbta-performance"
-s3 = boto3.resource('s3')
+s3 = boto3.resource("s3")
 
 def download_sorted_events(stop_id, year, month, day):
-  # Read events from S3
-
+  # Download events from S3
   key = f"Events/daily-data/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
-  print("key: {}".format(key))
   obj = s3.Object(BUCKET, key)
+  s3_data = obj.get()["Body"].read()
 
-  s3_data = obj.get()['Body'].read()
+  # Uncompress
   decompressed = zlib.decompress(s3_data, wbits=zlib.MAX_WBITS | 16).decode("ascii").split("\r\n")
 
   # Parse CSV
@@ -21,7 +20,7 @@ def download_sorted_events(stop_id, year, month, day):
     rows.append(row)
 
   # sort
-  rows_by_time = sorted(rows, key=lambda row: row['event_time'])
+  rows_by_time = sorted(rows, key=lambda row: row["event_time"])
   return rows_by_time
 
 
