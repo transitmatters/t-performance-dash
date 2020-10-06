@@ -1,7 +1,7 @@
 import json
 from chalice import Chalice, CORSConfig
 from datetime import datetime, timedelta, date, time
-from chalicelib import data_funcs
+from chalicelib import data_funcs, s3_historical
 
 app = Chalice(app_name="data-dashboard")
 
@@ -31,27 +31,42 @@ def mutlidict_to_dict(mutlidict):
         res_dict[key] = mutlidict.getlist(key)
     return res_dict
 
+def use_historical(date):
+    return (date.today() - date).days >= 90
 
 @app.route("/headways/{user_date}", cors=cors_config)
 def headways_route(user_date):
     date = parse_user_date(user_date)
-    return data_funcs.headways(
-        date, mutlidict_to_dict(app.current_request.query_params)
-    )
+    if use_historical(date):
+        stop = app.current_request.query_params["stop"]
+        return s3_historical.headways(stop, date.year, date.month, date.day)
+    else:
+        return data_funcs.headways(
+            date, mutlidict_to_dict(app.current_request.query_params)
+        )
 
 
 @app.route("/dwells/{user_date}", cors=cors_config)
 def dwells_route(user_date):
     date = parse_user_date(user_date)
-    return data_funcs.dwells(date, mutlidict_to_dict(app.current_request.query_params))
+    if use_historical(date):
+        stop = app.current_request.query_params["stop"]
+        return s3_historical.dwells(stop, date.year, date.month, date.day)
+    else:
+        return data_funcs.dwells(date, mutlidict_to_dict(app.current_request.query_params))
 
 
 @app.route("/traveltimes/{user_date}", cors=cors_config)
 def traveltime_route(user_date):
     date = parse_user_date(user_date)
-    return data_funcs.travel_times(
-        date, mutlidict_to_dict(app.current_request.query_params)
-    )
+    if use_historical(date):
+        from_stop = app.current_request.query_params["from_stop"]
+        to_stop = app.current_request.query_params["to_stop"]
+        return s3_historical.travel_times(from_stop, to_stop, date.year, date.month, date.day)
+    else:
+        return data_funcs.travel_times(
+            date, mutlidict_to_dict(app.current_request.query_params)
+        )
 
 
 @app.route("/alerts/{user_date}", cors=cors_config)

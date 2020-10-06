@@ -20,7 +20,10 @@ const departure_from_normal_string = (metric, benchmark) => {
 const point_colors = (data, metric_field, benchmark_field) => {
   return data.map(point => {
     const ratio = point[metric_field] / point[benchmark_field];
-    if (ratio <= 1.25) {
+    if (point[benchmark_field] === null) {
+      return '#1c1c1c'; //grey
+    }
+    else if (ratio <= 1.25) {
       return '#75c400'; //green
     }
     else if (ratio <= 1.5) {
