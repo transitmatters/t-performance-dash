@@ -25,7 +25,9 @@
     "start-python": "cd server && pipenv run chalice local --port=5000",
     "start-react": "react-scripts start",
     "build": "react-scripts build",
-    "lint": "flake8 --ignore=E501,E731 server && npx eslint src",
+    "lint": "npm run lint-js && npm run lint-python",
+    "lint-js": "eslint src",
+    "lint-python": "cd server && pipenv run flake8 --ignore=E501,E73 --exclude .chalice",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "postinstall": "cd server && pipenv install"
