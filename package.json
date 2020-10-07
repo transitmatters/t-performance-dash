@@ -27,7 +27,7 @@
     "build": "react-scripts build",
     "lint": "npm run lint-js && npm run lint-python",
     "lint-js": "eslint src",
-    "lint-python": "cd server && pipenv run flake8 --ignore=E501,E73 --exclude .chalice",
+    "lint-python": "cd server && pipenv run flake8 --ignore=E501,E731 --exclude .chalice",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "postinstall": "cd server && pipenv install"
