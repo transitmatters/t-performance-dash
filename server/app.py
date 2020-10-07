@@ -30,8 +30,10 @@ def mutlidict_to_dict(mutlidict):
         res_dict[key] = mutlidict.getlist(key)
     return res_dict
 
+
 def use_S3(date):
     return (date.today() - date).days >= 90
+
 
 @app.route("/headways/{user_date}", cors=cors_config)
 def headways_route(user_date):
