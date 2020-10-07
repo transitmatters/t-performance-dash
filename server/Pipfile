@@ -5,7 +5,6 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "*"
-flake8 = "*"
 
 [packages]
 flask = "*"
@@ -14,6 +13,7 @@ requests = "*"
 json-api-doc = "*"
 chalice = "*"
 pytz = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.7"
