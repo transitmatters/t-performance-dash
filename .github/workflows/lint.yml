@@ -25,7 +25,7 @@ jobs:
       - name: Set up Node 12.x
         uses: actions/setup-node@v1
         with:
-            node-version: 12.x
+          node-version: 12.x
       - name: Lint with ESLint
         run: |
           npm install eslint

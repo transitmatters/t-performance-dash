@@ -4,8 +4,10 @@ from chalicelib import MbtaPerformanceAPI
 
 DATE_FORMAT = "%Y/%m/%d %H:%M:%S"
 
+
 def stamp_to_dt(stamp):
     return datetime.datetime.fromtimestamp(stamp, pytz.timezone("America/New_York"))
+
 
 def headways(day, params):
     # get data
@@ -15,7 +17,7 @@ def headways(day, params):
     headways = []
     for dict_data in api_data:
         headways = headways + dict_data.get('headways', [])
-        
+
     # conversion
     for headway_dict in headways:
         # convert to datetime
@@ -87,14 +89,15 @@ def dwells(day, params):
 
     return dwells
 
+
 def alerts(day, params):
     api_data = MbtaPerformanceAPI.get_api_data(day, "pastalerts", params)
-    
+
     # combine all alerts data
     alert_items = []
     for dict_data in api_data:
         alert_items = alert_items + dict_data.get('past_alerts', [])
-    
+
     # get data
     flat_alerts = []
     for alert_item in alert_items:

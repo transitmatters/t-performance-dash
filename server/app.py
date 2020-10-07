@@ -1,6 +1,5 @@
-import json
 from chalice import Chalice, CORSConfig
-from datetime import datetime, timedelta, date, time
+from datetime import date
 from chalicelib import data_funcs, s3_historical
 
 app = Chalice(app_name="data-dashboard")
