@@ -15,4 +15,8 @@ This is the repository for the TransitMatters data dashboard. Client code is wri
 4. Navigate to [http://localhost:3000](http://localhost:3000) (or the url provided after running `npm start`)
 
 ### Linting
-To lint frontend and backend code, run `npm lint` in the root directory
+To lint frontend and backend code, run `npm run lint` in the root directory
+
+To lint just frontend code, run `npm run lint-frontend`
+
+To lint just backend code, run `npm run lint-backend`
