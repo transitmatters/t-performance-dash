@@ -13,6 +13,7 @@ requests = "*"
 json-api-doc = "*"
 chalice = "*"
 pytz = "*"
+boto3 = "*"
 flake8 = "*"
 
 [requires]

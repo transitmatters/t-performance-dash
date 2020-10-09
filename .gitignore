@@ -1,7 +1,7 @@
 secrets.py
 .terraform
 deployment.zip
-.chalice
+server/.chalice/deployments
 cfn/
 Pipfile
 Pipfile.lock
