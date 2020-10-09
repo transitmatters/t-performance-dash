@@ -4,6 +4,9 @@ from chalicelib import s3
 DATE_FORMAT_MASSDOT = "%Y-%m-%d %H:%M:%S"
 DATE_FORMAT_OUT = "%Y/%m/%d %H:%M:%S"
 
+EVENT_ARRIVAL = ["ARR", "PRA"]
+EVENT_DEPARTURE = ["DEP", "PRD"]
+
 
 def dwells(stop_id, year, month, day):
     rows_by_time = s3.download_sorted_events(stop_id, year, month, day)
@@ -13,7 +16,7 @@ def dwells(stop_id, year, month, day):
         maybe_an_arrival = rows_by_time[i]
         maybe_a_departure = rows_by_time[i + 1]
         # Look for all ARR/DEP pairs for same trip id
-        if maybe_an_arrival["event_type"] == "ARR" and maybe_a_departure["event_type"] == "DEP" and maybe_an_arrival["trip_id"] == maybe_a_departure["trip_id"]:
+        if maybe_an_arrival["event_type"] in EVENT_ARRIVAL and maybe_a_departure["event_type"] in EVENT_DEPARTURE and maybe_an_arrival["trip_id"] == maybe_a_departure["trip_id"]:
             dep_dt = datetime.strptime(
                 maybe_a_departure["event_time"], DATE_FORMAT_MASSDOT)
             arr_dt = datetime.strptime(
@@ -34,7 +37,7 @@ def headways(stop_id, year, month, day):
     rows_by_time = s3.download_sorted_events(stop_id, year, month, day)
 
     only_departures = list(
-        filter(lambda row: row['event_type'] == "DEP", rows_by_time))
+        filter(lambda row: row['event_type'] in EVENT_DEPARTURE, rows_by_time))
     for i in range(1, len(only_departures)):
         this = only_departures[i]
         prev = only_departures[i - 1]
@@ -62,7 +65,7 @@ def headways(stop_id, year, month, day):
 
 def find_trip_id_arrival(trip_id, event_list):
     arrival = list(filter(
-        lambda event: event["trip_id"] == trip_id and event["event_type"] == "ARR", event_list))
+        lambda event: event["trip_id"] == trip_id and event["event_type"] in EVENT_ARRIVAL, event_list))
     if len(arrival) == 1:
         return arrival[0]["event_time"]
     else:
@@ -74,7 +77,7 @@ def travel_times(stop_a, stop_b, year, month, day):
     rows_by_time_b = s3.download_sorted_events(stop_b, year, month, day)
 
     only_departures = list(
-        filter(lambda event: event["event_type"] == "DEP", rows_by_time_a))
+        filter(lambda event: event["event_type"] in EVENT_DEPARTURE, rows_by_time_a))
     travel_times = []
     for departure in only_departures:
         dep = departure["event_time"]
