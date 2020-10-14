@@ -1,9 +1,6 @@
 import datetime
 import pytz
 from chalicelib import MbtaPerformanceAPI
-import pandas as pd
-from pandas.tseries.holiday import USFederalHolidayCalendar
-import numpy as np
 
 DATE_FORMAT = "%Y/%m/%d %H:%M:%S"
 
