@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, date, time
+from datetime import datetime, timedelta, time
 from chalicelib import s3
 import pandas as pd
 from pandas.tseries.holiday import USFederalHolidayCalendar
@@ -11,6 +11,7 @@ DATE_FORMAT_OUT = "%Y/%m/%d %H:%M:%S"
 EVENT_ARRIVAL = ["ARR", "PRA"]
 EVENT_DEPARTURE = ["DEP", "PRD"]
 s3_resource = boto3.resource("s3")
+
 
 def dwells(stop_id, year, month, day):
     rows_by_time = s3.download_sorted_events(stop_id, year, month, day)
