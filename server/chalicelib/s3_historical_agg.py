@@ -1,5 +1,6 @@
-from datetime import datetime, timedelta, time
+from datetime import timedelta, time
 import pandas as pd
+from s3_historical import travel_times
 from pandas.tseries.holiday import USFederalHolidayCalendar
 import numpy as np
 import boto3
