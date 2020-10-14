@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, time
+from datetime import datetime
 from chalicelib import s3
 
 
