@@ -138,7 +138,7 @@ def travel_times_over_time(sdate, edate, params):
         data = travel_times(day=today_date, params=params)
         for data_dict in data:
             data_dict['service_date'] = today_date
-        all_data = all_data+data
+        all_data.extend(data)
 
     # convert to pandas
     df = pd.DataFrame.from_records(all_data)
