@@ -1,6 +1,7 @@
 from datetime import datetime
 from chalicelib import s3
 
+
 DATE_FORMAT_MASSDOT = "%Y-%m-%d %H:%M:%S"
 DATE_FORMAT_OUT = "%Y/%m/%d %H:%M:%S"
 
