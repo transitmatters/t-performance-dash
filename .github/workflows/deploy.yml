@@ -25,6 +25,14 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
+      - name: Generate AWS profile
+        run: |
+          mkdir ~/.aws
+          cat >> ~/.aws/credentials << EOF
+          [${AWS_PROFILE}]
+          aws_access_key_id = ${AWS_ACCESS_KEY_ID}
+          aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
+          EOF
       - name: Run deploy shell script
         run: |
           pip install pipenv
