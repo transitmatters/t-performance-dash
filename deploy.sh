@@ -10,7 +10,7 @@ npm run build
 pushd server/ > /dev/null
 pipenv run chalice package --merge-template frontend-cfn.json cfn/
 aws cloudformation package --template-file cfn/sam.json --s3-bucket datadashboard-backend --output-template-file cfn/packaged.yaml
-aws cloudformation deploy --template-file cfn/packaged.yaml --stack-name datadashboard --capabilities CAPABILITY_IAM
+aws cloudformation deploy --template-file cfn/packaged.yaml --stack-name datadashboard --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset
 popd > /dev/null
 aws s3 sync build/ s3://dashboard.transitmatters.org
 
