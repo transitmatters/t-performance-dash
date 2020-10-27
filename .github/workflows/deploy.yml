@@ -30,9 +30,9 @@ jobs:
         run: |
           mkdir ~/.aws
           cat >> ~/.aws/credentials << EOF
-          [${AWS_PROFILE}]
-          aws_access_key_id = ${AWS_ACCESS_KEY_ID}
-          aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
+          [$AWS_PROFILE]
+          aws_access_key_id = $AWS_ACCESS_KEY_ID
+          aws_secret_access_key = $AWS_SECRET_ACCESS_KEY
           EOF
       - name: Run deploy shell script
         run: |
