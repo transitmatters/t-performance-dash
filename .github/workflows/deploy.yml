@@ -1,0 +1,20 @@
+name: deploy
+
+on: pull_request
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:     
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Run deploy shell script
+        run: ./deploy.sh
