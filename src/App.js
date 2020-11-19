@@ -177,15 +177,18 @@ class App extends React.Component {
     }
   }
 
-  graphTitle(prefix, showDirection, showTo) {
+  locationDescription(bothStops) {
     const { from, to, line } = this.state.configuration;
+    var result = {};
+
     if (from && to) {
-      const direction = showDirection ? ` ${station_direction(from, to, line)}` : ""
-      const preposition = showTo ? "from" : "at";
-      const suffix = showTo ? `to ${to.stop_name}` : "";
-      return `${prefix} ${preposition} ${from.stop_name}${direction} ${suffix}`;
+      result['bothStops'] = bothStops;
+      result['to'] = to.stop_name;
+      result['from'] = from.stop_name;
+      result['direction'] = station_direction(from, to, line);
+      result['line'] = line;
     }
-    return prefix;
+    return result;
   }
 
   chartTimeframe() {
@@ -233,7 +236,8 @@ class App extends React.Component {
   renderCharts() {
     return <div className='charts main-column'>
       <Line
-        title={this.graphTitle('Travel times', false, true)}
+        title={"Travel times"}
+        location={this.locationDescription(true)}
         tooltipUnit={"travel time"}
         seriesName={'traveltimes'}
         isLoading={this.getIsLoadingDataset('traveltimes')}
@@ -246,7 +250,8 @@ class App extends React.Component {
         legend={true}
       />
       <Line
-        title={this.graphTitle('Time between trains (headways)', true, false)}
+        title={'Time between trains (headways)'}
+        location={this.locationDescription(false)}
         tooltipUnit={"headway"}
         seriesName={'headways'}
         isLoading={this.getIsLoadingDataset('headways')}
@@ -259,7 +264,8 @@ class App extends React.Component {
         legend={true}
       />
       <Line
-        title={this.graphTitle('Time spent at station (dwells)', true, false)}
+        title={'Time spent at station (dwells)'}
+        location={this.locationDescription(false)}
         tooltipUnit={"dwell time"}
         seriesName={'dwells'}
         isLoading={this.getIsLoadingDataset('dwells')}
