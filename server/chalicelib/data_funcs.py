@@ -1,12 +1,16 @@
 import datetime
 import pytz
-from chalicelib import MbtaPerformanceAPI
+from chalicelib import MbtaPerformanceAPI, s3_historical
 
 DATE_FORMAT = "%Y/%m/%d %H:%M:%S"
 
 
 def stamp_to_dt(stamp):
     return datetime.datetime.fromtimestamp(stamp, pytz.timezone("America/New_York"))
+
+
+def use_S3(date):
+    return (date.today() - date).days >= 90
 
 
 def headways(day, params):
@@ -37,9 +41,15 @@ def headways(day, params):
     return headways
 
 
-def travel_times(day, params):
+def travel_times(date, from_stops, to_stops):
+    if use_S3(date):
+        return s3_historical.travel_times(from_stops[0], to_stops[0], date.year, date.month, date.day)
+
     # get data
-    api_data = MbtaPerformanceAPI.get_api_data(day, "traveltimes", params)
+    api_data = MbtaPerformanceAPI.get_api_data(date, "traveltimes", {
+        "from_stop": from_stops,
+        "to_stop": to_stops
+    })
 
     # combine all travel times data
     travel = []

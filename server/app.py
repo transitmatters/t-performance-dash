@@ -1,6 +1,7 @@
+import json
 from chalice import Chalice, CORSConfig
 from datetime import date
-from chalicelib import data_funcs, s3_historical
+from chalicelib import data_funcs, aggregation, s3_historical
 
 app = Chalice(app_name="data-dashboard")
 
@@ -31,10 +32,6 @@ def mutlidict_to_dict(mutlidict):
     return res_dict
 
 
-def use_S3(date):
-    return (date.today() - date).days >= 90
-
-
 @app.route("/headways/{user_date}", cors=cors_config)
 def headways_route(user_date):
     date = parse_user_date(user_date)
@@ -60,14 +57,9 @@ def dwells_route(user_date):
 @app.route("/traveltimes/{user_date}", cors=cors_config)
 def traveltime_route(user_date):
     date = parse_user_date(user_date)
-    if use_S3(date):
-        from_stop = app.current_request.query_params["from_stop"]
-        to_stop = app.current_request.query_params["to_stop"]
-        return s3_historical.travel_times(from_stop, to_stop, date.year, date.month, date.day)
-    else:
-        return data_funcs.travel_times(
-            date, mutlidict_to_dict(app.current_request.query_params)
-        )
+    from_stop = app.current_request.query_params["from_stop"]
+    to_stop = app.current_request.query_params["to_stop"]
+    return data_funcs.travel_times(date, [from_stop], [to_stop])
 
 
 @app.route("/alerts/{user_date}", cors=cors_config)
@@ -77,3 +69,16 @@ def alerts_route(user_date):
         return []
     else:
         return data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params))
+
+
+@app.route("/aggregate/traveltimes", cors=cors_config)
+def traveltime_route():
+    sdate = parse_user_date(app.current_request.query_params["start_date"])
+    edate = parse_user_date(app.current_request.query_params["end_date"])
+    from_stop = app.current_request.query_params["from_stop"]
+    to_stop = app.current_request.query_params["to_stop"]
+
+    breakpoint()
+
+    response = aggregation.travel_times_over_time(sdate, edate, from_stop, to_stop)
+    return json.dumps(response, indent=4, sort_keys=True, default=str)

@@ -1,5 +1,5 @@
 import datetime
-from data_funcs import travel_times
+from chalicelib import data_funcs
 import pandas as pd
 from pandas.tseries.holiday import USFederalHolidayCalendar
 import numpy as np
@@ -19,17 +19,16 @@ def train_peak_status(df):
     return df
 
 
-def travel_times_over_time(sdate, edate, params):
+def travel_times_over_time(sdate, edate, from_stop, to_stop):
     all_data = []
     delta = edate - sdate       # as timedelta
 
     # get a range of dates
     for i in range(delta.days + 1):
-        today = sdate + datetime.timedelta(days=i)
-        today_date = datetime.date(year=today.year, month=today.month, day=today.day)
-        data = travel_times(day=today_date, params=params)
+        day = sdate + datetime.timedelta(days=i)
+        data = data_funcs.travel_times(day, [from_stop], [to_stop])
         for data_dict in data:
-            data_dict['service_date'] = today_date
+            data_dict['service_date'] = day
         all_data.extend(data)
 
     # convert to pandas
@@ -49,6 +48,6 @@ def travel_times_over_time(sdate, edate, params):
     # combine summary stats
     summary_stats_final = summary_stats.append(summary_stats_peak)
 
-    # conver to dict
+    # convert to dictionary
     summary_stats_dict = summary_stats_final.to_dict('records')
     return summary_stats_dict
