@@ -13,9 +13,13 @@ def use_S3(date):
     return (date.today() - date).days >= 90
 
 
-def headways(day, params):
+def headways(date, stops):
+    if use_S3(date):
+        return s3_historical.headways(stops, date.year, date.month, date.day)
     # get data
-    api_data = MbtaPerformanceAPI.get_api_data(day, "headways", params)
+    api_data = MbtaPerformanceAPI.get_api_data(date, "headways", {
+        "stop": stops
+    })
 
     # combine all headways data
     headways = []
@@ -75,9 +79,14 @@ def travel_times(date, from_stops, to_stops):
     return travel
 
 
-def dwells(day, params):
+def dwells(date, stops):
+    if use_S3(date):
+        return s3_historical.dwells(stops, date.year, date.month, date.day)
+
     # get data
-    api_data = MbtaPerformanceAPI.get_api_data(day, "dwells", params)
+    api_data = MbtaPerformanceAPI.get_api_data(date, "dwells", {
+        "stop": stops,
+    })
 
     # combine all travel times data
     dwells = []
@@ -100,8 +109,8 @@ def dwells(day, params):
     return dwells
 
 
-def alerts(day, params):
-    api_data = MbtaPerformanceAPI.get_api_data(day, "pastalerts", params)
+def alerts(date, params):
+    api_data = MbtaPerformanceAPI.get_api_data(date, "pastalerts", params)
 
     # combine all alerts data
     alert_items = []
