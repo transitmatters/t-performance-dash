@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Line } from 'react-chartjs-2';
 import Legend from './Legend';
+import drawTitle from './Title';
 
 const departure_from_normal_string = (metric, benchmark) => {
   const ratio = metric / benchmark;
@@ -36,39 +37,6 @@ const point_colors = (data, metric_field, benchmark_field) => {
     return '#1c1c1c'; //whatever
   });
 }
-
-const parse_location_description = (location) => {
-  var result = [];
-
-  var line_color = 'grey';
-
-  switch(location['line']) {
-    case 'Red':
-      line_color = '#d13434';
-      break;
-    case 'Orange':
-      line_color = '#e66f00';
-      break;
-    case 'Blue':
-      line_color = '#0e3d8c';
-      break;
-    case 'Green':
-      line_color = '#159765';
-      break;
-    default:
-      break;
-    }
-
-  result.push([location['from'], line_color])
-
-  if (location['bothStops']) {
-    result.push([' to ', 'grey'])
-    result.push([location['to'], line_color])
-  } else {
-    result.push([` ${location['direction']}`, 'grey'])
-  }
-  return result;
-};
 
 class LineClass extends React.Component {
 
@@ -135,8 +103,13 @@ class LineClass extends React.Component {
               //   annotations: alert_annotations
               // },
               maintainAspectRatio: false,
+              layout: {
+                padding: {
+                  top: 25
+                }
+              },
               title: {
-		// empty title here to leave space and set font for the title process in afterDraw
+                // empty title here to leave space and set font for the drawTitle process
                 display: true,
                 text: "",
                 fontSize: 16
@@ -187,28 +160,8 @@ class LineClass extends React.Component {
               }
             }}
             plugins={{
-              afterDraw: (chart, easing) => {
-		var ctx = chart.chart.ctx;
-		ctx.save();
-
-		// Primary chart title, grey and left
-		ctx.textAlign = 'left';
-		ctx.fillStyle = 'gray';
-		ctx.fillText(this.props.title, 50, 25);
-
-		// location components are aligned right
-		ctx.textAlign = 'right';
-		var position = chart.chart.width;
-		parse_location_description(this.props.location).reverse().forEach(
-		  tuple => {
-		    ctx.fillStyle = tuple[1];
-		    ctx.fillText(tuple[0], position, 25);
-		    position -= ctx.measureText(tuple[0]).width;
-		  }
-		)
-		ctx.restore();
-	      }
-	    }}
+              afterDraw: (chart) => drawTitle(this.props.title, this.props.location, chart)
+            }}
           />
         </div>
         {this.props.legend && <Legend />}
