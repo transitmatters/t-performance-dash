@@ -1,5 +1,5 @@
 const get_line_color = (line) => {
-  var line_color = 'grey';
+  let line_color = 'grey';
 
   switch(line) {
     case 'Red':
@@ -26,13 +26,13 @@ const parse_location_description = (location) => {
 
   var line_color = get_line_color(location['line']);
 
-  result.push([location['from'], line_color])
+  result.push([location['from'], line_color]);
 
   if (location['bothStops']) {
-    result.push([' to ', 'grey'])
-    result.push([location['to'], line_color])
+    result.push([' to ', 'grey']);
+    result.push([location['to'], line_color]);
   } else {
-    result.push([` ${location['direction']}`, 'grey'])
+    result.push([` ${location['direction']}`, 'grey']);
   }
   return result;
 };
@@ -42,27 +42,32 @@ const drawTitle = (title, location, chart) => {
   ctx.save();
 
   const left_buffer = 50;
+  const midspace = 10;
   const vpos_row1 = 25;
   const vpos_row2 = 50;
 
-  var title_width = ctx.measureText(title).width
-  var location_width = parse_location_description(location).map(x => ctx.measureText(x[0]).width).reduce((a,b) => {return a+b;}, 0)
+  var position;
 
-  if ((title_width + location_width + left_buffer) > chart.chart.width) {
+  var title_width = ctx.measureText(title).width;
+  var location_width = parse_location_description(location)
+      .map(x => ctx.measureText(x[0]).width)
+      .reduce((a,b) => a + b, 0);
+
+  if ((left_buffer + title_width + midspace + location_width) > chart.chart.width) {
     // small screen: centered title stacks vertically
     ctx.textAlign = 'center';
     ctx.fillStyle = 'grey';
     ctx.fillText(title, chart.chart.width/2, vpos_row1);
 
     ctx.textAlign = 'left';
-    var position = chart.chart.width/2 - location_width/2;
-    parse_location_description(location).forEach(
-      tuple => {
-        ctx.fillStyle = tuple[1];
-        ctx.fillText(tuple[0], position, vpos_row2);
-        position += ctx.measureText(tuple[0]).width;
-      }
-    )
+    position = chart.chart.width/2 - location_width/2;
+
+    for (const [word, color] of parse_location_description(location)) {
+      ctx.fillStyle = color;
+      ctx.fillText(word, position, vpos_row2);
+      position += ctx.measureText(word).width;
+    }
+
   } else {
     // larger screen
     // Primary chart title, grey and left
@@ -72,14 +77,12 @@ const drawTitle = (title, location, chart) => {
 
     // location components are aligned right
     ctx.textAlign = 'right';
-    var position = chart.chart.width;
-    parse_location_description(location).reverse().forEach(
-      tuple => {
-        ctx.fillStyle = tuple[1];
-        ctx.fillText(tuple[0], position, vpos_row2);
-        position -= ctx.measureText(tuple[0]).width;
-      }
-    )
+    position = chart.chart.width;
+    for (const [word, color] of parse_location_description(location).reverse()) {
+      ctx.fillStyle = color;
+      ctx.fillText(word, position, vpos_row2);
+      position -= ctx.measureText(word).width;
+    }
   }
   ctx.restore();
 }
