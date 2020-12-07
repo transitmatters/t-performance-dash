@@ -1087,12 +1087,12 @@ export const stations = {
 	}]
 };
 
-const createConfigPresetValue = (line, fromStationName, toStationName, date) => {
+const createConfigPresetValue = (line, fromStationName, toStationName, date_start) => {
 	const fromStation = stations[line].find(s => s.stop_name === fromStationName);
 	const toStation = stations[line].find(s => s.stop_name === toStationName);
 	return {
 		line,
-		date,
+		date_start,
 		from: fromStation,
 		to: toStation,
 	}

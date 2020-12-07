@@ -50,7 +50,8 @@ def headways(stop_id, year, month, day):
         only_departures[i]["headway_time_sec"] = delta.total_seconds()
 
     # The first departure of the day has no headway..
-    only_departures[0]["headway_time_sec"] = 0
+    if len(only_departures) >= 1:
+        only_departures[0]["headway_time_sec"] = 0
 
     # Mapping here so we only send back what the MBTA Performance API usually does
     return list(map(lambda departure: {

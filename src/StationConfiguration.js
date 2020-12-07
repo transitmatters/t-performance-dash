@@ -180,7 +180,7 @@ export default class StationConfiguration extends React.Component {
           <div className="option">
           <input
               type="button"
-              value="Advanced settings..."
+              value="More options..."
               style={this.state.show_date_end_picker ? { display: 'none' } : {}}
               onClick={() => this.setState({show_date_end_picker: true})}
               />

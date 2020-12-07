@@ -267,7 +267,7 @@ class App extends React.Component {
         xFieldLabel={this.getTimescale() === 'hour' ? 'Time of day' : 'Day'}
         xFieldUnit={this.getTimescale()}
         yField={this.getTimescale() === 'hour' ? 'travel_time_sec' : 'mean'}
-        yFieldLabel={'Minutes'}
+        yFieldLabel={this.getTimescale() === 'hour' ? 'Minutes' : 'Minutes (average)'}
         benchmarkField={'benchmark_travel_time_sec'}
         legend={true}
       />
@@ -281,7 +281,7 @@ class App extends React.Component {
         xFieldLabel={this.getTimescale() === 'hour' ? 'Time of day' : 'Day'}
         xFieldUnit={this.getTimescale()}
         yField={this.getTimescale() === 'hour' ? 'headway_time_sec' : 'mean'}
-        yFieldLabel={'Minutes'}
+        yFieldLabel={this.getTimescale() === 'hour' ? 'Minutes' : 'Minutes (average)'}
         benchmarkField={'benchmark_headway_time_sec'}
         legend={true}
       />
@@ -295,7 +295,7 @@ class App extends React.Component {
         xFieldLabel={this.getTimescale() === 'hour' ? 'Time of day' : 'Day'}
         xFieldUnit={this.getTimescale()}
         yField={this.getTimescale() === 'hour' ? 'dwell_time_sec' : 'mean'}
-        yFieldLabel={'Minutes'}
+        yFieldLabel={this.getTimescale() === 'hour' ? 'Minutes' : 'Minutes (average)'}
         benchmarkField={null}
       />
     </div>
