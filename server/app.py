@@ -72,3 +72,21 @@ def traveltime_route():
 
     response = aggregation.travel_times_over_time(sdate, edate, from_stop, to_stop)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
+
+@app.route("/aggregate/headways", cors=cors_config)
+def traveltime_route():
+    sdate = parse_user_date(app.current_request.query_params["start_date"])
+    edate = parse_user_date(app.current_request.query_params["end_date"])
+    stop = app.current_request.query_params["stop"]
+
+    response = aggregation.headways_over_time(sdate, edate, stop)
+    return json.dumps(response, indent=4, sort_keys=True, default=str)
+
+@app.route("/aggregate/dwells", cors=cors_config)
+def traveltime_route():
+    sdate = parse_user_date(app.current_request.query_params["start_date"])
+    edate = parse_user_date(app.current_request.query_params["end_date"])
+    stop = app.current_request.query_params["stop"]
+
+    response = aggregation.dwells_over_time(sdate, edate, stop)
+    return json.dumps(response, indent=4, sort_keys=True, default=str)

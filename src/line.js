@@ -50,24 +50,6 @@ class LineClass extends React.Component {
       benchmarkField
       alerts
     */
-
-    // const alert_annotations = this.props.alerts.map((alert, idx) => {
-    //   return {
-    //     type: 'line',
-    //     mode: 'vertical',
-    //     scaleID: 'x-axis-0',
-    //     value: alert.valid_from,
-    //     borderColor: 'red',
-    //     borderWidth: 1,
-    //     label: {
-    //       backgroundColor: "red",
-    //       yAdjust: idx * 30,
-    //       position: "top",
-    //       content: alertText(alert),
-    //       enabled: true
-    //     }
-    //   }
-    // });
     const { isLoading } = this.props;
     let labels = this.props.data.map(item => item[this.props.xField]);
     return (
@@ -98,9 +80,6 @@ class LineClass extends React.Component {
             }}
             options={{
               responsive: true,
-              // annotation: {
-              //   annotations: alert_annotations
-              // },
               maintainAspectRatio: false,
               title: {
                 display: true,
@@ -138,9 +117,9 @@ class LineClass extends React.Component {
                 ],
                 xAxes: [
                   {
-                    type: 'time',
+                    type: this.props.xFieldType || 'time',
                     time: {
-                      unit: 'hour',
+                      unit: this.props.xFieldUnit || 'hour',
                       unitStepSize: 1
                     },
                     scaleLabel: {

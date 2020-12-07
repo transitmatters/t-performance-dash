@@ -280,7 +280,7 @@ button:disabled,
   }
 
   .station-configuration .option-date input {
-    width: 120px;
+    width: 100px;
   }
 
   .station-configuration > *:not(:last-child) {

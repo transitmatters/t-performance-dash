@@ -30,34 +30,47 @@ const options_station_ui = (line) => {
 export default class StationConfiguration extends React.Component {
   constructor(props) {
     super(props);
-    this.flatpickr = React.createRef();
+    this.picker_start = React.createRef();
+    this.picker_end = React.createRef();
     this.handleSelectDate = this.handleSelectDate.bind(this);
     this.handleSelectRawDate = this.handleSelectRawDate.bind(this);
     this.handleSwapStations = this.handleSwapStations.bind(this);
+
+    this.state = {
+      show_date_end_picker: !!this.props.current.date_end,
+    };
   }
 
   componentDidMount() {
     if (useFlatPickr) {
-      flatpickr(this.flatpickr.current, {
-        onChange: this.handleSelectDate,
+      flatpickr(this.picker_start.current, {
+        onChange: this.handleSelectDate("date_start"),
+        maxDate: 'today',
+        minDate: "2016-01-15"
+      });
+      flatpickr(this.picker_end.current, {
+        onChange: this.handleSelectDate("date_end"),
         maxDate: 'today',
         minDate: "2016-01-15"
       });
     }
   }
 
-  handleSelectDate(_, dateStr, __) {
-    this.props.onConfigurationChange({
-      date: dateStr
-    });
+  handleSelectDate(field_name) {
+    return (_, dateStr, __) => {
+      this.props.onConfigurationChange({
+        [field_name]: dateStr
+      });
+    };
   }
 
-  handleSelectRawDate(evt) {
-    this.props.onConfigurationChange({
-      date: evt.target.value
-    });
+  handleSelectRawDate(field_name) {
+    return (evt) => {
+      this.props.onConfigurationChange({
+        [field_name]: evt.target.value
+      });
+    }
   }
-
 
   handleSelectOption(field) {
     return (value) => {
@@ -77,7 +90,7 @@ export default class StationConfiguration extends React.Component {
   }
 
   decode(property) {
-    return this.props.current[property] || null;
+    return this.props.current[property];
   }
 
   optionsForField(type) {
@@ -142,14 +155,35 @@ export default class StationConfiguration extends React.Component {
             <div className="swap-label">Swap</div>
           </button>
           <div className="option option-date">
-            <span className="date-label">Date</span>
+            <span className="date-label">Date:</span>
             <input
-              value={this.decode("date")}
-              onChange={!useFlatPickr && this.handleSelectRawDate}
+              value={this.decode("date_start")}
+              onChange={useFlatPickr ? undefined : this.handleSelectRawDate("date_start")}
               type='date'
-              ref={this.flatpickr}
+              ref={this.picker_start}
               placeholder='Select date...'
             />
+             <span style={this.state.show_date_end_picker ? {} : { display: 'none' }}>
+              <span className="date-label">to</span>
+              <input
+                value={this.decode("date_end")}
+                onChange={useFlatPickr ? undefined : this.handleSelectRawDate("date_end")}
+                type='date'
+                ref={this.picker_end}
+                placeholder='Select date...'
+              />
+            </span>
+          </div>
+          <div className="option option-date">
+
+          </div> 
+          <div class="option">
+          <input
+              type="button"
+              value="Advanced settings..."
+              style={this.state.show_date_end_picker ? { display: 'none' } : {}}
+              onClick={() => this.setState({show_date_end_picker: true})}
+              />
           </div>
         </div>
       </div>

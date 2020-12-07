@@ -15,19 +15,20 @@ const APP_DATA_BASE_PATH = (window.location.hostname === "localhost" ||
   '' : 'https://dashboard-api.transitmatters.org';
 
 const stateFromURL = (config) => {
-  const [line, from_id, to_id, date] = config.split(",");
+  const [line, from_id, to_id, date_start, date_end] = config.split(",");
   const from = lookup_station_by_id(line, from_id);
   const to = lookup_station_by_id(line, to_id);
   return {
     line,
     from,
     to,
-    date,
+    date_start,
+    date_end,
   }
 };
 
 const documentTitle = (config) => {
-  return `${config.line} Line - ${config.date} - TransitMatters Data Dashboard`;
+  return `${config.line} Line - ${config.date_start} - TransitMatters Data Dashboard`;
 };
 
 class App extends React.Component {
@@ -68,6 +69,7 @@ class App extends React.Component {
     this.chartTimeframe = this.chartTimeframe.bind(this);
     this.setIsLoadingDataset = this.setIsLoadingDataset.bind(this);
     this.getIsLoadingDataset = this.getIsLoadingDataset.bind(this);
+    this.getTimescale = this.getTimescale.bind(this);
   }
 
   componentDidMount() {
@@ -98,18 +100,34 @@ class App extends React.Component {
   }
 
   stateToURL() {
-    const { line, from, to, date, } = this.state.configuration;
+    const {
+      line,
+      from,
+      to,
+      date_start,
+      date_end,
+    } = this.state.configuration;
     const parts = [
       line,
       from?.stops.southbound,
       to?.stops.southbound,
-      date
+      date_start,
+      date_end,
     ].map(x => x || "").join(",");
     this.props.history.push(`/rapidtransit?config=${parts}`, this.state.configuration);
   }
 
   fetchDataset(name, options) {
-    let url = new URL(`${APP_DATA_BASE_PATH}/${name}/${this.state.configuration.date}`, window.location.origin);
+    let url;
+    // If a date_end is set, fetch aggregate data instead of single day
+    if (this.state.configuration.date_end) {
+      options["start_date"] = this.state.configuration.date_start;
+      options["end_date"] = this.state.configuration.date_end;
+      url = new URL(`${APP_DATA_BASE_PATH}/aggregate/${name}`, window.location.origin);
+    }
+    else {
+      url = new URL(`${APP_DATA_BASE_PATH}/${name}/${this.state.configuration.date_start}`, window.location.origin);
+    }
     Object.entries(options).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         value.forEach(subvalue => url.searchParams.append(key, subvalue))
@@ -146,10 +164,17 @@ class App extends React.Component {
     return this.state.datasetLoadingState[name];
   }
 
+  getTimescale() {
+    if (this.state.configuration.date_end) {
+      return "day";
+    }
+    return "hour";
+  }
+
   download() {
     const { configuration } = this.state;
     const { fromStopIds, toStopIds } = get_stop_ids_for_stations(configuration.from, configuration.to);
-    if (configuration.date && fromStopIds && toStopIds) {
+    if (configuration.date_start && fromStopIds && toStopIds) {
       this.fetchDataset('headways', {
         stop: fromStopIds,
       });
@@ -164,7 +189,7 @@ class App extends React.Component {
         });
       }
 
-      if (configuration.line && configuration.date) {
+      if (configuration.line && configuration.date_start && !configuration.date_end) {
         this.setState({
           alerts: null,
         });
@@ -218,8 +243,8 @@ class App extends React.Component {
         and dwell times, for any given day. <span style={{fontWeight: "bold"}}>Select a line, station pair, and date above to get started.</span><div style={{marginTop: 10}}>Looking for something interesting? <span style={{fontWeight: "bold"}}>Try one of these dates:</span></div></>}
         <Select
           onChange={value => {
-            const { line, date, from, to } = value;
-            this.updateConfiguration({ line, date }, false);
+            const { line, date_start, from, to } = value;
+            this.updateConfiguration({ line, date_start }, false);
             setTimeout(() => this.updateConfiguration({ from, to }));
           }}
           options={configPresets}
@@ -238,9 +263,10 @@ class App extends React.Component {
         seriesName={'traveltimes'}
         isLoading={this.getIsLoadingDataset('traveltimes')}
         data={this.state.traveltimes}
-        xField={'dep_dt'}
-        xFieldLabel={'Time of day'}
-        yField={'travel_time_sec'}
+        xField={this.getTimescale() === 'hour' ? 'dep_dt' : 'service_date'}
+        xFieldLabel={this.getTimescale() === 'hour' ? 'Time of day' : 'Day'}
+        xFieldUnit={this.getTimescale()}
+        yField={this.getTimescale() === 'hour' ? 'travel_time_sec' : 'mean'}
         yFieldLabel={'Minutes'}
         benchmarkField={'benchmark_travel_time_sec'}
         legend={true}
@@ -251,9 +277,10 @@ class App extends React.Component {
         seriesName={'headways'}
         isLoading={this.getIsLoadingDataset('headways')}
         data={this.state.headways}
-        xField={'current_dep_dt'}
-        xFieldLabel={'Time of day'}
-        yField={'headway_time_sec'}
+        xField={this.getTimescale() === 'hour' ? 'current_dep_dt' : 'service_date'}
+        xFieldLabel={this.getTimescale() === 'hour' ? 'Time of day' : 'Day'}
+        xFieldUnit={this.getTimescale()}
+        yField={this.getTimescale() === 'hour' ? 'headway_time_sec' : 'mean'}
         yFieldLabel={'Minutes'}
         benchmarkField={'benchmark_headway_time_sec'}
         legend={true}
@@ -264,9 +291,10 @@ class App extends React.Component {
         seriesName={'dwells'}
         isLoading={this.getIsLoadingDataset('dwells')}
         data={this.state.dwells}
-        xField={'arr_dt'}
-        xFieldLabel={'Time of day'}
-        yField={'dwell_time_sec'}
+        xField={this.getTimescale() === 'hour' ? 'arr_dt' : 'service_date'}
+        xFieldLabel={this.getTimescale() === 'hour' ? 'Time of day' : 'Day'}
+        xFieldUnit={this.getTimescale()}
+        yField={this.getTimescale() === 'hour' ? 'dwell_time_sec' : 'mean'}
         yFieldLabel={'Minutes'}
         benchmarkField={null}
       />
@@ -275,9 +303,9 @@ class App extends React.Component {
 
   render() {
     const { configuration, error } = this.state;
-    const { from, to, date } = configuration;
+    const { from, to, date_start } = configuration;
     const canShowCharts = from && to && !error;
-    const canShowAlerts = from && to && date;
+    const canShowAlerts = from && to && date_start;
     const recognized_alerts = this.state.alerts?.filter(recognize);
     const hasNoLoadedCharts = ['traveltimes', 'dwells', 'headways']
       .every(kind => this.getIsLoadingDataset(kind));

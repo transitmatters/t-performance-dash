@@ -10,7 +10,7 @@ EVENT_DEPARTURE = ["DEP", "PRD"]
 
 
 def dwells(stop_id, year, month, day):
-    rows_by_time = s3.download_sorted_events(stop_id, year, month, day)
+    rows_by_time = s3.download_sorted_events(stop_id[0], year, month, day)
 
     dwells = []
     for i in range(0, len(rows_by_time) - 1):
@@ -35,7 +35,7 @@ def dwells(stop_id, year, month, day):
 
 
 def headways(stop_id, year, month, day):
-    rows_by_time = s3.download_sorted_events(stop_id, year, month, day)
+    rows_by_time = s3.download_sorted_events(stop_id[0], year, month, day)
 
     only_departures = list(
         filter(lambda row: row['event_type'] in EVENT_DEPARTURE, rows_by_time))

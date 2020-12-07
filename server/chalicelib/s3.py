@@ -5,12 +5,20 @@ import zlib
 BUCKET = "tm-mbta-performance"
 s3 = boto3.resource("s3")
 
+STUPIDLY_SIMPLE_CACHE = {}
 
 def download_sorted_events(stop_id, year, month, day):
     # Download events from S3
-    key = f"Events/daily-data/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
-    obj = s3.Object(BUCKET, key)
-    s3_data = obj.get()["Body"].read()
+    try:
+        key = f"Events/daily-data/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
+        if key in STUPIDLY_SIMPLE_CACHE:
+            s3_data = STUPIDLY_SIMPLE_CACHE[key]
+        else:
+            obj = s3.Object(BUCKET, key)
+            s3_data = obj.get()["Body"].read()
+            STUPIDLY_SIMPLE_CACHE[key] = s3_data
+    except s3.meta.client.exceptions.NoSuchKey:
+        raise Exception(f"Data not available on S3 for key {key} ") from None
 
     # Uncompress
     decompressed = zlib.decompress(

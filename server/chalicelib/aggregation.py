@@ -50,4 +50,70 @@ def travel_times_over_time(sdate, edate, from_stop, to_stop):
 
     # convert to dictionary
     summary_stats_dict = summary_stats_final.to_dict('records')
-    return summary_stats_dict
+    return list(filter(lambda x: x['peak'] == 'all', summary_stats_dict))
+
+def headways_over_time(sdate, edate, stop):
+    all_data = []
+    delta = edate - sdate       # as timedelta
+
+    # get a range of dates
+    for i in range(delta.days + 1):
+        day = sdate + datetime.timedelta(days=i)
+        data = data_funcs.headways(day, [stop])
+        for data_dict in data:
+            data_dict['service_date'] = day
+        all_data.extend(data)
+
+    # convert to pandas
+    df = pd.DataFrame.from_records(all_data)
+    df['dep_dt'] = pd.to_datetime(df['current_dep_dt'])
+    df['dep_time'] = pd.to_datetime(df['current_dep_dt']).dt.time
+    df = train_peak_status(df)
+
+    # get summary stats
+    summary_stats = df.groupby('service_date')['headway_time_sec'].describe()
+    summary_stats['peak'] = 'all'
+    # reset_index to turn into dataframe
+    summary_stats = summary_stats.reset_index()
+    # summary_stats for peak / off-peak trains
+    summary_stats_peak = df.groupby(['service_date', 'peak'])['headway_time_sec'].describe().reset_index()
+
+    # combine summary stats
+    summary_stats_final = summary_stats.append(summary_stats_peak)
+
+    # convert to dictionary
+    summary_stats_dict = summary_stats_final.to_dict('records')
+    return list(filter(lambda x: x['peak'] == 'all', summary_stats_dict))
+
+def dwells_over_time(sdate, edate, stop):
+    all_data = []
+    delta = edate - sdate       # as timedelta
+
+    # get a range of dates
+    for i in range(delta.days + 1):
+        day = sdate + datetime.timedelta(days=i)
+        data = data_funcs.dwells(day, [stop])
+        for data_dict in data:
+            data_dict['service_date'] = day
+        all_data.extend(data)
+
+    # convert to pandas
+    df = pd.DataFrame.from_records(all_data)
+    df['dep_dt'] = pd.to_datetime(df['dep_dt'])
+    df['dep_time'] = pd.to_datetime(df['dep_dt']).dt.time
+    df = train_peak_status(df)
+
+    # get summary stats
+    summary_stats = df.groupby('service_date')['dwell_time_sec'].describe()
+    summary_stats['peak'] = 'all'
+    # reset_index to turn into dataframe
+    summary_stats = summary_stats.reset_index()
+    # summary_stats for peak / off-peak trains
+    summary_stats_peak = df.groupby(['service_date', 'peak'])['dwell_time_sec'].describe().reset_index()
+
+    # combine summary stats
+    summary_stats_final = summary_stats.append(summary_stats_peak)
+
+    # convert to dictionary
+    summary_stats_dict = summary_stats_final.to_dict('records')
+    return list(filter(lambda x: x['peak'] == 'all', summary_stats_dict))
