@@ -177,7 +177,7 @@ export default class StationConfiguration extends React.Component {
           <div className="option option-date">
 
           </div> 
-          <div class="option">
+          <div className="option">
           <input
               type="button"
               value="Advanced settings..."
