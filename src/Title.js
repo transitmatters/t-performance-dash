@@ -1,38 +1,20 @@
-const get_line_color = (line) => {
-  let line_color = 'grey';
+import { colorsForLine } from './constants.js';
 
-  switch(line) {
-    case 'Red':
-      line_color = '#d13434';
-      break;
-    case 'Orange':
-      line_color = '#e66f00';
-      break;
-    case 'Blue':
-      line_color = '#0e3d8c';
-      break;
-    case 'Green':
-      line_color = '#159765';
-      break;
-    default:
-      break;
-    }
-
-  return line_color;
-}
+const getLineColor = (lineName) => colorsForLine[lineName] || 'black';
+const titleColor = 'gray';
 
 const parse_location_description = (location) => {
   var result = [];
 
-  var line_color = get_line_color(location['line']);
+  var lineColor = getLineColor(location['line']);
 
-  result.push([location['from'], line_color]);
+  result.push([location['from'], lineColor]);
 
   if (location['bothStops']) {
-    result.push([' to ', 'grey']);
-    result.push([location['to'], line_color]);
+    result.push([' to ', titleColor]);
+    result.push([location['to'], lineColor]);
   } else {
-    result.push([` ${location['direction']}`, 'grey']);
+    result.push([` ${location['direction']}`, titleColor]);
   }
   return result;
 };
@@ -41,26 +23,26 @@ const drawTitle = (title, location, chart) => {
   var ctx = chart.chart.ctx;
   ctx.save();
 
-  const left_buffer = 50;
-  const midspace = 10;
+  const leftMargin = 50;
+  const minGap = 10;
   const vpos_row1 = 25;
   const vpos_row2 = 50;
 
   var position;
 
-  var title_width = ctx.measureText(title).width;
-  var location_width = parse_location_description(location)
+  var titleWidth = ctx.measureText(title).width;
+  var locationWidth = parse_location_description(location)
       .map(x => ctx.measureText(x[0]).width)
       .reduce((a,b) => a + b, 0);
 
-  if ((left_buffer + title_width + midspace + location_width) > chart.chart.width) {
+  if ((leftMargin + titleWidth + minGap + locationWidth) > chart.chart.width) {
     // small screen: centered title stacks vertically
     ctx.textAlign = 'center';
-    ctx.fillStyle = 'grey';
+    ctx.fillStyle = titleColor;
     ctx.fillText(title, chart.chart.width/2, vpos_row1);
 
     ctx.textAlign = 'left';
-    position = chart.chart.width/2 - location_width/2;
+    position = chart.chart.width/2 - locationWidth/2;
 
     for (const [word, color] of parse_location_description(location)) {
       ctx.fillStyle = color;
@@ -70,10 +52,10 @@ const drawTitle = (title, location, chart) => {
 
   } else {
     // larger screen
-    // Primary chart title, grey and left
+    // Primary chart title goes left left
     ctx.textAlign = 'left';
-    ctx.fillStyle = 'gray';
-    ctx.fillText(title, left_buffer, vpos_row2);
+    ctx.fillStyle = titleColor;
+    ctx.fillText(title, leftMargin, vpos_row2);
 
     // location components are aligned right
     ctx.textAlign = 'right';
@@ -85,6 +67,6 @@ const drawTitle = (title, location, chart) => {
     }
   }
   ctx.restore();
-}
+};
 
 export default drawTitle;
