@@ -179,16 +179,17 @@ class App extends React.Component {
 
   locationDescription(bothStops) {
     const { from, to, line } = this.state.configuration;
-    var result = {};
 
     if (from && to) {
-      result['bothStops'] = bothStops;
-      result['to'] = to.stop_name;
-      result['from'] = from.stop_name;
-      result['direction'] = station_direction(from, to, line);
-      result['line'] = line;
+      return {
+	bothStops: bothStops,
+	to: to.stop_name,
+	from: from.stop_name,
+	direction: station_direction(from, to, line),
+	line: line,
+      };
     }
-    return result;
+    return {};
   }
 
   chartTimeframe() {
