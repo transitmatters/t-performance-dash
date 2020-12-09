@@ -182,11 +182,11 @@ class App extends React.Component {
 
     if (from && to) {
       return {
-	bothStops: bothStops,
-	to: to.stop_name,
-	from: from.stop_name,
-	direction: station_direction(from, to, line),
-	line: line,
+        bothStops: bothStops,
+        to: to.stop_name,
+        from: from.stop_name,
+        direction: station_direction(from, to, line),
+        line: line,
       };
     }
     return {};
