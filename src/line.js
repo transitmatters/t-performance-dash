@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Line } from 'react-chartjs-2';
 import Legend from './Legend';
+import drawTitle from './Title';
 
 const departure_from_normal_string = (metric, benchmark) => {
   const ratio = metric / benchmark;
@@ -102,9 +103,15 @@ class LineClass extends React.Component {
               //   annotations: alert_annotations
               // },
               maintainAspectRatio: false,
+              layout: {
+                padding: {
+                  top: 25
+                }
+              },
               title: {
+                // empty title here to leave space and set font for the drawTitle process
                 display: true,
-                text: this.props.title,
+                text: "",
                 fontSize: 16
               },
               tooltips: {
@@ -151,6 +158,9 @@ class LineClass extends React.Component {
                   }
                 ]
               }
+            }}
+            plugins={{
+              afterDraw: (chart) => drawTitle(this.props.title, this.props.location, chart)
             }}
           />
         </div>
