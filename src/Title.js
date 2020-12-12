@@ -4,9 +4,9 @@ const getLineColor = (lineName) => colorsForLine[lineName] || 'black';
 const titleColor = 'gray';
 
 const parse_location_description = (location) => {
-  var result = [];
+  let result = [];
 
-  var lineColor = getLineColor(location['line']);
+  const lineColor = getLineColor(location['line']);
 
   result.push([location['from'], lineColor]);
 
@@ -20,7 +20,7 @@ const parse_location_description = (location) => {
 };
 
 const drawTitle = (title, location, chart) => {
-  var ctx = chart.chart.ctx;
+  let ctx = chart.chart.ctx;
   ctx.save();
 
   const leftMargin = 50;
@@ -28,12 +28,12 @@ const drawTitle = (title, location, chart) => {
   const vpos_row1 = 25;
   const vpos_row2 = 50;
 
-  var position;
+  let position;
 
-  var titleWidth = ctx.measureText(title).width;
-  var locationWidth = parse_location_description(location)
-      .map(x => ctx.measureText(x[0]).width)
-      .reduce((a,b) => a + b, 0);
+  const titleWidth = ctx.measureText(title).width;
+  const locationWidth = parse_location_description(location)
+	.map(x => ctx.measureText(x[0]).width)
+	.reduce((a,b) => a + b, 0);
 
   if ((leftMargin + titleWidth + minGap + locationWidth) > chart.chart.width) {
     // small screen: centered title stacks vertically
