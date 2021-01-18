@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Line } from 'react-chartjs-2';
-import Legend from './Legend';
+import { Legend, LegendLongTerm } from './Legend';
 
 const departure_from_normal_string = (metric, benchmark) => {
   const ratio = metric / benchmark;
@@ -61,6 +61,21 @@ class LineClass extends React.Component {
               labels,
               datasets: [
                 {
+                  label: "25-percentile",
+                  fill: "+1",
+                  backgroundColor: "#94a8ba",
+                  lineTension: 0.4,
+                  pointRadius: 0,
+                  data: this.props.data.map(item => (item["25%"] / 60).toFixed(2))
+                },
+                {
+                  label: "75-percentile",
+                  fill: "-1",
+                  lineTension: 0.4,
+                  pointRadius: 0,
+                  data: this.props.data.map(item => (item["75%"] / 60).toFixed(2))
+                },
+                {
                   label: this.props.seriesName,
                   fill: false,
                   lineTension: 0.1,
@@ -108,6 +123,9 @@ class LineClass extends React.Component {
               scales: {
                 yAxes: [
                   {
+                    ticks: {
+                      suggestedMin: 0,
+                    },
                     scaleLabel: {
                       display: true,
                       fontSize: 14,
@@ -133,7 +151,8 @@ class LineClass extends React.Component {
             }}
           />
         </div>
-        {this.props.legend && <Legend />}
+        {this.props.legend === 'hour' && <Legend />}
+        {this.props.legend === 'day' && <LegendLongTerm />}
       </div>
     );
   }

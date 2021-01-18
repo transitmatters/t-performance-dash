@@ -269,7 +269,7 @@ class App extends React.Component {
         yField={this.getTimescale() === 'hour' ? 'travel_time_sec' : 'mean'}
         yFieldLabel={this.getTimescale() === 'hour' ? 'Minutes' : 'Minutes (average)'}
         benchmarkField={'benchmark_travel_time_sec'}
-        legend={true}
+        legend={this.getTimescale() === 'hour' ? 'hour' : 'day'}
       />
       <Line
         title={this.graphTitle('Time between trains (headways)', true, false)}
@@ -283,7 +283,7 @@ class App extends React.Component {
         yField={this.getTimescale() === 'hour' ? 'headway_time_sec' : 'mean'}
         yFieldLabel={this.getTimescale() === 'hour' ? 'Minutes' : 'Minutes (average)'}
         benchmarkField={'benchmark_headway_time_sec'}
-        legend={true}
+        legend={this.getTimescale() === 'hour' ? 'hour' : 'day'}
       />
       <Line
         title={this.graphTitle('Time spent at station (dwells)', true, false)}
@@ -297,6 +297,7 @@ class App extends React.Component {
         yField={this.getTimescale() === 'hour' ? 'dwell_time_sec' : 'mean'}
         yFieldLabel={this.getTimescale() === 'hour' ? 'Minutes' : 'Minutes (average)'}
         benchmarkField={null}
+        legend={this.getTimescale() === 'hour' ? 'hour' : 'day'}
       />
     </div>
   }
@@ -305,7 +306,7 @@ class App extends React.Component {
     const { configuration, error } = this.state;
     const { from, to, date_start } = configuration;
     const canShowCharts = from && to && !error;
-    const canShowAlerts = from && to && date_start;
+    const canShowAlerts = from && to && date_start && this.getTimescale() === 'hour';
     const recognized_alerts = this.state.alerts?.filter(recognize);
     const hasNoLoadedCharts = ['traveltimes', 'dwells', 'headways']
       .every(kind => this.getIsLoadingDataset(kind));
