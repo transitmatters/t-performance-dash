@@ -276,12 +276,13 @@ class App extends React.Component {
         yField={timescale === 'hour' ? 'travel_time_sec' : '50%'}
         yFieldLabel={timescale === 'hour' ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={'benchmark_travel_time_sec'}
-        legend={timescale === 'hour' ? 'hour' : 'day'}
+        // legend={timescale === 'hour' ? 'hour' : 'day'}
       />
       <Line
         title={'Time between trains (headways)'}
         location={this.locationDescription(false)}
         tooltipUnit={"headway"}
+        timescale={timescale}
         seriesName={timescale === 'hour' ? 'headways' : 'headways (median)'}
         isLoading={this.getIsLoadingDataset('headways')}
         data={this.state.headways}
@@ -291,12 +292,13 @@ class App extends React.Component {
         yField={timescale === 'hour' ? 'headway_time_sec' : '50%'}
         yFieldLabel={timescale === 'hour' ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={'benchmark_headway_time_sec'}
-        legend={timescale === 'hour' ? 'hour' : 'day'}
+        // legend={timescale === 'hour' ? 'hour' : 'day'}
       />
       <Line
         title={'Time spent at station (dwells)'}
         location={this.locationDescription(false)}
         tooltipUnit={"dwell time"}
+        timescale={timescale}
         seriesName={timescale === 'hour' ? 'dwell times' : 'dwell times (median)'}
         isLoading={this.getIsLoadingDataset('dwells')}
         data={this.state.dwells}
@@ -306,7 +308,7 @@ class App extends React.Component {
         yField={timescale === 'hour' ? 'dwell_time_sec' : '50%'}
         yFieldLabel={timescale === 'hour' ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={null}
-        legend={timescale === 'hour' ? 'hour' : 'day'}
+        // legend={timescale === 'hour' ? 'hour' : 'day'}
       />
     </div>
   }

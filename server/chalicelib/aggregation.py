@@ -52,6 +52,7 @@ def travel_times_over_time(sdate, edate, from_stop, to_stop):
     summary_stats_dict = summary_stats_final.to_dict('records')
     return list(filter(lambda x: x['peak'] == 'all', summary_stats_dict))
 
+
 def headways_over_time(sdate, edate, stop):
     all_data = []
     delta = edate - sdate       # as timedelta
@@ -84,6 +85,7 @@ def headways_over_time(sdate, edate, stop):
     # convert to dictionary
     summary_stats_dict = summary_stats_final.to_dict('records')
     return list(filter(lambda x: x['peak'] == 'all', summary_stats_dict))
+
 
 def dwells_over_time(sdate, edate, stop):
     all_data = []

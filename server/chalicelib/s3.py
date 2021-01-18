@@ -5,7 +5,9 @@ import zlib
 BUCKET = "tm-mbta-performance"
 s3 = boto3.resource("s3")
 
+
 STUPIDLY_SIMPLE_CACHE = {}
+
 
 def download_sorted_events(stop_id, year, month, day):
     # Download events from S3
@@ -25,7 +27,6 @@ def download_sorted_events(stop_id, year, month, day):
         # raise Exception(f"Data not available on S3 for key {key} ") from None
         print(f"WARNING: No data available on S3 for key: {key}")
         return []
-
 
     # Parse CSV
     rows = []

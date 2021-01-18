@@ -1,7 +1,7 @@
 import json
 from chalice import Chalice, CORSConfig
 from datetime import date
-from chalicelib import data_funcs, aggregation, s3_historical
+from chalicelib import data_funcs, aggregation
 
 app = Chalice(app_name="data-dashboard")
 
@@ -64,7 +64,7 @@ def alerts_route(user_date):
 
 
 @app.route("/aggregate/traveltimes", cors=cors_config)
-def traveltime_route():
+def traveltime_aggregate_route():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
     from_stop = app.current_request.query_params["from_stop"]
@@ -73,8 +73,9 @@ def traveltime_route():
     response = aggregation.travel_times_over_time(sdate, edate, from_stop, to_stop)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
+
 @app.route("/aggregate/headways", cors=cors_config)
-def traveltime_route():
+def headways_aggregate_route():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
     stop = app.current_request.query_params["stop"]
@@ -82,8 +83,9 @@ def traveltime_route():
     response = aggregation.headways_over_time(sdate, edate, stop)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
+
 @app.route("/aggregate/dwells", cors=cors_config)
-def traveltime_route():
+def dwells_aggregate_route():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
     stop = app.current_request.query_params["stop"]

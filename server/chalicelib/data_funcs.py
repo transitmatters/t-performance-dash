@@ -1,4 +1,3 @@
-import asyncio
 import datetime
 import pytz
 from chalicelib import MbtaPerformanceAPI, s3_historical

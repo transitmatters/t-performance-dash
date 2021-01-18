@@ -172,8 +172,8 @@ class LineClass extends React.Component {
             }}
           />
         </div>
-        {this.props.legend === 'hour' && <Legend />}
-        {this.props.legend === 'day' && <LegendLongTerm />}
+        {this.props.timescale === 'day' && <LegendLongTerm />}
+        {this.props.timescale === 'hour' && this.props.yField !== "dwell_time_sec" && <Legend />}
       </div>
     );
   }
