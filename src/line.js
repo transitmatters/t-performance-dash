@@ -64,7 +64,7 @@ class LineClass extends React.Component {
                 {
                   label: "25th percentile",
                   fill: "+1",
-                  backgroundColor: "#f4ef8b",
+                  backgroundColor: "#bfc8d6",
                   lineTension: 0.4,
                   pointRadius: 0,
                   data: this.props.data.map(item => (item["25%"] / 60).toFixed(2))
