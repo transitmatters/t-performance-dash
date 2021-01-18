@@ -256,48 +256,50 @@ class App extends React.Component {
   }
 
   renderCharts() {
+    const timescale = this.getTimescale();
     return <div className='charts main-column'>
       <Line
         title={this.graphTitle('Travel times', false, true)}
         tooltipUnit={"travel time"}
-        seriesName={'traveltimes'}
+        timescale={timescale}
+        seriesName={timescale === 'hour' ? 'travel time' : 'travel time (median)'}
         isLoading={this.getIsLoadingDataset('traveltimes')}
         data={this.state.traveltimes}
-        xField={this.getTimescale() === 'hour' ? 'dep_dt' : 'service_date'}
-        xFieldLabel={this.getTimescale() === 'hour' ? 'Time of day' : 'Day'}
-        xFieldUnit={this.getTimescale()}
-        yField={this.getTimescale() === 'hour' ? 'travel_time_sec' : 'mean'}
-        yFieldLabel={this.getTimescale() === 'hour' ? 'Minutes' : 'Minutes (average)'}
+        xField={timescale === 'hour' ? 'dep_dt' : 'service_date'}
+        xFieldLabel={timescale === 'hour' ? 'Time of day' : 'Day'}
+        xFieldUnit={timescale}
+        yField={timescale === 'hour' ? 'travel_time_sec' : '50%'}
+        yFieldLabel={timescale === 'hour' ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={'benchmark_travel_time_sec'}
-        legend={this.getTimescale() === 'hour' ? 'hour' : 'day'}
+        legend={timescale === 'hour' ? 'hour' : 'day'}
       />
       <Line
         title={this.graphTitle('Time between trains (headways)', true, false)}
         tooltipUnit={"headway"}
-        seriesName={'headways'}
+        seriesName={timescale === 'hour' ? 'headways' : 'headways (median)'}
         isLoading={this.getIsLoadingDataset('headways')}
         data={this.state.headways}
-        xField={this.getTimescale() === 'hour' ? 'current_dep_dt' : 'service_date'}
-        xFieldLabel={this.getTimescale() === 'hour' ? 'Time of day' : 'Day'}
-        xFieldUnit={this.getTimescale()}
-        yField={this.getTimescale() === 'hour' ? 'headway_time_sec' : 'mean'}
-        yFieldLabel={this.getTimescale() === 'hour' ? 'Minutes' : 'Minutes (average)'}
+        xField={timescale === 'hour' ? 'current_dep_dt' : 'service_date'}
+        xFieldLabel={timescale === 'hour' ? 'Time of day' : 'Day'}
+        xFieldUnit={timescale}
+        yField={timescale === 'hour' ? 'headway_time_sec' : '50%'}
+        yFieldLabel={timescale === 'hour' ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={'benchmark_headway_time_sec'}
-        legend={this.getTimescale() === 'hour' ? 'hour' : 'day'}
+        legend={timescale === 'hour' ? 'hour' : 'day'}
       />
       <Line
         title={this.graphTitle('Time spent at station (dwells)', true, false)}
         tooltipUnit={"dwell time"}
-        seriesName={'dwells'}
+        seriesName={timescale === 'hour' ? 'dwell times' : 'dwell times (median)'}
         isLoading={this.getIsLoadingDataset('dwells')}
         data={this.state.dwells}
-        xField={this.getTimescale() === 'hour' ? 'arr_dt' : 'service_date'}
-        xFieldLabel={this.getTimescale() === 'hour' ? 'Time of day' : 'Day'}
-        xFieldUnit={this.getTimescale()}
-        yField={this.getTimescale() === 'hour' ? 'dwell_time_sec' : 'mean'}
-        yFieldLabel={this.getTimescale() === 'hour' ? 'Minutes' : 'Minutes (average)'}
+        xField={timescale === 'hour' ? 'arr_dt' : 'service_date'}
+        xFieldLabel={timescale === 'hour' ? 'Time of day' : 'Day'}
+        xFieldUnit={timescale}
+        yField={timescale === 'hour' ? 'dwell_time_sec' : '50%'}
+        yFieldLabel={timescale === 'hour' ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={null}
-        legend={this.getTimescale() === 'hour' ? 'hour' : 'day'}
+        legend={timescale === 'hour' ? 'hour' : 'day'}
       />
     </div>
   }

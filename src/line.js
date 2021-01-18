@@ -5,7 +5,7 @@ import { Legend, LegendLongTerm } from './Legend';
 
 const departure_from_normal_string = (metric, benchmark) => {
   const ratio = metric / benchmark;
-  if (ratio <= 1.25) {
+  if (!isFinite(ratio) || ratio <= 1.25) {
     return '';
   }
   else if (ratio <= 1.5) {
@@ -61,22 +61,22 @@ class LineClass extends React.Component {
               labels,
               datasets: [
                 {
-                  label: "25-percentile",
+                  label: "25th percentile",
                   fill: "+1",
-                  backgroundColor: "#94a8ba",
+                  backgroundColor: "#fcd199",
                   lineTension: 0.4,
                   pointRadius: 0,
                   data: this.props.data.map(item => (item["25%"] / 60).toFixed(2))
                 },
                 {
-                  label: "75-percentile",
+                  label: "75th percentile",
                   fill: "-1",
                   lineTension: 0.4,
                   pointRadius: 0,
                   data: this.props.data.map(item => (item["75%"] / 60).toFixed(2))
                 },
                 {
-                  label: this.props.seriesName,
+                  label: `Actual ${this.props.seriesName}`,
                   fill: false,
                   lineTension: 0.1,
                   pointBackgroundColor: point_colors(this.props.data, this.props.yField, this.props.benchmarkField),
@@ -87,7 +87,7 @@ class LineClass extends React.Component {
                   data: this.props.data.map(item => (item[this.props.yField] / 60).toFixed(2))
                 },
                 {
-                  label: `${this.props.seriesName}_benchmark`,
+                  label: `Benchmark MBTA ${this.props.seriesName}`,
                   data: this.props.data.map(item => item[this.props.benchmarkField] / 60),
                   pointRadius: 0
                 }
@@ -103,16 +103,27 @@ class LineClass extends React.Component {
               },
               tooltips: {
                 mode: "index",
+                displayColors: false,
                 callbacks: {
                   title: (tooltipItems, _) => {
-                    return new Date(tooltipItems[0].xLabel).toLocaleTimeString();
-                  },
-                  label: (tooltipItem, _) => {
-                    if (tooltipItem.datasetIndex === 0) {
-                      return `Actual ${this.props.tooltipUnit}: ${parseFloat(tooltipItem.value).toFixed(2)}`;
+                    if (this.props.timescale === "day") {
+                      /* In aggregation mode, dates come back from the server no times.
+                        Because we're -4/-5 UTC, the resulting strings become 7pm/8pm the previous day with affixing 00:00:00.
+                        Blegh */
+                      const date = new Date(`${tooltipItems[0].xLabel} 00:00:00`);
+                      return date.toDateString();
                     }
-                    return `Benchmark MBTA ${this.props.tooltipUnit}: ${parseFloat(tooltipItem.value).toFixed(2)}`;
+                    else if(this.props.timescale === "hour") {
+                      const date = new Date(tooltipItems[0].xLabel);
+                      return date.toLocaleTimeString();
+                    }
                   },
+                  // label: (tooltipItem, _) => {
+                  //   if (tooltipItem.datasetIndex === 0) {
+                  //     return `Actual ${this.props.tooltipUnit}: ${parseFloat(tooltipItem.value).toFixed(2)}`;
+                  //   }
+                  //   return `Benchmark MBTA ${this.props.tooltipUnit}: ${parseFloat(tooltipItem.value).toFixed(2)}`;
+                  // },
                   afterBody: (tooltipItems) => {
                     if (tooltipItems.length > 1) {
                       return departure_from_normal_string(tooltipItems[0].value, tooltipItems[1].value);
@@ -124,7 +135,7 @@ class LineClass extends React.Component {
                 yAxes: [
                   {
                     ticks: {
-                      suggestedMin: 0,
+                      // suggestedMin: 0,
                     },
                     scaleLabel: {
                       display: true,

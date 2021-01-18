@@ -14,8 +14,8 @@ function Legend() {
 function LegendLongTerm() {
   return (
     <div className="legend">
-      <p><span className="legend-dot" style={{"backgroundColor": "#83d3af"}}></span> Interquartile range</p>
-      <p><span className="legend-dot" style={{"backgroundColor": "black"}}></span> Average</p>
+      <p><span className="legend-dot" style={{"backgroundColor": "#fcd199"}}></span> Interquartile range</p>
+      <p><span className="legend-dot" style={{"backgroundColor": "black"}}></span> Median</p>
     </div>
   );
 }
