@@ -64,7 +64,7 @@ class LineClass extends React.Component {
                 {
                   label: "25th percentile",
                   fill: "+1",
-                  backgroundColor: "#fcd199",
+                  backgroundColor: "#f4ef8b",
                   lineTension: 0.4,
                   pointRadius: 0,
                   data: this.props.data.map(item => (item["25%"] / 60).toFixed(2))
@@ -141,9 +141,6 @@ class LineClass extends React.Component {
               scales: {
                 yAxes: [
                   {
-                    ticks: {
-                      // suggestedMin: 0,
-                    },
                     scaleLabel: {
                       display: true,
                       fontSize: 14,

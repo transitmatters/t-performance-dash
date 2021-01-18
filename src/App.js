@@ -276,7 +276,6 @@ class App extends React.Component {
         yField={timescale === 'hour' ? 'travel_time_sec' : '50%'}
         yFieldLabel={timescale === 'hour' ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={'benchmark_travel_time_sec'}
-        // legend={timescale === 'hour' ? 'hour' : 'day'}
       />
       <Line
         title={'Time between trains (headways)'}
@@ -292,7 +291,6 @@ class App extends React.Component {
         yField={timescale === 'hour' ? 'headway_time_sec' : '50%'}
         yFieldLabel={timescale === 'hour' ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={'benchmark_headway_time_sec'}
-        // legend={timescale === 'hour' ? 'hour' : 'day'}
       />
       <Line
         title={'Time spent at station (dwells)'}
@@ -308,7 +306,6 @@ class App extends React.Component {
         yField={timescale === 'hour' ? 'dwell_time_sec' : '50%'}
         yFieldLabel={timescale === 'hour' ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={null}
-        // legend={timescale === 'hour' ? 'hour' : 'day'}
       />
     </div>
   }
