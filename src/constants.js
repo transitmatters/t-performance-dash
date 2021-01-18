@@ -1,3 +1,10 @@
+export const colorsForLine = {
+  Red: '#d13434',
+  Orange: '#e66f00',
+  Blue: '#0e3d8c',
+  Green: '#159765',
+};
+
 export const stations = {
 	"Red": [{
 		"stop_name": "Alewife",
@@ -1096,7 +1103,7 @@ const createConfigPresetValue = (line, fromStationName, toStationName, date_star
 		from: fromStation,
 		to: toStation,
 	}
-}
+};
 
 export const configPresets = [
 	{

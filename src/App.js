@@ -202,15 +202,19 @@ class App extends React.Component {
     }
   }
 
-  graphTitle(prefix, showDirection, showTo) {
+  locationDescription(bothStops) {
     const { from, to, line } = this.state.configuration;
+
     if (from && to) {
-      const direction = showDirection ? ` ${station_direction(from, to, line)}` : ""
-      const preposition = showTo ? "from" : "at";
-      const suffix = showTo ? `to ${to.stop_name}` : "";
-      return `${prefix} ${preposition} ${from.stop_name}${direction} ${suffix}`;
+      return {
+        bothStops: bothStops,
+        to: to.stop_name,
+        from: from.stop_name,
+        direction: station_direction(from, to, line),
+        line: line,
+      };
     }
-    return prefix;
+    return {};
   }
 
   chartTimeframe() {
@@ -259,7 +263,8 @@ class App extends React.Component {
     const timescale = this.getTimescale();
     return <div className='charts main-column'>
       <Line
-        title={this.graphTitle('Travel times', false, true)}
+        title={"Travel times"}
+        location={this.locationDescription(true)}
         tooltipUnit={"travel time"}
         timescale={timescale}
         seriesName={timescale === 'hour' ? 'travel time' : 'travel time (median)'}
@@ -274,7 +279,8 @@ class App extends React.Component {
         legend={timescale === 'hour' ? 'hour' : 'day'}
       />
       <Line
-        title={this.graphTitle('Time between trains (headways)', true, false)}
+        title={'Time between trains (headways)'}
+        location={this.locationDescription(false)}
         tooltipUnit={"headway"}
         seriesName={timescale === 'hour' ? 'headways' : 'headways (median)'}
         isLoading={this.getIsLoadingDataset('headways')}
@@ -288,7 +294,8 @@ class App extends React.Component {
         legend={timescale === 'hour' ? 'hour' : 'day'}
       />
       <Line
-        title={this.graphTitle('Time spent at station (dwells)', true, false)}
+        title={'Time spent at station (dwells)'}
+        location={this.locationDescription(false)}
         tooltipUnit={"dwell time"}
         seriesName={timescale === 'hour' ? 'dwell times' : 'dwell times (median)'}
         isLoading={this.getIsLoadingDataset('dwells')}
