@@ -35,6 +35,7 @@ export default class StationConfiguration extends React.Component {
     this.handleSelectDate = this.handleSelectDate.bind(this);
     this.handleSelectRawDate = this.handleSelectRawDate.bind(this);
     this.handleSwapStations = this.handleSwapStations.bind(this);
+    this.clearMoreOptions = this.clearMoreOptions.bind(this);
 
     this.state = {
       show_date_end_picker: !!this.props.current.date_end,
@@ -113,7 +114,13 @@ export default class StationConfiguration extends React.Component {
         return true
       });
     }
+  }
 
+  clearMoreOptions() {
+    this.picker_end.current._flatpickr.clear();
+    this.setState({
+      show_date_end_picker: false,
+    });
   }
 
   render() {
@@ -174,16 +181,19 @@ export default class StationConfiguration extends React.Component {
               />
             </span>
           </div>
-          <div className="option option-date">
-
-          </div> 
           <div className="option">
           <input
+              className="more-options-button"
               type="button"
               value="More options..."
               style={this.state.show_date_end_picker ? { display: 'none' } : {}}
               onClick={() => this.setState({show_date_end_picker: true})}
               />
+          <button
+          className="clear-button"
+          style={{visibility: this.state.show_date_end_picker ? 'visible' : 'hidden'}}
+          onClick={this.clearMoreOptions}
+          >🅧</button>
           </div>
         </div>
       </div>

@@ -246,6 +246,14 @@ button:disabled,
   align-items: center;
 }
 
+.station-configuration .clear-button {
+  border: none;
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  height: 13px;
+}
+
 @media screen and (min-width: 770px) {
   .chart {
     display: grid;
@@ -280,7 +288,12 @@ button:disabled,
   }
 
   .station-configuration .option-date input {
-    width: 100px;
+    width: 120px;
+  }
+
+  .station-configuration .more-options-button {
+    width: 125px;
+    padding-right: 6px;
   }
 
   .station-configuration > *:not(:last-child) {
