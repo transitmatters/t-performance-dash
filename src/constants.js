@@ -1107,15 +1107,15 @@ const createConfigPresetValue = (line, fromStationName, toStationName, date_star
 
 export const configPresets = [
 	{
-		label: "October 12, 2020 — Red Line",
-		value: createConfigPresetValue("Red", "Central", "Davis", '2020-10-12'),
+		label: "January 17, 2021 — Red Line",
+		value: createConfigPresetValue("Red", "Braintree", "Andrew", '2021-01-17'),
 	},
 	{
-		label: "October 12, 2020 — Orange Line",
-		value: createConfigPresetValue("Orange", "Community College", "Roxbury Crossing", '2020-10-12'),
+		label: "January 4, 2021 — Orange Line",
+		value: createConfigPresetValue("Orange", "Wellington", "Tufts Medical Center", '2021-01-04'),
 	},
 	{
-		label: "October 9, 2020 — Blue Line",
-		value: createConfigPresetValue("Blue", "Revere Beach", "Aquarium", '2020-10-09'),
+		label: "January 4, 2021 — Blue Line",
+		value: createConfigPresetValue("Blue", "Revere Beach", "Aquarium", '2021-01-04'),
 	},
 ];
