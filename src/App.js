@@ -30,6 +30,12 @@ const documentTitle = (config) => {
   return `${config.line} Line - ${config.date} - TransitMatters Data Dashboard`;
 };
 
+const showBetaTag = () => {
+  const beta_tag = document.getElementById("beta-tag");
+  beta_tag.style.visibility = "visible";
+  beta_tag.innerText = "Beta";
+};
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -52,6 +58,10 @@ class App extends React.Component {
     const url_config = new URLSearchParams(props.location.search).get("config");
     if (typeof url_config === "string") {
       this.state.configuration = stateFromURL(url_config);
+    }
+
+    if (window.location.hostname !== "dashboard.transitmatters.org") {
+      showBetaTag();
     }
 
     // Handle back/forward buttons
