@@ -185,7 +185,7 @@ export default class StationConfiguration extends React.Component {
           <input
               className="more-options-button"
               type="button"
-              value="More options..."
+              value="Range..."
               style={this.state.show_date_end_picker ? { display: 'none' } : {}}
               onClick={() => this.setState({show_date_end_picker: true})}
               />
