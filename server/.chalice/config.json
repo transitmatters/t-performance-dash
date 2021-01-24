@@ -1,7 +1,7 @@
 {
   "version": "2.0",
   "app_name": "data-dashboard",
-  "api_gateway_endpoint_type": "EDGE",
+  "api_gateway_endpoint_type": "REGIONAL",
   "minimum_compression_size": 1000,
   "stages": {
     "production": {

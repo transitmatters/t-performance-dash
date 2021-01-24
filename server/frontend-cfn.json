@@ -1,13 +1,22 @@
 {
   "Parameters" : {
-    "TMFrontendHostname" : {
-      "Type" : "String",
-      "Default" : "dashboard.transitmatters.org",
-      "AllowedValues" : ["dashboard-beta.transitmatters.org", "dashboard.transitmatters.org"],
-      "Description" : "The frontend hostname for the data dashboard."
+    "TMFrontendHostname": {
+      "Type": "String",
+      "Default": "dashboard.transitmatters.org",
+      "AllowedValues": ["dashboard-beta.transitmatters.org", "dashboard.transitmatters.org"],
+      "Description": "The frontend hostname for the data dashboard."
+    },
+    "TMBackendCertArn": {
+      "Type": "String",
+      "Description": "The ACM ARN of the backend certificate."
     }
   },
   "Resources": {
+    "ApiGatewayCustomDomain": {
+      "Properties": {
+        "RegionalCertificateArn": { "Ref": "TMBackendCertArn" }
+      }
+    },
     "FrontendCert": {
       "Type": "AWS::CertificateManager::Certificate",
       "Properties": {
