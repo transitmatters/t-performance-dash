@@ -31,7 +31,7 @@ const documentTitle = (config) => {
 };
 
 const showBetaTag = () => {
-  const beta_tag = document.getElementById("beta-tag");
+  const beta_tag = document.querySelector(".beta-tag");
   beta_tag.style.visibility = "visible";
   beta_tag.innerText = "Beta";
 };
