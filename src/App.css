@@ -31,6 +31,7 @@
 
 .title .beta-tag {
   display: inline;
+  visibility: hidden;
   font-size: 0.3em;
   vertical-align: super;
   border-radius: 2px;
