@@ -1,12 +1,34 @@
 {
   "version": "2.0",
   "app_name": "data-dashboard",
+  "api_gateway_endpoint_type": "EDGE",
   "minimum_compression_size": 1000,
   "stages": {
-    "dev": {
+    "production": {
       "api_gateway_stage": "api",
       "autogen_policy": false,
-      "iam_policy_file": "policy.json"
+      "iam_policy_file": "policy.json",
+      "environment_variables": {
+        "TM_FRONTEND_HOST": "dashboard.transitmatters.org"
+      },
+      "api_gateway_custom_domain": {
+        "domain_name": "dashboard-api.transitmatters.org",
+        "tls_version": "TLS_1_2",
+        "certificate_arn": ""
+      }
+    },
+    "beta": {
+      "api_gateway_stage": "beta",
+      "autogen_policy": false,
+      "iam_policy_file": "policy.json",
+      "environment_variables": {
+        "TM_FRONTEND_HOST": "dashboard-beta.transitmatters.org"
+      },
+      "api_gateway_custom_domain": {
+        "domain_name": "dashboard-api-beta.transitmatters.org",
+        "tls_version": "TLS_1_2",
+        "certificate_arn": ""
+      }
     }
   }
 }

@@ -1,23 +1,20 @@
 {
+  "Parameters" : {
+    "TMFrontendHostname" : {
+      "Type" : "String",
+      "Default" : "dashboard.transitmatters.org",
+      "AllowedValues" : ["dashboard-beta.transitmatters.org", "dashboard.transitmatters.org"],
+      "Description" : "The frontend hostname for the data dashboard."
+    }
+  },
   "Resources": {
     "FrontendCert": {
       "Type": "AWS::CertificateManager::Certificate",
       "Properties": {
-        "DomainName": "dashboard.transitmatters.org",
+        "DomainName": { "Ref": "TMFrontendHostname" },
         "DomainValidationOptions": [{
-          "DomainName": "dashboard.transitmatters.org",
-          "ValidationDomain": "dashboard.transitmatters.org"
-        }],
-        "ValidationMethod": "DNS"
-      }
-    },
-    "BackendCert": {
-      "Type": "AWS::CertificateManager::Certificate",
-      "Properties": {
-        "DomainName": "dashboard-api.transitmatters.org",
-        "DomainValidationOptions": [{
-          "DomainName": "dashboard-api.transitmatters.org",
-          "ValidationDomain": "dashboard-api.transitmatters.org"
+          "DomainName": { "Ref": "TMFrontendHostname" },
+          "ValidationDomain": { "Ref": "TMFrontendHostname" }
         }],
         "ValidationMethod": "DNS"
       }
@@ -25,7 +22,7 @@
     "FrontendBucket": {
       "Type": "AWS::S3::Bucket",
       "Properties": {
-        "BucketName": "dashboard.transitmatters.org",
+        "BucketName": { "Ref": "TMFrontendHostname" },
         "AccessControl": "PublicRead",
         "WebsiteConfiguration": {
           "IndexDocument": "index.html",
@@ -36,7 +33,7 @@
     "FrontendBucketPolicy": {
       "Type": "AWS::S3::BucketPolicy",
       "Properties": {
-        "Bucket": "dashboard.transitmatters.org",
+        "Bucket": { "Ref": "FrontendBucket" },
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -45,9 +42,7 @@
               "Effect": "Allow",
               "Principal": "*",
               "Action": "s3:GetObject",
-              "Resource": [
-                "arn:aws:s3:::dashboard.transitmatters.org/*"
-              ]
+              "Resource": { "Fn::Join" : [ "", [ { "Fn::GetAtt" : [ "FrontendBucket", "Arn" ] }, "/*" ] ] }
             }
           ]
         }
@@ -58,7 +53,7 @@
       "Properties": {
         "DistributionConfig": {
           "Aliases": [
-            "dashboard.transitmatters.org"
+            { "Ref": "TMFrontendHostname" }
           ],
           "Enabled": "true",
           "DefaultCacheBehavior": {
@@ -77,7 +72,7 @@
                 "HTTPSPort": "443",
                 "OriginProtocolPolicy": "http-only"
               },
-              "DomainName": "dashboard.transitmatters.org.s3.amazonaws.com",
+              "DomainName": { "Fn::GetAtt" : [ "FrontendBucket", "DomainName" ] },
               "Id": "only-origin"
             }
           ],
