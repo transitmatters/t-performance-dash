@@ -13,7 +13,7 @@ import { configPresets } from './constants';
 const FRONTEND_TO_BACKEND_MAP = new Map([
   ["localhost", ""], // this becomes a relative path that is proxied through CRA:3000 to python on :5000
   ["127.0.0.1", ""],
-  ["dashboard.transitmatters.org", "https://dashboard-api.transitmatters.org"],
+  ["dashboard.transitmatters.org", "https://dashboard-api2.transitmatters.org"],
   ["dashboard-beta.transitmatters.org", "https://dashboard-api-beta.transitmatters.org"]
 ]);
 const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname);
