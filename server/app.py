@@ -1,12 +1,15 @@
 import json
+import os
 from chalice import Chalice, CORSConfig
 from datetime import date
 from chalicelib import data_funcs, aggregation
 
 app = Chalice(app_name="data-dashboard")
 
+TM_FRONTEND_HOST = os.environ["TM_FRONTEND_HOST"]
+
 cors_config = CORSConfig(
-    allow_origin="https://dashboard.transitmatters.org", max_age=3600
+    allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600
 )
 
 

@@ -10,9 +10,13 @@ import './App.css';
 import Select from './Select';
 import { configPresets } from './constants';
 
-const APP_DATA_BASE_PATH = (window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1") ?
-  '' : 'https://dashboard-api.transitmatters.org';
+const FRONTEND_TO_BACKEND_MAP = new Map([
+  ["localhost", ""], // this becomes a relative path that is proxied through CRA:3000 to python on :5000
+  ["127.0.0.1", ""],
+  ["dashboard.transitmatters.org", "https://dashboard-api2.transitmatters.org"],
+  ["dashboard-beta.transitmatters.org", "https://dashboard-api-beta.transitmatters.org"]
+]);
+const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname);
 
 const stateFromURL = (config) => {
   const [line, from_id, to_id, date_start, date_end] = config.split(",");
@@ -29,6 +33,12 @@ const stateFromURL = (config) => {
 
 const documentTitle = (config) => {
   return `${config.line} Line - ${config.date_start} - TransitMatters Data Dashboard`;
+};
+
+const showBetaTag = () => {
+  const beta_tag = document.querySelector(".beta-tag");
+  beta_tag.style.visibility = "visible";
+  beta_tag.innerText = "Beta";
 };
 
 class App extends React.Component {
@@ -53,6 +63,10 @@ class App extends React.Component {
     const url_config = new URLSearchParams(props.location.search).get("config");
     if (typeof url_config === "string") {
       this.state.configuration = stateFromURL(url_config);
+    }
+
+    if (window.location.hostname !== "dashboard.transitmatters.org") {
+      showBetaTag();
     }
 
     // Handle back/forward buttons
