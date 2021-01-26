@@ -6,6 +6,10 @@
       "AllowedValues": ["dashboard-beta.transitmatters.org", "dashboard.transitmatters.org"],
       "Description": "The frontend hostname for the data dashboard."
     },
+    "TMFrontendCertArn": {
+      "Type": "String",
+      "Description": "The ACM ARN of the frontend certificate."
+    },
     "TMBackendCertArn": {
       "Type": "String",
       "Description": "The ACM ARN of the backend certificate."
@@ -15,17 +19,6 @@
     "ApiGatewayCustomDomain": {
       "Properties": {
         "RegionalCertificateArn": { "Ref": "TMBackendCertArn" }
-      }
-    },
-    "FrontendCert": {
-      "Type": "AWS::CertificateManager::Certificate",
-      "Properties": {
-        "DomainName": { "Ref": "TMFrontendHostname" },
-        "DomainValidationOptions": [{
-          "DomainName": { "Ref": "TMFrontendHostname" },
-          "ValidationDomain": { "Ref": "TMFrontendHostname" }
-        }],
-        "ValidationMethod": "DNS"
       }
     },
     "FrontendBucket": {
@@ -96,9 +89,7 @@
           "PriceClass": "PriceClass_100",
           "ViewerCertificate": {
             "MinimumProtocolVersion": "TLSv1.2_2018",
-            "AcmCertificateArn": {
-              "Ref": "FrontendCert"
-            },
+            "AcmCertificateArn": { "Ref": "TMFrontendCertArn" },
             "SslSupportMethod": "sni-only"
           }
         }
