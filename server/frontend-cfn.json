@@ -1,31 +1,30 @@
 {
-  "Resources": {
-    "FrontendCert": {
-      "Type": "AWS::CertificateManager::Certificate",
-      "Properties": {
-        "DomainName": "dashboard.transitmatters.org",
-        "DomainValidationOptions": [{
-          "DomainName": "dashboard.transitmatters.org",
-          "ValidationDomain": "dashboard.transitmatters.org"
-        }],
-        "ValidationMethod": "DNS"
-      }
+  "Parameters" : {
+    "TMFrontendHostname": {
+      "Type": "String",
+      "Default": "dashboard.transitmatters.org",
+      "AllowedValues": ["dashboard-beta.transitmatters.org", "dashboard.transitmatters.org"],
+      "Description": "The frontend hostname for the data dashboard."
     },
-    "BackendCert": {
-      "Type": "AWS::CertificateManager::Certificate",
+    "TMFrontendCertArn": {
+      "Type": "String",
+      "Description": "The ACM ARN of the frontend certificate."
+    },
+    "TMBackendCertArn": {
+      "Type": "String",
+      "Description": "The ACM ARN of the backend certificate."
+    }
+  },
+  "Resources": {
+    "ApiGatewayCustomDomain": {
       "Properties": {
-        "DomainName": "dashboard-api.transitmatters.org",
-        "DomainValidationOptions": [{
-          "DomainName": "dashboard-api.transitmatters.org",
-          "ValidationDomain": "dashboard-api.transitmatters.org"
-        }],
-        "ValidationMethod": "DNS"
+        "RegionalCertificateArn": { "Ref": "TMBackendCertArn" }
       }
     },
     "FrontendBucket": {
       "Type": "AWS::S3::Bucket",
       "Properties": {
-        "BucketName": "dashboard.transitmatters.org",
+        "BucketName": { "Ref": "TMFrontendHostname" },
         "AccessControl": "PublicRead",
         "WebsiteConfiguration": {
           "IndexDocument": "index.html",
@@ -36,7 +35,7 @@
     "FrontendBucketPolicy": {
       "Type": "AWS::S3::BucketPolicy",
       "Properties": {
-        "Bucket": "dashboard.transitmatters.org",
+        "Bucket": { "Ref": "FrontendBucket" },
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -45,9 +44,7 @@
               "Effect": "Allow",
               "Principal": "*",
               "Action": "s3:GetObject",
-              "Resource": [
-                "arn:aws:s3:::dashboard.transitmatters.org/*"
-              ]
+              "Resource": { "Fn::Join" : [ "", [ { "Fn::GetAtt" : [ "FrontendBucket", "Arn" ] }, "/*" ] ] }
             }
           ]
         }
@@ -58,7 +55,7 @@
       "Properties": {
         "DistributionConfig": {
           "Aliases": [
-            "dashboard.transitmatters.org"
+            { "Ref": "TMFrontendHostname" }
           ],
           "Enabled": "true",
           "DefaultCacheBehavior": {
@@ -77,7 +74,7 @@
                 "HTTPSPort": "443",
                 "OriginProtocolPolicy": "http-only"
               },
-              "DomainName": "dashboard.transitmatters.org.s3.amazonaws.com",
+              "DomainName": { "Fn::GetAtt" : [ "FrontendBucket", "DomainName" ] },
               "Id": "only-origin"
             }
           ],
@@ -92,9 +89,7 @@
           "PriceClass": "PriceClass_100",
           "ViewerCertificate": {
             "MinimumProtocolVersion": "TLSv1.2_2018",
-            "AcmCertificateArn": {
-              "Ref": "FrontendCert"
-            },
+            "AcmCertificateArn": { "Ref": "TMFrontendCertArn" },
             "SslSupportMethod": "sni-only"
           }
         }
