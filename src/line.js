@@ -1,8 +1,21 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Line } from 'react-chartjs-2';
+import { Line, Chart } from 'react-chartjs-2';
 import Legend from './Legend';
 import drawTitle from './Title';
+
+Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
+  let x = eventPos.x;
+  let y = eventPos.y;
+
+  let firstElem = tooltipItems[0];
+  if (firstElem && firstElem.hasValue()) {
+    const pos = firstElem.tooltipPosition();
+    x = pos.x;
+    y = pos.y;
+  }
+  return {x, y};
+};
 
 const departure_from_normal_string = (metric, benchmark) => {
   const ratio = metric / benchmark;
@@ -116,6 +129,7 @@ class LineClass extends React.Component {
               },
               tooltips: {
                 mode: "index",
+                position: "first",
                 callbacks: {
                   title: (tooltipItems, _) => {
                     return new Date(tooltipItems[0].xLabel).toLocaleTimeString();
