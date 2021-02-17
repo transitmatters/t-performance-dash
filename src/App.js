@@ -9,6 +9,7 @@ import AlertBar from './AlertBar';
 import './App.css';
 import Select from './Select';
 import { configPresets } from './constants';
+import { CSVLink } from "react-csv";
 
 const FRONTEND_TO_BACKEND_MAP = new Map([
   ["localhost", ""], // this becomes a relative path that is proxied through CRA:3000 to python on :5000
@@ -286,11 +287,15 @@ class App extends React.Component {
         isLoading={this.getIsLoadingDataset('dwells')}
         data={this.state.dwells}
         xField={'arr_dt'}
-        xFieldLabel={'Time of day'}
+        xFieldLabel={'Time of day'} 
         yField={'dwell_time_sec'}
         yFieldLabel={'Minutes'}
         benchmarkField={null}
       />
+      <CSVLink style={{verticalAlign: 'text-bottom'}}
+      data={this.state.traveltimes.concat(this.state.headways,this.state.dwells)}
+      filename="data.csv">Download data
+      </CSVLink>
     </div>
   }
 
