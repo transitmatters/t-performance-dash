@@ -294,7 +294,7 @@ class App extends React.Component {
       />
       <CSVLink style={{verticalAlign: 'text-bottom'}}
       data={this.state.traveltimes.concat(this.state.headways,this.state.dwells)}
-      filename="data.csv">Download data
+      filename="dashboard_data.csv">Download data
       </CSVLink>
     </div>
   }
