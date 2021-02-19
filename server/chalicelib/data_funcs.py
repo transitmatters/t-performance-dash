@@ -115,6 +115,5 @@ def alerts(day, params):
                     "text": alert_version["header_text"]
                 })
         return flat_alerts
-    except:
+    except Exception:
         return []
-
