@@ -12,6 +12,25 @@ def stamp_to_dt(stamp):
 def use_S3(date):
     return (date.today() - date).days >= 90
 
+def partition_S3_dates(start_date, end_date):
+    CUTOFF = datetime.date.today() - datetime.timedelta(days=90)
+
+    s3_dates = None
+    api_dates = None
+
+    if end_date < CUTOFF:
+        s3_dates = (start_date, end_date)
+    elif CUTOFF <= start_date:
+        api_dates = (start_date, end_date)
+    else:
+        s3_dates = (start_date, CUTOFF - datetime.timedelta(days=1))
+        api_dates = (CUTOFF, end_date)
+
+    return {
+        's3_interval': s3_dates,
+        'mbta_api_interval': api_dates
+    }
+
 
 def headways(date, stops):
     if use_S3(date):
