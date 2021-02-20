@@ -1,3 +1,4 @@
+import json
 import os
 from chalice import Chalice, Cron, CORSConfig
 from datetime import date, timedelta
@@ -85,7 +86,4 @@ def traveltime_route(user_date):
 @app.route("/alerts/{user_date}", cors=cors_config)
 def alerts_route(user_date):
     date = parse_user_date(user_date)
-    if use_S3(date):
-        return []
-    else:
-        return data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params))
+    return json.dumps(data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params)))

@@ -1,8 +1,6 @@
 import json
 from chalicelib import MbtaPerformanceAPI, s3
 
-BUCKET = "tm-mbta-performance"
-
 
 def routes_for_alert(alert):
     routes = set()
@@ -22,7 +20,7 @@ def get_alerts(day, route):
     return list(filter(lambda alert: route[0] in routes_for_alert(alert), alerts))
 
 
-def store_alerts(date):
-    api_data = MbtaPerformanceAPI.get_api_data(date, "pastalerts", {})
+def store_alerts(day):
+    api_data = MbtaPerformanceAPI.get_api_data(day, "pastalerts", {})
     alerts = json.dumps(api_data).encode("utf8")
-    s3.upload(key(date), alerts, True)
+    s3.upload(key(day), alerts, True)
