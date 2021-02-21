@@ -4,6 +4,9 @@ import pandas as pd
 from pandas.tseries.holiday import USFederalHolidayCalendar
 import numpy as np
 
+# This matches the cutoff used in MbtaPerformanceApi.py
+SERVICE_HR_OFFSET = datetime.timedelta(hours=3, minutes=30)
+
 
 def train_peak_status(df):
     cal = USFederalHolidayCalendar()
@@ -20,21 +23,13 @@ def train_peak_status(df):
 
 
 def travel_times_over_time(sdate, edate, from_stop, to_stop):
-    all_data = []
-    delta = edate - sdate       # as timedelta
-
-    # get a range of dates
-    for i in range(delta.days + 1):
-        day = sdate + datetime.timedelta(days=i)
-        data = data_funcs.travel_times(day, [from_stop], [to_stop])
-        for data_dict in data:
-            data_dict['service_date'] = day
-        all_data.extend(data)
+    all_data = data_funcs.travel_times(sdate, [from_stop], [to_stop], edate)
 
     # convert to pandas
     df = pd.DataFrame.from_records(all_data)
     df['dep_dt'] = pd.to_datetime(df['dep_dt'])
     df['dep_time'] = pd.to_datetime(df['dep_dt']).dt.time
+    df['service_date'] = (df['dep_dt'] - SERVICE_HR_OFFSET).map(lambda x: x.date())
     df = train_peak_status(df)
 
     # get summary stats
@@ -54,21 +49,14 @@ def travel_times_over_time(sdate, edate, from_stop, to_stop):
 
 
 def headways_over_time(sdate, edate, stop):
-    all_data = []
-    delta = edate - sdate       # as timedelta
-
-    # get a range of dates
-    for i in range(delta.days + 1):
-        day = sdate + datetime.timedelta(days=i)
-        data = data_funcs.headways(day, [stop])
-        for data_dict in data:
-            data_dict['service_date'] = day
-        all_data.extend(data)
+    all_data = data_funcs.headways(sdate, [stop], edate)
 
     # convert to pandas
     df = pd.DataFrame.from_records(all_data)
+
     df['dep_dt'] = pd.to_datetime(df['current_dep_dt'])
     df['dep_time'] = pd.to_datetime(df['current_dep_dt']).dt.time
+    df['service_date'] = (df['dep_dt'] - SERVICE_HR_OFFSET).map(lambda x: x.date())
     df = train_peak_status(df)
 
     # get summary stats
@@ -88,21 +76,13 @@ def headways_over_time(sdate, edate, stop):
 
 
 def dwells_over_time(sdate, edate, stop):
-    all_data = []
-    delta = edate - sdate       # as timedelta
-
-    # get a range of dates
-    for i in range(delta.days + 1):
-        day = sdate + datetime.timedelta(days=i)
-        data = data_funcs.dwells(day, [stop])
-        for data_dict in data:
-            data_dict['service_date'] = day
-        all_data.extend(data)
+    all_data = data_funcs.dwells(sdate, [stop], edate)
 
     # convert to pandas
     df = pd.DataFrame.from_records(all_data)
     df['dep_dt'] = pd.to_datetime(df['dep_dt'])
     df['dep_time'] = pd.to_datetime(df['dep_dt']).dt.time
+    df['service_date'] = (df['dep_dt'] - SERVICE_HR_OFFSET).map(lambda x: x.date())
     df = train_peak_status(df)
 
     # get summary stats
