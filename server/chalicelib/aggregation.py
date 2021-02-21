@@ -7,6 +7,7 @@ import numpy as np
 # This matches the cutoff used in MbtaPerformanceApi.py
 SERVICE_HR_OFFSET = datetime.timedelta(hours=3, minutes=30)
 
+
 def train_peak_status(df):
     cal = USFederalHolidayCalendar()
     holidays = cal.holidays(start=df['dep_dt'].min(), end=df['dep_dt'].max())
@@ -23,7 +24,7 @@ def train_peak_status(df):
 
 def travel_times_over_time(sdate, edate, from_stop, to_stop):
     all_data = data_funcs.travel_times(sdate, [from_stop], [to_stop], edate)
-        
+
     # convert to pandas
     df = pd.DataFrame.from_records(all_data)
     df['dep_dt'] = pd.to_datetime(df['dep_dt'])
@@ -45,6 +46,7 @@ def travel_times_over_time(sdate, edate, from_stop, to_stop):
     # convert to dictionary
     summary_stats_dict = summary_stats_final.to_dict('records')
     return list(filter(lambda x: x['peak'] == 'all', summary_stats_dict))
+
 
 def headways_over_time(sdate, edate, stop):
     all_data = data_funcs.headways(sdate, [stop], edate)

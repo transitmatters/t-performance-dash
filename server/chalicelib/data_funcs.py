@@ -10,8 +10,10 @@ def stamp_to_dt(stamp):
     dt = datetime.datetime.fromtimestamp(stamp, pytz.timezone("America/New_York"))
     return dt.strftime(DATE_FORMAT)
 
+
 def use_S3(date):
     return (date.today() - date).days >= 90
+
 
 def partition_S3_dates(start_date, end_date):
     CUTOFF = datetime.date.today() - datetime.timedelta(days=90)
@@ -28,7 +30,8 @@ def partition_S3_dates(start_date, end_date):
         api_dates = (CUTOFF, end_date)
 
     return (s3_dates, api_dates)
-        
+
+
 def headways(sdate, stops, edate=None):
     if edate is None:
         if use_S3(sdate):
@@ -46,7 +49,7 @@ def headways(sdate, stops, edate=None):
 
     if api_interval:
         start, end = api_interval
-        delta = (end - start).days + 1 # to make it pythonic: we want to include the end date
+        delta = (end - start).days + 1  # to make it pythonic: we want to include the end date
         # MBTA api won't accept queries > 7 days.
         # We could move this logic inside the api (since it generates multiple requests), or leave it here.
         cur = start
@@ -57,7 +60,7 @@ def headways(sdate, stops, edate=None):
             cur += datetime.timedelta(days=inc)
 
     return all_data
-        
+
 
 def process_mbta_headways(sdate, stops, edate=None):
     # get data
@@ -86,10 +89,11 @@ def process_mbta_headways(sdate, stops, edate=None):
 
     return headways
 
+
 def travel_times(sdate, from_stops, to_stops, edate=None):
     if edate is None:
         if use_S3(sdate):
-            return s3_historical.travel_times(from_stops, to_stops, sdate)
+            return s3_historical.travel_times(from_stops[0], to_stops[0], sdate)
         else:
             return process_mbta_travel_times(sdate, from_stops, to_stops)
 
@@ -99,11 +103,11 @@ def travel_times(sdate, from_stops, to_stops, edate=None):
         start, end = s3_interval
         delta = (end - start).days + 1
         for i in range(delta):
-            all_data.extend(s3_historical.travel_times(from_stops, to_stops, start + datetime.timedelta(days=i)))
+            all_data.extend(s3_historical.travel_times(from_stops[0], to_stops[0], start + datetime.timedelta(days=i)))
 
     if api_interval:
         start, end = api_interval
-        delta = (end - start).days + 1 # to make it pythonic: we want to include the end date
+        delta = (end - start).days + 1  # to make it pythonic: we want to include the end date
         # MBTA api won't accept queries > 7 days.
         # We could move this logic inside the api (since it generates multiple requests), or leave it here.
         cur = start
@@ -116,13 +120,13 @@ def travel_times(sdate, from_stops, to_stops, edate=None):
 
     return all_data
 
+
 def process_mbta_travel_times(sdate, from_stops, to_stops, edate=None):
     # get data
     api_data = MbtaPerformanceAPI.get_api_data(sdate, "traveltimes", {
         "from_stop": from_stops,
         "to_stop": to_stops
-    },
-    edate)
+    }, end_day=edate)
 
     # combine all travel times data
     travel = []
@@ -145,6 +149,7 @@ def process_mbta_travel_times(sdate, from_stops, to_stops, edate=None):
 
     return travel
 
+
 def dwells(sdate, stops, edate=None):
     if edate is None:
         if use_S3(sdate):
@@ -162,7 +167,7 @@ def dwells(sdate, stops, edate=None):
 
     if api_interval:
         start, end = api_interval
-        delta = (end - start).days + 1 # to make it pythonic: we want to include the end date
+        delta = (end - start).days + 1  # to make it pythonic: we want to include the end date
         # MBTA api won't accept queries > 7 days.
         # We could move this logic inside the api (since it generates multiple requests), or leave it here.
         cur = start
@@ -173,7 +178,7 @@ def dwells(sdate, stops, edate=None):
             cur += datetime.timedelta(days=inc)
 
     return all_data
-    
+
 
 def process_mbta_dwells(sdate, stops, edate=None):
     # get data

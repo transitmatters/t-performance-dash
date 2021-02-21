@@ -36,6 +36,7 @@ def get_timestamp_range(start_day, end_day=None):
     else:
         return get_timestamps(start_day)
 
+
 def get_single_url(start_day, module, params, end_day=None):
     # import api key & set base url
     base_url_v2 = "http://realtime.mbta.com/developer/api/v2.1/{command}?{parameters}"
