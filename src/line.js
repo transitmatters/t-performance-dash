@@ -1,8 +1,21 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Line } from 'react-chartjs-2';
-import { Legend, LegendLongTerm } from './Legend';
+import { Line, Chart } from 'react-chartjs-2';
+import {Legend, LegendLongTerm} from './Legend';
 import drawTitle from './Title';
+
+Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
+  let x = eventPos.x;
+  let y = eventPos.y;
+
+  let firstElem = tooltipItems[0];
+  if (firstElem && firstElem.hasValue()) {
+    const pos = firstElem.tooltipPosition();
+    x = pos.x;
+    y = pos.y;
+  }
+  return {x, y};
+};
 
 const departure_from_normal_string = (metric, benchmark) => {
   const ratio = metric / benchmark;
@@ -12,10 +25,12 @@ const departure_from_normal_string = (metric, benchmark) => {
   else if (ratio <= 1.5) {
     return '>25% longer than normal';
   }
-  else if (ratio > 1.5) {
+  else if (ratio <= 2.0) {
     return '>50% longer than normal';
   }
-
+  else if (ratio > 2.0) {
+    return '>100% longer than normal';
+  }
 };
 
 const point_colors = (data, metric_field, benchmark_field) => {
@@ -25,13 +40,16 @@ const point_colors = (data, metric_field, benchmark_field) => {
       return '#1c1c1c'; //grey
     }
     else if (ratio <= 1.25) {
-      return '#75c400'; //green
+      return '#64b96a'; //green
     }
     else if (ratio <= 1.5) {
-      return '#e5a70b'; //yellow
+      return '#f5ed00'; //yellow
     }
-    else if (ratio > 1.5) {
-      return '#e53a0b'; //red
+    else if (ratio <= 2.0) {
+      return '#c33149'; //red
+    }
+    else if (ratio > 2.0) {
+      return '#bb5cc1'; //purple
     }
 
     return '#1c1c1c'; //whatever
@@ -110,7 +128,7 @@ class LineClass extends React.Component {
               },
               tooltips: {
                 mode: "index",
-                displayColors: false,
+                position: "first",
                 callbacks: {
                   title: (tooltipItems, _) => {
                     if (this.props.timescale === "day") {
