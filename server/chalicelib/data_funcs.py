@@ -1,8 +1,10 @@
 import datetime
 import pytz
-from chalicelib import MbtaPerformanceAPI
+from chalicelib import MbtaPerformanceAPI, s3_alerts
 
 DATE_FORMAT = "%Y/%m/%d %H:%M:%S"
+MBTA_HAS_ALERTS_WE_THINK = datetime.date(2016, 1, 15)
+WE_STARTED_COLLECTING_ALERTS = datetime.date(2021, 2, 1)
 
 
 def stamp_to_dt(stamp):
@@ -91,20 +93,31 @@ def dwells(day, params):
 
 
 def alerts(day, params):
-    api_data = MbtaPerformanceAPI.get_api_data(day, "pastalerts", params)
+    try:
+        today = datetime.date.today()
 
-    # combine all alerts data
-    alert_items = []
-    for dict_data in api_data:
-        alert_items = alert_items + dict_data.get('past_alerts', [])
+        if day == today or (day >= MBTA_HAS_ALERTS_WE_THINK and day < WE_STARTED_COLLECTING_ALERTS):
+            api_data = MbtaPerformanceAPI.get_api_data(day, "pastalerts", params)
+        elif day >= WE_STARTED_COLLECTING_ALERTS:
+            # This is stupid because we're emulating MBTA-performance ick
+            api_data = [{"past_alerts": s3_alerts.get_alerts(day, params["route"])}]
+        else:
+            return None
 
-    # get data
-    flat_alerts = []
-    for alert_item in alert_items:
-        for alert_version in alert_item["alert_versions"]:
-            flat_alerts.append({
-                "valid_from": stamp_to_dt(int(alert_version["valid_from"])).strftime(DATE_FORMAT),
-                "valid_to": stamp_to_dt(int(alert_version["valid_to"])).strftime(DATE_FORMAT),
-                "text": alert_version["header_text"]
-            })
-    return flat_alerts
+        # combine all alerts data
+        alert_items = []
+        for dict_data in api_data:
+            alert_items = alert_items + dict_data.get('past_alerts', [])
+
+        # get data
+        flat_alerts = []
+        for alert_item in alert_items:
+            for alert_version in alert_item["alert_versions"]:
+                flat_alerts.append({
+                    "valid_from": stamp_to_dt(int(alert_version["valid_from"])).strftime(DATE_FORMAT),
+                    "valid_to": stamp_to_dt(int(alert_version["valid_to"])).strftime(DATE_FORMAT),
+                    "text": alert_version["header_text"]
+                })
+        return flat_alerts
+    except Exception:
+        return []

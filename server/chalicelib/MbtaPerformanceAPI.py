@@ -27,7 +27,7 @@ def get_datetimes(day):
 
 def get_single_url(day, module, params):
     # import api key & set base url
-    base_url_v2 = "http://realtime.mbta.com/developer/api/v2.1/{command}?{parameters}"
+    base_url_v2 = "https://realtime.mbta.com/developer/api/v2.1/{command}?{parameters}"
 
     # get datetimes
     dt_str = get_datetimes(day)
