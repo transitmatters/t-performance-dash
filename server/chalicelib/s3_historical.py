@@ -9,8 +9,8 @@ EVENT_ARRIVAL = ["ARR", "PRA"]
 EVENT_DEPARTURE = ["DEP", "PRD"]
 
 
-def dwells(stop_id, date):
-    rows_by_time = s3.download_sorted_events(stop_id[0], date.year, date.month, date.day)
+def dwells(stop_id, sdate, edate):
+    rows_by_time = s3.download_event_range(stop_id[0], sdate, edate)
 
     dwells = []
     for i in range(0, len(rows_by_time) - 1):
@@ -34,8 +34,8 @@ def dwells(stop_id, date):
     return dwells
 
 
-def headways(stop_id, date):
-    rows_by_time = s3.download_sorted_events(stop_id[0], date.year, date.month, date.day)
+def headways(stop_id, sdate, edate):
+    rows_by_time = s3.download_event_range(stop_id[0], sdate, edate)
 
     only_departures = list(
         filter(lambda row: row['event_type'] in EVENT_DEPARTURE, rows_by_time))
@@ -74,9 +74,9 @@ def find_trip_id_arrival(trip_id, event_list):
         return None
 
 
-def travel_times(stop_a, stop_b, date):
-    rows_by_time_a = s3.download_sorted_events(stop_a, date.year, date.month, date.day)
-    rows_by_time_b = s3.download_sorted_events(stop_b, date.year, date.month, date.day)
+def travel_times(stop_a, stop_b, sdate, edate):
+    rows_by_time_a = s3.download_event_range(stop_a, sdate, edate)
+    rows_by_time_b = s3.download_event_range(stop_b, sdate, edate)
 
     only_departures = list(
         filter(lambda event: event["event_type"] in EVENT_DEPARTURE, rows_by_time_a))

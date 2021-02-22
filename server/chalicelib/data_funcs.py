@@ -35,7 +35,7 @@ def partition_S3_dates(start_date, end_date):
 def headways(sdate, stops, edate=None):
     if edate is None:
         if use_S3(sdate):
-            return s3_historical.headways(stops, sdate)
+            return s3_historical.headways(stops, sdate, sdate + datetime.timedelta(days=1))
         else:
             return process_mbta_headways(sdate, stops)
 
@@ -43,9 +43,7 @@ def headways(sdate, stops, edate=None):
     all_data = []
     if s3_interval:
         start, end = s3_interval
-        delta = (end - start).days + 1
-        for i in range(delta):
-            all_data.extend(s3_historical.headways(stops, start + datetime.timedelta(days=i)))
+        all_data.extend(s3_historical.headways(stops, start, end))
 
     if api_interval:
         start, end = api_interval
@@ -93,7 +91,7 @@ def process_mbta_headways(sdate, stops, edate=None):
 def travel_times(sdate, from_stops, to_stops, edate=None):
     if edate is None:
         if use_S3(sdate):
-            return s3_historical.travel_times(from_stops[0], to_stops[0], sdate)
+            return s3_historical.travel_times(from_stops[0], to_stops[0], sdate, sdate + datetime.timedelta(days=1))
         else:
             return process_mbta_travel_times(sdate, from_stops, to_stops)
 
@@ -101,9 +99,7 @@ def travel_times(sdate, from_stops, to_stops, edate=None):
     all_data = []
     if s3_interval:
         start, end = s3_interval
-        delta = (end - start).days + 1
-        for i in range(delta):
-            all_data.extend(s3_historical.travel_times(from_stops[0], to_stops[0], start + datetime.timedelta(days=i)))
+        all_data.extend(s3_historical.travel_times(from_stops[0], to_stops[0], start, end))
 
     if api_interval:
         start, end = api_interval
@@ -153,7 +149,7 @@ def process_mbta_travel_times(sdate, from_stops, to_stops, edate=None):
 def dwells(sdate, stops, edate=None):
     if edate is None:
         if use_S3(sdate):
-            return s3_historical.dwells(stops, sdate)
+            return s3_historical.dwells(stops, sdate, sdate + datetime.timedelta(days=1))
         else:
             return process_mbta_dwells(sdate, stops)
 
@@ -161,9 +157,7 @@ def dwells(sdate, stops, edate=None):
     all_data = []
     if s3_interval:
         start, end = s3_interval
-        delta = (end - start).days + 1
-        for i in range(delta):
-            all_data.extend(s3_historical.dwells(stops, start + datetime.timedelta(days=i)))
+        all_data.extend(s3_historical.dwells(stops, start, end))
 
     if api_interval:
         start, end = api_interval
