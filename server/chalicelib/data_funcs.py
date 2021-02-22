@@ -4,7 +4,7 @@ from chalicelib import MbtaPerformanceAPI, s3_alerts
 
 DATE_FORMAT = "%Y/%m/%d %H:%M:%S"
 MBTA_HAS_ALERTS_WE_THINK = datetime.date(2016, 1, 15)
-WE_STARTED_COLLECTING_ALERTS = datetime.date(2021, 2, 1)
+WE_STARTED_COLLECTING_ALERTS = datetime.date(2021, 2, 21)
 
 
 def stamp_to_dt(stamp):
