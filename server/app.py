@@ -15,7 +15,7 @@ cors_config = CORSConfig(
 
 # Every day at 10am UTC: store alerts from the previous day
 @app.schedule(Cron(0, 10, '*', '*', '?', '*'))
-def store_yesterday_alerts():
+def store_yesterday_alerts(event):
     # Only do this on the main site
     if TM_FRONTEND_HOST == "dashboard.transitmatters.org":
         yesterday = date.today() - timedelta(days=1)
