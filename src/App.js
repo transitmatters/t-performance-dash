@@ -287,7 +287,7 @@ class App extends React.Component {
         isLoading={this.getIsLoadingDataset('dwells')}
         data={this.state.dwells}
         xField={'arr_dt'}
-        xFieldLabel={'Time of day'} 
+        xFieldLabel={'Time of day'}
         yField={'dwell_time_sec'}
         yFieldLabel={'Minutes'}
         benchmarkField={null}
