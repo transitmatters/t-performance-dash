@@ -104,8 +104,12 @@ def dwells(day, params):
 
 def alerts(day, params):
     try:
+        # Grab the current "transit day" (3:30am-3:30am)
         today = current_transit_day()
-        if day == today or (day >= MBTA_HAS_ALERTS_WE_THINK and day < WE_STARTED_COLLECTING_ALERTS):
+        yesterday = today - datetime.timedelta(days=1)
+
+        # Use the API for today and yesterday's transit day, otherwise us.
+        if day >= yesterday or (day >= MBTA_HAS_ALERTS_WE_THINK and day < WE_STARTED_COLLECTING_ALERTS):
             api_data = MbtaPerformanceAPI.get_api_data(day, "pastalerts", params)
         elif day >= WE_STARTED_COLLECTING_ALERTS:
             # This is stupid because we're emulating MBTA-performance ick
