@@ -62,30 +62,21 @@ def headways(stop_id, sdate, edate):
         "benchmark_headway_time_sec": None
     }, only_departures))
 
-# For a given trip ID and a list of events, find when that trip ARR'ed
-
-
-def find_trip_id_arrival(trip_id, event_list):
-    arrival = list(filter(
-        lambda event: event["trip_id"] == trip_id and event["event_type"] in EVENT_ARRIVAL, event_list))
-    if len(arrival) == 1:
-        return arrival[0]["event_time"]
-    else:
-        return None
-
 
 def travel_times(stop_a, stop_b, sdate, edate):
     rows_by_time_a = s3.download_event_range(stop_a, sdate, edate)
     rows_by_time_b = s3.download_event_range(stop_b, sdate, edate)
 
-    only_departures = list(
-        filter(lambda event: event["event_type"] in EVENT_DEPARTURE, rows_by_time_a))
+    departures = filter(lambda event: event["event_type"] in EVENT_DEPARTURE, rows_by_time_a)
+    arrivals = {(event["service_date"], event["trip_id"]): event for event in rows_by_time_b if event["event_type"] in EVENT_ARRIVAL}
+
     travel_times = []
-    for departure in only_departures:
-        dep = departure["event_time"]
-        arr = find_trip_id_arrival(departure["trip_id"], rows_by_time_b)
-        if arr is None:
+    for departure in departures:
+        arrival = arrivals.get((departure["service_date"], departure["trip_id"]))
+        if arrival is None:
             continue
+        dep = departure["event_time"]
+        arr = arrival["event_time"]
 
         dep_dt = datetime.strptime(dep, DATE_FORMAT_MASSDOT)
         arr_dt = datetime.strptime(arr, DATE_FORMAT_MASSDOT)
