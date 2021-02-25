@@ -13,13 +13,14 @@ cors_config = CORSConfig(
 )
 
 
-# Every day at 10am UTC: store alerts from the previous day
+# Every day at 10am UTC: store alerts from the past
+# It's called yesterday for now but it's really two days ago!!
 @app.schedule(Cron(0, 10, '*', '*', '?', '*'))
 def store_yesterday_alerts(event):
     # Only do this on the main site
     if TM_FRONTEND_HOST == "dashboard.transitmatters.org":
-        yesterday = date.today() - timedelta(days=1)
-        s3_alerts.store_alerts(yesterday)
+        two_days_ago = date.today() - timedelta(days=2)
+        s3_alerts.store_alerts(two_days_ago)
 
 
 def parse_user_date(user_date):

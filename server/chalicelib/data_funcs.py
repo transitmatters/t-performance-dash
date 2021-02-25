@@ -11,6 +11,16 @@ def stamp_to_dt(stamp):
     return datetime.datetime.fromtimestamp(stamp, pytz.timezone("America/New_York"))
 
 
+# Transit days run 3:30am-3:30am local time
+def current_transit_day():
+    bos_tz = pytz.timezone("America/New_York")
+    today = datetime.date.today()
+    now = bos_tz.localize(datetime.datetime.now())
+    if now >= now.replace(hour=0, minute=0) and now < now.replace(hour=3, minute=30):
+        today -= datetime.timedelta(days=1)
+    return today
+
+
 def headways(day, params):
     # get data
     api_data = MbtaPerformanceAPI.get_api_data(day, "headways", params)
@@ -94,9 +104,12 @@ def dwells(day, params):
 
 def alerts(day, params):
     try:
-        today = datetime.date.today()
+        # Grab the current "transit day" (3:30am-3:30am)
+        today = current_transit_day()
+        yesterday = today - datetime.timedelta(days=1)
 
-        if day == today or (day >= MBTA_HAS_ALERTS_WE_THINK and day < WE_STARTED_COLLECTING_ALERTS):
+        # Use the API for today and yesterday's transit day, otherwise us.
+        if day >= yesterday or (day >= MBTA_HAS_ALERTS_WE_THINK and day < WE_STARTED_COLLECTING_ALERTS):
             api_data = MbtaPerformanceAPI.get_api_data(day, "pastalerts", params)
         elif day >= WE_STARTED_COLLECTING_ALERTS:
             # This is stupid because we're emulating MBTA-performance ick
