@@ -40,7 +40,7 @@ def download_multiple_event_files(jobs):
 
 
 def download_one_event_file(s3, stop_id, date):
-    year, month, day = date
+    year, month, day = date.year, date.month, date.day
 
     # Download events from S3
     try:
