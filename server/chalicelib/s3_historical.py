@@ -50,7 +50,11 @@ def headways(stop_id, sdate, edate):
 
     headways = []
     for prev, this in pairwise(only_departures):
-
+        if this["trip_id"] == prev["trip_id"] != '':
+            # in rare cases, same train can arrive and depart twice
+            # Here, we should skip the headway
+            # (though if trip_id is empty, we don't know).
+            continue
         this_dt = datetime.strptime(this["event_time"], DATE_FORMAT_MASSDOT)
         prev_dt = datetime.strptime(prev["event_time"], DATE_FORMAT_MASSDOT)
         delta = this_dt - prev_dt
@@ -72,7 +76,11 @@ def travel_times(stop_a, stop_b, sdate, edate):
     rows_by_time_b = s3.download_event_range(stop_b, sdate, edate)
 
     departures = filter(lambda event: event["event_type"] in EVENT_DEPARTURE, rows_by_time_a)
-    arrivals = {(event["service_date"], event["trip_id"]): event for event in rows_by_time_b if event["event_type"] in EVENT_ARRIVAL}
+    # we reverse arrivals so that if the same train arrives twice (this can happen),
+    # we get the earlier time.
+    arrivals = {(event["service_date"], event["trip_id"]): event
+                for event in reversed(rows_by_time_b)
+                if event["event_type"] in EVENT_ARRIVAL and event["trip_id"] != ''}
 
     travel_times = []
     for departure in departures:
