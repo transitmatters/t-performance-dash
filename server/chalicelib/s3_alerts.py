@@ -3,11 +3,14 @@ from chalicelib import MbtaPerformanceAPI, s3
 
 
 def routes_for_alert(alert):
-    routes = set()
-    for alert_version in alert["alert_versions"]:
-        for informed_entity in alert_version["informed_entity"]:
-            routes.add(informed_entity["route_id"])
-    return routes
+    try:
+        routes = set()
+        for alert_version in alert["alert_versions"]:
+            for informed_entity in alert_version["informed_entity"]:
+                routes.add(informed_entity["route_id"])
+        return routes
+    except Exception:
+        return set()
 
 
 def key(day):
