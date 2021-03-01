@@ -3,8 +3,7 @@ import pytz
 from chalicelib import MbtaPerformanceAPI, s3_alerts
 
 DATE_FORMAT = "%Y/%m/%d %H:%M:%S"
-MBTA_HAS_ALERTS_WE_THINK = datetime.date(2016, 1, 15)
-WE_STARTED_COLLECTING_ALERTS = datetime.date(2021, 2, 21)
+WE_HAVE_ALERTS_SINCE = datetime.date(2017, 11, 6)
 
 
 def stamp_to_dt(stamp):
@@ -109,9 +108,9 @@ def alerts(day, params):
         yesterday = today - datetime.timedelta(days=1)
 
         # Use the API for today and yesterday's transit day, otherwise us.
-        if day >= yesterday or (day >= MBTA_HAS_ALERTS_WE_THINK and day < WE_STARTED_COLLECTING_ALERTS):
+        if day >= yesterday:
             api_data = MbtaPerformanceAPI.get_api_data(day, "pastalerts", params)
-        elif day >= WE_STARTED_COLLECTING_ALERTS:
+        elif day >= WE_HAVE_ALERTS_SINCE:
             # This is stupid because we're emulating MBTA-performance ick
             api_data = [{"past_alerts": s3_alerts.get_alerts(day, params["route"])}]
         else:
