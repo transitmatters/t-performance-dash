@@ -13,8 +13,8 @@ def stamp_to_dt(stamp):
 # Transit days run 3:30am-3:30am local time
 def current_transit_day():
     bos_tz = pytz.timezone("America/New_York")
-    today = datetime.date.today()
     now = bos_tz.localize(datetime.datetime.now())
+    today = now.date()
     if now >= now.replace(hour=0, minute=0) and now < now.replace(hour=3, minute=30):
         today -= datetime.timedelta(days=1)
     return today
