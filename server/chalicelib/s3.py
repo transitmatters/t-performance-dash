@@ -7,9 +7,11 @@ import zlib
 BUCKET = "tm-mbta-performance"
 THREAD_COUNT = 3
 
+
 def chunks(l, n):
     n = max(1, n)
-    return (l[i:i+n] for i in range(0, len(l), n))
+    return (l[i:i + n] for i in range(0, len(l), n))
+
 
 def download_event_range(stop_id, sdate, edate):
     delta = edate - sdate
@@ -27,6 +29,7 @@ def download_event_range(stop_id, sdate, edate):
     results = list(map(lambda future: future.result(), futures))
     # Flatten all of the results into one list
     return [item for sublist in results for item in sublist]
+
 
 def download_multiple_event_files(jobs):
     session = boto3.session.Session()
