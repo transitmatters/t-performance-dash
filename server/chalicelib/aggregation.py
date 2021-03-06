@@ -28,8 +28,8 @@ def travel_times_over_time(sdate, edate, from_stop, to_stop):
     # convert to pandas
     df = pd.DataFrame.from_records(all_data)
     df['dep_dt'] = pd.to_datetime(df['dep_dt'])
-    df['dep_time'] = pd.to_datetime(df['dep_dt']).dt.time
-    df['service_date'] = (df['dep_dt'] - SERVICE_HR_OFFSET).map(lambda x: x.date())
+    df['dep_time'] = df['dep_dt'].dt.time
+    df['service_date'] = (df['dep_dt'] - SERVICE_HR_OFFSET).dt.date
     df = train_peak_status(df)
 
     # get summary stats
@@ -55,8 +55,8 @@ def headways_over_time(sdate, edate, stop):
     df = pd.DataFrame.from_records(all_data)
 
     df['dep_dt'] = pd.to_datetime(df['current_dep_dt'])
-    df['dep_time'] = pd.to_datetime(df['current_dep_dt']).dt.time
-    df['service_date'] = (df['dep_dt'] - SERVICE_HR_OFFSET).map(lambda x: x.date())
+    df['dep_time'] = df['dep_dt'].dt.time
+    df['service_date'] = (df['dep_dt'] - SERVICE_HR_OFFSET).dt.date
     df = train_peak_status(df)
 
     # get summary stats
@@ -81,8 +81,8 @@ def dwells_over_time(sdate, edate, stop):
     # convert to pandas
     df = pd.DataFrame.from_records(all_data)
     df['dep_dt'] = pd.to_datetime(df['dep_dt'])
-    df['dep_time'] = pd.to_datetime(df['dep_dt']).dt.time
-    df['service_date'] = (df['dep_dt'] - SERVICE_HR_OFFSET).map(lambda x: x.date())
+    df['dep_time'] = df['dep_dt'].dt.time
+    df['service_date'] = (df['dep_dt'] - SERVICE_HR_OFFSET).dt.date
     df = train_peak_status(df)
 
     # get summary stats

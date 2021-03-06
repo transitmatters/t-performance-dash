@@ -7,9 +7,11 @@ import zlib
 BUCKET = "tm-mbta-performance"
 THREAD_COUNT = 3
 
+
 def chunks(l, n):
     n = max(1, n)
-    return (l[i:i+n] for i in range(0, len(l), n))
+    return (l[i:i + n] for i in range(0, len(l), n))
+
 
 def download_event_range(stop_id, sdate, edate):
     delta = edate - sdate
@@ -28,6 +30,7 @@ def download_event_range(stop_id, sdate, edate):
     # Flatten all of the results into one list
     return [item for sublist in results for item in sublist]
 
+
 def download_multiple_event_files(jobs):
     session = boto3.session.Session()
     s3 = session.resource("s3")
@@ -40,7 +43,7 @@ def download_multiple_event_files(jobs):
 
 
 def download_one_event_file(s3, stop_id, date):
-    year, month, day = date
+    year, month, day = date.year, date.month, date.day
 
     # Download events from S3
     try:
