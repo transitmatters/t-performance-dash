@@ -275,20 +275,21 @@ class App extends React.Component {
 
   renderCharts() {
     const timescale = this.getTimescale();
+    const is_aggregation = timescale === 'hour';
     return <div className='charts main-column'>
       <Line
         title={"Travel times"}
         location={this.locationDescription(true)}
         tooltipUnit={"travel time"}
         timescale={timescale}
-        seriesName={timescale === 'hour' ? 'travel time' : 'travel time (median)'}
+        seriesName={is_aggregation ? 'travel time' : 'travel time (median)'}
         isLoading={this.getIsLoadingDataset('traveltimes')}
         data={this.state.traveltimes}
-        xField={timescale === 'hour' ? 'dep_dt' : 'service_date'}
-        xFieldLabel={timescale === 'hour' ? 'Time of day' : 'Day'}
+        xField={is_aggregation ? 'dep_dt' : 'service_date'}
+        xFieldLabel={is_aggregation ? 'Time of day' : 'Day'}
         xFieldUnit={timescale}
-        yField={timescale === 'hour' ? 'travel_time_sec' : '50%'}
-        yFieldLabel={timescale === 'hour' ? 'Minutes' : 'Minutes (median)'}
+        yField={is_aggregation ? 'travel_time_sec' : '50%'}
+        yFieldLabel={is_aggregation ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={'benchmark_travel_time_sec'}
       />
       <Line
@@ -296,14 +297,14 @@ class App extends React.Component {
         location={this.locationDescription(false)}
         tooltipUnit={"headway"}
         timescale={timescale}
-        seriesName={timescale === 'hour' ? 'headways' : 'headways (median)'}
+        seriesName={is_aggregation ? 'headways' : 'headways (median)'}
         isLoading={this.getIsLoadingDataset('headways')}
         data={this.state.headways}
-        xField={timescale === 'hour' ? 'current_dep_dt' : 'service_date'}
-        xFieldLabel={timescale === 'hour' ? 'Time of day' : 'Day'}
+        xField={is_aggregation ? 'current_dep_dt' : 'service_date'}
+        xFieldLabel={is_aggregation ? 'Time of day' : 'Day'}
         xFieldUnit={timescale}
-        yField={timescale === 'hour' ? 'headway_time_sec' : '50%'}
-        yFieldLabel={timescale === 'hour' ? 'Minutes' : 'Minutes (median)'}
+        yField={is_aggregation ? 'headway_time_sec' : '50%'}
+        yFieldLabel={is_aggregation ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={'benchmark_headway_time_sec'}
       />
       <Line
@@ -311,14 +312,14 @@ class App extends React.Component {
         location={this.locationDescription(false)}
         tooltipUnit={"dwell time"}
         timescale={timescale}
-        seriesName={timescale === 'hour' ? 'dwell times' : 'dwell times (median)'}
+        seriesName={is_aggregation ? 'dwell times' : 'dwell times (median)'}
         isLoading={this.getIsLoadingDataset('dwells')}
         data={this.state.dwells}
-        xField={timescale === 'hour' ? 'arr_dt' : 'service_date'}
-        xFieldLabel={timescale === 'hour' ? 'Time of day' : 'Day'}
+        xField={is_aggregation ? 'arr_dt' : 'service_date'}
+        xFieldLabel={is_aggregation ? 'Time of day' : 'Day'}
         xFieldUnit={timescale}
-        yField={timescale === 'hour' ? 'dwell_time_sec' : '50%'}
-        yFieldLabel={timescale === 'hour' ? 'Minutes' : 'Minutes (median)'}
+        yField={is_aggregation ? 'dwell_time_sec' : '50%'}
+        yFieldLabel={is_aggregation ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={null}
       />
     </div>

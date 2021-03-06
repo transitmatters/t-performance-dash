@@ -80,6 +80,17 @@ class LineClass extends React.Component {
               labels,
               datasets: [
                 {
+                  label: `Actual ${this.props.seriesName}`,
+                  fill: false,
+                  lineTension: 0.1,
+                  pointBackgroundColor: point_colors(this.props.data, this.props.yField, this.props.benchmarkField),
+                  pointHoverRadius: 3,
+                  pointHoverBackgroundColor: point_colors(this.props.data, this.props.yField, this.props.benchmarkField),
+                  pointRadius: 3,
+                  pointHitRadius: 10,
+                  data: this.props.data.map(item => (item[this.props.yField] / 60).toFixed(2))
+                },
+                {
                   label: "25th percentile",
                   fill: "+1",
                   backgroundColor: "#bfc8d6",
@@ -93,17 +104,6 @@ class LineClass extends React.Component {
                   lineTension: 0.4,
                   pointRadius: 0,
                   data: this.props.data.map(item => (item["75%"] / 60).toFixed(2))
-                },
-                {
-                  label: `Actual ${this.props.seriesName}`,
-                  fill: false,
-                  lineTension: 0.1,
-                  pointBackgroundColor: point_colors(this.props.data, this.props.yField, this.props.benchmarkField),
-                  pointHoverRadius: 3,
-                  pointHoverBackgroundColor: point_colors(this.props.data, this.props.yField, this.props.benchmarkField),
-                  pointRadius: 3,
-                  pointHitRadius: 10,
-                  data: this.props.data.map(item => (item[this.props.yField] / 60).toFixed(2))
                 },
                 {
                   label: `Benchmark MBTA ${this.props.seriesName}`,

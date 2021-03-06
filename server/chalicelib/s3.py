@@ -5,7 +5,7 @@ import csv
 import zlib
 
 BUCKET = "tm-mbta-performance"
-THREAD_COUNT = 3
+THREAD_COUNT = 5
 
 
 def chunks(l, n):
