@@ -35,7 +35,7 @@ def partition_S3_dates(start_date, end_date):
 def headways(sdate, stops, edate=None):
     if edate is None:
         if use_S3(sdate):
-            return s3_historical.headways(stops, sdate, sdate + datetime.timedelta(days=1))
+            return s3_historical.headways(stops, sdate, sdate)
         else:
             return process_mbta_headways(sdate, stops)
 
@@ -91,7 +91,7 @@ def process_mbta_headways(sdate, stops, edate=None):
 def travel_times(sdate, from_stops, to_stops, edate=None):
     if edate is None:
         if use_S3(sdate):
-            return s3_historical.travel_times(from_stops[0], to_stops[0], sdate, sdate + datetime.timedelta(days=1))
+            return s3_historical.travel_times(from_stops[0], to_stops[0], sdate, sdate)
         else:
             return process_mbta_travel_times(sdate, from_stops, to_stops)
 
@@ -149,7 +149,7 @@ def process_mbta_travel_times(sdate, from_stops, to_stops, edate=None):
 def dwells(sdate, stops, edate=None):
     if edate is None:
         if use_S3(sdate):
-            return s3_historical.dwells(stops, sdate, sdate + datetime.timedelta(days=1))
+            return s3_historical.dwells(stops, sdate, sdate)
         else:
             return process_mbta_dwells(sdate, stops)
 
