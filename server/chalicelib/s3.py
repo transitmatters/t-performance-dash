@@ -1,4 +1,5 @@
 import boto3
+from botocore.exceptions import ClientError
 import csv
 import zlib
 
@@ -20,10 +21,13 @@ def download_one_event_file(date, stop_id):
         decompressed = zlib.decompress(
             s3_data, wbits=zlib.MAX_WBITS | 16).decode("ascii").split("\r\n")
 
-    except s3.meta.client.exceptions.NoSuchKey:
-        # raise Exception(f"Data not available on S3 for key {key} ") from None
-        print(f"WARNING: No data available on S3 for key: {key}")
-        return []
+    except ClientError as ex:
+        if ex.response['Error']['Code'] == 'NoSuchKey':
+            # raise Exception(f"Data not available on S3 for key {key} ") from None
+            print(f"WARNING: No data available on S3 for key: {key}")
+            return []
+        else:
+            raise
 
     # Parse CSV
     rows = []
