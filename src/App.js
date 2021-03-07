@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { lookup_station_by_id, station_direction, get_stop_ids_for_stations } from './stations';
 import { recognize } from './AlertFilter';
 import AlertBar from './AlertBar';
+import ProgressBar from './ui/ProgressBar';
 import './App.css';
 import Select from './Select';
 import { configPresets } from './constants';
@@ -84,6 +85,7 @@ class App extends React.Component {
     this.setIsLoadingDataset = this.setIsLoadingDataset.bind(this);
     this.getIsLoadingDataset = this.getIsLoadingDataset.bind(this);
     this.getTimescale = this.getTimescale.bind(this);
+    this.progressBarRate = this.progressBarRate.bind(this);
   }
 
   componentDidMount() {
@@ -273,6 +275,23 @@ class App extends React.Component {
     </div>
   }
 
+  progressBarRate() {
+    const is_aggregation = this.getTimescale() === 'hour';
+    // Single day: no rate
+    if(is_aggregation) {
+      return null;
+    }
+
+    // Aggregation: fake rate based on how many days
+    const {date_start, date_end} = this.state.configuration;
+    const ms = (new Date(date_end) - new Date(date_start));
+    const days = ms / (1000*60*60*24);
+    const months = days / 30;
+
+    const total_seconds_expected = 3.0 * months;
+    return 100 / total_seconds_expected; // % per second
+  }
+
   renderCharts() {
     const timescale = this.getTimescale();
     const is_aggregation = timescale === 'hour';
@@ -344,6 +363,7 @@ class App extends React.Component {
             isLoading={this.getIsLoadingDataset("alerts")}
             isHidden={hasNoLoadedCharts}
           />}
+          <ProgressBar rate={this.progressBarRate()} />
         </div>
         {!canShowCharts && this.renderEmptyState(error)}
         {canShowCharts && this.renderCharts()}
