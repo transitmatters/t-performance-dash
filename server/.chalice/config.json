@@ -3,6 +3,7 @@
   "app_name": "data-dashboard",
   "api_gateway_endpoint_type": "REGIONAL",
   "minimum_compression_size": 1000,
+  "lambda_timeout": 30,
   "stages": {
     "production": {
       "api_gateway_stage": "production",
