@@ -3,6 +3,8 @@ import classNames from 'classnames';
 import { Line, Chart } from 'react-chartjs-2';
 import Legend from './Legend';
 import drawTitle from './Title';
+import { CSVLink } from "react-csv";
+import { FaSave } from 'react-icons/fa';
 
 Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
   let x = eventPos.x;
@@ -25,10 +27,12 @@ const departure_from_normal_string = (metric, benchmark) => {
   else if (ratio <= 1.5) {
     return '>25% longer than normal';
   }
-  else if (ratio > 1.5) {
+  else if (ratio <= 2.0) {
     return '>50% longer than normal';
   }
-
+  else if (ratio > 2.0) {
+    return '>100% longer than normal';
+  }
 };
 
 const point_colors = (data, metric_field, benchmark_field) => {
@@ -38,13 +42,16 @@ const point_colors = (data, metric_field, benchmark_field) => {
       return '#1c1c1c'; //grey
     }
     else if (ratio <= 1.25) {
-      return '#75c400'; //green
+      return '#64b96a'; //green
     }
     else if (ratio <= 1.5) {
-      return '#e5a70b'; //yellow
+      return '#f5ed00'; //yellow
     }
-    else if (ratio > 1.5) {
-      return '#e53a0b'; //red
+    else if (ratio <= 2.0) {
+      return '#c33149'; //red
+    }
+    else if (ratio > 2.0) {
+      return '#bb5cc1'; //purple
     }
 
     return '#1c1c1c'; //whatever
@@ -83,12 +90,21 @@ class LineClass extends React.Component {
     //   }
     // });
     const { isLoading } = this.props;
+
+    const graphData=   
+    <span className="graphData">
+    <CSVLink
+    data={this.props.data}
+    filename={this.props.seriesName}>
+    <FaSave/>  Export</CSVLink></span>
+
     let labels = this.props.data.map(item => item[this.props.xField]);
     return (
       <div className={classNames('chart', isLoading && 'is-loading')}>
         <div className="chart-container">
           <Line
             legend={{ display: false }}
+            graphData={{ display: false }} 
             data={{
               labels,
               datasets: [
@@ -178,7 +194,8 @@ class LineClass extends React.Component {
             }}
           />
         </div>
-        {this.props.legend && <Legend />}
+        {graphData}
+        {this.props.legend && <Legend /> } 
       </div>
     );
   }

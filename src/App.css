@@ -264,6 +264,12 @@ button:disabled,
     margin-top: 38px;
   }
 
+  .chart .graphData{
+    grid-area: legend;
+    margin-top: 183px;
+    padding-right: 6px;
+  }
+
   .station-configuration,
   .station-configuration > .option-group,
   .station-configuration .option {
@@ -393,6 +399,13 @@ button:disabled,
   text-align: left;
   font-size: 12px;
   padding: 4px;
+}
+
+.graphData {
+  text-align: left;
+  font-size: 12px;
+  padding: 4px;
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .legend-dot {
