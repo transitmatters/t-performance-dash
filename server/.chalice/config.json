@@ -4,6 +4,7 @@
   "api_gateway_endpoint_type": "REGIONAL",
   "minimum_compression_size": 1000,
   "lambda_timeout": 30,
+  "lambda_memory_size": 512,
   "stages": {
     "production": {
       "api_gateway_stage": "production",
