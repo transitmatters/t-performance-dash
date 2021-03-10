@@ -60,7 +60,7 @@ def process_mbta_headways(stops, sdate, edate=None):
     # combine all headways data
     headways = []
     for dict_data in api_data:
-        headways = headways + dict_data.get('headways', [])
+        headways += dict_data.get('headways', [])
 
     # conversion
     for headway_dict in headways:
@@ -110,7 +110,7 @@ def process_mbta_travel_times(from_stops, to_stops, sdate, edate=None):
     # combine all travel times data
     travel = []
     for dict_data in api_data:
-        travel = travel + dict_data.get('travel_times', [])
+        travel += dict_data.get('travel_times', [])
 
     # conversion
     for travel_dict in travel:
@@ -158,7 +158,7 @@ def process_mbta_dwells(stops, sdate, edate=None):
     # combine all travel times data
     dwells = []
     for dict_data in api_data:
-        dwells = dwells + dict_data.get('dwell_times', [])
+        dwells += dict_data.get('dwell_times', [])
 
     # conversion
     for dwell_dict in dwells:
