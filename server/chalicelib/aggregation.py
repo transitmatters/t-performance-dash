@@ -33,6 +33,7 @@ def faster_describe(grouped):
     stats.rename(columns={'median': '50%'}, inplace=True)
     return pd.concat([stats, q1, q3], axis=1)
 
+
 def travel_times_over_time(sdate, edate, from_stop, to_stop):
     all_data = data_funcs.travel_times(sdate, [from_stop], [to_stop], edate)
 

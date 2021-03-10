@@ -95,6 +95,8 @@ def _get_api_data(date_interval, module, params):
 
 
 _multithreaded_api = make_parallel(_get_api_data)
+
+
 # we offer this convenient wrapper, that also dispatches to multi-threaded if needed
 def get_api_data(module, params, start_day, end_day=None):
     if end_day is None:
