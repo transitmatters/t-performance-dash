@@ -22,6 +22,17 @@ def train_peak_status(df):
     return df
 
 
+def faster_describe(grouped):
+    # This does the same thing as pandas.DataFrame.describe(), but is up to 25x faster!
+    stats = grouped.aggregate(['count', 'mean', 'std', 'min', 'median', 'max'])
+    q1 = grouped.quantile(0.25)
+    q3 = grouped.quantile(0.75)
+    q1.name = '25%'
+    q3.name = '75%'
+    # TODO: we can take this out if we filter for 'median' in the front end
+    stats.rename(columns={'median': '50%'}, inplace=True)
+    return pd.concat([stats, q1, q3], axis=1)
+
 def travel_times_over_time(sdate, edate, from_stop, to_stop):
     all_data = data_funcs.travel_times(sdate, [from_stop], [to_stop], edate)
 
@@ -33,12 +44,12 @@ def travel_times_over_time(sdate, edate, from_stop, to_stop):
     df = train_peak_status(df)
 
     # get summary stats
-    summary_stats = df.groupby('service_date')['travel_time_sec'].describe()
+    summary_stats = faster_describe(df.groupby('service_date')['travel_time_sec'])
     summary_stats['peak'] = 'all'
     # reset_index to turn into dataframe
     summary_stats = summary_stats.reset_index()
     # summary_stats for peak / off-peak trains
-    summary_stats_peak = df.groupby(['service_date', 'peak'])['travel_time_sec'].describe().reset_index()
+    summary_stats_peak = faster_describe(df.groupby(['service_date', 'peak'])['travel_time_sec']).reset_index()
 
     # combine summary stats
     summary_stats_final = summary_stats.append(summary_stats_peak)
@@ -60,12 +71,12 @@ def headways_over_time(sdate, edate, stop):
     df = train_peak_status(df)
 
     # get summary stats
-    summary_stats = df.groupby('service_date')['headway_time_sec'].describe()
+    summary_stats = faster_describe(df.groupby('service_date')['headway_time_sec'])
     summary_stats['peak'] = 'all'
     # reset_index to turn into dataframe
     summary_stats = summary_stats.reset_index()
     # summary_stats for peak / off-peak trains
-    summary_stats_peak = df.groupby(['service_date', 'peak'])['headway_time_sec'].describe().reset_index()
+    summary_stats_peak = faster_describe(df.groupby(['service_date', 'peak'])['headway_time_sec']).reset_index()
 
     # combine summary stats
     summary_stats_final = summary_stats.append(summary_stats_peak)
@@ -86,12 +97,12 @@ def dwells_over_time(sdate, edate, stop):
     df = train_peak_status(df)
 
     # get summary stats
-    summary_stats = df.groupby('service_date')['dwell_time_sec'].describe()
+    summary_stats = faster_describe(df.groupby('service_date')['dwell_time_sec'])
     summary_stats['peak'] = 'all'
     # reset_index to turn into dataframe
     summary_stats = summary_stats.reset_index()
     # summary_stats for peak / off-peak trains
-    summary_stats_peak = df.groupby(['service_date', 'peak'])['dwell_time_sec'].describe().reset_index()
+    summary_stats_peak = faster_describe(df.groupby(['service_date', 'peak'])['dwell_time_sec']).reset_index()
 
     # combine summary stats
     summary_stats_final = summary_stats.append(summary_stats_peak)
