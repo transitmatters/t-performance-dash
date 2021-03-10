@@ -37,7 +37,7 @@ def headways(sdate, stops, edate=None):
         if use_S3(sdate):
             return s3_historical.headways(stops, sdate, sdate)
         else:
-            return process_mbta_headways(sdate, stops)
+            return process_mbta_headways(stops, sdate)
 
     s3_interval, api_interval = partition_S3_dates(sdate, edate)
     all_data = []
@@ -47,25 +47,16 @@ def headways(sdate, stops, edate=None):
 
     if api_interval:
         start, end = api_interval
-        delta = (end - start).days + 1  # to make it pythonic: we want to include the end date
-        # MBTA api won't accept queries > 7 days.
-        # We could move this logic inside the api (since it generates multiple requests), or leave it here.
-        cur = start
-        while delta != 0:
-            inc = min(delta, 7)
-            all_data.extend(process_mbta_headways(cur, stops, cur + datetime.timedelta(days=inc - 1)))
-            delta -= inc
-            cur += datetime.timedelta(days=inc)
+        all_data.extend(process_mbta_headways(stops, start, end))
 
     return all_data
 
 
-def process_mbta_headways(sdate, stops, edate=None):
+def process_mbta_headways(stops, sdate, edate=None):
     # get data
-    api_data = MbtaPerformanceAPI.get_api_data(sdate, "headways", {
-        "stop": stops
-    }, end_day=edate)
-
+    api_data = MbtaPerformanceAPI.get_api_data("headways",
+                                               {"stop": stops},
+                                               sdate, edate)
     # combine all headways data
     headways = []
     for dict_data in api_data:
@@ -93,7 +84,7 @@ def travel_times(sdate, from_stops, to_stops, edate=None):
         if use_S3(sdate):
             return s3_historical.travel_times(from_stops[0], to_stops[0], sdate, sdate)
         else:
-            return process_mbta_travel_times(sdate, from_stops, to_stops)
+            return process_mbta_travel_times(from_stops, to_stops, sdate)
 
     s3_interval, api_interval = partition_S3_dates(sdate, edate)
     all_data = []
@@ -103,27 +94,19 @@ def travel_times(sdate, from_stops, to_stops, edate=None):
 
     if api_interval:
         start, end = api_interval
-        delta = (end - start).days + 1  # to make it pythonic: we want to include the end date
-        # MBTA api won't accept queries > 7 days.
-        # We could move this logic inside the api (since it generates multiple requests), or leave it here.
-        cur = start
-        while delta != 0:
-            inc = min(delta, 7)
-            all_data.extend(process_mbta_travel_times(cur, from_stops, to_stops,
-                                                      cur + datetime.timedelta(days=inc - 1)))
-            delta -= inc
-            cur += datetime.timedelta(days=inc)
-
+        all_data.extend(process_mbta_travel_times(from_stops, to_stops,
+                                                  start, end))
     return all_data
 
 
-def process_mbta_travel_times(sdate, from_stops, to_stops, edate=None):
+def process_mbta_travel_times(from_stops, to_stops, sdate, edate=None):
     # get data
-    api_data = MbtaPerformanceAPI.get_api_data(sdate, "traveltimes", {
-        "from_stop": from_stops,
-        "to_stop": to_stops
-    }, end_day=edate)
-
+    api_data = MbtaPerformanceAPI.get_api_data("traveltimes",
+                                               {
+                                                   "from_stop": from_stops,
+                                                   "to_stop": to_stops
+                                               },
+                                               sdate, edate)
     # combine all travel times data
     travel = []
     for dict_data in api_data:
@@ -151,7 +134,7 @@ def dwells(sdate, stops, edate=None):
         if use_S3(sdate):
             return s3_historical.dwells(stops, sdate, sdate)
         else:
-            return process_mbta_dwells(sdate, stops)
+            return process_mbta_dwells(stops, sdate)
 
     s3_interval, api_interval = partition_S3_dates(sdate, edate)
     all_data = []
@@ -161,24 +144,16 @@ def dwells(sdate, stops, edate=None):
 
     if api_interval:
         start, end = api_interval
-        delta = (end - start).days + 1  # to make it pythonic: we want to include the end date
-        # MBTA api won't accept queries > 7 days.
-        # We could move this logic inside the api (since it generates multiple requests), or leave it here.
-        cur = start
-        while delta != 0:
-            inc = min(delta, 7)
-            all_data.extend(process_mbta_dwells(cur, stops, cur + datetime.timedelta(days=inc - 1)))
-            delta -= inc
-            cur += datetime.timedelta(days=inc)
+        all_data.extend(process_mbta_dwells(stops, start, end))
 
     return all_data
 
 
-def process_mbta_dwells(sdate, stops, edate=None):
+def process_mbta_dwells(stops, sdate, edate=None):
     # get data
-    api_data = MbtaPerformanceAPI.get_api_data(sdate, "dwells", {
-        "stop": stops,
-    }, edate)
+    api_data = MbtaPerformanceAPI.get_api_data("dwells",
+                                               {"stop": stops},
+                                               sdate, edate)
 
     # combine all travel times data
     dwells = []
@@ -200,7 +175,7 @@ def process_mbta_dwells(sdate, stops, edate=None):
 
 
 def alerts(date, params):
-    api_data = MbtaPerformanceAPI.get_api_data(date, "pastalerts", params)
+    api_data = MbtaPerformanceAPI.get_api_data("pastalerts", params, date)
 
     # combine all alerts data
     alert_items = []

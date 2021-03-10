@@ -8,6 +8,7 @@ from chalicelib import parallel
 BUCKET = "tm-mbta-performance"
 s3 = boto3.client('s3')
 
+
 def download_one_event_file(date, stop_id):
     year, month, day = date.year, date.month, date.day
 
