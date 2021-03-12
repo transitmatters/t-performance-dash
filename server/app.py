@@ -6,7 +6,8 @@ from chalicelib import data_funcs, s3_historical, s3_alerts
 
 app = Chalice(app_name="data-dashboard")
 
-TM_FRONTEND_HOST = os.environ["TM_FRONTEND_HOST"]
+# will run on localhost if TM_FRONTEND_HOST is not set in env
+TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", "localhost")
 
 cors_config = CORSConfig(
     allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600
