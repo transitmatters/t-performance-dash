@@ -5,6 +5,10 @@ const all_lines = () => {
 };
 
 const lookup_station_by_id = (line, id) => {
+  if (line === "" || line === undefined || id === "" || id === undefined) {
+    return undefined;
+  }
+
   return stations[line].find(x => [...x.stops.northbound, ...x.stops.southbound].includes(id));
 };
 

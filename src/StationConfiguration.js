@@ -36,25 +36,36 @@ export default class StationConfiguration extends React.Component {
     this.handleSelectRawDate = this.handleSelectRawDate.bind(this);
     this.handleSwapStations = this.handleSwapStations.bind(this);
     this.clearMoreOptions = this.clearMoreOptions.bind(this);
+    this.setupPickers = this.setupPickers.bind(this);
 
     this.state = {
       show_date_end_picker: !!this.props.current.date_end,
     };
   }
-
-  componentDidMount() {
+  
+  setupPickers() {
     if (useFlatPickr) {
       flatpickr(this.picker_start.current, {
         onChange: this.handleSelectDate("date_start"),
         maxDate: 'today',
         minDate: "2016-01-15"
       });
-      flatpickr(this.picker_end.current, {
-        onChange: this.handleSelectDate("date_end"),
-        maxDate: 'today',
-        minDate: "2016-01-15"
-      });
+      if (this.state.show_date_end_picker) {
+        flatpickr(this.picker_end.current, {
+          onChange: this.handleSelectDate("date_end"),
+          maxDate: 'today',
+          minDate: "2016-01-15"
+        });
+      }
     }
+  }
+
+  componentDidMount() {
+    this.setupPickers();
+  }
+
+  componentDidUpdate() {
+    this.setupPickers();
   }
 
   handleSelectDate(field_name) {
@@ -117,7 +128,10 @@ export default class StationConfiguration extends React.Component {
   }
 
   clearMoreOptions() {
-    this.picker_end.current._flatpickr.clear();
+    if(this.picker_end.current._flatpickr) {
+      this.picker_end.current._flatpickr.clear();
+    }
+
     this.setState({
       show_date_end_picker: false,
     });
@@ -162,7 +176,7 @@ export default class StationConfiguration extends React.Component {
             <div className="swap-label">Swap</div>
           </button>
           <div className="option option-date">
-            <span className="date-label">Date:</span>
+            <span className="date-label">Date</span>
             <input
               value={this.decode("date_start")}
               onChange={useFlatPickr ? undefined : this.handleSelectRawDate("date_start")}
@@ -170,8 +184,8 @@ export default class StationConfiguration extends React.Component {
               ref={this.picker_start}
               placeholder='Select date...'
             />
-             <span style={this.state.show_date_end_picker ? {} : { display: 'none' }}>
-              <span className="date-label">to</span>
+            {!!this.state.show_date_end_picker && <>
+              <span className="date-label end-date-label">to</span>
               <input
                 value={this.decode("date_end")}
                 onChange={useFlatPickr ? undefined : this.handleSelectRawDate("date_end")}
@@ -179,7 +193,13 @@ export default class StationConfiguration extends React.Component {
                 ref={this.picker_end}
                 placeholder='Select date...'
               />
-            </span>
+                        <button
+          className="clear-button"
+          style={{visibility: this.state.show_date_end_picker ? 'visible' : 'hidden'}}
+          onClick={this.clearMoreOptions}
+          >🅧</button>
+              </>
+            }
           </div>
           <div className="option">
           <input
@@ -189,11 +209,6 @@ export default class StationConfiguration extends React.Component {
               style={this.state.show_date_end_picker ? { display: 'none' } : {}}
               onClick={() => this.setState({show_date_end_picker: true})}
               />
-          <button
-          className="clear-button"
-          style={{visibility: this.state.show_date_end_picker ? 'visible' : 'hidden'}}
-          onClick={this.clearMoreOptions}
-          >🅧</button>
           </div>
         </div>
       </div>
