@@ -6,6 +6,8 @@ from urllib.parse import urlencode
 from decimal import Decimal
 import itertools
 
+from chalicelib.parallel import make_parallel
+
 from .secrets import MBTA_V2_API_KEY
 
 
@@ -37,7 +39,7 @@ def get_timestamp_range(start_day, end_day=None):
         return get_timestamps(start_day)
 
 
-def get_single_url(start_day, module, params, end_day=None):
+def get_single_url(start_day, end_day, module, params):
     # import api key & set base url
     base_url_v2 = "http://realtime.mbta.com/developer/api/v2.1/{command}?{parameters}"
 
@@ -55,13 +57,6 @@ def get_single_url(start_day, module, params, end_day=None):
     return url
 
 
-def product_dict(**kwargs):
-    keys = kwargs.keys()
-    vals = kwargs.values()
-    for instance in itertools.product(*vals):
-        yield dict(zip(keys, instance))
-
-
 def get_product_of_list_dict_values(dict_of_lists):
     keys = dict_of_lists.keys()
     values = dict_of_lists.values()
@@ -69,14 +64,14 @@ def get_product_of_list_dict_values(dict_of_lists):
         yield dict(zip(keys, combination))
 
 
-def get_many_urls(start_day, module, params, end_day=None):
+def get_many_urls(start_day, end_day, module, params):
     exploded_params = list(
         get_product_of_list_dict_values(params)
     )  # get all possible parameter combinations
     url_list = []
     # get url for each pair, add to list
     for single_param in exploded_params:
-        url_list.append(get_single_url(start_day, module, single_param, end_day))
+        url_list.append(get_single_url(start_day, end_day, module, single_param))
     return url_list
 
 
@@ -88,10 +83,35 @@ def get_single_api_data(url):
     return data
 
 
-def get_api_data(start_day, module, params, end_day=None):
-    url_list = get_many_urls(start_day, module, params, end_day)
+# This is the primary function, but shouldn't be called directly, see dispatcher below
+def _get_api_data(date_interval, module, params):
+    start_day, end_day = date_interval
+    url_list = get_many_urls(start_day, end_day, module, params)
     all_data = []
     for url in url_list:
         data = get_single_api_data(url=url)
         all_data.append(data)
     return all_data
+
+
+_multithreaded_api = make_parallel(_get_api_data)
+
+
+# we offer this convenient wrapper, that also dispatches to multi-threaded if needed
+def get_api_data(module, params, start_day, end_day=None):
+    if end_day is None:
+        return _get_api_data((start_day, None), module, params)
+    else:
+        return _multithreaded_api(get_7day_chunks(start_day, end_day), module, params)
+
+
+# MBTA api won't accept queries > 7 days.
+# this function operates on datetime.dates
+def get_7day_chunks(start, end):
+    delta = (end - start).days + 1
+    cur = start
+    while delta != 0:
+        inc = min(delta, 7)
+        yield (cur, cur + datetime.timedelta(days=inc - 1))
+        delta -= inc
+        cur += datetime.timedelta(days=inc)

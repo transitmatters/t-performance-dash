@@ -1,5 +1,5 @@
 from datetime import datetime
-from chalicelib import s3
+from chalicelib import s3, parallel
 
 import itertools
 
@@ -18,7 +18,7 @@ def pairwise(iterable):
 
 
 def dwells(stop_id, sdate, edate):
-    rows_by_time = s3.download_event_range(stop_id[0], sdate, edate)
+    rows_by_time = s3.download_event_range(parallel.date_range(sdate, edate), stop_id[0])
 
     dwells = []
     for maybe_an_arrival, maybe_a_departure in pairwise(rows_by_time):
@@ -44,7 +44,7 @@ def dwells(stop_id, sdate, edate):
 
 
 def headways(stop_id, sdate, edate):
-    rows_by_time = s3.download_event_range(stop_id[0], sdate, edate)
+    rows_by_time = s3.download_event_range(parallel.date_range(sdate, edate), stop_id[0])
 
     only_departures = filter(lambda row: row['event_type'] in EVENT_DEPARTURE, rows_by_time)
 
@@ -72,8 +72,8 @@ def headways(stop_id, sdate, edate):
 
 
 def travel_times(stop_a, stop_b, sdate, edate):
-    rows_by_time_a = s3.download_event_range(stop_a, sdate, edate)
-    rows_by_time_b = s3.download_event_range(stop_b, sdate, edate)
+    rows_by_time_a = s3.download_event_range(parallel.date_range(sdate, edate), stop_a)
+    rows_by_time_b = s3.download_event_range(parallel.date_range(sdate, edate), stop_b)
 
     departures = filter(lambda event: event["event_type"] in EVENT_DEPARTURE, rows_by_time_a)
     # we reverse arrivals so that if the same train arrives twice (this can happen),
