@@ -2,19 +2,10 @@ import React from "react";
 import './ProgressBar.css';
 
 const ProgressBar = (props) => {
-  const { rate } = props;
-  const [progress, setProgress] = React.useState(0);
-
-  if (rate === null) {
+  const { progress } = props;
+  if (!(progress >= 0 && progress < 100)) {
     return (null);
   }
-
-  setTimeout(() => {
-    if (progress < 100) {
-      // This trips a re-render, so you get the future for free.
-      setProgress(progress + rate);
-    }
-  }, 1000);
 
   return (
     <div className="progress-bar" style={{

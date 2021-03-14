@@ -56,6 +56,8 @@ class App extends React.Component {
       dwells: [],
       alerts: [],
       datasetLoadingState: {},
+
+      progress: 0,
     };
 
     ReactGA.initialize("UA-71173708-2");
@@ -86,6 +88,7 @@ class App extends React.Component {
     this.getIsLoadingDataset = this.getIsLoadingDataset.bind(this);
     this.getTimescale = this.getTimescale.bind(this);
     this.progressBarRate = this.progressBarRate.bind(this);
+    this.restartProgressBar = this.restartProgressBar.bind(this);
   }
 
   componentDidMount() {
@@ -187,10 +190,28 @@ class App extends React.Component {
     return "hour";
   }
 
+  restartProgressBar() {
+    this.setState({
+      progress: 0,
+    }, () => {
+      const progressTimer = setInterval(() => {
+        this.setState({
+          progress: this.state.progress + this.progressBarRate(),
+        }, () => {
+          if (this.state.progress >= 100) {
+            clearTimeout(progressTimer);
+          }
+        });
+      }, 1000);
+    });
+  }
+
   download() {
     const { configuration } = this.state;
     const { fromStopIds, toStopIds } = get_stop_ids_for_stations(configuration.from, configuration.to);
     if (configuration.date_start && fromStopIds && toStopIds) {
+      this.restartProgressBar();
+
       this.fetchDataset('headways', {
         stop: fromStopIds,
       });
@@ -363,7 +384,7 @@ class App extends React.Component {
             isLoading={this.getIsLoadingDataset("alerts")}
             isHidden={hasNoLoadedCharts}
           />}
-          <ProgressBar rate={this.progressBarRate()} />
+          <ProgressBar progress={this.state.progress} />
         </div>
         {!canShowCharts && this.renderEmptyState(error)}
         {canShowCharts && this.renderCharts()}
