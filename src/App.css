@@ -249,7 +249,7 @@ button:disabled,
 
 .station-configuration .clear-button {
   border: none;
-  margin: 0;
+  margin-left: 6px;
   padding: 0;
   font-size: 16px;
   height: 13px;
@@ -399,10 +399,6 @@ button:disabled,
 
   .station-configuration .select-component {
     width: 100%;
-  }
-
-  .station-configuration .clear-button {
-    margin-left: 3px;
   }
 
   .station-configuration .swap-stations-button {
