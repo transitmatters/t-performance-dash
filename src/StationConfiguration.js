@@ -45,12 +45,16 @@ export default class StationConfiguration extends React.Component {
   
   setupPickers() {
     if (useFlatPickr) {
-      flatpickr(this.picker_start.current, {
-        onChange: this.handleSelectDate("date_start"),
-        maxDate: 'today',
-        minDate: "2016-01-15"
-      });
-      if (this.state.show_date_end_picker) {
+      // Only initialize once, even after rerenders
+      if(!this.picker_start.current._flatpickr) {
+        flatpickr(this.picker_start.current, {
+          onChange: this.handleSelectDate("date_start"),
+          maxDate: 'today',
+          minDate: "2016-01-15"
+        });
+      }
+      // Only initialize once, even after rerenders
+      if (this.state.show_date_end_picker && !this.picker_end.current._flatpickr) {
         flatpickr(this.picker_end.current, {
           onChange: this.handleSelectDate("date_end"),
           maxDate: 'today',
