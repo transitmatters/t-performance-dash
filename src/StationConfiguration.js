@@ -184,6 +184,13 @@ export default class StationConfiguration extends React.Component {
               ref={this.picker_start}
               placeholder='Select date...'
             />
+            <input
+              className="more-options-button"
+              type="button"
+              value="Range..."
+              style={this.state.show_date_end_picker ? { display: 'none' } : {}}
+              onClick={() => this.setState({ show_date_end_picker: true })}
+            />
             {!!this.state.show_date_end_picker && <>
               <span className="date-label end-date-label">to</span>
               <input
@@ -193,22 +200,13 @@ export default class StationConfiguration extends React.Component {
                 ref={this.picker_end}
                 placeholder='Select date...'
               />
-                        <button
-          className="clear-button"
-          style={{visibility: this.state.show_date_end_picker ? 'visible' : 'hidden'}}
-          onClick={this.clearMoreOptions}
-          >🅧</button>
-              </>
+              <button
+                className="clear-button"
+                style={{ visibility: this.state.show_date_end_picker ? 'visible' : 'hidden' }}
+                onClick={this.clearMoreOptions}
+              >🅧</button>
+            </>
             }
-          </div>
-          <div className="option">
-          <input
-              className="more-options-button"
-              type="button"
-              value="Range..."
-              style={this.state.show_date_end_picker ? { display: 'none' } : {}}
-              onClick={() => this.setState({show_date_end_picker: true})}
-              />
           </div>
         </div>
       </div>

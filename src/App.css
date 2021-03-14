@@ -293,7 +293,8 @@ button:disabled,
   }
 
   .station-configuration .more-options-button {
-    width: 75px;
+    max-width: 75px;
+    margin-left: 6px;
     padding-right: 6px;
   }
 
@@ -411,8 +412,8 @@ button:disabled,
   }
 
   .station-configuration .more-options-button {
-    grid-area: date;
-    width: 75px;
+    margin-left: 10px;
+    max-width: 75px;
     padding-right: 7px;
   }
 
