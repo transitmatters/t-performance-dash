@@ -58,9 +58,10 @@ def travel_times_over_time(sdate, edate, from_stop, to_stop):
     # combine summary stats
     summary_stats_final = summary_stats.append(summary_stats_peak)
 
+    # filter peak status
+    results = summary_stats_final.loc[summary_stats_final['peak'] == 'all']
     # convert to dictionary
-    summary_stats_dict = summary_stats_final.to_dict('records')
-    return list(filter(lambda x: x['peak'] == 'all', summary_stats_dict))
+    return results.to_dict('records')
 
 
 def headways_over_time(sdate, edate, stop):
@@ -85,9 +86,10 @@ def headways_over_time(sdate, edate, stop):
     # combine summary stats
     summary_stats_final = summary_stats.append(summary_stats_peak)
 
+    # filter peak status
+    results = summary_stats_final.loc[summary_stats_final['peak'] == 'all']
     # convert to dictionary
-    summary_stats_dict = summary_stats_final.to_dict('records')
-    return list(filter(lambda x: x['peak'] == 'all', summary_stats_dict))
+    return results.to_dict('records')
 
 
 def dwells_over_time(sdate, edate, stop):
@@ -111,6 +113,7 @@ def dwells_over_time(sdate, edate, stop):
     # combine summary stats
     summary_stats_final = summary_stats.append(summary_stats_peak)
 
+    # filter peak status
+    results = summary_stats_final.loc[summary_stats_final['peak'] == 'all']
     # convert to dictionary
-    summary_stats_dict = summary_stats_final.to_dict('records')
-    return list(filter(lambda x: x['peak'] == 'all', summary_stats_dict))
+    return results.to_dict('records')
