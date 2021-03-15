@@ -24,14 +24,17 @@ def train_peak_status(df):
 
 def faster_describe(grouped):
     # This does the same thing as pandas.DataFrame.describe(), but is up to 25x faster!
-    stats = grouped.aggregate(['count', 'mean', 'std', 'min', 'median', 'max'])
+    # also, we can specify population std instead of sample.
+    stats = grouped.aggregate(['count', 'mean', 'min', 'median', 'max'])
+    std = grouped.std(ddof=0)
     q1 = grouped.quantile(0.25)
     q3 = grouped.quantile(0.75)
+    std.name = 'std'
     q1.name = '25%'
     q3.name = '75%'
     # TODO: we can take this out if we filter for 'median' in the front end
     stats.rename(columns={'median': '50%'}, inplace=True)
-    return pd.concat([stats, q1, q3], axis=1)
+    return pd.concat([stats, q1, q3, std], axis=1)
 
 
 def travel_times_over_time(sdate, edate, from_stop, to_stop):
