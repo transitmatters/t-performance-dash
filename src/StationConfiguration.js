@@ -132,12 +132,11 @@ export default class StationConfiguration extends React.Component {
   }
 
   clearMoreOptions() {
-    if(this.picker_end.current._flatpickr) {
-      this.picker_end.current._flatpickr.clear();
-    }
-
     this.setState({
       show_date_end_picker: false,
+    });
+    this.props.onConfigurationChange({
+      date_end: null,
     });
   }
 
