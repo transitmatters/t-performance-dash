@@ -34,7 +34,10 @@ def faster_describe(grouped):
     q3.name = '75%'
     # TODO: we can take this out if we filter for 'median' in the front end
     stats.rename(columns={'median': '50%'}, inplace=True)
-    return pd.concat([stats, q1, q3, std], axis=1)
+    stats = pd.concat([stats, q1, q3, std], axis=1)
+
+    # This will filter out some probable outliers.
+    return stats.loc[stats['count'] > 4]
 
 
 def travel_times_over_time(sdate, edate, from_stop, to_stop):
