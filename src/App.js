@@ -15,9 +15,13 @@ const FRONTEND_TO_BACKEND_MAP = new Map([
   ["localhost", ""], // this becomes a relative path that is proxied through CRA:3000 to python on :5000
   ["127.0.0.1", ""],
   ["dashboard.transitmatters.org", "https://dashboard-api2.transitmatters.org"],
-  ["dashboard-beta.transitmatters.org", "https://dashboard-api-beta.transitmatters.org"]
+  ["dashboard-beta.transitmatters.org", "https://dashboard-api-beta.transitmatters.org"],
+  ["192.168.1.141", "https://192.168.1.141:3000"]
 ]);
 const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname);
+
+const MAX_AGGREGATION_MONTHS = 8;
+const RANGE_TOO_LARGE_ERROR = `Please select a range no larger than ${MAX_AGGREGATION_MONTHS} months.`;
 
 const stateFromURL = (config) => {
   const [line, from_id, to_id, date_start, date_end] = config.split(",");
@@ -50,7 +54,7 @@ class App extends React.Component {
       configuration: {
         show_alerts: true,
       },
-      error: null,
+      error_message: null,
       headways: [],
       traveltimes: [],
       dwells: [],
@@ -66,6 +70,9 @@ class App extends React.Component {
     const url_config = new URLSearchParams(props.location.search).get("config");
     if (typeof url_config === "string") {
       this.state.configuration = stateFromURL(url_config);
+      if(!this.permittedRange(this.state.configuration.date_start, this.state.configuration.date_end)) {
+        this.state.error_message = RANGE_TOO_LARGE_ERROR;
+      }
     }
 
     if (window.location.hostname !== "dashboard.transitmatters.org") {
@@ -89,10 +96,23 @@ class App extends React.Component {
     this.getTimescale = this.getTimescale.bind(this);
     this.progressBarRate = this.progressBarRate.bind(this);
     this.restartProgressBar = this.restartProgressBar.bind(this);
+    this.permittedRange = this.permittedRange.bind(this);
   }
 
   componentDidMount() {
     this.download();
+  }
+
+  permittedRange(date_start, date_end) {
+    const date_start_ts = new Date(date_start).getTime();
+    const date_end_ts = new Date(date_end).getTime();
+    if(
+      date_end_ts < date_start_ts ||
+      date_end_ts - date_start_ts > MAX_AGGREGATION_MONTHS * 30 * 86400 * 1000
+      ) {
+      return false;
+    }
+    return true;
   }
 
   updateConfiguration(config_change, refetch = true) {
@@ -103,6 +123,21 @@ class App extends React.Component {
         ...config_change
       }
     };
+    
+    if(update.configuration.date_end) {
+      if(!this.permittedRange(update.configuration.date_start, update.configuration.date_end)) {
+        this.setState({
+          error_message: RANGE_TOO_LARGE_ERROR,
+        });
+        // Setting refetch to false prevents data download, but lets this.state.configuration update still
+        refetch = false;
+      }
+      else {
+        this.setState({
+          error_message: null,
+        });
+      }
+    }
     if (config_change.line && config_change.line !== this.state.configuration.line) {
       update.configuration.from = null;
       update.configuration.to = null;
@@ -266,7 +301,7 @@ class App extends React.Component {
     this.setState(currentState => {
       const { configuration } = currentState;
       return {
-        error,
+        error_message: error,
         configuration: {
           ...configuration,
           to: null,
@@ -276,12 +311,12 @@ class App extends React.Component {
     });
   }
 
-  renderEmptyState(withError) {
+  renderEmptyState(error_message) {
     return <div className="main-column">
       <div className="empty-state">
-        {withError && <>There was an error loading data for this date. Maybe try one of these?</>}
-        {!withError && <>See MBTA rapid transit performance data, including travel times between stations, headways,
-        and dwell times, for any given day. <span style={{fontWeight: "bold"}}>Select a line, station pair, and date above to get started.</span><div style={{marginTop: 10}}>Looking for something interesting? <span style={{fontWeight: "bold"}}>Try one of these dates:</span></div></>}
+        {error_message && <>{error_message}</>}
+        {!error_message && <>See MBTA rapid transit performance data, including travel times between stations, headways,
+        and dwell times, for any given day. <span style={{fontWeight: "bold"}}>Select a line, station pair, and date above to get started.</span><div style={{marginTop: 10}}>Looking for something interesting? <span style={{fontWeight: "bold"}}>Try one of these dates:</span></div>
         <Select
           onChange={value => {
             const { line, date_start, from, to } = value;
@@ -292,6 +327,7 @@ class App extends React.Component {
           className="date-selector"
           defaultLabel="Choose a date..."
         />
+        </>}
       </div>
     </div>
   }
@@ -366,9 +402,9 @@ class App extends React.Component {
   }
 
   render() {
-    const { configuration, error } = this.state;
+    const { configuration, error_message } = this.state;
     const { from, to, date_start } = configuration;
-    const canShowCharts = from && to && !error;
+    const canShowCharts = from && to && !error_message;
     const canShowAlerts = from && to && date_start && this.getTimescale() === 'hour';
     const recognized_alerts = this.state.alerts?.filter(recognize);
     const hasNoLoadedCharts = ['traveltimes', 'dwells', 'headways']
@@ -384,9 +420,9 @@ class App extends React.Component {
             isLoading={this.getIsLoadingDataset("alerts")}
             isHidden={hasNoLoadedCharts}
           />}
-          <ProgressBar progress={this.state.progress} />
+          {canShowCharts && <ProgressBar progress={this.state.progress} />}
         </div>
-        {!canShowCharts && this.renderEmptyState(error)}
+        {!canShowCharts && this.renderEmptyState(error_message)}
         {canShowCharts && this.renderCharts()}
       </div>
     );

@@ -73,7 +73,7 @@ def traveltime_aggregate_route():
     from_stop = app.current_request.query_params["from_stop"]
     to_stop = app.current_request.query_params["to_stop"]
 
-    response = aggregation.travel_times_over_time(sdate, edate, from_stop, to_stop)
+    response = []
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
@@ -83,7 +83,7 @@ def headways_aggregate_route():
     edate = parse_user_date(app.current_request.query_params["end_date"])
     stop = app.current_request.query_params["stop"]
 
-    response = aggregation.headways_over_time(sdate, edate, stop)
+    response = []
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
@@ -93,5 +93,5 @@ def dwells_aggregate_route():
     edate = parse_user_date(app.current_request.query_params["end_date"])
     stop = app.current_request.query_params["stop"]
 
-    response = aggregation.dwells_over_time(sdate, edate, stop)
+    response = []
     return json.dumps(response, indent=4, sort_keys=True, default=str)
