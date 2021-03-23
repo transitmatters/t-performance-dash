@@ -103,7 +103,7 @@ def travel_times(stop_a, stop_b, sdate, edate):
                 if event["event_type"] in EVENT_ARRIVAL and event["trip_id"] != ''}
 
     travel_times = []
-    for departure in unique_everseen(departures, key=lambda x: x['trip_id']):
+    for departure in unique_everseen(departures, key=lambda x: (x['service_date'], x['trip_id'])):
         arrival = arrivals.get((departure["service_date"], departure["trip_id"]))
         if arrival is None:
             continue
