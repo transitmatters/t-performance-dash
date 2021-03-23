@@ -11,10 +11,30 @@ EVENT_DEPARTURE = ["DEP", "PRD"]
 
 
 def pairwise(iterable):
+    # an itertools recipe from the docs
     # "s -> (s0,s1), (s1,s2), (s2, s3), ..."
     a, b = itertools.tee(iterable)
     next(b, None)
     return zip(a, b)
+
+
+def unique_everseen(iterable, key=None):
+    # an itertools recipe from the docs
+    # "List unique elements, preserving order. Remember all elements ever seen."
+    # unique_everseen('AAAABBBCCDAABBB') --> A B C D
+    # unique_everseen('ABBCcAD', str.lower) --> A B C D
+    seen = set()
+    seen_add = seen.add
+    if key is None:
+        for element in itertools.filterfalse(seen.__contains__, iterable):
+            seen_add(element)
+            yield element
+    else:
+        for element in iterable:
+            k = key(element)
+            if k not in seen:
+                seen_add(k)
+                yield element
 
 
 def dwells(stop_id, sdate, edate):
@@ -83,7 +103,7 @@ def travel_times(stop_a, stop_b, sdate, edate):
                 if event["event_type"] in EVENT_ARRIVAL and event["trip_id"] != ''}
 
     travel_times = []
-    for departure in departures:
+    for departure in unique_everseen(departures, key=lambda x: x['trip_id']):
         arrival = arrivals.get((departure["service_date"], departure["trip_id"]))
         if arrival is None:
             continue
@@ -94,6 +114,9 @@ def travel_times(stop_a, stop_b, sdate, edate):
         arr_dt = datetime.strptime(arr, DATE_FORMAT_MASSDOT)
         delta = arr_dt - dep_dt
         travel_time_sec = delta.total_seconds()
+
+        if travel_time_sec < 0:
+            continue
 
         travel_times.append({
             "route_id": departure["route_id"],
