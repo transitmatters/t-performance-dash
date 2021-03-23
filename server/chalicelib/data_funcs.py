@@ -1,8 +1,9 @@
 import datetime
 import pytz
-from chalicelib import MbtaPerformanceAPI, s3_historical
+from chalicelib import MbtaPerformanceAPI, s3_historical, s3_alerts
 
 DATE_FORMAT = "%Y/%m/%d %H:%M:%S"
+WE_HAVE_ALERTS_SINCE = datetime.date(2017, 11, 6)
 
 
 def stamp_to_dt(stamp):
@@ -50,6 +51,15 @@ def headways(sdate, stops, edate=None):
         all_data.extend(process_mbta_headways(stops, start, end))
 
     return all_data
+
+# Transit days run 3:30am-3:30am local time
+def current_transit_day():
+    bos_tz = pytz.timezone("America/New_York")
+    now = bos_tz.localize(datetime.datetime.now())
+    today = now.date()
+    if now >= now.replace(hour=0, minute=0) and now < now.replace(hour=3, minute=30):
+        today -= datetime.timedelta(days=1)
+    return today
 
 
 def process_mbta_headways(stops, sdate, edate=None):
@@ -174,21 +184,35 @@ def process_mbta_dwells(stops, sdate, edate=None):
     return dwells
 
 
-def alerts(date, params):
-    api_data = MbtaPerformanceAPI.get_api_data("pastalerts", params, date)
+def alerts(day, params):
+    try:
+        # Grab the current "transit day" (3:30am-3:30am)
+        today = current_transit_day()
+        yesterday = today - datetime.timedelta(days=1)
 
-    # combine all alerts data
-    alert_items = []
-    for dict_data in api_data:
-        alert_items = alert_items + dict_data.get('past_alerts', [])
+        # Use the API for today and yesterday's transit day, otherwise us.
+        if day >= yesterday:
+            api_data = MbtaPerformanceAPI.get_api_data(day, "pastalerts", params)
+        elif day >= WE_HAVE_ALERTS_SINCE:
+            # This is stupid because we're emulating MBTA-performance ick
+            api_data = [{"past_alerts": s3_alerts.get_alerts(day, params["route"])}]
+        else:
+            return None
 
-    # get data
-    flat_alerts = []
-    for alert_item in alert_items:
-        for alert_version in alert_item["alert_versions"]:
-            flat_alerts.append({
-                "valid_from": stamp_to_dt(alert_version["valid_from"]),
-                "valid_to": stamp_to_dt(alert_version["valid_to"]),
-                "text": alert_version["header_text"]
-            })
-    return flat_alerts
+        # combine all alerts data
+        alert_items = []
+        for dict_data in api_data:
+            alert_items = alert_items + dict_data.get('past_alerts', [])
+
+        # get data
+        flat_alerts = []
+        for alert_item in alert_items:
+            for alert_version in alert_item["alert_versions"]:
+                flat_alerts.append({
+                    "valid_from": stamp_to_dt(int(alert_version["valid_from"])).strftime(DATE_FORMAT),
+                    "valid_to": stamp_to_dt(int(alert_version["valid_to"])).strftime(DATE_FORMAT),
+                    "text": alert_version["header_text"]
+                })
+        return flat_alerts
+    except Exception:
+        return []

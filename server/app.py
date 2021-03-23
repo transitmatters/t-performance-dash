@@ -1,16 +1,27 @@
 import json
 import os
-from chalice import Chalice, CORSConfig
-from datetime import date
-from chalicelib import data_funcs, aggregation
+from chalice import Chalice, Cron, CORSConfig
+from datetime import date, timedelta
+from chalicelib import data_funcs, aggregation, s3_alerts
 
 app = Chalice(app_name="data-dashboard")
 
-TM_FRONTEND_HOST = os.environ["TM_FRONTEND_HOST"]
+# will run on localhost if TM_FRONTEND_HOST is not set in env
+TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", "localhost")
 
 cors_config = CORSConfig(
     allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600
 )
+
+
+# Every day at 10am UTC: store alerts from the past
+# It's called yesterday for now but it's really two days ago!!
+@app.schedule(Cron(0, 10, '*', '*', '?', '*'))
+def store_two_days_ago_alerts(event):
+    # Only do this on the main site
+    if TM_FRONTEND_HOST == "dashboard.transitmatters.org":
+        two_days_ago = date.today() - timedelta(days=2)
+        s3_alerts.store_alerts(two_days_ago)
 
 
 def parse_user_date(user_date):
@@ -60,10 +71,7 @@ def traveltime_route(user_date):
 @app.route("/alerts/{user_date}", cors=cors_config)
 def alerts_route(user_date):
     date = parse_user_date(user_date)
-    if data_funcs.use_S3(date):
-        return []
-    else:
-        return data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params))
+    return json.dumps(data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params)))
 
 
 @app.route("/aggregate/traveltimes", cors=cors_config)
