@@ -11,12 +11,12 @@ SERVICE_HR_OFFSET = datetime.timedelta(hours=3, minutes=30)
 def train_peak_status(df):
     cal = USFederalHolidayCalendar()
     holidays = cal.holidays(start=df['dep_dt'].min(), end=df['dep_dt'].max())
+    df['holiday'] = df['service_date'].isin(holidays.date)
 
-    df['holiday'] = df['dep_dt'].dt.date.astype('datetime64').isin(holidays.date)
-    df['weekday'] = df['dep_dt'].dt.dayofweek
-
-    conditions = [(df['holiday'] == 0) & (df['weekday'] < 5) & ((df['dep_time'] >= datetime.time(6, 30, 0)) & (df['dep_time'] < datetime.time(9, 0, 0))),
-                  (df['holiday'] == 0) & (df['weekday'] < 5) & ((df['dep_time'] >= datetime.time(15, 30, 0)) & (df['dep_time'] < datetime.time(18, 30, 0)))]
+    # Peak Hours: non-holiday weekdays 6:30-9am; 3:30-6:30pm
+    is_peak_day = (~df['holiday']) & (df['weekday'] < 5)
+    conditions = [is_peak_day & (df['dep_time'].between(datetime.time(6, 30), datetime.time(9, 0))),
+                  is_peak_day & (df['dep_time'].between(datetime.time(15, 30), datetime.time(18, 30)))]
     choices = ['am_peak', 'pm_peak']
     df['peak'] = np.select(conditions, choices, default='off_peak')
     return df
@@ -47,7 +47,11 @@ def travel_times_over_time(sdate, edate, from_stop, to_stop):
     df = pd.DataFrame.from_records(all_data)
     df['dep_dt'] = pd.to_datetime(df['dep_dt'])
     df['dep_time'] = df['dep_dt'].dt.time
-    df['service_date'] = (df['dep_dt'] - SERVICE_HR_OFFSET).dt.date
+
+    # label service date
+    service_date = df['dep_dt'] - SERVICE_HR_OFFSET
+    df['service_date'] = service_date.dt.date
+    df['weekday'] = service_date.dt.dayofweek
     df = train_peak_status(df)
 
     # get summary stats
@@ -72,10 +76,13 @@ def headways_over_time(sdate, edate, stop):
 
     # convert to pandas
     df = pd.DataFrame.from_records(all_data)
-
     df['dep_dt'] = pd.to_datetime(df['current_dep_dt'])
     df['dep_time'] = df['dep_dt'].dt.time
-    df['service_date'] = (df['dep_dt'] - SERVICE_HR_OFFSET).dt.date
+
+    # label service date
+    service_date = df['dep_dt'] - SERVICE_HR_OFFSET
+    df['service_date'] = service_date.dt.date
+    df['weekday'] = service_date.dt.dayofweek
     df = train_peak_status(df)
 
     # get summary stats
@@ -102,7 +109,11 @@ def dwells_over_time(sdate, edate, stop):
     df = pd.DataFrame.from_records(all_data)
     df['dep_dt'] = pd.to_datetime(df['dep_dt'])
     df['dep_time'] = df['dep_dt'].dt.time
-    df['service_date'] = (df['dep_dt'] - SERVICE_HR_OFFSET).dt.date
+
+    # label service date
+    service_date = df['dep_dt'] - SERVICE_HR_OFFSET
+    df['service_date'] = service_date.dt.date
+    df['weekday'] = service_date.dt.dayofweek
     df = train_peak_status(df)
 
     # get summary stats
