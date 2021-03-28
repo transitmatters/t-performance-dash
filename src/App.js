@@ -92,6 +92,7 @@ class App extends React.Component {
     this.chartTimeframe = this.chartTimeframe.bind(this);
     this.setIsLoadingDataset = this.setIsLoadingDataset.bind(this);
     this.getIsLoadingDataset = this.getIsLoadingDataset.bind(this);
+    this.getDoneLoading = this.getDoneLoading.bind(this);
     this.getTimescale = this.getTimescale.bind(this);
     this.progressBarRate = this.progressBarRate.bind(this);
     this.restartProgressBar = this.restartProgressBar.bind(this);
@@ -199,6 +200,16 @@ class App extends React.Component {
           [name]: data
         });
       });
+  }
+
+  getDoneLoading() {
+    let all_done = true;
+    for (const [, isLoading] of Object.entries(this.state.datasetLoadingState)) {
+      if (isLoading) {
+        all_done = false;
+      }
+    }
+    return all_done;
   }
 
   setIsLoadingDataset(name, isLoading) {
@@ -419,7 +430,7 @@ class App extends React.Component {
             isLoading={this.getIsLoadingDataset("alerts")}
             isHidden={hasNoLoadedCharts}
           />}
-          {canShowCharts && <ProgressBar progress={this.state.progress} />}
+          {canShowCharts && !this.getDoneLoading() && <ProgressBar progress={this.state.progress} />}
         </div>
         {!canShowCharts && this.renderEmptyState(error_message)}
         {canShowCharts && this.renderCharts()}
