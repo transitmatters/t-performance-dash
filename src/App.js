@@ -243,17 +243,21 @@ class App extends React.Component {
       this.progressTimer = null;
     }
 
+    // Start the progress bar at 0
     this.setState({
       progress: 0,
     }, () => {
       this.progressTimer = setInterval(() => {
-        this.setState({
-          progress: this.state.progress + this.progressBarRate(),
-        }, () => {
-          if (this.state.progress >= 100) {
-            clearTimeout(this.progressTimer);
-          }
-        });
+        // Increment up until 85%
+        if(this.state.progress < 85) {
+          this.setState({
+            progress: this.state.progress + this.progressBarRate(),
+          });
+        }
+        else {
+          // Stop at 90%, the progress bar will be cleared when everything is actually done loading
+          clearTimeout(this.progressTimer);
+        }
       }, 1000);
     });
   }
