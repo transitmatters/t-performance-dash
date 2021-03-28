@@ -97,6 +97,8 @@ class App extends React.Component {
     this.progressBarRate = this.progressBarRate.bind(this);
     this.restartProgressBar = this.restartProgressBar.bind(this);
     this.permittedRange = this.permittedRange.bind(this);
+
+    this.progressTimer = null;
   }
 
   componentDidMount() {
@@ -236,15 +238,20 @@ class App extends React.Component {
   }
 
   restartProgressBar() {
+    if(this.progressTimer !== null) {
+      clearTimeout(this.progressTimer);
+      this.progressTimer = null;
+    }
+
     this.setState({
       progress: 0,
     }, () => {
-      const progressTimer = setInterval(() => {
+      this.progressTimer = setInterval(() => {
         this.setState({
           progress: this.state.progress + this.progressBarRate(),
         }, () => {
           if (this.state.progress >= 100) {
-            clearTimeout(progressTimer);
+            clearTimeout(this.progressTimer);
           }
         });
       }, 1000);
