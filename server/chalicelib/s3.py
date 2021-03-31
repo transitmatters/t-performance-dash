@@ -8,6 +8,7 @@ from chalicelib import parallel
 BUCKET = "tm-mbta-performance"
 s3 = boto3.client('s3')
 
+
 # General downloading/uploading
 def download(key, encoding="utf8"):
     obj = s3.Object(BUCKET, key)
@@ -22,6 +23,7 @@ def upload(key, bytes, compress=True):
         bytes = zlib.compress(bytes)
 
     destination.put(Body=bytes)
+
 
 def download_one_event_file(date, stop_id):
     year, month, day = date.year, date.month, date.day
