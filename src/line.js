@@ -135,7 +135,7 @@ class LineClass extends React.Component {
                       /* In aggregation mode, dates come back from the server no times.
                         Because we're -4/-5 UTC, the resulting strings become 7pm/8pm the previous day with affixing 00:00:00.
                         Blegh */
-                      const date = new Date(`${tooltipItems[0].xLabel} 00:00:00`);
+                      const date = new Date(`${tooltipItems[0].xLabel}T00:00:00`); // Safari won't parse "2021-03-30" alone
                       return date.toDateString();
                     }
                     else if(this.props.timescale === "hour") {
