@@ -266,7 +266,8 @@ class App extends React.Component {
     const { configuration } = this.state;
     const { fromStopIds, toStopIds } = get_stop_ids_for_stations(configuration.from, configuration.to);
     if (configuration.date_start && fromStopIds && toStopIds) {
-      this.restartProgressBar();
+      if (configuration.date_end)
+	this.restartProgressBar();
 
       this.fetchDataset('headways', {
         stop: fromStopIds,
