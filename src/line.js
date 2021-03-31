@@ -107,7 +107,7 @@ class LineClass extends React.Component {
                 },
                 {
                   label: `Benchmark MBTA ${this.props.seriesName}`,
-                  data: this.props.data.map(item => item[this.props.benchmarkField] / 60),
+                  data: this.props.data.map(item => (item[this.props.benchmarkField] / 60).toFixed(2)),
                   pointRadius: 0
                 }
               ]
