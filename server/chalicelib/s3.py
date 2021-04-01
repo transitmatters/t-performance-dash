@@ -11,8 +11,8 @@ s3 = boto3.client('s3')
 
 # General downloading/uploading
 def download(key, encoding="utf8"):
-    obj = s3.Object(BUCKET, key)
-    s3_data = obj.get()["Body"].read()
+    obj = s3.get_object(Bucket=BUCKET, Key=key)
+    s3_data = obj["Body"].read()
     decompressed = zlib.decompress(s3_data).decode(encoding)
     return decompressed
 

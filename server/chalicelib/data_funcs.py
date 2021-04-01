@@ -1,5 +1,6 @@
 import datetime
 import pytz
+import traceback
 from chalicelib import MbtaPerformanceAPI, s3_historical, s3_alerts
 
 DATE_FORMAT = "%Y/%m/%d %H:%M:%S"
@@ -210,10 +211,11 @@ def alerts(day, params):
         for alert_item in alert_items:
             for alert_version in alert_item["alert_versions"]:
                 flat_alerts.append({
-                    "valid_from": stamp_to_dt(int(alert_version["valid_from"])).strftime(DATE_FORMAT),
-                    "valid_to": stamp_to_dt(int(alert_version["valid_to"])).strftime(DATE_FORMAT),
+                    "valid_from": stamp_to_dt(int(alert_version["valid_from"])),
+                    "valid_to": stamp_to_dt(int(alert_version["valid_to"])),
                     "text": alert_version["header_text"]
                 })
         return flat_alerts
     except Exception:
+        traceback.print_exc()
         return []
