@@ -15,6 +15,17 @@ This is the repository for the TransitMatters data dashboard. Client code is wri
 3. Run `npm start` to start both the JavaScript development server and the Python backend at the same time.
 4. Navigate to [http://localhost:3000](http://localhost:3000) (or the url provided after running `npm start`)
 
+## Deployment instructions
+1. Configure AWS CLI 1.x or 2.x with your AWS access key ID and secret under the profile name `transitmatters`.
+2. Configure shell environment variables for AWS ACM domain certificates.
+	* `TM_FRONTEND_CERT_ARN`
+	* `TM_FRONTEND_CERT_ARN_BETA`
+	* `TM_BACKEND_CERT_ARN`
+	* `TM_BACKEND_CERT_ARN_BETA`
+	* (You may also need to set `AWS_DEFAULT_REGION` in your shell to `us-east-1`. Maybe not! We're not sure.)
+3. Execute `./deploy.sh` (for production) or `./deploy.sh beta` (for beta).
+	* If you get an error, check the CloudFormation stack status in AWS Console. Good luck!
+
 ### Linting
 To lint frontend and backend code, run `npm run lint` in the root directory
 
