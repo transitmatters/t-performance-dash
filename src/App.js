@@ -313,16 +313,23 @@ class App extends React.Component {
   }
 
   suggestXRange() {
-    const today = `${this.state.configuration.date_start}T00:00:00`;
+    if (this.getTimescale() === 'hour') {
+      const today = `${this.state.configuration.date_start}T00:00:00`;
 
-    var low = new Date(today);
-    low.setHours(6,0);
+      var low = new Date(today);
+      low.setHours(6,0);
 
-    var high = new Date(today);
-    high.setDate(high.getDate() + 1);
-    high.setHours(1,0);
+      var high = new Date(today);
+      high.setDate(high.getDate() + 1);
+      high.setHours(1,0);
 
-    return [low, high];
+      return [low, high];
+    } else {
+      const start = `${this.state.configuration.date_start}T00:00:00`;
+      const end = `${this.state.configuration.date_end}T00:00:00`;
+
+      return [new Date(start), new Date(end)];
+    }
   }
 
   chartTimeframe() {
