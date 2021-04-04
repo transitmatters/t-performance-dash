@@ -177,7 +177,12 @@ class LineClass extends React.Component {
                       display: true,
                       fontSize: 14,
                       labelString: this.props.xFieldLabel
-                    }
+                    },
+		    // make sure graph shows /at least/ suggestedXRange, either end will extend to not hide points.
+		    afterDataLimits: (axis) => {if (this.props.isLoading) return; // prevents weird sliding animation
+						if (this.props.timescale === 'day') return;
+						axis.min = Math.min(axis.min, this.props.suggestedXRange[0]);
+						axis.max = Math.max(axis.max, this.props.suggestedXRange[1]);}
                   }
                 ]
               }
