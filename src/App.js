@@ -326,11 +326,16 @@ class App extends React.Component {
   }
 
   chartTimeframe() {
-    const travel_times = this.state.traveltimes;
-    if (travel_times.length > 0) {
-      return [new Date(travel_times[0].dep_dt), new Date(travel_times[travel_times.length - 1].dep_dt)];
-    }
-    return [];
+    const today = `${this.state.configuration.date_start}T00:00:00`;
+
+    var low = new Date(today);
+    low.setHours(5, 30)
+
+    var high = new Date(today);
+    high.setDate(high.getDate() + 1);
+    high.setHours(1,0);
+
+    return [low, high];
   }
 
   componentDidCatch(error) {
