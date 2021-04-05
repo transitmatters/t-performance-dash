@@ -316,10 +316,10 @@ class App extends React.Component {
     if (this.getTimescale() === 'hour') {
       const today = `${this.state.configuration.date_start}T00:00:00`;
 
-      var low = new Date(today);
+      let low = new Date(today);
       low.setHours(6,0);
 
-      var high = new Date(today);
+      let high = new Date(today);
       high.setDate(high.getDate() + 1);
       high.setHours(1,0);
 
@@ -335,10 +335,10 @@ class App extends React.Component {
   chartTimeframe() {
     const today = `${this.state.configuration.date_start}T00:00:00`;
 
-    var low = new Date(today);
+    let low = new Date(today);
     low.setHours(5, 30)
 
-    var high = new Date(today);
+    let high = new Date(today);
     high.setDate(high.getDate() + 1);
     high.setHours(1,0);
 
