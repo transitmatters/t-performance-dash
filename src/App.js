@@ -314,6 +314,7 @@ class App extends React.Component {
 
   suggestXRange() {
     if (this.getTimescale() === 'hour') {
+      // Force plot to show 6am today to 1am tomorrow at minimum
       const today = `${this.state.configuration.date_start}T00:00:00`;
 
       let low = new Date(today);
@@ -325,6 +326,7 @@ class App extends React.Component {
 
       return [low, high];
     } else {
+      // Force plot to show entire date range selected even if no data
       const start = `${this.state.configuration.date_start}T00:00:00`;
       const end = `${this.state.configuration.date_end}T00:00:00`;
 
@@ -333,6 +335,7 @@ class App extends React.Component {
   }
 
   chartTimeframe() {
+    // Set alert-bar interval to be 5:30am today to 1am tomorrow.
     const today = `${this.state.configuration.date_start}T00:00:00`;
 
     let low = new Date(today);
