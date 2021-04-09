@@ -90,6 +90,7 @@ class App extends React.Component {
     this.download = this.download.bind(this);
     this.updateConfiguration = this.updateConfiguration.bind(this);
     this.chartTimeframe = this.chartTimeframe.bind(this);
+    this.suggestXRange = this.suggestXRange.bind(this);
     this.setIsLoadingDataset = this.setIsLoadingDataset.bind(this);
     this.getIsLoadingDataset = this.getIsLoadingDataset.bind(this);
     this.getDoneLoading = this.getDoneLoading.bind(this);
@@ -125,7 +126,7 @@ class App extends React.Component {
         ...config_change
       }
     };
-    
+
     if(update.configuration.date_end) {
       if(!this.permittedRange(update.configuration.date_start, update.configuration.date_end)) {
         this.setState({
@@ -311,12 +312,40 @@ class App extends React.Component {
     return {};
   }
 
-  chartTimeframe() {
-    const travel_times = this.state.traveltimes;
-    if (travel_times.length > 0) {
-      return [new Date(travel_times[0].dep_dt), new Date(travel_times[travel_times.length - 1].dep_dt)];
+  suggestXRange() {
+    if (this.getTimescale() === 'hour') {
+      // Force plot to show 6am today to 1am tomorrow at minimum
+      const today = `${this.state.configuration.date_start}T00:00:00`;
+
+      let low = new Date(today);
+      low.setHours(6,0);
+
+      let high = new Date(today);
+      high.setDate(high.getDate() + 1);
+      high.setHours(1,0);
+
+      return [low, high];
+    } else {
+      // Force plot to show entire date range selected even if no data
+      const start = `${this.state.configuration.date_start}T00:00:00`;
+      const end = `${this.state.configuration.date_end}T00:00:00`;
+
+      return [new Date(start), new Date(end)];
     }
-    return [];
+  }
+
+  chartTimeframe() {
+    // Set alert-bar interval to be 5:30am today to 1am tomorrow.
+    const today = `${this.state.configuration.date_start}T00:00:00`;
+
+    let low = new Date(today);
+    low.setHours(5, 30)
+
+    let high = new Date(today);
+    high.setDate(high.getDate() + 1);
+    high.setHours(1,0);
+
+    return [low, high];
   }
 
   componentDidCatch(error) {
@@ -386,6 +415,7 @@ class App extends React.Component {
         xField={is_aggregation ? 'dep_dt' : 'service_date'}
         xFieldLabel={is_aggregation ? 'Time of day' : 'Day'}
         xFieldUnit={timescale}
+        suggestedXRange={this.suggestXRange()}
         yField={is_aggregation ? 'travel_time_sec' : '50%'}
         yFieldLabel={is_aggregation ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={'benchmark_travel_time_sec'}
@@ -401,6 +431,7 @@ class App extends React.Component {
         xField={is_aggregation ? 'current_dep_dt' : 'service_date'}
         xFieldLabel={is_aggregation ? 'Time of day' : 'Day'}
         xFieldUnit={timescale}
+        suggestedXRange={this.suggestXRange()}
         yField={is_aggregation ? 'headway_time_sec' : '50%'}
         yFieldLabel={is_aggregation ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={'benchmark_headway_time_sec'}
@@ -416,6 +447,7 @@ class App extends React.Component {
         xField={is_aggregation ? 'arr_dt' : 'service_date'}
         xFieldLabel={is_aggregation ? 'Time of day' : 'Day'}
         xFieldUnit={timescale}
+        suggestedXRange={this.suggestXRange()}
         yField={is_aggregation ? 'dwell_time_sec' : '50%'}
         yFieldLabel={is_aggregation ? 'Minutes' : 'Minutes (median)'}
         benchmarkField={null}
