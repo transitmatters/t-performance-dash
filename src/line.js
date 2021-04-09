@@ -3,6 +3,8 @@ import classNames from 'classnames';
 import { Line, Chart } from 'react-chartjs-2';
 import Legend from './Legend';
 import drawTitle from './Title';
+import { CSVLink } from "react-csv";
+import { FaSave } from 'react-icons/fa';
 
 Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
   let x = eventPos.x;
@@ -88,12 +90,21 @@ class LineClass extends React.Component {
     //   }
     // });
     const { isLoading } = this.props;
+
+    const graphData=   
+    <span className="graphData">
+    <CSVLink
+    data={this.props.data}
+    filename={this.props.seriesName}>
+    <FaSave/>  Export</CSVLink></span>
+
     let labels = this.props.data.map(item => item[this.props.xField]);
     return (
       <div className={classNames('chart', isLoading && 'is-loading')}>
         <div className="chart-container">
           <Line
             legend={{ display: false }}
+            graphData={{ display: false }} 
             data={{
               labels,
               datasets: [
@@ -183,7 +194,8 @@ class LineClass extends React.Component {
             }}
           />
         </div>
-        {this.props.legend && <Legend />}
+        {graphData}
+        {this.props.legend && <Legend /> } 
       </div>
     );
   }
