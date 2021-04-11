@@ -10,7 +10,7 @@ const Select = props => {
         onChange(option && option.value);
     }
 
-    const matchingIndex = options.findIndex(o => o.value === value);
+    const matchingIndex = options.findIndex(o => o.value.stop_name === value.stop_name);
 
     return (
         <div className={classNames('select-component', className, options.length === 0 && 'disabled')}>
