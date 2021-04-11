@@ -186,9 +186,9 @@ class LineClass extends React.Component {
                 ]
               }
             }}
-            plugins={{
+            plugins={[{
               afterDraw: (chart) => drawTitle(this.props.title, this.props.location, chart)
-            }}
+            }]}
           />
         </div>
         {this.props.timescale === 'day' && <LegendLongTerm />}
