@@ -3,7 +3,7 @@ import pytz
 import traceback
 from chalicelib import MbtaPerformanceAPI, s3_historical, s3_alerts
 
-DATE_FORMAT = "%Y/%m/%d %H:%M:%S"
+DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
 WE_HAVE_ALERTS_SINCE = datetime.date(2017, 11, 6)
 
 

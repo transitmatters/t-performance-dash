@@ -184,8 +184,8 @@ export default class StationConfiguration extends React.Component {
           <div className="option option-date">
             <span className="date-label">Date</span>
             <input
-              value={this.decode("date_start")}
-              onChange={useFlatPickr ? undefined : this.handleSelectRawDate("date_start")}
+              value={this.decode("date_start") || ""} // The || "" is to prevent undefined; that makes React think it's uncontrolled
+              onChange={this.handleSelectRawDate("date_start")}
               type='date'
               ref={this.picker_start}
               placeholder='Select date...'
@@ -200,8 +200,8 @@ export default class StationConfiguration extends React.Component {
             {!!this.state.show_date_end_picker && <>
               <span className="date-label end-date-label">to</span>
               <input
-                value={this.decode("date_end")}
-                onChange={useFlatPickr ? undefined : this.handleSelectRawDate("date_end")}
+                value={this.decode("date_end") || ""} // The || "" is to prevent undefined; that makes React think it's uncontrolled
+                onChange={this.handleSelectRawDate("date_end")}
                 type='date'
                 ref={this.picker_end}
                 placeholder='Select date...'
