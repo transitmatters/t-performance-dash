@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import classNames from 'classnames';
 
 const Select = props => {
-    const { options, onChange, defaultLabel = "", value, className } = props;
+    const { options, optionComparator, onChange, defaultLabel = "", value, className } = props;
     const elementRef = useRef(null);
 
     const handleChange = (evt) => {
@@ -10,7 +10,7 @@ const Select = props => {
         onChange(option && option.value);
     }
 
-    const matchingIndex = options.findIndex(o => o.value === value);
+    const matchingIndex = options.findIndex(optionComparator || (o => o.value === value));
 
     return (
         <div className={classNames('select-component', className, options.length === 0 && 'disabled')}>

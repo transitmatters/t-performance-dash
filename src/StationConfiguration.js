@@ -164,6 +164,8 @@ export default class StationConfiguration extends React.Component {
                 value={this.decode("from")}
                 options={this.optionsForField("from")}
                 onChange={this.handleSelectOption("from")}
+                // Non-standard value comparator because from/to gets copied by onpopstate :/
+                optionComparator={o => o.value.stop_name === this.decode("from")?.stop_name}
                 defaultLabel="Select a station..."
               />
             </div>
@@ -173,6 +175,8 @@ export default class StationConfiguration extends React.Component {
                 value={this.decode("to")}
                 options={this.optionsForField("to")}
                 onChange={this.handleSelectOption("to")}
+                // Non-standard value comparator because from/to gets copied by onpopstate :/
+                optionComparator={o => o.value.stop_name === this.decode("to")?.stop_name}
                 defaultLabel="Select a station..."
               />
             </div>
