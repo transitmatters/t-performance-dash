@@ -150,7 +150,7 @@ class LineClass extends React.Component {
                   //   return `Benchmark MBTA ${this.props.tooltipUnit}: ${parseFloat(tooltipItem.value).toFixed(2)}`;
                   // },
                   afterBody: (tooltipItems) => {
-                    if (tooltipItems.length > 1) {
+                    if (tooltipItems.length === 2) {
                       return departure_from_normal_string(tooltipItems[0].value, tooltipItems[1].value);
                     }
                   }
