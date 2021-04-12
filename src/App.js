@@ -100,6 +100,7 @@ class App extends React.Component {
     this.permittedRange = this.permittedRange.bind(this);
 
     this.progressTimer = null;
+    this.fetchControllers = [];
   }
 
   componentDidMount() {
@@ -174,7 +175,7 @@ class App extends React.Component {
     this.props.history.push(`/rapidtransit?config=${parts}`, this.state.configuration);
   }
 
-  fetchDataset(name, options) {
+  fetchDataset(name, signal, options) {
     let url;
     // If a date_end is set, fetch aggregate data instead of single day
     if (this.state.configuration.date_end) {
@@ -195,13 +196,20 @@ class App extends React.Component {
 
     this.setIsLoadingDataset(name, true);
 
-    fetch(url)
+    fetch(url, {
+      signal,
+    })
       .then(resp => resp.json())
       .then(data => {
         this.setIsLoadingDataset(name, false);
         this.setState({
           [name]: data
         });
+      })
+      .catch(e => {
+        if(e.name !== "AbortError") {
+          console.error(e);
+        }
       });
   }
 
@@ -239,11 +247,6 @@ class App extends React.Component {
   }
 
   restartProgressBar() {
-    if(this.progressTimer !== null) {
-      clearTimeout(this.progressTimer);
-      this.progressTimer = null;
-    }
-
     // Start the progress bar at 0
     this.setState({
       progress: 0,
@@ -257,28 +260,44 @@ class App extends React.Component {
         }
         else {
           // Stop at 90%, the progress bar will be cleared when everything is actually done loading
-          clearTimeout(this.progressTimer);
+          clearInterval(this.progressTimer);
+          this.progressTimer = null;
         }
       }, 1000);
     });
   }
 
   download() {
+    // End all existing fetches
+    while(this.fetchControllers.length > 0) {
+      this.fetchControllers.shift().abort();
+    }
+
+    const controller = new AbortController();
+    this.fetchControllers.push(controller);
+
+    // Stop existing progress bar timer
+    if(this.progressTimer !== null) {
+      clearInterval(this.progressTimer);
+      this.progressTimer = null;
+    }
+
     const { configuration } = this.state;
     const { fromStopIds, toStopIds } = get_stop_ids_for_stations(configuration.from, configuration.to);
     if (configuration.date_start && fromStopIds && toStopIds) {
-      if (configuration.date_end)
-	this.restartProgressBar();
+      if (configuration.date_end) {
+        this.restartProgressBar();
+      }
 
-      this.fetchDataset('headways', {
+      this.fetchDataset('headways', controller.signal, {
         stop: fromStopIds,
       });
-      this.fetchDataset('dwells', {
+      this.fetchDataset('dwells', controller.signal, {
         stop: fromStopIds,
       });
 
       if (this.state.configuration.to) {
-        this.fetchDataset('traveltimes', {
+        this.fetchDataset('traveltimes', controller.signal, {
           from_stop: fromStopIds,
           to_stop: toStopIds,
         });
@@ -288,7 +307,7 @@ class App extends React.Component {
         this.setState({
           alerts: null,
         });
-        this.fetchDataset('alerts', {
+        this.fetchDataset('alerts', controller.signal, {
           route: configuration.line,
         });
         ReactGA.pageview(window.location.pathname + window.location.search);
@@ -474,7 +493,7 @@ class App extends React.Component {
             isLoading={this.getIsLoadingDataset("alerts")}
             isHidden={hasNoLoadedCharts}
           />}
-          {canShowCharts && !this.getDoneLoading() && <ProgressBar progress={this.state.progress} />}
+          {canShowCharts && !this.getDoneLoading() && this.getTimescale() === 'day' && <ProgressBar progress={this.state.progress} />}
         </div>
         {!canShowCharts && this.renderEmptyState(error_message)}
         {canShowCharts && this.renderCharts()}
