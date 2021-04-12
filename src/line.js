@@ -80,7 +80,7 @@ class LineClass extends React.Component {
               labels,
               datasets: [
                 {
-                  label: `Actual ${this.props.seriesName}`,
+                  label: this.props.timescale === 'hour' ? `Actual ${this.props.seriesName}` : this.props.seriesName,
                   fill: false,
                   lineTension: 0.1,
                   pointBackgroundColor: point_colors(this.props.data, this.props.yField, this.props.benchmarkField),
