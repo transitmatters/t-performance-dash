@@ -42,6 +42,8 @@ def faster_describe(grouped):
 
 def travel_times_over_time(sdate, edate, from_stop, to_stop):
     all_data = data_funcs.travel_times(sdate, [from_stop], [to_stop], edate)
+    if not all_data:
+        return []
 
     # convert to pandas
     df = pd.DataFrame.from_records(all_data)
@@ -73,6 +75,8 @@ def travel_times_over_time(sdate, edate, from_stop, to_stop):
 
 def headways_over_time(sdate, edate, stop):
     all_data = data_funcs.headways(sdate, [stop], edate)
+    if not all_data:
+        return []
 
     # convert to pandas
     df = pd.DataFrame.from_records(all_data)
@@ -104,6 +108,8 @@ def headways_over_time(sdate, edate, stop):
 
 def dwells_over_time(sdate, edate, stop):
     all_data = data_funcs.dwells(sdate, [stop], edate)
+    if not all_data:
+        return []
 
     # convert to pandas
     df = pd.DataFrame.from_records(all_data)
