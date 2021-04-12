@@ -18,11 +18,9 @@ def download(key, encoding="utf8"):
 
 
 def upload(key, bytes, compress=True):
-    destination = s3.Object(BUCKET, key)
     if compress:
         bytes = zlib.compress(bytes)
-
-    destination.put(Body=bytes)
+    s3.put_object(Bucket=BUCKET, Key=key, Body=bytes)
 
 
 def download_one_event_file(date, stop_id):
