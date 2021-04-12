@@ -417,7 +417,7 @@ class App extends React.Component {
         xFieldUnit={timescale}
         suggestedXRange={this.suggestXRange()}
         yField={is_aggregation ? 'travel_time_sec' : '50%'}
-        yFieldLabel={is_aggregation ? 'Minutes' : 'Minutes (median)'}
+        yFieldLabel={"Minutes"}
         benchmarkField={'benchmark_travel_time_sec'}
       />
       <Line
@@ -433,7 +433,7 @@ class App extends React.Component {
         xFieldUnit={timescale}
         suggestedXRange={this.suggestXRange()}
         yField={is_aggregation ? 'headway_time_sec' : '50%'}
-        yFieldLabel={is_aggregation ? 'Minutes' : 'Minutes (median)'}
+        yFieldLabel={'Minutes'}
         benchmarkField={'benchmark_headway_time_sec'}
       />
       <Line
@@ -449,7 +449,7 @@ class App extends React.Component {
         xFieldUnit={timescale}
         suggestedXRange={this.suggestXRange()}
         yField={is_aggregation ? 'dwell_time_sec' : '50%'}
-        yFieldLabel={is_aggregation ? 'Minutes' : 'Minutes (median)'}
+        yFieldLabel={'Minutes'}
         benchmarkField={null}
       />
     </div>
