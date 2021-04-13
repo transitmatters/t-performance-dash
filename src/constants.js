@@ -1107,7 +1107,7 @@ const createConfigPresetValue = (line, fromStationName, toStationName, date_star
 };
 
 // Returns today's EST/EDT date in a format like "2021-04-12". Thanks Canada!
-const TODAY = new Date().toLocaleString('fr-CA', { timeZone: 'America/New_York' }).split(" ")[0];
+const TODAY = new Date().toLocaleString('fr-CA', { timeZone: 'America/New_York' }).split(",")[0];
 
 export const configPresets = [
 	{
