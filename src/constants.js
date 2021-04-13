@@ -1094,18 +1094,34 @@ export const stations = {
 	}]
 };
 
-const createConfigPresetValue = (line, fromStationName, toStationName, date) => {
+const createConfigPresetValue = (line, fromStationName, toStationName, date_start, date_end = undefined) => {
 	const fromStation = stations[line].find(s => s.stop_name === fromStationName);
 	const toStation = stations[line].find(s => s.stop_name === toStationName);
 	return {
 		line,
-		date,
+		date_start,
+		date_end,
 		from: fromStation,
 		to: toStation,
 	}
 };
 
+// Returns today's EST/EDT date in a format like "2021-04-12". Thanks Canada!
+const TODAY = new Date().toLocaleString('fr-CA', { timeZone: 'America/New_York' }).split(" ")[0];
+
 export const configPresets = [
+	{
+		label: "[New!] April 2021 — Orange Line slow zone",
+		value: createConfigPresetValue("Orange", "Oak Grove", "Wellington", '2021-03-01', TODAY),
+	},
+	{
+		label: "[New!] December 2020 — Orange Line slow zone",
+		value: createConfigPresetValue("Orange", "Community College", "North Station", '2020-11-01', '2021-02-17'),
+	},
+	{
+		label: "[New!] Spring 2020 — Green Line (E-branch) COVID-19 pandemic effect",
+		value: createConfigPresetValue("Green", "Mission Park", "Government Center", '2020-01-01', '2020-05-31'),
+	},
 	{
 		label: "March 30, 2021 — Red Line Power Issues",
 		value: createConfigPresetValue("Red", "Andrew", "Park Street", '2021-03-30'),

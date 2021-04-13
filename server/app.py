@@ -2,7 +2,7 @@ import json
 import os
 from chalice import Chalice, Cron, CORSConfig
 from datetime import date, timedelta
-from chalicelib import data_funcs, s3_historical, s3_alerts
+from chalicelib import data_funcs, aggregation, s3_alerts
 
 app = Chalice(app_name="data-dashboard")
 
@@ -46,46 +46,60 @@ def mutlidict_to_dict(mutlidict):
     return res_dict
 
 
-def use_S3(date):
-    return (date.today() - date).days >= 90
-
-
 @app.route("/headways/{user_date}", cors=cors_config)
 def headways_route(user_date):
     date = parse_user_date(user_date)
-    if use_S3(date):
-        stop = app.current_request.query_params["stop"]
-        return s3_historical.headways(stop, date.year, date.month, date.day)
-    else:
-        return data_funcs.headways(
-            date, mutlidict_to_dict(app.current_request.query_params)
-        )
+    stop = app.current_request.query_params["stop"]
+    return data_funcs.headways(date, [stop])
 
 
 @app.route("/dwells/{user_date}", cors=cors_config)
 def dwells_route(user_date):
     date = parse_user_date(user_date)
-    if use_S3(date):
-        stop = app.current_request.query_params["stop"]
-        return s3_historical.dwells(stop, date.year, date.month, date.day)
-    else:
-        return data_funcs.dwells(date, mutlidict_to_dict(app.current_request.query_params))
+    stop = app.current_request.query_params["stop"]
+    return data_funcs.dwells(date, [stop])
 
 
 @app.route("/traveltimes/{user_date}", cors=cors_config)
 def traveltime_route(user_date):
     date = parse_user_date(user_date)
-    if use_S3(date):
-        from_stop = app.current_request.query_params["from_stop"]
-        to_stop = app.current_request.query_params["to_stop"]
-        return s3_historical.travel_times(from_stop, to_stop, date.year, date.month, date.day)
-    else:
-        return data_funcs.travel_times(
-            date, mutlidict_to_dict(app.current_request.query_params)
-        )
+    from_stop = app.current_request.query_params["from_stop"]
+    to_stop = app.current_request.query_params["to_stop"]
+    return data_funcs.travel_times(date, [from_stop], [to_stop])
 
 
 @app.route("/alerts/{user_date}", cors=cors_config)
 def alerts_route(user_date):
     date = parse_user_date(user_date)
     return json.dumps(data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params)))
+
+
+@app.route("/aggregate/traveltimes", cors=cors_config)
+def traveltime_aggregate_route():
+    sdate = parse_user_date(app.current_request.query_params["start_date"])
+    edate = parse_user_date(app.current_request.query_params["end_date"])
+    from_stop = app.current_request.query_params["from_stop"]
+    to_stop = app.current_request.query_params["to_stop"]
+
+    response = aggregation.travel_times_over_time(sdate, edate, from_stop, to_stop)
+    return json.dumps(response, indent=4, sort_keys=True, default=str)
+
+
+@app.route("/aggregate/headways", cors=cors_config)
+def headways_aggregate_route():
+    sdate = parse_user_date(app.current_request.query_params["start_date"])
+    edate = parse_user_date(app.current_request.query_params["end_date"])
+    stop = app.current_request.query_params["stop"]
+
+    response = aggregation.headways_over_time(sdate, edate, stop)
+    return json.dumps(response, indent=4, sort_keys=True, default=str)
+
+
+@app.route("/aggregate/dwells", cors=cors_config)
+def dwells_aggregate_route():
+    sdate = parse_user_date(app.current_request.query_params["start_date"])
+    edate = parse_user_date(app.current_request.query_params["end_date"])
+    stop = app.current_request.query_params["stop"]
+
+    response = aggregation.dwells_over_time(sdate, edate, stop)
+    return json.dumps(response, indent=4, sort_keys=True, default=str)
