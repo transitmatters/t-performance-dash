@@ -428,7 +428,7 @@ class App extends React.Component {
         location={this.locationDescription(true)}
         tooltipUnit={"travel time"}
         timescale={timescale}
-        seriesName={is_aggregation ? 'travel time' : 'Travel time (median)'}
+        seriesName={is_aggregation ? 'travel time' : 'Median travel time'}
         isLoading={this.getIsLoadingDataset('traveltimes')}
         data={this.state.traveltimes}
         xField={is_aggregation ? 'dep_dt' : 'service_date'}
@@ -444,7 +444,7 @@ class App extends React.Component {
         location={this.locationDescription(false)}
         tooltipUnit={"headway"}
         timescale={timescale}
-        seriesName={is_aggregation ? 'headway' : 'Headway (median)'}
+        seriesName={is_aggregation ? 'headway' : 'Median headway'}
         isLoading={this.getIsLoadingDataset('headways')}
         data={this.state.headways}
         xField={is_aggregation ? 'current_dep_dt' : 'service_date'}
@@ -460,7 +460,7 @@ class App extends React.Component {
         location={this.locationDescription(false)}
         tooltipUnit={"dwell time"}
         timescale={timescale}
-        seriesName={is_aggregation ? 'dwell time' : 'Dwell time (median)'}
+        seriesName={is_aggregation ? 'dwell time' : 'Median dwell time'}
         isLoading={this.getIsLoadingDataset('dwells')}
         data={this.state.dwells}
         xField={is_aggregation ? 'arr_dt' : 'service_date'}
