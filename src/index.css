@@ -16,3 +16,7 @@ code {
 footer {
   text-align: center;
 }
+
+footer .version {
+  font-size: 15px;
+}
