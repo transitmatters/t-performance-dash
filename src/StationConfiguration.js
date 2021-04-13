@@ -68,8 +68,16 @@ export default class StationConfiguration extends React.Component {
     this.setupPickers();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     this.setupPickers();
+
+    // If the date_end prop shows up because a config preset set it,
+    //  then show the end date picker.
+    if(this.props.current.date_end !== prevProps.current.date_end) {
+      this.setState({
+        show_date_end_picker: !!this.props.current.date_end,
+      });
+    }
   }
 
   handleSelectDate(field_name) {
