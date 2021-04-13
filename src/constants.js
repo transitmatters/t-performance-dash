@@ -1119,8 +1119,8 @@ export const configPresets = [
 		value: createConfigPresetValue("Orange", "Community College", "North Station", '2020-11-01', '2021-02-17'),
 	},
 	{
-		label: "[New!] Spring 2020 — Green Line (C-branch) COVID-19 pandemic effect",
-		value: createConfigPresetValue("Green", "Englewood Avenue", "Saint Marys Street", '2020-01-31', '2020-07-05'),
+		label: "[New!] Spring 2020 — Green Line (E-branch) COVID-19 pandemic effect",
+		value: createConfigPresetValue("Green", "Mission Park", "Government Center", '2020-01-01', '2020-05-31'),
 	},
 	{
 		label: "March 30, 2021 — Red Line Power Issues",
