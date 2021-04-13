@@ -1094,18 +1094,26 @@ export const stations = {
 	}]
 };
 
-const createConfigPresetValue = (line, fromStationName, toStationName, date_start) => {
+const createConfigPresetValue = (line, fromStationName, toStationName, date_start, date_end = undefined) => {
 	const fromStation = stations[line].find(s => s.stop_name === fromStationName);
 	const toStation = stations[line].find(s => s.stop_name === toStationName);
 	return {
 		line,
 		date_start,
+		date_end,
 		from: fromStation,
 		to: toStation,
 	}
 };
 
+// Returns today's EST/EDT date in a format like "2021-04-12". Thanks Canada!
+const TODAY = new Date().toLocaleString('fr-CA', { timeZone: 'America/New_York' }).split(" ")[0];
+
 export const configPresets = [
+	{
+		label: "[New!] April 2021 — Orange Line slow zone",
+		value: createConfigPresetValue("Orange", "Oak Grove", "Wellington", '2021-03-01', TODAY),
+	},
 	{
 		label: "January 17, 2021 — Red Line",
 		value: createConfigPresetValue("Red", "Braintree", "Andrew", '2021-01-17'),
