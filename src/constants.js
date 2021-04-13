@@ -1115,6 +1115,14 @@ export const configPresets = [
 		value: createConfigPresetValue("Orange", "Oak Grove", "Wellington", '2021-03-01', TODAY),
 	},
 	{
+		label: "[New!] December 2020 — Orange Line slow zone",
+		value: createConfigPresetValue("Orange", "Community College", "North Station", '2020-11-01', '2021-02-17'),
+	},
+	{
+		label: "[New!] Spring 2020 — Green Line (C branch) COVID effect",
+		value: createConfigPresetValue("Green", "Englewood Avenue", "Saint Marys Street", '2020-01-31', '2020-07-05'),
+	},
+	{
 		label: "January 17, 2021 — Red Line",
 		value: createConfigPresetValue("Red", "Braintree", "Andrew", '2021-01-17'),
 	},
