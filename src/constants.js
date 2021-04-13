@@ -1123,15 +1123,15 @@ export const configPresets = [
 		value: createConfigPresetValue("Green", "Englewood Avenue", "Saint Marys Street", '2020-01-31', '2020-07-05'),
 	},
 	{
-		label: "January 17, 2021 — Red Line",
-		value: createConfigPresetValue("Red", "Braintree", "Andrew", '2021-01-17'),
+		label: "March 30, 2021 — Red Line Power Issues",
+		value: createConfigPresetValue("Red", "Andrew", "Park Street", '2021-03-30'),
 	},
 	{
-		label: "January 4, 2021 — Orange Line",
-		value: createConfigPresetValue("Orange", "Wellington", "Tufts Medical Center", '2021-01-04'),
+		label: "March 16, 2021 — Orange Line Derailment",
+		value: createConfigPresetValue("Orange", "Downtown Crossing", "Community College", '2021-03-16'),
 	},
 	{
-		label: "January 4, 2021 — Blue Line",
-		value: createConfigPresetValue("Blue", "Revere Beach", "Aquarium", '2021-01-04'),
+		label: "April 2, 2021 — Blue Line Daytime Maintenance",
+		value: createConfigPresetValue("Blue", "Revere Beach", "State Street", '2021-04-02'),
 	},
 ];
