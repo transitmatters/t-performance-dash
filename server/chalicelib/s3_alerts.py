@@ -25,6 +25,6 @@ def get_alerts(day, route):
 
 
 def store_alerts(day):
-    api_data = MbtaPerformanceAPI.get_api_data(day, "pastalerts", {})
+    api_data = MbtaPerformanceAPI.get_api_data("pastalerts", {}, day)
     alerts = json.dumps(api_data).encode("utf8")
     s3.upload(key(day), alerts, True)
