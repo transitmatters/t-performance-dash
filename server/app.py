@@ -1,5 +1,6 @@
 import json
 import os
+import subprocess
 from chalice import Chalice, Cron, CORSConfig
 from datetime import date, timedelta
 from chalicelib import data_funcs, aggregation, s3_alerts
@@ -103,3 +104,9 @@ def dwells_aggregate_route():
 
     response = aggregation.dwells_over_time(sdate, edate, stop)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
+
+
+@app.route("/git_id", cors=cors_config)
+def get_git_id():
+    git_id = str(subprocess.check_output(['git', 'describe', '--always', '--dirty', '--abbrev=10']))[2:-3]
+    return json.dumps({"git_id": git_id})

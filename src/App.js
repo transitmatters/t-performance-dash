@@ -45,6 +45,14 @@ const showBetaTag = () => {
   beta_tag.innerText = "Beta";
 };
 
+async function getGitId() {
+  const commitTag = document.querySelector(".version");
+  const response = await fetch(APP_DATA_BASE_PATH + '/git_id');
+  const commitJson = await response.json();
+  commitTag.style.visibility = "visible";
+  commitTag.innerText = "version " + commitJson.git_id;
+};
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -76,6 +84,10 @@ class App extends React.Component {
 
     if (window.location.hostname !== "dashboard.transitmatters.org") {
       showBetaTag();
+    }
+
+    if (window.location.hostname === "localhost") {
+      getGitId();
     }
 
     // Handle back/forward buttons
