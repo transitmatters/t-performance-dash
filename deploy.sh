@@ -15,15 +15,16 @@ export AWS_PAGER=""
 
 if [[ "$1" = "beta" ]]; then
     GIT_ID=`git describe --always --dirty --abbrev=10`
+    echo "Deploying git commit id $GIT_ID"
 else
     GIT_ID=`git describe --tags --abbrev=0`
+    echo "Deploying git tag $GIT_ID"
 fi
 
 BACKEND_BUCKET=datadashboard-backend$ENV_SUFFIX
 FRONTEND_HOSTNAME=dashboard$ENV_SUFFIX.transitmatters.org # Must match in .chalice/config.json!
 CF_STACK_NAME=datadashboard$ENV_SUFFIX
 
-echo "Deploying git commit id $GIT_COMMIT_ID"
 echo "Starting $CHALICE_STAGE deployment"
 echo "Backend bucket: $BACKEND_BUCKET"
 echo "Hostname: $FRONTEND_HOSTNAME"
@@ -31,7 +32,7 @@ echo "CloudFormation stack name: $CF_STACK_NAME"
 
 # build frontend and patch in commit id
 npm run build
-sed -i "s/version/version $GIT_ID/" ./build/index.html
+sed -i "s/git-id/version $GIT_ID/" ./build/index.html
 
 pushd server/ > /dev/null
 pipenv run chalice package --stage $CHALICE_STAGE --merge-template frontend-cfn.json cfn/
