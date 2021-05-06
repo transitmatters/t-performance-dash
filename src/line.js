@@ -92,11 +92,10 @@ class LineClass extends React.Component {
     const { isLoading } = this.props;
 
     const graphData=   
-    <span className="graphData">
-    <CSVLink
-    data={this.props.data}
-    filename={this.props.seriesName}>
-    <FaSave/>  Export</CSVLink></span>
+      <span className="graphData">
+      <CSVLink data={this.props.data}
+      filename={this.props.seriesName}>
+      <FaSave/>  Export</CSVLink></span>
 
     let labels = this.props.data.map(item => item[this.props.xField]);
     return (
