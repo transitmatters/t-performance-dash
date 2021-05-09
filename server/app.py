@@ -108,5 +108,7 @@ def dwells_aggregate_route():
 
 @app.route("/git_id", cors=cors_config)
 def get_git_id():
-    git_id = str(subprocess.check_output(['git', 'describe', '--always', '--dirty', '--abbrev=10']))[2:-3]
-    return json.dumps({"git_id": git_id})
+    # Only do this on localhost
+    if TM_FRONTEND_HOST == "localhost":
+        git_id = str(subprocess.check_output(['git', 'describe', '--always', '--dirty', '--abbrev=10']))[2:-3]
+        return json.dumps({"git_id": git_id})

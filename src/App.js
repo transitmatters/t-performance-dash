@@ -47,10 +47,17 @@ const showBetaTag = () => {
 
 async function getGitId() {
   const commitTag = document.querySelector(".version");
-  const response = await fetch(APP_DATA_BASE_PATH + '/git_id');
-  const commitJson = await response.json();
+  try {
+    const response = await fetch(APP_DATA_BASE_PATH + '/git_id');
+    const commitJson = await response.json();
+    const git_id = commitJson.git_id;
+  }
+  catch (error) {
+    console.log(`Error fetching Git ID: ${error}`);
+    const git_id = "unknown";
+  }
   commitTag.style.visibility = "visible";
-  commitTag.innerText = "version " + commitJson.git_id;
+  commitTag.innerText = "version " + git_id;
 };
 
 class App extends React.Component {
