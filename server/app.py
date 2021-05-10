@@ -1,7 +1,7 @@
 import json
 import os
 import subprocess
-from chalice import Chalice, Cron, CORSConfig
+from chalice import Chalice, Cron, CORSConfig, ConflictError
 from datetime import date, timedelta
 from chalicelib import data_funcs, aggregation, s3_alerts
 
@@ -112,3 +112,5 @@ def get_git_id():
     if TM_FRONTEND_HOST == "localhost":
         git_id = str(subprocess.check_output(['git', 'describe', '--always', '--dirty', '--abbrev=10']))[2:-3]
         return json.dumps({"git_id": git_id})
+    else:
+        raise ConflictError("Cannot get git id from serverless host")

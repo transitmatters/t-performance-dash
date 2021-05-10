@@ -47,14 +47,14 @@ const showBetaTag = () => {
 
 async function getGitId() {
   const commitTag = document.querySelector(".version");
-  var git_id = "unknown";
+  let git_id = "unknown";
   try {
     const response = await fetch(APP_DATA_BASE_PATH + '/git_id');
     const commitJson = await response.json();
     git_id = commitJson.git_id;
   }
   catch (error) {
-    console.log(`Error fetching Git ID: ${error}`);
+    console.error(`Error fetching Git ID: ${error}`);
   }
   commitTag.style.visibility = "visible";
   commitTag.innerText = "version " + git_id;
