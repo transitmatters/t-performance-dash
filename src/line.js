@@ -21,7 +21,7 @@ Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
 
 const departure_from_normal_string = (metric, benchmark) => {
   const ratio = metric / benchmark;
-  if (ratio <= 1.25) {
+  if (!isFinite(ratio) || ratio <= 1.25) {
     return '';
   }
   else if (ratio <= 1.5) {
@@ -57,6 +57,7 @@ const point_colors = (data, metric_field, benchmark_field) => {
     return '#1c1c1c'; //whatever
   });
 }
+
 
 class LineClass extends React.Component {
 
