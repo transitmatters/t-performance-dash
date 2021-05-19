@@ -13,7 +13,7 @@ export AWS_PAGER=""
 [[ "$1" = "beta" ]] && FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN_BETA" || FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN"
 [[ "$1" = "beta" ]] && BACKEND_CERT_ARN="$TM_BACKEND_CERT_ARN_BETA" || BACKEND_CERT_ARN="$TM_BACKEND_CERT_ARN"
 
-git fetch
+git fetch --tags
 if [[ "$1" = "beta" ]]; then
     GIT_ID=`git describe --always --dirty --abbrev=10`
     echo "Deploying git commit id $GIT_ID"
