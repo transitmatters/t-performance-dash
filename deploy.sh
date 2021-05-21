@@ -13,14 +13,16 @@ export AWS_PAGER=""
 [[ "$1" = "beta" ]] && FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN_BETA" || FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN"
 [[ "$1" = "beta" ]] && BACKEND_CERT_ARN="$TM_BACKEND_CERT_ARN_BETA" || BACKEND_CERT_ARN="$TM_BACKEND_CERT_ARN"
 
-git fetch --tags
-if [[ "$1" = "beta" ]]; then
-    GIT_ID=`git describe --always --dirty --abbrev=10`
-    echo "Deploying git commit id $GIT_ID"
-else
-    GIT_ID=`git describe --tags --abbrev=0`
-    echo "Deploying git tag $GIT_ID"
-fi
+git fetch --unshallow --tags
+GIT_ID=`git describe --tags --abbrev=0`
+echo "Deploying git tag $GIT_ID"
+# if [[ "$1" = "beta" ]]; then
+#     GIT_ID=`git describe --always --dirty --abbrev=10`
+#     echo "Deploying git commit id $GIT_ID"
+# else
+#     GIT_ID=`git describe --tags --abbrev=0`
+#     echo "Deploying git tag $GIT_ID"
+# fi
 
 BACKEND_BUCKET=datadashboard-backend$ENV_SUFFIX
 FRONTEND_HOSTNAME=dashboard$ENV_SUFFIX.transitmatters.org # Must match in .chalice/config.json!
