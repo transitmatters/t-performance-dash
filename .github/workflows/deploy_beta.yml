@@ -6,7 +6,7 @@ on:
       - beta
 
 jobs:
-  deploy:
+  deploy_beta:
     runs-on: ubuntu-latest
     env:
       AWS_PROFILE: transitmatters
