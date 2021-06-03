@@ -1,6 +1,7 @@
 import json
 import os
-from chalice import Chalice, Cron, CORSConfig, Response
+import subprocess
+from chalice import Chalice, Cron, CORSConfig, ConflictError, Response
 from datetime import date, timedelta
 from chalicelib import data_funcs, aggregation, s3_alerts, secrets
 
@@ -121,3 +122,13 @@ def dwells_aggregate_route():
 
     response = aggregation.dwells_over_time(sdate, edate, stop)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
+
+
+@app.route("/git_id", cors=cors_config)
+def get_git_id():
+    # Only do this on localhost
+    if TM_FRONTEND_HOST == "localhost":
+        git_id = str(subprocess.check_output(['git', 'describe', '--always', '--dirty', '--abbrev=10']))[2:-3]
+        return json.dumps({"git_id": git_id})
+    else:
+        raise ConflictError("Cannot get git id from serverless host")
