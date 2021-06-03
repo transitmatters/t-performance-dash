@@ -49,10 +49,17 @@ def mutlidict_to_dict(mutlidict):
 
 @app.route("/healthcheck", cors=cors_config)
 def healthcheck():
+    # These functions must return True or False :-)
     checks = [
-        len(secrets.MBTA_V2_API_KEY) > 0,
-        "2020-11-07 10:33:40" in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))
+        lambda: len(secrets.MBTA_V2_API_KEY) > 0,
+        lambda: "2020-11-07 10:33:40" in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))
     ]
+
+    for i in range(0, len(checks)):
+        try:
+            checks[i] = checks[i]()
+        except Exception:
+            checks[i] = False
 
     if all(checks):
         return {
