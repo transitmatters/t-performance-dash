@@ -1,9 +1,9 @@
 import json
 import os
 import subprocess
-from chalice import Chalice, Cron, CORSConfig, ConflictError
+from chalice import Chalice, Cron, CORSConfig, ConflictError, Response
 from datetime import date, timedelta
-from chalicelib import data_funcs, aggregation, s3_alerts
+from chalicelib import data_funcs, aggregation, s3_alerts, secrets
 
 app = Chalice(app_name="data-dashboard")
 
@@ -45,6 +45,31 @@ def mutlidict_to_dict(mutlidict):
     for key in mutlidict.keys():
         res_dict[key] = mutlidict.getlist(key)
     return res_dict
+
+
+@app.route("/healthcheck", cors=cors_config)
+def healthcheck():
+    # These functions must return True or False :-)
+    checks = [
+        lambda: len(secrets.MBTA_V2_API_KEY) > 0,
+        lambda: "2020-11-07 10:33:40" in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))
+    ]
+
+    for i in range(0, len(checks)):
+        try:
+            checks[i] = checks[i]()
+        except Exception:
+            checks[i] = False
+
+    if all(checks):
+        return {
+            "status": "pass"
+        }
+
+    return Response(body={
+        "status": "fail",
+        "check_failed": checks.index(False),
+    }, status_code=500)
 
 
 @app.route("/headways/{user_date}", cors=cors_config)
