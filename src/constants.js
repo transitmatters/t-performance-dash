@@ -1094,28 +1094,43 @@ export const stations = {
 	}]
 };
 
-const createConfigPresetValue = (line, fromStationName, toStationName, date) => {
+const createConfigPresetValue = (line, fromStationName, toStationName, date_start, date_end = undefined) => {
 	const fromStation = stations[line].find(s => s.stop_name === fromStationName);
 	const toStation = stations[line].find(s => s.stop_name === toStationName);
 	return {
 		line,
-		date,
+		date_start,
+		date_end,
 		from: fromStation,
 		to: toStation,
 	}
 };
 
+const TODAY = new Date().toISOString().split("T")[0];
+
 export const configPresets = [
 	{
-		label: "January 17, 2021 — Red Line",
-		value: createConfigPresetValue("Red", "Braintree", "Andrew", '2021-01-17'),
+		label: "[New!] April 2021 — Orange Line slow zone",
+		value: createConfigPresetValue("Orange", "Oak Grove", "Wellington", '2021-03-01', TODAY),
 	},
 	{
-		label: "January 4, 2021 — Orange Line",
-		value: createConfigPresetValue("Orange", "Wellington", "Tufts Medical Center", '2021-01-04'),
+		label: "[New!] December 2020 — Orange Line slow zone",
+		value: createConfigPresetValue("Orange", "Community College", "North Station", '2020-11-01', '2021-02-17'),
 	},
 	{
-		label: "January 4, 2021 — Blue Line",
-		value: createConfigPresetValue("Blue", "Revere Beach", "Aquarium", '2021-01-04'),
+		label: "[New!] Spring 2020 — Green Line (E-branch) COVID-19 pandemic effect",
+		value: createConfigPresetValue("Green", "Mission Park", "Government Center", '2020-01-01', '2020-05-31'),
+	},
+	{
+		label: "March 30, 2021 — Red Line Power Issues",
+		value: createConfigPresetValue("Red", "Andrew", "Park Street", '2021-03-30'),
+	},
+	{
+		label: "March 16, 2021 — Orange Line Derailment",
+		value: createConfigPresetValue("Orange", "Downtown Crossing", "Community College", '2021-03-16'),
+	},
+	{
+		label: "April 2, 2021 — Blue Line Daytime Maintenance",
+		value: createConfigPresetValue("Blue", "Revere Beach", "State Street", '2021-04-02'),
 	},
 ];

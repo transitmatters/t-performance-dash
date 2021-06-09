@@ -7,7 +7,6 @@ verify_ssl = true
 pylint = "*"
 
 [packages]
-flask = "*"
 gunicorn = "*"
 requests = "*"
 json-api-doc = "*"
@@ -17,6 +16,7 @@ boto3 = "*"
 flake8 = "*"
 pandas = "*"
 numpy = "*"
+importlib-resources = "*"
 
 [requires]
 python_version = "3.7"

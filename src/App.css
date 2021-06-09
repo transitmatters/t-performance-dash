@@ -247,6 +247,14 @@ button:disabled,
   align-items: center;
 }
 
+.station-configuration .clear-button {
+  border: none;
+  margin-left: 6px;
+  padding: 0;
+  font-size: 16px;
+  height: 13px;
+}
+
 @media screen and (min-width: 770px) {
   .chart {
     display: grid;
@@ -282,6 +290,12 @@ button:disabled,
 
   .station-configuration .option-date input {
     width: 120px;
+  }
+
+  .station-configuration .more-options-button {
+    max-width: 75px;
+    margin-left: 6px;
+    padding-right: 6px;
   }
 
   .station-configuration > *:not(:last-child) {
@@ -335,10 +349,11 @@ button:disabled,
 
   .station-configuration {
     display: grid;
-    grid-template-columns: 190px 1fr 40px;
+    grid-template-columns: 1fr 40px;
     grid-template-areas:
-      'date line line'
-      'stations stations swap';
+      'line line'
+      'date date'
+      'stations swap';
     column-gap: 10px;
     row-gap: 10px;
   }
@@ -349,6 +364,11 @@ button:disabled,
     text-align: right;
     margin-right: 10px;
     flex-shrink: 0;
+  }
+
+  .station-configuration .end-date-label {
+    margin-right: 0;
+    text-align: center;
   }
 
   .station-configuration > .option-line {
@@ -363,10 +383,13 @@ button:disabled,
 
   .station-configuration > .option-date {
     grid-area: date;
+    display: flex;
   }
 
   .station-configuration > .option-date input {
-    width: calc(100% - 40px);
+    width: 0px; /* Just needs to be something for flex to work */
+    flex-shrink: 1;
+    flex-grow: 1;
   }
 
   .station-configuration > .option {
@@ -382,6 +405,12 @@ button:disabled,
     grid-area: swap;
     justify-content: center;
     height: 100%;
+  }
+
+  .station-configuration .more-options-button {
+    margin-left: 10px;
+    max-width: 75px;
+    padding-right: 7px;
   }
 
   .station-configuration .swap-stations-button .swap-label {

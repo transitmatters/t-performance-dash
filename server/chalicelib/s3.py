@@ -1,20 +1,48 @@
 import boto3
+from botocore.exceptions import ClientError
 import csv
 import zlib
 
+from chalicelib import parallel
+
 BUCKET = "tm-mbta-performance"
-s3 = boto3.resource("s3")
+s3 = boto3.client('s3')
 
 
-def download_sorted_events(stop_id, year, month, day):
+# General downloading/uploading
+def download(key, encoding="utf8"):
+    obj = s3.get_object(Bucket=BUCKET, Key=key)
+    s3_data = obj["Body"].read()
+    decompressed = zlib.decompress(s3_data).decode(encoding)
+    return decompressed
+
+
+def upload(key, bytes, compress=True):
+    if compress:
+        bytes = zlib.compress(bytes)
+    s3.put_object(Bucket=BUCKET, Key=key, Body=bytes)
+
+
+def download_one_event_file(date, stop_id):
+    year, month, day = date.year, date.month, date.day
+
     # Download events from S3
-    key = f"Events/daily-data/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
-    obj = s3.Object(BUCKET, key)
-    s3_data = obj.get()["Body"].read()
+    try:
 
-    # Uncompress
-    decompressed = zlib.decompress(
-        s3_data, wbits=zlib.MAX_WBITS | 16).decode("ascii").split("\r\n")
+        key = f"Events/daily-data/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
+        obj = s3.get_object(Bucket=BUCKET, Key=key)
+        s3_data = obj["Body"].read()
+        # Uncompress
+        decompressed = zlib.decompress(
+            s3_data, wbits=zlib.MAX_WBITS | 16).decode("ascii").split("\r\n")
+
+    except ClientError as ex:
+        if ex.response['Error']['Code'] == 'NoSuchKey':
+            # raise Exception(f"Data not available on S3 for key {key} ") from None
+            print(f"WARNING: No data available on S3 for key: {key}")
+            return []
+        else:
+            raise
 
     # Parse CSV
     rows = []
@@ -24,3 +52,7 @@ def download_sorted_events(stop_id, year, month, day):
     # sort
     rows_by_time = sorted(rows, key=lambda row: row["event_time"])
     return rows_by_time
+
+
+# signature: (date_iterable, stop_id)
+download_event_range = parallel.make_parallel(download_one_event_file)

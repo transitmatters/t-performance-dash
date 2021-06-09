@@ -30,34 +30,71 @@ const options_station_ui = (line) => {
 export default class StationConfiguration extends React.Component {
   constructor(props) {
     super(props);
-    this.flatpickr = React.createRef();
+    this.picker_start = React.createRef();
+    this.picker_end = React.createRef();
     this.handleSelectDate = this.handleSelectDate.bind(this);
     this.handleSelectRawDate = this.handleSelectRawDate.bind(this);
     this.handleSwapStations = this.handleSwapStations.bind(this);
+    this.clearMoreOptions = this.clearMoreOptions.bind(this);
+    this.setupPickers = this.setupPickers.bind(this);
+
+    this.state = {
+      show_date_end_picker: !!this.props.current.date_end,
+    };
+  }
+  
+  setupPickers() {
+    if (useFlatPickr) {
+      // Only initialize once, even after rerenders
+      if(!this.picker_start.current._flatpickr) {
+        flatpickr(this.picker_start.current, {
+          onChange: this.handleSelectDate("date_start"),
+          maxDate: 'today',
+          minDate: "2016-01-15"
+        });
+      }
+      // Only initialize once, even after rerenders
+      if (this.state.show_date_end_picker && !this.picker_end.current._flatpickr) {
+        flatpickr(this.picker_end.current, {
+          onChange: this.handleSelectDate("date_end"),
+          maxDate: 'today',
+          minDate: "2016-01-15"
+        });
+      }
+    }
   }
 
   componentDidMount() {
-    if (useFlatPickr) {
-      flatpickr(this.flatpickr.current, {
-        onChange: this.handleSelectDate,
-        maxDate: 'today',
-        minDate: "2016-01-15"
+    this.setupPickers();
+  }
+
+  componentDidUpdate(prevProps) {
+    this.setupPickers();
+
+    // If the date_end prop shows up because a config preset set it,
+    //  then show the end date picker.
+    if(this.props.current.date_end !== prevProps.current.date_end) {
+      this.setState({
+        show_date_end_picker: !!this.props.current.date_end,
       });
     }
   }
 
-  handleSelectDate(_, dateStr, __) {
-    this.props.onConfigurationChange({
-      date: dateStr
-    });
+  handleSelectDate(field_name) {
+    return (_, dateStr, __) => {
+      this.props.onConfigurationChange({
+        [field_name]: dateStr
+      });
+    };
   }
 
-  handleSelectRawDate(evt) {
-    this.props.onConfigurationChange({
-      date: evt.target.value
-    });
+  handleSelectRawDate(field_name) {
+    return (evt) => {
+      this.props.onConfigurationChange({
+        [field_name]: evt.target.value
+      });
+    }
   }
-
 
   handleSelectOption(field) {
     return (value) => {
@@ -77,7 +114,7 @@ export default class StationConfiguration extends React.Component {
   }
 
   decode(property) {
-    return this.props.current[property] || null;
+    return this.props.current[property];
   }
 
   optionsForField(type) {
@@ -100,7 +137,18 @@ export default class StationConfiguration extends React.Component {
         return true
       });
     }
+  }
 
+  clearMoreOptions() {
+    this.setState({
+      show_date_end_picker: false,
+    });
+    if(this.picker_end.current._flatpickr) {
+      this.picker_end.current._flatpickr.destroy();
+    }
+    this.props.onConfigurationChange({
+      date_end: null,
+    });
   }
 
   render() {
@@ -124,6 +172,8 @@ export default class StationConfiguration extends React.Component {
                 value={this.decode("from")}
                 options={this.optionsForField("from")}
                 onChange={this.handleSelectOption("from")}
+                // Non-standard value comparator because from/to gets copied by onpopstate :/
+                optionComparator={o => o.value.stop_name === this.decode("from")?.stop_name}
                 defaultLabel="Select a station..."
               />
             </div>
@@ -133,6 +183,8 @@ export default class StationConfiguration extends React.Component {
                 value={this.decode("to")}
                 options={this.optionsForField("to")}
                 onChange={this.handleSelectOption("to")}
+                // Non-standard value comparator because from/to gets copied by onpopstate :/
+                optionComparator={o => o.value.stop_name === this.decode("to")?.stop_name}
                 defaultLabel="Select a station..."
               />
             </div>
@@ -144,12 +196,35 @@ export default class StationConfiguration extends React.Component {
           <div className="option option-date">
             <span className="date-label">Date</span>
             <input
-              value={this.decode("date")}
-              onChange={!useFlatPickr && this.handleSelectRawDate}
+              value={this.decode("date_start") || ""} // The || "" is to prevent undefined; that makes React think it's uncontrolled
+              onChange={this.handleSelectRawDate("date_start")}
               type='date'
-              ref={this.flatpickr}
+              ref={this.picker_start}
               placeholder='Select date...'
             />
+            <input
+              className="more-options-button"
+              type="button"
+              value="Range..."
+              style={this.state.show_date_end_picker ? { display: 'none' } : {}}
+              onClick={() => this.setState({ show_date_end_picker: true })}
+            />
+            {!!this.state.show_date_end_picker && <>
+              <span className="date-label end-date-label">to</span>
+              <input
+                value={this.decode("date_end") || ""} // The || "" is to prevent undefined; that makes React think it's uncontrolled
+                onChange={this.handleSelectRawDate("date_end")}
+                type='date'
+                ref={this.picker_end}
+                placeholder='Select date...'
+              />
+              <button
+                className="clear-button"
+                style={{ visibility: this.state.show_date_end_picker ? 'visible' : 'hidden' }}
+                onClick={this.clearMoreOptions}
+              >🅧</button>
+            </>
+            }
           </div>
         </div>
       </div>

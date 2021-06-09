@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function legend() {
+function Legend() {
     return (
       <div className="legend">
         <p><span className="legend-dot" style={{"backgroundColor": "#64b96a"}}></span> On time</p>
@@ -11,3 +11,17 @@ export default function legend() {
       </div>
     );
 }
+
+function LegendLongTerm() {
+  return (
+    <div className="legend">
+      <p><span className="legend-dot" style={{"backgroundColor": "black"}}></span> Median</p>
+      <p><span className="legend-dot" style={{"backgroundColor": "#C8CCD2"}}></span> Interquartile range</p>
+    </div>
+  );
+}
+
+export {
+  Legend,
+  LegendLongTerm,
+};
