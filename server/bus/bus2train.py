@@ -143,7 +143,7 @@ def main():
                 availability_metadata, from_disk)
     except FileNotFoundError:
         pass
-    except:
+    except Exception:
         raise
 
     with open(availability_path, "w", encoding="utf-8") as file:
