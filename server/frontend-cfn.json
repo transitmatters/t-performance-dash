@@ -25,6 +25,15 @@
         "RegionalCertificateArn": { "Ref": "TMBackendCertArn" }
       }
     },
+    "StoreTwoDaysAgoAlerts": {
+      "Properties": {
+        "Environment": {
+          "Variables": {
+            "MBTA_V2_API_KEY": { "Ref": "MbtaV2ApiKey" }
+          }
+        }
+      }
+    },
     "APIHandler": {
       "Properties": {
         "Environment": {
