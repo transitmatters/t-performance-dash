@@ -17,6 +17,7 @@ jobs:
       TM_FRONTEND_CERT_ARN_BETA: ${{ secrets.TM_FRONTEND_CERT_ARN_BETA }}
       TM_BACKEND_CERT_ARN: ${{ secrets.TM_BACKEND_CERT_ARN }}
       TM_BACKEND_CERT_ARN_BETA: ${{ secrets.TM_BACKEND_CERT_ARN_BETA }}
+      MBTA_V2_API_KEY: ${{ secrets.MBTA_V2_API_KEY }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
