@@ -115,6 +115,8 @@ def process(input_csv, availability_path):
                 # Debug override
                 # if service_date != "2020-01-15" or route_id != "1":
                 #   continue
+                if route_id != "57":
+                    continue
 
                 # I hate this and I'm sorry
                 availability_set.add((route_id, str(stop_id), direction_id))
