@@ -5,7 +5,6 @@ import os
 import pathlib
 import sys
 import traceback
-from collections import defaultdict
 from datetime import date
 from operator import itemgetter
 
@@ -27,16 +26,61 @@ def parse_user_date(user_date):
     [year, month, day] = [int(x) for x in date_split[0:3]]
     return date(year=year, month=month, day=day)
 
+# Read json file of availability into a set()
+# Example:
+#   (These aren't actually stop ids for the 77)
+"""
+{
+    "77": {
+        "70061": [
+            0,
+            1
+        ],
+        "70062": [
+            1
+        ]
+    }
+}
 
-def merge_availability_dicts(current: defaultdict, from_disk: dict):
-    for stop_id, directions in from_disk.items():
-        current[stop_id] = list(set(current[stop_id] + directions))
-    return current
+ ==>
+ ("77", "70061", 0),
+ ("77", "70061", 1),
+  etc
+"""
+def json_to_availability(file_path):
+    try:
+        with open(file_path, "r") as file:
+            flat = set()
+            nested = json.load(file)
+            for route, stop in nested.items():
+                for direction in stop:
+                    flat.add((route, stop, direction))
+            return flat
+    except FileNotFoundError:
+        return set()
+    except Exception:
+        raise
+
+# Same thing as above but in reverse
+def availability_to_json(availability_set):
+    to_output = {}
+    for (route, stop, direction) in availability_set:
+        if route not in to_output:
+            to_output[route] = {
+                stop: [direction]
+            }
+            continue
+        if stop not in to_output[route]:
+            to_output[route][stop] = [direction]
+            continue
+        if direction not in to_output[route][stop]:
+            to_output[route][stop].append(direction)
+    return to_output
 
 
-def process(input_csv):
+def process(input_csv, availability_path):
     output_by_stop_and_day = {}
-    availability_metadata = defaultdict(list)
+    availability_set = json_to_availability(availability_path)
 
     with open(input_csv, newline='') as csv_in:
         reader = csv.DictReader(csv_in)
@@ -72,8 +116,8 @@ def process(input_csv):
                 # if service_date != "2020-01-15" or route_id != "1":
                 #   continue
 
-                if direction_id not in availability_metadata[stop_id]:
-                    availability_metadata[stop_id].append(direction_id)
+                # I hate this and I'm sorry
+                availability_set.add((route_id, str(stop_id), direction_id))
 
                 # Bus has no delineation between departure and arrival, so we write out a departure row and an arrival row that match,
                 #   so it looks like the rapid transit format
@@ -105,7 +149,7 @@ def process(input_csv):
                 ])
             except Exception:
                 traceback.print_exc()
-    return output_by_stop_and_day, availability_metadata
+    return output_by_stop_and_day, availability_set
 
 
 def to_disk(output_by_stop_and_day, root):
@@ -132,22 +176,12 @@ def main():
     output_dir = sys.argv[2]
     pathlib.Path(output_dir).mkdir(exist_ok=True)
 
-    output, availability_metadata = process(input_csv)
+    availability_path = os.path.join(output_dir, AVAILABILITY_FILE)
+    output, availability_set = process(input_csv, availability_path)
     to_disk(output, output_dir)
 
-    availability_path = os.path.join(output_dir, AVAILABILITY_FILE)
-    try:
-        with open(availability_path, "r") as file:
-            from_disk = json.load(file)
-            availability_metadata = merge_availability_dicts(
-                availability_metadata, from_disk)
-    except FileNotFoundError:
-        pass
-    except Exception:
-        raise
-
     with open(availability_path, "w", encoding="utf-8") as file:
-        json.dump(availability_metadata, file, ensure_ascii=False, indent=4)
+        json.dump(availability_to_json(availability_set), file, ensure_ascii=False, indent=4)
         file.write("\n")
 
 
