@@ -9,7 +9,7 @@ const lookup_station_by_id = (line, id) => {
     return undefined;
   }
 
-  return stations[line].find(x => [...x.stops.northbound, ...x.stops.southbound].includes(id));
+  return stations[line].find(x => [...x.stops.northbound || [], ...x.stops.southbound || []].includes(id));
 };
 
 const options_station = (line) => {

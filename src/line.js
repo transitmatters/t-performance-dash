@@ -164,6 +164,9 @@ class LineClass extends React.Component {
                       display: true,
                       fontSize: 14,
                       labelString: this.props.yFieldLabel
+                    },
+                    ticks: {
+                      max: 100,
                     }
                   }
                 ],

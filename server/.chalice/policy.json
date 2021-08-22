@@ -16,7 +16,7 @@
       ],
       "Effect": "Allow",
       "Resource": [
-        "arn:aws:s3:::tm-mbta-performance"
+        "arn:aws:s3:::tm-mbta-performance-preston-test"
       ]
     },
     {
@@ -25,7 +25,7 @@
       ],
       "Effect": "Allow",
       "Resource": [
-        "arn:aws:s3:::tm-mbta-performance/*"
+        "arn:aws:s3:::tm-mbta-performance-preston-test/*"
       ]
     },
     {
@@ -34,7 +34,7 @@
       ],
       "Effect": "Allow",
       "Resource": [
-        "arn:aws:s3:::tm-mbta-performance/Alerts/*"
+        "arn:aws:s3:::tm-mbta-performance-preston-test/Alerts/*"
       ]
     }
   ]

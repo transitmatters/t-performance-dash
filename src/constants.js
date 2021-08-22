@@ -3,6 +3,7 @@ export const colorsForLine = {
   Orange: '#e66f00',
   Blue: '#0e3d8c',
   Green: '#159765',
+  "57": '#ffc72c',
 };
 
 export const stations = {
@@ -1091,7 +1092,166 @@ export const stations = {
 			"northbound": ["70207"],
 			"southbound": ["70208"]
 		}
-	}]
+	}],
+	"57": [
+		{
+			"stop_name": "Tremont St @ Washington St",
+			"branches": null,
+			"station": "979",
+			"order": 1,
+			"stops": {
+				"northbound": ["979"],
+				"southbound": ["912"],
+			}
+		},
+		{
+			"stop_name": "Kenmore",
+			"branches": null,
+			"station": "place-kencl",
+			"order": 2,
+			"stops": {
+				"northbound": ["899"],
+				"southbound": ["899"]
+			}
+		},
+
+		{
+			"stop_name": "Park St @ Tremont St",
+			"branches": null,
+			"station": "987",
+			"order": 3,
+			"stops": {
+				"northbound": ["987"]
+			}
+		},
+		{
+			"stop_name": "Park Dr @ Fenway Station",
+			"branches": null,
+			"station": "1807",
+			"order": 4,
+			"stops": {
+				"northbound": ["1807"]
+			}
+		},
+		{
+			"stop_name": "Brighton Ave @ Commonwealth Ave",
+			"branches": null,
+			"station": "931",
+			"order": 5,
+			"stops": {
+				"southbound": ["931"]
+			}
+		},
+		{
+			"stop_name": "Washington St @ Chestnut Hill Ave",
+			"branches": null,
+			"station": "918",
+			"order": 6,
+			"stops": {
+				"southbound": ["918"]
+			}
+		},
+		{
+			"stop_name": "1079 Commonwealth Ave",
+			"branches": null,
+			"station": "959",
+			"order": 7,
+			"stops": {
+				"northbound": ["959"]
+			}
+		},
+		{
+			"stop_name": "Cambridge St @ N Beacon St",
+			"branches": null,
+			"station": "966",
+			"order": 8,
+			"stops": {
+				"northbound": ["966"]
+			}
+		},
+		{
+			"stop_name": "Watertown Yard",
+			"branches": null,
+			"station": "900",
+			"order": 9,
+			"stops": {
+				"northbound": ["900"],
+				"southbound": ["900"]
+			}
+		},
+		{
+			"stop_name": "Washington St @ Bacon St",
+			"branches": null,
+			"station": "903",
+			"order": 10,
+			"stops": {
+				"southbound": ["903"]
+			}
+		},
+		{
+			"stop_name": "Commonwealth Ave @ Carlton St",
+			"branches": null,
+			"station": "937",
+			"order": 11,
+			"stops": {
+				"southbound": ["937"]
+			}
+		},
+		{
+			"stop_name": "Commonwealth Ave @ University Rd",
+			"branches": null,
+			"station": "954",
+			"order": 12,
+			"stops": {
+				"northbound": ["954"]
+			}
+		},
+		{
+			"stop_name": "Washington St @ Oak Sq",
+			"branches": null,
+			"station": "9780",
+			"order": 13,
+			"stops": {
+				"northbound": ["9780"]
+			}
+		},
+		{
+			"stop_name": "Brighton Ave @ Cambridge St",
+			"branches": null,
+			"station": "926",
+			"order": 14,
+			"stops": {
+				"southbound": ["926"]
+			}
+		},
+		{
+			"stop_name": "Washington St @ Breck Ave",
+			"branches": null,
+			"station": "913",
+			"order": 15,
+			"stops": {
+				"southbound": ["913"]
+			}
+		},
+		{
+			"stop_name": "Washington St @ Market St",
+			"branches": null,
+			"station": "973",
+			"order": 16,
+			"stops": {
+				"northbound": ["973"]
+			}
+		},
+		{
+			"stop_name": "Ave Louis Pasteur @ Longwood Ave",
+			"branches": null,
+			"station": "11780",
+			"order": 17,
+			"stops": {
+				"northbound": ["11780"]
+			}
+		},
+	]
 };
 
 const createConfigPresetValue = (line, fromStationName, toStationName, date_start, date_end = undefined) => {
