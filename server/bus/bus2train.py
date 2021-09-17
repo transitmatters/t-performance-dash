@@ -1,30 +1,18 @@
+import argparse
 import csv
 import gzip
 import json
 import os
 import pathlib
+import pandas as pd
 import sys
 import traceback
-from datetime import date
+from datetime import date, datetime
 from operator import itemgetter
 
 CSV_HEADER = ["service_date", "route_id", "trip_id", "direction_id", "stop_id",
               "stop_sequence", "vehicle_id", "vehicle_label", "event_type", "event_time"]
 AVAILABILITY_FILE = "bus_available.json"
-
-
-def write_row(output_by_stop_and_day, stop_id, day, row):
-    if (stop_id, day) in output_by_stop_and_day:
-        output_by_stop_and_day[(stop_id, day)].append(row)
-        return
-
-    output_by_stop_and_day[(stop_id, day)] = [row]
-
-
-def parse_user_date(user_date):
-    date_split = user_date.split("-")
-    [year, month, day] = [int(x) for x in date_split[0:3]]
-    return date(year=year, month=month, day=day)
 
 # Read json file of availability into a set()
 # Example:
@@ -78,108 +66,94 @@ def availability_to_json(availability_set):
     return to_output
 
 
-def process(input_csv, availability_path):
+def process(input_csv, availability_path, routes):
     output_by_stop_and_day = {}
-    availability_set = json_to_availability(availability_path)
+    # availability_set = json_to_availability(availability_path)
 
-    with open(input_csv, newline='') as csv_in:
-        reader = csv.DictReader(csv_in)
+    # thinking about doing this in pandas to have all the info at once
+    df = pd.read_csv(input_csv, parse_dates=['service_date', 'scheduled', 'actual'])
+    
+    df = df.loc[(df.standard_type == "Headway") & (df.actual.notnull())]
+    df.route_id = df.route_id.str.lstrip('0')
+    if routes:
+        df = df.loc[df.route_id.isin(routes)]
 
-        for row in reader:
-            try:
-                if row["standard_type"] != "Headway":
-                    continue
-                if row["actual"] == "NA":
-                    continue
+    OFFSET = datetime(1900, 1, 1, 0, 0, 0)
+    df.scheduled = df.service_date + (df.scheduled - OFFSET)
+    df.actual = df.service_date + (df.actual - OFFSET)
+    df.service_date = df.service_date.dt.date
 
-                """
-        "service_date", "route_id", "direction",  "half_trip_id", "stop_id",  "time_point_id",  "time_point_order", "point_type",   "standard_type",  "scheduled",            "actual",               "scheduled_headway",  "headway"
-        2020-01-15,     "01",       "Inbound",    46374001,       67,         "maput",                2,            "Midpoint",     "Schedule",       1900-01-01 05:08:00,    1900-01-01 05:09:07,      -5,                   NA,NA
-        2020-01-15,     "01",       "Inbound",    46374001,       110,        "hhgat",                1,            "Startpoint",   "Schedule",       1900-01-01 05:05:00,    1900-01-01 05:04:34,      26,                   NA,NA
-        2020-01-15,     "01",       "Inbound",    46374001,       72,         "cntsq",                3,            "Midpoint",     "Schedule",       1900-01-01 05:11:00,    1900-01-01 05:12:01,      -22,                    NA,NA
-        2020-01-15,     "01",       "Inbound",    46374001,       75,         "mit",                  4,            "Midpoint",     "Schedule",       1900-01-01 05:14:00,    1900-01-01 05:14:58,      -25,                    NA,NA
-        2020-01-15,     "01",       "Inbound",    46374001,       79,         "hynes",                5,            "Midpoint",     "Schedule",       1900-01-01 05:18:00,    1900-01-01 05:18:45,      32,                   NA,NA
-        2020-01-15,     "01",       "Inbound",    46374001,       187,        "masta",                6,            "Midpoint",     "Schedule",       1900-01-01 05:20:00,    1900-01-01 05:21:04,      -33,                    NA,NA
-        2020-01-15,     "01",       "Inbound",    46374045,       110,        "hhgat",                1,            "Startpoint",   "Headway",        1900-01-01 05:20:00,    1900-01-01 05:20:45,      NA,                   900,971
-        """
+    df.direction_id = df.direction_id.map({"Outbound": 0, "Inbound": 1})
 
-                time = row["actual"].split(" ")[1]
-                service_date = row["service_date"]
-                route_id = row["route_id"].lstrip("0")
-                trip_id = row["half_trip_id"]
-                direction_id = 0 if row["direction"] == "Outbound" else 1
-                stop_id = int(row["stop_id"])
-                event_type = "ARR"
-                event_time = f"{service_date} {time}"
-
-                # Debug override
-                # if service_date != "2020-01-15" or route_id != "1":
-                #   continue
-                if route_id != "57":
-                    continue
-
-                # I hate this and I'm sorry
-                availability_set.add((route_id, str(stop_id), direction_id))
-
-                # Bus has no delineation between departure and arrival, so we write out a departure row and an arrival row that match,
-                #   so it looks like the rapid transit format
-                # Write out an arrival row
-                write_row(output_by_stop_and_day, stop_id, service_date, [
-                    service_date,
-                    route_id,
-                    trip_id,
-                    direction_id,
-                    stop_id,
-                    "",  # stop_sequence
-                    "",  # vehicle_id
-                    "",  # vehicle_label
-                    event_type,
-                    event_time,
-                ])
-                # Write out a departure row
-                write_row(output_by_stop_and_day, stop_id, service_date, [
-                    service_date,
-                    route_id,
-                    trip_id,
-                    direction_id,
-                    stop_id,
-                    "",  # stop_sequence
-                    "",  # vehicle_id
-                    "",  # vehicle_label
-                    "DEP",
-                    event_time,
-                ])
-            except Exception:
-                traceback.print_exc()
-    return output_by_stop_and_day, availability_set
+    """
+    "service_date", "route_id", "direction",  "half_trip_id", "stop_id",  "time_point_id",  "time_point_order", "point_type",   "standard_type",  "scheduled",            "actual",               "scheduled_headway",  "headway"
+    2020-01-15,     "01",       "Inbound",    46374001,       67,         "maput",                2,            "Midpoint",     "Schedule",       1900-01-01 05:08:00,    1900-01-01 05:09:07,      -5,                   NA,NA
+    2020-01-15,     "01",       "Inbound",    46374001,       110,        "hhgat",                1,            "Startpoint",   "Schedule",       1900-01-01 05:05:00,    1900-01-01 05:04:34,      26,                   NA,NA
+    2020-01-15,     "01",       "Inbound",    46374001,       72,         "cntsq",                3,            "Midpoint",     "Schedule",       1900-01-01 05:11:00,    1900-01-01 05:12:01,      -22,                    NA,NA
+    2020-01-15,     "01",       "Inbound",    46374001,       75,         "mit",                  4,            "Midpoint",     "Schedule",       1900-01-01 05:14:00,    1900-01-01 05:14:58,      -25,                    NA,NA
+    2020-01-15,     "01",       "Inbound",    46374001,       79,         "hynes",                5,            "Midpoint",     "Schedule",       1900-01-01 05:18:00,    1900-01-01 05:18:45,      32,                   NA,NA
+    2020-01-15,     "01",       "Inbound",    46374001,       187,        "masta",                6,            "Midpoint",     "Schedule",       1900-01-01 05:20:00,    1900-01-01 05:21:04,      -33,                    NA,NA
+    2020-01-15,     "01",       "Inbound",    46374045,       110,        "hhgat",                1,            "Startpoint",   "Headway",        1900-01-01 05:20:00,    1900-01-01 05:20:45,      NA,                   900,971
+    """
+    available = df[['route_id', 'stop_id', 'direction_id']].drop_duplicates().to_records(index=False)
 
 
-def to_disk(output_by_stop_and_day, root):
-    for (stop_id, day), rows in output_by_stop_and_day.items():
-        day = parse_user_date(day)
-        destination_dir = pathlib.Path(root, "Events", "daily-data", str(
-            stop_id), f"Year={day.year}", f"Month={day.month}", f"Day={day.day}")
-        destination_dir.mkdir(parents=True, exist_ok=True)
-        destination = pathlib.Path(destination_dir, "events.csv.gz")
-        with open(destination, "wb") as file_out:
-            with gzip.open(file_out, "wt") as csv_out:
-                writer = csv.writer(csv_out, delimiter=",")
-                writer.writerow(CSV_HEADER)
-                for row in sorted(rows, key=itemgetter(CSV_HEADER.index("event_time"))):
-                    writer.writerow(row)
+    CSV_HEADER = ["service_date", "route_id", "trip_id", "direction_id", "stop_id",
+              "stop_sequence", "vehicle_id", "vehicle_label", "event_type", "event_time"]
+    
+    df = df.rename(columns={'half_trip_id': 'trip_id',
+                            'time_point_order': 'stop_sequence',
+                            'actual': 'event_time'})
+    df.drop(columns=['time_point_id','standard_type','scheduled','scheduled_headway','headway'])
+    df['vehicle_id'] = ""
+    df['vehicle_label'] = ""
 
+    df['event_type'] = df.point_type.map({"Startpoint": ["DEP"],
+                                       "Midpoint": ["ARR", "DEP"],
+                                       "Endpoint": ["ARR"]})
+    df = df.explode('event_type')
+    df = df[CSV_HEADER]
+
+    return df, []
+    return output_by_stop_and_day, []
+
+
+def write_file(events, outdir):
+    service_date, stop_id = events.name
+
+    fname = (pathlib.Path(outdir) /
+        "Events" / 
+        "daily-data" /
+        str(stop_id) / 
+        f"Year={service_date.year}" / 
+        f"Month={service_date.month}" /
+        f"Day={service_date.day}" /
+        "events.csv.gz")
+    fname.parent.mkdir(parents=True, exist_ok=True)
+    events.to_csv(fname, index=False, compression='gzip')
+
+
+def to_disk(df, root):
+    df.groupby(['service_date', 'stop_id']).apply(lambda e: write_file(e, root))
 
 def main():
-    if len(sys.argv) < 3:
-        print("Usage: python3 bus2train.py INPUT_CSV OUTPUT_DIR", file=sys.stderr)
-        exit(1)
 
-    input_csv = sys.argv[1]
-    output_dir = sys.argv[2]
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('input', metavar='INPUT_CSV')
+    parser.add_argument('output', metavar='OUTPUT_DIR')
+    parser.add_argument('--routes', '-r', nargs="*", type=str)
+
+    args = parser.parse_args()
+
+    input_csv = args.input
+    output_dir = args.output
+    routes = args.routes
+
     pathlib.Path(output_dir).mkdir(exist_ok=True)
 
     availability_path = os.path.join(output_dir, AVAILABILITY_FILE)
-    output, availability_set = process(input_csv, availability_path)
+    output, availability_set = process(input_csv, availability_path, routes)
     to_disk(output, output_dir)
 
     with open(availability_path, "w", encoding="utf-8") as file:
