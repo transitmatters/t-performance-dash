@@ -1,3 +1,4 @@
+import argparse
 import csv
 import gzip
 import json
@@ -5,7 +6,7 @@ import os
 import pathlib
 import sys
 import traceback
-from datetime import date
+from datetime import date, datetime
 from operator import itemgetter
 
 CSV_HEADER = ["service_date", "route_id", "trip_id", "direction_id", "stop_id",
@@ -77,8 +78,9 @@ def availability_to_json(availability_set):
             to_output[route][stop].append(direction)
     return to_output
 
+OFFSET = datetime(1900, 1, 1, 0, 0, 0)
 
-def process(input_csv, availability_path):
+def process(input_csv, availability_path, routes):
     output_by_stop_and_day = {}
     availability_set = json_to_availability(availability_path)
 
@@ -89,7 +91,7 @@ def process(input_csv, availability_path):
             try:
                 if row["standard_type"] != "Headway":
                     continue
-                if row["actual"] == "NA":
+                if row["actual"] in ["NA", ""]:
                     continue
 
                 """
@@ -102,21 +104,22 @@ def process(input_csv, availability_path):
         2020-01-15,     "01",       "Inbound",    46374001,       187,        "masta",                6,            "Midpoint",     "Schedule",       1900-01-01 05:20:00,    1900-01-01 05:21:04,      -33,                    NA,NA
         2020-01-15,     "01",       "Inbound",    46374045,       110,        "hhgat",                1,            "Startpoint",   "Headway",        1900-01-01 05:20:00,    1900-01-01 05:20:45,      NA,                   900,971
         """
-
-                time = row["actual"].split(" ")[1]
+                # represent actual time as timedelta from 1900-01-01 for some reason
+                time = datetime.fromisoformat(row["actual"]) - OFFSET
                 service_date = row["service_date"]
                 route_id = row["route_id"].lstrip("0")
                 trip_id = row["half_trip_id"]
-                direction_id = 0 if row["direction"] == "Outbound" else 1
+                direction_id = 0 if row["direction_id"] == "Outbound" else 1
                 stop_id = int(row["stop_id"])
                 event_type = "ARR"
-                event_time = f"{service_date} {time}"
+                event_time = datetime.fromisoformat(service_date) + time
 
                 # Debug override
                 # if service_date != "2020-01-15" or route_id != "1":
                 #   continue
-                if route_id != "57":
-                    continue
+                if routes:
+                    if route_id not in routes:
+                        continue
 
                 # I hate this and I'm sorry
                 availability_set.add((route_id, str(stop_id), direction_id))
@@ -170,16 +173,23 @@ def to_disk(output_by_stop_and_day, root):
 
 
 def main():
-    if len(sys.argv) < 3:
-        print("Usage: python3 bus2train.py INPUT_CSV OUTPUT_DIR", file=sys.stderr)
-        exit(1)
 
-    input_csv = sys.argv[1]
-    output_dir = sys.argv[2]
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('input', metavar='INPUT_CSV')
+    parser.add_argument('output', metavar='OUTPUT_DIR')
+    parser.add_argument('--routes', '-r', nargs="*", type=str)
+
+    args = parser.parse_args()
+
+    input_csv = args.input
+    output_dir = args.output
+    routes = args.routes
+
     pathlib.Path(output_dir).mkdir(exist_ok=True)
 
     availability_path = os.path.join(output_dir, AVAILABILITY_FILE)
-    output, availability_set = process(input_csv, availability_path)
+    output, availability_set = process(input_csv, availability_path, routes)
     to_disk(output, output_dir)
 
     with open(availability_path, "w", encoding="utf-8") as file:
