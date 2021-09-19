@@ -24,7 +24,11 @@ This is the repository for the TransitMatters data dashboard. Client code is wri
 	* `TM_BACKEND_CERT_ARN_BETA`
 	* (You may also need to set `AWS_DEFAULT_REGION` in your shell to `us-east-1`. Maybe not! We're not sure.)
 3. Execute `./deploy.sh` (for production) or `./deploy.sh beta` (for beta).
-	* If you get an error, check the CloudFormation stack status in AWS Console. Good luck!
+
+Additional notes:
+- If you're running this locally, your local MBTA-performance API key (which might be your own) will get uploaded to AWS!
+- If you're on a platform with a non-GNU `sed`, deploy.sh might fail. On macOS, this is fixed by `brew install gnu-sed` and adding it to your PATH.
+- If you get an unexplained error, check the CloudFormation stack status in AWS Console. Good luck!
 
 ### Linting
 To lint frontend and backend code, run `npm run lint` in the root directory

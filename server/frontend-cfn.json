@@ -13,12 +13,34 @@
     "TMBackendCertArn": {
       "Type": "String",
       "Description": "The ACM ARN of the backend certificate."
+    },
+    "MbtaV2ApiKey": {
+      "Type": "String",
+      "Description": "MBTA-performance API key."
     }
   },
   "Resources": {
     "ApiGatewayCustomDomain": {
       "Properties": {
         "RegionalCertificateArn": { "Ref": "TMBackendCertArn" }
+      }
+    },
+    "StoreTwoDaysAgoAlerts": {
+      "Properties": {
+        "Environment": {
+          "Variables": {
+            "MBTA_V2_API_KEY": { "Ref": "MbtaV2ApiKey" }
+          }
+        }
+      }
+    },
+    "APIHandler": {
+      "Properties": {
+        "Environment": {
+          "Variables": {
+            "MBTA_V2_API_KEY": { "Ref": "MbtaV2ApiKey" }
+          }
+        }
       }
     },
     "FrontendBucket": {
