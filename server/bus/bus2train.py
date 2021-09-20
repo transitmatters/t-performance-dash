@@ -1,6 +1,4 @@
 import argparse
-import csv
-import gzip
 import json
 import os
 import pathlib
@@ -14,59 +12,7 @@ CSV_HEADER = ["service_date", "route_id", "trip_id", "direction_id", "stop_id",
               "stop_sequence", "vehicle_id", "vehicle_label", "event_type", "event_time"]
 AVAILABILITY_FILE = "bus_available.json"
 
-# Read json file of availability into a set()
-# Example:
-#   (These aren't actually stop ids for the 77)
-"""
-{
-    "77": {
-        "70061": [
-            0,
-            1
-        ],
-        "70062": [
-            1
-        ]
-    }
-}
-
- ==>
- ("77", "70061", 0),
- ("77", "70061", 1),
-  etc
-"""
-def json_to_availability(file_path):
-    try:
-        with open(file_path, "r") as file:
-            flat = set()
-            nested = json.load(file)
-            for route, stop in nested.items():
-                for direction in stop:
-                    flat.add((route, stop, direction))
-            return flat
-    except FileNotFoundError:
-        return set()
-    except Exception:
-        raise
-
-# Same thing as above but in reverse
-def availability_to_json(availability_set):
-    to_output = {}
-    for (route, stop, direction) in availability_set:
-        if route not in to_output:
-            to_output[route] = {
-                stop: [direction]
-            }
-            continue
-        if stop not in to_output[route]:
-            to_output[route][stop] = [direction]
-            continue
-        if direction not in to_output[route][stop]:
-            to_output[route][stop].append(direction)
-    return to_output
-
-
-def process(input_csv, availability_path, routes):
+def load_data(input_csv, routes):
     output_by_stop_and_day = {}
     # availability_set = json_to_availability(availability_path)
 
@@ -95,7 +41,49 @@ def process(input_csv, availability_path, routes):
     2020-01-15,     "01",       "Inbound",    46374001,       187,        "masta",                6,            "Midpoint",     "Schedule",       1900-01-01 05:20:00,    1900-01-01 05:21:04,      -33,                    NA,NA
     2020-01-15,     "01",       "Inbound",    46374045,       110,        "hhgat",                1,            "Startpoint",   "Headway",        1900-01-01 05:20:00,    1900-01-01 05:20:45,      NA,                   900,971
     """
-    available = df[['route_id', 'stop_id', 'direction_id']].drop_duplicates().to_records(index=False)
+
+    return df
+
+def load_checkpoints(checkpoint_file):
+    if checkpoint_file:
+        return pd.read_csv(checkpoint_file, index_col="checkpoint_id").to_dict()["checkpoint_name"]
+    else:
+        return {} 
+
+def create_manifest(df, checkpoint_file):
+    station_names = load_checkpoints(checkpoint_file)
+
+    manifest = {}
+    
+    timepoints = df[['route_id', 'time_point_id', 'stop_id', 'direction_id', 'time_point_order']].drop_duplicates()
+    timepoints.stop_id = timepoints.stop_id.astype(str)
+    # timepoints.time_point_order = timepoints.time_point_order.astype(numpy.int32)
+
+    for rte_id, points in timepoints.groupby('route_id'):
+        summary = []
+        for tp_id, info in points.groupby('time_point_id'):
+            inbound = info.loc[info.direction_id == 1]
+            outbound = info.loc[info.direction_id == 0]
+
+            # TODO: this assumes a very linear route.
+            # alternate route patterns and changes BREAK things.
+            this_obj = {
+                "stop_name": station_names.get(tp_id.lower(), ""),
+                "branches": None,
+                "station": tp_id.lower(),
+                "order": inbound.time_point_order.tolist()[0],
+                "stops": {
+                    "inbound": inbound.stop_id.drop_duplicates().tolist(),
+                    "outbound": outbound.stop_id.drop_duplicates().tolist()
+                }
+            }
+            summary.append(this_obj)
+
+        manifest[rte_id] = sorted(summary, key = lambda x: x['order'])
+
+    return manifest
+
+def process_events(df):
 
 
     CSV_HEADER = ["service_date", "route_id", "trip_id", "direction_id", "stop_id",
@@ -114,11 +102,10 @@ def process(input_csv, availability_path, routes):
     df = df.explode('event_type')
     df = df[CSV_HEADER]
 
-    return df, []
-    return output_by_stop_and_day, []
+    return df
 
 
-def write_file(events, outdir):
+def _write_file(events, outdir):
     service_date, stop_id = events.name
 
     fname = (pathlib.Path(outdir) /
@@ -134,7 +121,7 @@ def write_file(events, outdir):
 
 
 def to_disk(df, root):
-    df.groupby(['service_date', 'stop_id']).apply(lambda e: write_file(e, root))
+    df.groupby(['service_date', 'stop_id']).apply(lambda e: _write_file(e, root))
 
 def main():
 
@@ -142,24 +129,34 @@ def main():
 
     parser.add_argument('input', metavar='INPUT_CSV')
     parser.add_argument('output', metavar='OUTPUT_DIR')
+    parser.add_argument('--checkpoints', metavar="checkpoints.txt")
     parser.add_argument('--routes', '-r', nargs="*", type=str)
+
 
     args = parser.parse_args()
 
     input_csv = args.input
     output_dir = args.output
+    checkpoint_file = args.checkpoints
     routes = args.routes
 
     pathlib.Path(output_dir).mkdir(exist_ok=True)
 
     availability_path = os.path.join(output_dir, AVAILABILITY_FILE)
-    output, availability_set = process(input_csv, availability_path, routes)
-    to_disk(output, output_dir)
+    data = load_data(input_csv, routes)
+    events = process_events(data)
+    to_disk(events, output_dir)
 
-    with open(availability_path, "w", encoding="utf-8") as file:
+    # do something with available and data
+    manifest = create_manifest(data, checkpoint_file)
+    with open(availability_path, "w", encoding="utf-8") as fd:
+        json.dump(manifest, fd, ensure_ascii=False, indent=4)
+        fd.write("\n")
+
+"""     with open(availability_path, "w", encoding="utf-8") as file:
         json.dump(availability_to_json(availability_set), file, ensure_ascii=False, indent=4)
         file.write("\n")
-
+ """
 
 if __name__ == "__main__":
     main()
