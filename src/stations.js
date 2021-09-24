@@ -9,31 +9,31 @@ const lookup_station_by_id = (line, id) => {
     return undefined;
   }
 
-  return stations[line].find(x => [...x.stops.northbound, ...x.stops.southbound].includes(id));
+  return stations[line].stations.find(x => [...x.stops["0"] || [], ...x.stops["1"] || []].includes(id));
 };
 
 const options_station = (line) => {
   if (!line) {
     return [];
   }
-  return stations[line];
+  return stations[line].stations;
 };
 
 const station_direction = (from, to, line) => {
   if (from.order === to.order) {
     return "";
   }
-  return from.order > to.order ? "northbound" : "southbound";
+  return from.order > to.order ? stations[line].direction["0"] : stations[line].direction["1"];
 }
 
 const get_stop_ids_for_stations = (from, to) => {
   if (!from || !to) {
     return { fromStopId: null, toStopId: null };
   }
-  const isSouthbound = from.order < to.order;
+  const isDirection1 = from.order < to.order;
   return {
-    fromStopIds: isSouthbound ? from.stops.southbound : from.stops.northbound,
-    toStopIds: isSouthbound ? to.stops.southbound : to.stops.northbound,
+    fromStopIds: isDirection1 ? from.stops["1"] : from.stops["0"],
+    toStopIds: isDirection1 ? to.stops["1"] : to.stops["0"],
   }
 }
 

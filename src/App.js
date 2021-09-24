@@ -184,10 +184,11 @@ class App extends React.Component {
       date_start,
       date_end,
     } = this.state.configuration;
+    const { fromStopIds, toStopIds } = get_stop_ids_for_stations(from, to);
     const parts = [
       line,
-      from?.stops.southbound,
-      to?.stops.southbound,
+      fromStopIds?.[0],
+      toStopIds?.[0],
       date_start,
       date_end,
     ].map(x => x || "").join(",");
