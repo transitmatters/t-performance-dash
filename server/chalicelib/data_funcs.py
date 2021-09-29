@@ -13,9 +13,12 @@ def stamp_to_dt(stamp):
     return dt.strftime(DATE_FORMAT)
 
 
-def use_S3(date):
-    return (date.today() - date).days >= 90
+def use_S3(date, stops):
+    archival = (date.today() - date).days >= 90
+    stop_id = int(stops[0])
+    bus = not stop_id in range(70000, 72000) or stop_id in [70618, 71391, 71855]
 
+    return archival or bus
 
 def partition_S3_dates(start_date, end_date):
     CUTOFF = datetime.date.today() - datetime.timedelta(days=90)
@@ -36,7 +39,7 @@ def partition_S3_dates(start_date, end_date):
 
 def headways(sdate, stops, edate=None):
     if edate is None:
-        if use_S3(sdate):
+        if use_S3(sdate, stops):
             return s3_historical.headways(stops, sdate, sdate)
         else:
             return process_mbta_headways(stops, sdate)
@@ -93,7 +96,7 @@ def process_mbta_headways(stops, sdate, edate=None):
 
 def travel_times(sdate, from_stops, to_stops, edate=None):
     if edate is None:
-        if use_S3(sdate):
+        if use_S3(sdate, from_stops):
             return s3_historical.travel_times(from_stops[0], to_stops[0], sdate, sdate)
         else:
             return process_mbta_travel_times(from_stops, to_stops, sdate)
@@ -143,7 +146,7 @@ def process_mbta_travel_times(from_stops, to_stops, sdate, edate=None):
 
 def dwells(sdate, stops, edate=None):
     if edate is None:
-        if use_S3(sdate):
+        if use_S3(sdate, stops):
             return s3_historical.dwells(stops, sdate, sdate)
         else:
             return process_mbta_dwells(stops, sdate)
