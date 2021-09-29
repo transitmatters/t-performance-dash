@@ -13,7 +13,8 @@ s3 = boto3.client('s3')
 def download(key, encoding="utf8"):
     obj = s3.get_object(Bucket=BUCKET, Key=key)
     s3_data = obj["Body"].read()
-    decompressed = zlib.decompress(s3_data).decode(encoding)
+    # 32 should detect zlib vs gzip
+    decompressed = zlib.decompress(s3_data, zlib.MAX_WBITS|32).decode(encoding)
     return decompressed
 
 
@@ -28,13 +29,8 @@ def download_one_event_file(date, stop_id):
 
     # Download events from S3
     try:
-
         key = f"Events/daily-data/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
-        obj = s3.get_object(Bucket=BUCKET, Key=key)
-        s3_data = obj["Body"].read()
-        # Uncompress
-        decompressed = zlib.decompress(
-            s3_data, wbits=zlib.MAX_WBITS | 16).decode("ascii").split("\r\n")
+        decompressed = download(key, 'ascii')
 
     except ClientError as ex:
         if ex.response['Error']['Code'] == 'NoSuchKey':
@@ -46,7 +42,7 @@ def download_one_event_file(date, stop_id):
 
     # Parse CSV
     rows = []
-    for row in csv.DictReader(decompressed):
+    for row in csv.DictReader(decompressed.splitlines()):
         rows.append(row)
 
     # sort

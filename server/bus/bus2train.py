@@ -19,7 +19,8 @@ def load_data(input_csv, routes):
     # thinking about doing this in pandas to have all the info at once
     df = pd.read_csv(input_csv, parse_dates=['service_date', 'scheduled', 'actual'])
     
-    df = df.loc[(df.standard_type == "Headway") & (df.actual.notnull())]
+    # AHHHHHH we need the "Headway" AND "Schedule" ones.
+    df = df.loc[df.actual.notnull()]
     df.route_id = df.route_id.str.lstrip('0')
     if routes:
         df = df.loc[df.route_id.isin(routes)]
@@ -73,13 +74,20 @@ def create_manifest(df, checkpoint_file):
                 "station": tp_id.lower(),
                 "order": inbound.time_point_order.tolist()[0],
                 "stops": {
-                    "inbound": inbound.stop_id.drop_duplicates().tolist(),
-                    "outbound": outbound.stop_id.drop_duplicates().tolist()
+                    "1": inbound.stop_id.drop_duplicates().tolist(),
+                    "0": outbound.stop_id.drop_duplicates().tolist()
                 }
             }
             summary.append(this_obj)
 
-        manifest[rte_id] = sorted(summary, key = lambda x: x['order'])
+        manifest[rte_id] = {
+            "type": "bus",
+            "direction": {
+                "0": "outbound",
+                "1": "inbound"
+            },
+            "stations": sorted(summary, key = lambda x: x['order'])
+        }
 
     return manifest
 
@@ -131,6 +139,7 @@ def main():
     parser.add_argument('output', metavar='OUTPUT_DIR')
     parser.add_argument('--checkpoints', metavar="checkpoints.txt")
     parser.add_argument('--routes', '-r', nargs="*", type=str)
+    parser.add_argument('--manifest', action='store_true')
 
 
     args = parser.parse_args()
@@ -147,16 +156,18 @@ def main():
     events = process_events(data)
     to_disk(events, output_dir)
 
-    # do something with available and data
-    manifest = create_manifest(data, checkpoint_file)
-    with open(availability_path, "w", encoding="utf-8") as fd:
-        json.dump(manifest, fd, ensure_ascii=False, indent=4)
-        fd.write("\n")
+    #TODO: this should be moved to a different utility probably
+    if args.manifest:
+        # do something with available and data
+        manifest = create_manifest(data, checkpoint_file)
+        with open(availability_path, "w", encoding="utf-8") as fd:
+            json.dump(manifest, fd, ensure_ascii=False, indent=4)
+            fd.write("\n")
 
-"""     with open(availability_path, "w", encoding="utf-8") as file:
-        json.dump(availability_to_json(availability_set), file, ensure_ascii=False, indent=4)
-        file.write("\n")
- """
+    """     with open(availability_path, "w", encoding="utf-8") as file:
+            json.dump(availability_to_json(availability_set), file, ensure_ascii=False, indent=4)
+            file.write("\n")
+    """
 
 if __name__ == "__main__":
     main()
