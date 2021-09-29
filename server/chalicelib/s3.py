@@ -5,7 +5,7 @@ import zlib
 
 from chalicelib import parallel
 
-BUCKET = "tm-mbta-performance-preston-test"
+BUCKET = "tm-mbta-performance"
 s3 = boto3.client('s3')
 
 
