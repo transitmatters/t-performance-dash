@@ -1,4 +1,4 @@
-export const bus_stations = {
+{
     "1": {
         "type": "bus",
         "direction": {

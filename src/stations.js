@@ -1,7 +1,7 @@
 import { stations as rt_stations } from './constants';
-import { bus_stations } from './constants_bus';
+import bus1 from './bus_constants/1.json';
 
-const stations = {...rt_stations, ...bus_stations};
+const stations = {...rt_stations, ...bus1};
 
 const all_lines = () => {
   return Object.keys(stations);
