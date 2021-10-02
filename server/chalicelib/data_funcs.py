@@ -97,7 +97,7 @@ def process_mbta_headways(stops, sdate, edate=None):
 def travel_times(sdate, from_stops, to_stops, edate=None):
     if edate is None:
         if use_S3(sdate, from_stops):
-            return s3_historical.travel_times(from_stops[0], to_stops[0], sdate, sdate)
+            return s3_historical.travel_times(from_stops, to_stops, sdate, sdate)
         else:
             return process_mbta_travel_times(from_stops, to_stops, sdate)
 
@@ -105,7 +105,7 @@ def travel_times(sdate, from_stops, to_stops, edate=None):
     all_data = []
     if s3_interval:
         start, end = s3_interval
-        all_data.extend(s3_historical.travel_times(from_stops[0], to_stops[0], start, end))
+        all_data.extend(s3_historical.travel_times(from_stops, to_stops, start, end))
 
     if api_interval:
         start, end = api_interval

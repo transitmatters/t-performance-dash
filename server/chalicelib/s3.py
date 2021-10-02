@@ -25,6 +25,7 @@ def upload(key, bytes, compress=True):
 
 
 def download_one_event_file(date, stop_id):
+    """As advertised: single event file from s3"""
     year, month, day = date.year, date.month, date.day
 
     # Download events from S3
@@ -50,5 +51,14 @@ def download_one_event_file(date, stop_id):
     return rows_by_time
 
 
-# signature: (date_iterable, stop_id)
-download_event_range = parallel.make_parallel(download_one_event_file)
+def download_single_day_events(date, stops):
+    """Will download events for single day, but can handle multiple stop_ids"""
+    result = []
+    for stop_id in stops:
+        result += download_one_event_file(date, stop_id)
+    return result
+
+
+# signature: (date_iterable, [stop_id])
+# Will download events for multiple stops, over a date range.
+download_event_range = parallel.make_parallel(download_single_day_events)
