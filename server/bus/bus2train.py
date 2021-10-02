@@ -71,7 +71,7 @@ def process_events(df):
     return df
 
 
-def _write_file(events, outdir):
+def _write_file(events, outdir, nozip=False):
     """
     This is a helper that will write the events to disk.
     It will be called on each "groupby" object, grouping stop_id and service_date
@@ -87,14 +87,14 @@ def _write_file(events, outdir):
                          f"Day={service_date.day}",
                          "events.csv.gz")
     fname.parent.mkdir(parents=True, exist_ok=True)
-    events.to_csv(fname, index=False, compression='gzip')
+    events.to_csv(fname, index=False, compression='gzip' if not nozip else None)
 
 
-def to_disk(df, root):
+def to_disk(df, root, nozip=False):
     """
     For each service_date/stop_id group, we call the helper that will write it to disk.
     """
-    df.groupby(['service_date', 'stop_id']).apply(lambda e: _write_file(e, root))
+    df.groupby(['service_date', 'stop_id']).apply(lambda e: _write_file(e, root, nozip))
 
 
 def main():
@@ -105,17 +105,19 @@ def main():
     parser.add_argument('--routes', '-r', nargs="*", type=str,
                         help="One note here: we should always be additive with our route set \
                             in case 2 lines share the same stop id: we need both in the result file.")
+    parser.add_argument('--nozip', '-nz', action='store_true', help="debug feature to skip gzipping")
 
     args = parser.parse_args()
     input_csv = args.input
     output_dir = args.output
     routes = args.routes
+    no_zip = args.nozip
 
     pathlib.Path(output_dir).mkdir(exist_ok=True)
     
     data = load_data(input_csv, routes)
     events = process_events(data)
-    to_disk(events, output_dir)
+    to_disk(events, output_dir, nozip=no_zip)
 
 
 if __name__ == "__main__":
