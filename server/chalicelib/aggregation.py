@@ -40,8 +40,8 @@ def faster_describe(grouped):
     return stats.loc[stats['count'] > 4]
 
 
-def travel_times_over_time(sdate, edate, from_stop, to_stop):
-    all_data = data_funcs.travel_times(sdate, [from_stop], [to_stop], edate)
+def travel_times_over_time(sdate, edate, from_stops, to_stops):
+    all_data = data_funcs.travel_times(sdate, from_stops, to_stops, edate)
     if not all_data:
         return []
 
@@ -73,8 +73,8 @@ def travel_times_over_time(sdate, edate, from_stop, to_stop):
     return results.to_dict('records')
 
 
-def headways_over_time(sdate, edate, stop):
-    all_data = data_funcs.headways(sdate, [stop], edate)
+def headways_over_time(sdate, edate, stops):
+    all_data = data_funcs.headways(sdate, stops, edate)
     if not all_data:
         return []
 
@@ -106,8 +106,8 @@ def headways_over_time(sdate, edate, stop):
     return results.to_dict('records')
 
 
-def dwells_over_time(sdate, edate, stop):
-    all_data = data_funcs.dwells(sdate, [stop], edate)
+def dwells_over_time(sdate, edate, stops):
+    all_data = data_funcs.dwells(sdate, stops, edate)
     if not all_data:
         return []
 
