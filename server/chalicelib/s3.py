@@ -56,7 +56,7 @@ def download_single_day_events(date, stops):
     result = []
     for stop_id in stops:
         result += download_one_event_file(date, stop_id)
-    return result
+    return sorted(result, key=lambda row: row["event_time"])
 
 
 # signature: (date_iterable, [stop_id])
