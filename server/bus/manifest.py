@@ -43,8 +43,8 @@ def create_manifest(df, checkpoint_file):
                 "station": tp_id.lower(),
                 "order": order_guess,
                 "stops": {
-                    "1": inbound.stop_id.tolist(),
-                    "0": outbound.stop_id.tolist()
+                    "1": [f"{rte_id}-1-{stop_id}" for stop_id in inbound.stop_id],
+                    "0": [f"{rte_id}-0-{stop_id}" for stop_id in outbound.stop_id]
                 }
             }
             summary.append(this_obj)

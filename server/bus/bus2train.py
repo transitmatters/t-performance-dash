@@ -76,12 +76,12 @@ def _write_file(events, outdir, nozip=False):
     This is a helper that will write the events to disk.
     It will be called on each "groupby" object, grouping stop_id and service_date
     """
-    service_date, stop_id = events.name
+    service_date, stop_id, direction_id, route_id = events.name
 
     fname = pathlib.Path(outdir,
                          "Events",
-                         "daily-data",
-                         str(stop_id),
+                         "daily-bus-data",
+                         f"{route_id}-{direction_id}-{stop_id}",
                          f"Year={service_date.year}",
                          f"Month={service_date.month}",
                          f"Day={service_date.day}",
@@ -94,7 +94,7 @@ def to_disk(df, root, nozip=False):
     """
     For each service_date/stop_id group, we call the helper that will write it to disk.
     """
-    df.groupby(['service_date', 'stop_id']).apply(lambda e: _write_file(e, root, nozip))
+    df.groupby(['service_date', 'stop_id', 'direction_id', 'route_id']).apply(lambda e: _write_file(e, root, nozip))
 
 
 def main():

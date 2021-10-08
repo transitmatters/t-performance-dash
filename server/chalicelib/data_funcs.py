@@ -15,10 +15,8 @@ def stamp_to_dt(stamp):
 
 def use_S3(date, stops):
     archival = (date.today() - date).days >= 90
-    stop_id = int(stops[0])
-    bus = not stop_id in range(70000, 72000) or stop_id in [70618, 71391, 71855]
-
-    return archival or bus
+    is_bus = '-' in stops[0]
+    return archival or is_bus
 
 def partition_S3_dates(start_date, end_date):
     CUTOFF = datetime.date.today() - datetime.timedelta(days=90)

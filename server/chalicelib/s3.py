@@ -24,13 +24,18 @@ def upload(key, bytes, compress=True):
     s3.put_object(Bucket=BUCKET, Key=key, Body=bytes)
 
 
+def is_bus(stop_id):
+    return '-' in stop_id
+
 def download_one_event_file(date, stop_id):
     """As advertised: single event file from s3"""
     year, month, day = date.year, date.month, date.day
 
+    folder = 'daily-bus-data' if is_bus(stop_id) else 'daily-data'
+    key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
+    
     # Download events from S3
     try:
-        key = f"Events/daily-data/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
         decompressed = download(key, 'ascii')
 
     except ClientError as ex:
