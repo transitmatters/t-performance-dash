@@ -12,19 +12,20 @@ def stamp_to_dt(stamp):
     dt = datetime.datetime.fromtimestamp(stamp, pytz.timezone("America/New_York"))
     return dt.strftime(DATE_FORMAT)
 
+def is_bus(stops):
+    return '-' in stops[0]
 
-def use_S3(date, stops):
+def use_S3(date, bus=False):
     archival = (date.today() - date).days >= 90
-    is_bus = '-' in stops[0]
-    return archival or is_bus
+    return archival or bus
 
-def partition_S3_dates(start_date, end_date):
+def partition_S3_dates(start_date, end_date, bus=False):
     CUTOFF = datetime.date.today() - datetime.timedelta(days=90)
 
     s3_dates = None
     api_dates = None
 
-    if end_date < CUTOFF:
+    if end_date < CUTOFF or bus:
         s3_dates = (start_date, end_date)
     elif CUTOFF <= start_date:
         api_dates = (start_date, end_date)
@@ -37,12 +38,12 @@ def partition_S3_dates(start_date, end_date):
 
 def headways(sdate, stops, edate=None):
     if edate is None:
-        if use_S3(sdate, stops):
+        if use_S3(sdate, is_bus(stops)):
             return s3_historical.headways(stops, sdate, sdate)
         else:
             return process_mbta_headways(stops, sdate)
 
-    s3_interval, api_interval = partition_S3_dates(sdate, edate)
+    s3_interval, api_interval = partition_S3_dates(sdate, edate, is_bus(stops))
     all_data = []
     if s3_interval:
         start, end = s3_interval
@@ -94,12 +95,12 @@ def process_mbta_headways(stops, sdate, edate=None):
 
 def travel_times(sdate, from_stops, to_stops, edate=None):
     if edate is None:
-        if use_S3(sdate, from_stops):
+        if use_S3(sdate, is_bus(from_stops)):
             return s3_historical.travel_times(from_stops, to_stops, sdate, sdate)
         else:
             return process_mbta_travel_times(from_stops, to_stops, sdate)
 
-    s3_interval, api_interval = partition_S3_dates(sdate, edate)
+    s3_interval, api_interval = partition_S3_dates(sdate, edate, is_bus(from_stops))
     all_data = []
     if s3_interval:
         start, end = s3_interval
@@ -144,12 +145,12 @@ def process_mbta_travel_times(from_stops, to_stops, sdate, edate=None):
 
 def dwells(sdate, stops, edate=None):
     if edate is None:
-        if use_S3(sdate, stops):
+        if use_S3(sdate, is_bus(stops)):
             return s3_historical.dwells(stops, sdate, sdate)
         else:
             return process_mbta_dwells(stops, sdate)
 
-    s3_interval, api_interval = partition_S3_dates(sdate, edate)
+    s3_interval, api_interval = partition_S3_dates(sdate, edate, is_bus(stops))
     all_data = []
     if s3_interval:
         start, end = s3_interval
