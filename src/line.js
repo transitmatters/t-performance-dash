@@ -8,7 +8,7 @@ import drawTitle from './Title';
 Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
   let x = eventPos.x;
   let y = eventPos.y;
-  
+
   let firstElem = tooltipItems[0];
   if (firstElem && firstElem.hasValue()) {
     const pos = firstElem.tooltipPosition();
@@ -52,7 +52,7 @@ const point_colors = (data, metric_field, benchmark_field) => {
     else if (ratio > 2.0) {
       return '#bb5cc1'; //purple
     }
-    
+
     return '#1c1c1c'; //whatever
   });
 }
@@ -175,18 +175,19 @@ class SingleDayLine extends React.Component {
                 high.setDate(high.getDate() + 1);
                 high.setHours(1,0);
                 axis.min = Math.min(axis.min, low) || null;
-                axis.max = Math.max(axis.max, high) || null;}
+                axis.max = Math.max(axis.max, high) || null;
               }
-            ]
-          }
-        }}
-        plugins={[{
-          afterDraw: (chart) => drawTitle(this.props.title, this.props.location, chart)
-        }]}
-        />
-        </div>
-        {this.props.benchmarkField && <Legend />}
-        </div>
+            }
+          ]
+        }
+      }}
+      plugins={[{
+        afterDraw: (chart) => drawTitle(this.props.title, this.props.location, chart)
+      }]}
+      />
+      </div>
+      {this.props.benchmarkField && <Legend />}
+      </div>
     );
     // TODO: hide legend when benchmarks are 0s
   }
@@ -268,18 +269,19 @@ class AggregateLine extends React.Component {
                 const low = new Date(`${this.props.startDate}T00:00:00`);
                 const high= new Date(`${this.props.endDate}T00:00:00`);
                 axis.min = Math.min(axis.min, low) || null;
-                axis.max = Math.max(axis.max, high) || null;}
+                axis.max = Math.max(axis.max, high) || null;
               }
-            ]
-          }
-        }}
-        plugins={[{
-          afterDraw: (chart) => drawTitle(this.props.title, this.props.location, chart)
-        }]}
-        />
-        </div>
-        <LegendLongTerm />
-        </div>
+            }
+          ]
+        }
+      }}
+      plugins={[{
+        afterDraw: (chart) => drawTitle(this.props.title, this.props.location, chart)
+      }]}
+      />
+      </div>
+      <LegendLongTerm />
+      </div>
     );
   }
 }
