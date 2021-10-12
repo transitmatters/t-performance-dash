@@ -147,20 +147,21 @@ class App extends React.Component {
       }
     };
 
-    if(update.configuration.date_end) {
-      if(!this.permittedRange(update.configuration.date_start, update.configuration.date_end)) {
-        this.setState({
-          error_message: RANGE_TOO_LARGE_ERROR,
-        });
-        // Setting refetch to false prevents data download, but lets this.state.configuration update still
-        refetch = false;
-      }
-      else {
-        this.setState({
-          error_message: null,
-        });
-      }
+    if (
+      update.configuration.date_end &&
+      !this.permittedRange(update.configuration.date_start, update.configuration.date_end)
+    ) {
+      this.setState({
+        error_message: RANGE_TOO_LARGE_ERROR,
+      });
+      // Setting refetch to false prevents data download, but lets this.state.configuration update still
+      refetch = false;
+    } else {
+      this.setState({
+        error_message: null,
+      });
     }
+
     if (config_change.line && config_change.line !== this.state.configuration.line) {
       update.configuration.from = null;
       update.configuration.to = null;
