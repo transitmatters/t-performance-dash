@@ -134,10 +134,6 @@ class SingleDayLine extends React.Component {
         tooltips: {
           // TODO: tooltip is under title words
           callbacks: {
-            title: (tooltipItems, _) => {
-              const date = new Date(tooltipItems[0].xLabel);
-              return date.toLocaleTimeString();
-            },
             afterBody: (tooltipItems) => {
               return departure_from_normal_string(tooltipItems[0].value, tooltipItems[1].value);
             }
@@ -153,7 +149,8 @@ class SingleDayLine extends React.Component {
             type: 'time',
             time: {
               unit: 'hour',
-              unitStepSize: 1
+              unitStepSize: 1,
+              tooltipFormat: "LTS" // locale time with seconds
             },
             scaleLabel: {
               labelString: "Time of day",
@@ -248,9 +245,9 @@ class AggregateLine extends React.Component {
           xAxes: [{
             type: 'time',
             time: {
-              tooltipFormat: "ddd MMM D YYYY",
               unit: 'day',
-              unitStepSize: 1
+              unitStepSize: 1,
+              tooltipFormat: "ddd MMM D YYYY"
             },
             ticks: {
               // force graph to show startDate to endDate, even if missing data
