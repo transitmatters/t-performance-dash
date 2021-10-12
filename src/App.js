@@ -113,7 +113,7 @@ class App extends React.Component {
     this.setIsLoadingDataset = this.setIsLoadingDataset.bind(this);
     this.getIsLoadingDataset = this.getIsLoadingDataset.bind(this);
     this.getDoneLoading = this.getDoneLoading.bind(this);
-    this.getTimescale = this.getTimescale.bind(this);
+    this.isAggregation = this.isAggregation.bind(this);
     this.progressBarRate = this.progressBarRate.bind(this);
     this.restartProgressBar = this.restartProgressBar.bind(this);
     this.permittedRange = this.permittedRange.bind(this);
@@ -258,11 +258,11 @@ class App extends React.Component {
     return this.state.datasetLoadingState[name];
   }
 
-  getTimescale() {
+  isAggregation() {
     if (this.state.configuration.date_end) {
-      return "day";
+      return true;
     }
-    return "hour";
+    return false;
   }
 
   restartProgressBar() {
@@ -422,9 +422,8 @@ class App extends React.Component {
   }
 
   progressBarRate() {
-    const is_aggregation = this.getTimescale() === 'hour';
     // Single day: no rate
-    if(is_aggregation) {
+    if(!this.isAggregation()) {
       return null;
     }
 
@@ -439,9 +438,7 @@ class App extends React.Component {
   }
 
   renderCharts() {
-    const timescale = this.getTimescale();
-    // TODO: move this into config
-    if (timescale === 'hour') {
+    if (!this.isAggregation()) {
       return <div className='charts main-column'>
         <SingleDayLine
           title={"Travel times"}
@@ -511,7 +508,7 @@ class App extends React.Component {
     const { configuration, error_message } = this.state;
     const { from, to, date_start } = configuration;
     const canShowCharts = from && to && !error_message;
-    const canShowAlerts = from && to && date_start && this.getTimescale() === 'hour';
+    const canShowAlerts = from && to && date_start && !this.isAggregation();
     const recognized_alerts = this.state.alerts?.filter(recognize);
     const hasNoLoadedCharts = ['traveltimes', 'dwells', 'headways']
       .every(kind => this.getIsLoadingDataset(kind));
@@ -526,7 +523,7 @@ class App extends React.Component {
             isLoading={this.getIsLoadingDataset("alerts")}
             isHidden={hasNoLoadedCharts}
           />}
-          {canShowCharts && !this.getDoneLoading() && this.getTimescale() === 'day' && <ProgressBar progress={this.state.progress} />}
+          {canShowCharts && !this.getDoneLoading() && this.isAggregation() && <ProgressBar progress={this.state.progress} />}
         </div>
         {!canShowCharts && this.renderEmptyState(error_message)}
         {canShowCharts && this.renderCharts()}
