@@ -109,7 +109,6 @@ class App extends React.Component {
     this.download = this.download.bind(this);
     this.updateConfiguration = this.updateConfiguration.bind(this);
     this.chartTimeframe = this.chartTimeframe.bind(this);
-    this.suggestXRange = this.suggestXRange.bind(this);
     this.setIsLoadingDataset = this.setIsLoadingDataset.bind(this);
     this.getIsLoadingDataset = this.getIsLoadingDataset.bind(this);
     this.getDoneLoading = this.getDoneLoading.bind(this);
@@ -351,28 +350,6 @@ class App extends React.Component {
     return {};
   }
 
-  suggestXRange(single_day) {
-    if (single_day) {
-      // Force plot to show 6am today to 1am tomorrow at minimum
-      const today = `${this.state.configuration.date_start}T00:00:00`;
-
-      let low = new Date(today);
-      low.setHours(6,0);
-
-      let high = new Date(today);
-      high.setDate(high.getDate() + 1);
-      high.setHours(1,0);
-
-      return [low, high];
-    } else {
-      // Force plot to show entire date range selected even if no data
-      const start = `${this.state.configuration.date_start}T00:00:00`;
-      const end = `${this.state.configuration.date_end}T00:00:00`;
-
-      return [new Date(start), new Date(end)];
-    }
-  }
-
   chartTimeframe() {
     // Set alert-bar interval to be 5:30am today to 1am tomorrow.
     const today = `${this.state.configuration.date_start}T00:00:00`;
@@ -450,7 +427,7 @@ class App extends React.Component {
           benchmarkField={'benchmark_travel_time_sec'}
           location={this.locationDescription(true)}
           isLoading={this.getIsLoadingDataset('traveltimes')}
-          suggestedXRange={this.suggestXRange(true)}
+          date={this.state.configuration.date_start}
         />
         <SingleDayLine
           title={'Time between trains (headways)'}
@@ -461,7 +438,7 @@ class App extends React.Component {
           benchmarkField={'benchmark_headway_time_sec'}
           location={this.locationDescription(false)}
           isLoading={this.getIsLoadingDataset('headways')}
-          suggestedXRange={this.suggestXRange(true)}
+          date={this.state.configuration.date_start}
         />
         <SingleDayLine
           title={'Time spent at station (dwells)'}
@@ -472,7 +449,7 @@ class App extends React.Component {
           benchmarkField={null}
           location={this.locationDescription(false)}
           isLoading={this.getIsLoadingDataset('dwells')}
-          suggestedXRange={this.suggestXRange(true)}
+          date={this.state.configuration.date_start}
         />
       </div>
     } else {
@@ -483,7 +460,8 @@ class App extends React.Component {
           seriesName={"Median travel time"}
           location={this.locationDescription(true)}
           isLoading={this.getIsLoadingDataset('traveltimes')}
-          suggestedXRange={this.suggestXRange(false)}
+          startDate={this.state.configuration.date_start}
+          endDate={this.state.configuration.date_end}
         />
         <AggregateLine
           title={'Time between trains (headways)'}
@@ -491,7 +469,8 @@ class App extends React.Component {
           seriesName={'Median headway'}
           location={this.locationDescription(false)}
           isLoading={this.getIsLoadingDataset('headways')}
-          suggestedXRange={this.suggestXRange(false)}
+          startDate={this.state.configuration.date_start}
+          endDate={this.state.configuration.date_end}
         />
         <AggregateLine
           title={'Time spent at station (dwells)'}
@@ -499,7 +478,8 @@ class App extends React.Component {
           seriesName={'Median dwell time'}
           location={this.locationDescription(false)}
           isLoading={this.getIsLoadingDataset('dwells')}
-          suggestedXRange={this.suggestXRange(false)}
+          startDate={this.state.configuration.date_start}
+          endDate={this.state.configuration.date_end}
         />
       </div>
     }

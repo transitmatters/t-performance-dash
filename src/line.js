@@ -101,7 +101,7 @@ class SingleDayLine extends React.Component {
     benchmarkField
     location (description used to generate title)
     isLoading
-    suggestedXRange
+    date
     */
     const { isLoading } = this.props;
     let labels = this.props.data.map(item => item[this.props.xField]);
@@ -163,10 +163,19 @@ class SingleDayLine extends React.Component {
               scaleLabel: {
                 labelString: "Time of day",
               },
-              // make sure graph shows /at least/ suggestedXRange, either end will extend to not hide points.
-              afterDataLimits: (axis) => {if (this.props.isLoading) return; // prevents weird sliding animation
-                axis.min = Math.min(axis.min, this.props.suggestedXRange[0]) || null;
-                axis.max = Math.max(axis.max, this.props.suggestedXRange[1]) || null;}
+              // make sure graph shows /at least/ 6am today to 1am tomorrow
+              afterDataLimits: (axis) => {
+                if (this.props.isLoading) {
+                  return; // prevents weird sliding animation
+                }
+                const today = new Date(`${this.props.date}T00:00:00`);
+                let low = new Date(today);
+                low.setHours(6,0);
+                let high = new Date(today);
+                high.setDate(high.getDate() + 1);
+                high.setHours(1,0);
+                axis.min = Math.min(axis.min, low) || null;
+                axis.max = Math.max(axis.max, high) || null;}
               }
             ]
           }
@@ -193,7 +202,8 @@ class AggregateLine extends React.Component {
     seriesName
     location
     isLoading
-    suggestedXRange
+    startDate
+    endDate
     */
     const { isLoading } = this.props;
     let labels = this.props.data.map(item => item['service_date']);
@@ -250,13 +260,15 @@ class AggregateLine extends React.Component {
                 unit: 'day',
                 unitStepSize: 1
               },
-              scaleLabel: {
-                labelString: 'Day'
-              },
-              // make sure graph shows /at least/ suggestedXRange, either end will extend to not hide points.
-              afterDataLimits: (axis) => {if (this.props.isLoading) return; // prevents weird sliding animation
-                axis.min = Math.min(axis.min, this.props.suggestedXRange[0]) || null;
-                axis.max = Math.max(axis.max, this.props.suggestedXRange[1]) || null;}
+              // make sure graph shows /at least/ startDate to endDate, even if missing data
+              afterDataLimits: (axis) => {
+                if (this.props.isLoading) {
+                  return; // prevents weird sliding animation
+                }
+                const low = new Date(`${this.props.startDate}T00:00:00`);
+                const high= new Date(`${this.props.endDate}T00:00:00`);
+                axis.min = Math.min(axis.min, low) || null;
+                axis.max = Math.max(axis.max, high) || null;}
               }
             ]
           }
