@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactGA from 'react-ga';
-import Line from './line';
+import { SingleDayLine, AggregateLine } from './line';
 import StationConfiguration from './StationConfiguration';
 import { withRouter } from 'react-router-dom';
 import { lookup_station_by_id, station_direction, get_stop_ids_for_stations } from './stations';
@@ -440,57 +440,71 @@ class App extends React.Component {
 
   renderCharts() {
     const timescale = this.getTimescale();
-    const is_aggregation = timescale === 'hour';
-    return <div className='charts main-column'>
-      <Line
-        title={"Travel times"}
-        location={this.locationDescription(true)}
-        tooltipUnit={"travel time"}
-        timescale={timescale}
-        seriesName={is_aggregation ? 'travel time' : 'Median travel time'}
-        isLoading={this.getIsLoadingDataset('traveltimes')}
-        data={this.state.traveltimes}
-        xField={is_aggregation ? 'dep_dt' : 'service_date'}
-        xFieldLabel={is_aggregation ? 'Time of day' : 'Day'}
-        xFieldUnit={timescale}
-        suggestedXRange={this.suggestXRange()}
-        yField={is_aggregation ? 'travel_time_sec' : '50%'}
-        yFieldLabel={"Minutes"}
-        benchmarkField={'benchmark_travel_time_sec'}
-      />
-      <Line
-        title={'Time between trains (headways)'}
-        location={this.locationDescription(false)}
-        tooltipUnit={"headway"}
-        timescale={timescale}
-        seriesName={is_aggregation ? 'headway' : 'Median headway'}
-        isLoading={this.getIsLoadingDataset('headways')}
-        data={this.state.headways}
-        xField={is_aggregation ? 'current_dep_dt' : 'service_date'}
-        xFieldLabel={is_aggregation ? 'Time of day' : 'Day'}
-        xFieldUnit={timescale}
-        suggestedXRange={this.suggestXRange()}
-        yField={is_aggregation ? 'headway_time_sec' : '50%'}
-        yFieldLabel={'Minutes'}
-        benchmarkField={'benchmark_headway_time_sec'}
-      />
-      <Line
-        title={'Time spent at station (dwells)'}
-        location={this.locationDescription(false)}
-        tooltipUnit={"dwell time"}
-        timescale={timescale}
-        seriesName={is_aggregation ? 'dwell time' : 'Median dwell time'}
-        isLoading={this.getIsLoadingDataset('dwells')}
-        data={this.state.dwells}
-        xField={is_aggregation ? 'arr_dt' : 'service_date'}
-        xFieldLabel={is_aggregation ? 'Time of day' : 'Day'}
-        xFieldUnit={timescale}
-        suggestedXRange={this.suggestXRange()}
-        yField={is_aggregation ? 'dwell_time_sec' : '50%'}
-        yFieldLabel={'Minutes'}
-        benchmarkField={null}
-      />
-    </div>
+    // TODO: move this into config
+    if (timescale === 'hour') {
+      return <div className='charts main-column'>
+        <SingleDayLine
+          title={"Travel times"}
+          data={this.state.traveltimes}
+          seriesName={"travel time"}
+          xField={'dep_dt'}
+          yField={'travel_time_sec'}
+          benchmarkField={'benchmark_travel_time_sec'}
+          location={this.locationDescription(true)}
+          isLoading={this.getIsLoadingDataset('traveltimes')}
+          suggestedXRange={this.suggestXRange()}
+        />
+        <SingleDayLine
+          title={'Time between trains (headways)'}
+          data={this.state.headways}
+          seriesName={"headway"}
+          xField={"current_dep_dt"}
+          yField={'headway_time_sec'}
+          benchmarkField={'benchmark_headway_time_sec'}
+          location={this.locationDescription(false)}
+          isLoading={this.getIsLoadingDataset('headways')}
+          suggestedXRange={this.suggestXRange()}
+        />
+        <SingleDayLine
+          title={'Time spent at station (dwells)'}
+          data={this.state.dwells}
+          seriesName={"dwell time"}
+          xField={"arr_dt"}
+          yField={"dwell_time_sec"}
+          benchmarkField={null}
+          location={this.locationDescription(false)}
+          isLoading={this.getIsLoadingDataset('dwells')}
+          suggestedXRange={this.suggestXRange()}
+        />
+      </div>
+    } else {
+      return <div className='charts main-column'>
+        <AggregateLine
+          title={"Travel times"}
+          data={this.state.traveltimes}
+          seriesName={"Median travel time"}
+          location={this.locationDescription(true)}
+          isLoading={this.getIsLoadingDataset('traveltimes')}
+          suggestedXRange={this.suggestXRange()}
+        />
+        <AggregateLine
+          title={'Time between trains (headways)'}
+          data={this.state.headways}
+          seriesName={'Median headway'}
+          location={this.locationDescription(false)}
+          isLoading={this.getIsLoadingDataset('headways')}
+          suggestedXRange={this.suggestXRange()}
+        />
+        <AggregateLine
+          title={'Time spent at station (dwells)'}
+          data={this.state.dwells}
+          seriesName={'Median dwell time'}
+          location={this.locationDescription(false)}
+          isLoading={this.getIsLoadingDataset('dwells')}
+          suggestedXRange={this.suggestXRange()}
+        />
+      </div>
+    }
   }
 
   render() {
