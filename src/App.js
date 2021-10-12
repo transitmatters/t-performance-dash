@@ -350,8 +350,8 @@ class App extends React.Component {
     return {};
   }
 
-  suggestXRange() {
-    if (this.getTimescale() === 'hour') {
+  suggestXRange(single_day) {
+    if (single_day) {
       // Force plot to show 6am today to 1am tomorrow at minimum
       const today = `${this.state.configuration.date_start}T00:00:00`;
 
@@ -452,7 +452,7 @@ class App extends React.Component {
           benchmarkField={'benchmark_travel_time_sec'}
           location={this.locationDescription(true)}
           isLoading={this.getIsLoadingDataset('traveltimes')}
-          suggestedXRange={this.suggestXRange()}
+          suggestedXRange={this.suggestXRange(true)}
         />
         <SingleDayLine
           title={'Time between trains (headways)'}
@@ -463,7 +463,7 @@ class App extends React.Component {
           benchmarkField={'benchmark_headway_time_sec'}
           location={this.locationDescription(false)}
           isLoading={this.getIsLoadingDataset('headways')}
-          suggestedXRange={this.suggestXRange()}
+          suggestedXRange={this.suggestXRange(true)}
         />
         <SingleDayLine
           title={'Time spent at station (dwells)'}
@@ -474,7 +474,7 @@ class App extends React.Component {
           benchmarkField={null}
           location={this.locationDescription(false)}
           isLoading={this.getIsLoadingDataset('dwells')}
-          suggestedXRange={this.suggestXRange()}
+          suggestedXRange={this.suggestXRange(true)}
         />
       </div>
     } else {
@@ -485,7 +485,7 @@ class App extends React.Component {
           seriesName={"Median travel time"}
           location={this.locationDescription(true)}
           isLoading={this.getIsLoadingDataset('traveltimes')}
-          suggestedXRange={this.suggestXRange()}
+          suggestedXRange={this.suggestXRange(false)}
         />
         <AggregateLine
           title={'Time between trains (headways)'}
@@ -493,7 +493,7 @@ class App extends React.Component {
           seriesName={'Median headway'}
           location={this.locationDescription(false)}
           isLoading={this.getIsLoadingDataset('headways')}
-          suggestedXRange={this.suggestXRange()}
+          suggestedXRange={this.suggestXRange(false)}
         />
         <AggregateLine
           title={'Time spent at station (dwells)'}
@@ -501,7 +501,7 @@ class App extends React.Component {
           seriesName={'Median dwell time'}
           location={this.locationDescription(false)}
           isLoading={this.getIsLoadingDataset('dwells')}
-          suggestedXRange={this.suggestXRange()}
+          suggestedXRange={this.suggestXRange(false)}
         />
       </div>
     }
