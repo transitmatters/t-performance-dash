@@ -93,15 +93,15 @@ class SingleDayLine extends React.Component {
   render() {
     /*
     Props:
-    title
-    data
-    seriesName
-    xField
-    yField
-    benchmarkField
-    location (description used to generate title)
-    isLoading
-    date
+      title
+      data
+      seriesName
+      xField
+      yField
+      benchmarkField
+      location (description used to generate title)
+      isLoading
+      date
     */
     const { isLoading } = this.props;
     let labels = this.props.data.map(item => item[this.props.xField]);
@@ -139,46 +139,40 @@ class SingleDayLine extends React.Component {
               return date.toLocaleTimeString();
             },
             afterBody: (tooltipItems) => {
-              if (tooltipItems.length === 2) {
-                return departure_from_normal_string(tooltipItems[0].value, tooltipItems[1].value);
-              }
+              return departure_from_normal_string(tooltipItems[0].value, tooltipItems[1].value);
             }
           }
         },
         scales: {
-          yAxes: [
-            {
-              scaleLabel: {
-                labelString: "Minutes"
-              }
+          yAxes: [{
+            scaleLabel: {
+              labelString: "Minutes"
             }
-          ],
-          xAxes: [
-            {
-              type: 'time',
-              time: {
-                unit: 'hour',
-                unitStepSize: 1
-              },
-              scaleLabel: {
-                labelString: "Time of day",
-              },
-              // make sure graph shows /at least/ 6am today to 1am tomorrow
-              afterDataLimits: (axis) => {
-                if (this.props.isLoading) {
-                  return; // prevents weird sliding animation
-                }
-                const today = new Date(`${this.props.date}T00:00:00`);
-                let low = new Date(today);
-                low.setHours(6,0);
-                let high = new Date(today);
-                high.setDate(high.getDate() + 1);
-                high.setHours(1,0);
-                axis.min = Math.min(axis.min, low) || null;
-                axis.max = Math.max(axis.max, high) || null;
+          }],
+          xAxes: [{
+            type: 'time',
+            time: {
+              unit: 'hour',
+              unitStepSize: 1
+            },
+            scaleLabel: {
+              labelString: "Time of day",
+            },
+            // make sure graph shows /at least/ 6am today to 1am tomorrow
+            afterDataLimits: (axis) => {
+              if (this.props.isLoading) {
+                return; // prevents weird sliding animation
               }
+              const today = new Date(`${this.props.date}T00:00:00`);
+              let low = new Date(today);
+              low.setHours(6,0);
+              let high = new Date(today);
+              high.setDate(high.getDate() + 1);
+              high.setHours(1,0);
+              axis.min = Math.min(axis.min, low) || null;
+              axis.max = Math.max(axis.max, high) || null;
             }
-          ]
+          }]
         }
       }}
       plugins={[{
@@ -198,13 +192,13 @@ class AggregateLine extends React.Component {
   render() {
     /*
     Props:
-    title
-    data
-    seriesName
-    location
-    isLoading
-    startDate
-    endDate
+      title
+      data
+      seriesName
+      location
+      isLoading
+      startDate
+      endDate
     */
     const { isLoading } = this.props;
     let labels = this.props.data.map(item => item['service_date']);
@@ -246,33 +240,24 @@ class AggregateLine extends React.Component {
       }}
       options={{
         scales: {
-          yAxes: [
-            {
-              scaleLabel: {
-                labelString: "Minutes"
-              }
+          yAxes: [{
+            scaleLabel: {
+              labelString: "Minutes"
             }
-          ],
-          xAxes: [
-            {
-              type: 'time',
-              time: {
-                tooltipFormat: "ddd MMM D YYYY",
-                unit: 'day',
-                unitStepSize: 1
-              },
-              // make sure graph shows /at least/ startDate to endDate, even if missing data
-              afterDataLimits: (axis) => {
-                if (this.props.isLoading) {
-                  return; // prevents weird sliding animation
-                }
-                const low = new Date(`${this.props.startDate}T00:00:00`);
-                const high= new Date(`${this.props.endDate}T00:00:00`);
-                axis.min = Math.min(axis.min, low) || null;
-                axis.max = Math.max(axis.max, high) || null;
-              }
+          }],
+          xAxes: [{
+            type: 'time',
+            time: {
+              tooltipFormat: "ddd MMM D YYYY",
+              unit: 'day',
+              unitStepSize: 1
+            },
+            ticks: {
+              // force graph to show startDate to endDate, even if missing data
+              min: new Date(`${this.props.startDate}T00:00:00`),
+              max: new Date(`${this.props.endDate}T00:00:00`),
             }
-          ]
+          }]
         }
       }}
       plugins={[{
