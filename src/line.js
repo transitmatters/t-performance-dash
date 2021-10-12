@@ -66,6 +66,9 @@ merge(defaults, {
         top: 25
       }
     },
+    legend: {
+      display: false
+    },
     title: {
       // empty title to set font and leave room for drawTitle fn
       display: true,
@@ -106,7 +109,6 @@ class SingleDayLine extends React.Component {
       <div className={classNames('chart', isLoading && 'is-loading')}>
       <div className="chart-container">
       <Line
-      legend={{ display: false }}
       data={{
         labels,
         datasets: [
@@ -174,10 +176,10 @@ class SingleDayLine extends React.Component {
         }]}
         />
         </div>
-        {this.props.yField !== "dwell_time_sec" && <Legend />}
+        {this.props.benchmarkField && <Legend />}
         </div>
-        // TODO: hide legend when benchmarks are not present/0s
     );
+    // TODO: hide legend when benchmarks are 0s
   }
 }
  
@@ -199,7 +201,6 @@ class AggregateLine extends React.Component {
       <div className={classNames('chart', isLoading && 'is-loading')}>
       <div className="chart-container">
       <Line
-      legend={{ display: false }}
       data={{
         labels,
         datasets: [
