@@ -194,7 +194,7 @@ def alerts(day, params):
 
         # Use the API for today and yesterday's transit day, otherwise us.
         if day >= yesterday:
-            api_data = MbtaPerformanceAPI.get_api_data(day, "pastalerts", params)
+            api_data = MbtaPerformanceAPI.get_api_data("pastalerts", params, day)
         elif day >= WE_HAVE_ALERTS_SINCE:
             # This is stupid because we're emulating MBTA-performance ick
             api_data = [{"past_alerts": s3_alerts.get_alerts(day, params["route"])}]
