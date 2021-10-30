@@ -259,10 +259,7 @@ class App extends React.Component {
   }
 
   isAggregation() {
-    if (this.state.configuration.date_end) {
-      return true;
-    }
-    return false;
+    return !!this.state.configuration.date_end;
   }
 
   restartProgressBar() {
@@ -416,7 +413,37 @@ class App extends React.Component {
   }
 
   renderCharts() {
-    if (!this.isAggregation()) {
+    if (this.isAggregation()) {
+      return <div className='charts main-column'>
+        <AggregateLine
+          title={"Travel times"}
+          data={this.state.traveltimes}
+          seriesName={"Median travel time"}
+          location={this.locationDescription(true)}
+          isLoading={this.getIsLoadingDataset('traveltimes')}
+          startDate={this.state.configuration.date_start}
+          endDate={this.state.configuration.date_end}
+        />
+        <AggregateLine
+          title={'Time between trains (headways)'}
+          data={this.state.headways}
+          seriesName={'Median headway'}
+          location={this.locationDescription(false)}
+          isLoading={this.getIsLoadingDataset('headways')}
+          startDate={this.state.configuration.date_start}
+          endDate={this.state.configuration.date_end}
+        />
+        <AggregateLine
+          title={'Time spent at station (dwells)'}
+          data={this.state.dwells}
+          seriesName={'Median dwell time'}
+          location={this.locationDescription(false)}
+          isLoading={this.getIsLoadingDataset('dwells')}
+          startDate={this.state.configuration.date_start}
+          endDate={this.state.configuration.date_end}
+        />
+      </div>
+    } else {
       return <div className='charts main-column'>
         <SingleDayLine
           title={"Travel times"}
@@ -450,36 +477,6 @@ class App extends React.Component {
           location={this.locationDescription(false)}
           isLoading={this.getIsLoadingDataset('dwells')}
           date={this.state.configuration.date_start}
-        />
-      </div>
-    } else {
-      return <div className='charts main-column'>
-        <AggregateLine
-          title={"Travel times"}
-          data={this.state.traveltimes}
-          seriesName={"Median travel time"}
-          location={this.locationDescription(true)}
-          isLoading={this.getIsLoadingDataset('traveltimes')}
-          startDate={this.state.configuration.date_start}
-          endDate={this.state.configuration.date_end}
-        />
-        <AggregateLine
-          title={'Time between trains (headways)'}
-          data={this.state.headways}
-          seriesName={'Median headway'}
-          location={this.locationDescription(false)}
-          isLoading={this.getIsLoadingDataset('headways')}
-          startDate={this.state.configuration.date_start}
-          endDate={this.state.configuration.date_end}
-        />
-        <AggregateLine
-          title={'Time spent at station (dwells)'}
-          data={this.state.dwells}
-          seriesName={'Median dwell time'}
-          location={this.locationDescription(false)}
-          isLoading={this.getIsLoadingDataset('dwells')}
-          startDate={this.state.configuration.date_start}
-          endDate={this.state.configuration.date_end}
         />
       </div>
     }

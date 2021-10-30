@@ -269,4 +269,3 @@ class AggregateLine extends React.Component {
 }
 
 export { SingleDayLine, AggregateLine };
-    
