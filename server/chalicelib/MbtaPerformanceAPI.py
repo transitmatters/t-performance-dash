@@ -80,9 +80,9 @@ def get_single_api_data(url):
     response = requests.get(url)
     try:
         response.raise_for_status()
-    except requests.exceptions.HTTPError as err:
+    except requests.exceptions.HTTPError:
         print(response.content.decode("utf-8"))
-        raise # TODO: catch this gracefully
+        raise  # TODO: catch this gracefully
     data = json.loads(response.content.decode("utf-8"), parse_float=Decimal, parse_int=Decimal)
     return data
 
@@ -115,7 +115,7 @@ def get_7day_chunks(start, end):
     delta = (end - start).days + 1
     cur = start
     while delta != 0:
-        inc = min(delta, 6) # Stupid DST hour throws us over if we actually use 7.
+        inc = min(delta, 6)  # Stupid DST hour throws us over if we actually use 7.
         yield (cur, cur + datetime.timedelta(days=inc - 1))
         delta -= inc
         cur += datetime.timedelta(days=inc)
