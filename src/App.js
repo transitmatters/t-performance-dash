@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactGA from 'react-ga';
-import Line from './line';
+import { SingleDayLine, AggregateLine } from './line';
 import StationConfiguration from './StationConfiguration';
 import { withRouter } from 'react-router-dom';
 import { lookup_station_by_id, station_direction, get_stop_ids_for_stations } from './stations';
@@ -109,11 +109,10 @@ class App extends React.Component {
     this.download = this.download.bind(this);
     this.updateConfiguration = this.updateConfiguration.bind(this);
     this.chartTimeframe = this.chartTimeframe.bind(this);
-    this.suggestXRange = this.suggestXRange.bind(this);
     this.setIsLoadingDataset = this.setIsLoadingDataset.bind(this);
     this.getIsLoadingDataset = this.getIsLoadingDataset.bind(this);
     this.getDoneLoading = this.getDoneLoading.bind(this);
-    this.getTimescale = this.getTimescale.bind(this);
+    this.isAggregation = this.isAggregation.bind(this);
     this.progressBarRate = this.progressBarRate.bind(this);
     this.restartProgressBar = this.restartProgressBar.bind(this);
     this.permittedRange = this.permittedRange.bind(this);
@@ -147,20 +146,21 @@ class App extends React.Component {
       }
     };
 
-    if(update.configuration.date_end) {
-      if(!this.permittedRange(update.configuration.date_start, update.configuration.date_end)) {
-        this.setState({
-          error_message: RANGE_TOO_LARGE_ERROR,
-        });
-        // Setting refetch to false prevents data download, but lets this.state.configuration update still
-        refetch = false;
-      }
-      else {
-        this.setState({
-          error_message: null,
-        });
-      }
+    if (
+      update.configuration.date_end &&
+      !this.permittedRange(update.configuration.date_start, update.configuration.date_end)
+    ) {
+      this.setState({
+        error_message: RANGE_TOO_LARGE_ERROR,
+      });
+      // Setting refetch to false prevents data download, but lets this.state.configuration update still
+      refetch = false;
+    } else {
+      this.setState({
+        error_message: null,
+      });
     }
+
     if (config_change.line && config_change.line !== this.state.configuration.line) {
       update.configuration.from = null;
       update.configuration.to = null;
@@ -259,11 +259,8 @@ class App extends React.Component {
     return this.state.datasetLoadingState[name];
   }
 
-  getTimescale() {
-    if (this.state.configuration.date_end) {
-      return "day";
-    }
-    return "hour";
+  isAggregation() {
+    return !!this.state.configuration.date_end;
   }
 
   restartProgressBar() {
@@ -351,28 +348,6 @@ class App extends React.Component {
     return {};
   }
 
-  suggestXRange() {
-    if (this.getTimescale() === 'hour') {
-      // Force plot to show 6am today to 1am tomorrow at minimum
-      const today = `${this.state.configuration.date_start}T00:00:00`;
-
-      let low = new Date(today);
-      low.setHours(6,0);
-
-      let high = new Date(today);
-      high.setDate(high.getDate() + 1);
-      high.setHours(1,0);
-
-      return [low, high];
-    } else {
-      // Force plot to show entire date range selected even if no data
-      const start = `${this.state.configuration.date_start}T00:00:00`;
-      const end = `${this.state.configuration.date_end}T00:00:00`;
-
-      return [new Date(start), new Date(end)];
-    }
-  }
-
   chartTimeframe() {
     // Set alert-bar interval to be 5:30am today to 1am tomorrow.
     const today = `${this.state.configuration.date_start}T00:00:00`;
@@ -423,9 +398,8 @@ class App extends React.Component {
   }
 
   progressBarRate() {
-    const is_aggregation = this.getTimescale() === 'hour';
     // Single day: no rate
-    if(is_aggregation) {
+    if(!this.isAggregation()) {
       return null;
     }
 
@@ -440,65 +414,80 @@ class App extends React.Component {
   }
 
   renderCharts() {
-    const timescale = this.getTimescale();
-    const is_aggregation = timescale === 'hour';
-    return <div className='charts main-column'>
-      <Line
-        title={"Travel times"}
-        location={this.locationDescription(true)}
-        tooltipUnit={"travel time"}
-        timescale={timescale}
-        seriesName={is_aggregation ? 'travel time' : 'Median travel time'}
-        isLoading={this.getIsLoadingDataset('traveltimes')}
-        data={this.state.traveltimes}
-        xField={is_aggregation ? 'dep_dt' : 'service_date'}
-        xFieldLabel={is_aggregation ? 'Time of day' : 'Day'}
-        xFieldUnit={timescale}
-        suggestedXRange={this.suggestXRange()}
-        yField={is_aggregation ? 'travel_time_sec' : '50%'}
-        yFieldLabel={"Minutes"}
-        benchmarkField={'benchmark_travel_time_sec'}
-      />
-      <Line
-        title={'Time between trains (headways)'}
-        location={this.locationDescription(false)}
-        tooltipUnit={"headway"}
-        timescale={timescale}
-        seriesName={is_aggregation ? 'headway' : 'Median headway'}
-        isLoading={this.getIsLoadingDataset('headways')}
-        data={this.state.headways}
-        xField={is_aggregation ? 'current_dep_dt' : 'service_date'}
-        xFieldLabel={is_aggregation ? 'Time of day' : 'Day'}
-        xFieldUnit={timescale}
-        suggestedXRange={this.suggestXRange()}
-        yField={is_aggregation ? 'headway_time_sec' : '50%'}
-        yFieldLabel={'Minutes'}
-        benchmarkField={'benchmark_headway_time_sec'}
-      />
-      <Line
-        title={'Time spent at station (dwells)'}
-        location={this.locationDescription(false)}
-        tooltipUnit={"dwell time"}
-        timescale={timescale}
-        seriesName={is_aggregation ? 'dwell time' : 'Median dwell time'}
-        isLoading={this.getIsLoadingDataset('dwells')}
-        data={this.state.dwells}
-        xField={is_aggregation ? 'arr_dt' : 'service_date'}
-        xFieldLabel={is_aggregation ? 'Time of day' : 'Day'}
-        xFieldUnit={timescale}
-        suggestedXRange={this.suggestXRange()}
-        yField={is_aggregation ? 'dwell_time_sec' : '50%'}
-        yFieldLabel={'Minutes'}
-        benchmarkField={null}
-      />
-    </div>
+    if (this.isAggregation()) {
+      return <div className='charts main-column'>
+        <AggregateLine
+          title={"Travel times"}
+          data={this.state.traveltimes}
+          seriesName={"Median travel time"}
+          location={this.locationDescription(true)}
+          isLoading={this.getIsLoadingDataset('traveltimes')}
+          startDate={this.state.configuration.date_start}
+          endDate={this.state.configuration.date_end}
+        />
+        <AggregateLine
+          title={'Time between trains (headways)'}
+          data={this.state.headways}
+          seriesName={'Median headway'}
+          location={this.locationDescription(false)}
+          isLoading={this.getIsLoadingDataset('headways')}
+          startDate={this.state.configuration.date_start}
+          endDate={this.state.configuration.date_end}
+        />
+        <AggregateLine
+          title={'Time spent at station (dwells)'}
+          data={this.state.dwells}
+          seriesName={'Median dwell time'}
+          location={this.locationDescription(false)}
+          isLoading={this.getIsLoadingDataset('dwells')}
+          startDate={this.state.configuration.date_start}
+          endDate={this.state.configuration.date_end}
+        />
+      </div>
+    } else {
+      return <div className='charts main-column'>
+        <SingleDayLine
+          title={"Travel times"}
+          data={this.state.traveltimes}
+          seriesName={"travel time"}
+          xField={'dep_dt'}
+          yField={'travel_time_sec'}
+          benchmarkField={'benchmark_travel_time_sec'}
+          location={this.locationDescription(true)}
+          isLoading={this.getIsLoadingDataset('traveltimes')}
+          date={this.state.configuration.date_start}
+        />
+        <SingleDayLine
+          title={'Time between trains (headways)'}
+          data={this.state.headways}
+          seriesName={"headway"}
+          xField={"current_dep_dt"}
+          yField={'headway_time_sec'}
+          benchmarkField={'benchmark_headway_time_sec'}
+          location={this.locationDescription(false)}
+          isLoading={this.getIsLoadingDataset('headways')}
+          date={this.state.configuration.date_start}
+        />
+        <SingleDayLine
+          title={'Time spent at station (dwells)'}
+          data={this.state.dwells}
+          seriesName={"dwell time"}
+          xField={"arr_dt"}
+          yField={"dwell_time_sec"}
+          benchmarkField={null}
+          location={this.locationDescription(false)}
+          isLoading={this.getIsLoadingDataset('dwells')}
+          date={this.state.configuration.date_start}
+        />
+      </div>
+    }
   }
 
   render() {
     const { configuration, error_message } = this.state;
     const { from, to, date_start } = configuration;
     const canShowCharts = from && to && !error_message;
-    const canShowAlerts = from && to && date_start && this.getTimescale() === 'hour';
+    const canShowAlerts = from && to && date_start && !this.isAggregation();
     const recognized_alerts = this.state.alerts?.filter(recognize);
     const hasNoLoadedCharts = ['traveltimes', 'dwells', 'headways']
       .every(kind => this.getIsLoadingDataset(kind));
@@ -513,7 +502,7 @@ class App extends React.Component {
             isLoading={this.getIsLoadingDataset("alerts")}
             isHidden={hasNoLoadedCharts}
           />}
-          {canShowCharts && !this.getDoneLoading() && this.getTimescale() === 'day' && <ProgressBar progress={this.state.progress} />}
+          {canShowCharts && !this.getDoneLoading() && this.isAggregation() && <ProgressBar progress={this.state.progress} />}
         </div>
         {!canShowCharts && this.renderEmptyState(error_message)}
         {canShowCharts && this.renderCharts()}

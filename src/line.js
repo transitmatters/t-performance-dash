@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Line, Chart } from 'react-chartjs-2';
+import { Line, Chart, defaults } from 'react-chartjs-2';
+import merge from 'lodash.merge';
 import {Legend, LegendLongTerm} from './Legend';
 import drawTitle from './Title';
 
@@ -56,147 +57,215 @@ const point_colors = (data, metric_field, benchmark_field) => {
   });
 }
 
-class LineClass extends React.Component {
+merge(defaults, {
+  global: {
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        top: 25
+      }
+    },
+    legend: {
+      display: false
+    },
+    title: {
+      // empty title to set font and leave room for drawTitle fn
+      display: true,
+      text: "",
+      fontSize: 16,
+    },
+    tooltips: {
+      mode: "index",
+      position: "first"
+    }
+  },
+  scale: {
+    scaleLabel: {
+      display: true,
+      fontSize: 14
+    }
+  }
+});
 
+class SingleDayLine extends React.Component {
+  
   render() {
     /*
     Props:
+      title
+      data
       seriesName
       xField
-      xFieldLabel
       yField
-      yFieldLabel
       benchmarkField
-      alerts
+      location (description used to generate title)
+      isLoading
+      date
     */
     const { isLoading } = this.props;
     let labels = this.props.data.map(item => item[this.props.xField]);
     return (
       <div className={classNames('chart', isLoading && 'is-loading')}>
-        <div className="chart-container">
-          <Line
-            legend={{ display: false }}
-            data={{
-              labels,
-              datasets: [
-                {
-                  label: this.props.timescale === 'hour' ? `Actual ${this.props.seriesName}` : this.props.seriesName,
-                  fill: false,
-                  lineTension: 0.1,
-                  pointBackgroundColor: point_colors(this.props.data, this.props.yField, this.props.benchmarkField),
-                  pointHoverRadius: 3,
-                  pointHoverBackgroundColor: point_colors(this.props.data, this.props.yField, this.props.benchmarkField),
-                  pointRadius: 3,
-                  pointHitRadius: 10,
-                  data: this.props.data.map(item => (item[this.props.yField] / 60).toFixed(2))
-                },
-                {
-                  label: "25th percentile",
-                  fill: 1,
-                  backgroundColor: "rgba(191,200,214,0.5)",
-                  lineTension: 0.4,
-                  pointRadius: 0,
-                  data: this.props.data.map(item => (item["25%"] / 60).toFixed(2))
-                },
-                {
-                  label: "75th percentile",
-                  fill: 1,
-                  backgroundColor: "rgba(191,200,214,0.5)",
-                  lineTension: 0.4,
-                  pointRadius: 0,
-                  data: this.props.data.map(item => (item["75%"] / 60).toFixed(2))
-                },
-                {
-                  label: `Benchmark MBTA ${this.props.seriesName}`,
-                  data: this.props.data.map(item => (item[this.props.benchmarkField] / 60).toFixed(2)),
-                  pointRadius: 0
-                }
-              ]
-            }}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              layout: {
-                padding: {
-                  top: 25
-                }
-              },
-              title: {
-                // empty title here to leave space and set font for the drawTitle process
-                display: true,
-                text: "",
-                fontSize: 16
-              },
-              tooltips: {
-                mode: "index",
-                position: "first",
-                callbacks: {
-                  title: (tooltipItems, _) => {
-                    if (this.props.timescale === "day") {
-                      /* In aggregation mode, dates come back from the server no times.
-                        Because we're -4/-5 UTC, the resulting strings become 7pm/8pm the previous day with affixing 00:00:00.
-                        Blegh */
-                      const date = new Date(`${tooltipItems[0].xLabel}T00:00:00`); // Safari won't parse "2021-03-30" alone
-                      return date.toDateString();
-                    }
-                    else if(this.props.timescale === "hour") {
-                      const date = new Date(tooltipItems[0].xLabel);
-                      return date.toLocaleTimeString();
-                    }
-                  },
-                  // label: (tooltipItem, _) => {
-                  //   if (tooltipItem.datasetIndex === 0) {
-                  //     return `Actual ${this.props.tooltipUnit}: ${parseFloat(tooltipItem.value).toFixed(2)}`;
-                  //   }
-                  //   return `Benchmark MBTA ${this.props.tooltipUnit}: ${parseFloat(tooltipItem.value).toFixed(2)}`;
-                  // },
-                  afterBody: (tooltipItems) => {
-                    if (tooltipItems.length === 2) {
-                      return departure_from_normal_string(tooltipItems[0].value, tooltipItems[1].value);
-                    }
-                  }
-                }
-              },
-              scales: {
-                yAxes: [
-                  {
-                    scaleLabel: {
-                      display: true,
-                      fontSize: 14,
-                      labelString: this.props.yFieldLabel
-                    }
-                  }
-                ],
-                xAxes: [
-                  {
-                    type: this.props.xFieldType || 'time',
-                    time: {
-                      unit: this.props.xFieldUnit || 'hour',
-                      unitStepSize: 1
-                    },
-                    scaleLabel: {
-                      display: true,
-                      fontSize: 14,
-                      labelString: this.props.xFieldLabel
-                    },
-                    // make sure graph shows /at least/ suggestedXRange, either end will extend to not hide points.
-                    afterDataLimits: (axis) => {if (this.props.isLoading) return; // prevents weird sliding animation
-                                                axis.min = Math.min(axis.min, this.props.suggestedXRange[0]) || null;
-                                                axis.max = Math.max(axis.max, this.props.suggestedXRange[1]) || null;}
-                  }
-                ]
+      <div className="chart-container">
+      <Line
+      data={{
+        labels,
+        datasets: [
+          {
+            label: `Actual ${this.props.seriesName}`,
+            fill: false,
+            lineTension: 0.1,
+            pointBackgroundColor: point_colors(this.props.data, this.props.yField, this.props.benchmarkField),
+            pointHoverRadius: 3,
+            pointHoverBackgroundColor: point_colors(this.props.data, this.props.yField, this.props.benchmarkField),
+            pointRadius: 3,
+            pointHitRadius: 10,
+            data: this.props.data.map(item => (item[this.props.yField] / 60).toFixed(2))
+          },
+          {
+            label: `Benchmark MBTA ${this.props.seriesName}`,
+            data: this.props.data.map(item => (item[this.props.benchmarkField] / 60).toFixed(2)),
+            pointRadius: 0
+          }
+        ]
+      }}
+      options={{
+        tooltips: {
+          // TODO: tooltip is under title words
+          callbacks: {
+            afterBody: (tooltipItems) => {
+              return departure_from_normal_string(tooltipItems[0].value, tooltipItems[1].value);
+            }
+          }
+        },
+        scales: {
+          yAxes: [{
+            scaleLabel: {
+              labelString: "Minutes"
+            }
+          }],
+          xAxes: [{
+            type: 'time',
+            time: {
+              unit: 'hour',
+              unitStepSize: 1,
+              tooltipFormat: "LTS" // locale time with seconds
+            },
+            scaleLabel: {
+              labelString: "Time of day",
+            },
+            // make sure graph shows /at least/ 6am today to 1am tomorrow
+            afterDataLimits: (axis) => {
+              if (this.props.isLoading) {
+                return; // prevents weird sliding animation
               }
-            }}
-            plugins={[{
-              afterDraw: (chart) => drawTitle(this.props.title, this.props.location, chart)
-            }]}
-          />
-        </div>
-        {this.props.timescale === 'day' && <LegendLongTerm />}
-        {this.props.timescale === 'hour' && this.props.yField !== "dwell_time_sec" && <Legend />}
+              const today = new Date(`${this.props.date}T00:00:00`);
+              let low = new Date(today);
+              low.setHours(6,0);
+              let high = new Date(today);
+              high.setDate(high.getDate() + 1);
+              high.setHours(1,0);
+              axis.min = Math.min(axis.min, low) || null;
+              axis.max = Math.max(axis.max, high) || null;
+            }
+          }]
+        }
+      }}
+      plugins={[{
+        afterDraw: (chart) => drawTitle(this.props.title, this.props.location, chart)
+      }]}
+      />
+      </div>
+      {this.props.benchmarkField && <Legend />}
+      </div>
+    );
+    // TODO: hide legend when benchmarks are 0s
+  }
+}
+ 
+class AggregateLine extends React.Component {
+  
+  render() {
+    /*
+    Props:
+      title
+      data
+      seriesName
+      location
+      isLoading
+      startDate
+      endDate
+    */
+    const { isLoading } = this.props;
+    let labels = this.props.data.map(item => item['service_date']);
+    return (
+      <div className={classNames('chart', isLoading && 'is-loading')}>
+      <div className="chart-container">
+      <Line
+      data={{
+        labels,
+        datasets: [
+          {
+            label: this.props.seriesName,
+            fill: false,
+            lineTension: 0.1,
+            pointBackgroundColor: '#1c1c1c',
+            pointHoverRadius: 3,
+            pointHoverBackgroundColor: '#1c1c1c',
+            pointRadius: 3,
+            pointHitRadius: 10,
+            data: this.props.data.map(item => (item["50%"] / 60).toFixed(2))
+          },
+          {
+            label: "25th percentile",
+            fill: 1,
+            backgroundColor: "rgba(191,200,214,0.5)",
+            lineTension: 0.4,
+            pointRadius: 0,
+            data: this.props.data.map(item => (item["25%"] / 60).toFixed(2))
+          },
+          {
+            label: "75th percentile",
+            fill: 1,
+            backgroundColor: "rgba(191,200,214,0.5)",
+            lineTension: 0.4,
+            pointRadius: 0,
+            data: this.props.data.map(item => (item["75%"] / 60).toFixed(2))
+          },
+        ]
+      }}
+      options={{
+        scales: {
+          yAxes: [{
+            scaleLabel: {
+              labelString: "Minutes"
+            }
+          }],
+          xAxes: [{
+            type: 'time',
+            time: {
+              unit: 'day',
+              unitStepSize: 1,
+              tooltipFormat: "ddd MMM D YYYY"
+            },
+            ticks: {
+              // force graph to show startDate to endDate, even if missing data
+              min: new Date(`${this.props.startDate}T00:00:00`),
+              max: new Date(`${this.props.endDate}T00:00:00`),
+            }
+          }]
+        }
+      }}
+      plugins={[{
+        afterDraw: (chart) => drawTitle(this.props.title, this.props.location, chart)
+      }]}
+      />
+      </div>
+      <LegendLongTerm />
       </div>
     );
   }
 }
 
-export default LineClass;
+export { SingleDayLine, AggregateLine };
