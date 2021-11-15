@@ -13,14 +13,14 @@ def load_checkpoints(checkpoint_file):
     if checkpoint_file:
         return pd.read_csv(checkpoint_file, index_col="checkpoint_id").to_dict()["checkpoint_name"]
     else:
-        return {} 
+        return {}
 
 
 def create_manifest(df, checkpoint_file):
     station_names = load_checkpoints(checkpoint_file)
 
     manifest = {}
-    
+
     timepoints = df.groupby(['route_id', 'time_point_id', 'stop_id', 'direction_id'])['time_point_order'].agg(pd.Series.mode).reset_index()
     timepoints.stop_id = timepoints.stop_id.astype(str)
 
@@ -36,7 +36,7 @@ def create_manifest(df, checkpoint_file):
             if pd.isnull(order_guess):
                 order_guess = 0
             else:
-                order_guess = int(order_guess) # none of that icky int64 stuff, json-serializable please
+                order_guess = int(order_guess)  # none of that icky int64 stuff, json-serializable please
             this_obj = {
                 "stop_name": station_names.get(tp_id.lower(), ""),
                 "branches": None,
@@ -55,10 +55,11 @@ def create_manifest(df, checkpoint_file):
                 "0": "outbound",
                 "1": "inbound"
             },
-            "stations": sorted(summary, key = lambda x: x['order'])
+            "stations": sorted(summary, key=lambda x: x['order'])
         }
 
     return manifest
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -75,12 +76,13 @@ def main():
     checkpoint_file = args.checkpoints
 
     data = load_data(input_csv, routes)
-    
+
     manifest = create_manifest(data, checkpoint_file)
-    
+
     with open(output_file, "w", encoding="utf-8") as fd:
         json.dump(manifest, fd, ensure_ascii=False, indent=4)
         fd.write("\n")
+
 
 if __name__ == "__main__":
     main()

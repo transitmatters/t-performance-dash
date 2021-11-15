@@ -12,12 +12,15 @@ def stamp_to_dt(stamp):
     dt = datetime.datetime.fromtimestamp(stamp, pytz.timezone("America/New_York"))
     return dt.strftime(DATE_FORMAT)
 
+
 def is_bus(stops):
     return '-' in stops[0]
+
 
 def use_S3(date, bus=False):
     archival = (date.today() - date).days >= 90
     return archival or bus
+
 
 def partition_S3_dates(start_date, end_date, bus=False):
     CUTOFF = datetime.date.today() - datetime.timedelta(days=90)

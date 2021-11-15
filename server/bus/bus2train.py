@@ -58,15 +58,15 @@ def process_events(df):
     df = df.rename(columns={'half_trip_id': 'trip_id',
                             'time_point_order': 'stop_sequence',
                             'actual': 'event_time'})
-    df.drop(columns=['time_point_id','standard_type','scheduled','scheduled_headway','headway'])
+    df.drop(columns=['time_point_id', 'standard_type', 'scheduled', 'scheduled_headway', 'headway'])
     df['vehicle_id'] = ""
     df['vehicle_label'] = ""
 
     df['event_type'] = df.point_type.map({"Startpoint": ["DEP"],
-                                       "Midpoint": ["ARR", "DEP"],
-                                       "Endpoint": ["ARR"]})
+                                          "Midpoint": ["ARR", "DEP"],
+                                          "Endpoint": ["ARR"]})
     df = df.explode('event_type')
-    df = df[CSV_HEADER] # reorder
+    df = df[CSV_HEADER]  # reorder
 
     return df
 
@@ -114,7 +114,7 @@ def main():
     no_zip = args.nozip
 
     pathlib.Path(output_dir).mkdir(exist_ok=True)
-    
+
     data = load_data(input_csv, routes)
     events = process_events(data)
     to_disk(events, output_dir, nozip=no_zip)
