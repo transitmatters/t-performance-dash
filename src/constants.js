@@ -557,7 +557,7 @@ export const stations = {
 					"0": ["70144"],
 					"1": ["70145"]
 				}
-			}, {
+			}, /* {
 				"stop_name": "Boston University West",
 				"branches": ["B"],
 				"station": "place-buwst",
@@ -592,6 +592,24 @@ export const stations = {
 				"stops": {
 					"0": ["70136"],
 					"1": ["70137"]
+				}
+			}, */ {
+				"stop_name": "Amory Street",
+				"branches": ["B"],
+				"station": "place-amory",
+				"order": 105,
+				"stops": {
+					"0": ["170140"],
+					"1": ["170141"]
+				}
+			}, {
+				"stop_name": "Babcock Street",
+				"branches": ["B"],
+				"station": "place-babck",
+				"order": 107,
+				"stops": {
+					"0": ["170136"],
+					"1": ["170137"]
 				}
 			}, {
 				"stop_name": "Packards Corner",

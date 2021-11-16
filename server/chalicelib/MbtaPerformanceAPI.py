@@ -1,7 +1,7 @@
 import json
 import datetime
 import pytz
-from urllib.request import Request, urlopen
+import requests
 from urllib.parse import urlencode
 from decimal import Decimal
 import itertools
@@ -77,9 +77,13 @@ def get_many_urls(start_day, end_day, module, params):
 
 def get_single_api_data(url):
     print("Requesting data from URL: {}".format(url))
-    req = Request(url)
-    response = urlopen(req).read()
-    data = json.loads(response.decode("utf-8"), parse_float=Decimal, parse_int=Decimal)
+    response = requests.get(url)
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError:
+        print(response.content.decode("utf-8"))
+        raise  # TODO: catch this gracefully
+    data = json.loads(response.content.decode("utf-8"), parse_float=Decimal, parse_int=Decimal)
     return data
 
 
@@ -105,13 +109,13 @@ def get_api_data(module, params, start_day, end_day=None):
         return _multithreaded_api(get_7day_chunks(start_day, end_day), module, params)
 
 
-# MBTA api won't accept queries > 7 days.
+# MBTA api won't accept queries > 7 days. 6 day interval here because of DST.
 # this function operates on datetime.dates
 def get_7day_chunks(start, end):
     delta = (end - start).days + 1
     cur = start
     while delta != 0:
-        inc = min(delta, 7)
+        inc = min(delta, 6)  # Stupid DST hour throws us over if we actually use 7.
         yield (cur, cur + datetime.timedelta(days=inc - 1))
         delta -= inc
         cur += datetime.timedelta(days=inc)
