@@ -11,9 +11,9 @@ def load_checkpoints(checkpoint_file):
     output: dict(checkpoint_id -> station_name) or {}
     """
     if checkpoint_file:
-        df = pd.read_csv(checkpoint_file, index_col="checkpoint_id")
-        df.index = df.index.str.lower()
-        return df.to_dict()["checkpoint_name"]
+        chks = pd.read_csv(checkpoint_file, index_col="checkpoint_id", squeeze=True)
+        chks.index = chks.index.str.lower()
+        return chks.str.replace("(Bus)", "", regex=False).str.strip()
     else:
         return {}
 
@@ -28,7 +28,7 @@ def emit_stop_obj(entry, branches = False):
         "stop_name": entry.stop_name.iloc[0],
         "branches": entry.route_id.unique().tolist() if branches else None,
         "station": tpt_id,
-        "order": None,  # TODO: determine the order guess
+        "order": int(entry.order_guess.iloc[0]),
         "stops": {
             "1": entry.loc[entry.direction_id == 1].full_stop_id.tolist(),
             "0": entry.loc[entry.direction_id == 0].full_stop_id.tolist(),
@@ -38,20 +38,26 @@ def emit_stop_obj(entry, branches = False):
 
 def create_manifest(df, routes, checkpoint_file):
     output_route_name = '/'.join(routes)
+
+    df['time_point_id'] = df['time_point_id'].str.lower()
+    df['time_point_order'] = df['time_point_order'].fillna(0)
     
     tpts = df[['route_id', 'stop_id', 'time_point_id', 'direction_id']].value_counts(dropna=False).rename("counts").reset_index()
 
     # use checkpoint file to map time_point_id to stop_name
     station_names = load_checkpoints(checkpoint_file)
-    tpts['stop_name'] = tpts['time_point_id'].str.lower().map(station_names)
+    tpts['stop_name'] = tpts['time_point_id'].map(station_names)
 
     # Create full stop id e.g. '66-0-64000'
     tpts['full_stop_id'] = tpts[['route_id', 'direction_id', 'stop_id']].astype(str).agg('-'.join, axis=1)
     
+    # Must be arranged by inbound direction. Use most common (mode) as guess
+    orders = df.loc[df.direction_id == 1].groupby("time_point_id", dropna=False)['time_point_order'].agg(pd.Series.mode)
+    tpts['order_guess'] = tpts['time_point_id'].map(orders).fillna(0).astype(int)
+
     stop_objs = tpts.groupby('time_point_id', dropna=False).apply(
             lambda x: emit_stop_obj(x, len(routes) > 1)
         ).dropna()
-    # TODO: include order
 
     manifest = {
         output_route_name: {
@@ -60,7 +66,7 @@ def create_manifest(df, routes, checkpoint_file):
                 "0": "outbound",
                 "1": "inbound"
             },
-            "stations": stop_objs.values.tolist()  # TODO: sorted
+            "stations": sorted(stop_objs.values, key=lambda x: x['order'])
         }
     }
 
