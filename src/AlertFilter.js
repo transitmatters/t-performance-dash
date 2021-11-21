@@ -6,8 +6,18 @@ const known = [
   /notice/,
 ];
 
+const anti = [
+  / stop .* move /i // "The stop X will permanently move to Y"
+]
+
 const findMatch = (alert) => {
   const text = alert.text;
+  for (const exp of anti) {
+    const match = text.match(exp);
+    if (match != null) {
+      return null;
+    }
+  }
   for (const exp of known) {
     const match = text.match(exp);
     if (match != null) {
