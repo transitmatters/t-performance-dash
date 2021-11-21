@@ -1,0 +1,152 @@
+{
+    "23": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Ashmont Terminal",
+                "branches": null,
+                "station": "ashmt",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "23-1-334"
+                    ],
+                    "0": [
+                        "23-0-334"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Codman Square",
+                "branches": null,
+                "station": "codmn",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "23-1-371"
+                    ],
+                    "0": [
+                        "23-0-426"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Four Corners (Dorchester)",
+                "branches": null,
+                "station": "fourc",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "23-1-463"
+                    ],
+                    "0": [
+                        "23-0-478"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Washington Street & Columbia Road",
+                "branches": null,
+                "station": "wacol",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "23-1-473"
+                    ],
+                    "0": [
+                        "23-0-468"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Grove Hall",
+                "branches": null,
+                "station": "ghall",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "23-1-386"
+                    ],
+                    "0": [
+                        "23-0-412"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Warren Street @ Boston Latin Academy",
+                "branches": null,
+                "station": "latac",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "23-1-390"
+                    ],
+                    "0": [
+                        "23-0-13321",
+                        "23-0-407"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Warren Street @ Walnut Avenue",
+                "branches": null,
+                "station": "warwl",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "23-1-396"
+                    ],
+                    "0": [
+                        "23-0-40001"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Nubian Station",
+                "branches": null,
+                "station": "nubn",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "23-1-64000"
+                    ],
+                    "0": [
+                        "23-0-64000"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Roxbury Crossing Station",
+                "branches": null,
+                "station": "roxbs",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "23-1-21148"
+                    ],
+                    "0": [
+                        "23-0-11257"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Ruggles",
+                "branches": null,
+                "station": "rugg",
+                "order": 10,
+                "stops": {
+                    "1": [
+                        "23-1-17861"
+                    ],
+                    "0": [
+                        "23-0-17862"
+                    ]
+                }
+            }
+        ]
+    }
+}
