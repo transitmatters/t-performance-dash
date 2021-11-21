@@ -20,18 +20,18 @@ def load_checkpoints(checkpoint_file):
 
 def emit_stop_obj(entry, branches = False):
     tpt_id = entry.name
-    if entry['counts'].sum() < 20:
+    if entry['counts'].sum() < 100:
         # this timepoint is very infrequently used
         return None
     
     return {
         "stop_name": entry.stop_name.iloc[0],
-        "branches": entry.route_id.unique().tolist() if branches else None,
+        "branches": sorted(entry.route_id.unique().tolist()) if branches else None,
         "station": tpt_id,
         "order": int(entry.order_guess.iloc[0]),
         "stops": {
-            "1": entry.loc[entry.direction_id == 1].full_stop_id.tolist(),
-            "0": entry.loc[entry.direction_id == 0].full_stop_id.tolist(),
+            "1": sorted(entry.loc[entry.direction_id == 1].full_stop_id.tolist()),
+            "0": sorted(entry.loc[entry.direction_id == 0].full_stop_id.tolist()),
         }
     }
 
