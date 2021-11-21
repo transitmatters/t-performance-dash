@@ -5,6 +5,7 @@ import bus_23 from './bus_constants/23.json';
 import bus_28 from './bus_constants/28.json';
 import bus_57 from './bus_constants/57.json';
 import bus_66 from './bus_constants/66.json';
+import bus_111 from './bus_constants/111.json';
 import bus_114_116_117 from './bus_constants/114-116-117.json'
 
 const stations = {...rt_stations,
@@ -13,6 +14,7 @@ const stations = {...rt_stations,
                   ...bus_28,
                   ...bus_57,
                   ...bus_66,
+                  ...bus_111,
                   ...bus_114_116_117
                 };
 
