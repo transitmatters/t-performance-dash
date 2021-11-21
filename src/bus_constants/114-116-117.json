@@ -1,0 +1,203 @@
+{
+    "114/116/117": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Wonderland Station West",
+                "branches": [
+                    "116",
+                    "117"
+                ],
+                "station": "wondw",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "116-1-15795",
+                        "117-1-15795"
+                    ],
+                    "0": [
+                        "116-0-15795",
+                        "117-0-15795"
+                    ]
+                }
+            },
+            {
+                "stop_name": "[117] Bell Circle",
+                "branches": [
+                    "117"
+                ],
+                "station": "bell",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "117-1-4733"
+                    ],
+                    "0": [
+                        "117-0-4717"
+                    ]
+                }
+            },
+            {
+                "stop_name": "[117] Revere City Hall",
+                "_comment": "only the 117 is logged here",
+                "branches": [
+                    "117"
+                ],
+                "station": "rcith",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "117-1-5714"
+                    ],
+                    "0": [
+                        "117-0-5761"
+                    ]
+                }
+            },
+            {
+                "stop_name": "[116] Broadway & Central (Revere)",
+                "_comment": "only the 116 is logged here, plus first and last 117 trips each day. They can be honorary 116s",
+                "branches": [
+                    "116"
+                ],
+                "station": "bwcen",
+                "order": 10,
+                "stops": {
+                    "1": [
+                        "116-1-5713",
+                        "117-1-5713"
+                    ],
+                    "0": [
+                        "116-0-5763",
+                        "117-0-5790"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Broadway & Webster",
+                "branches": [
+                    "116",
+                    "117"
+                ],
+                "station": "webst",
+                "order": 11,
+                "stops": {
+                    "1": [
+                        "116-1-5720",
+                        "117-1-5720"
+                    ],
+                    "0": [
+                        "116-0-5755",
+                        "117-0-5755"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Market Basket",
+                "branches": [
+                    "114"
+                ],
+                "station": "mysml",
+                "order": 21,
+                "stops": {
+                    "1": [
+                        "114-1-5045"
+                    ],
+                    "0": [
+                        "114-0-5045"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Bellingham Square (Chelsea)",
+                "branches": [
+                    "114",
+                    "116",
+                    "117"
+                ],
+                "station": "belsq",
+                "order": 100,
+                "stops": {
+                    "1": [
+                        "114-1-5605",
+                        "116-1-5605",
+                        "116-1-56170",
+                        "117-1-5605"
+                    ],
+                    "0": [
+                        "114-0-5615",
+                        "116-0-5615",
+                        "116-0-56170",
+                        "117-0-5615"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Central Square (East Boston)",
+                "branches": [
+                    "114",
+                    "116",
+                    "117"
+                ],
+                "station": "cntle",
+                "order": 101,
+                "stops": {
+                    "1": [
+                        "114-1-5736",
+                        "116-1-5736",
+                        "117-1-5736"
+                    ],
+                    "0": [
+                        "114-0-5743",
+                        "116-0-5743",
+                        "117-0-5743"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Maverick Square (East Boston)",
+                "branches": [
+                    "114",
+                    "116",
+                    "117"
+                ],
+                "station": "mavck",
+                "order": 102,
+                "stops": {
+                    "1": [
+                        "114-1-5740",
+                        "116-1-5740",
+                        "117-1-5740"
+                    ],
+                    "0": [
+                        "114-0-5740",
+                        "116-0-5740",
+                        "117-0-5740"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Haymarket",
+                "branches": [
+                    "117"
+                ],
+                "station": "hayms",
+                "order": 200,
+                "stops": {
+                    "1": [
+                        "117-1-8309",
+                        "117-1-8310"
+                    ],
+                    "0": [
+                        "117-0-8309",
+                        "117-0-8310"
+                    ]
+                }
+            }
+        ]
+    }
+}
