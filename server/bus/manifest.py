@@ -51,8 +51,8 @@ def create_manifest(df, routes, checkpoint_file):
     # Create full stop id e.g. '66-0-64000'
     tpts['full_stop_id'] = tpts[['route_id', 'direction_id', 'stop_id']].astype(str).agg('-'.join, axis=1)
     
-    # Must be arranged by inbound direction. Use most common (mode) as guess
-    orders = df.loc[df.direction_id == 1].groupby("time_point_id", dropna=False)['time_point_order'].agg(pd.Series.mode)
+    # Must be arranged by inbound direction. Use most common (mode) as guess (w/ max in case 2 modes)
+    orders = df.loc[df.direction_id == 1].groupby("time_point_id", dropna=False)['time_point_order'].agg(lambda x: x.mode().max())
     tpts['order_guess'] = tpts['time_point_id'].map(orders).fillna(0).astype(int)
 
     stop_objs = tpts.groupby('time_point_id', dropna=False).apply(
