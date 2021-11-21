@@ -452,7 +452,7 @@ class App extends React.Component {
           seriesName={"travel time"}
           xField={'dep_dt'}
           yField={'travel_time_sec'}
-          benchmarkField={'benchmark_travel_time_sec'}
+          benchmarkField={(this.state.traveltimes.some(e => e.benchmark_travel_time_sec > 0)) ? 'benchmark_travel_time_sec' : null}
           location={this.locationDescription(true)}
           isLoading={this.getIsLoadingDataset('traveltimes')}
           date={this.state.configuration.date_start}
@@ -463,7 +463,7 @@ class App extends React.Component {
           seriesName={"headway"}
           xField={"current_dep_dt"}
           yField={'headway_time_sec'}
-          benchmarkField={'benchmark_headway_time_sec'}
+          benchmarkField={(this.state.traveltimes.some(e => e.benchmark_headway_time_sec > 0)) ? 'benchmark_headway_time_sec' : null}
           location={this.locationDescription(false)}
           isLoading={this.getIsLoadingDataset('headways')}
           date={this.state.configuration.date_start}
