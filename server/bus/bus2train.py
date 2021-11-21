@@ -87,7 +87,8 @@ def _write_file(events, outdir, nozip=False):
                          f"Day={service_date.day}",
                          "events.csv.gz")
     fname.parent.mkdir(parents=True, exist_ok=True)
-    events.to_csv(fname, index=False, compression='gzip' if not nozip else None)
+    # set mtime to 0 in gzip header for determinism (so we can re-gen old routes, and rsync to s3 will ignore)
+    events.to_csv(fname, index=False, compression={'method': 'gzip', 'mtime': 0} if not nozip else None)
 
 
 def to_disk(df, root, nozip=False):
