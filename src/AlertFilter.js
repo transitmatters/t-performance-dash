@@ -4,6 +4,7 @@ const known = [
   /[A-Za-z]+ speeds/,     // "Reduced speeds"
   /delay/,
   /notice/,
+  /shuttle/,  // might want to worry about this one...
 ];
 
 const anti = [
