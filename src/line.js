@@ -135,7 +135,7 @@ class SingleDayLine extends React.Component {
           // TODO: tooltip is under title words
           callbacks: {
             afterBody: (tooltipItems) => {
-              return departure_from_normal_string(tooltipItems[0].value, tooltipItems[1].value);
+              return departure_from_normal_string(tooltipItems[0].value, tooltipItems[1]?.value);
             }
           }
         },
