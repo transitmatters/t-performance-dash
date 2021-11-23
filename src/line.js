@@ -173,7 +173,7 @@ class SingleDayLine extends React.Component {
         }
       }}
       plugins={[{
-        afterDraw: (chart) => drawTitle(this.props.title, this.props.location, chart)
+        afterDraw: (chart) => drawTitle(this.props.title, this.props.location, this.props.titleBothStops, chart)
       }]}
       />
       </div>
@@ -258,7 +258,7 @@ class AggregateLine extends React.Component {
         }
       }}
       plugins={[{
-        afterDraw: (chart) => drawTitle(this.props.title, this.props.location, chart)
+        afterDraw: (chart) => drawTitle(this.props.title, this.props.location, this.props.titleBothStops, chart)
       }]}
       />
       </div>
