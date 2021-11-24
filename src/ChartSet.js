@@ -1,5 +1,6 @@
 import React from 'react';
-import { SingleDayLine, AggregateLine } from './line';
+import { AggregateDaily } from './AggregateDaily';
+import { SingleDayLine, AggregateOverTime } from './line';
 import { station_direction } from './stations';
 
 
@@ -15,11 +16,11 @@ function getLocationDescription(from, to, line) {
   return {};
 }
 
-function AggregateSet(props) {
-  const locationDescription = getLocationDescription(props.from, props.to, props.line)
+const AggregateSet = (props) => {
+  const locationDescription = getLocationDescription(props.from, props.to, props.line);
   return(
     <div className='charts main-column'>
-      <AggregateLine
+      <AggregateOverTime
         title={"Travel times"}
         data={props.traveltimes}
         seriesName={"Median travel time"}
@@ -29,7 +30,7 @@ function AggregateSet(props) {
         startDate={props.startDate}
         endDate={props.endDate}
       />
-      <AggregateLine
+      <AggregateOverTime
         title={'Time between trains (headways)'}
         data={props.headways}
         seriesName={'Median headway'}
@@ -39,7 +40,7 @@ function AggregateSet(props) {
         startDate={props.startDate}
         endDate={props.endDate}
       />
-      <AggregateLine
+      <AggregateOverTime
         title={'Time spent at station (dwells)'}
         data={props.dwells}
         seriesName={'Median dwell time'}
@@ -49,12 +50,21 @@ function AggregateSet(props) {
         startDate={props.startDate}
         endDate={props.endDate}
       />
+      <AggregateDaily
+        data={props.traveltimes}
+        location={locationDescription}
+        isLoading={props.isLoadingTraveltimes}
+        seriesName={"Median travel time by day"}
+        titleBothStops={true}
+      />
     </div>
   )
 }
 
-function SingleDaySet(props) {
-  const locationDescription = getLocationDescription(props.from, props.to, props.line)
+const SingleDaySet = (props) => {
+  const locationDescription = getLocationDescription(props.from, props.to, props.line);
+  const anyTravelBenchmarks = props.traveltimes.some(e => e.benchmark_travel_time_sec > 0);
+  const anyHeadwayBenchmarks = props.headways.some(e => e.benchmark_headway_time_sec > 0);
   return <div className='charts main-column'>
         <SingleDayLine
           title={"Travel times"}
@@ -62,7 +72,7 @@ function SingleDaySet(props) {
           seriesName={"travel time"}
           xField={'dep_dt'}
           yField={'travel_time_sec'}
-          benchmarkField={(props.traveltimes.some(e => e.benchmark_travel_time_sec > 0)) ? 'benchmark_travel_time_sec' : null}
+          benchmarkField={anyTravelBenchmarks ? 'benchmark_travel_time_sec' : null}
           location={locationDescription}
           titleBothStops={true}
           isLoading={props.isLoadingTraveltimes}
@@ -74,7 +84,7 @@ function SingleDaySet(props) {
           seriesName={"headway"}
           xField={"current_dep_dt"}
           yField={'headway_time_sec'}
-          benchmarkField={(props.headways.some(e => e.benchmark_headway_time_sec > 0)) ? 'benchmark_headway_time_sec' : null}
+          benchmarkField={anyHeadwayBenchmarks ? 'benchmark_headway_time_sec' : null}
           location={locationDescription}
           titleBothStops={false}
           isLoading={props.isLoadingHeadways}

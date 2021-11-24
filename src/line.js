@@ -189,6 +189,11 @@ class AggregateLine extends React.Component {
   render() {
     /*
     Props:
+    xField
+    timeUnit
+    timeFormat
+    xMin
+    xMax
       title
       data
       seriesName
@@ -198,7 +203,7 @@ class AggregateLine extends React.Component {
       endDate
     */
     const { isLoading } = this.props;
-    let labels = this.props.data.map(item => item['service_date']);
+    let labels = this.props.data.map(item => item[this.props.xField]);
     return (
       <div className={classNames('chart', isLoading && 'is-loading')}>
       <div className="chart-container">
@@ -245,14 +250,14 @@ class AggregateLine extends React.Component {
           xAxes: [{
             type: 'time',
             time: {
-              unit: 'day',
+              unit: this.props.timeUnit,
               unitStepSize: 1,
-              tooltipFormat: "ddd MMM D YYYY"
+              tooltipFormat: this.props.timeFormat
             },
             ticks: {
               // force graph to show startDate to endDate, even if missing data
-              min: new Date(`${this.props.startDate}T00:00:00`),
-              max: new Date(`${this.props.endDate}T00:00:00`),
+              min: this.props.xMin, //new Date(`${this.props.startDate}T00:00:00`),
+              max: this.props.xMax, //new Date(`${this.props.endDate}T00:00:00`),
             }
           }]
         }
@@ -262,10 +267,39 @@ class AggregateLine extends React.Component {
       }]}
       />
       </div>
-      <LegendLongTerm />
+      <div className="chart-extras">
+        <LegendLongTerm />
+        {this.props.children}
+      </div>
       </div>
     );
   }
 }
 
-export { SingleDayLine, AggregateLine };
+const AggregateOverTime = (props) => {
+  return(
+    <AggregateLine
+      {...props}
+      xField={'service_date'}
+      timeUnit={'day'}
+      timeFormat={'ddd MM D YYYY'}
+      xMin={new Date(`${props.startDate}T00:00:00`)}
+      xMax={new Date(`${props.endDate}T00:00:00`)}
+    />
+  )
+}
+
+const AggregateDaily = (props) => {
+  return(
+    <AggregateLine
+      {...props}
+      xField={'dep_dt'}
+      timeUnit={'hour'}
+      timeFormat={'LTS'} // maybe change this w/o seconds?
+      // TODO: xMin, xMax
+      // also: maybe change fill color to be distinct?
+    />
+  )
+}
+
+export { SingleDayLine, AggregateOverTime, AggregateDaily };
