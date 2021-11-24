@@ -352,10 +352,22 @@ button:disabled,
     display: none;
   }
 
-  .legend {
+  .chart-extras {
     margin-left: 44px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .chart-extras .legend {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-auto-flow: column;
+    column-gap: 10px;
+  }
+
+  .chart-extras .control {
+    margin-right: 25px;
+    margin-bottom: 10px;
   }
 
   .station-configuration {

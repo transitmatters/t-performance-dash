@@ -177,10 +177,11 @@ class SingleDayLine extends React.Component {
       }]}
       />
       </div>
-      {this.props.benchmarkField && <Legend />}
+      <div className="chart-extras">
+        {this.props.benchmarkField && <Legend />}
+      </div>
       </div>
     );
-    // TODO: hide legend when benchmarks are 0s
   }
 }
  
@@ -256,8 +257,8 @@ class AggregateLine extends React.Component {
             },
             ticks: {
               // force graph to show startDate to endDate, even if missing data
-              min: this.props.xMin, //new Date(`${this.props.startDate}T00:00:00`),
-              max: this.props.xMax, //new Date(`${this.props.endDate}T00:00:00`),
+              min: this.props.xMin,
+              max: this.props.xMax,
             }
           }]
         }
