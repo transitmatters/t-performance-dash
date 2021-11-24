@@ -14,7 +14,7 @@ const RadioForm = props => {
   }
 
   return (
-    <div className={classNames("radio-form", className)}>
+    <div className={classNames("control", className)}>
       {options.map((opt, index) => 
         <label key={index}>
           <input type="radio"
@@ -67,7 +67,7 @@ class AggregateDaily extends React.Component {
       >
         <RadioForm onChange={this.onChangeValue}
           options={this.options}
-          default={this.options[0].value}
+          defaultValue={this.options[0].value}
         />
       </AggregateOverTime>
     )

@@ -24,6 +24,7 @@ const drawTitle = (title, location, bothStops, chart) => {
   ctx.save();
 
   const leftMargin = 50;
+  const rightMargin = 15;
   const minGap = 10;
   const vpos_row1 = 25;
   const vpos_row2 = 50;
@@ -35,7 +36,7 @@ const drawTitle = (title, location, bothStops, chart) => {
 	  .map(x => ctx.measureText(x[0]).width)
 	  .reduce((a,b) => a + b, 0);
 
-  if ((leftMargin + titleWidth + minGap + locationWidth) > chart.chart.width) {
+  if ((leftMargin + titleWidth + minGap + locationWidth + rightMargin) > chart.chart.width) {
     // small screen: centered title stacks vertically
     ctx.textAlign = 'center';
     ctx.fillStyle = titleColor;
@@ -59,7 +60,7 @@ const drawTitle = (title, location, bothStops, chart) => {
 
     // location components are aligned right
     ctx.textAlign = 'right';
-    position = chart.chart.width;
+    position = chart.chart.width - rightMargin;
     for (const [word, color] of parse_location_description(location, bothStops).reverse()) {
       ctx.fillStyle = color;
       ctx.fillText(word, position, vpos_row2);
