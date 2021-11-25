@@ -290,11 +290,11 @@ const AggregateOverTime = (props) => {
   )
 }
 
-const AggregateDaily = (props) => {
+const AggregateDailyLine = (props) => {
   return(
     <AggregateLine
       {...props}
-      xField={'dep_dt'}
+      xField={'dep_time_from_epoch'}
       timeUnit={'hour'}
       timeFormat={'LTS'} // maybe change this w/o seconds?
       // TODO: xMin, xMax
@@ -303,4 +303,4 @@ const AggregateDaily = (props) => {
   )
 }
 
-export { SingleDayLine, AggregateOverTime, AggregateDaily };
+export { SingleDayLine, AggregateOverTime, AggregateDailyLine };

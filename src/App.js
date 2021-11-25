@@ -201,7 +201,13 @@ class App extends React.Component {
     if (this.state.configuration.date_end) {
       options["start_date"] = this.state.configuration.date_start;
       options["end_date"] = this.state.configuration.date_end;
-      url = new URL(`${APP_DATA_BASE_PATH}/aggregate/${name}`, window.location.origin);
+
+      var method = name;
+      if (name === "traveltimes") {
+        method = "traveltimes2"
+      }
+
+      url = new URL(`${APP_DATA_BASE_PATH}/aggregate/${method}`, window.location.origin);
     }
     else {
       url = new URL(`${APP_DATA_BASE_PATH}/${name}/${this.state.configuration.date_start}`, window.location.origin);

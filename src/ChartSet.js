@@ -22,7 +22,7 @@ const AggregateSet = (props) => {
     <div className='charts main-column'>
       <AggregateOverTime
         title={"Travel times"}
-        data={props.traveltimes}
+        data={props.traveltimes.overtime || []}
         seriesName={"Median travel time"}
         location={locationDescription}
         titleBothStops={true}
@@ -51,12 +51,13 @@ const AggregateSet = (props) => {
         endDate={props.endDate}
       />
       <AggregateDaily
-        data={props.traveltimes}
+        data={props.traveltimes.daily || []}
+        title={'Travel times by hour'}
         location={locationDescription}
         isLoading={props.isLoadingTraveltimes}
         seriesName={"Median travel time by day"}
         titleBothStops={true}
-      />
+       />
     </div>
   )
 }
