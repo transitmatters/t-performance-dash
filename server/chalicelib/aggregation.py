@@ -42,12 +42,13 @@ def faster_describe(grouped):
 
 
 ####################
-### TRAVEL TIMES ###
+# TRAVEL TIMES
 ####################
 # `aggregate_traveltime_data` will fetch and clean the data
 # There are `calc_travel_times_over_time` and `calc_travel_times_daily` will use the data to aggregate in various ways
 # `travel_times_all` will return all calculated aggregates
 # `travel_times_over_time` is legacy and returns just the over-time calculation
+
 def aggregate_traveltime_data(sdate, edate, from_stop, to_stop):
     all_data = data_funcs.travel_times(sdate, [from_stop], [to_stop], edate)
     if not all_data:
@@ -122,6 +123,9 @@ def travel_times_over_time(sdate, edate, from_stop, to_stop):
     return travel_times_all(sdate, edate, from_stop, to_stop)['overtime']
 
 
+####################
+# HEADWAYS
+####################
 def headways_over_time(sdate, edate, stop):
     all_data = data_funcs.headways(sdate, [stop], edate)
     if not all_data:
@@ -155,6 +159,9 @@ def headways_over_time(sdate, edate, stop):
     return results.to_dict('records')
 
 
+####################
+# DWELLS
+####################
 def dwells_over_time(sdate, edate, stop):
     all_data = data_funcs.dwells(sdate, [stop], edate)
     if not all_data:
