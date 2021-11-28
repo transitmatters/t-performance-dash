@@ -42,33 +42,32 @@ class AggregateDaily extends React.Component {
 
     this.state = {
       title: `${props.title} (Work days)`,
-      data: props.data.workdays || []
+      selected: "workdays"
     }
   }
 
-  options = [{value: "weekday", label: "Work days"},
-             {value: "offday", label: "Weekends/Holidays"}]
+  options = [{value: "workdays", label: "Work days"},
+             {value: "weekends", label: "Weekends/Holidays"}]
 
   onChangeValue(value) {
-    if (value === "weekday") {
+    if (value === "workdays") {
       this.setState({
         title: `${this.props.title} (Work days)`,
-        data: this.props.data.workdays || []
+        selected: value
       })
     } else {
       this.setState({
         title: `${this.props.title} (Weekends)`,
-        data: this.props.data.weekends || []
+        selected: value
       })
     }
   }
 
   render() {
-    // TODO: this isn't updating when new data loads
     return(
       <AggregateDailyLine
         title={this.state.title}
-        data={this.state.data}
+        data={this.props.data?.[this.state.selected] || []}
         seriesName={this.props.seriesName}
         location={this.props.location}
         titleBothStops={this.props.titleBothStops}
@@ -76,7 +75,7 @@ class AggregateDaily extends React.Component {
       >
         <RadioForm onChange={this.onChangeValue}
           options={this.options}
-          defaultValue={this.options[0].value}
+          defaultValue={this.state.selected}
         />
       </AggregateDailyLine>
     )
