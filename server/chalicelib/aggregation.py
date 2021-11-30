@@ -40,6 +40,7 @@ def faster_describe(grouped):
     # This will filter out some probable outliers.
     return stats.loc[stats['count'] > 4]
 
+
 ####################
 # TRAVEL TIMES
 ####################
