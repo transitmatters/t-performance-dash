@@ -1,6 +1,6 @@
 import React from 'react';
-import { AggregateDaily } from './AggregateDaily';
-import { SingleDayLine, AggregateOverTime } from './line';
+import { AggregateDaily, AggregateOverTime } from './AggregateCharts';
+import { SingleDayLine, AggregateOverTimeLine } from './line';
 import { station_direction } from './stations';
 
 
@@ -20,6 +20,10 @@ const AggregateSet = (props) => {
   const locationDescription = getLocationDescription(props.from, props.to, props.line);
   return(
     <div className='charts main-column'>
+      {/**
+       * Perhaps we want AggregateOverTimeLine still for rail, and only have the peak/offpeak for bus
+       * In which case, data={props.traveltimes.overtime.filter(x => x.peak === 'all')}
+       */}
       <AggregateOverTime
         title={"Travel times"}
         data={props.traveltimes.overtime || []}
@@ -30,7 +34,7 @@ const AggregateSet = (props) => {
         startDate={props.startDate}
         endDate={props.endDate}
       />
-      <AggregateOverTime
+      <AggregateOverTimeLine
         title={'Time between trains (headways)'}
         data={props.headways}
         seriesName={'Median headway'}
@@ -40,7 +44,7 @@ const AggregateSet = (props) => {
         startDate={props.startDate}
         endDate={props.endDate}
       />
-      <AggregateOverTime
+      <AggregateOverTimeLine
         title={'Time spent at station (dwells)'}
         data={props.dwells}
         seriesName={'Median dwell time'}
@@ -51,12 +55,12 @@ const AggregateSet = (props) => {
         endDate={props.endDate}
       />
       <AggregateDaily
-        data={props.traveltimes.daily || []}
         title={'Travel times by hour'}
-        location={locationDescription}
-        isLoading={props.isLoadingTraveltimes}
+        data={props.traveltimes.daily || []}
         seriesName={"Median travel time by day"}
+        location={locationDescription}
         titleBothStops={true}
+        isLoading={props.isLoadingTraveltimes}
        />
     </div>
   )

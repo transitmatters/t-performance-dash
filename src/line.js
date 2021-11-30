@@ -226,7 +226,7 @@ class AggregateLine extends React.Component {
           {
             label: "25th percentile",
             fill: 1,
-            backgroundColor: "rgba(191,200,214,0.5)",
+            backgroundColor: this.props.fillColor,
             lineTension: 0.4,
             pointRadius: 0,
             data: this.props.data.map(item => (item["25%"] / 60).toFixed(2))
@@ -234,7 +234,7 @@ class AggregateLine extends React.Component {
           {
             label: "75th percentile",
             fill: 1,
-            backgroundColor: "rgba(191,200,214,0.5)",
+            backgroundColor: this.props.fillColor,
             lineTension: 0.4,
             pointRadius: 0,
             data: this.props.data.map(item => (item["75%"] / 60).toFixed(2))
@@ -277,15 +277,16 @@ class AggregateLine extends React.Component {
   }
 }
 
-const AggregateOverTime = (props) => {
+const AggregateOverTimeLine = (props) => {
   return(
     <AggregateLine
       {...props}
       xField={'service_date'}
       timeUnit={'day'}
-      timeFormat={'ddd MM D YYYY'}
+      timeFormat={'ddd MM D YYYY'} //momentjs format
       xMin={new Date(`${props.startDate}T00:00:00`)}
       xMax={new Date(`${props.endDate}T00:00:00`)}
+      fillColor={"rgba(191,200,214,0.5)"}
     />
   )
 }
@@ -296,11 +297,11 @@ const AggregateDailyLine = (props) => {
       {...props}
       xField={'dep_time_from_epoch'}
       timeUnit={'hour'}
-      timeFormat={'LTS'} // maybe change this w/o seconds?
-      // TODO: xMin, xMax
-      // also: maybe change fill color to be distinct?
+      timeFormat={'LT'} // momentjs format: locale time
+      fillColor={"rgba(136,174,230,0.5)"}
+      // xMin, xMax?
     />
   )
 }
 
-export { SingleDayLine, AggregateOverTime, AggregateDailyLine };
+export { SingleDayLine, AggregateOverTimeLine, AggregateDailyLine };

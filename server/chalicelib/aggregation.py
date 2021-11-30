@@ -35,11 +35,10 @@ def faster_describe(grouped):
     q3.name = '75%'
     # TODO: we can take this out if we filter for 'median' in the front end
     stats.rename(columns={'median': '50%'}, inplace=True)
-    stats = pd.concat([stats, q1, q3, std], axis=1)
+    stats = pd.concat([stats, q1, q3, std], axis=1).reset_index()
 
     # This will filter out some probable outliers.
     return stats.loc[stats['count'] > 4]
-
 
 ####################
 # TRAVEL TIMES
@@ -47,7 +46,7 @@ def faster_describe(grouped):
 # `aggregate_traveltime_data` will fetch and clean the data
 # There are `calc_travel_times_over_time` and `calc_travel_times_daily` will use the data to aggregate in various ways
 # `travel_times_all` will return all calculated aggregates
-# `travel_times_over_time` is legacy and returns just the over-time calculation
+# `travel_times_over_time` is legacy and returns just the over-time aggregation w/ peak == all
 
 def aggregate_traveltime_data(sdate, edate, from_stop, to_stop):
     all_data = data_funcs.travel_times(sdate, [from_stop], [to_stop], edate)
@@ -74,53 +73,48 @@ def calc_travel_times_daily(df):
     timedeltas.loc[timedeltas < SERVICE_HR_OFFSET] += datetime.timedelta(days=1)
     df['dep_time_from_epoch'] = timedeltas + datetime.datetime(1970, 1, 1)
 
-    workday = df.loc[df.is_peak_day]
-    weekend = df.loc[~df.is_peak_day]
+    stats = faster_describe(df.groupby('is_peak_day').resample('30T', on='dep_time_from_epoch')['travel_time_sec'])
+    stats['dep_time_from_epoch'] = stats['dep_time_from_epoch'].dt.strftime("%Y-%m-%dT%H:%M:%S")
 
-    # resample: groupby on 'dep_time_from_epoch' in 30 minute chunks.
-    workday_stats = faster_describe(workday.resample('30T', on='dep_time_from_epoch')['travel_time_sec']).reset_index()
-    weekend_stats = faster_describe(weekend.resample('30T', on='dep_time_from_epoch')['travel_time_sec']).reset_index()
-
-    workday_stats['dep_time_from_epoch'] = workday_stats['dep_time_from_epoch'].dt.strftime("%Y-%m-%dT%H:%M:%S")
-    weekend_stats['dep_time_from_epoch'] = weekend_stats['dep_time_from_epoch'].dt.strftime("%Y-%m-%dT%H:%M:%S")
-
-    return {
-        'workdays': workday_stats.to_dict('records'),
-        'weekends': weekend_stats.to_dict('records')
-    }
+    return stats
 
 
 def calc_travel_times_over_time(df):
     # get summary stats
     summary_stats = faster_describe(df.groupby('service_date')['travel_time_sec'])
     summary_stats['peak'] = 'all'
-    # reset_index to turn into dataframe
-    summary_stats = summary_stats.reset_index()
+
     # summary_stats for peak / off-peak trains
-    summary_stats_peak = faster_describe(df.groupby(['service_date', 'peak'])['travel_time_sec']).reset_index()
+    summary_stats_peak = faster_describe(df.groupby(['service_date', 'peak'])['travel_time_sec'])
 
     # combine summary stats
     summary_stats_final = summary_stats.append(summary_stats_peak)
 
-    results = summary_stats_final.loc[summary_stats_final['peak'] == 'all']
-    return results.to_dict('records')
+    return summary_stats_final
 
 
 def travel_times_all(sdate, edate, from_stop, to_stop):
     df = aggregate_traveltime_data(sdate, edate, from_stop, to_stop)
     if df is None:
-        return {'overtime': [], 'daily': []}
+        return {
+            'daily': [],
+            'overtime': []
+        }
     daily = calc_travel_times_daily(df)
     overtime = calc_travel_times_over_time(df)
 
     return {
-        'overtime': overtime,
-        'daily': daily
+        'daily': daily.to_dict('records'),
+        'overtime': overtime.to_dict('records')
     }
 
 
 def travel_times_over_time(sdate, edate, from_stop, to_stop):
-    return travel_times_all(sdate, edate, from_stop, to_stop)['overtime']
+    df = aggregate_traveltime_data(sdate, edate, from_stop, to_stop)
+    if df is None:
+        return []
+    overtime = calc_travel_times_over_time(df)
+    return overtime.loc[overtime['peak'] == 'all'].to_dict('records')
 
 
 ####################
@@ -145,10 +139,9 @@ def headways_over_time(sdate, edate, stop):
     # get summary stats
     summary_stats = faster_describe(df.groupby('service_date')['headway_time_sec'])
     summary_stats['peak'] = 'all'
-    # reset_index to turn into dataframe
-    summary_stats = summary_stats.reset_index()
+
     # summary_stats for peak / off-peak trains
-    summary_stats_peak = faster_describe(df.groupby(['service_date', 'peak'])['headway_time_sec']).reset_index()
+    summary_stats_peak = faster_describe(df.groupby(['service_date', 'peak'])['headway_time_sec'])
 
     # combine summary stats
     summary_stats_final = summary_stats.append(summary_stats_peak)
@@ -181,10 +174,9 @@ def dwells_over_time(sdate, edate, stop):
     # get summary stats
     summary_stats = faster_describe(df.groupby('service_date')['dwell_time_sec'])
     summary_stats['peak'] = 'all'
-    # reset_index to turn into dataframe
-    summary_stats = summary_stats.reset_index()
+
     # summary_stats for peak / off-peak trains
-    summary_stats_peak = faster_describe(df.groupby(['service_date', 'peak'])['dwell_time_sec']).reset_index()
+    summary_stats_peak = faster_describe(df.groupby(['service_date', 'peak'])['dwell_time_sec'])
 
     # combine summary stats
     summary_stats_final = summary_stats.append(summary_stats_peak)
