@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/themes/light.css';
+import './ui/toggle.css';
 
 import Select from './Select';
 import { all_lines, options_station } from './stations';
@@ -156,6 +157,11 @@ export default class StationConfiguration extends React.Component {
     return (
       <div className={classNames('station-configuration-wrapper', currentLine)}>
         <div className="station-configuration main-column">
+          <label className="option switch">
+            <input type="checkbox"/>
+            <span class="slider"></span>
+          </label>
+
           <div className="option option-line">
             <Select
               value={this.decode("line")}
