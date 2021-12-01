@@ -68,12 +68,14 @@ const AggregateSet = (props) => {
 
 const SingleDaySet = (props) => {
   const locationDescription = getLocationDescription(props.from, props.to, props.line);
-  const anyTravelBenchmarks = props.traveltimes.some(e => e.benchmark_travel_time_sec > 0);
+  // props.traveltimes might be an Object leftover from aggregate mode
+  // TODO: fix this by clearing existing data in updateConfiguration
+  const anyTravelBenchmarks = Array.isArray(props.traveltimes) && props.traveltimes.some(e => e.benchmark_travel_time_sec > 0);
   const anyHeadwayBenchmarks = props.headways.some(e => e.benchmark_headway_time_sec > 0);
   return <div className='charts main-column'>
         <SingleDayLine
           title={"Travel times"}
-          data={props.traveltimes}
+          data={Array.isArray(props.traveltimes) ? props.traveltimes : []}
           seriesName={"travel time"}
           xField={'dep_dt'}
           yField={'travel_time_sec'}
