@@ -318,7 +318,8 @@ button:disabled,
   }
 
   .station-configuration .from-to-label,
-  .station-configuration .date-label {
+  .station-configuration .date-label,
+  .station-configuration .switch-label {
     margin-left: 7px;
     margin-right: 7px;
   }
@@ -382,7 +383,8 @@ button:disabled,
   }
 
   .station-configuration .from-to-label,
-  .station-configuration .date-label {
+  .station-configuration .date-label,
+  .station-configuration .switch-label {
     width: 30px;
     text-align: right;
     margin-right: 10px;

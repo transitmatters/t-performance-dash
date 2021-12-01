@@ -157,10 +157,14 @@ export default class StationConfiguration extends React.Component {
     return (
       <div className={classNames('station-configuration-wrapper', currentLine)}>
         <div className="station-configuration main-column">
-          <label className="option switch">
-            <input type="checkbox"/>
-            <span class="slider"></span>
-          </label>
+          <div className="option option-mode">
+            <span className="switch-label">Subway</span>
+            <label className="option switch">
+              <input type="checkbox"/>
+              <span class="slider"></span>
+            </label>
+            <span className="switch-label">Bus</span>
+          </div>
 
           <div className="option option-line">
             <Select
