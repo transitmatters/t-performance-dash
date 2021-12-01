@@ -1,0 +1,155 @@
+{
+    "111": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Woodlawn",
+                "branches": null,
+                "station": "woodc",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "111-1-5547"
+                    ],
+                    "0": [
+                        "111-0-5547"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Garfield Avenue & Clyde",
+                "branches": null,
+                "station": "garfi",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "111-1-5592"
+                    ],
+                    "0": [
+                        "111-0-5629"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Sagamore & Washington",
+                "branches": null,
+                "station": "smore",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "111-1-5595"
+                    ],
+                    "0": [
+                        "111-0-5626"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Washington & Cary",
+                "branches": null,
+                "station": "wacry",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "111-1-5601"
+                    ],
+                    "0": [
+                        "111-0-5601",
+                        "111-0-5620"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Bellingham Square (Chelsea)",
+                "branches": null,
+                "station": "belsq",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "111-1-5605"
+                    ],
+                    "0": [
+                        "111-0-5615"
+                    ]
+                }
+            },
+            {
+                "stop_name": "[INB] Third & Chestnut | [OB] Broadway & Beacon",
+                "_comment": "The route splits with differing timepoints. Hopefully this is clear yet concise",
+                "branches": null,
+                "station": "thche|bwybc",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "111-1-5607"
+                    ],
+                    "0": [
+                        "111-0-5611"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Tobin Bridge",
+                "branches": null,
+                "station": "tobin",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "111-1-12001"
+                    ],
+                    "0": [
+                        "111-0-12002"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Rutherford Avenue & Ramp",
+                "branches": null,
+                "station": "ruthf",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "111-1-12003"
+                    ],
+                    "0": [
+                        "111-0-12004"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Causeway Street & Commercial Street",
+                "branches": null,
+                "station": "cacom",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "111-1-2829"
+                    ],
+                    "0": [
+                        "111-0-2832"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Haymarket",
+                "branches": null,
+                "station": "hayms",
+                "order": 10,
+                "stops": {
+                    "1": [
+                        "111-1-8309",
+                        "111-1-8310"
+                    ],
+                    "0": [
+                        "111-0-8309",
+                        "111-0-8310"
+                    ]
+                }
+            }
+        ]
+    }
+}

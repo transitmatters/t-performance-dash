@@ -1,0 +1,126 @@
+{
+    "57": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Watertown Yard",
+                "branches": null,
+                "station": "wtryd",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "57-1-900"
+                    ],
+                    "0": [
+                        "57-0-900"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Newton Corner",
+                "branches": null,
+                "station": "nwcor",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "57-1-903"
+                    ],
+                    "0": [
+                        "57-0-987"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Oak Square",
+                "branches": null,
+                "station": "oaksq",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "57-1-912",
+                        "57-1-913"
+                    ],
+                    "0": [
+                        "57-0-9780",
+                        "57-0-979"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Brighton Center",
+                "branches": null,
+                "station": "brctr",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "57-1-918"
+                    ],
+                    "0": [
+                        "57-0-973"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Union Square",
+                "branches": null,
+                "station": "union",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "57-1-925",
+                        "57-1-926"
+                    ],
+                    "0": [
+                        "57-0-966"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Brighton & Commonwealth Avenue",
+                "branches": null,
+                "station": "brcom",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "57-1-931"
+                    ],
+                    "0": [
+                        "57-0-959"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Commonwealth Avenue @ BU Bridge",
+                "branches": null,
+                "station": "bubrg",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "57-1-937"
+                    ],
+                    "0": [
+                        "57-0-954"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Kenmore (Busway)",
+                "branches": null,
+                "station": "kenbs",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "57-1-899"
+                    ],
+                    "0": [
+                        "57-0-899"
+                    ]
+                }
+            }
+        ]
+    }
+}

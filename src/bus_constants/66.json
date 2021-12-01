@@ -1,0 +1,140 @@
+{
+    "66": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Harvard",
+                "branches": null,
+                "station": "harsq",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "66-1-22549"
+                    ],
+                    "0": [
+                        "66-0-22549"
+                    ]
+                }
+            },
+            {
+                "stop_name": "North Harvard & Western",
+                "branches": null,
+                "station": "nhvws",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "66-1-2553"
+                    ],
+                    "0": [
+                        "66-0-2561"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Union Square",
+                "branches": null,
+                "station": "union",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "66-1-926",
+                        "66-1-925"
+                    ],
+                    "0": [
+                        "66-0-1111",
+                        "66-0-966"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Harvard Avenue & Commonwealth Avenue",
+                "branches": null,
+                "station": "hvdcm",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "66-1-1302"
+                    ],
+                    "0": [
+                        "66-0-1378"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Coolidge Corner",
+                "branches": null,
+                "station": "cool",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "66-1-1308"
+                    ],
+                    "0": [
+                        "66-0-1372"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Brookline Village",
+                "branches": null,
+                "station": "brkvl",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "66-1-1555"
+                    ],
+                    "0": [
+                        "66-0-1526"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Brigham Circle",
+                "branches": null,
+                "station": "brghm",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "66-1-1317"
+                    ],
+                    "0": [
+                        "66-0-1362"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Roxbury Crossing Station",
+                "branches": null,
+                "station": "roxbs",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "66-1-1323"
+                    ],
+                    "0": [
+                        "66-0-1357",
+                        "66-0-21148"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Nubian Station",
+                "branches": null,
+                "station": "nubn",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "66-1-64000"
+                    ],
+                    "0": [
+                        "66-0-64000"
+                    ]
+                }
+            }
+        ]
+    }
+}

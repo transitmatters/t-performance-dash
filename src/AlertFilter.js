@@ -4,10 +4,21 @@ const known = [
   /[A-Za-z]+ speeds/,     // "Reduced speeds"
   /delay/,
   /notice/,
+  /shuttle/,  // might want to worry about this one...
 ];
+
+const anti = [
+  / stop .* move /i // "The stop X will permanently move to Y"
+]
 
 const findMatch = (alert) => {
   const text = alert.text;
+  for (const exp of anti) {
+    const match = text.match(exp);
+    if (match != null) {
+      return null;
+    }
+  }
   for (const exp of known) {
     const match = text.match(exp);
     if (match != null) {
