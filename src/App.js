@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactGA from 'react-ga';
-import { SingleDaySet, AggregateSet } from './ChartSet';
+import { SingleDaySet, AggregateSet } from './ChartSets';
 import StationConfiguration from './StationConfiguration';
 import { withRouter } from 'react-router-dom';
 import { lookup_station_by_id, get_stop_ids_for_stations } from './stations';
@@ -202,7 +202,7 @@ class App extends React.Component {
       options["start_date"] = this.state.configuration.date_start;
       options["end_date"] = this.state.configuration.date_end;
 
-      var method = name;
+      let method = name;
       if (name === "traveltimes") {
         method = "traveltimes2"
       }

@@ -1,6 +1,6 @@
 import React from 'react';
-import { AggregateDaily, AggregateOverTime } from './AggregateCharts';
-import { SingleDayLine, AggregateOverTimeLine } from './line';
+import { AggregateByDateSelectable, AggregateByTimeSelectable } from './SelectableCharts';
+import { SingleDayLine, AggregateByDate } from './line';
 import { station_direction } from './stations';
 
 
@@ -24,9 +24,9 @@ const AggregateSet = (props) => {
        * Perhaps we want AggregateOverTimeLine still for rail, and only have the peak/offpeak for bus
        * In which case, data={props.traveltimes.overtime.filter(x => x.peak === 'all')}
        */}
-      <AggregateOverTime
+      <AggregateByDateSelectable
         title={"Travel times"}
-        data={props.traveltimes.overtime || []}
+        data={props.traveltimes.by_date || []}
         seriesName={"Median travel time"}
         location={locationDescription}
         titleBothStops={true}
@@ -34,7 +34,7 @@ const AggregateSet = (props) => {
         startDate={props.startDate}
         endDate={props.endDate}
       />
-      <AggregateOverTimeLine
+      <AggregateByDate
         title={'Time between trains (headways)'}
         data={props.headways}
         seriesName={'Median headway'}
@@ -44,7 +44,7 @@ const AggregateSet = (props) => {
         startDate={props.startDate}
         endDate={props.endDate}
       />
-      <AggregateOverTimeLine
+      <AggregateByDate
         title={'Time spent at station (dwells)'}
         data={props.dwells}
         seriesName={'Median dwell time'}
@@ -54,9 +54,9 @@ const AggregateSet = (props) => {
         startDate={props.startDate}
         endDate={props.endDate}
       />
-      <AggregateDaily
+      <AggregateByTimeSelectable
         title={'Travel times by hour'}
-        data={props.traveltimes.daily || []}
+        data={props.traveltimes.by_time || []}
         seriesName={"Median travel time by day"}
         location={locationDescription}
         titleBothStops={true}

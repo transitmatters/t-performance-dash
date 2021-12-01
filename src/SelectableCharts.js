@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import classNames from 'classnames';
-import { AggregateDailyLine, AggregateOverTimeLine } from './line';
+import { AggregateByTime, AggregateByDate } from './line';
 
 const RadioForm = props => {
   const { options, onChange, defaultValue, className } = props;
@@ -28,7 +28,7 @@ const RadioForm = props => {
   )
 }
 
-class AggregateDaily extends React.Component {
+class AggregateByTimeSelectable extends React.Component {
   /*
   Props:
     data
@@ -41,14 +41,14 @@ class AggregateDaily extends React.Component {
     this.onChangeValue = this.onChangeValue.bind(this);
 
     this.state = {
-      title: `${props.title} (Work days)`,
-      selected: "workdays"
+      title: `${props.title} (Weekday)`,
+      selected: "weekday"
     }
   }
 
   options = [
-    {value: "workdays", label: "Work days", titleSuffix: "(Work days)"},
-    {value: "weekends", label: "Weekends/Holidays", titleSuffix: "(Weekends)"}
+    {value: "weekday", label: "Weekday", titleSuffix: "(Weekday)"},
+    {value: "weekend", label: "Weekend/Holiday", titleSuffix: "(Weekend/Holiday)"}
   ]
 
   onChangeValue(value) {
@@ -61,9 +61,9 @@ class AggregateDaily extends React.Component {
 
   render() {
     return(
-      <AggregateDailyLine
+      <AggregateByTime
         title={this.state.title}
-        data={this.props.data.filter(x => x.is_peak_day === (this.state.selected === "workdays"))}
+        data={this.props.data.filter(x => x.is_peak_day === (this.state.selected === "weekday"))}
         seriesName={this.props.seriesName}
         location={this.props.location}
         titleBothStops={this.props.titleBothStops}
@@ -73,12 +73,12 @@ class AggregateDaily extends React.Component {
           options={this.options}
           defaultValue={this.state.selected}
         />
-      </AggregateDailyLine>
+      </AggregateByTime>
     )
   }
 }
 
-class AggregateOverTime extends React.Component {
+class AggregateByDateSelectable extends React.Component {
   /*
   Props:
     data
@@ -91,7 +91,7 @@ class AggregateOverTime extends React.Component {
     this.onChangeValue = this.onChangeValue.bind(this);
 
     this.state = {
-      title: `${props.title}`,
+      title: props.title,
       selected: "all"
     }
   }
@@ -104,7 +104,7 @@ class AggregateOverTime extends React.Component {
   ]
 
   onChangeValue(value) {
-    let titleSuffix = this.options.find(x => x.value === value).titleSuffix || ""
+    const titleSuffix = this.options.find(x => x.value === value).titleSuffix || ""
     this.setState({
       title: `${this.props.title} ${titleSuffix}`,
       selected: value
@@ -113,7 +113,7 @@ class AggregateOverTime extends React.Component {
 
   render() {
     return(
-      <AggregateOverTimeLine
+      <AggregateByDate
         title={this.state.title}
         data={this.props.data.filter(x => x.peak === this.state.selected)}
         seriesName={this.props.seriesName}
@@ -127,9 +127,9 @@ class AggregateOverTime extends React.Component {
           options={this.options}
           defaultValue={this.state.selected}
         />
-      </AggregateOverTimeLine>
+      </AggregateByDate>
     )
   }
 }
 
-export { AggregateDaily, AggregateOverTime }
+export { AggregateByDateSelectable, AggregateByTimeSelectable }

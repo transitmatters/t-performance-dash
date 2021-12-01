@@ -277,13 +277,13 @@ class AggregateLine extends React.Component {
   }
 }
 
-const AggregateOverTimeLine = (props) => {
+const AggregateByDate = (props) => {
   return(
     <AggregateLine
       {...props}
       xField={'service_date'}
       timeUnit={'day'}
-      timeFormat={'ddd MM D YYYY'} //momentjs format
+      timeFormat={'ddd MMM D YYYY'} //momentjs format
       xMin={new Date(`${props.startDate}T00:00:00`)}
       xMax={new Date(`${props.endDate}T00:00:00`)}
       fillColor={"rgba(191,200,214,0.5)"}
@@ -291,7 +291,7 @@ const AggregateOverTimeLine = (props) => {
   )
 }
 
-const AggregateDailyLine = (props) => {
+const AggregateByTime = (props) => {
   return(
     <AggregateLine
       {...props}
@@ -304,4 +304,4 @@ const AggregateDailyLine = (props) => {
   )
 }
 
-export { SingleDayLine, AggregateOverTimeLine, AggregateDailyLine };
+export { SingleDayLine, AggregateByDate, AggregateByTime };

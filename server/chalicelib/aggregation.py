@@ -45,9 +45,9 @@ def faster_describe(grouped):
 # TRAVEL TIMES
 ####################
 # `aggregate_traveltime_data` will fetch and clean the data
-# There are `calc_travel_times_over_time` and `calc_travel_times_daily` will use the data to aggregate in various ways
+# There are `calc_travel_times_by_date` and `calc_travel_times_by_time` will use the data to aggregate in various ways
 # `travel_times_all` will return all calculated aggregates
-# `travel_times_over_time` is legacy and returns just the over-time aggregation w/ peak == all
+# `travel_times_over_time` is legacy and returns just the by_date aggregation w/ peak == all
 
 def aggregate_traveltime_data(sdate, edate, from_stop, to_stop):
     all_data = data_funcs.travel_times(sdate, [from_stop], [to_stop], edate)
@@ -68,7 +68,7 @@ def aggregate_traveltime_data(sdate, edate, from_stop, to_stop):
     return df
 
 
-def calc_travel_times_daily(df):
+def calc_travel_times_by_time(df):
     # convert time of day to a consistent datetime relative to epoch
     timedeltas = pd.to_timedelta(df['dep_time'].astype(str))
     timedeltas.loc[timedeltas < SERVICE_HR_OFFSET] += datetime.timedelta(days=1)
@@ -80,7 +80,7 @@ def calc_travel_times_daily(df):
     return stats
 
 
-def calc_travel_times_over_time(df):
+def calc_travel_times_by_date(df):
     # get summary stats
     summary_stats = faster_describe(df.groupby('service_date')['travel_time_sec'])
     summary_stats['peak'] = 'all'
@@ -98,15 +98,15 @@ def travel_times_all(sdate, edate, from_stop, to_stop):
     df = aggregate_traveltime_data(sdate, edate, from_stop, to_stop)
     if df is None:
         return {
-            'daily': [],
-            'overtime': []
+            'by_date': [],
+            'by_time': []
         }
-    daily = calc_travel_times_daily(df)
-    overtime = calc_travel_times_over_time(df)
+    by_date = calc_travel_times_by_date(df)
+    by_time = calc_travel_times_by_time(df)
 
     return {
-        'daily': daily.to_dict('records'),
-        'overtime': overtime.to_dict('records')
+        'by_date': by_date.to_dict('records'),
+        'by_time': by_time.to_dict('records')
     }
 
 
@@ -114,8 +114,8 @@ def travel_times_over_time(sdate, edate, from_stop, to_stop):
     df = aggregate_traveltime_data(sdate, edate, from_stop, to_stop)
     if df is None:
         return []
-    overtime = calc_travel_times_over_time(df)
-    return overtime.loc[overtime['peak'] == 'all'].to_dict('records')
+    stats = calc_travel_times_by_date(df)
+    return stats.loc[stats['peak'] == 'all'].to_dict('records')
 
 
 ####################
