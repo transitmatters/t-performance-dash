@@ -125,7 +125,7 @@ class SingleDayLine extends React.Component {
           },
           {
             label: `Benchmark MBTA ${this.props.seriesName}`,
-            data: this.props.data.map(item => (item[this.props.benchmarkField] / 60).toFixed(2)),
+            data: this.props.useBenchmarks && this.props.data.map(item => (item[this.props.benchmarkField] / 60).toFixed(2)),
             pointRadius: 0
           }
         ]
