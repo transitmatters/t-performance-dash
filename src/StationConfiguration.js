@@ -38,6 +38,7 @@ export default class StationConfiguration extends React.Component {
     this.handleSwapStations = this.handleSwapStations.bind(this);
     this.clearMoreOptions = this.clearMoreOptions.bind(this);
     this.setupPickers = this.setupPickers.bind(this);
+    this.handleBusToggle = this.handleBusToggle.bind(this);
 
     this.state = {
       show_date_end_picker: !!this.props.current.date_end,
@@ -79,6 +80,12 @@ export default class StationConfiguration extends React.Component {
         show_date_end_picker: !!this.props.current.date_end,
       });
     }
+  }
+
+  handleBusToggle() {
+    this.props.onConfigurationChange({
+      bus_mode: !this.props.current.bus_mode
+    });
   }
 
   handleSelectDate(field_name) {
@@ -160,8 +167,8 @@ export default class StationConfiguration extends React.Component {
           <div className="option option-mode">
             <span className="switch-label">Subway</span>
             <label className="option switch">
-              <input type="checkbox"/>
-              <span class="slider"></span>
+              <input type="checkbox" checked={this.props.current.bus_mode} onChange={this.handleBusToggle}/>
+              <span className="slider"></span>
             </label>
             <span className="switch-label">Bus</span>
           </div>

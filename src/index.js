@@ -7,5 +7,5 @@ import { BrowserRouter, Route } from 'react-router-dom';
 
 ReactDOM.render(<BrowserRouter>
 <Route path={["/opensource"]} exact component={OpenSource} />
-<Route path={["/rapidtransit", "/"]} exact component={App} />
+<Route path={["/rapidtransit", "/bus", "/"]} exact component={App} />
 </BrowserRouter>, document.getElementById('root'));

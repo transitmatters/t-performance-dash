@@ -22,11 +22,13 @@ const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname)
 const MAX_AGGREGATION_MONTHS = 8;
 const RANGE_TOO_LARGE_ERROR = `Please select a range no larger than ${MAX_AGGREGATION_MONTHS} months.`;
 
-const stateFromURL = (config) => {
+const stateFromURL = (pathname, config) => {
+  const bus_mode = (pathname === "/bus")
   const [line, from_id, to_id, date_start, date_end] = config.split(",");
   const from = lookup_station_by_id(line, from_id);
   const to = lookup_station_by_id(line, to_id);
   return {
+    bus_mode,
     line,
     from,
     to,
@@ -83,7 +85,7 @@ class App extends React.Component {
 
     const url_config = new URLSearchParams(props.location.search).get("config");
     if (typeof url_config === "string") {
-      this.state.configuration = stateFromURL(url_config);
+      this.state.configuration = stateFromURL(this.props.location.pathname, url_config);
       if(!this.permittedRange(this.state.configuration.date_start, this.state.configuration.date_end)) {
         this.state.error_message = RANGE_TOO_LARGE_ERROR;
       }
@@ -178,6 +180,7 @@ class App extends React.Component {
 
   stateToURL() {
     const {
+      bus_mode,
       line,
       from,
       to,
@@ -185,6 +188,7 @@ class App extends React.Component {
       date_end,
     } = this.state.configuration;
     const { fromStopIds, toStopIds } = get_stop_ids_for_stations(from, to);
+    const pathname = bus_mode ? "bus" : "rapidtransit"
     const parts = [
       line,
       fromStopIds?.[0],
@@ -192,7 +196,7 @@ class App extends React.Component {
       date_start,
       date_end,
     ].map(x => x || "").join(",");
-    this.props.history.push(`/rapidtransit?config=${parts}`, this.state.configuration);
+    this.props.history.push(`/${pathname}?config=${parts}`, this.state.configuration);
   }
 
   fetchDataset(name, signal, options) {
