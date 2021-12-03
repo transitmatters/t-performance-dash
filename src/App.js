@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactGA from 'react-ga';
-import { SingleDayLine, AggregateLine } from './line';
+import { SingleDaySet, AggregateSet } from './ChartSets';
 import StationConfiguration from './StationConfiguration';
 import { withRouter } from 'react-router-dom';
-import { lookup_station_by_id, station_direction, get_stop_ids_for_stations } from './stations';
+import { lookup_station_by_id, get_stop_ids_for_stations } from './stations';
 import { recognize } from './AlertFilter';
 import AlertBar from './AlertBar';
 import ProgressBar from './ui/ProgressBar';
@@ -201,7 +201,9 @@ class App extends React.Component {
     if (this.state.configuration.date_end) {
       options["start_date"] = this.state.configuration.date_start;
       options["end_date"] = this.state.configuration.date_end;
-      url = new URL(`${APP_DATA_BASE_PATH}/aggregate/${name}`, window.location.origin);
+
+      const method = (name === "traveltimes") ? "traveltimes2" : name;
+      url = new URL(`${APP_DATA_BASE_PATH}/aggregate/${method}`, window.location.origin);
     }
     else {
       url = new URL(`${APP_DATA_BASE_PATH}/${name}/${this.state.configuration.date_start}`, window.location.origin);
@@ -333,20 +335,6 @@ class App extends React.Component {
     }
   }
 
-  locationDescription(bothStops) {
-    const { from, to, line } = this.state.configuration;
-
-    if (from && to) {
-      return {
-        bothStops: bothStops,
-        to: to.stop_name,
-        from: from.stop_name,
-        direction: station_direction(from, to, line),
-        line: line,
-      };
-    }
-    return {};
-  }
 
   chartTimeframe() {
     // Set alert-bar interval to be 5:30am today to 1am tomorrow.
@@ -414,72 +402,23 @@ class App extends React.Component {
   }
 
   renderCharts() {
+    const propsToPass = {
+      traveltimes: this.state.traveltimes,
+      headways: this.state.headways,
+      dwells: this.state.dwells,
+      isLoadingTraveltimes: this.getIsLoadingDataset('traveltimes'),
+      isLoadingHeadways: this.getIsLoadingDataset('headways'),
+      isLoadingDwells: this.getIsLoadingDataset('dwells'),
+      startDate: this.state.configuration.date_start,
+      endDate: this.state.configuration.date_end,
+      from: this.state.configuration.from,
+      to: this.state.configuration.to,
+      line: this.state.configuration.line
+    }
     if (this.isAggregation()) {
-      return <div className='charts main-column'>
-        <AggregateLine
-          title={"Travel times"}
-          data={this.state.traveltimes}
-          seriesName={"Median travel time"}
-          location={this.locationDescription(true)}
-          isLoading={this.getIsLoadingDataset('traveltimes')}
-          startDate={this.state.configuration.date_start}
-          endDate={this.state.configuration.date_end}
-        />
-        <AggregateLine
-          title={'Time between trains (headways)'}
-          data={this.state.headways}
-          seriesName={'Median headway'}
-          location={this.locationDescription(false)}
-          isLoading={this.getIsLoadingDataset('headways')}
-          startDate={this.state.configuration.date_start}
-          endDate={this.state.configuration.date_end}
-        />
-        <AggregateLine
-          title={'Time spent at station (dwells)'}
-          data={this.state.dwells}
-          seriesName={'Median dwell time'}
-          location={this.locationDescription(false)}
-          isLoading={this.getIsLoadingDataset('dwells')}
-          startDate={this.state.configuration.date_start}
-          endDate={this.state.configuration.date_end}
-        />
-      </div>
+      return <AggregateSet {...propsToPass} />
     } else {
-      return <div className='charts main-column'>
-        <SingleDayLine
-          title={"Travel times"}
-          data={this.state.traveltimes}
-          seriesName={"travel time"}
-          xField={'dep_dt'}
-          yField={'travel_time_sec'}
-          benchmarkField={'benchmark_travel_time_sec'}
-          location={this.locationDescription(true)}
-          isLoading={this.getIsLoadingDataset('traveltimes')}
-          date={this.state.configuration.date_start}
-        />
-        <SingleDayLine
-          title={'Time between trains (headways)'}
-          data={this.state.headways}
-          seriesName={"headway"}
-          xField={"current_dep_dt"}
-          yField={'headway_time_sec'}
-          benchmarkField={'benchmark_headway_time_sec'}
-          location={this.locationDescription(false)}
-          isLoading={this.getIsLoadingDataset('headways')}
-          date={this.state.configuration.date_start}
-        />
-        <SingleDayLine
-          title={'Time spent at station (dwells)'}
-          data={this.state.dwells}
-          seriesName={"dwell time"}
-          xField={"arr_dt"}
-          yField={"dwell_time_sec"}
-          benchmarkField={null}
-          location={this.locationDescription(false)}
-          isLoading={this.getIsLoadingDataset('dwells')}
-          date={this.state.configuration.date_start}
-        />
-      </div>
+      return <SingleDaySet {...propsToPass} />
     }
   }
 

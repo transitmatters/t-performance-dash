@@ -111,6 +111,17 @@ def traveltime_aggregate_route():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
+@app.route("/aggregate/traveltimes2", cors=cors_config)
+def traveltime_aggregate_route_2():
+    sdate = parse_user_date(app.current_request.query_params["start_date"])
+    edate = parse_user_date(app.current_request.query_params["end_date"])
+    from_stop = app.current_request.query_params["from_stop"]
+    to_stop = app.current_request.query_params["to_stop"]
+
+    response = aggregation.travel_times_all(sdate, edate, from_stop, to_stop)
+    return json.dumps(response, indent=4, sort_keys=True, default=str)
+
+
 @app.route("/aggregate/headways", cors=cors_config)
 def headways_aggregate_route():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
