@@ -3,6 +3,26 @@ import { AggregateByDateSelectable, AggregateByTimeSelectable } from './Selectab
 import { SingleDayLine, AggregateByDate } from './line';
 import { station_direction } from './stations';
 
+const dataFields = {
+  traveltimes: {
+    seriesName: "travel time",
+    xField: "dep_dt",
+    yField: "travel_time_sec",
+    benchmarkField: "benchmark_travel_time_sec"
+  },
+  headways: {
+    seriesName: "headway",
+    xField: "current_dep_dt",
+    yField: "headway_time_sec",
+    benchmarkField: "benchmark_headway_time_sec"
+  },
+  dwells: {
+    seriesName: "dwell time",
+    xField: "arr_dt",
+    yField: "dwell_time_sec",
+    benchmarkField: null
+  }
+}
 
 function getLocationDescription(from, to, line) {  
   if (from && to) {
@@ -70,44 +90,40 @@ const SingleDaySet = (props) => {
   const locationDescription = getLocationDescription(props.from, props.to, props.line);
   const anyTravelBenchmarks = props.traveltimes.some(e => e.benchmark_travel_time_sec > 0);
   const anyHeadwayBenchmarks = props.headways.some(e => e.benchmark_headway_time_sec > 0);
-  return <div className='charts main-column'>
-        <SingleDayLine
-          title={"Travel times"}
-          data={props.traveltimes}
-          seriesName={"travel time"}
-          xField={'dep_dt'}
-          yField={'travel_time_sec'}
-          benchmarkField={anyTravelBenchmarks ? 'benchmark_travel_time_sec' : null}
-          location={locationDescription}
-          titleBothStops={true}
-          isLoading={props.isLoadingTraveltimes}
-          date={props.startDate}
-        />
-        <SingleDayLine
-          title={'Time between trains (headways)'}
-          data={props.headways}
-          seriesName={"headway"}
-          xField={"current_dep_dt"}
-          yField={'headway_time_sec'}
-          benchmarkField={anyHeadwayBenchmarks ? 'benchmark_headway_time_sec' : null}
-          location={locationDescription}
-          titleBothStops={false}
-          isLoading={props.isLoadingHeadways}
-          date={props.startDate}
-        />
-        <SingleDayLine
-          title={'Time spent at station (dwells)'}
-          data={props.dwells}
-          seriesName={"dwell time"}
-          xField={"arr_dt"}
-          yField={"dwell_time_sec"}
-          benchmarkField={null}
-          location={locationDescription}
-          titleBothStops={false}
-          isLoading={props.isLoadingDwells}
-          date={props.startDate}
-        />
-      </div>
+  return(
+    <div className='charts main-column'>
+      <SingleDayLine
+        {...dataFields.traveltimes}
+        title={"Travel times"}
+        data={props.traveltimes}
+        useBenchmarks={anyTravelBenchmarks}
+        location={locationDescription}
+        titleBothStops={true}
+        isLoading={props.isLoadingTraveltimes}
+        date={props.startDate}
+      />
+      <SingleDayLine
+        {...dataFields.headways}
+        title={'Time between trains (headways)'}
+        data={props.headways}
+        useBenchmarks={anyHeadwayBenchmarks}
+        location={locationDescription}
+        titleBothStops={false}
+        isLoading={props.isLoadingHeadways}
+        date={props.startDate}
+      />
+      <SingleDayLine
+        {...dataFields.dwells}
+        title={'Time spent at station (dwells)'}
+        data={props.dwells}
+        useBenchmarks={false}
+        location={locationDescription}
+        titleBothStops={false}
+        isLoading={props.isLoadingDwells}
+        date={props.startDate}
+      />
+    </div>
+  )
 }
 
 export { SingleDaySet, AggregateSet }

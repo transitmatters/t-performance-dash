@@ -1,17 +1,9 @@
 import React from 'react';
-import { useState } from 'react';
 import classNames from 'classnames';
 import { AggregateByTime, AggregateByDate } from './line';
 
-const RadioForm = props => {
-  const { options, onChange, defaultValue, className } = props;
-  const [ checked, setChecked ] = useState(defaultValue);
-
-  const handleChange = (evt) => {
-    const value = evt.target.value;
-    setChecked(value);
-    onChange(evt.target.value);
-  }
+const RadioForm = (props) => {
+  const { options, onChange, checked, className } = props;
 
   return (
     <div className={classNames("control", className)}>
@@ -19,7 +11,7 @@ const RadioForm = props => {
         <label key={index}>
           <input type="radio"
             value={opt.value}
-            onChange={handleChange}
+            onChange={evt => onChange(evt.target.value)}
             checked={opt.value === checked}/>
           {opt.label}
         </label>
@@ -27,6 +19,11 @@ const RadioForm = props => {
     </div>
   )
 }
+
+const dayOptions = [
+  {value: "weekday", label: "Weekday", titleSuffix: "(Weekday)"},
+  {value: "weekend", label: "Weekend/Holiday", titleSuffix: "(Weekend/Holiday)"}
+]
 
 class AggregateByTimeSelectable extends React.Component {
   /*
@@ -46,13 +43,8 @@ class AggregateByTimeSelectable extends React.Component {
     }
   }
 
-  options = [
-    {value: "weekday", label: "Weekday", titleSuffix: "(Weekday)"},
-    {value: "weekend", label: "Weekend/Holiday", titleSuffix: "(Weekend/Holiday)"}
-  ]
-
   onChangeValue(value) {
-    let titleSuffix = this.options.find(x => x.value === value).titleSuffix
+    let titleSuffix = dayOptions.find(x => x.value === value).titleSuffix
     this.setState({
       title: `${this.props.title} ${titleSuffix}`,
       selected: value
@@ -70,13 +62,21 @@ class AggregateByTimeSelectable extends React.Component {
         isLoading={this.props.isLoading}
       >
         <RadioForm onChange={this.onChangeValue}
-          options={this.options}
-          defaultValue={this.state.selected}
+          options={dayOptions}
+          checked={this.state.selected}
         />
       </AggregateByTime>
     )
   }
 }
+
+
+const peakOptions = [
+  {value: "all", label: "All times", titleSuffix: ""},
+  {value: "am_peak", label: "AM Peak", titleSuffix: "(AM Peak only)"},
+  {value: "pm_peak", label: "PM Peak", titleSuffix: "(PM Peak only)"},
+  {value: "off_peak", label: "Off-peak", titleSuffix: "(Off-peak only)"}
+]
 
 class AggregateByDateSelectable extends React.Component {
   /*
@@ -96,15 +96,8 @@ class AggregateByDateSelectable extends React.Component {
     }
   }
 
-  options = [
-    {value: "all", label: "All times", titleSuffix: ""},
-    {value: "am_peak", label: "AM Peak", titleSuffix: "(AM Peak only)"},
-    {value: "pm_peak", label: "PM Peak", titleSuffix: "(PM Peak only)"},
-    {value: "off_peak", label: "Off-peak", titleSuffix: "(Off-peak only)"}
-  ]
-
   onChangeValue(value) {
-    const titleSuffix = this.options.find(x => x.value === value).titleSuffix || ""
+    const titleSuffix = peakOptions.find(x => x.value === value).titleSuffix || ""
     this.setState({
       title: `${this.props.title} ${titleSuffix}`,
       selected: value
@@ -124,8 +117,8 @@ class AggregateByDateSelectable extends React.Component {
         endDate={this.props.endDate}
       >
         <RadioForm onChange={this.onChangeValue}
-          options={this.options}
-          defaultValue={this.state.selected}
+          options={peakOptions}
+          checked={this.state.selected}
         />
       </AggregateByDate>
     )
