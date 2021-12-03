@@ -18,12 +18,12 @@ def load_checkpoints(checkpoint_file):
         return {}
 
 
-def emit_stop_obj(entry, branches = False):
+def emit_stop_obj(entry, branches=False):
     tpt_id = entry.name
     if entry['counts'].sum() < 100:
         # this timepoint is very infrequently used
         return None
-    
+
     return {
         "stop_name": entry.stop_name.iloc[0],
         "branches": sorted(entry.route_id.unique().tolist()) if branches else None,
@@ -41,7 +41,7 @@ def create_manifest(df, routes, checkpoint_file):
 
     df['time_point_id'] = df['time_point_id'].str.lower()
     df['time_point_order'] = df['time_point_order'].fillna(0)
-    
+
     tpts = df[['route_id', 'stop_id', 'time_point_id', 'direction_id']].value_counts(dropna=False).rename("counts").reset_index()
 
     # use checkpoint file to map time_point_id to stop_name
@@ -50,14 +50,14 @@ def create_manifest(df, routes, checkpoint_file):
 
     # Create full stop id e.g. '66-0-64000'
     tpts['full_stop_id'] = tpts[['route_id', 'direction_id', 'stop_id']].astype(str).agg('-'.join, axis=1)
-    
+
     # Must be arranged by inbound direction. Use most common (mode) as guess (w/ max in case 2 modes)
     orders = df.loc[df.direction_id == 1].groupby("time_point_id", dropna=False)['time_point_order'].agg(lambda x: x.mode().max())
     tpts['order_guess'] = tpts['time_point_id'].map(orders).fillna(0).astype(int)
 
     stop_objs = tpts.groupby('time_point_id', dropna=False).apply(
-            lambda x: emit_stop_obj(x, len(routes) > 1)
-        ).dropna()
+        lambda x: emit_stop_obj(x, len(routes) > 1)
+    ).dropna()
 
     manifest = {
         output_route_name: {
