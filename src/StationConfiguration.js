@@ -5,18 +5,29 @@ import 'flatpickr/dist/themes/light.css';
 import './ui/toggle.css';
 
 import Select from './Select';
-import { all_lines, options_station } from './stations';
+import { bus_lines, subway_lines, options_station } from './stations';
 
 const ua = window.navigator.userAgent;
 const iOSDevice = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
 const useFlatPickr = !iOSDevice;
 
-const options_lines = all_lines().map((line) => {
-  return {
-    value: line,
-    label: line.charAt(0) + line.slice(1) + ' Line',
+const options_lines = (is_bus) => {
+  if (is_bus) {
+    return bus_lines().map((line) => {
+      return {
+        value: line,
+        label: line.includes("/") ? `Routes ${line}` : `Route ${line}`
+      }
+    });
+  } else {
+    return subway_lines().map((line) => {
+      return {
+        value: line,
+        label: `${line} Line`
+      }
+    });
   }
-});
+};
 
 const options_station_ui = (line) => {
   return options_station(line).map((station) => {
@@ -127,7 +138,7 @@ export default class StationConfiguration extends React.Component {
 
   optionsForField(type) {
     if (type === "line") {
-      return options_lines;
+      return options_lines(this.props.current.bus_mode);
     }
     if (type === "from") {
       const toStation = this.decode("to");

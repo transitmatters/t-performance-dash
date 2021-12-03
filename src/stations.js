@@ -22,6 +22,14 @@ const all_lines = () => {
   return Object.keys(stations);
 };
 
+const bus_lines = () => {
+  return all_lines().filter((line) => stations[line].type === "bus");
+}
+
+const subway_lines = () => {
+  return all_lines().filter((line) => stations[line].type != "bus")
+}
+
 const lookup_station_by_id = (line, id) => {
   if (line === "" || line === undefined || id === "" || id === undefined) {
     return undefined;
@@ -57,6 +65,8 @@ const get_stop_ids_for_stations = (from, to) => {
 
 export {
   all_lines,
+  bus_lines,
+  subway_lines,
   options_station,
   station_direction,
   lookup_station_by_id,
