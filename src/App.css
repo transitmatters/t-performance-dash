@@ -1,9 +1,9 @@
 :root {
   --transitmatters-red: #d31a2b;
-  --red-line: #d13434;
-  --orange-line: #e66f00;
-  --blue-line: #0e3d8c;
-  --green-line: #159765;
+  --red-line: #da291c;
+  --orange-line: #ed8b00;
+  --blue-line: #003da5;
+  --green-line: #00843d;
   --bus: #ffc72c;
   --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   --incident-color: #c02828;
