@@ -95,8 +95,9 @@ export default class StationConfiguration extends React.Component {
 
   handleBusToggle() {
     this.props.onConfigurationChange({
-      bus_mode: !this.props.current.bus_mode
-    });
+      bus_mode: !this.props.current.bus_mode,
+      line: null
+    }, false);
   }
 
   handleSelectDate(field_name) {
@@ -173,7 +174,8 @@ export default class StationConfiguration extends React.Component {
   render() {
     const currentLine = this.decode("line");
     return (
-      <div className={classNames('station-configuration-wrapper', currentLine)}>
+      <div className={classNames('station-configuration-wrapper',
+                                  this.props.current.bus_mode ? "Bus" : currentLine)}>
         <div className="station-configuration main-column">
           <div className="option option-mode">
             <span className="switch-label">Subway</span>

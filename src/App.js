@@ -163,7 +163,7 @@ class App extends React.Component {
       });
     }
 
-    if (config_change.line && config_change.line !== this.state.configuration.line) {
+    if ("line" in config_change && config_change.line !== this.state.configuration.line) {
       update.configuration.from = null;
       update.configuration.to = null;
       update.headways = [];

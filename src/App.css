@@ -4,6 +4,7 @@
   --orange-line: #e66f00;
   --blue-line: #0e3d8c;
   --green-line: #159765;
+  --bus: #ffc72c;
   --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   --incident-color: #c02828;
   --incident-tooltip-color: #eaeaea;
@@ -141,6 +142,10 @@
 
 .station-configuration-wrapper.Green {
   background-color: var(--green-line);
+}
+
+.station-configuration-wrapper.Bus {
+  background-color: var(--bus);
 }
 
 .station-configuration {
