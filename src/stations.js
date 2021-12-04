@@ -27,7 +27,7 @@ const bus_lines = () => {
 }
 
 const subway_lines = () => {
-  return all_lines().filter((line) => stations[line].type != "bus")
+  return all_lines().filter((line) => stations[line].type !== "bus")
 }
 
 const lookup_station_by_id = (line, id) => {

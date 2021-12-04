@@ -8,7 +8,8 @@
   --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   --incident-color: #c02828;
   --incident-tooltip-color: #eaeaea;
-  --swap: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125'><path fill='white' transform='rotate(90 50 62)' style='text-indent:0;text-transform:none;block-progression:tb' d='M42 10a2 2 0 00-2 1l-8 9a2 2 0 000 3l9 10a2 2 0 103-3l-6-7h27c10 0 15 7 15 13s-5 12-15 12H35c-12 0-19 8-19 16 0 9 7 17 19 17h27l-5 5a2 2 0 103 3l8-9a2 2 0 000-3l-9-10a2 2 0 10-3 3l6 7H35c-10 0-15-6-15-13 0-6 5-12 15-12h30c12 0 19-8 19-16s-7-17-19-17H38l5-5a2 2 0 00-1-4z' fill-rule='evenodd' overflow='visible'/></svg>");
+  --swap-white: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125'><path fill='white' transform='rotate(90 50 62)' style='text-indent:0;text-transform:none;block-progression:tb' d='M42 10a2 2 0 00-2 1l-8 9a2 2 0 000 3l9 10a2 2 0 103-3l-6-7h27c10 0 15 7 15 13s-5 12-15 12H35c-12 0-19 8-19 16 0 9 7 17 19 17h27l-5 5a2 2 0 103 3l8-9a2 2 0 000-3l-9-10a2 2 0 10-3 3l6 7H35c-10 0-15-6-15-13 0-6 5-12 15-12h30c12 0 19-8 19-16s-7-17-19-17H38l5-5a2 2 0 00-1-4z' fill-rule='evenodd' overflow='visible'/></svg>");
+  --swap-black: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125'><path fill='black' transform='rotate(90 50 62)' style='text-indent:0;text-transform:none;block-progression:tb' d='M42 10a2 2 0 00-2 1l-8 9a2 2 0 000 3l9 10a2 2 0 103-3l-6-7h27c10 0 15 7 15 13s-5 12-15 12H35c-12 0-19 8-19 16 0 9 7 17 19 17h27l-5 5a2 2 0 103 3l8-9a2 2 0 000-3l-9-10a2 2 0 10-3 3l6 7H35c-10 0-15-6-15-13 0-6 5-12 15-12h30c12 0 19-8 19-16s-7-17-19-17H38l5-5a2 2 0 00-1-4z' fill-rule='evenodd' overflow='visible'/></svg>");
 }
 
 .App {
@@ -126,6 +127,7 @@
 .station-configuration-wrapper {
   background-color: var(--transitmatters-red);
   box-shadow: var(--global-shadow);
+  color: white;
 }
 
 .station-configuration-wrapper.Red {
@@ -146,10 +148,10 @@
 
 .station-configuration-wrapper.Bus {
   background-color: var(--bus);
+  color: black;
 }
 
 .station-configuration {
-  color: white;
   padding: 10px;
 }
 
@@ -201,8 +203,15 @@ button:disabled,
 .station-configuration select,
 .station-configuration input,
 .station-configuration button {
-  color: white;
+  color: inherit;
   border-color: rgba(255, 255, 255, 0.6);
+}
+
+.station-configuration-wrapper.Bus select,
+.station-configuration-wrapper.Bus input,
+.station-configuration-wrapper.Bus button {
+  color: inherit;
+  border-color: rgba(0, 0, 0, 0.4)
 }
 
 .station-configuration select,
@@ -221,7 +230,7 @@ button:disabled,
 }
 
 .station-configuration input::placeholder {
-  color: white;
+  color: inherit;
 }
 
 .station-configuration button:not(:disabled):hover {
@@ -235,12 +244,16 @@ button:disabled,
 }
 
 .station-configuration .swap-stations-button .swap-icon {
-  background-image: var(--swap);
+  background-image: var(--swap-white);
   background-repeat: no-repeat;
   background-size: 100%;
   background-position: center;
   height: 24px;
   width: 24px;
+}
+
+.station-configuration-wrapper.Bus .station-configuration .swap-stations-button .swap-icon {
+  background-image: var(--swap-black);
 }
 
 .station-configuration .swap-stations-button .swap-label {
