@@ -391,27 +391,35 @@ button:disabled,
 
   .station-configuration {
     display: grid;
-    grid-template-columns: 1fr 40px;
+    grid-template-columns: .5fr 1fr 40px;
     grid-template-areas:
-      'line line'
-      'date date'
-      'stations swap';
+      'toggle line line'
+      'date date date'
+      'stations stations swap';
     column-gap: 10px;
     row-gap: 10px;
   }
 
   .station-configuration .from-to-label,
-  .station-configuration .date-label,
-  .station-configuration .switch-label {
+  .station-configuration .date-label {
     width: 30px;
     text-align: right;
     margin-right: 10px;
     flex-shrink: 0;
   }
 
+  .station-configuration .switch-label {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
   .station-configuration .end-date-label {
     margin-right: 0;
     text-align: center;
+  }
+
+  .station-configuration .option-mode {
+    grid-area: toggle;
   }
 
   .station-configuration > .option-line {
