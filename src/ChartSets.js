@@ -1,5 +1,5 @@
 import React from 'react';
-import { AggregateByDateSelectable, AggregateByTimeSelectable } from './SelectableCharts';
+import { AggregateByTimeSelectable } from './SelectableCharts';
 import { SingleDayLine, AggregateByDate } from './line';
 import { station_direction } from './stations';
 
@@ -38,15 +38,12 @@ function getLocationDescription(from, to, line) {
 
 const AggregateSet = (props) => {
   const locationDescription = getLocationDescription(props.from, props.to, props.line);
+  const headwayTitle = props.bus_mode ? "Time between buses (headways)" : "Time between trains (headways)";
   return(
     <div className='charts main-column'>
-      {/**
-       * Perhaps we want AggregateOverTimeLine still for rail, and only have the peak/offpeak for bus
-       * In which case, data={props.traveltimes.overtime.filter(x => x.peak === 'all')}
-       */}
-      <AggregateByDateSelectable
+      <AggregateByDate
         title={"Travel times"}
-        data={props.traveltimes.by_date || []}
+        data={props.traveltimes.by_date?.filter(x => x.peak === 'all') || []}
         seriesName={"Median travel time"}
         location={locationDescription}
         titleBothStops={true}
@@ -55,7 +52,7 @@ const AggregateSet = (props) => {
         endDate={props.endDate}
       />
       <AggregateByDate
-        title={'Time between trains (headways)'}
+        title={headwayTitle}
         data={props.headways}
         seriesName={'Median headway'}
         location={locationDescription}
@@ -64,16 +61,18 @@ const AggregateSet = (props) => {
         startDate={props.startDate}
         endDate={props.endDate}
       />
-      <AggregateByDate
-        title={'Time spent at station (dwells)'}
-        data={props.dwells}
-        seriesName={'Median dwell time'}
-        location={locationDescription}
-        titleBothStops={false}
-        isLoading={props.isLoadingDwells}
-        startDate={props.startDate}
-        endDate={props.endDate}
-      />
+      {!props.bus_mode &&
+        <AggregateByDate
+          title={'Time spent at station (dwells)'}
+          data={props.dwells}
+          seriesName={'Median dwell time'}
+          location={locationDescription}
+          titleBothStops={false}
+          isLoading={props.isLoadingDwells}
+          startDate={props.startDate}
+          endDate={props.endDate}
+        />
+      }
       <AggregateByTimeSelectable
         title={'Travel times by hour'}
         data={props.traveltimes.by_time || []}
@@ -92,6 +91,7 @@ const SingleDaySet = (props) => {
   // TODO: fix this by clearing existing data in updateConfiguration
   const anyTravelBenchmarks = Array.isArray(props.traveltimes) && props.traveltimes.some(e => e.benchmark_travel_time_sec > 0);
   const anyHeadwayBenchmarks = props.headways.some(e => e.benchmark_headway_time_sec > 0);
+  const headwayTitle = props.bus_mode ? "Time between buses (headways)" : "Time between trains (headways)";
   return(
     <div className='charts main-column'>
       <SingleDayLine
@@ -106,7 +106,7 @@ const SingleDaySet = (props) => {
       />
       <SingleDayLine
         {...dataFields.headways}
-        title={'Time between trains (headways)'}
+        title={headwayTitle}
         data={props.headways}
         useBenchmarks={anyHeadwayBenchmarks}
         location={locationDescription}
@@ -114,16 +114,18 @@ const SingleDaySet = (props) => {
         isLoading={props.isLoadingHeadways}
         date={props.startDate}
       />
-      <SingleDayLine
-        {...dataFields.dwells}
-        title={'Time spent at station (dwells)'}
-        data={props.dwells}
-        useBenchmarks={false}
-        location={locationDescription}
-        titleBothStops={false}
-        isLoading={props.isLoadingDwells}
-        date={props.startDate}
-      />
+      {!props.bus_mode &&
+        <SingleDayLine
+          {...dataFields.dwells}
+          title={'Time spent at station (dwells)'}
+          data={props.dwells}
+          useBenchmarks={false}
+          location={locationDescription}
+          titleBothStops={false}
+          isLoading={props.isLoadingDwells}
+          date={props.startDate}
+        />
+      }
     </div>
   )
 }

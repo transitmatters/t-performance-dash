@@ -407,6 +407,7 @@ class App extends React.Component {
 
   renderCharts() {
     const propsToPass = {
+      bus_mode: this.state.configuration.bus_mode,
       traveltimes: this.state.traveltimes,
       headways: this.state.headways,
       dwells: this.state.dwells,
