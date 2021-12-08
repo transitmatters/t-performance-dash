@@ -95,7 +95,7 @@ export default class StationConfiguration extends React.Component {
 
   handleBusToggle() {
     this.props.onConfigurationChange({
-      bus_mode: !this.props.current.bus_mode,
+      bus_mode: !this.decode("bus_mode"),
       line: null
     }, false);
   }
@@ -139,7 +139,7 @@ export default class StationConfiguration extends React.Component {
 
   optionsForField(type) {
     if (type === "line") {
-      return options_lines(this.props.current.bus_mode);
+      return options_lines(this.decode("bus_mode"));
     }
     if (type === "from") {
       const toStation = this.decode("to");
@@ -175,12 +175,13 @@ export default class StationConfiguration extends React.Component {
     const currentLine = this.decode("line");
     return (
       <div className={classNames('station-configuration-wrapper',
-                                  this.props.current.bus_mode ? "Bus" : currentLine)}>
+                                  this.decode("bus_mode") ? "Bus" : currentLine)}>
         <div className="station-configuration main-column">
+          
           <div className="option option-mode">
             <span className="switch-label">Subway</span>
             <label className="option switch">
-              <input type="checkbox" checked={this.props.current.bus_mode} onChange={this.handleBusToggle}/>
+              <input type="checkbox" checked={this.decode("bus_mode")} onChange={this.handleBusToggle}/>
               <span className="slider"></span>
             </label>
             <span className="switch-label">Bus</span>
@@ -191,7 +192,7 @@ export default class StationConfiguration extends React.Component {
               value={this.decode("line")}
               options={this.optionsForField("line")}
               onChange={this.handleSelectOption("line")}
-              defaultLabel="Select a line..."
+              defaultLabel={this.decode("bus_mode") ? "Select a route..." : "Select a line..."}
             />
           </div>
 
