@@ -221,6 +221,10 @@ button:disabled,
   padding-left: 10px;
 }
 
+.station-configuration .slider {
+  box-shadow: var(--global-shadow);
+}
+
 .station-configuration button {
   display: flex;
   align-items: center;
