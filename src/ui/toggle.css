@@ -27,11 +27,11 @@
 }
 
 .station-configuration .slider {
-  outline-color: rgba(0, 0, 0, 0)
+    outline-color: rgba(0, 0, 0, 0)
 }
 
 .station-configuration-wrapper.Bus .slider {
-  outline-color: rgba(0, 0, 0, 0.4);
+    outline-color: rgba(0, 0, 0, 0.4);
 }
 
 .slider:before {
@@ -51,4 +51,8 @@ input:checked + .slider:before {
     -webkit-transform: translateX(18px);
     -ms-transform: translateX(18px);
     transform: translateX(18px);
+}
+
+.switch input:focus + .slider:before {
+    background-color: skyblue;
 }

@@ -153,15 +153,16 @@ export default class StationConfiguration extends React.Component {
 
   render() {
     const currentLine = this.decode("line");
+    const bus_mode = this.decode("bus_mode");
     return (
       <div className={classNames('station-configuration-wrapper',
-                                  this.decode("bus_mode") ? "Bus" : currentLine)}>
+                                  bus_mode ? "Bus" : currentLine)}>
         <div className="station-configuration main-column">
           
           <div className="option option-mode">
             <span className="switch-label">Subway</span>
             <label className="option switch">
-              <input type="checkbox" checked={this.decode("bus_mode")} onChange={this.handleBusToggle}/>
+              <input type="checkbox" checked={bus_mode} onChange={this.handleBusToggle}/>
               <span className="slider"></span>
             </label>
             <span className="switch-label">Bus</span>
@@ -172,7 +173,7 @@ export default class StationConfiguration extends React.Component {
               value={this.decode("line")}
               options={this.optionsForField("line")}
               onChange={this.handleSelectOption("line")}
-              defaultLabel={this.decode("bus_mode") ? "Select a route..." : "Select a line..."}
+              defaultLabel={bus_mode ? "Select a route..." : "Select a line..."}
             />
           </div>
 
@@ -209,9 +210,9 @@ export default class StationConfiguration extends React.Component {
             <Flatpickr
               value={this.decode("date_start")} // || "" // The || "" is to prevent undefined; that makes React think it's uncontrolled
               onChange={this.handleSelectDate("date_start")}
-              options={this.decode("bus_mode") ? busDateRange : dateRange}
+              options={bus_mode ? busDateRange : dateRange}
               placeholder="Select date..."
-              defaultValue={this.decode("bus_mode") ? busDateRange.maxDate : "today"}
+              defaultValue={bus_mode ? busDateRange.maxDate : "today"}
             />
             <button
               className="more-options-button"
@@ -223,7 +224,7 @@ export default class StationConfiguration extends React.Component {
               <Flatpickr
                 value={this.decode("date_end")}
                 onChange={this.handleSelectDate("date_end")}
-                options={this.decode("bus_mode") ? busDateRange : dateRange}
+                options={bus_mode ? busDateRange : dateRange}
                 placeholder="Select date..."
                 defaultValue={this.decode("date_start")}
               />
