@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import flatpickr from 'flatpickr';
-import 'flatpickr/dist/themes/light.css';
+import Flatpickr from "react-flatpickr";
+import 'react-flatpickr/node_modules/flatpickr/dist/themes/light.css';
 import './ui/toggle.css';
 
 import Select from './Select';
@@ -10,6 +10,16 @@ import { bus_lines, subway_lines, options_station } from './stations';
 const ua = window.navigator.userAgent;
 const iOSDevice = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
 const useFlatPickr = !iOSDevice;
+
+const dateRange = { 
+  minDate: "2016-01-01",
+  maxDate: "today"
+};
+
+const busDateRange = {
+  minDate: "2021-01-01",
+  maxDate: "2021-09-30"
+};
 
 const options_lines = (is_bus) => {
   if (is_bus) {
@@ -42,13 +52,10 @@ const options_station_ui = (line) => {
 export default class StationConfiguration extends React.Component {
   constructor(props) {
     super(props);
-    this.picker_start = React.createRef();
-    this.picker_end = React.createRef();
     this.handleSelectDate = this.handleSelectDate.bind(this);
     this.handleSelectRawDate = this.handleSelectRawDate.bind(this);
     this.handleSwapStations = this.handleSwapStations.bind(this);
     this.clearMoreOptions = this.clearMoreOptions.bind(this);
-    this.setupPickers = this.setupPickers.bind(this);
     this.handleBusToggle = this.handleBusToggle.bind(this);
 
     this.state = {
@@ -56,34 +63,8 @@ export default class StationConfiguration extends React.Component {
     };
   }
   
-  setupPickers() {
-    if (useFlatPickr) {
-      // Only initialize once, even after rerenders
-      if(!this.picker_start.current._flatpickr) {
-        flatpickr(this.picker_start.current, {
-          onChange: this.handleSelectDate("date_start"),
-          maxDate: 'today',
-          minDate: "2016-01-15"
-        });
-      }
-      // Only initialize once, even after rerenders
-      if (this.state.show_date_end_picker && !this.picker_end.current._flatpickr) {
-        flatpickr(this.picker_end.current, {
-          onChange: this.handleSelectDate("date_end"),
-          maxDate: 'today',
-          minDate: "2016-01-15"
-        });
-      }
-    }
-  }
-
-  componentDidMount() {
-    this.setupPickers();
-  }
 
   componentDidUpdate(prevProps) {
-    this.setupPickers();
-
     // If the date_end prop shows up because a config preset set it,
     //  then show the end date picker.
     if(this.props.current.date_end !== prevProps.current.date_end) {
@@ -96,7 +77,9 @@ export default class StationConfiguration extends React.Component {
   handleBusToggle() {
     this.props.onConfigurationChange({
       bus_mode: !this.decode("bus_mode"),
-      line: null
+      line: null,
+      date_start: null,
+      date_end: null
     }, false);
   }
 
@@ -163,9 +146,6 @@ export default class StationConfiguration extends React.Component {
     this.setState({
       show_date_end_picker: false,
     });
-    if(this.picker_end.current._flatpickr) {
-      this.picker_end.current._flatpickr.destroy();
-    }
     this.props.onConfigurationChange({
       date_end: null,
     });
@@ -226,12 +206,12 @@ export default class StationConfiguration extends React.Component {
           </button>
           <div className="option option-date">
             <span className="date-label">Date</span>
-            <input
-              value={this.decode("date_start") || ""} // The || "" is to prevent undefined; that makes React think it's uncontrolled
-              onChange={this.handleSelectRawDate("date_start")}
-              type='date'
-              ref={this.picker_start}
-              placeholder='Select date...'
+            <Flatpickr
+              value={this.decode("date_start")} // || "" // The || "" is to prevent undefined; that makes React think it's uncontrolled
+              onChange={this.handleSelectDate("date_start")}
+              options={this.decode("bus_mode") ? busDateRange : dateRange}
+              placeholder="Select date..."
+              defaultValue={this.decode("bus_mode") ? busDateRange.maxDate : "today"}
             />
             <button
               className="more-options-button"
@@ -240,12 +220,12 @@ export default class StationConfiguration extends React.Component {
             >Range...</button>
             {!!this.state.show_date_end_picker && <>
               <span className="date-label end-date-label">to</span>
-              <input
-                value={this.decode("date_end") || ""} // The || "" is to prevent undefined; that makes React think it's uncontrolled
-                onChange={this.handleSelectRawDate("date_end")}
-                type='date'
-                ref={this.picker_end}
-                placeholder='Select date...'
+              <Flatpickr
+                value={this.decode("date_end")}
+                onChange={this.handleSelectDate("date_end")}
+                options={this.decode("bus_mode") ? busDateRange : dateRange}
+                placeholder="Select date..."
+                defaultValue={this.decode("date_start")}
               />
               <button
                 className="clear-button"
