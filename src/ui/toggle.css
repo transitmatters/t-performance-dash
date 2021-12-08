@@ -20,9 +20,18 @@
     right: 0;
     bottom: 0;
     border-radius: 10px;
+    outline: 1px solid;
     background-color: #fff;
     -webkit-transition: .4s;
     transition: .4s;
+}
+
+.station-configuration .slider {
+  outline-color: rgba(0, 0, 0, 0)
+}
+
+.station-configuration-wrapper.Bus .slider {
+  outline-color: rgba(0, 0, 0, 0.4);
 }
 
 .slider:before {
