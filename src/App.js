@@ -85,7 +85,7 @@ class App extends React.Component {
 
     const url_config = new URLSearchParams(props.location.search).get("config");
     if (typeof url_config === "string") {
-      this.state.configuration = stateFromURL(this.props.location.pathname, url_config);
+      this.state.configuration = stateFromURL(props.location.pathname, url_config);
       if(!this.permittedRange(this.state.configuration.date_start, this.state.configuration.date_end)) {
         this.state.error_message = RANGE_TOO_LARGE_ERROR;
       }

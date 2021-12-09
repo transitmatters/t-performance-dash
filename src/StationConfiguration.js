@@ -1,25 +1,17 @@
 import React from 'react';
 import classNames from 'classnames';
 import Flatpickr from "react-flatpickr";
-import 'react-flatpickr/node_modules/flatpickr/dist/themes/light.css';
+import 'flatpickr/dist/themes/light.css';
 import './ui/toggle.css';
 
 import Select from './Select';
 import { bus_lines, subway_lines, options_station } from './stations';
+import { busDateRange, trainDateRange } from './constants';
 
 const ua = window.navigator.userAgent;
 const iOSDevice = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
 const useFlatPickr = !iOSDevice;
 
-const dateRange = { 
-  minDate: "2016-01-01",
-  maxDate: "today"
-};
-
-const busDateRange = {
-  minDate: "2021-01-01",
-  maxDate: "2021-09-30"
-};
 
 const options_lines = (is_bus) => {
   if (is_bus) {
@@ -154,6 +146,7 @@ export default class StationConfiguration extends React.Component {
   render() {
     const currentLine = this.decode("line");
     const bus_mode = this.decode("bus_mode");
+    const availableDates = bus_mode ? busDateRange : trainDateRange;
     return (
       <div className={classNames('station-configuration-wrapper',
                                   bus_mode ? "Bus" : currentLine)}>
@@ -210,9 +203,9 @@ export default class StationConfiguration extends React.Component {
             <Flatpickr
               value={this.decode("date_start")} // || "" // The || "" is to prevent undefined; that makes React think it's uncontrolled
               onChange={this.handleSelectDate("date_start")}
-              options={bus_mode ? busDateRange : dateRange}
+              options={availableDates}
               placeholder="Select date..."
-              defaultValue={bus_mode ? busDateRange.maxDate : "today"}
+              defaultValue={availableDates.maxDate}
             />
             <button
               className="more-options-button"
@@ -224,7 +217,7 @@ export default class StationConfiguration extends React.Component {
               <Flatpickr
                 value={this.decode("date_end")}
                 onChange={this.handleSelectDate("date_end")}
-                options={bus_mode ? busDateRange : dateRange}
+                options={availableDates}
                 placeholder="Select date..."
                 defaultValue={this.decode("date_start")}
               />

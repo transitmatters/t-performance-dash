@@ -6,6 +6,16 @@ export const colorsForLine = {
 	bus: '#ffc72c',
 };
 
+export const trainDateRange = {
+	minDate: "2016-01-15",
+	maxDate: "today"
+};
+
+export const busDateRange = {
+	minDate: "2021-01-01",
+	maxDate: "2021-09-30"
+};
+
 export const stations = {
 	"Red": {
 		"type": "rapidtransit",
