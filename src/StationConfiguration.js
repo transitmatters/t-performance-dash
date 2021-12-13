@@ -1,16 +1,11 @@
 import React from 'react';
 import classNames from 'classnames';
-import Flatpickr from "react-flatpickr";
-import 'flatpickr/dist/themes/light.css';
-import './ui/toggle.css';
 
+import DatePicker from './date';
 import Select from './Select';
 import { bus_lines, subway_lines, options_station } from './stations';
 import { busDateRange, trainDateRange } from './constants';
-
-const ua = window.navigator.userAgent;
-const iOSDevice = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
-const useFlatPickr = !iOSDevice;
+import './ui/toggle.css';
 
 
 const options_lines = (is_bus) => {
@@ -73,22 +68,6 @@ export default class StationConfiguration extends React.Component {
       date_start: null,
       date_end: null
     }, false);
-  }
-
-  handleSelectDate(field_name) {
-    return (_, dateStr, __) => {
-      this.props.onConfigurationChange({
-        [field_name]: dateStr
-      });
-    };
-  }
-
-  handleSelectRawDate(field_name) {
-    return (evt) => {
-      this.props.onConfigurationChange({
-        [field_name]: evt.target.value
-      });
-    }
   }
 
   handleSelectOption(field) {
@@ -200,12 +179,11 @@ export default class StationConfiguration extends React.Component {
           </button>
           <div className="option option-date">
             <span className="date-label">Date</span>
-            <Flatpickr
-              value={this.decode("date_start")} // || "" // The || "" is to prevent undefined; that makes React think it's uncontrolled
-              onChange={this.handleSelectDate("date_start")}
+            <DatePicker
+              value={this.decode("date_start") || ""} 
+              onChange={this.handleSelectOption("date_start")}
               options={availableDates}
               placeholder="Select date..."
-              defaultValue={availableDates.maxDate}
             />
             <button
               className="more-options-button"
@@ -214,12 +192,11 @@ export default class StationConfiguration extends React.Component {
             >Range...</button>
             {!!this.state.show_date_end_picker && <>
               <span className="date-label end-date-label">to</span>
-              <Flatpickr
-                value={this.decode("date_end")}
-                onChange={this.handleSelectDate("date_end")}
+              <DatePicker
+                value={this.decode("date_end") || ""}
+                onChange={this.handleSelectOption("date_end")}
                 options={availableDates}
                 placeholder="Select date..."
-                defaultValue={this.decode("date_start")}
               />
               <button
                 className="clear-button"
