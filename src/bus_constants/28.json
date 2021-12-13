@@ -133,7 +133,7 @@
                 }
             },
             {
-                "stop_name": "Roxbury Crossing Station (Bus)",
+                "stop_name": "Roxbury Crossing Station",
                 "branches": null,
                 "station": "roxbs",
                 "order": 10,
