@@ -39,11 +39,12 @@ const options_station_ui = (line) => {
 export default class StationConfiguration extends React.Component {
   constructor(props) {
     super(props);
-    this.handleSelectDate = this.handleSelectDate.bind(this);
-    this.handleSelectRawDate = this.handleSelectRawDate.bind(this);
-    this.handleSwapStations = this.handleSwapStations.bind(this);
-    this.clearMoreOptions = this.clearMoreOptions.bind(this);
     this.handleBusToggle = this.handleBusToggle.bind(this);
+    this.handleSelectOption = this.handleSelectOption.bind(this);
+    this.handleSwapStations = this.handleSwapStations.bind(this);
+    this.decode = this.decode.bind(this);
+    this.optionsForField = this.optionsForField.bind(this);
+    this.clearMoreOptions = this.clearMoreOptions.bind(this);
 
     this.state = {
       show_date_end_picker: !!this.props.current.date_end,
