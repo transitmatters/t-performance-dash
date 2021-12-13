@@ -1162,7 +1162,9 @@ export const stations = {
 const createConfigPresetValue = (line, fromStationName, toStationName, date_start, date_end = undefined) => {
 	const fromStation = stations[line].stations.find(s => s.stop_name === fromStationName);
 	const toStation = stations[line].stations.find(s => s.stop_name === toStationName);
+	const bus_mode = stations[line].type === "bus";
 	return {
+		bus_mode,
 		line,
 		date_start,
 		date_end,

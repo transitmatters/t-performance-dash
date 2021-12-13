@@ -376,8 +376,8 @@ class App extends React.Component {
         and dwell times, for any given day. <span style={{fontWeight: "bold"}}>Select a line, station pair, and date above to get started.</span><div style={{marginTop: 10}}>Looking for something interesting? <span style={{fontWeight: "bold"}}>Try one of these dates:</span></div>
         <Select
           onChange={value => {
-            const { line, date_start, date_end, from, to } = value;
-            this.updateConfiguration({ line, date_start, date_end }, false);
+            const { bus_mode, line, date_start, date_end, from, to } = value;
+            this.updateConfiguration({ bus_mode, line, date_start, date_end }, false);
             setTimeout(() => this.updateConfiguration({ from, to }));
           }}
           options={configPresets}
