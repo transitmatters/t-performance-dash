@@ -20,18 +20,23 @@
     right: 0;
     bottom: 0;
     border-radius: 10px;
-    outline: 1px solid;
+    outline: none;
+    /* outline: 1px solid; */
     background-color: #fff;
     -webkit-transition: .4s;
     transition: .4s;
 }
 
+/* Want toggle perimiter to show in bus mode
+ * Border changes size/shape of area
+ * Outline has square corners on some browsers
+ * so, using box-shadow instead */
 .station-configuration .slider {
-    outline-color: rgba(0, 0, 0, 0)
+    box-shadow: none;
 }
 
 .station-configuration-wrapper.Bus .slider {
-    outline-color: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 1pt rgba(0, 0, 0, 0.4);
 }
 
 .slider:before {
