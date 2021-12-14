@@ -42,8 +42,6 @@ export default class StationConfiguration extends React.Component {
     this.handleBusToggle = this.handleBusToggle.bind(this);
     this.handleSelectOption = this.handleSelectOption.bind(this);
     this.handleSwapStations = this.handleSwapStations.bind(this);
-    this.decode = this.decode.bind(this);
-    this.optionsForField = this.optionsForField.bind(this);
     this.clearMoreOptions = this.clearMoreOptions.bind(this);
 
     this.state = {

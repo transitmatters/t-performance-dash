@@ -109,13 +109,6 @@ class App extends React.Component {
 
     this.download = this.download.bind(this);
     this.updateConfiguration = this.updateConfiguration.bind(this);
-    this.setIsLoadingDataset = this.setIsLoadingDataset.bind(this);
-    this.getIsLoadingDataset = this.getIsLoadingDataset.bind(this);
-    this.getDoneLoading = this.getDoneLoading.bind(this);
-    this.isAggregation = this.isAggregation.bind(this);
-    this.progressBarRate = this.progressBarRate.bind(this);
-    this.restartProgressBar = this.restartProgressBar.bind(this);
-    this.validateRange = this.validateRange.bind(this);
 
     this.progressTimer = null;
     this.fetchControllers = [];
