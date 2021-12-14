@@ -21,6 +21,7 @@ const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname)
 
 const MAX_AGGREGATION_MONTHS = 8;
 const RANGE_TOO_LARGE_ERROR = `Please select a range no larger than ${MAX_AGGREGATION_MONTHS} months.`;
+const RANGE_NEGATIVE_ERROR = `Please select a positive date range.`;
 
 const stateFromURL = (pathname, config) => {
   const bus_mode = (pathname === "/bus")
@@ -86,9 +87,7 @@ class App extends React.Component {
     const url_config = new URLSearchParams(props.location.search).get("config");
     if (typeof url_config === "string") {
       this.state.configuration = stateFromURL(props.location.pathname, url_config);
-      if(!this.permittedRange(this.state.configuration.date_start, this.state.configuration.date_end)) {
-        this.state.error_message = RANGE_TOO_LARGE_ERROR;
-      }
+      this.state.error_message = this.validateRange(this.state.configuration.date_start, this.state.configuration.date_end);
     }
 
     if (window.location.hostname !== "dashboard.transitmatters.org") {
@@ -110,14 +109,13 @@ class App extends React.Component {
 
     this.download = this.download.bind(this);
     this.updateConfiguration = this.updateConfiguration.bind(this);
-    this.chartTimeframe = this.chartTimeframe.bind(this);
     this.setIsLoadingDataset = this.setIsLoadingDataset.bind(this);
     this.getIsLoadingDataset = this.getIsLoadingDataset.bind(this);
     this.getDoneLoading = this.getDoneLoading.bind(this);
     this.isAggregation = this.isAggregation.bind(this);
     this.progressBarRate = this.progressBarRate.bind(this);
     this.restartProgressBar = this.restartProgressBar.bind(this);
-    this.permittedRange = this.permittedRange.bind(this);
+    this.validateRange = this.validateRange.bind(this);
 
     this.progressTimer = null;
     this.fetchControllers = [];
@@ -127,16 +125,16 @@ class App extends React.Component {
     this.download();
   }
 
-  permittedRange(date_start, date_end) {
+  validateRange(date_start, date_end) {
     const date_start_ts = new Date(date_start).getTime();
     const date_end_ts = new Date(date_end).getTime();
-    if(
-      date_end_ts < date_start_ts ||
-      date_end_ts - date_start_ts > MAX_AGGREGATION_MONTHS * 30 * 86400 * 1000
-      ) {
-      return false;
+    if (date_end_ts < date_start_ts) {
+      return RANGE_NEGATIVE_ERROR;
+    } 
+    if (date_end_ts - date_start_ts > MAX_AGGREGATION_MONTHS * 31 * 86400 * 1000) {
+      return RANGE_TOO_LARGE_ERROR;
     }
-    return true;
+    return null;
   }
 
   updateConfiguration(config_change, refetch = true) {
@@ -148,19 +146,15 @@ class App extends React.Component {
       }
     };
 
-    if (
-      update.configuration.date_end &&
-      !this.permittedRange(update.configuration.date_start, update.configuration.date_end)
-    ) {
-      this.setState({
-        error_message: RANGE_TOO_LARGE_ERROR,
-      });
+    if (update.configuration.date_end) {
+      const error = this.validateRange(update.configuration.date_start, update.configuration.date_end);
+      this.setState(
+        {error_message: error}
+      );
       // Setting refetch to false prevents data download, but lets this.state.configuration update still
-      refetch = false;
-    } else {
-      this.setState({
-        error_message: null,
-      });
+      if (error) {
+        refetch = false;
+      }
     }
 
     if ("line" in config_change && config_change.line !== this.state.configuration.line) {
@@ -275,8 +269,8 @@ class App extends React.Component {
       progress: 0,
     }, () => {
       this.progressTimer = setInterval(() => {
-        // Increment up until 85%
-        if(this.state.progress < 85) {
+        // Increment up until 95%
+        if(this.state.progress < 95) {
           this.setState({
             progress: this.state.progress + this.progressBarRate(),
           });
@@ -339,20 +333,6 @@ class App extends React.Component {
     }
   }
 
-
-  chartTimeframe() {
-    // Set alert-bar interval to be 5:30am today to 1am tomorrow.
-    const today = `${this.state.configuration.date_start}T00:00:00`;
-
-    let low = new Date(today);
-    low.setHours(5, 30)
-
-    let high = new Date(today);
-    high.setDate(high.getDate() + 1);
-    high.setHours(1,0);
-
-    return [low, high];
-  }
 
   componentDidCatch(error) {
     this.setState(currentState => {
@@ -442,7 +422,7 @@ class App extends React.Component {
           <StationConfiguration current={configuration} onConfigurationChange={this.updateConfiguration} />
           {canShowAlerts && <AlertBar
             alerts={recognized_alerts}
-            timeframe={this.chartTimeframe()}
+            today={this.state.configuration.date_start}
             isLoading={this.getIsLoadingDataset("alerts")}
             isHidden={hasNoLoadedCharts}
           />}
