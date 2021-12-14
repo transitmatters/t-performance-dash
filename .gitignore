@@ -28,6 +28,8 @@ build
 .env.production.local
 .eslintcache
 
+**/data
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -35,3 +37,4 @@ yarn-error.log*
 .idea
 .vscode
 *~
+*.pyc

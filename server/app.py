@@ -31,15 +31,6 @@ def parse_user_date(user_date):
     return date(year=year, month=month, day=day)
 
 
-def parse_query_stop_args(query_params, expected_stop_param_names):
-    stops_dict = {}
-    for stop_param in expected_stop_param_names:
-        query_value = query_params.get(stop_param)
-        if query_value:
-            stops_dict[stop_param] = query_value
-    return stops_dict
-
-
 def mutlidict_to_dict(mutlidict):
     res_dict = {}
     for key in mutlidict.keys():
@@ -75,23 +66,23 @@ def healthcheck():
 @app.route("/headways/{user_date}", cors=cors_config)
 def headways_route(user_date):
     date = parse_user_date(user_date)
-    stop = app.current_request.query_params["stop"]
-    return data_funcs.headways(date, [stop])
+    stops = app.current_request.query_params.getlist("stop")
+    return data_funcs.headways(date, stops)
 
 
 @app.route("/dwells/{user_date}", cors=cors_config)
 def dwells_route(user_date):
     date = parse_user_date(user_date)
-    stop = app.current_request.query_params["stop"]
-    return data_funcs.dwells(date, [stop])
+    stops = app.current_request.query_params.getlist("stop")
+    return data_funcs.dwells(date, stops)
 
 
 @app.route("/traveltimes/{user_date}", cors=cors_config)
 def traveltime_route(user_date):
     date = parse_user_date(user_date)
-    from_stop = app.current_request.query_params["from_stop"]
-    to_stop = app.current_request.query_params["to_stop"]
-    return data_funcs.travel_times(date, [from_stop], [to_stop])
+    from_stops = app.current_request.query_params.getlist("from_stop")
+    to_stops = app.current_request.query_params.getlist("to_stop")
+    return data_funcs.travel_times(date, from_stops, to_stops)
 
 
 @app.route("/alerts/{user_date}", cors=cors_config)
@@ -104,10 +95,10 @@ def alerts_route(user_date):
 def traveltime_aggregate_route():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
-    from_stop = app.current_request.query_params["from_stop"]
-    to_stop = app.current_request.query_params["to_stop"]
+    from_stops = app.current_request.query_params.getlist("from_stop")
+    to_stops = app.current_request.query_params.getlist("to_stop")
 
-    response = aggregation.travel_times_over_time(sdate, edate, from_stop, to_stop)
+    response = aggregation.travel_times_over_time(sdate, edate, from_stops, to_stops)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
@@ -115,8 +106,8 @@ def traveltime_aggregate_route():
 def traveltime_aggregate_route_2():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
-    from_stop = app.current_request.query_params["from_stop"]
-    to_stop = app.current_request.query_params["to_stop"]
+    from_stop = app.current_request.query_params.getlist("from_stop")
+    to_stop = app.current_request.query_params.getlist("to_stop")
 
     response = aggregation.travel_times_all(sdate, edate, from_stop, to_stop)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
@@ -126,9 +117,9 @@ def traveltime_aggregate_route_2():
 def headways_aggregate_route():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
-    stop = app.current_request.query_params["stop"]
+    stops = app.current_request.query_params.getlist("stop")
 
-    response = aggregation.headways_over_time(sdate, edate, stop)
+    response = aggregation.headways_over_time(sdate, edate, stops)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
@@ -136,9 +127,9 @@ def headways_aggregate_route():
 def dwells_aggregate_route():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
-    stop = app.current_request.query_params["stop"]
+    stops = app.current_request.query_params.getlist("stop")
 
-    response = aggregation.dwells_over_time(sdate, edate, stop)
+    response = aggregation.dwells_over_time(sdate, edate, stops)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 

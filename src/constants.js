@@ -1,8 +1,9 @@
 export const colorsForLine = {
-  Red: '#d13434',
-  Orange: '#e66f00',
-  Blue: '#0e3d8c',
-  Green: '#159765',
+	Red: '#d13434',
+	Orange: '#e66f00',
+	Blue: '#0e3d8c',
+	Green: '#159765',
+	bus: '#ffc72c',
 };
 
 export const stations = {
