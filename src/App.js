@@ -21,7 +21,7 @@ const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname)
 
 const MAX_AGGREGATION_MONTHS = 8;
 const RANGE_TOO_LARGE_ERROR = `Please select a range no larger than ${MAX_AGGREGATION_MONTHS} months.`;
-const RANGE_NEGATIVE_ERROR = `Please select a positive date range.`;
+const RANGE_NEGATIVE_ERROR = "Please choose an end date that comes after the selected start date.";
 
 const stateFromURL = (pathname, config) => {
   const bus_mode = (pathname === "/bus")
@@ -126,6 +126,9 @@ class App extends React.Component {
   }
 
   validateRange(date_start, date_end) {
+    if (!date_end) {
+      return null;
+    }
     const date_start_ts = new Date(date_start).getTime();
     const date_end_ts = new Date(date_end).getTime();
     if (date_end_ts < date_start_ts) {
@@ -146,15 +149,13 @@ class App extends React.Component {
       }
     };
 
-    if (update.configuration.date_end) {
-      const error = this.validateRange(update.configuration.date_start, update.configuration.date_end);
-      this.setState(
-        {error_message: error}
-      );
-      // Setting refetch to false prevents data download, but lets this.state.configuration update still
-      if (error) {
-        refetch = false;
-      }
+    const error = this.validateRange(update.configuration.date_start, update.configuration.date_end);
+    this.setState(
+      {error_message: error}
+    );
+    // Setting refetch to false prevents data download, but lets this.state.configuration update still
+    if (error) {
+      refetch = false;
     }
 
     if ("line" in config_change && config_change.line !== this.state.configuration.line) {
