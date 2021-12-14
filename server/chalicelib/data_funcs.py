@@ -1,7 +1,7 @@
 import datetime
 import pytz
 import traceback
-from chalicelib import MbtaPerformanceAPI, s3_historical, s3_alerts
+from chalicelib import MbtaPerformanceAPI, s3_historical, s3_alerts, s3
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
 WE_HAVE_ALERTS_SINCE = datetime.date(2017, 11, 6)
@@ -14,7 +14,7 @@ def stamp_to_dt(stamp):
 
 
 def is_bus(stops):
-    return '-' in stops[0]
+    return all(map(s3.is_bus, stops))
 
 
 def use_S3(date, bus=False):

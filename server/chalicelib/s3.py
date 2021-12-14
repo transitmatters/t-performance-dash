@@ -25,7 +25,7 @@ def upload(key, bytes, compress=True):
 
 
 def is_bus(stop_id):
-    return '-' in stop_id
+    return ('-0-' in stop_id) or ('-1-' in stop_id)
 
 
 def download_one_event_file(date, stop_id):

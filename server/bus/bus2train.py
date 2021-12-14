@@ -25,12 +25,12 @@ def load_data(input_csv, routes):
     """
 
     # thinking about doing this in pandas to have all the info at once
-    df = pd.read_csv(input_csv, parse_dates=['service_date', 'scheduled', 'actual'])
+    df = pd.read_csv(input_csv, parse_dates=["service_date", "scheduled", "actual"])
 
     # We need to keep both "Headway" AND "Schedule": both can have timepoint data.
     df = df.loc[df.actual.notnull()]
 
-    df.route_id = df.route_id.str.lstrip('0')
+    df.route_id = df.route_id.str.lstrip("0")
     if routes:
         df = df.loc[df.route_id.isin(routes)]
 
@@ -55,58 +55,53 @@ def process_events(df):
     CSV_HEADER = ["service_date", "route_id", "trip_id", "direction_id", "stop_id",
                   "stop_sequence", "vehicle_id", "vehicle_label", "event_type", "event_time"]
 
-    df = df.rename(columns={'half_trip_id': 'trip_id',
-                            'time_point_order': 'stop_sequence',
-                            'actual': 'event_time'})
-    df.drop(columns=['time_point_id', 'standard_type', 'scheduled', 'scheduled_headway', 'headway'])
-    df['vehicle_id'] = ""
-    df['vehicle_label'] = ""
+    df = df.rename(columns={"half_trip_id": "trip_id",
+                            "time_point_order": "stop_sequence",
+                            "actual": "event_time"})
+    df.drop(columns=["time_point_id", "standard_type", "scheduled", "scheduled_headway", "headway"])
+    df["vehicle_id"] = ""
+    df["vehicle_label"] = ""
 
-    df['event_type'] = df.point_type.map({"Startpoint": ["DEP"],
+    df["event_type"] = df.point_type.map({"Startpoint": ["DEP"],
                                           "Midpoint": ["ARR", "DEP"],
                                           "Endpoint": ["ARR"]})
-    df = df.explode('event_type')
+    df = df.explode("event_type")
     df = df[CSV_HEADER]  # reorder
 
     return df
 
 
-def _write_file(events, outdir, nozip=False):
+def to_disk(df, outdir, nozip=False):
     """
-    This is a helper that will write the events to disk.
-    It will be called on each "groupby" object, grouping stop_id and service_date
+    For each service_date/stop_id/direction/route group, we write the events to disk.
     """
-    service_date, stop_id, direction_id, route_id = events.name
+    grouped = df.groupby(["service_date", "stop_id", "direction_id", "route_id"])
 
-    fname = pathlib.Path(outdir,
-                         "Events",
-                         "daily-bus-data",
-                         f"{route_id}-{direction_id}-{stop_id}",
-                         f"Year={service_date.year}",
-                         f"Month={service_date.month}",
-                         f"Day={service_date.day}",
-                         "events.csv.gz")
-    fname.parent.mkdir(parents=True, exist_ok=True)
-    # set mtime to 0 in gzip header for determinism (so we can re-gen old routes, and rsync to s3 will ignore)
-    events.to_csv(fname, index=False, compression={'method': 'gzip', 'mtime': 0} if not nozip else None)
+    for name, events in grouped:
+        service_date, stop_id, direction_id, route_id = name
 
-
-def to_disk(df, root, nozip=False):
-    """
-    For each service_date/stop_id group, we call the helper that will write it to disk.
-    """
-    df.groupby(['service_date', 'stop_id', 'direction_id', 'route_id']).apply(lambda e: _write_file(e, root, nozip))
+        fname = pathlib.Path(outdir,
+                             "Events",
+                             "daily-bus-data",
+                             f"{route_id}-{direction_id}-{stop_id}",
+                             f"Year={service_date.year}",
+                             f"Month={service_date.month}",
+                             f"Day={service_date.day}",
+                             "events.csv.gz")
+        fname.parent.mkdir(parents=True, exist_ok=True)
+        # set mtime to 0 in gzip header for determinism (so we can re-gen old routes, and rsync to s3 will ignore)
+        events.to_csv(fname, index=False, compression={"method": "gzip", "mtime": 0} if not nozip else None)
 
 
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('input', metavar='INPUT_CSV')
-    parser.add_argument('output', metavar='OUTPUT_DIR')
-    parser.add_argument('--routes', '-r', nargs="*", type=str,
+    parser.add_argument("input", metavar="INPUT_CSV")
+    parser.add_argument("output", metavar="OUTPUT_DIR")
+    parser.add_argument("--routes", "-r", nargs="*", type=str,
                         help="One note here: we should always be additive with our route set \
                             in case 2 lines share the same stop id: we need both in the result file.")
-    parser.add_argument('--nozip', '-nz', action='store_true', help="debug feature to skip gzipping")
+    parser.add_argument("--nozip", "-nz", action="store_true", help="debug feature to skip gzipping")
 
     args = parser.parse_args()
     input_csv = args.input

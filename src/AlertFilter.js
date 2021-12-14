@@ -4,7 +4,7 @@ const known = [
   /[A-Za-z]+ speeds/,     // "Reduced speeds"
   /delay/,
   /notice/,
-  /shuttle/,  // might want to worry about this one...
+  /[Ss]huttle/,  // might want to worry about this one...
 ];
 
 // TODO: audit this. Like, list all the alerts
@@ -16,19 +16,11 @@ const anti = [
 
 const findMatch = (alert) => {
   const text = alert.text;
-  for (const exp of anti) {
-    const match = text.match(exp);
-    if (match != null) {
-      return null;
-    }
+
+  if (anti.some((exp) => text.match(exp))) {
+    return false;
   }
-  for (const exp of known) {
-    const match = text.match(exp);
-    if (match != null) {
-      return match;
-    }
-  }
-  return null;
+  return known.some((exp) => text.match(exp))
 }
 
 const recognize = (alert) => {
