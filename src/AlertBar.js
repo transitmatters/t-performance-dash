@@ -43,8 +43,8 @@ export default function AlertBar(props) {
     const boxes = [];
     let idx = 0;
     for (const alert of alerts) {
-      const alert_start = new Date(alert.valid_from).getTime();
-      const alert_end = new Date(alert.valid_to).getTime();
+      const alert_start = Math.max(start, new Date(alert.valid_from).getTime());
+      const alert_end = Math.min(end, new Date(alert.valid_to).getTime());
       const width = (alert_end - alert_start) / duration * 100;
 
       const left_pos = (alert_start - start) / (duration) * 100;
