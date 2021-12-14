@@ -62,7 +62,7 @@ export default class StationConfiguration extends React.Component {
 
   handleBusToggle() {
     this.props.onConfigurationChange({
-      bus_mode: !this.decode("bus_mode"),
+      bus_mode: !this.getVal("bus_mode"),
       line: null,
       date_start: null,
       date_end: null
@@ -78,28 +78,28 @@ export default class StationConfiguration extends React.Component {
   }
 
   handleSwapStations() {
-    const fromValue = this.decode("from");
-    const toValue = this.decode("to");
+    const fromValue = this.getVal("from");
+    const toValue = this.getVal("to");
     this.props.onConfigurationChange({
       from: toValue,
       to: fromValue
     });
   }
 
-  decode(property) {
+  getVal(property) {
     return this.props.current[property];
   }
 
   optionsForField(type) {
     if (type === "line") {
-      return options_lines(this.decode("bus_mode"));
+      return options_lines(this.getVal("bus_mode"));
     }
     if (type === "from") {
-      const toStation = this.decode("to");
+      const toStation = this.getVal("to");
       return options_station_ui(this.props.current.line).filter(entry => entry.value !== toStation);
     }
     if (type === "to") {
-      const fromStation = this.decode("from");
+      const fromStation = this.getVal("from");
       return options_station_ui(this.props.current.line).filter(({ value }) => {
         if (value === fromStation) {
           return false;
@@ -122,8 +122,8 @@ export default class StationConfiguration extends React.Component {
   }
 
   render() {
-    const currentLine = this.decode("line");
-    const bus_mode = this.decode("bus_mode");
+    const currentLine = this.getVal("line");
+    const bus_mode = this.getVal("bus_mode");
     const availableDates = bus_mode ? busDateRange : trainDateRange;
     return (
       <div className={classNames('station-configuration-wrapper',
@@ -141,7 +141,7 @@ export default class StationConfiguration extends React.Component {
 
           <div className="option option-line">
             <Select
-              value={this.decode("line")}
+              value={this.getVal("line")}
               options={this.optionsForField("line")}
               onChange={this.handleSelectOption("line")}
               defaultLabel={bus_mode ? "Select a route..." : "Select a line..."}
@@ -152,22 +152,22 @@ export default class StationConfiguration extends React.Component {
             <div className="option option-from-station">
               <span className="from-to-label">From</span>
               <Select
-                value={this.decode("from")}
+                value={this.getVal("from")}
                 options={this.optionsForField("from")}
                 onChange={this.handleSelectOption("from")}
                 // Non-standard value comparator because from/to gets copied by onpopstate :/
-                optionComparator={o => o.value.stop_name === this.decode("from")?.stop_name}
+                optionComparator={o => o.value.stop_name === this.getVal("from")?.stop_name}
                 defaultLabel="Select a station..."
               />
             </div>
             <div className="option option-to-station">
               <span className="from-to-label">To</span>
               <Select
-                value={this.decode("to")}
+                value={this.getVal("to")}
                 options={this.optionsForField("to")}
                 onChange={this.handleSelectOption("to")}
                 // Non-standard value comparator because from/to gets copied by onpopstate :/
-                optionComparator={o => o.value.stop_name === this.decode("to")?.stop_name}
+                optionComparator={o => o.value.stop_name === this.getVal("to")?.stop_name}
                 defaultLabel="Select a station..."
               />
             </div>
@@ -179,7 +179,7 @@ export default class StationConfiguration extends React.Component {
           <div className="option option-date">
             <span className="date-label">Date</span>
             <DatePicker
-              value={this.decode("date_start") || ""} 
+              value={this.getVal("date_start") || ""}
               onChange={this.handleSelectOption("date_start")}
               options={availableDates}
               placeholder="Select date..."
@@ -192,7 +192,7 @@ export default class StationConfiguration extends React.Component {
             {!!this.state.show_date_end_picker && <>
               <span className="date-label end-date-label">to</span>
               <DatePicker
-                value={this.decode("date_end") || ""}
+                value={this.getVal("date_end") || ""}
                 onChange={this.handleSelectOption("date_end")}
                 options={availableDates}
                 placeholder="Select date..."
