@@ -43,7 +43,6 @@ def load_data(input_csv, routes):
         'Actual': 'actual',
         'ScheduledHeadway': 'scheduled_headway',
         'Headway': 'headway',
-        # 2020 data uses a different column name for direction.
         'direction': 'direction_id'
         },
             inplace=True)
