@@ -23,3 +23,4 @@ mv "2019/MBTA Bus Arrival Departure Jul-Sept 2019.csv" "2019/2019-07-09.csv"
 mv "2019/MBTA Bus Arrival Departure Oct-Dec 2019.csv" "2019/2019-10-12.csv"
 mv "2018/MBTA Bus Arrival Departure Aug-Sept 2018.csv" "2018/2018-08-09.csv"
 mv "2018/MBTA Bus Arrival Departure Oct-Dec 2018.csv" "2018/2018-10-12.csv"
+sed -i -e 's/<U+FEFF>//' 2020/2020-07-09.csv
