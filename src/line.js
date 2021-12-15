@@ -178,7 +178,7 @@ class SingleDayLine extends React.Component {
       />
       </div>
       <div className="chart-extras">
-        {this.props.benchmarkField && <Legend />}
+        {this.props.useBenchmarks && <Legend />}
       </div>
       </div>
     );
