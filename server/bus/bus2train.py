@@ -25,7 +25,28 @@ def load_data(input_csv, routes):
     """
 
     # thinking about doing this in pandas to have all the info at once
-    df = pd.read_csv(input_csv, parse_dates=["service_date", "scheduled", "actual"])
+    df = pd.read_csv(input_csv)
+    df.rename(columns={
+        # This set of transformations covers prior-year bus data.
+        'ServiceDate': 'service_date',
+        'Route': 'route_id',
+        'Direction': 'direction_id',
+        'HalfTripId': 'half_trip_id',
+        'Stop': 'stop_id',
+        'stop_name': 'time_point_id',
+        'stop_sequence': 'time_point_order',
+        'Timepoint': 'time_point_id',
+        'TimepointOrder': 'time_point_order',
+        'PointType': 'point_type',
+        'StandardType': 'standard_type',
+        'Scheduled': 'scheduled',
+        'Actual': 'actual',
+        'ScheduledHeadway': 'scheduled_headway',
+        'Headway': 'headway',
+        # 2020 data uses a different column name for direction.
+        'direction': 'direction_id'
+        },
+            inplace=True)
 
     # We need to keep both "Headway" AND "Schedule": both can have timepoint data.
     df = df.loc[df.actual.notnull()]
