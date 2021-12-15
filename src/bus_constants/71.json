@@ -1,0 +1,125 @@
+{
+    "71": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Aberdeen & Mount Auburn",
+                "branches": null,
+                "station": "abmta",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "71-1-2098"
+                    ],
+                    "0": [
+                        "71-0-2077"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Watertown Square",
+                "branches": null,
+                "station": "wtrsq",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "71-1-8178"
+                    ],
+                    "0": [
+                        "71-0-8178"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Watertown High School",
+                "branches": null,
+                "station": "wtrhs",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "71-1-2050"
+                    ],
+                    "0": [
+                        "71-0-2043"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Mount Auburn Bridge",
+                "branches": null,
+                "station": "mtaub",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "71-1-2064"
+                    ],
+                    "0": [
+                        "71-0-2030"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Mount Auburn Hospital",
+                "branches": null,
+                "station": "mthsp",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "71-1-2070"
+                    ],
+                    "0": [
+                        "71-0-2025"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Mount Auburn @ Story Street",
+                "branches": null,
+                "station": "mtsty",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "71-1-2074"
+                    ],
+                    "0": [
+                        "71-0-2020"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Harvard Bus Tunnels",
+                "branches": null,
+                "station": "bally",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "71-1-20761",
+                        "71-1-32549"
+                    ],
+                    "0": [
+                        "71-0-2076",
+                        "71-0-20761"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Cambridge Common Loop",
+                "branches": null,
+                "station": "hloop",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "71-1-12614"
+                    ],
+                    "0": [
+                        "71-0-12614"
+                    ]
+                }
+            }
+        ]
+    }
+}

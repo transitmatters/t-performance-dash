@@ -1,0 +1,150 @@
+{
+    "39": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Forest Hills Busway",
+                "branches": null,
+                "station": "fhill",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "39-1-10642"
+                    ],
+                    "0": [
+                        "39-0-10642"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Jamaica Plain Center (Monument)",
+                "branches": null,
+                "station": "jpctr",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "39-1-1128"
+                    ],
+                    "0": [
+                        "39-0-1939"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Centre Street & South Huntington Avenue",
+                "branches": null,
+                "station": "shunt",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "39-1-11131"
+                    ],
+                    "0": [
+                        "39-0-1160"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Heath Street Loop",
+                "branches": null,
+                "station": "heath",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "39-1-65741",
+                        "39-1-6574"
+                    ],
+                    "0": [
+                        "39-0-31365"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Brigham Circle",
+                "branches": null,
+                "station": "brghm",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "39-1-1317"
+                    ],
+                    "0": [
+                        "39-0-1363"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Huntington Avenue & Longwood Avenue",
+                "branches": null,
+                "station": "hlong",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "39-1-31317"
+                    ],
+                    "0": [
+                        "39-0-91391"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Northeastern University",
+                "branches": null,
+                "station": "nuniv",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "39-1-81317"
+                    ],
+                    "0": [
+                        "39-0-41391"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Huntington Avenue & Belvidere Street",
+                "branches": null,
+                "station": "hunbv",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "39-1-11389"
+                    ],
+                    "0": [
+                        "39-0-11388"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Copley",
+                "branches": null,
+                "station": "copst",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "39-1-175"
+                    ],
+                    "0": []
+                }
+            },
+            {
+                "stop_name": "Back Bay",
+                "branches": null,
+                "station": "bbsta",
+                "order": 10,
+                "stops": {
+                    "1": [
+                        "39-1-23391"
+                    ],
+                    "0": [
+                        "39-0-23391"
+                    ]
+                }
+            }
+        ]
+    }
+}

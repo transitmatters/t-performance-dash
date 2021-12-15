@@ -1,0 +1,139 @@
+{
+    "15": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Fields Corner",
+                "branches": null,
+                "station": "fldcr",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "15-1-322",
+                        "15-1-323"
+                    ],
+                    "0": [
+                        "15-0-323"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Saint Peter's Square (Dorchester)",
+                "branches": null,
+                "station": "peter",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "15-1-15100"
+                    ],
+                    "0": [
+                        "15-0-15100"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Geneva Avenue @ Bowdoin Street",
+                "branches": null,
+                "station": "genbo",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "15-1-1468"
+                    ],
+                    "0": [
+                        "15-0-1515"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Kane Square",
+                "branches": null,
+                "station": "kane",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "15-1-1475"
+                    ],
+                    "0": [
+                        "15-0-1508"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Uphams Corner",
+                "branches": null,
+                "station": "upham",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "15-1-1480"
+                    ],
+                    "0": [
+                        "15-0-1503"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Blue Hill Avenue @ Dudley Street",
+                "branches": null,
+                "station": "bhdud",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "15-1-1486"
+                    ],
+                    "0": [
+                        "15-0-1497"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Nubian Station",
+                "branches": null,
+                "station": "nubn",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "15-1-64000",
+                        "15-1-64"
+                    ],
+                    "0": [
+                        "15-0-64000"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Roxbury Crossing Station",
+                "branches": null,
+                "station": "roxbs",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "15-1-21148"
+                    ],
+                    "0": [
+                        "15-0-11257"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Ruggles",
+                "branches": null,
+                "station": "rugg",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "15-1-17861"
+                    ],
+                    "0": [
+                        "15-0-17863"
+                    ]
+                }
+            }
+        ]
+    }
+}

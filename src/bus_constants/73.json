@@ -1,0 +1,111 @@
+{
+    "73": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Waverley Square",
+                "branches": null,
+                "station": "wavsq",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "73-1-2134"
+                    ],
+                    "0": [
+                        "73-0-2134"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Benton Square",
+                "branches": null,
+                "station": "bntns",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "73-1-2108"
+                    ],
+                    "0": [
+                        "73-0-2125"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Mount Auburn Bridge",
+                "branches": null,
+                "station": "mtaub",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "73-1-2064",
+                        "73-1-2117"
+                    ],
+                    "0": [
+                        "73-0-2030"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Mount Auburn Hospital",
+                "branches": null,
+                "station": "mthsp",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "73-1-2070"
+                    ],
+                    "0": [
+                        "73-0-2025"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Mount Auburn @ Story Street",
+                "branches": null,
+                "station": "mtsty",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "73-1-2074"
+                    ],
+                    "0": [
+                        "73-0-2020"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Harvard Bus Tunnels",
+                "branches": null,
+                "station": "bally",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "73-1-20761"
+                    ],
+                    "0": [
+                        "73-0-2076",
+                        "73-0-20761"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Cambridge Common Loop",
+                "branches": null,
+                "station": "hloop",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "73-1-12614"
+                    ],
+                    "0": [
+                        "73-0-12614"
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,141 @@
+{
+    "22": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Ashmont Terminal",
+                "branches": null,
+                "station": "ashmt",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "22-1-334"
+                    ],
+                    "0": [
+                        "22-0-334"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Codman Square",
+                "branches": null,
+                "station": "codmn",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "22-1-371"
+                    ],
+                    "0": [
+                        "22-0-426"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Blue Hill Avenue @ Talbot Avenue",
+                "branches": null,
+                "station": "bltal",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "22-1-378"
+                    ],
+                    "0": [
+                        "22-0-419"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Franklin Park",
+                "branches": null,
+                "station": "frnpk",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "22-1-383"
+                    ],
+                    "0": [
+                        "22-0-17391",
+                        "22-0-415"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Seaver & Humboldt",
+                "branches": null,
+                "station": "svrhm",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "22-1-1741"
+                    ],
+                    "0": [
+                        "22-0-17411"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Egleston Square",
+                "branches": null,
+                "station": "egles",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "22-1-1188"
+                    ],
+                    "0": [
+                        "22-0-10413",
+                        "22-0-1267"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Jackson Square Station",
+                "branches": null,
+                "station": "jasst",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "22-1-11531"
+                    ],
+                    "0": [
+                        "22-0-11531"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Roxbury Crossing Station",
+                "branches": null,
+                "station": "roxbs",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "22-1-1222"
+                    ],
+                    "0": [
+                        "22-0-1258",
+                        "22-0-21148"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Ruggles",
+                "branches": null,
+                "station": "rugg",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "22-1-17861",
+                        "22-1-17863"
+                    ],
+                    "0": [
+                        "22-0-17862"
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,142 @@
+{
+    "77": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Arlington Heights",
+                "branches": null,
+                "station": "arlht",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "77-1-7922"
+                    ],
+                    "0": [
+                        "77-0-7922"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Appleton Street & Massachusetts Avenue",
+                "branches": null,
+                "station": "appma",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "77-1-2251"
+                    ],
+                    "0": [
+                        "77-0-2291"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Arlington Center",
+                "branches": null,
+                "station": "arlct",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "77-1-2258"
+                    ],
+                    "0": [
+                        "77-0-2282"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Massachusetts Avenue @ Lake Street",
+                "branches": null,
+                "station": "make",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "77-1-2265"
+                    ],
+                    "0": [
+                        "77-0-2277"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Alewife Brook Parkway",
+                "branches": null,
+                "station": "alwpk",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "77-1-22671"
+                    ],
+                    "0": [
+                        "77-0-22751"
+                    ]
+                }
+            },
+            {
+                "stop_name": "North Cambridge Station",
+                "branches": null,
+                "station": "ncsta",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "77-1-12295",
+                        "77-1-2296"
+                    ],
+                    "0": [
+                        "77-0-12295",
+                        "77-0-2271",
+                        "77-0-2320"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Porter Square",
+                "branches": null,
+                "station": "portr",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "77-1-12301"
+                    ],
+                    "0": [
+                        "77-0-23151"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Cambridge Common Loop",
+                "branches": null,
+                "station": "hloop",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "77-1-2307"
+                    ],
+                    "0": [
+                        "77-0-2310"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Harvard Bus Tunnels",
+                "branches": null,
+                "station": "bally",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "77-1-2076",
+                        "77-1-32549"
+                    ],
+                    "0": [
+                        "77-0-20761",
+                        "77-0-20762"
+                    ]
+                }
+            }
+        ]
+    }
+}
