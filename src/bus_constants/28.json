@@ -100,7 +100,8 @@
                         "28-1-390"
                     ],
                     "0": [
-                        "28-0-407"
+                        "28-0-407",
+                        "28-0-13321"
                     ]
                 }
             },
@@ -133,7 +134,7 @@
                 }
             },
             {
-                "stop_name": "Roxbury Crossing Station",
+                "stop_name": "Roxbury Crossing Station (Bus)",
                 "branches": null,
                 "station": "roxbs",
                 "order": 10,
