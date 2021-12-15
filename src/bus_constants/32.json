@@ -50,7 +50,7 @@
                 }
             },
             {
-                "stop_name": "Hyde Park Avenue @ American Legion Highway",
+                "stop_name": "Hyde Park Ave @ American Legion",
                 "branches": null,
                 "station": "hpaml",
                 "order": 4,
@@ -64,7 +64,7 @@
                 }
             },
             {
-                "stop_name": "Hyde Park Avenue @ Cummins Highway",
+                "stop_name": "Hyde Park Ave @ Cummins Highway",
                 "branches": null,
                 "station": "hpave",
                 "order": 5,

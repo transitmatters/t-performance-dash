@@ -21,7 +21,7 @@
                 }
             },
             {
-                "stop_name": "Jamaica Plain Center (Monument)",
+                "stop_name": "Jamaica Plain Center",
                 "branches": null,
                 "station": "jpctr",
                 "order": 2,
@@ -35,7 +35,7 @@
                 }
             },
             {
-                "stop_name": "Centre Street & South Huntington Avenue",
+                "stop_name": "Centre St & South Huntington Ave",
                 "branches": null,
                 "station": "shunt",
                 "order": 3,
@@ -78,7 +78,7 @@
                 }
             },
             {
-                "stop_name": "Huntington Avenue & Longwood Avenue",
+                "stop_name": "Huntington Ave & Longwood Ave",
                 "branches": null,
                 "station": "hlong",
                 "order": 6,
@@ -106,7 +106,7 @@
                 }
             },
             {
-                "stop_name": "Huntington Avenue & Belvidere Street",
+                "stop_name": "Huntington Ave & Belvidere St",
                 "branches": null,
                 "station": "hunbv",
                 "order": 8,

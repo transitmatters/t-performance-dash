@@ -21,7 +21,7 @@
                 }
             },
             {
-                "stop_name": "Appleton Street & Massachusetts Avenue",
+                "stop_name": "Appleton St & Mass Ave",
                 "branches": null,
                 "station": "appma",
                 "order": 2,
@@ -49,7 +49,7 @@
                 }
             },
             {
-                "stop_name": "Massachusetts Avenue @ Lake Street",
+                "stop_name": "Mass Ave @ Lake St",
                 "branches": null,
                 "station": "make",
                 "order": 4,

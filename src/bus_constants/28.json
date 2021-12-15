@@ -35,7 +35,7 @@
                 }
             },
             {
-                "stop_name": "Morton Street @ Blue Hill Avenue",
+                "stop_name": "Morton St @ Blue Hill Ave",
                 "branches": null,
                 "station": "mortn",
                 "order": 3,
@@ -49,7 +49,7 @@
                 }
             },
             {
-                "stop_name": "Blue Hill Avenue @ Talbot Avenue",
+                "stop_name": "Blue Hill Ave @ Talbot Ave",
                 "branches": null,
                 "station": "bltal",
                 "order": 4,
@@ -91,7 +91,7 @@
                 }
             },
             {
-                "stop_name": "Warren Street @ Boston Latin Academy",
+                "stop_name": "Warren St @ Boston Latin",
                 "branches": null,
                 "station": "latac",
                 "order": 7,
@@ -106,7 +106,7 @@
                 }
             },
             {
-                "stop_name": "Warren Street @ Walnut Avenue",
+                "stop_name": "Warren St @ Walnut Ave",
                 "branches": null,
                 "station": "warwl",
                 "order": 8,
@@ -134,7 +134,7 @@
                 }
             },
             {
-                "stop_name": "Roxbury Crossing Station (Bus)",
+                "stop_name": "Roxbury Crossing Station",
                 "branches": null,
                 "station": "roxbs",
                 "order": 10,
