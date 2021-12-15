@@ -24,7 +24,7 @@ const drawTitle = (title, location, bothStops, chart) => {
   ctx.save();
 
   const leftMargin = 50;
-  const rightMargin = 15;
+  const rightMargin = 7;
   const minGap = 10;
   const vpos_row1 = 25;
   const vpos_row2 = 50;
