@@ -53,6 +53,11 @@ def load_data(input_csv, routes):
     df.route_id = df.route_id.str.lstrip("0")
     if routes:
         df = df.loc[df.route_id.isin(routes)]
+ 
+    # Convert dates
+    df.scheduled = pd.to_datetime(df.scheduled)
+    df.service_date = pd.to_datetime(df.service_date)
+    df.actual = pd.to_datetime(df.actual)
 
     OFFSET = datetime(1900, 1, 1, 0, 0, 0)
     df.scheduled = df.service_date + (df.scheduled - OFFSET)
