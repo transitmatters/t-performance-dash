@@ -202,13 +202,11 @@ export default class StationConfiguration extends React.Component {
               ref={this.picker_start}
               placeholder='Select date...'
             />
-            <input
+            <button
               className="more-options-button"
-              type="button"
-              value="Range..."
               style={this.state.show_date_end_picker ? { display: 'none' } : {}}
               onClick={() => this.setState({ show_date_end_picker: true })}
-            />
+            >Range...</button>
             {!!this.state.show_date_end_picker && <>
               <span className="date-label end-date-label">to</span>
               <input
