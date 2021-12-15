@@ -504,3 +504,8 @@ button:disabled,
 .control input[type=radio] {
   margin-right: 10px;
 }
+
+.bus-disclaimer {
+  font-style: italic;
+  padding-top: 30px;
+}

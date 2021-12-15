@@ -2,6 +2,7 @@ import React from 'react';
 import { AggregateByTimeSelectable } from './SelectableCharts';
 import { SingleDayLine, AggregateByDate } from './line';
 import { station_direction } from './stations';
+import { BusDisclaimer } from './notes';
 
 const dataFields = {
   traveltimes: {
@@ -126,6 +127,7 @@ const SingleDaySet = (props) => {
           date={props.startDate}
         />
       }
+      {props.bus_mode && <BusDisclaimer />}
     </div>
   )
 }
