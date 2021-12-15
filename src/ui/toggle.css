@@ -1,8 +1,12 @@
+:root { 
+    --toggle-timing: .1s;
+}
+
 .switch {
     position: relative;
     display: inline-block;
-    width: 40px;
-    height: 20px;
+    width: 42px;
+    height: 22px;
     flex-shrink: 0;
 }
 
@@ -19,24 +23,23 @@
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 10px;
-    outline: none;
-    /* outline: 1px solid; */
+    border-radius: 11px;
+    border: 1px solid;
+    width: 40px;
+    height: 20px;
+    box-sizing: content-box;
     background-color: #fff;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: var(--toggle-timing);
+    transition: var(--toggle-timing);
 }
 
-/* Want toggle perimiter to show in bus mode
- * Border changes size/shape of area
- * Outline has square corners on some browsers
- * so, using box-shadow instead */
 .station-configuration .slider {
-    box-shadow: none;
+    border-style: hidden;
 }
 
 .station-configuration-wrapper.Bus .slider {
-    box-shadow: 0 0 0 1pt rgba(0, 0, 0, 0.4);
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.4);
 }
 
 .slider:before {
@@ -48,8 +51,8 @@
     bottom: 4px;
     border-radius: 6px;
     background-color: black;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: var(--toggle-timing);
+    transition: var(--toggle-timing);
 }
 
 input:checked + .slider:before {
@@ -58,6 +61,7 @@ input:checked + .slider:before {
     transform: translateX(18px);
 }
 
-.switch input:focus + .slider:before {
-    background-color: skyblue;
+.switch input:focus + .slider {
+    outline: 5px auto Highlight;
+    outline: 5px auto -webkit-focus-ring-color;
 }
