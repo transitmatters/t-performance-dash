@@ -44,8 +44,7 @@ def load_data(input_csv, routes):
         'ScheduledHeadway': 'scheduled_headway',
         'Headway': 'headway',
         'direction': 'direction_id'
-        },
-            inplace=True)
+    }, inplace=True)
 
     # We need to keep both "Headway" AND "Schedule": both can have timepoint data.
     df = df.loc[df.actual.notnull()]
@@ -53,7 +52,7 @@ def load_data(input_csv, routes):
     df.route_id = df.route_id.str.lstrip("0")
     if routes:
         df = df.loc[df.route_id.isin(routes)]
- 
+
     # Convert dates
     df.scheduled = pd.to_datetime(df.scheduled)
     df.service_date = pd.to_datetime(df.service_date)
