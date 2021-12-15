@@ -27,7 +27,7 @@ def runone(path, first=False):
 
 def run(paths):
     unchanged = True
-    runone(paths[-1], first=True)
+    runone(paths[0], first=True)
     for path in reversed(paths[1:]):
         unchanged = unchanged and runone(path)
     if unchanged == True:
