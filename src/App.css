@@ -156,7 +156,7 @@
 }
 
 select,
-.flatpickr-input,
+.option-date input,
 button {
   border-radius: 4px;
   appearance: none;

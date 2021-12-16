@@ -3,7 +3,6 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/themes/light.css';
 
 const ua = window.navigator.userAgent;
-const iOSDevice = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
 const isMobile = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(ua);
 const useFlatPickr = !isMobile;
 
