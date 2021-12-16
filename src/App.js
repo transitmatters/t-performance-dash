@@ -21,7 +21,7 @@ const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname)
 
 const MAX_AGGREGATION_MONTHS = 8;
 const RANGE_TOO_LARGE_ERROR = `Please select a range no larger than ${MAX_AGGREGATION_MONTHS} months.`;
-const RANGE_NEGATIVE_ERROR = "Please choose an end date that comes after the selected start date.";
+const RANGE_NEGATIVE_ERROR = "Oops, please ensure the start date comes before the selected end date.";
 
 const stateFromURL = (pathname, config) => {
   const bus_mode = (pathname === "/bus")
@@ -36,6 +36,24 @@ const stateFromURL = (pathname, config) => {
     date_start,
     date_end,
   }
+};
+
+const urlFromState = (config) => {
+  const { bus_mode, line, from, to, date_start, date_end } = config;
+  const { fromStopIds, toStopIds } = get_stop_ids_for_stations(from, to);
+  const pathname = bus_mode ? "bus" : "rapidtransit"
+  const parts = [
+    line,
+    fromStopIds?.[0],
+    toStopIds?.[0],
+    date_start,
+    date_end,
+  ];
+  const partString = parts.map(x => x || "").join(",");
+  const url = `/${pathname}?config=${partString}`;
+  const isComplete = parts.slice(0, -1).every(x => x);
+
+  return [url, isComplete];
 };
 
 const documentTitle = (config) => {
@@ -100,9 +118,7 @@ class App extends React.Component {
 
     // Handle back/forward buttons
     window.onpopstate = (e) => {
-      this.setState({
-        configuration: e.state.state,
-      }, () => {
+      this.setState(e.state.state, () => {
         this.download();
       });
     };
@@ -126,7 +142,7 @@ class App extends React.Component {
     const date_end_ts = new Date(date_end).getTime();
     if (date_end_ts < date_start_ts) {
       return RANGE_NEGATIVE_ERROR;
-    } 
+    }
     if (date_end_ts - date_start_ts > MAX_AGGREGATION_MONTHS * 31 * 86400 * 1000) {
       return RANGE_TOO_LARGE_ERROR;
     }
@@ -134,6 +150,13 @@ class App extends React.Component {
   }
 
   updateConfiguration(config_change, refetch = true) {
+    // Save to browser history only if we are leaving a complete configuration
+    // so back button never takes you to a partial page
+    const [ url, isComplete ] = urlFromState(this.state.configuration);
+    if (isComplete) {
+      this.props.history.push(url, this.state);
+    }
+
     let update = {
       error: null,
       configuration: {
@@ -143,9 +166,9 @@ class App extends React.Component {
     };
 
     const error = this.validateRange(update.configuration.date_start, update.configuration.date_end);
-    this.setState(
-      {error_message: error}
-    );
+    this.setState({
+      error_message: error
+    });
     // Setting refetch to false prevents data download, but lets this.state.configuration update still
     if (error) {
       refetch = false;
@@ -159,32 +182,11 @@ class App extends React.Component {
       update.dwells = [];
     }
     this.setState(update, () => {
-      this.stateToURL();
+      this.props.history.replace(urlFromState(this.state.configuration)[0], this.state);
       if (refetch) {
         this.download();
       }
     });
-  }
-
-  stateToURL() {
-    const {
-      bus_mode,
-      line,
-      from,
-      to,
-      date_start,
-      date_end,
-    } = this.state.configuration;
-    const { fromStopIds, toStopIds } = get_stop_ids_for_stations(from, to);
-    const pathname = bus_mode ? "bus" : "rapidtransit"
-    const parts = [
-      line,
-      fromStopIds?.[0],
-      toStopIds?.[0],
-      date_start,
-      date_end,
-    ].map(x => x || "").join(",");
-    this.props.history.push(`/${pathname}?config=${parts}`, this.state.configuration);
   }
 
   fetchDataset(name, signal, options) {
