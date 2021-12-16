@@ -11,7 +11,7 @@ const RegularDateInput = (props) => {
   if (maxDate === "today") {
     const iso_date = new Date();
     const offset = iso_date.getTimezoneOffset();
-    const local_date = new Date(iso_date - (offset * 60 * 1000));
+    const local_date = new Date(iso_date.valueOf() - (offset * 60 * 1000));
     maxDate = local_date.toISOString().split("T")[0];
   }
 

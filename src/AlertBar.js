@@ -9,10 +9,10 @@ function chartTimeframe(start_date) {
   // Set alert-bar interval to be 5:30am today to 1am tomorrow.
   const today = `${start_date}T00:00:00`;
 
-  let low = new Date(today);
+  const low = new Date(today);
   low.setHours(5, 30);
 
-  let high = new Date(today);
+  const high = new Date(today);
   high.setDate(high.getDate() + 1);
   high.setHours(1,0);
 
