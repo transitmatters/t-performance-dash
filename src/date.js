@@ -4,7 +4,8 @@ import 'flatpickr/dist/themes/light.css';
 
 const ua = window.navigator.userAgent;
 const iOSDevice = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
-const useFlatPickr = !iOSDevice;
+const isMobile = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+const useFlatPickr = !isMobile;
 
 const RegularDateInput = (props) => {
   let maxDate = props.options.maxDate;
