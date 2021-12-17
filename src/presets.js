@@ -20,7 +20,7 @@ const TODAY = new Date().toISOString().split("T")[0];
 export const configPresets = [
 	{
 		label: "June to December 2021 — Orange Line slow zones",
-		value: createConfigPresetValue("Orange", "Downtown Crossing", "Green Street", "2021-06-01", "2021-12-31")
+		value: createConfigPresetValue("Orange", "Downtown Crossing", "Green Street", "2021-06-01", TODAY)
 	},
 	{
 		label: "September 9, 2021 — Route 28 first day of school traffic",
