@@ -153,7 +153,11 @@ class SingleDayLine extends React.Component {
               tooltipFormat: "LTS" // locale time with seconds
             },
             scaleLabel: {
-              labelString: "Time of day",
+              labelString: (
+                new Date(`${this.props.date}T00:00:00`)
+                  .toLocaleDateString(undefined, {
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+                  }))
             },
             // make sure graph shows /at least/ 6am today to 1am tomorrow
             afterDataLimits: (axis) => {
