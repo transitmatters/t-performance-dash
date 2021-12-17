@@ -64,6 +64,7 @@ const get_stop_ids_for_stations = (from, to) => {
 }
 
 export {
+  stations,
   all_lines,
   bus_lines,
   subway_lines,

@@ -9,7 +9,7 @@ import AlertBar from './AlertBar';
 import ProgressBar from './ui/ProgressBar';
 import './App.css';
 import Select from './Select';
-import { configPresets } from './constants';
+import { configPresets } from './presets';
 
 const FRONTEND_TO_BACKEND_MAP = new Map([
   ["localhost", ""], // this becomes a relative path that is proxied through CRA:3000 to python on :5000
