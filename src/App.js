@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { lookup_station_by_id, get_stop_ids_for_stations } from './stations';
 import { recognize } from './AlertFilter';
 import AlertBar from './AlertBar';
-import ProgressBar from './ui/ProgressBar';
+import { ProgressBar, progressBarRate } from './ui/ProgressBar';
 import './App.css';
 import Select from './Select';
 import { configPresets } from './presets';
@@ -96,7 +96,7 @@ class App extends React.Component {
       alerts: [],
       datasetLoadingState: {},
 
-      progress: 0,
+      progressBarKey: 0,
     };
 
     ReactGA.initialize("UA-71173708-2");
@@ -126,7 +126,6 @@ class App extends React.Component {
     this.download = this.download.bind(this);
     this.updateConfiguration = this.updateConfiguration.bind(this);
 
-    this.progressTimer = null;
     this.fetchControllers = [];
   }
 
@@ -181,12 +180,18 @@ class App extends React.Component {
       update.traveltimes = [];
       update.dwells = [];
     }
-    this.setState(update, () => {
-      this.props.history.replace(urlFromState(this.state.configuration)[0], this.state);
-      if (refetch) {
-        this.download();
-      }
-    });
+    this.setState((state, props) => (
+      { 
+        progressBarKey: state.progressBarKey + 1,
+        ...update,
+      }),
+      // callback once state is updated
+      () => {
+        this.props.history.replace(urlFromState(this.state.configuration)[0], this.state);
+        if (refetch) {
+          this.download();
+        }
+      });
   }
 
   fetchDataset(name, signal, options) {
@@ -259,27 +264,6 @@ class App extends React.Component {
     return !!this.state.configuration.date_end;
   }
 
-  restartProgressBar() {
-    // Start the progress bar at 0
-    this.setState({
-      progress: 0,
-    }, () => {
-      this.progressTimer = setInterval(() => {
-        // Increment up until 95%
-        if(this.state.progress < 95) {
-          this.setState({
-            progress: this.state.progress + this.progressBarRate(),
-          });
-        }
-        else {
-          // Stop at 90%, the progress bar will be cleared when everything is actually done loading
-          clearInterval(this.progressTimer);
-          this.progressTimer = null;
-        }
-      }, 1000);
-    });
-  }
-
   download() {
     // End all existing fetches
     while(this.fetchControllers.length > 0) {
@@ -289,19 +273,9 @@ class App extends React.Component {
     const controller = new AbortController();
     this.fetchControllers.push(controller);
 
-    // Stop existing progress bar timer
-    if(this.progressTimer !== null) {
-      clearInterval(this.progressTimer);
-      this.progressTimer = null;
-    }
-
     const { configuration } = this.state;
     const { fromStopIds, toStopIds } = get_stop_ids_for_stations(configuration.from, configuration.to);
     if (configuration.date_start && fromStopIds && toStopIds) {
-      if (configuration.date_end) {
-        this.restartProgressBar();
-      }
-
       this.fetchDataset('headways', controller.signal, {
         stop: fromStopIds,
       });
@@ -365,22 +339,6 @@ class App extends React.Component {
     </div>
   }
 
-  progressBarRate() {
-    // Single day: no rate
-    if(!this.isAggregation()) {
-      return null;
-    }
-
-    // Aggregation: fake rate based on how many days
-    const {date_start, date_end} = this.state.configuration;
-    const ms = (new Date(date_end) - new Date(date_start));
-    const days = ms / (1000*60*60*24);
-    const months = days / 30;
-
-    const total_seconds_expected = 3.0 * months;
-    return 100 / total_seconds_expected; // % per second
-  }
-
   renderCharts() {
     const propsToPass = {
       bus_mode: this.state.configuration.bus_mode,
@@ -422,7 +380,12 @@ class App extends React.Component {
             isLoading={this.getIsLoadingDataset("alerts")}
             isHidden={hasNoLoadedCharts}
           />}
-          {canShowCharts && !this.getDoneLoading() && this.isAggregation() && <ProgressBar progress={this.state.progress} />}
+          {canShowCharts && this.isAggregation() && !this.getDoneLoading() &&
+            <ProgressBar
+              key={this.state.progressBarKey}
+              rate={progressBarRate(this.state.configuration.date_start, this.state.configuration.date_end)}
+            />
+          }
         </div>
         {!canShowCharts && this.renderEmptyState(error_message)}
         {canShowCharts && this.renderCharts()}
