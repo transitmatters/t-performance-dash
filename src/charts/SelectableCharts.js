@@ -42,6 +42,8 @@ class AggregateByTimeSelectable extends React.Component {
         location={this.props.location}
         titleBothStops={this.props.titleBothStops}
         isLoading={this.props.isLoading}
+        startDate={this.props.startDate}
+        endDate={this.props.endDate}
       >
         <RadioForm onChange={this.onChangeValue}
           options={dayOptions}

@@ -77,10 +77,12 @@ const AggregateSet = (props) => {
       <AggregateByTimeSelectable
         title={'Travel times by hour'}
         data={props.traveltimes.by_time || []}
-        seriesName={"Median travel time by day"}
+        seriesName={"Median travel time"}
         location={locationDescription}
         titleBothStops={true}
         isLoading={props.isLoadingTraveltimes}
+        startDate={props.startDate}
+        endDate={props.endDate}
        />
     </div>
   )

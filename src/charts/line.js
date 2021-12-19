@@ -19,6 +19,18 @@ Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
   return {x, y};
 };
 
+const prettyDate = (dateString, with_dow) => {
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: with_dow ? 'long' : undefined,
+  };
+  return new Date(`${dateString}T00:00:00`)
+    .toLocaleDateString(undefined, // user locale/language
+                        options);
+}
+
 const departure_from_normal_string = (metric, benchmark) => {
   const ratio = metric / benchmark;
   if (!isFinite(ratio) || ratio <= 1.25) {
@@ -154,11 +166,7 @@ class SingleDayLine extends React.Component {
               tooltipFormat: "LTS" // locale time with seconds
             },
             scaleLabel: {
-              labelString: (
-                new Date(`${this.props.date}T00:00:00`)
-                  .toLocaleDateString(undefined, {
-                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-                  }))
+              labelString: prettyDate(this.props.date, true)
             },
             // make sure graph shows /at least/ 6am today to 1am tomorrow
             afterDataLimits: (axis) => {
@@ -305,6 +313,7 @@ const AggregateByDate = (props) => {
       xMin={new Date(`${props.startDate}T00:00:00`)}
       xMax={new Date(`${props.endDate}T00:00:00`)}
       fillColor={"rgba(191,200,214,0.5)"}
+      xLabel=""
     />
   )
 }
@@ -317,6 +326,7 @@ const AggregateByTime = (props) => {
       timeUnit={'hour'}
       timeFormat={'LT'} // momentjs format: locale time
       fillColor={"rgba(136,174,230,0.5)"}
+      xLabel={`${prettyDate(props.startDate, false)} – ${prettyDate(props.endDate, false)}`}
       // xMin, xMax?
     />
   )
