@@ -364,7 +364,7 @@ class App extends React.Component {
   render() {
     const { configuration, error_message } = this.state;
     const { from, to, date_start } = configuration;
-    const canShowCharts = from && to && !error_message;
+    const canShowCharts = from && to && date_start && !error_message;
     const canShowAlerts = from && to && date_start && !this.isAggregation();
     const recognized_alerts = this.state.alerts?.filter(recognize);
     const hasNoLoadedCharts = ['traveltimes', 'dwells', 'headways']

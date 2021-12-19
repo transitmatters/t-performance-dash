@@ -4,6 +4,7 @@ import { Line, Chart, defaults } from 'react-chartjs-2';
 import merge from 'lodash.merge';
 import {Legend, LegendLongTerm} from './Legend';
 import drawTitle from './Title';
+import writeError from './error';
 
 Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
   let x = eventPos.x;
@@ -177,7 +178,12 @@ class SingleDayLine extends React.Component {
         }
       }}
       plugins={[{
-        afterDraw: (chart) => drawTitle(this.props.title, this.props.location, this.props.titleBothStops, chart)
+        afterDraw: (chart) => {
+          drawTitle(this.props.title, this.props.location, this.props.titleBothStops, chart);
+          if (!this.props.isLoading && !this.props.data.length) {
+            writeError(chart);
+          }
+        }
       }]}
       />
       </div>
@@ -263,12 +269,20 @@ class AggregateLine extends React.Component {
               // force graph to show startDate to endDate, even if missing data
               min: this.props.xMin,
               max: this.props.xMax,
+            },
+            scaleLabel: {
+              labelString: this.props.xLabel,
             }
           }]
         }
       }}
       plugins={[{
-        afterDraw: (chart) => drawTitle(this.props.title, this.props.location, this.props.titleBothStops, chart)
+        afterDraw: (chart) => {
+          drawTitle(this.props.title, this.props.location, this.props.titleBothStops, chart);
+          if (!this.props.isLoading && !this.props.data.length) {
+            writeError(chart);
+          }
+        }
       }]}
       />
       </div>
