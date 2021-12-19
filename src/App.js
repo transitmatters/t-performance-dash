@@ -4,11 +4,11 @@ import { SingleDaySet, AggregateSet } from './ChartSets';
 import StationConfiguration from './StationConfiguration';
 import { withRouter } from 'react-router-dom';
 import { lookup_station_by_id, get_stop_ids_for_stations } from './stations';
-import { recognize } from './AlertFilter';
-import AlertBar from './AlertBar';
+import { recognize } from './alerts/AlertFilter';
+import AlertBar from './alerts/AlertBar';
 import { ProgressBar, progressBarRate } from './ui/ProgressBar';
 import './App.css';
-import Select from './Select';
+import Select from './inputs/Select';
 import { configPresets } from './presets';
 
 const FRONTEND_TO_BACKEND_MAP = new Map([

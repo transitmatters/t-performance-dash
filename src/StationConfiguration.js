@@ -1,11 +1,12 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import DatePicker from './date';
-import Select from './Select';
+import DatePicker from './inputs/date';
+import Select from './inputs/Select';
+import './inputs/toggle.css';
+
 import { bus_lines, subway_lines, options_station } from './stations';
 import { busDateRange, trainDateRange } from './constants';
-import './ui/toggle.css';
 
 
 const options_lines = (is_bus) => {
