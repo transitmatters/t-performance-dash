@@ -5,26 +5,18 @@ import DatePicker from './inputs/date';
 import Select from './inputs/Select';
 import './inputs/toggle.css';
 
-import { bus_lines, subway_lines, options_station } from './stations';
+import { bus_lines, subway_lines, options_station, line_name } from './stations';
 import { busDateRange, trainDateRange } from './constants';
 
 
 const options_lines = (is_bus) => {
-  if (is_bus) {
-    return bus_lines().map((line) => {
-      return {
-        value: line,
-        label: line.includes("/") ? `Routes ${line}` : `Route ${line}`
-      }
-    });
-  } else {
-    return subway_lines().map((line) => {
-      return {
-        value: line,
-        label: `${line} Line`
-      }
-    });
-  }
+  const lines = is_bus ? bus_lines() : subway_lines();
+  return lines.map((line) => {
+    return {
+      value: line,
+      label: line_name(line)
+    }
+  });
 };
 
 const options_station_ui = (line) => {

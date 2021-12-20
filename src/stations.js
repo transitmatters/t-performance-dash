@@ -63,6 +63,14 @@ const get_stop_ids_for_stations = (from, to) => {
   }
 }
 
+const line_name = (line) => {
+  if (stations[line].type === "bus") {
+    return line.includes("/") ? `Routes ${line}` : `Route ${line}`;
+  } else {
+    return `${line} Line`;
+  }
+}
+
 export {
   stations,
   all_lines,
@@ -72,4 +80,5 @@ export {
   station_direction,
   lookup_station_by_id,
   get_stop_ids_for_stations,
+  line_name
 };
