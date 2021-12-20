@@ -13,12 +13,12 @@ def runone(path, first=False):
         stat_map = dict(map(lambda x: (x['station'], x), my_stations))
         for s in station_stops:
             if s not in stat_map:
-                print("  + Station %s removed in file %s. (Stops: %s)" % (s, path, station_stops[s]))
+                print("  - Station %s removed in file %s. (Stops: %s)" % (s, path, station_stops[s]))
                 continue
             for d in station_stops[s]:
                 for stop in station_stops[s][d]:
                     if stop not in stat_map[s]['stops'][d]:
-                        print("  + Stop %s removed from %s in file %s" % (stop, s, path))
+                        print("  - Stop %s removed from %s in file %s" % (stop, s, path))
 
     for i in list(current.values())[0]['stations']:
         s = i['station']
