@@ -3,6 +3,7 @@ import sys
 
 station_stops = {}
 
+
 def runone(path, first=False):
     unchanged = True
     current = json.load(open(path))
@@ -16,7 +17,7 @@ def runone(path, first=False):
                 continue
             for d in station_stops[s]:
                 for stop in station_stops[s][d]:
-                    if not stop in stat_map[s]['stops'][d]:
+                    if stop not in stat_map[s]['stops'][d]:
                         print("  + Stop %s removed from %s in file %s" % (stop, s, path))
 
     for i in list(current.values())[0]['stations']:
