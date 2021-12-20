@@ -1,15 +1,33 @@
+const errorMsg = "No data available. Try another stop or date.";
+const txtColor = "gray";
+
+function font(size=16) {
+  return `bold ${size}px "Helvetica Neue", "Helvetica", "Arial", sans-serif`;
+}
+
 const writeError = (chart) => {
   const ctx = chart.chart.ctx;
   ctx.save();
 
-  ctx.font = `16px bold "Helvetica Neue", "Helvetica", "Arial", sans-serif`;
+  const xAxis = chart.scales['x-axis-0'];
+  const yAxis = chart.scales['y-axis-0'];
+  const centerX = (xAxis.left + xAxis.right) / 2;
+  const centerY = (yAxis.bottom + yAxis.top) / 2;
+  const maxWidth = (xAxis.right - xAxis.left);
+  
+  /* shrink font on smaller screens */
+  let fontSize = 16;
+  ctx.font = font(fontSize);
+  while (ctx.measureText(errorMsg).width > maxWidth) {
+    fontSize -= 1;
+    ctx.font = font(fontSize);
+  }
+
+  ctx.fillStyle = txtColor;
   ctx.textAlign = 'center';
-  ctx.fillText("No data available. Try another stop/date.",
-               chart.chart.width / 2,
-               chart.chart.height / 2);
+  ctx.fillText(errorMsg, centerX, centerY);
 
   ctx.restore();
-
 }
 
 export default writeError;
