@@ -25,6 +25,12 @@ const dataFields = {
   }
 }
 
+const headwayTitle = {
+  // indexed by bus_mode
+  true: "Time between buses (headways)",
+  false: "Time between trains (headways)"
+}
+
 function getLocationDescription(from, to, line) {  
   if (from && to) {
     return {
@@ -39,7 +45,6 @@ function getLocationDescription(from, to, line) {
 
 const AggregateSet = (props) => {
   const locationDescription = getLocationDescription(props.from, props.to, props.line);
-  const headwayTitle = props.bus_mode ? "Time between buses (headways)" : "Time between trains (headways)";
   return(
     <div className='charts main-column'>
       <AggregateByDate
@@ -53,7 +58,7 @@ const AggregateSet = (props) => {
         endDate={props.endDate}
       />
       <AggregateByDate
-        title={headwayTitle}
+        title={headwayTitle[props.bus_mode]}
         data={props.headways}
         seriesName={'Median headway'}
         location={locationDescription}
@@ -94,7 +99,6 @@ const SingleDaySet = (props) => {
   // TODO: fix this by clearing existing data in updateConfiguration
   const anyTravelBenchmarks = Array.isArray(props.traveltimes) && props.traveltimes.some(e => e.benchmark_travel_time_sec > 0);
   const anyHeadwayBenchmarks = props.headways.some(e => e.benchmark_headway_time_sec > 0);
-  const headwayTitle = props.bus_mode ? "Time between buses (headways)" : "Time between trains (headways)";
   return(
     <div className='charts main-column'>
       <SingleDayLine
@@ -109,7 +113,7 @@ const SingleDaySet = (props) => {
       />
       <SingleDayLine
         {...dataFields.headways}
-        title={headwayTitle}
+        title={headwayTitle[props.bus_mode]}
         data={props.headways}
         useBenchmarks={anyHeadwayBenchmarks}
         location={locationDescription}
