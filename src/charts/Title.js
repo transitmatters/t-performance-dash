@@ -38,8 +38,8 @@ const drawTitle = (title, location, bothStops, chart) => {
   const ctx = chart.chart.ctx;
   ctx.save();
 
-  const leftMargin = 50;
-  const rightMargin = 7;
+  const leftMargin = chart.scales['x-axis-0'].left;
+  const rightMargin = chart.chart.width - chart.scales['x-axis-0'].right;
   const minGap = 10;
   const vpos_row1 = 25;
   const vpos_row2 = 50;
