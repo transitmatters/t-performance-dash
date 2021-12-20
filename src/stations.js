@@ -17,10 +17,17 @@ import bus_114_116_117 from './bus_constants/114-116-117.json'
 
 const stations = {...rt_stations,
                   ...bus_1,
+                  ...bus_15,
+                  ...bus_22,
                   ...bus_23,
                   ...bus_28,
+                  ...bus_32,
+                  ...bus_39,
                   ...bus_57,
                   ...bus_66,
+                  ...bus_71,
+                  ...bus_73,
+                  ...bus_77,
                   ...bus_111,
                   ...bus_114_116_117
                 };
