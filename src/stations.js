@@ -64,6 +64,9 @@ const get_stop_ids_for_stations = (from, to) => {
 }
 
 const line_name = (line) => {
+  if (!line) {
+    return "";
+  }
   if (stations[line].type === "bus") {
     return line.includes("/") ? `Routes ${line}` : `Route ${line}`;
   } else {

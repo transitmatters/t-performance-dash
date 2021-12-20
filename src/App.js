@@ -60,9 +60,16 @@ const urlFromState = (config) => {
 };
 
 const documentTitle = (config) => {
-  const line = line_name(config.line);
-  const date_info = `${config.date_start}` + (config.date_end ? ` to ${config.date_end}` : "");
-  return `${line} - ${date_info} - TransitMatters Data Dashboard`;
+  const pieces = ["TransitMatters Data Dashboard"];
+  if (config.line) {
+    pieces.splice(0, 0, line_name(config.line));
+  }
+  if (config.date_start && config.date_end) {
+    pieces.splice(1, 0, `${config.date_start} to ${config.date_end}`);
+  } else if (config.date_start) {
+    pieces.splice(1, 0, config.date_start.toString());
+  }
+  return pieces.join(' - ');
 };
 
 const showBetaTag = () => {
