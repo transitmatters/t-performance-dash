@@ -79,15 +79,22 @@
                 }
             },
             {
-                "stop_name": "[INB] Third & Chestnut | [OB] Broadway & Beacon",
-                "_comment": "The route splits with differing timepoints. Hopefully this is clear yet concise",
+                "stop_name": "Third & Chestnut (Inbound)",
                 "branches": null,
-                "station": "thche|bwybc",
+                "station": "thche",
                 "order": 6,
                 "stops": {
                     "1": [
                         "111-1-5607"
-                    ],
+                    ]
+                }
+            },
+            {
+                "stop_name": "Broadway & Beacon (Outbound)",
+                "branches": null,
+                "station": "bwybc",
+                "order": 6,
+                "stops": {
                     "0": [
                         "111-0-5611"
                     ]
