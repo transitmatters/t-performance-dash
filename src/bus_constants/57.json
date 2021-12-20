@@ -80,7 +80,7 @@
                 }
             },
             {
-                "stop_name": "Brighton & Commonwealth Avenue",
+                "stop_name": "Brighton & Comm Ave",
                 "branches": null,
                 "station": "brcom",
                 "order": 6,
@@ -94,7 +94,7 @@
                 }
             },
             {
-                "stop_name": "Commonwealth Ave @ BU Bridge",
+                "stop_name": "Comm Ave @ BU Bridge",
                 "branches": null,
                 "station": "bubrg",
                 "order": 7,
