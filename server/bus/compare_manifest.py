@@ -13,7 +13,7 @@ def runone(path, first=False):
         if s not in station_stops:
             station_stops[s] = {}
             if not first:
-                print("Found missing station %s" % s)
+                print("  + Found new station %s" % s)
                 unchanged = False
         for direction in i['stops']:
             if direction not in station_stops[s]:
@@ -22,7 +22,7 @@ def runone(path, first=False):
                 if stop not in station_stops[s][direction]:
                     station_stops[s][direction].append(stop)
                     if not first:
-                        print("Found additional stop %s at station %s in %s" % (stop, s, path))
+                        print(" + Found additional stop %s at station %s in %s" % (stop, s, path))
                         unchanged = False
     return unchanged
 
