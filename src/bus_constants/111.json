@@ -86,18 +86,20 @@
                 "stops": {
                     "1": [
                         "111-1-5607"
-                    ]
+                    ],
+		    "0": []
                 }
             },
             {
                 "stop_name": "Broadway & Beacon (Outbound)",
                 "branches": null,
                 "station": "bwybc",
-                "order": 6,
+                "order": 6.5,
                 "stops": {
                     "0": [
                         "111-0-5611"
-                    ]
+                    ],
+		    "1": []
                 }
             },
             {
