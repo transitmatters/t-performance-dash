@@ -35,7 +35,7 @@
                 }
             },
             {
-                "stop_name": "Mount Auburn Bridge",
+                "stop_name": "Mt Auburn Bridge",
                 "branches": null,
                 "station": "mtaub",
                 "order": 3,
@@ -50,7 +50,7 @@
                 }
             },
             {
-                "stop_name": "Mount Auburn Hospital",
+                "stop_name": "Mt Auburn Hospital",
                 "branches": null,
                 "station": "mthsp",
                 "order": 4,
@@ -64,7 +64,7 @@
                 }
             },
             {
-                "stop_name": "Mount Auburn @ Story St",
+                "stop_name": "Mt Auburn @ Story St",
                 "branches": null,
                 "station": "mtsty",
                 "order": 5,
