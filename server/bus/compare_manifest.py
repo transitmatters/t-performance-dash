@@ -3,10 +3,22 @@ import sys
 
 station_stops = {}
 
-
 def runone(path, first=False):
     unchanged = True
     current = json.load(open(path))
+    # Print any removed stops first
+    if not first:
+        my_stations = list(current.values())[0]['stations']
+        stat_map = dict(map(lambda x: (x['station'], x), my_stations))
+        for s in station_stops:
+            if s not in stat_map:
+                print("  + Station %s removed in file %s. (Stops: %s)" % (s, path, station_stops[s]))
+                continue
+            for d in station_stops[s]:
+                for stop in station_stops[s][d]:
+                    if not stop in stat_map[s]['stops'][d]:
+                        print("  + Stop %s removed from %s in file %s" % (stop, s, path))
+
     for i in list(current.values())[0]['stations']:
         s = i['station']
 
