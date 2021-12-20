@@ -3,7 +3,7 @@ import ReactGA from 'react-ga';
 import { SingleDaySet, AggregateSet } from './ChartSets';
 import StationConfiguration from './StationConfiguration';
 import { withRouter } from 'react-router-dom';
-import { lookup_station_by_id, get_stop_ids_for_stations } from './stations';
+import { lookup_station_by_id, get_stop_ids_for_stations, line_name } from './stations';
 import { recognize } from './alerts/AlertFilter';
 import AlertBar from './alerts/AlertBar';
 import { ProgressBar, progressBarRate } from './ui/ProgressBar';
@@ -19,12 +19,15 @@ const FRONTEND_TO_BACKEND_MAP = new Map([
 ]);
 const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname);
 
+const RAPIDTRANSIT_PATH = "/rapidtransit";
+const BUS_PATH = "/bus";
+
 const MAX_AGGREGATION_MONTHS = 8;
 const RANGE_TOO_LARGE_ERROR = `Please select a range no larger than ${MAX_AGGREGATION_MONTHS} months.`;
 const RANGE_NEGATIVE_ERROR = "Oops, please ensure the start date comes before the selected end date.";
 
 const stateFromURL = (pathname, config) => {
-  const bus_mode = (pathname === "/bus")
+  const bus_mode = (pathname === BUS_PATH)
   const [line, from_id, to_id, date_start, date_end] = config.split(",");
   const from = lookup_station_by_id(line, from_id);
   const to = lookup_station_by_id(line, to_id);
@@ -41,7 +44,7 @@ const stateFromURL = (pathname, config) => {
 const urlFromState = (config) => {
   const { bus_mode, line, from, to, date_start, date_end } = config;
   const { fromStopIds, toStopIds } = get_stop_ids_for_stations(from, to);
-  const pathname = bus_mode ? "bus" : "rapidtransit"
+  const path = bus_mode ? BUS_PATH : RAPIDTRANSIT_PATH;
   const parts = [
     line,
     fromStopIds?.[0],
@@ -50,14 +53,16 @@ const urlFromState = (config) => {
     date_end,
   ];
   const partString = parts.map(x => x || "").join(",");
-  const url = `/${pathname}?config=${partString}`;
+  const url = `${path}?config=${partString}`;
   const isComplete = parts.slice(0, -1).every(x => x);
 
   return [url, isComplete];
 };
 
 const documentTitle = (config) => {
-  return `${config.line} Line - ${config.date_start} - TransitMatters Data Dashboard`;
+  const line = line_name(config.line);
+  const date_info = `${config.date_start}` + (config.date_end ? ` to ${config.date_end}` : "");
+  return `${line} - ${date_info} - TransitMatters Data Dashboard`;
 };
 
 const showBetaTag = () => {
@@ -100,7 +105,7 @@ class App extends React.Component {
     };
 
     ReactGA.initialize("UA-71173708-2");
-    ReactGA.pageview("/rapidtransit");
+    ReactGA.pageview(props.location.pathname);
 
     const url_config = new URLSearchParams(props.location.search).get("config");
     if (typeof url_config === "string") {
@@ -188,6 +193,7 @@ class App extends React.Component {
       // callback once state is updated
       () => {
         this.props.history.replace(urlFromState(this.state.configuration)[0], this.state);
+        document.title = documentTitle(this.state.configuration);
         if (refetch) {
           this.download();
         }
@@ -297,9 +303,8 @@ class App extends React.Component {
         this.fetchDataset('alerts', controller.signal, {
           route: configuration.line,
         });
-        ReactGA.pageview(window.location.pathname + window.location.search);
-        document.title = documentTitle(this.state.configuration);
       }
+      ReactGA.pageview(window.location.pathname + window.location.search);
     }
   }
 
