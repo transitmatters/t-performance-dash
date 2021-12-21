@@ -22,20 +22,6 @@
                 }
             },
             {
-                "stop_name": "Saint Peter's Square (Dorchester)",
-                "branches": null,
-                "station": "peter",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "15-1-15100"
-                    ],
-                    "0": [
-                        "15-0-15100"
-                    ]
-                }
-            },
-            {
                 "stop_name": "Geneva Ave @ Bowdoin St",
                 "branches": null,
                 "station": "genbo",
