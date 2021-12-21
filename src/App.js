@@ -24,7 +24,8 @@ const BUS_PATH = "/bus";
 
 const MAX_AGGREGATION_MONTHS = 8;
 const RANGE_TOO_LARGE_ERROR = `Please select a range no larger than ${MAX_AGGREGATION_MONTHS} months.`;
-const RANGE_NEGATIVE_ERROR = "Oops, please ensure the start date comes before the selected end date.";
+const RANGE_NEGATIVE_ERROR = "Please ensure the start date comes before the selected end date.";
+const INVALID_STOP_ERROR = "Invalid stop selection. Please check the inbound/outbound nature of your selected stops.";
 
 const stateFromURL = (pathname, config) => {
   const bus_mode = (pathname === BUS_PATH)
@@ -160,6 +161,17 @@ class App extends React.Component {
     return null;
   }
 
+  validateStops(from, to) {
+    /* A selected stop might have no stop ids depending on direction (e.g. inbound-only). */
+    const { fromStopIds, toStopIds } = get_stop_ids_for_stations(from, to);
+    if (from && to) {
+      if (!fromStopIds.length || !toStopIds.length) {
+        return INVALID_STOP_ERROR;
+      }
+    }
+    return null;
+  }
+
   updateConfiguration(config_change, refetch = true) {
     // Save to browser history only if we are leaving a complete configuration
     // so back button never takes you to a partial page
@@ -176,7 +188,8 @@ class App extends React.Component {
       }
     };
 
-    const error = this.validateRange(update.configuration.date_start, update.configuration.date_end);
+    const error = this.validateRange(update.configuration.date_start, update.configuration.date_end) ||
+                  this.validateStops(update.configuration.from, update.configuration.to);
     this.setState({
       error_message: error
     });
