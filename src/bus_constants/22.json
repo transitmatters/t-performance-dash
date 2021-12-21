@@ -1,5 +1,5 @@
 {
-    "57": {
+    "22": {
         "type": "bus",
         "direction": {
             "0": "outbound",
@@ -7,117 +7,132 @@
         },
         "stations": [
             {
-                "stop_name": "Watertown Yard",
+                "stop_name": "Ashmont Terminal",
                 "branches": null,
-                "station": "wtryd",
+                "station": "ashmt",
                 "order": 1,
                 "stops": {
                     "1": [
-                        "57-1-900"
+                        "22-1-334"
                     ],
                     "0": [
-                        "57-0-900"
+                        "22-0-334"
                     ]
                 }
             },
             {
-                "stop_name": "Newton Corner",
+                "stop_name": "Codman Square",
                 "branches": null,
-                "station": "nwcor",
+                "station": "codmn",
                 "order": 2,
                 "stops": {
                     "1": [
-                        "57-1-903"
+                        "22-1-371"
                     ],
                     "0": [
-                        "57-0-987"
+                        "22-0-426"
                     ]
                 }
             },
             {
-                "stop_name": "Oak Square",
+                "stop_name": "Blue Hill Ave @ Talbot Ave",
                 "branches": null,
-                "station": "oaksq",
+                "station": "bltal",
                 "order": 3,
                 "stops": {
                     "1": [
-                        "57-1-912",
-                        "57-1-913"
+                        "22-1-378"
                     ],
                     "0": [
-                        "57-0-9780",
-                        "57-0-979"
+                        "22-0-419"
                     ]
                 }
             },
             {
-                "stop_name": "Brighton Center",
+                "stop_name": "Franklin Park",
                 "branches": null,
-                "station": "brctr",
+                "station": "frnpk",
                 "order": 4,
                 "stops": {
                     "1": [
-                        "57-1-918"
+                        "22-1-383"
                     ],
                     "0": [
-                        "57-0-973"
+                        "22-0-17391",
+                        "22-0-415"
                     ]
                 }
             },
             {
-                "stop_name": "Union Square",
+                "stop_name": "Seaver & Humboldt",
                 "branches": null,
-                "station": "union",
+                "station": "svrhm",
                 "order": 5,
                 "stops": {
                     "1": [
-                        "57-1-925",
-                        "57-1-926"
+                        "22-1-1741"
                     ],
                     "0": [
-                        "57-0-966"
+                        "22-0-17411"
                     ]
                 }
             },
             {
-                "stop_name": "Brighton & Comm Ave",
+                "stop_name": "Egleston Square",
                 "branches": null,
-                "station": "brcom",
+                "station": "egles",
                 "order": 6,
                 "stops": {
                     "1": [
-                        "57-1-931"
+                        "22-1-1188"
                     ],
                     "0": [
-                        "57-0-959"
+                        "22-0-10413",
+                        "22-0-1267"
                     ]
                 }
             },
             {
-                "stop_name": "Comm Ave @ BU Bridge",
+                "stop_name": "Jackson Square Station",
                 "branches": null,
-                "station": "bubrg",
+                "station": "jasst",
                 "order": 7,
                 "stops": {
                     "1": [
-                        "57-1-937"
+                        "22-1-11531"
                     ],
                     "0": [
-                        "57-0-954"
+                        "22-0-11531"
                     ]
                 }
             },
             {
-                "stop_name": "Kenmore (Busway)",
+                "stop_name": "Roxbury Crossing Station",
                 "branches": null,
-                "station": "kenbs",
+                "station": "roxbs",
                 "order": 8,
                 "stops": {
                     "1": [
-                        "57-1-899"
+                        "22-1-1222"
                     ],
                     "0": [
-                        "57-0-899"
+                        "22-0-1258",
+                        "22-0-21148"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Ruggles",
+                "branches": null,
+                "station": "rugg",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "22-1-17861",
+                        "22-1-17863"
+                    ],
+                    "0": [
+                        "22-0-17862"
                     ]
                 }
             }
