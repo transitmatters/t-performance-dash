@@ -1,5 +1,5 @@
 {
-    "57": {
+    "77": {
         "type": "bus",
         "direction": {
             "0": "outbound",
@@ -7,117 +7,133 @@
         },
         "stations": [
             {
-                "stop_name": "Watertown Yard",
+                "stop_name": "Arlington Heights",
                 "branches": null,
-                "station": "wtryd",
+                "station": "arlht",
                 "order": 1,
                 "stops": {
                     "1": [
-                        "57-1-900"
+                        "77-1-7922"
                     ],
                     "0": [
-                        "57-0-900"
+                        "77-0-7922"
                     ]
                 }
             },
             {
-                "stop_name": "Newton Corner",
+                "stop_name": "Appleton St & Mass Ave",
                 "branches": null,
-                "station": "nwcor",
+                "station": "appma",
                 "order": 2,
                 "stops": {
                     "1": [
-                        "57-1-903"
+                        "77-1-2251"
                     ],
                     "0": [
-                        "57-0-987"
+                        "77-0-2291"
                     ]
                 }
             },
             {
-                "stop_name": "Oak Square",
+                "stop_name": "Arlington Center",
                 "branches": null,
-                "station": "oaksq",
+                "station": "arlct",
                 "order": 3,
                 "stops": {
                     "1": [
-                        "57-1-912",
-                        "57-1-913"
+                        "77-1-2258"
                     ],
                     "0": [
-                        "57-0-9780",
-                        "57-0-979"
+                        "77-0-2282"
                     ]
                 }
             },
             {
-                "stop_name": "Brighton Center",
+                "stop_name": "Mass Ave @ Lake St",
                 "branches": null,
-                "station": "brctr",
+                "station": "make",
                 "order": 4,
                 "stops": {
                     "1": [
-                        "57-1-918"
+                        "77-1-2265"
                     ],
                     "0": [
-                        "57-0-973"
+                        "77-0-2277"
                     ]
                 }
             },
             {
-                "stop_name": "Union Square",
+                "stop_name": "Alewife Brook Parkway",
                 "branches": null,
-                "station": "union",
+                "station": "alwpk",
                 "order": 5,
                 "stops": {
                     "1": [
-                        "57-1-925",
-                        "57-1-926"
+                        "77-1-22671"
                     ],
                     "0": [
-                        "57-0-966"
+                        "77-0-22751"
                     ]
                 }
             },
             {
-                "stop_name": "Brighton & Comm Ave",
+                "stop_name": "North Cambridge Station",
                 "branches": null,
-                "station": "brcom",
+                "station": "ncsta",
                 "order": 6,
                 "stops": {
                     "1": [
-                        "57-1-931"
+                        "77-1-12295",
+                        "77-1-2296"
                     ],
                     "0": [
-                        "57-0-959"
+                        "77-0-12295",
+                        "77-0-2271",
+                        "77-0-2320"
                     ]
                 }
             },
             {
-                "stop_name": "Comm Ave @ BU Bridge",
+                "stop_name": "Porter Square",
                 "branches": null,
-                "station": "bubrg",
+                "station": "portr",
                 "order": 7,
                 "stops": {
                     "1": [
-                        "57-1-937"
+                        "77-1-12301"
                     ],
                     "0": [
-                        "57-0-954"
+                        "77-0-23151"
                     ]
                 }
             },
             {
-                "stop_name": "Kenmore (Busway)",
+                "stop_name": "Cambridge Common Loop",
                 "branches": null,
-                "station": "kenbs",
+                "station": "hloop",
                 "order": 8,
                 "stops": {
                     "1": [
-                        "57-1-899"
+                        "77-1-2307"
                     ],
                     "0": [
-                        "57-0-899"
+                        "77-0-2310"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Harvard Bus Tunnels",
+                "branches": null,
+                "station": "bally",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "77-1-2076",
+                        "77-1-32549"
+                    ],
+                    "0": [
+                        "77-0-20761",
+                        "77-0-20762"
                     ]
                 }
             }

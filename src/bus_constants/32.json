@@ -1,0 +1,97 @@
+{
+    "32": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Wolcott Square",
+                "branches": null,
+                "station": "wolsq",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "32-1-42819"
+                    ],
+                    "0": [
+                        "32-0-42819"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Cleary Square",
+                "branches": null,
+                "station": "clsq",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "32-1-36466"
+                    ],
+                    "0": [
+                        "32-0-2819",
+                        "32-0-6509"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Greenwood & Hyde Park",
+                "branches": null,
+                "station": "green",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "32-1-6471"
+                    ],
+                    "0": [
+                        "32-0-6504"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Hyde Park Ave @ American Legion",
+                "branches": null,
+                "station": "hpaml",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "32-1-6474"
+                    ],
+                    "0": [
+                        "32-0-6500"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Hyde Park Ave @ Cummins Highway",
+                "branches": null,
+                "station": "hpave",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "32-1-6478"
+                    ],
+                    "0": [
+                        "32-0-6496"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Forest Hills Busway",
+                "branches": null,
+                "station": "fhill",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "32-1-10642",
+                        "32-1-875"
+                    ],
+                    "0": [
+                        "32-0-875"
+                    ]
+                }
+            }
+        ]
+    }
+}

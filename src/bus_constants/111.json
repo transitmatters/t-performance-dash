@@ -16,7 +16,8 @@
                         "111-1-5547"
                     ],
                     "0": [
-                        "111-0-5547"
+                        "111-0-5547",
+                        "111-0-5636"
                     ]
                 }
             },
@@ -78,18 +79,27 @@
                 }
             },
             {
-                "stop_name": "[INB] Third & Chestnut | [OB] Broadway & Beacon",
-                "_comment": "The route splits with differing timepoints. Hopefully this is clear yet concise",
+                "stop_name": "Third & Chestnut (Inbound)",
                 "branches": null,
-                "station": "thche|bwybc",
+                "station": "thche",
                 "order": 6,
                 "stops": {
                     "1": [
                         "111-1-5607"
                     ],
+                    "0": []
+                }
+            },
+            {
+                "stop_name": "Broadway & Beacon (Outbound)",
+                "branches": null,
+                "station": "bwybc",
+                "order": 6.5,
+                "stops": {
                     "0": [
                         "111-0-5611"
-                    ]
+                    ],
+                    "1": []
                 }
             },
             {
@@ -121,7 +131,7 @@
                 }
             },
             {
-                "stop_name": "Causeway Street & Commercial Street",
+                "stop_name": "Causeway St & Commercial St",
                 "branches": null,
                 "station": "cacom",
                 "order": 9,
@@ -131,6 +141,22 @@
                     ],
                     "0": [
                         "111-0-2832"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Haymarket",
+                "branches": null,
+                "station": "hayms",
+                "order": 10,
+                "stops": {
+                    "1": [
+                        "111-1-8309",
+                        "111-1-8310"
+                    ],
+                    "0": [
+                        "111-0-8309",
+                        "111-0-8310"
                     ]
                 }
             }
