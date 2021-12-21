@@ -120,7 +120,7 @@
                 }
             },
             {
-                "stop_name": "Copley",
+                "stop_name": "Copley (Inbound)",
                 "branches": null,
                 "station": "copst",
                 "order": 9,
