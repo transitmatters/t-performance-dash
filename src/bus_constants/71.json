@@ -7,20 +7,6 @@
         },
         "stations": [
             {
-                "stop_name": "Aberdeen & Mt Auburn",
-                "branches": null,
-                "station": "abmta",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "71-1-2098"
-                    ],
-                    "0": [
-                        "71-0-2077"
-                    ]
-                }
-            },
-            {
                 "stop_name": "Watertown Square",
                 "branches": null,
                 "station": "wtrsq",
