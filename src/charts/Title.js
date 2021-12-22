@@ -22,9 +22,9 @@ const parse_location_description = (location, bothStops) => {
   return result;
 };
 
-function font(size = 16) {
+function font(size_px = 16) {
   // This is the default from chartjs, but now we can adjust size.
-  return `bold ${size}px "Helvetica Neue", "Helvetica", "Arial", sans-serif`;
+  return `bold ${size_px}px "Helvetica Neue", "Helvetica", "Arial", sans-serif`;
 }
 
 const calcLocationWidth = (words, ctx) => {

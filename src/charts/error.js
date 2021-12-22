@@ -1,11 +1,11 @@
 const errorMsg = "No data available. Try another stop or date.";
 const txtColor = "gray";
 
-function font(size=16) {
-  return `bold ${size}px "Helvetica Neue", "Helvetica", "Arial", sans-serif`;
+function font(size_px=16) {
+  return `bold ${size_px}px "Helvetica Neue", "Helvetica", "Arial", sans-serif`;
 }
 
-const writeError = (chart) => {
+function writeError(chart) {
   const ctx = chart.chart.ctx;
   ctx.save();
 
