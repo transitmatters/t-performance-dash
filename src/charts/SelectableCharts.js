@@ -1,24 +1,6 @@
 import React from 'react';
-import classNames from 'classnames';
 import { AggregateByTime, AggregateByDate } from './line';
-
-const RadioForm = (props) => {
-  const { options, onChange, checked, className } = props;
-
-  return (
-    <div className={classNames("control", className)}>
-      {options.map((opt, index) => 
-        <label key={index}>
-          <input type="radio"
-            value={opt.value}
-            onChange={evt => onChange(evt.target.value)}
-            checked={opt.value === checked}/>
-          {opt.label}
-        </label>
-        )}
-    </div>
-  )
-}
+import RadioForm from '../inputs/radio';
 
 const dayOptions = [
   {value: "weekday", label: "Weekday", titleSuffix: "(Weekday)"},
@@ -60,6 +42,8 @@ class AggregateByTimeSelectable extends React.Component {
         location={this.props.location}
         titleBothStops={this.props.titleBothStops}
         isLoading={this.props.isLoading}
+        startDate={this.props.startDate}
+        endDate={this.props.endDate}
       >
         <RadioForm onChange={this.onChangeValue}
           options={dayOptions}

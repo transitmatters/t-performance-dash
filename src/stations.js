@@ -36,6 +36,14 @@ const all_lines = () => {
   return Object.keys(stations);
 };
 
+const bus_lines = () => {
+  return all_lines().filter((line) => stations[line].type === "bus");
+}
+
+const subway_lines = () => {
+  return all_lines().filter((line) => stations[line].type !== "bus")
+}
+
 const lookup_station_by_id = (line, id) => {
   if (line === "" || line === undefined || id === "" || id === undefined) {
     return undefined;
@@ -69,10 +77,25 @@ const get_stop_ids_for_stations = (from, to) => {
   }
 }
 
+const line_name = (line) => {
+  if (!line) {
+    return "";
+  }
+  if (stations[line].type === "bus") {
+    return line.includes("/") ? `Routes ${line}` : `Route ${line}`;
+  } else {
+    return `${line} Line`;
+  }
+}
+
 export {
+  stations,
   all_lines,
+  bus_lines,
+  subway_lines,
   options_station,
   station_direction,
   lookup_station_by_id,
   get_stop_ids_for_stations,
+  line_name
 };

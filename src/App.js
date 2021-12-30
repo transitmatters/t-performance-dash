@@ -3,13 +3,13 @@ import ReactGA from 'react-ga';
 import { SingleDaySet, AggregateSet } from './ChartSets';
 import StationConfiguration from './StationConfiguration';
 import { withRouter } from 'react-router-dom';
-import { lookup_station_by_id, get_stop_ids_for_stations } from './stations';
-import { recognize } from './AlertFilter';
-import AlertBar from './AlertBar';
-import ProgressBar from './ui/ProgressBar';
+import { lookup_station_by_id, get_stop_ids_for_stations, line_name } from './stations';
+import { recognize } from './alerts/AlertFilter';
+import AlertBar from './alerts/AlertBar';
+import { ProgressBar, progressBarRate } from './ui/ProgressBar';
 import './App.css';
-import Select from './Select';
-import { configPresets } from './constants';
+import Select from './inputs/Select';
+import { configPresets } from './presets';
 
 const FRONTEND_TO_BACKEND_MAP = new Map([
   ["localhost", ""], // this becomes a relative path that is proxied through CRA:3000 to python on :5000
@@ -19,14 +19,21 @@ const FRONTEND_TO_BACKEND_MAP = new Map([
 ]);
 const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname);
 
+const RAPIDTRANSIT_PATH = "/rapidtransit";
+const BUS_PATH = "/bus";
+
 const MAX_AGGREGATION_MONTHS = 8;
 const RANGE_TOO_LARGE_ERROR = `Please select a range no larger than ${MAX_AGGREGATION_MONTHS} months.`;
+const RANGE_NEGATIVE_ERROR = "Please ensure the start date comes before the selected end date.";
+const INVALID_STOP_ERROR = "Invalid stop selection. Please check the inbound/outbound nature of your selected stops.";
 
-const stateFromURL = (config) => {
+const stateFromURL = (pathname, config) => {
+  const bus_mode = (pathname === BUS_PATH);
   const [line, from_id, to_id, date_start, date_end] = config.split(",");
   const from = lookup_station_by_id(line, from_id);
   const to = lookup_station_by_id(line, to_id);
   return {
+    bus_mode,
     line,
     from,
     to,
@@ -35,8 +42,38 @@ const stateFromURL = (config) => {
   }
 };
 
+const urlFromState = (config) => {
+  const { bus_mode, line, from, to, date_start, date_end } = config;
+  const { fromStopIds, toStopIds } = get_stop_ids_for_stations(from, to);
+  const path = bus_mode ? BUS_PATH : RAPIDTRANSIT_PATH;
+  const parts = [
+    line,
+    fromStopIds?.[0],
+    toStopIds?.[0],
+    date_start,
+    date_end,
+  ];
+  if (!parts.some(x => x)) {
+    return [path, false];
+  }
+  const partString = parts.map(x => x || "").join(",");
+  const url = `${path}?config=${partString}`;
+  const isComplete = parts.slice(0, -1).every(x => x);
+
+  return [url, isComplete];
+};
+
 const documentTitle = (config) => {
-  return `${config.line} Line - ${config.date_start} - TransitMatters Data Dashboard`;
+  const pieces = ["TransitMatters Data Dashboard"];
+  if (config.line) {
+    pieces.splice(0, 0, line_name(config.line));
+  }
+  if (config.date_start && config.date_end) {
+    pieces.splice(1, 0, `${config.date_start} to ${config.date_end}`);
+  } else if (config.date_start) {
+    pieces.splice(1, 0, config.date_start.toString());
+  }
+  return pieces.join(' - ');
 };
 
 const showBetaTag = () => {
@@ -66,6 +103,7 @@ class App extends React.Component {
 
     this.state = {
       configuration: {
+        bus_mode: props.bus_mode,
         show_alerts: true,
       },
       error_message: null,
@@ -75,18 +113,16 @@ class App extends React.Component {
       alerts: [],
       datasetLoadingState: {},
 
-      progress: 0,
+      progressBarKey: 0,
     };
 
     ReactGA.initialize("UA-71173708-2");
-    ReactGA.pageview("/rapidtransit");
+    ReactGA.pageview(props.location.pathname);
 
     const url_config = new URLSearchParams(props.location.search).get("config");
     if (typeof url_config === "string") {
-      this.state.configuration = stateFromURL(url_config);
-      if(!this.permittedRange(this.state.configuration.date_start, this.state.configuration.date_end)) {
-        this.state.error_message = RANGE_TOO_LARGE_ERROR;
-      }
+      this.state.configuration = stateFromURL(props.location.pathname, url_config);
+      this.state.error_message = this.validateRange(this.state.configuration.date_start, this.state.configuration.date_end);
     }
 
     if (window.location.hostname !== "dashboard.transitmatters.org") {
@@ -99,25 +135,14 @@ class App extends React.Component {
 
     // Handle back/forward buttons
     window.onpopstate = (e) => {
-      this.setState({
-        configuration: e.state.state,
-      }, () => {
+      this.setState(e.state.state, () => {
         this.download();
       });
     };
 
     this.download = this.download.bind(this);
     this.updateConfiguration = this.updateConfiguration.bind(this);
-    this.chartTimeframe = this.chartTimeframe.bind(this);
-    this.setIsLoadingDataset = this.setIsLoadingDataset.bind(this);
-    this.getIsLoadingDataset = this.getIsLoadingDataset.bind(this);
-    this.getDoneLoading = this.getDoneLoading.bind(this);
-    this.isAggregation = this.isAggregation.bind(this);
-    this.progressBarRate = this.progressBarRate.bind(this);
-    this.restartProgressBar = this.restartProgressBar.bind(this);
-    this.permittedRange = this.permittedRange.bind(this);
 
-    this.progressTimer = null;
     this.fetchControllers = [];
   }
 
@@ -125,19 +150,40 @@ class App extends React.Component {
     this.download();
   }
 
-  permittedRange(date_start, date_end) {
+  validateRange(date_start, date_end) {
+    if (!date_end) {
+      return null;
+    }
     const date_start_ts = new Date(date_start).getTime();
     const date_end_ts = new Date(date_end).getTime();
-    if(
-      date_end_ts < date_start_ts ||
-      date_end_ts - date_start_ts > MAX_AGGREGATION_MONTHS * 30 * 86400 * 1000
-      ) {
-      return false;
+    if (date_end_ts < date_start_ts) {
+      return RANGE_NEGATIVE_ERROR;
     }
-    return true;
+    if (date_end_ts - date_start_ts > MAX_AGGREGATION_MONTHS * 31 * 86400 * 1000) {
+      return RANGE_TOO_LARGE_ERROR;
+    }
+    return null;
+  }
+
+  validateStops(from, to) {
+    /* A selected stop might have no stop ids depending on direction (e.g. inbound-only). */
+    const { fromStopIds, toStopIds } = get_stop_ids_for_stations(from, to);
+    if (from && to) {
+      if (!fromStopIds.length || !toStopIds.length) {
+        return INVALID_STOP_ERROR;
+      }
+    }
+    return null;
   }
 
   updateConfiguration(config_change, refetch = true) {
+    // Save to browser history only if we are leaving a complete configuration
+    // so back button never takes you to a partial page
+    const [ url, isComplete ] = urlFromState(this.state.configuration);
+    if (isComplete) {
+      this.props.history.push(url, this.state);
+    }
+
     let update = {
       error: null,
       configuration: {
@@ -146,53 +192,36 @@ class App extends React.Component {
       }
     };
 
-    if (
-      update.configuration.date_end &&
-      !this.permittedRange(update.configuration.date_start, update.configuration.date_end)
-    ) {
-      this.setState({
-        error_message: RANGE_TOO_LARGE_ERROR,
-      });
-      // Setting refetch to false prevents data download, but lets this.state.configuration update still
+    const error = this.validateRange(update.configuration.date_start, update.configuration.date_end) ||
+                  this.validateStops(update.configuration.from, update.configuration.to);
+    this.setState({
+      error_message: error
+    });
+    // Setting refetch to false prevents data download, but lets this.state.configuration update still
+    if (error) {
       refetch = false;
-    } else {
-      this.setState({
-        error_message: null,
-      });
     }
 
-    if (config_change.line && config_change.line !== this.state.configuration.line) {
+    if ("line" in config_change && config_change.line !== this.state.configuration.line) {
       update.configuration.from = null;
       update.configuration.to = null;
       update.headways = [];
       update.traveltimes = [];
       update.dwells = [];
     }
-    this.setState(update, () => {
-      this.stateToURL();
-      if (refetch) {
-        this.download();
-      }
-    });
-  }
-
-  stateToURL() {
-    const {
-      line,
-      from,
-      to,
-      date_start,
-      date_end,
-    } = this.state.configuration;
-    const { fromStopIds, toStopIds } = get_stop_ids_for_stations(from, to);
-    const parts = [
-      line,
-      fromStopIds?.[0],
-      toStopIds?.[0],
-      date_start,
-      date_end,
-    ].map(x => x || "").join(",");
-    this.props.history.push(`/rapidtransit?config=${parts}`, this.state.configuration);
+    this.setState((state, props) => (
+      { 
+        progressBarKey: state.progressBarKey + 1,
+        ...update,
+      }),
+      // callback once state is updated
+      () => {
+        this.props.history.replace(urlFromState(this.state.configuration)[0], this.state);
+        document.title = documentTitle(this.state.configuration);
+        if (refetch) {
+          this.download();
+        }
+      });
   }
 
   fetchDataset(name, signal, options) {
@@ -265,27 +294,6 @@ class App extends React.Component {
     return !!this.state.configuration.date_end;
   }
 
-  restartProgressBar() {
-    // Start the progress bar at 0
-    this.setState({
-      progress: 0,
-    }, () => {
-      this.progressTimer = setInterval(() => {
-        // Increment up until 85%
-        if(this.state.progress < 85) {
-          this.setState({
-            progress: this.state.progress + this.progressBarRate(),
-          });
-        }
-        else {
-          // Stop at 90%, the progress bar will be cleared when everything is actually done loading
-          clearInterval(this.progressTimer);
-          this.progressTimer = null;
-        }
-      }, 1000);
-    });
-  }
-
   download() {
     // End all existing fetches
     while(this.fetchControllers.length > 0) {
@@ -295,19 +303,9 @@ class App extends React.Component {
     const controller = new AbortController();
     this.fetchControllers.push(controller);
 
-    // Stop existing progress bar timer
-    if(this.progressTimer !== null) {
-      clearInterval(this.progressTimer);
-      this.progressTimer = null;
-    }
-
     const { configuration } = this.state;
     const { fromStopIds, toStopIds } = get_stop_ids_for_stations(configuration.from, configuration.to);
     if (configuration.date_start && fromStopIds && toStopIds) {
-      if (configuration.date_end) {
-        this.restartProgressBar();
-      }
-
       this.fetchDataset('headways', controller.signal, {
         stop: fromStopIds,
       });
@@ -329,26 +327,11 @@ class App extends React.Component {
         this.fetchDataset('alerts', controller.signal, {
           route: configuration.line,
         });
-        ReactGA.pageview(window.location.pathname + window.location.search);
-        document.title = documentTitle(this.state.configuration);
       }
+      ReactGA.pageview(window.location.pathname + window.location.search);
     }
   }
 
-
-  chartTimeframe() {
-    // Set alert-bar interval to be 5:30am today to 1am tomorrow.
-    const today = `${this.state.configuration.date_start}T00:00:00`;
-
-    let low = new Date(today);
-    low.setHours(5, 30)
-
-    let high = new Date(today);
-    high.setDate(high.getDate() + 1);
-    high.setHours(1,0);
-
-    return [low, high];
-  }
 
   componentDidCatch(error) {
     this.setState(currentState => {
@@ -372,8 +355,8 @@ class App extends React.Component {
         and dwell times, for any given day. <span style={{fontWeight: "bold"}}>Select a line, station pair, and date above to get started.</span><div style={{marginTop: 10}}>Looking for something interesting? <span style={{fontWeight: "bold"}}>Try one of these dates:</span></div>
         <Select
           onChange={value => {
-            const { line, date_start, date_end, from, to } = value;
-            this.updateConfiguration({ line, date_start, date_end }, false);
+            const { bus_mode, line, date_start, date_end, from, to } = value;
+            this.updateConfiguration({ bus_mode, line, date_start, date_end }, false);
             setTimeout(() => this.updateConfiguration({ from, to }));
           }}
           options={configPresets}
@@ -385,24 +368,9 @@ class App extends React.Component {
     </div>
   }
 
-  progressBarRate() {
-    // Single day: no rate
-    if(!this.isAggregation()) {
-      return null;
-    }
-
-    // Aggregation: fake rate based on how many days
-    const {date_start, date_end} = this.state.configuration;
-    const ms = (new Date(date_end) - new Date(date_start));
-    const days = ms / (1000*60*60*24);
-    const months = days / 30;
-
-    const total_seconds_expected = 3.0 * months;
-    return 100 / total_seconds_expected; // % per second
-  }
-
   renderCharts() {
     const propsToPass = {
+      bus_mode: this.state.configuration.bus_mode,
       traveltimes: this.state.traveltimes,
       headways: this.state.headways,
       dwells: this.state.dwells,
@@ -425,7 +393,7 @@ class App extends React.Component {
   render() {
     const { configuration, error_message } = this.state;
     const { from, to, date_start } = configuration;
-    const canShowCharts = from && to && !error_message;
+    const canShowCharts = from && to && date_start && !error_message;
     const canShowAlerts = from && to && date_start && !this.isAggregation();
     const recognized_alerts = this.state.alerts?.filter(recognize);
     const hasNoLoadedCharts = ['traveltimes', 'dwells', 'headways']
@@ -437,11 +405,16 @@ class App extends React.Component {
           <StationConfiguration current={configuration} onConfigurationChange={this.updateConfiguration} />
           {canShowAlerts && <AlertBar
             alerts={recognized_alerts}
-            timeframe={this.chartTimeframe()}
+            today={this.state.configuration.date_start}
             isLoading={this.getIsLoadingDataset("alerts")}
             isHidden={hasNoLoadedCharts}
           />}
-          {canShowCharts && !this.getDoneLoading() && this.isAggregation() && <ProgressBar progress={this.state.progress} />}
+          {canShowCharts && this.isAggregation() && !this.getDoneLoading() &&
+            <ProgressBar
+              key={this.state.progressBarKey}
+              rate={progressBarRate(this.state.configuration.date_start, this.state.configuration.date_end)}
+            />
+          }
         </div>
         {!canShowCharts && this.renderEmptyState(error_message)}
         {canShowCharts && this.renderCharts()}

@@ -1,7 +1,8 @@
 import React from 'react';
-import { AggregateByDateSelectable, AggregateByTimeSelectable } from './SelectableCharts';
-import { SingleDayLine, AggregateByDate } from './line';
+import { AggregateByTimeSelectable } from './charts/SelectableCharts';
+import { SingleDayLine, AggregateByDate } from './charts/line';
 import { station_direction } from './stations';
+import { BusDisclaimer } from './ui/notes';
 
 const dataFields = {
   traveltimes: {
@@ -24,6 +25,12 @@ const dataFields = {
   }
 }
 
+const headwayTitle = {
+  // indexed by bus_mode
+  true: "Time between buses (headways)",
+  false: "Time between trains (headways)"
+}
+
 function getLocationDescription(from, to, line) {  
   if (from && to) {
     return {
@@ -40,13 +47,9 @@ const AggregateSet = (props) => {
   const locationDescription = getLocationDescription(props.from, props.to, props.line);
   return(
     <div className='charts main-column'>
-      {/**
-       * Perhaps we want AggregateOverTimeLine still for rail, and only have the peak/offpeak for bus
-       * In which case, data={props.traveltimes.overtime.filter(x => x.peak === 'all')}
-       */}
-      <AggregateByDateSelectable
+      <AggregateByDate
         title={"Travel times"}
-        data={props.traveltimes.by_date || []}
+        data={props.traveltimes.by_date?.filter(x => x.peak === 'all') || []}
         seriesName={"Median travel time"}
         location={locationDescription}
         titleBothStops={true}
@@ -55,7 +58,7 @@ const AggregateSet = (props) => {
         endDate={props.endDate}
       />
       <AggregateByDate
-        title={'Time between trains (headways)'}
+        title={headwayTitle[props.bus_mode]}
         data={props.headways}
         seriesName={'Median headway'}
         location={locationDescription}
@@ -64,23 +67,27 @@ const AggregateSet = (props) => {
         startDate={props.startDate}
         endDate={props.endDate}
       />
-      <AggregateByDate
-        title={'Time spent at station (dwells)'}
-        data={props.dwells}
-        seriesName={'Median dwell time'}
-        location={locationDescription}
-        titleBothStops={false}
-        isLoading={props.isLoadingDwells}
-        startDate={props.startDate}
-        endDate={props.endDate}
-      />
+      {!props.bus_mode &&
+        <AggregateByDate
+          title={'Time spent at station (dwells)'}
+          data={props.dwells}
+          seriesName={'Median dwell time'}
+          location={locationDescription}
+          titleBothStops={false}
+          isLoading={props.isLoadingDwells}
+          startDate={props.startDate}
+          endDate={props.endDate}
+        />
+      }
       <AggregateByTimeSelectable
         title={'Travel times by hour'}
         data={props.traveltimes.by_time || []}
-        seriesName={"Median travel time by day"}
+        seriesName={"Median travel time"}
         location={locationDescription}
         titleBothStops={true}
         isLoading={props.isLoadingTraveltimes}
+        startDate={props.startDate}
+        endDate={props.endDate}
        />
     </div>
   )
@@ -106,7 +113,7 @@ const SingleDaySet = (props) => {
       />
       <SingleDayLine
         {...dataFields.headways}
-        title={'Time between trains (headways)'}
+        title={headwayTitle[props.bus_mode]}
         data={props.headways}
         useBenchmarks={anyHeadwayBenchmarks}
         location={locationDescription}
@@ -114,16 +121,19 @@ const SingleDaySet = (props) => {
         isLoading={props.isLoadingHeadways}
         date={props.startDate}
       />
-      <SingleDayLine
-        {...dataFields.dwells}
-        title={'Time spent at station (dwells)'}
-        data={props.dwells}
-        useBenchmarks={false}
-        location={locationDescription}
-        titleBothStops={false}
-        isLoading={props.isLoadingDwells}
-        date={props.startDate}
-      />
+      {!props.bus_mode &&
+        <SingleDayLine
+          {...dataFields.dwells}
+          title={'Time spent at station (dwells)'}
+          data={props.dwells}
+          useBenchmarks={false}
+          location={locationDescription}
+          titleBothStops={false}
+          isLoading={props.isLoadingDwells}
+          date={props.startDate}
+        />
+      }
+      {props.bus_mode && <BusDisclaimer />}
     </div>
   )
 }

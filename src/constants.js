@@ -1,9 +1,19 @@
 export const colorsForLine = {
-	Red: '#d13434',
-	Orange: '#e66f00',
-	Blue: '#0e3d8c',
-	Green: '#159765',
+	Red: '#da291c',
+	Orange: '#ed8b00',
+	Blue: '#003da5',
+	Green: '#00834d',
 	bus: '#ffc72c',
+};
+
+export const trainDateRange = {
+	minDate: "2016-01-15",
+	maxDate: "today"
+};
+
+export const busDateRange = {
+	minDate: "2018-08-01",
+	maxDate: "2021-10-31"
 };
 
 export const stations = {
@@ -1148,44 +1158,3 @@ export const stations = {
 		]
 	}
 };
-
-const createConfigPresetValue = (line, fromStationName, toStationName, date_start, date_end = undefined) => {
-	const fromStation = stations[line].stations.find(s => s.stop_name === fromStationName);
-	const toStation = stations[line].stations.find(s => s.stop_name === toStationName);
-	return {
-		line,
-		date_start,
-		date_end,
-		from: fromStation,
-		to: toStation,
-	}
-};
-
-const TODAY = new Date().toISOString().split("T")[0];
-
-export const configPresets = [
-	{
-		label: "[New!] April 2021 — Orange Line slow zone",
-		value: createConfigPresetValue("Orange", "Oak Grove", "Wellington", '2021-03-01', TODAY),
-	},
-	{
-		label: "[New!] December 2020 — Orange Line slow zone",
-		value: createConfigPresetValue("Orange", "Community College", "North Station", '2020-11-01', '2021-02-17'),
-	},
-	{
-		label: "[New!] Spring 2020 — Green Line (E-branch) COVID-19 pandemic effect",
-		value: createConfigPresetValue("Green", "Mission Park", "Government Center", '2020-01-01', '2020-05-31'),
-	},
-	{
-		label: "March 30, 2021 — Red Line Power Issues",
-		value: createConfigPresetValue("Red", "Andrew", "Park Street", '2021-03-30'),
-	},
-	{
-		label: "March 16, 2021 — Orange Line Derailment",
-		value: createConfigPresetValue("Orange", "Downtown Crossing", "Community College", '2021-03-16'),
-	},
-	{
-		label: "April 2, 2021 — Blue Line Daytime Maintenance",
-		value: createConfigPresetValue("Blue", "Revere Beach", "State Street", '2021-04-02'),
-	},
-];

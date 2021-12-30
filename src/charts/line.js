@@ -4,6 +4,7 @@ import { Line, Chart, defaults } from 'react-chartjs-2';
 import merge from 'lodash.merge';
 import {Legend, LegendLongTerm} from './Legend';
 import drawTitle from './Title';
+import writeError from './error';
 
 Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
   let x = eventPos.x;
@@ -17,6 +18,18 @@ Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
   }
   return {x, y};
 };
+
+const prettyDate = (dateString, with_dow) => {
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: with_dow ? 'long' : undefined,
+  };
+  return new Date(`${dateString}T00:00:00`)
+    .toLocaleDateString(undefined, // user locale/language
+                        options);
+}
 
 const departure_from_normal_string = (metric, benchmark) => {
   const ratio = metric / benchmark;
@@ -153,7 +166,7 @@ class SingleDayLine extends React.Component {
               tooltipFormat: "LTS" // locale time with seconds
             },
             scaleLabel: {
-              labelString: "Time of day",
+              labelString: prettyDate(this.props.date, true)
             },
             // make sure graph shows /at least/ 6am today to 1am tomorrow
             afterDataLimits: (axis) => {
@@ -173,12 +186,17 @@ class SingleDayLine extends React.Component {
         }
       }}
       plugins={[{
-        afterDraw: (chart) => drawTitle(this.props.title, this.props.location, this.props.titleBothStops, chart)
+        afterDraw: (chart) => {
+          drawTitle(this.props.title, this.props.location, this.props.titleBothStops, chart);
+          if (!this.props.isLoading && !this.props.data.length) {
+            writeError(chart);
+          }
+        }
       }]}
       />
       </div>
       <div className="chart-extras">
-        {this.props.benchmarkField && <Legend />}
+        {this.props.useBenchmarks && <Legend />}
       </div>
       </div>
     );
@@ -259,12 +277,20 @@ class AggregateLine extends React.Component {
               // force graph to show startDate to endDate, even if missing data
               min: this.props.xMin,
               max: this.props.xMax,
+            },
+            scaleLabel: {
+              labelString: this.props.xLabel,
             }
           }]
         }
       }}
       plugins={[{
-        afterDraw: (chart) => drawTitle(this.props.title, this.props.location, this.props.titleBothStops, chart)
+        afterDraw: (chart) => {
+          drawTitle(this.props.title, this.props.location, this.props.titleBothStops, chart);
+          if (!this.props.isLoading && !this.props.data.length) {
+            writeError(chart);
+          }
+        }
       }]}
       />
       </div>
@@ -287,6 +313,7 @@ const AggregateByDate = (props) => {
       xMin={new Date(`${props.startDate}T00:00:00`)}
       xMax={new Date(`${props.endDate}T00:00:00`)}
       fillColor={"rgba(191,200,214,0.5)"}
+      xLabel=""
     />
   )
 }
@@ -299,6 +326,7 @@ const AggregateByTime = (props) => {
       timeUnit={'hour'}
       timeFormat={'LT'} // momentjs format: locale time
       fillColor={"rgba(136,174,230,0.5)"}
+      xLabel={`${prettyDate(props.startDate, false)} – ${prettyDate(props.endDate, false)}`}
       // xMin, xMax?
     />
   )

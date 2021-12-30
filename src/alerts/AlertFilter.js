@@ -7,8 +7,11 @@ const known = [
   /[Ss]huttle/,  // might want to worry about this one...
 ];
 
+// TODO: audit this. Like, list all the alerts
+// to see what filters are actually accurate
 const anti = [
-  / stop .* move /i // "The stop X will permanently move to Y"
+  / stop .* move /i, // "The stop X will permanently move to Y"
+  /temporary stop/
 ]
 
 const findMatch = (alert) => {
