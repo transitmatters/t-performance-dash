@@ -28,7 +28,7 @@ const RANGE_NEGATIVE_ERROR = "Please ensure the start date comes before the sele
 const INVALID_STOP_ERROR = "Invalid stop selection. Please check the inbound/outbound nature of your selected stops.";
 
 const stateFromURL = (pathname, config) => {
-  const bus_mode = (pathname === BUS_PATH)
+  const bus_mode = (pathname === BUS_PATH);
   const [line, from_id, to_id, date_start, date_end] = config.split(",");
   const from = lookup_station_by_id(line, from_id);
   const to = lookup_station_by_id(line, to_id);
@@ -53,6 +53,9 @@ const urlFromState = (config) => {
     date_start,
     date_end,
   ];
+  if (!parts.some(x => x)) {
+    return [path, false];
+  }
   const partString = parts.map(x => x || "").join(",");
   const url = `${path}?config=${partString}`;
   const isComplete = parts.slice(0, -1).every(x => x);
@@ -100,6 +103,7 @@ class App extends React.Component {
 
     this.state = {
       configuration: {
+        bus_mode: props.bus_mode,
         show_alerts: true,
       },
       error_message: null,
