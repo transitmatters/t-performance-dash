@@ -16,7 +16,7 @@ for i in 2021 2020 2019 2018; do
 done
 
 mv 2021/MBTA*/*.csv 2021/
-rmdir 2021/MBTA_Bus_Arrival_Depature_Times_2021/
+rmdir 2021/MBTA_Bus_Arrival_Departure_Times_2021/
 
 # Rename files so they have consistent names and no spaces.
 mv "2020/Bus Arrival Departure Times Jan-Mar 2020.csv" "2020/2020-Q1.csv"
