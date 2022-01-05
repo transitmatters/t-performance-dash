@@ -26,6 +26,14 @@ export const configPresets = [
 		label: "September 9, 2021 — Route 28 first day of school traffic",
 		value: createConfigPresetValue("28", "Mattapan Station", "Nubian Station", "2021-09-09")
 	},
+	{
+		label: "October 2021 — Route 22 Before Columbus Ave Bus Lanes",
+		value: createConfigPresetValue("22", "Jackson Square Station", "Franklin Park", "2021-10-01", "2021-10-30")
+	},
+	{
+		label: "November 2021 — Route 22 After Columbus Ave Bus Lanes",
+		value: createConfigPresetValue("22", "Jackson Square Station", "Franklin Park", "2021-11-01", "2021-11-30")
+	}
 	/** OLD STUFF
 	{
 		label: "[New!] April 2021 — Orange Line slow zone",
