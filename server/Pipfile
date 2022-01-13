@@ -4,19 +4,18 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+flake8 = "==4.0.1"
 pylint = "*"
 
 [packages]
-gunicorn = "*"
-requests = "*"
-json-api-doc = "*"
-chalice = "*"
-pytz = "*"
-boto3 = "*"
-flake8 = "*"
-pandas = "*"
-numpy = "*"
-importlib-resources = "*"
+boto3 = "==1.20.34"
+chalice = "==1.26.4"
+importlib-resources = "==5.4.0"
+json-api-doc = "==0.11.0"
+numpy = "==1.22.0"
+pandas = "==1.3.5"
+pytz = "==2021.3"
+requests = "==2.22.0"
 
 [requires]
-python_version = "3.7"
+python_version = "3.9"

@@ -6,7 +6,7 @@
     "@tippyjs/react": "^4.0.2",
     "chart.js": "^2.9.4",
     "classnames": "^2.2.6",
-    "concurrently": "^5.2.0",
+    "concurrently": "^7.0.0",
     "flatpickr": "4.5.7",
     "lodash.merge": "^4.6.2",
     "react": "^16.13.1",
@@ -31,7 +31,7 @@
     "lint-backend": "cd server && pipenv run flake8 --ignore=E501,E731 --exclude .chalice",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postinstall": "cd server && pipenv install --python=3.7"
+    "postinstall": "cd server && pipenv install --dev"
   },
   "proxy": "http://localhost:5000",
   "eslintConfig": {

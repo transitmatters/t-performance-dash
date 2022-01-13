@@ -5,8 +5,8 @@
 This is the repository for the TransitMatters data dashboard. Client code is written in JavaScript with React, and the backend is written in Python with Chalice.
 
 ## Requirements to develop locally
-* node 12.x LTS (verify with `node -v`)
-* Python 3.7 with pipenv (verify with `python --version; pipenv --version`)
+* node >= 12.20 (verify with `node -v`)
+* Python 3.9 with pipenv (verify with `python --version; pipenv --version`)
 
 ## Development Instructions
 1. Add `MBTA_V2_API_KEY` to your shell environment:
