@@ -86,7 +86,7 @@
 
 .alerts {
   display: grid;
-  grid-template-areas: 'left-gutter alerts right-gutter legend';
+  grid-template-areas: "left-gutter alerts right-gutter legend";
   grid-template-columns: 54px 1fr 20px 190px;
   height: 100%;
 }
@@ -188,7 +188,7 @@ button:disabled,
 
 .select-component::after {
   pointer-events: none;
-  content: '\25bc';
+  content: "\25bc";
   transform: scaleX(1.2) scaleY(0.8);
   text-align: center;
   position: absolute;
@@ -211,7 +211,7 @@ button:disabled,
 .station-configuration-wrapper.Bus input,
 .station-configuration-wrapper.Bus button {
   color: inherit;
-  border-color: rgba(0, 0, 0, 0.4)
+  border-color: rgba(0, 0, 0, 0.4);
 }
 
 .station-configuration select,
@@ -256,7 +256,10 @@ button:disabled,
   width: 24px;
 }
 
-.station-configuration-wrapper.Bus .station-configuration .swap-stations-button .swap-icon {
+.station-configuration-wrapper.Bus
+  .station-configuration
+  .swap-stations-button
+  .swap-icon {
   background-image: var(--swap-black);
 }
 
@@ -284,9 +287,9 @@ button:disabled,
 @media screen and (min-width: 770px) {
   .chart {
     display: grid;
-    grid-template: 
-      'chart legend'
-      'chart extras';
+    grid-template:
+      "chart legend"
+      "chart extras";
     grid-template-columns: 1fr 190px;
     column-gap: 8px;
   }
@@ -363,7 +366,7 @@ button:disabled,
   }
 
   .alerts {
-    grid-template-areas: 'left-gutter alerts right-gutter';
+    grid-template-areas: "left-gutter alerts right-gutter";
     grid-template-columns: 46px 1fr 8px;
   }
 
@@ -395,11 +398,11 @@ button:disabled,
 
   .station-configuration {
     display: grid;
-    grid-template-columns: .5fr 1fr 40px;
+    grid-template-columns: 0.5fr 1fr 40px;
     grid-template-areas:
-      'toggle line line'
-      'date date date'
-      'stations stations swap';
+      "toggle line line"
+      "date date date"
+      "stations stations swap";
     column-gap: 10px;
     row-gap: 10px;
   }
@@ -501,11 +504,18 @@ button:disabled,
   display: grid;
 }
 
-.control input[type=radio] {
+.control input[type="radio"] {
   margin-right: 10px;
 }
 
 .bus-disclaimer {
   font-style: italic;
   padding-top: 30px;
+}
+
+html,
+body,
+#root,
+#root > div {
+  height: 100%;
 }

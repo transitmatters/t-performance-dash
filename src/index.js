@@ -1,14 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import OpenSource from './OpenSource';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import OpenSource from "./OpenSource";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { SlowZones } from "./slow_zones/SlowZones";
 
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
-      <Route exact path="/opensource" >
+      <Route exact path="/opensource">
         <OpenSource />
       </Route>
       <Route exact path="/">
@@ -20,6 +21,10 @@ ReactDOM.render(
       <Route exact path="/bus">
         <App bus_mode={true} />
       </Route>
+      <Route exact path="/slow-zones">
+        <SlowZones />
+      </Route>
     </Switch>
   </BrowserRouter>,
-document.getElementById('root'));
+  document.getElementById("root")
+);
