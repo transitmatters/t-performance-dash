@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactGA from 'react-ga';
 import { SingleDaySet, AggregateSet } from './ChartSets';
 import StationConfiguration from './StationConfiguration';
 import { withRouter } from 'react-router-dom';
@@ -11,10 +10,12 @@ import './App.css';
 import Select from './inputs/Select';
 import { configPresets } from './presets';
 
+const PRODUCTION = "dashboard.transitmatters.org";
+
 const FRONTEND_TO_BACKEND_MAP = new Map([
   ["localhost", ""], // this becomes a relative path that is proxied through CRA:3000 to python on :5000
   ["127.0.0.1", ""],
-  ["dashboard.transitmatters.org", "https://dashboard-api2.transitmatters.org"],
+  [PRODUCTION, "https://dashboard-api2.transitmatters.org"],
   ["dashboard-beta.transitmatters.org", "https://dashboard-api-beta.transitmatters.org"]
 ]);
 const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname);
@@ -116,8 +117,11 @@ class App extends React.Component {
       progressBarKey: 0,
     };
 
-    ReactGA.initialize("UA-71173708-2");
-    ReactGA.pageview(props.location.pathname);
+    if (window.location.hostname === PRODUCTION) {
+      window.goatcounter.count({
+        path: props.location.pathname,
+      });
+    }
 
     const url_config = new URLSearchParams(props.location.search).get("config");
     if (typeof url_config === "string") {
@@ -328,7 +332,12 @@ class App extends React.Component {
           route: configuration.line,
         });
       }
-      ReactGA.pageview(window.location.pathname + window.location.search);
+
+      if (window.location.hostname === PRODUCTION) {
+        window.goatcounter.count({
+          path: window.location.pathname + window.location.search,
+        });
+      }
     }
   }
 
