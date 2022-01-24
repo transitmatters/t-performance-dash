@@ -118,7 +118,7 @@ class App extends React.Component {
     };
 
     if (window.location.hostname === PRODUCTION) {
-      window.goatcounter.count({
+      window.goatcounter?.count?.({
         path: props.location.pathname,
       });
     }
@@ -334,7 +334,7 @@ class App extends React.Component {
       }
 
       if (window.location.hostname === PRODUCTION) {
-        window.goatcounter.count({
+        window.goatcounter?.count?.({
           path: window.location.pathname + window.location.search,
         });
       }
