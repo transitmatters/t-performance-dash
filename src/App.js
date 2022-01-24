@@ -117,7 +117,7 @@ class App extends React.Component {
       progressBarKey: 0,
     };
 
-    if(window.location.hostname === PRODUCTION) {
+    if (window.location.hostname === PRODUCTION) {
       window.goatcounter.count({
         path: props.location.pathname,
       });
