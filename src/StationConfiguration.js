@@ -1,21 +1,23 @@
 import React from 'react';
 import classNames from 'classnames';
-import flatpickr from 'flatpickr';
-import 'flatpickr/dist/themes/light.css';
 
-import Select from './Select';
-import { all_lines, options_station } from './stations';
+import DatePicker from './inputs/date';
+import Select from './inputs/Select';
+import './inputs/toggle.css';
 
-const ua = window.navigator.userAgent;
-const iOSDevice = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
-const useFlatPickr = !iOSDevice;
+import { bus_lines, subway_lines, options_station, line_name } from './stations';
+import { busDateRange, trainDateRange } from './constants';
 
-const options_lines = all_lines().map((line) => {
-  return {
-    value: line,
-    label: line.charAt(0) + line.slice(1) + ' Line',
-  }
-});
+
+const options_lines = (is_bus) => {
+  const lines = is_bus ? bus_lines() : subway_lines();
+  return lines.map((line) => {
+    return {
+      value: line,
+      label: line_name(line)
+    }
+  });
+};
 
 const options_station_ui = (line) => {
   return options_station(line).map((station) => {
@@ -30,47 +32,18 @@ const options_station_ui = (line) => {
 export default class StationConfiguration extends React.Component {
   constructor(props) {
     super(props);
-    this.picker_start = React.createRef();
-    this.picker_end = React.createRef();
-    this.handleSelectDate = this.handleSelectDate.bind(this);
-    this.handleSelectRawDate = this.handleSelectRawDate.bind(this);
+    this.handleBusToggle = this.handleBusToggle.bind(this);
+    this.handleSelectOption = this.handleSelectOption.bind(this);
     this.handleSwapStations = this.handleSwapStations.bind(this);
     this.clearMoreOptions = this.clearMoreOptions.bind(this);
-    this.setupPickers = this.setupPickers.bind(this);
 
     this.state = {
       show_date_end_picker: !!this.props.current.date_end,
     };
   }
   
-  setupPickers() {
-    if (useFlatPickr) {
-      // Only initialize once, even after rerenders
-      if(!this.picker_start.current._flatpickr) {
-        flatpickr(this.picker_start.current, {
-          onChange: this.handleSelectDate("date_start"),
-          maxDate: 'today',
-          minDate: "2016-01-15"
-        });
-      }
-      // Only initialize once, even after rerenders
-      if (this.state.show_date_end_picker && !this.picker_end.current._flatpickr) {
-        flatpickr(this.picker_end.current, {
-          onChange: this.handleSelectDate("date_end"),
-          maxDate: 'today',
-          minDate: "2016-01-15"
-        });
-      }
-    }
-  }
-
-  componentDidMount() {
-    this.setupPickers();
-  }
 
   componentDidUpdate(prevProps) {
-    this.setupPickers();
-
     // If the date_end prop shows up because a config preset set it,
     //  then show the end date picker.
     if(this.props.current.date_end !== prevProps.current.date_end) {
@@ -80,20 +53,13 @@ export default class StationConfiguration extends React.Component {
     }
   }
 
-  handleSelectDate(field_name) {
-    return (_, dateStr, __) => {
-      this.props.onConfigurationChange({
-        [field_name]: dateStr
-      });
-    };
-  }
-
-  handleSelectRawDate(field_name) {
-    return (evt) => {
-      this.props.onConfigurationChange({
-        [field_name]: evt.target.value
-      });
-    }
+  handleBusToggle() {
+    this.props.onConfigurationChange({
+      bus_mode: !this.getVal("bus_mode"),
+      line: null,
+      date_start: null,
+      date_end: null
+    }, false);
   }
 
   handleSelectOption(field) {
@@ -105,28 +71,28 @@ export default class StationConfiguration extends React.Component {
   }
 
   handleSwapStations() {
-    const fromValue = this.decode("from");
-    const toValue = this.decode("to");
+    const fromValue = this.getVal("from");
+    const toValue = this.getVal("to");
     this.props.onConfigurationChange({
       from: toValue,
       to: fromValue
     });
   }
 
-  decode(property) {
+  getVal(property) {
     return this.props.current[property];
   }
 
   optionsForField(type) {
     if (type === "line") {
-      return options_lines;
+      return options_lines(this.getVal("bus_mode"));
     }
     if (type === "from") {
-      const toStation = this.decode("to");
+      const toStation = this.getVal("to");
       return options_station_ui(this.props.current.line).filter(entry => entry.value !== toStation);
     }
     if (type === "to") {
-      const fromStation = this.decode("from");
+      const fromStation = this.getVal("from");
       return options_station_ui(this.props.current.line).filter(({ value }) => {
         if (value === fromStation) {
           return false;
@@ -143,25 +109,35 @@ export default class StationConfiguration extends React.Component {
     this.setState({
       show_date_end_picker: false,
     });
-    if(this.picker_end.current._flatpickr) {
-      this.picker_end.current._flatpickr.destroy();
-    }
     this.props.onConfigurationChange({
       date_end: null,
     });
   }
 
   render() {
-    const currentLine = this.decode("line");
+    const currentLine = this.getVal("line");
+    const bus_mode = this.getVal("bus_mode");
+    const availableDates = bus_mode ? busDateRange : trainDateRange;
     return (
-      <div className={classNames('station-configuration-wrapper', currentLine)}>
+      <div className={classNames('station-configuration-wrapper',
+                                  bus_mode ? "Bus" : currentLine)}>
         <div className="station-configuration main-column">
+          
+          <div className="option option-mode">
+            <span className="switch-label">Subway</span>
+            <label className="option switch">
+              <input type="checkbox" checked={bus_mode} onChange={this.handleBusToggle}/>
+              <span className="slider"></span>
+            </label>
+            <span className="switch-label">Bus</span>
+          </div>
+
           <div className="option option-line">
             <Select
-              value={this.decode("line")}
+              value={this.getVal("line")}
               options={this.optionsForField("line")}
               onChange={this.handleSelectOption("line")}
-              defaultLabel="Select a line..."
+              defaultLabel={bus_mode ? "Select a route..." : "Select a line..."}
             />
           </div>
 
@@ -169,22 +145,22 @@ export default class StationConfiguration extends React.Component {
             <div className="option option-from-station">
               <span className="from-to-label">From</span>
               <Select
-                value={this.decode("from")}
+                value={this.getVal("from")}
                 options={this.optionsForField("from")}
                 onChange={this.handleSelectOption("from")}
                 // Non-standard value comparator because from/to gets copied by onpopstate :/
-                optionComparator={o => o.value.stop_name === this.decode("from")?.stop_name}
+                optionComparator={o => o.value.stop_name === this.getVal("from")?.stop_name}
                 defaultLabel="Select a station..."
               />
             </div>
             <div className="option option-to-station">
               <span className="from-to-label">To</span>
               <Select
-                value={this.decode("to")}
+                value={this.getVal("to")}
                 options={this.optionsForField("to")}
                 onChange={this.handleSelectOption("to")}
                 // Non-standard value comparator because from/to gets copied by onpopstate :/
-                optionComparator={o => o.value.stop_name === this.decode("to")?.stop_name}
+                optionComparator={o => o.value.stop_name === this.getVal("to")?.stop_name}
                 defaultLabel="Select a station..."
               />
             </div>
@@ -195,28 +171,24 @@ export default class StationConfiguration extends React.Component {
           </button>
           <div className="option option-date">
             <span className="date-label">Date</span>
-            <input
-              value={this.decode("date_start") || ""} // The || "" is to prevent undefined; that makes React think it's uncontrolled
-              onChange={this.handleSelectRawDate("date_start")}
-              type='date'
-              ref={this.picker_start}
-              placeholder='Select date...'
+            <DatePicker
+              value={this.getVal("date_start") || ""}
+              onChange={this.handleSelectOption("date_start")}
+              options={availableDates}
+              placeholder="Select date..."
             />
-            <input
+            <button
               className="more-options-button"
-              type="button"
-              value="Range..."
               style={this.state.show_date_end_picker ? { display: 'none' } : {}}
               onClick={() => this.setState({ show_date_end_picker: true })}
-            />
+            >Range...</button>
             {!!this.state.show_date_end_picker && <>
               <span className="date-label end-date-label">to</span>
-              <input
-                value={this.decode("date_end") || ""} // The || "" is to prevent undefined; that makes React think it's uncontrolled
-                onChange={this.handleSelectRawDate("date_end")}
-                type='date'
-                ref={this.picker_end}
-                placeholder='Select date...'
+              <DatePicker
+                value={this.getVal("date_end") || ""}
+                onChange={this.handleSelectOption("date_end")}
+                options={availableDates}
+                placeholder="Select date..."
               />
               <button
                 className="clear-button"

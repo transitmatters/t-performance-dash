@@ -5,6 +5,21 @@ import 'tippy.js/dist/tippy.css'; // optional
 import LegendAlerts from './LegendAlerts';
 
 
+function chartTimeframe(start_date) {
+  // Set alert-bar interval to be 5:30am today to 1am tomorrow.
+  const today = `${start_date}T00:00:00`;
+
+  const low = new Date(today);
+  low.setHours(5, 30);
+
+  const high = new Date(today);
+  high.setDate(high.getDate() + 1);
+  high.setHours(1,0);
+
+  return [low, high];
+}
+
+
 function BoxSection(props) {
 
   return (
@@ -27,7 +42,7 @@ function BoxSection(props) {
 }
 
 export default function AlertBar(props) {
-  const { alerts, isLoading, isHidden } = props;
+  const { alerts, today, isLoading, isHidden } = props;
 
 
   const renderBoxes = () => {
@@ -35,16 +50,15 @@ export default function AlertBar(props) {
       return null;
     }
 
-    const start = props.timeframe[0]?.getTime();
-    const end = props.timeframe[1]?.getTime();
+    const [start, end] = chartTimeframe(today);
     const duration = (end - start);
 
 
     const boxes = [];
     let idx = 0;
     for (const alert of alerts) {
-      const alert_start = new Date(alert.valid_from).getTime();
-      const alert_end = new Date(alert.valid_to).getTime();
+      const alert_start = Math.max(start, new Date(alert.valid_from).getTime());
+      const alert_end = Math.min(end, new Date(alert.valid_to).getTime());
       const width = (alert_end - alert_start) / duration * 100;
 
       const left_pos = (alert_start - start) / (duration) * 100;

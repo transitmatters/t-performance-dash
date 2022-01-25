@@ -1,0 +1,167 @@
+{
+    "28": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Mattapan Station",
+                "branches": null,
+                "station": "matpn",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "28-1-18511"
+                    ],
+                    "0": [
+                        "28-0-18511"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Wellington Hill",
+                "branches": null,
+                "station": "wellh",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "28-1-1728"
+                    ],
+                    "0": [
+                        "28-0-1714"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Morton St @ Blue Hill Ave",
+                "branches": null,
+                "station": "mortn",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "28-1-1731"
+                    ],
+                    "0": [
+                        "28-0-11712"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Blue Hill Ave @ Talbot Ave",
+                "branches": null,
+                "station": "bltal",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "28-1-1737"
+                    ],
+                    "0": [
+                        "28-0-419"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Franklin Park",
+                "branches": null,
+                "station": "frnpk",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "28-1-383"
+                    ],
+                    "0": [
+                        "28-0-415"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Grove Hall",
+                "branches": null,
+                "station": "ghall",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "28-1-386"
+                    ],
+                    "0": [
+                        "28-0-412"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Warren St @ Boston Latin",
+                "branches": null,
+                "station": "latac",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "28-1-390"
+                    ],
+                    "0": [
+                        "28-0-407",
+                        "28-0-13321"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Warren St @ Walnut Ave",
+                "branches": null,
+                "station": "warwl",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "28-1-396"
+                    ],
+                    "0": [
+                        "28-0-40001"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Nubian Station",
+                "branches": null,
+                "station": "nubn",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "28-1-64000"
+                    ],
+                    "0": [
+                        "28-0-64000"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Roxbury Crossing Station",
+                "branches": null,
+                "station": "roxbs",
+                "order": 10,
+                "stops": {
+                    "1": [
+                        "28-1-21148"
+                    ],
+                    "0": [
+                        "28-0-11257"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Ruggles",
+                "branches": null,
+                "station": "rugg",
+                "order": 11,
+                "stops": {
+                    "1": [
+                        "28-1-17861"
+                    ],
+                    "0": [
+                        "28-0-17861",
+                        "28-0-17862"
+                    ]
+                }
+            }
+        ]
+    }
+}

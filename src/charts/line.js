@@ -4,6 +4,7 @@ import { Line, Chart, defaults } from 'react-chartjs-2';
 import merge from 'lodash.merge';
 import {Legend, LegendLongTerm} from './Legend';
 import drawTitle from './Title';
+import writeError from './error';
 
 Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
   let x = eventPos.x;
@@ -17,6 +18,18 @@ Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
   }
   return {x, y};
 };
+
+const prettyDate = (dateString, with_dow) => {
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: with_dow ? 'long' : undefined,
+  };
+  return new Date(`${dateString}T00:00:00`)
+    .toLocaleDateString(undefined, // user locale/language
+                        options);
+}
 
 const departure_from_normal_string = (metric, benchmark) => {
   const ratio = metric / benchmark;
@@ -125,7 +138,7 @@ class SingleDayLine extends React.Component {
           },
           {
             label: `Benchmark MBTA ${this.props.seriesName}`,
-            data: this.props.data.map(item => (item[this.props.benchmarkField] / 60).toFixed(2)),
+            data: this.props.useBenchmarks && this.props.data.map(item => (item[this.props.benchmarkField] / 60).toFixed(2)),
             pointRadius: 0
           }
         ]
@@ -135,7 +148,7 @@ class SingleDayLine extends React.Component {
           // TODO: tooltip is under title words
           callbacks: {
             afterBody: (tooltipItems) => {
-              return departure_from_normal_string(tooltipItems[0].value, tooltipItems[1].value);
+              return departure_from_normal_string(tooltipItems[0].value, tooltipItems[1]?.value);
             }
           }
         },
@@ -153,7 +166,7 @@ class SingleDayLine extends React.Component {
               tooltipFormat: "LTS" // locale time with seconds
             },
             scaleLabel: {
-              labelString: "Time of day",
+              labelString: prettyDate(this.props.date, true)
             },
             // make sure graph shows /at least/ 6am today to 1am tomorrow
             afterDataLimits: (axis) => {
@@ -173,14 +186,20 @@ class SingleDayLine extends React.Component {
         }
       }}
       plugins={[{
-        afterDraw: (chart) => drawTitle(this.props.title, this.props.location, chart)
+        afterDraw: (chart) => {
+          drawTitle(this.props.title, this.props.location, this.props.titleBothStops, chart);
+          if (!this.props.isLoading && !this.props.data.length) {
+            writeError(chart);
+          }
+        }
       }]}
       />
       </div>
-      {this.props.benchmarkField && <Legend />}
+      <div className="chart-extras">
+        {this.props.useBenchmarks && <Legend />}
+      </div>
       </div>
     );
-    // TODO: hide legend when benchmarks are 0s
   }
 }
  
@@ -189,6 +208,11 @@ class AggregateLine extends React.Component {
   render() {
     /*
     Props:
+    xField
+    timeUnit
+    timeFormat
+    xMin
+    xMax
       title
       data
       seriesName
@@ -198,7 +222,7 @@ class AggregateLine extends React.Component {
       endDate
     */
     const { isLoading } = this.props;
-    let labels = this.props.data.map(item => item['service_date']);
+    let labels = this.props.data.map(item => item[this.props.xField]);
     return (
       <div className={classNames('chart', isLoading && 'is-loading')}>
       <div className="chart-container">
@@ -220,7 +244,7 @@ class AggregateLine extends React.Component {
           {
             label: "25th percentile",
             fill: 1,
-            backgroundColor: "rgba(191,200,214,0.5)",
+            backgroundColor: this.props.fillColor,
             lineTension: 0.4,
             pointRadius: 0,
             data: this.props.data.map(item => (item["25%"] / 60).toFixed(2))
@@ -228,7 +252,7 @@ class AggregateLine extends React.Component {
           {
             label: "75th percentile",
             fill: 1,
-            backgroundColor: "rgba(191,200,214,0.5)",
+            backgroundColor: this.props.fillColor,
             lineTension: 0.4,
             pointRadius: 0,
             data: this.props.data.map(item => (item["75%"] / 60).toFixed(2))
@@ -245,27 +269,67 @@ class AggregateLine extends React.Component {
           xAxes: [{
             type: 'time',
             time: {
-              unit: 'day',
+              unit: this.props.timeUnit,
               unitStepSize: 1,
-              tooltipFormat: "ddd MMM D YYYY"
+              tooltipFormat: this.props.timeFormat
             },
             ticks: {
               // force graph to show startDate to endDate, even if missing data
-              min: new Date(`${this.props.startDate}T00:00:00`),
-              max: new Date(`${this.props.endDate}T00:00:00`),
+              min: this.props.xMin,
+              max: this.props.xMax,
+            },
+            scaleLabel: {
+              labelString: this.props.xLabel,
             }
           }]
         }
       }}
       plugins={[{
-        afterDraw: (chart) => drawTitle(this.props.title, this.props.location, chart)
+        afterDraw: (chart) => {
+          drawTitle(this.props.title, this.props.location, this.props.titleBothStops, chart);
+          if (!this.props.isLoading && !this.props.data.length) {
+            writeError(chart);
+          }
+        }
       }]}
       />
       </div>
-      <LegendLongTerm />
+      <div className="chart-extras">
+        <LegendLongTerm />
+        {this.props.children}
+      </div>
       </div>
     );
   }
 }
 
-export { SingleDayLine, AggregateLine };
+const AggregateByDate = (props) => {
+  return(
+    <AggregateLine
+      {...props}
+      xField={'service_date'}
+      timeUnit={'day'}
+      timeFormat={'ddd MMM D YYYY'} //momentjs format
+      xMin={new Date(`${props.startDate}T00:00:00`)}
+      xMax={new Date(`${props.endDate}T00:00:00`)}
+      fillColor={"rgba(191,200,214,0.5)"}
+      xLabel=""
+    />
+  )
+}
+
+const AggregateByTime = (props) => {
+  return(
+    <AggregateLine
+      {...props}
+      xField={'dep_time_from_epoch'}
+      timeUnit={'hour'}
+      timeFormat={'LT'} // momentjs format: locale time
+      fillColor={"rgba(136,174,230,0.5)"}
+      xLabel={`${prettyDate(props.startDate, false)} – ${prettyDate(props.endDate, false)}`}
+      // xMin, xMax?
+    />
+  )
+}
+
+export { SingleDayLine, AggregateByDate, AggregateByTime };

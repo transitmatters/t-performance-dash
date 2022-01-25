@@ -13,7 +13,8 @@ s3 = boto3.client('s3')
 def download(key, encoding="utf8"):
     obj = s3.get_object(Bucket=BUCKET, Key=key)
     s3_data = obj["Body"].read()
-    decompressed = zlib.decompress(s3_data).decode(encoding)
+    # 32 should detect zlib vs gzip
+    decompressed = zlib.decompress(s3_data, zlib.MAX_WBITS | 32).decode(encoding)
     return decompressed
 
 
@@ -23,18 +24,20 @@ def upload(key, bytes, compress=True):
     s3.put_object(Bucket=BUCKET, Key=key, Body=bytes)
 
 
+def is_bus(stop_id):
+    return ('-0-' in stop_id) or ('-1-' in stop_id)
+
+
 def download_one_event_file(date, stop_id):
+    """As advertised: single event file from s3"""
     year, month, day = date.year, date.month, date.day
+
+    folder = 'daily-bus-data' if is_bus(stop_id) else 'daily-data'
+    key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
 
     # Download events from S3
     try:
-
-        key = f"Events/daily-data/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
-        obj = s3.get_object(Bucket=BUCKET, Key=key)
-        s3_data = obj["Body"].read()
-        # Uncompress
-        decompressed = zlib.decompress(
-            s3_data, wbits=zlib.MAX_WBITS | 16).decode("ascii").split("\r\n")
+        decompressed = download(key, 'ascii')
 
     except ClientError as ex:
         if ex.response['Error']['Code'] == 'NoSuchKey':
@@ -46,7 +49,7 @@ def download_one_event_file(date, stop_id):
 
     # Parse CSV
     rows = []
-    for row in csv.DictReader(decompressed):
+    for row in csv.DictReader(decompressed.splitlines()):
         rows.append(row)
 
     # sort
@@ -54,5 +57,14 @@ def download_one_event_file(date, stop_id):
     return rows_by_time
 
 
-# signature: (date_iterable, stop_id)
-download_event_range = parallel.make_parallel(download_one_event_file)
+def download_single_day_events(date, stops):
+    """Will download events for single day, but can handle multiple stop_ids"""
+    result = []
+    for stop_id in stops:
+        result += download_one_event_file(date, stop_id)
+    return sorted(result, key=lambda row: row["event_time"])
+
+
+# signature: (date_iterable, [stop_id])
+# Will download events for multiple stops, over a date range.
+download_event_range = parallel.make_parallel(download_single_day_events)

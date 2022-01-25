@@ -1,13 +1,15 @@
 :root {
   --transitmatters-red: #d31a2b;
-  --red-line: #d13434;
-  --orange-line: #e66f00;
-  --blue-line: #0e3d8c;
-  --green-line: #159765;
+  --red-line: #da291c;
+  --orange-line: #ed8b00;
+  --blue-line: #003da5;
+  --green-line: #00843d;
+  --bus: #ffc72c;
   --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   --incident-color: #c02828;
   --incident-tooltip-color: #eaeaea;
-  --swap: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125'><path fill='white' transform='rotate(90 50 62)' style='text-indent:0;text-transform:none;block-progression:tb' d='M42 10a2 2 0 00-2 1l-8 9a2 2 0 000 3l9 10a2 2 0 103-3l-6-7h27c10 0 15 7 15 13s-5 12-15 12H35c-12 0-19 8-19 16 0 9 7 17 19 17h27l-5 5a2 2 0 103 3l8-9a2 2 0 000-3l-9-10a2 2 0 10-3 3l6 7H35c-10 0-15-6-15-13 0-6 5-12 15-12h30c12 0 19-8 19-16s-7-17-19-17H38l5-5a2 2 0 00-1-4z' fill-rule='evenodd' overflow='visible'/></svg>");
+  --swap-white: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125'><path fill='white' transform='rotate(90 50 62)' style='text-indent:0;text-transform:none;block-progression:tb' d='M42 10a2 2 0 00-2 1l-8 9a2 2 0 000 3l9 10a2 2 0 103-3l-6-7h27c10 0 15 7 15 13s-5 12-15 12H35c-12 0-19 8-19 16 0 9 7 17 19 17h27l-5 5a2 2 0 103 3l8-9a2 2 0 000-3l-9-10a2 2 0 10-3 3l6 7H35c-10 0-15-6-15-13 0-6 5-12 15-12h30c12 0 19-8 19-16s-7-17-19-17H38l5-5a2 2 0 00-1-4z' fill-rule='evenodd' overflow='visible'/></svg>");
+  --swap-black: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125'><path fill='black' transform='rotate(90 50 62)' style='text-indent:0;text-transform:none;block-progression:tb' d='M42 10a2 2 0 00-2 1l-8 9a2 2 0 000 3l9 10a2 2 0 103-3l-6-7h27c10 0 15 7 15 13s-5 12-15 12H35c-12 0-19 8-19 16 0 9 7 17 19 17h27l-5 5a2 2 0 103 3l8-9a2 2 0 000-3l-9-10a2 2 0 10-3 3l6 7H35c-10 0-15-6-15-13 0-6 5-12 15-12h30c12 0 19-8 19-16s-7-17-19-17H38l5-5a2 2 0 00-1-4z' fill-rule='evenodd' overflow='visible'/></svg>");
 }
 
 .App {
@@ -125,6 +127,7 @@
 .station-configuration-wrapper {
   background-color: var(--transitmatters-red);
   box-shadow: var(--global-shadow);
+  color: white;
 }
 
 .station-configuration-wrapper.Red {
@@ -143,13 +146,17 @@
   background-color: var(--green-line);
 }
 
+.station-configuration-wrapper.Bus {
+  background-color: var(--bus);
+  color: black;
+}
+
 .station-configuration {
-  color: white;
   padding: 10px;
 }
 
 select,
-input,
+.option-date input,
 button {
   border-radius: 4px;
   appearance: none;
@@ -196,8 +203,15 @@ button:disabled,
 .station-configuration select,
 .station-configuration input,
 .station-configuration button {
-  color: white;
+  color: inherit;
   border-color: rgba(255, 255, 255, 0.6);
+}
+
+.station-configuration-wrapper.Bus select,
+.station-configuration-wrapper.Bus input,
+.station-configuration-wrapper.Bus button {
+  color: inherit;
+  border-color: rgba(0, 0, 0, 0.4)
 }
 
 .station-configuration select,
@@ -207,16 +221,20 @@ button:disabled,
   padding-left: 10px;
 }
 
+.station-configuration .slider {
+  box-shadow: var(--global-shadow);
+}
+
 .station-configuration button {
   display: flex;
   align-items: center;
   background: none;
-  padding-left: 0;
+  padding-left: 6px;
   padding-right: 6px;
 }
 
 .station-configuration input::placeholder {
-  color: white;
+  color: inherit;
 }
 
 .station-configuration button:not(:disabled):hover {
@@ -225,13 +243,21 @@ button:disabled,
   box-shadow: var(--global-shadow);
 }
 
+.station-configuration .swap-stations-button {
+  padding-left: 0;
+}
+
 .station-configuration .swap-stations-button .swap-icon {
-  background-image: var(--swap);
+  background-image: var(--swap-white);
   background-repeat: no-repeat;
   background-size: 100%;
   background-position: center;
   height: 24px;
   width: 24px;
+}
+
+.station-configuration-wrapper.Bus .station-configuration .swap-stations-button .swap-icon {
+  background-image: var(--swap-black);
 }
 
 .station-configuration .swap-stations-button .swap-label {
@@ -258,7 +284,9 @@ button:disabled,
 @media screen and (min-width: 770px) {
   .chart {
     display: grid;
-    grid-template: 'chart legend';
+    grid-template: 
+      'chart legend'
+      'chart extras';
     grid-template-columns: 1fr 190px;
     column-gap: 8px;
   }
@@ -269,7 +297,12 @@ button:disabled,
 
   .chart .legend {
     grid-area: legend;
-    margin-top: 38px;
+    margin-top: 65px;
+  }
+
+  .chart .control {
+    grid-area: extras;
+    margin-top: 20px;
   }
 
   .station-configuration,
@@ -307,7 +340,8 @@ button:disabled,
   }
 
   .station-configuration .from-to-label,
-  .station-configuration .date-label {
+  .station-configuration .date-label,
+  .station-configuration .switch-label {
     margin-left: 7px;
     margin-right: 7px;
   }
@@ -341,19 +375,31 @@ button:disabled,
     display: none;
   }
 
-  .legend {
+  .chart-extras {
     margin-left: 44px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .chart-extras .legend {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-auto-flow: column;
+    column-gap: 10px;
+  }
+
+  .chart-extras .control {
+    margin-right: 25px;
+    margin-bottom: 10px;
   }
 
   .station-configuration {
     display: grid;
-    grid-template-columns: 1fr 40px;
+    grid-template-columns: .5fr 1fr 40px;
     grid-template-areas:
-      'line line'
-      'date date'
-      'stations swap';
+      'toggle line line'
+      'date date date'
+      'stations stations swap';
     column-gap: 10px;
     row-gap: 10px;
   }
@@ -366,9 +412,18 @@ button:disabled,
     flex-shrink: 0;
   }
 
+  .station-configuration .switch-label {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
   .station-configuration .end-date-label {
     margin-right: 0;
     text-align: center;
+  }
+
+  .station-configuration .option-mode {
+    grid-area: toggle;
   }
 
   .station-configuration > .option-line {
@@ -440,4 +495,17 @@ button:disabled,
   background-color: #bbb;
   margin-right: 4px;
   display: inline-block;
+}
+
+.control {
+  display: grid;
+}
+
+.control input[type=radio] {
+  margin-right: 10px;
+}
+
+.bus-disclaimer {
+  font-style: italic;
+  padding-top: 30px;
 }
