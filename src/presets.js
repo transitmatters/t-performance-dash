@@ -15,7 +15,7 @@ const createConfigPresetValue = (line, fromStationName, toStationName, date_star
 	}
 };
 
-const TODAY = new Date().toISOString().split("T")[0];
+// const TODAY = new Date().toISOString().split("T")[0];
 
 export const configPresets = [
 	{
