@@ -4,17 +4,23 @@ const known = [
   /[A-Za-z]+ speeds/,     // "Reduced speeds"
   /delay/,
   /notice/,
+  /[Ss]huttle/,  // might want to worry about this one...
 ];
+
+// TODO: audit this. Like, list all the alerts
+// to see what filters are actually accurate
+const anti = [
+  / stop .* move /i, // "The stop X will permanently move to Y"
+  /temporary stop/
+]
 
 const findMatch = (alert) => {
   const text = alert.text;
-  for (const exp of known) {
-    const match = text.match(exp);
-    if (match != null) {
-      return match;
-    }
+
+  if (anti.some((exp) => text.match(exp))) {
+    return false;
   }
-  return null;
+  return known.some((exp) => text.match(exp))
 }
 
 const recognize = (alert) => {
