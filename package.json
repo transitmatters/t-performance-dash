@@ -26,7 +26,7 @@
     "start-react": "react-scripts start",
     "build": "react-scripts build",
     "lint": "npm run lint-frontend && npm run lint-backend",
-    "lint-frontend": "eslint src",
+    "lint-frontend": "eslint src --max-warnings=0",
     "lint-backend": "cd server && pipenv run flake8 --ignore=E501,E731 --exclude .chalice",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
