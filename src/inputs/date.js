@@ -2,8 +2,8 @@ import React from 'react';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/themes/light.css';
 
-const ua = window.navigator.userAgent;
-const isMobile = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+// const ua = window.navigator.userAgent;
+// const isMobile = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(ua);
 // `max:` doesn't work on iOS, so using flatpickr for everyone
 const useFlatPickr = true; // !isMobile;
 
