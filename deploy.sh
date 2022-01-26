@@ -32,7 +32,7 @@ echo "Hostname: $FRONTEND_HOSTNAME"
 echo "CloudFormation stack name: $CF_STACK_NAME"
 
 # build frontend and patch in commit id
-CI=false npm run build # Yes, we're in CI, but CI=true treats lint warnings as errors which isn't too fun
+npm run build
 sed -i "s/git-id/version $GIT_ID/" ./build/index.html
 
 pushd server/ > /dev/null
