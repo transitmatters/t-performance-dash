@@ -2,10 +2,9 @@ import React from 'react';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/themes/light.css';
 
-// const ua = window.navigator.userAgent;
-// const isMobile = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(ua);
-// `max:` doesn't work on iOS, so using flatpickr for everyone
-const useFlatPickr = true; // !isMobile;
+const ua = window.navigator.userAgent;
+const isMobile = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+const useFlatPickr = !isMobile;
 
 const RegularDateInput = (props) => {
   let maxDate = props.options.maxDate;
@@ -50,7 +49,8 @@ class Flatpickr extends React.Component {
   createFlatpickr = () => {
     this.flatpickr = flatpickr(this.node,
       {
-        disableMobile: true, // we've already decided on flatpickr at this point
+        // if we get here, we've already decided on flatpickr. Don't resort to mobile-native.
+        disableMobile: true,
         date: this.props.value,
         onChange: (sel, dateStr, inst) => this.props.onChange(dateStr),
         ...this.props.options
