@@ -2,7 +2,7 @@
 ![lint](https://github.com/transitmatters/t-performance-dash/workflows/lint/badge.svg)
 ![deploy](https://github.com/transitmatters/t-performance-dash/workflows/deploy/badge.svg)
 
-This is the repository for the TransitMatters data dashboard. Client code is written in JavaScript with React, and the backend is written in Python with Chalice.
+This is the repository for the TransitMatters Data Dashboard. Client code is written in JavaScript with React, and the backend is written in Python with Chalice.
 
 ## Requirements to develop locally
 * node 12.x LTS (verify with `node -v`)
@@ -23,7 +23,7 @@ This is the repository for the TransitMatters data dashboard. Client code is wri
 	* `TM_BACKEND_CERT_ARN`
 	* `TM_BACKEND_CERT_ARN_BETA`
 	* (You may also need to set `AWS_DEFAULT_REGION` in your shell to `us-east-1`. Maybe not! We're not sure.)
-3. Execute `./deploy.sh` (for production) or `./deploy.sh beta` (for beta).
+3. Execute `./deploy.sh` (for beta) or `./deploy.sh -p` (for production). If deploying from a CI platform (such as GitHub Actions) you may also want to include the `-c` flag.
 
 Additional notes:
 - If you're running this locally, your local MBTA-performance API key (which might be your own) will get uploaded to AWS!
