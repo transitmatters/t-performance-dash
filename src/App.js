@@ -3,6 +3,7 @@ import { SingleDaySet, AggregateSet } from './ChartSets';
 import StationConfiguration from './StationConfiguration';
 import { withRouter } from 'react-router-dom';
 import { lookup_station_by_id, get_stop_ids_for_stations, line_name } from './stations';
+import { trainDateRange, busDateRange } from './constants';
 import { recognize } from './alerts/AlertFilter';
 import AlertBar from './alerts/AlertBar';
 import { ProgressBar, progressBarRate } from './ui/ProgressBar';
@@ -24,6 +25,8 @@ const RAPIDTRANSIT_PATH = "/rapidtransit";
 const BUS_PATH = "/bus";
 
 const MAX_AGGREGATION_MONTHS = 8;
+const TOO_EARLY_ERROR = (date) => `Our archives only go back so far. Please select a date no earlier than ${date}.`;
+const TOO_LATE_ERROR = (date) => `Data not yet available. Please select a date no later than ${date}.`;
 const RANGE_TOO_LARGE_ERROR = `Please select a range no larger than ${MAX_AGGREGATION_MONTHS} months.`;
 const RANGE_NEGATIVE_ERROR = "Please ensure the start date comes before the selected end date.";
 const INVALID_STOP_ERROR = "Invalid stop selection. Please check the inbound/outbound nature of your selected stops.";
@@ -126,7 +129,7 @@ class App extends React.Component {
     const url_config = new URLSearchParams(props.location.search).get("config");
     if (typeof url_config === "string") {
       this.state.configuration = stateFromURL(props.location.pathname, url_config);
-      this.state.error_message = this.validateRange(this.state.configuration.date_start, this.state.configuration.date_end);
+      this.state.error_message = this.checkForErrors(this.state.configuration);
     }
 
     if (window.location.hostname !== "dashboard.transitmatters.org") {
@@ -154,16 +157,45 @@ class App extends React.Component {
     this.download();
   }
 
-  validateRange(date_start, date_end) {
+  checkForErrors(config) {
+    return(
+      this.validateRange(config.date_start, config.bus_mode) ||
+      this.validateRange(config.date_end, config.bus_mode) ||
+      this.validateInterval(config.date_start, config.date_end) ||
+      this.validateStops(config.from, config.to)
+    );
+  }
+
+  validateRange(selectedDate, bus_mode) {
+    // This should all be handled by the datepicker.
+    // However, iOS (and maybe other systems) don't support min: and max: on a date input
+    // So we have to check here also.
+    if (!selectedDate) {
+      return null;
+    }
+    const selectedDateTs = new Date(selectedDate).getTime();
+    const dateRange = bus_mode ? busDateRange : trainDateRange;
+
+    if (selectedDateTs < new Date(dateRange.minDate).getTime()) {
+      return TOO_EARLY_ERROR(dateRange.minDate);
+    }
+    if (bus_mode) {
+      if (selectedDateTs > new Date(dateRange.maxDate).getTime()) {
+        return TOO_LATE_ERROR(dateRange.maxDate);
+      }
+    }
+    return null;
+  }
+
+  validateInterval(date_start, date_end) {
     if (!date_end) {
       return null;
     }
-    const date_start_ts = new Date(date_start).getTime();
-    const date_end_ts = new Date(date_end).getTime();
-    if (date_end_ts < date_start_ts) {
+    const date_interval_ms = new Date(date_end).getTime() - new Date(date_start).getTime();
+    if (date_interval_ms < 0) {
       return RANGE_NEGATIVE_ERROR;
     }
-    if (date_end_ts - date_start_ts > MAX_AGGREGATION_MONTHS * 31 * 86400 * 1000) {
+    if (date_interval_ms > MAX_AGGREGATION_MONTHS * 31 * 86400 * 1000) {
       return RANGE_TOO_LARGE_ERROR;
     }
     return null;
@@ -196,8 +228,7 @@ class App extends React.Component {
       }
     };
 
-    const error = this.validateRange(update.configuration.date_start, update.configuration.date_end) ||
-                  this.validateStops(update.configuration.from, update.configuration.to);
+    const error = this.checkForErrors(update.configuration);
     this.setState({
       error_message: error
     });
