@@ -12,10 +12,10 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
-      - name: Set up Node 12.x
+      - name: Set up Node 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 16
       - name: Lint frontend code with ESLint
         run: |
           pip install pipenv
@@ -31,10 +31,10 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
-      - name: Set up Node 12.x
+      - name: Set up Node 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 16
       - name: Lint backend code with Flake8
         run: |
           pip install pipenv
