@@ -1,6 +1,7 @@
 secrets.py
 .terraform
 deployment.zip
+server/requirements.txt
 server/.chalice/deployments
 server/chalicelib/__pycache__
 cfn/
