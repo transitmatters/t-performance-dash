@@ -39,6 +39,6 @@ jobs:
           EOF
       - name: Run deploy shell script
         run: |
-          pip install pipenv
+          curl -sSL https://install.python-poetry.org | python3 -
           npm install
           bash deploy.sh -p -c

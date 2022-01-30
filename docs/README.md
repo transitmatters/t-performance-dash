@@ -6,7 +6,7 @@ This is the repository for the TransitMatters Data Dashboard. Client code is wri
 
 ## Requirements to develop locally
 * node 12.x LTS (verify with `node -v`)
-* Python 3.7 with pipenv (verify with `python --version; pipenv --version`)
+* Python 3.9 with poetry (verify with `python --version; poetry --version`)
 
 ## Development Instructions
 1. Add `MBTA_V2_API_KEY` to your shell environment:

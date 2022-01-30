@@ -18,7 +18,7 @@ jobs:
           node-version: 12.x
       - name: Lint frontend code with ESLint
         run: |
-          pip install pipenv
+          curl -sSL https://install.python-poetry.org | python3 -
           npm install
           npm run lint-frontend
 
@@ -37,6 +37,6 @@ jobs:
           node-version: 12.x
       - name: Lint backend code with Flake8
         run: |
-          pip install pipenv
+          curl -sSL https://install.python-poetry.org | python3 -
           npm install
           npm run lint-backend
