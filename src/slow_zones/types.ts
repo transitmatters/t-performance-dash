@@ -15,6 +15,9 @@ export interface SlowZone {
   id: string;
   from_short: string;
   to_short: string;
+  direction: Direction;
 }
+
+export type Direction = "northbound" | "southbound";
 
 export type ChartView = "line" | "xrange";

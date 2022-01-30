@@ -21,7 +21,7 @@ ReactDOM.render(
       <Route exact path="/bus">
         <App bus_mode={true} />
       </Route>
-      <Route exact path="/slow-zones">
+      <Route exact path="/slowzones">
         <SlowZones />
       </Route>
     </Switch>

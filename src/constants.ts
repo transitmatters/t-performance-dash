@@ -1,4 +1,22 @@
-export const colorsForLine = {
+const FRONTEND_TO_BACKEND_MAP = new Map([
+	["localhost", ""], // this becomes a relative path that is proxied through CRA:3000 to python on :5000
+	["127.0.0.1", ""],
+	["dashboard.transitmatters.org", "https://dashboard-api2.transitmatters.org"],
+	[
+	  "dashboard-beta.transitmatters.org",
+	  "https://dashboard-api-beta.transitmatters.org",
+	],
+  ]);
+  
+export const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(
+	window.location.hostname
+  );
+
+interface ColorsForLine {
+	[key:string]: string
+}
+
+export const colorsForLine: ColorsForLine = {
 	Red: '#da291c',
 	Orange: '#ed8b00',
 	Blue: '#003da5',

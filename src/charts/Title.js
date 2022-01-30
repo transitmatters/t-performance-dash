@@ -1,4 +1,4 @@
-import { colorsForLine } from '../constants.js';
+import { colorsForLine } from '../constants.ts';
 
 const getLineColor = (lineName) => colorsForLine[lineName] || 'black';
 const titleColor = 'gray';

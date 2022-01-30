@@ -1,12 +1,12 @@
-import STATIONS from "./stations";
-import ABBREVS from "./stop_abbreviations";
-import { SlowZone } from "./types";
+import { colorsForLine } from "../constants";
+import { lookup_station_by_id } from "../stations";
+import { Direction, SlowZone } from "./types";
 
-const colorsForLine: any = {
-  Red: "#d13434",
-  Orange: "#e66f00",
-  Blue: "#0e3d8c",
-  Green: "#159765",
+const WEEK_MS = 1000 * 60 * 60 * 24 * 7;
+const MIN_DATE = new Date(2021, 1, 1);
+
+const capitalize = (s: string) => {
+  return s && s[0].toUpperCase() + s.slice(1);
 };
 
 const getDashUrl = (d: any) => {
@@ -22,38 +22,57 @@ const getDashUrl = (d: any) => {
   }
   now = now.toISOString().split("T")[0];
 
-  return `https://dashboard.transitmatters.org/rapidtransit?config=${d.color},${d.fr_id},${d.to_id},${then},${now}`;
+  return `https://dashboard.transitmatters.org/rapidtransit?config=${d.custom.color},${d.custom.fr_id},${d.custom.to_id},${then},${now}`;
 };
 
+const getDirection = (to: any, from: any) => {
+  const toOrder = to.order;
+  const fromOrder = from.order;
+  return toOrder > fromOrder ? "southbound" : "northbound";
+};
+
+// Data formatting & cleanup
 export const formatSlowZones = (data: any) =>
   data.map((x: any) => {
     // @ts-ignore
-    const from = STATIONS[x.color].find((st) =>
-      [...st.stops.northbound, ...st.stops.southbound].includes("" + x.fr_id)
-    ).stop_name;
+    const from = lookup_station_by_id(x.color, x.fr_id);
     // @ts-ignore
-    const to = STATIONS[x.color].find((st) =>
-      [...st.stops.northbound, ...st.stops.southbound].includes("" + x.to_id)
-    ).stop_name;
-
+    const to = lookup_station_by_id(x.color, x.to_id);
+    const direction = getDirection(to, from);
     return {
       start: new Date(x.start),
       end: new Date(x.end),
-      from,
-      to,
+      from: from.stop_name,
+      to: to.stop_name,
       uid: +x.id,
-      id: from + "-" + to,
+      id: from.stop_name + "-" + to.stop_name,
       delay: +x.delay,
       duration: +x.duration,
-      //@ts-ignore
-      fr_short: ABBREVS[from],
-      //@ts-ignore
-      to_short: ABBREVS[to],
       color: x.color,
       fr_id: x.fr_id,
       to_id: x.to_id,
+      direction,
     };
   });
+
+const getMaxDate = (data: SlowZone[]) =>
+  data.reduce((max: any, curr: any) => {
+    if (
+      curr.end.getTime() > max.end.getTime() ||
+      curr.start.getTime() > max.end.getTime()
+    ) {
+      return curr;
+    } else return max;
+  });
+
+const getNumberOfWeeks = (date1: Date, date2: Date) => {
+  const date1ms = date1.getTime();
+  const date2ms = date2.getTime();
+
+  const diff = Math.abs(date2ms - date1ms);
+
+  return Math.floor(diff / WEEK_MS);
+};
 
 export const groupByRoute = (data: SlowZone[]) =>
   data.reduce((series: any, sz: SlowZone) => {
@@ -72,10 +91,38 @@ export const groupByLine = (data: SlowZone[]) =>
   }, {});
 
 export const getRoutes = (data: SlowZone[]) => {
-  const groupObj: any = groupByRoute(data);
+  const groupObj = groupByRoute(data);
   return Object.keys(groupObj);
 };
 
+const groupByMonth = (data: SlowZone[], maxDate: any, minDate: any) => {
+  const numberOfWeeks = getNumberOfWeeks(minDate, maxDate.end);
+  const dateMs = minDate.getTime();
+  const weekData = new Array(Math.ceil(numberOfWeeks));
+  for (let x = 0; x < numberOfWeeks; x++) {
+    const weekStart = dateMs + WEEK_MS * x;
+    const weekEnd = weekStart + WEEK_MS;
+    weekData[x] = +(
+      data.reduce((prev, curr) => {
+        if (
+          curr.start.getTime() >= weekStart &&
+          curr.start.getTime() <= weekEnd
+        ) {
+          return prev + curr.delay;
+        } else if (
+          curr.start.getTime() <= weekStart &&
+          curr.end.getTime() >= weekEnd
+        ) {
+          return prev + curr.delay;
+        }
+        return prev;
+      }, 0) / 60
+    ).toFixed(2);
+  }
+  return weekData;
+};
+
+// Xrange options
 export const generateXrangeSeries = (data: any) => {
   const routes = getRoutes(data);
   const groupedByLine = groupByLine(data);
@@ -95,81 +142,25 @@ export const generateXrangeSeries = (data: any) => {
           d.end.getUTCDate()
         ),
         y: routes.indexOf(d.id),
-        ...d,
+        custom: { ...d },
       })),
       dataLabels: {
         enabled: true,
         // @ts-ignore
         formatter: function () {
           // @ts-ignore
-          return `${this.point.delay.toFixed(1)} s`;
+          return `${this.point.custom.delay.toFixed(0)} s`;
         },
       },
     };
   });
 };
 
-const getMaxDate = (data: SlowZone[]) =>
-  data.reduce((max: any, curr: any) => {
-    if (
-      curr.end.getTime() > max.end.getTime() ||
-      curr.start.getTime() > max.end.getTime()
-    ) {
-      return curr;
-    } else return max;
-  });
-
-const getNumberOfWeeks = (date1: Date, date2: Date) => {
-  const WEEK = 1000 * 60 * 60 * 24 * 7;
-
-  const date1ms = date1.getTime();
-  const date2ms = date2.getTime();
-
-  const diff = Math.abs(date2ms - date1ms);
-
-  return Math.floor(diff / WEEK);
-};
-
-const groupByMonth = (data: SlowZone[], maxDate: any, minDate: any) => {
-  const numberOfWeeks = getNumberOfWeeks(new Date(2021, 1, 1), maxDate.end);
-  const dateMs = new Date(2021, 1, 1).getTime();
-  const weekData = new Array(Math.ceil(numberOfWeeks));
-  for (let x = 0; x <= numberOfWeeks; x++) {
-    const weekStart = dateMs + 604800000 * x;
-    const weekEnd = weekStart + 604800000;
-    weekData[x] = data.reduce((prev, curr) => {
-      if (
-        curr.start.getTime() >= weekStart &&
-        curr.start.getTime() <= weekEnd
-      ) {
-        return prev + Number(curr.delay.toFixed(1));
-      } else if (
-        curr.start.getTime() <= weekStart &&
-        curr.end.getTime() >= weekEnd
-      ) {
-        return prev + Number(curr.delay.toFixed(1));
-      }
-      return prev;
-    }, 0);
-  }
-  return weekData;
-};
-
-export const generateLineSeries = (data: any) => {
-  const groupedByLine = groupByLine(data);
-  const maxDate = getMaxDate(data);
-  const minDate = new Date(2021, 1, 1);
-  return Object.entries(groupedByLine).map((line: any) => {
-    return {
-      name: line[0],
-      color: colorsForLine[line[0]],
-      data: groupByMonth(line[1], maxDate, minDate),
-    };
-  });
-};
 export const generateXrangeOptions = (
   data: SlowZone[],
-  setChartView: Function
+  setChartView: Function,
+  direction: Direction,
+  setDirection: Function
 ): any => ({
   chart: {
     type: "xrange",
@@ -178,8 +169,9 @@ export const generateXrangeOptions = (
     enabled: false,
   },
   title: {
-    text: "Slow Zone Details",
+    text: `${capitalize(direction)} Slow Zones`,
   },
+
   xAxis: {
     type: "datetime",
     title: {
@@ -188,13 +180,13 @@ export const generateXrangeOptions = (
   },
 
   yAxis: {
+    type: "category",
     title: {
       text: "Line Segments",
     },
     categories: getRoutes(data),
     reversed: true,
   },
-
   plotOptions: {
     series: {
       cursor: "pointer",
@@ -204,11 +196,20 @@ export const generateXrangeOptions = (
           window.open(getDashUrl(event.point), "_blank");
         },
       },
-      pointWidth: "12",
+      borderRadius: 0,
+      borderWidth: 1,
+      grouping: false,
+      pointPadding: 0.15,
+      groupPadding: 0,
+      showInLegend: true,
+      colorByPoint: false,
     },
   },
   series: generateXrangeSeries(data),
   exporting: {
+    scale: "1",
+    width: "1500px",
+    height: "1500px",
     buttons: {
       customButton: {
         text: "Regular View",
@@ -216,28 +217,49 @@ export const generateXrangeOptions = (
           setChartView("line");
         },
       },
+      button2: {
+        text: "Change Direction",
+        onclick: function () {
+          setDirection(
+            direction === "southbound" ? "northbound" : "southbound"
+          );
+        },
+      },
     },
   },
 });
+
+// Line options
+export const generateLineSeries = (data: any) => {
+  const groupedByLine = groupByLine(data);
+  const maxDate = getMaxDate(data);
+  return Object.entries(groupedByLine).map((line: any) => {
+    return {
+      name: line[0],
+      color: colorsForLine[line[0]],
+      data: groupByMonth(line[1], maxDate, MIN_DATE),
+    };
+  });
+};
 
 export const generateLineOptions = (
   data: SlowZone[],
   setChartView: Function
 ): any => ({
   title: {
-    text: "Slow Zone Aggregation",
+    text: `Slow Zones`,
   },
   xAxis: { type: "datetime", title: { text: "Date" } },
   yAxis: {
     title: {
-      text: "Slow Time Per Week (s)",
+      text: "Slow Time Per Week (minutes)",
     },
   },
   series: generateLineSeries(data),
   plotOptions: {
     series: {
       pointStart: Date.UTC(2021, 1, 1),
-      pointInterval: 604800000,
+      pointInterval: WEEK_MS,
     },
   },
   exporting: {
