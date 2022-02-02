@@ -22,15 +22,15 @@
   "homepage": ".",
   "scripts": {
     "start": "concurrently npm:start-python npm:start-react",
-    "start-python": "cd server && pipenv run chalice local --port=5000",
+    "start-python": "cd server && poetry run chalice local --port=5000",
     "start-react": "react-scripts start",
     "build": "react-scripts build",
     "lint": "npm run lint-frontend && npm run lint-backend",
     "lint-frontend": "eslint src --max-warnings=0",
-    "lint-backend": "cd server && pipenv run flake8",
+    "lint-backend": "cd server && poetry run flake8",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postinstall": "cd server && pipenv install --python=3.7"
+    "postinstall": "cd server && poetry install"
   },
   "proxy": "http://localhost:5000",
   "browserslist": {

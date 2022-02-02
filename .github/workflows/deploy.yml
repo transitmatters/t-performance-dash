@@ -21,10 +21,10 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-      - name: Set up Python 3.7
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: 3.9
       - name: Set up Node 16.x
         uses: actions/setup-node@v1
         with:
@@ -39,6 +39,6 @@ jobs:
           EOF
       - name: Run deploy shell script
         run: |
-          pip install pipenv
+          curl -sSL https://install.python-poetry.org | python3 -
           npm install
           bash deploy.sh -p -c
