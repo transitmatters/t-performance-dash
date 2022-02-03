@@ -11,7 +11,7 @@ def load_checkpoints(checkpoint_file):
     output: dict(checkpoint_id -> station_name) or {}
     """
     if checkpoint_file:
-        chks = pd.read_csv(checkpoint_file, index_col="checkpoint_id", squeeze=True)
+        chks = pd.read_csv(checkpoint_file, index_col="checkpoint_id").squeeze("columns")
         chks.index = chks.index.str.lower()
         return chks.str.replace("(Bus)", "", regex=False).str.strip()
     else:
