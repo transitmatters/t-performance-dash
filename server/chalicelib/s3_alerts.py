@@ -19,10 +19,13 @@ def key(day):
     return f"Alerts/{str(day)}.json.gz"
 
 
-def get_alerts(day, route):
+def get_alerts(day, routes):
     alerts_str = s3.download(key(day), "utf8")
     alerts = json.loads(alerts_str)[0]["past_alerts"]
-    return list(filter(lambda alert: route[0] in routes_for_alert(alert), alerts))
+    def matches_route(alert):
+        targets = routes_for_alert(alert)
+        return any(r in targets for r in routes)
+    return list(filter(matches_route, alerts))
 
 
 def store_alerts(day):

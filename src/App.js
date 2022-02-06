@@ -360,7 +360,8 @@ class App extends React.Component {
           alerts: null,
         });
         this.fetchDataset('alerts', controller.signal, {
-          route: configuration.line,
+          // split so the 114/116/117 get their fun too.
+          route: configuration.line.split("/"),
         });
       }
 
