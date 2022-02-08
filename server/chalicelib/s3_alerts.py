@@ -22,9 +22,11 @@ def key(day):
 def get_alerts(day, routes):
     alerts_str = s3.download(key(day), "utf8")
     alerts = json.loads(alerts_str)[0]["past_alerts"]
+
     def matches_route(alert):
         targets = routes_for_alert(alert)
         return any(r in targets for r in routes)
+
     return list(filter(matches_route, alerts))
 
 
