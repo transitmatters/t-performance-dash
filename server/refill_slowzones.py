@@ -12,6 +12,7 @@ end_str = sys.argv[2]
 START = datetime.datetime.strptime(start_str, "%Y-%m-%d").date()
 END = datetime.datetime.strptime(end_str, "%Y-%m-%d").date()
 
+
 def do_alerts_exist(d):
     try:
         get_alerts(d, ["Red"])
