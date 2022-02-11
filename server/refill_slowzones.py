@@ -3,10 +3,14 @@ import datetime
 from chalicelib.parallel import date_range
 from chalicelib.s3_alerts import store_alerts, get_alerts
 
+import sys
+if len(sys.argv) < 3:
+    print("usage: python refill_slowzones.py 2021-04-12 2021-05-01")
+start_str = sys.argv[1]
+end_str = sys.argv[2]
 
-START = datetime.date(2022, 1, 3)
-END = datetime.date.today() - datetime.timedelta(days=2)
-
+START = datetime.datetime.strptime(start_str, "%Y-%m-%d").date()
+END = datetime.datetime.strptime(end_str, "%Y-%m-%d").date()
 
 def do_alerts_exist(d):
     try:
