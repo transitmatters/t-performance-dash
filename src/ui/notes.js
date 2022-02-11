@@ -10,4 +10,12 @@ const BusDisclaimer = () => {
     )
 };
 
-export { BusDisclaimer };
+const TodayDisclaimer = () => {
+    return(
+        <div className="today-disclaimer">
+            Today's data haven't been cleaned yet and may be a little messy.
+        </div>
+    )
+}
+
+export { BusDisclaimer, TodayDisclaimer };

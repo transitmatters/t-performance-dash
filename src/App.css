@@ -509,3 +509,8 @@ button:disabled,
   font-style: italic;
   padding-top: 30px;
 }
+
+.today-disclaimer {
+  font-style: italic;
+  padding-top: 30px;
+}

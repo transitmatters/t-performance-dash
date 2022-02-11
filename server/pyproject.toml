@@ -15,7 +15,7 @@ numpy = "1.22.1"
 pandas = "1.4.0"
 
 [tool.poetry.dev-dependencies]
-chalice = "1.26.5"
+chalice = "1.26.6"
 flake8 = "4.0.1"
 
 
