@@ -6,6 +6,8 @@ export const colorsForLine = {
 	bus: '#ffc72c',
 };
 
+export const TODAY = new Date().toISOString().split("T")[0];
+
 export const trainDateRange = {
 	minDate: "2016-01-15",
 	maxDate: "today"

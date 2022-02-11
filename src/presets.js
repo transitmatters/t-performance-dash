@@ -15,8 +15,6 @@ const createConfigPresetValue = (line, fromStationName, toStationName, date_star
 	}
 };
 
-// const TODAY = new Date().toISOString().split("T")[0];
-
 export const configPresets = [
 	{
 		label: "Jan 12, 2022 — Red Line door problem",
