@@ -3,7 +3,7 @@ import { AggregateByTimeSelectable } from './charts/SelectableCharts';
 import { SingleDayLine, AggregateByDate } from './charts/line';
 import { station_direction } from './stations';
 import { BusDisclaimer, TodayDisclaimer } from './ui/notes';
-import { TODAY } from './constants';
+import { TODAY_SERVICE_DATE } from './constants';
 
 const dataFields = {
   traveltimes: {
@@ -32,7 +32,7 @@ const headwayTitle = {
   false: "Time between trains (headways)"
 }
 
-function getLocationDescription(from, to, line) {  
+function getLocationDescription(from, to, line) {
   if (from && to) {
     return {
       to: to.stop_name,
@@ -134,7 +134,7 @@ const SingleDaySet = (props) => {
           date={props.startDate}
         />
       }
-      {props.startDate === TODAY && <TodayDisclaimer />}
+      {props.startDate === TODAY_SERVICE_DATE() && <TodayDisclaimer />}
       {props.bus_mode && <BusDisclaimer />}
     </div>
   )

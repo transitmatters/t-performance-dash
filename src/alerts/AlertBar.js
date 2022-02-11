@@ -46,8 +46,12 @@ export default function AlertBar(props) {
 
 
   const renderBoxes = () => {
-    if (isLoading || !alerts) {
+    if (isLoading) {
       return null;
+    }
+
+    if (!alerts) {
+      return <div>Unable to retrieve this day's MBTA incidents.</div>
     }
 
     const [start, end] = chartTimeframe(today);

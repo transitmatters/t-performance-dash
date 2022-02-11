@@ -6,7 +6,14 @@ export const colorsForLine = {
 	bus: '#ffc72c',
 };
 
-export const TODAY = new Date().toISOString().split("T")[0];
+export const TODAY_SERVICE_DATE = () => {
+	// toISOString returns in UTC.
+	// I want "3am Eastern", which is UTC-07:00.
+	// and when DST ends and it's actually 4am EST, that's fine too.
+	const d = new Date();
+	d.setHours(d.getHours() - 7);
+	return d.toISOString().split("T")[0];
+}
 
 export const trainDateRange = {
 	minDate: "2016-01-15",

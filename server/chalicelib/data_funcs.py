@@ -195,7 +195,8 @@ def alerts(day, params):
     try:
         # Grab the current "transit day" (3:30am-3:30am)
         today = current_transit_day()
-        yesterday = today - datetime.timedelta(days=1)
+        # yesterday + 1 bonus day to cover the gap, since aws is only populated at 5/6am.
+        yesterday = today - datetime.timedelta(days=2)
 
         # Use the API for today and yesterday's transit day, otherwise us.
         if day >= yesterday:
@@ -223,4 +224,4 @@ def alerts(day, params):
         return flat_alerts
     except Exception:
         traceback.print_exc()
-        return []
+        return None
