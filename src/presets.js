@@ -15,24 +15,26 @@ const createConfigPresetValue = (line, fromStationName, toStationName, date_star
 	}
 };
 
-const TODAY = new Date().toISOString().split("T")[0];
-
 export const configPresets = [
 	{
-		label: "June to December 2021 — Orange Line slow zones",
-		value: createConfigPresetValue("Orange", "Downtown Crossing", "Green Street", "2021-06-01", TODAY)
+		label: "Jan 12, 2022 — Red Line door problem",
+		value: createConfigPresetValue("Red", "Quincy Adams", "South Station", "2022-01-12")
 	},
 	{
-		label: "September 9, 2021 — Route 28 first day of school traffic",
+		label: "June 2021 to Present — Orange Line slow zones",
+		value: createConfigPresetValue("Orange", "Downtown Crossing", "Green Street", "2021-06-01", "2022-01-23")
+	},
+	{
+		label: "Sept 9, 2021 — Route 28 first day of school traffic",
 		value: createConfigPresetValue("28", "Mattapan Station", "Nubian Station", "2021-09-09")
 	},
 	{
-		label: "October 2021 — Route 22 Before Columbus Ave Bus Lanes",
-		value: createConfigPresetValue("22", "Jackson Square Station", "Franklin Park", "2021-10-01", "2021-10-30")
+		label: "Oct 19, 2021 — Route 1 bus bunching",
+		value: createConfigPresetValue("1", "Harvard", "Hynes Station", "2021-10-19")
 	},
 	{
-		label: "November 2021 — Route 22 After Columbus Ave Bus Lanes",
-		value: createConfigPresetValue("22", "Jackson Square Station", "Franklin Park", "2021-11-01", "2021-11-30")
+		label: "Oct to Nov 2021 — Route 22 Columbus Ave bus lane",
+		value: createConfigPresetValue("22", "Jackson Square Station", "Franklin Park", "2021-10-01", "2021-11-30")
 	}
 	/** OLD STUFF
 	{

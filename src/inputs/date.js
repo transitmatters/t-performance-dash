@@ -49,6 +49,8 @@ class Flatpickr extends React.Component {
   createFlatpickr = () => {
     this.flatpickr = flatpickr(this.node,
       {
+        // if we get here, we've already decided on flatpickr. Don't resort to mobile-native.
+        disableMobile: true,
         date: this.props.value,
         onChange: (sel, dateStr, inst) => this.props.onChange(dateStr),
         ...this.props.options

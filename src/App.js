@@ -1,5 +1,4 @@
 import React from "react";
-import ReactGA from "react-ga";
 import { SingleDaySet, AggregateSet } from "./ChartSets";
 import StationConfiguration from "./StationConfiguration";
 import { withRouter } from "react-router-dom";
@@ -8,18 +7,37 @@ import {
   get_stop_ids_for_stations,
   line_name,
 } from "./stations";
+import { trainDateRange, busDateRange } from "./constants";
 import { recognize } from "./alerts/AlertFilter";
 import AlertBar from "./alerts/AlertBar";
 import { ProgressBar, progressBarRate } from "./ui/ProgressBar";
 import "./App.css";
 import Select from "./inputs/Select";
 import { configPresets } from "./presets";
-import { APP_DATA_BASE_PATH } from "./constants";
+
+const PRODUCTION = "dashboard.transitmatters.org";
+
+const FRONTEND_TO_BACKEND_MAP = new Map([
+  ["localhost", ""], // this becomes a relative path that is proxied through CRA:3000 to python on :5000
+  ["127.0.0.1", ""],
+  [PRODUCTION, "https://dashboard-api2.transitmatters.org"],
+  [
+    "dashboard-beta.transitmatters.org",
+    "https://dashboard-api-beta.transitmatters.org",
+  ],
+]);
+const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(
+  window.location.hostname
+);
 
 const RAPIDTRANSIT_PATH = "/rapidtransit";
 const BUS_PATH = "/bus";
 
 const MAX_AGGREGATION_MONTHS = 8;
+const TOO_EARLY_ERROR = (date) =>
+  `Our archives only go back so far. Please select a date no earlier than ${date}.`;
+const TOO_LATE_ERROR = (date) =>
+  `Data not yet available. Please select a date no later than ${date}.`;
 const RANGE_TOO_LARGE_ERROR = `Please select a range no larger than ${MAX_AGGREGATION_MONTHS} months.`;
 const RANGE_NEGATIVE_ERROR =
   "Please ensure the start date comes before the selected end date.";
@@ -108,8 +126,11 @@ class App extends React.Component {
       progressBarKey: 0,
     };
 
-    ReactGA.initialize("UA-71173708-2");
-    ReactGA.pageview(props.location.pathname);
+    if (window.location.hostname === PRODUCTION) {
+      window.goatcounter?.count?.({
+        path: props.location.pathname,
+      });
+    }
 
     const url_config = new URLSearchParams(props.location.search).get("config");
     if (typeof url_config === "string") {
@@ -117,10 +138,7 @@ class App extends React.Component {
         props.location.pathname,
         url_config
       );
-      this.state.error_message = this.validateRange(
-        this.state.configuration.date_start,
-        this.state.configuration.date_end
-      );
+      this.state.error_message = this.checkForErrors(this.state.configuration);
     }
 
     if (window.location.hostname !== "dashboard.transitmatters.org") {
@@ -148,19 +166,46 @@ class App extends React.Component {
     this.download();
   }
 
-  validateRange(date_start, date_end) {
+  checkForErrors(config) {
+    return (
+      this.validateRange(config.date_start, config.bus_mode) ||
+      this.validateRange(config.date_end, config.bus_mode) ||
+      this.validateInterval(config.date_start, config.date_end) ||
+      this.validateStops(config.from, config.to)
+    );
+  }
+
+  validateRange(selectedDate, bus_mode) {
+    // This should all be handled by the datepicker.
+    // However, iOS (and maybe other systems) don't support min: and max: on a date input
+    // So we have to check here also.
+    if (!selectedDate) {
+      return null;
+    }
+    const selectedDateTs = new Date(selectedDate).getTime();
+    const dateRange = bus_mode ? busDateRange : trainDateRange;
+
+    if (selectedDateTs < new Date(dateRange.minDate).getTime()) {
+      return TOO_EARLY_ERROR(dateRange.minDate);
+    }
+    if (bus_mode) {
+      if (selectedDateTs > new Date(dateRange.maxDate).getTime()) {
+        return TOO_LATE_ERROR(dateRange.maxDate);
+      }
+    }
+    return null;
+  }
+
+  validateInterval(date_start, date_end) {
     if (!date_end) {
       return null;
     }
-    const date_start_ts = new Date(date_start).getTime();
-    const date_end_ts = new Date(date_end).getTime();
-    if (date_end_ts < date_start_ts) {
+    const date_interval_ms =
+      new Date(date_end).getTime() - new Date(date_start).getTime();
+    if (date_interval_ms < 0) {
       return RANGE_NEGATIVE_ERROR;
     }
-    if (
-      date_end_ts - date_start_ts >
-      MAX_AGGREGATION_MONTHS * 31 * 86400 * 1000
-    ) {
+    if (date_interval_ms > MAX_AGGREGATION_MONTHS * 31 * 86400 * 1000) {
       return RANGE_TOO_LARGE_ERROR;
     }
     return null;
@@ -193,12 +238,7 @@ class App extends React.Component {
       },
     };
 
-    const error =
-      this.validateRange(
-        update.configuration.date_start,
-        update.configuration.date_end
-      ) ||
-      this.validateStops(update.configuration.from, update.configuration.to);
+    const error = this.checkForErrors(update.configuration);
     this.setState({
       error_message: error,
     });
@@ -351,10 +391,16 @@ class App extends React.Component {
           alerts: null,
         });
         this.fetchDataset("alerts", controller.signal, {
-          route: configuration.line,
+          // split so the 114/116/117 get their fun too.
+          route: configuration.line.split("/"),
         });
       }
-      ReactGA.pageview(window.location.pathname + window.location.search);
+
+      if (window.location.hostname === PRODUCTION) {
+        window.goatcounter?.count?.({
+          path: window.location.pathname + window.location.search,
+        });
+      }
     }
   }
 

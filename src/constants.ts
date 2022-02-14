@@ -24,6 +24,15 @@ export const colorsForLine: ColorsForLine = {
 	bus: '#ffc72c',
 };
 
+export const TODAY_SERVICE_DATE = () => {
+	// toISOString returns in UTC.
+	// I want "3am Eastern", which is UTC-07:00.
+	// and when DST ends and it's actually 4am EST, that's fine too.
+	const d = new Date();
+	d.setHours(d.getHours() - 7);
+	return d.toISOString().split("T")[0];
+}
+
 export const trainDateRange = {
 	minDate: "2016-01-15",
 	maxDate: "today"
@@ -31,7 +40,7 @@ export const trainDateRange = {
 
 export const busDateRange = {
 	minDate: "2018-08-01",
-	maxDate: "2021-11-30"
+	maxDate: "2021-12-31"
 };
 
 export const stations = {

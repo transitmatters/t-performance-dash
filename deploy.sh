@@ -1,25 +1,56 @@
 #!/bin/bash
+
 set -e
 
 export AWS_PROFILE=transitmatters
 export AWS_REGION=us-east-1
+export AWS_DEFAULT_REGION=us-east-1
 export AWS_PAGER=""
 
+PRODUCTION=false
+CI=false
+
+# Argument parsing
+# pass "-p" flag to deploy to production
+# pass "-c" flag if deploying with CI
+
+while getopts "pc" opt; do
+    case $opt in
+        p)
+            PRODUCTION=true
+            ;;
+        c)
+            CI=true
+            ;;
+  esac
+done
+
 # Setup environment stuff
-# By default deploy to production, otherwise "./deploy.sh beta" deploys to beta stage
+# By default deploy to beta, otherwise deploys to production
 
-[[ "$1" = "beta" ]] && ENV_SUFFIX="-beta" || ENV_SUFFIX=""
-[[ "$1" = "beta" ]] && CHALICE_STAGE="beta" || CHALICE_STAGE="production"
-[[ "$1" = "beta" ]] && FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN_BETA" || FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN"
-[[ "$1" = "beta" ]] && BACKEND_CERT_ARN="$TM_BACKEND_CERT_ARN_BETA" || BACKEND_CERT_ARN="$TM_BACKEND_CERT_ARN"
+$PRODUCTION && ENV_SUFFIX="" || ENV_SUFFIX="-beta"
+$PRODUCTION && CHALICE_STAGE="production" || CHALICE_STAGE="beta"
+$PRODUCTION && FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN" || FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN_BETA"
+$PRODUCTION && BACKEND_CERT_ARN="$TM_BACKEND_CERT_ARN" || BACKEND_CERT_ARN="$TM_BACKEND_CERT_ARN_BETA"
 
-git fetch --unshallow --tags
-if [[ "$1" = "beta" ]]; then
-    GIT_ID=`git describe --always --dirty --abbrev=10`
-    echo "Deploying git commit id $GIT_ID"
+# Fetch repository tags
+# Run unshallow if deploying in CI
+
+if $CI; then
+    git fetch --unshallow --tags
 else
+    git fetch --tags
+fi
+
+# If production, identify build with latest git tag
+# If beta, identify build with dirty hash
+
+if $PRODUCTION; then
     GIT_ID=`git describe --tags --abbrev=0`
-    echo "Deploying git tag $GIT_ID"
+    echo "Deploying git tag $GIT_ID to production site"
+else
+    GIT_ID=`git describe --always --dirty --abbrev=10`
+    echo "Deploying git commit id $GIT_ID to beta site"
 fi
 
 BACKEND_BUCKET=datadashboard-backend$ENV_SUFFIX
@@ -36,7 +67,8 @@ npm run build
 sed -i "s/git-id/version $GIT_ID/" ./build/index.html
 
 pushd server/ > /dev/null
-pipenv run chalice package --stage $CHALICE_STAGE --merge-template frontend-cfn.json cfn/
+poetry export --output requirements.txt
+poetry run chalice package --stage $CHALICE_STAGE --merge-template frontend-cfn.json cfn/
 aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUCKET --output-template-file cfn/packaged.yaml
 aws cloudformation deploy --template-file cfn/packaged.yaml --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset --parameter-overrides \
     TMFrontendHostname=$FRONTEND_HOSTNAME \
