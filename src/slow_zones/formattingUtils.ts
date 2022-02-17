@@ -2,8 +2,8 @@ import { colorsForLine } from "../constants";
 import { lookup_station_by_id } from "../stations";
 import { Direction, SlowZone } from "./types";
 
-const WEEK_MS = 1000 * 60 * 60 * 24 * 7;
-const MIN_DATE = new Date(2021, 1, 1);
+export const X_MIN = new Date(2021, 0, 1);
+const DAY_MS = 1000 * 60 * 60 * 24;
 
 const capitalize = (s: string) => {
   return s && s[0].toUpperCase() + s.slice(1);
@@ -55,25 +55,6 @@ export const formatSlowZones = (data: any) =>
     };
   });
 
-const getMaxDate = (data: SlowZone[]) =>
-  data.reduce((max: any, curr: any) => {
-    if (
-      curr.end.getTime() > max.end.getTime() ||
-      curr.start.getTime() > max.end.getTime()
-    ) {
-      return curr;
-    } else return max;
-  });
-
-const getNumberOfWeeks = (date1: Date, date2: Date) => {
-  const date1ms = date1.getTime();
-  const date2ms = date2.getTime();
-
-  const diff = Math.abs(date2ms - date1ms);
-
-  return Math.floor(diff / WEEK_MS);
-};
-
 export const groupByRoute = (data: SlowZone[]) =>
   data.reduce((series: any, sz: SlowZone) => {
     const key = sz.id;
@@ -93,33 +74,6 @@ export const groupByLine = (data: SlowZone[]) =>
 export const getRoutes = (data: SlowZone[]) => {
   const groupObj = groupByRoute(data);
   return Object.keys(groupObj);
-};
-
-const groupByMonth = (data: SlowZone[], maxDate: any, minDate: any) => {
-  const numberOfWeeks = getNumberOfWeeks(minDate, maxDate.end);
-  const dateMs = minDate.getTime();
-  const weekData = new Array(Math.ceil(numberOfWeeks));
-  for (let x = 0; x < numberOfWeeks; x++) {
-    const weekStart = dateMs + WEEK_MS * x;
-    const weekEnd = weekStart + WEEK_MS;
-    weekData[x] = +(
-      data.reduce((prev, curr) => {
-        if (
-          curr.start.getTime() >= weekStart &&
-          curr.start.getTime() <= weekEnd
-        ) {
-          return prev + curr.delay;
-        } else if (
-          curr.start.getTime() <= weekStart &&
-          curr.end.getTime() >= weekEnd
-        ) {
-          return prev + curr.delay;
-        }
-        return prev;
-      }, 0) / 60
-    ).toFixed(2);
-  }
-  return weekData;
 };
 
 // Xrange options
@@ -230,16 +184,15 @@ export const generateXrangeOptions = (
 });
 
 // Line options
-export const generateLineSeries = (data: any) => {
-  const groupedByLine = groupByLine(data);
-  const maxDate = getMaxDate(data);
-  return Object.entries(groupedByLine).map((line: any) => {
-    return {
-      name: line[0],
-      color: colorsForLine[line[0]],
-      data: groupByMonth(line[1], maxDate, MIN_DATE),
-    };
-  });
+export const groupByLineDailyTotals = (data: any) => {
+  const RED_LINE = data.map((day: any) => day.Red);
+  const BLUE_LINE = data.map((day: any) => day.Blue);
+  const ORANGE_LINE = data.map((day: any) => day.Orange);
+  return [
+    { name: "Red", color: colorsForLine["Red"], data: RED_LINE },
+    { name: "Blue", color: colorsForLine["Blue"], data: BLUE_LINE },
+    { name: "Orange", color: colorsForLine["Orange"], data: ORANGE_LINE },
+  ];
 };
 
 export const generateLineOptions = (
@@ -252,14 +205,18 @@ export const generateLineOptions = (
   xAxis: { type: "datetime", title: { text: "Date" } },
   yAxis: {
     title: {
-      text: "Slow Time Per Week (minutes)",
+      text: "Slow Time Per Day (seconds)",
     },
   },
-  series: generateLineSeries(data),
+  series: groupByLineDailyTotals(data),
   plotOptions: {
     series: {
-      pointStart: Date.UTC(2021, 1, 1),
-      pointInterval: WEEK_MS,
+      pointStart: Date.UTC(
+        X_MIN.getFullYear(),
+        X_MIN.getMonth(),
+        X_MIN.getDay()
+      ),
+      pointInterval: DAY_MS,
     },
   },
   exporting: {
