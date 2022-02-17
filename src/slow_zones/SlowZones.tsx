@@ -57,6 +57,7 @@ export const SlowZones = () => {
           setOptions(options);
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chartView]);
 
   return (
