@@ -11,7 +11,6 @@ import {
   generateXrangeOptions,
   X_MIN,
 } from "./formattingUtils";
-import { APP_DATA_BASE_PATH } from "../constants";
 xrange(Highcharts);
 exporting(Highcharts);
 
@@ -23,7 +22,7 @@ export const SlowZones = () => {
   useEffect(() => {
     if (chartView === "line") {
       const url = new URL(
-        `${APP_DATA_BASE_PATH}/static/slowzones/delay_totals.json`,
+        `/static/slowzones/delay_totals.json`,
         window.location.origin
       );
       fetch(url.toString())
@@ -32,13 +31,12 @@ export const SlowZones = () => {
           const filteredData = data.filter(
             (d: any) => new Date(d.date) > X_MIN
           );
-          console.log(filteredData)
           const options = generateLineOptions(filteredData, setChartView);
           setOptions(options);
         });
     } else {
       const url = new URL(
-        `${APP_DATA_BASE_PATH}/static/slowzones/all_slow.json`,
+        `/static/slowzones/all_slow.json`,
         window.location.origin
       );
       fetch(url.toString())
