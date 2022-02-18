@@ -60,6 +60,19 @@
   width: 200px;
 }
 
+.empty-state #slowzone-container {
+  padding-bottom: 24px;
+  text-align: center;
+}
+
+
+.empty-state #slowzone-button {
+  background-color: var(--bus);
+  padding: 5px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
 .chart.is-loading {
   opacity: 0.3;
   pointer-events: none;
