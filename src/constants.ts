@@ -12,11 +12,8 @@ export const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(
 	window.location.hostname
   );
 
-interface ColorsForLine {
-	[key:string]: string
-}
 
-export const colorsForLine: ColorsForLine = {
+export const colorsForLine: Record<string, string>= {
 	Red: '#da291c',
 	Orange: '#ed8b00',
 	Blue: '#003da5',

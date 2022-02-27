@@ -34,9 +34,7 @@ const getDirection = (to: any, from: any) => {
 // Data formatting & cleanup
 export const formatSlowZones = (data: any) =>
   data.map((x: any) => {
-    // @ts-ignore
     const from = lookup_station_by_id(x.color, x.fr_id);
-    // @ts-ignore
     const to = lookup_station_by_id(x.color, x.to_id);
     const direction = getDirection(to, from);
     return {
@@ -56,7 +54,7 @@ export const formatSlowZones = (data: any) =>
   });
 
 export const groupByRoute = (data: SlowZone[]) =>
-  data.reduce((series: any, sz: SlowZone) => {
+  data.reduce((series: Record<string, SlowZone[]>, sz: SlowZone) => {
     const key = sz.id;
     const s = (series[key] || []).concat(sz);
     series[key] = s;
@@ -64,7 +62,7 @@ export const groupByRoute = (data: SlowZone[]) =>
   }, {});
 
 export const groupByLine = (data: SlowZone[]) =>
-  data.reduce((series: any, sz: any) => {
+  data.reduce((series: Record<string, SlowZone[]>, sz: any) => {
     const key = sz.color;
     const s = (series[key] || []).concat(sz);
     series[key] = s;
@@ -80,11 +78,12 @@ export const getRoutes = (data: SlowZone[]) => {
 export const generateXrangeSeries = (data: any) => {
   const routes = getRoutes(data);
   const groupedByLine = groupByLine(data);
-  return Object.entries(groupedByLine).map((line: any) => {
+  return Object.entries(groupedByLine).map((line) => {
+    const [name, data] = line;
     return {
-      name: line[0],
+      name: name,
       color: colorsForLine[line[0]],
-      data: line[1].map((d: SlowZone) => ({
+      data: data.map((d) => ({
         x: Date.UTC(
           d.start.getUTCFullYear(),
           d.start.getUTCMonth(),
@@ -112,7 +111,7 @@ export const generateXrangeSeries = (data: any) => {
 
 export const generateXrangeOptions = (
   data: SlowZone[],
-  direction: Direction,
+  direction: Direction
 ): any => ({
   chart: {
     type: "xrange",
@@ -121,9 +120,8 @@ export const generateXrangeOptions = (
     enabled: false,
   },
   title: {
-    text: `${capitalize(direction)} Slow Zones`,
+    text: `${capitalize(direction)} slow zones`,
   },
-
   xAxis: {
     type: "datetime",
     title: {
@@ -132,6 +130,9 @@ export const generateXrangeOptions = (
   },
   legend: {
     enabled: false,
+  },
+  time: {
+    timezone: "America/New_York",
   },
   yAxis: {
     type: "category",
@@ -145,8 +146,7 @@ export const generateXrangeOptions = (
     series: {
       cursor: "pointer",
       events: {
-        // @ts-ignore
-        click: function (event) {
+        click: function (event: any) {
           window.open(getDashUrl(event.point), "_blank");
         },
       },
@@ -160,7 +160,6 @@ export const generateXrangeOptions = (
     },
   },
   series: generateXrangeSeries(data),
-  
 });
 
 // Line options
@@ -194,13 +193,16 @@ export const generateLineOptions = (
   selectedLines: string[]
 ): any => ({
   title: {
-    text: `Slow Zones`,
+    text: `Slow zones`,
   },
   xAxis: { type: "datetime", title: { text: "Date" } },
   yAxis: {
     title: {
-      text: "Slow Time Per Day (minutes)",
+      text: "Slow time per day (minutes)",
     },
+  },
+  time: {
+    timezone: "America/New_York",
   },
   series: groupByLineDailyTotals(data, selectedLines),
   plotOptions: {
@@ -212,5 +214,4 @@ export const generateLineOptions = (
   legend: {
     enabled: false,
   },
- 
 });

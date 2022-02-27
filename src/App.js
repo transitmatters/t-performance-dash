@@ -1,7 +1,7 @@
 import React from 'react';
 import { SingleDaySet, AggregateSet } from './ChartSets';
 import StationConfiguration from './StationConfiguration';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { lookup_station_by_id, get_stop_ids_for_stations, line_name } from './stations';
 import { trainDateRange, busDateRange } from './constants';
 import { recognize } from './alerts/AlertFilter';
@@ -10,7 +10,6 @@ import { ProgressBar, progressBarRate } from './ui/ProgressBar';
 import './App.css';
 import Select from './inputs/Select';
 import { configPresets } from './presets';
-import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 const PRODUCTION = "dashboard.transitmatters.org";
 
