@@ -1,6 +1,4 @@
 import classNames from "classnames";
-import RadioForm from "../inputs/radio";
-import { line_name, subway_lines } from "../stations";
 import { optionsForSelect } from "./SlowZones";
 import { ChartView, Direction } from "./types";
 

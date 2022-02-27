@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ChartView, Direction, SlowZone } from "./types";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
@@ -91,6 +91,7 @@ export const SlowZones = () => {
           });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chartView, direction, selectedLines]);
 
   const toggleLine = (line: string) => {
