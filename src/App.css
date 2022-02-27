@@ -417,6 +417,16 @@ button:disabled,
     row-gap: 10px;
   }
 
+  .slow-zone {
+    padding-top:10px;
+    padding-bottom: 10px;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-areas: 'chart-toggle';
+    row-gap: 15px;
+    justify-items:center
+  }
+
   .station-configuration .from-to-label,
   .station-configuration .date-label {
     width: 30px;
@@ -526,4 +536,52 @@ button:disabled,
 .today-disclaimer {
   font-style: italic;
   padding-top: 30px;
+}
+
+.button-toggle {
+  margin:4px;
+  background-color:#EFEFEF;
+  border-radius:4px;
+  border:1px solid #D0D0D0;
+  overflow:auto;
+  float:left;
+  cursor: pointer;
+}
+.button-toggle label {
+  float:left;
+  width: 4.0em;
+  cursor: pointer;
+  color: black
+}
+
+.button-toggle label span {
+  text-align:center;
+  padding:3px 0px;
+  display:block;
+}
+
+.button-toggle label input {
+  position:absolute;
+  top:-20px;
+}
+
+.button-toggle input:checked + span {
+  color:#fff;
+}
+
+.button-toggle input:disabled + span {
+  color:#fff;
+  cursor: not-allowed	;
+}
+
+.Red input:checked + span{
+  background-color:var( --red-line);
+}
+
+.Orange input:checked + span{
+  background-color:var( --orange-line);
+}
+
+.Blue input:checked + span{
+  background-color:var( --blue-line);
 }

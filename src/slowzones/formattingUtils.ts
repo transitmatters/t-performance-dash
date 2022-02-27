@@ -112,9 +112,7 @@ export const generateXrangeSeries = (data: any) => {
 
 export const generateXrangeOptions = (
   data: SlowZone[],
-  setChartView: Function,
   direction: Direction,
-  setDirection: Function
 ): any => ({
   chart: {
     type: "xrange",
@@ -132,7 +130,9 @@ export const generateXrangeOptions = (
       text: "Date",
     },
   },
-
+  legend: {
+    enabled: false,
+  },
   yAxis: {
     type: "category",
     title: {
@@ -160,44 +160,38 @@ export const generateXrangeOptions = (
     },
   },
   series: generateXrangeSeries(data),
-  exporting: {
-    scale: "1",
-    width: "1500px",
-    height: "1500px",
-    buttons: {
-      customButton: {
-        text: "Regular View",
-        onclick: function () {
-          setChartView("line");
-        },
-      },
-      button2: {
-        text: "Change Direction",
-        onclick: function () {
-          setDirection(
-            direction === "southbound" ? "northbound" : "southbound"
-          );
-        },
-      },
-    },
-  },
+  
 });
 
 // Line options
-export const groupByLineDailyTotals = (data: any) => {
+export const groupByLineDailyTotals = (data: any, selectedLines: string[]) => {
   const RED_LINE = data.map((day: any) => Number((day.Red / 60).toFixed(2)));
   const BLUE_LINE = data.map((day: any) => Number((day.Blue / 60).toFixed(2)));
-  const ORANGE_LINE = data.map((day: any) => Number((day.Orange/60).toFixed(2)));
+  const ORANGE_LINE = data.map((day: any) =>
+    Number((day.Orange / 60).toFixed(2))
+  );
   return [
-    { name: "Red", color: colorsForLine["Red"], data: RED_LINE },
-    { name: "Blue", color: colorsForLine["Blue"], data: BLUE_LINE },
-    { name: "Orange", color: colorsForLine["Orange"], data: ORANGE_LINE },
+    selectedLines.includes("Red") && {
+      name: "Red",
+      color: colorsForLine["Red"],
+      data: RED_LINE,
+    },
+    selectedLines.includes("Blue") && {
+      name: "Blue",
+      color: colorsForLine["Blue"],
+      data: BLUE_LINE,
+    },
+    selectedLines.includes("Orange") && {
+      name: "Orange",
+      color: colorsForLine["Orange"],
+      data: ORANGE_LINE,
+    },
   ];
 };
 
 export const generateLineOptions = (
   data: SlowZone[],
-  setChartView: Function
+  selectedLines: string[]
 ): any => ({
   title: {
     text: `Slow Zones`,
@@ -208,23 +202,15 @@ export const generateLineOptions = (
       text: "Slow Time Per Day (minutes)",
     },
   },
-  series: groupByLineDailyTotals(data),
+  series: groupByLineDailyTotals(data, selectedLines),
   plotOptions: {
     series: {
-      pointStart: Date.UTC(
-        2021,0,1
-      ),
+      pointStart: Date.UTC(2021, 0, 1),
       pointInterval: DAY_MS,
     },
   },
-  exporting: {
-    buttons: {
-      customButton: {
-        text: "Detailed View",
-        onclick: () => {
-          setChartView("xrange");
-        },
-      },
-    },
+  legend: {
+    enabled: false,
   },
+ 
 });
