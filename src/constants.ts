@@ -1,3 +1,5 @@
+import moment from "moment";
+
 const FRONTEND_TO_BACKEND_MAP = new Map([
 	["localhost", ""], // this becomes a relative path that is proxied through CRA:3000 to python on :5000
 	["127.0.0.1", ""],
@@ -20,6 +22,10 @@ export const colorsForLine: Record<string, string>= {
 	Green: '#00834d',
 	bus: '#ffc72c',
 };
+
+export const getDateThreeMonthsAgo = () => {
+	return moment().subtract(3, 'months')
+}
 
 export const TODAY_SERVICE_DATE = () => {
 	// toISOString returns in UTC.

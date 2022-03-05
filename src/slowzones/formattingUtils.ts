@@ -1,8 +1,8 @@
+import moment from "moment";
 import { colorsForLine } from "../constants";
 import { lookup_station_by_id } from "../stations";
 import { Direction, SlowZone } from "./types";
 
-export const X_MIN = new Date(2021, 0, 0);
 const DAY_MS = 1000 * 60 * 60 * 24;
 
 const capitalize = (s: string) => {
@@ -157,6 +157,7 @@ export const generateXrangeOptions = (
       groupPadding: 0,
       showInLegend: true,
       colorByPoint: false,
+      animation: false,
     },
   },
   series: generateXrangeSeries(data),
@@ -190,7 +191,9 @@ export const groupByLineDailyTotals = (data: any, selectedLines: string[]) => {
 
 export const generateLineOptions = (
   data: SlowZone[],
-  selectedLines: string[]
+  selectedLines: string[],
+  startDate: string,
+  endDate: string
 ): any => ({
   title: {
     text: `Slow zones`,
@@ -207,8 +210,10 @@ export const generateLineOptions = (
   series: groupByLineDailyTotals(data, selectedLines),
   plotOptions: {
     series: {
-      pointStart: Date.UTC(2021, 0, 1),
+      pointStart: moment(startDate),
+      pointEnd: moment(endDate),
       pointInterval: DAY_MS,
+      animation: false,
     },
   },
   legend: {

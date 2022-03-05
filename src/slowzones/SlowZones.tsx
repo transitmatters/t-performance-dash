@@ -9,10 +9,12 @@ import {
   formatSlowZones,
   generateLineOptions,
   generateXrangeOptions,
-  X_MIN,
 } from "./formattingUtils";
 import SlowZoneNav from "./SlowZoneNav";
 import { line_name, subway_lines } from "../stations";
+import { getDateThreeMonthsAgo } from "../constants";
+import moment from "moment";
+
 xrange(Highcharts);
 exporting(Highcharts);
 
@@ -38,10 +40,21 @@ export const SlowZones = () => {
   ]);
   const [totalDelays, setTotalDelays] = useState<any>();
   const [allSlow, setAllSlow] = useState<any>();
+  const [startDate, setStartDate] = useState(
+    getDateThreeMonthsAgo().format("YYYY-MM-D")
+  );
+  const [endDate, setEndDate] = useState(moment().format("YYYY-MM-D"));
 
   const setTotalDelaysOptions = (data: any) => {
-    const filteredData = data.filter((d: any) => new Date(d.date) > X_MIN);
-    const options = generateLineOptions(filteredData, selectedLines);
+    const filteredData = data.filter((d: any) => {
+      return d.date >= startDate && d.date <= endDate;
+    });
+    const options = generateLineOptions(
+      filteredData,
+      selectedLines,
+      startDate,
+      endDate
+    );
     setOptions(options);
   };
 
@@ -49,7 +62,12 @@ export const SlowZones = () => {
     const formattedData = formatSlowZones(data);
     const filteredData = formattedData.filter(
       (d: SlowZone) =>
-        d.start > X_MIN &&
+        // Starts in the range
+        ((d.start >= new Date(startDate) && d.start <= new Date(endDate)) ||
+          (d.start <= new Date(startDate) && d.end >= new Date(endDate)) ||
+          (d.start <= new Date(startDate) &&
+            d.end <= new Date(endDate) &&
+            d.end >= new Date(startDate))) &&
         selectedLines.includes(d.color) &&
         d.direction === direction
     );
@@ -92,7 +110,7 @@ export const SlowZones = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chartView, direction, selectedLines]);
+  }, [chartView, direction, selectedLines, startDate, endDate]);
 
   const toggleLine = (line: string) => {
     if (selectedLines.includes(line)) {
@@ -111,6 +129,10 @@ export const SlowZones = () => {
         setDireciton={setDirection}
         selectedLines={selectedLines}
         toggleLine={toggleLine}
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={setStartDate}
+        setEndDate={setEndDate}
       />
       {options && (
         <HighchartsReact

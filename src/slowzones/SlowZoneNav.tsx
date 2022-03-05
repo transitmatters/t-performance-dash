@@ -1,6 +1,9 @@
 import classNames from "classnames";
+import DatePicker from "../inputs/date";
 import { optionsForSelect } from "./SlowZones";
 import { ChartView, Direction } from "./types";
+import { getDateThreeMonthsAgo, trainDateRange } from "../constants";
+import moment from "moment";
 
 interface SlowZoneNavProps {
   chartView: ChartView;
@@ -9,7 +12,12 @@ interface SlowZoneNavProps {
   setDireciton: Function;
   selectedLines: string[];
   toggleLine: (value: string) => void;
+  startDate: string;
+  endDate: string;
+  setStartDate: Function;
+  setEndDate: Function;
 }
+
 const SlowZoneNav = ({
   chartView,
   setChartView,
@@ -17,16 +25,24 @@ const SlowZoneNav = ({
   selectedLines,
   toggleLine,
   setDireciton,
+  startDate,
+  endDate,
+  setStartDate,
+  setEndDate,
 }: SlowZoneNavProps) => {
   const getIsChecked = (value: string) => {
     return selectedLines.includes(value);
   };
+  const clear = ()=>{
+    setStartDate(getDateThreeMonthsAgo().toISOString())
+    setEndDate(moment().endOf('day').toISOString())
+  }
   return (
     <div className="station-configuration-wrapper">
       <div className="slow-zone station-configuration  main-column">
         <div className="line-toggle">
           <div className="option ">
-            {optionsForSelect().map((opt, index) => (
+            {optionsForSelect().map((opt) => (
               <div
                 key={opt.value}
                 className={classNames("button-toggle", opt.value)}
@@ -86,6 +102,30 @@ const SlowZoneNav = ({
             </div>
           </div>
         )}
+        <div className="option option-date">
+          <span className="date-label">Date</span>
+          <DatePicker
+            value={startDate}
+            onChange={setStartDate}
+            options={trainDateRange}
+            placeholder="Select date..."
+          />
+
+          <span className="date-label end-date-label">to</span>
+          <DatePicker
+            value={endDate}
+            onChange={setEndDate}
+            options={trainDateRange}
+            placeholder="Select date..."
+            minDate={startDate}
+          />
+          <button
+            className="clear-button"
+            onClick={clear}
+          >
+            🅧
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -422,7 +422,9 @@ button:disabled,
     padding-bottom: 10px;
     display: grid;
     grid-template-columns: 100%;
-    grid-template-areas: 'chart-toggle';
+    grid-template-areas: 
+    'chart-toggle'
+    'date';
     row-gap: 15px;
     justify-items:center
   }
@@ -459,7 +461,7 @@ button:disabled,
     grid-area: stations;
   }
 
-  .station-configuration > .option-date {
+  .station-configuration .slow-zone > .option-date {
     grid-area: date;
     display: flex;
   }
