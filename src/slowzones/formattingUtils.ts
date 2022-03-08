@@ -184,12 +184,16 @@ export const groupByLineDailyTotals = (data: any, selectedLines: string[]) => {
 export const generateLineOptions = (
   data: SlowZone[],
   selectedLines: string[],
-  startDate: Moment,
+  startDate: Moment
 ): any => ({
+  credits: { enabled: false },
   title: {
     text: `Slow zones`,
   },
-  xAxis: { type: "datetime", title: { text: "Date" } },
+  xAxis: {
+    type: "datetime",
+    title: { text: "Date" },
+  },
   yAxis: {
     title: {
       text: "Slow time per day (minutes)",
