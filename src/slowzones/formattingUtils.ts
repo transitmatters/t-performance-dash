@@ -201,7 +201,7 @@ export const generateLineOptions = (
   series: groupByLineDailyTotals(data, selectedLines),
   plotOptions: {
     series: {
-      pointStart: startDate.add(1,'day').valueOf(),
+      pointStart: startDate.valueOf(),
       pointInterval: DAY_MS,
       animation: false,
     },

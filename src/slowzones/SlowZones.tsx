@@ -45,12 +45,9 @@ export const SlowZones = () => {
 
   const setTotalDelaysOptions = (data: any) => {
     const filteredData = data.filter((d: any) => {
-      return moment(d.date).isBetween(
-        startDate,
-        endDate,
-        undefined,
-        "[]"
-      );
+      return moment(d.date)
+        .add(5, "hours")
+        .isBetween(startDate, endDate, undefined, "[]");
     });
     const options = generateLineOptions(filteredData, selectedLines, startDate);
     setOptions(options);
@@ -124,10 +121,12 @@ export const SlowZones = () => {
         setDireciton={setDirection}
         selectedLines={selectedLines}
         toggleLine={toggleLine}
-        startDate={startDate.format("YYYY-MM-DD")}
-        endDate={endDate.format("YYYY-MM-DD")}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={(date: any) => {
+          setStartDate(moment(date));
+        }}
+        setEndDate={(date: any) => setEndDate(moment(date))}
       />
       {options && (
         <HighchartsReact

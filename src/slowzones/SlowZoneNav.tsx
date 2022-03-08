@@ -3,7 +3,8 @@ import DatePicker from "../inputs/date";
 import { optionsForSelect } from "./SlowZones";
 import { ChartView, Direction } from "./types";
 import { getDateThreeMonthsAgo, trainDateRange } from "../constants";
-import moment from "moment";
+import moment, { Moment } from "moment";
+import { useMemo } from "react";
 
 interface SlowZoneNavProps {
   chartView: ChartView;
@@ -12,8 +13,8 @@ interface SlowZoneNavProps {
   setDireciton: Function;
   selectedLines: string[];
   toggleLine: (value: string) => void;
-  startDate: string;
-  endDate: string;
+  startDate: Moment;
+  endDate: Moment;
   setStartDate: Function;
   setEndDate: Function;
 }
@@ -37,6 +38,12 @@ const SlowZoneNav = ({
     setStartDate(getDateThreeMonthsAgo());
     setEndDate(moment().endOf("day"));
   };
+
+  const startMoment = useMemo(() => startDate.format("YYYY-MM-DD"), [
+    startDate,
+  ]);
+  const endMoment = useMemo(() => endDate.format("YYYY-MM-DD"), [endDate]);
+
   return (
     <div className="station-configuration-wrapper">
       <div className="slow-zone station-configuration main-column">
@@ -69,8 +76,9 @@ const SlowZoneNav = ({
                 type="checkbox"
                 checked={chartView === "xrange"}
                 onChange={() => {
-                  if (chartView === "line") setChartView("xrange");
-                  else {
+                  if (chartView === "line") {
+                    setChartView("xrange");
+                  } else {
                     setChartView("line");
                   }
                 }}
@@ -105,21 +113,19 @@ const SlowZoneNav = ({
         <div className="option option-date">
           <span className="date-label">Date</span>
           <DatePicker
-            value={startDate}
+            value={startMoment}
             onChange={setStartDate}
-            options={trainDateRange}
+            options={{ maxDate: endMoment, minDate: trainDateRange.minDate }}
+            maxDate={endMoment}
             placeholder="Select date..."
-            useMoment={true}
           />
 
           <span className="date-label end-date-label">to</span>
           <DatePicker
-            value={endDate}
+            value={endMoment}
             onChange={setEndDate}
-            options={trainDateRange}
+            options={{ minDate: startMoment, maxDate: trainDateRange.maxDate }}
             placeholder="Select date..."
-            minDate={startDate}
-            useMoment={true}
           />
           <button className="clear-button" onClick={clear}>
             🅧

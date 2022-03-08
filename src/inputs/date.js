@@ -1,7 +1,6 @@
 import React from 'react';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/themes/light.css';
-import moment from 'moment';
 
 const ua = window.navigator.userAgent;
 const isMobile = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(ua);
@@ -15,12 +14,11 @@ const RegularDateInput = (props) => {
     const local_date = new Date(iso_date.valueOf() - (offset * 60 * 1000));
     maxDate = local_date.toISOString().split("T")[0];
   }
-
   return(
     <input
       type="date"
       value={props.value}
-      onChange={(evt) => props.onChange(props.useMoment? moment(evt.target.value) : evt.target.value)}
+      onChange={(evt) => props.onChange(evt.target.value)}
       placeholder={props.placeholder}
       min={props.options.minDate}
       max={maxDate}
@@ -53,7 +51,7 @@ class Flatpickr extends React.Component {
         // if we get here, we've already decided on flatpickr. Don't resort to mobile-native.
         disableMobile: true,
         date: this.props.value,
-        onChange: (sel, dateStr, inst) => this.props.onChange(this.props.useMoment ? moment(dateStr) : dateStr),
+        onChange: (sel, dateStr, inst) => this.props.onChange(dateStr),
         ...this.props.options
       });
   }
