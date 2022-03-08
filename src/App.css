@@ -421,14 +421,18 @@ button:disabled,
     padding-top:10px;
     padding-bottom: 10px;
     display: grid;
-    grid-template-columns: 100%;
+    grid-template-columns:100%;
     grid-template-areas: 
-    'chart-toggle'
+    'line'
+    'line'
     'date';
     row-gap: 15px;
-    justify-items:center
   }
 
+  .slow-zone .line-toggle , .chart-toggle , .direction-toggle{ 
+    justify-self: center;
+  }
+  
   .station-configuration .from-to-label,
   .station-configuration .date-label {
     width: 30px;

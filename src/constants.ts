@@ -24,7 +24,7 @@ export const colorsForLine: Record<string, string>= {
 };
 
 export const getDateThreeMonthsAgo = () => {
-	return moment().subtract(3, 'months')
+	return moment().subtract(3, 'months').startOf('day')
 }
 
 export const TODAY_SERVICE_DATE = () => {

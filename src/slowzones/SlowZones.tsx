@@ -40,21 +40,19 @@ export const SlowZones = () => {
   ]);
   const [totalDelays, setTotalDelays] = useState<any>();
   const [allSlow, setAllSlow] = useState<any>();
-  const [startDate, setStartDate] = useState(
-    getDateThreeMonthsAgo().format("YYYY-MM-D")
-  );
-  const [endDate, setEndDate] = useState(moment().format("YYYY-MM-D"));
+  const [startDate, setStartDate] = useState(getDateThreeMonthsAgo());
+  const [endDate, setEndDate] = useState(moment());
 
   const setTotalDelaysOptions = (data: any) => {
     const filteredData = data.filter((d: any) => {
-      return d.date >= startDate && d.date <= endDate;
+      return moment(d.date).isBetween(
+        startDate,
+        endDate,
+        undefined,
+        "[]"
+      );
     });
-    const options = generateLineOptions(
-      filteredData,
-      selectedLines,
-      startDate,
-      endDate
-    );
+    const options = generateLineOptions(filteredData, selectedLines, startDate);
     setOptions(options);
   };
 
@@ -62,12 +60,9 @@ export const SlowZones = () => {
     const formattedData = formatSlowZones(data);
     const filteredData = formattedData.filter(
       (d: SlowZone) =>
-        // Starts in the range
-        ((d.start >= new Date(startDate) && d.start <= new Date(endDate)) ||
-          (d.start <= new Date(startDate) && d.end >= new Date(endDate)) ||
-          (d.start <= new Date(startDate) &&
-            d.end <= new Date(endDate) &&
-            d.end >= new Date(startDate))) &&
+        (d.start.isBetween(startDate, endDate, undefined, "[]") ||
+          d.end.isBetween(startDate, endDate, undefined, "[]") ||
+          (d.start.isBefore(startDate) && d.end.isAfter(endDate))) &&
         selectedLines.includes(d.color) &&
         d.direction === direction
     );
@@ -129,8 +124,8 @@ export const SlowZones = () => {
         setDireciton={setDirection}
         selectedLines={selectedLines}
         toggleLine={toggleLine}
-        startDate={startDate}
-        endDate={endDate}
+        startDate={startDate.format("YYYY-MM-DD")}
+        endDate={endDate.format("YYYY-MM-DD")}
         setStartDate={setStartDate}
         setEndDate={setEndDate}
       />

@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment, { Moment } from "moment";
 import { colorsForLine } from "../constants";
 import { lookup_station_by_id } from "../stations";
 import { Direction, SlowZone } from "./types";
@@ -38,8 +38,8 @@ export const formatSlowZones = (data: any) =>
     const to = lookup_station_by_id(x.color, x.to_id);
     const direction = getDirection(to, from);
     return {
-      start: new Date(x.start),
-      end: new Date(x.end),
+      start: moment(x.start),
+      end: moment(x.end),
       from: from.stop_name,
       to: to.stop_name,
       uid: +x.id,
@@ -84,16 +84,8 @@ export const generateXrangeSeries = (data: any) => {
       name: name,
       color: colorsForLine[line[0]],
       data: data.map((d) => ({
-        x: Date.UTC(
-          d.start.getUTCFullYear(),
-          d.start.getUTCMonth(),
-          d.start.getUTCDate()
-        ),
-        x2: Date.UTC(
-          d.end.getUTCFullYear(),
-          d.end.getUTCMonth(),
-          d.end.getUTCDate()
-        ),
+        x: d.start.utc().valueOf(),
+        x2: d.end.utc().valueOf(),
         y: routes.indexOf(d.id),
         custom: { ...d },
       })),
@@ -192,8 +184,7 @@ export const groupByLineDailyTotals = (data: any, selectedLines: string[]) => {
 export const generateLineOptions = (
   data: SlowZone[],
   selectedLines: string[],
-  startDate: string,
-  endDate: string
+  startDate: Moment,
 ): any => ({
   title: {
     text: `Slow zones`,
@@ -210,8 +201,7 @@ export const generateLineOptions = (
   series: groupByLineDailyTotals(data, selectedLines),
   plotOptions: {
     series: {
-      pointStart: moment(startDate),
-      pointEnd: moment(endDate),
+      pointStart: startDate.add(1,'day').valueOf(),
       pointInterval: DAY_MS,
       animation: false,
     },

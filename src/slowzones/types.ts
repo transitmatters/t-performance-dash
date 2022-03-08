@@ -1,7 +1,9 @@
+import { Moment } from "moment";
+
 export interface SlowZone {
   service_date: number;
-  start: Date;
-  end: Date;
+  start: Moment;
+  end: Moment;
   mean_metric: number;
   duration: number;
   baseline: number;

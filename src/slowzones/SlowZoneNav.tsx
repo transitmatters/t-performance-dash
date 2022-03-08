@@ -33,15 +33,15 @@ const SlowZoneNav = ({
   const getIsChecked = (value: string) => {
     return selectedLines.includes(value);
   };
-  const clear = ()=>{
-    setStartDate(getDateThreeMonthsAgo().toISOString())
-    setEndDate(moment().endOf('day').toISOString())
-  }
+  const clear = () => {
+    setStartDate(getDateThreeMonthsAgo());
+    setEndDate(moment().endOf("day"));
+  };
   return (
     <div className="station-configuration-wrapper">
-      <div className="slow-zone station-configuration  main-column">
+      <div className="slow-zone station-configuration main-column">
         <div className="line-toggle">
-          <div className="option ">
+          <div className="option mode">
             {optionsForSelect().map((opt) => (
               <div
                 key={opt.value}
@@ -109,6 +109,7 @@ const SlowZoneNav = ({
             onChange={setStartDate}
             options={trainDateRange}
             placeholder="Select date..."
+            useMoment={true}
           />
 
           <span className="date-label end-date-label">to</span>
@@ -118,11 +119,9 @@ const SlowZoneNav = ({
             options={trainDateRange}
             placeholder="Select date..."
             minDate={startDate}
+            useMoment={true}
           />
-          <button
-            className="clear-button"
-            onClick={clear}
-          >
+          <button className="clear-button" onClick={clear}>
             🅧
           </button>
         </div>
