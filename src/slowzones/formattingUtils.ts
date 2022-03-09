@@ -10,7 +10,7 @@ const capitalize = (s: string) => {
 };
 
 const getDashUrl = (d: any) => {
-  let then: any = new Date(d.x);
+  let then: any = new Date(d.custom.startDate);
   then.setDate(then.getDate() - 14); // two weeks of baseline for comparison
   then = then.toISOString().split("T")[0];
 
@@ -75,7 +75,7 @@ export const getRoutes = (data: SlowZone[]) => {
 };
 
 // Xrange options
-export const generateXrangeSeries = (data: any) => {
+export const generateXrangeSeries = (data: any, startDate: Moment) => {
   const routes = getRoutes(data);
   const groupedByLine = groupByLine(data);
   return Object.entries(groupedByLine).map((line) => {
@@ -84,10 +84,12 @@ export const generateXrangeSeries = (data: any) => {
       name: name,
       color: colorsForLine[line[0]],
       data: data.map((d) => ({
-        x: d.start.utc().valueOf(),
+        x: d.start.isBefore(startDate)
+          ? startDate.utc().valueOf()
+          : d.start.utc().valueOf(),
         x2: d.end.utc().valueOf(),
         y: routes.indexOf(d.id),
-        custom: { ...d },
+        custom: { ...d, startDate: d.start.utc().valueOf() },
       })),
       dataLabels: {
         enabled: true,
@@ -103,7 +105,8 @@ export const generateXrangeSeries = (data: any) => {
 
 export const generateXrangeOptions = (
   data: SlowZone[],
-  direction: Direction
+  direction: Direction,
+  startDate: Moment
 ): any => ({
   chart: {
     type: "xrange",
@@ -134,6 +137,11 @@ export const generateXrangeOptions = (
     categories: getRoutes(data),
     reversed: true,
   },
+  tooltip: {
+    formatter: function (this: any){
+      return `<div><span style="font-size: 10px">${moment(this.point.custom.startDate).format('MMMM Do YYYY')} - ${moment(this.point.x2).format('MMMM Do YYYY')}</span><br/> <span style="color:${this.point.color}">●</span> ${this.point.series.name}: <b>${this.point.yCategory}</b><br/></div>`
+    }
+  },
   plotOptions: {
     series: {
       cursor: "pointer",
@@ -152,7 +160,7 @@ export const generateXrangeOptions = (
       animation: false,
     },
   },
-  series: generateXrangeSeries(data),
+  series: generateXrangeSeries(data, startDate),
 });
 
 // Line options
@@ -209,6 +217,11 @@ export const generateLineOptions = (
       pointInterval: DAY_MS,
       animation: false,
     },
+  },
+  tooltip: {
+    formatter: function (this: any){
+      return `<div><span style="font-size: 10px">${moment(this.point.x).format('MMMM Do YYYY')}</span><br/> <span style="color:${this.point.color}">●</span> ${this.point.series.name}: <b>${this.point.y}</b><br/></div>`
+    }
   },
   legend: {
     enabled: false,

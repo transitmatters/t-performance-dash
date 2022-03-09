@@ -64,7 +64,7 @@ export const SlowZones = () => {
         d.direction === direction
     );
 
-    const options = generateXrangeOptions(filteredData, direction);
+    const options = generateXrangeOptions(filteredData, direction, startDate);
     setOptions(options);
   };
 
