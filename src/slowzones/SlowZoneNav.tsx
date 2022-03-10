@@ -70,7 +70,7 @@ const SlowZoneNav = ({
         </div>
         <div className="chart-toggle">
           <div className="option option-mode">
-            <span className="switch-label">Total Slow Time</span>
+            <span className="switch-label">Total slow time</span>
             <label className="option switch">
               <input
                 type="checkbox"
@@ -85,7 +85,7 @@ const SlowZoneNav = ({
               />
               <span className="slider"></span>
             </label>
-            <span className="switch-label">Line Segments</span>
+            <span className="switch-label">Line segments</span>
           </div>
         </div>
 

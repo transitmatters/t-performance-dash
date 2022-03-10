@@ -67,8 +67,9 @@
 
 
 .empty-state #slowzone-button {
-  background-color: var(--bus);
-  padding: 5px;
+  background-color: #333;
+  color:white;
+  padding: 3px 8px 3px 8px;
   margin-left: 5px;
   cursor: pointer;
 }
@@ -427,6 +428,7 @@ button:disabled,
     'line'
     'date';
     row-gap: 15px;
+    font-size: 14px
   }
 
   .slow-zone .line-toggle , .chart-toggle , .direction-toggle{ 
@@ -465,7 +467,7 @@ button:disabled,
     grid-area: stations;
   }
 
-  .station-configuration .slow-zone > .option-date {
+  .station-configuration > .option-date {
     grid-area: date;
     display: flex;
   }
