@@ -22,7 +22,7 @@ export const trainDateRange = {
 
 export const busDateRange = {
 	minDate: "2018-08-01",
-	maxDate: "2021-12-31"
+	maxDate: "2022-02-28"
 };
 
 export const stations = {

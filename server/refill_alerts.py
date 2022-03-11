@@ -5,7 +5,7 @@ from chalicelib.s3_alerts import store_alerts, get_alerts
 
 import sys
 if len(sys.argv) < 3:
-    print("usage: python refill_slowzones.py 2021-04-12 2021-05-01")
+    print("usage: poetry run python refill_alerts.py 2021-04-12 2021-05-01")
 start_str = sys.argv[1]
 end_str = sys.argv[2]
 
