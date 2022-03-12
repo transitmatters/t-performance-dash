@@ -10,9 +10,15 @@ const capitalize = (s: string) => {
 };
 
 const getDashUrl = (d: any) => {
-  let then: any = new Date(d.custom.startDate);
-  then.setDate(then.getDate() - 14); // two weeks of baseline for comparison
-  then = then.toISOString().split("T")[0];
+  const dateDiff = moment(d.custom.startDate).diff(d.x2, "months");
+  let then;
+  if (dateDiff <= -7) {
+    then = moment(d.x2).subtract(7, 'months').toISOString().split("T")[0]
+  } else {
+    then = new Date(d.custom.startDate);
+    then.setDate(then.getDate() - 14); // two weeks of baseline for comparison
+    then = then.toISOString().split("T")[0];
+  }
 
   let now: any = new Date(d.x2);
   now.setDate(now.getDate() + 14); // two weeks after for comparison.
@@ -138,9 +144,15 @@ export const generateXrangeOptions = (
     reversed: true,
   },
   tooltip: {
-    formatter: function (this: any){
-      return `<div><span style="font-size: 10px">${moment(this.point.custom.startDate).format('MMMM Do YYYY')} - ${moment(this.point.x2).format('MMMM Do YYYY')}</span><br/> <span style="color:${this.point.color}">●</span> ${this.point.series.name}: <b>${this.point.yCategory}</b><br/></div>`
-    }
+    formatter: function (this: any) {
+      return `<div><span style="font-size: 10px">${moment(
+        this.point.custom.startDate
+      ).format("MMMM Do YYYY")} - ${moment(this.point.x2).format(
+        "MMMM Do YYYY"
+      )}</span><br/> <span style="color:${this.point.color}">●</span> ${
+        this.point.series.name
+      }: <b>${this.point.yCategory}</b><br/></div>`;
+    },
   },
   plotOptions: {
     series: {
@@ -194,6 +206,11 @@ export const generateLineOptions = (
   selectedLines: string[],
   startDate: Moment
 ): any => ({
+  exporting: {
+    csv: {
+      itemDelimiter: ";",
+    },
+  },
   credits: { enabled: false },
   title: {
     text: `Slow zones`,
@@ -219,9 +236,13 @@ export const generateLineOptions = (
     },
   },
   tooltip: {
-    formatter: function (this: any){
-      return `<div><span style="font-size: 10px">${moment(this.point.x).format('MMMM Do YYYY')}</span><br/> <span style="color:${this.point.color}">●</span> ${this.point.series.name}: <b>${this.point.y}</b><br/></div>`
-    }
+    formatter: function (this: any) {
+      return `<div><span style="font-size: 10px">${moment(this.point.x).format(
+        "MMMM Do YYYY"
+      )}</span><br/> <span style="color:${this.point.color}">●</span> ${
+        this.point.series.name
+      }: <b>${this.point.y}</b><br/></div>`;
+    },
   },
   legend: {
     enabled: false,

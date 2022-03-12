@@ -428,7 +428,6 @@ button:disabled,
     'line'
     'date';
     row-gap: 15px;
-    font-size: 14px
   }
 
   .slow-zone .line-toggle , .chart-toggle , .direction-toggle{ 
@@ -593,3 +592,8 @@ button:disabled,
 .Blue input:checked + span{
   background-color:var( --blue-line);
 }
+
+.slow-zone {
+  font-size: 14px;
+}
+
