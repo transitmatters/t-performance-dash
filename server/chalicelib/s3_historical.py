@@ -1,13 +1,11 @@
 from datetime import datetime
 from chalicelib import s3, parallel
+from chalicelib.constants import *
 
 import itertools
 
 DATE_FORMAT_MASSDOT = "%Y-%m-%d %H:%M:%S"
 DATE_FORMAT_OUT = "%Y-%m-%dT%H:%M:%S"
-
-EVENT_ARRIVAL = ["ARR", "PRA"]
-EVENT_DEPARTURE = ["DEP", "PRD"]
 
 
 def pairwise(iterable):
