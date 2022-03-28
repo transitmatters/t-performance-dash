@@ -35,6 +35,6 @@ def update_statistics_file(route, date, count):
     except ClientError as ex:
         if ex.response['Error']['Code'] != 'NoSuchKey':
             raise
-        data = csv_row
+        data = "service_date,run_count\n" + csv_row
 
     s3.upload(key, data.encode(), False)
