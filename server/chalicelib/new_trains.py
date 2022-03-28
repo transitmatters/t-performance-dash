@@ -13,7 +13,7 @@ ROUTES = {
     }
 }
 
-KEY = "NewTrains/AggData/{}LineAgg.TEST.csv"
+KEY = "NewTrains/AggData/{}LineAgg.csv"
 
 def train_runs(label_filter, stations, date):
     api_data = MbtaPerformanceAPI.get_api_data("events",
