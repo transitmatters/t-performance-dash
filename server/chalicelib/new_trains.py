@@ -4,10 +4,12 @@ from botocore.exceptions import ClientError
 
 ROUTES = {
     "Red": {
+        "is_train": lambda x: int(x) >= 1500 and int(x) <= 2151,
         "is_new": lambda x: int(x) >= 1900 and int(x) <= 2151,
         "core_stations": [70077, 70078] # Downtown Crossing
     },
     "Orange": {
+        "is_train": lambda x: int(x) >= 1200 and int(x) <= 1551,
         "is_new": lambda x: int(x) >= 1400 and int(x) <= 1551,
         "core_stations": [70014, 70015] # Back Bay
     }
