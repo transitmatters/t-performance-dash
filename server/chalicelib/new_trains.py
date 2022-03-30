@@ -26,10 +26,11 @@ def train_runs(label_filter, stations, date):
     return list(filter(lambda event: label_filter(event["vehicle_label"]), deps))
 
 
-def update_statistics_file(route, date, count):
-    csv_row = "{formatted_date},{count}\n".format(
+def update_statistics_file(route, date, count, new_count):
+    csv_row = "{formatted_date},{count},{new_count}\n".format(
         formatted_date=date.strftime("%m/%d/%Y"),
-        count=count
+        count=count, 
+        new_count=new_count
     )
     key = KEY.format(route)
     try:
@@ -37,6 +38,6 @@ def update_statistics_file(route, date, count):
     except ClientError as ex:
         if ex.response['Error']['Code'] != 'NoSuchKey':
             raise
-        data = "service_date,run_count\n" + csv_row
+        data = "service_date,run_count,new_run_count\n" + csv_row
 
     s3.upload(key, data.encode(), False)
