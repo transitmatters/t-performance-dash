@@ -40,12 +40,17 @@ def store_new_train_runs(event):
         for route, spec in new_trains.ROUTES.items():
             print(f"Storing new train runs for {route}...")
             try:
-                run_count = len(new_trains.train_runs(
+                new_run_count = len(new_trains.train_runs(
                     spec["is_new"],
                     spec["core_stations"],
                     yesterday
                 ))
-                new_trains.update_statistics_file(route, yesterday, run_count)
+                run_count = len(new_trains.train_runs(
+                    spec["is_train"],
+                    spec["core_stations"],
+                    yesterday
+                ))
+                new_trains.update_statistics_file(route, yesterday, new_run_count)
             except:
                 print(f"Unable to store new train run count for route={route}", file=sys.stderr)
                 continue
