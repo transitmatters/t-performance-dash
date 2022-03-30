@@ -50,7 +50,7 @@ def store_new_train_runs(event):
                     spec["core_stations"],
                     yesterday
                 ))
-                new_trains.update_statistics_file(route, yesterday, new_run_count)
+                new_trains.update_statistics_file(route, yesterday, run_count, new_run_count)
             except:
                 print(f"Unable to store new train run count for route={route}", file=sys.stderr)
                 continue
