@@ -196,7 +196,7 @@ class App extends React.Component {
       return RANGE_NEGATIVE_ERROR;
     }
     if (date_interval_ms > MAX_AGGREGATION_MONTHS * 31 * 86400 * 1000) {
-      return RANGE_TOO_LARGE_ERROR;
+      return null; //return RANGE_TOO_LARGE_ERROR;
     }
     return null;
   }
@@ -296,7 +296,8 @@ class App extends React.Component {
         if(e.name !== "AbortError") {
           console.error(e);
         }
-        this.setIsLoadingDataset(name, false);
+        // we need something like this to fix perpetual loading, but this ain't it
+        // this.setIsLoadingDataset(name, false);
       });
   }
 
