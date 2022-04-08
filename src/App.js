@@ -296,6 +296,7 @@ class App extends React.Component {
         if(e.name !== "AbortError") {
           console.error(e);
         }
+        this.setIsLoadingDataset(name, false);
       });
   }
 
