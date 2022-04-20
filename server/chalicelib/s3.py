@@ -29,16 +29,15 @@ def is_bus(stop_id):
     return ('-0-' in stop_id) or ('-1-' in stop_id)
 
 
-def download_one_event_file(date, stop_id, monthly=False):
+def download_one_event_file(date, stop_id):
     """As advertised: single event file from s3"""
-    year, month, day = date.year, date.month, date.day
+    year, month = date.year, date.month
 
-    if monthly:
+    if is_bus(stop_id):
         folder = 'monthly-bus-data'
-        key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
     else:
-        folder = 'daily-data'
-        key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
+        folder = 'monthly-data'
+    key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
 
     # Download events from S3
     try:
@@ -61,29 +60,14 @@ def download_one_event_file(date, stop_id, monthly=False):
     rows_by_time = sorted(rows, key=lambda row: row["event_time"])
     return rows_by_time
 
-def multiplexed_download_one_event_file(datestop, monthly):
+
+@parallel.make_parallel
+def parallel_download_events(datestop):
     (date, stop) = datestop
-    return download_one_event_file(date, stop, monthly)
-
-parallel_download_events = parallel.make_parallel(multiplexed_download_one_event_file)
-
-def download_single_day_events(date, stops):
-    """Will download events for single day, but can handle multiple stop_ids"""
-    result = []
-    for stop_id in stops:
-        result += download_one_event_file(date, stop_id)
-    return sorted(result, key=lambda row: row["event_time"])
-
-
-# signature: (date_iterable, [stop_id])
-# Will download events for multiple stops, over a date range.
-download_event_range = parallel.make_parallel(download_single_day_events)
+    return download_one_event_file(date, stop)
 
 
 def download_events(sdate, edate, stops):
-    if is_bus(stops[0]):
-        datestops = itertools.product(parallel.month_range(sdate, edate), stops)
-        result = parallel_download_events(datestops, monthly=True)
-        return filter(lambda row: sdate.strftime("%Y-%m-%d") <= row['service_date'] <= edate.strftime("%Y-%m-%d"), result)
-    else:
-        return download_event_range(parallel.date_range(sdate, edate), stops)
+    datestops = itertools.product(parallel.month_range(sdate, edate), stops)
+    result = parallel_download_events(datestops)
+    return filter(lambda row: sdate.strftime("%Y-%m-%d") <= row['service_date'] <= edate.strftime("%Y-%m-%d"), result)

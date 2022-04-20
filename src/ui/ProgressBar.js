@@ -10,7 +10,7 @@ function progressBarRate(date_start, date_end) {
   const ms = (new Date(date_end) - new Date(date_start));
   const days = ms / (1000*60*60*24);
   const months = days / 30;
-  const total_seconds_expected = 3.0 * months;
+  const total_seconds_expected = 0.83 * months;
   return 100 / total_seconds_expected;
 }
 
