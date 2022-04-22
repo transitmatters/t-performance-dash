@@ -19,7 +19,7 @@ jobs:
       - name: Lint frontend code with ESLint
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
-          npm install
+          npm ci
           npm run lint-frontend
 
   backend:
@@ -38,5 +38,5 @@ jobs:
       - name: Lint backend code with Flake8
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
-          npm install
+          npm ci
           npm run lint-backend
