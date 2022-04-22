@@ -1,19 +1,20 @@
 from chalicelib import MbtaPerformanceAPI, s3
-from chalicelib.constants import *
+from chalicelib.constants import EVENT_DEPARTURE
 from botocore.exceptions import ClientError
 
 ROUTES = {
     "Red": {
         "is_new": lambda x: int(x) >= 1900 and int(x) <= 2151,
-        "core_stations": [70077, 70078] # Downtown Crossing
+        "core_stations": [70077, 70078]  # Downtown Crossing
     },
     "Orange": {
         "is_new": lambda x: int(x) >= 1400 and int(x) <= 1551,
-        "core_stations": [70014, 70015] # Back Bay
+        "core_stations": [70014, 70015]  # Back Bay
     }
 }
 
 KEY = "NewTrains/AggData/{}LineAgg.csv"
+
 
 def train_runs(label_filter, stations, date):
     api_data = MbtaPerformanceAPI.get_api_data("events",

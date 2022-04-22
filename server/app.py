@@ -31,6 +31,7 @@ def store_two_days_ago_alerts(event):
         two_days_ago = date.today() - timedelta(days=2)
         s3_alerts.store_alerts(two_days_ago)
 
+
 # Every day at 10:05am UTC: store new train runs from the previous day
 @app.schedule(Cron(5, 10, '*', '*', '?', '*'))
 def store_new_train_runs(event):
@@ -46,7 +47,7 @@ def store_new_train_runs(event):
                     yesterday
                 ))
                 new_trains.update_statistics_file(route, yesterday, run_count)
-            except:
+            except Exception:
                 print(f"Unable to store new train run count for route={route}", file=sys.stderr)
                 continue
 
