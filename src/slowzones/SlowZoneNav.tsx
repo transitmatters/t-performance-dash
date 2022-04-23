@@ -70,7 +70,7 @@ const SlowZoneNav = ({
         </div>
         <div className="chart-toggle">
           <div className="option option-mode">
-            <span className="switch-label">Total slow time</span>
+            <span className="switch-label slowzones-switch-label">Total slow time</span>
             <label className="option switch">
               <input
                 type="checkbox"
@@ -85,31 +85,34 @@ const SlowZoneNav = ({
               />
               <span className="slider"></span>
             </label>
-            <span className="switch-label">Line segments</span>
+            <span className="switch-label slowzones-switch-label">Line segments</span>
           </div>
         </div>
-
-        {chartView === "xrange" && (
-          <div className="direction-toggle">
-            <div className="option option-mode">
-              <span className="switch-label">Southbound</span>
-              <label className="option switch">
-                <input
-                  type="checkbox"
-                  checked={direction === "northbound"}
-                  onChange={() => {
-                    if (direction === "northbound") setDireciton("southbound");
-                    else {
-                      setDireciton("northbound");
-                    }
-                  }}
-                />
-                <span className="slider"></span>
-              </label>
-              <span className="switch-label">Northbound</span>
-            </div>
-          </div>
-        )}
+        <div className="direction-toggle">
+        <div className="option option-mode"
+        style={{
+          // Disable the northbound/southbound slider in "total slow time" mode
+          opacity: chartView === "xrange" ? 1.0 : 0.5,
+          pointerEvents: chartView === "xrange" ? "auto" : "none"}
+        }
+        >
+          <span className="switch-label">Southbound</span>
+          <label className="option switch">
+            <input
+              type="checkbox"
+              checked={direction === "northbound"}
+              onChange={() => {
+                if (direction === "northbound") setDireciton("southbound");
+                else {
+                  setDireciton("northbound");
+                }
+              }}
+            />
+            <span className="slider"></span>
+          </label>
+          <span className="switch-label">Northbound</span>
+        </div>
+        </div>
         <div className="option option-date">
           <span className="date-label">Date</span>
           <DatePicker
