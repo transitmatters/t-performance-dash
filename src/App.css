@@ -167,6 +167,7 @@
 
 .station-configuration {
   padding: 10px;
+  line-height: 1.0;
 }
 
 select,
@@ -363,6 +364,10 @@ button:disabled,
   .station-configuration .select-component {
     flex-grow: 1;
     flex-shrink: 1;
+  }
+
+  .slowzones-switch-label {
+    width: 100px;
   }
 }
 
