@@ -68,7 +68,7 @@ const urlFromState = (config) => {
 };
 
 const documentTitle = (config) => {
-  const pieces = ["TransitMatters Data Dashboard"];
+  const pieces = ["Data Dashboard"];
   if (config.line) {
     pieces.splice(0, 0, line_name(config.line));
   }

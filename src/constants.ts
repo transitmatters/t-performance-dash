@@ -43,7 +43,7 @@ export const trainDateRange = {
 
 export const busDateRange = {
 	minDate: "2018-08-01",
-	maxDate: "2021-12-31"
+	maxDate: "2022-02-28"
 };
 
 export const stations = {
@@ -755,7 +755,7 @@ export const stations = {
 				"branches": ["B", "C", "D"],
 				"station": "place-kencl",
 				disabled: true,
-				"order": 11,
+				"order": 12,
 				"stops": {
 					"0": ["70150", "71150"],
 					"1": ["70151", "71151"]
@@ -764,7 +764,7 @@ export const stations = {
 				"stop_name": "Hynes",
 				"branches": ["B", "C", "D"],
 				"station": "place-hymnl",
-				"order": 10,
+				"order": 11,
 				"stops": {
 					"0": ["70152"],
 					"1": ["70153"]
@@ -774,7 +774,7 @@ export const stations = {
 				"branches": ["B", "C", "D", "E"],
 				"station": "place-pktrm",
 				disabled: true,
-				"order": 6,
+				"order": 7,
 				"stops": {
 					"0": ["70200"],
 					"1": ["70196", "70197", "70198", "70199"]
@@ -783,7 +783,7 @@ export const stations = {
 				"stop_name": "Boylston",
 				"branches": ["B", "C", "D", "E"],
 				"station": "place-boyls",
-				"order": 7,
+				"order": 8,
 				"stops": {
 					"0": ["70158"],
 					"1": ["70159"]
@@ -792,7 +792,7 @@ export const stations = {
 				"stop_name": "Arlington",
 				"branches": ["B", "C", "D", "E"],
 				"station": "place-armnl",
-				"order": 8,
+				"order": 9,
 				"stops": {
 					"0": ["70156"],
 					"1": ["70157"]
@@ -801,7 +801,7 @@ export const stations = {
 				"stop_name": "Copley",
 				"branches": ["B", "C", "D", "E"],
 				"station": "place-coecl",
-				"order": 9,
+				"order": 10,
 				"stops": {
 					"0": ["70154"],
 					"1": ["70155"]
@@ -927,7 +927,7 @@ export const stations = {
 				"stop_name": "Government Center",
 				"branches": ["C", "D", "E"],
 				"station": "place-gover",
-				"order": 5,
+				"order": 6,
 				"stops": {
 					"0": ["70201"],
 					"1": ["70202"]
@@ -936,7 +936,7 @@ export const stations = {
 				"stop_name": "North Station",
 				"branches": ["C", "E"],
 				"station": "place-north",
-				"order": 3,
+				"order": 4,
 				"stops": {
 					"0": ["70205"],
 					"1": ["70206"]
@@ -945,7 +945,7 @@ export const stations = {
 				"stop_name": "Haymarket",
 				"branches": ["C", "E"],
 				"station": "place-haecl",
-				"order": 4,
+				"order": 5,
 				"stops": {
 					"0": ["70203"],
 					"1": ["70204"]
@@ -1166,7 +1166,7 @@ export const stations = {
 					"0": ["70240"],
 					"1": ["70239"]
 				}
-			}, {
+			}, /* {
 				"stop_name": "Lechmere",
 				"branches": ["E"],
 				"station": "place-lech",
@@ -1175,11 +1175,29 @@ export const stations = {
 					"0": ["70209"],
 					"1": ["70210"]
 				}
-			}, {
+			}, */{
+				"stop_name": "Lechmere",
+				"branches": ["E"],
+				"station": "place-lech",
+				"order": 2,
+				"stops": {
+					"0": ["70501"],
+					"1": ["70502"]
+				}
+			},{
+				"stop_name": "Union Square",
+				"branches": ["E"],
+				"station": "place-unsqu",
+				"order": 1,
+				"stops": {
+					"0": ["70503"],
+					"1": ["70504"]
+				}
+			},{
 				"stop_name": "Science Park",
 				"branches": ["E"],
 				"station": "place-spmnl",
-				"order": 2,
+				"order": 3,
 				"stops": {
 					"0": ["70207"],
 					"1": ["70208"]
