@@ -88,6 +88,7 @@ const SlowZoneNav = ({
             <span className="switch-label slowzones-switch-label">Line segments</span>
           </div>
         </div>
+        <div className="direction-toggle">
         <div className="option option-mode"
         style={{
           // Disable the northbound/southbound slider in "total slow time" mode
@@ -110,6 +111,7 @@ const SlowZoneNav = ({
             <span className="slider"></span>
           </label>
           <span className="switch-label">Northbound</span>
+        </div>
         </div>
         <div className="option option-date">
           <span className="date-label">Date</span>
