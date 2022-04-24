@@ -88,8 +88,6 @@ export const SlowZones = () => {
     setOptions(options);
   };
 
-  useEffect(() => {});
-
   useEffect(() => {
     history.replace({ search: params.toString() });
 
