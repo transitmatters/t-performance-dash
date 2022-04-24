@@ -17,6 +17,7 @@ interface SlowZoneNavProps {
   endDate: Moment;
   setStartDate: Function;
   setEndDate: Function;
+  params: URLSearchParams;
 }
 
 const SlowZoneNav = ({
@@ -30,13 +31,18 @@ const SlowZoneNav = ({
   endDate,
   setStartDate,
   setEndDate,
+  params,
 }: SlowZoneNavProps) => {
   const getIsChecked = (value: string) => {
     return selectedLines.includes(value);
   };
   const clear = () => {
-    setStartDate(getDateThreeMonthsAgo());
-    setEndDate(moment().endOf("day"));
+    const threeMonthsAgo = getDateThreeMonthsAgo();
+    setStartDate(threeMonthsAgo);
+    params.set("startDate", threeMonthsAgo.format("YYYY-MM-DD"));
+    const EOD = moment().endOf("day");
+    params.set("endDate", EOD.format("YYYY-MM-DD"));
+    setEndDate(EOD);
   };
 
   const startMoment = useMemo(() => startDate.format("YYYY-MM-DD"), [
@@ -70,7 +76,9 @@ const SlowZoneNav = ({
         </div>
         <div className="chart-toggle">
           <div className="option option-mode">
-            <span className="switch-label slowzones-switch-label">Total slow time</span>
+            <span className="switch-label slowzones-switch-label">
+              Total slow time
+            </span>
             <label className="option switch">
               <input
                 type="checkbox"
@@ -78,40 +86,48 @@ const SlowZoneNav = ({
                 onChange={() => {
                   if (chartView === "line") {
                     setChartView("xrange");
+                    params.set("chartView", "xrange");
                   } else {
                     setChartView("line");
+                    params.set("chartView", "line");
                   }
                 }}
               />
               <span className="slider"></span>
             </label>
-            <span className="switch-label slowzones-switch-label">Line segments</span>
+            <span className="switch-label slowzones-switch-label">
+              Line segments
+            </span>
           </div>
         </div>
         <div className="direction-toggle">
-        <div className="option option-mode"
-        style={{
-          // Disable the northbound/southbound slider in "total slow time" mode
-          opacity: chartView === "xrange" ? 1.0 : 0.5,
-          pointerEvents: chartView === "xrange" ? "auto" : "none"}
-        }
-        >
-          <span className="switch-label">Southbound</span>
-          <label className="option switch">
-            <input
-              type="checkbox"
-              checked={direction === "northbound"}
-              onChange={() => {
-                if (direction === "northbound") setDireciton("southbound");
-                else {
-                  setDireciton("northbound");
-                }
-              }}
-            />
-            <span className="slider"></span>
-          </label>
-          <span className="switch-label">Northbound</span>
-        </div>
+          <div
+            className="option option-mode"
+            style={{
+              // Disable the northbound/southbound slider in "total slow time" mode
+              opacity: chartView === "xrange" ? 1.0 : 0.5,
+              pointerEvents: chartView === "xrange" ? "auto" : "none",
+            }}
+          >
+            <span className="switch-label">Southbound</span>
+            <label className="option switch">
+              <input
+                type="checkbox"
+                checked={direction === "northbound"}
+                onChange={() => {
+                  if (direction === "northbound") {
+                    setDireciton("southbound");
+                    params.set("direction", "southbound");
+                  } else {
+                    setDireciton("northbound");
+                    params.set("direction", "northbound");
+                  }
+                }}
+              />
+              <span className="slider"></span>
+            </label>
+            <span className="switch-label">Northbound</span>
+          </div>
         </div>
         <div className="option option-date">
           <span className="date-label">Date</span>
