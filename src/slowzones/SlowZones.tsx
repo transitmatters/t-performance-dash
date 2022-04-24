@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChartView, Direction, SlowZone } from "./types";
+// @ts-ignore
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import xrange from "highcharts/modules/xrange";
@@ -29,19 +31,37 @@ export const optionsForSelect = () => {
   });
 };
 
+function useQuery() {
+  const { search } = useLocation();
+
+  return useMemo(() => new URLSearchParams(search), [search]);
+}
+
 export const SlowZones = () => {
+  const params = useQuery();
+  const history = useHistory();
   const [options, setOptions] = useState<Highcharts.Options>();
-  const [chartView, setChartView] = useState<ChartView>("line");
-  const [direction, setDirection] = useState<Direction>("southbound");
-  const [selectedLines, setSelectedLines] = useState<any[]>([
-    "Red",
-    "Orange",
-    "Blue",
-  ]);
+  const [chartView, setChartView] = useState<ChartView>(
+    (params.get("chartView") as ChartView) || "line"
+  );
+  const [direction, setDirection] = useState<Direction>(
+    (params.get("direction") as Direction) || "southbound"
+  );
+  const [selectedLines, setSelectedLines] = useState<any[]>(
+    params.get("selectedLines")?.split(",") || ["Red", "Orange", "Blue"]
+  );
   const [totalDelays, setTotalDelays] = useState<any>();
   const [allSlow, setAllSlow] = useState<any>();
-  const [startDate, setStartDate] = useState(getDateThreeMonthsAgo());
-  const [endDate, setEndDate] = useState(moment());
+  const [startDate, setStartDate] = useState(() => {
+    if (params.get("startDate")) {
+      return moment(params.get("startDate"));
+    } else return getDateThreeMonthsAgo();
+  });
+  const [endDate, setEndDate] = useState(() => {
+    if (params.get("endDate")) {
+      return moment(params.get("endDate"));
+    } else return moment();
+  });
 
   const setTotalDelaysOptions = (data: any) => {
     const filteredData = data.filter((d: any) => {
@@ -68,7 +88,11 @@ export const SlowZones = () => {
     setOptions(options);
   };
 
+  useEffect(() => {});
+
   useEffect(() => {
+    history.replace({ search: params.toString() });
+
     if (chartView === "line") {
       if (totalDelays) {
         // We only want to fetch each dataset once
@@ -106,9 +130,13 @@ export const SlowZones = () => {
 
   const toggleLine = (line: string) => {
     if (selectedLines.includes(line)) {
-      setSelectedLines(selectedLines.filter((value) => value !== line));
+      const filteredLines = selectedLines.filter((value) => value !== line);
+      setSelectedLines(filteredLines);
+      params.set("selectedLines", filteredLines.join(","));
     } else {
-      setSelectedLines([...selectedLines, line]);
+      const lines = [...selectedLines, line];
+      setSelectedLines(lines);
+      params.set("selectedLines", lines.join(","));
     }
   };
 
@@ -125,8 +153,13 @@ export const SlowZones = () => {
         endDate={endDate}
         setStartDate={(date: any) => {
           setStartDate(moment(date));
+          params.set("startDate", date);
         }}
-        setEndDate={(date: any) => setEndDate(moment(date))}
+        setEndDate={(date: any) => {
+          setEndDate(moment(date));
+          params.set("endDate", date);
+        }}
+        params={params}
       />
       {options && (
         <HighchartsReact
