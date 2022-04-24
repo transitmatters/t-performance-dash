@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ChartView, Direction, SlowZone } from "./types";
-// @ts-ignore
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import xrange from "highcharts/modules/xrange";
