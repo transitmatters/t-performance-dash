@@ -264,6 +264,10 @@ class AggregateLine extends React.Component {
           yAxes: [{
             scaleLabel: {
               labelString: "Minutes"
+            },
+            ticks: {
+              suggestedMin: this.props.suggestedYMin,
+              suggestedMax: this.props.suggestedYMax,
             }
           }],
           xAxes: [{
