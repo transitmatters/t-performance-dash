@@ -24,7 +24,7 @@ const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname)
 const RAPIDTRANSIT_PATH = "/rapidtransit";
 const BUS_PATH = "/bus";
 
-const MAX_AGGREGATION_MONTHS = 24;
+const MAX_AGGREGATION_MONTHS = 18;
 const TOO_EARLY_ERROR = (date) => `Our archives only go back so far. Please select a date no earlier than ${date}.`;
 const TOO_LATE_ERROR = (date) => `Data not yet available. Please select a date no later than ${date}.`;
 const RANGE_TOO_LARGE_ERROR = `Please select a range no larger than ${MAX_AGGREGATION_MONTHS} months.`;
