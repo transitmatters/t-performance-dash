@@ -1,4 +1,5 @@
 import boto3
+import botocore
 from botocore.exceptions import ClientError
 import csv
 import itertools
@@ -7,7 +8,7 @@ import zlib
 from chalicelib import parallel
 
 BUCKET = "tm-mbta-performance"
-s3 = boto3.client('s3')
+s3 = boto3.client('s3', config=botocore.client.Config(max_pool_connections=15))
 
 
 # General downloading/uploading
