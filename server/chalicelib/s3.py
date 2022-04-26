@@ -34,10 +34,7 @@ def download_one_event_file(date, stop_id):
     """As advertised: single event file from s3"""
     year, month = date.year, date.month
 
-    if is_bus(stop_id):
-        folder = 'monthly-bus-data'
-    else:
-        folder = 'monthly-data'
+    folder = 'monthly-bus-data' if is_bus(stop_id) else 'monthly-data'
     key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
 
     # Download events from S3
