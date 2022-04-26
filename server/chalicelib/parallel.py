@@ -24,6 +24,7 @@ def make_parallel(single_func, THREAD_COUNT=5):
 def date_range(start, end):
     return pd.date_range(start, end)
 
+
 def month_range(start, end):
     # This is kinda funky, but is stil simpler than other approaches
     # pandas won't generate a monthly date_range that includes Jan and Feb for Jan31-Feb1 e.g.

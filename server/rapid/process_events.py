@@ -1,7 +1,6 @@
 import argparse
 import pandas as pd
 import pathlib
-import sys
 
 
 def process_events(input_csv, outdir, nozip=False):
@@ -56,6 +55,7 @@ def main():
     pathlib.Path(output_dir).mkdir(exist_ok=True)
 
     process_events(input_csv, output_dir, no_zip)
+
 
 if __name__ == '__main__':
     main()
