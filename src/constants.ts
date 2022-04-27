@@ -1,10 +1,31 @@
-export const colorsForLine = {
+import moment from "moment";
+
+const FRONTEND_TO_BACKEND_MAP = new Map([
+	["localhost", ""], // this becomes a relative path that is proxied through CRA:3000 to python on :5000
+	["127.0.0.1", ""],
+	["dashboard.transitmatters.org", "https://dashboard-api2.transitmatters.org"],
+	[
+	  "dashboard-beta.transitmatters.org",
+	  "https://dashboard-api-beta.transitmatters.org",
+	],
+  ]);
+  
+export const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(
+	window.location.hostname
+  );
+
+
+export const colorsForLine: Record<string, string>= {
 	Red: '#da291c',
 	Orange: '#ed8b00',
 	Blue: '#003da5',
 	Green: '#00834d',
 	bus: '#ffc72c',
 };
+
+export const getDateThreeMonthsAgo = () => {
+	return moment().subtract(3, 'months').startOf('day')
+}
 
 export const TODAY_SERVICE_DATE = () => {
 	// toISOString returns in UTC.

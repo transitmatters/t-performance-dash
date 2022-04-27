@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import OpenSource from './OpenSource';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { SlowZones } from './slowzones/SlowZones';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -19,6 +20,9 @@ ReactDOM.render(
       </Route>
       <Route exact path="/bus">
         <App bus_mode={true} />
+      </Route>
+      <Route exact path="/slowzones">
+        <SlowZones />
       </Route>
     </Switch>
   </BrowserRouter>,

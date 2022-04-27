@@ -44,6 +44,9 @@ class AggregateByTimeSelectable extends React.Component {
         isLoading={this.props.isLoading}
         startDate={this.props.startDate}
         endDate={this.props.endDate}
+        // Keep scale the same even when selected data changes
+        suggestedYMin={Math.min(...this.props.data.map(x => x["25%"])) / 60}
+        suggestedYMax={Math.max(...this.props.data.map(x => x["75%"])) / 60}
       >
         <RadioForm onChange={this.onChangeValue}
           options={dayOptions}
@@ -99,6 +102,9 @@ class AggregateByDateSelectable extends React.Component {
         isLoading={this.props.isLoading}
         startDate={this.props.startDate}
         endDate={this.props.endDate}
+        // Keep scale the same even when the selected data changes
+        suggestedYMin={Math.min(...this.props.data.map(x => x["25%"])) / 60}
+        suggestedYMax={Math.max(...this.props.data.map(x => x["75%"])) / 60}
       >
         <RadioForm onChange={this.onChangeValue}
           options={peakOptions}
