@@ -169,4 +169,3 @@ export const SlowZones = () => {
     </>
   );
 };
-
