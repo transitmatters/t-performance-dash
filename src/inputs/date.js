@@ -14,7 +14,6 @@ const RegularDateInput = (props) => {
     const local_date = new Date(iso_date.valueOf() - (offset * 60 * 1000));
     maxDate = local_date.toISOString().split("T")[0];
   }
-
   return(
     <input
       type="date"

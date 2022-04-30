@@ -14,12 +14,12 @@ import { configPresets } from './presets';
 const PRODUCTION = "dashboard.transitmatters.org";
 
 const FRONTEND_TO_BACKEND_MAP = new Map([
-  ["localhost", ""], // this becomes a relative path that is proxied through CRA:3000 to python on :5000
-  ["127.0.0.1", ""],
   [PRODUCTION, "https://dashboard-api2.transitmatters.org"],
   ["dashboard-beta.transitmatters.org", "https://dashboard-api-beta.transitmatters.org"]
 ]);
-const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname);
+// Fetch the absolute location of the API to load from; fallback to "" which
+// results in a relative path for local development (which is proxied to python on tcp/5000 via react-scripts magic)
+const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname) || "";
 
 const RAPIDTRANSIT_PATH = "/rapidtransit";
 const BUS_PATH = "/bus";
@@ -392,6 +392,7 @@ class App extends React.Component {
     return <div className="main-column">
       <div className="empty-state">
         {error_message && <>{error_message}</>}
+        {/* <div id="slowzone-container"> Check out our new <Link to='/slowzones'><button id="slowzone-button">Slow Zone Tracker</button></Link></div> */}
         {!error_message && <>See MBTA rapid transit performance data, including travel times between stations, headways,
         and dwell times, for any given day. <span style={{fontWeight: "bold"}}>Select a line, station pair, and date above to get started.</span><div style={{marginTop: 10}}>Looking for something interesting? <span style={{fontWeight: "bold"}}>Try one of these dates:</span></div>
         <Select
