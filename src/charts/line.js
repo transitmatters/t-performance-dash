@@ -31,6 +31,8 @@ const prettyDate = (dateString, with_dow) => {
                         options);
 }
 
+const dateYear = (dateString) => {return dateString.split("-")[0]}
+
 const departure_from_normal_string = (metric, benchmark) => {
   const ratio = metric / benchmark;
   if (!isFinite(ratio) || ratio <= 1.25) {
@@ -317,7 +319,11 @@ const AggregateByDate = (props) => {
       xMin={new Date(`${props.startDate}T00:00:00`)}
       xMax={new Date(`${props.endDate}T00:00:00`)}
       fillColor={"rgba(191,200,214,0.5)"}
-      xLabel=""
+      xLabel={
+        dateYear(props.startDate) === dateYear(props.endDate) ?
+          dateYear(props.startDate) :
+          `${dateYear(props.startDate)} – ${dateYear(props.endDate)}`
+        }
     />
   )
 }
