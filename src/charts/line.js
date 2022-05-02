@@ -197,10 +197,10 @@ class SingleDayLine extends React.Component {
       />
         <DownloadButton
           data={this.props.data}
-          seriesName={this.props.seriesName}
+          datasetName={this.props.fname}
           location={this.props.location}
           bothStops={this.props.titleBothStops}
-          date={this.props.date}
+          startDate={this.props.date}
         />
       </div>
       <div className="chart-extras">
@@ -304,6 +304,14 @@ class AggregateLine extends React.Component {
           }
         }
       }]}
+      />
+      <DownloadButton
+        data={this.props.data}
+        datasetName={this.props.fname}
+        location={this.props.location}
+        bothStops={this.props.titleBothStops}
+        startDate={this.props.startDate}
+        endDate={this.props.endDate}
       />
       </div>
       <div className="chart-extras">

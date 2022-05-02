@@ -1,20 +1,29 @@
 import React from 'react';
 import { CSVLink } from 'react-csv';
 
-function filename(seriesName, location, bothStops, date) {
-  // CharlesMGH-southbound_dwelltimes_20210315.csv
-  // CentralSquareCambridge-MelneaCassWashington_traveltimes_20201119.csv
-  // BostonUniversityWest-eastbound_headways_20161226.csv
+const directionAbbrs = {
+  "northbound": "NB",
+  "southbound": "SB",
+  "eastbound": "EB",
+  "westbound": "WB"
+};
+
+function filename(datasetName, location, bothStops, startDate, endDate) {
+  // CharlesMGH-SB_dwells_20210315.csv
+  // CentralSquareCambridge-MelneaCassWashington_traveltimesByHour-weekday_20200101-20201231.csv
+  // BostonUniversityWest-EB_headways_20161226-20170328.csv
   const fromStop = location.from.replace(/[^A-z]/g, "");
   const toStop = location.to.replace(/[^A-z]/g, "");
+  const dir = directionAbbrs[location.direction];
+  const where = `${fromStop}-${bothStops ? toStop : dir}`;
 
-  const series = `${seriesName.replace(" ", "")}s`;
+  const what = datasetName;
 
-  const dateString = date.replaceAll("-", "");
+  const date1 = startDate.replaceAll("-", "");
+  const date2 = endDate ? `-${endDate.replaceAll("-", "")}` : "";
+  const when = `${date1}${date2}`;
 
-  const components = `${fromStop}-${bothStops ? toStop : location.direction}_${series}_${dateString}`;
-  
-  return `${components}.csv`;
+  return `${where}_${what}_${when}.csv`;
 }
 
 const DownloadButton = (props) => {
@@ -31,7 +40,7 @@ const DownloadButton = (props) => {
       <CSVLink
         className="csv-link"
         data={props.data}
-        filename={filename(props.seriesName, props.location, props.bothStops, props.date)}
+        filename={filename(props.datasetName, props.location, props.bothStops, props.startDate, props.endDate)}
         >
       </CSVLink>
     </div>
