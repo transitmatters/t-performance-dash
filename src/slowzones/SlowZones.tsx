@@ -162,7 +162,7 @@ export const SlowZones = () => {
       {options && (
         <HighchartsReact
           containerProps={{
-            style: { "min-height": "90vh", paddingTop: "1em" },
+            style: { "min-height": "83vh", paddingTop: "1em" },
           }}
           options={options}
           highcharts={Highcharts}
@@ -171,12 +171,92 @@ export const SlowZones = () => {
       )}
       {chartView === "xrange" && (
         <div className="derailment-footer">
-          <img aria-label="Warning emoji" height="25px" width="25px" src="warning-emoji.png" />
+          <img
+            aria-label="Warning emoji"
+            height="25px"
+            width="25px"
+            src="warning-emoji.png"
+          />
           <span className="derailment-footer-text">
             = Affected by a derailment
           </span>
         </div>
       )}
+
+      <div className="faq">
+        <div className="faq-title">F.A.Q</div>
+        <hr className="faq-hr"></hr>
+
+        <div className="faq-content">
+          <div className="faq-question">
+            <input id="q1" type="checkbox" className="panel" />
+            <div className="plus">+</div>
+            <label htmlFor="q1" className="panel-title">
+              What is this?
+            </label>
+            <div className="panel-content">
+              This is a tool to help find and track slow zones. That is, areas
+              where trains have lower-than-usual speeds due to track conditions,
+              signal issues, or other infrastructure problems.
+            </div>
+          </div>
+
+          <div className="faq-question">
+            <input id="q2" type="checkbox" className="panel" />
+            <div className="plus">+</div>
+            <label htmlFor="q2" className="panel-title">
+              How do we calculate this?
+            </label>
+            <div className="panel-content">
+              We look at the daily median travel time + dwell time for each
+              segment along a route. Whenever that trip time is at least 10%
+              slower than the baseline for 3 or more days in a row, it gets
+              flagged as a slow zone. Currently, our baseline is the median
+              value in our data, which goes back to 2016. It’s not a perfect
+              system, but various algorithmic improvements are in the works.
+            </div>
+          </div>
+
+          <div className="faq-question">
+            <input id="q3" type="checkbox" className="panel" />
+            <div className="plus">+</div>
+            <label htmlFor="q3" className="panel-title">
+              Why did we build this?
+            </label>
+            <div className="panel-content">
+              There’s power in data, but it’s only useful when you can tell a
+              story. Slow zones are a nice story to tell: they tie our
+              observable results to a cause. With so much data available, it can
+              be difficult to find the interesting bits. So we’ve built this
+              tool to help us locate and track this type of issue (slow zones),
+              and monitor the severity over time.
+            </div>
+          </div>
+          <div className="faq-question">
+            <input id="q4" type="checkbox" className="panel" />
+            <div className="plus">+</div>
+            <label htmlFor="q4" className="panel-title">
+              How can you use this?
+            </label>
+            <div className="panel-content">
+              Share it. Bring the data to public meetings. Pressure the T to do
+              better, but also give them credit where it’s due.
+            </div>
+          </div>
+          <div className="faq-question">
+            <input id="q5" type="checkbox" className="panel" />
+            <div className="plus">+</div>
+            <label htmlFor="q5" className="panel-title">
+              What about the Green Line?
+            </label>
+            <div className="panel-content">
+              Due to variable traffic, much of the Green Line doesn’t have
+              consistent enough trip times to measure. As for the main trunk and
+              the D line? Coming “soon”.
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
