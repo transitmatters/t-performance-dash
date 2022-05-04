@@ -602,3 +602,11 @@ button:disabled,
   font-size: 14px;
 }
 
+.derailment-footer {
+  padding-left: 4em;
+  display: flex
+}
+
+.derailment-footer-text {
+  align-self: center;
+}

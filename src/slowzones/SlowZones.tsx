@@ -5,7 +5,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import xrange from "highcharts/modules/xrange";
 import exporting from "highcharts/modules/exporting";
-
+import annotations from "highcharts/modules/annotations";
 import {
   formatSlowZones,
   generateLineOptions,
@@ -18,6 +18,7 @@ import moment from "moment";
 
 xrange(Highcharts);
 exporting(Highcharts);
+annotations(Highcharts);
 
 export const optionsForSelect = () => {
   const lines = subway_lines();
@@ -160,11 +161,21 @@ export const SlowZones = () => {
       />
       {options && (
         <HighchartsReact
-          containerProps={{ style: { height: "75vh", paddingTop: "5px" } }}
+          containerProps={{
+            style: { "min-height": "90vh", paddingTop: "1em" },
+          }}
           options={options}
           highcharts={Highcharts}
           immutable={true}
         />
+      )}
+      {chartView === "xrange" && (
+        <div className="derailment-footer">
+          <img height="25px" width="25px" src="warning-emoji.png" />
+          <span className="derailment-footer-text">
+            = Affected by a derailment
+          </span>
+        </div>
       )}
     </>
   );

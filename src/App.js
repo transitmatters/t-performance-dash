@@ -1,7 +1,7 @@
 import React from 'react';
 import { SingleDaySet, AggregateSet } from './ChartSets';
 import StationConfiguration from './StationConfiguration';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { lookup_station_by_id, get_stop_ids_for_stations, line_name } from './stations';
 import { trainDateRange, busDateRange } from './constants';
 import { recognize } from './alerts/AlertFilter';
@@ -392,7 +392,7 @@ class App extends React.Component {
     return <div className="main-column">
       <div className="empty-state">
         {error_message && <>{error_message}</>}
-        {/* <div id="slowzone-container"> Check out our new <Link to='/slowzones'><button id="slowzone-button">Slow Zone Tracker</button></Link></div> */}
+        <div id="slowzone-container"> Check out our new <Link to='/slowzones'><button id="slowzone-button">Slow Zone Tracker</button></Link></div>
         {!error_message && <>See MBTA rapid transit performance data, including travel times between stations, headways,
         and dwell times, for any given day. <span style={{fontWeight: "bold"}}>Select a line, station pair, and date above to get started.</span><div style={{marginTop: 10}}>Looking for something interesting? <span style={{fontWeight: "bold"}}>Try one of these dates:</span></div>
         <Select
