@@ -664,6 +664,7 @@ button:disabled,
   padding: 10px 10px 0 48px;
   display: block;
   cursor: pointer;
+  margin-left: 10px;
 }
 
 .panel-content {
