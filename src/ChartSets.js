@@ -1,4 +1,3 @@
-import React from 'react';
 import { AggregateByTimeSelectable } from './charts/SelectableCharts';
 import { SingleDayLine, AggregateByDate } from './charts/line';
 import { station_direction } from './stations';
@@ -8,18 +7,21 @@ import { TODAY_SERVICE_DATE } from './constants';
 const dataFields = {
   traveltimes: {
     seriesName: "travel time",
+    fname: "traveltimes",
     xField: "dep_dt",
     yField: "travel_time_sec",
     benchmarkField: "benchmark_travel_time_sec"
   },
   headways: {
     seriesName: "headway",
+    fname: "headways",
     xField: "current_dep_dt",
     yField: "headway_time_sec",
     benchmarkField: "benchmark_headway_time_sec"
   },
   dwells: {
     seriesName: "dwell time",
+    fname: "dwells",
     xField: "arr_dt",
     yField: "dwell_time_sec",
     benchmarkField: null
@@ -52,6 +54,7 @@ const AggregateSet = (props) => {
         title={"Travel times"}
         data={props.traveltimes.by_date?.filter(x => x.peak === 'all') || []}
         seriesName={"Median travel time"}
+        fname={"traveltimes"}
         location={locationDescription}
         titleBothStops={true}
         isLoading={props.isLoadingTraveltimes}
@@ -62,6 +65,7 @@ const AggregateSet = (props) => {
         title={headwayTitle[props.bus_mode]}
         data={props.headways}
         seriesName={'Median headway'}
+        fname={"headways"}
         location={locationDescription}
         titleBothStops={false}
         isLoading={props.isLoadingHeadways}
@@ -73,6 +77,7 @@ const AggregateSet = (props) => {
           title={'Time spent at station (dwells)'}
           data={props.dwells}
           seriesName={'Median dwell time'}
+          fname={"dwells"}
           location={locationDescription}
           titleBothStops={false}
           isLoading={props.isLoadingDwells}
@@ -84,6 +89,7 @@ const AggregateSet = (props) => {
         title={'Travel times by hour'}
         data={props.traveltimes.by_time || []}
         seriesName={"Median travel time"}
+        fname={"traveltimesByHour"}
         location={locationDescription}
         titleBothStops={true}
         isLoading={props.isLoadingTraveltimes}

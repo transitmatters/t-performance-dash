@@ -89,7 +89,7 @@ def calc_travel_times_by_date(df):
     summary_stats_peak = faster_describe(df.groupby(['service_date', 'peak'])['travel_time_sec'])
 
     # combine summary stats
-    summary_stats_final = summary_stats.append(summary_stats_peak)
+    summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
 
     return summary_stats_final
 
@@ -145,7 +145,7 @@ def headways_over_time(sdate, edate, stops):
     summary_stats_peak = faster_describe(df.groupby(['service_date', 'peak'])['headway_time_sec'])
 
     # combine summary stats
-    summary_stats_final = summary_stats.append(summary_stats_peak)
+    summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
 
     # filter peak status
     results = summary_stats_final.loc[summary_stats_final['peak'] == 'all']
@@ -177,7 +177,7 @@ def dwells_over_time(sdate, edate, stops):
     summary_stats_peak = faster_describe(df.groupby(['service_date', 'peak'])['dwell_time_sec'])
 
     # combine summary stats
-    summary_stats_final = summary_stats.append(summary_stats_peak)
+    summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
 
     # filter peak status
     results = summary_stats_final.loc[summary_stats_final['peak'] == 'all']

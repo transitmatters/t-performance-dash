@@ -5,6 +5,7 @@ import merge from 'lodash.merge';
 import {Legend, LegendLongTerm} from './Legend';
 import drawTitle from './Title';
 import writeError from './error';
+import { DownloadButton } from './download';
 
 Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
   let x = eventPos.x;
@@ -200,6 +201,13 @@ class SingleDayLine extends React.Component {
         }
       }]}
       />
+        <DownloadButton
+          data={this.props.data}
+          datasetName={this.props.fname}
+          location={this.props.location}
+          bothStops={this.props.titleBothStops}
+          startDate={this.props.date}
+        />
       </div>
       <div className="chart-extras">
         {this.props.useBenchmarks && <Legend />}
@@ -302,6 +310,14 @@ class AggregateLine extends React.Component {
           }
         }
       }]}
+      />
+      <DownloadButton
+        data={this.props.data}
+        datasetName={this.props.fname}
+        location={this.props.location}
+        bothStops={this.props.titleBothStops}
+        startDate={this.props.startDate}
+        endDate={this.props.endDate}
       />
       </div>
       <div className="chart-extras">

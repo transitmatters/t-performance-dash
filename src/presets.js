@@ -22,7 +22,7 @@ export const configPresets = [
 	},
 	{
 		label: "June 2021 to Present — Orange Line slow zones",
-		value: createConfigPresetValue("Orange", "Downtown Crossing", "Green Street", "2021-06-01", "2022-01-23")
+		value: createConfigPresetValue("Orange", "Downtown Crossing", "Green Street", "2021-06-01", "2022-05-04")
 	},
 	{
 		label: "Sept 9, 2021 — Route 28 first day of school traffic",
