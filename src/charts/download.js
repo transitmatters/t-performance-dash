@@ -36,7 +36,7 @@ const DownloadButton = (props) => {
   *  - date
   */
   return(
-    <div className="download-button" title="Download Data as CSV">
+    <div className="download-button" title="Download data as CSV">
       <CSVLink
         className="csv-link"
         data={props.data}
