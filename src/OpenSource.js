@@ -128,7 +128,14 @@ export default function OpenSource() {
       OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE<br />
       SOFTWARE.<br />
 
+    
+      <hr />
+      Highcharts:<br />
+      Attribution-NonCommercial 3.0 Unported (CC BY-NC 3.0)<br />
+      <br />
+      Copyright (c) 2022 Highsoft<br />
 
+      <a href="https://highcharts.com">Highcharts.com</a>
     </div>
   );
 }

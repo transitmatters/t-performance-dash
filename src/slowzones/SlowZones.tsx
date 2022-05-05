@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ChartView, Direction, SlowZone } from "./types";
-import { useHistory, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import xrange from "highcharts/modules/xrange";
@@ -178,7 +178,7 @@ export const SlowZones = () => {
           </span>
         </div>
       )}
-  
+
       <div className="accordion">
         <li className="accordion-item" id="what-is-this">
           <a className="accordion-item-header" href="#what-is-this">
@@ -204,6 +204,20 @@ export const SlowZones = () => {
               flagged as a slow zone. Currently, our baseline is the median
               value in our data, which goes back to 2016. It’s not a perfect
               system, but various algorithmic improvements are in the works.
+              Frontend
+            </p>
+          </div>
+        </li>
+        <li className="accordion-item" id="how-do-we-build-this">
+          <a className="accordion-item-header" href="#how-do-we-build-this">
+            How do we build this?
+          </a>
+          <div className="accordion-text">
+            <p>
+              ReactJS + Gantt Charts from{" "}
+              <a href="highcharts.com">Highcharts</a> <br />
+              See our <Link to="/opensource"> Attribution</Link> page for more
+              information.
             </p>
           </div>
         </li>
