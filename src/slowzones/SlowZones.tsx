@@ -204,13 +204,12 @@ export const SlowZones = () => {
               flagged as a slow zone. Currently, our baseline is the median
               value in our data, which goes back to 2016. It’s not a perfect
               system, but various algorithmic improvements are in the works.
-              Frontend
             </p>
           </div>
         </li>
         <li className="accordion-item" id="how-do-we-build-this">
           <a className="accordion-item-header" href="#how-do-we-build-this">
-            How do we build this?
+            How did we build this?
           </a>
           <div className="accordion-text">
             <p>
