@@ -1,9 +1,39 @@
 import moment, { Moment } from "moment";
-import { colorsForLine } from "../constants";
+import { colorsForLine, derailments } from "../constants";
 import { lookup_station_by_id } from "../stations";
 import { Direction, SlowZone } from "./types";
 
+const ua = window.navigator.userAgent;
+const isMobile = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+const textSize = isMobile ? '11' : 14
+
 const DAY_MS = 1000 * 60 * 60 * 24;
+
+const isDuringDerailment = (start: Moment, end: Moment, color: string) => {
+  if (color === "Blue") return false;
+
+  if (color === "Red") {
+    return (
+      start.isBetween(
+        moment(derailments.Red.start),
+        moment(derailments.Red.end)
+      ) ||
+      end.isBetween(moment(derailments.Red.start), moment(derailments.Red.end))
+    );
+  }
+  if (color === "Orange") {
+    return (
+      start.isBetween(
+        moment(derailments.Orange.start),
+        moment(derailments.Orange.end)
+      ) ||
+      end.isBetween(
+        moment(derailments.Orange.start),
+        moment(derailments.Orange.end)
+      )
+    );
+  }
+};
 
 const capitalize = (s: string) => {
   return s && s[0].toUpperCase() + s.slice(1);
@@ -12,8 +42,8 @@ const capitalize = (s: string) => {
 const getDashUrl = (d: any) => {
   const dateDiff = moment(d.custom.startDate).diff(d.x2, "months");
   let then;
-  if (dateDiff <= -7) {
-    then = moment(d.x2).subtract(7, "months").toISOString().split("T")[0];
+  if (dateDiff <= -18) {
+    then = moment(d.x2).subtract(18, "months").toISOString().split("T")[0];
   } else {
     then = new Date(d.custom.startDate);
     then.setDate(then.getDate() - 14); // two weeks of baseline for comparison
@@ -76,18 +106,26 @@ export const groupByLine = (data: SlowZone[]) =>
     return series;
   }, {});
 
-export const getRoutes = (data: SlowZone[]) => {
+export const getRoutes = (data: SlowZone[], direction: Direction) => {
   // group by line, sort by order , flatten, get ids, filter out duplicates
   const routes = Object.values(groupByLine(data))
-    .map((sz: SlowZone[]) => sz.sort((a, b) => a.order - b.order))
+    .map((sz: SlowZone[]) =>
+      sz.sort((a, b) =>
+        direction === "southbound" ? a.order - b.order : b.order - a.order
+      )
+    )
     .flat()
     .map((sz: SlowZone) => sz.id);
   return [...new Set(routes)];
 };
 
 // Xrange options
-export const generateXrangeSeries = (data: any, startDate: Moment) => {
-  const routes = getRoutes(data);
+export const generateXrangeSeries = (
+  data: any,
+  startDate: Moment,
+  direciton: Direction
+) => {
+  const routes = getRoutes(data, direciton);
   const groupedByLine = groupByLine(data);
   return Object.entries(groupedByLine).map((line) => {
     const [name, data] = line;
@@ -101,7 +139,11 @@ export const generateXrangeSeries = (data: any, startDate: Moment) => {
             : d.start.utc().valueOf(),
           x2: d.end.utc().valueOf(),
           y: routes.indexOf(d.id),
-          custom: { ...d, startDate: d.start.utc().valueOf() },
+          custom: {
+            ...d,
+            startDate: d.start.utc().valueOf(),
+            isDuringDerailment: isDuringDerailment(d.start, d.end, d.color),
+          },
         };
       }),
       dataLabels: {
@@ -109,7 +151,11 @@ export const generateXrangeSeries = (data: any, startDate: Moment) => {
         // @ts-ignore
         formatter: function () {
           // @ts-ignore
-          return `${this.point.custom.delay.toFixed(0)} s`;
+          return this.point.custom.isDuringDerailment
+            ? // @ts-ignore
+              `${this.point.custom.delay.toFixed(0)} s ⚠️`
+            : // @ts-ignore
+              `${this.point.custom.delay.toFixed(0)} s`;
         },
       },
     };
@@ -121,6 +167,28 @@ export const generateXrangeOptions = (
   direction: Direction,
   startDate: Moment
 ): any => ({
+  annotations: [
+    {
+      labels: [
+        {
+          point: "red-derailment-start",
+          text: "Derailment",
+        },
+        {
+          point: "red-derailment-end",
+          text: "Signals restored",
+        },
+        {
+          point: "orange-derailment-start",
+          text: "Derailment",
+        },
+        {
+          point: "orange-derailment-end",
+          text: "Tracks restored",
+        },
+      ],
+    },
+  ],
   chart: {
     type: "xrange",
   },
@@ -129,26 +197,42 @@ export const generateXrangeOptions = (
   },
   title: {
     text: `${capitalize(direction)} slow zones`,
+    style: {
+      fontSize: "24px",
+    },
   },
   xAxis: {
     type: "datetime",
     title: {
       text: "Date",
+      style: {
+        fontSize: textSize,
+      },
+    },
+    labels: {
+      style: {
+        fontSize: textSize,
+      },
     },
   },
   legend: {
     enabled: false,
   },
-  time: {
-    timezone: "America/New_York",
-  },
   yAxis: {
     type: "category",
     title: {
       text: "Line Segments",
+      style: {
+        fontSize: textSize,
+      },
     },
-    categories: getRoutes(data),
+    categories: getRoutes(data, direction),
     reversed: true,
+    labels: {
+      style: {
+        fontSize: textSize,
+      },
+    },
   },
   tooltip: {
     formatter: function (this: any) {
@@ -169,26 +253,41 @@ export const generateXrangeOptions = (
           window.open(getDashUrl(event.point), "_blank");
         },
       },
-      borderRadius: 0,
-      borderWidth: 1,
       grouping: false,
       pointPadding: 0.15,
       groupPadding: 0,
-      showInLegend: true,
       colorByPoint: false,
       animation: false,
     },
   },
-  series: generateXrangeSeries(data, startDate),
+  series: generateXrangeSeries(data, startDate, direction),
 });
 
 // Line options
 export const groupByLineDailyTotals = (data: any, selectedLines: string[]) => {
-  const RED_LINE = data.map((day: any) => Number((day.Red / 60).toFixed(2)));
+  const RED_LINE = data.map((day: any) => {
+    const y = Number((day.Red / 60).toFixed(2));
+    if (day.date === derailments.Red.start) {
+      return { id: "red-derailment-start", y };
+    }
+    if (day.date === derailments.Red.end) {
+      return { id: "red-derailment-end", y };
+    } else {
+      return y;
+    }
+  });
   const BLUE_LINE = data.map((day: any) => Number((day.Blue / 60).toFixed(2)));
-  const ORANGE_LINE = data.map((day: any) =>
-    Number((day.Orange / 60).toFixed(2))
-  );
+  const ORANGE_LINE = data.map((day: any) => {
+    const y = Number((day.Orange / 60).toFixed(2));
+    if (day.date === derailments.Orange.start) {
+      return { id: "orange-derailment-start", y };
+    }
+    if (day.date === derailments.Orange.end) {
+      return { id: "orange-derailment-end", y };
+    } else {
+      return y;
+    }
+  });
   return [
     selectedLines.includes("Red") && {
       name: "Red",
@@ -220,19 +319,37 @@ export const generateLineOptions = (
   },
   credits: { enabled: false },
   title: {
-    text: `Slow zones`,
+    text: `Time spent in slow zones`,
+    style: {
+      fontSize: "24px",
+    },
   },
   xAxis: {
     type: "datetime",
-    title: { text: "Date" },
+    title: {
+      text: "Date",
+      style: {
+        fontSize: textSize,
+      },
+    },
+    labels: {
+      style: {
+        fontSize: textSize,
+      },
+    },
   },
   yAxis: {
     title: {
       text: "Slow time per day (minutes)",
+      style: {
+        fontSize: textSize,
+      },
     },
-  },
-  time: {
-    timezone: "America/New_York",
+    labels: {
+      style: {
+        fontSize: textSize,
+      },
+    },
   },
   series: groupByLineDailyTotals(data, selectedLines),
   plotOptions: {
@@ -254,4 +371,26 @@ export const generateLineOptions = (
   legend: {
     enabled: false,
   },
+  annotations: [
+    {
+      labels: [
+        {
+          point: "red-derailment-start",
+          text: "Derailment",
+        },
+        {
+          point: "red-derailment-end",
+          text: "Signals restored",
+        },
+        {
+          point: "orange-derailment-start",
+          text: "Derailment",
+        },
+        {
+          point: "orange-derailment-end",
+          text: "Tracks restored",
+        },
+      ],
+    },
+  ],
 });
