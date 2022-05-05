@@ -13,7 +13,7 @@ const getDashUrl = (d: any) => {
   const dateDiff = moment(d.custom.startDate).diff(d.x2, "months");
   let then;
   if (dateDiff <= -7) {
-    then = moment(d.x2).subtract(7, 'months').toISOString().split("T")[0]
+    then = moment(d.x2).subtract(7, "months").toISOString().split("T")[0];
   } else {
     then = new Date(d.custom.startDate);
     then.setDate(then.getDate() - 14); // two weeks of baseline for comparison
@@ -44,6 +44,7 @@ export const formatSlowZones = (data: any) =>
     const to = lookup_station_by_id(x.color, x.to_id);
     const direction = getDirection(to, from);
     return {
+      order: from.order,
       start: moment(x.start),
       end: moment(x.end),
       from: from.stop_name,
@@ -76,8 +77,12 @@ export const groupByLine = (data: SlowZone[]) =>
   }, {});
 
 export const getRoutes = (data: SlowZone[]) => {
-  const groupObj = groupByRoute(data);
-  return Object.keys(groupObj);
+  // group by line, sort by order , flatten, get ids, filter out duplicates
+  const routes = Object.values(groupByLine(data))
+    .map((sz: SlowZone[]) => sz.sort((a, b) => a.order - b.order))
+    .flat()
+    .map((sz: SlowZone) => sz.id);
+  return [...new Set(routes)];
 };
 
 // Xrange options
@@ -89,14 +94,16 @@ export const generateXrangeSeries = (data: any, startDate: Moment) => {
     return {
       name: name,
       color: colorsForLine[line[0]],
-      data: data.map((d) => ({
-        x: d.start.isBefore(startDate)
-          ? startDate.utc().valueOf()
-          : d.start.utc().valueOf(),
-        x2: d.end.utc().valueOf(),
-        y: routes.indexOf(d.id),
-        custom: { ...d, startDate: d.start.utc().valueOf() },
-      })),
+      data: data.map((d) => {
+        return {
+          x: d.start.isBefore(startDate)
+            ? startDate.utc().valueOf()
+            : d.start.utc().valueOf(),
+          x2: d.end.utc().valueOf(),
+          y: routes.indexOf(d.id),
+          custom: { ...d, startDate: d.start.utc().valueOf() },
+        };
+      }),
       dataLabels: {
         enabled: true,
         // @ts-ignore
