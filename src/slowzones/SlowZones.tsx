@@ -38,6 +38,7 @@ function useQuery() {
 }
 
 export const SlowZones = () => {
+  document.title = "Data Dashboard - Slow zones";
   const params = useQuery();
   const history = useHistory();
   const [options, setOptions] = useState<Highcharts.Options>();
@@ -171,12 +172,7 @@ export const SlowZones = () => {
       )}
       {chartView === "xrange" && (
         <div className="derailment-footer">
-          <img
-            aria-label="Warning emoji"
-            height="25px"
-            width="25px"
-            src="warning-emoji.png"
-          />
+          ⚠️
           <span className="derailment-footer-text">
             = Affected by a derailment
           </span>
