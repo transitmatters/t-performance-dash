@@ -214,8 +214,8 @@ export const SlowZones = () => {
           </a>
           <div className="accordion-text">
             <p>
-              ReactJS + Gantt Charts from{" "}
-              <a href="highcharts.com">Highcharts</a> <br />
+              ReactJS + HighchartsJS and Highcharts Gantt from 
+              <a href="highcharts.com"> Highcharts</a> <br />
               See our <Link to="/opensource"> Attribution</Link> page for more
               information.
             </p>
