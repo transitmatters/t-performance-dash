@@ -61,7 +61,6 @@ def load_data(input_csv, routes):
     OFFSET = datetime(1900, 1, 1, 0, 0, 0)
     df.scheduled = df.service_date + (df.scheduled - OFFSET)
     df.actual = df.service_date + (df.actual - OFFSET)
-    df.service_date = df.service_date.dt.date
 
     df.direction_id = df.direction_id.map({"Outbound": 0, "Inbound": 1})
 
@@ -99,18 +98,18 @@ def to_disk(df, outdir, nozip=False):
     """
     For each service_date/stop_id/direction/route group, we write the events to disk.
     """
-    grouped = df.groupby(["service_date", "stop_id", "direction_id", "route_id"])
+    monthly_service_date = pd.Grouper(key="service_date", freq="1M")
+    grouped = df.groupby([monthly_service_date, "stop_id", "direction_id", "route_id"])
 
     for name, events in grouped:
         service_date, stop_id, direction_id, route_id = name
 
         fname = pathlib.Path(outdir,
                              "Events",
-                             "daily-bus-data",
+                             "monthly-bus-data",
                              f"{route_id}-{direction_id}-{stop_id}",
                              f"Year={service_date.year}",
                              f"Month={service_date.month}",
-                             f"Day={service_date.day}",
                              "events.csv.gz")
         fname.parent.mkdir(parents=True, exist_ok=True)
         # set mtime to 0 in gzip header for determinism (so we can re-gen old routes, and rsync to s3 will ignore)
