@@ -648,6 +648,7 @@ button:disabled,
   overflow: hidden;
   font-size: 14px;
   padding-left: 2em;
+  padding-right: 2em;
 }
 
 .accordion .accordion-item-header{
