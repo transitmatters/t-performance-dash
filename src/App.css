@@ -611,108 +611,60 @@ button:disabled,
   align-self: center;
 }
 
-.faq {
-  padding-top: 2em;
+.accordion > li {
+  list-style: none;
+}
+
+.accordion > a {
+  text-decoration: none;
+}
+
+.accordion{
+  max-width: 1000px;
+  height: auto;
+  overflow: hidden;
+  font-size: 14px;
+  padding-left: 2em;
+}
+
+.accordion .accordion-item-header{
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  overflow-x: hidden;
-}
-
-.faq-title {
-  font-size: 50px;
-}
-
-.faq-hr {
-  width: 25%;
-  border: 1px solid black;
-  margin: .5rem
-}
-
-
-.faq-header{
-  font-size: 42px;
-  border-bottom: 1px dotted #ccc;
-  padding: 24px;
-}
-
-@media only screen and (max-width: 600px) {
-  .faq-content {
-    margin: 0 auto;
-    width: 90%;
-  }
-}
-
-@media only screen and (min-width: 1200px) {
-  .faq-content {
-    margin: 0 auto;
-    width: 60%;
-  }
-}
-
-.faq-question {
-  padding: 20px 0;
-  border-bottom: 1px dotted #ccc;
-}
-
-.panel-title {
-  font-size: 24px;
-  width: 100%;
+  flex-direction: row;
+  padding: 10px;
+  border-bottom: 1px solid #cecece;
   position: relative;
-  margin: 0;
-  padding: 10px 10px 0 48px;
-  display: block;
-  cursor: pointer;
-  margin-left: 10px;
+  color: black;
+  font-weight: 600;
 }
 
-.panel-content {
-  font-size: 20px;
-  padding: 0px 14px;
-  margin: 0 40px;
-  height: 0;
-  overflow: hidden;
-  z-index: -1;
-  position: relative;
-  opacity: 0;
-  -webkit-transition: .4s ease;
-  -moz-transition: .4s ease;
-  -o-transition: .4s ease;
-  transition: .4s ease;
-}
-
-.panel:checked ~ .panel-content{
-  height: auto;
-  opacity: 1;
-  padding: 14px;
-}
-
-.plus {
+.accordion .accordion-item-header:after {
+  content: "•";
   position: absolute;
-  margin-left: 20px;
-  margin-top: 4px;
-  z-index: 5;
-  font-size: 42px;
-  line-height: 100%;
-  -webkit-user-select: none;    
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-  -webkit-transition: .2s ease;
-  -moz-transition: .2s ease;
-  -o-transition: .2s ease;
-  transition: .2s ease;
-}
-
-.panel:checked ~ .plus {
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-
-.panel {
+  right: 0;
   display: none;
+  font-size: 14px;
+}
+
+.accordion .accordion-item-header .accordion-item-active-marker {
+  margin-left: auto;
+}
+
+.accordion .accordion-text {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 300ms ease-in-out;
+  font-style: italic;
+}
+
+.accordion .accordion-text p {
+  padding: 10px;
+}
+
+.accordion-item:target .accordion-text{
+  max-height: 300px;
+}
+
+.accordion-item:target .accordion-item-header:after {
+  display: block;
 }

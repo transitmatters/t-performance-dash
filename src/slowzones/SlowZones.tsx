@@ -182,80 +182,73 @@ export const SlowZones = () => {
           </span>
         </div>
       )}
-
-      <div className="faq">
-        <div className="faq-title">F.A.Q</div>
-        <hr className="faq-hr"></hr>
-
-        <div className="faq-content">
-          <div className="faq-question">
-            <input id="q1" type="checkbox" className="panel" />
-            <div className="plus">+</div>
-            <label htmlFor="q1" className="panel-title">
-              What is this?
-            </label>
-            <div className="panel-content">
+  
+      <div className="accordion">
+        <li className="accordion-item" id="what-is-this">
+          <a className="accordion-item-header" href="#what-is-this">
+            What is this?
+          </a>
+          <div className="accordion-text">
+            <p>
               This is a tool to help find and track slow zones. That is, areas
               where trains have lower-than-usual speeds due to track conditions,
               signal issues, or other infrastructure problems.
-            </div>
+            </p>
           </div>
-
-          <div className="faq-question">
-            <input id="q2" type="checkbox" className="panel" />
-            <div className="plus">+</div>
-            <label htmlFor="q2" className="panel-title">
-              How do we calculate this?
-            </label>
-            <div className="panel-content">
+        </li>
+        <li className="accordion-item" id="how-do-we-calculate-this">
+          <a className="accordion-item-header" href="#how-do-we-calculate-this">
+            How do we calculate this?
+          </a>
+          <div className="accordion-text">
+            <p>
               We look at the daily median travel time + dwell time for each
               segment along a route. Whenever that trip time is at least 10%
               slower than the baseline for 3 or more days in a row, it gets
               flagged as a slow zone. Currently, our baseline is the median
               value in our data, which goes back to 2016. It’s not a perfect
               system, but various algorithmic improvements are in the works.
-            </div>
+            </p>
           </div>
-
-          <div className="faq-question">
-            <input id="q3" type="checkbox" className="panel" />
-            <div className="plus">+</div>
-            <label htmlFor="q3" className="panel-title">
-              Why did we build this?
-            </label>
-            <div className="panel-content">
+        </li>
+        <li className="accordion-item" id="why-did-we-build-this">
+          <a className="accordion-item-header" href="#why-did-we-build-this">
+            Why did we build this?
+          </a>
+          <div className="accordion-text">
+            <p>
               There’s power in data, but it’s only useful when you can tell a
               story. Slow zones are a nice story to tell: they tie our
               observable results to a cause. With so much data available, it can
               be difficult to find the interesting bits. So we’ve built this
               tool to help us locate and track this type of issue (slow zones),
               and monitor the severity over time.
-            </div>
+            </p>
           </div>
-          <div className="faq-question">
-            <input id="q4" type="checkbox" className="panel" />
-            <div className="plus">+</div>
-            <label htmlFor="q4" className="panel-title">
-              How can you use this?
-            </label>
-            <div className="panel-content">
+        </li>
+        <li className="accordion-item" id="how-can-you-use-this">
+          <a className="accordion-item-header" href="#how-can-you-use-this">
+            How can you use this?
+          </a>
+          <div className="accordion-text">
+            <p>
               Share it. Bring the data to public meetings. Pressure the T to do
               better, but also give them credit where it’s due.
-            </div>
+            </p>
           </div>
-          <div className="faq-question">
-            <input id="q5" type="checkbox" className="panel" />
-            <div className="plus">+</div>
-            <label htmlFor="q5" className="panel-title">
-              What about the Green Line?
-            </label>
-            <div className="panel-content">
+        </li>
+        <li className="accordion-item" id="green-line">
+          <a className="accordion-item-header" href="#green-line">
+            What about the Green Line?
+          </a>
+          <div className="accordion-text">
+            <p>
               Due to variable traffic, much of the Green Line doesn’t have
               consistent enough trip times to measure. As for the main trunk and
               the D line? Coming “soon”.
-            </div>
+            </p>
           </div>
-        </div>
+        </li>
       </div>
     </>
   );
