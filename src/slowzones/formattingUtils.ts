@@ -42,8 +42,8 @@ const capitalize = (s: string) => {
 const getDashUrl = (d: any) => {
   const dateDiff = moment(d.custom.startDate).diff(d.x2, "months");
   let then;
-  if (dateDiff <= -7) {
-    then = moment(d.x2).subtract(7, "months").toISOString().split("T")[0];
+  if (dateDiff <= -18) {
+    then = moment(d.x2).subtract(18, "months").toISOString().split("T")[0];
   } else {
     then = new Date(d.custom.startDate);
     then.setDate(then.getDate() - 14); // two weeks of baseline for comparison
