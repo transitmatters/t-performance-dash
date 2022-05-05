@@ -604,7 +604,9 @@ button:disabled,
 
 .derailment-footer {
   padding-left: 4em;
-  display: flex
+  font-size: 14px;
+  display: flex;
+  padding-bottom: 10px;
 }
 
 .derailment-footer-text {
@@ -619,7 +621,8 @@ button:disabled,
   text-decoration: none;
 }
 
-.accordion{
+.accordion {
+  padding-top: 10px;
   max-width: 1000px;
   height: auto;
   overflow: hidden;
