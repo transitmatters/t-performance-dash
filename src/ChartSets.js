@@ -1,4 +1,3 @@
-import React from 'react';
 import { AggregateByTimeSelectable } from './charts/SelectableCharts';
 import { SingleDayLine, AggregateByDate } from './charts/line';
 import { station_direction } from './stations';

@@ -1,11 +1,12 @@
-import React from 'react';
 import { CSVLink } from 'react-csv';
 
 const directionAbbrs = {
-  "northbound": "NB",
-  "southbound": "SB",
-  "eastbound": "EB",
-  "westbound": "WB"
+  northbound: "NB",
+  southbound: "SB",
+  eastbound: "EB",
+  westbound: "WB",
+  inbound: "IB",
+  outbound: "OB"
 };
 
 function filename(datasetName, location, bothStops, startDate, endDate) {
@@ -26,21 +27,20 @@ function filename(datasetName, location, bothStops, startDate, endDate) {
   return `${where}_${what}_${when}.csv`;
 }
 
-const DownloadButton = (props) => {
-  /**
-  * props:
-  *  - data
-  *  - seriesName
-  *  - location
-  *  - bothStops
-  *  - date
-  */
+const DownloadButton = ({
+  datasetName,
+  data,
+  location,
+  bothStops,
+  startDate,
+  endDate
+}) => {
   return(
     <div className="download-button" title="Download data as CSV">
       <CSVLink
         className="csv-link"
-        data={props.data}
-        filename={filename(props.datasetName, props.location, props.bothStops, props.startDate, props.endDate)}
+        data={data}
+        filename={filename(datasetName, location, bothStops, startDate, endDate)}
         >
       </CSVLink>
     </div>
