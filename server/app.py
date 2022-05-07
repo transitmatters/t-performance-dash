@@ -3,7 +3,13 @@ import os
 import subprocess
 from chalice import Chalice, Cron, CORSConfig, ConflictError, Response
 from datetime import date, timedelta
-from chalicelib import data_funcs, aggregation, s3_alerts, secrets
+from chalicelib import (
+    aggregation,
+    data_funcs,
+    new_trains,
+    s3_alerts,
+    secrets,
+)
 
 app = Chalice(app_name="data-dashboard")
 
@@ -23,6 +29,15 @@ def store_two_days_ago_alerts(event):
     if TM_FRONTEND_HOST == "dashboard.transitmatters.org":
         two_days_ago = date.today() - timedelta(days=2)
         s3_alerts.store_alerts(two_days_ago)
+
+
+# Every day at 10:05am UTC: store new train runs from the previous day
+@app.schedule(Cron(5, 10, '*', '*', '?', '*'))
+def store_new_train_runs(event):
+    # Only do this on the main site
+    if TM_FRONTEND_HOST == "dashboard.transitmatters.org":
+        yesterday = date.today() - timedelta(days=1)
+        new_trains.update_all(yesterday)
 
 
 def parse_user_date(user_date):
