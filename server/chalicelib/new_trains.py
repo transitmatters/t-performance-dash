@@ -4,30 +4,30 @@ from botocore.exceptions import ClientError
 
 ROUTES = {
     "Red": {
-        "is_new": lambda x: int(x) >= 1900 and int(x) <= 2151,
+        "labels": range(1900, 2152),
         "core_stations": [70077, 70078]  # Downtown Crossing
     },
     "Orange": {
-        "is_new": lambda x: int(x) >= 1400 and int(x) <= 1551,
+        "labels": range(1400, 1552),
         "core_stations": [70014, 70015]  # Back Bay
     }
 }
 
-KEY = "NewTrains/AggData/{}LineAgg.csv"
+KEY = "NewTrains/run_counts/{}.csv"
 
 
-def train_runs(label_filter, stations, date):
-    api_data = MbtaPerformanceAPI.get_api_data("events",
-                                               {"stop": stations},
-                                               date)
-    all_events = sum([stop["events"] for stop in api_data], [])
-    deps = list(filter(lambda event: event["event_type"] in EVENT_DEPARTURE, all_events))
-    return list(filter(lambda event: label_filter(event["vehicle_label"]), deps))
+def train_runs(route, date):
+    spec = ROUTES[route]
+    api_data = MbtaPerformanceAPI.get_api_data("events", {"stop": spec["core_stations"]}, date)
+    events = sum([stop["events"] for stop in api_data], [])
+    departures = filter(lambda event: event["event_type"] in EVENT_DEPARTURE, events)
+    by_trip_id = {event["trip_id"]: event for event in departures} # Just in case a single trip gets a DEP and a PRD
+    return list(filter(lambda event: int(event["vehicle_label"]) in spec["labels"], by_trip_id.values()))
 
 
 def update_statistics_file(route, date, count):
     csv_row = "{formatted_date},{count}\n".format(
-        formatted_date=date.strftime("%m/%d/%Y"),
+        formatted_date=date.strftime("%Y-%m-%d"),
         count=count
     )
     key = KEY.format(route)
@@ -38,4 +38,4 @@ def update_statistics_file(route, date, count):
             raise
         data = "service_date,run_count\n" + csv_row
 
-    s3.upload(key, data.encode(), False)
+    s3.upload(key, data.encode(), compress=False)

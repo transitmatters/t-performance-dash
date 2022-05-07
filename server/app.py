@@ -38,14 +38,10 @@ def store_new_train_runs(event):
     # Only do this on the main site
     if TM_FRONTEND_HOST == "dashboard.transitmatters.org":
         yesterday = date.today() - timedelta(days=1)
-        for route, spec in new_trains.ROUTES.items():
+        for route in new_trains.ROUTES.keys():
             print(f"Storing new train runs for {route}...")
             try:
-                run_count = len(new_trains.train_runs(
-                    spec["is_new"],
-                    spec["core_stations"],
-                    yesterday
-                ))
+                run_count = len(new_trains.train_runs(route, yesterday))
                 new_trains.update_statistics_file(route, yesterday, run_count)
             except Exception:
                 print(f"Unable to store new train run count for route={route}", file=sys.stderr)
