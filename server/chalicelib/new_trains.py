@@ -1,3 +1,4 @@
+import sys
 from chalicelib import MbtaPerformanceAPI, s3
 from chalicelib.constants import EVENT_DEPARTURE
 from botocore.exceptions import ClientError
@@ -23,6 +24,17 @@ def train_runs(route, date):
     departures = filter(lambda event: event["event_type"] in EVENT_DEPARTURE, events)
     by_trip_id = {event["trip_id"]: event for event in departures}  # Just in case a single trip gets a DEP and a PRD
     return list(filter(lambda event: int(event["vehicle_label"]) in spec["labels"], by_trip_id.values()))
+
+
+def update_all(date):
+    for route in ROUTE_DEFINITIONS.keys():
+        print(f"Storing new train runs for {route}...")
+        try:
+            run_count = len(train_runs(route, date))
+            update_statistics_file(route, date, run_count)
+        except Exception:
+            print(f"Unable to store new train run count for route={route}", file=sys.stderr)
+            continue
 
 
 def update_statistics_file(route, date, count):

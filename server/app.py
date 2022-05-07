@@ -1,7 +1,6 @@
 import json
 import os
 import subprocess
-import sys
 from chalice import Chalice, Cron, CORSConfig, ConflictError, Response
 from datetime import date, timedelta
 from chalicelib import (
@@ -38,14 +37,7 @@ def store_new_train_runs(event):
     # Only do this on the main site
     if TM_FRONTEND_HOST == "dashboard.transitmatters.org":
         yesterday = date.today() - timedelta(days=1)
-        for route in new_trains.ROUTE_DEFINITIONS.keys():
-            print(f"Storing new train runs for {route}...")
-            try:
-                run_count = len(new_trains.train_runs(route, yesterday))
-                new_trains.update_statistics_file(route, yesterday, run_count)
-            except Exception:
-                print(f"Unable to store new train run count for route={route}", file=sys.stderr)
-                continue
+        new_trains.update_all(yesterday)
 
 
 def parse_user_date(user_date):
