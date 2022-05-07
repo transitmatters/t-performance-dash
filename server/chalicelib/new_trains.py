@@ -21,7 +21,7 @@ def train_runs(route, date):
     api_data = MbtaPerformanceAPI.get_api_data("events", {"stop": spec["core_stations"]}, date)
     events = sum([stop["events"] for stop in api_data], [])
     departures = filter(lambda event: event["event_type"] in EVENT_DEPARTURE, events)
-    by_trip_id = {event["trip_id"]: event for event in departures} # Just in case a single trip gets a DEP and a PRD
+    by_trip_id = {event["trip_id"]: event for event in departures}  # Just in case a single trip gets a DEP and a PRD
     return list(filter(lambda event: int(event["vehicle_label"]) in spec["labels"], by_trip_id.values()))
 
 
