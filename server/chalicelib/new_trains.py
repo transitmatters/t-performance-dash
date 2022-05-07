@@ -2,7 +2,7 @@ from chalicelib import MbtaPerformanceAPI, s3
 from chalicelib.constants import EVENT_DEPARTURE
 from botocore.exceptions import ClientError
 
-ROUTES = {
+ROUTE_DEFINITIONS = {
     "Red": {
         "labels": range(1900, 2152),
         "core_stations": [70077, 70078]  # Downtown Crossing
@@ -17,7 +17,7 @@ KEY = "NewTrains/run_counts/{}.csv"
 
 
 def train_runs(route, date):
-    spec = ROUTES[route]
+    spec = ROUTE_DEFINITIONS[route]
     api_data = MbtaPerformanceAPI.get_api_data("events", {"stop": spec["core_stations"]}, date)
     events = sum([stop["events"] for stop in api_data], [])
     departures = filter(lambda event: event["event_type"] in EVENT_DEPARTURE, events)

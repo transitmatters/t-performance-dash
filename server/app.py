@@ -38,7 +38,7 @@ def store_new_train_runs(event):
     # Only do this on the main site
     if TM_FRONTEND_HOST == "dashboard.transitmatters.org":
         yesterday = date.today() - timedelta(days=1)
-        for route in new_trains.ROUTES.keys():
+        for route in new_trains.ROUTE_DEFINITIONS.keys():
             print(f"Storing new train runs for {route}...")
             try:
                 run_count = len(new_trains.train_runs(route, yesterday))
