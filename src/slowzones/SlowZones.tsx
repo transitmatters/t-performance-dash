@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { ChartView, Direction, SlowZone } from "./types";
-import { useHistory, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import xrange from "highcharts/modules/xrange";
 import exporting from "highcharts/modules/exporting";
-
+import annotations from "highcharts/modules/annotations";
 import {
   formatSlowZones,
   generateLineOptions,
@@ -18,6 +18,7 @@ import moment from "moment";
 
 xrange(Highcharts);
 exporting(Highcharts);
+annotations(Highcharts);
 
 export const optionsForSelect = () => {
   const lines = subway_lines();
@@ -37,6 +38,7 @@ function useQuery() {
 }
 
 export const SlowZones = () => {
+  document.title = "Data Dashboard - Slow zones";
   const params = useQuery();
   const history = useHistory();
   const [options, setOptions] = useState<Highcharts.Options>();
@@ -160,13 +162,103 @@ export const SlowZones = () => {
       />
       {options && (
         <HighchartsReact
-          containerProps={{ style: { height: "75vh", paddingTop: "5px" } }}
+          containerProps={{
+            style: { "min-height": "83vh", paddingTop: "1em" },
+          }}
           options={options}
           highcharts={Highcharts}
           immutable={true}
         />
       )}
+      {chartView === "xrange" && (
+        <div className="derailment-footer">
+          ⚠️
+          <span className="derailment-footer-text">
+            = Affected by a derailment
+          </span>
+        </div>
+      )}
+
+      <div className="accordion">
+        <li className="accordion-item" id="what-is-this">
+          <a className="accordion-item-header" href="#what-is-this">
+            What is this?
+          </a>
+          <div className="accordion-text">
+            <p>
+              This is a tool to help find and track slow zones. That is, areas
+              where trains have lower-than-usual speeds due to track conditions,
+              signal issues, or other infrastructure problems.
+            </p>
+          </div>
+        </li>
+        <li className="accordion-item" id="how-do-we-calculate-this">
+          <a className="accordion-item-header" href="#how-do-we-calculate-this">
+            How do we calculate this?
+          </a>
+          <div className="accordion-text">
+            <p>
+              We look at the daily median travel time + dwell time for each
+              segment along a route. Whenever that trip time is at least 10%
+              slower than the baseline for 3 or more days in a row, it gets
+              flagged as a slow zone. Currently, our baseline is the median
+              value in our data, which goes back to 2016. It’s not a perfect
+              system, but various algorithmic improvements are in the works.
+            </p>
+          </div>
+        </li>
+        <li className="accordion-item" id="how-do-we-build-this">
+          <a className="accordion-item-header" href="#how-do-we-build-this">
+            How did we build this?
+          </a>
+          <div className="accordion-text">
+            <p>
+              ReactJS + HighchartsJS and Highcharts Gantt from 
+              <a href="highcharts.com"> Highcharts</a> <br />
+              See our <Link to="/opensource"> Attribution</Link> page for more
+              information.
+            </p>
+          </div>
+        </li>
+        <li className="accordion-item" id="why-did-we-build-this">
+          <a className="accordion-item-header" href="#why-did-we-build-this">
+            Why did we build this?
+          </a>
+          <div className="accordion-text">
+            <p>
+              There’s power in data, but it’s only useful when you can tell a
+              story. Slow zones are a nice story to tell: they tie our
+              observable results to a cause. With so much data available, it can
+              be difficult to find the interesting bits. So we’ve built this
+              tool to help us locate and track this type of issue (slow zones),
+              and monitor the severity over time.
+            </p>
+          </div>
+        </li>
+        <li className="accordion-item" id="how-can-you-use-this">
+          <a className="accordion-item-header" href="#how-can-you-use-this">
+            How can you use this?
+          </a>
+          <div className="accordion-text">
+            <p>
+              Share it. Bring the data to public meetings. Pressure the T to do
+              better, but also give them credit where it’s due.
+            </p>
+          </div>
+        </li>
+        <li className="accordion-item" id="green-line">
+          <a className="accordion-item-header" href="#green-line">
+            What about the Green Line?
+          </a>
+          <div className="accordion-text">
+            <p>
+              Due to variable traffic, much of the Green Line doesn’t have
+              consistent enough trip times to measure. As for the main trunk and
+              the D line? Coming “soon”.
+            </p>
+          </div>
+        </li>
+      </div>
     </>
   );
 };
-

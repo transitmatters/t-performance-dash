@@ -18,6 +18,7 @@ export interface SlowZone {
   from_short: string;
   to_short: string;
   direction: Direction;
+  order: number;
 }
 
 export type Direction = "northbound" | "southbound";

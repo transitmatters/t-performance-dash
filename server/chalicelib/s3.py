@@ -1,12 +1,14 @@
 import boto3
+import botocore
 from botocore.exceptions import ClientError
 import csv
+import itertools
 import zlib
 
 from chalicelib import parallel
 
 BUCKET = "tm-mbta-performance"
-s3 = boto3.client('s3')
+s3 = boto3.client('s3', config=botocore.client.Config(max_pool_connections=15))
 
 
 # General downloading/uploading
@@ -32,10 +34,10 @@ def is_bus(stop_id):
 
 def download_one_event_file(date, stop_id):
     """As advertised: single event file from s3"""
-    year, month, day = date.year, date.month, date.day
+    year, month = date.year, date.month
 
-    folder = 'daily-bus-data' if is_bus(stop_id) else 'daily-data'
-    key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
+    folder = 'monthly-bus-data' if is_bus(stop_id) else 'monthly-data'
+    key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
 
     # Download events from S3
     try:
@@ -59,14 +61,13 @@ def download_one_event_file(date, stop_id):
     return rows_by_time
 
 
-def download_single_day_events(date, stops):
-    """Will download events for single day, but can handle multiple stop_ids"""
-    result = []
-    for stop_id in stops:
-        result += download_one_event_file(date, stop_id)
-    return sorted(result, key=lambda row: row["event_time"])
+@parallel.make_parallel
+def parallel_download_events(datestop):
+    (date, stop) = datestop
+    return download_one_event_file(date, stop)
 
 
-# signature: (date_iterable, [stop_id])
-# Will download events for multiple stops, over a date range.
-download_event_range = parallel.make_parallel(download_single_day_events)
+def download_events(sdate, edate, stops):
+    datestops = itertools.product(parallel.month_range(sdate, edate), stops)
+    result = parallel_download_events(datestops)
+    return filter(lambda row: sdate.strftime("%Y-%m-%d") <= row['service_date'] <= edate.strftime("%Y-%m-%d"), result)

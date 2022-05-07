@@ -1206,3 +1206,22 @@ export const stations = {
 		]
 	}
 };
+
+export const derailments = {
+  Red: {
+    start: "2019-06-11T00:00:00Z",
+    end: "2019-09-21T00:00:00Z",
+    color: "Red",
+    title: "Red line derailment",
+    description:
+      "A red line train derailment at JFK/UMass destroyed important signal infrastructure that took months to repair.",
+  },
+  Orange: {
+    start: "2021-03-16T00:00:00Z",
+    end: "2021-04-16T00:00:00Z",
+    color: "Orange",
+    title: "Orange line derailment",
+    description:
+      "An orange line train derailment damaged a switch, requiring track replacement. A speed restriction followed in order to give the new track time to settle.",
+  },
+};

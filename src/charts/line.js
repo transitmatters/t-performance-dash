@@ -5,6 +5,7 @@ import merge from 'lodash.merge';
 import {Legend, LegendLongTerm} from './Legend';
 import drawTitle from './Title';
 import writeError from './error';
+import { DownloadButton } from './download';
 
 Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
   let x = eventPos.x;
@@ -29,6 +30,12 @@ const prettyDate = (dateString, with_dow) => {
   return new Date(`${dateString}T00:00:00`)
     .toLocaleDateString(undefined, // user locale/language
                         options);
+}
+
+const yearLabel = (date1, date2) => {
+  const y1 = date1.split("-")[0];
+  const y2 = date2.split("-")[0];
+  return (y1 === y2) ? y1 : `${y1} – ${y2}`;
 }
 
 const departure_from_normal_string = (metric, benchmark) => {
@@ -194,6 +201,13 @@ class SingleDayLine extends React.Component {
         }
       }]}
       />
+        <DownloadButton
+          data={this.props.data}
+          datasetName={this.props.fname}
+          location={this.props.location}
+          bothStops={this.props.titleBothStops}
+          startDate={this.props.date}
+        />
       </div>
       <div className="chart-extras">
         {this.props.useBenchmarks && <Legend />}
@@ -297,6 +311,14 @@ class AggregateLine extends React.Component {
         }
       }]}
       />
+      <DownloadButton
+        data={this.props.data}
+        datasetName={this.props.fname}
+        location={this.props.location}
+        bothStops={this.props.titleBothStops}
+        startDate={this.props.startDate}
+        endDate={this.props.endDate}
+      />
       </div>
       <div className="chart-extras">
         <LegendLongTerm />
@@ -317,7 +339,7 @@ const AggregateByDate = (props) => {
       xMin={new Date(`${props.startDate}T00:00:00`)}
       xMax={new Date(`${props.endDate}T00:00:00`)}
       fillColor={"rgba(191,200,214,0.5)"}
-      xLabel=""
+      xLabel={yearLabel(props.startDate, props.endDate)}
     />
   )
 }

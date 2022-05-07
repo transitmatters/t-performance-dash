@@ -39,6 +39,7 @@ class AggregateByTimeSelectable extends React.Component {
         title={this.state.title}
         data={this.props.data.filter(x => x.is_peak_day === (this.state.selected === "weekday"))}
         seriesName={this.props.seriesName}
+        fname={`${this.props.fname}-${this.state.selected}`}
         location={this.props.location}
         titleBothStops={this.props.titleBothStops}
         isLoading={this.props.isLoading}
@@ -97,6 +98,7 @@ class AggregateByDateSelectable extends React.Component {
         title={this.state.title}
         data={this.props.data.filter(x => x.peak === this.state.selected)}
         seriesName={this.props.seriesName}
+        fname={`${this.props.fname}-${this.state.selected.split("_")[0]}`}
         location={this.props.location}
         titleBothStops={this.props.titleBothStops}
         isLoading={this.props.isLoading}

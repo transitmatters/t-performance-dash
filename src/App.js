@@ -1,7 +1,7 @@
 import React from 'react';
 import { SingleDaySet, AggregateSet } from './ChartSets';
 import StationConfiguration from './StationConfiguration';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { lookup_station_by_id, get_stop_ids_for_stations, line_name } from './stations';
 import { trainDateRange, busDateRange } from './constants';
 import { recognize } from './alerts/AlertFilter';
@@ -24,7 +24,7 @@ const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname)
 const RAPIDTRANSIT_PATH = "/rapidtransit";
 const BUS_PATH = "/bus";
 
-const MAX_AGGREGATION_MONTHS = 8;
+const MAX_AGGREGATION_MONTHS = 18;
 const TOO_EARLY_ERROR = (date) => `Our archives only go back so far. Please select a date no earlier than ${date}.`;
 const TOO_LATE_ERROR = (date) => `Data not yet available. Please select a date no later than ${date}.`;
 const RANGE_TOO_LARGE_ERROR = `Please select a range no larger than ${MAX_AGGREGATION_MONTHS} months.`;
@@ -296,6 +296,8 @@ class App extends React.Component {
         if(e.name !== "AbortError") {
           console.error(e);
         }
+        // we need something like this to fix perpetual loading, but this ain't it
+        // this.setIsLoadingDataset(name, false);
       });
   }
 
@@ -392,7 +394,7 @@ class App extends React.Component {
     return <div className="main-column">
       <div className="empty-state">
         {error_message && <>{error_message}</>}
-        {/* <div id="slowzone-container"> Check out our new <Link to='/slowzones'><button id="slowzone-button">Slow Zone Tracker</button></Link></div> */}
+        <div id="slowzone-container"> Check out our new <Link to='/slowzones'><button id="slowzone-button">Slow Zone Tracker</button></Link></div>
         {!error_message && <>See MBTA rapid transit performance data, including travel times between stations, headways,
         and dwell times, for any given day. <span style={{fontWeight: "bold"}}>Select a line, station pair, and date above to get started.</span><div style={{marginTop: 10}}>Looking for something interesting? <span style={{fontWeight: "bold"}}>Try one of these dates:</span></div>
         <Select
