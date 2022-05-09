@@ -7,13 +7,14 @@ import zlib
 
 from chalicelib import parallel
 
-BUCKET = "tm-mbta-performance"
+DATA_BUCKET = "tm-mbta-performance"
+FRONTEND_BUCKET = "dashboard.transitmatters.org"
 s3 = boto3.client('s3', config=botocore.client.Config(max_pool_connections=15))
 
 
 # General downloading/uploading
-def download(key, encoding="utf8", compressed=True):
-    obj = s3.get_object(Bucket=BUCKET, Key=key)
+def download(key, encoding="utf8", compressed=True, bucket=DATA_BUCKET):
+    obj = s3.get_object(Bucket=bucket, Key=key)
     s3_data = obj["Body"].read()
     if not compressed:
         return s3_data.decode(encoding)
@@ -22,10 +23,10 @@ def download(key, encoding="utf8", compressed=True):
     return decompressed
 
 
-def upload(key, bytes, compress=True):
+def upload(key, bytes, compress=True, bucket=DATA_BUCKET):
     if compress:
         bytes = zlib.compress(bytes)
-    s3.put_object(Bucket=BUCKET, Key=key, Body=bytes)
+    s3.put_object(Bucket=bucket, Key=key, Body=bytes)
 
 
 def is_bus(stop_id):
