@@ -207,21 +207,21 @@ export const SlowZones = () => {
             </p>
           </div>
         </li>
-        <li className="accordion-item" id="what-do-the-lines-mean">
-          <a className="accordion-item-header" href="#what-do-the-line-mean">
-            What do the lines mean?
+        <li className="accordion-item" id="what-does-the-line-graph-mean">
+          <a className="accordion-item-header" href="#what-does-the-line-graph-mean">
+            What does the line graph mean?
           </a>
           <div className="accordion-text">
             <p>
               The line graph sums all the slow zone delays by color. In other
               words, it shows the amount of delay time due to slow zones on
               one round trip of each route. The numbers are approximate due to
-              rounding.
+              averaging.
             </p>
           </div>
         </li>
-        <li className="accordion-item" id="how-do-we-build-this">
-          <a className="accordion-item-header" href="#how-do-we-build-this">
+        <li className="accordion-item" id="how-did-we-build-this">
+          <a className="accordion-item-header" href="#how-did-we-build-this">
             How did we build this?
           </a>
           <div className="accordion-text">
