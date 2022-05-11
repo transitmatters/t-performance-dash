@@ -5,6 +5,7 @@ server/requirements.txt
 server/.chalice/deployments
 server/chalicelib/__pycache__
 cfn/
+public/static/
 Pipfile
 Pipfile.lock
 
