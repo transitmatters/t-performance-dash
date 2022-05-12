@@ -1,4 +1,6 @@
 import React from 'react';
+import { goatcount } from './analytics';
+import { APP_DATA_BASE_PATH } from './constants';
 import { SingleDaySet, AggregateSet } from './ChartSets';
 import StationConfiguration from './StationConfiguration';
 import { Link, withRouter } from 'react-router-dom';
@@ -10,16 +12,6 @@ import { ProgressBar, progressBarRate } from './ui/ProgressBar';
 import './App.css';
 import Select from './inputs/Select';
 import { configPresets } from './presets';
-
-const PRODUCTION = "dashboard.transitmatters.org";
-
-const FRONTEND_TO_BACKEND_MAP = new Map([
-  [PRODUCTION, "https://dashboard-api2.transitmatters.org"],
-  ["dashboard-beta.transitmatters.org", "https://dashboard-api-beta.transitmatters.org"]
-]);
-// Fetch the absolute location of the API to load from; fallback to "" which
-// results in a relative path for local development (which is proxied to python on tcp/5000 via react-scripts magic)
-const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname) || "";
 
 const RAPIDTRANSIT_PATH = "/rapidtransit";
 const BUS_PATH = "/bus";
@@ -120,11 +112,7 @@ class App extends React.Component {
       progressBarKey: 0,
     };
 
-    if (window.location.hostname === PRODUCTION) {
-      window.goatcounter?.count?.({
-        path: props.location.pathname,
-      });
-    }
+    goatcount();
 
     const url_config = new URLSearchParams(props.location.search).get("config");
     if (typeof url_config === "string") {
@@ -256,6 +244,7 @@ class App extends React.Component {
         if (refetch) {
           this.download();
         }
+        goatcount();
       });
   }
 
@@ -364,12 +353,6 @@ class App extends React.Component {
         this.fetchDataset('alerts', controller.signal, {
           // split so the 114/116/117 get their fun too.
           route: configuration.line.split("/"),
-        });
-      }
-
-      if (window.location.hostname === PRODUCTION) {
-        window.goatcounter?.count?.({
-          path: window.location.pathname + window.location.search,
         });
       }
     }
