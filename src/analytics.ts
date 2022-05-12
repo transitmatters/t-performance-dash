@@ -4,10 +4,10 @@ declare global {
   interface Window { goatcounter: any; }
 }
 
-export function goatcount(path=window.location.pathname + window.location.search) {
+export function goatcount() {
   if (window.location.hostname === PRODUCTION) {
     window.goatcounter?.count?.({
-      path,
+      path: window.location.pathname + window.location.search,
     });
   }
 }
