@@ -11,9 +11,10 @@ import {
   generateLineOptions,
   generateXrangeOptions,
 } from "./formattingUtils";
+import { goatcount } from "../analytics";
+import { getDateThreeMonthsAgo } from "../constants";
 import SlowZoneNav from "./SlowZoneNav";
 import { line_name, subway_lines } from "../stations";
-import { getDateThreeMonthsAgo } from "../constants";
 import moment from "moment";
 
 xrange(Highcharts);
@@ -91,6 +92,8 @@ export const SlowZones = () => {
 
   useEffect(() => {
     history.replace({ search: params.toString() });
+
+    goatcount();
 
     if (chartView === "line") {
       if (totalDelays) {

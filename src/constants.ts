@@ -1,19 +1,17 @@
 import moment from "moment";
 
+export const PRODUCTION = "dashboard.transitmatters.org";
 const FRONTEND_TO_BACKEND_MAP = new Map([
-	["localhost", ""], // this becomes a relative path that is proxied through CRA:3000 to python on :5000
-	["127.0.0.1", ""],
-	["dashboard.transitmatters.org", "https://dashboard-api2.transitmatters.org"],
+	[PRODUCTION, "https://dashboard-api2.transitmatters.org"],
 	[
 	  "dashboard-beta.transitmatters.org",
 	  "https://dashboard-api-beta.transitmatters.org",
 	],
   ]);
-  
-export const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(
-	window.location.hostname
-  );
 
+// Fetch the absolute location of the API to load from; fallback to "" which
+// results in a relative path for local development (which is proxied to python on tcp/5000 via react-scripts magic)
+export const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname) || "";
 
 export const colorsForLine: Record<string, string>= {
 	Red: '#da291c',
