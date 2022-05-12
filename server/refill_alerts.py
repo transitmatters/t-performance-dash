@@ -23,6 +23,7 @@ def do_alerts_exist(d):
 
 
 for d in date_range(START, END):
+    d = d.date()
     if do_alerts_exist(d):
         continue
     print("storing", d)

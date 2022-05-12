@@ -30,8 +30,11 @@
   "scripts": {
     "start": "concurrently npm:start-python npm:start-react",
     "start-python": "cd server && poetry run chalice local --port=5000",
-    "start-react": "react-scripts start",
-    "build": "react-scripts build",
+    "start-react": "npm run get-sz-data && react-scripts start",
+    "build": "react-scripts build && rm -rf build/static/slowzones",
+    "get-sz-data": "npm run get-sz-totals && npm run get-szs",
+    "get-sz-totals": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/slowzones/delay_totals.json",
+    "get-szs": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/slowzones/all_slow.json",
     "lint": "npm run lint-frontend && npm run lint-backend",
     "lint-frontend": "eslint src --max-warnings=0",
     "lint-backend": "cd server && poetry run flake8",
