@@ -31,7 +31,7 @@
     "start": "concurrently npm:start-python npm:start-react",
     "start-python": "cd server && poetry run chalice local --port=5000",
     "start-react": "npm run get-sz-data && react-scripts start",
-    "build": "react-scripts build && rm -r build/static/slowzones",
+    "build": "react-scripts build && rm -rf build/static/slowzones",
     "get-sz-data": "npm run get-sz-totals && npm run get-szs",
     "get-sz-totals": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/slowzones/delay_totals.json",
     "get-szs": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/slowzones/all_slow.json",
