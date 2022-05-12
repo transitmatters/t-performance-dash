@@ -112,6 +112,7 @@ class App extends React.Component {
       progressBarKey: 0,
     };
 
+    goatcount();
 
     const url_config = new URLSearchParams(props.location.search).get("config");
     if (typeof url_config === "string") {
@@ -142,7 +143,6 @@ class App extends React.Component {
 
   componentDidMount() {
     this.download();
-    goatcount();
   }
 
   checkForErrors(config) {
@@ -244,6 +244,7 @@ class App extends React.Component {
         if (refetch) {
           this.download();
         }
+        goatcount();
       });
   }
 
@@ -354,8 +355,6 @@ class App extends React.Component {
           route: configuration.line.split("/"),
         });
       }
-
-      goatcount();
     }
   }
 
