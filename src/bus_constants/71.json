@@ -91,20 +91,6 @@
                         "71-0-20761"
                     ]
                 }
-            },
-            {
-                "stop_name": "Cambridge Common Loop",
-                "branches": null,
-                "station": "hloop",
-                "order": 7,
-                "stops": {
-                    "1": [
-                        "71-1-12614"
-                    ],
-                    "0": [
-                        "71-0-12614"
-                    ]
-                }
             }
         ]
     }
