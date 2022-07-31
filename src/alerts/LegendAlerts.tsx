@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function legend_alerts() {
+export const legend_alerts: React.FC = () => {
   return (
     <div className="legend">
       <p>
@@ -10,3 +10,5 @@ export default function legend_alerts() {
     </div>
   );
 }
+
+export default legend_alerts;

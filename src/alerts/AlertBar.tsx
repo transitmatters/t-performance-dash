@@ -3,9 +3,10 @@ import classNames from 'classnames';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css'; // optional
 import LegendAlerts from './LegendAlerts';
+import { Alert } from './types';
 
 
-function chartTimeframe(start_date) {
+function chartTimeframe(start_date: string) {
   // Set alert-bar interval to be 5:30am today to 1am tomorrow.
   const today = `${start_date}T00:00:00`;
 
@@ -20,19 +21,18 @@ function chartTimeframe(start_date) {
 }
 
 
-function BoxSection(props) {
-
+const BoxSection: React.FC<{ title: string, width: number, left: number, border: boolean}> = ({title, width, left, border}) => {
   return (
-    <Tippy content={props.title}>
+    <Tippy content={title}>
       <div className="incident-section" style={
         {
-          "width": `${props.width}%`,
+          "width": `${width}%`,
           "height": "100%",
           "float": "left",
           "position": "absolute",
-          "left": `${props.left}%`,
-          "borderLeft": props.border && "0.1px solid white",
-          "borderRight": props.border && "0.1px solid white",
+          "left": `${left}%`,
+          "borderLeft": border ? "0.1px solid white" : undefined,
+          "borderRight": border ? "0.1px solid white": undefined,
         }
       }>
       </div>
@@ -41,10 +41,14 @@ function BoxSection(props) {
   );
 }
 
-export default function AlertBar(props) {
-  const { alerts, today, isLoading, isHidden } = props;
+interface AlertBarProps {
+  alerts: Alert[];
+  today: string;
+  isLoading: boolean;
+  isHidden: boolean;
+}
 
-
+export const AlertBar: React.FC<AlertBarProps> = ({alerts, today, isLoading, isHidden}) => {
   const renderBoxes = () => {
     if (isLoading) {
       return null;
@@ -55,17 +59,17 @@ export default function AlertBar(props) {
     }
 
     const [start, end] = chartTimeframe(today);
-    const duration = (end - start);
+    const duration = (end.getTime() - start.getTime());
 
 
     const boxes = [];
     let idx = 0;
     for (const alert of alerts) {
-      const alert_start = Math.max(start, new Date(alert.valid_from).getTime());
-      const alert_end = Math.min(end, new Date(alert.valid_to).getTime());
+      const alert_start = Math.max(start.getTime(), new Date(alert.valid_from).getTime());
+      const alert_end = Math.min(end.getTime(), new Date(alert.valid_to).getTime());
       const width = (alert_end - alert_start) / duration * 100;
 
-      const left_pos = (alert_start - start) / (duration) * 100;
+      const left_pos = (alert_start - start.getTime()) / (duration) * 100;
       const tooltip = `${new Date(alert.valid_from).toLocaleTimeString('en-US')} - ${new Date(alert.valid_to).toLocaleTimeString('en-US')}\n${alert.text}`;
 
       boxes.push(<BoxSection title={tooltip} border={true} width={width} left={left_pos} key={idx} />);
@@ -90,3 +94,5 @@ export default function AlertBar(props) {
     </div>
   );
 }
+
+export default AlertBar;
