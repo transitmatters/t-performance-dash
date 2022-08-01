@@ -25,17 +25,12 @@ const findMatch = (alert: Alert) => {
   return known.some((exp) => text.match(exp))
 }
 
-const recognize = (alert: Alert) => {
+export const recognize = (alert: Alert) => {
   return !!findMatch(alert);
 }
 
-const alertText = (alert: Alert) => {
+export const alertText = (alert: Alert) => {
   if (findMatch(alert)) {
     return alert.text;
   }
-};
-
-export {
-  recognize,
-  alertText,
 };

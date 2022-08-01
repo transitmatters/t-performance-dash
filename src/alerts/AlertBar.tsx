@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css'; // optional
-import LegendAlerts from './LegendAlerts';
+import { LegendAlerts } from './LegendAlerts';
 import { Alert } from './types';
 
 
@@ -20,8 +20,15 @@ function chartTimeframe(start_date: string) {
   return [low, high];
 }
 
+interface BoxSectionProps {
+  title: string;
+  width: number;
+  left: number;
+  border: boolean;
+}
 
-const BoxSection: React.FC<{ title: string, width: number, left: number, border: boolean}> = ({title, width, left, border}) => {
+const BoxSection: React.FC<BoxSectionProps> = ({title, width, left, border}) => {
+  const toBorderOrNotToBorder = border ? "0.1px solid white" : undefined
   return (
     <Tippy content={title}>
       <div className="incident-section" style={
@@ -31,8 +38,8 @@ const BoxSection: React.FC<{ title: string, width: number, left: number, border:
           "float": "left",
           "position": "absolute",
           "left": `${left}%`,
-          "borderLeft": border ? "0.1px solid white" : undefined,
-          "borderRight": border ? "0.1px solid white": undefined,
+          "borderLeft": toBorderOrNotToBorder,
+          "borderRight": toBorderOrNotToBorder,
         }
       }>
       </div>
@@ -94,5 +101,3 @@ export const AlertBar: React.FC<AlertBarProps> = ({alerts, today, isLoading, isH
     </div>
   );
 }
-
-export default AlertBar;
