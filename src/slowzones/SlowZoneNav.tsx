@@ -15,8 +15,8 @@ interface SlowZoneNavProps {
   toggleLine: (value: string) => void;
   startDate: Moment;
   endDate: Moment;
-  setStartDate: Function;
-  setEndDate: Function;
+  setStartDate: (date: Date | string | Moment) => void;
+  setEndDate: (date: Date | string | Moment) => void;
   params: URLSearchParams;
 }
 
@@ -135,7 +135,6 @@ const SlowZoneNav = ({
             value={startMoment}
             onChange={setStartDate}
             options={{ maxDate: endMoment, minDate: trainDateRange.minDate }}
-            maxDate={endMoment}
             placeholder="Select date..."
           />
 

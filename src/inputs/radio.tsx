@@ -1,9 +1,15 @@
 import React from "react";
 import classNames from 'classnames';
+import { Option } from "./types";
 
-const RadioForm = (props) => {
-  const { options, onChange, checked, className } = props;
+interface RadioFormProps {
+  options: Option[]; 
+  onChange: (value: string) => void; 
+  checked: string;
+  className: string;
+}
 
+const RadioForm: React.FC<RadioFormProps> = ({ options, onChange, checked, className }) => {
   return (
     <div className={classNames("control", className)}>
       {options.map((opt, index) => 
