@@ -16,17 +16,17 @@ const anti = [
   /temporary stop/
 ]
 
-const findMatch = (alert: Alert) => {
+/**
+ * Given an alert object, findMatch returns a boolean with whether or not the alert is a known format
+ * like "Reduced speeds" or "Up to 15 minutes"
+ */
+export const findMatch = (alert: Alert) => {
   const text = alert.text;
 
   if (anti.some((exp) => text.match(exp))) {
     return false;
   }
   return known.some((exp) => text.match(exp))
-}
-
-export const recognize = (alert: Alert) => {
-  return !!findMatch(alert);
 }
 
 export const alertText = (alert: Alert) => {

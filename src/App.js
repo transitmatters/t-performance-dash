@@ -6,7 +6,7 @@ import StationConfiguration from './StationConfiguration';
 import { Link, withRouter } from 'react-router-dom';
 import { lookup_station_by_id, get_stop_ids_for_stations, line_name } from './stations';
 import { trainDateRange, busDateRange } from './constants';
-import { recognize } from './alerts/AlertFilter';
+import { findMatch } from './alerts/AlertFilter';
 import { AlertBar } from './alerts/AlertBar';
 import { ProgressBar, progressBarRate } from './ui/ProgressBar';
 import './App.css';
@@ -422,7 +422,7 @@ class App extends React.Component {
     const { from, to, date_start } = configuration;
     const canShowCharts = from && to && date_start && !error_message;
     const canShowAlerts = from && to && date_start && !this.isAggregation();
-    const recognized_alerts = this.state.alerts?.filter(recognize);
+    const recognized_alerts = this.state.alerts?.filter(findMatch);
     const hasNoLoadedCharts = ['traveltimes', 'dwells', 'headways']
       .every(kind => this.getIsLoadingDataset(kind));
 
