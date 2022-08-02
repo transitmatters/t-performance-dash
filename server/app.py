@@ -1,13 +1,11 @@
 import json
 import os
 import subprocess
-from chalice import Chalice, Cron, CORSConfig, ConflictError, Response
-from datetime import date, timedelta
+from chalice import Chalice, CORSConfig, ConflictError, Response
+from datetime import date
 from chalicelib import (
     aggregation,
     data_funcs,
-    new_trains,
-    s3_alerts,
     secrets,
 )
 
@@ -19,25 +17,6 @@ TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", "localhost")
 cors_config = CORSConfig(
     allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600
 )
-
-
-# Every day at 10am UTC: store alerts from the past
-# It's called yesterday for now but it's really two days ago!!
-@app.schedule(Cron(0, 10, '*', '*', '?', '*'))
-def store_two_days_ago_alerts(event):
-    # Only do this on the main site
-    if TM_FRONTEND_HOST == "dashboard.transitmatters.org":
-        two_days_ago = date.today() - timedelta(days=2)
-        s3_alerts.store_alerts(two_days_ago)
-
-
-# Every day at 10:05am UTC: store new train runs from the previous day
-@app.schedule(Cron(5, 10, '*', '*', '?', '*'))
-def store_new_train_runs(event):
-    # Only do this on the main site
-    if TM_FRONTEND_HOST == "dashboard.transitmatters.org":
-        yesterday = date.today() - timedelta(days=1)
-        new_trains.update_all(yesterday)
 
 
 def parse_user_date(user_date):
