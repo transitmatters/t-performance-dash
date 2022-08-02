@@ -28,9 +28,3 @@ export const findMatch = (alert: Alert) => {
   }
   return known.some((exp) => text.match(exp))
 }
-
-export const alertText = (alert: Alert) => {
-  if (findMatch(alert)) {
-    return alert.text;
-  }
-};
