@@ -25,24 +25,6 @@
         "RegionalCertificateArn": { "Ref": "TMBackendCertArn" }
       }
     },
-    "StoreNewTrainRuns": {
-      "Properties": {
-        "Environment": {
-          "Variables": {
-            "MBTA_V2_API_KEY": { "Ref": "MbtaV2ApiKey" }
-          }
-        }
-      }
-    },
-    "StoreTwoDaysAgoAlerts": {
-      "Properties": {
-        "Environment": {
-          "Variables": {
-            "MBTA_V2_API_KEY": { "Ref": "MbtaV2ApiKey" }
-          }
-        }
-      }
-    },
     "APIHandler": {
       "Properties": {
         "Environment": {
