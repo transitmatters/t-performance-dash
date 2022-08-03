@@ -76,12 +76,13 @@ def process_events(df):
     - Calculate event_type column with ARR and DEP entries
     """
     CSV_HEADER = ["service_date", "route_id", "trip_id", "direction_id", "stop_id",
-                  "stop_sequence", "vehicle_id", "vehicle_label", "event_type", "event_time"]
+                  "stop_sequence", "vehicle_id", "vehicle_label", "event_type", "event_time",
+                  "scheduled_headway"]
 
     df = df.rename(columns={"half_trip_id": "trip_id",
                             "time_point_order": "stop_sequence",
                             "actual": "event_time"})
-    df.drop(columns=["time_point_id", "standard_type", "scheduled", "scheduled_headway", "headway"])
+    df.drop(columns=["time_point_id", "standard_type", "scheduled", "headway"])
     df["vehicle_id"] = ""
     df["vehicle_label"] = ""
 
