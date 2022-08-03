@@ -70,4 +70,5 @@ def parallel_download_events(datestop):
 def download_events(sdate, edate, stops):
     datestops = itertools.product(parallel.month_range(sdate, edate), stops)
     result = parallel_download_events(datestops)
-    return filter(lambda row: sdate.strftime("%Y-%m-%d") <= row['service_date'] <= edate.strftime("%Y-%m-%d"), result)
+    result = filter(lambda row: sdate.strftime("%Y-%m-%d") <= row['service_date'] <= edate.strftime("%Y-%m-%d"), result)
+    return sorted(result, key=lambda row: row["event_time"])
