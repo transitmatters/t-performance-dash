@@ -1,15 +1,12 @@
-const onTimeStyle = {"backgroundColor": "#64b96a"};
-const twentyFivePercentStyle = {"backgroundColor": "#f5ed00"};
-const fiftyPercentStyle = {"backgroundColor": "#c33149"};
-const oneHundredPercentStyle = {"backgroundColor": "#bb5cc1"};
+import './legend.css'
 
 function Legend() {
     return (
       <div className="legend">
-        <p><span className="legend-dot" style={onTimeStyle}></span> On time</p>
-        <p><span className="legend-dot" style={twentyFivePercentStyle}></span> {">25% longer than benchmark"}</p>
-        <p><span className="legend-dot" style={fiftyPercentStyle}></span> {">50% longer than benchmark"}</p>
-        <p><span className="legend-dot" style={oneHundredPercentStyle}></span> {">100% longer than benchmark"}</p>
+        <p><span className="legend-dot on-time"></span> On time</p>
+        <p><span className="legend-dot twenty-five-percent"></span> {">25% longer than benchmark"}</p>
+        <p><span className="legend-dot fifty-percent"></span> {">50% longer than benchmark"}</p>
+        <p><span className="legend-dot hundred-percent"></span> {">100% longer than benchmark"}</p>
         <p><span className="legend-line"></span> MBTA benchmark</p>
       </div>
     );
