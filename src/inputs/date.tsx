@@ -35,6 +35,7 @@ const RegularDateInput: React.FC<DateInputProps> = ({ options, value, placeholde
 
 const FlatpickrDateSelect: React.FC<DateInputProps> = ({ value, placeholder, onChange, options }) => {
     return <Flatpickr
+        key={options.maxDate}
         value={value}
         placeholder={placeholder}
         options={{ enableTime: false, ...options }}
