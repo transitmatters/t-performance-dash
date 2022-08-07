@@ -1,3 +1,5 @@
+import { Alert } from "./types";
+
 const known = [
   /[Uu]p to ([0-9]+) min/, // "Up to 15 minutes"
   /([0-9]+) min/,          // "15 minutes"
@@ -14,7 +16,11 @@ const anti = [
   /temporary stop/
 ]
 
-const findMatch = (alert) => {
+/**
+ * Given an alert object, findMatch returns a boolean with whether or not the alert is a known format
+ * like "Reduced speeds" or "Up to 15 minutes"
+ */
+export const findMatch = (alert: Alert) => {
   const text = alert.text;
 
   if (anti.some((exp) => text.match(exp))) {
@@ -22,16 +28,3 @@ const findMatch = (alert) => {
   }
   return known.some((exp) => text.match(exp))
 }
-
-const recognize = (alert) => {
-  return !!findMatch(alert);
-}
-
-const alertText = (alert) => {
-  return findMatch(alert)[0];
-};
-
-export {
-  recognize,
-  alertText,
-};
