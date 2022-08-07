@@ -232,7 +232,7 @@ class App extends React.Component {
       update.traveltimes = [];
       update.dwells = [];
     }
-    this.setState((state) => (
+    this.setState((state, props) => (
       { 
         progressBarKey: state.progressBarKey + 1,
         ...update,
