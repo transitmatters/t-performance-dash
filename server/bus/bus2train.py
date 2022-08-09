@@ -3,6 +3,7 @@ import pathlib
 import pandas as pd
 from datetime import datetime
 
+from gtfs_archive import add_gtfs_headways
 
 def load_data(input_csv, routes):
     """
@@ -52,6 +53,7 @@ def load_data(input_csv, routes):
     df.route_id = df.route_id.str.lstrip("0")
     if routes:
         df = df.loc[df.route_id.isin(routes)]
+    df.stop_id = df.stop_id.astype(str)
 
     # Convert dates
     df.scheduled = pd.to_datetime(df.scheduled)
@@ -82,9 +84,12 @@ def process_events(df):
     df = df.rename(columns={"half_trip_id": "trip_id",
                             "time_point_order": "stop_sequence",
                             "actual": "event_time"})
-    df.drop(columns=["time_point_id", "standard_type", "scheduled", "headway"])
+    df = df.drop(columns=["time_point_id", "standard_type", "scheduled", "scheduled_headway", "headway"])
     df["vehicle_id"] = ""
     df["vehicle_label"] = ""
+    df["scheduled_headway"] = ""
+
+    df = add_gtfs_headways(df)
 
     df["event_type"] = df.point_type.map({"Startpoint": ["DEP"],
                                           "Midpoint": ["ARR", "DEP"],
