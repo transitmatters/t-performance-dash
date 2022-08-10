@@ -96,28 +96,39 @@ def _old_add_gtfs_headways(df):
     return df
 
 def add_gtfs_headways(df):
+    # TODO: I think we need to worry about 114/116/117 headways?
     results = []
 
+    # wa have to do this day-by-day because gtfs changes so often
     for service_date, day_group in df.groupby('service_date'):
         trips, stops = read_gtfs(service_date.date())
 
+        # filter out the trips of interest
         mytrips = trips[trips.route_id.isin(day_group.route_id)]
-        trip_info = mytrips[['trip_id', 'route_id', 'direction_id']]
 
+        # take only the stops on those trips (adding route and dir info)
+        trip_info = mytrips[['trip_id', 'route_id', 'direction_id']]
         mystops = stops.merge(trip_info, on='trip_id', how='right')
 
+        # calculate gtfs headways
         mystops = mystops.sort_values(by='arrival_time')
         headways = mystops.groupby(['route_id', 'stop_id', 'direction_id']).arrival_time.diff()
         mystops['scheduled_headway'] = headways.dt.seconds
 
-        # TODO: calc rep trip times here too?
+        # calculate gtfs traveltimes
+        trip_start_time = mystops.groupby('trip_id').arrival_time.transform('min')
+        mystops['scheduled_tt'] = mystops.arrival_time - trip_start_time
+        # TODO: assign each actual trip a scheduled trip_id to assign it times
 
+        # assign each actual timepoint a scheduled headway
+        # merge_asof will match the previous scheduled value for 'arrival_time'
         day_group['arrival_time'] = day_group.event_time - service_date
-
         final = pd.merge_asof(day_group.sort_values(by='arrival_time'),
                               mystops[['route_id', 'stop_id', 'direction_id', 'arrival_time', 'scheduled_headway']],
                               on='arrival_time',
                               by=['route_id', 'stop_id', 'direction_id'])
+
+        # finally, put all the days together
         results.append(final)
 
     return pd.concat(results)
