@@ -87,7 +87,6 @@ def process_events(df):
     df = df.drop(columns=["time_point_id", "standard_type", "scheduled", "scheduled_headway", "headway"])
     df["vehicle_id"] = ""
     df["vehicle_label"] = ""
-    df["scheduled_headway"] = ""
 
     df = add_gtfs_headways(df)
 

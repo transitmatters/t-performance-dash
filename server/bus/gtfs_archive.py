@@ -12,6 +12,7 @@ archives = pd.read_csv("https://cdn.mbta.com/archive/archived_feeds.txt")
 def to_datestr(date):
     return int(str(date).replace('-', ''))
 
+
 def get_gtfs_archive(datestr: int):
     matches = archives[(archives.feed_start_date <= datestr) & (archives.feed_end_date >= datestr)]
     archive_url = matches.iloc[0].archive_url
@@ -29,6 +30,7 @@ def get_gtfs_archive(datestr: int):
 
     urllib.request.urlcleanup() # remove temporary zipfile
     return MAIN_DIR/archive_name
+
 
 def get_services(date: datetime.date, archive_dir: pathlib.Path):
     datestr = to_datestr(date)
@@ -69,7 +71,7 @@ def read_gtfs(date: datetime.date):
     return trips, stops
 
 
-def add_gtfs_headways(df):
+def _old_add_gtfs_headways(df):
     for service_date, group in df.groupby('service_date'):
         trips, stops = read_gtfs(service_date.date())
 
@@ -93,4 +95,30 @@ def add_gtfs_headways(df):
     
     return df
 
+def add_gtfs_headways(df):
+    results = []
+
+    for service_date, day_group in df.groupby('service_date'):
+        trips, stops = read_gtfs(service_date.date())
+
+        mytrips = trips[trips.route_id.isin(day_group.route_id)]
+        trip_info = mytrips[['trip_id', 'route_id', 'direction_id']]
+
+        mystops = stops.merge(trip_info, on='trip_id', how='right')
+
+        mystops = mystops.sort_values(by='arrival_time')
+        headways = mystops.groupby(['route_id', 'stop_id', 'direction_id']).arrival_time.diff()
+        mystops['scheduled_headway'] = headways.dt.seconds
+
+        # TODO: calc rep trip times here too?
+
+        day_group['arrival_time'] = day_group.event_time - service_date
+
+        final = pd.merge_asof(day_group.sort_values(by='arrival_time'),
+                              mystops[['route_id', 'stop_id', 'direction_id', 'arrival_time', 'scheduled_headway']],
+                              on='arrival_time',
+                              by=['route_id', 'stop_id', 'direction_id'])
+        results.append(final)
+
+    return pd.concat(results)
 
