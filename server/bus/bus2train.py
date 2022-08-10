@@ -79,7 +79,7 @@ def process_events(df):
     """
     CSV_HEADER = ["service_date", "route_id", "trip_id", "direction_id", "stop_id",
                   "stop_sequence", "vehicle_id", "vehicle_label", "event_type", "event_time",
-                  "scheduled_headway"]
+                  "scheduled_headway", "scheduled_tt"]
 
     df = df.rename(columns={"half_trip_id": "trip_id",
                             "time_point_order": "stop_sequence",

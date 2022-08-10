@@ -117,19 +117,38 @@ def add_gtfs_headways(df):
 
         # calculate gtfs traveltimes
         trip_start_time = mystops.groupby('trip_id').arrival_time.transform('min')
-        mystops['scheduled_tt'] = mystops.arrival_time - trip_start_time
-        # TODO: assign each actual trip a scheduled trip_id to assign it times
+        mystops['scheduled_tt'] = (mystops.arrival_time - trip_start_time).dt.seconds
+
 
         # assign each actual timepoint a scheduled headway
         # merge_asof will match the previous scheduled value for 'arrival_time'
         day_group['arrival_time'] = day_group.event_time - service_date
         final = pd.merge_asof(day_group.sort_values(by='arrival_time'),
                               mystops[['route_id', 'stop_id', 'direction_id', 'arrival_time', 'scheduled_headway']],
-                              on='arrival_time',
+                              on='arrival_time', direction='backward',
                               by=['route_id', 'stop_id', 'direction_id'])
+
+        # assign each actual trip a scheduled trip_id, based on when it started the route
+        route_starts = day_group.loc[day_group.groupby('trip_id').event_time.idxmin()]
+        route_starts = route_starts[['trip_id','route_id','direction_id','stop_id','arrival_time']]
+
+        trip_id_map = pd.merge_asof(route_starts.sort_values(by='arrival_time'),
+                                    mystops[['trip_id','route_id','direction_id','stop_id','arrival_time']],
+                                    on='arrival_time', direction='nearest',
+                                    by=['route_id','direction_id','stop_id'],
+                                    suffixes=['', '_scheduled'])
+        trip_id_map = trip_id_map.set_index('trip_id').trip_id_scheduled
+        
+        # use the scheduled trip matching to get the scheduled traveltime
+        final['scheduled_trip_id'] = final.trip_id.map(trip_id_map)
+        final = final.merge(mystops[['trip_id','route_id','direction_id','stop_id','scheduled_tt']],
+                            how='left', 
+                            left_on=['scheduled_trip_id','route_id','direction_id','stop_id'],
+                            right_on=['trip_id','route_id','direction_id','stop_id'],
+                            suffixes=['', '_gtfs'])
+
 
         # finally, put all the days together
         results.append(final)
 
     return pd.concat(results)
-

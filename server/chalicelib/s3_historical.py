@@ -116,13 +116,21 @@ def travel_times(stops_a, stops_b, sdate, edate):
         if travel_time_sec < 0:
             continue
 
+        # benchmark calculation:
+        sched_arr = arrival.get("scheduled_tt")
+        sched_dep = departure.get("scheduled_tt")
+        if sched_arr != None and sched_dep != None:
+            benchmark = float(sched_arr) - float(sched_dep)
+        else:
+            benchmark = None
+
         travel_times.append({
             "route_id": departure["route_id"],
             "direction": int(departure["direction_id"]),
             "dep_dt": dep_dt.strftime(DATE_FORMAT_OUT),
             "arr_dt": arr_dt.strftime(DATE_FORMAT_OUT),
             "travel_time_sec": travel_time_sec,
-            "benchmark_travel_time_sec": None
+            "benchmark_travel_time_sec": benchmark
         })
 
     return travel_times
