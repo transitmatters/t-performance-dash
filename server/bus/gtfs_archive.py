@@ -7,41 +7,52 @@ import urllib.request
 MAIN_DIR = pathlib.Path("./data/gtfs_archives/")
 MAIN_DIR.mkdir(parents=True, exist_ok=True)
 
-archives = pd.read_csv("https://cdn.mbta.com/archive/archived_feeds.txt")
+ARCHIVES = pd.read_csv("https://cdn.mbta.com/archive/archived_feeds.txt")
 
-def to_datestr(date):
+
+def to_dateint(date):
+    """turn date into 20220615 e.g."""
     return int(str(date).replace('-', ''))
 
 
-def get_gtfs_archive(datestr: int):
-    matches = archives[(archives.feed_start_date <= datestr) & (archives.feed_end_date >= datestr)]
+def get_gtfs_archive(dateint: int):
+    """
+    Determine which GTFS archive corresponds to the date.
+    Returns that archive folder, downloading if it doesn't yet exist.
+    """
+    matches = ARCHIVES[(ARCHIVES.feed_start_date <= dateint) & (ARCHIVES.feed_end_date >= dateint)]
     archive_url = matches.iloc[0].archive_url
 
     archive_name = pathlib.Path(archive_url).stem
 
-    if (MAIN_DIR/archive_name).exists():
-        print("archive already exists:", archive_name)
-        return MAIN_DIR/archive_name
+    if (MAIN_DIR / archive_name).exists():
+        print(f"Archive for {dateint} already exists: {archive_name}")
+        return MAIN_DIR / archive_name
 
-    print("downloading archive", archive_url)
+    # else we have to download it
+    print(f"Downloading archive for {dateint}: {archive_url}")
     zipfile, _ = urllib.request.urlretrieve(archive_url)
-    shutil.unpack_archive(zipfile, extract_dir=MAIN_DIR/archive_name, format='zip')
-    print("archive inflated")
+    shutil.unpack_archive(zipfile, extract_dir=(MAIN_DIR / archive_name), format='zip')
+    # remove temporary zipfile
+    urllib.request.urlcleanup()
 
-    urllib.request.urlcleanup() # remove temporary zipfile
-    return MAIN_DIR/archive_name
+    return (MAIN_DIR / archive_name)
 
 
 def get_services(date: datetime.date, archive_dir: pathlib.Path):
-    datestr = to_datestr(date)
+    """
+    Read calendar.txt to determine which services ran on the given date.
+    Also, incorporate exceptions from calendar_dates.txt for holidays, etc.
+    """
+    dateint = to_dateint(date)
     day_of_week = date.strftime("%A").lower()
 
-    cal = pd.read_csv(archive_dir/"calendar.txt")
-    current_services = cal[(cal.start_date <= datestr) & (cal.end_date >= datestr)]
+    cal = pd.read_csv(archive_dir / "calendar.txt")
+    current_services = cal[(cal.start_date <= dateint) & (cal.end_date >= dateint)]
     services = current_services[current_services[day_of_week] == 1].service_id.tolist()
 
-    exceptions = pd.read_csv(archive_dir/"calendar_dates.txt")
-    exceptions = exceptions[exceptions.date == datestr]
+    exceptions = pd.read_csv(archive_dir / "calendar_dates.txt")
+    exceptions = exceptions[exceptions.date == dateint]
     additions = exceptions[exceptions.exception_type == 1].service_id.tolist()
     subtractions = exceptions[exceptions.exception_type == 2].service_id.tolist()
 
@@ -50,103 +61,97 @@ def get_services(date: datetime.date, archive_dir: pathlib.Path):
 
 
 def read_gtfs(date: datetime.date):
-    datestr = to_datestr(date)
-    
-    archive_dir = get_gtfs_archive(datestr)
+    """
+    Given a date, this function will:
+    - Find the appropriate gtfs archive (downloading if necessary)
+    - Determine which services ran on that date
+    - Return two dataframes containing just the trips and stop_times that ran on that date
+    """
+    dateint = to_dateint(date)
+
+    archive_dir = get_gtfs_archive(dateint)
     services = get_services(date, archive_dir)
 
-    trips = pd.read_csv(archive_dir/"trips.txt", dtype={'trip_short_name': str})
+    # specify dtypes to avoid warnings
+    trips = pd.read_csv(archive_dir / "trips.txt", dtype={'trip_short_name': str})
     trips = trips[trips.service_id.isin(services)]
 
-    stops = pd.read_csv(archive_dir/"stop_times.txt",
+    stops = pd.read_csv(archive_dir / "stop_times.txt",
                         dtype={'trip_id': str,
                                'stop_id': str,
                                'stop_headsign': str,
                                'checkpoint_id': str}
                         )
-    stops = stops[stops.trip_id.isin(trips.trip_id.unique())]
+    stops = stops[stops.trip_id.isin(trips.trip_id)]
     stops.arrival_time = pd.to_timedelta(stops.arrival_time)
     stops.departure_time = pd.to_timedelta(stops.departure_time)
-    
+
     return trips, stops
 
 
-def _old_add_gtfs_headways(df):
-    for service_date, group in df.groupby('service_date'):
-        trips, stops = read_gtfs(service_date.date())
-
-        for (rte, dir), group in group.groupby(['route_id', 'direction_id']):
-
-            mytrips = trips[(trips.route_id == rte) & (trips.direction_id == dir)]
-            mystops = stops[stops.trip_id.isin(mytrips.trip_id)].sort_values(by='arrival_time')
-            mystops['headways'] = mystops.groupby('stop_id').arrival_time.diff()
-
-            for stop_id, g in group.groupby("stop_id"):
-
-                headways = mystops[mystops.stop_id == stop_id].set_index('arrival_time').headways.dt.seconds
-
-                # get the closest headway to the actual event time
-                idx = headways.index.get_indexer(g.event_time - service_date, method='ffill')
-                # -1 means not found. we'll use index 0, which has NaN headway anyway
-                idx[idx < 0] = 0
-
-                # set the headways on the original df
-                df.loc[g.index, 'scheduled_headway'] = headways[idx].values
-    
-    return df
-
-def add_gtfs_headways(df):
+def add_gtfs_headways(events_df):
+    """
+    This will calculate scheduled headway and traveltime information
+    from gtfs for the routes we care about, and then match our actual
+    events to the scheduled values. This matching is done based on
+    time-of-day, so is not an excact match. Luckily, pandas helps us out
+    with merge_asof.
+    https://pandas.pydata.org/docs/reference/api/pandas.merge_asof.html
+    """
     # TODO: I think we need to worry about 114/116/117 headways?
+
+    # defining these columns in particular becasue we use them everywhere
+    RDS = ['route_id', 'direction_id', 'stop_id']
+
     results = []
 
     # wa have to do this day-by-day because gtfs changes so often
-    for service_date, day_group in df.groupby('service_date'):
-        trips, stops = read_gtfs(service_date.date())
+    for service_date, days_events in events_df.groupby('service_date'):
+        all_trips, all_stops = read_gtfs(service_date.date())
 
         # filter out the trips of interest
-        mytrips = trips[trips.route_id.isin(day_group.route_id)]
+        relevant_trips = all_trips[all_trips.route_id.isin(days_events.route_id)]
 
-        # take only the stops on those trips (adding route and dir info)
-        trip_info = mytrips[['trip_id', 'route_id', 'direction_id']]
-        mystops = stops.merge(trip_info, on='trip_id', how='right')
+        # take only the stops from those trips (adding route and dir info)
+        trip_info = relevant_trips[['trip_id', 'route_id', 'direction_id']]
+        gtfs_stops = all_stops.merge(trip_info, on='trip_id', how='right')
 
         # calculate gtfs headways
-        mystops = mystops.sort_values(by='arrival_time')
-        headways = mystops.groupby(['route_id', 'stop_id', 'direction_id']).arrival_time.diff()
-        mystops['scheduled_headway'] = headways.dt.seconds
+        gtfs_stops = gtfs_stops.sort_values(by='arrival_time')
+        headways = gtfs_stops.groupby(RDS).arrival_time.diff()
+        gtfs_stops['scheduled_headway'] = headways.dt.seconds
 
         # calculate gtfs traveltimes
-        trip_start_time = mystops.groupby('trip_id').arrival_time.transform('min')
-        mystops['scheduled_tt'] = (mystops.arrival_time - trip_start_time).dt.seconds
-
+        trip_start_times = gtfs_stops.groupby('trip_id').arrival_time.transform('min')
+        gtfs_stops['scheduled_tt'] = (gtfs_stops.arrival_time - trip_start_times).dt.seconds
 
         # assign each actual timepoint a scheduled headway
-        # merge_asof will match the previous scheduled value for 'arrival_time'
-        day_group['arrival_time'] = day_group.event_time - service_date
-        final = pd.merge_asof(day_group.sort_values(by='arrival_time'),
-                              mystops[['route_id', 'stop_id', 'direction_id', 'arrival_time', 'scheduled_headway']],
+        # merge_asof 'backward' matches the previous scheduled value of 'arrival_time'
+        days_events['arrival_time'] = days_events.event_time - service_date
+        final = pd.merge_asof(days_events.sort_values(by='arrival_time'),
+                              gtfs_stops[RDS + ['arrival_time', 'scheduled_headway']],
                               on='arrival_time', direction='backward',
-                              by=['route_id', 'stop_id', 'direction_id'])
+                              by=RDS)
 
         # assign each actual trip a scheduled trip_id, based on when it started the route
-        route_starts = day_group.loc[day_group.groupby('trip_id').event_time.idxmin()]
-        route_starts = route_starts[['trip_id','route_id','direction_id','stop_id','arrival_time']]
+        route_starts = days_events.loc[days_events.groupby('trip_id').event_time.idxmin()]
+        route_starts = route_starts[RDS + ['trip_id', 'arrival_time']]
 
         trip_id_map = pd.merge_asof(route_starts.sort_values(by='arrival_time'),
-                                    mystops[['trip_id','route_id','direction_id','stop_id','arrival_time']],
+                                    gtfs_stops[RDS + ['arrival_time', 'trip_id']],
                                     on='arrival_time', direction='nearest',
-                                    by=['route_id','direction_id','stop_id'],
+                                    by=RDS,
                                     suffixes=['', '_scheduled'])
         trip_id_map = trip_id_map.set_index('trip_id').trip_id_scheduled
-        
+
         # use the scheduled trip matching to get the scheduled traveltime
         final['scheduled_trip_id'] = final.trip_id.map(trip_id_map)
-        final = final.merge(mystops[['trip_id','route_id','direction_id','stop_id','scheduled_tt']],
-                            how='left', 
-                            left_on=['scheduled_trip_id','route_id','direction_id','stop_id'],
-                            right_on=['trip_id','route_id','direction_id','stop_id'],
-                            suffixes=['', '_gtfs'])
-
+        final = pd.merge(final,
+                         gtfs_stops[RDS + ['trip_id', 'scheduled_tt']],
+                         how='left',
+                         left_on=RDS + ['scheduled_trip_id'],
+                         right_on=RDS + ['trip_id'],
+                         suffixes=['', '_gtfs'])
 
         # finally, put all the days together
         results.append(final)

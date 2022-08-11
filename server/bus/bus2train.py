@@ -5,6 +5,7 @@ from datetime import datetime
 
 from gtfs_archive import add_gtfs_headways
 
+
 def load_data(input_csv, routes):
     """
     Loads in the below format and makes some adjustments for processing.
@@ -85,11 +86,11 @@ def process_events(df):
                             "time_point_order": "stop_sequence",
                             "actual": "event_time"})
     df = df.drop(columns=["time_point_id", "standard_type", "scheduled", "scheduled_headway", "headway"])
-    df["vehicle_id"] = ""
-    df["vehicle_label"] = ""
 
     df = add_gtfs_headways(df)
 
+    df["vehicle_id"] = ""
+    df["vehicle_label"] = ""
     df["event_type"] = df.point_type.map({"Startpoint": ["DEP"],
                                           "Midpoint": ["ARR", "DEP"],
                                           "Endpoint": ["ARR"]})

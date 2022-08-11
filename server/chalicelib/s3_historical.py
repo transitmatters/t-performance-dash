@@ -119,7 +119,7 @@ def travel_times(stops_a, stops_b, sdate, edate):
         # benchmark calculation:
         sched_arr = arrival.get("scheduled_tt")
         sched_dep = departure.get("scheduled_tt")
-        if sched_arr != None and sched_dep != None:
+        if sched_arr is not None and sched_dep is not None:
             benchmark = float(sched_arr) - float(sched_dep)
         else:
             benchmark = None
