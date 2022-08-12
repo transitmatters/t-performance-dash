@@ -45,23 +45,23 @@ class Flatpickr extends React.Component {
     this.handleNodeChange = this.handleNodeChange.bind(this);
   }
 
-  createFlatpickr = () => {
+  createFlatpickr() {
     this.flatpickr = flatpickr(this.node,
       {
         // if we get here, we've already decided on flatpickr. Don't resort to mobile-native.
         disableMobile: true,
         date: this.props.value,
-        onChange: (sel, dateStr, inst) => this.props.onChange(dateStr),
+        onChange: (sel, dateStr) => this.props.onChange(dateStr),
         ...this.props.options
       });
   }
 
-  destroyFlatpickr = () => {
+  destroyFlatpickr() {
     this.flatpickr?.destroy();
     this.flatpickr = null;
   }
 
-  handleNodeChange = (node) => {
+  handleNodeChange(node) {
     this.node = node;
     if (node) {
       this.destroyFlatpickr();

@@ -148,13 +148,12 @@ export const generateXrangeSeries = (
       }),
       dataLabels: {
         enabled: true,
-        // @ts-ignore
-        formatter: function () {
-          // @ts-ignore
+        formatter: () => {
+          // @ts-expect-error appears that this is always undefined
           return this.point.custom.isDuringDerailment
-            ? // @ts-ignore
+            ? // @ts-expect-error appears that this is always undefined
               `${this.point.custom.delay.toFixed(0)} s ⚠️`
-            : // @ts-ignore
+            : // @ts-expect-error appears that this is always undefined
               `${this.point.custom.delay.toFixed(0)} s`;
         },
       },

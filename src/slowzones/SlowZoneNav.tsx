@@ -8,15 +8,15 @@ import { useMemo } from "react";
 
 interface SlowZoneNavProps {
   chartView: ChartView;
-  setChartView: Function;
+  setChartView: (chartView: ChartView) => void;
   direction: Direction;
-  setDireciton: Function;
+  setDireciton: (direction: Direction) => void;
   selectedLines: string[];
   toggleLine: (value: string) => void;
   startDate: Moment;
   endDate: Moment;
-  setStartDate: Function;
-  setEndDate: Function;
+  setStartDate: (startDate: Date | string | Moment) => void;
+  setEndDate: (endDate: Date | string | Moment) => void;
   params: URLSearchParams;
 }
 
