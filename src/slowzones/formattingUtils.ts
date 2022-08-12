@@ -148,7 +148,8 @@ export const generateXrangeSeries = (
       }),
       dataLabels: {
         enabled: true,
-        formatter: () => {
+        // @ts-expect-error appears this needs a function
+        formatter: function () {
           // @ts-expect-error appears that this is always undefined
           return this.point.custom.isDuringDerailment
             ? // @ts-expect-error appears that this is always undefined
