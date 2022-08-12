@@ -1,36 +1,27 @@
-import moment, { Moment } from "moment";
-import { colorsForLine, derailments } from "../constants";
-import { lookup_station_by_id } from "../stations";
-import { Direction, SlowZone } from "./types";
+import moment, { Moment } from 'moment';
+import { colorsForLine, derailments } from '../constants';
+import { lookup_station_by_id } from '../stations';
+import { Direction, SlowZone } from './types';
 
 const ua = window.navigator.userAgent;
 const isMobile = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(ua);
-const textSize = isMobile ? '11' : 14
+const textSize = isMobile ? '11' : 14;
 
 const DAY_MS = 1000 * 60 * 60 * 24;
 
 const isDuringDerailment = (start: Moment, end: Moment, color: string) => {
-  if (color === "Blue") return false;
+  if (color === 'Blue') return false;
 
-  if (color === "Red") {
+  if (color === 'Red') {
     return (
-      start.isBetween(
-        moment(derailments.Red.start),
-        moment(derailments.Red.end)
-      ) ||
+      start.isBetween(moment(derailments.Red.start), moment(derailments.Red.end)) ||
       end.isBetween(moment(derailments.Red.start), moment(derailments.Red.end))
     );
   }
-  if (color === "Orange") {
+  if (color === 'Orange') {
     return (
-      start.isBetween(
-        moment(derailments.Orange.start),
-        moment(derailments.Orange.end)
-      ) ||
-      end.isBetween(
-        moment(derailments.Orange.start),
-        moment(derailments.Orange.end)
-      )
+      start.isBetween(moment(derailments.Orange.start), moment(derailments.Orange.end)) ||
+      end.isBetween(moment(derailments.Orange.start), moment(derailments.Orange.end))
     );
   }
 };
@@ -40,14 +31,14 @@ const capitalize = (s: string) => {
 };
 
 const getDashUrl = (d: any) => {
-  const dateDiff = moment(d.custom.startDate).diff(d.x2, "months");
+  const dateDiff = moment(d.custom.startDate).diff(d.x2, 'months');
   let then;
   if (dateDiff <= -18) {
-    then = moment(d.x2).subtract(18, "months").toISOString().split("T")[0];
+    then = moment(d.x2).subtract(18, 'months').toISOString().split('T')[0];
   } else {
     then = new Date(d.custom.startDate);
     then.setDate(then.getDate() - 14); // two weeks of baseline for comparison
-    then = then.toISOString().split("T")[0];
+    then = then.toISOString().split('T')[0];
   }
 
   let now: any = new Date(d.x2);
@@ -56,7 +47,7 @@ const getDashUrl = (d: any) => {
   if (today < now) {
     now = today;
   }
-  now = now.toISOString().split("T")[0];
+  now = now.toISOString().split('T')[0];
 
   return `https://dashboard.transitmatters.org/rapidtransit?config=${d.custom.color},${d.custom.fr_id},${d.custom.to_id},${then},${now}`;
 };
@@ -64,7 +55,7 @@ const getDashUrl = (d: any) => {
 const getDirection = (to: any, from: any) => {
   const toOrder = to.order;
   const fromOrder = from.order;
-  return toOrder > fromOrder ? "southbound" : "northbound";
+  return toOrder > fromOrder ? 'southbound' : 'northbound';
 };
 
 // Data formatting & cleanup
@@ -80,7 +71,7 @@ export const formatSlowZones = (data: any) =>
       from: from.stop_name,
       to: to.stop_name,
       uid: +x.id,
-      id: from.stop_name + "-" + to.stop_name,
+      id: from.stop_name + '-' + to.stop_name,
       delay: +x.delay,
       duration: +x.duration,
       color: x.color,
@@ -110,9 +101,7 @@ export const getRoutes = (data: SlowZone[], direction: Direction) => {
   // group by line, sort by order , flatten, get ids, filter out duplicates
   const routes = Object.values(groupByLine(data))
     .map((sz: SlowZone[]) =>
-      sz.sort((a, b) =>
-        direction === "southbound" ? a.order - b.order : b.order - a.order
-      )
+      sz.sort((a, b) => (direction === 'southbound' ? a.order - b.order : b.order - a.order))
     )
     .flat()
     .map((sz: SlowZone) => sz.id);
@@ -120,11 +109,7 @@ export const getRoutes = (data: SlowZone[], direction: Direction) => {
 };
 
 // Xrange options
-export const generateXrangeSeries = (
-  data: any,
-  startDate: Moment,
-  direciton: Direction
-) => {
+export const generateXrangeSeries = (data: any, startDate: Moment, direciton: Direction) => {
   const routes = getRoutes(data, direciton);
   const groupedByLine = groupByLine(data);
   return Object.entries(groupedByLine).map((line) => {
@@ -134,9 +119,7 @@ export const generateXrangeSeries = (
       color: colorsForLine[line[0]],
       data: data.map((d) => {
         return {
-          x: d.start.isBefore(startDate)
-            ? startDate.utc().valueOf()
-            : d.start.utc().valueOf(),
+          x: d.start.isBefore(startDate) ? startDate.utc().valueOf() : d.start.utc().valueOf(),
           x2: d.end.utc().valueOf(),
           y: routes.indexOf(d.id),
           custom: {
@@ -170,26 +153,26 @@ export const generateXrangeOptions = (
     {
       labels: [
         {
-          point: "red-derailment-start",
-          text: "Derailment",
+          point: 'red-derailment-start',
+          text: 'Derailment',
         },
         {
-          point: "red-derailment-end",
-          text: "Signals restored",
+          point: 'red-derailment-end',
+          text: 'Signals restored',
         },
         {
-          point: "orange-derailment-start",
-          text: "Derailment",
+          point: 'orange-derailment-start',
+          text: 'Derailment',
         },
         {
-          point: "orange-derailment-end",
-          text: "Tracks restored",
+          point: 'orange-derailment-end',
+          text: 'Tracks restored',
         },
       ],
     },
   ],
   chart: {
-    type: "xrange",
+    type: 'xrange',
   },
   credits: {
     enabled: false,
@@ -197,13 +180,13 @@ export const generateXrangeOptions = (
   title: {
     text: `${capitalize(direction)} slow zones`,
     style: {
-      fontSize: "24px",
+      fontSize: '24px',
     },
   },
   xAxis: {
-    type: "datetime",
+    type: 'datetime',
     title: {
-      text: "Date",
+      text: 'Date',
       style: {
         fontSize: textSize,
       },
@@ -218,9 +201,9 @@ export const generateXrangeOptions = (
     enabled: false,
   },
   yAxis: {
-    type: "category",
+    type: 'category',
     title: {
-      text: "Line Segments",
+      text: 'Line Segments',
       style: {
         fontSize: textSize,
       },
@@ -235,21 +218,21 @@ export const generateXrangeOptions = (
   },
   tooltip: {
     formatter: function (this: any) {
-      return `<div><span style="font-size: 10px">${moment(
-        this.point.custom.startDate
-      ).utc().format("MMMM Do YYYY")} - ${moment(this.point.x2).utc().format(
-        "MMMM Do YYYY"
-      )}</span><br/> <span style="color:${this.point.color}">●</span> ${
+      return `<div><span style="font-size: 10px">${moment(this.point.custom.startDate)
+        .utc()
+        .format('MMMM Do YYYY')} - ${moment(this.point.x2)
+        .utc()
+        .format('MMMM Do YYYY')}</span><br/> <span style="color:${this.point.color}">●</span> ${
         this.point.series.name
       }: <b>${this.point.yCategory}</b><br/></div>`;
     },
   },
   plotOptions: {
     series: {
-      cursor: "pointer",
+      cursor: 'pointer',
       events: {
         click: function (event: any) {
-          window.open(getDashUrl(event.point), "_blank");
+          window.open(getDashUrl(event.point), '_blank');
         },
       },
       grouping: false,
@@ -267,10 +250,10 @@ export const groupByLineDailyTotals = (data: any, selectedLines: string[]) => {
   const RED_LINE = data.map((day: any) => {
     const y = Number((day.Red / 60).toFixed(2));
     if (day.date === derailments.Red.start) {
-      return { id: "red-derailment-start", y };
+      return { id: 'red-derailment-start', y };
     }
     if (day.date === derailments.Red.end) {
-      return { id: "red-derailment-end", y };
+      return { id: 'red-derailment-end', y };
     } else {
       return y;
     }
@@ -279,28 +262,28 @@ export const groupByLineDailyTotals = (data: any, selectedLines: string[]) => {
   const ORANGE_LINE = data.map((day: any) => {
     const y = Number((day.Orange / 60).toFixed(2));
     if (day.date === derailments.Orange.start) {
-      return { id: "orange-derailment-start", y };
+      return { id: 'orange-derailment-start', y };
     }
     if (day.date === derailments.Orange.end) {
-      return { id: "orange-derailment-end", y };
+      return { id: 'orange-derailment-end', y };
     } else {
       return y;
     }
   });
   return [
-    selectedLines.includes("Red") && {
-      name: "Red",
-      color: colorsForLine["Red"],
+    selectedLines.includes('Red') && {
+      name: 'Red',
+      color: colorsForLine['Red'],
       data: RED_LINE,
     },
-    selectedLines.includes("Blue") && {
-      name: "Blue",
-      color: colorsForLine["Blue"],
+    selectedLines.includes('Blue') && {
+      name: 'Blue',
+      color: colorsForLine['Blue'],
       data: BLUE_LINE,
     },
-    selectedLines.includes("Orange") && {
-      name: "Orange",
-      color: colorsForLine["Orange"],
+    selectedLines.includes('Orange') && {
+      name: 'Orange',
+      color: colorsForLine['Orange'],
       data: ORANGE_LINE,
     },
   ];
@@ -313,20 +296,20 @@ export const generateLineOptions = (
 ): any => ({
   exporting: {
     csv: {
-      itemDelimiter: ";",
+      itemDelimiter: ';',
     },
   },
   credits: { enabled: false },
   title: {
     text: `Time spent in slow zones`,
     style: {
-      fontSize: "24px",
+      fontSize: '24px',
     },
   },
   xAxis: {
-    type: "datetime",
+    type: 'datetime',
     title: {
-      text: "Date",
+      text: 'Date',
       style: {
         fontSize: textSize,
       },
@@ -339,7 +322,7 @@ export const generateLineOptions = (
   },
   yAxis: {
     title: {
-      text: "Slow time per day (minutes)",
+      text: 'Slow time per day (minutes)',
       style: {
         fontSize: textSize,
       },
@@ -361,7 +344,7 @@ export const generateLineOptions = (
   tooltip: {
     formatter: function (this: any) {
       return `<div><span style="font-size: 10px">${moment(this.point.x).format(
-        "MMMM Do YYYY"
+        'MMMM Do YYYY'
       )}</span><br/> <span style="color:${this.point.color}">●</span> ${
         this.point.series.name
       }: <b>${this.point.y}</b><br/></div>`;
@@ -374,20 +357,20 @@ export const generateLineOptions = (
     {
       labels: [
         {
-          point: "red-derailment-start",
-          text: "Derailment",
+          point: 'red-derailment-start',
+          text: 'Derailment',
         },
         {
-          point: "red-derailment-end",
-          text: "Signals restored",
+          point: 'red-derailment-end',
+          text: 'Signals restored',
         },
         {
-          point: "orange-derailment-start",
-          text: "Derailment",
+          point: 'orange-derailment-start',
+          text: 'Derailment',
         },
         {
-          point: "orange-derailment-end",
-          text: "Tracks restored",
+          point: 'orange-derailment-end',
+          text: 'Tracks restored',
         },
       ],
     },

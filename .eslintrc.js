@@ -24,14 +24,15 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: 'module',
   },
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier'],
+  plugins: ['react', 'react-hooks', '@typescript-eslint', 'import', 'prettier'],
   rules: {
-    'prettier/prettier': 'off', // TODO: Change to Warn
+    'prettier/prettier': 'warn',
     'react/prop-types': 'off', // TODO: Turn on or move to TS
     'react/no-unescaped-entities': 'off',
     'react/react-in-jsx-scope': 'off',
     '@typescript-eslint/no-explicit-any': 'off', // TODO: After full TS migration, change to warn or error
     '@typescript-eslint/ban-ts-comment': 'warn',
+    'import/no-default-export': 'warn',
   },
   settings: {
     react: {

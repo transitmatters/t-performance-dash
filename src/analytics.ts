@@ -1,7 +1,9 @@
 import { PRODUCTION } from './constants';
 
 declare global {
-  interface Window { goatcounter: any; }
+  interface Window {
+    goatcounter: any;
+  }
 }
 
 export function goatcount() {
