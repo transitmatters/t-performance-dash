@@ -26,7 +26,7 @@ module.exports = {
   },
   plugins: ['react', 'react-hooks', '@typescript-eslint', 'import', 'prettier'],
   rules: {
-    'prettier/prettier': 'warn',
+    'prettier/prettier': 'off', // TODO: Change to Warn
     'react/prop-types': 'off', // TODO: Turn on or move to TS
     'react/no-unescaped-entities': 'off',
     'react/react-in-jsx-scope': 'off',
