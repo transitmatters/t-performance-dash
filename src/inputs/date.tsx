@@ -1,5 +1,5 @@
 import React from 'react';
-import Flatpickr from "react-flatpickr";
+import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/light.css';
 
 const ua = window.navigator.userAgent;
@@ -7,7 +7,7 @@ const isMobile = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.tes
 const useFlatPickr = !isMobile;
 
 interface DateInputProps {
-  options: { maxDate: string, minDate: string };
+  options: { maxDate: string; minDate: string };
   value: string;
   placeholder: string;
   onChange: (value: any) => void;
@@ -15,13 +15,13 @@ interface DateInputProps {
 
 const RegularDateInput: React.FC<DateInputProps> = ({ options, value, placeholder, onChange }) => {
   let maxDate = options.maxDate;
-  if (maxDate === "today") {
+  if (maxDate === 'today') {
     const iso_date = new Date();
     const offset = iso_date.getTimezoneOffset();
-    const local_date = new Date(iso_date.valueOf() - (offset * 60 * 1000));
-    maxDate = local_date.toISOString().split("T")[0];
+    const local_date = new Date(iso_date.valueOf() - offset * 60 * 1000);
+    maxDate = local_date.toISOString().split('T')[0];
   }
-  return(
+  return (
     <input
       type="date"
       value={value}
@@ -30,27 +30,34 @@ const RegularDateInput: React.FC<DateInputProps> = ({ options, value, placeholde
       min={options.minDate}
       max={maxDate}
     />
-  )
-}
+  );
+};
 
-const FlatpickrDateSelect: React.FC<DateInputProps> = ({ value, placeholder, onChange, options }) => {
-    return <Flatpickr
-        key={options.maxDate}
-        value={value}
-        placeholder={placeholder}
-        options={{ enableTime: false, ...options }}
-        onChange={(dates, currentDateString) => {
-          onChange(currentDateString);
-        }}
-      />
-}
+const FlatpickrDateSelect: React.FC<DateInputProps> = ({
+  value,
+  placeholder,
+  onChange,
+  options,
+}) => {
+  return (
+    <Flatpickr
+      key={options.maxDate}
+      value={value}
+      placeholder={placeholder}
+      options={{ enableTime: false, ...options }}
+      onChange={(dates, currentDateString) => {
+        onChange(currentDateString);
+      }}
+    />
+  );
+};
 
 const DatePicker: React.FC<DateInputProps> = (props) => {
   if (useFlatPickr) {
-    return(<FlatpickrDateSelect {...props} />);
+    return <FlatpickrDateSelect {...props} />;
   } else {
-    return(<RegularDateInput {...props} />);
+    return <RegularDateInput {...props} />;
   }
-}
+};
 
 export default DatePicker;
