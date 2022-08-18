@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import stations_json from './stations.json' assert { type: 'json' };
+import stations_json from './stations.json';
 
 export const PRODUCTION = 'dashboard.transitmatters.org';
 const FRONTEND_TO_BACKEND_MAP = new Map([
