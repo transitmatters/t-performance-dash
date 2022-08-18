@@ -74,9 +74,9 @@ export const AlertBar: React.FC<AlertBarProps> = ({ alerts, today, isLoading, is
       const width = ((alert_end - alert_start) / duration) * 100;
 
       const left_pos = ((alert_start - start.getTime()) / duration) * 100;
-      const tooltip = `${new Date(alert.valid_from).toLocaleTimeString('en-US')} - ${new Date(
-        alert.valid_to
-      ).toLocaleTimeString('en-US')}\n${alert.text}`;
+      const tooltip =
+        `${new Date(alert.valid_from).toLocaleTimeString('en-US')}` +
+        ` - ${new Date(alert.valid_to).toLocaleTimeString('en-US')}\n${alert.text}`;
 
       boxes.push(
         <BoxSection title={tooltip} border={true} width={width} left={left_pos} key={idx} />
