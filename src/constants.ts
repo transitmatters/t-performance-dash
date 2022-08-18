@@ -240,10 +240,20 @@ export const stations = {
         },
       },
       {
+        stop_name: 'Wollaston',
+        branches: ['B'],
+        station: 'place-wlsta',
+        order: 203,
+        stops: {
+          '0': ['70100'],
+          '1': ['70099'],
+        },
+      },
+      {
         stop_name: 'Quincy Center',
         branches: ['B'],
         station: 'place-qnctr',
-        order: 203,
+        order: 204,
         stops: {
           '0': ['70102'],
           '1': ['70101'],
@@ -253,7 +263,7 @@ export const stations = {
         stop_name: 'Quincy Adams',
         branches: ['B'],
         station: 'place-qamnl',
-        order: 204,
+        order: 205,
         stops: {
           '0': ['70104'],
           '1': ['70103'],
@@ -263,7 +273,7 @@ export const stations = {
         stop_name: 'Braintree',
         branches: ['B'],
         station: 'place-brntn',
-        order: 205,
+        order: 206,
         stops: {
           '0': ['70105'],
           '1': ['70105'],

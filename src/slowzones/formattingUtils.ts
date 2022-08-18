@@ -131,7 +131,8 @@ export const generateXrangeSeries = (data: any, startDate: Moment, direciton: Di
       }),
       dataLabels: {
         enabled: true,
-        formatter: () => {
+        // @ts-expect-error appears this needs a function
+        formatter: function () {
           // @ts-expect-error appears that this is always undefined
           return this.point.custom.isDuringDerailment
             ? // @ts-expect-error appears that this is always undefined
@@ -218,9 +219,8 @@ export const generateXrangeOptions = (
   },
   tooltip: {
     formatter: function (this: any) {
-      return `<div><span style="font-size: 10px">${moment(this.point.custom.startDate)
-        .utc()
-        .format('MMMM Do YYYY')} - ${moment(this.point.x2)
+      return `<div><span style="font-size: 10px">
+      ${moment(this.point.custom.startDate).utc().format('MMMM Do YYYY')} - ${moment(this.point.x2)
         .utc()
         .format('MMMM Do YYYY')}</span><br/> <span style="color:${this.point.color}">●</span> ${
         this.point.series.name
