@@ -32,7 +32,7 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     '@typescript-eslint/no-explicit-any': 'off', // TODO: After full TS migration, change to warn or error
     '@typescript-eslint/ban-ts-comment': 'warn',
-    'import/no-default-export': 'warn',
+    'import/no-default-export': 'off',
   },
   settings: {
     react: {
