@@ -20,7 +20,7 @@ interface SlowZoneNavProps {
   params: URLSearchParams;
 }
 
-const SlowZoneNav = ({
+export const SlowZoneNav = ({
   chartView,
   setChartView,
   direction,
@@ -144,5 +144,3 @@ const SlowZoneNav = ({
     </div>
   );
 };
-
-export default SlowZoneNav;

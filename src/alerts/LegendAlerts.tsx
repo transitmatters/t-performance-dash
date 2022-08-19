@@ -9,4 +9,4 @@ export const LegendAlerts: React.FC = () => {
       </p>
     </div>
   );
-}
+};
