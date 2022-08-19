@@ -1,10 +1,10 @@
-import classNames from "classnames";
-import DatePicker from "../inputs/date";
-import { optionsForSelect } from "./SlowZones";
-import { ChartView, Direction } from "./types";
-import { getDateThreeMonthsAgo, trainDateRange } from "../constants";
-import moment, { Moment } from "moment";
-import { useMemo } from "react";
+import classNames from 'classnames';
+import DatePicker from '../inputs/date';
+import { optionsForSelect } from './SlowZones';
+import { ChartView, Direction } from './types';
+import { getDateThreeMonthsAgo, trainDateRange } from '../constants';
+import moment, { Moment } from 'moment';
+import { useMemo } from 'react';
 
 interface SlowZoneNavProps {
   chartView: ChartView;
@@ -20,7 +20,7 @@ interface SlowZoneNavProps {
   params: URLSearchParams;
 }
 
-const SlowZoneNav = ({
+export const SlowZoneNav = ({
   chartView,
   setChartView,
   direction,
@@ -39,16 +39,14 @@ const SlowZoneNav = ({
   const clear = () => {
     const threeMonthsAgo = getDateThreeMonthsAgo();
     setStartDate(threeMonthsAgo);
-    params.set("startDate", threeMonthsAgo.format("YYYY-MM-DD"));
-    const EOD = moment().endOf("day");
-    params.set("endDate", EOD.format("YYYY-MM-DD"));
+    params.set('startDate', threeMonthsAgo.format('YYYY-MM-DD'));
+    const EOD = moment().endOf('day');
+    params.set('endDate', EOD.format('YYYY-MM-DD'));
     setEndDate(EOD);
   };
 
-  const startMoment = useMemo(() => startDate.format("YYYY-MM-DD"), [
-    startDate,
-  ]);
-  const endMoment = useMemo(() => endDate.format("YYYY-MM-DD"), [endDate]);
+  const startMoment = useMemo(() => startDate.format('YYYY-MM-DD'), [startDate]);
+  const endMoment = useMemo(() => endDate.format('YYYY-MM-DD'), [endDate]);
 
   return (
     <div className="station-configuration-wrapper">
@@ -56,10 +54,7 @@ const SlowZoneNav = ({
         <div className="line-toggle">
           <div className="option mode">
             {optionsForSelect().map((opt) => (
-              <div
-                key={opt.value}
-                className={classNames("button-toggle", opt.value)}
-              >
+              <div key={opt.value} className={classNames('button-toggle', opt.value)}>
                 <label>
                   <input
                     type="checkbox"
@@ -76,28 +71,24 @@ const SlowZoneNav = ({
         </div>
         <div className="chart-toggle">
           <div className="option option-mode">
-            <span className="switch-label slowzones-switch-label">
-              Total slow time
-            </span>
+            <span className="switch-label slowzones-switch-label">Total slow time</span>
             <label className="option switch">
               <input
                 type="checkbox"
-                checked={chartView === "xrange"}
+                checked={chartView === 'xrange'}
                 onChange={() => {
-                  if (chartView === "line") {
-                    setChartView("xrange");
-                    params.set("chartView", "xrange");
+                  if (chartView === 'line') {
+                    setChartView('xrange');
+                    params.set('chartView', 'xrange');
                   } else {
-                    setChartView("line");
-                    params.set("chartView", "line");
+                    setChartView('line');
+                    params.set('chartView', 'line');
                   }
                 }}
               />
               <span className="slider"></span>
             </label>
-            <span className="switch-label slowzones-switch-label">
-              Line segments
-            </span>
+            <span className="switch-label slowzones-switch-label">Line segments</span>
           </div>
         </div>
         <div className="direction-toggle">
@@ -105,22 +96,22 @@ const SlowZoneNav = ({
             className="option option-mode"
             style={{
               // Disable the northbound/southbound slider in "total slow time" mode
-              opacity: chartView === "xrange" ? 1.0 : 0.5,
-              pointerEvents: chartView === "xrange" ? "auto" : "none",
+              opacity: chartView === 'xrange' ? 1.0 : 0.5,
+              pointerEvents: chartView === 'xrange' ? 'auto' : 'none',
             }}
           >
             <span className="switch-label">Southbound</span>
             <label className="option switch">
               <input
                 type="checkbox"
-                checked={direction === "northbound"}
+                checked={direction === 'northbound'}
                 onChange={() => {
-                  if (direction === "northbound") {
-                    setDireciton("southbound");
-                    params.set("direction", "southbound");
+                  if (direction === 'northbound') {
+                    setDireciton('southbound');
+                    params.set('direction', 'southbound');
                   } else {
-                    setDireciton("northbound");
-                    params.set("direction", "northbound");
+                    setDireciton('northbound');
+                    params.set('direction', 'northbound');
                   }
                 }}
               />
@@ -154,5 +145,3 @@ const SlowZoneNav = ({
     </div>
   );
 };
-
-export default SlowZoneNav;
