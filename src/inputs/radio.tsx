@@ -9,7 +9,7 @@ interface RadioFormProps {
   className: string;
 }
 
-const RadioForm: React.FC<RadioFormProps> = ({ options, onChange, checked, className }) => {
+export const RadioForm: React.FC<RadioFormProps> = ({ options, onChange, checked, className }) => {
   return (
     <div className={classNames('control', className)}>
       {options.map((opt, index) => (
@@ -26,5 +26,3 @@ const RadioForm: React.FC<RadioFormProps> = ({ options, onChange, checked, class
     </div>
   );
 };
-
-export default RadioForm;

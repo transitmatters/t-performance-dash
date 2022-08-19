@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import DatePicker from '../inputs/date';
+import { DatePicker } from '../inputs/date';
 import { optionsForSelect } from './SlowZones';
 import { ChartView, Direction } from './types';
 import { getDateThreeMonthsAgo, trainDateRange } from '../constants';

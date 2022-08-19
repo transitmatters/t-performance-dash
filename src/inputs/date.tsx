@@ -52,12 +52,10 @@ const FlatpickrDateSelect: React.FC<DateInputProps> = ({
   );
 };
 
-const DatePicker: React.FC<DateInputProps> = (props) => {
+export const DatePicker: React.FC<DateInputProps> = (props) => {
   if (useFlatPickr) {
     return <FlatpickrDateSelect {...props} />;
   } else {
     return <RegularDateInput {...props} />;
   }
 };
-
-export default DatePicker;
