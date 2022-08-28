@@ -1,7 +1,8 @@
 export interface Option {
   value: string;
   label: string;
-  disabled: boolean;
+  disabled?: boolean;
+  titleSuffix?: string;
 }
 
 export interface Options {
