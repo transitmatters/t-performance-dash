@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import DatePicker from '../inputs/date';
+import { DatePicker } from '../inputs/date';
 import { optionsForSelect } from './SlowZones';
 import { ChartView, Direction } from './types';
 import { getDateThreeMonthsAgo, trainDateRange } from '../constants';
@@ -15,8 +15,8 @@ interface SlowZoneNavProps {
   toggleLine: (value: string) => void;
   startDate: Moment;
   endDate: Moment;
-  setStartDate: (startDate: Date | string | Moment) => void;
-  setEndDate: (endDate: Date | string | Moment) => void;
+  setStartDate: (date: Date | string | Moment) => void;
+  setEndDate: (date: Date | string | Moment) => void;
   params: URLSearchParams;
 }
 
@@ -126,7 +126,6 @@ export const SlowZoneNav = ({
             value={startMoment}
             onChange={setStartDate}
             options={{ maxDate: endMoment, minDate: trainDateRange.minDate }}
-            maxDate={endMoment}
             placeholder="Select date..."
           />
 

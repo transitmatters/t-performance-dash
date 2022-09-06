@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import DatePicker from './inputs/date';
-import Select from './inputs/Select';
+import { DatePicker } from './inputs/date';
+import { Select } from './inputs/Select';
 import './inputs/toggle.css';
 
 import { bus_lines, subway_lines, options_station, line_name } from './stations';

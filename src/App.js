@@ -10,7 +10,7 @@ import { findMatch } from './alerts/AlertFilter';
 import { AlertBar } from './alerts/AlertBar';
 import { ProgressBar, progressBarRate } from './ui/ProgressBar';
 import './App.css';
-import Select from './inputs/Select';
+import { Select } from './inputs/Select';
 import { configPresets } from './presets';
 
 const RAPIDTRANSIT_PATH = "/rapidtransit";

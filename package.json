@@ -4,11 +4,9 @@
   "private": true,
   "dependencies": {
     "@tippyjs/react": "^4.0.2",
-    "@types/react": "^17.0.39",
     "chart.js": "^2.9.4",
     "classnames": "^2.2.6",
     "concurrently": "^7.0.0",
-    "flatpickr": "^4.6.9",
     "highcharts": "^9.3.3",
     "highcharts-react-official": "^3.1.0",
     "lodash.merge": "^4.6.2",
@@ -17,12 +15,15 @@
     "react-chartjs-2": "^2.11.1",
     "react-csv": "^2.2.2",
     "react-dom": "^17.0.0",
+    "react-flatpickr": "^3.10.13",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^5.0.0",
     "react-select": "^4.0.0",
     "typescript": "^4.5.5"
   },
   "devDependencies": {
+    "@types/react": "^17.0.39",
+    "@types/react-flatpickr": "^3.8.7",
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",
