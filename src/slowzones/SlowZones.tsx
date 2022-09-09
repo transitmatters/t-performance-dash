@@ -1,21 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
-import { ChartView, Direction, SlowZone } from "./types";
-import { Link, useHistory, useLocation } from "react-router-dom";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
-import xrange from "highcharts/modules/xrange";
-import exporting from "highcharts/modules/exporting";
-import annotations from "highcharts/modules/annotations";
-import {
-  formatSlowZones,
-  generateLineOptions,
-  generateXrangeOptions,
-} from "./formattingUtils";
-import { goatcount } from "../analytics";
-import { getDateThreeMonthsAgo } from "../constants";
-import SlowZoneNav from "./SlowZoneNav";
-import { line_name, subway_lines } from "../stations";
-import moment from "moment";
+import { useEffect, useMemo, useState } from 'react';
+import { ChartView, Direction, SlowZone } from './types';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import xrange from 'highcharts/modules/xrange';
+import exporting from 'highcharts/modules/exporting';
+import annotations from 'highcharts/modules/annotations';
+import { formatSlowZones, generateLineOptions, generateXrangeOptions } from './formattingUtils';
+import { goatcount } from '../analytics';
+import { getDateThreeMonthsAgo } from '../constants';
+import { SlowZoneNav } from './SlowZoneNav';
+import { line_name, subway_lines } from '../stations';
+import moment from 'moment';
 
 xrange(Highcharts);
 exporting(Highcharts);
@@ -27,7 +23,7 @@ export const optionsForSelect = () => {
     return {
       value: line,
       label: line_name(line),
-      disabled: line_name(line) === "Green Line",
+      disabled: line_name(line) === 'Green Line',
     };
   });
 };
@@ -39,37 +35,35 @@ function useQuery() {
 }
 
 export const SlowZones = () => {
-  document.title = "Data Dashboard - Slow zones";
+  document.title = 'Data Dashboard - Slow zones';
   const params = useQuery();
   const history = useHistory();
   const [options, setOptions] = useState<Highcharts.Options>();
   const [chartView, setChartView] = useState<ChartView>(
-    (params.get("chartView") as ChartView) || "line"
+    (params.get('chartView') as ChartView) || 'line'
   );
   const [direction, setDirection] = useState<Direction>(
-    (params.get("direction") as Direction) || "southbound"
+    (params.get('direction') as Direction) || 'southbound'
   );
   const [selectedLines, setSelectedLines] = useState<any[]>(
-    params.get("selectedLines")?.split(",") || ["Red", "Orange", "Blue"]
+    params.get('selectedLines')?.split(',') || ['Red', 'Orange', 'Blue']
   );
   const [totalDelays, setTotalDelays] = useState<any>();
   const [allSlow, setAllSlow] = useState<any>();
   const [startDate, setStartDate] = useState(() => {
-    if (params.get("startDate")) {
-      return moment(params.get("startDate"));
+    if (params.get('startDate')) {
+      return moment(params.get('startDate'));
     } else return getDateThreeMonthsAgo();
   });
   const [endDate, setEndDate] = useState(() => {
-    if (params.get("endDate")) {
-      return moment(params.get("endDate"));
+    if (params.get('endDate')) {
+      return moment(params.get('endDate'));
     } else return moment();
   });
 
   const setTotalDelaysOptions = (data: any) => {
     const filteredData = data.filter((d: any) => {
-      return moment(d.date)
-        .add(5, "hours")
-        .isBetween(startDate, endDate, undefined, "[]");
+      return moment(d.date).add(5, 'hours').isBetween(startDate, endDate, undefined, '[]');
     });
     const options = generateLineOptions(filteredData, selectedLines, startDate);
     setOptions(options);
@@ -79,8 +73,8 @@ export const SlowZones = () => {
     const formattedData = formatSlowZones(data);
     const filteredData = formattedData.filter(
       (d: SlowZone) =>
-        (d.start.isBetween(startDate, endDate, undefined, "[]") ||
-          d.end.isBetween(startDate, endDate, undefined, "[]") ||
+        (d.start.isBetween(startDate, endDate, undefined, '[]') ||
+          d.end.isBetween(startDate, endDate, undefined, '[]') ||
           (d.start.isBefore(startDate) && d.end.isAfter(endDate))) &&
         selectedLines.includes(d.color) &&
         d.direction === direction
@@ -95,15 +89,12 @@ export const SlowZones = () => {
 
     goatcount();
 
-    if (chartView === "line") {
+    if (chartView === 'line') {
       if (totalDelays) {
         // We only want to fetch each dataset once
         setTotalDelaysOptions(totalDelays);
       } else {
-        const url = new URL(
-          `/static/slowzones/delay_totals.json`,
-          window.location.origin
-        );
+        const url = new URL(`/static/slowzones/delay_totals.json`, window.location.origin);
         fetch(url.toString())
           .then((resp) => resp.json())
           .then((data) => {
@@ -115,10 +106,7 @@ export const SlowZones = () => {
       if (allSlow) {
         setAllSlowOptions(allSlow);
       } else {
-        const url = new URL(
-          `/static/slowzones/all_slow.json`,
-          window.location.origin
-        );
+        const url = new URL(`/static/slowzones/all_slow.json`, window.location.origin);
         fetch(url.toString())
           .then((resp) => resp.json())
           .then((data) => {
@@ -134,11 +122,11 @@ export const SlowZones = () => {
     if (selectedLines.includes(line)) {
       const filteredLines = selectedLines.filter((value) => value !== line);
       setSelectedLines(filteredLines);
-      params.set("selectedLines", filteredLines.join(","));
+      params.set('selectedLines', filteredLines.join(','));
     } else {
       const lines = [...selectedLines, line];
       setSelectedLines(lines);
-      params.set("selectedLines", lines.join(","));
+      params.set('selectedLines', lines.join(','));
     }
   };
 
@@ -155,30 +143,28 @@ export const SlowZones = () => {
         endDate={endDate}
         setStartDate={(date: any) => {
           setStartDate(moment(date));
-          params.set("startDate", date);
+          params.set('startDate', date);
         }}
         setEndDate={(date: any) => {
           setEndDate(moment(date));
-          params.set("endDate", date);
+          params.set('endDate', date);
         }}
         params={params}
       />
       {options && (
         <HighchartsReact
           containerProps={{
-            style: { "min-height": "83vh", paddingTop: "1em" },
+            style: { 'min-height': '83vh', paddingTop: '1em' },
           }}
           options={options}
           highcharts={Highcharts}
           immutable={true}
         />
       )}
-      {chartView === "xrange" && (
+      {chartView === 'xrange' && (
         <div className="derailment-footer">
           ⚠️
-          <span className="derailment-footer-text">
-            = Affected by a derailment
-          </span>
+          <span className="derailment-footer-text">= Affected by a derailment</span>
         </div>
       )}
 
@@ -189,9 +175,9 @@ export const SlowZones = () => {
           </a>
           <div className="accordion-text">
             <p>
-              This is a tool to help find and track slow zones. That is, areas
-              where trains have lower-than-usual speeds due to track conditions,
-              signal issues, or other infrastructure problems.
+              This is a tool to help find and track slow zones. That is, areas where trains have
+              lower-than-usual speeds due to track conditions, signal issues, or other
+              infrastructure problems.
             </p>
           </div>
         </li>
@@ -201,12 +187,11 @@ export const SlowZones = () => {
           </a>
           <div className="accordion-text">
             <p>
-              We look at the daily median travel time + dwell time for each
-              segment along a route. Whenever that trip time is at least 10%
-              slower than the baseline for 3 or more days in a row, it gets
-              flagged as a slow zone. Currently, our baseline is the median
-              value in our data, which goes back to 2016. It’s not a perfect
-              system, but various algorithmic improvements are in the works.
+              We look at the daily median travel time + dwell time for each segment along a route.
+              Whenever that trip time is at least 10% slower than the baseline for 3 or more days in
+              a row, it gets flagged as a slow zone. Currently, our baseline is the median value in
+              our data, which goes back to 2016. It’s not a perfect system, but various algorithmic
+              improvements are in the works.
             </p>
           </div>
         </li>
@@ -216,10 +201,9 @@ export const SlowZones = () => {
           </a>
           <div className="accordion-text">
             <p>
-              The line graph sums all the slow zone delays by color. In other
-              words, it shows the amount of delay time due to slow zones on
-              one round trip of each route. The numbers are approximate due to
-              averaging.
+              The line graph sums all the slow zone delays by color. In other words, it shows the
+              amount of delay time due to slow zones on one round trip of each route. The numbers
+              are approximate due to averaging.
             </p>
           </div>
         </li>
@@ -229,10 +213,9 @@ export const SlowZones = () => {
           </a>
           <div className="accordion-text">
             <p>
-              ReactJS + HighchartsJS and Highcharts Gantt from 
+              ReactJS + HighchartsJS and Highcharts Gantt from
               <a href="highcharts.com"> Highcharts</a> <br />
-              See our <Link to="/opensource"> Attribution</Link> page for more
-              information.
+              See our <Link to="/opensource"> Attribution</Link> page for more information.
             </p>
           </div>
         </li>
@@ -242,12 +225,11 @@ export const SlowZones = () => {
           </a>
           <div className="accordion-text">
             <p>
-              There’s power in data, but it’s only useful when you can tell a
-              story. Slow zones are a nice story to tell: they tie our
-              observable results to a cause. With so much data available, it can
-              be difficult to find the interesting bits. So we’ve built this
-              tool to help us locate and track this type of issue (slow zones),
-              and monitor the severity over time.
+              There’s power in data, but it’s only useful when you can tell a story. Slow zones are
+              a nice story to tell: they tie our observable results to a cause. With so much data
+              available, it can be difficult to find the interesting bits. So we’ve built this tool
+              to help us locate and track this type of issue (slow zones), and monitor the severity
+              over time.
             </p>
           </div>
         </li>
@@ -257,8 +239,8 @@ export const SlowZones = () => {
           </a>
           <div className="accordion-text">
             <p>
-              Share it. Bring the data to public meetings. Pressure the T to do
-              better, but also give them credit where it’s due.
+              Share it. Bring the data to public meetings. Pressure the T to do better, but also
+              give them credit where it’s due.
             </p>
           </div>
         </li>
@@ -268,9 +250,8 @@ export const SlowZones = () => {
           </a>
           <div className="accordion-text">
             <p>
-              Due to variable traffic, much of the Green Line doesn’t have
-              consistent enough trip times to measure. As for the main trunk and
-              the D line? Coming “soon”.
+              Due to variable traffic, much of the Green Line doesn’t have consistent enough trip
+              times to measure. As for the main trunk and the D line? Coming “soon”.
             </p>
           </div>
         </li>
