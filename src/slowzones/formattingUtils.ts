@@ -332,6 +332,7 @@ export const generateLineOptions = (
         fontSize: textSize,
       },
     },
+    min: 0,
   },
   series: groupByLineDailyTotals(data, selectedLines),
   plotOptions: {
