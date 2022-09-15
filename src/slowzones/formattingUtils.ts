@@ -125,7 +125,7 @@ export const generateXrangeSeries = (data: any, startDate: Moment, direciton: Di
           custom: {
             ...d,
             startDate: d.start.utc().valueOf(),
-            isDuringDerailment: isDuringMajorEvent(d.start, d.end, d.color),
+            isDuringMajorEvent: isDuringMajorEvent(d.start, d.end, d.color),
           },
         };
       }),
@@ -134,7 +134,7 @@ export const generateXrangeSeries = (data: any, startDate: Moment, direciton: Di
         // @ts-expect-error appears this needs a function
         formatter: function () {
           // @ts-expect-error appears that this is always undefined
-          return this.point.custom.isDuringDerailment
+          return this.point.custom.isDuringMajorEvent
             ? // @ts-expect-error appears that this is always undefined
               `${this.point.custom.delay.toFixed(0)} s ⚠️`
             : // @ts-expect-error appears that this is always undefined

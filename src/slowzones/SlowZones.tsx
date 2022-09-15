@@ -163,8 +163,7 @@ export const SlowZones = () => {
       )}
       {chartView === 'xrange' && (
         <div className="event-footer">
-          <span className="event-footer-text">⚠️ = Affected by a derailment</span>
-          <span className="event-footer-text">🚧 = Affected by a shutdown</span>
+          <span className="event-footer-text">⚠️ = Affected by a derailment or shutdown</span>
         </div>
       )}
 
