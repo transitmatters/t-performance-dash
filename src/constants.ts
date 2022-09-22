@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { MbtaMajorEvent } from './slowzones/types';
 
 import stations_json from './stations.json';
 
@@ -45,21 +46,36 @@ export const busDateRange = {
 
 export const stations = stations_json;
 
-export const derailments = {
-  Red: {
-    start: '2019-06-11T00:00:00Z',
-    end: '2019-09-21T00:00:00Z',
-    color: 'Red',
-    title: 'Red line derailment',
-    description:
-      'A red line train derailment at JFK/UMass destroyed important signal infrastructure that took months to repair.',
-  },
-  Orange: {
-    start: '2021-03-16T00:00:00Z',
-    end: '2021-04-16T00:00:00Z',
-    color: 'Orange',
-    title: 'Orange line derailment',
-    description:
-      'An orange line train derailment damaged a switch, requiring track replacement. A speed restriction followed in order to give the new track time to settle.',
-  },
+export const majorEvents: { Red: MbtaMajorEvent[]; Orange: MbtaMajorEvent[] } = {
+  Red: [
+    {
+      start: '2019-06-11T00:00:00Z',
+      end: '2019-09-21T00:00:00Z',
+      color: 'Red',
+      title: 'Red line derailment',
+      description:
+        'A red line train derailment at JFK/UMass destroyed important signal infrastructure that took months to repair.',
+      type: 'derailment',
+    },
+  ],
+  Orange: [
+    {
+      start: '2021-03-16T00:00:00Z',
+      end: '2021-04-16T00:00:00Z',
+      color: 'Orange',
+      title: 'Orange line derailment',
+      description:
+        'An orange line train derailment damaged a switch, requiring track replacement. A speed restriction followed in order to give the new track time to settle.',
+      type: 'derailment',
+    },
+    {
+      start: '2022-08-19T00:00:00Z',
+      end: '2022-09-19T00:00:00Z',
+      color: 'Orange',
+      title: 'Orange line shutdown',
+      description:
+        'The orange line was shut down for 30 days to complete deferred maintenance',
+      type: 'shutdown',
+    },
+  ],
 };
