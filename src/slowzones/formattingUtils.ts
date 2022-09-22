@@ -1,7 +1,7 @@
 import moment, { Moment } from 'moment';
-import { colorsForLine, derailments } from '../constants';
+import { colorsForLine, majorEvents } from '../constants';
 import { lookup_station_by_id } from '../stations';
-import { Direction, SlowZone } from './types';
+import { Day, Direction, SlowZone } from './types';
 
 const ua = window.navigator.userAgent;
 const isMobile = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(ua);
@@ -9,19 +9,19 @@ const textSize = isMobile ? '11' : 14;
 
 const DAY_MS = 1000 * 60 * 60 * 24;
 
-const isDuringDerailment = (start: Moment, end: Moment, color: string) => {
+const isDuringMajorEvent = (start: Moment, end: Moment, color: string) => {
   if (color === 'Blue') return false;
 
   if (color === 'Red') {
     return (
-      start.isBetween(moment(derailments.Red.start), moment(derailments.Red.end)) ||
-      end.isBetween(moment(derailments.Red.start), moment(derailments.Red.end))
+      majorEvents.Red.some(event => start.isBetween(moment(event.start), moment(event.end))) ||
+      majorEvents.Red.some(event => end.isBetween(moment(event.start), moment(event.end)))
     );
   }
   if (color === 'Orange') {
     return (
-      start.isBetween(moment(derailments.Orange.start), moment(derailments.Orange.end)) ||
-      end.isBetween(moment(derailments.Orange.start), moment(derailments.Orange.end))
+      majorEvents.Orange.some(event => start.isBetween(moment(event.start), moment(event.end))) ||
+      majorEvents.Orange.some(event => end.isBetween(moment(event.start), moment(event.end)))
     );
   }
 };
@@ -125,7 +125,7 @@ export const generateXrangeSeries = (data: any, startDate: Moment, direciton: Di
           custom: {
             ...d,
             startDate: d.start.utc().valueOf(),
-            isDuringDerailment: isDuringDerailment(d.start, d.end, d.color),
+            isDuringMajorEvent: isDuringMajorEvent(d.start, d.end, d.color),
           },
         };
       }),
@@ -134,7 +134,7 @@ export const generateXrangeSeries = (data: any, startDate: Moment, direciton: Di
         // @ts-expect-error appears this needs a function
         formatter: function () {
           // @ts-expect-error appears that this is always undefined
-          return this.point.custom.isDuringDerailment
+          return this.point.custom.isDuringMajorEvent
             ? // @ts-expect-error appears that this is always undefined
               `${this.point.custom.delay.toFixed(0)} s ⚠️`
             : // @ts-expect-error appears that this is always undefined
@@ -168,6 +168,14 @@ export const generateXrangeOptions = (
         {
           point: 'orange-derailment-end',
           text: 'Tracks restored',
+        },
+        {
+          point: 'orange-shutdown-start',
+          text: 'Shutdown',
+        },
+        {
+          point: 'orange-shutdown-end',
+          text: 'Service restored',
         },
       ],
     },
@@ -249,27 +257,34 @@ export const generateXrangeOptions = (
 export const groupByLineDailyTotals = (data: any, selectedLines: string[]) => {
   const RED_LINE = data.map((day: any) => {
     const y = Number((day.Red / 60).toFixed(2));
-    if (day.date === derailments.Red.start) {
+    if (majorEvents.Red.some(event => day.date === event.start && event.type === 'derailment')) {
       return { id: 'red-derailment-start', y };
     }
-    if (day.date === derailments.Red.end) {
+    if (majorEvents.Red.some(event => day.date === event.end && event.type === 'derailment')) {
       return { id: 'red-derailment-end', y };
     } else {
       return y;
     }
   });
-  const BLUE_LINE = data.map((day: any) => Number((day.Blue / 60).toFixed(2)));
-  const ORANGE_LINE = data.map((day: any) => {
+  const BLUE_LINE = data.map((day: Day) => Number((day.Blue / 60).toFixed(2)));
+  const ORANGE_LINE = data.map((day: Day) => {
     const y = Number((day.Orange / 60).toFixed(2));
-    if (day.date === derailments.Orange.start) {
+    if (majorEvents.Orange.some(event => day.date === event.start && event.type === 'derailment')) {
       return { id: 'orange-derailment-start', y };
     }
-    if (day.date === derailments.Orange.end) {
+    if (majorEvents.Orange.some(event => day.date === event.end && event.type === 'derailment')) {
       return { id: 'orange-derailment-end', y };
+    } 
+    if (majorEvents.Orange.some(event => day.date === event.start && event.type === 'shutdown')) {
+      return { id: 'orange-shutdown-start', y };
+    }
+    if (majorEvents.Orange.some(event => day.date === event.end && event.type === 'shutdown')) {
+      return { id: 'orange-shutdown-end', y };
     } else {
       return y;
     }
   });
+  console.log(ORANGE_LINE)
   return [
     selectedLines.includes('Red') && {
       name: 'Red',
@@ -372,6 +387,14 @@ export const generateLineOptions = (
         {
           point: 'orange-derailment-end',
           text: 'Tracks restored',
+        },
+        {
+          point: 'orange-shutdown-start',
+          text: 'Shutdown',
+        },
+        {
+          point: 'orange-shutdown-end',
+          text: 'Service restored',
         },
       ],
     },
