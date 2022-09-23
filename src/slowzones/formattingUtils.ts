@@ -316,7 +316,7 @@ export const generateLineOptions = (
   },
   credits: { enabled: false },
   title: {
-    text: `Time spent in slow zones`,
+    text: `Total delay from slow zones over time`,
     style: {
       fontSize: '24px',
     },
@@ -337,7 +337,7 @@ export const generateLineOptions = (
   },
   yAxis: {
     title: {
-      text: 'Slow time per day (minutes)',
+      text: 'Amount of delay (minutes)',
       style: {
         fontSize: textSize,
       },

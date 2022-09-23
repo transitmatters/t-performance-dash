@@ -187,10 +187,10 @@ export const SlowZones = () => {
           <div className="accordion-text">
             <p>
               We look at the daily median travel time + dwell time for each segment along a route.
-              Whenever that trip time is at least 10% slower than the baseline for 3 or more days in
+              Whenever that trip time is at least 10% slower than the baseline for 4 or more days in
               a row, it gets flagged as a slow zone. Currently, our baseline is the median value in
-              our data, which goes back to 2016. It’s not a perfect system, but various algorithmic
-              improvements are in the works.
+              our data, which goes back to 2016. It’s not a perfect system: you may find some
+              anomalies, but we think it works pretty well.
             </p>
           </div>
         </li>
