@@ -9,21 +9,27 @@ const textSize = isMobile ? '11' : 14;
 
 const DAY_MS = 1000 * 60 * 60 * 24;
 
-const isDuringMajorEvent = (start: Moment, end: Moment, color: string) => {
-  if (color === 'Blue') return false;
+const getFootnoteIcon = (start: Moment, end: Moment, color: string) => {
+  if (color === 'Blue') return '';
 
   if (color === 'Red') {
-    return (
-      majorEvents.Red.some(event => start.isBetween(moment(event.start), moment(event.end), undefined, '[]')) ||
-      majorEvents.Red.some(event => end.isBetween(moment(event.start), moment(event.end), undefined, '[]'))
-    );
+    if (majorEvents.Red.some(event => start.isBetween(moment(event.start), moment(event.end), undefined, '[]'))) {
+      return ` ⚠️`;
+    } else {
+      return '';
+    };
   }
   if (color === 'Orange') {
-    return (
-      majorEvents.Orange.some(event => start.isBetween(moment(event.start), moment(event.end), undefined, '[]')) ||
-      majorEvents.Orange.some(event => end.isBetween(moment(event.start), moment(event.end), undefined, '[]'))
-    );
-  }
+    if (majorEvents.Orange.some(event => start.isBetween(moment(event.start), moment(event.end), undefined, '[]'))) {
+      return ` ⚠️`;
+    } else if (majorEvents.Orange.filter(event => event.type === 'shutdown').some(event => 
+        moment(event.start).isBetween(start, end))
+    ) {
+      return ` 🚧`
+    } else {
+      return '';
+    }
+  };
 };
 
 const capitalize = (s: string) => {
@@ -125,7 +131,7 @@ export const generateXrangeSeries = (data: any, startDate: Moment, direciton: Di
           custom: {
             ...d,
             startDate: d.start.utc().valueOf(),
-            isDuringMajorEvent: isDuringMajorEvent(d.start, d.end, d.color),
+            tooltipFootnote: getFootnoteIcon(d.start, d.end, d.color),
           },
         };
       }),
@@ -134,11 +140,7 @@ export const generateXrangeSeries = (data: any, startDate: Moment, direciton: Di
         // @ts-expect-error appears this needs a function
         formatter: function () {
           // @ts-expect-error appears that this is always undefined
-          return this.point.custom.isDuringMajorEvent
-            ? // @ts-expect-error appears that this is always undefined
-              `${this.point.custom.delay.toFixed(0)} s ⚠️`
-            : // @ts-expect-error appears that this is always undefined
-              `${this.point.custom.delay.toFixed(0)} s`;
+          return `${this.point.custom.delay.toFixed(0)} s${this.point.custom.tooltipFootnote}`;
         },
       },
     };
@@ -296,7 +298,6 @@ export const groupByLineDailyTotals = (data: any, selectedLines: string[]) => {
       return y;
     }
   });
-  console.log(ORANGE_LINE)
   return [
     selectedLines.includes('Red') && {
       name: 'Red',
