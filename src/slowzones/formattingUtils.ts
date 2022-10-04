@@ -14,14 +14,14 @@ const isDuringMajorEvent = (start: Moment, end: Moment, color: string) => {
 
   if (color === 'Red') {
     return (
-      majorEvents.Red.some(event => start.isBetween(moment(event.start), moment(event.end))) ||
-      majorEvents.Red.some(event => end.isBetween(moment(event.start), moment(event.end)))
+      majorEvents.Red.some(event => start.isBetween(moment(event.start), moment(event.end), undefined, '[]')) ||
+      majorEvents.Red.some(event => end.isBetween(moment(event.start), moment(event.end), undefined, '[]'))
     );
   }
   if (color === 'Orange') {
     return (
-      majorEvents.Orange.some(event => start.isBetween(moment(event.start), moment(event.end))) ||
-      majorEvents.Orange.some(event => end.isBetween(moment(event.start), moment(event.end)))
+      majorEvents.Orange.some(event => start.isBetween(moment(event.start), moment(event.end), undefined, '[]')) ||
+      majorEvents.Orange.some(event => end.isBetween(moment(event.start), moment(event.end), undefined, '[]'))
     );
   }
 };
