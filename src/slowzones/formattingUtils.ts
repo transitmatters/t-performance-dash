@@ -334,6 +334,10 @@ export const generateLineOptions = (
         fontSize: textSize,
       },
     },
+    dateTimeLabelFormats: {
+      day: '%e %b',
+      week: '%e %b',
+    },
   },
   yAxis: {
     title: {
@@ -359,7 +363,7 @@ export const generateLineOptions = (
   },
   tooltip: {
     formatter: function (this: any) {
-      return `<div><span style="font-size: 10px">${moment(this.point.x).format(
+      return `<div><span style="font-size: 10px">${moment.utc(this.point.x).format(
         'MMMM Do YYYY'
       )}</span><br/> <span style="color:${this.point.color}">●</span> ${
         this.point.series.name

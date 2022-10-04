@@ -52,18 +52,18 @@ export const SlowZones = () => {
   const [allSlow, setAllSlow] = useState<any>();
   const [startDate, setStartDate] = useState(() => {
     if (params.get('startDate')) {
-      return moment(params.get('startDate'));
+      return moment.utc(params.get('startDate'));
     } else return getDateThreeMonthsAgo();
   });
   const [endDate, setEndDate] = useState(() => {
     if (params.get('endDate')) {
-      return moment(params.get('endDate'));
+      return moment.utc(params.get('endDate'));
     } else return moment();
   });
 
   const setTotalDelaysOptions = (data: any) => {
     const filteredData = data.filter((d: any) => {
-      return moment(d.date).add(5, 'hours').isBetween(startDate, endDate, undefined, '[]');
+      return moment.utc(d.date).isBetween(startDate, endDate, undefined, '[]');
     });
     const options = generateLineOptions(filteredData, selectedLines, startDate);
     setOptions(options);
@@ -142,11 +142,11 @@ export const SlowZones = () => {
         startDate={startDate}
         endDate={endDate}
         setStartDate={(date: any) => {
-          setStartDate(moment(date));
+          setStartDate(moment.utc(date));
           params.set('startDate', date);
         }}
         setEndDate={(date: any) => {
-          setEndDate(moment(date));
+          setEndDate(moment.utc(date));
           params.set('endDate', date);
         }}
         params={params}
