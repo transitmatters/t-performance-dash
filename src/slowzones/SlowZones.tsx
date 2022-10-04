@@ -65,7 +65,7 @@ export const SlowZones = () => {
     const filteredData = data.filter((d: any) => {
       return moment.utc(d.date).isBetween(startDate, endDate, undefined, '[]');
     });
-    const options = generateLineOptions(filteredData, selectedLines, startDate);
+    const options = generateLineOptions(filteredData, selectedLines, startDate, endDate);
     setOptions(options);
   };
 
@@ -80,7 +80,7 @@ export const SlowZones = () => {
         d.direction === direction
     );
 
-    const options = generateXrangeOptions(filteredData, direction, startDate);
+    const options = generateXrangeOptions(filteredData, direction, startDate, endDate);
     setOptions(options);
   };
 

@@ -148,7 +148,8 @@ export const generateXrangeSeries = (data: any, startDate: Moment, direciton: Di
 export const generateXrangeOptions = (
   data: SlowZone[],
   direction: Direction,
-  startDate: Moment
+  startDate: Moment,
+  endDate: Moment
 ): any => ({
   annotations: [
     {
@@ -205,6 +206,17 @@ export const generateXrangeOptions = (
         fontSize: textSize,
       },
     },
+    min: startDate.valueOf(),
+    max: endDate.valueOf(),
+    dateTimeLabelFormats: {
+      day: '%e %b',
+      week: '%e %b',
+    },
+    plotLines: [{
+      width: 2,
+      zIndex: 5,
+      value: moment().startOf('day').subtract(28, 'hours').valueOf(),
+    }],
   },
   legend: {
     enabled: false,
@@ -307,7 +319,8 @@ export const groupByLineDailyTotals = (data: any, selectedLines: string[]) => {
 export const generateLineOptions = (
   data: SlowZone[],
   selectedLines: string[],
-  startDate: Moment
+  startDate: Moment,
+  endDate: Moment,
 ): any => ({
   exporting: {
     csv: {
@@ -329,6 +342,8 @@ export const generateLineOptions = (
         fontSize: textSize,
       },
     },
+    min: startDate.valueOf(),
+    max: endDate.valueOf(),
     labels: {
       style: {
         fontSize: textSize,
