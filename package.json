@@ -7,7 +7,7 @@
     "chart.js": "^2.9.4",
     "classnames": "^2.2.6",
     "concurrently": "^7.0.0",
-    "highcharts": "^9.3.3",
+    "highcharts": "^10.2.1",
     "highcharts-react-official": "^3.1.0",
     "lodash.merge": "^4.6.2",
     "moment": "^2.29.4",

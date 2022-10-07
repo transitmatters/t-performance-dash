@@ -1,3 +1,4 @@
+import { SeriesOptionsType } from 'highcharts';
 import moment, { Moment } from 'moment';
 import { colorsForLine, majorEvents } from '../constants';
 import { lookup_station_by_id } from '../stations';
@@ -5,7 +6,7 @@ import { Day, Direction, SlowZone } from './types';
 
 const ua = window.navigator.userAgent;
 const isMobile = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(ua);
-const textSize = isMobile ? '11' : 14;
+const textSize = isMobile ? '11' : '14';
 
 const DAY_MS = 1000 * 60 * 60 * 24;
 
@@ -124,7 +125,7 @@ export const getRoutes = (data: SlowZone[], direction: Direction) => {
 };
 
 // Xrange options
-export const generateXrangeSeries = (data: any, startDate: Moment, direciton: Direction) => {
+export const generateXrangeSeries = (data: any, startDate: Moment, direciton: Direction): SeriesOptionsType[] => {
   const routes = getRoutes(data, direciton);
   const groupedByLine = groupByLine(data);
   return Object.entries(groupedByLine).map((line) => {
@@ -132,6 +133,7 @@ export const generateXrangeSeries = (data: any, startDate: Moment, direciton: Di
     return {
       name: name,
       color: colorsForLine[line[0]],
+      type: 'xrange',
       data: data.map((d) => {
         return {
           x: d.start.isBefore(startDate) ? startDate.utc().valueOf() : d.start.utc().valueOf(),
@@ -146,7 +148,6 @@ export const generateXrangeSeries = (data: any, startDate: Moment, direciton: Di
       }),
       dataLabels: {
         enabled: true,
-        // @ts-expect-error appears this needs a function
         formatter: function () {
           // @ts-expect-error appears that this is always undefined
           return `${this.point.custom.delay.toFixed(0)} s${this.point.custom.tooltipFootnote}`;
@@ -206,6 +207,7 @@ export const generateXrangeOptions = (
   },
   xAxis: {
     type: 'datetime',
+    top: 40,
     title: {
       text: 'Date',
       style: {
@@ -232,18 +234,17 @@ export const generateXrangeOptions = (
       {
         color: colorsForLine.Orange,
         width: 2,
-        dashStyle: 'dot',
+        dashStyle: 'Dot',
         zIndex: 3,
         value: moment.utc(majorEvents.OrangeShutdown.start).valueOf(),
-        label: 'Orange line shutdown begins'
+        label: { text: 'Orange line shutdown', align: 'left', rotation: 0 }
       },
       {
         color: colorsForLine.Orange,
         width: 2,
-        dashStyle: 'dot',
+        dashStyle: 'Dot',
         zIndex: 3,
         value: moment.utc(majorEvents.OrangeShutdown.end).valueOf(),
-        label: 'Orange line shutdown ends'
       }
     ],
   },
