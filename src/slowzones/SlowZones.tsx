@@ -6,7 +6,7 @@ import HighchartsReact from 'highcharts-react-official';
 import xrange from 'highcharts/modules/xrange';
 import exporting from 'highcharts/modules/exporting';
 import annotations from 'highcharts/modules/annotations';
-import { formatSlowZones, generateLineOptions, generateXrangeOptions } from './formattingUtils';
+import { formatSlowZones, generateLineOptions, generateXrangeOptions, EMOJI } from './formattingUtils';
 import { goatcount } from '../analytics';
 import { getDateThreeMonthsAgo } from '../constants';
 import { SlowZoneNav } from './SlowZoneNav';
@@ -163,8 +163,9 @@ export const SlowZones = () => {
       )}
       {chartView === 'xrange' && (
         <div className="event-footer">
-          <span className="event-footer-text">⚠️ = Caused by a derailment or shutdown</span>
-          <span className="event-footer-text">🚧 = To be fixed by shutdown</span>
+          <span className="event-footer-text">{`${EMOJI.derailment} = Affected by a derailment`}</span>
+          <span className="event-footer-text">{`${EMOJI.construction} = To be fixed by shutdown`}</span>
+          <span className="event-footer-text">{`${EMOJI.shutdown} = Began during shutdown`}</span>
         </div>
       )}
 

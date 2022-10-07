@@ -9,26 +9,35 @@ const textSize = isMobile ? '11' : 14;
 
 const DAY_MS = 1000 * 60 * 60 * 24;
 
+export const EMOJI = {
+  'derailment': ` 🚨`,
+  'construction': ` 🚧`,
+  'shutdown': ` ⚠️`,
+}
+
 const getFootnoteIcon = (start: Moment, end: Moment, color: string) => {
   if (color === 'Blue') return '';
 
   if (color === 'Red') {
-    if (majorEvents.Red.some(event => start.isBetween(moment(event.start), moment(event.end), undefined, '[]'))) {
-      return ` ⚠️`;
-    } else {
-      return '';
-    };
+    const event = majorEvents.RedDerailment;
+    if (start.isBetween(moment(event.start), moment(event.end), undefined, '[]')) {
+      return EMOJI.derailment;
+    }
+    return '';
   }
   if (color === 'Orange') {
-    if (majorEvents.Orange.some(event => start.isBetween(moment(event.start), moment(event.end), undefined, '[]'))) {
-      return ` ⚠️`;
-    } else if (majorEvents.Orange.filter(event => event.type === 'shutdown').some(event => 
-        moment(event.start).isBetween(start, end))
-    ) {
-      return ` 🚧`
-    } else {
-      return '';
+    let event = majorEvents.OrangeDerailment;
+    if (start.isBetween(moment(event.start), moment(event.end), undefined, '[]')) {
+      return EMOJI.derailment;
     }
+    event = majorEvents.OrangeShutdown;
+    if (start.isBetween(moment(event.start), moment(event.end), undefined, '[]')) {
+      return EMOJI.shutdown;
+    }
+    if (moment(event.start).isBetween(start, end)) {
+      return EMOJI.construction;
+    }
+    return '';
   };
 };
 
@@ -214,11 +223,29 @@ export const generateXrangeOptions = (
       day: '%e %b',
       week: '%e %b',
     },
-    plotLines: [{
-      width: 2,
-      zIndex: 5,
-      value: moment().startOf('day').subtract(28, 'hours').valueOf(),
-    }],
+    plotLines: [
+      {
+        width: 2,
+        zIndex: 5,
+        value: moment().startOf('day').subtract(28, 'hours').valueOf(),
+      },
+      {
+        color: colorsForLine.Orange,
+        width: 2,
+        dashStyle: 'dot',
+        zIndex: 3,
+        value: moment.utc(majorEvents.OrangeShutdown.start).valueOf(),
+        label: 'Orange line shutdown begins'
+      },
+      {
+        color: colorsForLine.Orange,
+        width: 2,
+        dashStyle: 'dot',
+        zIndex: 3,
+        value: moment.utc(majorEvents.OrangeShutdown.end).valueOf(),
+        label: 'Orange line shutdown ends'
+      }
+    ],
   },
   legend: {
     enabled: false,
@@ -271,10 +298,10 @@ export const generateXrangeOptions = (
 export const groupByLineDailyTotals = (data: any, selectedLines: string[]) => {
   const RED_LINE = data.map((day: any) => {
     const y = Number((day.Red / 60).toFixed(2));
-    if (majorEvents.Red.some(event => day.date === event.start && event.type === 'derailment')) {
+    if (majorEvents.RedDerailment.start === day.date) {
       return { id: 'red-derailment-start', y };
     }
-    if (majorEvents.Red.some(event => day.date === event.end && event.type === 'derailment')) {
+    if (majorEvents.RedDerailment.end === day.date) {
       return { id: 'red-derailment-end', y };
     } else {
       return y;
@@ -283,16 +310,16 @@ export const groupByLineDailyTotals = (data: any, selectedLines: string[]) => {
   const BLUE_LINE = data.map((day: Day) => Number((day.Blue / 60).toFixed(2)));
   const ORANGE_LINE = data.map((day: Day) => {
     const y = Number((day.Orange / 60).toFixed(2));
-    if (majorEvents.Orange.some(event => day.date === event.start && event.type === 'derailment')) {
+    if (majorEvents.OrangeDerailment.start === day.date) {
       return { id: 'orange-derailment-start', y };
     }
-    if (majorEvents.Orange.some(event => day.date === event.end && event.type === 'derailment')) {
+    if (majorEvents.OrangeDerailment.end === day.date){
       return { id: 'orange-derailment-end', y };
     } 
-    if (majorEvents.Orange.some(event => day.date === event.start && event.type === 'shutdown')) {
+    if (majorEvents.OrangeShutdown.start === day.date) {
       return { id: 'orange-shutdown-start', y };
     }
-    if (majorEvents.Orange.some(event => day.date === event.end && event.type === 'shutdown')) {
+    if (majorEvents.OrangeShutdown.end === day.date) {
       return { id: 'orange-shutdown-end', y };
     } else {
       return y;
