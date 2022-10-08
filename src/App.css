@@ -634,7 +634,7 @@ button:disabled,
 }
 
 .event-footer-text {
-  align-self: center;
+  align-self: left;
 }
 
 .accordion > li {

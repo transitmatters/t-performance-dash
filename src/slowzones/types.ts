@@ -33,7 +33,7 @@ export type Direction = 'northbound' | 'southbound';
 
 export type ChartView = 'line' | 'xrange';
 
-export type MBTAEventType = 'derailment' | 'shutdown';
+export type MbtaEventType = 'derailment' | 'shutdown';
 
 export interface MbtaMajorEvent {
   start: string;
@@ -41,5 +41,5 @@ export interface MbtaMajorEvent {
   color: string;
   title: string;
   description: string;
-  type: MBTAEventType;
+  type: MbtaEventType;
 }
