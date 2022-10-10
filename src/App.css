@@ -622,15 +622,19 @@ button:disabled,
   font-size: 14px;
 }
 
-.derailment-footer {
+.event-footer {
   padding-left: 4em;
   font-size: 14px;
   display: flex;
   padding-bottom: 10px;
+  flex-flow: column;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
 }
 
-.derailment-footer-text {
-  align-self: center;
+.event-footer-text {
+  align-self: left;
 }
 
 .accordion > li {

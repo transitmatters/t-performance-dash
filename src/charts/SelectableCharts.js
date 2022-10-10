@@ -1,6 +1,6 @@
 import React from 'react';
 import { AggregateByTime, AggregateByDate } from './AggregateLine';
-import RadioForm from '../inputs/radio';
+import { RadioForm } from '../inputs/radio';
 
 const dayOptions = [
   {value: "weekday", label: "Weekday", titleSuffix: "(Weekday)"},

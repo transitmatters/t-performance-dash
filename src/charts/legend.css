@@ -1,16 +1,15 @@
 .on-time {
-    background-color: #64b96a
+    background-color: #64b96a !important
 }
 
 .twenty-five-percent {
-    background-color: #f5ed00
+    background-color: #f5ed00 !important
 }
 
 .fifty-percent {
-    background-color: #c33149
-
+    background-color: #c33149 !important
 }
 
 .hundred-percent {
-    background-color: #bb5cc1
+    background-color: #bb5cc1 !important
 }
