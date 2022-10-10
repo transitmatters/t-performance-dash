@@ -5,6 +5,7 @@ import App from './App';
 import OpenSource from './OpenSource';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { SlowZones } from './slowzones/SlowZones';
+import { Rankings } from './rankings/Rankings';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -23,6 +24,9 @@ ReactDOM.render(
       </Route>
       <Route exact path="/slowzones">
         <SlowZones />
+      </Route>
+      <Route exact path="/rankings">
+        <Rankings />
       </Route>
     </Switch>
   </BrowserRouter>,
