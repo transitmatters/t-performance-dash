@@ -45,7 +45,6 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
   startDate,
   endDate
 }) => {
-  console.log(data)
   return(
     <div className="download-button" title="Download data as CSV">
       <CSVLink
