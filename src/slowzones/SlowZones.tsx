@@ -34,7 +34,7 @@ function useQuery() {
   return useMemo(() => new URLSearchParams(search), [search]);
 }
 
-export const SlowZones = () => {
+export const SlowZones: React.FC = () => {
   document.title = 'Data Dashboard - Slow zones';
   const params = useQuery();
   const history = useHistory();

@@ -5,11 +5,11 @@ import { Option, Options } from './types';
 interface SelectProps {
   options: Options;
   /** Non-standard value comparator because from/to gets copied by onpopstate */
-  optionComparator: (option: Option) => boolean;
+  optionComparator?: (option: Option) => boolean;
   onChange: (value: string | undefined) => void;
   defaultLabel: string;
   value: string;
-  className: string;
+  className?: string;
 }
 
 export const Select: React.FC<SelectProps> = ({

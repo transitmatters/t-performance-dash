@@ -4,7 +4,7 @@ import { optionsForSelect } from './SlowZones';
 import { ChartView, Direction } from './types';
 import { getDateThreeMonthsAgo, trainDateRange } from '../constants';
 import moment, { Moment } from 'moment';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 interface SlowZoneNavProps {
   chartView: ChartView;
@@ -20,7 +20,7 @@ interface SlowZoneNavProps {
   params: URLSearchParams;
 }
 
-export const SlowZoneNav = ({
+export const SlowZoneNav: React.FC<SlowZoneNavProps> = ({
   chartView,
   setChartView,
   direction,
@@ -32,7 +32,7 @@ export const SlowZoneNav = ({
   setStartDate,
   setEndDate,
   params,
-}: SlowZoneNavProps) => {
+}) => {
   const getIsChecked = (value: string) => {
     return selectedLines.includes(value);
   };
