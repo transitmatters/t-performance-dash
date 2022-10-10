@@ -8,7 +8,7 @@ import drawTitle from './Title';
 import writeError from './error';
 import { DownloadButton } from './download';
 import { prettyDate, yearLabel } from './lineUtils';
-import { AggregatePoint } from './types';
+import { AggregatePoint, Location } from './types';
 
 Chart.Tooltip.positioners.first = (tooltipItems: any, eventPos: any) => {
   let x = eventPos.x;

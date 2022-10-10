@@ -29,9 +29,11 @@ export interface AggregatePoint {
 export interface Location {
   to: string;
   from: string;
-  direction: string;
+  direction: Direction;
   line: string;
 }
+
+type Direction = 'northbound' | 'southbound' | 'eastbound' | 'westbound' | 'inbound' | 'outbound';
 
 export type BenchmarkField = 'benchmark_travel_time_sec' | 'benchmark_headway_time_sec' | null;
 
