@@ -11,6 +11,8 @@ SERVICE_HR_OFFSET = datetime.timedelta(hours=3, minutes=30)
 def train_peak_status(df):
     cal = USFederalHolidayCalendar()
     holidays = cal.holidays(start=df['dep_dt'].min(), end=df['dep_dt'].max())
+    # pandas has a bug where sometimes empty holidays returns an Index and we need DateTimeIndex
+    holidays = pd.to_datetime(holidays)
     df['holiday'] = df['service_date'].isin(holidays.date)
 
     # Peak Hours: non-holiday weekdays 6:30-9am; 3:30-6:30pm

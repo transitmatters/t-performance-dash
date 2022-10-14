@@ -207,7 +207,6 @@ export const generateXrangeOptions = (
   },
   xAxis: {
     type: 'datetime',
-    top: 40,
     title: {
       text: 'Date',
       style: {
@@ -237,7 +236,7 @@ export const generateXrangeOptions = (
         dashStyle: 'Dot',
         zIndex: 3,
         value: moment.utc(majorEvents.OrangeShutdown.start).valueOf(),
-        label: { text: 'Orange line shutdown', align: 'left', rotation: 0 }
+        label: { text: 'Orange line shutdown', align: 'left', rotation: 0, y: -10 }
       },
       {
         color: colorsForLine.Orange,
