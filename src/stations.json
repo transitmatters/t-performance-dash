@@ -543,7 +543,7 @@
 				}
 			}, {
 				"stop_name": "Lechmere",
-				"branches": ["E"],
+				"branches": ["D", "E"],
 				"station": "place-lech",
 				"order": 2,
 				"stops": {
@@ -552,7 +552,7 @@
 				}
 			}, {
 				"stop_name": "Science Park",
-				"branches": ["E"],
+				"branches": ["D", "E"],
 				"station": "place-spmnl",
 				"order": 3,
 				"stops": {
@@ -561,7 +561,7 @@
 				}
 			}, {
 				"stop_name": "North Station",
-				"branches": ["C", "E"],
+				"branches": ["C", "D", "E"],
 				"station": "place-north",
 				"order": 4,
 				"stops": {
@@ -570,7 +570,7 @@
 				}
 			}, {
 				"stop_name": "Haymarket",
-				"branches": ["C", "E"],
+				"branches": ["C", "D", "E"],
 				"station": "place-haecl",
 				"order": 5,
 				"stops": {
@@ -579,7 +579,7 @@
 				}
 			}, {
 				"stop_name": "Government Center",
-				"branches": ["C", "D", "E"],
+				"branches": ["B", "C", "D", "E"],
 				"station": "place-gover",
 				"order": 6,
 				"stops": {
