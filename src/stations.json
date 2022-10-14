@@ -535,6 +535,7 @@
 				"stop_name": "Union Square",
 				"branches": ["E"],
 				"station": "place-unsqu",
+				"disabled": true,
 				"order": 1,
 				"stops": {
 					"0": ["70503"],
@@ -589,7 +590,6 @@
 				"stop_name": "Park Street",
 				"branches": ["B", "C", "D", "E"],
 				"station": "place-pktrm",
-				"disabled": true,
 				"order": 7,
 				"stops": {
 					"0": ["70200"],
@@ -635,7 +635,6 @@
 				"stop_name": "Kenmore",
 				"branches": ["B", "C", "D"],
 				"station": "place-kencl",
-				"disabled": true,
 				"order": 12,
 				"stops": {
 					"0": ["70150", "71150"],
