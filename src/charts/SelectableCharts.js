@@ -1,5 +1,5 @@
 import React from 'react';
-import { AggregateByTime, AggregateByDate } from './AggregateLine';
+import { AggregateByTime, AggregateByDate } from './line';
 import { RadioForm } from '../inputs/radio';
 
 const dayOptions = [
