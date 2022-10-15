@@ -27,7 +27,7 @@ function filename(datasetName, location, bothStops, startDate, endDate) {
   return `${where}_${what}_${when}.csv`;
 }
 
-const DownloadButton = ({
+export const DownloadButton = ({
   datasetName,
   data,
   location,
@@ -46,5 +46,3 @@ const DownloadButton = ({
     </div>
   );
 }
-  
-export { DownloadButton }
