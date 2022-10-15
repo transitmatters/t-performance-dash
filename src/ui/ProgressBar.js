@@ -7,6 +7,7 @@ function progressBarRate(date_start, date_end) {
     return null;
   }
   // Aggregation: fake rate based on how many days
+  // @ts-expect-error Typescript doesn't like subtracting a Date
   const ms = (new Date(date_end) - new Date(date_start));
   const days = ms / (1000*60*60*24);
   const months = days / 30;
