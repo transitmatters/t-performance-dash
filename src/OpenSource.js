@@ -1,4 +1,4 @@
-export default function OpenSource() {
+export function OpenSource() {
   
   
   return (

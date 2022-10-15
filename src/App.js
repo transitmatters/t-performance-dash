@@ -2,7 +2,7 @@ import React from 'react';
 import { goatcount } from './analytics';
 import { APP_DATA_BASE_PATH } from './constants';
 import { SingleDaySet, AggregateSet } from './ChartSets';
-import StationConfiguration from './StationConfiguration';
+import { StationConfiguration } from './StationConfiguration';
 import { Link, withRouter } from 'react-router-dom';
 import { lookup_station_by_id, get_stop_ids_for_stations, line_name } from './stations';
 import { trainDateRange, busDateRange } from './constants';
@@ -13,19 +13,22 @@ import './App.css';
 import { Select } from './inputs/Select';
 import { configPresets } from './presets';
 
-const RAPIDTRANSIT_PATH = "/rapidtransit";
-const BUS_PATH = "/bus";
+const RAPIDTRANSIT_PATH = '/rapidtransit';
+const BUS_PATH = '/bus';
 
 const MAX_AGGREGATION_MONTHS = 18;
-const TOO_EARLY_ERROR = (date) => `Our archives only go back so far. Please select a date no earlier than ${date}.`;
-const TOO_LATE_ERROR = (date) => `Data not yet available. Please select a date no later than ${date}.`;
+const TOO_EARLY_ERROR = (date) =>
+  `Our archives only go back so far. Please select a date no earlier than ${date}.`;
+const TOO_LATE_ERROR = (date) =>
+  `Data not yet available. Please select a date no later than ${date}.`;
 const RANGE_TOO_LARGE_ERROR = `Please select a range no larger than ${MAX_AGGREGATION_MONTHS} months.`;
-const RANGE_NEGATIVE_ERROR = "Please ensure the start date comes before the selected end date.";
-const INVALID_STOP_ERROR = "Invalid stop selection. Please check the inbound/outbound nature of your selected stops.";
+const RANGE_NEGATIVE_ERROR = 'Please ensure the start date comes before the selected end date.';
+const INVALID_STOP_ERROR =
+  'Invalid stop selection. Please check the inbound/outbound nature of your selected stops.';
 
 const stateFromURL = (pathname, config) => {
-  const bus_mode = (pathname === BUS_PATH);
-  const [line, from_id, to_id, date_start, date_end] = config.split(",");
+  const bus_mode = pathname === BUS_PATH;
+  const [line, from_id, to_id, date_start, date_end] = config.split(',');
   const from = lookup_station_by_id(line, from_id);
   const to = lookup_station_by_id(line, to_id);
   return {
@@ -35,32 +38,26 @@ const stateFromURL = (pathname, config) => {
     to,
     date_start,
     date_end,
-  }
+  };
 };
 
 const urlFromState = (config) => {
   const { bus_mode, line, from, to, date_start, date_end } = config;
   const { fromStopIds, toStopIds } = get_stop_ids_for_stations(from, to);
   const path = bus_mode ? BUS_PATH : RAPIDTRANSIT_PATH;
-  const parts = [
-    line,
-    fromStopIds?.[0],
-    toStopIds?.[0],
-    date_start,
-    date_end,
-  ];
-  if (!parts.some(x => x)) {
+  const parts = [line, fromStopIds?.[0], toStopIds?.[0], date_start, date_end];
+  if (!parts.some((x) => x)) {
     return [path, false];
   }
-  const partString = parts.map(x => x || "").join(",");
+  const partString = parts.map((x) => x || '').join(',');
   const url = `${path}?config=${partString}`;
-  const isComplete = parts.slice(0, -1).every(x => x);
+  const isComplete = parts.slice(0, -1).every((x) => x);
 
   return [url, isComplete];
 };
 
 const documentTitle = (config) => {
-  const pieces = ["Data Dashboard"];
+  const pieces = ['Data Dashboard'];
   if (config.line) {
     pieces.splice(0, 0, line_name(config.line));
   }
@@ -73,25 +70,24 @@ const documentTitle = (config) => {
 };
 
 const showBetaTag = () => {
-  const beta_tag = document.querySelector(".beta-tag");
-  beta_tag.style.visibility = "visible";
-  beta_tag.innerText = "Beta";
+  const beta_tag = document.querySelector('.beta-tag');
+  beta_tag.style.visibility = 'visible';
+  beta_tag.innerText = 'Beta';
 };
 
 async function getGitId() {
-  const commitTag = document.querySelector(".version");
-  let git_id = "unknown";
+  const commitTag = document.querySelector('.version');
+  let git_id = 'unknown';
   try {
     const response = await fetch(APP_DATA_BASE_PATH + '/git_id');
     const commitJson = await response.json();
     git_id = commitJson.git_id;
-  }
-  catch (error) {
+  } catch (error) {
     console.error(`Error fetching Git ID: ${error}`);
   }
-  commitTag.style.visibility = "visible";
-  commitTag.innerText = "version " + git_id;
-};
+  commitTag.style.visibility = 'visible';
+  commitTag.innerText = 'version ' + git_id;
+}
 
 class App extends React.Component {
   constructor(props) {
@@ -114,17 +110,17 @@ class App extends React.Component {
 
     goatcount();
 
-    const url_config = new URLSearchParams(props.location.search).get("config");
-    if (typeof url_config === "string") {
+    const url_config = new URLSearchParams(props.location.search).get('config');
+    if (typeof url_config === 'string') {
       this.state.configuration = stateFromURL(props.location.pathname, url_config);
       this.state.error_message = this.checkForErrors(this.state.configuration);
     }
 
-    if (window.location.hostname !== "dashboard.transitmatters.org") {
+    if (window.location.hostname !== 'dashboard.transitmatters.org') {
       showBetaTag();
     }
 
-    if (window.location.hostname === "localhost") {
+    if (window.location.hostname === 'localhost') {
       getGitId();
     }
 
@@ -146,7 +142,7 @@ class App extends React.Component {
   }
 
   checkForErrors(config) {
-    return(
+    return (
       this.validateRange(config.date_start, config.bus_mode) ||
       this.validateRange(config.date_end, config.bus_mode) ||
       this.validateInterval(config.date_start, config.date_end) ||
@@ -203,7 +199,7 @@ class App extends React.Component {
   updateConfiguration(config_change, refetch = true) {
     // Save to browser history only if we are leaving a complete configuration
     // so back button never takes you to a partial page
-    const [ url, isComplete ] = urlFromState(this.state.configuration);
+    const [url, isComplete] = urlFromState(this.state.configuration);
     if (isComplete) {
       this.props.history.push(url, this.state);
     }
@@ -212,28 +208,28 @@ class App extends React.Component {
       error: null,
       configuration: {
         ...this.state.configuration,
-        ...config_change
-      }
+        ...config_change,
+      },
     };
 
     const error = this.checkForErrors(update.configuration);
     this.setState({
-      error_message: error
+      error_message: error,
     });
     // Setting refetch to false prevents data download, but lets this.state.configuration update still
     if (error) {
       refetch = false;
     }
 
-    if ("line" in config_change && config_change.line !== this.state.configuration.line) {
+    if ('line' in config_change && config_change.line !== this.state.configuration.line) {
       update.configuration.from = null;
       update.configuration.to = null;
       update.headways = [];
       update.traveltimes = [];
       update.dwells = [];
     }
-    this.setState((state) => (
-      { 
+    this.setState(
+      (state) => ({
         progressBarKey: state.progressBarKey + 1,
         ...update,
       }),
@@ -245,25 +241,28 @@ class App extends React.Component {
           this.download();
         }
         goatcount();
-      });
+      }
+    );
   }
 
   fetchDataset(name, signal, options) {
     let url;
     // If a date_end is set, fetch aggregate data instead of single day
     if (this.state.configuration.date_end) {
-      options["start_date"] = this.state.configuration.date_start;
-      options["end_date"] = this.state.configuration.date_end;
+      options['start_date'] = this.state.configuration.date_start;
+      options['end_date'] = this.state.configuration.date_end;
 
-      const method = (name === "traveltimes") ? "traveltimes2" : name;
+      const method = name === 'traveltimes' ? 'traveltimes2' : name;
       url = new URL(`${APP_DATA_BASE_PATH}/aggregate/${method}`, window.location.origin);
-    }
-    else {
-      url = new URL(`${APP_DATA_BASE_PATH}/${name}/${this.state.configuration.date_start}`, window.location.origin);
+    } else {
+      url = new URL(
+        `${APP_DATA_BASE_PATH}/${name}/${this.state.configuration.date_start}`,
+        window.location.origin
+      );
     }
     Object.entries(options).forEach(([key, value]) => {
       if (Array.isArray(value)) {
-        value.forEach(subvalue => url.searchParams.append(key, subvalue))
+        value.forEach((subvalue) => url.searchParams.append(key, subvalue));
       } else {
         url.searchParams.append(key, value);
       }
@@ -274,15 +273,15 @@ class App extends React.Component {
     fetch(url, {
       signal,
     })
-      .then(resp => resp.json())
-      .then(data => {
+      .then((resp) => resp.json())
+      .then((data) => {
         this.setIsLoadingDataset(name, false);
         this.setState({
-          [name]: data
+          [name]: data,
         });
       })
-      .catch(e => {
-        if(e.name !== "AbortError") {
+      .catch((e) => {
+        if (e.name !== 'AbortError') {
           console.error(e);
         }
         // we need something like this to fix perpetual loading, but this ain't it
@@ -301,14 +300,14 @@ class App extends React.Component {
   }
 
   setIsLoadingDataset(name, isLoading) {
-    this.setState(currentState => {
+    this.setState((currentState) => {
       const { datasetLoadingState } = currentState;
       return {
         datasetLoadingState: {
           ...datasetLoadingState,
-          [name]: isLoading
-        }
-      }
+          [name]: isLoading,
+        },
+      };
     });
   }
 
@@ -322,7 +321,7 @@ class App extends React.Component {
 
   download() {
     // End all existing fetches
-    while(this.fetchControllers.length > 0) {
+    while (this.fetchControllers.length > 0) {
       this.fetchControllers.shift().abort();
     }
 
@@ -330,7 +329,10 @@ class App extends React.Component {
     this.fetchControllers.push(controller);
 
     const { configuration } = this.state;
-    const { fromStopIds, toStopIds } = get_stop_ids_for_stations(configuration.from, configuration.to);
+    const { fromStopIds, toStopIds } = get_stop_ids_for_stations(
+      configuration.from,
+      configuration.to
+    );
     if (configuration.date_start && fromStopIds && toStopIds) {
       this.fetchDataset('headways', controller.signal, {
         stop: fromStopIds,
@@ -352,15 +354,14 @@ class App extends React.Component {
         });
         this.fetchDataset('alerts', controller.signal, {
           // split so the 114/116/117 get their fun too.
-          route: configuration.line.split("/"),
+          route: configuration.line.split('/'),
         });
       }
     }
   }
 
-
   componentDidCatch(error) {
-    this.setState(currentState => {
+    this.setState((currentState) => {
       const { configuration } = currentState;
       return {
         error_message: error,
@@ -368,31 +369,49 @@ class App extends React.Component {
           ...configuration,
           to: null,
           from: null,
-        }
-      }
+        },
+      };
     });
   }
 
   renderEmptyState(error_message) {
-    return <div className="main-column">
-      <div className="empty-state">
-        {error_message && <>{error_message}</>}
-        <div id="slowzone-container"> Check out our new <Link to='/slowzones'><button id="slowzone-button">Slow Zone Tracker</button></Link></div>
-        {!error_message && <>See MBTA rapid transit performance data, including travel times between stations, headways,
-        and dwell times, for any given day. <span style={{fontWeight: "bold"}}>Select a line, station pair, and date above to get started.</span><div style={{marginTop: 10}}>Looking for something interesting? <span style={{fontWeight: "bold"}}>Try one of these dates:</span></div>
-        <Select
-          onChange={value => {
-            const { bus_mode, line, date_start, date_end, from, to } = value;
-            this.updateConfiguration({ bus_mode, line, date_start, date_end }, false);
-            setTimeout(() => this.updateConfiguration({ from, to }));
-          }}
-          options={configPresets}
-          className="date-selector"
-          defaultLabel="Choose a date..."
-        />
-        </>}
+    return (
+      <div className="main-column">
+        <div className="empty-state">
+          {error_message && <>{error_message}</>}
+          <div id="slowzone-container">
+            {' '}
+            Check out our new{' '}
+            <Link to="/slowzones">
+              <button id="slowzone-button">Slow Zone Tracker</button>
+            </Link>
+          </div>
+          {!error_message && (
+            <>
+              See MBTA rapid transit performance data, including travel times between stations,
+              headways, and dwell times, for any given day.{' '}
+              <span style={{ fontWeight: 'bold' }}>
+                Select a line, station pair, and date above to get started.
+              </span>
+              <div style={{ marginTop: 10 }}>
+                Looking for something interesting?{' '}
+                <span style={{ fontWeight: 'bold' }}>Try one of these dates:</span>
+              </div>
+              <Select
+                onChange={(value) => {
+                  const { bus_mode, line, date_start, date_end, from, to } = value;
+                  this.updateConfiguration({ bus_mode, line, date_start, date_end }, false);
+                  setTimeout(() => this.updateConfiguration({ from, to }));
+                }}
+                options={configPresets}
+                className="date-selector"
+                defaultLabel="Choose a date..."
+              />
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    );
   }
 
   renderCharts() {
@@ -408,12 +427,12 @@ class App extends React.Component {
       endDate: this.state.configuration.date_end,
       from: this.state.configuration.from,
       to: this.state.configuration.to,
-      line: this.state.configuration.line
-    }
+      line: this.state.configuration.line,
+    };
     if (this.isAggregation()) {
-      return <AggregateSet {...propsToPass} />
+      return <AggregateSet {...propsToPass} />;
     } else {
-      return <SingleDaySet {...propsToPass} />
+      return <SingleDaySet {...propsToPass} />;
     }
   }
 
@@ -423,25 +442,34 @@ class App extends React.Component {
     const canShowCharts = from && to && date_start && !error_message;
     const canShowAlerts = from && to && date_start && !this.isAggregation();
     const recognized_alerts = this.state.alerts?.filter(findMatch);
-    const hasNoLoadedCharts = ['traveltimes', 'dwells', 'headways']
-      .every(kind => this.getIsLoadingDataset(kind));
+    const hasNoLoadedCharts = ['traveltimes', 'dwells', 'headways'].every((kind) =>
+      this.getIsLoadingDataset(kind)
+    );
 
     return (
-      <div className='App'>
+      <div className="App">
         <div className="top-sticky-container">
-          <StationConfiguration current={configuration} onConfigurationChange={this.updateConfiguration} />
-          {canShowAlerts && <AlertBar
-            alerts={recognized_alerts}
-            today={this.state.configuration.date_start}
-            isLoading={this.getIsLoadingDataset("alerts")}
-            isHidden={hasNoLoadedCharts}
-          />}
-          {canShowCharts && this.isAggregation() && !this.getDoneLoading() &&
+          <StationConfiguration
+            current={configuration}
+            onConfigurationChange={this.updateConfiguration}
+          />
+          {canShowAlerts && (
+            <AlertBar
+              alerts={recognized_alerts}
+              today={this.state.configuration.date_start}
+              isLoading={this.getIsLoadingDataset('alerts')}
+              isHidden={hasNoLoadedCharts}
+            />
+          )}
+          {canShowCharts && this.isAggregation() && !this.getDoneLoading() && (
             <ProgressBar
               key={this.state.progressBarKey}
-              rate={progressBarRate(this.state.configuration.date_start, this.state.configuration.date_end)}
+              rate={progressBarRate(
+                this.state.configuration.date_start,
+                this.state.configuration.date_end
+              )}
             />
-          }
+          )}
         </div>
         {!canShowCharts && this.renderEmptyState(error_message)}
         {canShowCharts && this.renderCharts()}
@@ -450,4 +478,5 @@ class App extends React.Component {
   }
 }
 
+// eslint-disable-next-line import/no-default-export
 export default withRouter(App);
