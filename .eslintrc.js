@@ -34,6 +34,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'warn',
     'react/react-in-jsx-scope': 'off',
     'no-console': 'off',
+    '@typescript-eslint/ban-ts-comment': 'warn',
     'import/no-default-export': 'warn',
     '@typescript-eslint/no-explicit-any': 'off', // TODO: Turn on when TS migration done
   },
