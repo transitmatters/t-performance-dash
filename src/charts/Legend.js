@@ -1,7 +1,6 @@
 import './legend.css'
-import React from 'react';
 
-export const Legend: React.FC = () => {
+function Legend() {
     return (
       <div className="legend">
         <p><span className="legend-dot on-time"></span> On time</p>
@@ -13,7 +12,7 @@ export const Legend: React.FC = () => {
     );
 }
 
-export const LegendLongTerm: React.FC = () => {
+function LegendLongTerm() {
   return (
     <div className="legend">
       <p><span className="legend-dot" style={{"backgroundColor": "black"}}></span> Median</p>
@@ -21,3 +20,8 @@ export const LegendLongTerm: React.FC = () => {
     </div>
   );
 }
+
+export {
+  Legend,
+  LegendLongTerm,
+};
