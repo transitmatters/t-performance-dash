@@ -35,7 +35,7 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'no-console': 'warn',
     'import/no-default-export': 'warn',
-    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-explicit-any': 'off', // TODO: Turn on when TS migration done
   },
   settings: {
     react: {
