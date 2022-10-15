@@ -1,5 +1,6 @@
 import { AggregateByTimeSelectable } from './charts/SelectableCharts';
-import { SingleDayLine, AggregateByDate } from './charts/line';
+import { AggregateByDate } from './charts/AggregateLine';
+import { SingleDayLine } from './charts/SingleDayLine';
 import { station_direction } from './stations';
 import { BusDisclaimer, TodayDisclaimer } from './ui/notes';
 import { TODAY_SERVICE_DATE } from './constants';
