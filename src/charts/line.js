@@ -4,7 +4,7 @@ import { Line, Chart, defaults } from 'react-chartjs-2';
 import merge from 'lodash.merge';
 import {Legend, LegendLongTerm} from './Legend';
 import { drawTitle } from './Title';
-import writeError from './error';
+import { writeError } from './error';
 import { DownloadButton } from './download';
 
 Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
