@@ -1,4 +1,5 @@
 import { CSVLink } from 'react-csv';
+import { AggregatePoint, DataPoint, Location } from './types';
 
 const directionAbbrs = {
   northbound: "NB",
@@ -9,7 +10,7 @@ const directionAbbrs = {
   outbound: "OB"
 };
 
-function filename(datasetName, location, bothStops, startDate, endDate) {
+function filename(datasetName: string, location: Location, bothStops: boolean, startDate: string, endDate: string) {
   // CharlesMGH-SB_dwells_20210315.csv
   // CentralSquareCambridge-MelneaCassWashington_traveltimesByHour-weekday_20200101-20201231.csv
   // BostonUniversityWest-EB_headways_20161226-20170328.csv
@@ -27,7 +28,16 @@ function filename(datasetName, location, bothStops, startDate, endDate) {
   return `${where}_${what}_${when}.csv`;
 }
 
-export const DownloadButton = ({
+interface DownloadButtonProps {
+  datasetName: string;
+  data: (DataPoint | AggregatePoint)[];
+  location: Location;
+  bothStops: boolean;
+  startDate: string;
+  endDate: string;
+}
+
+export const DownloadButton: React.FC<DownloadButtonProps> = ({
   datasetName,
   data,
   location,
