@@ -2,14 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import OpenSource from './OpenSource';
+import { OpenSource } from './OpenSource';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { SlowZones } from './slowzones/SlowZones';
 
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
-      <Route exact path="/opensource" >
+      <Route exact path="/opensource">
         <OpenSource />
       </Route>
       <Route exact path="/">
@@ -26,4 +26,5 @@ ReactDOM.render(
       </Route>
     </Switch>
   </BrowserRouter>,
-document.getElementById('root'));
+  document.getElementById('root')
+);
