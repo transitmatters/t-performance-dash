@@ -28,11 +28,15 @@ module.exports = {
   rules: {
     'prettier/prettier': 'off', // TODO: Change to Warn
     'react/prop-types': 'off', // TODO: Turn on or move to TS
+    'react/jsx-no-target-blank': 0,
     'react/no-unescaped-entities': 'off',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
     'react/react-in-jsx-scope': 'off',
-    '@typescript-eslint/no-explicit-any': 'off', // TODO: After full TS migration, change to warn or error
+    'no-console': 'off',
     '@typescript-eslint/ban-ts-comment': 'warn',
-    'import/no-default-export': 'off',
+    'import/no-default-export': 'warn',
+    '@typescript-eslint/no-explicit-any': 'off', // TODO: Turn on when TS migration done
   },
   settings: {
     react: {

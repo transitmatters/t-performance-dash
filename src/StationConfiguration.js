@@ -29,7 +29,7 @@ const options_station_ui = (line) => {
   }).sort((a, b) => a.value.order - b.value.order)
 };
 
-export default class StationConfiguration extends React.Component {
+export class StationConfiguration extends React.Component {
   constructor(props) {
     super(props);
     this.handleBusToggle = this.handleBusToggle.bind(this);

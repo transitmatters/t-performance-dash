@@ -5,7 +5,7 @@ function font(size_px=16) {
   return `bold ${size_px}px "Helvetica Neue", "Helvetica", "Arial", sans-serif`;
 }
 
-function writeError(chart) {
+export const writeError = (chart: any) => {
   const ctx = chart.chart.ctx;
   ctx.save();
 
@@ -29,5 +29,3 @@ function writeError(chart) {
 
   ctx.restore();
 }
-
-export default writeError;
