@@ -40,3 +40,15 @@ yarn-error.log*
 .vscode
 *~
 *.pyc
+
+
+# next.js
+/.next/
+/out/
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
