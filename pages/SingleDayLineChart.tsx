@@ -13,8 +13,8 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React from 'react';
-import headwaysData from './data/headways.json';
 import { drawTitle } from './Title';
+import { DataPoints } from './types/dataPoints';
 
 ChartJS.register(
   CategoryScale,
@@ -40,26 +40,28 @@ const prettyDate = (dateString: string, with_dow: boolean) => {
   );
 };
 
-const point_colors = (data, metric_field: string, benchmark_field: string) => {
+const point_colors = (data: DataPoints, metric_field: string, benchmark_field?: string) => {
   return data.map((point) => {
-    const ratio = point[metric_field] / point[benchmark_field];
-    if (point[benchmark_field] === null) {
-      return '#1c1c1c'; //grey
-    } else if (ratio <= 1.25) {
-      return '#64b96a'; //green
-    } else if (ratio <= 1.5) {
-      return '#f5ed00'; //yellow
-    } else if (ratio <= 2.0) {
-      return '#c33149'; //red
-    } else if (ratio > 2.0) {
-      return '#bb5cc1'; //purple
+    if (benchmark_field) {
+      const ratio = point[metric_field] / point[benchmark_field];
+      if (point[benchmark_field] === null) {
+        return '#1c1c1c'; //grey
+      } else if (ratio <= 1.25) {
+        return '#64b96a'; //green
+      } else if (ratio <= 1.5) {
+        return '#f5ed00'; //yellow
+      } else if (ratio <= 2.0) {
+        return '#c33149'; //red
+      } else if (ratio > 2.0) {
+        return '#bb5cc1'; //purple
+      }
     }
 
     return '#1c1c1c'; //whatever
   });
 };
 
-const departure_from_normal_string = (metric, benchmark) => {
+const departure_from_normal_string = (metric: number, benchmark: number) => {
   const ratio = metric / benchmark;
   if (!isFinite(ratio) || ratio <= 1.25) {
     return '';
@@ -72,10 +74,29 @@ const departure_from_normal_string = (metric, benchmark) => {
   }
 };
 
-export const SingleDayLineChart = () => {
-  const labels = headwaysData.map((item) => item.current_dep_dt);
+interface SingleDayLineChartProps {
+  data: DataPoints;
+  title: string;
+  chartId: string;
+  metricField: string;
+  benchmarkField?: string;
+  pointField: string;
+  bothStops?: boolean;
+}
+
+export const SingleDayLineChart: React.FC<SingleDayLineChartProps> = ({
+  chartId,
+  title,
+  data,
+  metricField,
+  benchmarkField,
+  pointField,
+  bothStops = false,
+}) => {
+  const labels = data.map((item) => item[pointField]);
   return (
     <Line
+      id={chartId}
       height={250}
       data={{
         labels,
@@ -83,26 +104,16 @@ export const SingleDayLineChart = () => {
           {
             label: `Actual`,
             fill: false,
-            pointBackgroundColor: point_colors(
-              headwaysData,
-              'headway_time_sec',
-              'benchmark_headway_time_sec'
-            ),
+            pointBackgroundColor: point_colors(data, metricField, benchmarkField),
             pointHoverRadius: 3,
-            pointHoverBackgroundColor: point_colors(
-              headwaysData,
-              'headway_time_sec',
-              'benchmark_headway_time_sec'
-            ),
+            pointHoverBackgroundColor: point_colors(data, metricField, benchmarkField),
             pointRadius: 3,
             pointHitRadius: 10,
-            data: headwaysData.map((headway) => (headway.headway_time_sec / 60).toFixed(2)),
+            data: data.map((datapoint) => (datapoint[metricField] / 60).toFixed(2)),
           },
           {
             label: `Benchmark MBTA`,
-            data: headwaysData.map((headway) =>
-              (headway.benchmark_headway_time_sec / 60).toFixed(2)
-            ),
+            data: data.map((datapoint) => (datapoint[benchmarkField] / 60).toFixed(2)),
             pointRadius: 0,
             pointHoverRadius: 0,
             fill: true,
@@ -125,8 +136,8 @@ export const SingleDayLineChart = () => {
             callbacks: {
               afterBody: (tooltipItems) => {
                 return departure_from_normal_string(
-                  tooltipItems[0].formattedValue,
-                  tooltipItems[1]?.formattedValue
+                  tooltipItems[0].parsed.y,
+                  tooltipItems[1]?.parsed.y
                 );
               },
             },
@@ -176,9 +187,9 @@ export const SingleDayLineChart = () => {
           id: 'customTitle',
           afterDraw: (chart) => {
             drawTitle(
-              'Time between trains (Headways)',
+              title,
               { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
-              true,
+              bothStops,
               chart
             );
           },

@@ -2,8 +2,10 @@
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import React from 'react';
-import Image from 'next/image';
 import { SingleDayLineChart } from './SingleDayLineChart';
+import headwaysData from './data/headways.json';
+import travelTimesData from './data/travel_times.json';
+import dwellsData from './data/dwells.json';
 
 const tabs = [
   { name: 'Red Line', href: '#', current: false },
@@ -132,7 +134,34 @@ export default function Home() {
             </div>
           </div>
           <div className={'charts main-column'}>
-            <SingleDayLineChart />
+            <SingleDayLineChart
+              chartId={'travelTimes'}
+              title={'Travel Times'}
+              data={travelTimesData}
+              metricField={'travel_time_sec'}
+              benchmarkField={'benchmark_travel_time_sec'}
+              pointField={'dep_dt'}
+              bothStops={true}
+            />
+          </div>
+          <div className={'charts main-column'}>
+            <SingleDayLineChart
+              chartId={'headways'}
+              title={'Time between trains (headways)'}
+              data={headwaysData}
+              metricField={'headway_time_sec'}
+              benchmarkField={'benchmark_headway_time_sec'}
+              pointField={'current_dep_dt'}
+            />
+          </div>
+          <div className={'charts main-column'}>
+            <SingleDayLineChart
+              chartId={'dwells'}
+              title={'Time spent at station (dwells)'}
+              data={dwellsData}
+              metricField={'dwell_time_sec'}
+              pointField={'arr_dt'}
+            />
           </div>
         </main>
       </div>
