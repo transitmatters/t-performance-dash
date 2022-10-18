@@ -15,6 +15,7 @@ import { enUS } from 'date-fns/locale';
 import React from 'react';
 import { drawTitle } from './Title';
 import { DataPoints } from './types/dataPoints';
+import { colors } from './constants';
 
 ChartJS.register(
   CategoryScale,
@@ -45,19 +46,19 @@ const point_colors = (data: DataPoints, metric_field: string, benchmark_field?: 
     if (benchmark_field) {
       const ratio = point[metric_field] / point[benchmark_field];
       if (point[benchmark_field] === null) {
-        return '#1c1c1c'; //grey
+        return colors.grey; //grey
       } else if (ratio <= 1.25) {
-        return '#64b96a'; //green
+        return colors.green; //green
       } else if (ratio <= 1.5) {
-        return '#f5ed00'; //yellow
+        return colors.yellow; //yellow
       } else if (ratio <= 2.0) {
-        return '#c33149'; //red
+        return colors.red; //red
       } else if (ratio > 2.0) {
-        return '#bb5cc1'; //purple
+        return colors.purple; //purple
       }
     }
 
-    return '#1c1c1c'; //whatever
+    return colors.grey; //whatever
   });
 };
 
