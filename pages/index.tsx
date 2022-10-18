@@ -1,16 +1,22 @@
-import { Disclosure } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+/* eslint-disable import/no-default-export */
+import { Disclosure } from '@headlessui/react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import React from 'react';
+import { SingleDayLineChart } from './SingleDayLineChart';
+import headwaysData from './data/headways.json';
+import travelTimesData from './data/travel_times.json';
+import dwellsData from './data/dwells.json';
 
 const tabs = [
-  { name: "Red Line", href: "#", current: false },
-  { name: "Blue Line", href: "#", current: false },
-  { name: "Orange Line", href: "#", current: true },
-  { name: "Green Line", href: "#", current: false },
-  { name: "Bus", href: "#", current: false },
+  { name: 'Red Line', href: '#', current: false },
+  { name: 'Blue Line', href: '#', current: false },
+  { name: 'Orange Line', href: '#', current: true },
+  { name: 'Green Line', href: '#', current: false },
+  { name: 'Bus', href: '#', current: false },
 ];
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(' ');
 }
 
 export default function Home() {
@@ -27,27 +33,21 @@ export default function Home() {
                     <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
-                        <XMarkIcon
-                          className="block h-6 w-6"
-                          aria-hidden="true"
-                        />
+                        <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                       ) : (
-                        <Bars3Icon
-                          className="block h-6 w-6"
-                          aria-hidden="true"
-                        />
+                        <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                       )}
                     </Disclosure.Button>
                   </div>
                   <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                     <div className="flex flex-shrink-0 items-center">
                       <img
-                        className="block h-6 w-auto lg:hidden stroke-black"
+                        className="block h-6 w-auto stroke-black lg:hidden"
                         src="tm-logo.svg"
                         alt="Your Company"
                       />
                       <img
-                        className="hidden h-6 w-auto lg:block stroke-black"
+                        className="hidden h-6 w-auto stroke-black lg:block"
                         src="tm-logo.svg"
                         alt="Your Company"
                       />
@@ -94,10 +94,8 @@ export default function Home() {
           )}
         </Disclosure>
         <main>
-          <div className="border-b border-gray-200 pb-5 py-6 sm:pb-0 mx-auto px-4 sm:px-6 md:px-8">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
-              Data Dashboard
-            </h3>
+          <div className="mx-auto border-b border-gray-200 py-6 px-4 pb-5 sm:px-6 sm:pb-0 md:px-8">
+            <h3 className="text-lg font-medium leading-6 text-gray-900">Data Dashboard</h3>
             <div className="mt-3 sm:mt-4">
               <div className="sm:hidden">
                 <label htmlFor="current-tab" className="sr-only">
@@ -122,11 +120,11 @@ export default function Home() {
                       href={tab.href}
                       className={classNames(
                         tab.current
-                          ? "border-indigo-500 text-indigo-600"
-                          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
-                        "whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm"
+                          ? 'border-indigo-500 text-indigo-600'
+                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                        'whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium'
                       )}
-                      aria-current={tab.current ? "page" : undefined}
+                      aria-current={tab.current ? 'page' : undefined}
                     >
                       {tab.name}
                     </a>
@@ -134,6 +132,36 @@ export default function Home() {
                 </nav>
               </div>
             </div>
+          </div>
+          <div className={'charts main-column'}>
+            <SingleDayLineChart
+              chartId={'travelTimes'}
+              title={'Travel Times'}
+              data={travelTimesData}
+              metricField={'travel_time_sec'}
+              benchmarkField={'benchmark_travel_time_sec'}
+              pointField={'dep_dt'}
+              bothStops={true}
+            />
+          </div>
+          <div className={'charts main-column'}>
+            <SingleDayLineChart
+              chartId={'headways'}
+              title={'Time between trains (headways)'}
+              data={headwaysData}
+              metricField={'headway_time_sec'}
+              benchmarkField={'benchmark_headway_time_sec'}
+              pointField={'current_dep_dt'}
+            />
+          </div>
+          <div className={'charts main-column'}>
+            <SingleDayLineChart
+              chartId={'dwells'}
+              title={'Time spent at station (dwells)'}
+              data={dwellsData}
+              metricField={'dwell_time_sec'}
+              pointField={'arr_dt'}
+            />
           </div>
         </main>
       </div>

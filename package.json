@@ -5,10 +5,13 @@
   "dependencies": {
     "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^2.0.12",
-    "chart.js": "4.0.0-alpha.2",
+    "chart.js": "^3.9.1",
+    "chartjs-adapter-date-fns": "^2.0.0",
     "concurrently": "^7.4.0",
+    "date-fns": "^2.29.3",
     "next": "12.3.1",
     "react": "18.2.0",
+    "react-chartjs-2": "^4.3.1",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
