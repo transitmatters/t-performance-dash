@@ -10,6 +10,7 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
+    'next/core-web-vitals',
     'prettier',
   ],
   globals: {
@@ -26,17 +27,17 @@ module.exports = {
   },
   plugins: ['react', 'react-hooks', '@typescript-eslint', 'import', 'prettier'],
   rules: {
-    'prettier/prettier': 'off', // TODO: Change to Warn
-    'react/prop-types': 'off', // TODO: Turn on or move to TS
+    'prettier/prettier': 'warn',
+    'react/prop-types': 'off',
     'react/jsx-no-target-blank': 0,
     'react/no-unescaped-entities': 'off',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
-    'react/react-in-jsx-scope': 'off',
-    'no-console': 'off',
+    'react/react-in-jsx-scope': 'warn',
+    'no-console': 'warn',
     '@typescript-eslint/ban-ts-comment': 'warn',
-    'import/no-default-export': 'warn',
-    '@typescript-eslint/no-explicit-any': 'off', // TODO: Turn on when TS migration done
+    'import/no-default-export': 'error',
+    '@typescript-eslint/no-explicit-any': 'warn',
   },
   settings: {
     react: {
