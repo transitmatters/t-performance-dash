@@ -6,3 +6,11 @@ export const colors = {
   red: '#c33149',
   purple: '#bb5cc1',
 };
+
+export const colorsForLine: Record<string, string> = {
+  Red: '#da291c',
+  Orange: '#ed8b00',
+  Blue: '#003da5',
+  Green: '#00834d',
+  bus: '#ffc72c',
+};
