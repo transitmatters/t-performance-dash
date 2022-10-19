@@ -1,6 +1,11 @@
 import { Chart } from 'chart.js';
 import { Location } from '../src/charts/types';
 
+interface TitleFormat {
+  text: string;
+  color: string;
+}
+
 export const colorsForLine: Record<string, string> = {
   Red: '#da291c',
   Orange: '#ed8b00',
@@ -13,20 +18,15 @@ const getLineColor = (lineName: string) => colorsForLine[lineName] || 'black';
 const titleColor = 'gray';
 
 const parse_location_description = (location: Location, bothStops: boolean) => {
-  /** Example return values:
-   * [["Harvard", "red"], [" to ", "gray"], ["Park St", "red"]]
-   * or
-   * [["Harvard", "red"], [" southbound", "gray"]]
-   */
-  const result = [];
+  const result: TitleFormat[] = [];
   const lineColor = getLineColor(location['line']);
 
-  result.push([location['from'], lineColor]);
+  result.push({ text: location['from'], color: lineColor });
   if (bothStops) {
-    result.push([' to ', titleColor]);
-    result.push([location['to'], lineColor]);
+    result.push({ text: ' to ', color: titleColor });
+    result.push({ text: location['to'], color: lineColor });
   } else {
-    result.push([` ${location['direction']}`, titleColor]);
+    result.push({ text: ` ${location['direction']}`, color: titleColor });
   }
   return result;
 };
@@ -36,10 +36,10 @@ function font(size_px = 16) {
   return `bold ${size_px}px "Helvetica Neue", "Helvetica", "Arial", sans-serif`;
 }
 
-const calcLocationWidth = (words: string[][], ctx: CanvasRenderingContext2D) => {
+const calcLocationWidth = (words: TitleFormat[], ctx: CanvasRenderingContext2D) => {
   // input: result of parse_location_description
   // output depends on ctx's current font
-  return words.map((x) => ctx.measureText(x[0]).width).reduce((a, b) => a + b, 0);
+  return words.map((x) => ctx.measureText(x.text).width).reduce((a, b) => a + b, 0);
 };
 
 export const drawTitle = (title: string, location: Location, bothStops: boolean, chart: Chart) => {
@@ -77,10 +77,10 @@ export const drawTitle = (title: string, location: Location, bothStops: boolean,
     ctx.textAlign = 'left';
     position = chart.width / 2 - locationWidth / 2;
 
-    for (const [word, color] of locationDescr) {
+    for (const { text, color } of locationDescr) {
       ctx.fillStyle = color;
-      ctx.fillText(word, position, vpos_row2);
-      position += ctx.measureText(word).width;
+      ctx.fillText(text, position, vpos_row2);
+      position += ctx.measureText(text).width;
     }
   } else {
     // larger screen
@@ -92,10 +92,10 @@ export const drawTitle = (title: string, location: Location, bothStops: boolean,
     // location components are aligned right
     ctx.textAlign = 'right';
     position = chart.width - rightMargin;
-    for (const [word, color] of locationDescr.reverse()) {
+    for (const { text, color } of locationDescr.reverse()) {
       ctx.fillStyle = color;
-      ctx.fillText(word, position, vpos_row2);
-      position -= ctx.measureText(word).width;
+      ctx.fillText(text, position, vpos_row2);
+      position -= ctx.measureText(text).width;
     }
   }
   ctx.restore();

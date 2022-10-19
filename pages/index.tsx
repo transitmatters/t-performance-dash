@@ -5,7 +5,9 @@ import headwaysData from './data/headways.json';
 import travelTimesData from './data/travel_times.json';
 import dwellsData from './data/dwells.json';
 
-function classNames(...classes) {
+import React from 'react';
+
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
@@ -32,7 +34,7 @@ export default function Home() {
                 id="current-tab"
                 name="current-tab"
                 className="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                defaultValue={tabs.find((tab) => tab.current).name}
+                defaultValue={tabs.find((tab) => tab.current)?.name}
               >
                 {tabs.map((tab) => (
                   <option key={tab.name}>{tab.name}</option>
