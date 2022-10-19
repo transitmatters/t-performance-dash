@@ -17,6 +17,7 @@ import React from 'react';
 import { drawTitle } from './Title';
 import { DataPoints } from '../types/dataPoints';
 import { colors } from '../utils/constants';
+import { Legend as LegendView } from './Legend';
 
 ChartJS.register(
   CategoryScale,
@@ -99,107 +100,112 @@ export const SingleDayLineChart: React.FC<SingleDayLineChartProps> = ({
 }) => {
   const labels = data.map((item) => item[pointField]);
   return (
-    <Line
-      id={chartId}
-      height={250}
-      data={{
-        labels,
-        datasets: [
-          {
-            label: `Actual`,
-            fill: false,
-            pointBackgroundColor: point_colors(data, metricField, benchmarkField),
-            pointHoverRadius: 3,
-            pointHoverBackgroundColor: point_colors(data, metricField, benchmarkField),
-            pointRadius: 3,
-            pointHitRadius: 10,
-            data: data.map((datapoint) => (datapoint[metricField] / 60).toFixed(2)),
-          },
-          {
-            label: `Benchmark MBTA`,
-            data: benchmarkField
-              ? data.map((datapoint) => (datapoint[benchmarkField] / 60).toFixed(2))
-              : [],
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            fill: true,
-          },
-        ],
-      }}
-      options={{
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: {
-          padding: {
-            top: 25,
-          },
-        },
-        plugins: {
-          tooltip: {
-            mode: 'index',
-            position: 'nearest',
-            callbacks: {
-              afterBody: (tooltipItems) => {
-                return departure_from_normal_string(
-                  tooltipItems[0].parsed.y,
-                  tooltipItems[1]?.parsed.y
+    <div className={'chart'}>
+      <div className="chart-container">
+        <Line
+          id={chartId}
+          height={250}
+          data={{
+            labels,
+            datasets: [
+              {
+                label: `Actual`,
+                fill: false,
+                pointBackgroundColor: point_colors(data, metricField, benchmarkField),
+                pointHoverRadius: 3,
+                pointHoverBackgroundColor: point_colors(data, metricField, benchmarkField),
+                pointRadius: 3,
+                pointHitRadius: 10,
+                data: data.map((datapoint) => (datapoint[metricField] / 60).toFixed(2)),
+              },
+              {
+                label: `Benchmark MBTA`,
+                data: benchmarkField
+                  ? data.map((datapoint) => (datapoint[benchmarkField] / 60).toFixed(2))
+                  : [],
+                pointRadius: 0,
+                pointHoverRadius: 0,
+                fill: true,
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+              padding: {
+                top: 25,
+              },
+            },
+            plugins: {
+              tooltip: {
+                mode: 'index',
+                position: 'nearest',
+                callbacks: {
+                  afterBody: (tooltipItems) => {
+                    return departure_from_normal_string(
+                      tooltipItems[0].parsed.y,
+                      tooltipItems[1]?.parsed.y
+                    );
+                  },
+                },
+              },
+              legend: {
+                display: false,
+              },
+              title: {
+                // empty title to set font and leave room for drawTitle fn
+                display: true,
+                text: '',
+              },
+            },
+            interaction: {
+              mode: 'index',
+              intersect: false,
+            },
+            scales: {
+              y: {
+                display: true,
+                title: {
+                  display: true,
+                  text: 'Minutes',
+                },
+              },
+              x: {
+                type: 'time',
+                time: {
+                  unit: 'hour',
+                  tooltipFormat: 'LTS', // locale time with seconds
+                },
+                adapters: {
+                  date: {
+                    locale: enUS,
+                  },
+                },
+                display: true,
+                title: {
+                  display: true,
+                  text: prettyDate('2022-10-17', true),
+                },
+              },
+            },
+          }}
+          plugins={[
+            {
+              id: 'customTitle',
+              afterDraw: (chart) => {
+                drawTitle(
+                  title,
+                  { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
+                  bothStops,
+                  chart
                 );
               },
             },
-          },
-          legend: {
-            display: false,
-          },
-          title: {
-            // empty title to set font and leave room for drawTitle fn
-            display: true,
-            text: '',
-          },
-        },
-        interaction: {
-          mode: 'index',
-          intersect: false,
-        },
-        scales: {
-          y: {
-            display: true,
-            title: {
-              display: true,
-              text: 'Minutes',
-            },
-          },
-          x: {
-            type: 'time',
-            time: {
-              unit: 'hour',
-              tooltipFormat: 'LTS', // locale time with seconds
-            },
-            adapters: {
-              date: {
-                locale: enUS,
-              },
-            },
-            display: true,
-            title: {
-              display: true,
-              text: prettyDate('2022-10-17', true),
-            },
-          },
-        },
-      }}
-      plugins={[
-        {
-          id: 'customTitle',
-          afterDraw: (chart) => {
-            drawTitle(
-              title,
-              { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
-              bothStops,
-              chart
-            );
-          },
-        },
-      ]}
-    />
+          ]}
+        />
+      </div>
+      <div className="chart-extras">{benchmarkField && <LegendView />}</div>
+    </div>
   );
 };

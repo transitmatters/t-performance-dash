@@ -18,11 +18,6 @@ const getLineColor = (lineName: string) => colorsForLine[lineName] || 'black';
 const titleColor = 'gray';
 
 const parse_location_description = (location: Location, bothStops: boolean) => {
-  /** Example return values:
-   * [["Harvard", "red"], [" to ", "gray"], ["Park St", "red"]]
-   * or
-   * [["Harvard", "red"], [" southbound", "gray"]]
-   */
   const result: TitleFormat[] = [];
   const lineColor = getLineColor(location['line']);
 
