@@ -73,6 +73,7 @@ const departure_from_normal_string = (metric: number, benchmark: number) => {
   } else if (ratio > 2.0) {
     return '>100% longer than normal';
   }
+  return '';
 };
 
 interface SingleDayLineChartProps {
@@ -114,11 +115,13 @@ export const SingleDayLineChart: React.FC<SingleDayLineChartProps> = ({
           },
           {
             label: `Benchmark MBTA`,
-            data: data.map((datapoint) => (datapoint[benchmarkField] / 60).toFixed(2)),
+            data: benchmarkField
+              ? data.map((datapoint) => (datapoint[benchmarkField] / 60).toFixed(2))
+              : [],
             pointRadius: 0,
             pointHoverRadius: 0,
             fill: true,
-            backgroundColor: 'grey',
+            backgroundColor: colors.grey,
           },
         ],
       }}
