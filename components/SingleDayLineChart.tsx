@@ -6,6 +6,7 @@ import {
   TimeScale,
   PointElement,
   LineElement,
+  Filler,
   Title,
   Tooltip,
   Legend,
@@ -23,6 +24,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  Filler,
   Title,
   Tooltip,
   Legend
@@ -121,7 +123,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineChartProps> = ({
             pointRadius: 0,
             pointHoverRadius: 0,
             fill: true,
-            backgroundColor: colors.grey,
           },
         ],
       }}
