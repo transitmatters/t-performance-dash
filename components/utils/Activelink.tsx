@@ -7,7 +7,7 @@ type ActiveLinkProps = LinkProps & {
   activeClassName: string;
 };
 
-const ActiveLink = ({ children, activeClassName, ...props }: ActiveLinkProps) => {
+export const ActiveLink = ({ children, activeClassName, ...props }: ActiveLinkProps) => {
   const { asPath, isReady } = useRouter();
 
   const child = Children.only(children);
@@ -52,5 +52,3 @@ const ActiveLink = ({ children, activeClassName, ...props }: ActiveLinkProps) =>
     </Link>
   );
 };
-
-export default ActiveLink;
