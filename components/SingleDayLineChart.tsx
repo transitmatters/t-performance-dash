@@ -14,8 +14,8 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React from 'react';
 import { drawTitle } from './Title';
-import { DataPoints } from './types/dataPoints';
-import { colors } from './constants';
+import { DataPoints } from '../types/dataPoints';
+import { colors } from '../utils/constants';
 
 ChartJS.register(
   CategoryScale,
