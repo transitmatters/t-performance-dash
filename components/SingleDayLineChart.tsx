@@ -124,7 +124,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineChartProps> = ({
                   ? data.map((datapoint) => (datapoint[benchmarkField] / 60).toFixed(2))
                   : [],
                 pointRadius: 0,
-                pointHoverRadius: 0,
+                pointHoverRadius: 3,
                 fill: true,
               },
             ],
