@@ -5,6 +5,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^2.0.12",
+    "@tanstack/react-query": "^4.12.0",
     "chart.js": "^3.9.1",
     "chartjs-adapter-date-fns": "^2.0.0",
     "concurrently": "^7.4.0",
