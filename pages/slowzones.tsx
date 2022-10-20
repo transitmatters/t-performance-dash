@@ -1,5 +1,5 @@
-const SlowZones = (props) => {
-  return <div>Slow Zones</div>;
-};
+import { SlowZonesContainer } from '../components/slowzones/SlowZonesContainer';
 
-export default SlowZones;
+export default function SlowZones(props) {
+  return <SlowZonesContainer />;
+}

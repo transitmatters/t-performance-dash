@@ -1,5 +1,5 @@
 /* eslint-disable import/no-default-export */
-import { SingleDayLineChart } from '../components/SingleDayLineChart';
+import { SingleDayLineChart } from '../components/dashboard/charts/SingleDayLineChart';
 
 import headwaysData from './data/headways.json';
 import travelTimesData from './data/travel_times.json';

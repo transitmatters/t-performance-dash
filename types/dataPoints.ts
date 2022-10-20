@@ -32,3 +32,11 @@ export interface DwellPoint {
   dep_dt: string;
   dwell_time_sec: number;
 }
+
+export interface DayDelayTotals {
+  date: string;
+  Blue: number;
+  Orange: number;
+  Red: number;
+  Green: number;
+}

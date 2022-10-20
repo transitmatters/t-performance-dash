@@ -1,5 +1,5 @@
 import { Chart } from 'chart.js';
-import { Location } from '../src/charts/types';
+import { Location } from '../../../src/charts/types';
 
 interface TitleFormat {
   text: string;
