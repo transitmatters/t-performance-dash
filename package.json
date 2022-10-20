@@ -54,6 +54,9 @@
     "postinstall": "cd server && poetry install"
   },
   "proxy": "http://localhost:5000",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
