@@ -1,4 +1,5 @@
 /* eslint-disable import/no-default-export */
+import '../styles/dashboard.css';
 import '../styles/globals.css';
 import React from 'react';
 import { Layout } from '../components/Layout';
