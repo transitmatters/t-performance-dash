@@ -5,9 +5,11 @@
   "dependencies": {
     "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^2.0.12",
+    "@tippyjs/react": "^4.2.6",
     "@tanstack/react-query": "^4.12.0",
     "chart.js": "^3.9.1",
     "chartjs-adapter-date-fns": "^2.0.0",
+    "classnames": "^2.3.2",
     "concurrently": "^7.4.0",
     "date-fns": "^2.29.3",
     "next": "12.3.1",
@@ -52,6 +54,9 @@
     "postinstall": "cd server && poetry install"
   },
   "proxy": "http://localhost:5000",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "browserslist": {
     "production": [
       ">0.2%",

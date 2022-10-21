@@ -4,8 +4,10 @@ import { SingleDayLineChart } from '../components/dashboard/charts/SingleDayLine
 import headwaysData from './data/headways.json';
 import travelTimesData from './data/travel_times.json';
 import dwellsData from './data/dwells.json';
+import alerts from './data/alerts.json';
 
 import React from 'react';
+import { AlertBar } from '../components/alerts/AlertBar';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -63,6 +65,7 @@ export default function Home() {
           </div>
         </div>
       </main>
+      <AlertBar alerts={alerts} today={'2022-10-11'} isLoading={false} />
       <div className="px-4">
         <div className={'charts main-column'}>
           <SingleDayLineChart
