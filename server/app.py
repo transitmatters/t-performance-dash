@@ -50,8 +50,8 @@ def healthcheck():
 
     if len(failed_checks) == 0:
         return Response(body={
-        "status": "pass"
-    }, status_code=200)
+            "status": "pass"
+        }, status_code=200)
 
     return Response(body={
         "status": "fail",
