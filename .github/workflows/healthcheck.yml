@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  healthcheck:
+  backend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -25,5 +25,6 @@ jobs:
           curl -sSL https://install.python-poetry.org | python3 -
           npm install
           npm start &
+          echo "Server deployed - sleeping for 1 min before testing..."
           sleep 60
-          curl -f http://localhost:3000/healthcheck
+          curl --fail-with-body http://localhost:3000/healthcheck
