@@ -24,7 +24,8 @@ jobs:
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           npm install
+          echo Server deploying - sleeping for 1 min before testing...
           npm start &
-          echo "Server deployed - sleeping for 1 min before testing..."
           sleep 60
-          curl --fail-with-body http://localhost:3000/healthcheck
+          curl http://localhost:3000/healthcheck
+          curl -f http://localhost:3000/healthcheck
