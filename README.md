@@ -2,6 +2,7 @@
 
 ![lint](https://github.com/transitmatters/t-performance-dash/workflows/lint/badge.svg?branch=main)
 ![build](https://github.com/transitmatters/t-performance-dash/workflows/build/badge.svg?branch=main)
+![healthcheck](https://github.com/transitmatters/t-performance-dash/workflows/healthcheck/badge.svg?branch=main)
 ![deploy](https://github.com/transitmatters/t-performance-dash/workflows/deploy/badge.svg?branch=main)
 
 This is the repository for the TransitMatters Data Dashboard. Client code is written in JavaScript with React, and the backend is written in Python with Chalice.

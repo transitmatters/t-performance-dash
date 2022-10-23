@@ -1,0 +1,28 @@
+name: healthcheck
+
+on:  
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.9
+      - name: Set up Node 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Setup local server deployment and run healthcheck
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          npm install
+          npm start
+          curl -f http://localhost:3000/healthcheck
