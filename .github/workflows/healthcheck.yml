@@ -29,5 +29,5 @@ jobs:
           echo Server deploying - sleeping for 1 min before testing...
           npm start &
           sleep 60
-          curl http://localhost:3000/healthcheck
+          curl -w "\n" http://localhost:3000/healthcheck
           curl -f http://localhost:3000/healthcheck
