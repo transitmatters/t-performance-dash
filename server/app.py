@@ -44,7 +44,7 @@ def healthcheck():
     for check in checks:
         try:
             if not checks[check]():
-                failed_checks += check
+                failed_checks += [check]
         except Exception:
             failed_checks += [check]
 

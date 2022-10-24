@@ -9,6 +9,8 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    env:
+      MBTA_V2_API_KEY: ${{ secrets.MBTA_V2_API_KEY }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
