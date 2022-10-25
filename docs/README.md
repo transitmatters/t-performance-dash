@@ -4,11 +4,11 @@
 ![build](https://github.com/transitmatters/t-performance-dash/workflows/build/badge.svg)
 ![deploy](https://github.com/transitmatters/t-performance-dash/workflows/deploy/badge.svg)
 
-This is the repository for the TransitMatters Data Dashboard. Client code is written in JavaScript with React, and the backend is written in Python with Chalice.
+This is the repository for the TransitMatters Data Dashboard. Client code is written in Typescript with React and Next.js, and the backend is written in Python with Chalice.
 
 ## Requirements to develop locally
 
-- node 16.x preferred, but should work with anything >=12.x and <17. (verify with `node -v`)
+- node 18.x preferred, but should work with anything >=16.x and <19. (verify with `node -v`)
 - Python 3.9 with poetry (verify with `python --version; poetry --version`)
 
 ## Development Instructions

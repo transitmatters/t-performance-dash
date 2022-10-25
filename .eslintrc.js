@@ -10,6 +10,7 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:import/recommended',
     'next/core-web-vitals',
     'prettier',
   ],
@@ -37,6 +38,7 @@ module.exports = {
     'no-console': 'warn',
     '@typescript-eslint/ban-ts-comment': 'warn',
     'import/no-default-export': 'error',
+    'import/order': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',
   },
   settings: {

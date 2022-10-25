@@ -1,13 +1,11 @@
 /* eslint-disable import/no-default-export */
+import React from 'react';
 import { SingleDayLineChart } from '../components/dashboard/charts/SingleDayLineChart';
-
+import { AlertBar } from '../components/alerts/AlertBar';
 import headwaysData from './data/headways.json';
 import travelTimesData from './data/travel_times.json';
 import dwellsData from './data/dwells.json';
 import alerts from './data/alerts.json';
-
-import React from 'react';
-import { AlertBar } from '../components/alerts/AlertBar';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');

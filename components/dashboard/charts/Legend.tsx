@@ -1,5 +1,5 @@
-import styles from './styles/Legend.module.css';
 import React from 'react';
+import styles from './styles/Legend.module.css';
 
 export const Legend: React.FC = () => {
   return (
