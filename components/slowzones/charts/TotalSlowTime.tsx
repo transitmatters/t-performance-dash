@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   CategoryScale,
   Chart as ChartJS,

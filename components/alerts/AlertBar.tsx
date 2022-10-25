@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react';
 import classNames from 'classnames';
-import { LegendAlerts } from './LegendAlerts';
-import { Alert } from '../../types/alerts';
-import { findMatch } from './AlertFilter';
 import Tippy from '@tippyjs/react';
+import { Alert } from '../../types/alerts';
+import { LegendAlerts } from './LegendAlerts';
+import { findMatch } from './AlertFilter';
 import 'tippy.js/dist/tippy.css'; // optional
 
 function chartTimeframe(start_date: string) {

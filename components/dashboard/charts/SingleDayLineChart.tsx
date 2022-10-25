@@ -14,9 +14,9 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React from 'react';
-import { drawTitle } from './Title';
 import { DataPoints } from '../../../types/dataPoints';
 import { colors } from '../../../utils/constants';
+import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
 
 ChartJS.register(

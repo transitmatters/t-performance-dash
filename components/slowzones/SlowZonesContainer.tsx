@@ -1,3 +1,4 @@
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAllSlow, fetchDelayTotals } from '../../pages/data/slowzones';
 import { TotalSlowTime } from './charts/TotalSlowTime';
