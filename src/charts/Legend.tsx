@@ -1,6 +1,6 @@
 import './legend.css'
 
-function Legend() {
+export function Legend() {
     return (
       <div className="legend">
         <p><span className="legend-dot on-time"></span> On time</p>
@@ -12,7 +12,7 @@ function Legend() {
     );
 }
 
-function LegendLongTerm() {
+export function LegendLongTerm() {
   return (
     <div className="legend">
       <p><span className="legend-dot" style={{"backgroundColor": "black"}}></span> Median</p>
@@ -20,8 +20,3 @@ function LegendLongTerm() {
     </div>
   );
 }
-
-export {
-  Legend,
-  LegendLongTerm,
-};

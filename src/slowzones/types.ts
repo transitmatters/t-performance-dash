@@ -1,4 +1,4 @@
-import { Moment } from "moment";
+import { Moment } from 'moment';
 
 export interface SlowZone {
   service_date: number;
@@ -21,6 +21,25 @@ export interface SlowZone {
   order: number;
 }
 
-export type Direction = "northbound" | "southbound";
+export interface Day {
+  date: string;
+  Blue: number;
+  Orange: number;
+  Red: number;
+  Green: number;
+}
 
-export type ChartView = "line" | "xrange";
+export type Direction = 'northbound' | 'southbound';
+
+export type ChartView = 'line' | 'xrange';
+
+export type MbtaEventType = 'derailment' | 'shutdown';
+
+export interface MbtaMajorEvent {
+  start: string;
+  end: string;
+  color: string;
+  title: string;
+  description: string;
+  type: MbtaEventType;
+}

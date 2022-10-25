@@ -93,7 +93,7 @@ def process_mbta_headways(stops, sdate, edate=None):
         headway_dict["headway_time_sec"] = int(headway_dict.get("headway_time_sec"))
         headway_dict["direction"] = int(headway_dict.get("direction"))
 
-    return headways
+    return sorted(headways, key=lambda x: x["current_dep_dt"])
 
 
 def travel_times(sdate, from_stops, to_stops, edate=None):
@@ -143,7 +143,7 @@ def process_mbta_travel_times(from_stops, to_stops, sdate, edate=None):
         travel_dict["travel_time_sec"] = int(travel_dict.get("travel_time_sec"))
         travel_dict["direction"] = int(travel_dict.get("direction"))
 
-    return travel
+    return sorted(travel, key=lambda x: x["dep_dt"])
 
 
 def dwells(sdate, stops, edate=None):
@@ -188,7 +188,7 @@ def process_mbta_dwells(stops, sdate, edate=None):
         dwell_dict["dwell_time_sec"] = int(dwell_dict.get("dwell_time_sec"))
         dwell_dict["direction"] = int(dwell_dict.get("direction"))
 
-    return dwells
+    return sorted(dwells, key=lambda x: x["arr_dt"])
 
 
 def alerts(day, params):

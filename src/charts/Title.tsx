@@ -1,9 +1,10 @@
 import { colorsForLine } from '../constants';
+import { Location } from './types';
 
-const getLineColor = (lineName) => colorsForLine[lineName] || 'black';
+const getLineColor = (lineName: string) => colorsForLine[lineName] || 'black';
 const titleColor = 'gray';
 
-const parse_location_description = (location, bothStops) => {
+const parse_location_description = (location: Location, bothStops: boolean) => {
   /** Example return values:
    * [["Harvard", "red"], [" to ", "gray"], ["Park St", "red"]]
    * or
@@ -27,14 +28,13 @@ function font(size_px = 16) {
   return `bold ${size_px}px "Helvetica Neue", "Helvetica", "Arial", sans-serif`;
 }
 
-const calcLocationWidth = (words, ctx) => {
+const calcLocationWidth = (words: string[][], ctx: CanvasRenderingContext2D) => {
   // input: result of parse_location_description
   // output depends on ctx's current font
-  return words.map(x => ctx.measureText(x[0]).width)
-              .reduce((a,b) => a + b, 0);
-}
+  return words.map((x) => ctx.measureText(x[0]).width).reduce((a, b) => a + b, 0);
+};
 
-const drawTitle = (title, location, bothStops, chart) => {
+export const drawTitle = (title: string, location: Location, bothStops: boolean, chart: any) => {
   const ctx = chart.chart.ctx;
   ctx.save();
 
@@ -43,21 +43,21 @@ const drawTitle = (title, location, bothStops, chart) => {
   const minGap = 10;
   const vpos_row1 = 25;
   const vpos_row2 = 50;
-  
+
   let fontSize = 16;
   ctx.font = font(fontSize);
 
   let position;
-  
+
   const locationDescr = parse_location_description(location, bothStops);
   const titleWidth = ctx.measureText(title).width;
   let locationWidth = calcLocationWidth(locationDescr, ctx);
 
-  if ((leftMargin + titleWidth + minGap + locationWidth + rightMargin) > chart.chart.width) {
+  if (leftMargin + titleWidth + minGap + locationWidth + rightMargin > chart.chart.width) {
     // small screen: centered title stacks vertically
     ctx.textAlign = 'center';
     ctx.fillStyle = titleColor;
-    ctx.fillText(title, chart.chart.width/2, vpos_row1);
+    ctx.fillText(title, chart.chart.width / 2, vpos_row1);
 
     // Location info might be too long. Shrink the font until it fits.
     while (locationWidth > chart.chart.width && fontSize >= 8) {
@@ -67,14 +67,13 @@ const drawTitle = (title, location, bothStops, chart) => {
     }
     // we want centered, but have to write 1 word at a time bc colors, so...
     ctx.textAlign = 'left';
-    position = chart.chart.width/2 - locationWidth/2;
+    position = chart.chart.width / 2 - locationWidth / 2;
 
     for (const [word, color] of locationDescr) {
       ctx.fillStyle = color;
       ctx.fillText(word, position, vpos_row2);
       position += ctx.measureText(word).width;
     }
-
   } else {
     // larger screen
     // Primary chart title goes left
@@ -93,5 +92,3 @@ const drawTitle = (title, location, bothStops, chart) => {
   }
   ctx.restore();
 };
-
-export default drawTitle;

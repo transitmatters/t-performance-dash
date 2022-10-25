@@ -6,7 +6,7 @@ import HighchartsReact from 'highcharts-react-official';
 import xrange from 'highcharts/modules/xrange';
 import exporting from 'highcharts/modules/exporting';
 import annotations from 'highcharts/modules/annotations';
-import { formatSlowZones, generateLineOptions, generateXrangeOptions } from './formattingUtils';
+import { formatSlowZones, generateLineOptions, generateXrangeOptions, EMOJI } from './formattingUtils';
 import { goatcount } from '../analytics';
 import { getDateThreeMonthsAgo } from '../constants';
 import { SlowZoneNav } from './SlowZoneNav';
@@ -52,20 +52,20 @@ export const SlowZones = () => {
   const [allSlow, setAllSlow] = useState<any>();
   const [startDate, setStartDate] = useState(() => {
     if (params.get('startDate')) {
-      return moment(params.get('startDate'));
+      return moment.utc(params.get('startDate'));
     } else return getDateThreeMonthsAgo();
   });
   const [endDate, setEndDate] = useState(() => {
     if (params.get('endDate')) {
-      return moment(params.get('endDate'));
+      return moment.utc(params.get('endDate'));
     } else return moment();
   });
 
   const setTotalDelaysOptions = (data: any) => {
     const filteredData = data.filter((d: any) => {
-      return moment(d.date).add(5, 'hours').isBetween(startDate, endDate, undefined, '[]');
+      return moment.utc(d.date).isBetween(startDate, endDate, undefined, '[]');
     });
-    const options = generateLineOptions(filteredData, selectedLines, startDate);
+    const options = generateLineOptions(filteredData, selectedLines, startDate, endDate);
     setOptions(options);
   };
 
@@ -80,7 +80,7 @@ export const SlowZones = () => {
         d.direction === direction
     );
 
-    const options = generateXrangeOptions(filteredData, direction, startDate);
+    const options = generateXrangeOptions(filteredData, direction, startDate, endDate);
     setOptions(options);
   };
 
@@ -142,11 +142,11 @@ export const SlowZones = () => {
         startDate={startDate}
         endDate={endDate}
         setStartDate={(date: any) => {
-          setStartDate(moment(date));
+          setStartDate(moment.utc(date));
           params.set('startDate', date);
         }}
         setEndDate={(date: any) => {
-          setEndDate(moment(date));
+          setEndDate(moment.utc(date));
           params.set('endDate', date);
         }}
         params={params}
@@ -162,9 +162,10 @@ export const SlowZones = () => {
         />
       )}
       {chartView === 'xrange' && (
-        <div className="derailment-footer">
-          ⚠️
-          <span className="derailment-footer-text">= Affected by a derailment</span>
+        <div className="event-footer">
+          <span className="event-footer-text">{`${EMOJI.derailment} = Affected by a derailment`}</span>
+          <span className="event-footer-text">{`${EMOJI.construction} = To be fixed by shutdown`}</span>
+          <span className="event-footer-text">{`${EMOJI.shutdown} = Began after shutdown`}</span>
         </div>
       )}
 
@@ -188,10 +189,10 @@ export const SlowZones = () => {
           <div className="accordion-text">
             <p>
               We look at the daily median travel time + dwell time for each segment along a route.
-              Whenever that trip time is at least 10% slower than the baseline for 3 or more days in
+              Whenever that trip time is at least 10% slower than the baseline for 4 or more days in
               a row, it gets flagged as a slow zone. Currently, our baseline is the median value in
-              our data, which goes back to 2016. It’s not a perfect system, but various algorithmic
-              improvements are in the works.
+              our data, which goes back to 2016. It’s not a perfect system: you may find some
+              anomalies, but we think it works pretty well.
             </p>
           </div>
         </li>
