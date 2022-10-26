@@ -23,7 +23,8 @@ const tabs = [
   { name: 'Bus', href: '#', current: false },
 ];
 
-export function Home() {
+// eslint-disable-next-line import/no-default-export
+export default function Home() {
   const [fromStation, setFromStation] = useState<SelectOption | null>(null);
   const [toStation, setToStation] = useState<SelectOption | null>(null);
 
