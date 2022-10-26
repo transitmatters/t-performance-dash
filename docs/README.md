@@ -1,8 +1,8 @@
-## TransitMatters Data Dashboard
+# TransitMatters Data Dashboard
 
-![lint](https://github.com/transitmatters/t-performance-dash/workflows/lint/badge.svg)
-![build](https://github.com/transitmatters/t-performance-dash/workflows/build/badge.svg)
-![deploy](https://github.com/transitmatters/t-performance-dash/workflows/deploy/badge.svg)
+![lint](https://github.com/transitmatters/t-performance-dash/workflows/lint/badge.svg?branch=main)
+![build](https://github.com/transitmatters/t-performance-dash/workflows/build/badge.svg?branch=main)
+![deploy](https://github.com/transitmatters/t-performance-dash/workflows/deploy/badge.svg?branch=main)
 
 This is the repository for the TransitMatters Data Dashboard. Client code is written in Typescript with React and Next.js, and the backend is written in Python with Chalice.
 
