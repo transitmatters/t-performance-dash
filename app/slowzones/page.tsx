@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query';
 import { TotalSlowTime } from '../../components/slowzones/charts/TotalSlowTime';
 import { fetchDelayTotals } from '../../data/slowzones';
 
-// eslint-disable-next-line import/no-default-export
 export default function SlowZones() {
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
 

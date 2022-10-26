@@ -6,7 +6,6 @@ import '../styles/dashboard.css';
 import '../styles/globals.css';
 const queryClient = new QueryClient();
 
-// eslint-disable-next-line import/no-default-export
 export default function RootLayout({
   // Layouts must accept a children prop.
   // This will be populated with nested layouts or pages
