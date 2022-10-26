@@ -1,3 +1,8 @@
+import { LineMap } from '../types/stations';
+import stations_json from './stations.json';
+
+export const stations: { [key: string]: LineMap } = stations_json;
+
 // Colors for charts
 export const colors = {
   grey: '#1c1c1c',
