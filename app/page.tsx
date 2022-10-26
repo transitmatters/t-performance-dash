@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { AlertBar } from '../components/alerts/AlertBar';
 import { SingleDayLineChart } from '../components/dashboard/charts/SingleDayLineChart';
 import { Select } from '../components/inputs/Select';
@@ -23,7 +23,7 @@ const tabs = [
   { name: 'Bus', href: '#', current: false },
 ];
 
-export default function Home() {
+export function Home() {
   const [fromStation, setFromStation] = useState<SelectOption | null>(null);
   const [toStation, setToStation] = useState<SelectOption | null>(null);
 

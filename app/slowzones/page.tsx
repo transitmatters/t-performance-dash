@@ -1,11 +1,11 @@
 'use client';
 
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { TotalSlowTime } from '../../components/slowzones/charts/TotalSlowTime';
-import { fetchAllSlow, fetchDelayTotals } from '../../data/slowzones';
+import { fetchDelayTotals } from '../../data/slowzones';
 
-export default function SlowZones(props) {
-  const allSlow = useQuery(['allSlow'], fetchAllSlow);
+export function SlowZones() {
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
 
   return (

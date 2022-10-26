@@ -6,7 +6,7 @@ import '../styles/dashboard.css';
 import '../styles/globals.css';
 const queryClient = new QueryClient();
 
-export default function RootLayout({
+export function RootLayout({
   // Layouts must accept a children prop.
   // This will be populated with nested layouts or pages
   children,
