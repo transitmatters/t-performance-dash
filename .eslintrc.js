@@ -46,4 +46,12 @@ module.exports = {
       version: 'detect',
     },
   },
+  overrides: [
+    {
+      files: ['app/**/*.tsx'],
+      rules: {
+        'import/no-default-export': 'off',
+      },
+    },
+  ],
 };
