@@ -2,6 +2,9 @@
 import React from 'react';
 import { SingleDayLineChart } from '../components/dashboard/charts/SingleDayLineChart';
 import { AlertBar } from '../components/alerts/AlertBar';
+import { Select } from '../components/inputs/Select';
+import { optionsForField, swapStations } from '../utils/stations';
+import { SelectOption } from '../types/inputs';
 import headwaysData from './data/headways.json';
 import travelTimesData from './data/travel_times.json';
 import dwellsData from './data/dwells.json';
@@ -20,6 +23,9 @@ const tabs = [
 ];
 
 export default function Home() {
+  const [fromStation, setFromStation] = React.useState<SelectOption | null>(null);
+  const [toStation, setToStation] = React.useState<SelectOption | null>(null);
+
   return (
     <>
       <main>
@@ -49,7 +55,7 @@ export default function Home() {
                     href={tab.href}
                     className={classNames(
                       tab.current
-                        ? 'border-indigo-500 text-indigo-600'
+                        ? 'border-mbta-orange text-orange-600'
                         : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
                       'whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium'
                     )}
@@ -59,6 +65,23 @@ export default function Home() {
                   </a>
                 ))}
               </nav>
+              <Select
+                label={'From'}
+                options={optionsForField('from', 'Red', fromStation?.value, toStation?.value)}
+                selected={fromStation}
+                setSelected={setFromStation}
+              />
+              <Select
+                label={'To'}
+                options={optionsForField('to', 'Red', fromStation?.value, toStation?.value)}
+                selected={toStation}
+                setSelected={setToStation}
+              />
+              <button
+                onClick={() => swapStations(fromStation, toStation, setFromStation, setToStation)}
+              >
+                Swap
+              </button>
             </div>
           </div>
         </div>
