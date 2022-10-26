@@ -1,14 +1,16 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { fetchAllSlow, fetchDelayTotals } from '../../pages/data/slowzones';
-import { TotalSlowTime } from './charts/TotalSlowTime';
+'use client';
 
-export const SlowZonesContainer = () => {
+import { useQuery } from '@tanstack/react-query';
+import { TotalSlowTime } from '../../components/slowzones/charts/TotalSlowTime';
+import { fetchAllSlow, fetchDelayTotals } from '../../data/slowzones';
+
+export default function SlowZones(props) {
   const allSlow = useQuery(['allSlow'], fetchAllSlow);
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
+
   return (
     <TotalSlowTime
       data={delayTotals.data?.filter((d) => new Date(2022, 1, 1) < new Date(d.date))}
     />
   );
-};
+}
