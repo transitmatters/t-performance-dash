@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>Next.js</title>
+        <title>Dashboard</title>
       </head>
       <body>
         <QueryClientProvider client={queryClient}>

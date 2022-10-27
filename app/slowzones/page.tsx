@@ -1,16 +1,16 @@
 'use client';
 
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { TotalSlowTime } from '../../components/slowzones/charts/TotalSlowTime';
-import { fetchDelayTotals } from '../../data/slowzones';
+import React, { use } from 'react';
 
-export default function SlowZones() {
-  const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
-
-  return (
-    <TotalSlowTime
-      data={delayTotals.data?.filter((d) => new Date(2022, 1, 1) < new Date(d.date))}
-    />
+async function getData() {
+  // this will error out
+  const res = await fetch(
+    'http://localhost:5000/traveltimes/2022-10-10?from_stop=70059&to_stop=70045'
   );
+  return res.json();
+}
+
+export default async function SlowZones() {
+  const delayTotals = use(getData());
+  return <>{JSON.stringify(delayTotals)}</>;
 }
