@@ -1,9 +1,6 @@
 'use client';
 
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { TotalSlowTime } from '../../components/slowzones/charts/TotalSlowTime';
-import { fetchDelayTotals } from '../../data/slowzones';
+import React, { use } from 'react';
 
 async function getData() {
   const res = await fetch(
