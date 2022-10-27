@@ -15,7 +15,7 @@ app = Chalice(app_name="data-dashboard")
 TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", "localhost")
 
 cors_config = CORSConfig(
-    allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600
+    allow_origin='*'
 )
 
 
