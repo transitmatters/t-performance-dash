@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { TotalSlowTime } from '../../components/slowzones/charts/TotalSlowTime';
-import { fetchDelayTotals } from '../../data/slowzones';
+import { fetchDelayTotals } from '../../api/slowzones';
 
 export default function SlowZones() {
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
