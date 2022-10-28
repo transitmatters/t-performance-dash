@@ -25,7 +25,7 @@ def load_data(input_csv, routes):
     """
 
     # thinking about doing this in pandas to have all the info at once
-    df = pd.read_csv(input_csv)
+    df = pd.read_csv(input_csv, dtype={'stop_id': str})
     df.rename(columns={
         # This set of transformations covers prior-year bus data.
         'ServiceDate': 'service_date',
