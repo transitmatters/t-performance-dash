@@ -1,6 +1,8 @@
 import React from 'react';
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
+import TmLogoSvg from '../public/tm-logo.svg';
 import { ActiveLink } from './utils/ActiveLink';
 
 export const Navbar = () => {
@@ -25,14 +27,14 @@ export const Navbar = () => {
                   </div>
                   <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                     <div className="flex flex-shrink-0 items-center">
-                      <img
+                      <Image
                         className="block h-6 w-auto stroke-black lg:hidden"
-                        src="tm-logo.svg"
+                        src={TmLogoSvg}
                         alt="Your Company"
                       />
-                      <img
+                      <Image
                         className="hidden h-6 w-auto stroke-black lg:block"
-                        src="tm-logo.svg"
+                        src={TmLogoSvg}
                         alt="Your Company"
                       />
                     </div>
