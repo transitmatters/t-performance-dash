@@ -2,10 +2,11 @@ import json
 import os
 import subprocess
 from chalice import Chalice, CORSConfig, ConflictError, Response
-from datetime import date
+from datetime import date, timedelta
 from chalicelib import (
     aggregation,
     data_funcs,
+    MbtaPerformanceAPI,
     secrets,
 )
 
@@ -37,13 +38,16 @@ def healthcheck():
     # These functions must return True or False :-)
     checks = [
         lambda: len(secrets.MBTA_V2_API_KEY) > 0,
-        lambda: "2020-11-07 10:33:40" in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))
+        lambda: "2020-11-07 10:33:40" in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"])),
+        lambda: MbtaPerformanceAPI.get_api_data("headways", {"stop": [70067]}, date.today() - timedelta(days=1), date.today())
     ]
 
+    exception = None
     for i in range(0, len(checks)):
         try:
             checks[i] = checks[i]()
-        except Exception:
+        except Exception as e:
+            exception = e
             checks[i] = False
 
     if all(checks):
@@ -54,6 +58,7 @@ def healthcheck():
     return Response(body={
         "status": "fail",
         "check_failed": checks.index(False),
+        "exception": str(exception)
     }, status_code=500)
 
 
