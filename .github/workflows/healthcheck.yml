@@ -1,33 +1,13 @@
 name: healthcheck
 
-on:  
-  pull_request:
-  push:
-    branches:
-      - main
+on:
+  schedule:
+    - cron: '15 23 * * *' # 7:15PM EST every day
 
 jobs:
   backend:
-    runs-on: ubuntu-latest
-    env:
-      MBTA_V2_API_KEY: ${{ secrets.MBTA_V2_API_KEY }}
+    runs-on: ubuntu-22.04
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
-      - name: Set up Node 16.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - name: Setup local server deployment and run healthcheck
+      - name: Run backend healthcheck
         run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          npm install
-          echo Server deploying - sleeping for 1 min before testing...
-          npm start &
-          sleep 60
-          curl -w "\n" http://localhost:3000/healthcheck
-          curl -f http://localhost:3000/healthcheck
+          curl --fail-with-body https://dashboard-api2.transitmatters.org/healthcheck

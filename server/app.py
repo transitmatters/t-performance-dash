@@ -40,13 +40,14 @@ def healthcheck():
         "S3 Alert Fetching": (lambda: "2020-11-07 10:33:40" in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"])))
     }
 
-    failed_checks = []
+    failed_checks = {}
     for check in checks:
         try:
-            if not checks[check]():
-                failed_checks += [check]
-        except Exception:
-            failed_checks += [check]
+            check_bool = checks[check]()
+            if not check_bool:
+                failed_checks[check] = "Check ran successfully but failed :("
+        except Exception as e:
+            failed_checks[check] = f"Check failed to run: {e}"
 
     if len(failed_checks) == 0:
         return Response(body={
