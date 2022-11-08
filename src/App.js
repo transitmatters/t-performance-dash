@@ -96,7 +96,7 @@ async function getGitId() {
 */
 const capHeadways = (data, maximum = 7200) => {
   return data.map(item => {
-    if (item[dataFields.headways.benchmarkField] > maximum) {
+    if (item[dataFields.headways.benchmarkField] > maximum || item[dataFields.headways.yField] > maximum) {
       return {
         ...item,
         [dataFields.headways.yField]: null,
