@@ -1,7 +1,7 @@
 import React from 'react';
 import { goatcount } from './analytics';
 import { APP_DATA_BASE_PATH } from './constants';
-import { SingleDaySet, AggregateSet } from './ChartSets';
+import { SingleDaySet, AggregateSet, dataFields } from './ChartSets';
 import { StationConfiguration } from './StationConfiguration';
 import { Link, withRouter } from 'react-router-dom';
 import { lookup_station_by_id, get_stop_ids_for_stations, line_name } from './stations';
@@ -87,6 +87,24 @@ async function getGitId() {
   }
   commitTag.style.visibility = 'visible';
   commitTag.innerText = 'version ' + git_id;
+}
+
+/*
+  Set headway to null if benchmark is greater than a limit.
+  data: array of headways
+  maximum: cap on headway in seconds (Default 2 hours)
+*/
+const capHeadways = (data, maximum = 7200) => {
+  return data.map(item => {
+    if (item[dataFields.headways.benchmarkField] > maximum) {
+      return {
+        ...item,
+        [dataFields.headways.yField]: null,
+        [dataFields.headways.benchmarkField]: null
+      }
+    }
+    return item
+    })
 }
 
 class App extends React.Component {
@@ -418,7 +436,7 @@ class App extends React.Component {
     const propsToPass = {
       bus_mode: this.state.configuration.bus_mode,
       traveltimes: this.state.traveltimes,
-      headways: this.state.headways,
+      headways: capHeadways(this.state.headways),
       dwells: this.state.dwells,
       isLoadingTraveltimes: this.getIsLoadingDataset('traveltimes'),
       isLoadingHeadways: this.getIsLoadingDataset('headways'),

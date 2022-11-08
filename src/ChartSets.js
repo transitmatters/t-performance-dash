@@ -34,7 +34,7 @@ const headwayTitle = {
   false: "Time between trains (headways)"
 }
 
-function getLocationDescription(from, to, line) {
+const getLocationDescription = (from, to, line) => {
   if (from && to) {
     return {
       to: to.stop_name,
@@ -146,4 +146,4 @@ const SingleDaySet = (props) => {
   )
 }
 
-export { SingleDaySet, AggregateSet }
+export { SingleDaySet, AggregateSet, dataFields }
