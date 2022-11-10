@@ -59,13 +59,8 @@ const urlFromConfig = (config) => {
   const path = config.bus_mode ? BUS_PATH : RAPIDTRANSIT_PATH;
   const query = getQueryStrings(config);
 
-  // If the form is incomplete return the URL without a query.
-  if (!formIsComplete(config)) {
-    return path;
-  }
-
-  // Remove empty fields from array. Can only be end_date.
-  const queryString = query.filter((x) => x).join(',');
+  // Remove empty fields from array.
+  const queryString = query.join(',');
   return `${path}?config=${queryString}`;
 };
 
@@ -220,6 +215,15 @@ class App extends React.Component {
       configuration: newConfiguration,
     };
 
+    // If line is changed, reset data and from/to fields.
+    if ('line' in config_change && config_change.line !== this.state.configuration.line) {
+      newConfiguration.from = null;
+      newConfiguration.to = null;
+      update.headways = [];
+      update.traveltimes = [];
+      update.dwells = [];
+    }
+
     // Get updated URL
     const url = urlFromConfig(newConfiguration);
 
@@ -239,13 +243,6 @@ class App extends React.Component {
       refetch = false;
     }
 
-    if ('line' in config_change && config_change.line !== this.state.configuration.line) {
-      update.configuration.from = null;
-      update.configuration.to = null;
-      update.headways = [];
-      update.traveltimes = [];
-      update.dwells = [];
-    }
     this.setState(
       (state) => ({
         progressBarKey: state.progressBarKey + 1,
