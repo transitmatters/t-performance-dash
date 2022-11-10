@@ -139,7 +139,6 @@ class App extends React.Component {
 
     // Handle back/forward buttons
     window.onpopstate = (e) => {
-      console.log(e.state?.state)
       this.setState(e.state?.state, () => {
         this.download();
       });
