@@ -1,8 +1,9 @@
-export type DataPoints = TravelTimePoint[] | HeadwayPoint[] | DwellPoint[];
-
-export interface TravelTimePoint {
+export interface DataPoint {
   route_id: string;
   direction: number;
+}
+
+export interface TravelTimePoint extends DataPoint {
   dep_dt: string;
   arr_dt: string;
   travel_time_sec: number;
@@ -12,10 +13,8 @@ export interface TravelTimePoint {
   threshold_flag_3?: string;
 }
 
-export interface HeadwayPoint {
-  route_id: string;
+export interface HeadwayPoint extends DataPoint {
   prev_route_id: string;
-  direction: number;
   current_dep_dt: string;
   previous_dep_dt: string;
   headway_time_sec: number;
@@ -25,9 +24,7 @@ export interface HeadwayPoint {
   threshold_flag_3?: string;
 }
 
-export interface DwellPoint {
-  route_id: string;
-  direction: number;
+export interface DwellPoint extends DataPoint {
   arr_dt: string;
   dep_dt: string;
   dwell_time_sec: number;

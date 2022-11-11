@@ -1,4 +1,4 @@
-export interface DataPoint {
+export interface DownloadDataPoint {
     route_id: string;
     direction: number;
     dep_dt: Date;

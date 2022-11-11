@@ -1,31 +1,36 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Line, Chart, defaults } from 'react-chartjs-2';
+import * as Chart from 'chart.js'
+//import { } from 'react-chartjs-2';
 import merge from 'lodash.merge';
 import {Legend, LegendLongTerm} from './Legend';
 import { drawTitle } from './Title';
 import { writeError } from './error';
-import { DownloadButton } from './download';
+import { DownloadButton } from './download';    
+import { SingleDayLineProps, AggregateLineProps } from '../../types/lines';
+import { DataPoint } from '../../types/dataPoints';
+import { Line } from 'react-chartjs-2';
+import { defaults } from 'chart.js';
 
-Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
-  let x = eventPos.x;
-  let y = eventPos.y;
+// Chart.Tooltip.positioners.first = (tooltipItems, eventPos) => {
+//   let x = eventPos.x;
+//   let y = eventPos.y;
 
-  let firstElem = tooltipItems[0];
-  if (firstElem && firstElem.hasValue()) {
-    const pos = firstElem.tooltipPosition();
-    x = pos.x;
-    y = pos.y;
-  }
-  return {x, y};
-};
+//   let firstElem = tooltipItems[0];
+//   if (firstElem && firstElem.hasValue()) {
+//     const pos = firstElem.tooltipPosition();
+//     x = pos.x;
+//     y = pos.y;
+//   }
+//   return {x, y};
+// };
 
 const prettyDate = (dateString, with_dow) => {
-  const options = {
+  const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-    weekday: with_dow ? 'long' : undefined,
+    weekday: "long",
   };
   return new Date(`${dateString}T00:00:00`)
     .toLocaleDateString(undefined, // user locale/language
@@ -108,23 +113,11 @@ merge(defaults, {
   }
 });
 
-class SingleDayLine extends React.Component {
+class SingleDayLine extends React.Component<SingleDayLineProps> {
   
   render() {
-    /*
-    Props:
-      title
-      data
-      seriesName
-      xField
-      yField
-      benchmarkField
-      location (description used to generate title)
-      isLoading
-      date
-    */
     const { isLoading } = this.props;
-    let labels = this.props.data.map(item => item[this.props.xField]);
+    let labels = this.props.data.map((item: DataPoint) => item[this.props.xField]);
     return (
       <div className={classNames('chart', isLoading && 'is-loading')}>
       <div className="chart-container">
@@ -133,7 +126,7 @@ class SingleDayLine extends React.Component {
         labels,
         datasets: [
           {
-            label: `Actuals ${this.props.seriesName}`,
+            label: `Actual ${this.props.seriesName}`,
             fill: false,
             lineTension: 0.1,
             pointBackgroundColor: point_colors(this.props.data, this.props.yField, this.props.benchmarkField),
@@ -186,13 +179,15 @@ class SingleDayLine extends React.Component {
               let high = new Date(today);
               high.setDate(high.getDate() + 1);
               high.setHours(1,0);
-              axis.min = Math.min(axis.min, low) || null;
-              axis.max = Math.max(axis.max, high) || null;
+              axis.min = (axis.min < low ? axis.min: low) || null;
+              axis.max = (axis.max > high ? axis.max: low) || null;
             }
           }]
         }
       }}
       plugins={[{
+          // Plugins require an ID.
+          id: 'SingleLineAfterDrawPlugin',
         afterDraw: (chart) => {
           drawTitle(this.props.title, this.props.location, this.props.titleBothStops, chart);
           if (!this.props.isLoading && !this.props.data.length) {
@@ -216,25 +211,9 @@ class SingleDayLine extends React.Component {
     );
   }
 }
- 
-class AggregateLine extends React.Component {
+class AggregateLine extends React.Component<AggregateLineProps> {
   
   render() {
-    /*
-    Props:
-    xField
-    timeUnit
-    timeFormat
-    xMin
-    xMax
-      title
-      data
-      seriesName
-      location
-      isLoading
-      startDate
-      endDate
-    */
     const { isLoading } = this.props;
     let labels = this.props.data.map(item => item[this.props.xField]);
     return (
@@ -247,6 +226,7 @@ class AggregateLine extends React.Component {
           {
             label: this.props.seriesName,
             fill: false,
+            //Doesn't work?
             lineTension: 0.1,
             pointBackgroundColor: '#1c1c1c',
             pointHoverRadius: 3,
@@ -303,6 +283,7 @@ class AggregateLine extends React.Component {
         }
       }}
       plugins={[{
+        id: 'AggregateLineAfterDrawPlugin',
         afterDraw: (chart) => {
           drawTitle(this.props.title, this.props.location, this.props.titleBothStops, chart);
           if (!this.props.isLoading && !this.props.data.length) {

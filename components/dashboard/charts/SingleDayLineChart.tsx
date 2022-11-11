@@ -14,7 +14,7 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React from 'react';
-import { DataPoints } from '../../../types/dataPoints';
+import { DataPoint } from '../../../types/dataPoints';
 import { colors } from '../../../utils/constants';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
@@ -44,8 +44,8 @@ const prettyDate = (dateString: string, with_dow: boolean) => {
   );
 };
 
-const point_colors = (data: DataPoints, metric_field: string, benchmark_field?: string) => {
-  return data.map((point) => {
+const pointColors = (data: DataPoint[], metric_field: string, benchmark_field?: string) => {
+  return data.map((point: DataPoint) => {
     if (benchmark_field) {
       const ratio = point[metric_field] / point[benchmark_field];
       if (point[benchmark_field] === null) {
@@ -65,7 +65,7 @@ const point_colors = (data: DataPoints, metric_field: string, benchmark_field?: 
   });
 };
 
-const departure_from_normal_string = (metric: number, benchmark: number) => {
+const departureFromNormalString = (metric: number, benchmark: number) => {
   const ratio = metric / benchmark;
   if (!isFinite(ratio) || ratio <= 1.25) {
     return '';
@@ -80,7 +80,7 @@ const departure_from_normal_string = (metric: number, benchmark: number) => {
 };
 
 interface SingleDayLineChartProps {
-  data: DataPoints;
+  data: DataPoint[];
   title: string;
   chartId: string;
   metricField: string;
@@ -111,9 +111,9 @@ export const SingleDayLineChart: React.FC<SingleDayLineChartProps> = ({
               {
                 label: `Actual`,
                 fill: false,
-                pointBackgroundColor: point_colors(data, metricField, benchmarkField),
+                pointBackgroundColor: pointColors(data, metricField, benchmarkField),
                 pointHoverRadius: 3,
-                pointHoverBackgroundColor: point_colors(data, metricField, benchmarkField),
+                pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField),
                 pointRadius: 3,
                 pointHitRadius: 10,
                 data: data.map((datapoint) => (datapoint[metricField] / 60).toFixed(2)),
@@ -143,7 +143,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineChartProps> = ({
                 position: 'nearest',
                 callbacks: {
                   afterBody: (tooltipItems) => {
-                    return departure_from_normal_string(
+                    return departureFromNormalString(
                       tooltipItems[0].parsed.y,
                       tooltipItems[1]?.parsed.y
                     );
