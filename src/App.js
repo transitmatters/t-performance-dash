@@ -47,6 +47,11 @@ const formIsComplete = (config) => {
     return line && from && to && date_start
 }
 
+const formIsEmpty = (config) => {
+    const { line, from, to, date_start, date_end } = config;
+    return !line && !from && !to && !date_start && !date_end
+}
+
 // TODO: Replace query array with individual fields. 
 const getQueryStrings = (config) => {
   const { line, from, to, date_start, date_end } = config;
@@ -58,6 +63,10 @@ const getQueryStrings = (config) => {
 const urlFromConfig = (config) => {
   const path = config.bus_mode ? BUS_PATH : RAPIDTRANSIT_PATH;
   const query = getQueryStrings(config);
+  // If nothing is entered, return without config query.
+  if(!query.some(piece => piece)) {
+    return path;
+  }
 
   // Remove empty fields from array.
   const queryString = query.join(',');
@@ -120,7 +129,8 @@ class App extends React.Component {
 
     const url_config = new URLSearchParams(props.location.search).get('config');
     if (typeof url_config === 'string') {
-      this.state.configuration = stateFromURL(props.location.pathname, url_config);
+      const config = stateFromURL(props.location.pathname, url_config);
+      this.state.configuration = config
       this.state.error_message = this.checkForErrors(this.state.configuration);
     }
 
@@ -133,11 +143,11 @@ class App extends React.Component {
     }
 
     // Handle back/forward buttons
-    window.onpopstate = (e) => {
-      this.setState(e.state?.state, () => {
+    window.addEventListener("popstate", (e) => {
+      this.setState(e.state.state, () => {
         this.download();
       });
-    };
+    });
 
     this.download = this.download.bind(this);
     this.updateConfiguration = this.updateConfiguration.bind(this);
@@ -146,6 +156,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    // Save configuration to history on load. This allows the user to go back to the dashboard with no fields filled.
+    // We also need to get the proper current URL to replace for the case when someone navigates to the page via a pre-configured URL.
+    this.props.history.replace(`${this.props.location.pathname}${this.props.location.search}`, {configuration: this.state.configuration});
     this.download();
   }
 
@@ -216,12 +229,9 @@ class App extends React.Component {
     };
 
     // If line is changed, reset data and from/to fields.
-    if ('line' in config_change && config_change.line !== this.state.configuration.line) {
+    if ('line' in config_change && config_change?.line !== this.state.configuration.line) {
       newConfiguration.from = null;
       newConfiguration.to = null;
-      update.headways = [];
-      update.traveltimes = [];
-      update.dwells = [];
     }
 
     // Get updated URL
@@ -229,10 +239,16 @@ class App extends React.Component {
 
     // Save to browser history only if we are leaving a complete configuration.
     // So we check this.state because it has the values from before the current change.
-    if (formIsComplete(this.state.configuration)) {
-      this.props.history.push(url, update);
+    const complete = formIsComplete(this.state.configuration);
+    const empty = formIsEmpty(this.state.configuration);
+    if(empty) {
+      this.props.history.push(url, {configuration: {bus_mode: config_change.bus_mode || this.state.bus_mode }});
     } else {
-      this.props.history.replace(url, update);
+      if (complete) {
+        this.props.history.push(url, update);
+      } else {
+        this.props.history.replace(url, update);
+      }
     }
 
     this.setState({
