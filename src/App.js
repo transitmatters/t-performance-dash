@@ -236,14 +236,12 @@ class App extends React.Component {
     // Get updated URL
     const url = urlFromConfig(newConfiguration);
 
-    // Save to browser history only if we are leaving a complete configuration.
-    // So we check this.state because it has the values from before the current change.
-    const complete = formIsComplete(this.state.configuration);
-    const empty = formIsEmpty(this.state.configuration);
-    if(empty) {
+    // If the form is empty, we want to push an empty configuration to the history stack. This allows us to go back to the empty dashboard.
+    if(formIsEmpty(this.state.configuration)) {
       this.props.history.push(url, {configuration: {bus_mode: config_change.bus_mode || this.state.bus_mode }});
     } else {
-      if (complete) {
+      // Save to browser history only if we are leaving a complete configuration.
+      if (formIsComplete(this.state.configuration)) {
         this.props.history.push(url, update);
       } else {
         this.props.history.replace(url, update);
