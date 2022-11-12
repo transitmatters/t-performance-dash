@@ -129,8 +129,7 @@ class App extends React.Component {
 
     const url_config = new URLSearchParams(props.location.search).get('config');
     if (typeof url_config === 'string') {
-      const config = stateFromURL(props.location.pathname, url_config);
-      this.state.configuration = config
+      this.state.configuration = stateFromURL(props.location.pathname, url_config);
       this.state.error_message = this.checkForErrors(this.state.configuration);
     }
 
