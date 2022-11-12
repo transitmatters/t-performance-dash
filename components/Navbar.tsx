@@ -9,7 +9,7 @@ export const Navbar = () => {
   return (
     <>
       <div>
-        <Disclosure as="nav" className="bg-neutral-700 shadow">
+        <Disclosure as="nav" className="bg-tm-grey shadow-sm">
           {({ open }) => (
             <>
               <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">

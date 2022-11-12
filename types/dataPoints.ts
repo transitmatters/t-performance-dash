@@ -40,3 +40,32 @@ export interface DayDelayTotals {
   Red: number;
   Green: number;
 }
+
+export type Direction = 'northbound' | 'southbound';
+
+export interface SlowZone {
+  start: string;
+  end: string;
+  duration: number;
+  delay: number;
+  color: string;
+  fr_id: string;
+  to_id: string;
+  from: string;
+  to: string;
+  id: string;
+  direction: Direction;
+  order: number;
+}
+
+export type SlowZoneResponse = {
+  start: string;
+  end: string;
+  mean_metric: number;
+  duration: number;
+  baseline: number;
+  delay: number;
+  color: string;
+  fr_id: string;
+  to_id: string;
+};

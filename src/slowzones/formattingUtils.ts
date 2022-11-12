@@ -11,10 +11,10 @@ const textSize = isMobile ? '11' : '14';
 const DAY_MS = 1000 * 60 * 60 * 24;
 
 export const EMOJI = {
-  'derailment': ` 🚨`,
-  'construction': ` 🚧`,
-  'shutdown': ` ⚠️`,
-}
+  derailment: ` 🚨`,
+  construction: ` 🚧`,
+  shutdown: ` ⚠️`,
+};
 
 const getFootnoteIcon = (start: Moment, end: Moment, color: string) => {
   if (color === 'Blue') return '';
@@ -39,7 +39,7 @@ const getFootnoteIcon = (start: Moment, end: Moment, color: string) => {
       return EMOJI.construction;
     }
     return '';
-  };
+  }
 };
 
 const capitalize = (s: string) => {
@@ -125,7 +125,11 @@ export const getRoutes = (data: SlowZone[], direction: Direction) => {
 };
 
 // Xrange options
-export const generateXrangeSeries = (data: any, startDate: Moment, direciton: Direction): SeriesOptionsType[] => {
+export const generateXrangeSeries = (
+  data: any,
+  startDate: Moment,
+  direciton: Direction
+): SeriesOptionsType[] => {
   const routes = getRoutes(data, direciton);
   const groupedByLine = groupByLine(data);
   return Object.entries(groupedByLine).map((line) => {
@@ -236,7 +240,7 @@ export const generateXrangeOptions = (
         dashStyle: 'Dot',
         zIndex: 3,
         value: moment.utc(majorEvents.OrangeShutdown.start).valueOf(),
-        label: { text: 'Orange line shutdown', align: 'left', rotation: 0, y: -10 }
+        label: { text: 'Orange line shutdown', align: 'left', rotation: 0, y: -10 },
       },
       {
         color: colorsForLine.Orange,
@@ -244,7 +248,7 @@ export const generateXrangeOptions = (
         dashStyle: 'Dot',
         zIndex: 3,
         value: moment.utc(majorEvents.OrangeShutdown.end).valueOf(),
-      }
+      },
     ],
   },
   legend: {
@@ -313,9 +317,9 @@ export const groupByLineDailyTotals = (data: any, selectedLines: string[]) => {
     if (majorEvents.OrangeDerailment.start === day.date) {
       return { id: 'orange-derailment-start', y };
     }
-    if (majorEvents.OrangeDerailment.end === day.date){
+    if (majorEvents.OrangeDerailment.end === day.date) {
       return { id: 'orange-derailment-end', y };
-    } 
+    }
     if (majorEvents.OrangeShutdown.start === day.date) {
       return { id: 'orange-shutdown-start', y };
     }
@@ -348,7 +352,7 @@ export const generateLineOptions = (
   data: SlowZone[],
   selectedLines: string[],
   startDate: Moment,
-  endDate: Moment,
+  endDate: Moment
 ): any => ({
   exporting: {
     csv: {
@@ -406,9 +410,9 @@ export const generateLineOptions = (
   },
   tooltip: {
     formatter: function (this: any) {
-      return `<div><span style="font-size: 10px">${moment.utc(this.point.x).format(
-        'MMMM Do YYYY'
-      )}</span><br/> <span style="color:${this.point.color}">●</span> ${
+      return `<div><span style="font-size: 10px">${moment
+        .utc(this.point.x)
+        .format('MMMM Do YYYY')}</span><br/> <span style="color:${this.point.color}">●</span> ${
         this.point.series.name
       }: <b>${this.point.y}</b><br/></div>`;
     },

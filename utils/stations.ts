@@ -56,3 +56,13 @@ export const swapStations = (
   setFromStation(toStation);
   setToStation(fromStation);
 };
+
+export const lookup_station_by_id = (line: string, id: string) => {
+  if (line === '' || line === undefined || id === '' || id === undefined) {
+    return undefined;
+  }
+
+  return stations[line].stations.find((x) =>
+    [...(x.stops['0'] || []), ...(x.stops['1'] || [])].includes(id)
+  );
+};
