@@ -37,7 +37,7 @@ def healthcheck():
     # These functions must return True or False :-)
     checks = {
         "API Key Present": (lambda: len(secrets.MBTA_V2_API_KEY) > 0),
-        "S3 Alert Fetching": (lambda: "2020-11-07 10:33:40" in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"])))
+        "S3 Headway Fetching": (lambda: "2020-11-07 10:33:40" in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"])))
     }
 
     failed_checks = {}
