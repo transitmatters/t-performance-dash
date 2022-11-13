@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "t-performance-dash"
-version = "1.0.0"
-description = ""
+version = "3.3.0"
+description = "TransitMatters performance visualizer for the MBTA"
 authors = ["TransitMatters Labs Team"]
 license = "MIT"
 
