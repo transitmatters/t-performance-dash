@@ -47,9 +47,9 @@ def healthcheck():
         try:
             check_bool = checks[check]()
             if not check_bool:
-                failed_checks[check] = "Check ran successfully but failed :("
+                failed_checks[check] = "Check failed :("
         except Exception as e:
-            failed_checks[check] = f"Check failed to run: {e}"
+            failed_checks[check] = f"Check threw an exception: {e}"
 
     if len(failed_checks) == 0:
         return Response(body={
