@@ -3,3 +3,10 @@ export interface SelectOption<T = any> {
   value: T;
   id: string;
 }
+
+// TODO: change this to a date object? if that's what input returns.
+export interface DateOption {
+  startDate?: any;
+  endDate?: any;
+  range?: boolean;
+}

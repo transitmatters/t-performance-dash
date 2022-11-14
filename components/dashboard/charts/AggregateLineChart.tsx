@@ -14,13 +14,11 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React from 'react';
-import { writeError } from '../../';
-import { DataPoint } from '../../../types/dataPoints';
-import { colors } from '../../../utils/constants';
 import { drawTitle } from './Title';
 import { Legend as LegendView, LegendLongTerm } from './Legend';
 import { AggregateLineProps } from '../../../types/lines';
 import { DownloadButton } from '../../../src/charts/download';
+import { AggregatePoint } from '../../../src/charts/types';
 
 ChartJS.register(
   CategoryScale,
@@ -35,12 +33,12 @@ ChartJS.register(
 );
 
 
-export const AggregateLineCharts: React.FC<AggregateLineProps> = (props, {
+export const AggregateLineChart: React.FC<AggregateLineProps> = (props, {
     title,
     data,
     location,
     isLoading,
-    xField,
+    pointField,
     useBenchmarks,
     titleBothStops,
     fname,
@@ -68,79 +66,78 @@ export const AggregateLineCharts: React.FC<AggregateLineProps> = (props, {
           label: seriesName,
           fill: false,
           //Doesn't work?
-          lineTension: 0.1,
+          tension: 0.1,
           pointBackgroundColor: '#1c1c1c',
           pointHoverRadius: 3,
           pointHoverBackgroundColor: '#1c1c1c',
           pointRadius: 3,
           pointHitRadius: 10,
-          data: data.map(item => (item["50%"] / 60).toFixed(2))
+          data: data.map((item: AggregatePoint) => (item["50%"] / 60).toFixed(2))
         },
         {
           label: "25th percentile",
           fill: 1,
           backgroundColor: fillColor,
-          lineTension: 0.4,
+          tension: 0.4,
           pointRadius: 0,
-          data: data.map(item => (item["25%"] / 60).toFixed(2))
+          data: data.map((item: AggregatePoint) => (item["25%"] / 60).toFixed(2))
         },
         {
           label: "75th percentile",
           fill: 1,
           backgroundColor: fillColor,
-          lineTension: 0.4,
+          tension: 0.4,
           pointRadius: 0,
-          data: data.map(item => (item["75%"] / 60).toFixed(2))
+          data: data.map((item: AggregatePoint) => (item["75%"] / 60).toFixed(2))
         },
       ]
     }}
     options={{
       scales: {
-        yAxes: [{
-          scaleLabel: {
-            labelString: "Minutes"
+        y: {
+          title: {
+            text: "Minutes"
           },
-          ticks: {
-            suggestedMin: suggestedYMin,
-            suggestedMax: suggestedYMax,
-          }
-        }],
-        xAxes: [{
-          type: 'time',
-          time: {
-            unit: timeUnit,
-            unitStepSize: 1,
+        suggestedMin: suggestedYMin,
+        suggestedMax: suggestedYMax,
+        },
+        x: {
+            time: {
+                unit: timeUnit,
+                stepSize: 1,
             tooltipFormat: timeFormat
+        },
+        // Possile should be 'time'
+        type: 'timeseries',
+        adapters: {
+            date: {
+              locale: enUS,
+            },
           },
-          ticks: {
-            // force graph to show startDate to endDate, even if missing data
-            min: xMin,
-            max: xMax,
-          },
-          scaleLabel: {
-            labelString: xLabel,
+          // force graph to show startDate to endDate, even if missing data
+          min: xMin,
+          max: xMax,
+          title: {
+            text: xLabel,
           }
-        }]
+        }
       }
     }}
     plugins={[{
       id: 'AggregateLineAfterDrawPlugin',
-      afterDraw: (chart) => {
+      afterDraw: (chart: ChartJS) => {
         drawTitle(title, location, titleBothStops, chart);
-        if (!isLoading && !data.length) {
-          writeError(chart);
-        }
       }
     }]}
     />
-    <DownloadButton
+    {/* <DownloadButton
       data={data}
       datasetName={fname}
       location={location}
       bothStops={titleBothStops}
       startDate={startDate}
       endDate={endDate}
-    />
+    /> */}
     </div>
     <div className="chart-extras">
       <LegendLongTerm />

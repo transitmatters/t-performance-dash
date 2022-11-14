@@ -21,7 +21,7 @@ export const Select: React.FC<SelectProps> = ({ label, options, selected, setSel
         <>
           <Listbox.Label className="block text-sm font-medium text-gray-700">{label}</Listbox.Label>
           <div className="relative mt-1">
-            {/* TODO: Dynamicly set the color based on the selected line */}
+            {/* TODO: Dynamically set the color based on the selected line */}
             <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-mbta-red focus:outline-none focus:ring-1 focus:ring-mbta-red sm:text-sm">
               <span className="flex items-center">
                 <span className="ml-3 block truncate">
@@ -45,7 +45,7 @@ export const Select: React.FC<SelectProps> = ({ label, options, selected, setSel
                   <Listbox.Option
                     key={option.id}
                     className={({ active }) =>
-                      // TODO: Dynamicly set the color based on the selected line
+                      // TODO: Dynamically set the color based on the selected line
                       classNames(
                         active ? 'bg-mbta-red text-white' : 'text-gray-900',
                         'relative cursor-default select-none py-2 pl-3 pr-9'

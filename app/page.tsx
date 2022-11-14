@@ -2,13 +2,15 @@
 
 import React, { useState } from 'react';
 import { AlertBar } from '../components/alerts/AlertBar';
+import { AggregateLineChart } from '../components/dashboard/charts/AggregateLineChart';
 import { SingleDayLineChart } from '../components/dashboard/charts/SingleDayLineChart';
+import { DateInput } from '../components/inputs/DateInput';
 import { Select } from '../components/inputs/Select';
 import alerts from '../data/alerts.json';
 import dwellsData from '../data/dwells.json';
 import headwaysData from '../data/headways.json';
 import travelTimesData from '../data/travel_times.json';
-import { SelectOption } from '../types/inputs';
+import { DateOption, SelectOption } from '../types/inputs';
 import { optionsForField, swapStations } from '../utils/stations';
 
 function classNames(...classes: string[]) {
@@ -26,6 +28,7 @@ const tabs = [
 export default function Home() {
   const [fromStation, setFromStation] = useState<SelectOption | null>(null);
   const [toStation, setToStation] = useState<SelectOption | null>(null);
+  const [dateSelection, setDateSelection] = useState<DateOption | null>(null);
 
   return (
     <>
@@ -82,41 +85,57 @@ export default function Home() {
             >
               Swap
             </button>
+            <DateInput dateSelection={dateSelection} setDateSelection={setDateSelection} />
           </div>
         </div>
       </div>
       <AlertBar alerts={alerts} today={'2022-10-11'} isLoading={false} />
       <div className="px-4">
-        <div className={'charts main-column'}>
-          <SingleDayLineChart
-            chartId={'travelTimes'}
-            title={'Travel Times'}
-            data={travelTimesData}
-            metricField={'travel_time_sec'}
-            benchmarkField={'benchmark_travel_time_sec'}
-            pointField={'dep_dt'}
-            bothStops={true}
-          />
-        </div>
-        <div className={'charts main-column'}>
-          <SingleDayLineChart
-            chartId={'headways'}
-            title={'Time between trains (headways)'}
-            data={headwaysData}
-            metricField={'headway_time_sec'}
-            benchmarkField={'benchmark_headway_time_sec'}
-            pointField={'current_dep_dt'}
-          />
-        </div>
-        <div className={'charts main-column'}>
-          <SingleDayLineChart
-            chartId={'dwells'}
-            title={'Time spent at station (dwells)'}
-            data={dwellsData}
-            metricField={'dwell_time_sec'}
-            pointField={'arr_dt'}
-          />
-        </div>
+        {dateSelection?.range ?
+            <div className={'charts main-column'}>
+              <AggregateLineChart
+                chartId={'headways'}
+                title={'Time between trains (headways)'}
+                data={headwaysData}
+                metricField={'headway_time_sec'}
+                benchmarkField={'benchmark_headway_time_sec'}
+                pointField={'current_dep_dt'}
+              />
+            </div>
+          :
+          <div>
+            <div className={'charts main-column'}>
+              <SingleDayLineChart
+                chartId={'travelTimes'}
+                title={'Travel Times'}
+                data={travelTimesData}
+                metricField={'travel_time_sec'}
+                benchmarkField={'benchmark_travel_time_sec'}
+                pointField={'dep_dt'}
+                bothStops={true}
+              />
+            </div>
+            <div className={'charts main-column'}>
+              <SingleDayLineChart
+                chartId={'headways'}
+                title={'Time between trains (headways)'}
+                data={headwaysData}
+                metricField={'headway_time_sec'}
+                benchmarkField={'benchmark_headway_time_sec'}
+                pointField={'current_dep_dt'}
+              />
+            </div>
+            <div className={'charts main-column'}>
+              <SingleDayLineChart
+                chartId={'dwells'}
+                title={'Time spent at station (dwells)'}
+                data={dwellsData}
+                metricField={'dwell_time_sec'}
+                pointField={'arr_dt'}
+              />
+            </div>
+          </div>
+        }
       </div>
     </>
   );
