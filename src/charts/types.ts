@@ -22,7 +22,7 @@ export interface SingleDayDataPoint {
     min: number;
     std: number;
     service_date?: string;
-    dep_time_from_epoch?: Date;
+    dep_time_from_epoch?: string;
     is_peak_day?: boolean;
   }
   
@@ -37,6 +37,20 @@ export interface SingleDayDataPoint {
   
   export type BenchmarkField = 'benchmark_travel_time_sec' | 'benchmark_headway_time_sec' | null;
   
-  export type XField = 'dep_dt' | 'current_dep_dt' | 'arr_dt';
-  export type YField = 'travel_time_sec' | 'headway_time_sec' | 'dwell_time_sec';
+  export enum PointFieldKeys {
+    depDt = 'dep_dt',
+    currentDepDt = 'current_dep_dt',
+    arrDt = 'arr_dt',
+    serviceDate = 'service_date',
+    depTimeFromEpoch = 'dep_time_from_epoch',
+  }
+  
+  export enum MetricFieldKeys {
+    travelTimeSec = 'travel_time_sec',
+    headWayTimeSec = 'headway_time_sec',
+    dwellTimeSec = 'dwell_time_sec,'
+  }
+
+  export type PointField = PointFieldKeys;
+  export type MetricField = MetricFieldKeys;
   

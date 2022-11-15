@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { Listbox } from '@headlessui/react';
-import { DateOption, SelectOption } from '../../types/inputs';
+import React from 'react';
+import { DateOption } from '../../types/inputs';
 import { formatDate } from '../utils/Date';
 
 function classNames(...classes: string[]) {

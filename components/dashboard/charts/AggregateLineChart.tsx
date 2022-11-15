@@ -15,11 +15,10 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React from 'react';
 import { drawTitle } from './Title';
-import { Legend as LegendLongTerm } from './Legend';
+import { LegendLongTerm } from './Legend';
 import { AggregateLineProps } from '../../../types/lines';
 import { DownloadButton } from '../../../src/charts/download';
 import { AggregateDataPoint } from '../../../src/charts/types';
-import { formatDate } from '../../utils/Date';
 
 ChartJS.register(
   CategoryScale,
@@ -54,7 +53,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   startDate,
   endDate,
   fillColor,
-  xLabel,
   suggestedYMin,
   suggestedYMax,
   xMin,
@@ -62,8 +60,8 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   ...props
 
 }) => {
+  console.log(data[0])
   const labels = data.map((item: AggregateDataPoint) => item[pointField]);
-  console.log(labels)
   return (
     <div className={'chart'}>
       <div className="chart-container">
@@ -117,7 +115,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                     stepSize: 1,
                     tooltipFormat: timeFormat
                   },
-                  // Possile should be 'time'
                   type: 'time',
                   adapters: {
                     date: {
@@ -125,10 +122,12 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                     },
                   },
                   // force graph to show startDate to endDate, even if missing data
-                  min: startDate,
-                  max: endDate,
+                  // TODO: clean this up
+                  min: timeUnit === 'day' ? startDate : null,
+                  max: timeUnit === 'day' ? endDate : null,
                   title: {
                     display: true,
+                    // TODO: Change this when doing hourly aggregates.
                     text: yearLabel(startDate, endDate),
                   }
                 }
