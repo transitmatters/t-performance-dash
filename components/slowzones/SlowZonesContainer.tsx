@@ -28,7 +28,7 @@ export const SlowZonesContainer = ({ allSlow, delayTotals }: SlowZonesContainerP
             {({ open }) => (
               <>
                 <div className="relative">
-                  <Listbox.Button className="relative w-full cursor-default rounded-md border border-black  bg-tm-light_red py-1.5 pl-3 pr-10 text-left text-white shadow-sm focus:outline-none focus:ring-1 sm:text-sm">
+                  <Listbox.Button className="relative w-full cursor-default rounded-md border border-black  bg-tm-lightRed py-1.5 pl-3 pr-10 text-left text-white shadow-sm focus:outline-none focus:ring-1 sm:text-sm">
                     <span className="block truncate">{selectedGraph.name}</span>
                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                       <ChevronUpDownIcon className="text-white-400 h-5 w-5" aria-hidden="true" />
@@ -48,7 +48,7 @@ export const SlowZonesContainer = ({ allSlow, delayTotals }: SlowZonesContainerP
                           key={person.id}
                           className={({ active }) =>
                             classNames(
-                              active ? 'bg-tm-light_red text-white' : 'text-gray-900',
+                              active ? 'bg-tm-lightRed text-white' : 'text-gray-900',
                               'relative cursor-default select-none py-2 pl-3 pr-9'
                             )
                           }

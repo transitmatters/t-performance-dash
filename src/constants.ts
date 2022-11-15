@@ -1,5 +1,4 @@
 import moment from 'moment';
-import { COLORS } from '../constants/colors';
 import { MbtaMajorEvent } from './slowzones/types';
 
 import stations_json from './stations.json';
@@ -15,7 +14,7 @@ const FRONTEND_TO_BACKEND_MAP = new Map([
 export const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP.get(window.location.hostname) || '';
 
 export const colorsForLine: Record<string, string> = {
-  Red: COLORS.redMBTA,
+  Red: '#da291c',
   Orange: '#ed8b00',
   Blue: '#003da5',
   Green: '#00834d',
