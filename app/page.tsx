@@ -108,7 +108,6 @@ export default function Home() {
                  //TODO: get this to display week day correctly...
                  timeFormat={'MMM d yyyy'}
                  seriesName='Median headway'
-                 //TODO: when does this load? We want start date to be populated too.
                  startDate={dateSelection?.startDate}
                  endDate={dateSelection?.endDate}
                  // There were 2 diff colors in v3 of dashboard. Why?
@@ -117,7 +116,6 @@ export default function Home() {
                  location={'todo'}
                  // TODO: isLoading
                  isLoading={false}
-                 //TODO
                  bothStops={false}
                  fname="headways"
                />

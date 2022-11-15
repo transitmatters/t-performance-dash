@@ -1,4 +1,4 @@
-export interface DownloadDataPoint {
+export interface SingleDayDataPoint {
     route_id: string;
     direction: number;
     dep_dt: Date;
@@ -12,7 +12,7 @@ export interface DownloadDataPoint {
     threshold_flag_1?: string;
   }
   
-  export interface AggregatePoint {
+  export interface AggregateDataPoint {
     '25%': number;
     '50%': number;
     '75%': number;

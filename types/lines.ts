@@ -1,11 +1,11 @@
 import React from "react"
-import { AggregatePoint, DownloadDataPoint } from "../src/charts/types"
+import { AggregateDataPoint, SingleDayDataPoint } from "../src/charts/types"
 
 export interface LineProps {
     title: string,
     chartId: string,
     metricField: string,
-    data: DownloadDataPoint[] | AggregatePoint[],
+    data: SingleDayDataPoint[] | AggregateDataPoint[],
     location: any,
     isLoading: any,
     pointField: 'dep_time_from_epoch' | 'service_date' | 'dep_dt' | 'current_dep_dt' | 'arr_dt',
@@ -16,7 +16,7 @@ export interface LineProps {
 export interface AggregateLineProps extends LineProps {
     timeUnit: 'day' | 'hour',
     //TODO: figure out why it breaks when I don't specify the aggregate point.
-    data: AggregatePoint[]
+    data: AggregateDataPoint[]
     timeFormat: string,
     seriesName: string,
     startDate: any,

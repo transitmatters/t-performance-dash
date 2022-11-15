@@ -133,7 +133,7 @@ class SingleDayLine extends React.Component {
         labels,
         datasets: [
           {
-            label: `Actuals ${this.props.seriesName}`,
+            label: `Actual ${this.props.seriesName}`,
             fill: false,
             lineTension: 0.1,
             pointBackgroundColor: point_colors(this.props.data, this.props.yField, this.props.benchmarkField),

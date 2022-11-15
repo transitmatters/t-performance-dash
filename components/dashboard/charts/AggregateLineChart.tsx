@@ -15,10 +15,10 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React from 'react';
 import { drawTitle } from './Title';
-import { Legend as LegendView, LegendLongTerm } from './Legend';
+import { Legend as LegendLongTerm } from './Legend';
 import { AggregateLineProps } from '../../../types/lines';
 import { DownloadButton } from '../../../src/charts/download';
-import { AggregatePoint } from '../../../src/charts/types';
+import { AggregateDataPoint } from '../../../src/charts/types';
 import { formatDate } from '../../utils/Date';
 
 ChartJS.register(
@@ -32,6 +32,12 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
+const yearLabel = (date1: string, date2: string) => {
+  const y1 = date1.split("-")[0];
+  const y2 = date2.split("-")[0];
+  return (y1 === y2) ? y1 : `${y1} – ${y2}`;
+}
 
 export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   chartId,
@@ -56,7 +62,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   ...props
 
 }) => {
-  const labels = data.map((item: AggregatePoint) => item[pointField]);
+  const labels = data.map((item: AggregateDataPoint) => item[pointField]);
   console.log(labels)
   return (
     <div className={'chart'}>
@@ -69,14 +75,13 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 {
                   label: seriesName,
                   fill: false,
-                  //Doesn't work?
                   tension: 0.1,
                   pointBackgroundColor: '#1c1c1c',
                   pointHoverRadius: 3,
                   pointHoverBackgroundColor: '#1c1c1c',
                   pointRadius: 3,
                   pointHitRadius: 10,
-                  data: data.map((item: AggregatePoint) => (item["50%"] / 60).toFixed(2))
+                  data: data.map((item: AggregateDataPoint) => (item["50%"] / 60).toFixed(2))
                 },
                 {
                   label: "25th percentile",
@@ -84,7 +89,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                   backgroundColor: fillColor,
                   tension: 0.4,
                   pointRadius: 0,
-                  data: data.map((item: AggregatePoint) => (item["25%"] / 60).toFixed(2))
+                  data: data.map((item: AggregateDataPoint) => (item["25%"] / 60).toFixed(2))
                 },
                 {
                   label: "75th percentile",
@@ -92,7 +97,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                   backgroundColor: fillColor,
                   tension: 0.4,
                   pointRadius: 0,
-                  data: data.map((item: AggregatePoint) => (item["75%"] / 60).toFixed(2))
+                  data: data.map((item: AggregateDataPoint) => (item["75%"] / 60).toFixed(2))
                 },
               ]
             }}
@@ -100,7 +105,8 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
               scales: {
                 y: {
                   title: {
-                    text: "Minutes"
+                    display: true,
+                    text: "Minutes",
                   },
                   suggestedMin: suggestedYMin,
                   suggestedMax: suggestedYMax,
@@ -122,15 +128,22 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                   min: startDate,
                   max: endDate,
                   title: {
-                    text: xLabel,
+                    display: true,
+                    text: yearLabel(startDate, endDate),
                   }
                 }
-              }
+              },
+              // Make the tooltip display all 3 datapoints for each x axis entry.
+              interaction: {
+                mode: 'index',
+              },
             }}
             plugins={[{
               id: 'AggregateLineAfterDrawPlugin',
               afterDraw: (chart: ChartJS) => {
-                drawTitle(title, location, bothStops, chart);
+                // TODO: remove place holders
+                drawTitle(title, { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
+                bothStops, chart);
               }
             }]}
           />

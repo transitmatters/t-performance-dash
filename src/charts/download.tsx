@@ -1,5 +1,5 @@
 import { CSVLink } from 'react-csv';
-import { AggregatePoint, DownloadDataPoint, Location } from './types';
+import { AggregateDataPoint, SingleDayDataPoint, Location } from './types';
 
 const directionAbbrs = {
   northbound: "NB",
@@ -30,7 +30,7 @@ function filename(datasetName: string, location: Location, bothStops: boolean, s
 
 interface DownloadButtonProps {
   datasetName: string;
-  data: (DownloadDataPoint | AggregatePoint)[];
+  data: (SingleDayDataPoint | AggregateDataPoint)[];
   location: Location;
   bothStops: boolean;
   startDate: string;
