@@ -3,12 +3,12 @@ export interface DownloadDataPoint {
     direction: number;
     dep_dt: Date;
     arr_dt: Date;
-    current_dep_dt: Date;
-    travel_time_sec: number;
-    headway_time_sec: number;
-    dwell_time_sec: number;
-    benchmark_travel_time_sec: number;
-    benchmark_headway_time_sec: number;
+    current_dep_dt?: Date;
+    travel_time_sec?: number;
+    headway_time_sec?: number;
+    dwell_time_sec?: number;
+    benchmark_travel_time_sec?: number;
+    benchmark_headway_time_sec?: number;
     threshold_flag_1?: string;
   }
   
@@ -17,13 +17,13 @@ export interface DownloadDataPoint {
     '50%': number;
     '75%': number;
     count: number;
-    dep_time_from_epoch: Date;
-    service_date: Date;
-    is_peak_day: boolean;
     max: number;
     mean: number;
     min: number;
     std: number;
+    service_date?: string;
+    dep_time_from_epoch?: Date;
+    is_peak_day?: boolean;
   }
   
   export interface Location {

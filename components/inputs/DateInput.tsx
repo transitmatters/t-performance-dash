@@ -25,7 +25,7 @@ export const DateInput: React.FC<DateInputProps> = ({ dateSelection, setDateSele
                     <label className="block text-sm font-medium text-gray-700">{'To'}</label>
                     <span>
                         <input type="date" className="" onChange={(event) => {setDateSelection({...dateSelection, endDate: event.target.value})}} max={formatDate(new Date())}/>
-                        <button onClick={() => setDateSelection({ ...dateSelection, range: false })}>🅧</button>
+                        <button onClick={() => setDateSelection({ ...dateSelection, endDate: undefined, range: false })}>🅧</button>
                     </span>
                 </span>
                 :

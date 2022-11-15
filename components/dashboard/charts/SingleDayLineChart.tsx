@@ -18,6 +18,7 @@ import { DataPoint } from '../../../types/dataPoints';
 import { colors } from '../../../utils/constants';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
+import { SingleDayLineProps } from '../../../types/lines';
 
 ChartJS.register(
   CategoryScale,
@@ -79,17 +80,7 @@ const departureFromNormalString = (metric: number, benchmark: number) => {
   return '';
 };
 
-interface SingleDayLineChartProps {
-  data: DataPoint[];
-  title: string;
-  chartId: string;
-  metricField: string;
-  benchmarkField?: string;
-  pointField: string;
-  bothStops?: boolean;
-}
-
-export const SingleDayLineChart: React.FC<SingleDayLineChartProps> = ({
+export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   chartId,
   title,
   data,
@@ -102,6 +93,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineChartProps> = ({
   return (
     <div className={'chart'}>
       <div className="chart-container">
+        <div>
         <Line
           id={chartId}
           height={250}
@@ -206,6 +198,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineChartProps> = ({
         />
       </div>
       <div className="chart-extras">{benchmarkField && <LegendView />}</div>
+      </div>
     </div>
   );
 };

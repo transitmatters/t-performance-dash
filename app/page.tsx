@@ -10,6 +10,10 @@ import alerts from '../data/alerts.json';
 import dwellsData from '../data/dwells.json';
 import headwaysData from '../data/headways.json';
 import travelTimesData from '../data/travel_times.json';
+import dwellsDataAgg from '../data/dwells_agg.json';
+import headwaysDataAgg from '../data/headways_agg.json';
+import travelTimesDataAgg from '../data/travel_times_agg.json';
+
 import { DateOption, SelectOption } from '../types/inputs';
 import { optionsForField, swapStations } from '../utils/stations';
 
@@ -86,22 +90,38 @@ export default function Home() {
               Swap
             </button>
             <DateInput dateSelection={dateSelection} setDateSelection={setDateSelection} />
+            <button onClick={() => { console.log(headwaysDataAgg) }}>databutton</button>
           </div>
         </div>
       </div>
       <AlertBar alerts={alerts} today={'2022-10-11'} isLoading={false} />
       <div className="px-4">
-        {dateSelection?.range ?
-            <div className={'charts main-column'}>
-              <AggregateLineChart
-                chartId={'headways'}
-                title={'Time between trains (headways)'}
-                data={headwaysData}
-                metricField={'headway_time_sec'}
-                benchmarkField={'benchmark_headway_time_sec'}
-                pointField={'current_dep_dt'}
-              />
-            </div>
+        {dateSelection?.endDate ?
+               <div className={'charts main-column'}>
+               <AggregateLineChart
+                 chartId={'headways_agg'}
+                 title={'Time between trains (headways)'}
+                 data={headwaysDataAgg}
+                 metricField={'headway_time_sec'}
+                 pointField={'service_date'}
+                 timeUnit={'day'}
+                 //TODO: get this to display week day correctly...
+                 timeFormat={'MMM d yyyy'}
+                 seriesName='Median headway'
+                 //TODO: when does this load? We want start date to be populated too.
+                 startDate={dateSelection?.startDate}
+                 endDate={dateSelection?.endDate}
+                 // There were 2 diff colors in v3 of dashboard. Why?
+                 fillColor={'rgba(191,200,214,0.5)'}
+                 xLabel={undefined}
+                 location={'todo'}
+                 // TODO: isLoading
+                 isLoading={false}
+                 //TODO
+                 bothStops={false}
+                 fname="headways"
+               />
+             </div>
           :
           <div>
             <div className={'charts main-column'}>
@@ -115,6 +135,7 @@ export default function Home() {
                 bothStops={true}
               />
             </div>
+           
             <div className={'charts main-column'}>
               <SingleDayLineChart
                 chartId={'headways'}
