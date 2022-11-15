@@ -2,11 +2,12 @@ import json
 import os
 import subprocess
 from chalice import Chalice, CORSConfig, ConflictError, Response
-from datetime import date
+from datetime import date, timedelta
 from chalicelib import (
     aggregation,
     data_funcs,
-    secrets,
+    MbtaPerformanceAPI,
+    secrets
 )
 
 app = Chalice(app_name="data-dashboard")
@@ -35,25 +36,30 @@ def mutlidict_to_dict(mutlidict):
 @app.route("/healthcheck", cors=cors_config)
 def healthcheck():
     # These functions must return True or False :-)
-    checks = [
-        lambda: len(secrets.MBTA_V2_API_KEY) > 0,
-        lambda: "2020-11-07 10:33:40" in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))
-    ]
+    checks = {
+        "API Key Present": (lambda: len(secrets.MBTA_V2_API_KEY) > 0),
+        "S3 Headway Fetching": (lambda: "2020-11-07 10:33:40" in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))),
+        "Performance API Check": (lambda: MbtaPerformanceAPI.get_api_data("headways", {"stop": [70067]}, date.today() - timedelta(days=1), date.today()))
+    }
 
-    for i in range(0, len(checks)):
+    failed_checks = {}
+    for check in checks:
         try:
-            checks[i] = checks[i]()
-        except Exception:
-            checks[i] = False
+            check_bool = checks[check]()
+            if not check_bool:
+                failed_checks[check] = "Check failed :("
+        except Exception as e:
+            failed_checks[check] = f"Check threw an exception: {e}"
 
-    if all(checks):
-        return {
+    if len(failed_checks) == 0:
+        return Response(body={
             "status": "pass"
-        }
+        }, status_code=200)
 
     return Response(body={
         "status": "fail",
-        "check_failed": checks.index(False),
+        "failed_checks_sum": len(failed_checks),
+        "failed_checks": failed_checks
     }, status_code=500)
 
 
