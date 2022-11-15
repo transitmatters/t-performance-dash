@@ -15,9 +15,10 @@ This is the repository for the TransitMatters Data Dashboard. Client code is wri
 
 1. Add `MBTA_V2_API_KEY` to your shell environment:
    - `export MBTA_V2_API_KEY='KEY'` in ~/.bashrc or ~/.zshrc
-2. In the root directory, run `npm install` to install all frontend and backend dependencies
-3. Run `npm start` to start both the JavaScript development server and the Python backend at the same time.
-4. Navigate to [http://localhost:3000](http://localhost:3000) (or the url provided after running `npm start`)
+2. Add your AWS credentials (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) to your shell environment, OR add them to a .boto config file with awscli command `aws configure`.
+3. In the root directory, run `npm install` to install all frontend and backend dependencies
+4. Run `npm start` to start both the JavaScript development server and the Python backend at the same time.
+5. Navigate to [http://localhost:3000](http://localhost:3000) (or the url provided after running `npm start`)
 
 ## Deployment Instructions
 

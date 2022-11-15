@@ -14,11 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full bg-gray-100 font-sans">
       <head>
         <title>Dashboard</title>
       </head>
-      <body>
+      <body className="h-full ">
         <QueryClientProvider client={queryClient}>
           <Layout>{children}</Layout>
         </QueryClientProvider>
