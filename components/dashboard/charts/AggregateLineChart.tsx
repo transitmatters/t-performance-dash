@@ -17,8 +17,9 @@ import React from 'react';
 import { drawTitle } from './Title';
 import { LegendLongTerm } from './Legend';
 import { AggregateLineProps } from '../../../types/lines';
-import { DownloadButton } from '../../../src/charts/download';
 import { AggregateDataPoint } from '../../../src/charts/types';
+import { prettyDate } from '../../utils/Date';
+import { COLORS } from '../../../constants/colors';
 
 ChartJS.register(
   CategoryScale,
@@ -32,10 +33,14 @@ ChartJS.register(
   Legend
 );
 
-const yearLabel = (date1: string, date2: string) => {
-  const y1 = date1.split("-")[0];
-  const y2 = date2.split("-")[0];
-  return (y1 === y2) ? y1 : `${y1} – ${y2}`;
+const xAxisLabel = (startDate: string, endDate: string, hourly: boolean) => {
+  if (hourly) {
+    return `${prettyDate(startDate, false)} – ${prettyDate(endDate, false)}`
+  } else {
+    const y1 = startDate.split("-")[0];
+    const y2 = endDate.split("-")[0];
+    return (y1 === y2) ? y1 : `${y1} – ${y2}`;
+  }
 }
 
 export const AggregateLineChart: React.FC<AggregateLineProps> = ({
@@ -45,7 +50,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   location,
   isLoading,
   pointField,
-  bothStops,
+  bothStops = false,
   fname,
   timeUnit,
   timeFormat,
@@ -55,18 +60,18 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   fillColor,
   suggestedYMin,
   suggestedYMax,
-  xMin,
-  xMax,
   ...props
 
 }) => {
-  console.log(data[0])
+  const hourly = (timeUnit === 'hour')
   const labels = data.map((item: AggregateDataPoint) => item[pointField]);
   return (
-    <div className={'chart'}>
+    <div className='chart'>
       <div className="chart-container">
         <div>
           <Line
+            id={chartId}
+            height={250}
             data={{
               labels,
               datasets: [
@@ -74,9 +79,9 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                   label: seriesName,
                   fill: false,
                   tension: 0.1,
-                  pointBackgroundColor: '#1c1c1c',
+                  pointBackgroundColor: COLORS.charts.pointColor,
                   pointHoverRadius: 3,
-                  pointHoverBackgroundColor: '#1c1c1c',
+                  pointHoverBackgroundColor: COLORS.charts.pointColor,
                   pointRadius: 3,
                   pointHitRadius: 10,
                   data: data.map((item: AggregateDataPoint) => (item["50%"] / 60).toFixed(2))
@@ -122,38 +127,42 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                     },
                   },
                   // force graph to show startDate to endDate, even if missing data
-                  // TODO: clean this up
-                  min: timeUnit === 'day' ? startDate : null,
-                  max: timeUnit === 'day' ? endDate : null,
+                  min: hourly ? null : startDate,
+                  max: hourly ? null : endDate,
                   title: {
                     display: true,
-                    // TODO: Change this when doing hourly aggregates.
-                    text: yearLabel(startDate, endDate),
+                    text: xAxisLabel(startDate, endDate, hourly),
                   }
                 }
+              },
+              responsive: true,
+              maintainAspectRatio: false,
+              layout: {
+                padding: {
+                  top: 25,
+                },
               },
               // Make the tooltip display all 3 datapoints for each x axis entry.
               interaction: {
                 mode: 'index',
+                intersect: false,
+              },
+              plugins: {
+                legend: {
+                  display: false,
+                },
               },
             }}
             plugins={[{
-              id: 'AggregateLineAfterDrawPlugin',
+              id: 'customTitleAggregate',
               afterDraw: (chart: ChartJS) => {
-                // TODO: remove place holders
+                // TODO: This is not placing the title correctly for aggregate charts. 
                 drawTitle(title, { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
-                bothStops, chart);
+                  bothStops, chart);
               }
             }]}
           />
-          {/* <DownloadButton
-      data={data}
-      datasetName={fname}
-      location={location}
-      bothStops={titleBothStops}
-      startDate={startDate}
-      endDate={endDate}
-    /> */}
+          {/* TODO: add back download button */}
         </div>
         <div className="chart-extras">
           <LegendLongTerm />

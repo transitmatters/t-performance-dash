@@ -1,3 +1,4 @@
+import { COLORS } from './constants/colors'
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -9,10 +10,10 @@ module.exports = {
     extend: {
       colors: {
         mbta: {
-          red: '#da291c',
-          orange: '#ed8b00',
-          blue: '#003da5',
-          green: '#00834d',
+          red: COLORS.mbta.red,
+          orange: COLORS.mbta.orange,
+          blue: COLORS.mbta.blue,
+          green: COLORS.mbta.green,
         },
       },
     },

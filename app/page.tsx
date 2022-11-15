@@ -16,7 +16,8 @@ import travelTimesDataAgg from '../data/travel_times_agg.json';
 
 import { DateOption, SelectOption } from '../types/inputs';
 import { optionsForField, swapStations } from '../utils/stations';
-import { MetricFieldKeys, PointFieldKeys } from '../src/charts/types';
+import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../src/charts/types';
+import { COLORS } from '../constants/colors';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -113,14 +114,14 @@ export default function Home() {
                 startDate={dateSelection?.startDate}
                 endDate={dateSelection?.endDate}
                 // There were 2 diff colors in v3 of dashboard. Why?
-                fillColor={'rgba(191,200,214,0.5)'}
+                fillColor={COLORS.charts.fillBackgroundColor}
                 location={'todo'}
                 // TODO: isLoading
                 isLoading={false}
                 bothStops={true}
                 fname="traveltimes"
               />
-            </div>Î
+            </div>
             <div className={'charts main-column'}>
               <AggregateLineChart
                 chartId={'headways_agg'}
@@ -134,11 +135,10 @@ export default function Home() {
                 startDate={dateSelection?.startDate}
                 endDate={dateSelection?.endDate}
                 // There were 2 diff colors in v3 of dashboard. Why?
-                fillColor={'rgba(191,200,214,0.5)'}
+                fillColor={COLORS.charts.fillBackgroundColor}
                 location={'todo'}
                 // TODO: isLoading
                 isLoading={false}
-                bothStops={false}
                 fname="headways"
               />
             </div>
@@ -157,12 +157,11 @@ export default function Home() {
                   startDate={dateSelection?.startDate}
                   endDate={dateSelection?.endDate}
                   // There were 2 diff colors in v3 of dashboard. Why?
-                  fillColor={'rgba(191,200,214,0.5)'}
+                  fillColor={COLORS.charts.fillBackgroundColor}
                   // TODO: location
                   location={'todo'}
                   // TODO: isLoading
                   isLoading={false}
-                  bothStops={false}
                   fname="dwells"
                 />
               </div>
@@ -175,12 +174,12 @@ export default function Home() {
                 pointField={PointFieldKeys.depTimeFromEpoch}
                 timeUnit={'hour'}
                 //TODO: get this to display week day correctly...
-                timeFormat={'hh:mm a'}
+                timeFormat='hh:mm a'
                 seriesName='Median travel time'
                 startDate={dateSelection?.startDate}
                 endDate={dateSelection?.endDate}
                 // There were 2 diff colors in v3 of dashboard. Also make these constants
-                fillColor={'rgba(136,174,230,0.5)'}
+                fillColor={COLORS.charts.fillBackgroundColorHourly}
                 // TODO: location
                 location={'todo'}
                 // TODO: isLoading
@@ -198,9 +197,12 @@ export default function Home() {
                 title={'Travel Times'}
                 data={travelTimesData}
                 metricField={MetricFieldKeys.travelTimeSec}
-                benchmarkField={'benchmark_travel_time_sec'}
+                benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
                 pointField={PointFieldKeys.depDt}
                 bothStops={true}
+                location={'todo'}
+                isLoading={false}
+                fname={'todo'}
               />
             </div>
 
@@ -210,8 +212,11 @@ export default function Home() {
                 title={'Time between trains (headways)'}
                 data={headwaysData}
                 metricField={MetricFieldKeys.headWayTimeSec}
-                benchmarkField={'benchmark_headway_time_sec'}
+                benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
                 pointField={PointFieldKeys.currentDepDt}
+                location={'todo'}
+                isLoading={false}
+                fname={'todo'}
               />
             </div>
             <div className={'charts main-column'}>
@@ -221,6 +226,9 @@ export default function Home() {
                 data={dwellsData}
                 metricField={MetricFieldKeys.dwellTimeSec}
                 pointField={PointFieldKeys.arrDt}
+                location={'todo'}
+                isLoading={false}
+                fname={'todo'}
               />
             </div>
           </div>

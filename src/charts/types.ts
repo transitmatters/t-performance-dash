@@ -1,9 +1,9 @@
 export interface SingleDayDataPoint {
     route_id: string;
     direction: number;
-    dep_dt: Date;
-    arr_dt: Date;
-    current_dep_dt?: Date;
+    dep_dt?: string;
+    arr_dt?: string;
+    current_dep_dt?: string;
     travel_time_sec?: number;
     headway_time_sec?: number;
     dwell_time_sec?: number;
@@ -35,8 +35,6 @@ export interface SingleDayDataPoint {
   
   type Direction = 'northbound' | 'southbound' | 'eastbound' | 'westbound' | 'inbound' | 'outbound';
   
-  export type BenchmarkField = 'benchmark_travel_time_sec' | 'benchmark_headway_time_sec' | null;
-  
   export enum PointFieldKeys {
     depDt = 'dep_dt',
     currentDepDt = 'current_dep_dt',
@@ -48,9 +46,14 @@ export interface SingleDayDataPoint {
   export enum MetricFieldKeys {
     travelTimeSec = 'travel_time_sec',
     headWayTimeSec = 'headway_time_sec',
-    dwellTimeSec = 'dwell_time_sec,'
+    dwellTimeSec = 'dwell_time_sec',
+  }
+  export enum BenchmarkFieldKeys {
+    benchmarkTravelTimeSec = 'benchmark_travel_time_sec',
+    benchmarkHeadwayTimeSec = 'benchmark_headway_time_sec',
   }
 
   export type PointField = PointFieldKeys;
   export type MetricField = MetricFieldKeys;
+  export type BenchmarkField = BenchmarkFieldKeys;
   

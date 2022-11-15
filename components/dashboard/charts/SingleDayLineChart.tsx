@@ -19,6 +19,7 @@ import { colors } from '../../../utils/constants';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
 import { SingleDayLineProps } from '../../../types/lines';
+import { prettyDate } from '../../utils/Date';
 
 ChartJS.register(
   CategoryScale,
@@ -31,19 +32,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-const prettyDate = (dateString: string, with_dow: boolean) => {
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    weekday: with_dow ? 'long' : undefined,
-  };
-  return new Date(`${dateString}T00:00:00`).toLocaleDateString(
-    undefined, // user locale/language
-    options
-  );
-};
 
 const pointColors = (data: DataPoint[], metric_field: string, benchmark_field?: string) => {
   return data.map((point: DataPoint) => {
@@ -65,6 +53,7 @@ const pointColors = (data: DataPoint[], metric_field: string, benchmark_field?: 
     return colors.grey; //whatever
   });
 };
+
 
 const departureFromNormalString = (metric: number, benchmark: number) => {
   const ratio = metric / benchmark;
@@ -108,12 +97,13 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField),
                 pointRadius: 3,
                 pointHitRadius: 10,
-                data: data.map((datapoint) => (datapoint[metricField] / 60).toFixed(2)),
+                // TODO: would be nice to add types to these arrow functions - but causes an issue bc datapoint[field] might be undefined.
+                data: data.map((datapoint: any) => (datapoint[metricField] / 60).toFixed(2)),
               },
               {
                 label: `Benchmark MBTA`,
                 data: benchmarkField
-                  ? data.map((datapoint) => (datapoint[benchmarkField] / 60).toFixed(2))
+                  ? data.map((datapoint: any) => (datapoint[benchmarkField] / 60).toFixed(2))
                   : [],
                 pointRadius: 0,
                 pointHoverRadius: 3,
