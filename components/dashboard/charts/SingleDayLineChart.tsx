@@ -15,7 +15,7 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React from 'react';
 import { DataPoint } from '../../../types/dataPoints';
-import { colors } from '../../../utils/constants';
+import { CHART_COLORS } from '../../../utils/constants';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
 import { SingleDayLineProps } from '../../../types/lines';
@@ -38,19 +38,19 @@ const pointColors = (data: DataPoint[], metric_field: string, benchmark_field?: 
     if (benchmark_field) {
       const ratio = point[metric_field] / point[benchmark_field];
       if (point[benchmark_field] === null) {
-        return colors.grey; //grey
+        return CHART_COLORS.GREY; //grey
       } else if (ratio <= 1.25) {
-        return colors.green; //green
+        return CHART_COLORS.GREEN; //green
       } else if (ratio <= 1.5) {
-        return colors.yellow; //yellow
+        return CHART_COLORS.YELLOW; //yellow
       } else if (ratio <= 2.0) {
-        return colors.red; //red
+        return CHART_COLORS.RED; //red
       } else if (ratio > 2.0) {
-        return colors.purple; //purple
+        return CHART_COLORS.PURPLE; //purple
       }
     }
 
-    return colors.grey; //whatever
+    return CHART_COLORS.GREY; //whatever
   });
 };
 

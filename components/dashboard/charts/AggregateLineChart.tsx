@@ -19,7 +19,7 @@ import { LegendLongTerm } from './Legend';
 import { AggregateLineProps } from '../../../types/lines';
 import { AggregateDataPoint } from '../../../src/charts/types';
 import { prettyDate } from '../../utils/Date';
-import { COLORS } from '../../../constants/colors';
+import { CHART_COLORS } from '../../../utils/constants';
 
 ChartJS.register(
   CategoryScale,
@@ -79,9 +79,9 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                   label: seriesName,
                   fill: false,
                   tension: 0.1,
-                  pointBackgroundColor: COLORS.charts.pointColor,
+                  pointBackgroundColor: CHART_COLORS.GREY,
                   pointHoverRadius: 3,
-                  pointHoverBackgroundColor: COLORS.charts.pointColor,
+                  pointHoverBackgroundColor: CHART_COLORS.GREY,
                   pointRadius: 3,
                   pointHitRadius: 10,
                   data: data.map((item: AggregateDataPoint) => (item["50%"] / 60).toFixed(2))

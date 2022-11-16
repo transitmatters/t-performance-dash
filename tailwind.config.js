@@ -17,6 +17,7 @@ module.exports = {
           orange: '#ed8b00',
           blue: '#003da5',
           green: '#00834d',
+          bus: '#ffc72c',
         },
         tm: {
           red: '#a31e1e',
