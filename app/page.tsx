@@ -7,17 +7,12 @@ import { SingleDayLineChart } from '../components/dashboard/charts/SingleDayLine
 import { DateInput } from '../components/inputs/DateInput';
 import { Select } from '../components/inputs/Select';
 import alerts from '../data/alerts.json';
-import dwellsData from '../data/dwells.json';
-import headwaysData from '../data/headways.json';
-import travelTimesData from '../data/travel_times.json';
-import dwellsDataAgg from '../data/dwells_agg.json';
-import headwaysDataAgg from '../data/headways_agg.json';
-import travelTimesDataAgg from '../data/travel_times_agg.json';
-
 import { DateOption, SelectOption } from '../types/inputs';
 import { optionsForField, swapStations } from '../utils/stations';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../src/charts/types';
 import { COLORS } from '../constants/colors';
+import { AggregatePage } from '../components/dashboard/charts/AggregatePage';
+import { SingleDayPage } from '../components/dashboard/charts/SingleDayPage';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -92,146 +87,15 @@ export default function Home() {
               Swap
             </button>
             <DateInput dateSelection={dateSelection} setDateSelection={setDateSelection} />
-            <button onClick={() => { console.log(headwaysDataAgg) }}>databutton</button>
           </div>
         </div>
       </div>
       <AlertBar alerts={alerts} today={'2022-10-11'} isLoading={false} />
       <div className="px-4">
         {dateSelection?.endDate ?
-          <div>
-            <div className={'charts main-column'}>
-              <AggregateLineChart
-                chartId={'travel_times_agg'}
-                title={'Travel times'}
-                data={travelTimesDataAgg['by_date']?.filter(x => x.peak === 'all') || []}
-                // This is service date when agg by date. dep_time_from_epoch when agg by hour. Can probably remove this prop.
-                pointField={PointFieldKeys.serviceDate}
-                timeUnit={'day'}
-                //TODO: get this to display week day correctly...
-                timeFormat={'MMM d yyyy'}
-                seriesName='Median travel time'
-                startDate={dateSelection?.startDate}
-                endDate={dateSelection?.endDate}
-                // There were 2 diff colors in v3 of dashboard. Why?
-                fillColor={COLORS.charts.fillBackgroundColor}
-                location={'todo'}
-                // TODO: isLoading
-                isLoading={false}
-                bothStops={true}
-                fname="traveltimes"
-              />
-            </div>
-            <div className={'charts main-column'}>
-              <AggregateLineChart
-                chartId={'headways_agg'}
-                title={'Time between trains (headways)'}
-                data={headwaysDataAgg}
-                pointField={PointFieldKeys.serviceDate}
-                timeUnit={'day'}
-                //TODO: get this to display week day correctly...
-                timeFormat={'MMM d yyyy'}
-                seriesName='Median headway'
-                startDate={dateSelection?.startDate}
-                endDate={dateSelection?.endDate}
-                // There were 2 diff colors in v3 of dashboard. Why?
-                fillColor={COLORS.charts.fillBackgroundColor}
-                location={'todo'}
-                // TODO: isLoading
-                isLoading={false}
-                fname="headways"
-              />
-            </div>
-            { // TODO: Make this only appear when not on bus lines.
-              // !bus_mode &&  
-              <div className={'charts main-column'}>
-                <AggregateLineChart
-                  chartId={'dwells_agg'}
-                  title={'Time spent at stations (dwells)'}
-                  data={dwellsDataAgg}
-                  pointField={PointFieldKeys.serviceDate}
-                  timeUnit={'day'}
-                  //TODO: get this to display week day correctly...
-                  timeFormat={'MMM d yyyy'}
-                  seriesName='Median dwell time'
-                  startDate={dateSelection?.startDate}
-                  endDate={dateSelection?.endDate}
-                  // There were 2 diff colors in v3 of dashboard. Why?
-                  fillColor={COLORS.charts.fillBackgroundColor}
-                  // TODO: location
-                  location={'todo'}
-                  // TODO: isLoading
-                  isLoading={false}
-                  fname="dwells"
-                />
-              </div>
-            }
-            <div className={'charts main-column'}>
-              <AggregateLineChart
-                chartId={'dwells_agg'}
-                title={'Travel times by hour'}
-                data={travelTimesDataAgg['by_time'].filter(data => data.is_peak_day)} // TODO: Add toggle for this.
-                pointField={PointFieldKeys.depTimeFromEpoch}
-                timeUnit={'hour'}
-                //TODO: get this to display week day correctly...
-                timeFormat='hh:mm a'
-                seriesName='Median travel time'
-                startDate={dateSelection?.startDate}
-                endDate={dateSelection?.endDate}
-                // There were 2 diff colors in v3 of dashboard. Also make these constants
-                fillColor={COLORS.charts.fillBackgroundColorHourly}
-                // TODO: location
-                location={'todo'}
-                // TODO: isLoading
-                isLoading={false}
-                bothStops={true}
-                fname="traveltimesByHour"
-              />
-            </div>
-          </div>
+          <AggregatePage dateSelection={dateSelection} />
           :
-          <div>
-            <div className={'charts main-column'}>
-              <SingleDayLineChart
-                chartId={'travelTimes'}
-                title={'Travel Times'}
-                data={travelTimesData}
-                metricField={MetricFieldKeys.travelTimeSec}
-                benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
-                pointField={PointFieldKeys.depDt}
-                bothStops={true}
-                location={'todo'}
-                isLoading={false}
-                fname={'todo'}
-              />
-            </div>
-
-            <div className={'charts main-column'}>
-              <SingleDayLineChart
-                chartId={'headways'}
-                title={'Time between trains (headways)'}
-                data={headwaysData}
-                metricField={MetricFieldKeys.headWayTimeSec}
-                benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
-                pointField={PointFieldKeys.currentDepDt}
-                location={'todo'}
-                isLoading={false}
-                fname={'todo'}
-              />
-            </div>
-            <div className={'charts main-column'}>
-              <SingleDayLineChart
-                chartId={'dwells'}
-                title={'Time spent at station (dwells)'}
-                data={dwellsData}
-                metricField={MetricFieldKeys.dwellTimeSec}
-                pointField={PointFieldKeys.arrDt}
-                location={'todo'}
-                isLoading={false}
-                fname={'todo'}
-              />
-            </div>
-          </div>
+          <SingleDayPage />
         }
       </div>
     </>
