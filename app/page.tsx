@@ -23,7 +23,7 @@ const tabs = [
 ];
 
 const fetchData = () => {
-  const url = new URL(`http://localhost:5000/headways/2022-11-03`, window.location.origin);
+  const url = new URL(`/headways/2022-11-03`, window.location.origin);
   url.searchParams.append('stop', '70057')
   const request = fetch(url.toString()).then(response => response.json());
 
