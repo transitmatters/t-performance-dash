@@ -16,7 +16,7 @@ TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", "localhost:3000")
 
 # TODO: Fix to use https again except when local
 cors_config = CORSConfig(
-   allow_origin=f"http://{TM_FRONTEND_HOST}", max_age=3600
+   allow_origin=f"http://{TM_FRONTEND_HOST}:3000", max_age=3600
 )
 
 
@@ -60,6 +60,7 @@ def healthcheck():
 
 @app.route("/headways/{user_date}", cors=cors_config)
 def headways_route(user_date):
+    print('apprequest:', '\nqueryParams: ',app.current_request.query_params,'\n headers: ', app.current_request.headers,'\n context: ', app.current_request.context)
     date = parse_user_date(user_date)
     stops = app.current_request.query_params.getlist("stop")
     return data_funcs.headways(date, stops)

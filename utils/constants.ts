@@ -29,3 +29,11 @@ export const colorsForLine: Record<string, string> = {
   green: LINE_COLORS.GREEN,
   bus: LINE_COLORS.BUS,
 }
+
+export const PRODUCTION = 'dashboard.transitmatters.org';
+export const BETA = 'dashboard-beta.transitmatters.org';
+const FRONTEND_TO_BACKEND_MAP = {
+  PRODUCTION: 'https://dashboard-api2.transitmatters.org',
+  BETA: 'https://dashboard-api-beta.transitmatters.org'
+}
+export const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP[window.location.hostname] || '';

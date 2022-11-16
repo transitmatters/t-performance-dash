@@ -2,15 +2,11 @@
 
 import React, { useState } from 'react';
 import { AlertBar } from '../components/alerts/AlertBar';
-import { AggregateLineChart } from '../components/dashboard/charts/AggregateLineChart';
-import { SingleDayLineChart } from '../components/dashboard/charts/SingleDayLineChart';
 import { DateInput } from '../components/inputs/DateInput';
 import { Select } from '../components/inputs/Select';
 import alerts from '../data/alerts.json';
 import { DateOption, SelectOption } from '../types/inputs';
 import { optionsForField, swapStations } from '../utils/stations';
-import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../src/charts/types';
-import { COLORS } from '../constants/colors';
 import { AggregatePage } from '../components/dashboard/charts/AggregatePage';
 import { SingleDayPage } from '../components/dashboard/charts/SingleDayPage';
 
@@ -26,10 +22,19 @@ const tabs = [
   { name: 'Bus', href: '#', current: false },
 ];
 
+const fetchData = () => {
+  const url = new URL(`http://localhost:5000/headways/2022-11-03`, window.location.origin);
+  url.searchParams.append('stop', '70057')
+  const request = fetch(url.toString()).then(response => response.json());
+
+}
+
 export default function Home() {
   const [fromStation, setFromStation] = useState<SelectOption | null>(null);
   const [toStation, setToStation] = useState<SelectOption | null>(null);
   const [dateSelection, setDateSelection] = useState<DateOption | null>(null);
+
+
 
   return (
     <>
@@ -87,6 +92,7 @@ export default function Home() {
               Swap
             </button>
             <DateInput dateSelection={dateSelection} setDateSelection={setDateSelection} />
+            <button onClick={() => fetchData()}>data boi</button>
           </div>
         </div>
       </div>
