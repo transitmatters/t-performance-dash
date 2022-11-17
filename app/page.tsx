@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { AlertBar } from '../components/alerts/AlertBar';
 import { DateInput } from '../components/inputs/DateInput';
 import { Select } from '../components/inputs/Select';
@@ -22,21 +22,10 @@ const tabs = [
   { name: 'Bus', href: '#', current: false },
 ];
 
-const fetchData = () => {
-  const url = new URL(`/headways/2022-11-03`, window.location.origin);
-  url.searchParams.append('stop', '70057')
-  const request = fetch(url.toString()).then(response => response.json());
-
-}
-
 export default function Home() {
   const [fromStation, setFromStation] = useState<SelectOption | null>(null);
   const [toStation, setToStation] = useState<SelectOption | null>(null);
   const [dateSelection, setDateSelection] = useState<DateOption | null>(null);
-  const [data, setData] = useState();
-  // TODO: only update HEADWAY data when fromStation is changed!!! Save unnecessary fetches.
-  const getData = useCallback(fetchData, [fromStation])
-
 
   return (
     <>
@@ -94,7 +83,6 @@ export default function Home() {
               Swap
             </button>
             <DateInput dateSelection={dateSelection} setDateSelection={setDateSelection} />
-            <button onClick={() => fetchData()}>data boi</button>
           </div>
         </div>
       </div>

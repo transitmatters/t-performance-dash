@@ -1,12 +1,19 @@
 /** @type {import('next').NextConfig} */
+
+let rewrites = []
+// If running locally rewrite requests to server port (proxy).
+if(process.env.NODE_ENV === 'development') {
+  rewrites.push(
+    {
+      source: '/:path*',
+      destination: 'http://localhost:5000/:path*'
+    }
+  );
+}
+
 const nextConfig = {
-  async rewrites() {
-    return [
-      {
-        source: '/:path*',
-        destination: 'http://localhost:5000/:path*'
-      },
-    ]
+ async rewrites() {
+    return rewrites
   },
   reactStrictMode: true,
   swcMinify: true,

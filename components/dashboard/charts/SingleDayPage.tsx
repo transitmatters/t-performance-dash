@@ -5,6 +5,7 @@ import { stopIdsForStations } from '../../../utils/stations';
 import { fetchSingleDayData } from '../../../api/datadashboard';
 import { useQuery } from '@tanstack/react-query';
 
+// TODO: add types
 export const SingleDayPage = ({configuration}) => {
   const { fromStation, toStation, dateSelection} = configuration;
   const date = dateSelection?.startDate;
