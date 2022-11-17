@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { AlertBar } from '../components/alerts/AlertBar';
 import { DateInput } from '../components/inputs/DateInput';
 import { Select } from '../components/inputs/Select';
@@ -33,7 +33,9 @@ export default function Home() {
   const [fromStation, setFromStation] = useState<SelectOption | null>(null);
   const [toStation, setToStation] = useState<SelectOption | null>(null);
   const [dateSelection, setDateSelection] = useState<DateOption | null>(null);
-
+  const [data, setData] = useState();
+  // TODO: only update HEADWAY data when fromStation is changed!!! Save unnecessary fetches.
+  const getData = useCallback(fetchData, [fromStation])
 
 
   return (
@@ -101,7 +103,7 @@ export default function Home() {
         {dateSelection?.endDate ?
           <AggregatePage dateSelection={dateSelection} />
           :
-          <SingleDayPage />
+          <SingleDayPage configuration={{fromStation: fromStation, toStation: toStation, dateSelection: dateSelection}} />
         }
       </div>
     </>

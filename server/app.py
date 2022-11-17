@@ -60,7 +60,6 @@ def healthcheck():
 
 @app.route("/headways/{user_date}", cors=cors_config)
 def headways_route(user_date):
-    print('apprequest:', '\nqueryParams: ',app.current_request.query_params,'\n headers: ', app.current_request.headers,'\n context: ', app.current_request.context)
     date = parse_user_date(user_date)
     stops = app.current_request.query_params.getlist("stop")
     return data_funcs.headways(date, stops)

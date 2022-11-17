@@ -1,24 +1,37 @@
 import { SingleDayLineChart } from './SingleDayLineChart'
 
-import dwellsData from '../../../data/dwells.json';
-import headwaysData from '../../../data/headways.json';
-import travelTimesData from '../../../data/travel_times.json';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../../src/charts/types';
+import { stopIdsForStations } from '../../../utils/stations';
+import { fetchSingleDayData } from '../../../api/datadashboard';
+import { useQuery } from '@tanstack/react-query';
 
-export const SingleDayPage = () => {
+export const SingleDayPage = ({configuration}) => {
+  const { fromStation, toStation, dateSelection} = configuration;
+  const date = dateSelection?.startDate;
+  const {fromStopIds, toStopIds } = stopIdsForStations(fromStation?.value, toStation?.value);
+  const queryReady = !!(fromStopIds && date);
+
+  //TODO: deal with errors
+  const headwaysRequest = useQuery({enabled: queryReady, queryKey: ['headways', fromStopIds, date], queryFn: () => fetchSingleDayData('headways', date, {stop: fromStopIds}) });
+  const traveltimesRequest = useQuery({enabled: queryReady, queryKey: ['traveltimes', fromStopIds, toStopIds, date], queryFn: () => fetchSingleDayData('traveltimes', date, {from_stop: fromStopIds, to_stop: toStopIds}) });
+  const dwellsRequest = useQuery({enabled: queryReady, queryKey: ['dwells', fromStopIds, date], queryFn: () => fetchSingleDayData('dwells', date, {stop: fromStopIds}) });
+  if(!(queryReady)) {
+    //TODO: Add something nice here when no charts are loaded.
+    return (<p> select values to load charts.</p>)
+  }
     return (
         <div>
             <div className={'charts main-column'}>
               <SingleDayLineChart
-                chartId={'travelTimes'}
+                chartId={'traveltimes'}
                 title={'Travel Times'}
-                data={travelTimesData}
+                data={traveltimesRequest.data || []}
                 metricField={MetricFieldKeys.travelTimeSec}
                 benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
                 pointField={PointFieldKeys.depDt}
                 bothStops={true}
                 location={'todo'}
-                isLoading={false}
+                isLoading={traveltimesRequest.isLoading}
                 fname={'todo'}
               />
             </div>
@@ -27,12 +40,12 @@ export const SingleDayPage = () => {
               <SingleDayLineChart
                 chartId={'headways'}
                 title={'Time between trains (headways)'}
-                data={headwaysData}
+                data={headwaysRequest.data || []}
                 metricField={MetricFieldKeys.headWayTimeSec}
                 benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
                 pointField={PointFieldKeys.currentDepDt}
                 location={'todo'}
-                isLoading={false}
+                isLoading={headwaysRequest.isLoading}
                 fname={'todo'}
               />
             </div>
@@ -40,11 +53,11 @@ export const SingleDayPage = () => {
               <SingleDayLineChart
                 chartId={'dwells'}
                 title={'Time spent at station (dwells)'}
-                data={dwellsData}
+                data={dwellsRequest.data || []}
                 metricField={MetricFieldKeys.dwellTimeSec}
                 pointField={PointFieldKeys.arrDt}
                 location={'todo'}
-                isLoading={false}
+                isLoading={dwellsRequest.isLoading}
                 fname={'todo'}
               />
             </div>
