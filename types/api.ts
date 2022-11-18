@@ -4,4 +4,4 @@ export enum SingleDayAPIKeys {
   toStop = 'to_stop',
 }
 
-export type SingleDayAPIOptions = { [key in SingleDayAPIKeys]?: string[] }
+export type SingleDayAPIOptions = { [key in SingleDayAPIKeys]?: string[] | null }
