@@ -14,12 +14,12 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React from 'react';
-import { drawTitle } from './Title';
-import { LegendLongTerm } from './Legend';
 import { AggregateLineProps } from '../../../types/lines';
 import { AggregateDataPoint } from '../../../src/charts/types';
 import { prettyDate } from '../../utils/Date';
 import { CHART_COLORS } from '../../../utils/constants';
+import { LegendLongTerm } from './Legend';
+import { drawTitle } from './Title';
 
 ChartJS.register(
   CategoryScale,
@@ -35,13 +35,13 @@ ChartJS.register(
 
 const xAxisLabel = (startDate: string, endDate: string, hourly: boolean) => {
   if (hourly) {
-    return `${prettyDate(startDate, false)} – ${prettyDate(endDate, false)}`
+    return `${prettyDate(startDate, false)} – ${prettyDate(endDate, false)}`;
   } else {
-    const y1 = startDate.split("-")[0];
-    const y2 = endDate.split("-")[0];
-    return (y1 === y2) ? y1 : `${y1} – ${y2}`;
+    const y1 = startDate.split('-')[0];
+    const y2 = endDate.split('-')[0];
+    return y1 === y2 ? y1 : `${y1} – ${y2}`;
   }
-}
+};
 
 export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   chartId,
@@ -61,12 +61,11 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   suggestedYMin,
   suggestedYMax,
   ...props
-
 }) => {
-  const hourly = (timeUnit === 'hour')
+  const hourly = timeUnit === 'hour';
   const labels = data.map((item: AggregateDataPoint) => item[pointField]);
   return (
-    <div className='chart'>
+    <div className="chart">
       <div className="chart-container">
         <div>
           <Line
@@ -84,32 +83,32 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                   pointHoverBackgroundColor: CHART_COLORS.GREY,
                   pointRadius: 3,
                   pointHitRadius: 10,
-                  data: data.map((item: AggregateDataPoint) => (item["50%"] / 60).toFixed(2))
+                  data: data.map((item: AggregateDataPoint) => (item['50%'] / 60).toFixed(2)),
                 },
                 {
-                  label: "25th percentile",
+                  label: '25th percentile',
                   fill: 1,
                   backgroundColor: fillColor,
                   tension: 0.4,
                   pointRadius: 0,
-                  data: data.map((item: AggregateDataPoint) => (item["25%"] / 60).toFixed(2))
+                  data: data.map((item: AggregateDataPoint) => (item['25%'] / 60).toFixed(2)),
                 },
                 {
-                  label: "75th percentile",
+                  label: '75th percentile',
                   fill: 1,
                   backgroundColor: fillColor,
                   tension: 0.4,
                   pointRadius: 0,
-                  data: data.map((item: AggregateDataPoint) => (item["75%"] / 60).toFixed(2))
+                  data: data.map((item: AggregateDataPoint) => (item['75%'] / 60).toFixed(2)),
                 },
-              ]
+              ],
             }}
             options={{
               scales: {
                 y: {
                   title: {
                     display: true,
-                    text: "Minutes",
+                    text: 'Minutes',
                   },
                   suggestedMin: suggestedYMin,
                   suggestedMax: suggestedYMax,
@@ -118,7 +117,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                   time: {
                     unit: timeUnit,
                     stepSize: 1,
-                    tooltipFormat: timeFormat
+                    tooltipFormat: timeFormat,
                   },
                   type: 'time',
                   adapters: {
@@ -132,8 +131,8 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                   title: {
                     display: true,
                     text: xAxisLabel(startDate, endDate, hourly),
-                  }
-                }
+                  },
+                },
               },
               responsive: true,
               maintainAspectRatio: false,
@@ -153,14 +152,20 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 },
               },
             }}
-            plugins={[{
-              id: 'customTitleAggregate',
-              afterDraw: (chart: ChartJS) => {
-                // TODO: This is not placing the title correctly for aggregate charts. 
-                drawTitle(title, { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
-                  bothStops, chart);
-              }
-            }]}
+            plugins={[
+              {
+                id: 'customTitleAggregate',
+                afterDraw: (chart: ChartJS) => {
+                  // TODO: This is not placing the title correctly for aggregate charts.
+                  drawTitle(
+                    title,
+                    { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
+                    bothStops,
+                    chart
+                  );
+                },
+              },
+            ]}
           />
           {/* TODO: add back download button */}
         </div>
@@ -170,6 +175,5 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
         </div>
       </div>
     </div>
-
   );
 };
