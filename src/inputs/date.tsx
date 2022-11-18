@@ -13,7 +13,12 @@ interface DateInputProps {
   onChange: (value: any) => void;
 }
 
-const RegularDateInput: React.FC<DateInputProps> = ({ options, value, placeholder, onChange }) => {
+const RegularDateInput: React.FC<DateInputProps> = ({
+  options,
+  value,
+  placeholder,
+  onChange
+}) => {
   let maxDate = options.maxDate;
   if (maxDate === 'today') {
     const iso_date = new Date();

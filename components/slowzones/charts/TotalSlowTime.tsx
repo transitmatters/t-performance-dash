@@ -3,7 +3,7 @@ import { Chart as ChartJS, LineElement, PointElement } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { Line } from 'react-chartjs-2';
-import { colorsForLine } from '../../../utils/constants';
+import { LINE_COLORS } from '../../../utils/constants';
 
 import { DayDelayTotals } from '../../../types/dataPoints';
 
@@ -22,24 +22,24 @@ export const TotalSlowTime = ({ data }: { data?: DayDelayTotals[] }) => {
           {
             label: 'Blue Line',
             data: data?.map((d) => (d.Blue / 60).toFixed(2)),
-            borderColor: colorsForLine['Blue'],
-            backgroundColor: colorsForLine['Blue'],
+            borderColor: LINE_COLORS.BLUE,
+            backgroundColor: LINE_COLORS.BLUE,
             pointRadius: 0,
             tension: 0.1,
           },
           {
             label: 'Red Line',
             data: data?.map((d) => (d.Red / 60).toFixed(2)),
-            borderColor: colorsForLine['Red'],
-            backgroundColor: colorsForLine['Red'],
+            borderColor: LINE_COLORS.RED,
+            backgroundColor: LINE_COLORS.RED,
             pointRadius: 0,
             tension: 0.1,
           },
           {
             label: 'Orange Line',
             data: data?.map((d) => (d.Orange / 60).toFixed(2)),
-            borderColor: colorsForLine['Orange'],
-            backgroundColor: colorsForLine['Orange'],
+            borderColor: LINE_COLORS.ORANGE,
+            backgroundColor: LINE_COLORS.ORANGE,
             pointRadius: 0,
             tension: 0.1,
           },

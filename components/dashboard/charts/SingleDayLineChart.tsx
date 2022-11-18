@@ -14,8 +14,10 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React from 'react';
-import { DataPoints } from '../../../types/dataPoints';
-import { colors } from '../../../utils/constants';
+import { DataPoint } from '../../../types/dataPoints';
+import { CHART_COLORS } from '../../../utils/constants';
+import { SingleDayLineProps } from '../../../types/lines';
+import { prettyDate } from '../../utils/Date';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
 
@@ -31,41 +33,28 @@ ChartJS.register(
   Legend
 );
 
-const prettyDate = (dateString: string, with_dow: boolean) => {
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    weekday: with_dow ? 'long' : undefined,
-  };
-  return new Date(`${dateString}T00:00:00`).toLocaleDateString(
-    undefined, // user locale/language
-    options
-  );
-};
-
-const point_colors = (data: DataPoints, metric_field: string, benchmark_field?: string) => {
-  return data.map((point) => {
+const pointColors = (data: DataPoint[], metric_field: string, benchmark_field?: string) => {
+  return data.map((point: DataPoint) => {
     if (benchmark_field) {
       const ratio = point[metric_field] / point[benchmark_field];
       if (point[benchmark_field] === null) {
-        return colors.grey; //grey
+        return CHART_COLORS.GREY; //grey
       } else if (ratio <= 1.25) {
-        return colors.green; //green
+        return CHART_COLORS.GREEN; //green
       } else if (ratio <= 1.5) {
-        return colors.yellow; //yellow
+        return CHART_COLORS.YELLOW; //yellow
       } else if (ratio <= 2.0) {
-        return colors.red; //red
+        return CHART_COLORS.RED; //red
       } else if (ratio > 2.0) {
-        return colors.purple; //purple
+        return CHART_COLORS.PURPLE; //purple
       }
     }
 
-    return colors.grey; //whatever
+    return CHART_COLORS.GREY; //whatever
   });
 };
 
-const departure_from_normal_string = (metric: number, benchmark: number) => {
+const departureFromNormalString = (metric: number, benchmark: number) => {
   const ratio = metric / benchmark;
   if (!isFinite(ratio) || ratio <= 1.25) {
     return '';
@@ -79,17 +68,7 @@ const departure_from_normal_string = (metric: number, benchmark: number) => {
   return '';
 };
 
-interface SingleDayLineChartProps {
-  data: DataPoints;
-  title: string;
-  chartId: string;
-  metricField: string;
-  benchmarkField?: string;
-  pointField: string;
-  bothStops?: boolean;
-}
-
-export const SingleDayLineChart: React.FC<SingleDayLineChartProps> = ({
+export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   chartId,
   title,
   data,
@@ -102,110 +81,113 @@ export const SingleDayLineChart: React.FC<SingleDayLineChartProps> = ({
   return (
     <div className={'chart'}>
       <div className="chart-container">
-        <Line
-          id={chartId}
-          height={250}
-          data={{
-            labels,
-            datasets: [
-              {
-                label: `Actual`,
-                fill: false,
-                pointBackgroundColor: point_colors(data, metricField, benchmarkField),
-                pointHoverRadius: 3,
-                pointHoverBackgroundColor: point_colors(data, metricField, benchmarkField),
-                pointRadius: 3,
-                pointHitRadius: 10,
-                data: data.map((datapoint) => (datapoint[metricField] / 60).toFixed(2)),
+        <div>
+          <Line
+            id={chartId}
+            height={250}
+            data={{
+              labels,
+              datasets: [
+                {
+                  label: `Actual`,
+                  fill: false,
+                  pointBackgroundColor: pointColors(data, metricField, benchmarkField),
+                  pointHoverRadius: 3,
+                  pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField),
+                  pointRadius: 3,
+                  pointHitRadius: 10,
+                  // TODO: would be nice to add types to these arrow functions - but causes an issue bc datapoint[field] might be undefined.
+                  data: data.map((datapoint: any) => (datapoint[metricField] / 60).toFixed(2)),
+                },
+                {
+                  label: `Benchmark MBTA`,
+                  data: benchmarkField
+                    ? data.map((datapoint: any) => (datapoint[benchmarkField] / 60).toFixed(2))
+                    : [],
+                  pointRadius: 0,
+                  pointHoverRadius: 3,
+                  fill: true,
+                },
+              ],
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              layout: {
+                padding: {
+                  top: 25,
+                },
               },
-              {
-                label: `Benchmark MBTA`,
-                data: benchmarkField
-                  ? data.map((datapoint) => (datapoint[benchmarkField] / 60).toFixed(2))
-                  : [],
-                pointRadius: 0,
-                pointHoverRadius: 3,
-                fill: true,
+              plugins: {
+                tooltip: {
+                  mode: 'index',
+                  position: 'nearest',
+                  callbacks: {
+                    afterBody: (tooltipItems) => {
+                      return departureFromNormalString(
+                        tooltipItems[0].parsed.y,
+                        tooltipItems[1]?.parsed.y
+                      );
+                    },
+                  },
+                },
+                legend: {
+                  display: false,
+                },
+                title: {
+                  // empty title to set font and leave room for drawTitle fn
+                  display: true,
+                  text: '',
+                },
               },
-            ],
-          }}
-          options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            layout: {
-              padding: {
-                top: 25,
-              },
-            },
-            plugins: {
-              tooltip: {
+              interaction: {
                 mode: 'index',
-                position: 'nearest',
-                callbacks: {
-                  afterBody: (tooltipItems) => {
-                    return departure_from_normal_string(
-                      tooltipItems[0].parsed.y,
-                      tooltipItems[1]?.parsed.y
-                    );
+                intersect: false,
+              },
+              scales: {
+                y: {
+                  display: true,
+                  title: {
+                    display: true,
+                    text: 'Minutes',
+                  },
+                },
+                x: {
+                  type: 'time',
+                  time: {
+                    unit: 'hour',
+                    tooltipFormat: 'LTS', // locale time with seconds
+                  },
+                  adapters: {
+                    date: {
+                      locale: enUS,
+                    },
+                  },
+                  display: true,
+                  title: {
+                    display: true,
+                    text: prettyDate('2022-10-17', true),
                   },
                 },
               },
-              legend: {
-                display: false,
-              },
-              title: {
-                // empty title to set font and leave room for drawTitle fn
-                display: true,
-                text: '',
-              },
-            },
-            interaction: {
-              mode: 'index',
-              intersect: false,
-            },
-            scales: {
-              y: {
-                display: true,
-                title: {
-                  display: true,
-                  text: 'Minutes',
+            }}
+            plugins={[
+              {
+                id: 'customTitle',
+                afterDraw: (chart) => {
+                  drawTitle(
+                    title,
+                    { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
+                    bothStops,
+                    chart
+                  );
                 },
               },
-              x: {
-                type: 'time',
-                time: {
-                  unit: 'hour',
-                  tooltipFormat: 'LTS', // locale time with seconds
-                },
-                adapters: {
-                  date: {
-                    locale: enUS,
-                  },
-                },
-                display: true,
-                title: {
-                  display: true,
-                  text: prettyDate('2022-10-17', true),
-                },
-              },
-            },
-          }}
-          plugins={[
-            {
-              id: 'customTitle',
-              afterDraw: (chart) => {
-                drawTitle(
-                  title,
-                  { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
-                  bothStops,
-                  chart
-                );
-              },
-            },
-          ]}
-        />
+            ]}
+          />
+        </div>
+        <div className="chart-extras">{benchmarkField && <LegendView />}</div>
       </div>
-      <div className="chart-extras">{benchmarkField && <LegendView />}</div>
     </div>
   );
 };

@@ -17,10 +17,11 @@ module.exports = {
           orange: '#ed8b00',
           blue: '#003da5',
           green: '#00834d',
+          bus: '#ffc72c',
         },
         tm: {
           red: '#a31e1e',
-          light_red: '#cb2525',
+          lightRed: '#cb2525',
           grey: '#2e2d2c',
         },
       },

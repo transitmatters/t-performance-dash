@@ -4,18 +4,28 @@ import stations_json from './stations.json';
 export const stations: { [key: string]: LineMap } = stations_json;
 
 // Colors for charts
-export const colors = {
-  grey: '#1c1c1c',
-  green: '#64b96a',
-  yellow: '#f5ed00',
-  red: '#c33149',
-  purple: '#bb5cc1',
+export const CHART_COLORS = {
+    GREY: '#1c1c1c',
+    GREEN: '#64b96a',
+    YELLOW: '#f5ed00',
+    RED: '#c33149',
+    PURPLE: '#bb5cc1',
+    FILL: '#bfc8d680',
+    FILL_HOURLY: '#88aee680',
+};
+
+export const LINE_COLORS = {
+  RED: '#da291c',
+  ORANGE: '#ed8b00',
+  BLUE: '#003da5',
+  GREEN: '#00834d',
+  BUS: '#ffc72c',
 };
 
 export const colorsForLine: Record<string, string> = {
-  Red: '#da291c',
-  Orange: '#ed8b00',
-  Blue: '#003da5',
-  Green: '#00834d',
-  bus: '#ffc72c',
-};
+  red: LINE_COLORS.RED,
+  orange: LINE_COLORS.ORANGE,
+  blue: LINE_COLORS.BLUE,
+  green: LINE_COLORS.GREEN,
+  bus: LINE_COLORS.BUS,
+}
