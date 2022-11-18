@@ -66,3 +66,15 @@ export const lookup_station_by_id = (line: string, id: string) => {
     [...(x.stops['0'] || []), ...(x.stops['1'] || [])].includes(id)
   );
 };
+
+// TODO: Add types
+export const stopIdsForStations = (from: Station, to: Station): {fromStopIds: string[], toStopIds: string[]} | {fromStopIds: null, toStopIds: null} => {
+  if (!from || !to) {
+    return { fromStopIds: null, toStopIds: null };
+  }
+  const isDirection1 = from.order < to.order;
+  return {
+    fromStopIds: isDirection1 ? from.stops['1'] : from.stops['0'],
+    toStopIds: isDirection1 ? to.stops['1'] : to.stops['0'],
+  };
+};

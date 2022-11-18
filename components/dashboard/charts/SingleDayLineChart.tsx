@@ -72,9 +72,12 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   chartId,
   title,
   data,
+  date,
   metricField,
-  benchmarkField,
   pointField,
+  benchmarkField,
+  // TODO: loading animation?
+  isLoading,
   bothStops = false,
 }) => {
   const labels = data.map((item) => item[pointField]);
@@ -166,25 +169,39 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   display: true,
                   title: {
                     display: true,
-                    text: prettyDate('2022-10-17', true),
+                    text: prettyDate(date, true),
+                  },
+
+                  afterDataLimits: (axis) => {
+                        const today = new Date(`${date}T00:00:00`);
+                        const low = new Date(today);
+                        low.setHours(6);
+                        axis.min = Math.min(axis.min, low.valueOf());
+                        const high = new Date(today);
+                        high.setDate(high.getDate() + 1);
+                        high.setHours(1);
+                        axis.max = Math.max(axis.max, high.valueOf());
+                      }
+                    },
+                  },
+                 animation:false, 
+                }
+              }
+            plugins={
+                [
+                {
+                  id: 'customTitle',
+                  afterDraw: (chart) => {
+                    drawTitle(
+                      title,
+                      { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
+                      bothStops,
+                      chart
+                    );
                   },
                 },
-              },
-            }}
-            plugins={[
-              {
-                id: 'customTitle',
-                afterDraw: (chart) => {
-                  drawTitle(
-                    title,
-                    { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
-                    bothStops,
-                    chart
-                  );
-                },
-              },
             ]}
-          />
+              />
         </div>
         <div className="chart-extras">{benchmarkField && <LegendView />}</div>
       </div>

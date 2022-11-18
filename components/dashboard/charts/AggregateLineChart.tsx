@@ -35,13 +35,13 @@ ChartJS.register(
 
 const xAxisLabel = (startDate: string, endDate: string, hourly: boolean) => {
   if (hourly) {
-    return `${prettyDate(startDate, false)} – ${prettyDate(endDate, false)}`;
+    return `${prettyDate(startDate, false)} – ${prettyDate(endDate, false)}`
   } else {
-    const y1 = startDate.split('-')[0];
-    const y2 = endDate.split('-')[0];
-    return y1 === y2 ? y1 : `${y1} – ${y2}`;
+    const y1 = startDate.split("-")[0];
+    const y2 = endDate.split("-")[0];
+    return (y1 === y2) ? y1 : `${y1} – ${y2}`;
   }
-};
+}
 
 export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   chartId,
