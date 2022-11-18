@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { AlertBar } from '../components/alerts/AlertBar';
 import { DateInput } from '../components/inputs/DateInput';
 import { Select } from '../components/inputs/Select';
@@ -91,9 +92,11 @@ export default function Home() {
         {dateSelection?.endDate ?
           <AggregatePage dateSelection={dateSelection} />
           :
-          <SingleDayPage configuration={{fromStation: fromStation, toStation: toStation, dateSelection: dateSelection}} />
+          <SingleDayPage configuration={{ fromStation: fromStation?.value, toStation: toStation?.value, dateSelection: dateSelection }} />
         }
       </div>
+      {/* Only loads in development */}
+      <ReactQueryDevtools />
     </>
   );
 }

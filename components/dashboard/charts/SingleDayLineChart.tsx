@@ -70,14 +70,15 @@ const departureFromNormalString = (metric: number, benchmark: number) => {
 };
 
 export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
-  data,
-  // TODO: loading animation?
-  isLoading,
   chartId,
   title,
+  data,
+  date,
   metricField,
-  benchmarkField,
   pointField,
+  benchmarkField,
+  // TODO: loading animation?
+  isLoading,
   bothStops = false,
 }) => {
   const labels = data.map((item) => item[pointField]);
@@ -85,111 +86,125 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
     <div className={'chart'}>
       <div className="chart-container">
         <div>
-        <Line
-          id={chartId}
-          height={250}
-          data={{
-            labels,
-            datasets: [
-              {
-                label: `Actual`,
-                fill: false,
-                pointBackgroundColor: pointColors(data, metricField, benchmarkField),
-                pointHoverRadius: 3,
-                pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField),
-                pointRadius: 3,
-                pointHitRadius: 10,
-                // TODO: would be nice to add types to these arrow functions - but causes an issue bc datapoint[field] might be undefined.
-                data: data.map((datapoint: any) => (datapoint[metricField] / 60).toFixed(2)),
+          <Line
+            id={chartId}
+            height={250}
+            data={{
+              labels,
+              datasets: [
+                {
+                  label: `Actual`,
+                  fill: false,
+                  pointBackgroundColor: pointColors(data, metricField, benchmarkField),
+                  pointHoverRadius: 3,
+                  pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField),
+                  pointRadius: 3,
+                  pointHitRadius: 10,
+                  // TODO: would be nice to add types to these arrow functions - but causes an issue bc datapoint[field] might be undefined.
+                  data: data.map((datapoint: any) => (datapoint[metricField] / 60).toFixed(2)),
+                },
+                {
+                  label: `Benchmark MBTA`,
+                  data: benchmarkField
+                    ? data.map((datapoint: any) => (datapoint[benchmarkField] / 60).toFixed(2))
+                    : [],
+                  pointRadius: 0,
+                  pointHoverRadius: 3,
+                  fill: true,
+                },
+              ],
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              layout: {
+                padding: {
+                  top: 25,
+                },
               },
-              {
-                label: `Benchmark MBTA`,
-                data: benchmarkField
-                  ? data.map((datapoint: any) => (datapoint[benchmarkField] / 60).toFixed(2))
-                  : [],
-                pointRadius: 0,
-                pointHoverRadius: 3,
-                fill: true,
+              plugins: {
+                tooltip: {
+                  mode: 'index',
+                  position: 'nearest',
+                  callbacks: {
+                    afterBody: (tooltipItems) => {
+                      return departureFromNormalString(
+                        tooltipItems[0].parsed.y,
+                        tooltipItems[1]?.parsed.y
+                      );
+                    },
+                  },
+                },
+                legend: {
+                  display: false,
+                },
+                title: {
+                  // empty title to set font and leave room for drawTitle fn
+                  display: true,
+                  text: '',
+                },
               },
-            ],
-          }}
-          options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            layout: {
-              padding: {
-                top: 25,
-              },
-            },
-            plugins: {
-              tooltip: {
+              interaction: {
                 mode: 'index',
-                position: 'nearest',
-                callbacks: {
-                  afterBody: (tooltipItems) => {
-                    return departureFromNormalString(
-                      tooltipItems[0].parsed.y,
-                      tooltipItems[1]?.parsed.y
+                intersect: false,
+              },
+              scales: {
+                y: {
+                  display: true,
+                  title: {
+                    display: true,
+                    text: 'Minutes',
+                  },
+                },
+                x: {
+                  type: 'time',
+                  time: {
+                    unit: 'hour',
+                    tooltipFormat: 'LTS', // locale time with seconds
+                  },
+                  adapters: {
+                    date: {
+                      locale: enUS,
+                    },
+                  },
+                  display: true,
+                  title: {
+                    display: true,
+                    text: prettyDate(date, true),
+                  },
+
+                  afterDataLimits: (axis) => {
+                        const today = new Date(`${date}T00:00:00`);
+                        let low = new Date(today);
+                        low.setHours(6);
+                        axis.min = Math.min(axis.min, low.valueOf());
+                        let high = new Date(today);
+                        high.setDate(high.getDate() + 1);
+                        high.setHours(1);
+                        axis.max = Math.max(axis.max, high.valueOf());
+                      }
+                    },
+                  },
+                 animation:false, 
+                }
+              }
+            plugins={
+                [
+                {
+                  id: 'customTitle',
+                  afterDraw: (chart) => {
+                    drawTitle(
+                      title,
+                      { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
+                      bothStops,
+                      chart
                     );
                   },
                 },
-              },
-              legend: {
-                display: false,
-              },
-              title: {
-                // empty title to set font and leave room for drawTitle fn
-                display: true,
-                text: '',
-              },
-            },
-            interaction: {
-              mode: 'index',
-              intersect: false,
-            },
-            scales: {
-              y: {
-                display: true,
-                title: {
-                  display: true,
-                  text: 'Minutes',
-                },
-              },
-              x: {
-                type: 'time',
-                time: {
-                  unit: 'hour',
-                  tooltipFormat: 'LTS', // locale time with seconds
-                },
-                adapters: {
-                  date: {
-                    locale: enUS,
-                  },
-                },
-                display: true,
-                title: {
-                  display: true,
-                  text: prettyDate('2022-10-17', true),
-                },
-              },
-            },
-          }}
-          plugins={[
-            {
-              id: 'customTitle',
-              afterDraw: (chart) => {
-                drawTitle(
-                  title,
-                  { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
-                  bothStops,
-                  chart
-                );
-              },
-            },
-          ]}
-        />
-      </div>
-      <div className="chart-extras">{benchmarkField && <LegendView />}</div>
+            ]}
+              />
+        </div>
+        <div className="chart-extras">{benchmarkField && <LegendView />}</div>
       </div>
     </div>
   );

@@ -17,8 +17,8 @@ export interface AggregateLineProps extends LineProps {
     data: AggregateDataPoint[]
     timeFormat: string,
     seriesName: string,
-    startDate: any,
-    endDate: any,
+    startDate: string,
+    endDate: string,
     fillColor: any,
     suggestedYMin?: number,
     suggestedYMax?: number,
@@ -28,5 +28,6 @@ export interface AggregateLineProps extends LineProps {
 export interface SingleDayLineProps extends LineProps {
     data: SingleDayDataPoint[],
     metricField: MetricField, // Y value
+    date: string,
     benchmarkField?: BenchmarkField,
 }
