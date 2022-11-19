@@ -2,10 +2,6 @@ import React from 'react';
 import { DateOption } from '../../types/inputs';
 import { formatDate } from '../utils/Date';
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
-
 interface DateInputProps {
   dateSelection: DateOption | null;
   setDateSelection: (dateSelection: DateOption | null) => void;

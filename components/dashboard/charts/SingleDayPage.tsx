@@ -1,12 +1,12 @@
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-import { SingleDayLineChart } from './SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../../src/charts/types';
 import { stopIdsForStations } from '../../../utils/stations';
 import { fetchSingleDayData } from '../../../api/datadashboard';
-import { useQuery } from '@tanstack/react-query';
 import { Station } from '../../../types/stations';
 import { DateOption } from '../../../types/inputs';
+import { SingleDayLineChart } from './SingleDayLineChart';
 
 interface SingleDayPageProps {
   configuration: {
