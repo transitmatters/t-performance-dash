@@ -1,10 +1,10 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
 
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../../src/charts/types';
 import { stopIdsForStations } from '../../../utils/stations';
-import { fetchSingleDayData } from '../../../api/datadashboard';
+import { useQuerySingleDayData } from '../../../api/datadashboard';
 import { Station } from '../../../types/stations';
+import { QueryNameKeys, SingleDayAPIKeys } from '../../../types/api';
 import { DateOption } from '../../../types/inputs';
 import { SingleDayLineChart } from './SingleDayLineChart';
 
@@ -20,30 +20,35 @@ export const SingleDayPage: React.FC<SingleDayPageProps> = ({ configuration }) =
   const { fromStation, toStation, dateSelection } = configuration;
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
   const date = dateSelection?.startDate;
-  const queryReady = !!(fromStopIds && date);
+  const queryIsReady = !!(fromStopIds && date);
 
-  //TODO: deal with errors
-  const headwaysRequest = useQuery({
-    refetchOnWindowFocus: false,
-    enabled: queryReady,
-    queryKey: ['headways', fromStopIds, date],
-    queryFn: () => fetchSingleDayData('headways', { stop: fromStopIds }, date),
-  });
-  const traveltimesRequest = useQuery({
-    refetchOnWindowFocus: false,
-    enabled: queryReady,
-    queryKey: ['traveltimes', fromStopIds, toStopIds, date],
-    queryFn: () =>
-      fetchSingleDayData('traveltimes', { from_stop: fromStopIds, to_stop: toStopIds }, date),
-  });
-  const dwellsRequest = useQuery({
-    refetchOnWindowFocus: false,
-    enabled: queryReady,
-    queryKey: ['dwells', fromStopIds, date],
-    queryFn: () => fetchSingleDayData('dwells', { stop: fromStopIds }, date),
-  });
+  const traveltimesRequest = useQuerySingleDayData(
+    {
+      [SingleDayAPIKeys.fromStop]: fromStopIds,
+      [SingleDayAPIKeys.toStop]: toStopIds,
+    },
+    QueryNameKeys.traveltimes,
+    queryIsReady,
+    date
+  );
+  const headwaysRequest = useQuerySingleDayData(
+    {
+      [SingleDayAPIKeys.stop]: fromStopIds,
+    },
+    QueryNameKeys.headways,
+    queryIsReady,
+    date
+  );
+  const dwellsRequest = useQuerySingleDayData(
+    {
+      [SingleDayAPIKeys.stop]: fromStopIds,
+    },
+    QueryNameKeys.dwells,
+    queryIsReady,
+    date
+  );
 
-  if (!queryReady) {
+  if (!queryIsReady) {
     //TODO: Add something nice here when no charts are loaded.
     return <p> select values to load charts.</p>;
   }
