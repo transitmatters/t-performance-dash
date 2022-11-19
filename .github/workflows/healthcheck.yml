@@ -1,0 +1,13 @@
+name: healthcheck
+
+on:
+  schedule:
+    - cron: '15 23 * * *' # 7:15PM EST every day
+
+jobs:
+  backend:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Run backend healthcheck
+        run: |
+          curl --fail-with-body https://dashboard-api2.transitmatters.org/healthcheck

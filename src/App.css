@@ -311,7 +311,7 @@ button:disabled,
   height: 13px;
 }
 
-@media screen and (min-width: 770px) {
+@media screen and (min-width: 1300px) {
   .chart {
     display: grid;
     grid-template: 
@@ -383,6 +383,136 @@ button:disabled,
 
   .slowzones-switch-label {
     width: 100px;
+  }
+}
+
+@media screen and (max-width: 1300px) and (min-width: 770px) {
+  .hero-body .container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-body .container .title {
+    padding-left: 15px;
+  }
+
+  .alerts {
+    grid-template-areas: 'left-gutter alerts right-gutter';
+    grid-template-columns: 46px 1fr 8px;
+  }
+
+  .alerts-bar {
+    height: 30px;
+  }
+
+  .alerts .legend {
+    display: none;
+  }
+
+  .chart-extras {
+    margin-left: 44px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .chart-extras .legend {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-auto-flow: column;
+    column-gap: 10px;
+  }
+
+  .chart-extras .control {
+    margin-right: 25px;
+    margin-bottom: 10px;
+  }
+  
+  .station-configuration {
+    display: grid;
+    grid-template-columns: .5fr 1fr 1fr 40px;
+    grid-template-areas:
+      'toggle line stations swap'
+      'date date stations swap';
+    column-gap: 10px;
+    row-gap: 10px;
+  }
+
+  .station-configuration > .option-group,
+  .station-configuration .option {
+    display: flex;
+    align-items: center;
+  }
+
+  .station-configuration > .option-stations-group {
+    display: grid;
+    row-gap: 10px;
+    grid-area: stations;
+  }
+
+  .slow-zone .line-toggle , .chart-toggle , .direction-toggle{ 
+    justify-self: center;
+  }
+  
+  .station-configuration .from-to-label,
+  .station-configuration .date-label {
+    width: 30px;
+    text-align: right;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+
+  .station-configuration .switch-label {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .station-configuration .end-date-label {
+    margin-right: 0;
+    text-align: center;
+  }
+
+  .station-configuration .option-mode {
+    grid-area: toggle;
+  }
+
+  .station-configuration > .option-line {
+    grid-area: line;
+  }
+
+  .station-configuration > .option-date {
+    grid-area: date;
+    display: flex;
+  }
+
+  .station-configuration > .option-date input {
+    width: 0px; /* Just needs to be something for flex to work */
+    flex-shrink: 1;
+    flex-grow: 1;
+  }
+
+  .station-configuration > .option {
+    display: flex;
+    align-items: center;
+  }
+
+  .station-configuration .select-component {
+    width: 100%;
+  }
+
+  .station-configuration .swap-stations-button {
+    grid-area: swap;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .station-configuration .more-options-button {
+    margin-left: 10px;
+    max-width: 75px;
+    padding-right: 7px;
+  }
+
+  .station-configuration .swap-stations-button .swap-label {
+    display: none;
   }
 }
 

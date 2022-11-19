@@ -40,19 +40,36 @@ const stateFromURL = (pathname, config) => {
   };
 };
 
-const urlFromState = (config) => {
-  const { bus_mode, line, from, to, date_start, date_end } = config;
-  const { fromStopIds, toStopIds } = get_stop_ids_for_stations(from, to);
-  const path = bus_mode ? BUS_PATH : RAPIDTRANSIT_PATH;
-  const parts = [line, fromStopIds?.[0], toStopIds?.[0], date_start, date_end];
-  if (!parts.some((x) => x)) {
-    return [path, false];
-  }
-  const partString = parts.map((x) => x || '').join(',');
-  const url = `${path}?config=${partString}`;
-  const isComplete = parts.slice(0, -1).every((x) => x);
+// Check if the form is complete. (All fields except date_end are filled)
+const formIsComplete = (config) => {
+    const { line, from, to, date_start } = config;
+    return line && from && to && date_start
+}
 
-  return [url, isComplete];
+const formIsEmpty = (config) => {
+    const { line, from, to, date_start, date_end } = config;
+    return !line && !from && !to && !date_start && !date_end
+}
+
+// TODO: Replace query array with individual fields. 
+const getQueryStrings = (config) => {
+  const { line, from, to, date_start, date_end } = config;
+  const { fromStopIds, toStopIds } = get_stop_ids_for_stations(from, to);
+  return [line, fromStopIds?.[0], toStopIds?.[0], date_start, date_end];
+}
+
+// Get a URL which matches the form configuration. 
+const urlFromConfig = (config) => {
+  const path = config.bus_mode ? BUS_PATH : RAPIDTRANSIT_PATH;
+  const query = getQueryStrings(config);
+  // If nothing is entered, return without config query.
+  if(!query.some(piece => piece)) {
+    return path;
+  }
+
+  // Remove empty fields from array.
+  const queryString = query.join(',');
+  return `${path}?config=${queryString}`;
 };
 
 const documentTitle = (config) => {
@@ -124,11 +141,11 @@ class App extends React.Component {
     }
 
     // Handle back/forward buttons
-    window.onpopstate = (e) => {
+    window.addEventListener("popstate", (e) => {
       this.setState(e.state.state, () => {
         this.download();
       });
-    };
+    });
 
     this.download = this.download.bind(this);
     this.updateConfiguration = this.updateConfiguration.bind(this);
@@ -137,6 +154,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    // Save configuration to history on load. This allows the user to go back to the dashboard with no fields filled.
+    // We also need to get the proper current URL to replace for the case when someone navigates to the page via a pre-configured URL.
+    this.props.history.replace(`${this.props.location.pathname}${this.props.location.search}`, {configuration: this.state.configuration});
     this.download();
   }
 
@@ -196,37 +216,45 @@ class App extends React.Component {
   }
 
   updateConfiguration(config_change, refetch = true) {
-    // Save to browser history only if we are leaving a complete configuration
-    // so back button never takes you to a partial page
-    const [url, isComplete] = urlFromState(this.state.configuration);
-    if (isComplete) {
-      this.props.history.push(url, this.state);
+    const newConfiguration = {
+      ...this.state.configuration,
+      ...config_change
     }
 
-    let update = {
-      error: null,
-      configuration: {
-        ...this.state.configuration,
-        ...config_change,
-      },
+    const update = {
+      error_message: this.checkForErrors(newConfiguration),
+      configuration: newConfiguration,
     };
 
-    const error = this.checkForErrors(update.configuration);
+    // If line is changed, reset data and from/to fields.
+    if ('line' in config_change && config_change?.line !== this.state.configuration.line) {
+      newConfiguration.from = null;
+      newConfiguration.to = null;
+    }
+
+    // Get updated URL
+    const url = urlFromConfig(newConfiguration);
+
+    // If the form is empty, we want to push an empty configuration to the history stack. This allows us to go back to the empty dashboard.
+    if(formIsEmpty(this.state.configuration)) {
+      this.props.history.push(url, {configuration: {bus_mode: config_change.bus_mode || this.state.bus_mode }});
+    } else {
+      // Save to browser history only if we are leaving a complete configuration.
+      if (formIsComplete(this.state.configuration)) {
+        this.props.history.push(url, update);
+      } else {
+        this.props.history.replace(url, update);
+      }
+    }
+
     this.setState({
-      error_message: error,
+      error_message: update.error_message,
     });
     // Setting refetch to false prevents data download, but lets this.state.configuration update still
-    if (error) {
+    if (update.error_message) {
       refetch = false;
     }
 
-    if ('line' in config_change && config_change.line !== this.state.configuration.line) {
-      update.configuration.from = null;
-      update.configuration.to = null;
-      update.headways = [];
-      update.traveltimes = [];
-      update.dwells = [];
-    }
     this.setState(
       (state) => ({
         progressBarKey: state.progressBarKey + 1,
@@ -234,7 +262,6 @@ class App extends React.Component {
       }),
       // callback once state is updated
       () => {
-        this.props.history.replace(urlFromState(this.state.configuration)[0], this.state);
         document.title = documentTitle(this.state.configuration);
         if (refetch) {
           this.download();

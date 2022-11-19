@@ -65,7 +65,7 @@ const getDashUrl = (d: any) => {
   }
   now = now.toISOString().split('T')[0];
 
-  return `https://dashboard.transitmatters.org/rapidtransit?config=${d.custom.color},${d.custom.fr_id},${d.custom.to_id},${then},${now}`;
+  return new URL(`/rapidtransit?config=${d.custom.color},${d.custom.fr_id},${d.custom.to_id},${then},${now}`, window.location.origin);
 };
 
 const getDirection = (to: any, from: any) => {

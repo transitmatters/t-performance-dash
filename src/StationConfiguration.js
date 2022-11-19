@@ -99,7 +99,7 @@ export class StationConfiguration extends React.Component {
     if (type === 'to') {
       const fromStation = this.getVal('from');
       return options_station_ui(this.props.current.line).filter(({ value }) => {
-        if (value === fromStation) {
+        if (value?.stop_name === fromStation?.stop_name) {
           return false;
         }
         if (fromStation && fromStation.branches && value.branches) {
