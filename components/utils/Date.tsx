@@ -3,6 +3,7 @@ export const formatDate = (date: Date) => {
     date.getDate() < 10 ? '0' : ''
   }${date.getDate()}`;
 };
+
 export const prettyDate = (dateString: string, withDow: boolean) => {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',

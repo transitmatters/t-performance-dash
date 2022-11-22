@@ -2,15 +2,11 @@
 
 import React, { useState } from 'react';
 import { AlertBar } from '../components/alerts/AlertBar';
-import { AggregateLineChart } from '../components/dashboard/charts/AggregateLineChart';
-import { SingleDayLineChart } from '../components/dashboard/charts/SingleDayLineChart';
 import { DateInput } from '../components/inputs/DateInput';
 import { Select } from '../components/inputs/Select';
 import alerts from '../data/alerts.json';
 import { DateOption, SelectOption } from '../types/inputs';
 import { optionsForField, swapStations } from '../utils/stations';
-import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../src/charts/types';
-import { COLORS } from '../constants/colors';
 import { AggregatePage } from '../components/dashboard/charts/AggregatePage';
 import { SingleDayPage } from '../components/dashboard/charts/SingleDayPage';
 
@@ -92,12 +88,19 @@ export default function Home() {
       </div>
       <AlertBar alerts={alerts} today={'2022-10-11'} isLoading={false} />
       <div className="px-4">
-        {dateSelection?.endDate ?
+        {dateSelection?.endDate ? (
           <AggregatePage dateSelection={dateSelection} />
-          :
-          <SingleDayPage />
-        }
+        ) : (
+          <SingleDayPage
+            configuration={{
+              fromStation: fromStation?.value,
+              toStation: toStation?.value,
+              dateSelection: dateSelection,
+            }}
+          />
+        )}
       </div>
+      {/* Only loads in development */}
     </>
   );
 }

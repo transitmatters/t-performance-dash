@@ -72,9 +72,12 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   chartId,
   title,
   data,
+  date,
   metricField,
-  benchmarkField,
   pointField,
+  benchmarkField,
+  // TODO: loading animation?
+  isLoading,
   bothStops = false,
 }) => {
   const labels = data.map((item) => item[pointField]);
@@ -156,7 +159,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   type: 'time',
                   time: {
                     unit: 'hour',
-                    tooltipFormat: 'LTS', // locale time with seconds
+                    tooltipFormat: 'h:mm:ss a', // locale time with seconds
                   },
                   adapters: {
                     date: {
@@ -166,15 +169,41 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   display: true,
                   title: {
                     display: true,
-                    text: prettyDate('2022-10-17', true),
+                    text: prettyDate(date, true),
+                  },
+
+                  afterDataLimits: (axis) => {
+                    const today = new Date(`${date}T00:00:00`);
+                    const low = new Date(today);
+                    low.setHours(6);
+                    axis.min = Math.min(axis.min, low.valueOf());
+                    const high = new Date(today);
+                    high.setDate(high.getDate() + 1);
+                    high.setHours(1);
+                    axis.max = Math.max(axis.max, high.valueOf());
                   },
                 },
               },
+              animation: false,
             }}
             plugins={[
               {
                 id: 'customTitle',
                 afterDraw: (chart) => {
+                  if (date.length === 0 && !isLoading) {
+                    // No data is present
+                    const ctx = chart.ctx;
+                    const width = chart.width;
+                    const height = chart.height;
+                    chart.clear();
+
+                    ctx.save();
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.font = "16px normal 'Helvetica Nueue'";
+                    ctx.fillText('No data to display', width / 2, height / 2);
+                    ctx.restore();
+                  }
                   drawTitle(
                     title,
                     { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
