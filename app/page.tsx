@@ -89,7 +89,13 @@ export default function Home() {
       <AlertBar alerts={alerts} today={'2022-10-11'} isLoading={false} />
       <div className="px-4">
         {dateSelection?.endDate ? (
-          <AggregatePage dateSelection={dateSelection} />
+          <AggregatePage
+            configuration={{
+              fromStation: fromStation?.value,
+              toStation: toStation?.value,
+              dateSelection: dateSelection,
+            }}
+          />
         ) : (
           <SingleDayPage
             configuration={{

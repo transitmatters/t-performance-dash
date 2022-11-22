@@ -1,15 +1,20 @@
 import React from 'react';
+import { useQueryAggregateData, useQueryTravelTimes } from '../../../api/datadashboard';
 
-import dwellsDataAgg from '../../../data/dwells_agg.json';
-import headwaysDataAgg from '../../../data/headways_agg.json';
-import travelTimesDataAgg from '../../../data/travel_times_agg.json';
 import { PointFieldKeys } from '../../../src/charts/types';
+import { AggregateAPIKeys, QueryNameKeys } from '../../../types/api';
 import { DateOption } from '../../../types/inputs';
+import { Station } from '../../../types/stations';
 import { CHART_COLORS } from '../../../utils/constants';
+import { stopIdsForStations } from '../../../utils/stations';
 import { AggregateLineChart } from './AggregateLineChart';
 
 interface AggregatePageProps {
-  dateSelection: DateOption;
+  configuration: {
+    fromStation: Station;
+    toStation: Station;
+    dateSelection: DateOption | null;
+  };
 }
 /*
 TODOS: 
@@ -20,14 +25,51 @@ TODOS:
  bus_mode
 */
 
-export const AggregatePage: React.FC<AggregatePageProps> = ({ dateSelection }) => {
+export const AggregatePage: React.FC<AggregatePageProps> = ({ configuration }) => {
+  const { fromStation, toStation, dateSelection } = configuration;
+  const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
+  const startDate = dateSelection?.startDate;
+  const endDate = dateSelection?.endDate;
+  const queryIsReady = !!(fromStopIds && startDate && endDate);
+
+  const traveltimesRequest = useQueryTravelTimes(
+    {
+      [AggregateAPIKeys.fromStop]: fromStopIds || [],
+      [AggregateAPIKeys.toStop]: toStopIds || [],
+      [AggregateAPIKeys.start_date]: dateSelection?.startDate || '',
+      [AggregateAPIKeys.end_date]: dateSelection?.endDate || '',
+    },
+    QueryNameKeys.traveltimes,
+    queryIsReady
+  );
+  const headwaysRequest = useQueryAggregateData(
+    {
+      [AggregateAPIKeys.stop]: fromStopIds || [],
+      [AggregateAPIKeys.start_date]: dateSelection?.startDate || '',
+      [AggregateAPIKeys.end_date]: dateSelection?.endDate || '',
+    },
+    QueryNameKeys.headways,
+    queryIsReady
+  );
+  const dwellsRequest = useQueryAggregateData(
+    {
+      [AggregateAPIKeys.stop]: fromStopIds || [],
+      [AggregateAPIKeys.start_date]: dateSelection?.startDate || '',
+      [AggregateAPIKeys.end_date]: dateSelection?.endDate || '',
+    },
+    QueryNameKeys.dwells,
+    queryIsReady
+  );
+
   return (
     <div>
       <div className={'charts main-column'}>
         <AggregateLineChart
           chartId={'travel_times_agg'}
           title={'Travel times'}
-          data={travelTimesDataAgg['by_date']?.filter((x) => x.peak === 'all') || []}
+          data={
+            traveltimesRequest?.data?.by_date?.filter((datapoint) => datapoint.peak === 'all') || []
+          }
           // This is service date when agg by date. dep_time_from_epoch when agg by hour. Can probably remove this prop.
           pointField={PointFieldKeys.serviceDate}
           timeUnit={'day'}
@@ -46,7 +88,7 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({ dateSelection }) =
         <AggregateLineChart
           chartId={'headways_agg'}
           title={'Time between trains (headways)'}
-          data={headwaysDataAgg}
+          data={headwaysRequest.data || []}
           pointField={PointFieldKeys.serviceDate}
           timeUnit={'day'}
           timeFormat={'MMM d yyyy'}
@@ -66,7 +108,7 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({ dateSelection }) =
           <AggregateLineChart
             chartId={'dwells_agg'}
             title={'Time spent at stations (dwells)'}
-            data={dwellsDataAgg}
+            data={dwellsRequest.data || []}
             pointField={PointFieldKeys.serviceDate}
             timeUnit={'day'}
             timeFormat={'MMM d yyyy'}
@@ -84,7 +126,7 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({ dateSelection }) =
         <AggregateLineChart
           chartId={'dwells_agg'}
           title={'Travel times by hour'}
-          data={travelTimesDataAgg['by_time'].filter((data) => data.is_peak_day)} // TODO: Add toggle for this.
+          data={traveltimesRequest?.data?.by_time?.filter((data) => data.is_peak_day) || []} // TODO: Add toggle for this.
           pointField={PointFieldKeys.depTimeFromEpoch}
           timeUnit={'hour'}
           timeFormat="hh:mm a"
