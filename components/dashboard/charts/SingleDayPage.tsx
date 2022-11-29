@@ -5,28 +5,27 @@ import { stopIdsForStations } from '../../../utils/stations';
 import { useCustomQueries } from '../../../api/datadashboard';
 import { Station } from '../../../types/stations';
 import { SingleDayAPIKeys } from '../../../types/api';
-import { DateOption } from '../../../types/inputs';
 import { SingleDayLineChart } from './SingleDayLineChart';
 
 interface SingleDayPageProps {
-  configuration: {
-    fromStation: Station;
-    toStation: Station;
-    dateSelection: DateOption;
-  };
+  fromStation: Station;
+  toStation: Station;
+  startDate: string;
 }
 
-export const SingleDayPage: React.FC<SingleDayPageProps> = ({ configuration }) => {
-  const { fromStation, toStation, dateSelection } = configuration;
+export const SingleDayPage: React.FC<SingleDayPageProps> = ({
+  fromStation,
+  toStation,
+  startDate,
+}) => {
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
-  const date = dateSelection.startDate ?? '';
 
   const { traveltimes, headways, dwells } = useCustomQueries(
     {
       [SingleDayAPIKeys.fromStop]: fromStopIds,
       [SingleDayAPIKeys.toStop]: toStopIds,
       [SingleDayAPIKeys.stop]: fromStopIds,
-      [SingleDayAPIKeys.date]: date,
+      [SingleDayAPIKeys.date]: startDate,
     },
     false
   );
@@ -38,7 +37,7 @@ export const SingleDayPage: React.FC<SingleDayPageProps> = ({ configuration }) =
           chartId={'traveltimes'}
           title={'Travel Times'}
           data={traveltimes.data || []}
-          date={date}
+          date={startDate}
           metricField={MetricFieldKeys.travelTimeSec}
           pointField={PointFieldKeys.depDt}
           benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
@@ -54,7 +53,7 @@ export const SingleDayPage: React.FC<SingleDayPageProps> = ({ configuration }) =
           chartId={'headways'}
           title={'Time between trains (headways)'}
           data={headways.data || []}
-          date={date}
+          date={startDate}
           metricField={MetricFieldKeys.headWayTimeSec}
           pointField={PointFieldKeys.currentDepDt}
           benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
@@ -68,7 +67,7 @@ export const SingleDayPage: React.FC<SingleDayPageProps> = ({ configuration }) =
           chartId={'dwells'}
           title={'Time spent at station (dwells)'}
           data={dwells.data || []}
-          date={date}
+          date={startDate}
           metricField={MetricFieldKeys.dwellTimeSec}
           pointField={PointFieldKeys.arrDt}
           isLoading={dwells.isLoading}

@@ -14,8 +14,19 @@ interface ChartsPageProps {
 }
 
 export const ChartsPage: React.FC<ChartsPageProps> = ({ configuration, aggregate }) => {
-  if (aggregate) {
-    return <AggregatePage configuration={configuration} />;
+  const { fromStation, toStation, dateSelection } = configuration;
+  const { endDate, startDate } = dateSelection;
+  if (aggregate && typeof endDate === 'string' && typeof startDate === 'string') {
+    return (
+      <AggregatePage
+        fromStation={fromStation}
+        toStation={toStation}
+        startDate={startDate}
+        endDate={endDate}
+      />
+    );
   }
-  return <SingleDayPage configuration={configuration} />;
+  if (typeof startDate === 'string')
+    return <SingleDayPage fromStation={fromStation} toStation={toStation} startDate={startDate} />;
+  return null;
 };

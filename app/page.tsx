@@ -113,7 +113,6 @@ export default function Home() {
           <p>Inputs not complete</p>
         )}
       </div>
-      {/* Only loads in development */}
     </>
   );
 }

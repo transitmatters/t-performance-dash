@@ -3,18 +3,16 @@ import { useCustomQueries } from '../../../api/datadashboard';
 
 import { PointFieldKeys } from '../../../src/charts/types';
 import { AggregateAPIKeys } from '../../../types/api';
-import { DateOption } from '../../../types/inputs';
 import { Station } from '../../../types/stations';
 import { CHART_COLORS } from '../../../utils/constants';
 import { stopIdsForStations } from '../../../utils/stations';
 import { AggregateLineChart } from './AggregateLineChart';
 
 interface AggregatePageProps {
-  configuration: {
-    fromStation: Station;
-    toStation: Station;
-    dateSelection: DateOption;
-  };
+  fromStation: Station;
+  toStation: Station;
+  startDate: string;
+  endDate: string;
 }
 /*
 TODOS: 
@@ -26,18 +24,21 @@ TODOS:
  Catch error when start date > end date.
 */
 
-export const AggregatePage: React.FC<AggregatePageProps> = ({ configuration }) => {
-  const { fromStation, toStation, dateSelection } = configuration;
+export const AggregatePage: React.FC<AggregatePageProps> = ({
+  fromStation,
+  toStation,
+  startDate,
+  endDate,
+}) => {
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
-  const { startDate, endDate } = dateSelection;
 
   const { traveltimes, headways, dwells } = useCustomQueries(
     {
       [AggregateAPIKeys.fromStop]: fromStopIds,
       [AggregateAPIKeys.toStop]: toStopIds,
       [AggregateAPIKeys.stop]: fromStopIds,
-      [AggregateAPIKeys.startDate]: startDate ?? '',
-      [AggregateAPIKeys.endDate]: endDate ?? '',
+      [AggregateAPIKeys.startDate]: startDate,
+      [AggregateAPIKeys.endDate]: endDate,
     },
     true
   );
@@ -48,7 +49,6 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({ configuration }) =
         <AggregateLineChart
           chartId={'travel_times_agg'}
           title={'Travel times'}
-          // TODO: fix this. Same issue with aggregate bvs. traveltime points...
           data={traveltimes?.data?.by_date?.filter((datapoint) => datapoint.peak === 'all') || []}
           // This is service date when agg by date. dep_time_from_epoch when agg by hour. Can probably remove this prop.
           pointField={PointFieldKeys.serviceDate}
@@ -111,8 +111,8 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({ configuration }) =
           timeUnit={'hour'}
           timeFormat="hh:mm a"
           seriesName="Median travel time"
-          startDate={dateSelection?.startDate}
-          endDate={dateSelection?.endDate}
+          startDate={startDate}
+          endDate={endDate}
           fillColor={CHART_COLORS.FILL_HOURLY}
           location={'todo'}
           isLoading={false}
