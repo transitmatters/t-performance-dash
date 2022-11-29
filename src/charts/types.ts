@@ -27,9 +27,9 @@ export interface AggregateDataPoint {
   peak?: string;
 }
 
-export interface TravelTimesRequest {
+export interface AggregateDataResponse {
   by_date: AggregateDataPoint[];
-  by_time: AggregateDataPoint[];
+  by_time?: AggregateDataPoint[];
 }
 
 export interface Location {

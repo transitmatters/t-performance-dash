@@ -1,8 +1,8 @@
 import React from 'react';
-import { useQueryAggregateData, useQueryTravelTimes } from '../../../api/datadashboard';
+import { useCustomQueries } from '../../../api/datadashboard';
 
 import { PointFieldKeys } from '../../../src/charts/types';
-import { AggregateAPIKeys, QueryNameKeys } from '../../../types/api';
+import { AggregateAPIKeys } from '../../../types/api';
 import { DateOption } from '../../../types/inputs';
 import { Station } from '../../../types/stations';
 import { CHART_COLORS } from '../../../utils/constants';
@@ -13,7 +13,7 @@ interface AggregatePageProps {
   configuration: {
     fromStation: Station;
     toStation: Station;
-    dateSelection: DateOption | null;
+    dateSelection: DateOption;
   };
 }
 /*
@@ -23,42 +23,23 @@ TODOS:
  location field
  Toggle for peak data only
  bus_mode
+ Catch error when start date > end date.
 */
 
 export const AggregatePage: React.FC<AggregatePageProps> = ({ configuration }) => {
   const { fromStation, toStation, dateSelection } = configuration;
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
-  const startDate = dateSelection?.startDate;
-  const endDate = dateSelection?.endDate;
-  const queryIsReady = !!(fromStopIds && startDate && endDate);
+  const { startDate, endDate } = dateSelection;
 
-  const traveltimesRequest = useQueryTravelTimes(
+  const { traveltimes, headways, dwells } = useCustomQueries(
     {
-      [AggregateAPIKeys.fromStop]: fromStopIds || [],
-      [AggregateAPIKeys.toStop]: toStopIds || [],
-      [AggregateAPIKeys.start_date]: dateSelection?.startDate || '',
-      [AggregateAPIKeys.end_date]: dateSelection?.endDate || '',
+      [AggregateAPIKeys.fromStop]: fromStopIds,
+      [AggregateAPIKeys.toStop]: toStopIds,
+      [AggregateAPIKeys.stop]: fromStopIds,
+      [AggregateAPIKeys.startDate]: startDate ?? '',
+      [AggregateAPIKeys.endDate]: endDate ?? '',
     },
-    QueryNameKeys.traveltimes,
-    queryIsReady
-  );
-  const headwaysRequest = useQueryAggregateData(
-    {
-      [AggregateAPIKeys.stop]: fromStopIds || [],
-      [AggregateAPIKeys.start_date]: dateSelection?.startDate || '',
-      [AggregateAPIKeys.end_date]: dateSelection?.endDate || '',
-    },
-    QueryNameKeys.headways,
-    queryIsReady
-  );
-  const dwellsRequest = useQueryAggregateData(
-    {
-      [AggregateAPIKeys.stop]: fromStopIds || [],
-      [AggregateAPIKeys.start_date]: dateSelection?.startDate || '',
-      [AggregateAPIKeys.end_date]: dateSelection?.endDate || '',
-    },
-    QueryNameKeys.dwells,
-    queryIsReady
+    true
   );
 
   return (
@@ -67,16 +48,15 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({ configuration }) =
         <AggregateLineChart
           chartId={'travel_times_agg'}
           title={'Travel times'}
-          data={
-            traveltimesRequest?.data?.by_date?.filter((datapoint) => datapoint.peak === 'all') || []
-          }
+          // TODO: fix this. Same issue with aggregate bvs. traveltime points...
+          data={traveltimes?.data?.by_date?.filter((datapoint) => datapoint.peak === 'all') || []}
           // This is service date when agg by date. dep_time_from_epoch when agg by hour. Can probably remove this prop.
           pointField={PointFieldKeys.serviceDate}
           timeUnit={'day'}
           timeFormat={'MMM d yyyy'}
           seriesName="Median travel time"
-          startDate={dateSelection?.startDate}
-          endDate={dateSelection?.endDate}
+          startDate={startDate}
+          endDate={endDate}
           fillColor={CHART_COLORS.FILL}
           location={'todo'}
           isLoading={false}
@@ -88,13 +68,13 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({ configuration }) =
         <AggregateLineChart
           chartId={'headways_agg'}
           title={'Time between trains (headways)'}
-          data={headwaysRequest.data || []}
+          data={headways?.data?.by_date || []}
           pointField={PointFieldKeys.serviceDate}
           timeUnit={'day'}
           timeFormat={'MMM d yyyy'}
           seriesName="Median headway"
-          startDate={dateSelection?.startDate}
-          endDate={dateSelection?.endDate}
+          startDate={startDate}
+          endDate={endDate}
           fillColor={CHART_COLORS.FILL}
           location={'todo'}
           isLoading={false}
@@ -108,13 +88,13 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({ configuration }) =
           <AggregateLineChart
             chartId={'dwells_agg'}
             title={'Time spent at stations (dwells)'}
-            data={dwellsRequest.data || []}
+            data={dwells?.data?.by_date || []}
             pointField={PointFieldKeys.serviceDate}
             timeUnit={'day'}
             timeFormat={'MMM d yyyy'}
             seriesName="Median dwell time"
-            startDate={dateSelection?.startDate}
-            endDate={dateSelection?.endDate}
+            startDate={startDate}
+            endDate={endDate}
             fillColor={CHART_COLORS.FILL}
             location={'todo'}
             isLoading={false}
@@ -124,9 +104,9 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({ configuration }) =
       }
       <div className={'charts main-column'}>
         <AggregateLineChart
-          chartId={'dwells_agg'}
+          chartId={'travel_times_agg_hour'}
           title={'Travel times by hour'}
-          data={traveltimesRequest?.data?.by_time?.filter((data) => data.is_peak_day) || []} // TODO: Add toggle for this.
+          data={traveltimes?.data?.by_time?.filter((data) => data.is_peak_day) || []} // TODO: Add toggle for peak day.
           pointField={PointFieldKeys.depTimeFromEpoch}
           timeUnit={'hour'}
           timeFormat="hh:mm a"

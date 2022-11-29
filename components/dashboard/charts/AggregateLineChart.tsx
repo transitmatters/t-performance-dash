@@ -133,7 +133,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                   max: hourly ? null : endDate,
                   title: {
                     display: true,
-                    text: xAxisLabel(startDate, endDate, hourly),
+                    text: xAxisLabel(startDate ?? '', endDate ?? '', hourly),
                   },
                 },
               },
