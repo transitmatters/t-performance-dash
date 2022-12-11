@@ -535,7 +535,7 @@
 				"stop_name": "Medford/Tufts",
 				"branches": ["E"],
 				"station": "place-mdftf",
-				"disabled": true,
+				"disabled": false,
 				"order": 1,
 				"stops": {
 					"0": ["70511"],
@@ -545,7 +545,7 @@
 				"stop_name": "Ball Square",
 				"branches": ["E"],
 				"station": "place-balsq",
-				"disabled": true,
+				"disabled": false,
 				"order": 2,
 				"stops": {
 					"0": ["70509"],
@@ -555,7 +555,7 @@
 				"stop_name": "Magoun Square",
 				"branches": ["E"],
 				"station": "place-mgngl",
-				"disabled": true,
+				"disabled": false,
 				"order": 3,
 				"stops": {
 					"0": ["70507"],
@@ -565,7 +565,7 @@
 				"stop_name": "Gilman Square",
 				"branches": ["E"],
 				"station": "place-gilmn",
-				"disabled": true,
+				"disabled": false,
 				"order": 4,
 				"stops": {
 					"0": ["70505"],
@@ -575,7 +575,7 @@
 				"stop_name": "East Somerville",
 				"branches": ["E"],
 				"station": "place-esomr",
-				"disabled": true,
+				"disabled": false,
 				"order": 5,
 				"stops": {
 					"0": ["70513"],
@@ -585,7 +585,7 @@
 				"stop_name": "Union Square",
 				"branches": ["D"],
 				"station": "place-unsqu",
-				"disabled": true,
+				"disabled": false,
 				"order": 6,
 				"stops": {
 					"0": ["70503"],
