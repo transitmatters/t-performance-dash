@@ -68,10 +68,10 @@ export const lookup_station_by_id = (line: string, id: string) => {
 };
 
 // TODO: Add types
-export const stopIdsForStations = (from: Station, to: Station): {fromStopIds: string[], toStopIds: string[]} | {fromStopIds: null, toStopIds: null} => {
-  if (!from || !to) {
-    return { fromStopIds: null, toStopIds: null };
-  }
+export const stopIdsForStations = (
+  from: Station,
+  to: Station
+): { fromStopIds: string[]; toStopIds: string[] } => {
   const isDirection1 = from.order < to.order;
   return {
     fromStopIds: isDirection1 ? from.stops['1'] : from.stops['0'],

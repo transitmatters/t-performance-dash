@@ -7,8 +7,7 @@ import { Select } from '../components/inputs/Select';
 import alerts from '../data/alerts.json';
 import { DateOption, SelectOption } from '../types/inputs';
 import { optionsForField, swapStations } from '../utils/stations';
-import { AggregatePage } from '../components/dashboard/charts/AggregatePage';
-import { SingleDayPage } from '../components/dashboard/charts/SingleDayPage';
+import { ChartsPage } from '../components/dashboard/charts/ChartsPage';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -25,7 +24,20 @@ const tabs = [
 export default function Home() {
   const [fromStation, setFromStation] = useState<SelectOption | null>(null);
   const [toStation, setToStation] = useState<SelectOption | null>(null);
-  const [dateSelection, setDateSelection] = useState<DateOption | null>(null);
+  const [dateSelection, setDateSelection] = useState<DateOption>({
+    startDate: undefined,
+    endDate: undefined,
+    range: false,
+  });
+
+  const chartsAreReady = () => {
+    return (
+      fromStation &&
+      toStation &&
+      dateSelection.startDate &&
+      (!dateSelection.range || dateSelection.endDate)
+    );
+  };
 
   return (
     <>
@@ -88,19 +100,19 @@ export default function Home() {
       </div>
       <AlertBar alerts={alerts} today={'2022-10-11'} isLoading={false} />
       <div className="px-4">
-        {dateSelection?.endDate ? (
-          <AggregatePage dateSelection={dateSelection} />
-        ) : (
-          <SingleDayPage
+        {chartsAreReady() ? (
+          <ChartsPage
             configuration={{
               fromStation: fromStation?.value,
               toStation: toStation?.value,
               dateSelection: dateSelection,
             }}
+            aggregate={dateSelection.range}
           />
+        ) : (
+          <p>Inputs not complete</p>
         )}
       </div>
-      {/* Only loads in development */}
     </>
   );
 }

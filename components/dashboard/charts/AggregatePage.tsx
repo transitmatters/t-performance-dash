@@ -1,15 +1,18 @@
 import React from 'react';
+import { useCustomQueries } from '../../../api/datadashboard';
 
-import dwellsDataAgg from '../../../data/dwells_agg.json';
-import headwaysDataAgg from '../../../data/headways_agg.json';
-import travelTimesDataAgg from '../../../data/travel_times_agg.json';
 import { PointFieldKeys } from '../../../src/charts/types';
-import { DateOption } from '../../../types/inputs';
+import { AggregateAPIKeys } from '../../../types/api';
+import { Station } from '../../../types/stations';
 import { CHART_COLORS } from '../../../utils/constants';
+import { stopIdsForStations } from '../../../utils/stations';
 import { AggregateLineChart } from './AggregateLineChart';
 
 interface AggregatePageProps {
-  dateSelection: DateOption;
+  fromStation: Station;
+  toStation: Station;
+  startDate: string;
+  endDate: string;
 }
 /*
 TODOS: 
@@ -18,23 +21,42 @@ TODOS:
  location field
  Toggle for peak data only
  bus_mode
+ Catch error when start date > end date.
 */
 
-export const AggregatePage: React.FC<AggregatePageProps> = ({ dateSelection }) => {
+export const AggregatePage: React.FC<AggregatePageProps> = ({
+  fromStation,
+  toStation,
+  startDate,
+  endDate,
+}) => {
+  const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
+
+  const { traveltimes, headways, dwells } = useCustomQueries(
+    {
+      [AggregateAPIKeys.fromStop]: fromStopIds,
+      [AggregateAPIKeys.toStop]: toStopIds,
+      [AggregateAPIKeys.stop]: fromStopIds,
+      [AggregateAPIKeys.startDate]: startDate,
+      [AggregateAPIKeys.endDate]: endDate,
+    },
+    true
+  );
+
   return (
     <div>
       <div className={'charts main-column'}>
         <AggregateLineChart
           chartId={'travel_times_agg'}
           title={'Travel times'}
-          data={travelTimesDataAgg['by_date']?.filter((x) => x.peak === 'all') || []}
+          data={traveltimes?.data?.by_date?.filter((datapoint) => datapoint.peak === 'all') || []}
           // This is service date when agg by date. dep_time_from_epoch when agg by hour. Can probably remove this prop.
           pointField={PointFieldKeys.serviceDate}
           timeUnit={'day'}
           timeFormat={'MMM d yyyy'}
           seriesName="Median travel time"
-          startDate={dateSelection?.startDate}
-          endDate={dateSelection?.endDate}
+          startDate={startDate}
+          endDate={endDate}
           fillColor={CHART_COLORS.FILL}
           location={'todo'}
           isLoading={false}
@@ -46,13 +68,13 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({ dateSelection }) =
         <AggregateLineChart
           chartId={'headways_agg'}
           title={'Time between trains (headways)'}
-          data={headwaysDataAgg}
+          data={headways?.data?.by_date || []}
           pointField={PointFieldKeys.serviceDate}
           timeUnit={'day'}
           timeFormat={'MMM d yyyy'}
           seriesName="Median headway"
-          startDate={dateSelection?.startDate}
-          endDate={dateSelection?.endDate}
+          startDate={startDate}
+          endDate={endDate}
           fillColor={CHART_COLORS.FILL}
           location={'todo'}
           isLoading={false}
@@ -66,13 +88,13 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({ dateSelection }) =
           <AggregateLineChart
             chartId={'dwells_agg'}
             title={'Time spent at stations (dwells)'}
-            data={dwellsDataAgg}
+            data={dwells?.data?.by_date || []}
             pointField={PointFieldKeys.serviceDate}
             timeUnit={'day'}
             timeFormat={'MMM d yyyy'}
             seriesName="Median dwell time"
-            startDate={dateSelection?.startDate}
-            endDate={dateSelection?.endDate}
+            startDate={startDate}
+            endDate={endDate}
             fillColor={CHART_COLORS.FILL}
             location={'todo'}
             isLoading={false}
@@ -82,15 +104,15 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({ dateSelection }) =
       }
       <div className={'charts main-column'}>
         <AggregateLineChart
-          chartId={'dwells_agg'}
+          chartId={'travel_times_agg_hour'}
           title={'Travel times by hour'}
-          data={travelTimesDataAgg['by_time'].filter((data) => data.is_peak_day)} // TODO: Add toggle for this.
+          data={traveltimes?.data?.by_time?.filter((data) => data.is_peak_day) || []} // TODO: Add toggle for peak day.
           pointField={PointFieldKeys.depTimeFromEpoch}
           timeUnit={'hour'}
           timeFormat="hh:mm a"
           seriesName="Median travel time"
-          startDate={dateSelection?.startDate}
-          endDate={dateSelection?.endDate}
+          startDate={startDate}
+          endDate={endDate}
           fillColor={CHART_COLORS.FILL_HOURLY}
           location={'todo'}
           isLoading={false}

@@ -84,139 +84,137 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   return (
     <div className={'chart'}>
       <div className="chart-container">
-        <div>
-          <Line
-            id={chartId}
-            height={250}
-            data={{
-              labels,
-              datasets: [
-                {
-                  label: `Actual`,
-                  fill: false,
-                  pointBackgroundColor: pointColors(data, metricField, benchmarkField),
-                  pointHoverRadius: 3,
-                  pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField),
-                  pointRadius: 3,
-                  pointHitRadius: 10,
-                  // TODO: would be nice to add types to these arrow functions - but causes an issue bc datapoint[field] might be undefined.
-                  data: data.map((datapoint: any) => (datapoint[metricField] / 60).toFixed(2)),
-                },
-                {
-                  label: `Benchmark MBTA`,
-                  data: benchmarkField
-                    ? data.map((datapoint: any) => (datapoint[benchmarkField] / 60).toFixed(2))
-                    : [],
-                  pointRadius: 0,
-                  pointHoverRadius: 3,
-                  fill: true,
-                },
-              ],
-            }}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              layout: {
-                padding: {
-                  top: 25,
-                },
-              },
-              plugins: {
-                tooltip: {
-                  mode: 'index',
-                  position: 'nearest',
-                  callbacks: {
-                    afterBody: (tooltipItems) => {
-                      return departureFromNormalString(
-                        tooltipItems[0].parsed.y,
-                        tooltipItems[1]?.parsed.y
-                      );
-                    },
-                  },
-                },
-                legend: {
-                  display: false,
-                },
-                title: {
-                  // empty title to set font and leave room for drawTitle fn
-                  display: true,
-                  text: '',
-                },
-              },
-              interaction: {
-                mode: 'index',
-                intersect: false,
-              },
-              scales: {
-                y: {
-                  display: true,
-                  title: {
-                    display: true,
-                    text: 'Minutes',
-                  },
-                },
-                x: {
-                  type: 'time',
-                  time: {
-                    unit: 'hour',
-                    tooltipFormat: 'h:mm:ss a', // locale time with seconds
-                  },
-                  adapters: {
-                    date: {
-                      locale: enUS,
-                    },
-                  },
-                  display: true,
-                  title: {
-                    display: true,
-                    text: prettyDate(date, true),
-                  },
-
-                  afterDataLimits: (axis) => {
-                    const today = new Date(`${date}T00:00:00`);
-                    const low = new Date(today);
-                    low.setHours(6);
-                    axis.min = Math.min(axis.min, low.valueOf());
-                    const high = new Date(today);
-                    high.setDate(high.getDate() + 1);
-                    high.setHours(1);
-                    axis.max = Math.max(axis.max, high.valueOf());
-                  },
-                },
-              },
-              animation: false,
-            }}
-            plugins={[
+        <Line
+          id={chartId}
+          height={250}
+          data={{
+            labels,
+            datasets: [
               {
-                id: 'customTitle',
-                afterDraw: (chart) => {
-                  if (date.length === 0 && !isLoading) {
-                    // No data is present
-                    const ctx = chart.ctx;
-                    const width = chart.width;
-                    const height = chart.height;
-                    chart.clear();
-
-                    ctx.save();
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.font = "16px normal 'Helvetica Nueue'";
-                    ctx.fillText('No data to display', width / 2, height / 2);
-                    ctx.restore();
-                  }
-                  drawTitle(
-                    title,
-                    { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
-                    bothStops,
-                    chart
-                  );
+                label: `Actual`,
+                fill: false,
+                pointBackgroundColor: pointColors(data, metricField, benchmarkField),
+                pointHoverRadius: 3,
+                pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField),
+                pointRadius: 3,
+                pointHitRadius: 10,
+                // TODO: would be nice to add types to these arrow functions - but causes an issue bc datapoint[field] might be undefined.
+                data: data.map((datapoint: any) => (datapoint[metricField] / 60).toFixed(2)),
+              },
+              {
+                label: `Benchmark MBTA`,
+                data: benchmarkField
+                  ? data.map((datapoint: any) => (datapoint[benchmarkField] / 60).toFixed(2))
+                  : [],
+                pointRadius: 0,
+                pointHoverRadius: 3,
+                fill: true,
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+              padding: {
+                top: 25,
+              },
+            },
+            plugins: {
+              tooltip: {
+                mode: 'index',
+                position: 'nearest',
+                callbacks: {
+                  afterBody: (tooltipItems) => {
+                    return departureFromNormalString(
+                      tooltipItems[0].parsed.y,
+                      tooltipItems[1]?.parsed.y
+                    );
+                  },
                 },
               },
-            ]}
-          />
-        </div>
-        <div className="chart-extras">{benchmarkField && <LegendView />}</div>
+              legend: {
+                display: false,
+              },
+              title: {
+                // empty title to set font and leave room for drawTitle fn
+                display: true,
+                text: '',
+              },
+            },
+            interaction: {
+              mode: 'index',
+              intersect: false,
+            },
+            scales: {
+              y: {
+                display: true,
+                title: {
+                  display: true,
+                  text: 'Minutes',
+                },
+              },
+              x: {
+                type: 'time',
+                time: {
+                  unit: 'hour',
+                  tooltipFormat: 'h:mm:ss a', // locale time with seconds
+                },
+                adapters: {
+                  date: {
+                    locale: enUS,
+                  },
+                },
+                display: true,
+                title: {
+                  display: true,
+                  text: prettyDate(date, true),
+                },
+
+                afterDataLimits: (axis) => {
+                  const today = new Date(`${date}T00:00:00`);
+                  const low = new Date(today);
+                  low.setHours(6);
+                  axis.min = Math.min(axis.min, low.valueOf());
+                  const high = new Date(today);
+                  high.setDate(high.getDate() + 1);
+                  high.setHours(1);
+                  axis.max = Math.max(axis.max, high.valueOf());
+                },
+              },
+            },
+            animation: false,
+          }}
+          plugins={[
+            {
+              id: 'customTitle',
+              afterDraw: (chart) => {
+                if (date.length === 0 && !isLoading) {
+                  // No data is present
+                  const ctx = chart.ctx;
+                  const width = chart.width;
+                  const height = chart.height;
+                  chart.clear();
+
+                  ctx.save();
+                  ctx.textAlign = 'center';
+                  ctx.textBaseline = 'middle';
+                  ctx.font = "16px normal 'Helvetica Nueue'";
+                  ctx.fillText('No data to display', width / 2, height / 2);
+                  ctx.restore();
+                }
+                drawTitle(
+                  title,
+                  { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
+                  bothStops,
+                  chart
+                );
+              },
+            },
+          ]}
+        />
       </div>
+      <div className="chart-extras">{benchmarkField && <LegendView />}</div>
     </div>
   );
 };
