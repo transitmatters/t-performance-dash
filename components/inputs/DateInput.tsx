@@ -3,8 +3,8 @@ import { DateOption } from '../../types/inputs';
 import { formatDate } from '../utils/Date';
 
 interface DateInputProps {
-  dateSelection: DateOption | null;
-  setDateSelection: (dateSelection: DateOption | null) => void;
+  dateSelection: DateOption;
+  setDateSelection: (dateSelection: DateOption) => void;
 }
 
 // TODO: add all logic from existing date picker.

@@ -24,6 +24,12 @@ export interface AggregateDataPoint {
   service_date?: string;
   dep_time_from_epoch?: string;
   is_peak_day?: boolean;
+  peak?: string;
+}
+
+export interface AggregateDataResponse {
+  by_date: AggregateDataPoint[];
+  by_time?: AggregateDataPoint[];
 }
 
 export interface Location {
