@@ -27,7 +27,7 @@ export default function RootLayout({
       <head>
         <title>Dashboard</title>
       </head>
-      <body className="h-full ">
+      <body className="bg-white">
         <QueryClientProvider client={queryClient}>
           <Layout>{children}</Layout>
           <ReactQueryDevtools />

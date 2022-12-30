@@ -1,7 +1,12 @@
 export enum QueryNameKeys {
   traveltimes = 'traveltimes',
+<<<<<<< HEAD
   headways = 'headways',
   dwells = 'dwells',
+=======
+  dwells = 'dwells',
+  headways = 'headways',
+>>>>>>> v4-design-work
 }
 export type QueryNameOptions = QueryNameKeys;
 

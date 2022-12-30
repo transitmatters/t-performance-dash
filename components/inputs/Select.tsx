@@ -2,19 +2,17 @@ import React, { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { SelectOption } from '../../types/inputs';
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
-
+import { classNames } from '../utils/tailwind';
+import { buttonConfig, formConfig, otherConfig } from './tailwind';
 interface SelectProps {
   label: string;
   options: SelectOption[];
+  line: string;
   selected: SelectOption | null;
   setSelected: (selected: SelectOption | null) => void;
 }
 
-export const Select: React.FC<SelectProps> = ({ label, options, selected, setSelected }) => {
+export const Select: React.FC<SelectProps> = ({ label, options, line, selected, setSelected }) => {
   return (
     <Listbox value={selected} onChange={setSelected}>
       {({ open }) => (
@@ -22,7 +20,7 @@ export const Select: React.FC<SelectProps> = ({ label, options, selected, setSel
           <Listbox.Label className="block text-sm font-medium text-gray-700">{label}</Listbox.Label>
           <div className="relative mt-1">
             {/* TODO: Dynamically set the color based on the selected line */}
-            <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-mbta-red focus:outline-none focus:ring-1 focus:ring-mbta-red sm:text-sm">
+            <Listbox.Button className={classNames(buttonConfig.default, buttonConfig[line])}>
               <span className="flex items-center">
                 <span className="ml-3 block truncate">
                   {selected?.label ?? 'Select a Station...'}
@@ -47,7 +45,7 @@ export const Select: React.FC<SelectProps> = ({ label, options, selected, setSel
                     className={({ active }) =>
                       // TODO: Dynamically set the color based on the selected line
                       classNames(
-                        active ? 'bg-mbta-red text-white' : 'text-gray-900',
+                        active ? formConfig.active[line] : 'text-gray-900',
                         'relative cursor-default select-none py-2 pl-3 pr-9'
                       )
                     }
@@ -69,7 +67,7 @@ export const Select: React.FC<SelectProps> = ({ label, options, selected, setSel
                         {selected ? (
                           <span
                             className={classNames(
-                              active ? 'text-white' : 'text-mbta-red',
+                              active ? 'text-white' : otherConfig.selected[line],
                               'absolute inset-y-0 right-0 flex items-center pr-4'
                             )}
                           >
