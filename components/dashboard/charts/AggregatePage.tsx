@@ -49,13 +49,7 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({
         <AggregateLineChart
           chartId={'travel_times_agg'}
           title={'Travel times'}
-<<<<<<< HEAD
           data={traveltimes?.data?.by_date?.filter((datapoint) => datapoint.peak === 'all') || []}
-=======
-          data={
-            traveltimesRequest?.data?.by_date?.filter((datapoint) => datapoint.peak === 'all') || []
-          }
->>>>>>> v4-design-work
           // This is service date when agg by date. dep_time_from_epoch when agg by hour. Can probably remove this prop.
           pointField={PointFieldKeys.serviceDate}
           timeUnit={'day'}
@@ -74,11 +68,7 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({
         <AggregateLineChart
           chartId={'headways_agg'}
           title={'Time between trains (headways)'}
-<<<<<<< HEAD
           data={headways?.data?.by_date || []}
-=======
-          data={headwaysRequest.data || []}
->>>>>>> v4-design-work
           pointField={PointFieldKeys.serviceDate}
           timeUnit={'day'}
           timeFormat={'MMM d yyyy'}
@@ -98,11 +88,7 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({
           <AggregateLineChart
             chartId={'dwells_agg'}
             title={'Time spent at stations (dwells)'}
-<<<<<<< HEAD
             data={dwells?.data?.by_date || []}
-=======
-            data={dwellsRequest.data || []}
->>>>>>> v4-design-work
             pointField={PointFieldKeys.serviceDate}
             timeUnit={'day'}
             timeFormat={'MMM d yyyy'}
@@ -120,11 +106,7 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({
         <AggregateLineChart
           chartId={'travel_times_agg_hour'}
           title={'Travel times by hour'}
-<<<<<<< HEAD
           data={traveltimes?.data?.by_time?.filter((data) => data.is_peak_day) || []} // TODO: Add toggle for peak day.
-=======
-          data={traveltimesRequest?.data?.by_time?.filter((data) => data.is_peak_day) || []} // TODO: Add toggle for this.
->>>>>>> v4-design-work
           pointField={PointFieldKeys.depTimeFromEpoch}
           timeUnit={'hour'}
           timeFormat="hh:mm a"

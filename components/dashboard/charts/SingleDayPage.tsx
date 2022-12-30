@@ -52,7 +52,6 @@ export const SingleDayPage: React.FC<SingleDayPageProps> = ({
         <SingleDayLineChart
           chartId={'headways'}
           title={'Time between trains (headways)'}
-<<<<<<< HEAD
           data={headways.data || []}
           date={startDate}
           metricField={MetricFieldKeys.headWayTimeSec}
@@ -60,15 +59,6 @@ export const SingleDayPage: React.FC<SingleDayPageProps> = ({
           benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
           isLoading={headways.isLoading}
           location={'todo'}
-=======
-          data={headwaysRequest.data || []}
-          date={date}
-          metricField={MetricFieldKeys.headWayTimeSec}
-          pointField={PointFieldKeys.currentDepDt}
-          benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
-          isLoading={headwaysRequest.isLoading}
-          location={location}
->>>>>>> v4-design-work
           fname={'todo'}
         />
       </div>
@@ -76,21 +66,12 @@ export const SingleDayPage: React.FC<SingleDayPageProps> = ({
         <SingleDayLineChart
           chartId={'dwells'}
           title={'Time spent at station (dwells)'}
-<<<<<<< HEAD
           data={dwells.data || []}
           date={startDate}
           metricField={MetricFieldKeys.dwellTimeSec}
           pointField={PointFieldKeys.arrDt}
           isLoading={dwells.isLoading}
           location={'todo'}
-=======
-          data={dwellsRequest.data || []}
-          date={date}
-          metricField={MetricFieldKeys.dwellTimeSec}
-          pointField={PointFieldKeys.arrDt}
-          isLoading={dwellsRequest.isLoading}
-          location={location}
->>>>>>> v4-design-work
           fname={'todo'}
         />
       </div>
