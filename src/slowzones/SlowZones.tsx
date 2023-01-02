@@ -202,7 +202,7 @@ export const SlowZones = () => {
             <p>
               The line graph shows the sum of the delay from all slow zones by line each day. <br/>
               In other words, it shows the amount of delay time due to slow zones on one round
-              trip of each route. We used to sum the mean delay for each slow zone, but since
+              trip of each route. Previously we would sum the mean delay for each slow zone, but since
               slow zones often can change in severity over time, we decided it would be more accurate
               to show the true daily value.
             </p>
