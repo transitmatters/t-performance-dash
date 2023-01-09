@@ -14,7 +14,7 @@ module.exports = {
     fontSize: {
       // TODO: try using only defaults.
       xs: '0.75rem',
-      sm: '0.8rem',
+      sm: '0.5rem',
       base: '1rem',
       xl: '1.25rem',
       '2xl': '1.563rem',
@@ -28,14 +28,15 @@ module.exports = {
     extend: {
       boxShadow: {
         figma: '4px 4px 0 #DA291C',
-        dataBox: '1px 1px 4px rgba(0, 0, 0, 0.2);',
+        dataBox: '1px 1px 4px rgba(0, 0, 0, 0.1);',
         tappedDataBox: 'inset 1px 1px 4px rgba(0, 0, 0, 0.2);',
-        dataPageHeader: '0px 0px 10px 10px;',
       },
       colors: {
         design: {
+          darkGrey: '#353535',
           subtitleGrey: '#808080',
           lightGrey: '#DADADA',
+          background: '#F6F6F6',
         },
         mbta: {
           red: '#da291c',

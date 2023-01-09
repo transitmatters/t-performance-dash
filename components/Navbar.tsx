@@ -12,10 +12,10 @@ import Menu from '../public/Icons/Menu.svg';
 import Close from '../public/Icons/Close.svg';
 import { ActiveLink } from './utils/ActiveLink';
 const navBarLinks = {
-  line: { name: 'Line Dashboards', icon: Train },
-  system: { name: 'System-Wide Dashboards', icon: MBTA },
+  line: { name: 'Lines', icon: Train },
+  system: { name: 'System-Wide', icon: MBTA },
   ourSelection: { name: 'Our Selection', icon: Star },
-  personalized: { name: 'Personalized Dashboard', icon: Profile },
+  personalized: { name: 'Personalized', icon: Profile },
   donate: { name: 'Donate', icon: Heart },
   feedback: { name: 'Feedback', icon: Message },
 };

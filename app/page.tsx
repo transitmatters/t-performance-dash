@@ -4,29 +4,28 @@ import React from 'react';
 import { fetchDelayTotals } from '../api/slowzones';
 import { TotalSlowTime } from '../components/slowzones/charts/TotalSlowTime';
 import { classNames } from '../components/utils/tailwind';
-import { WidgetBox, WidgetPage } from '../components/widgets/WidgetBox';
+import { WidgetPage } from '../components/widgets/Widget';
 import { BasicDataWidgetItem } from '../components/widgets/BasicDataWidgetItem';
 import { BasicDataWidgetPair } from '../components/widgets/BasicDataWidgetPair';
-import { DataPageHeader } from '../components/general/DataPageHeader';
+import { DataPageHeader } from '../components/widgets/DataPageHeader';
+import { HomescreenWidgetTitle } from '../components/widgets/HomescreenWidgetTitle';
 
 export default function Home() {
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
 
   return (
     <div className={classNames('flex w-full flex-col items-center')}>
-      <DataPageHeader title="Headways">
-        <p>placeholder</p>
-      </DataPageHeader>
+      <DataPageHeader title="Headways" line="TBD" dateString="Today (TBD)" />
       <WidgetPage>
         <BasicDataWidgetPair>
           <BasicDataWidgetItem
-            title="Today"
+            title="Median"
             value="5:37"
             analysis="-0:12 from last Weds."
             explanation="This is where the explanation of the statistic will be placed."
           />
           <BasicDataWidgetItem
-            title="Today"
+            title="Median"
             value="5:37"
             analysis="-0:12 from last Weds."
             explanation="This is where the explanation of the statistic will be placed."
@@ -34,43 +33,19 @@ export default function Home() {
         </BasicDataWidgetPair>{' '}
         <BasicDataWidgetPair>
           <BasicDataWidgetItem
-            title="Today"
+            title="Median"
             value="5:37"
             analysis="-0:12 from last Weds."
             explanation="This is where the explanation of the statistic will be placed."
           />
           <BasicDataWidgetItem
-            title="Today"
-            value="5:37"
-            analysis="-0:12 from last Weds."
+            title="New Trains"
+            value="4"
+            analysis="-1 from last Weds."
             explanation="This is where the explanation of the statistic will be placed."
+            units="trains"
           />
         </BasicDataWidgetPair>
-        <WidgetBox title="Headways">
-          <BasicDataWidgetItem
-            title="Today"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="This is where the explanation of the statistic will be placed."
-          />
-        </WidgetBox>
-        <WidgetBox title="Travel Times">
-          <BasicDataWidgetItem
-            title="Today"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="This is where the explanation of the statistic will be placed."
-          />
-        </WidgetBox>
-        <WidgetBox title="Slow Zones">
-          <div className={classNames('flex-grow-1 flex rounded border border-mbta-lighterRed p-4')}>
-            {/* {delayTotals.data && (
-            <TotalSlowTime
-              data={delayTotals.data.filter((t) => new Date(t.date) > new Date(2020, 0, 1)) || []}
-            />
-          )} */}
-          </div>
-        </WidgetBox>
         <BasicDataWidgetPair>
           <BasicDataWidgetItem
             title="Today"
@@ -85,6 +60,13 @@ export default function Home() {
             explanation="Test"
           />
         </BasicDataWidgetPair>
+        <HomescreenWidgetTitle title="Headways" />
+        <BasicDataWidgetItem
+          title="Today"
+          value="5:37"
+          analysis="-0:12 from last Weds."
+          explanation="Test"
+        />
       </WidgetPage>
     </div>
   );
