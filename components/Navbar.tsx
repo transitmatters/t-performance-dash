@@ -41,7 +41,7 @@ export const Navbar = () => {
             <ActiveLink key={key} href={`/${key}`} activeClassName="border-white">
               <a
                 className={classNames(
-                  'inline-flex h-full items-center gap-x-2 border-b-2 border-transparent px-4 text-base text-white hover:bg-design-subtitleGrey'
+                  'inline-flex h-full items-center gap-x-2 border-b-2 border-transparent px-4 text-sm text-white hover:bg-design-subtitleGrey'
                 )}
               >
                 <Image className="h-5 w-auto" src={value.icon} alt="Transit Matters Logo" />
