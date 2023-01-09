@@ -8,7 +8,9 @@ type DataPageHeaderProps = {
 
 export const DataPageHeader: React.FC<DataPageHeaderProps> = ({ title, children }) => {
   return (
-    <div className={classNames('sticky top-0 mx-1 mb-px w-full justify-center bg-white')}>
+    <div
+      className={classNames('sticky top-11 mx-1 mb-px w-full justify-center bg-white sm:top-16')}
+    >
       <div className="mx-3 mt-2 bg-white">
         <div
           className={classNames(
