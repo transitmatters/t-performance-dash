@@ -4,8 +4,8 @@ import React, { Fragment } from 'react';
 import { LINES, LINE_OBJECTS } from '../../constants/lines';
 import SelectedLineIndicator from '../../public/Icons/Components/SelectedLineIndicator.svg';
 
-import { lineSelectionButtonConfig, lineSelectionConfig } from '../../app/data/tailwind';
 import { classNames } from '../utils/tailwind';
+import { lineSelectionButtonConfig, lineSelectionConfig } from './LineSelectorStyle';
 
 const LineSelectionItem = ({ lineName, selectedLine }) => {
   const isSelected = lineName === selectedLine;
