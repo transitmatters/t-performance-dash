@@ -13,8 +13,8 @@ module.exports = {
   theme: {
     fontSize: {
       // TODO: try using only defaults.
-      xs: '0.75rem',
-      sm: '0.8rem',
+      xs: '0.5rem',
+      sm: '0.75rem',
       base: '1rem',
       xl: '1.25rem',
       '2xl': '1.563rem',
@@ -30,6 +30,9 @@ module.exports = {
         figma: '4px 4px 0 #DA291C',
         dataBox: '1px 1px 4px rgba(0, 0, 0, 0.1);',
         tappedDataBox: 'inset 1px 1px 4px rgba(0, 0, 0, 0.2);',
+        unselectedLine: '1px 1px 2px rgba(0, 0, 0, 0.2);',
+        selectedLine: 'inset 2px 2px 3px rgba(0, 0, 0, 0.2);',
+        simple: '0px 0px 2px rgba(0,0,0,0.2);',
       },
       colors: {
         design: {

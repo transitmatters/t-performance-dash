@@ -30,7 +30,6 @@ export default function RootLayout({
       <body className="bg-design-background">
         <QueryClientProvider client={queryClient}>
           <Layout>{children}</Layout>
-          <ReactQueryDevtools />
         </QueryClientProvider>
       </body>
     </html>

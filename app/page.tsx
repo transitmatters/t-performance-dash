@@ -9,6 +9,7 @@ import { BasicDataWidgetItem } from '../components/widgets/BasicDataWidgetItem';
 import { BasicDataWidgetPair } from '../components/widgets/BasicDataWidgetPair';
 import { DataPageHeader } from '../components/widgets/DataPageHeader';
 import { HomescreenWidgetTitle } from '../components/widgets/HomescreenWidgetTitle';
+import { BottomNavBar } from '../components/general/BottomNavBar';
 
 export default function Home() {
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
@@ -68,6 +69,7 @@ export default function Home() {
           explanation="Test"
         />
       </WidgetPage>
+      <BottomNavBar line="<line>" section="<Section>" />
     </div>
   );
 }
