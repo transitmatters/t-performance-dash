@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import React, { useRef, useState, useEffect } from 'react';
 import { classNames } from '../utils/tailwind';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';

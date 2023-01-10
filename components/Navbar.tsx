@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Image from 'next/image';
 import classNames from 'classnames';
 import Heart from '../public/Icons/Heart.svg';
 import MBTA from '../public/Icons/MBTA.svg';
