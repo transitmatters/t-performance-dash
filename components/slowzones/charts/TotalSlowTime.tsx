@@ -16,69 +16,71 @@ Chart.register(...registerables);
 export const TotalSlowTime = ({ data, line }: TotalSlowTimeProps) => {
   const ref = useRef();
   const labels = data?.map((item) => item['date']);
-  return (
-    <Line
-      ref={ref}
-      id={'total_slow_time'}
-      data={{
-        labels,
-        datasets: [
-          {
-            label: `${line} Line`,
-            data: data?.map((d) => (d[line] / 60).toFixed(2)),
-            borderColor: LINE_COLORS[line.toUpperCase()],
-            backgroundColor: LINE_COLORS[line.toUpperCase()],
-            pointRadius: 0,
-            tension: 0.1,
+  if (line) {
+    return (
+      <Line
+        ref={ref}
+        id={'total_slow_time'}
+        data={{
+          labels,
+          datasets: [
+            {
+              label: `${line} Line`,
+              data: data?.map((d) => (d[line] / 60).toFixed(2)),
+              borderColor: LINE_COLORS[line.toUpperCase()],
+              backgroundColor: LINE_COLORS[line.toUpperCase()],
+              pointRadius: 0,
+              tension: 0.1,
+            },
+          ],
+        }}
+        options={{
+          maintainAspectRatio: false,
+          elements: {
+            point: {
+              radius: 6,
+              hitRadius: 6,
+              hoverRadius: 6,
+            },
           },
-        ],
-      }}
-      options={{
-        maintainAspectRatio: false,
-        elements: {
-          point: {
-            radius: 6,
-            hitRadius: 6,
-            hoverRadius: 6,
+          responsive: true,
+          layout: {
+            padding: {
+              top: 25,
+            },
           },
-        },
-        responsive: true,
-        layout: {
-          padding: {
-            top: 25,
-          },
-        },
-        scales: {
-          y: {
-            display: true,
-            title: {
+          scales: {
+            y: {
               display: true,
-              text: 'Minutes',
-            },
-          },
-          x: {
-            type: 'time',
-            time: {
-              unit: 'month',
-              displayFormats: {
-                month: 'MMM',
+              title: {
+                display: true,
+                text: 'Minutes',
               },
             },
+            x: {
+              type: 'time',
+              time: {
+                unit: 'month',
+                displayFormats: {
+                  month: 'MMM',
+                },
+              },
 
-            adapters: {
-              date: {
-                locale: enUS,
+              adapters: {
+                date: {
+                  locale: enUS,
+                },
               },
+              display: true,
             },
-            display: true,
           },
-        },
-        plugins: {
-          legend: {
-            display: false,
+          plugins: {
+            legend: {
+              display: false,
+            },
           },
-        },
-      }}
-    />
-  );
+        }}
+      />
+    );
+  }
 };

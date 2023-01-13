@@ -1,16 +1,19 @@
-import React, { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
+import React, { Fragment } from 'react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 import { LINE_OBJECTS } from '../../constants/lines';
-import { useSelectedStore } from '../../stores/useSelected';
-
 import { classNames } from '../utils/tailwind';
+import { getPage } from '../utils/router';
 import { buttonConfig, lineSelectionButtonConfig, lineSelectionConfig } from './LineSelectorStyle';
 
 export const LineSelector = () => {
-  const selectedLine = useSelectedStore((state) => state.line);
+  const router = useRouter();
+  const page = getPage(router.asPath);
+
   return (
-    <Listbox value={selectedLine} onChange={() => null}>
+    <Listbox value={LINE_OBJECTS[page.line]} onChange={() => null}>
       {({ open }) => (
         <>
           <div className="relative">
@@ -18,11 +21,11 @@ export const LineSelector = () => {
               <div
                 className={classNames(
                   'ml-2 flex h-8 w-8 rounded-full border-2 bg-opacity-80',
-                  buttonConfig[selectedLine.key],
+                  buttonConfig[page.line],
                   open ? 'shadow-simpleInset' : 'shadow-simple'
                 )}
               >
-                <p className={`z-10 m-auto select-none text-sm text-white`}>{selectedLine.key}</p>
+                <p className={`z-10 m-auto select-none text-sm text-white`}>{page.line}</p>
               </div>
             </Listbox.Button>
 
@@ -49,22 +52,24 @@ export const LineSelector = () => {
                     value={metadata}
                   >
                     {({ selected }) => (
-                      <div
-                        className={classNames(
-                          selected ? 'font-semibold' : 'font-normal',
-                          'flex flex-row gap-2 truncate'
-                        )}
-                      >
+                      <Link href={`/${metadata.key}`}>
                         <div
                           className={classNames(
-                            'h-5 w-5 rounded-full',
-                            lineSelectionButtonConfig[metadata.key],
-                            lineSelectionConfig[metadata.key],
-                            selected ? 'bg-opacity-100' : 'bg-opacity-20'
+                            selected ? 'font-semibold' : 'font-normal',
+                            'flex flex-row gap-2 truncate'
                           )}
-                        ></div>
-                        {metadata.name}
-                      </div>
+                        >
+                          <div
+                            className={classNames(
+                              'h-5 w-5 rounded-full',
+                              lineSelectionButtonConfig[metadata.key],
+                              lineSelectionConfig[metadata.key],
+                              selected ? 'bg-opacity-100' : 'bg-opacity-20'
+                            )}
+                          ></div>
+                          {metadata.name}
+                        </div>
+                      </Link>
                     )}
                   </Listbox.Option>
                 ))}

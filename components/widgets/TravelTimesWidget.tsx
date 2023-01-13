@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../dashboard/charts/SingleDayLineChart';
@@ -8,6 +9,7 @@ import { SingleDayAPIParams } from '../../types/api';
 import { stopIdsForStations } from '../../utils/stations';
 import { useCustomQueries } from '../../api/datadashboard';
 import { Station } from '../../types/stations';
+import { getPage } from '../utils/router';
 import { BasicWidgetDataLayout } from './internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from './HomescreenWidgetTitle';
 
@@ -35,6 +37,9 @@ export const TravelTimesWidget: React.FC = () => {
     },
   };
 
+  const router = useRouter();
+  const page = getPage(router.asPath);
+
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 
   const { traveltimes } = useCustomQueries(
@@ -47,6 +52,7 @@ export const TravelTimesWidget: React.FC = () => {
     false
   );
 
+  // TODO: If these error out, should only affect the widget, not the title.
   if (traveltimes.isLoading) {
     return <>Loading ... teehee</>;
   }
@@ -57,7 +63,7 @@ export const TravelTimesWidget: React.FC = () => {
 
   return (
     <>
-      <HomescreenWidgetTitle title="Travel times" href="/traveltimes" />
+      <HomescreenWidgetTitle title="Travel times" href={`/${page.line}/traveltimes`} />
       <div className={classNames('bg-white p-2 shadow-dataBox')}>
         <div className={'charts main-column'}>
           <SingleDayLineChart

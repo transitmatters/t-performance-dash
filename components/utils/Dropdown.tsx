@@ -36,7 +36,7 @@ export const Dropdown = ({ setSelectedValue, selectedValue, options }) => {
                     }
                     value={person}
                   >
-                    {({ selected, active }) => (
+                    {({ selected }) => (
                       <span
                         className={classNames(
                           selected ? 'font-semibold' : 'font-normal',

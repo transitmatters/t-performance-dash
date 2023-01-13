@@ -17,8 +17,8 @@ export const fetchSingleDayData = (
   name: string,
   options: PartialSingleDayAPIOptions
 ): Promise<SingleDayDataPoint[]> => {
-  const url = new URL(`${name}/${options.date}`, window.location.origin);
-
+  // TODO: Remove `api/` from URL. Temporary fix to work with rewrites in development
+  const url = new URL(`api/${name}/${options.date}`, window.location.origin);
   Object.entries(options).forEach(([key, value]) => {
     // options includes date which is a string. Date is never used as a parameter since it is part of the URL, so it can be excluded.
     if (!(typeof value === 'string') && key !== 'date')
@@ -40,7 +40,9 @@ export const fetchAggregateData = (
   options: PartialAggregateAPIOptions
 ): Promise<AggregateDataResponse> => {
   const method = name === QueryNameKeys.traveltimes ? 'traveltimes2' : name;
-  const url = new URL(`${APP_DATA_BASE_PATH}/aggregate/${method}`, window.location.origin);
+
+  // TODO: Remove `api/` from URL. Temporary fix to work with rewrites in development
+  const url = new URL(`api/${APP_DATA_BASE_PATH}/aggregate/${method}`, window.location.origin);
   // Loop through each option and append values to searchParams.
   Object.entries(options).forEach(([key, value]) => {
     if (Array.isArray(value)) {
