@@ -532,11 +532,61 @@
 		},
 		"stations": [
 			{
-				"stop_name": "Union Square",
+				"stop_name": "Medford/Tufts",
 				"branches": ["E"],
-				"station": "place-unsqu",
-				"disabled": true,
+				"station": "place-mdftf",
+				"disabled": false,
 				"order": 1,
+				"stops": {
+					"0": ["70511"],
+					"1": ["70512"]
+				}
+			}, {
+				"stop_name": "Ball Square",
+				"branches": ["E"],
+				"station": "place-balsq",
+				"disabled": false,
+				"order": 2,
+				"stops": {
+					"0": ["70509"],
+					"1": ["70510"]
+				}
+			}, {
+				"stop_name": "Magoun Square",
+				"branches": ["E"],
+				"station": "place-mgngl",
+				"disabled": false,
+				"order": 3,
+				"stops": {
+					"0": ["70507"],
+					"1": ["70508"]
+				}
+			}, {
+				"stop_name": "Gilman Square",
+				"branches": ["E"],
+				"station": "place-gilmn",
+				"disabled": false,
+				"order": 4,
+				"stops": {
+					"0": ["70505"],
+					"1": ["70506"]
+				}
+			}, {
+				"stop_name": "East Somerville",
+				"branches": ["E"],
+				"station": "place-esomr",
+				"disabled": false,
+				"order": 5,
+				"stops": {
+					"0": ["70513"],
+					"1": ["70514"]
+				}
+			}, {
+				"stop_name": "Union Square",
+				"branches": ["D"],
+				"station": "place-unsqu",
+				"disabled": false,
+				"order": 6,
 				"stops": {
 					"0": ["70503"],
 					"1": ["70504"]
@@ -545,7 +595,7 @@
 				"stop_name": "Lechmere",
 				"branches": ["D", "E"],
 				"station": "place-lech",
-				"order": 2,
+				"order": 7,
 				"stops": {
 					"0": ["70501", "70209"],
 					"1": ["70502", "70210"]
@@ -554,7 +604,7 @@
 				"stop_name": "Science Park",
 				"branches": ["D", "E"],
 				"station": "place-spmnl",
-				"order": 3,
+				"order": 8,
 				"stops": {
 					"0": ["70207"],
 					"1": ["70208"]
@@ -563,7 +613,7 @@
 				"stop_name": "North Station",
 				"branches": ["C", "D", "E"],
 				"station": "place-north",
-				"order": 4,
+				"order": 9,
 				"stops": {
 					"0": ["70205"],
 					"1": ["70206"]
@@ -572,7 +622,7 @@
 				"stop_name": "Haymarket",
 				"branches": ["C", "D", "E"],
 				"station": "place-haecl",
-				"order": 5,
+				"order": 10,
 				"stops": {
 					"0": ["70203"],
 					"1": ["70204"]
@@ -581,7 +631,7 @@
 				"stop_name": "Government Center",
 				"branches": ["B", "C", "D", "E"],
 				"station": "place-gover",
-				"order": 6,
+				"order": 11,
 				"stops": {
 					"0": ["70201"],
 					"1": ["70202"]
@@ -590,7 +640,7 @@
 				"stop_name": "Park Street",
 				"branches": ["B", "C", "D", "E"],
 				"station": "place-pktrm",
-				"order": 7,
+				"order": 12,
 				"stops": {
 					"0": ["70200"],
 					"1": ["70196", "70197", "70198", "70199"]
@@ -599,7 +649,7 @@
 				"stop_name": "Boylston",
 				"branches": ["B", "C", "D", "E"],
 				"station": "place-boyls",
-				"order": 8,
+				"order": 13,
 				"stops": {
 					"0": ["70158"],
 					"1": ["70159"]
@@ -608,7 +658,7 @@
 				"stop_name": "Arlington",
 				"branches": ["B", "C", "D", "E"],
 				"station": "place-armnl",
-				"order": 9,
+				"order": 14,
 				"stops": {
 					"0": ["70156"],
 					"1": ["70157"]
@@ -617,7 +667,7 @@
 				"stop_name": "Copley",
 				"branches": ["B", "C", "D", "E"],
 				"station": "place-coecl",
-				"order": 10,
+				"order": 15,
 				"stops": {
 					"0": ["70154"],
 					"1": ["70155"]
@@ -626,7 +676,7 @@
 				"stop_name": "Hynes",
 				"branches": ["B", "C", "D"],
 				"station": "place-hymnl",
-				"order": 11,
+				"order": 16,
 				"stops": {
 					"0": ["70152"],
 					"1": ["70153"]
@@ -635,7 +685,7 @@
 				"stop_name": "Kenmore",
 				"branches": ["B", "C", "D"],
 				"station": "place-kencl",
-				"order": 12,
+				"order": 17,
 				"stops": {
 					"0": ["70150", "71150"],
 					"1": ["70151", "71151"]
