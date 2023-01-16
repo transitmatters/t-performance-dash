@@ -22,6 +22,9 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   typescript: tsSettings,
+  images: {
+    unoptimized: true,
+  },
   experimental: {
     appDir: true,
   },
