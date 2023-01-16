@@ -22,6 +22,11 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   typescript: tsSettings,
+
+  // No nextJS image optimization for a static site.
+  images: {
+    unoptimized: true,
+  },
   experimental: {
     appDir: true,
   },
