@@ -9,12 +9,19 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
+// This is to prevent typescript errors from failing the build while we set up v4.
+const tsSettings = { ignoreBuildErrors: false };
+if (process.env.V4_TEMP) {
+  tsSettings.ignoreBuildErrors = true;
+}
+
 const nextConfig = {
   async rewrites() {
     return rewrites;
   },
   reactStrictMode: true,
   swcMinify: true,
+  typescript: tsSettings,
   experimental: {
     appDir: true,
   },
