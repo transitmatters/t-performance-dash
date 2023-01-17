@@ -61,6 +61,48 @@ export default function Home() {
             explanation="Test"
           />
         </BasicDataWidgetPair>
+        <BasicDataWidgetPair>
+          <BasicDataWidgetItem
+            title="Today"
+            value="5:37"
+            analysis="-0:12 from last Weds."
+            explanation="Test"
+          />
+          <BasicDataWidgetItem
+            title="Today"
+            value="5:37"
+            analysis="-0:12 from last Weds."
+            explanation="Test"
+          />
+        </BasicDataWidgetPair>
+        <BasicDataWidgetPair>
+          <BasicDataWidgetItem
+            title="Today"
+            value="5:37"
+            analysis="-0:12 from last Weds."
+            explanation="Test"
+          />
+          <BasicDataWidgetItem
+            title="Today"
+            value="5:37"
+            analysis="-0:12 from last Weds."
+            explanation="Test"
+          />
+        </BasicDataWidgetPair>
+        <BasicDataWidgetPair>
+          <BasicDataWidgetItem
+            title="Today"
+            value="5:37"
+            analysis="-0:12 from last Weds."
+            explanation="Test"
+          />
+          <BasicDataWidgetItem
+            title="Today"
+            value="5:37"
+            analysis="-0:12 from last Weds."
+            explanation="Test"
+          />
+        </BasicDataWidgetPair>
         <HomescreenWidgetTitle title="Headways" />
         <BasicDataWidgetItem
           title="Today"
