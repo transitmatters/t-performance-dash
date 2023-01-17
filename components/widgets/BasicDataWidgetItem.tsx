@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import React, { useRef, useState, useEffect } from 'react';
 import { classNames } from '../utils/tailwind';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
@@ -8,6 +7,7 @@ type BasicDataWidgetItemProps = {
   value: string;
   analysis: string;
   explanation: string;
+  units?: string;
 };
 
 export const BasicDataWidgetItem: React.FC<BasicDataWidgetItemProps> = ({
@@ -15,6 +15,7 @@ export const BasicDataWidgetItem: React.FC<BasicDataWidgetItemProps> = ({
   value,
   analysis,
   explanation = 'The median is the travel time of the trip which was faster than 50% of the trips today.',
+  units,
 }) => {
   const [tapped, setTapped] = useState(false);
   const [height, setHeight] = useState(0);
@@ -56,9 +57,12 @@ export const BasicDataWidgetItem: React.FC<BasicDataWidgetItemProps> = ({
     >
       <div className={classNames('flex flex-col items-start')}>
         <p className={classNames('text-base')}>{title}</p>
-        <p className={classNames('text-4xl font-bold text-black')}>{value}</p>
+        <div className="flex flex-row items-baseline gap-x-1">
+          <p className={classNames('text-4xl text-black')}>{value}</p>
+          <p className="text-base text-design-subtitleGrey">{units}</p>
+        </div>
         <div className="flex flex-row items-center gap-x-1">
-          <Image className="h-3 w-auto" src={ArrowDownNegative} alt="Your Company" />
+          <ArrowDownNegative className="h-3 w-auto" alt="Your Company" />
           <p className={classNames('text-xs text-design-subtitleGrey')}>{analysis}</p>
         </div>
       </div>

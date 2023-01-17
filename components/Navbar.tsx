@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Image from 'next/image';
 import classNames from 'classnames';
 import Heart from '../public/Icons/Heart.svg';
 import MBTA from '../public/Icons/MBTA.svg';
@@ -12,10 +11,10 @@ import Menu from '../public/Icons/Menu.svg';
 import Close from '../public/Icons/Close.svg';
 import { ActiveLink } from './utils/ActiveLink';
 const navBarLinks = {
-  line: { name: 'Line Dashboards', icon: Train },
-  system: { name: 'System-Wide Dashboards', icon: MBTA },
+  line: { name: 'Lines', icon: Train },
+  system: { name: 'System-Wide', icon: MBTA },
   ourSelection: { name: 'Our Selection', icon: Star },
-  personalized: { name: 'Personalized Dashboard', icon: Profile },
+  personalized: { name: 'Personalized', icon: Profile },
   donate: { name: 'Donate', icon: Heart },
   feedback: { name: 'Feedback', icon: Message },
 };
@@ -24,16 +23,25 @@ export const Navbar = () => {
   const [open, setOpen] = useState(false);
   return (
     <div className="fixed top-0 z-50 flex w-full items-center justify-between overflow-x-hidden bg-tm-grey p-2">
-      <Image className="h-7 w-auto sm:h-12" src={TmLogoSvg} alt="Transit Matters Logo" />
+      <TmLogoSvg className="h-7 w-auto sm:h-12" alt="Transit Matters Logo" />
       <div className="flex sm:hidden">
-        <Image
-          className="h-4 w-auto sm:hidden"
-          src={open ? Close : Menu}
-          alt="Menu"
-          onClick={() => {
-            setOpen(!open);
-          }}
-        />
+        {open ? (
+          <Close
+            className="h-4 w-4 sm:hidden"
+            alt="Menu"
+            onClick={() => {
+              setOpen(!open);
+            }}
+          />
+        ) : (
+          <Menu
+            className="h-4 w-4 sm:hidden"
+            alt="Menu"
+            onClick={() => {
+              setOpen(!open);
+            }}
+          />
+        )}
       </div>
       <div className="hidden h-11 sm:flex">
         {Object.entries(navBarLinks).map(([key, value]) => {
@@ -41,10 +49,10 @@ export const Navbar = () => {
             <ActiveLink key={key} href={`/${key}`} activeClassName="border-white">
               <a
                 className={classNames(
-                  'inline-flex h-full items-center gap-x-2 border-b-2 border-transparent px-4 text-base text-white hover:bg-design-subtitleGrey'
+                  'inline-flex h-full items-center gap-x-2 border-b-2 border-transparent px-4 text-sm text-white hover:bg-design-subtitleGrey'
                 )}
               >
-                <Image className="h-5 w-auto" src={value.icon} alt="Transit Matters Logo" />
+                <value.icon className="h-5 w-auto" alt="Transit Matters Logo" />
                 <p className="text-center">{value.name}</p>
               </a>
             </ActiveLink>
@@ -66,7 +74,7 @@ export const Navbar = () => {
                   index === 4 ? 'pt-5' : 'pt-1'
                 )}
               >
-                <Image className="h-5 w-auto" src={value.icon} alt="Transit Matters Logo" />
+                <value.icon className="h-5 w-auto" alt="Transit Matters Logo" />
                 {value.name}
               </a>
             </ActiveLink>
