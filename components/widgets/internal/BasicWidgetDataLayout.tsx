@@ -27,7 +27,7 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
         </div>
         <div className="flex flex-row items-center gap-x-1">
           <div>{Icon}</div>
-          <p className={classNames('text-xs text-design-subtitleGrey')}>{analysis}</p>
+          <p className={classNames('text-sm text-design-subtitleGrey')}>{analysis}</p>
         </div>
       </div>
     </div>
