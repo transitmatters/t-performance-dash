@@ -9,7 +9,7 @@ export const Dropdown = ({ setSelectedValue, selectedValue, options }) => {
     <Listbox value={selectedValue} onChange={setSelectedValue}>
       {({ open }) => (
         <>
-          <div className="relative ">
+          <div className="relative">
             <Listbox.Button className="relative w-full cursor-default rounded-md border bg-mbta-lightRed py-1.5 pl-3 pr-10 text-left text-white opacity-50 shadow-sm focus:outline-none focus:ring-1 sm:text-sm">
               <span className="block truncate">{selectedValue.name}</span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">

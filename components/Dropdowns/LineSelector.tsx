@@ -2,10 +2,9 @@ import { Popover, Transition } from '@headlessui/react';
 
 import React, { Fragment } from 'react';
 import { LINES, LINE_OBJECTS } from '../../constants/lines';
-import SelectedLineIndicator from '../../public/Icons/Components/SelectedLineIndicator.svg';
 
 import { classNames } from '../utils/tailwind';
-import { lineSelectionButtonConfig, lineSelectionConfig } from './LineSelectorStyle';
+import { buttonConfig, lineSelectionButtonConfig, lineSelectionConfig } from './LineSelectorStyle';
 
 const LineSelectionItem = ({ lineName, selectedLine }) => {
   const isSelected = lineName === selectedLine;
@@ -34,34 +33,33 @@ const LineSelectionItem = ({ lineName, selectedLine }) => {
 
 export const LineSelector = ({ selectedLine }) => {
   return (
-    <Popover className="relative">
+    <Popover className="relative flex h-full items-center">
       {({ open }) => (
         <>
-          <Popover.Overlay className="fixed inset-0 bg-black opacity-30" />
+          <Popover.Overlay className="mb-safe fixed inset-0 bottom-11 bg-black opacity-30" />
 
-          <Popover.Button>
-            <div className="ml-2 flex h-8 w-8">
-              <p className={`z-10 m-auto select-none text-sm text-white ${open && 'font-bold'}`}>
-                RL
-              </p>
-              <SelectedLineIndicator
-                fill={LINE_OBJECTS[selectedLine].color}
-                className="absolute h-8 w-8"
-                alt="Current Line Indicator"
-              />
+          <Popover.Button className="ring-0">
+            <div
+              className={classNames(
+                'ml-2 flex h-8 w-8 rounded-full border-2 bg-opacity-80',
+                buttonConfig[selectedLine],
+                open ? 'shadow-simpleInset' : 'shadow-simple'
+              )}
+            >
+              <p className={`z-10 m-auto select-none text-sm text-white`}>{selectedLine}</p>
             </div>
           </Popover.Button>
           <Transition
             // TODO: Slide up.
             as={Fragment}
             enter="transition ease-out duration-200"
-            enterFrom="opacity-0 scale-x-0"
-            enterTo="opacity-100 scale-x-1"
+            enterFrom="opacity-0 translate-y-full"
+            enterTo="opacity-100 translate-y-0"
             leave="transition ease-in duration-150"
-            leaveFrom="opacity-100 scale-x-1"
-            leaveTo="opacity-0 scale-x-0"
+            leaveFrom="opacity-100 translate-y-0"
+            leaveTo="opacity-0 translate-y-full"
           >
-            <Popover.Panel className="fixed left-2 bottom-12 z-10 m-auto table rounded-lg bg-white px-2 shadow-simple">
+            <Popover.Panel className="absolute bottom-11 z-10 m-auto table rounded-t-md bg-white px-2">
               <div className="table-row">
                 {LINES.map((lineName) => (
                   <LineSelectionItem
@@ -76,11 +74,5 @@ export const LineSelector = ({ selectedLine }) => {
         </>
       )}
     </Popover>
-    // <div className="absolute">
-    //   <p>Line Selector</p>
-    //   {LINES.map((lineName) => {
-    //     return <LineSelectionItem key={lineName} lineName={lineName} />;
-    //   })}
-    // </div>
   );
 };

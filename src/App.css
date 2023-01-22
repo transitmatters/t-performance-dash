@@ -5,6 +5,8 @@
   --blue-line: #003da5;
   --green-line: #00843d;
   --bus: #ffc72c;
+  --dark-grey: #353535;
+  --subtitle-grey: #808080;
   --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   --incident-color: #c02828;
   --incident-tooltip-color: #eaeaea;
@@ -72,10 +74,9 @@
   text-align: center;
 }
 
-
 .empty-state #slowzone-button {
   background-color: #333;
-  color:white;
+  color: white;
   padding: 3px 8px 3px 8px;
   margin-left: 5px;
   cursor: pointer;
@@ -175,7 +176,7 @@
 
 .station-configuration {
   padding: 10px;
-  line-height: 1.0;
+  line-height: 1;
 }
 
 select,
@@ -241,7 +242,7 @@ button:disabled,
 .station-configuration-wrapper.Bus input,
 .station-configuration-wrapper.Bus button {
   color: inherit;
-  border-color: rgba(0, 0, 0, 0.4)
+  border-color: rgba(0, 0, 0, 0.4);
 }
 
 .station-configuration select,
@@ -314,7 +315,7 @@ button:disabled,
 @media screen and (min-width: 1300px) {
   .chart {
     display: grid;
-    grid-template: 
+    grid-template:
       'chart legend'
       'chart extras';
     grid-template-columns: 1fr 190px;
@@ -426,10 +427,10 @@ button:disabled,
     margin-right: 25px;
     margin-bottom: 10px;
   }
-  
+
   .station-configuration {
     display: grid;
-    grid-template-columns: .5fr 1fr 1fr 40px;
+    grid-template-columns: 0.5fr 1fr 1fr 40px;
     grid-template-areas:
       'toggle line stations swap'
       'date date stations swap';
@@ -449,10 +450,12 @@ button:disabled,
     grid-area: stations;
   }
 
-  .slow-zone .line-toggle , .chart-toggle , .direction-toggle{ 
+  .slow-zone .line-toggle,
+  .chart-toggle,
+  .direction-toggle {
     justify-self: center;
   }
-  
+
   .station-configuration .from-to-label,
   .station-configuration .date-label {
     width: 30px;
@@ -559,7 +562,7 @@ button:disabled,
 
   .station-configuration {
     display: grid;
-    grid-template-columns: .5fr 1fr 40px;
+    grid-template-columns: 0.5fr 1fr 40px;
     grid-template-areas:
       'toggle line line'
       'date date date'
@@ -569,21 +572,23 @@ button:disabled,
   }
 
   .slow-zone {
-    padding-top:10px;
+    padding-top: 10px;
     padding-bottom: 10px;
     display: grid;
-    grid-template-columns:100%;
-    grid-template-areas: 
-    'line'
-    'line'
-    'date';
+    grid-template-columns: 100%;
+    grid-template-areas:
+      'line'
+      'line'
+      'date';
     row-gap: 15px;
   }
 
-  .slow-zone .line-toggle , .chart-toggle , .direction-toggle{ 
+  .slow-zone .line-toggle,
+  .chart-toggle,
+  .direction-toggle {
     justify-self: center;
   }
-  
+
   .station-configuration .from-to-label,
   .station-configuration .date-label {
     width: 30px;
@@ -699,7 +704,7 @@ button:disabled,
   display: grid;
 }
 
-.control input[type=radio] {
+.control input[type='radio'] {
   margin-right: 10px;
 }
 
@@ -714,51 +719,51 @@ button:disabled,
 }
 
 .button-toggle {
-  margin:4px;
-  background-color:#EFEFEF;
-  border-radius:4px;
-  border:1px solid #D0D0D0;
-  overflow:auto;
-  float:left;
+  margin: 4px;
+  background-color: #efefef;
+  border-radius: 4px;
+  border: 1px solid #d0d0d0;
+  overflow: auto;
+  float: left;
   cursor: pointer;
 }
 .button-toggle label {
-  float:left;
-  width: 4.0em;
+  float: left;
+  width: 4em;
   cursor: pointer;
-  color: black
+  color: black;
 }
 
 .button-toggle label span {
-  text-align:center;
-  padding:3px 0px;
-  display:block;
+  text-align: center;
+  padding: 3px 0px;
+  display: block;
 }
 
 .button-toggle label input {
-  position:absolute;
-  top:-20px;
+  position: absolute;
+  top: -20px;
 }
 
 .button-toggle input:checked + span {
-  color:#fff;
+  color: #fff;
 }
 
 .button-toggle input:disabled + span {
-  color:#fff;
-  cursor: not-allowed	;
+  color: #fff;
+  cursor: not-allowed;
 }
 
-.Red input:checked + span{
-  background-color:var( --red-line);
+.Red input:checked + span {
+  background-color: var(--red-line);
 }
 
-.Orange input:checked + span{
-  background-color:var( --orange-line);
+.Orange input:checked + span {
+  background-color: var(--orange-line);
 }
 
-.Blue input:checked + span{
-  background-color:var( --blue-line);
+.Blue input:checked + span {
+  background-color: var(--blue-line);
 }
 
 .slow-zone {
@@ -798,7 +803,7 @@ button:disabled,
   padding-right: 2em;
 }
 
-.accordion .accordion-item-header{
+.accordion .accordion-item-header {
   display: flex;
   align-items: center;
   flex-direction: row;
@@ -810,7 +815,7 @@ button:disabled,
 }
 
 .accordion .accordion-item-header:after {
-  content: "•";
+  content: '•';
   position: absolute;
   right: 0;
   display: none;
@@ -832,7 +837,7 @@ button:disabled,
   padding: 10px;
 }
 
-.accordion-item:target .accordion-text{
+.accordion-item:target .accordion-text {
   max-height: 300px;
 }
 

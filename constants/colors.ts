@@ -18,4 +18,10 @@ export const COLORS = {
     lightRed: '#cb2525',
     grey: '#2e2d2c',
   },
+  design: {
+    darkGrey: '#353535',
+    subtitleGrey: '#808080',
+    lightGrey: '#DADADA',
+    background: '#F6F6F6',
+  },
 };
