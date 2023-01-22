@@ -13,7 +13,7 @@ export const HomescreenWidgetTitle: React.FC<HomescreenWidgetTitle> = ({ title, 
       <Link href={href}>
         <div className="flex flex-row items-center gap-x-2">
           <h3 className="text-base text-design-darkGrey">Explore</h3>
-          <ExploreArrow className="h-3 w-auto" alt="Go" />
+          <ExploreArrow className="h-3 w-auto" />
         </div>
       </Link>
     </div>
