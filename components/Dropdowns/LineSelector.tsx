@@ -1,13 +1,21 @@
+import React, { Fragment } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 
-import React, { Fragment } from 'react';
-import { LINES, LINE_OBJECTS } from '../../constants/lines';
+import { LineMetadata, LINE_OBJECTS } from '../../constants/lines';
+import SelectedLineIndicator from '../../public/Icons/Components/SelectedLineIndicator.svg';
+import { useSelectedStore } from '../../stores/useSelected';
 
 import { classNames } from '../utils/tailwind';
 import { buttonConfig, lineSelectionButtonConfig, lineSelectionConfig } from './LineSelectorStyle';
 
-const LineSelectionItem = ({ lineName, selectedLine }) => {
-  const isSelected = lineName === selectedLine;
+const LineSelectionItem = ({
+  lineName,
+  selectedLine,
+}: {
+  lineName: string;
+  selectedLine: LineMetadata;
+}) => {
+  const isSelected = lineName === selectedLine.key;
   return (
     <div
       className={classNames(
@@ -31,7 +39,8 @@ const LineSelectionItem = ({ lineName, selectedLine }) => {
   );
 };
 
-export const LineSelector = ({ selectedLine }) => {
+export const LineSelector = () => {
+  const selectedLine = useSelectedStore((state) => state.line);
   return (
     <Popover className="relative flex h-full items-center">
       {({ open }) => (
@@ -42,11 +51,11 @@ export const LineSelector = ({ selectedLine }) => {
             <div
               className={classNames(
                 'ml-2 flex h-8 w-8 rounded-full border-2 bg-opacity-80',
-                buttonConfig[selectedLine],
+                buttonConfig[selectedLine.key],
                 open ? 'shadow-simpleInset' : 'shadow-simple'
               )}
             >
-              <p className={`z-10 m-auto select-none text-sm text-white`}>{selectedLine}</p>
+              <p className={`z-10 m-auto select-none text-sm text-white`}>{selectedLine.key}</p>
             </div>
           </Popover.Button>
           <Transition
@@ -61,12 +70,8 @@ export const LineSelector = ({ selectedLine }) => {
           >
             <Popover.Panel className="absolute bottom-11 z-10 m-auto table rounded-t-md bg-white px-2">
               <div className="table-row">
-                {LINES.map((lineName) => (
-                  <LineSelectionItem
-                    key={lineName}
-                    lineName={lineName}
-                    selectedLine={selectedLine}
-                  />
+                {Object.entries(LINE_OBJECTS).map(([key]) => (
+                  <LineSelectionItem key={key} lineName={key} selectedLine={selectedLine} />
                 ))}
               </div>
             </Popover.Panel>

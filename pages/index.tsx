@@ -7,108 +7,49 @@ import { BasicDataWidgetPair } from '../components/widgets/BasicDataWidgetPair';
 import { DataPageHeader } from '../components/widgets/DataPageHeader';
 import { HomescreenWidgetTitle } from '../components/widgets/HomescreenWidgetTitle';
 import { BottomNavBar } from '../components/general/BottomNavBar';
-import SlowZones from './slowzones/page';
+import SlowZones from '../components/widgets/SlowZonesWidget';
+import { useSelectedStore } from '../stores/useSelected';
 
 export default function Home() {
+  const line = useSelectedStore((state) => state.line);
   return (
-    <div className={classNames('flex w-full flex-col items-center bg-gray-100')}>
-      <DataPageHeader title="Headways" line="TBD" dateString="Today (TBD)" />
+    <div className={classNames('flex w-full flex-col items-center')}>
+      <DataPageHeader title="Headways" line={line.short} dateString="Today (TBD)" />
       <WidgetPage>
         <BasicDataWidgetPair>
-          <BasicDataWidgetItem
-            title="Median"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="This is where the explanation of the statistic will be placed."
-          />
-          <BasicDataWidgetItem
-            title="Median"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="This is where the explanation of the statistic will be placed."
-          />
+          <BasicDataWidgetItem title="Median" value="5:37" analysis="-0:12 from last Weds." />
+          <BasicDataWidgetItem title="Median" value="5:37" analysis="-0:12 from last Weds." />
         </BasicDataWidgetPair>{' '}
         <BasicDataWidgetPair>
-          <BasicDataWidgetItem
-            title="Median"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="This is where the explanation of the statistic will be placed."
-          />
+          <BasicDataWidgetItem title="Median" value="5:37" analysis="-0:12 from last Weds." />
           <BasicDataWidgetItem
             title="New Trains"
             value="4"
             analysis="-1 from last Weds."
-            explanation="This is where the explanation of the statistic will be placed."
             units="trains"
           />
         </BasicDataWidgetPair>
         <BasicDataWidgetPair>
-          <BasicDataWidgetItem
-            title="Today"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="Test"
-          />
-          <BasicDataWidgetItem
-            title="Today"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="Test"
-          />
+          <BasicDataWidgetItem title="Today" value="5:37" analysis="-0:12 from last Weds." />
+          <BasicDataWidgetItem title="Today" value="5:37" analysis="-0:12 from last Weds." />
         </BasicDataWidgetPair>
         <BasicDataWidgetPair>
-          <BasicDataWidgetItem
-            title="Today"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="Test"
-          />
-          <BasicDataWidgetItem
-            title="Today"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="Test"
-          />
+          <BasicDataWidgetItem title="Today" value="5:37" analysis="-0:12 from last Weds." />
+          <BasicDataWidgetItem title="Today" value="5:37" analysis="-0:12 from last Weds." />
         </BasicDataWidgetPair>
         <BasicDataWidgetPair>
-          <BasicDataWidgetItem
-            title="Today"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="Test"
-          />
-          <BasicDataWidgetItem
-            title="Today"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="Test"
-          />
+          <BasicDataWidgetItem title="Today" value="5:37" analysis="-0:12 from last Weds." />
+          <BasicDataWidgetItem title="Today" value="5:37" analysis="-0:12 from last Weds." />
         </BasicDataWidgetPair>
         <BasicDataWidgetPair>
-          <BasicDataWidgetItem
-            title="Today"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="Test"
-          />
-          <BasicDataWidgetItem
-            title="Today"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="Test"
-          />
+          <BasicDataWidgetItem title="Today" value="5:37" analysis="-0:12 from last Weds." />
+          <BasicDataWidgetItem title="Today" value="5:37" analysis="-0:12 from last Weds." />
         </BasicDataWidgetPair>
-        <HomescreenWidgetTitle title="Headways" />
-        <BasicDataWidgetItem
-          title="Today"
-          value="5:37"
-          analysis="-0:12 from last Weds."
-          explanation="Test"
-        />
-        <SlowZones line="Red" />
+        <HomescreenWidgetTitle title="Headways" href="/" />
+        <BasicDataWidgetItem title="Today" value="5:37" analysis="-0:12 from last Weds." />
+        <SlowZones />
       </WidgetPage>
-      <BottomNavBar line="<line>" section="<Section>" />
+      <BottomNavBar />
     </div>
   );
 }
