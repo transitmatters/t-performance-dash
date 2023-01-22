@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Chart as ChartJS, LineElement, PointElement } from 'chart.js';
+import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { Line } from 'react-chartjs-2';
@@ -7,8 +7,13 @@ import { LINE_COLORS } from '../../../utils/constants';
 
 import { DayDelayTotals } from '../../../types/dataPoints';
 
-ChartJS.register(PointElement, LineElement);
-export const TotalSlowTime = ({ data }: { data?: DayDelayTotals[] }) => {
+interface TotalSlowTimeProps {
+  line: string;
+  data?: DayDelayTotals[];
+}
+Chart.register(...registerables);
+
+export const TotalSlowTime = ({ data, line }: TotalSlowTimeProps) => {
   const ref = useRef();
   const labels = data?.map((item) => item['date']);
   return (
@@ -20,26 +25,10 @@ export const TotalSlowTime = ({ data }: { data?: DayDelayTotals[] }) => {
         labels,
         datasets: [
           {
-            label: 'Blue Line',
-            data: data?.map((d) => (d.Blue / 60).toFixed(2)),
-            borderColor: LINE_COLORS.BLUE,
-            backgroundColor: LINE_COLORS.BLUE,
-            pointRadius: 0,
-            tension: 0.1,
-          },
-          {
-            label: 'Red Line',
-            data: data?.map((d) => (d.Red / 60).toFixed(2)),
-            borderColor: LINE_COLORS.RED,
-            backgroundColor: LINE_COLORS.RED,
-            pointRadius: 0,
-            tension: 0.1,
-          },
-          {
-            label: 'Orange Line',
-            data: data?.map((d) => (d.Orange / 60).toFixed(2)),
-            borderColor: LINE_COLORS.ORANGE,
-            backgroundColor: LINE_COLORS.ORANGE,
+            label: `${line} Line`,
+            data: data?.map((d) => (d[line] / 60).toFixed(2)),
+            borderColor: LINE_COLORS[line.toUpperCase()],
+            backgroundColor: LINE_COLORS[line.toUpperCase()],
             pointRadius: 0,
             tension: 0.1,
           },
@@ -72,6 +61,9 @@ export const TotalSlowTime = ({ data }: { data?: DayDelayTotals[] }) => {
             type: 'time',
             time: {
               unit: 'month',
+              displayFormats: {
+                month: 'MMM',
+              },
             },
 
             adapters: {

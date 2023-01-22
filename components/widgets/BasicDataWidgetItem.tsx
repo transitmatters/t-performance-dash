@@ -41,7 +41,7 @@ export const BasicDataWidgetItem: React.FC<BasicDataWidgetItemProps> = ({
             <p className={classNames('text-base')}>{title}</p>
             <p className={classNames('text-base font-bold text-black')}>{value}</p>
           </div>
-          <p className={classNames('text-sma text-design-subtitleGrey')}>{explanation}</p>
+          <p className={classNames('text-sm text-design-subtitleGrey')}>{explanation}</p>
         </div>
       </div>
     );
@@ -63,7 +63,7 @@ export const BasicDataWidgetItem: React.FC<BasicDataWidgetItemProps> = ({
         </div>
         <div className="flex flex-row items-center gap-x-1">
           <ArrowDownNegative className="h-3 w-auto" alt="Your Company" />
-          <p className={classNames('text-xs text-design-subtitleGrey')}>{analysis}</p>
+          <p className={classNames('text-sm text-design-subtitleGrey')}>{analysis}</p>
         </div>
       </div>
     </div>
