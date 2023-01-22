@@ -10,7 +10,7 @@ export const HomescreenWidgetTitle: React.FC<HomescreenWidgetTitle> = ({ title }
       <h3>{title}</h3>
       <div className="flex flex-row items-center gap-x-2">
         <h3 className="text-base text-design-darkGrey">Explore</h3>
-        <ExploreArrow className="h-3 w-auto" alt="Go" height={12} width={12} />
+        <ExploreArrow className="h-3 w-auto" alt="Go" />
       </div>
     </div>
   );

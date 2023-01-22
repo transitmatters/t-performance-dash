@@ -62,7 +62,7 @@ export const BasicDataWidgetItem: React.FC<BasicDataWidgetItemProps> = ({
           <p className="text-base text-design-subtitleGrey">{units}</p>
         </div>
         <div className="flex flex-row items-center gap-x-1">
-          <ArrowDownNegative className="h-3 w-auto" alt="Your Company" />
+          <ArrowDownNegative className="h-3 w-auto" alt="Negative Sentiment Indication" />
           <p className={classNames('text-sm text-design-subtitleGrey')}>{analysis}</p>
         </div>
       </div>

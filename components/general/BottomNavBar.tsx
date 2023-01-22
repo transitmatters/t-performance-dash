@@ -1,17 +1,20 @@
 import React from 'react';
 
+import ExploreArrow from '../../public/Icons/Components/ExploreArrow.svg';
 import { LineSelector } from '../Dropdowns/LineSelector';
+import { SectionSelector } from '../Dropdowns/SectionSelector';
+import { DataPageSelection } from './DataPageSelection';
 
-interface BottomNavBarProps {
-  line: string;
-  section: string;
-}
-
-export const BottomNavBar: React.FC<BottomNavBarProps> = ({ line, section }) => {
+export const BottomNavBar: React.FC<null> = () => {
   return (
-    <div className="fixed bottom-0 flex h-10 w-full flex-row items-center bg-white">
-      <LineSelector selectedLine={'RL'} />
-      <p className="ml-2 select-none font-bold">{section}</p>
+    <div className="pb-safe fixed bottom-0 z-20 w-full bg-white">
+      <div className="flex h-11 w-full flex-row items-center gap-x-2 bg-white shadow-shadowUp">
+        <LineSelector selectedLine={'RL'} />
+        <ExploreArrow className="h-3 w-auto sm:h-3" alt="Divider" />
+        <SectionSelector selectedSection={'Commute'} />
+        <ExploreArrow className="relative -left-2 h-3 w-auto sm:h-3" alt="Divider" />
+        <DataPageSelection selectedSection={'Commute'} />
+      </div>
     </div>
   );
 };

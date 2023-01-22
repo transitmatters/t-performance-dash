@@ -13,3 +13,11 @@ export const lineSelectionButtonConfig = {
   BL: `bg-mbta-blue`,
   BUS: `bg-mbta-bus`,
 };
+
+export const buttonConfig = {
+  RL: `border-mbta-red bg-mbta-red`,
+  OL: `border-mbta-orange bg-mbta-orange`,
+  GL: `border-mbta-green bg-mbta-green`,
+  BL: `border-mbta-blue bg-mbta-blue`,
+  BUS: `border-mbta-bus bg-mbta-bus`,
+};
