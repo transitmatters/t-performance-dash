@@ -3,19 +3,17 @@ import React, { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { fetchAllSlow, fetchDelayTotals } from '../../api/slowzones';
-import { HomescreenWidgetTitle } from '../../components/widgets/HomescreenWidgetTitle';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
-import { BasicWidgetDataLayout } from '../../components/widgets/internal/BasicWidgetDataLayout';
-import { TotalSlowTime } from '../../components/slowzones/charts/TotalSlowTime';
+import { TotalSlowTime } from '../slowzones/charts/TotalSlowTime';
+import { useSelectedStore } from '../../stores/useSelected';
+import { BasicWidgetDataLayout } from './internal/BasicWidgetDataLayout';
+import { HomescreenWidgetTitle } from './HomescreenWidgetTitle';
 
-interface SlowZoneProps {
-  line: string;
-}
-
-export default function SlowZones({ line }: SlowZoneProps) {
+export default function SlowZones() {
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
   const allSlow = useQuery(['allSlow'], fetchAllSlow);
 
+  const line = useSelectedStore((state) => state.line.short);
   const data = useMemo(
     () =>
       delayTotals.data && delayTotals.data.filter((t) => new Date(t.date) > new Date(2022, 0, 1)),
@@ -32,7 +30,7 @@ export default function SlowZones({ line }: SlowZoneProps) {
 
   return (
     <>
-      <HomescreenWidgetTitle title="Slow zones" />
+      <HomescreenWidgetTitle title="Slow zones" href="/slowzones" />
       <div className={classNames('bg-white p-2 shadow-dataBox')}>
         <div className={classNames('h-48 pr-4')}>
           <TotalSlowTime line={line} data={data} />
