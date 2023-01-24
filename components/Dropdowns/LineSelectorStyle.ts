@@ -1,9 +1,9 @@
 export const lineSelectionConfig = {
-  RL: `bg-mbta-red border-mbta-red border-solid border-2`,
-  OL: `bg-mbta-orange border-mbta-orange border-solid border-2`,
-  GL: `bg-mbta-green border-mbta-green border-solid border-2`,
-  BL: `bg-mbta-blue border-mbta-blue border-solid border-2`,
-  BUS: `bg-mbta-bus border-mbta-bus border-solid border-2`,
+  RL: `bg-mbta-red border-mbta-red border-solid border`,
+  OL: `bg-mbta-orange border-mbta-orange border-solid border`,
+  GL: `bg-mbta-green border-mbta-green border-solid border`,
+  BL: `bg-mbta-blue border-mbta-blue border-solid border`,
+  BUS: `bg-mbta-bus border-mbta-bus border-solid border`,
 };
 
 export const lineSelectionButtonConfig = {
