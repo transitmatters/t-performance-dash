@@ -10,6 +10,8 @@ import { BasicDataWidgetItem } from '../../components/widgets/BasicDataWidgetIte
 import { WidgetPage } from '../../components/widgets/Widget';
 import { DataPageHeader } from '../../components/widgets/DataPageHeader';
 import { BottomNavBar } from '../../components/general/BottomNavBar';
+import { SecondaryNavBar } from '../../components/general/SecondaryNavBar';
+import { SlowZonesContainer } from '../../components/slowzones/SlowZonesContainer';
 
 export default function SlowZones() {
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
@@ -17,7 +19,7 @@ export default function SlowZones() {
 
   const line = useSelectedStore((state) => state.line.short);
 
-  const data = useMemo(
+  const formattedTotals = useMemo(
     () =>
       delayTotals.data && delayTotals.data.filter((t) => new Date(t.date) > new Date(2022, 0, 1)),
     [delayTotals.data]
@@ -38,7 +40,9 @@ export default function SlowZones() {
         <BasicDataWidgetPair>
           <BasicDataWidgetItem
             title="Total Delay"
-            value={data && (data[data.length - 1][line] / 60).toFixed(2)}
+            value={
+              formattedTotals && (formattedTotals[formattedTotals.length - 1][line] / 60).toFixed(2)
+            }
             units="min"
             analysis="+1.0 since last week"
             icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
@@ -51,7 +55,10 @@ export default function SlowZones() {
             icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
         </BasicDataWidgetPair>
+        {}
+        <SlowZonesContainer allSlow={allSlow.data} delayTotals={formattedTotals} line={line} />
       </WidgetPage>
+      <SecondaryNavBar />
       <BottomNavBar />
     </>
   );

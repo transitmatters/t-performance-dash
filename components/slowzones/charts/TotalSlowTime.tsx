@@ -20,7 +20,6 @@ export const TotalSlowTime = ({ data, line }: TotalSlowTimeProps) => {
     <Line
       ref={ref}
       id={'total_slow_time'}
-      height={800}
       data={{
         labels,
         datasets: [

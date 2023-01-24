@@ -15,7 +15,7 @@ export const DataPageHeader: React.FC<DataPageHeaderProps> = ({
   children,
 }) => {
   return (
-    <div className={classNames('sticky top-11 mx-1 mb-px w-full justify-center sm:top-16')}>
+    <div className={classNames('sticky top-11 z-10 mx-1 mb-px w-full justify-center sm:top-16')}>
       <div className="mx-3">
         <div
           className={classNames(
