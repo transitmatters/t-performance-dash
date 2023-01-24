@@ -17,7 +17,7 @@ export const fetchSingleDayData = (
   name: string,
   options: PartialSingleDayAPIOptions
 ): Promise<SingleDayDataPoint[]> => {
-  const url = new URL(`${APP_DATA_BASE_PATH}/${name}/${options.date}`, window.location.origin);
+  const url = new URL(`${name}/${options.date}`, window.location.origin);
 
   Object.entries(options).forEach(([key, value]) => {
     // options includes date which is a string. Date is never used as a parameter since it is part of the URL, so it can be excluded.

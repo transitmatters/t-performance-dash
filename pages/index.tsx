@@ -9,6 +9,7 @@ import { HomescreenWidgetTitle } from '../components/widgets/HomescreenWidgetTit
 import { BottomNavBar } from '../components/general/BottomNavBar';
 import SlowZones from '../components/widgets/SlowZonesWidget';
 import { useSelectedStore } from '../stores/useSelected';
+import { TravelTimesWidget } from '../components/widgets/TravelTimesWidget';
 
 export default function Home() {
   const line = useSelectedStore((state) => state.line);
@@ -47,6 +48,7 @@ export default function Home() {
         </BasicDataWidgetPair>
         <HomescreenWidgetTitle title="Headways" href="/" />
         <BasicDataWidgetItem title="Today" value="5:37" analysis="-0:12 from last Weds." />
+        <TravelTimesWidget />
         <SlowZones />
       </WidgetPage>
       <BottomNavBar />
