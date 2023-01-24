@@ -6,7 +6,12 @@ import HighchartsReact from 'highcharts-react-official';
 import xrange from 'highcharts/modules/xrange';
 import exporting from 'highcharts/modules/exporting';
 import annotations from 'highcharts/modules/annotations';
-import { formatSlowZones, generateLineOptions, generateXrangeOptions, EMOJI } from './formattingUtils';
+import {
+  formatSlowZones,
+  generateLineOptions,
+  generateXrangeOptions,
+  EMOJI,
+} from './formattingUtils';
 import { goatcount } from '../analytics';
 import { getDateThreeMonthsAgo } from '../constants';
 import { SlowZoneNav } from './SlowZoneNav';
@@ -151,6 +156,29 @@ export const SlowZones = () => {
         }}
         params={params}
       />
+      <div
+        className="sz-alert"
+        style={{
+          display: 'flex',
+          paddingLeft: '16px',
+          paddingRight: '16px',
+          justifyContent: 'center',
+          alignItems: 'center',
+          columnGap: '8px',
+          width: 'auto',
+          userSelect: 'none',
+          backgroundColor: '#585858',
+          minHeight: '34px',
+        }}
+      >
+        <p style={{ display: 'inline', fontSize: '1.6rem' }}>ℹ️</p>
+        <p style={{ display: 'inline', color: 'white', textAlign: 'center', fontSize: '.9rem' }}>
+          <i>Our slow zone algorithm changed. </i>
+          <a href="https://transitmatters.org/blog/slowzonesupdate">
+            <u style={{ color: '#a2c6ff' }}>Learn&nbsp;More</u>
+          </a>
+        </p>
+      </div>
       {options && (
         <HighchartsReact
           containerProps={{
