@@ -16,13 +16,20 @@ if (process.env.V4_TEMP) {
 }
 
 const nextConfig = {
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    });
+
+    return config;
+  },
   async rewrites() {
     return rewrites;
   },
   reactStrictMode: true,
   swcMinify: true,
   typescript: tsSettings,
-
   // No nextJS image optimization for a static site.
   images: {
     unoptimized: true,

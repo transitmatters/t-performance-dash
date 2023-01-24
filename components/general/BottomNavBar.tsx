@@ -10,9 +10,9 @@ export const BottomNavBar = () => {
     <div className="pb-safe fixed bottom-0 z-20 w-full bg-white">
       <div className="flex h-11 w-full flex-row items-center gap-x-2 bg-white shadow-shadowUp">
         <LineSelector />
-        <ExploreArrow className="h-3 w-auto sm:h-3" alt="Divider" />
+        <ExploreArrow className="h-3 w-auto sm:h-3" />
         <SectionSelector selectedSection={'Commute'} />
-        <ExploreArrow className="relative -left-2 h-3 w-auto sm:h-3" alt="Divider" />
+        <ExploreArrow className="relative -left-2 h-3 w-auto sm:h-3" />
         <DataPageSelection selectedSection={'Commute'} />
       </div>
     </div>
