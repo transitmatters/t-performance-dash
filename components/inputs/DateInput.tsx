@@ -1,8 +1,6 @@
 import React from 'react';
 import { DateOption } from '../../types/inputs';
 import { formatDate } from '../utils/Date';
-import { classNames } from '../utils/tailwind';
-import { dateInputConfig } from './tailwind';
 
 interface DateInputProps {
   dateSelection: DateOption;
@@ -10,7 +8,7 @@ interface DateInputProps {
 }
 
 // TODO: add all logic from existing date picker.
-export const DateInput: React.FC<DateInputProps> = ({ line, dateSelection, setDateSelection }) => {
+export const DateInput: React.FC<DateInputProps> = ({ dateSelection, setDateSelection }) => {
   return (
     <div className="flex flex-col">
       <label className="block text-sm font-medium text-gray-700">{'Date'}</label>
