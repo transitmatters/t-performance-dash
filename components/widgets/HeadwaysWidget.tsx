@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import classNames from 'classnames';
-import { secondsToMinutes } from 'date-fns';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../dashboard/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
@@ -13,7 +12,7 @@ import { getCurrentDate } from '../../utils/date';
 import { BasicWidgetDataLayout } from './internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from './HomescreenWidgetTitle';
 
-export const TravelTimesWidget: React.FC = () => {
+export const HeadwaysWidget: React.FC = () => {
   const startDate = getCurrentDate();
 
   const fromStation: Station = {
@@ -39,7 +38,7 @@ export const TravelTimesWidget: React.FC = () => {
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 
-  const { traveltimes } = useCustomQueries(
+  const { headways } = useCustomQueries(
     {
       [SingleDayAPIParams.fromStop]: fromStopIds,
       [SingleDayAPIParams.toStop]: toStopIds,
@@ -49,63 +48,38 @@ export const TravelTimesWidget: React.FC = () => {
     false
   );
 
-  const averageTravelTime = React.useMemo(() => {
-    if (traveltimes && traveltimes.data) {
-      const totalSum = traveltimes?.data
-        .map((trip) => trip.travel_time_sec)
-        .reduce((a, b) => {
-          if (a && b) {
-            return a + b;
-          } else {
-            return 0;
-          }
-        });
-      return (totalSum || 0) / traveltimes.data.length;
-    } else {
-      return 0;
-    }
-  }, [traveltimes]);
-
-  if (traveltimes.isLoading) {
+  if (headways.isLoading) {
     return <>Loading ... teehee</>;
   }
 
-  if (traveltimes.isError) {
+  if (headways.isError) {
     return <>Uh oh... error</>;
   }
 
   return (
     <>
-      <HomescreenWidgetTitle title="Travel times" href="/traveltimes" />
+      <HomescreenWidgetTitle title="Headways" href="/headways" />
       <div className={classNames('bg-white p-2 shadow-dataBox')}>
         <div className={'charts main-column'}>
           <SingleDayLineChart
-            chartId={'traveltimes'}
-            title={'Travel Times'}
-            data={traveltimes.data || []}
+            chartId={'headways'}
+            title={'Time between trains (headways)'}
+            data={headways.data || []}
             date={startDate}
-            metricField={MetricFieldKeys.travelTimeSec}
-            pointField={PointFieldKeys.depDt}
-            benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
-            isLoading={traveltimes.isLoading}
-            bothStops={true}
+            metricField={MetricFieldKeys.headWayTimeSec}
+            pointField={PointFieldKeys.currentDepDt}
+            benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
+            isLoading={headways.isLoading}
             location={'todo'}
             fname={'todo'}
           />
         </div>
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
-            title="Average Travel Time"
-            value={secondsToMinutes(averageTravelTime).toString()}
+            title="Average Headway"
+            value={'8'}
             units="min"
             analysis="+1.0 since last week"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
-          />
-          <BasicWidgetDataLayout
-            title="Round Trip"
-            value={secondsToMinutes(averageTravelTime * 2).toString()} //TODO: Show real time for a round trip
-            units="min"
-            analysis="+2 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
         </div>
