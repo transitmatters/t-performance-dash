@@ -15,8 +15,7 @@ import React, { useMemo, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { COLORS } from '../../../constants/colors';
 import { SlowZoneResponse } from '../../../types/dataPoints';
-import { colorsForLine } from '../../../utils/constants';
-import { formatSlowZones, getRoutes, groupByLine } from '../../../utils/slowZoneUtils';
+import { formatSlowZones, getRoutes } from '../../../utils/slowZoneUtils';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, TimeScale);
 
 export const LineSegments = ({ data, line }: { data: SlowZoneResponse[]; line: string }) => {
@@ -26,7 +25,7 @@ export const LineSegments = ({ data, line }: { data: SlowZoneResponse[]; line: s
       formatSlowZones(data.filter((d) => new Date(d.end) > new Date(2022, 5, 1))).filter(
         (sz) => sz.direction === 'southbound' && sz.color === line
       ),
-    [data]
+    [data, line]
   );
   const routes = useMemo(() => getRoutes(formattedData, 'southbound'), [formattedData]);
 

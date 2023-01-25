@@ -1,14 +1,10 @@
-import { Listbox, Transition } from '@headlessui/react';
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
-import classNames from 'classnames';
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { DayDelayTotals, SlowZoneResponse } from '../../types/dataPoints';
 import { LineSegments } from './charts/LineSegments';
 import { TotalSlowTime } from './charts/TotalSlowTime';
-import { FilterBar } from './FilterBar';
 
 interface SlowZonesContainerProps {
-  delayTotals: DayDelayTotals[];
+  delayTotals: DayDelayTotals[] | undefined;
   allSlow: SlowZoneResponse[];
   line: string;
 }
@@ -25,7 +21,7 @@ export const SlowZonesContainer = ({ allSlow, delayTotals, line }: SlowZonesCont
     <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
       {selectedGraph.name === 'Total Slow Time' ? (
         <TotalSlowTime
-          data={delayTotals.filter((t) => new Date(t.date) > new Date(2020, 0, 1))}
+          data={delayTotals?.filter((t) => new Date(t.date) > new Date(2020, 0, 1))}
           line={line}
         />
       ) : (

@@ -4,7 +4,7 @@ import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../../sr
 import { stopIdsForStations } from '../../../utils/stations';
 import { useCustomQueries } from '../../../api/datadashboard';
 import { Station } from '../../../types/stations';
-import { SingleDayAPIKeys } from '../../../types/api';
+import { SingleDayAPIParams } from '../../../types/api';
 import { SingleDayLineChart } from './SingleDayLineChart';
 
 interface SingleDayPageProps {
@@ -22,10 +22,10 @@ export const SingleDayPage: React.FC<SingleDayPageProps> = ({
 
   const { traveltimes, headways, dwells } = useCustomQueries(
     {
-      [SingleDayAPIKeys.fromStop]: fromStopIds,
-      [SingleDayAPIKeys.toStop]: toStopIds,
-      [SingleDayAPIKeys.stop]: fromStopIds,
-      [SingleDayAPIKeys.date]: startDate,
+      [SingleDayAPIParams.fromStop]: fromStopIds,
+      [SingleDayAPIParams.toStop]: toStopIds,
+      [SingleDayAPIParams.stop]: fromStopIds,
+      [SingleDayAPIParams.date]: startDate,
     },
     false
   );
