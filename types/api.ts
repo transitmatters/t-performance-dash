@@ -5,16 +5,16 @@ export enum QueryNameKeys {
 }
 export type QueryNameOptions = QueryNameKeys;
 
-export enum SingleDayAPIKeys {
+export enum SingleDayAPIParams {
   stop = 'stop',
   fromStop = 'from_stop',
   toStop = 'to_stop',
   date = 'date',
 }
-export type SingleDayAPIOptions = { [key in SingleDayAPIKeys]: string[] | string };
+export type SingleDayAPIOptions = { [key in SingleDayAPIParams]: string[] | string };
 export type PartialSingleDayAPIOptions = Partial<SingleDayAPIOptions>;
 
-export enum AggregateAPIKeys {
+export enum AggregateAPIParams {
   stop = 'stop',
   fromStop = 'from_stop',
   toStop = 'to_stop',
@@ -22,5 +22,5 @@ export enum AggregateAPIKeys {
   endDate = 'end_date',
 }
 
-export type AggregateAPIOptions = { [key in AggregateAPIKeys]: string[] | string };
+export type AggregateAPIOptions = { [key in AggregateAPIParams]: string[] | string };
 export type PartialAggregateAPIOptions = Partial<AggregateAPIOptions>;

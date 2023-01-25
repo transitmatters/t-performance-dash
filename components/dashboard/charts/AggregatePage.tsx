@@ -2,7 +2,7 @@ import React from 'react';
 import { useCustomQueries } from '../../../api/datadashboard';
 
 import { PointFieldKeys } from '../../../src/charts/types';
-import { AggregateAPIKeys } from '../../../types/api';
+import { AggregateAPIParams } from '../../../types/api';
 import { Station } from '../../../types/stations';
 import { CHART_COLORS } from '../../../utils/constants';
 import { stopIdsForStations } from '../../../utils/stations';
@@ -34,11 +34,11 @@ export const AggregatePage: React.FC<AggregatePageProps> = ({
 
   const { traveltimes, headways, dwells } = useCustomQueries(
     {
-      [AggregateAPIKeys.fromStop]: fromStopIds,
-      [AggregateAPIKeys.toStop]: toStopIds,
-      [AggregateAPIKeys.stop]: fromStopIds,
-      [AggregateAPIKeys.startDate]: startDate,
-      [AggregateAPIKeys.endDate]: endDate,
+      [AggregateAPIParams.fromStop]: fromStopIds,
+      [AggregateAPIParams.toStop]: toStopIds,
+      [AggregateAPIParams.stop]: fromStopIds,
+      [AggregateAPIParams.startDate]: startDate,
+      [AggregateAPIParams.endDate]: endDate,
     },
     true
   );

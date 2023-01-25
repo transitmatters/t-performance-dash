@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../dashboard/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
-import { SingleDayAPIKeys } from '../../types/api';
+import { SingleDayAPIParams } from '../../types/api';
 import { stopIdsForStations } from '../../utils/stations';
 import { useCustomQueries } from '../../api/datadashboard';
 import { Station } from '../../types/stations';
@@ -39,10 +39,10 @@ export const TravelTimesWidget: React.FC = () => {
 
   const { traveltimes } = useCustomQueries(
     {
-      [SingleDayAPIKeys.fromStop]: fromStopIds,
-      [SingleDayAPIKeys.toStop]: toStopIds,
-      [SingleDayAPIKeys.stop]: fromStopIds,
-      [SingleDayAPIKeys.date]: startDate,
+      [SingleDayAPIParams.fromStop]: fromStopIds,
+      [SingleDayAPIParams.toStop]: toStopIds,
+      [SingleDayAPIParams.stop]: fromStopIds,
+      [SingleDayAPIParams.date]: startDate,
     },
     false
   );
