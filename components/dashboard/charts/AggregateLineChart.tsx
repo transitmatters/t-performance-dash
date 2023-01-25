@@ -118,9 +118,11 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
               x: {
                 time: {
                   unit: timeUnit,
+                  // @ts-expect-error The typing expectations are wrong
                   stepSize: 1,
                   tooltipFormat: timeFormat,
                 },
+                // @ts-expect-error The typing expectations are wrong
                 type: 'time',
                 adapters: {
                   date: {
