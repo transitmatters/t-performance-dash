@@ -11,9 +11,11 @@ import { Station } from '../../types/stations';
 import { getCurrentDate } from '../../utils/date';
 import { BasicWidgetDataLayout } from './internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from './HomescreenWidgetTitle';
+import { useDelimitatedRoute } from '../utils/router';
 
 export const HeadwaysWidget: React.FC = () => {
   const startDate = getCurrentDate();
+  const route = useDelimitatedRoute();
 
   const fromStation: Station = {
     stop_name: 'Davis',
@@ -58,7 +60,7 @@ export const HeadwaysWidget: React.FC = () => {
 
   return (
     <>
-      <HomescreenWidgetTitle title="Headways" href="/headways" />
+      <HomescreenWidgetTitle title="Headways" href={`/${route.line}/headways`} />
       <div className={classNames('bg-white p-2 shadow-dataBox')}>
         <div className={'charts main-column'}>
           <SingleDayLineChart
