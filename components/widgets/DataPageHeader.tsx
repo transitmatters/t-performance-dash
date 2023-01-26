@@ -1,32 +1,24 @@
-import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import { LINE_OBJECTS } from '../../constants/lines';
 import { DATA_PAGE_NAMES } from '../../constants/datapages';
-import { getPage } from '../utils/router';
+import { useDelimitatedRoute } from '../utils/router';
 import { classNames } from '../utils/tailwind';
+import { headerStyle } from './DataPageHeaderStyle';
 
 type DataPageHeaderProps = {
   dateString: string;
   children?: ReactNode;
 };
-const headerStyle = {
-  RL: 'text-mbta-red',
-  OL: 'text-mbta-orange',
-  GL: 'text-mbta-green',
-  BL: 'text-mbta-blue',
-  BUS: 'text-mbta-bus',
-};
 
 export const DataPageHeader: React.FC<DataPageHeaderProps> = ({ dateString, children }) => {
-  const router = useRouter();
-  const page = getPage(router.asPath);
+  const route = useDelimitatedRoute();
 
   // Determine the header.
   const getHeader = () => {
-    if (page.datapage) {
-      return DATA_PAGE_NAMES[page.datapage];
-    } else if (page.line) {
-      return LINE_OBJECTS[page.line]?.name;
+    if (route.datapage) {
+      return DATA_PAGE_NAMES[route.datapage];
+    } else if (route.line) {
+      return LINE_OBJECTS[route.line]?.name;
     }
     return '';
   };
@@ -44,7 +36,7 @@ export const DataPageHeader: React.FC<DataPageHeaderProps> = ({ dateString, chil
               style={{ marginBottom: '-6px' }}
               className={classNames(
                 'select-none text-center text-3xl font-bold',
-                headerStyle[page.line]
+                headerStyle[route.line]
               )}
             >
               {getHeader()}
@@ -53,7 +45,7 @@ export const DataPageHeader: React.FC<DataPageHeaderProps> = ({ dateString, chil
               className={classNames(
                 'select-none text-center text-base italic text-design-subtitleGrey'
               )}
-            >{`${LINE_OBJECTS[page.line]?.name} - ${dateString}`}</h2>
+            >{`${LINE_OBJECTS[route.line]?.name} - ${dateString}`}</h2>
           </div>
           {children}
         </div>

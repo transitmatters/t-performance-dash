@@ -8,14 +8,13 @@ import { BasicDataWidgetPair } from '../../components/widgets/BasicDataWidgetPai
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { BasicDataWidgetItem } from '../../components/widgets/BasicDataWidgetItem';
 import { SlowZonesContainer } from '../../components/slowzones/SlowZonesContainer';
-import { getPage } from '../../components/utils/router';
+import { useDelimitatedRoute } from '../../components/utils/router';
 import { LINE_OBJECTS } from '../../constants/lines';
 
 export default function SlowZones() {
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
   const allSlow = useQuery(['allSlow'], fetchAllSlow);
-  const router = useRouter();
-  const page = getPage(router.asPath);
+  const route = useDelimitatedRoute();
 
   const formattedTotals = useMemo(
     () =>
@@ -39,7 +38,7 @@ export default function SlowZones() {
           value={
             formattedTotals &&
             (
-              formattedTotals[formattedTotals.length - 1][LINE_OBJECTS[page.line].short] / 60
+              formattedTotals[formattedTotals.length - 1][LINE_OBJECTS[route.line].short] / 60
             ).toFixed(2)
           }
           units="min"
@@ -58,7 +57,7 @@ export default function SlowZones() {
       <SlowZonesContainer
         allSlow={allSlow.data}
         delayTotals={formattedTotals}
-        line={LINE_OBJECTS[page.line].short}
+        line={LINE_OBJECTS[route.line].short}
       />
     </>
   );
