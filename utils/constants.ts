@@ -30,11 +30,11 @@ export const colorsForLine: Record<string, string> = {
   bus: LINE_COLORS.BUS,
 };
 
-export const PRODUCTION = 'dashboard.transitmatters.org';
-export const BETA = 'dashboard-beta.transitmatters.org';
+export const PRODUCTION = 'dashboard-v4.transitmatters.org';
+export const BETA = 'dashboard-v4-beta.labs.transitmatters.org';
 const FRONTEND_TO_BACKEND_MAP = {
-  PRODUCTION: 'https://dashboard-api2.transitmatters.org',
-  BETA: 'https://dashboard-api-beta.transitmatters.org',
+  PRODUCTION: 'https://dashboard-v4-api.transitmatters.org',
+  BETA: 'https://dashboard-v4-beta-api.labs.transitmatters.org',
 };
 let index = '';
 // This is to prevent a next js render error https://nextjs.org/docs/messages/prerender-error
