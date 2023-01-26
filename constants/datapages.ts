@@ -1,5 +1,5 @@
 export type DataPage =
-  | 'general'
+  | 'overview'
   | 'traveltimes'
   | 'slowzones'
   | 'headways'
@@ -11,7 +11,7 @@ export type DataPage =
 export type DataPageNames = Record<DataPage, string>;
 
 export const DATA_PAGE_NAMES: DataPageNames = {
-  general: 'General',
+  overview: 'Overview',
   traveltimes: 'Travel Times',
   slowzones: 'Slow Zones',
   headways: 'Headways',
@@ -21,4 +21,4 @@ export const DATA_PAGE_NAMES: DataPageNames = {
   service: 'Service',
 };
 
-export const DATA_PAGES = ['general', 'traveltimes', 'slowzones', 'headways', 'dwells', 'more'];
+export const DATA_PAGES = ['overview', 'traveltimes', 'slowzones', 'headways', 'dwells', 'more'];

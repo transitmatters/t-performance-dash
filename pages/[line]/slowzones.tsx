@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAllSlow, fetchDelayTotals } from '../../api/slowzones';
 import { BasicDataWidgetPair } from '../../components/widgets/BasicDataWidgetPair';
@@ -38,7 +37,7 @@ export default function SlowZones() {
           value={
             formattedTotals &&
             (
-              formattedTotals[formattedTotals.length - 1][LINE_OBJECTS[route.line].short] / 60
+              formattedTotals[formattedTotals.length - 1][LINE_OBJECTS[route.line]?.short] / 60
             ).toFixed(2)
           }
           units="min"
@@ -57,7 +56,7 @@ export default function SlowZones() {
       <SlowZonesContainer
         allSlow={allSlow.data}
         delayTotals={formattedTotals}
-        line={LINE_OBJECTS[route.line].short}
+        line={LINE_OBJECTS[route.line]?.short}
       />
     </>
   );

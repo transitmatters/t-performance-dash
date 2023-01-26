@@ -15,7 +15,7 @@ export const LineSelector = () => {
       {({ open }) => (
         <>
           <div className="relative">
-            <Listbox.Button className="relative w-full cursor-default bg-white px-2 text-left  shadow-sm focus:outline-none focus:ring-1 sm:text-sm">
+            <Listbox.Button className="relative w-full cursor-pointer bg-white px-2 text-left focus:outline-none focus:ring-1 sm:text-sm">
               <div
                 className={classNames(
                   'ml-2 flex h-8 w-8 rounded-full border-2 bg-opacity-80',
@@ -35,9 +35,12 @@ export const LineSelector = () => {
               leaveTo="opacity-0"
             >
               <Listbox.Options className="w-34 absolute left-1 -top-3 origin-top-right -translate-y-full transform divide-y divide-gray-100 rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-              {Object.entries(LINE_OBJECTS).map(([_, metadata]) => {
-                  // If a datapage is selected, stay on that route.
-                  const href = `/${metadata.key}${route.datapage ? `/${route.datapage}` : ''}`;
+                {Object.entries(LINE_OBJECTS).map(([_, metadata]) => {
+                  // If a datapage is selected, stay on that datapage. If the current line is selected, go to overview.
+                  let href = `/${metadata.path}`;
+                  if (metadata.key !== route.line && route.datapage) {
+                    href += `/${route.datapage}`;
+                  }
                   return (
                     <Link key={metadata.key} href={href}>
                       <Listbox.Option
@@ -46,7 +49,7 @@ export const LineSelector = () => {
                             active || selected
                               ? 'border-opacity-100 bg-opacity-20'
                               : 'border-opacity-20 bg-opacity-0 text-gray-900',
-                            'relative cursor-default select-none py-2 pl-3 pr-6',
+                            'relative cursor-pointer select-none py-2 pl-3 pr-6',
                             lineSelectionConfig[metadata.key]
                           )
                         }

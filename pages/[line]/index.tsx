@@ -7,10 +7,16 @@ import { TravelTimesWidget } from '../../components/widgets/TravelTimesWidget';
 
 // This might be useless.
 export async function generateStaticParams() {
-  return [{ line: 'RL' }, { line: 'OL' }, { line: 'GL' }, { line: 'BL' }, { line: 'BUS' }];
+  return [
+    { line: 'red' },
+    { line: 'orange' },
+    { line: 'green' },
+    { line: 'blue' },
+    { line: 'bus' },
+  ];
 }
 
-export default function General() {
+export default function Overview() {
   return (
     <>
       <BasicDataWidgetPair>

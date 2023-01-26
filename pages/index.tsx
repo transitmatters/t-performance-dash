@@ -5,22 +5,22 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <>
-      <Link href="/RL">
+      <Link href="/red">
         <div>
           <p>Red Line</p>
         </div>
       </Link>
-      <Link href="/OL">
+      <Link href="/orange">
         <div>
           <p>Orange Line</p>
         </div>
       </Link>
-      <Link href="/GL">
+      <Link href="/green">
         <div>
           <p>Green Line</p>
         </div>
       </Link>
-      <Link href="/BL">
+      <Link href="/blue">
         <div>
           <p>Blue Line</p>
         </div>
