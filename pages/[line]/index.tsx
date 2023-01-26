@@ -1,6 +1,7 @@
 import React from 'react';
 import { BasicDataWidgetItem } from '../../components/widgets/BasicDataWidgetItem';
 import { BasicDataWidgetPair } from '../../components/widgets/BasicDataWidgetPair';
+import { HeadwaysWidget } from '../../components/widgets/HeadwaysWidget';
 import SlowZonesWidget from '../../components/widgets/SlowZonesWidget';
 import { TravelTimesWidget } from '../../components/widgets/TravelTimesWidget';
 
@@ -22,6 +23,7 @@ export default function General() {
       </BasicDataWidgetPair>
       <TravelTimesWidget />
       <SlowZonesWidget />
+      <HeadwaysWidget />
     </>
   );
 }
