@@ -34,7 +34,7 @@ def mutlidict_to_dict(mutlidict):
     return res_dict
 
 
-@app.route("/healthcheck", cors=cors_config)
+@app.route("/api/healthcheck", cors=cors_config)
 def healthcheck():
     # These functions must return True or False :-)
     checks = {
@@ -64,21 +64,21 @@ def healthcheck():
     }, status_code=500)
 
 
-@app.route("/headways/{user_date}", cors=cors_config)
+@app.route("/api/headways/{user_date}", cors=cors_config)
 def headways_route(user_date):
     date = parse_user_date(user_date)
     stops = app.current_request.query_params.getlist("stop")
     return data_funcs.headways(date, stops)
 
 
-@app.route("/dwells/{user_date}", cors=cors_config)
+@app.route("/api/dwells/{user_date}", cors=cors_config)
 def dwells_route(user_date):
     date = parse_user_date(user_date)
     stops = app.current_request.query_params.getlist("stop")
     return data_funcs.dwells(date, stops)
 
 
-@app.route("/traveltimes/{user_date}", cors=cors_config)
+@app.route("/api/traveltimes/{user_date}", cors=cors_config)
 def traveltime_route(user_date):
     date = parse_user_date(user_date)
     from_stops = app.current_request.query_params.getlist("from_stop")
@@ -86,13 +86,13 @@ def traveltime_route(user_date):
     return data_funcs.travel_times(date, from_stops, to_stops)
 
 
-@app.route("/alerts/{user_date}", cors=cors_config)
+@app.route("/api/alerts/{user_date}", cors=cors_config)
 def alerts_route(user_date):
     date = parse_user_date(user_date)
     return json.dumps(data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params)))
 
 
-@app.route("/aggregate/traveltimes", cors=cors_config)
+@app.route("/api/aggregate/traveltimes", cors=cors_config)
 def traveltime_aggregate_route():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
@@ -103,7 +103,7 @@ def traveltime_aggregate_route():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/aggregate/traveltimes2", cors=cors_config)
+@app.route("/api/aggregate/traveltimes2", cors=cors_config)
 def traveltime_aggregate_route_2():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
@@ -114,7 +114,7 @@ def traveltime_aggregate_route_2():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/aggregate/headways", cors=cors_config)
+@app.route("/api/aggregate/headways", cors=cors_config)
 def headways_aggregate_route():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
@@ -124,7 +124,7 @@ def headways_aggregate_route():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/aggregate/dwells", cors=cors_config)
+@app.route("/api/aggregate/dwells", cors=cors_config)
 def dwells_aggregate_route():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
@@ -134,7 +134,7 @@ def dwells_aggregate_route():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/git_id", cors=cors_config)
+@app.route("/api/git_id", cors=cors_config)
 def get_git_id():
     # Only do this on localhost
     if TM_FRONTEND_HOST == "localhost":
