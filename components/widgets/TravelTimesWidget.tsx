@@ -81,7 +81,7 @@ export const TravelTimesWidget: React.FC = () => {
 
   return (
     <>
-      <HomescreenWidgetTitle title="Travel Times" href={`/${LINE_OBJECTS[route.line].path}/traveltimes`} />
+      <HomescreenWidgetTitle title="Travel Times" href={`/${LINE_OBJECTS[route.line]?.path}/traveltimes`} />
       <div className={classNames('bg-white p-2 shadow-dataBox')}>
         <div className={'charts main-column'}>
           <SingleDayLineChart
