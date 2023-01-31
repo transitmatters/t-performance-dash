@@ -1,6 +1,6 @@
 {
-  "name": "t-dash",
-  "version": "0.1.0",
+  "name": "t-performance-dash",
+  "version": "3.3.0",
   "private": true,
   "dependencies": {
     "@tippyjs/react": "^4.0.2",
@@ -54,6 +54,9 @@
     "postinstall": "cd server && poetry install"
   },
   "proxy": "http://localhost:5000",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "browserslist": {
     "production": [
       ">0.2%",

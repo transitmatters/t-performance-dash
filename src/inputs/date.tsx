@@ -46,7 +46,9 @@ const FlatpickrDateSelect: React.FC<DateInputProps> = ({
       placeholder={placeholder}
       options={{ enableTime: false, ...options }}
       onChange={(dates, currentDateString) => {
-        onChange(currentDateString);
+        if(currentDateString !== value) {
+          onChange(currentDateString);
+        }
       }}
     />
   );

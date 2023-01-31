@@ -11,9 +11,7 @@ const textSize = isMobile ? '11' : '14';
 const DAY_MS = 1000 * 60 * 60 * 24;
 
 export const EMOJI = {
-  'derailment': ` 🚨`,
-  'construction': ` 🚧`,
-  'shutdown': ` ⚠️`,
+  'derailment': ` 🚨`
 }
 
 const getFootnoteIcon = (start: Moment, end: Moment, color: string) => {
@@ -27,16 +25,9 @@ const getFootnoteIcon = (start: Moment, end: Moment, color: string) => {
     return '';
   }
   if (color === 'Orange') {
-    let event = majorEvents.OrangeDerailment;
-    if (start.isBetween(moment(event.start), moment(event.end), undefined, '[]')) {
+    const event = majorEvents.OrangeDerailment;
+    if (end.isBetween(moment(event.start), moment(event.end), undefined, '[]')) {
       return EMOJI.derailment;
-    }
-    event = majorEvents.OrangeShutdown;
-    if (start.isBetween(moment(event.start), moment(event.end), undefined, '[]')) {
-      return EMOJI.shutdown;
-    }
-    if (moment(event.start).isBetween(start, end)) {
-      return EMOJI.construction;
     }
     return '';
   };
@@ -65,7 +56,7 @@ const getDashUrl = (d: any) => {
   }
   now = now.toISOString().split('T')[0];
 
-  return `https://dashboard.transitmatters.org/rapidtransit?config=${d.custom.color},${d.custom.fr_id},${d.custom.to_id},${then},${now}`;
+  return new URL(`/rapidtransit?config=${d.custom.color},${d.custom.fr_id},${d.custom.to_id},${then},${now}`, window.location.origin);
 };
 
 const getDirection = (to: any, from: any) => {

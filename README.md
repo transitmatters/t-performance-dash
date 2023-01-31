@@ -3,21 +3,23 @@
 ![lint](https://github.com/transitmatters/t-performance-dash/workflows/lint/badge.svg?branch=main)
 ![build](https://github.com/transitmatters/t-performance-dash/workflows/build/badge.svg?branch=main)
 ![deploy](https://github.com/transitmatters/t-performance-dash/workflows/deploy/badge.svg?branch=main)
+![healthcheck](https://github.com/transitmatters/t-performance-dash/workflows/healthcheck/badge.svg)
 
 This is the repository for the TransitMatters Data Dashboard. Client code is written in JavaScript with React, and the backend is written in Python with Chalice.
 
 ## Requirements to develop locally
 
-- node 16.x preferred, but should work with anything >=12.x and <17. (verify with `node -v`)
-- Python 3.9 with poetry (verify with `python --version; poetry --version`)
+- node 16.x preferred, but should work with anything >=14.x and <17. (verify with `node -v`)
+- Python 3.9 with recent poetry (verify with python --version; poetry --version; `poetry self update` to update poetry)
 
 ## Development Instructions
 
 1. Add `MBTA_V2_API_KEY` to your shell environment:
    - `export MBTA_V2_API_KEY='KEY'` in ~/.bashrc or ~/.zshrc
-2. In the root directory, run `npm install` to install all frontend and backend dependencies
-3. Run `npm start` to start both the JavaScript development server and the Python backend at the same time.
-4. Navigate to [http://localhost:3000](http://localhost:3000) (or the url provided after running `npm start`)
+2. Add your AWS credentials (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) to your shell environment, OR add them to a .boto config file with awscli command `aws configure`.
+3. In the root directory, run `npm install` to install all frontend and backend dependencies
+4. Run `npm start` to start both the JavaScript development server and the Python backend at the same time.
+5. Navigate to [http://localhost:3000](http://localhost:3000) (or the url provided after running `npm start`)
 
 ## Deployment Instructions
 
