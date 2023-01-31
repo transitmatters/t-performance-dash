@@ -15,11 +15,14 @@
     "classnames": "^2.3.2",
     "concurrently": "^7.6.0",
     "date-fns": "^2.29.3",
+    "dayjs": "^1.11.7",
     "mini-css-extract-plugin": "^2.7.2",
     "next": "13.1.1",
     "react": "18.2.0",
     "react-chartjs-2": "^5.1.0",
+    "react-device-detect": "^2.2.2",
     "react-dom": "18.2.0",
+    "react-tailwindcss-datepicker": "^1.4.2",
     "zustand": "^4.3.2"
   },
   "devDependencies": {
