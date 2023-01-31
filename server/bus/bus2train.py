@@ -1,6 +1,7 @@
 import argparse
 import pathlib
 import pandas as pd
+import numpy as np
 from datetime import datetime
 
 from gtfs_archive import add_gtfs_headways
@@ -88,6 +89,8 @@ def process_events(df):
     df = df.drop(columns=["time_point_id", "standard_type", "scheduled", "scheduled_headway", "headway"])
 
     df = add_gtfs_headways(df)
+    # We can't use headway info for the combined routes since gtfs won't be grouped this way.
+    df.loc[df.route_id.isin(['114', '116', '117']), 'scheduled_headway'] = np.nan
 
     df["vehicle_id"] = ""
     df["vehicle_label"] = ""
