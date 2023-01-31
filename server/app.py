@@ -17,7 +17,7 @@ TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", "localhost:3000")
 
 # TODO: Fix to use https again except when local
 cors_config = CORSConfig(
-   allow_origin=f"http://{TM_FRONTEND_HOST}", max_age=3600
+    allow_origin=f"http://{TM_FRONTEND_HOST}", max_age=3600
 )
 
 

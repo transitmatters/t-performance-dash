@@ -1,75 +1,30 @@
 'use client';
-import { useQuery } from '@tanstack/react-query';
 import React from 'react';
-import { fetchDelayTotals } from '../api/slowzones';
-import { TotalSlowTime } from '../components/slowzones/charts/TotalSlowTime';
-import { classNames } from '../components/utils/tailwind';
-import { WidgetPage } from '../components/widgets/Widget';
-import { BasicDataWidgetItem } from '../components/widgets/BasicDataWidgetItem';
-import { BasicDataWidgetPair } from '../components/widgets/BasicDataWidgetPair';
-import { DataPageHeader } from '../components/widgets/DataPageHeader';
-import { HomescreenWidgetTitle } from '../components/widgets/HomescreenWidgetTitle';
-import { BottomNavBar } from '../components/general/BottomNavBar';
+import Link from 'next/link';
 
 export default function Home() {
-  const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
-
   return (
-    <div className={classNames('flex w-full flex-col items-center')}>
-      <DataPageHeader title="Headways" line="TBD" dateString="Today (TBD)" />
-      <WidgetPage>
-        <BasicDataWidgetPair>
-          <BasicDataWidgetItem
-            title="Median"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="This is where the explanation of the statistic will be placed."
-          />
-          <BasicDataWidgetItem
-            title="Median"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="This is where the explanation of the statistic will be placed."
-          />
-        </BasicDataWidgetPair>{' '}
-        <BasicDataWidgetPair>
-          <BasicDataWidgetItem
-            title="Median"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="This is where the explanation of the statistic will be placed."
-          />
-          <BasicDataWidgetItem
-            title="New Trains"
-            value="4"
-            analysis="-1 from last Weds."
-            explanation="This is where the explanation of the statistic will be placed."
-            units="trains"
-          />
-        </BasicDataWidgetPair>
-        <BasicDataWidgetPair>
-          <BasicDataWidgetItem
-            title="Today"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="Test"
-          />
-          <BasicDataWidgetItem
-            title="Today"
-            value="5:37"
-            analysis="-0:12 from last Weds."
-            explanation="Test"
-          />
-        </BasicDataWidgetPair>
-        <HomescreenWidgetTitle title="Headways" />
-        <BasicDataWidgetItem
-          title="Today"
-          value="5:37"
-          analysis="-0:12 from last Weds."
-          explanation="Test"
-        />
-      </WidgetPage>
-      <BottomNavBar line="<line>" section="<Section>" />
-    </div>
+    <>
+      <Link href="/red">
+        <div>
+          <p>Red Line</p>
+        </div>
+      </Link>
+      <Link href="/orange">
+        <div>
+          <p>Orange Line</p>
+        </div>
+      </Link>
+      <Link href="/green">
+        <div>
+          <p>Green Line</p>
+        </div>
+      </Link>
+      <Link href="/blue">
+        <div>
+          <p>Blue Line</p>
+        </div>
+      </Link>
+    </>
   );
 }

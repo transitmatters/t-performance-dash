@@ -1,6 +1,6 @@
 name: lint
 
-on:  
+on:
   pull_request:
   push:
     branches:
@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
-      - name: Set up Node 16.x
+      - name: Set up Node 18.x
         uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -35,7 +35,7 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
-      - name: Set up Node 16.x
+      - name: Set up Node 18.x
         uses: actions/setup-node@v3
         with:
           node-version: 18

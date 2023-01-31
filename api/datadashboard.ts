@@ -2,12 +2,12 @@ import * as ReactQuery from '@tanstack/react-query';
 import { useQueries } from '@tanstack/react-query';
 import { AggregateDataResponse, SingleDayDataPoint } from '../src/charts/types';
 import {
-  AggregateAPIKeys,
+  AggregateAPIParams,
   AggregateAPIOptions,
   PartialAggregateAPIOptions,
   PartialSingleDayAPIOptions,
   QueryNameKeys,
-  SingleDayAPIKeys,
+  SingleDayAPIParams,
   SingleDayAPIOptions,
 } from '../types/api';
 import { APP_DATA_BASE_PATH } from '../utils/constants';
@@ -17,8 +17,8 @@ export const fetchSingleDayData = (
   name: string,
   options: PartialSingleDayAPIOptions
 ): Promise<SingleDayDataPoint[]> => {
-  const url = new URL(`${APP_DATA_BASE_PATH}/${name}/${options.date}`, window.location.origin);
-
+  // TODO: Remove `api/` from URL. Temporary fix to work with rewrites in development
+  const url = new URL(`api/${name}/${options.date}`, window.location.origin);
   Object.entries(options).forEach(([key, value]) => {
     // options includes date which is a string. Date is never used as a parameter since it is part of the URL, so it can be excluded.
     if (!(typeof value === 'string') && key !== 'date')
@@ -29,9 +29,9 @@ export const fetchSingleDayData = (
 
 // Object to contain the name of each single day query and the parameters/keys it takes.
 const singleDayQueryDependencies = {
-  traveltimes: [SingleDayAPIKeys.fromStop, SingleDayAPIKeys.toStop, SingleDayAPIKeys.date],
-  headways: [SingleDayAPIKeys.stop, SingleDayAPIKeys.date],
-  dwells: [SingleDayAPIKeys.stop, SingleDayAPIKeys.date],
+  traveltimes: [SingleDayAPIParams.fromStop, SingleDayAPIParams.toStop, SingleDayAPIParams.date],
+  headways: [SingleDayAPIParams.stop, SingleDayAPIParams.date],
+  dwells: [SingleDayAPIParams.stop, SingleDayAPIParams.date],
 };
 
 // Fetch data for all aggregate charts except traveltimes.
@@ -40,7 +40,9 @@ export const fetchAggregateData = (
   options: PartialAggregateAPIOptions
 ): Promise<AggregateDataResponse> => {
   const method = name === QueryNameKeys.traveltimes ? 'traveltimes2' : name;
-  const url = new URL(`${APP_DATA_BASE_PATH}/aggregate/${method}`, window.location.origin);
+
+  // TODO: Remove `api/` from URL. Temporary fix to work with rewrites in development
+  const url = new URL(`api/${APP_DATA_BASE_PATH}/aggregate/${method}`, window.location.origin);
   // Loop through each option and append values to searchParams.
   Object.entries(options).forEach(([key, value]) => {
     if (Array.isArray(value)) {
@@ -60,13 +62,13 @@ export const fetchAggregateData = (
 // Object to contain name of each aggregate query and the parameters/keys it takes.
 const aggregateQueryDependencies = {
   traveltimes: [
-    AggregateAPIKeys.fromStop,
-    AggregateAPIKeys.toStop,
-    AggregateAPIKeys.startDate,
-    AggregateAPIKeys.endDate,
+    AggregateAPIParams.fromStop,
+    AggregateAPIParams.toStop,
+    AggregateAPIParams.startDate,
+    AggregateAPIParams.endDate,
   ],
-  headways: [AggregateAPIKeys.stop, AggregateAPIKeys.startDate, AggregateAPIKeys.endDate],
-  dwells: [AggregateAPIKeys.stop, AggregateAPIKeys.startDate, AggregateAPIKeys.endDate],
+  headways: [AggregateAPIParams.stop, AggregateAPIParams.startDate, AggregateAPIParams.endDate],
+  dwells: [AggregateAPIParams.stop, AggregateAPIParams.startDate, AggregateAPIParams.endDate],
 };
 
 // Overload call to specify type for single day queries
@@ -90,7 +92,7 @@ export const useCustomQueries: UseQueriesOverload = (
   const queries = Object.keys(dependencies).reduce((object, queryName) => {
     const keys = [queryName];
     const params = {};
-    dependencies[queryName].forEach((field: AggregateAPIKeys | SingleDayAPIKeys) => {
+    dependencies[queryName].forEach((field: AggregateAPIParams | SingleDayAPIParams) => {
       keys.push(parameters[field].toString());
       params[field] = parameters[field];
     });

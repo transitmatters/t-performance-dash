@@ -1,86 +1,87 @@
-import { Popover, Transition } from '@headlessui/react';
-
+import { Listbox, Transition } from '@headlessui/react';
 import React, { Fragment } from 'react';
-import { LINES, LINE_OBJECTS } from '../../constants/lines';
-import SelectedLineIndicator from '../../public/Icons/Components/SelectedLineIndicator.svg';
+import Link from 'next/link';
 
+import { LINE_OBJECTS } from '../../constants/lines';
 import { classNames } from '../utils/tailwind';
-import { lineSelectionButtonConfig, lineSelectionConfig } from './LineSelectorStyle';
+import { useDelimitatedRoute } from '../utils/router';
+import { buttonConfig, lineSelectionButtonConfig, lineSelectionConfig } from './LineSelectorStyle';
 
-const LineSelectionItem = ({ lineName, selectedLine }) => {
-  const isSelected = lineName === selectedLine;
-  return (
-    <div
-      className={classNames(
-        'my-2 flex flex-row items-center rounded-full pl-2',
-        lineSelectionConfig[lineName],
-        isSelected
-          ? 'border-opacity-100 bg-opacity-20 shadow-selectedLine'
-          : 'border-opacity-20 bg-opacity-0 shadow-unselectedLine'
-      )}
-    >
-      <div
-        className={classNames(
-          'h-5 w-5 rounded-full',
-          lineSelectionButtonConfig[lineName],
-          lineSelectionConfig[lineName],
-          isSelected ? 'bg-opacity-100' : 'bg-opacity-20'
-        )}
-      ></div>
-      <p className="whitespace-nowrap p-2 text-sm">{LINE_OBJECTS[lineName].name}</p>
-    </div>
-  );
-};
+export const LineSelector = () => {
+  const route = useDelimitatedRoute();
 
-export const LineSelector = ({ selectedLine }) => {
   return (
-    <Popover className="relative">
+    <Listbox value={LINE_OBJECTS[route.line]} onChange={() => null}>
       {({ open }) => (
         <>
-          <Popover.Overlay className="fixed inset-0 bg-black opacity-30" />
-
-          <Popover.Button>
-            <div className="ml-2 flex h-8 w-8">
-              <p className={`z-10 m-auto select-none text-sm text-white ${open && 'font-bold'}`}>
-                RL
-              </p>
-              <SelectedLineIndicator
-                fill={LINE_OBJECTS[selectedLine].color}
-                className="absolute h-8 w-8"
-                alt="Current Line Indicator"
-              />
-            </div>
-          </Popover.Button>
-          <Transition
-            // TODO: Slide up.
-            as={Fragment}
-            enter="transition ease-out duration-200"
-            enterFrom="opacity-0 scale-x-0"
-            enterTo="opacity-100 scale-x-1"
-            leave="transition ease-in duration-150"
-            leaveFrom="opacity-100 scale-x-1"
-            leaveTo="opacity-0 scale-x-0"
-          >
-            <Popover.Panel className="fixed left-2 bottom-12 z-10 m-auto table rounded-lg bg-white px-2 shadow-simple">
-              <div className="table-row">
-                {LINES.map((lineName) => (
-                  <LineSelectionItem
-                    key={lineName}
-                    lineName={lineName}
-                    selectedLine={selectedLine}
-                  />
-                ))}
+          <div className="relative">
+            <Listbox.Button className="relative w-full cursor-pointer bg-white px-2 text-left focus:outline-none focus:ring-1 sm:text-sm">
+              <div
+                className={classNames(
+                  'ml-2 flex h-8 w-8 rounded-full border-2 bg-opacity-80',
+                  buttonConfig[route.line],
+                  open ? 'shadow-simpleInset' : 'shadow-simple'
+                )}
+              >
+                <p className={`z-10 m-auto select-none text-sm text-white`}>{route.line}</p>
               </div>
-            </Popover.Panel>
-          </Transition>
+            </Listbox.Button>
+
+            <Transition
+              show={open}
+              as={Fragment}
+              leave="transition ease-in duration-100"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Listbox.Options className="w-34 absolute left-1 -top-3 origin-top-right -translate-y-full transform divide-y divide-gray-100 rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                {Object.entries(LINE_OBJECTS).map(([_, metadata]) => {
+                  // If a datapage is selected, stay on that datapage. If the current line is selected, go to overview.
+                  let href = `/${metadata.path}`;
+                  if (metadata.key !== route.line && route.datapage) {
+                    href += `/${route.datapage}`;
+                  }
+                  return (
+                    <Link key={metadata.key} href={href}>
+                      <Listbox.Option
+                        className={({ active, selected }) =>
+                          classNames(
+                            active || selected
+                              ? 'border-opacity-100 bg-opacity-20'
+                              : 'border-opacity-20 bg-opacity-0 text-gray-900',
+                            'relative cursor-pointer select-none py-2 pl-3 pr-6',
+                            lineSelectionConfig[metadata.key]
+                          )
+                        }
+                        value={metadata}
+                      >
+                        {({ selected }) => (
+                          <div
+                            className={classNames(
+                              selected ? 'font-semibold' : 'font-normal',
+                              'flex flex-row gap-2 truncate'
+                            )}
+                          >
+                            <div
+                              className={classNames(
+                                'h-5 w-5 rounded-full',
+                                lineSelectionButtonConfig[metadata.key],
+                                lineSelectionConfig[metadata.key],
+                                selected ? 'bg-opacity-100' : 'bg-opacity-20'
+                              )}
+                            ></div>
+                            {metadata.name}
+                          </div>
+                        )}
+                      </Listbox.Option>
+                    </Link>
+                  );
+                })}
+              </Listbox.Options>
+            </Transition>
+          </div>
         </>
       )}
-    </Popover>
-    // <div className="absolute">
-    //   <p>Line Selector</p>
-    //   {LINES.map((lineName) => {
-    //     return <LineSelectionItem key={lineName} lineName={lineName} />;
-    //   })}
-    // </div>
+    </Listbox>
   );
 };

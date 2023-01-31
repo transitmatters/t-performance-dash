@@ -1,17 +1,15 @@
 import React from 'react';
 
 import { LineSelector } from '../Dropdowns/LineSelector';
+import { DataPageSelection } from './DataPageSelection';
 
-interface BottomNavBarProps {
-  line: string;
-  section: string;
-}
-
-export const BottomNavBar: React.FC<BottomNavBarProps> = ({ line, section }) => {
+export const BottomNavBar = () => {
   return (
-    <div className="fixed bottom-0 flex h-10 w-full flex-row items-center bg-white">
-      <LineSelector selectedLine={'RL'} />
-      <p className="ml-2 select-none font-bold">{section}</p>
+    <div className="pb-safe fixed bottom-0 z-20 w-full border border-gray-300 bg-white">
+      <div className="flex h-11 w-full flex-row items-center gap-x-2 bg-white ">
+        <LineSelector />
+        <DataPageSelection />
+      </div>
     </div>
   );
 };

@@ -1,26 +1,24 @@
 import React from 'react';
-import { classNames } from '../utils/tailwind';
-import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
+import { classNames } from '../../utils/tailwind';
 
-type BasicDataWidgetItemProps = {
+type BasicWidgetDataLayoutProps = {
   title: string;
   value?: string;
   analysis: string;
   units?: string;
-  icon?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Icon: any;
 };
 
-export const BasicDataWidgetItem: React.FC<BasicDataWidgetItemProps> = ({
+export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
   title,
   value,
   analysis,
   units,
-  icon,
+  Icon,
 }) => {
   return (
-    <div
-      className={classNames('w-1/2 rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox')}
-    >
+    <div className={classNames('w-1/2 bg-white p-2')}>
       <div className={classNames('flex flex-col items-start')}>
         <p className={classNames('text-base')}>{title}</p>
         <div className="flex flex-row items-baseline gap-x-1">
@@ -28,11 +26,7 @@ export const BasicDataWidgetItem: React.FC<BasicDataWidgetItemProps> = ({
           <p className="text-base text-design-subtitleGrey">{units}</p>
         </div>
         <div className="flex flex-row items-center gap-x-1">
-          {icon ? (
-            icon
-          ) : (
-            <ArrowDownNegative className="h-3 w-auto" alt="Negative Sentiment Indication" />
-          )}
+          <div>{Icon}</div>
           <p className={classNames('text-sm text-design-subtitleGrey')}>{analysis}</p>
         </div>
       </div>

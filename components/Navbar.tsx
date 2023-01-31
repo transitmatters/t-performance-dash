@@ -23,20 +23,20 @@ export const Navbar = () => {
   const [open, setOpen] = useState(false);
   return (
     <div className="fixed top-0 z-50 flex w-full items-center justify-between overflow-x-hidden bg-tm-grey p-2">
-      <TmLogoSvg className="h-7 w-auto sm:h-12" alt="Transit Matters Logo" />
+      <TmLogoSvg className="h-7 w-auto sm:h-12" alt="TransitMatters Logo" />
       <div className="flex sm:hidden">
         {open ? (
           <Close
+            alt="Close"
             className="h-4 w-4 sm:hidden"
-            alt="Menu"
             onClick={() => {
               setOpen(!open);
             }}
           />
         ) : (
           <Menu
-            className="h-4 w-4 sm:hidden"
             alt="Menu"
+            className="h-4 w-4 sm:hidden"
             onClick={() => {
               setOpen(!open);
             }}
@@ -52,7 +52,7 @@ export const Navbar = () => {
                   'inline-flex h-full items-center gap-x-2 border-b-2 border-transparent px-4 text-sm text-white hover:bg-design-subtitleGrey'
                 )}
               >
-                <value.icon className="h-5 w-auto" alt="Transit Matters Logo" />
+                <value.icon className="h-5 w-auto" alt={value.name} />
                 <p className="text-center">{value.name}</p>
               </a>
             </ActiveLink>
@@ -74,7 +74,7 @@ export const Navbar = () => {
                   index === 4 ? 'pt-5' : 'pt-1'
                 )}
               >
-                <value.icon className="h-5 w-auto" alt="Transit Matters Logo" />
+                <value.icon className="h-5 w-auto" />
                 {value.name}
               </a>
             </ActiveLink>

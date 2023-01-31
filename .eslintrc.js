@@ -37,8 +37,7 @@ module.exports = {
     'react/react-in-jsx-scope': 'warn',
     'no-console': 'warn',
     '@typescript-eslint/ban-ts-comment': 'warn',
-    // Disabling this rule because Next JS expects default exports. TODO: There may be a better solution.
-    'import/no-default-export': 'warn',
+    'import/no-default-export': 'off',
     'import/order': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',
   },

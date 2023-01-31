@@ -32,7 +32,10 @@ module.exports = {
         tappedDataBox: 'inset 1px 1px 4px rgba(0, 0, 0, 0.2);',
         unselectedLine: '1px 1px 2px rgba(0, 0, 0, 0.2);',
         selectedLine: 'inset 2px 2px 3px rgba(0, 0, 0, 0.2);',
-        simple: '0px 0px 2px rgba(0,0,0,0.2);',
+        simple: '2px 2px 3px rgba(0, 0, 0, 0.25);',
+        simpleInset: 'inset 2px 2px 3px rgba(0, 0, 0, 0.25);',
+        illuminate: '0px 0px 2px rgba(255,255,255,0.5);',
+        shadowUp: '0px -2px 2px rgba(0, 0, 0, 0.25);',
       },
       colors: {
         design: {
@@ -42,7 +45,7 @@ module.exports = {
           background: '#F6F6F6',
         },
         mbta: {
-          red: '#da291c',
+          red: '#D13434',
           lighterRed: '#EEA7A3',
           lightRed: '#ea6359',
           orange: '#ed8b00',
