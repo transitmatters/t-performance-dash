@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "app_name": "data-dashboard",
+  "app_name": "data-dashboard-v4",
   "api_gateway_endpoint_type": "REGIONAL",
   "minimum_compression_size": 1000,
   "lambda_timeout": 30,
@@ -11,10 +11,10 @@
       "autogen_policy": false,
       "iam_policy_file": "policy.json",
       "environment_variables": {
-        "TM_FRONTEND_HOST": "dashboard.transitmatters.org"
+        "TM_FRONTEND_HOST": "dashboard-v4.transitmatters.org"
       },
       "api_gateway_custom_domain": {
-        "domain_name": "dashboard-api2.transitmatters.org",
+        "domain_name": "dashboard-v4-api.transitmatters.org",
         "tls_version": "TLS_1_2",
         "certificate_arn": ""
       }
@@ -24,10 +24,10 @@
       "autogen_policy": false,
       "iam_policy_file": "policy.json",
       "environment_variables": {
-        "TM_FRONTEND_HOST": "dashboard-beta.transitmatters.org"
+        "TM_FRONTEND_HOST": "dashboard-v4-beta.labs.transitmatters.org"
       },
       "api_gateway_custom_domain": {
-        "domain_name": "dashboard-api-beta.transitmatters.org",
+        "domain_name": "dashboard-v4-beta-api.labs.transitmatters.org",
         "tls_version": "TLS_1_2",
         "certificate_arn": ""
       }
