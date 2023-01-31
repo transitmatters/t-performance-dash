@@ -78,12 +78,20 @@ def headways(stop_ids, sdate, edate):
         delta = this_dt - prev_dt
         headway_time_sec = delta.total_seconds()
 
+        # Throw out any headways > 120 min
+        if headway_time_sec > 120 * 60:
+            continue
+
+        benchmark_headway = this.get("scheduled_headway")
+        if benchmark_headway == '':
+            benchmark_headway = None
+
         headways.append({
             "route_id": this["route_id"],
             "direction": this["direction_id"],
             "current_dep_dt": this["event_time"],
             "headway_time_sec": headway_time_sec,
-            "benchmark_headway_time_sec": this.get("scheduled_headway")
+            "benchmark_headway_time_sec": benchmark_headway
         })
 
     return headways
@@ -117,11 +125,13 @@ def travel_times(stops_a, stops_b, sdate, edate):
             continue
 
         # benchmark calculation:
+        # not every file will have the scheduled_tt field, so we use get.
         sched_arr = arrival.get("scheduled_tt")
         sched_dep = departure.get("scheduled_tt")
-        if sched_arr is not None and sched_dep is not None:
+        try:
+            # sched values may be None or ''
             benchmark = float(sched_arr) - float(sched_dep)
-        else:
+        except:
             benchmark = None
 
         travel_times.append({
