@@ -175,7 +175,7 @@ export const SlowZones = () => {
         <p style={{ display: 'inline', color: 'white', textAlign: 'center', fontSize: '.9rem' }}>
           <i>Our slow zone algorithm changed. </i>
           <a href="https://transitmatters.org/blog/slowzonesupdate">
-            <u style={{ color: '#a2c6ff' }}>Learn&nbsp;More</u>
+            <u style={{ color: '#a2c6ff' }}>Learn&nbsp;more</u>
           </a>
         </p>
       </div>
