@@ -131,7 +131,7 @@ def travel_times(stops_a, stops_b, sdate, edate):
         try:
             # sched values may be None or ''
             benchmark = float(sched_arr) - float(sched_dep)
-        except:
+        except (TypeError, ValueError):
             benchmark = None
 
         travel_times.append({
