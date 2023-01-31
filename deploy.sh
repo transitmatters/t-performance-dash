@@ -28,10 +28,16 @@ done
 # Setup environment stuff
 # By default deploy to beta, otherwise deploys to production
 
-$PRODUCTION && ENV_SUFFIX="" || ENV_SUFFIX="-beta"
-$PRODUCTION && CHALICE_STAGE="production" || CHALICE_STAGE="beta"
-$PRODUCTION && FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN" || FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN_BETA"
-$PRODUCTION && BACKEND_CERT_ARN="$TM_BACKEND_CERT_ARN" || BACKEND_CERT_ARN="$TM_BACKEND_CERT_ARN_BETA"
+$PRODUCTION && ENV_SUFFIX=""                                    || ENV_SUFFIX="-beta"
+$PRODUCTION && CHALICE_STAGE="production"                       || CHALICE_STAGE="beta"
+$PRODUCTION && DOMAIN_PREFIX=""                                 || DOMAIN_PREFIX="dashboard-beta."
+
+$PRODUCTION && FRONTEND_ZONE="dashboard.transitmatters.org"     || FRONTEND_ZONE="labs.transitmatters.org"
+$PRODUCTION && FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN"        || FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN_BETA"
+
+$PRODUCTION && BACKEND_ZONE="dashboard-api2.transitmatters.org" || BACKEND_ZONE="labs.transitmatters.org"
+$PRODUCTION && BACKEND_CERT_ARN="$TM_BACKEND_CERT_ARN"          || BACKEND_CERT_ARN="$TM_BACKEND_CERT_ARN_BETA"
+
 
 # Fetch repository tags
 # Run unshallow if deploying in CI
@@ -54,7 +60,7 @@ else
 fi
 
 BACKEND_BUCKET=datadashboard-backend$ENV_SUFFIX
-FRONTEND_HOSTNAME=dashboard$ENV_SUFFIX.transitmatters.org # Must match in .chalice/config.json!
+FRONTEND_HOSTNAME=$DOMAIN_PREFIX$FRONTEND_ZONE # Must match in .chalice/config.json!
 CF_STACK_NAME=datadashboard$ENV_SUFFIX
 
 echo "Starting $CHALICE_STAGE deployment"
@@ -74,6 +80,8 @@ aws cloudformation deploy --template-file cfn/packaged.yaml --stack-name $CF_STA
     TMFrontendHostname=$FRONTEND_HOSTNAME \
     TMFrontendCertArn=$FRONTEND_CERT_ARN \
     TMBackendCertArn=$BACKEND_CERT_ARN \
+    TMFrontendZone=$FRONTEND_ZONE \
+    TMBackendZone=$BACKEND_ZONE \
     MbtaV2ApiKey=$MBTA_V2_API_KEY
 
 popd > /dev/null
