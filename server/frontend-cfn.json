@@ -25,6 +25,45 @@
         "RegionalCertificateArn": { "Ref": "TMBackendCertArn" }
       }
     },
+    "FrontendDNSRecordSet": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "Name": { "Ref": "TMFrontendHostname" },
+        "HostedZoneName": "labs.transitmatters.org.",
+        "AliasTarget": {
+          "HostedZoneId": "Z2FDTNDATAQYW2",
+          "DNSName": {
+            "Fn::GetAtt": [
+              "FrontendCloudFront",
+              "DomainName"
+            ]
+          }
+        },
+        "Type": "A"
+      }
+    },
+    "BackendDNSRecordSet": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "Name": "dashboard-v4-beta-api.labs.transitmatters.org",
+        "HostedZoneName": "labs.transitmatters.org.",
+        "AliasTarget": {
+          "HostedZoneId": {
+            "Fn::GetAtt": [
+              "ApiGatewayCustomDomain",
+              "RegionalHostedZoneId"
+            ]
+          },
+          "DNSName": {
+            "Fn::GetAtt": [
+              "ApiGatewayCustomDomain",
+              "RegionalDomainName"
+            ]
+          }
+        },
+        "Type": "A"
+      }
+    },
     "APIHandler": {
       "Properties": {
         "Environment": {
