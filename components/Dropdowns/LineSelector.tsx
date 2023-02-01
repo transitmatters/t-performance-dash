@@ -26,9 +26,7 @@ export const LineSelector: React.FC<LineSelectorProps> = ({ value }) => {
   const isMobile = value == null;
 
   // Don't render until we have the line.
-  if (!route.line) {
-    return <div></div>;
-  }
+  if (!route.line) return null;
 
   return (
     <Listbox value={LINE_OBJECTS[route.line]} onChange={() => null}>
