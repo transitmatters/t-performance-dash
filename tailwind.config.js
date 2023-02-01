@@ -12,6 +12,9 @@ module.exports = {
     },
   ],
   theme: {
+    screens: {
+      sm: '640px',
+    },
     fontSize: {
       // TODO: try using only defaults.
       xs: '0.5rem',

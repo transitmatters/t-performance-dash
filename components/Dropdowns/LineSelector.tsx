@@ -8,6 +8,7 @@ import { NavBarItem } from '../../constants/NavBarLinks';
 import { classNames } from '../utils/tailwind';
 import { getLineSelectionItemHref, useDelimitatedRoute } from '../utils/router';
 import { NavBarButton } from '../general/NavBarButton';
+import { useBreakpoint } from '../utils/ScreenSize';
 import {
   buttonConfig,
   lightColors,
@@ -23,7 +24,7 @@ interface LineSelectorProps {
 export const LineSelector: React.FC<LineSelectorProps> = ({ value }) => {
   const route = useDelimitatedRoute();
   // `value` is only set if this line selector is opened from the nav bar. Which is only in desktop mode.
-  const isMobile = value == null;
+  const isMobile = !useBreakpoint('sm');
 
   // Don't render until we have the line.
   if (!route.line) return null;
@@ -49,7 +50,7 @@ export const LineSelector: React.FC<LineSelectorProps> = ({ value }) => {
                 <p className={`select-none text-sm text-white`}>{route.line}</p>
               </div>
             ) : (
-              <NavBarButton value={value} />
+              value && <NavBarButton value={value} />
             )}
           </Listbox.Button>
 
