@@ -20,6 +20,7 @@ export const COLORS = {
   },
   design: {
     darkGrey: '#353535',
+    sideBar: '#403e3e',
     subtitleGrey: '#808080',
     lightGrey: '#DADADA',
     background: '#F6F6F6',

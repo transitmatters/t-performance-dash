@@ -11,6 +11,9 @@ module.exports = {
     { pattern: /(border|text)-mbta-(red|lightRed|orange|blue|green|bus)/ },
   ],
   theme: {
+    screens: {
+      sm: '640px',
+    },
     fontSize: {
       // TODO: try using only defaults.
       xs: '0.5rem',
@@ -40,7 +43,10 @@ module.exports = {
       colors: {
         design: {
           darkGrey: '#353535',
+          sideBar: '#403E3E',
           subtitleGrey: '#808080',
+          sideBarHeader: '#E0E0E0',
+          sideBarText: '#B6B6B6',
           lightGrey: '#DADADA',
           background: '#F6F6F6',
         },

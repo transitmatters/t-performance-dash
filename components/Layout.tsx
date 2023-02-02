@@ -15,9 +15,9 @@ const queryClient = new QueryClient({
 export const Layout = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex flex-col">
+      <div className="flex h-screen flex-col">
         <Navbar />
-        <main className="relative top-11 sm:top-16">{children}</main>
+        <main className="relative top-11 h-full sm:top-16">{children}</main>
       </div>
     </QueryClientProvider>
   );

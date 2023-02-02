@@ -22,7 +22,7 @@ const navBarLinks = {
 export const Navbar = () => {
   const [open, setOpen] = useState(false);
   return (
-    <div className="fixed top-0 z-50 flex w-full items-center justify-between overflow-x-hidden bg-tm-grey p-2">
+    <div className="fixed top-0 z-50 flex w-full items-center justify-between overflow-x-hidden bg-tm-grey p-2 shadow-md">
       <TmLogoSvg className="h-7 w-auto sm:h-12" alt="TransitMatters Logo" />
       <div className="flex sm:hidden">
         {open ? (

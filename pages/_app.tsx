@@ -1,18 +1,33 @@
 'use client';
-import React from 'react';
-import { DashboardLayout } from '../components/DashboardLayout';
+import React, { useEffect, useState } from 'react';
+import { DashboardLayoutMobile } from '../components/DashboardLayoutMobile';
+import { DashboardLayoutDesktop } from '../components/DashboardLayoutDesktop';
 import { Layout } from '../components/Layout';
+import { useBreakpoint } from '../components/utils/ScreenSize';
 import '../styles/dashboard.css';
 import '../styles/globals.css';
 
 export default function App({ Component, pageProps }) {
-  const getLayout = Component.getLayout ?? ((page) => page);
+  const isMobile = !useBreakpoint('sm');
+  const [loaded, setLoaded] = useState(false);
 
-  return getLayout(
+  // Don't load on the server. This prevents hydration errors between mobile/desktop layouts.
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+  if (!loaded) return null;
+
+  return (
     <Layout>
-      <DashboardLayout>
-        <Component {...pageProps} />
-      </DashboardLayout>
+      {isMobile ? (
+        <DashboardLayoutMobile>
+          <Component {...pageProps} />
+        </DashboardLayoutMobile>
+      ) : (
+        <DashboardLayoutDesktop>
+          <Component {...pageProps} />
+        </DashboardLayoutDesktop>
+      )}
     </Layout>
   );
 }
