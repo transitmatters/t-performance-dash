@@ -6,9 +6,8 @@ import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../dashboard/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { SingleDayAPIParams } from '../../types/api';
-import { stopIdsForStations } from '../../utils/stations';
+import { optionsStation, stopIdsForStations } from '../../utils/stations';
 import { useCustomQueries } from '../../api/datadashboard';
-import { Station } from '../../types/stations';
 import { useDelimitatedRoute } from '../utils/router';
 import { getCurrentDate } from '../../utils/date';
 import { LINE_OBJECTS } from '../../constants/lines';
@@ -18,44 +17,28 @@ import { HomescreenWidgetTitle } from './HomescreenWidgetTitle';
 export const TravelTimesWidget: React.FC = () => {
   const startDate = getCurrentDate();
 
-  const fromStation: Station = {
-    stop_name: 'Davis',
-    branches: ['A', 'B'],
-    station: 'place-davis',
-    order: 2,
-    stops: {
-      '0': ['70064'],
-      '1': ['70063'],
-    },
-  };
-  const toStation: Station = {
-    stop_name: 'Downtown Crossing',
-    branches: ['A', 'B'],
-    station: 'place-dwnxg',
-    order: 9,
-    stops: {
-      '0': ['70078'],
-      '1': ['70077'],
-    },
-  };
-
   const route = useDelimitatedRoute();
+
+  const stations = optionsStation(route.line);
+  const toStation = stations?.[stations.length - 1];
+  const fromStation = stations?.[0];
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 
   const { traveltimes } = useCustomQueries(
     {
-      [SingleDayAPIParams.fromStop]: fromStopIds,
-      [SingleDayAPIParams.toStop]: toStopIds,
-      [SingleDayAPIParams.stop]: fromStopIds,
+      [SingleDayAPIParams.fromStop]: fromStopIds || '',
+      [SingleDayAPIParams.toStop]: toStopIds || '',
+      [SingleDayAPIParams.stop]: fromStopIds || '',
       [SingleDayAPIParams.date]: startDate,
     },
-    false
+    false,
+    fromStopIds !== null && toStopIds !== null
   );
 
   // TODO: If these error out, should only affect the widget, not the title.
   const averageTravelTime = React.useMemo(() => {
-    if (traveltimes && traveltimes.data) {
+    if (traveltimes && traveltimes.data && traveltimes.data.length >= 1) {
       const totalSum = traveltimes?.data
         .map((trip) => trip.travel_time_sec)
         .reduce((a, b) => {
@@ -71,11 +54,9 @@ export const TravelTimesWidget: React.FC = () => {
     }
   }, [traveltimes]);
 
-  if (traveltimes.isLoading) {
-    return <>Loading ... teehee</>;
-  }
+  const isLoading = traveltimes.isLoading || toStation === undefined || fromStation === undefined;
 
-  if (traveltimes.isError) {
+  if (traveltimes.isError || !route.line) {
     return <>Uh oh... error</>;
   }
 
@@ -85,22 +66,25 @@ export const TravelTimesWidget: React.FC = () => {
         title="Travel Times"
         href={`/${LINE_OBJECTS[route.line].path}/traveltimes`}
       />
-      <div className={classNames('bg-white p-2 shadow-dataBox')}>
-        <div className={'charts main-column'}>
-          <SingleDayLineChart
-            chartId={'traveltimes'}
-            title={'Travel Times'}
-            data={traveltimes.data || []}
-            date={startDate}
-            metricField={MetricFieldKeys.travelTimeSec}
-            pointField={PointFieldKeys.depDt}
-            benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
-            isLoading={traveltimes.isLoading}
-            bothStops={true}
-            location={'todo'}
-            fname={'todo'}
-          />
-        </div>
+      <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
+        <SingleDayLineChart
+          chartId={'traveltimes'}
+          title={'Travel Times'}
+          data={traveltimes.data || []}
+          date={startDate}
+          metricField={MetricFieldKeys.travelTimeSec}
+          pointField={PointFieldKeys.depDt}
+          benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
+          isLoading={isLoading}
+          bothStops={true}
+          location={{
+            to: toStation?.stop_name || 'Loading...',
+            from: fromStation?.stop_name || 'Loading...',
+            direction: 'southbound',
+            line: route.linePath,
+          }}
+          fname={'traveltimes'}
+        />
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Travel Time"

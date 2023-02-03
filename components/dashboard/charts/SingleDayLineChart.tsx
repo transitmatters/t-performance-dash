@@ -79,6 +79,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   // TODO: loading animation?
   isLoading,
   bothStops = false,
+  location,
 }) => {
   const labels = data.map((item) => item[pointField]);
   return (
@@ -103,6 +104,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               },
               {
                 label: `Benchmark MBTA`,
+                backgroundColor: 'rgba(0, 0, 0, 0.1)',
                 data: benchmarkField
                   ? data.map((datapoint: any) => (datapoint[benchmarkField] / 60).toFixed(2))
                   : [],
@@ -203,12 +205,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   ctx.fillText('No data to display', width / 2, height / 2);
                   ctx.restore();
                 }
-                drawTitle(
-                  title,
-                  { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
-                  bothStops,
-                  chart
-                );
+                drawTitle(title, location, bothStops, chart);
               },
             },
           ]}

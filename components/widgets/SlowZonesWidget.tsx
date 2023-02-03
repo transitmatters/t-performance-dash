@@ -32,7 +32,7 @@ export default function SlowZonesWidget() {
   return (
     <>
       <HomescreenWidgetTitle title="Slow Zones" href={`/${route.line}/slowzones`} />
-      <div className={classNames('bg-white p-2 shadow-dataBox')}>
+      <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <div className={classNames('h-48 pr-4')}>
           <TotalSlowTime line={LINE_OBJECTS[route.line]?.short} data={data} />
         </div>
@@ -47,7 +47,7 @@ export default function SlowZonesWidget() {
           <BasicWidgetDataLayout
             title="# Slow Zones"
             value="7"
-            units="min"
+            units="zones"
             analysis="+2 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />

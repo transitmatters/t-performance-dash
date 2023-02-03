@@ -1,14 +1,4 @@
-export type DataPage =
-  | 'overview'
-  | 'traveltimes'
-  | 'slowzones'
-  | 'headways'
-  | 'dwells'
-  | 'ridership'
-  | 'service'
-  | 'more';
-
-export type DataPageNames = Record<DataPage, string>;
+import { DataPage, DataPageNames } from '../types/dataPages';
 
 export const DATA_PAGE_NAMES: DataPageNames = {
   overview: 'Overview',
@@ -21,4 +11,11 @@ export const DATA_PAGE_NAMES: DataPageNames = {
   service: 'Service',
 };
 
-export const DATA_PAGES = ['overview', 'traveltimes', 'slowzones', 'headways', 'dwells', 'more'];
+export const DATA_PAGES: DataPage[] = [
+  'overview',
+  'traveltimes',
+  'slowzones',
+  'headways',
+  'dwells',
+  'more',
+];

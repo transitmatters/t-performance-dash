@@ -6,16 +6,30 @@ import {
   MetricField,
   PointField,
   SingleDayDataPoint,
-} from '../src/charts/types';
+  Location,
+} from './charts';
+
+export type Line = 'RL' | 'OL' | 'GL' | 'BL' | 'BUS';
+export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus';
+export type LineMetadata = {
+  name: string;
+  color: string;
+  short: string;
+  path: LinePath;
+  key: Line;
+};
+export type LineObject = { [key in Line]: LineMetadata };
+
+type DataName = 'traveltimes' | 'headways' | 'dwells' | 'traveltimesByHour';
 
 export interface LineProps {
   title: string;
   chartId: string;
-  location: any;
+  location: Location;
   isLoading: any;
   pointField: PointField; // X value
   bothStops?: boolean;
-  fname: any;
+  fname: DataName;
 }
 
 export interface AggregateLineProps extends LineProps {
@@ -23,7 +37,7 @@ export interface AggregateLineProps extends LineProps {
   data: AggregateDataPoint[];
   timeFormat: string;
   seriesName: string;
-  fillColor: any;
+  fillColor: string;
   startDate: string;
   endDate: string;
   suggestedYMin?: number;
