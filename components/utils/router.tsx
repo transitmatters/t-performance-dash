@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { DataPage } from '../../constants/datapages';
-import { Line } from '../../constants/lines';
+import { Line, LineMetadata, LinePath } from '../../constants/lines';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'RL',
@@ -9,14 +9,29 @@ const linePathToKeyMap: Record<string, Line> = {
   blue: 'BL',
   bus: 'BUS',
 };
+export type Route = {
+  line: Line;
+  linePath: LinePath;
+  datapage: DataPage;
+};
 
-export const useDelimitatedRoute = (): { line: Line; datapage: DataPage } => {
+export const useDelimitatedRoute = (): Route => {
   const router = useRouter();
   const path = router.asPath;
   const pathItems = path.split('/');
 
   return {
     line: linePathToKeyMap[pathItems[1]] as Line,
+    linePath: pathItems[1] as LinePath,
     datapage: pathItems[2] as DataPage,
   };
+};
+
+// If a datapage is selected, stay on that datapage. If the current line is selected, go to overview.
+export const getLineSelectionItemHref = (metadata: LineMetadata, route: Route): string => {
+  let href = `/${metadata.path}`;
+  if (metadata.key !== route.line && route.datapage) {
+    href += `/${route.datapage}`;
+  }
+  return href;
 };

@@ -4,20 +4,27 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
+    './node_modules/react-tailwindcss-datepicker/dist/index.esm.js',
   ],
   safelist: [
-    'border-mbta-green',
-    'text-mbta-green',
-    { pattern: /(border|text)-mbta-(red|lightRed|orange|blue|green|bus)/ },
+    {
+      pattern:
+        /(border|text|bg)-mbta-(red|lightRed|orange|lightOrange|blue|lightBlue|green|lightGreen|bus|lightBus)/,
+    },
   ],
+  darkMode: 'class',
   theme: {
     screens: {
       sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
     },
     fontSize: {
       // TODO: try using only defaults.
-      xs: '0.5rem',
-      sm: '0.75rem',
+      xs: '0.75rem',
+      sm: '0.875rem',
       base: '1rem',
       xl: '1.25rem',
       '2xl': '1.563rem',
@@ -52,16 +59,18 @@ module.exports = {
         },
         mbta: {
           red: '#D13434',
-          lighterRed: '#EEA7A3',
-          lightRed: '#ea6359',
+          lightRed: '#E89999',
           orange: '#ed8b00',
+          lightOrange: '#F6C580',
           blue: '#003da5',
+          lightBlue: '#809ED2',
           green: '#00834d',
+          lightGreen: '#80C1A6',
           bus: '#ffc72c',
+          lightBus: '#FFE395',
         },
         tm: {
           red: '#a31e1e',
-          lightRed: '#cb2525',
           grey: '#2e2d2c',
         },
       },

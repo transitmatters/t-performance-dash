@@ -1,6 +1,6 @@
 name: build
 
-on:  
+on:
   pull_request:
   push:
     branches:
@@ -24,4 +24,4 @@ jobs:
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           npm ci
-          npm run build
+          npm run build-v4

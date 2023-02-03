@@ -11,9 +11,9 @@ import { useCustomQueries } from '../../api/datadashboard';
 import { Station } from '../../types/stations';
 import { useDelimitatedRoute } from '../utils/router';
 import { getCurrentDate } from '../../utils/date';
+import { LINE_OBJECTS } from '../../constants/lines';
 import { BasicWidgetDataLayout } from './internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from './HomescreenWidgetTitle';
-import { LINE_OBJECTS } from '../../constants/lines';
 
 export const TravelTimesWidget: React.FC = () => {
   const startDate = getCurrentDate();
@@ -81,7 +81,10 @@ export const TravelTimesWidget: React.FC = () => {
 
   return (
     <>
-      <HomescreenWidgetTitle title="Travel Times" href={`/${LINE_OBJECTS[route.line].path}/traveltimes`} />
+      <HomescreenWidgetTitle
+        title="Travel Times"
+        href={`/${LINE_OBJECTS[route.line].path}/traveltimes`}
+      />
       <div className={classNames('bg-white p-2 shadow-dataBox')}>
         <div className={'charts main-column'}>
           <SingleDayLineChart

@@ -1,3 +1,5 @@
+import { DateType } from 'react-tailwindcss-datepicker/dist/types';
+
 export interface SelectOption<T = any> {
   label: string;
   value: T;
@@ -6,6 +8,6 @@ export interface SelectOption<T = any> {
 
 export interface DateOption {
   range: boolean;
-  startDate?: string;
-  endDate?: string;
+  startDate: DateType;
+  endDate: DateType;
 }

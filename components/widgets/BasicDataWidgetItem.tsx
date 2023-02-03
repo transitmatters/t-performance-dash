@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { classNames } from '../utils/tailwind';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 
@@ -7,7 +7,7 @@ type BasicDataWidgetItemProps = {
   value?: string;
   analysis: string;
   units?: string;
-  icon?: any;
+  icon?: ReactNode;
 };
 
 export const BasicDataWidgetItem: React.FC<BasicDataWidgetItemProps> = ({
@@ -33,7 +33,7 @@ export const BasicDataWidgetItem: React.FC<BasicDataWidgetItemProps> = ({
           ) : (
             <ArrowDownNegative className="h-3 w-auto" alt="Negative Sentiment Indication" />
           )}
-          <p className={classNames('text-sm text-design-subtitleGrey')}>{analysis}</p>
+          <p className={classNames('text-xs text-design-subtitleGrey')}>{analysis}</p>
         </div>
       </div>
     </div>
