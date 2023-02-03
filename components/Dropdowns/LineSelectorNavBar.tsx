@@ -16,7 +16,7 @@ interface LineSelectorNavBarProps {
 
 export const LineSelectorNavBar: React.FC<LineSelectorNavBarProps> = ({ value }) => {
   const route = useDelimitatedRoute();
-  const buttonDiv = 'w-full cursor-pointer sm:text-sm bg-tm-grey';
+  const buttonDiv = 'w-full cursor-pointer sm:text-xs bg-tm-grey';
 
   // Don't render fully until we have the line.
   if (!route.line) {
@@ -59,7 +59,7 @@ export const LineSelectorNavBar: React.FC<LineSelectorNavBarProps> = ({ value })
                         <div
                           className={classNames(
                             selected ? 'font-semibold' : 'font-normal',
-                            'flex flex-row gap-2 truncate border-black text-sm text-white'
+                            'flex flex-row gap-2 truncate border-black text-xs text-white'
                           )}
                         >
                           <div
