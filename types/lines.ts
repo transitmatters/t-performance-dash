@@ -10,11 +10,12 @@ import {
 } from './charts';
 
 export type Line = 'RL' | 'OL' | 'GL' | 'BL' | 'BUS';
+export type LineShort = 'Red' | 'Orange' | 'Green' | 'Blue' | 'Bus';
 export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus';
 export type LineMetadata = {
   name: string;
   color: string;
-  short: string;
+  short: LineShort;
   path: LinePath;
   key: Line;
 };

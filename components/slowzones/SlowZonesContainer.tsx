@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { DayDelayTotals, SlowZoneResponse } from '../../types/dataPoints';
+import { LineShort } from '../../types/lines';
 import { LineSegments } from './charts/LineSegments';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 
 interface SlowZonesContainerProps {
   delayTotals: DayDelayTotals[] | undefined;
   allSlow: SlowZoneResponse[];
-  line: string;
+  line: LineShort | undefined;
 }
 
 const graphs = [
@@ -14,7 +15,11 @@ const graphs = [
   { id: 2, name: 'Total Slow Time' },
 ];
 
-export const SlowZonesContainer = ({ allSlow, delayTotals, line }: SlowZonesContainerProps) => {
+export const SlowZonesContainer: React.FC<SlowZonesContainerProps> = ({
+  allSlow,
+  delayTotals,
+  line,
+}) => {
   const [selectedGraph, setSelectedGraph] = useState(graphs[0]);
 
   return (

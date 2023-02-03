@@ -35,6 +35,7 @@ export default function SlowZones() {
         <BasicDataWidgetItem
           title="Total Delay"
           value={
+            route.line &&
             formattedTotals &&
             (
               formattedTotals[formattedTotals.length - 1][LINE_OBJECTS[route.line]?.short] / 60
@@ -56,7 +57,7 @@ export default function SlowZones() {
       <SlowZonesContainer
         allSlow={allSlow.data}
         delayTotals={formattedTotals}
-        line={LINE_OBJECTS[route.line]?.short}
+        line={route.line && LINE_OBJECTS[route.line]?.short}
       />
     </>
   );

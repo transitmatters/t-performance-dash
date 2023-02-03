@@ -6,9 +6,10 @@ import { Line } from 'react-chartjs-2';
 import { LINE_COLORS } from '../../../utils/constants';
 
 import { DayDelayTotals } from '../../../types/dataPoints';
+import { LineShort } from '../../../types/lines';
 
 interface TotalSlowTimeProps {
-  line: string;
+  line: LineShort | undefined;
   data?: DayDelayTotals[];
 }
 Chart.register(...registerables);

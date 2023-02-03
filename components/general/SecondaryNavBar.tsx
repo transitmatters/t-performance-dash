@@ -14,7 +14,7 @@ const visualizationOptions = [
   { name: 'Totals', id: 3 },
 ];
 
-export const SecondaryNavBar = () => {
+export const SecondaryNavBar: React.FC = () => {
   const { linePath } = useDelimitatedRoute();
   const maxDate = getCurrentDate();
 
