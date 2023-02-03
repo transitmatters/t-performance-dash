@@ -26,7 +26,7 @@ export const DataPageSelection = () => {
   const page = useDelimitatedRoute();
   const selectedDataPage = page.datapage || DATA_PAGES[0];
   return (
-    <div className="flex h-8 items-center gap-x-4 overflow-scroll rounded-md border-black">
+    <div className="flex h-8 items-center gap-x-4 overflow-auto rounded-md border-black">
       {DATA_PAGES.map((dataPageItem: string) => {
         let href = `/${LINE_OBJECTS[page.line]?.path}`;
         if (dataPageItem !== DATA_PAGES[0]) {
