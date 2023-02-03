@@ -25,7 +25,7 @@ export const LineSelectorSideBar: React.FC<LineSelectorSideBarProps> = ({ value,
         <MobileMenuButton value={value} />
       </Listbox.Button>
       <Listbox.Options>
-        {Object.entries(LINE_OBJECTS).map(([_, metadata]) => {
+        {Object.entries(LINE_OBJECTS).map(([, metadata]) => {
           const href = getLineSelectionItemHref(metadata, route);
           return (
             <Link key={metadata.key} href={href} onClick={() => setOpen(false)}>
