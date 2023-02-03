@@ -1,4 +1,4 @@
-export const lineButtonSelectConfig = {
+export const buttonHighlightConfig = {
   RL: `focus:ring-mbta-red`,
   OL: `focus:ring-mbta-orange`,
   GL: `focus:ring-mbta-green`,
