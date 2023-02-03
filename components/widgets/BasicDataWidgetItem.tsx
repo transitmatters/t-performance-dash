@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { classNames } from '../utils/tailwind';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 
@@ -7,7 +7,7 @@ type BasicDataWidgetItemProps = {
   value?: string;
   analysis: string;
   units?: string;
-  icon?: any;
+  icon?: ReactNode;
 };
 
 export const BasicDataWidgetItem: React.FC<BasicDataWidgetItemProps> = ({

@@ -1,7 +1,7 @@
 import { COLORS } from './colors';
 
 export type Line = 'RL' | 'OL' | 'GL' | 'BL' | 'BUS';
-export type LinePath = 'red' | 'orange' | 'green' | 'bus';
+export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus';
 export type LineMetadata = {
   name: string;
   color: string;

@@ -4,12 +4,14 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
+    './node_modules/react-tailwindcss-datepicker/dist/index.esm.js',
   ],
   safelist: [
     'border-mbta-green',
     'text-mbta-green',
     { pattern: /(border|text)-mbta-(red|lightRed|orange|blue|green|bus)/ },
   ],
+  darkMode: 'class',
   theme: {
     fontSize: {
       // TODO: try using only defaults.

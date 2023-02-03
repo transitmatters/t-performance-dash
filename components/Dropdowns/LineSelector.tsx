@@ -35,7 +35,7 @@ export const LineSelector = () => {
               leaveTo="opacity-0"
             >
               <Listbox.Options className="w-34 absolute left-1 -top-3 origin-top-right -translate-y-full transform divide-y divide-gray-100 rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                {Object.entries(LINE_OBJECTS).map(([_, metadata]) => {
+                {Object.entries(LINE_OBJECTS).map(([, metadata]) => {
                   // If a datapage is selected, stay on that datapage. If the current line is selected, go to overview.
                   let href = `/${metadata.path}`;
                   if (metadata.key !== route.line && route.datapage) {
