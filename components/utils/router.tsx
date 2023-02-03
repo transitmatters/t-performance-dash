@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { DataPage } from '../../constants/datapages';
-import { Line, LineMetadata } from '../../constants/lines';
+import { Line, LineMetadata, LinePath } from '../../constants/lines';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'RL',
@@ -11,6 +11,7 @@ const linePathToKeyMap: Record<string, Line> = {
 };
 export type Route = {
   line: Line;
+  linePath: LinePath;
   datapage: DataPage;
 };
 
@@ -21,6 +22,7 @@ export const useDelimitatedRoute = (): Route => {
 
   return {
     line: linePathToKeyMap[pathItems[1]] as Line,
+    linePath: pathItems[1] as LinePath,
     datapage: pathItems[2] as DataPage,
   };
 };

@@ -39,7 +39,7 @@ export const LineSelectorNavBar: React.FC<LineSelectorNavBarProps> = ({ value })
             leaveTo="opacity-0"
           >
             <Listbox.Options className="fixed top-16 bg-tm-grey">
-              {Object.entries(LINE_OBJECTS).map(([_, metadata]) => {
+              {Object.entries(LINE_OBJECTS).map(([, metadata]) => {
                 const href = getLineSelectionItemHref(metadata, route);
                 return (
                   <Link key={metadata.key} href={href}>

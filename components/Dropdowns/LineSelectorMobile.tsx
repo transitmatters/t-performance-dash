@@ -47,7 +47,7 @@ export const LineSelectorMobile = () => {
             leaveTo="opacity-0"
           >
             <Listbox.Options className="w-34 absolute left-1 -top-3 origin-top-right -translate-y-full transform divide-y divide-gray-100 rounded-md border border-design-lightGrey bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-              {Object.entries(LINE_OBJECTS).map(([_, metadata], index) => {
+              {Object.entries(LINE_OBJECTS).map(([, metadata], index) => {
                 const href = getLineSelectionItemHref(metadata, route);
                 return (
                   <Link key={metadata.key} href={href}>

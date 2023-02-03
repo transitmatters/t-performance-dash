@@ -9,9 +9,9 @@ import { stopIdsForStations } from '../../utils/stations';
 import { useCustomQueries } from '../../api/datadashboard';
 import { Station } from '../../types/stations';
 import { getCurrentDate } from '../../utils/date';
+import { useDelimitatedRoute } from '../utils/router';
 import { BasicWidgetDataLayout } from './internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from './HomescreenWidgetTitle';
-import { useDelimitatedRoute } from '../utils/router';
 
 export const HeadwaysWidget: React.FC = () => {
   const startDate = getCurrentDate();

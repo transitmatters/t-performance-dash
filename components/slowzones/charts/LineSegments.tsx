@@ -119,7 +119,6 @@ export const LineSegments = ({ data, line }: { data: SlowZoneResponse[]; line: s
             },
             display: function (ctx) {
               const scale = ctx.chart.scales.y; // 'y' is your scale id
-              const value = ctx.dataset.data[ctx.dataIndex];
               const range = Math.max(scale.max - scale.min, 1);
               return (ctx.chart.height / range) * 3 > 16;
             },

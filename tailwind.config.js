@@ -4,6 +4,7 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
+    './node_modules/react-tailwindcss-datepicker/dist/index.esm.js',
   ],
   safelist: [
     {
@@ -11,6 +12,7 @@ module.exports = {
         /(border|text|bg)-mbta-(red|lightRed|orange|lightOrange|blue|lightBlue|green|lightGreen|bus|lightBus)/,
     },
   ],
+  darkMode: 'class',
   theme: {
     screens: {
       sm: '640px',
