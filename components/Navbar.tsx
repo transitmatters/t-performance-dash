@@ -7,9 +7,9 @@ import Menu from '../public/Icons/Menu.svg';
 import Close from '../public/Icons/Close.svg';
 import { NavBarKeys, NAV_BAR_LINKS } from '../constants/NavBarLinks';
 import { NavBarButton } from './general/NavBarButton';
-import { LineSelector } from './Dropdowns/LineSelector';
 import { LineSelectorSideBar } from './Dropdowns/LineSelectorSidebar';
 import { MobileMenuButton } from './general/MobileMenuButton';
+import { LineSelectorNavBar } from './Dropdowns/LineSelectorNavBar';
 
 export const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -38,7 +38,7 @@ export const Navbar = () => {
       <div className="hidden h-11 sm:flex">
         {Object.entries(NAV_BAR_LINKS).map(([key, value]) => {
           if (value.type === NavBarKeys.list) {
-            return <LineSelector key={value.name} value={value} />;
+            return <LineSelectorNavBar key={value.name} value={value} />;
           }
           return (
             <Link key={key} href={`/${key}`}>

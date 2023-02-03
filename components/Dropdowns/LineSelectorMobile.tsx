@@ -4,11 +4,8 @@ import React, { Fragment } from 'react';
 import Link from 'next/link';
 
 import { LINE_OBJECTS } from '../../constants/lines';
-import { NavBarItem } from '../../constants/NavBarLinks';
 import { classNames } from '../utils/tailwind';
 import { getLineSelectionItemHref, useDelimitatedRoute } from '../utils/router';
-import { NavBarButton } from '../general/NavBarButton';
-import { useBreakpoint } from '../utils/ScreenSize';
 import {
   buttonConfig,
   lightColors,
@@ -16,42 +13,30 @@ import {
   lineSelectionConfig,
 } from './LineSelectorStyle';
 
-interface LineSelectorProps {
-  value?: NavBarItem;
-}
-
-// LineSelector used by the top navbar in desktop mode, and bottom navbar in mobile mode.
-export const LineSelector: React.FC<LineSelectorProps> = ({ value }) => {
+export const LineSelectorMobile = () => {
   const route = useDelimitatedRoute();
-  // `value` is only set if this line selector is opened from the nav bar. Which is only in desktop mode.
-  const isMobile = !useBreakpoint('sm');
+
+  const buttonDiv = 'w-full sm:text-sm relative ml-2 h-8 w-8 bg-white';
 
   // Don't render until we have the line.
-  if (!route.line) return null;
+  if (!route.line) {
+    return <div className={buttonDiv}></div>;
+  }
 
   return (
     <Listbox value={LINE_OBJECTS[route.line]} onChange={() => null}>
       {({ open }) => (
         <>
-          <Listbox.Button
-            className={classNames(
-              'w-full cursor-pointer sm:text-sm',
-              isMobile ? 'relative ml-2 h-8 w-8 bg-white' : 'bg-tm-grey'
-            )}
-          >
-            {isMobile ? (
-              <div
-                className={classNames(
-                  'relative flex h-8 w-8 items-center justify-center rounded-full border-2 bg-opacity-80',
-                  buttonConfig[route.line],
-                  open ? 'shadow-simpleInset' : 'shadow-simple'
-                )}
-              >
-                <p className={`select-none text-sm text-white`}>{route.line}</p>
-              </div>
-            ) : (
-              value && <NavBarButton value={value} />
-            )}
+          <Listbox.Button className={buttonDiv}>
+            <div
+              className={classNames(
+                'relative flex h-8 w-8 items-center justify-center rounded-full border-2 bg-opacity-80',
+                buttonConfig[route.line],
+                open ? 'shadow-simpleInset' : 'shadow-simple'
+              )}
+            >
+              <p className={`select-none text-sm text-white`}>{route.line}</p>
+            </div>
           </Listbox.Button>
 
           <Transition
@@ -61,13 +46,7 @@ export const LineSelector: React.FC<LineSelectorProps> = ({ value }) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options
-              className={classNames(
-                isMobile
-                  ? 'w-34 absolute left-1 -top-3 origin-top-right -translate-y-full transform divide-y divide-gray-100 rounded-md border border-design-lightGrey bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
-                  : 'fixed top-16 bg-tm-grey'
-              )}
-            >
+            <Listbox.Options className="w-34 absolute left-1 -top-3 origin-top-right -translate-y-full transform divide-y divide-gray-100 rounded-md border border-design-lightGrey bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               {Object.entries(LINE_OBJECTS).map(([_, metadata], index) => {
                 const href = getLineSelectionItemHref(metadata, route);
                 return (
@@ -78,15 +57,12 @@ export const LineSelector: React.FC<LineSelectorProps> = ({ value }) => {
                           active || selected
                             ? 'border-opacity-100 bg-opacity-30'
                             : 'bg-opacity-0 text-gray-900',
-                          'relative cursor-pointer select-none py-2 pl-3 pr-6',
+                          'relative cursor-pointer select-none border-b border-design-lightGrey py-2 pl-3 pr-6',
                           lightColors[metadata.key],
-                          isMobile
-                            ? 'border-b border-design-lightGrey'
-                            : 'border-t border-gray-600',
                           // Round top of first item to match container.
-                          index === 0 && !value ? 'rounded-t-[5px]' : '',
+                          index === 0 ? 'rounded-t-[5px]' : '',
                           // Round bottom of last item to match container.
-                          index === Object.keys(LINE_OBJECTS).length - 1 && isMobile
+                          index === Object.keys(LINE_OBJECTS).length - 1
                             ? 'rounded-b-[5px] border-b-0'
                             : ''
                         )
@@ -97,8 +73,7 @@ export const LineSelector: React.FC<LineSelectorProps> = ({ value }) => {
                         <div
                           className={classNames(
                             selected ? 'font-semibold' : 'font-normal',
-                            'flex flex-row gap-2 truncate border-black',
-                            isMobile ? 'text-black' : 'text-sm text-white'
+                            'flex flex-row gap-2 truncate border-black text-black'
                           )}
                         >
                           <div
@@ -109,7 +84,7 @@ export const LineSelector: React.FC<LineSelectorProps> = ({ value }) => {
                                 ? lineSelectionConfig[metadata.key]
                                 : lightColors[metadata.key]
                             )}
-                          ></div>
+                          />
                           {metadata.name}
                         </div>
                       )}
