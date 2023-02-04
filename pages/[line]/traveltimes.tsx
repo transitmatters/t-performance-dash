@@ -14,7 +14,7 @@ export default function TravelTimes() {
 
   const route = useDelimitatedRoute();
 
-  const stations = optionsStation(route.line);
+  const stations = optionsStation(route.lineShort);
   const toStation = stations?.[stations.length - 1];
   const fromStation = stations?.[0];
 
@@ -56,7 +56,7 @@ export default function TravelTimes() {
             to: toStation.stop_name,
             from: fromStation.stop_name,
             direction: 'southbound',
-            line: route.linePath,
+            line: route.lineShort,
           }}
           fname={'traveltimes'}
         />

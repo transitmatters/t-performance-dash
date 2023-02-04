@@ -161,12 +161,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
               id: 'customTitleAggregate',
               afterDraw: (chart: ChartJS) => {
                 // TODO: This is not placing the title correctly for aggregate charts.
-                drawTitle(
-                  title,
-                  { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
-                  bothStops,
-                  chart
-                );
+                drawTitle(title, location, bothStops, chart);
               },
             },
           ]}

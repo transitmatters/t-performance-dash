@@ -62,7 +62,7 @@ export const TravelTimesWidget: React.FC = () => {
         to: toStation?.stop_name || 'Loading...',
         from: fromStation?.stop_name || 'Loading...',
         direction: 'southbound',
-        line: route.linePath,
+        line: route.lineShort,
       };
     }
 
@@ -70,9 +70,9 @@ export const TravelTimesWidget: React.FC = () => {
       to: toStation.stop_name,
       from: fromStation.stop_name,
       direction: 'southbound',
-      line: route.linePath,
+      line: route.lineShort,
     };
-  }, [fromStation, route.linePath, toStation]);
+  }, [fromStation, route, toStation]);
 
   const isLoading = traveltimes.isLoading || toStation === undefined || fromStation === undefined;
 

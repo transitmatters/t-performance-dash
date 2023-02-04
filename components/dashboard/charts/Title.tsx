@@ -1,20 +1,21 @@
 import { Chart } from 'chart.js';
 import { Location } from '../../../types/charts';
+import { LineShort } from '../../../types/lines';
 
 interface TitleFormat {
   text: string;
   color: string;
 }
 
-export const colorsForLine: Record<string, string> = {
-  red: '#da291c',
-  orange: '#ed8b00',
-  blue: '#003da5',
-  green: '#00834d',
-  bus: '#ffc72c',
+export const colorsForLine: Record<LineShort, string> = {
+  Red: '#da291c',
+  Orange: '#ed8b00',
+  Blue: '#003da5',
+  Green: '#00834d',
+  Bus: '#ffc72c',
 };
 
-const getLineColor = (lineName: string) => colorsForLine[lineName.toLowerCase()] || 'black';
+const getLineColor = (lineShort: LineShort) => colorsForLine[lineShort] || 'black';
 const titleColor = 'gray';
 
 const parse_location_description = (location: Location, bothStops: boolean) => {
