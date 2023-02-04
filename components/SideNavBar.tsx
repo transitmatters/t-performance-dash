@@ -20,20 +20,21 @@ export const SideNavBar = () => {
   };
 
   return (
-    <div className="fixed h-full w-64 bg-design-sideBar px-4 py-4">
+    <div className="fixed h-full w-64 bg-design-sideBar px-2 py-4">
       <div className="flex flex-col text-design-sideBarHeader">
-        <p className="select-none font-bold">Data</p>
+        <p className="select-none pb-2 text-lg font-bold">{LINE_OBJECTS[line]?.name}</p>
+        <hr />
         <Tab.Group vertical selectedIndex={selectedPage} onChange={selectPage}>
-          <Tab.List className="flex flex-col pl-2">
+          <Tab.List className="flex flex-col ">
             {DATA_PAGES.map((dataPage: DataPage, index: number) => (
-              <Tab className="outline-none focus:underline" key={dataPage}>
+              <Tab className="outline-none" key={dataPage}>
                 {({ selected }) => (
                   <div
                     className={classNames(
                       'rounded-md py-2 pl-2 text-start font-medium ring-0',
                       selected
                         ? 'bg-design-rb-900 text-white'
-                        : 'font-base hover:bg-design-rb-800 text-design-sideBarText hover:text-white',
+                        : 'font-base text-design-sideBarText hover:bg-design-rb-800 hover:text-white',
                       index === 0 ? 'mt-0' : 'mt-1'
                     )}
                   >
