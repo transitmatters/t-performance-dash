@@ -1,15 +1,16 @@
 import React from 'react';
 import { BottomNavBar } from './general/BottomNavBar';
 import { SecondaryNavBar } from './general/SecondaryNavBar';
-import { classNames } from './utils/tailwind';
 import { DataPageHeader } from './widgets/DataPageHeader';
 import { WidgetPage } from './widgets/Widget';
 
 export const DashboardLayoutMobile = ({ children }) => {
   return (
     <div className="flex w-full flex-col items-center">
-      <DataPageHeader dateString="Today (TBD)" />
-      <WidgetPage>{children}</WidgetPage>
+      <WidgetPage>
+        <DataPageHeader />
+        {children}
+      </WidgetPage>
       <SecondaryNavBar />
       <BottomNavBar />
     </div>

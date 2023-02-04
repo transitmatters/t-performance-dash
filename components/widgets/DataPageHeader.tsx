@@ -1,60 +1,59 @@
-import React, { ReactNode } from 'react';
-import { LINE_OBJECTS } from '../../constants/lines';
+import React, { useState } from 'react';
+import Datepicker from 'react-tailwindcss-datepicker';
+import { DateValueType } from 'react-tailwindcss-datepicker/dist/types';
 import { DATA_PAGE_NAMES } from '../../constants/datapages';
+import { LINE_OBJECTS } from '../../constants/lines';
+import { getCurrentDate } from '../../utils/date';
+import { Button } from '../inputs/Button';
 import { useDelimitatedRoute } from '../utils/router';
-import { classNames } from '../utils/tailwind';
-import { headerStyle } from './DataPageHeaderStyle';
+import { useBreakpoint } from '../utils/ScreenSize';
 
-type DataPageHeaderProps = {
-  dateString: string;
-  children?: ReactNode;
-};
+export const DataPageHeader = () => {
+  const isDesktop = useBreakpoint('lg');
 
-export const DataPageHeader: React.FC<DataPageHeaderProps> = ({ dateString, children }) => {
-  const route = useDelimitatedRoute();
+  const { linePath, datapage, line } = useDelimitatedRoute();
+  const maxDate = getCurrentDate();
+
+  const [range, setRange] = useState<boolean>(false);
+  const [dates, setDates] = useState<DateValueType>({
+    startDate: maxDate,
+    endDate: maxDate,
+  });
 
   // Determine the header.
   const getHeader = () => {
-    if (route.datapage) {
-      return DATA_PAGE_NAMES[route.datapage];
-    } else if (route.line) {
-      return LINE_OBJECTS[route.line]?.name;
-    }
-    return '';
-  };
-
-  const getSecondHeader = () => {
-    if (route.datapage) {
-      return `${LINE_OBJECTS[route.line]?.name} - `;
+    if (datapage) {
+      return DATA_PAGE_NAMES[datapage];
+    } else if (line) {
+      return LINE_OBJECTS[line]?.name;
     }
     return '';
   };
 
   return (
-    <div className={classNames('sticky top-11 z-10 mx-1 mb-px w-full sm:static sm:top-16')}>
-      <div className="mx-3">
-        <div
-          className={classNames(
-            'flex flex-col items-center justify-center gap-y-1 rounded-b-lg bg-white py-1 shadow-dataBox sm:flex-row sm:items-baseline sm:justify-start sm:gap-x-2 sm:bg-transparent sm:shadow-none'
-          )}
-        >
-          <h1
-            style={{ marginBottom: '-6px' }}
-            className={classNames(
-              'select-none text-center text-3xl font-bold',
-              headerStyle[route.line]
-            )}
-          >
-            {getHeader()}
-          </h1>
-          <h2
-            className={classNames(
-              'select-none text-center text-base italic text-design-subtitleGrey'
-            )}
-          >{`${getSecondHeader()}${dateString}`}</h2>
-        </div>
-        {children}
+    <div className="mb-2 flex">
+      <div className="min-w-0 flex-1">
+        <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+          {getHeader()}
+        </h2>
       </div>
+      {isDesktop && (
+        <div className="mt-4 flex flex-row gap-x-2 md:mt-0 md:ml-4">
+          <Datepicker
+            primaryColor={linePath !== 'bus' ? linePath : 'yellow'}
+            value={dates}
+            onChange={setDates}
+            maxDate={maxDate}
+            asSingle={!range}
+            useRange={range}
+            showShortcuts={true}
+            containerClassName={'w-auto'}
+            inputClassName={'h-8'}
+          />
+
+          <Button text={range ? '🅧' : 'Range'} onClick={() => setRange(!range)} />
+        </div>
+      )}
     </div>
   );
 };
