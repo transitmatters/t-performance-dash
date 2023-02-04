@@ -1,5 +1,5 @@
 import { Chart } from 'chart.js';
-import { Location } from '../../../src/charts/types';
+import { Location } from '../../../types/charts';
 
 interface TitleFormat {
   text: string;
@@ -19,7 +19,7 @@ const titleColor = 'gray';
 
 const parse_location_description = (location: Location, bothStops: boolean) => {
   const result: TitleFormat[] = [];
-  const lineColor = getLineColor(location['line']);
+  const lineColor = getLineColor(location.line);
 
   result.push({ text: location['from'], color: lineColor });
   if (bothStops) {

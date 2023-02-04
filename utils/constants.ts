@@ -1,7 +1,7 @@
-import { LineMap } from '../types/stations';
+import { Line, LineMap } from '../types/stations';
 import stations_json from './stations.json';
 
-export const stations: { [key: string]: LineMap } = stations_json;
+export const stations: { [key in Line]: LineMap } = stations_json;
 
 // Colors for charts
 export const CHART_COLORS = {
