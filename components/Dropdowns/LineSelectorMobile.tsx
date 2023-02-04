@@ -16,7 +16,7 @@ import {
 export const LineSelectorMobile = () => {
   const route = useDelimitatedRoute();
 
-  const buttonDiv = 'w-full sm:text-sm relative ml-2 h-8 w-8 bg-white';
+  const buttonDiv = 'w-full relative ml-2 h-8 w-8 bg-white';
 
   // Don't render until we have the line.
   if (!route.line) {
@@ -46,7 +46,7 @@ export const LineSelectorMobile = () => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options className="w-34 absolute left-1 -top-3 origin-top-right -translate-y-full transform divide-y divide-gray-100 rounded-md border border-design-lightGrey bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <Listbox.Options className="w-34 absolute left-1 -top-3 origin-top-right -translate-y-full transform divide-y divide-gray-100 rounded-md border border-design-lightGrey bg-white text-xs shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               {Object.entries(LINE_OBJECTS).map(([, metadata], index) => {
                 const href = getLineSelectionItemHref(metadata, route);
                 return (
