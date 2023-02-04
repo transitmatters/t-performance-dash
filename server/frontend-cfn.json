@@ -2,8 +2,8 @@
   "Parameters" : {
     "TMFrontendHostname": {
       "Type": "String",
-      "Default": "dashboard.transitmatters.org",
-      "AllowedValues": ["dashboard-beta.transitmatters.org", "dashboard.transitmatters.org"],
+      "Default": "dashboard-beta.labs.transitmatters.org",
+      "AllowedValues": ["dashboard-beta.labs.transitmatters.org", "dashboard.transitmatters.org"],
       "Description": "The frontend hostname for the data dashboard."
     },
     "TMFrontendZone": {
@@ -21,6 +21,12 @@
     "TMFrontendCertArn": {
       "Type": "String",
       "Description": "The ACM ARN of the frontend certificate."
+    },
+    "TMBackendHostname": {
+      "Type": "String",
+      "Default": "dashboard-api.labs.transitmatters.org",
+      "AllowedPattern": "^dashboard-api2\\.transitmatters\\.org$|^.*\\.labs\\.transitmatters\\.org$",
+      "Description": "The backend hostname for the data dashboard."
     },
     "TMBackendCertArn": {
       "Type": "String",
@@ -57,12 +63,7 @@
     "BackendDNSRecordSet": {
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
-        "Name": {
-          "Fn::GetAtt": [
-            "ApiGatewayCustomDomain",
-            "RegionalDomainName"
-          ]
-        },
+        "Name": { "Ref": "TMBackendHostname" },
         "HostedZoneName": { "Fn::Sub": "${TMBackendZone}." },
         "AliasTarget": {
           "HostedZoneId": {
