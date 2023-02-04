@@ -23,7 +23,7 @@ export const useDelimitatedRoute = (): Route => {
   return {
     line: linePathToKeyMap[pathItems[1]] as Line,
     linePath: pathItems[1] as LinePath,
-    datapage: pathItems[2] as DataPage,
+    datapage: (pathItems[2] as DataPage) || 'overview',
   };
 };
 
