@@ -1,6 +1,6 @@
 import { SelectOption } from '../types/inputs';
 import { Line, Station } from '../types/stations';
-import { stations } from './constants';
+import { stations as rtStations } from './constants';
 
 export const optionsForField = (
   type: 'from' | 'to',
@@ -9,10 +9,10 @@ export const optionsForField = (
   toStation: Station | null
 ) => {
   if (type === 'from') {
-    return options_station_ui(line).filter((entry) => entry.value !== toStation);
+    return options_station_ui(line)?.filter((entry) => entry.value !== toStation);
   }
   if (type === 'to') {
-    return options_station_ui(line).filter(({ value }) => {
+    return options_station_ui(line)?.filter(({ value }) => {
       if (value === fromStation) {
         return false;
       }
@@ -27,9 +27,9 @@ export const optionsForField = (
   }
 };
 
-const options_station_ui = (line: Line): SelectOption<Station>[] => {
-  return options_station(line)
-    .map((station) => {
+const options_station_ui = (line: Line): SelectOption<Station>[] | undefined => {
+  return optionsStation(line)
+    ?.map((station) => {
       return {
         id: station.station,
         value: station,
@@ -40,11 +40,11 @@ const options_station_ui = (line: Line): SelectOption<Station>[] => {
     .sort((a, b) => a.value.order - b.value.order);
 };
 
-const options_station = (line: Line) => {
-  if (!line) {
-    return [];
+export const optionsStation = (line: Line): Station[] | undefined => {
+  if (!line || !rtStations[line]) {
+    return undefined;
   }
-  return stations[line].stations;
+  return rtStations[line].stations.sort((a, b) => a.order - b.order);
 };
 
 export const swapStations = (
@@ -62,16 +62,19 @@ export const lookup_station_by_id = (line: string, id: string) => {
     return undefined;
   }
 
-  return stations[line].stations.find((x) =>
+  return rtStations[line].stations.find((x) =>
     [...(x.stops['0'] || []), ...(x.stops['1'] || [])].includes(id)
   );
 };
 
-// TODO: Add types
 export const stopIdsForStations = (
-  from: Station,
-  to: Station
-): { fromStopIds: string[]; toStopIds: string[] } => {
+  from: Station | undefined,
+  to: Station | undefined
+): { fromStopIds: string[] | null; toStopIds: string[] | null } => {
+  if (to === undefined || from === undefined) {
+    return { fromStopIds: null, toStopIds: null };
+  }
+
   const isDirection1 = from.order < to.order;
   return {
     fromStopIds: isDirection1 ? from.stops['1'] : from.stops['0'],

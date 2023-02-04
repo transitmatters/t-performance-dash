@@ -79,14 +79,17 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   // TODO: loading animation?
   isLoading,
   bothStops = false,
+  location,
+  showLegend = true,
 }) => {
   const labels = data.map((item) => item[pointField]);
   return (
-    <div className={'chart'}>
-      <div className="chart-container">
+    <div className={showLegend ? 'chart' : undefined}>
+      <div className={'chart-container'}>
         <Line
           id={chartId}
           height={250}
+          redraw={true}
           data={{
             labels,
             datasets: [
@@ -204,18 +207,13 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   ctx.fillText('No data to display', width / 2, height / 2);
                   ctx.restore();
                 }
-                drawTitle(
-                  title,
-                  { to: 'Park Street', from: 'Porter', direction: 'southbound', line: 'Red' },
-                  bothStops,
-                  chart
-                );
+                drawTitle(title, location, bothStops, chart);
               },
             },
           ]}
         />
       </div>
-      <div className="chart-extras">{benchmarkField && <LegendView />}</div>
+      {showLegend && <div className="chart-extras">{benchmarkField && <LegendView />}</div>}
     </div>
   );
 };
