@@ -1,5 +1,5 @@
 {
-  "RL": {
+  "Red": {
     "type": "rapidtransit",
     "direction": {
       "0": "northbound",
@@ -238,7 +238,7 @@
       }
     ]
   },
-  "OL": {
+  "Orange": {
     "type": "rapidtransit",
     "direction": {
       "0": "northbound",
@@ -447,7 +447,7 @@
       }
     ]
   },
-  "BL": {
+  "Blue": {
     "type": "rapidtransit",
     "direction": {
       "0": "northbound",
@@ -576,7 +576,7 @@
       }
     ]
   },
-  "GL": {
+  "Green": {
     "type": "rapidtransit",
     "direction": {
       "0": "eastbound",

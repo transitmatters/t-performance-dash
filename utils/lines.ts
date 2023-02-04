@@ -1,5 +1,5 @@
 import { LINE_OBJECTS } from '../constants/lines';
-import { Line, LineShort } from '../types/lines';
+import { LineShort } from '../types/lines';
 
 export const lineTabs = [
   { name: 'Red Line', current: false, id: 'red' },
@@ -9,7 +9,7 @@ export const lineTabs = [
   { name: 'Bus', current: false, id: 'bus' },
 ];
 
-export const shortToLine = (name: LineShort): Exclude<Line, 'BUS'> => {
+export const shortToLine = (name: LineShort): Exclude<LineShort, 'Bus'> => {
   const found = Object.entries(LINE_OBJECTS).find(([abv, line]) => line.short === name);
-  return found?.[0] as Exclude<Line, 'BUS'>;
+  return found?.[0] as Exclude<LineShort, 'Bus'>;
 };

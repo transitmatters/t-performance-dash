@@ -1,11 +1,11 @@
 import { SelectOption } from '../types/inputs';
-import { Line } from '../types/lines';
+import { LineShort } from '../types/lines';
 import { Station } from '../types/stations';
 import { rtStations } from './constants';
 
 export const optionsForField = (
   type: 'from' | 'to',
-  line: Line,
+  line: LineShort,
   fromStation: Station | null,
   toStation: Station | null
 ) => {
@@ -28,7 +28,7 @@ export const optionsForField = (
   }
 };
 
-const options_station_ui = (line: Line): SelectOption<Station>[] | undefined => {
+const options_station_ui = (line: LineShort): SelectOption<Station>[] | undefined => {
   return optionsStation(line)
     ?.map((station) => {
       return {
@@ -41,8 +41,8 @@ const options_station_ui = (line: Line): SelectOption<Station>[] | undefined => 
     .sort((a, b) => a.value.order - b.value.order);
 };
 
-export const optionsStation = (line: Line): Station[] | undefined => {
-  if (line === 'BUS') {
+export const optionsStation = (line: LineShort): Station[] | undefined => {
+  if (line === 'Bus') {
     // TODO: Remove bus conditions
     return undefined;
   }
@@ -63,7 +63,7 @@ export const swapStations = (
   setToStation(fromStation);
 };
 
-export const lookup_station_by_id = (line: Exclude<Line, 'BUS'>, id: string) => {
+export const lookup_station_by_id = (line: Exclude<LineShort, 'Bus'>, id: string) => {
   if (line === undefined || id === '' || id === undefined) {
     return undefined;
   }

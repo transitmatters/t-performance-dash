@@ -1,4 +1,4 @@
-import { Line } from '../types/lines';
+import { LineShort } from '../types/lines';
 import { LineMap } from '../types/stations';
 
 import stations_json from './stations.json';
@@ -17,7 +17,7 @@ import bus_77 from './bus_constants/77.json';
 import bus_111 from './bus_constants/111.json';
 import bus_114_116_117 from './bus_constants/114-116-117.json';
 
-export const rtStations: { [key in Exclude<Line, 'BUS'>]: LineMap } = stations_json;
+export const rtStations: { [key in Exclude<LineShort, 'Bus'>]: LineMap } = stations_json;
 
 export const busStations: { [key: string]: LineMap } = {
   ...bus_1,

@@ -19,7 +19,7 @@ export const HeadwaysWidget: React.FC = () => {
   const startDate = getCurrentDate();
   const route = useDelimitatedRoute();
 
-  const stations = optionsStation(route.line);
+  const stations = optionsStation(route.lineShort);
   const toStation = stations?.[stations.length - 3];
   const fromStation = stations?.[1];
 
