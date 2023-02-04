@@ -103,6 +103,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               },
               {
                 label: `Benchmark MBTA`,
+                backgroundColor: 'rgba(0, 0, 0, 0.1)',
                 data: benchmarkField
                   ? data.map((datapoint: any) => (datapoint[benchmarkField] / 60).toFixed(2))
                   : [],
