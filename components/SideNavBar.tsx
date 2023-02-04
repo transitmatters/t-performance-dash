@@ -20,7 +20,7 @@ export const SideNavBar = () => {
   };
 
   return (
-    <div className="fixed h-full w-40 bg-design-sideBar px-4 py-4">
+    <div className="fixed h-full w-64 bg-design-sideBar px-4 py-4">
       <div className="flex flex-col text-design-sideBarHeader">
         <p className="select-none font-bold">Data</p>
         <Tab.Group vertical selectedIndex={selectedPage} onChange={selectPage}>
@@ -30,13 +30,11 @@ export const SideNavBar = () => {
                 {({ selected }) => (
                   <div
                     className={classNames(
-                      'py-1 pl-2',
-                      'ring-0',
+                      'rounded-md py-2 pl-2 text-start font-medium ring-0',
                       selected
-                        ? 'border-l-2 font-semibold text-white'
-                        : 'font-base border-l text-design-sideBarText hover:border-l-2 hover:font-semibold hover:text-white',
-                      index === 0 && 'pt-0',
-                      index === DATA_PAGES.length - 1 && 'pb-0'
+                        ? 'bg-design-rb-900 text-white'
+                        : 'font-base hover:bg-design-rb-800 text-design-sideBarText hover:text-white',
+                      index === 0 ? 'mt-0' : 'mt-1'
                     )}
                   >
                     {DATA_PAGE_NAMES[dataPage]}

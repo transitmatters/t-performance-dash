@@ -56,6 +56,8 @@ module.exports = {
           sideBarText: '#B6B6B6',
           lightGrey: '#DADADA',
           background: '#F6F6F6',
+          'rb-900': '#1C1919',
+          'rb-800': '#262525',
         },
         mbta: {
           red: '#D13434',
