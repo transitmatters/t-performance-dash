@@ -80,14 +80,16 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   isLoading,
   bothStops = false,
   location,
+  showLegend = true,
 }) => {
   const labels = data.map((item) => item[pointField]);
   return (
-    <div className={'chart'}>
-      <div className="chart-container">
+    <div className={showLegend ? 'chart' : undefined}>
+      <div className={'chart-container'}>
         <Line
           id={chartId}
           height={250}
+          redraw={true}
           data={{
             labels,
             datasets: [
@@ -211,7 +213,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
           ]}
         />
       </div>
-      <div className="chart-extras">{benchmarkField && <LegendView />}</div>
+      {showLegend && <div className="chart-extras">{benchmarkField && <LegendView />}</div>}
     </div>
   );
 };

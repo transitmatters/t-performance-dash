@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { secondsToMinutes } from 'date-fns';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
@@ -10,7 +10,9 @@ import { optionsStation, stopIdsForStations } from '../../utils/stations';
 import { useCustomQueries } from '../../api/datadashboard';
 import { useDelimitatedRoute } from '../utils/router';
 import { getCurrentDate } from '../../utils/date';
+import { Location } from '../../types/charts';
 import { LINE_OBJECTS } from '../../constants/lines';
+import Device from '../utils/Device';
 import { BasicWidgetDataLayout } from './internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from './HomescreenWidgetTitle';
 
@@ -20,8 +22,8 @@ export const TravelTimesWidget: React.FC = () => {
   const route = useDelimitatedRoute();
 
   const stations = optionsStation(route.line);
-  const toStation = stations?.[stations.length - 1];
-  const fromStation = stations?.[0];
+  const toStation = stations?.[stations.length - 3];
+  const fromStation = stations?.[1];
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 
@@ -54,6 +56,24 @@ export const TravelTimesWidget: React.FC = () => {
     }
   }, [traveltimes]);
 
+  const location: Location = useMemo(() => {
+    if (toStation === undefined || fromStation === undefined) {
+      return {
+        to: toStation?.stop_name || 'Loading...',
+        from: fromStation?.stop_name || 'Loading...',
+        direction: 'southbound',
+        line: route.linePath,
+      };
+    }
+
+    return {
+      to: toStation.stop_name,
+      from: fromStation.stop_name,
+      direction: 'southbound',
+      line: route.linePath,
+    };
+  }, [fromStation, route.linePath, toStation]);
+
   const isLoading = traveltimes.isLoading || toStation === undefined || fromStation === undefined;
 
   if (traveltimes.isError || !route.line) {
@@ -67,24 +87,24 @@ export const TravelTimesWidget: React.FC = () => {
         href={`/${LINE_OBJECTS[route.line].path}/traveltimes`}
       />
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <SingleDayLineChart
-          chartId={'traveltimes'}
-          title={'Travel Times'}
-          data={traveltimes.data || []}
-          date={startDate}
-          metricField={MetricFieldKeys.travelTimeSec}
-          pointField={PointFieldKeys.depDt}
-          benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
-          isLoading={isLoading}
-          bothStops={true}
-          location={{
-            to: toStation?.stop_name || 'Loading...',
-            from: fromStation?.stop_name || 'Loading...',
-            direction: 'southbound',
-            line: route.linePath,
-          }}
-          fname={'traveltimes'}
-        />
+        <Device>
+          {({ isMobile }) => (
+            <SingleDayLineChart
+              chartId={`traveltimes-widget-${route.line}`}
+              title={'Travel Times'}
+              data={traveltimes.data || []}
+              date={startDate}
+              metricField={MetricFieldKeys.travelTimeSec}
+              pointField={PointFieldKeys.depDt}
+              benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
+              isLoading={isLoading}
+              bothStops={true}
+              location={location}
+              fname={'traveltimes'}
+              showLegend={!isMobile}
+            />
+          )}
+        </Device>
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Travel Time"

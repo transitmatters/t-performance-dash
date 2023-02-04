@@ -31,6 +31,7 @@ export interface LineProps {
   pointField: PointField; // X value
   bothStops?: boolean;
   fname: DataName;
+  showLegend?: boolean;
 }
 
 export interface AggregateLineProps extends LineProps {

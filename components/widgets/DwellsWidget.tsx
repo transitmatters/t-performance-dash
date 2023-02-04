@@ -4,18 +4,17 @@ import classNames from 'classnames';
 import { secondsToMinutes } from 'date-fns';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../dashboard/charts/SingleDayLineChart';
-import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
+import { MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { SingleDayAPIParams } from '../../types/api';
 import { optionsStation, stopIdsForStations } from '../../utils/stations';
 import { useCustomQueries } from '../../api/datadashboard';
 import { getCurrentDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../utils/router';
 import { Location } from '../../types/charts';
-import Device from '../utils/Device';
 import { BasicWidgetDataLayout } from './internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from './HomescreenWidgetTitle';
 
-export const HeadwaysWidget: React.FC = () => {
+export const DwellsWidget: React.FC = () => {
   const startDate = getCurrentDate();
   const route = useDelimitatedRoute();
 
@@ -25,7 +24,7 @@ export const HeadwaysWidget: React.FC = () => {
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 
-  const { headways } = useCustomQueries(
+  const { dwells } = useCustomQueries(
     {
       [SingleDayAPIParams.fromStop]: fromStopIds || '',
       [SingleDayAPIParams.toStop]: toStopIds || '',
@@ -36,10 +35,10 @@ export const HeadwaysWidget: React.FC = () => {
     fromStopIds !== null && toStopIds !== null
   );
 
-  const averageHeadways = useMemo(() => {
-    if (headways && headways.data && headways.data.length >= 1) {
-      const totalSum = headways?.data
-        .map((trip) => trip.headway_time_sec)
+  const averageDwells = useMemo(() => {
+    if (dwells && dwells.data && dwells.data.length >= 1) {
+      const totalSum = dwells?.data
+        .map((trip) => trip.dwell_time_sec)
         .reduce((a, b) => {
           if (a && b) {
             return a + b;
@@ -47,22 +46,22 @@ export const HeadwaysWidget: React.FC = () => {
             return 0;
           }
         });
-      return (totalSum || 0) / headways.data.length;
+      return (totalSum || 0) / dwells.data.length;
     } else {
       return 0;
     }
-  }, [headways]);
+  }, [dwells]);
 
-  const longestHeadway = useMemo(() => {
-    if (headways && headways.data && headways.data.length >= 1) {
-      const allHeadways = headways?.data
-        .map((trip) => trip.headway_time_sec)
-        .filter((headway) => headway !== undefined) as number[];
-      return Math.max(...allHeadways);
+  const longestDwell = useMemo(() => {
+    if (dwells && dwells.data && dwells.data.length >= 1) {
+      const allDwells = dwells?.data
+        .map((trip) => trip.dwell_time_sec)
+        .filter((dwell) => dwell !== undefined) as number[];
+      return Math.max(...allDwells);
     } else {
       return 0;
     }
-  }, [headways]);
+  }, [dwells]);
 
   const location: Location = useMemo(() => {
     if (toStation === undefined || fromStation === undefined) {
@@ -82,44 +81,39 @@ export const HeadwaysWidget: React.FC = () => {
     };
   }, [fromStation, route.linePath, toStation]);
 
-  const isLoading = headways.isLoading || toStation === undefined || fromStation === undefined;
+  const isLoading = dwells.isLoading || toStation === undefined || fromStation === undefined;
 
-  if (headways.isError) {
+  if (dwells.isError) {
     return <>Uh oh... error</>;
   }
 
   return (
     <>
-      <HomescreenWidgetTitle title="Headways" href={`/${route.line}/headways`} />
+      <HomescreenWidgetTitle title="Dwells" href={`/${route.line}/dwells`} />
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <Device>
-          {({ isMobile }) => (
-            <SingleDayLineChart
-              chartId={`headways-widget-${route.line}`}
-              title={'Time between trains (headways)'}
-              data={headways.data || []}
-              date={startDate}
-              metricField={MetricFieldKeys.headWayTimeSec}
-              pointField={PointFieldKeys.currentDepDt}
-              benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
-              isLoading={isLoading}
-              location={location}
-              fname={'headways'}
-              showLegend={!isMobile}
-            />
-          )}
-        </Device>
+        <SingleDayLineChart
+          chartId={`dwells-widget-${route.line}`}
+          title={'Time spent at station (dwells)'}
+          data={dwells.data || []}
+          date={startDate}
+          metricField={MetricFieldKeys.dwellTimeSec}
+          pointField={PointFieldKeys.arrDt}
+          isLoading={isLoading}
+          location={location}
+          fname={'dwells'}
+          showLegend={false}
+        />
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
-            title="Average Headway"
-            value={secondsToMinutes(averageHeadways).toString()}
+            title="Average Dwell"
+            value={secondsToMinutes(averageDwells).toString()}
             units="min"
             analysis="+1.0 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
           <BasicWidgetDataLayout
-            title="Longest Headway"
-            value={secondsToMinutes(longestHeadway).toString()}
+            title="Longest Dwell"
+            value={secondsToMinutes(longestDwell).toString()}
             units="min"
             analysis="+1.0 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
