@@ -14,7 +14,7 @@ import { APP_DATA_BASE_PATH } from '../utils/constants';
 
 // Fetch data for all single day charts.
 export const fetchSingleDayData = (
-  name: string,
+  name: QueryNameKeys,
   options: PartialSingleDayAPIOptions
 ): Promise<SingleDayDataPoint[]> => {
   // TODO: Remove `api/` from URL. Temporary fix to work with rewrites in development
@@ -36,7 +36,7 @@ const singleDayQueryDependencies = {
 
 // Fetch data for all aggregate charts except traveltimes.
 export const fetchAggregateData = (
-  name: string,
+  name: QueryNameKeys,
   options: PartialAggregateAPIOptions
 ): Promise<AggregateDataResponse> => {
   const method = name === QueryNameKeys.traveltimes ? 'traveltimes2' : name;
@@ -73,10 +73,10 @@ const aggregateQueryDependencies = {
 
 // Overload call to specify type for single day queries
 type UseQueriesOverload = {
-  (parameters: SingleDayAPIOptions, aggregate: false): {
+  (parameters: SingleDayAPIOptions, aggregate: false, enabled: boolean): {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<SingleDayDataPoint[]>;
   };
-  (parameters: AggregateAPIOptions, aggregate: true): {
+  (parameters: AggregateAPIOptions, aggregate: true, enabled: boolean): {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<AggregateDataResponse>;
   };
 };
@@ -84,12 +84,13 @@ type UseQueriesOverload = {
 // Return type `any` because the return type is specified in the overload in `UseQueriesOverload`
 export const useCustomQueries: UseQueriesOverload = (
   parameters: SingleDayAPIOptions | AggregateAPIOptions,
-  aggregate: boolean
+  aggregate: boolean,
+  enabled = true
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any => {
   const dependencies = aggregate ? aggregateQueryDependencies : singleDayQueryDependencies;
   // Create objects with keys of query names which contains keys and parameters.
-  const queries = Object.keys(dependencies).reduce((object, queryName) => {
+  const queries = Object.keys(dependencies).reduce((object, queryName: QueryNameKeys) => {
     const keys = [queryName];
     const params = {};
     dependencies[queryName].forEach((field: AggregateAPIParams | SingleDayAPIParams) => {
@@ -104,13 +105,14 @@ export const useCustomQueries: UseQueriesOverload = (
 
   // Create multiple queries.
   const requests = useQueries({
-    queries: Object.keys(queries).map((name) => {
+    queries: Object.keys(queries).map((name: QueryNameKeys) => {
       return {
         queryKey: queries[name].keys,
         queryFn: () =>
           aggregate
             ? fetchAggregateData(name, queries[name].params)
             : fetchSingleDayData(name, queries[name].params),
+        enabled,
       };
     }),
   });
