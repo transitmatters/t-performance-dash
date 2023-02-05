@@ -1,8 +1,6 @@
 'use client';
 import React from 'react';
 import classNames from 'classnames';
-import { secondsToMinutes } from 'date-fns';
-import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../dashboard/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { SingleDayAPIParams } from '../../types/api';
@@ -54,7 +52,7 @@ export const TravelTimesWidget: React.FC = () => {
   );
 
   // TODO: If these error out, should only affect the widget, not the title.
-  const averageTravelTime = React.useMemo(() => {
+  const averageTravelTime: number = React.useMemo(() => {
     if (traveltimes && traveltimes.data) {
       const totalSum = traveltimes?.data
         ?.map((trip) => trip.travel_time_sec)
@@ -101,22 +99,20 @@ export const TravelTimesWidget: React.FC = () => {
             fname={'todo'}
           />
         </div>
-        <div className={classNames('flex w-full flex-row')}>
+        <div className={classNames('flex w-full flex-row space-x-8')}>
           <BasicWidgetDataLayout
             title="Average Travel Time"
-            value={secondsToMinutes(averageTravelTime).toString()}
-            units="min"
+            value={averageTravelTime}
+            unit={'time'}
             analysis="since last week"
-            change="+1.0"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            delta={1}
           />
           <BasicWidgetDataLayout
             title="Round Trip"
-            value={secondsToMinutes(averageTravelTime * 2).toString()} //TODO: Show real time for a round trip
-            units="min"
+            value={averageTravelTime * 2} //TODO: Show real time for a round trip
+            unit="time"
             analysis="since last week"
-            change="+2"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            delta={2}
           />
         </div>
       </div>

@@ -2,7 +2,6 @@
 import React, { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAllSlow, fetchDelayTotals } from '../../api/slowzones';
-import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { TotalSlowTime } from '../slowzones/charts/TotalSlowTime';
 import { useDelimitatedRoute } from '../utils/router';
 import { classNames } from '../utils/tailwind';
@@ -36,22 +35,20 @@ export default function SlowZonesWidget() {
         <div className={classNames('h-48 pr-4')}>
           <TotalSlowTime line={LINE_OBJECTS[route.line]?.short} data={data} />
         </div>
-        <div className={classNames('flex w-full flex-row')}>
+        <div className={classNames('flex w-full flex-row space-x-8')}>
           <BasicWidgetDataLayout
             title="Total Delay"
-            value={data && (data[data.length - 1][LINE_OBJECTS[route.line]?.short] / 60).toFixed(2)}
-            units="min"
+            value={data && data[data.length - 1][LINE_OBJECTS[route.line]?.short]}
+            unit="time"
             analysis="since last week"
-            change="+1.0"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            delta={60}
           />
           <BasicWidgetDataLayout
             title="# Slow Zones"
-            value="7"
-            units="min"
+            value={7}
+            unit="quantity"
             analysis="since last week"
-            change="+2"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            delta={-2}
           />
         </div>
       </div>

@@ -104,22 +104,20 @@ export const DwellsWidget: React.FC = () => {
           fname={'dwells'}
           showLegend={false}
         />
-        <div className={classNames('flex w-full flex-row')}>
+        <div className={classNames('flex w-full flex-row space-x-8')}>
           <BasicWidgetDataLayout
             title="Average Dwell"
-            value={secondsToMinutes(averageDwells).toString()}
-            units="min"
+            value={averageDwells}
+            unit="time"
             analysis="since last week"
-            change="+1.0"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            delta={1}
           />
           <BasicWidgetDataLayout
             title="Longest Dwell"
-            value={secondsToMinutes(longestDwell).toString()}
-            units="min"
-            analysis="+since last week"
-            change="+1.0"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            value={longestDwell}
+            unit="time"
+            analysis="since last week"
+            delta={1}
           />
         </div>
       </div>

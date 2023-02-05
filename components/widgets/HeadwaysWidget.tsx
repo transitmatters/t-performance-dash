@@ -76,14 +76,13 @@ export const HeadwaysWidget: React.FC = () => {
             fname={'todo'}
           />
         </div>
-        <div className={classNames('flex w-full flex-row')}>
+        <div className={classNames('flex w-full flex-row space-x-8')}>
           <BasicWidgetDataLayout
             title="Average Headway"
-            value={'8'}
-            units="min"
+            value={8}
+            unit="time"
             analysis="since last week"
-            change="+1.0"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            delta={1}
           />
         </div>
       </div>

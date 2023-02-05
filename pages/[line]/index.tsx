@@ -23,26 +23,20 @@ export default function Overview() {
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Median"
-          value="5:37"
+          value={345}
           analysis="from last Weds."
-          change="-0:12 "
+          delta={-12}
+          unit="time"
         />
         <BasicDataWidgetItem
           title="Median"
-          value="5:37"
+          value={345}
           analysis="from last Weds."
-          change="-0:12"
+          delta={-12}
+          unit="time"
         />
       </BasicDataWidgetPair>
-      <BasicDataWidgetPair>
-        <BasicDataWidgetItem
-          title="Today"
-          value="5:37"
-          analysis="from last Weds."
-          change="-0:12 "
-        />
-        <BasicDataWidgetItem title="Today" value="5:37" analysis="from last Weds." change="-0:12" />
-      </BasicDataWidgetPair>
+
       <TravelTimesWidget />
       <SlowZonesWidget />
       <HeadwaysWidget />
