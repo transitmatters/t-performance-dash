@@ -21,17 +21,7 @@ module.exports = {
       xl: '1280px',
       '2xl': '1536px',
     },
-    fontSize: {
-      // TODO: try using only defaults.
-      xs: '0.75rem',
-      sm: '0.875rem',
-      base: '1rem',
-      xl: '1.25rem',
-      '2xl': '1.563rem',
-      '3xl': '1.875rem',
-      '4xl': '2.5rem',
-      '5xl': '3.052rem',
-    },
+
     fontFamily: {
       display: ['Helvetica Neue', 'sans-serif'],
     },
@@ -53,6 +43,10 @@ module.exports = {
           subtitleGrey: '#808080',
           lightGrey: '#DADADA',
           background: '#F6F6F6',
+          negative: '#EF4445',
+          'rb-500': '#807D7D',
+          'rb-800': '#262525',
+          'rb-900': '#1C1919',
         },
         mbta: {
           red: '#D13434',

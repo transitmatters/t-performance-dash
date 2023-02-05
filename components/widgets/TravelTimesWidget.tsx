@@ -57,14 +57,14 @@ export const TravelTimesWidget: React.FC = () => {
   const averageTravelTime = React.useMemo(() => {
     if (traveltimes && traveltimes.data) {
       const totalSum = traveltimes?.data
-        .map((trip) => trip.travel_time_sec)
-        .reduce((a, b) => {
+        ?.map((trip) => trip.travel_time_sec)
+        ?.reduce((a, b) => {
           if (a && b) {
             return a + b;
           } else {
             return 0;
           }
-        });
+        }, 0);
       return (totalSum || 0) / traveltimes.data.length;
     } else {
       return 0;

@@ -21,12 +21,27 @@ export default function Overview() {
   return (
     <>
       <BasicDataWidgetPair>
-        <BasicDataWidgetItem title="Median" value="5:37" analysis="-0:12 from last Weds." />
-        <BasicDataWidgetItem title="Median" value="5:37" analysis="-0:12 from last Weds." />
+        <BasicDataWidgetItem
+          title="Median"
+          value="5:37"
+          analysis="from last Weds."
+          change="-0:12 "
+        />
+        <BasicDataWidgetItem
+          title="Median"
+          value="5:37"
+          analysis="from last Weds."
+          change="-0:12"
+        />
       </BasicDataWidgetPair>
       <BasicDataWidgetPair>
-        <BasicDataWidgetItem title="Today" value="5:37" analysis="-0:12 from last Weds." />
-        <BasicDataWidgetItem title="Today" value="5:37" analysis="-0:12 from last Weds." />
+        <BasicDataWidgetItem
+          title="Today"
+          value="5:37"
+          analysis="from last Weds."
+          change="-0:12 "
+        />
+        <BasicDataWidgetItem title="Today" value="5:37" analysis="from last Weds." change="-0:12" />
       </BasicDataWidgetPair>
       <TravelTimesWidget />
       <SlowZonesWidget />

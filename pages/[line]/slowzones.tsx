@@ -41,14 +41,16 @@ export default function SlowZones() {
             ).toFixed(2)
           }
           units="min"
-          analysis="+1.0 since last week"
+          analysis="since last week"
+          change="+1.0"
           icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
         />
         <BasicDataWidgetItem
           title="# Slow Zones"
           value="7"
           units="min"
-          analysis="+2 since last week"
+          analysis="since last week"
+          change="+2"
           icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
         />
       </BasicDataWidgetPair>
