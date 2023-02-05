@@ -3,6 +3,8 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import Train from '../../public/Icons/Train.svg';
 import TmLogoSvg from '../../public/tm-logo-big.svg';
+import TmIconSvg from '../../public/tm-logo-small.svg';
+
 import { SideNavigation } from './SideNavigation';
 
 export const SideNavBar = () => {
@@ -88,7 +90,7 @@ export const SideNavBar = () => {
           </div>
         </div>
         <div className="flex flex-1 flex-col md:pl-64">
-          <div className="sticky top-0 z-10 bg-gray-100 pl-1 pt-1 sm:pl-3 sm:pt-3 md:hidden">
+          <div className="sticky top-0 z-10 flex flex-row items-center justify-between bg-gray-100 pl-1 pt-1 sm:pl-3 sm:pt-3 md:hidden">
             <button
               type="button"
               className="-ml-0.5 -mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-400"
@@ -97,6 +99,7 @@ export const SideNavBar = () => {
               <span className="sr-only">Open sidebar</span>
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
+            <TmIconSvg className="w-19 mr-4 h-9" alt="TransitMatters Logo" />
           </div>
         </div>
       </div>

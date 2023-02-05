@@ -19,13 +19,13 @@ export const TravelTimesWidget: React.FC = () => {
   const startDate = getCurrentDate();
 
   const fromStation: Station = {
-    stop_name: 'Davis',
+    stop_name: 'Kendall/MIT',
     branches: ['A', 'B'],
-    station: 'place-davis',
-    order: 2,
+    station: 'place-knncl',
+    order: 6,
     stops: {
-      '0': ['70064'],
-      '1': ['70063'],
+      '0': ['70072'],
+      '1': ['70071'],
     },
   };
   const toStation: Station = {

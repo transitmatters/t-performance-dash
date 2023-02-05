@@ -31,7 +31,9 @@ export const useDelimitatedRoute = (): Route => {
 export const getLineSelectionItemHref = (metadata: LineMetadata, route: Route): string => {
   let href = `/${metadata.path}`;
   if (metadata.key !== route.line && route.datapage) {
-    href += `/${route.datapage}`;
+    if (route.datapage !== 'overview') {
+      href += `/${route.datapage}`;
+    }
   }
   return href;
 };
