@@ -21,7 +21,6 @@ module.exports = {
       xl: '1280px',
       '2xl': '1536px',
     },
-
     fontFamily: {
       display: ['Helvetica Neue', 'sans-serif'],
     },
@@ -40,7 +39,10 @@ module.exports = {
       colors: {
         design: {
           darkGrey: '#353535',
+          sideBar: '#403E3E',
           subtitleGrey: '#808080',
+          sideBarHeader: '#E0E0E0',
+          sideBarText: '#B6B6B6',
           lightGrey: '#DADADA',
           background: '#F6F6F6',
           negative: '#EF4445',

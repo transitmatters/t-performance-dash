@@ -8,11 +8,11 @@ import { classNames } from '../utils/tailwind';
 interface DataPageSelectionItemProps {
   isSelected: boolean;
   href: string;
-  dataPage: string;
+  name: string;
 }
 
 const DataPageSelectionItem: React.FC<DataPageSelectionItemProps> = ({
-  dataPage,
+  name,
   href,
   isSelected,
 }) => {
@@ -25,7 +25,7 @@ const DataPageSelectionItem: React.FC<DataPageSelectionItemProps> = ({
             isSelected ? 'font-bold' : 'font-normal'
           )}
         >
-          {DATA_PAGE_NAMES[dataPage]}
+          {name}
         </p>
       </div>
     </Link>
@@ -37,16 +37,16 @@ export const DataPageSelection: React.FC = () => {
   const selectedDataPage = page.datapage || DATA_PAGES[0];
   return (
     <div className="flex h-8 items-center gap-x-4 overflow-auto rounded-md border-black">
-      {DATA_PAGES.map((dataPageItem: string) => {
+      {Object.entries(DATA_PAGES).map(([key, dataPageItem]) => {
         let href = `/${LINE_OBJECTS[page.line]?.path}`;
-        if (dataPageItem !== DATA_PAGES[0]) {
-          href += `/${dataPageItem}`;
+        if (key !== 'overview') {
+          href += `/${key}`;
         }
         return (
           <DataPageSelectionItem
-            isSelected={selectedDataPage === dataPageItem}
-            key={dataPageItem}
-            dataPage={dataPageItem}
+            isSelected={selectedDataPage === dataPageItem.name}
+            key={dataPageItem.name}
+            name={dataPageItem.name}
             href={href}
           />
         );
