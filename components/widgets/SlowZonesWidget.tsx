@@ -41,14 +41,16 @@ export default function SlowZonesWidget() {
             title="Total Delay"
             value={data && (data[data.length - 1][LINE_OBJECTS[route.line]?.short] / 60).toFixed(2)}
             units="min"
-            analysis="+1.0 since last week"
+            analysis="since last week"
+            change="+1.0"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
           <BasicWidgetDataLayout
             title="# Slow Zones"
             value="7"
             units="min"
-            analysis="+2 since last week"
+            analysis="since last week"
+            change="+2"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
         </div>

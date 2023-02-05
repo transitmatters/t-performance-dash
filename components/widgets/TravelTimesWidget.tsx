@@ -106,14 +106,16 @@ export const TravelTimesWidget: React.FC = () => {
             title="Average Travel Time"
             value={secondsToMinutes(averageTravelTime).toString()}
             units="min"
-            analysis="+1.0 since last week"
+            analysis="since last week"
+            change="+1.0"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
           <BasicWidgetDataLayout
             title="Round Trip"
             value={secondsToMinutes(averageTravelTime * 2).toString()} //TODO: Show real time for a round trip
             units="min"
-            analysis="+2 since last week"
+            analysis="since last week"
+            change="+2"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
         </div>

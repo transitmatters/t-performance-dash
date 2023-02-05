@@ -109,14 +109,16 @@ export const DwellsWidget: React.FC = () => {
             title="Average Dwell"
             value={secondsToMinutes(averageDwells).toString()}
             units="min"
-            analysis="+1.0 since last week"
+            analysis="since last week"
+            change="+1.0"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
           <BasicWidgetDataLayout
             title="Longest Dwell"
             value={secondsToMinutes(longestDwell).toString()}
             units="min"
-            analysis="+1.0 since last week"
+            analysis="+since last week"
+            change="+1.0"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
         </div>

@@ -43,7 +43,6 @@ export default function SlowZones() {
           units="min"
           analysis="since last week"
           change="+1.0"
-          icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
         />
         <BasicDataWidgetItem
           title="# Slow Zones"
@@ -51,7 +50,6 @@ export default function SlowZones() {
           units="min"
           analysis="since last week"
           change="+2"
-          icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
         />
       </BasicDataWidgetPair>
       {}

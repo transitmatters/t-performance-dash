@@ -81,7 +81,8 @@ export const HeadwaysWidget: React.FC = () => {
             title="Average Headway"
             value={'8'}
             units="min"
-            analysis="+1.0 since last week"
+            analysis="since last week"
+            change="+1.0"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
         </div>
