@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { NavBarButtonProps } from './NavBarButton';
+import { NavBarButtonProps } from '../navigation/NavBarButton';
 
 export const MobileMenuButton: React.FC<NavBarButtonProps> = ({ value }) => {
   return (

@@ -7,7 +7,7 @@ import { LINE_OBJECTS } from '../../constants/lines';
 import { NavBarItem } from '../../constants/NavBarLinks';
 import { classNames } from '../utils/tailwind';
 import { getLineSelectionItemHref, useDelimitatedRoute } from '../utils/router';
-import { NavBarButton } from '../general/NavBarButton';
+import { NavBarButton } from '../navigation/NavBarButton';
 import { lightColors, lineSelectionButtonConfig, lineSelectionConfig } from './LineSelectorStyle';
 
 interface LineSelectorNavBarProps {

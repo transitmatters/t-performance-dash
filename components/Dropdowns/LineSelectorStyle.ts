@@ -1,9 +1,9 @@
 export const lineSelectionConfig = {
-  RL: `bg-mbta-red border-mbta-red`,
-  OL: `bg-mbta-orange border-mbta-orange`,
-  GL: `bg-mbta-green border-mbta-green`,
-  BL: `bg-mbta-blue border-mbta-blue`,
-  BUS: `bg-mbta-bus border-mbta-bus`,
+  RL: `hover:bg-mbta-red border-mbta-red `,
+  OL: `hover:bg-mbta-orange border-mbta-orange`,
+  GL: `hover:bg-mbta-green border-mbta-green`,
+  BL: `hover:bg-mbta-blue border-mbta-blue`,
+  BUS: `hover:bg-mbta-bus border-mbta-bus`,
 };
 
 export const lightColors = {
