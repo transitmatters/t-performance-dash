@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "LABS cert arn: $TM_LABS_WILDCARD_CERT_ARN"
 
 set -e
 
@@ -6,6 +7,7 @@ export AWS_PROFILE=transitmatters
 export AWS_REGION=us-east-1
 export AWS_DEFAULT_REGION=us-east-1
 export AWS_PAGER=""
+echo "LABS cert arn: $TM_LABS_WILDCARD_CERT_ARN"
 
 PRODUCTION=false
 CI=false
@@ -69,6 +71,9 @@ echo "Starting $CHALICE_STAGE deployment"
 echo "Backend bucket: $BACKEND_BUCKET"
 echo "Hostname: $FRONTEND_HOSTNAME"
 echo "CloudFormation stack name: $CF_STACK_NAME"
+echo "frontend cert arn: $FRONTEND_CERT_ARN"
+echo "backend cert arn: $BACKEND_CERT_ARN"
+echo "LABS cert arn: $TM_LABS_WILDCARD_CERT_ARN"
 
 # build frontend and patch in commit id
 npm run build-v4

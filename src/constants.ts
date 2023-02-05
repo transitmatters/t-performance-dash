@@ -7,6 +7,7 @@ export const PRODUCTION = 'dashboard.transitmatters.org';
 const FRONTEND_TO_BACKEND_MAP = new Map([
   [PRODUCTION, 'https://dashboard-api2.transitmatters.org'],
   ['dashboard-beta.transitmatters.org', 'https://dashboard-api-beta.transitmatters.org'],
+  ['dashboard-v4-beta.labs.transitmatters.org', 'https://dashboard-v4-api-beta.labs.transitmatters.org'],
 ]);
 
 // Fetch the absolute location of the API to load from; fallback to "" which
