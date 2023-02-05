@@ -90,7 +90,7 @@ export const SideNavigation = ({ items, setSidebarOpen }: SideNavigationProps) =
                           className={() =>
                             classNames(
                               `group flex w-full items-center rounded-md py-2 pl-10 pr-2 text-sm font-medium ${
-                                linePath !== item.name && 'hover:bg-gray-800'
+                                linePath !== item.name && 'hover:bg-design-rb-800'
                               }  cursor-pointer hover:text-white `
                             )
                           }
