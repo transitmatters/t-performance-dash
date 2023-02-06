@@ -16,7 +16,7 @@ import { SingleDayAPIParams } from '../../common/types/api';
 
 export const DwellsWidget: React.FC = () => {
   const startDate = getCurrentDate();
-  const { linePath, line, lineShort } = useDelimitatedRoute();
+  const { linePath, lineShort } = useDelimitatedRoute();
 
   const stations = optionsStation(lineShort);
   const toStation = stations?.[stations.length - 3];
@@ -92,7 +92,7 @@ export const DwellsWidget: React.FC = () => {
       <HomescreenWidgetTitle title="Dwells" href={`/${linePath}/dwells`} />
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <SingleDayLineChart
-          chartId={`dwells-widget-${line}`}
+          chartId={`dwells-widget-${linePath}`}
           title={'Time spent at station (dwells)'}
           data={dwells.data ?? []}
           date={startDate}
