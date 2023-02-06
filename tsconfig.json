@@ -24,6 +24,6 @@
       }
     ]
   },
-  "include": ["next-env.d.ts", "react-app-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", ".next/types/**/*.ts", "common", "modules", "pages", "public"],
   "exclude": ["node_modules", "src/**/*.ts", "src/**/*.tsx"]
 }
