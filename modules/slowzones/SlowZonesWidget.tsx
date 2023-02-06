@@ -11,7 +11,7 @@ import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 
 export default function SlowZonesWidget() {
-  const { line, linePath, datapage } = useDelimitatedRoute();
+  const { line, linePath } = useDelimitatedRoute();
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
   const allSlow = useQuery(['allSlow'], fetchAllSlow);
 

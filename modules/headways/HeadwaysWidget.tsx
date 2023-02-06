@@ -38,24 +38,6 @@ export const HeadwaysWidget: React.FC = () => {
     },
   };
 
-  const location: Location = useMemo(() => {
-    if (toStation === undefined || fromStation === undefined) {
-      return {
-        to: toStation?.stop_name || 'Loading...',
-        from: fromStation?.stop_name || 'Loading...',
-        direction: 'southbound',
-        line: route.linePath,
-      };
-    }
-
-    return {
-      to: toStation.stop_name,
-      from: fromStation.stop_name,
-      direction: 'southbound',
-      line: route.linePath,
-    };
-  }, [fromStation, route.linePath, toStation]);
-
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 
   const { headways } = useCustomQueries(
@@ -90,7 +72,7 @@ export const HeadwaysWidget: React.FC = () => {
             pointField={PointFieldKeys.currentDepDt}
             benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
             isLoading={headways.isLoading}
-            location={location}
+            location={'todo'}
             fname={'headways'}
           />
         </div>
