@@ -82,8 +82,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   location,
   showLegend = true,
 }) => {
-  console.log(data);
-
   const labels = data.map((item) => item[pointField]);
   return (
     <div className={showLegend ? 'chart' : undefined}>
