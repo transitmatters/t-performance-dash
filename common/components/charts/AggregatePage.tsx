@@ -3,7 +3,7 @@ import { useCustomQueries } from '../../api/datadashboard';
 
 import { PointFieldKeys } from '../../../src/charts/types';
 import { AggregateAPIParams } from '../../types/api';
-import { Station } from '../../types/stations';
+import type { Station } from '../../types/stations';
 import { CHART_COLORS } from '../../../utils/constants';
 import { stopIdsForStations } from '../../../utils/stations';
 import { AggregateLineChart } from './AggregateLineChart';

@@ -14,8 +14,8 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React from 'react';
-import { AggregateLineProps } from '../../types/lines';
-import { AggregateDataPoint } from '../../../src/charts/types';
+import type { AggregateLineProps } from '../../types/lines';
+import type { AggregateDataPoint } from '../../../src/charts/types';
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../../utils/constants';
 import { LegendLongTerm } from './Legend';

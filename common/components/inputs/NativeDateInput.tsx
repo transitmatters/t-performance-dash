@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
-import { DateOption } from '../../types/inputs';
+import type { DateOption } from '../../types/inputs';
 import { formatDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../utils/router';
 import { buttonHighlightConfig } from './styles/inputStyle';

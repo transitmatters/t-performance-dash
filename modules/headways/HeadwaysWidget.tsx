@@ -7,7 +7,7 @@ import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/c
 import { SingleDayAPIParams } from '../../common/types/api';
 import { stopIdsForStations } from '../../utils/stations';
 import { useCustomQueries } from '../../common/api/datadashboard';
-import { Station } from '../../common/types/stations';
+import type { Station } from '../../common/types/stations';
 import { getCurrentDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
@@ -73,7 +73,7 @@ export const HeadwaysWidget: React.FC = () => {
             benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
             isLoading={headways.isLoading}
             location={'todo'}
-            fname={'todo'}
+            fname={'headways'}
           />
         </div>
         <div className={classNames('flex w-full flex-row')}>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
-import { DateValueType } from 'react-tailwindcss-datepicker/dist/types';
+import type { DateValueType } from 'react-tailwindcss-datepicker/dist/types';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { getCurrentDate } from '../../utils/date';
 import { Button } from '../../common/components/inputs/Button';

@@ -1,6 +1,8 @@
 import { usePathname } from 'next/navigation';
-import Link, { LinkProps } from 'next/link';
-import React, { useState, useEffect, ReactElement, Children } from 'react';
+import type { LinkProps } from 'next/link';
+import Link from 'next/link';
+import type { ReactElement } from 'react';
+import React, { useState, useEffect, Children } from 'react';
 
 type ActiveLinkProps = LinkProps & {
   children: ReactElement;

@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import classNames from 'classnames';
-import { SelectOption } from '../../types/inputs';
+import type { SelectOption } from '../../types/inputs';
 import { buttonConfig, formConfig, otherConfig } from './styles/tailwind';
 
 interface SelectProps {

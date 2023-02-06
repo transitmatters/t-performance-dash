@@ -1,6 +1,6 @@
 import React from 'react';
-import { DateOption } from '../../types/inputs';
-import { Station } from '../../types/stations';
+import type { DateOption } from '../../types/inputs';
+import type { Station } from '../../types/stations';
 import { AggregatePage } from './AggregatePage';
 import { SingleDayPage } from './SingleDayPage';
 

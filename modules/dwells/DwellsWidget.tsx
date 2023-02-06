@@ -10,7 +10,7 @@ import { optionsStation, stopIdsForStations } from '../../utils/stations';
 import { useCustomQueries } from '../../common/api/datadashboard';
 import { getCurrentDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { Location } from '../../common/types/charts';
+import type { Location } from '../../common/types/charts';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { SingleDayAPIParams } from '../../common/types/api';

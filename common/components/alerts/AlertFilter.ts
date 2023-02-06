@@ -1,4 +1,4 @@
-import { Alert } from '../../types/alerts';
+import type { Alert } from '../../types/alerts';
 
 const known = [
   /[Uu]p to ([0-9]+) min/, // "Up to 15 minutes"

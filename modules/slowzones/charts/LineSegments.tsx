@@ -14,7 +14,7 @@ import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { COLORS } from '../../../common/constants/colors';
-import { SlowZoneResponse } from '../../../common/types/dataPoints';
+import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 import { formatSlowZones, getRoutes } from '../../../utils/slowZoneUtils';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, TimeScale);
 

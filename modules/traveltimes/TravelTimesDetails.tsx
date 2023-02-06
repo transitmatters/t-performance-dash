@@ -5,7 +5,7 @@ import { useCustomQueries } from '../../common/api/datadashboard';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { SingleDayAPIParams } from '../../common/types/api';
-import { Station } from '../../common/types/stations';
+import type { Station } from '../../common/types/stations';
 import { stopIdsForStations } from '../../utils/stations';
 
 export default function TravelTimesDetails() {
@@ -66,7 +66,7 @@ export default function TravelTimesDetails() {
           isLoading={traveltimes.isLoading}
           bothStops={true}
           location={'todo'}
-          fname={'todo'}
+          fname={'traveltimes'}
         />
       </div>
     </>

@@ -3,7 +3,7 @@ import React from 'react';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../../src/charts/types';
 import { stopIdsForStations } from '../../../utils/stations';
 import { useCustomQueries } from '../../api/datadashboard';
-import { Station } from '../../types/stations';
+import type { Station } from '../../types/stations';
 import { SingleDayAPIParams } from '../../types/api';
 import { SingleDayLineChart } from './SingleDayLineChart';
 

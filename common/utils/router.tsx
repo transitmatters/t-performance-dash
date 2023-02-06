@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
-import { DataPage } from '../constants/datapages';
-import { Line, LineMetadata, LinePath } from '../constants/lines';
+import type { DataPage } from '../types/dataPages';
+import type { Line, LineMetadata, LinePath } from '../types/lines';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'RL',
