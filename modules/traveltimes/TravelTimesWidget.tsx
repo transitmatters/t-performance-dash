@@ -14,6 +14,7 @@ import type { Location } from '../../common/types/charts';
 import Device from '../../common/components/general/Device/Device';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
+import { averageTravelTime } from '../../common/utils/traveltimes';
 
 export const TravelTimesWidget: React.FC = () => {
   const startDate = getCurrentDate();
@@ -35,24 +36,6 @@ export const TravelTimesWidget: React.FC = () => {
     false,
     fromStopIds !== null && toStopIds !== null
   );
-
-  // TODO: If these error out, should only affect the widget, not the title.
-  const averageTravelTime = React.useMemo(() => {
-    if (traveltimes && traveltimes.data && traveltimes.data.length >= 1) {
-      const totalSum = traveltimes?.data
-        .map((trip) => trip.travel_time_sec)
-        .reduce((a, b) => {
-          if (a && b) {
-            return a + b;
-          } else {
-            return 0;
-          }
-        });
-      return (totalSum || 0) / traveltimes.data.length;
-    } else {
-      return 0;
-    }
-  }, [traveltimes]);
 
   const location: Location = useMemo(() => {
     if (toStation === undefined || fromStation === undefined) {
@@ -103,14 +86,22 @@ export const TravelTimesWidget: React.FC = () => {
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Travel Time"
-            value={secondsToMinutes(averageTravelTime).toString()}
+            value={
+              traveltimes.data
+                ? secondsToMinutes(averageTravelTime(traveltimes.data)).toString()
+                : 'Loading...'
+            }
             units="min"
             analysis="+1.0 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
           <BasicWidgetDataLayout
             title="Round Trip"
-            value={secondsToMinutes(averageTravelTime * 2).toString()} //TODO: Show real time for a round trip
+            value={
+              traveltimes.data
+                ? secondsToMinutes(averageTravelTime(traveltimes.data) * 2).toString()
+                : 'Loading...'
+            } //TODO: Show real time for a round trip
             units="min"
             analysis="+2 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}

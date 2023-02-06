@@ -13,6 +13,7 @@ import type { Location } from '../../common/types/charts';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { SingleDayAPIParams } from '../../common/types/api';
+import { averageDwells, longestDwells } from '../../common/utils/dwells';
 
 export const DwellsWidget: React.FC = () => {
   const startDate = getCurrentDate();
@@ -34,34 +35,6 @@ export const DwellsWidget: React.FC = () => {
     false,
     fromStopIds !== null && toStopIds !== null
   );
-
-  const averageDwells = useMemo(() => {
-    if (dwells && dwells.data && dwells.data.length >= 1) {
-      const totalSum = dwells?.data
-        .map((trip) => trip.dwell_time_sec)
-        .reduce((a, b) => {
-          if (a && b) {
-            return a + b;
-          } else {
-            return 0;
-          }
-        });
-      return (totalSum || 0) / dwells.data.length;
-    } else {
-      return 0;
-    }
-  }, [dwells]);
-
-  const longestDwell = useMemo(() => {
-    if (dwells && dwells.data && dwells.data.length >= 1) {
-      const allDwells = dwells?.data
-        .map((trip) => trip.dwell_time_sec)
-        .filter((dwell) => dwell !== undefined) as number[];
-      return Math.max(...allDwells);
-    } else {
-      return 0;
-    }
-  }, [dwells]);
 
   const location: Location = useMemo(() => {
     if (toStation === undefined || fromStation === undefined) {
@@ -106,14 +79,18 @@ export const DwellsWidget: React.FC = () => {
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Dwell"
-            value={secondsToMinutes(averageDwells).toString()}
+            value={
+              dwells.data ? secondsToMinutes(averageDwells(dwells.data)).toString() : 'Loading...'
+            }
             units="min"
             analysis="+1.0 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
           <BasicWidgetDataLayout
             title="Longest Dwell"
-            value={secondsToMinutes(longestDwell).toString()}
+            value={
+              dwells.data ? secondsToMinutes(longestDwells(dwells.data)).toString() : 'Loading...'
+            }
             units="min"
             analysis="+1.0 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}

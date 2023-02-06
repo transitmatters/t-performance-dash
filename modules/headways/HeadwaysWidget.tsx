@@ -9,6 +9,7 @@ import { SingleDayAPIParams } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useCustomQueries } from '../../common/api/datadashboard';
 import { getCurrentDate } from '../../common/utils/date';
+import { averageHeadway, longestHeadway } from '../../common/utils/headways';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import type { Location } from '../../common/types/charts';
 import Device from '../../common/components/general/Device/Device';
@@ -35,34 +36,6 @@ export const HeadwaysWidget: React.FC = () => {
     false,
     fromStopIds !== null && toStopIds !== null
   );
-
-  const averageHeadways = useMemo(() => {
-    if (headways && headways.data && headways.data.length >= 1) {
-      const totalSum = headways?.data
-        .map((trip) => trip.headway_time_sec)
-        .reduce((a, b) => {
-          if (a && b) {
-            return a + b;
-          } else {
-            return 0;
-          }
-        });
-      return (totalSum || 0) / headways.data.length;
-    } else {
-      return 0;
-    }
-  }, [headways]);
-
-  const longestHeadway = useMemo(() => {
-    if (headways && headways.data && headways.data.length >= 1) {
-      const allHeadways = headways?.data
-        .map((trip) => trip.headway_time_sec)
-        .filter((headway) => headway !== undefined) as number[];
-      return Math.max(...allHeadways);
-    } else {
-      return 0;
-    }
-  }, [headways]);
 
   const location: Location = useMemo(() => {
     if (toStation === undefined || fromStation === undefined) {
@@ -112,14 +85,22 @@ export const HeadwaysWidget: React.FC = () => {
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Headway"
-            value={secondsToMinutes(averageHeadways).toString()}
+            value={
+              headways.data
+                ? secondsToMinutes(averageHeadway(headways.data)).toString()
+                : 'Loading...'
+            }
             units="min"
             analysis="+1.0 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
           <BasicWidgetDataLayout
             title="Longest Headway"
-            value={secondsToMinutes(longestHeadway).toString()}
+            value={
+              headways.data
+                ? secondsToMinutes(longestHeadway(headways.data)).toString()
+                : 'Loading...'
+            }
             units="min"
             analysis="+1.0 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
