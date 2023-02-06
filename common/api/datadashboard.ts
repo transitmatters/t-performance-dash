@@ -71,10 +71,10 @@ const aggregateQueryDependencies = {
 
 // Overload call to specify type for single day queries
 type UseQueriesOverload = {
-  (parameters: SingleDayAPIOptions, aggregate: false, enabled: boolean): {
+  (parameters: SingleDayAPIOptions, aggregate: false, enabled?: boolean): {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<SingleDayDataPoint[]>;
   };
-  (parameters: AggregateAPIOptions, aggregate: true, enabled: boolean): {
+  (parameters: AggregateAPIOptions, aggregate: true, enabled?: boolean): {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<AggregateDataResponse>;
   };
 };

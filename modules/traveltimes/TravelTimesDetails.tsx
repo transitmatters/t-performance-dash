@@ -36,9 +36,9 @@ export default function TravelTimesDetails() {
 
   const { traveltimes } = useCustomQueries(
     {
-      [SingleDayAPIParams.fromStop]: fromStopIds,
-      [SingleDayAPIParams.toStop]: toStopIds,
-      [SingleDayAPIParams.stop]: fromStopIds,
+      [SingleDayAPIParams.fromStop]: fromStopIds || '',
+      [SingleDayAPIParams.toStop]: toStopIds || '',
+      [SingleDayAPIParams.stop]: fromStopIds || '',
       [SingleDayAPIParams.date]: startDate,
     },
     false

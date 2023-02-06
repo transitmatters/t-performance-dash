@@ -1,6 +1,7 @@
+import { capitalize } from 'lodash';
 import { useRouter } from 'next/router';
 import type { DataPage } from '../types/dataPages';
-import type { Line, LineMetadata, LinePath } from '../types/lines';
+import type { Line, LineMetadata, LinePath, LineShort } from '../types/lines';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'RL',
@@ -12,6 +13,7 @@ const linePathToKeyMap: Record<string, Line> = {
 export type Route = {
   line: Line;
   linePath: LinePath;
+  lineShort: LineShort;
   datapage: DataPage;
 };
 
@@ -23,6 +25,7 @@ export const useDelimitatedRoute = (): Route => {
   return {
     line: linePathToKeyMap[pathItems[1]] as Line,
     linePath: pathItems[1] as LinePath,
+    lineShort: capitalize(pathItems[1]) as LineShort,
     datapage: (pathItems[2] as DataPage) || 'overview',
   };
 };
