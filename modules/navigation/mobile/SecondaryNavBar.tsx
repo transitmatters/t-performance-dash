@@ -6,7 +6,7 @@ import Device from '../../../common/components/general/Device/Device';
 import { Button } from '../../../common/components/inputs/Button';
 import { NativeDateInput } from '../../../common/components/inputs/NativeDateInput';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { getCurrentDate } from '../../../utils/date';
+import { getCurrentDate } from '../../../common/utils/date';
 
 const visualizationOptions = [
   { name: 'Map', id: 1 },
