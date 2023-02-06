@@ -17,9 +17,9 @@ import { SingleDayAPIParams } from '../../common/types/api';
 
 export const DwellsWidget: React.FC = () => {
   const startDate = getCurrentDate();
-  const route = useDelimitatedRoute();
+  const { linePath, line, lineShort } = useDelimitatedRoute();
 
-  const stations = optionsStation(route.lineShort);
+  const stations = optionsStation(lineShort);
   const toStation = stations?.[stations.length - 3];
   const fromStation = stations?.[1];
 
@@ -70,7 +70,7 @@ export const DwellsWidget: React.FC = () => {
         to: toStation?.stop_name || 'Loading...',
         from: fromStation?.stop_name || 'Loading...',
         direction: 'southbound',
-        line: route.linePath,
+        line: linePath,
       };
     }
 
@@ -78,9 +78,9 @@ export const DwellsWidget: React.FC = () => {
       to: toStation.stop_name,
       from: fromStation.stop_name,
       direction: 'southbound',
-      line: route.linePath,
+      line: linePath,
     };
-  }, [fromStation, route.linePath, toStation]);
+  }, [fromStation, linePath, toStation]);
 
   const isLoading = dwells.isLoading || toStation === undefined || fromStation === undefined;
 
@@ -90,10 +90,10 @@ export const DwellsWidget: React.FC = () => {
 
   return (
     <>
-      <HomescreenWidgetTitle title="Dwells" href={`/${route.line}/dwells`} />
+      <HomescreenWidgetTitle title="Dwells" href={`/${linePath}/dwells`} />
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <SingleDayLineChart
-          chartId={`dwells-widget-${route.line}`}
+          chartId={`dwells-widget-${line}`}
           title={'Time spent at station (dwells)'}
           data={dwells.data || []}
           date={startDate}

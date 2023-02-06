@@ -15,16 +15,16 @@ import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 
 export const HeadwaysWidget: React.FC = () => {
   const startDate = getCurrentDate();
-  const route = useDelimitatedRoute();
+  const { linePath } = useDelimitatedRoute();
 
   const fromStation: Station = {
-    stop_name: 'Davis',
+    stop_name: 'Kendall/MIT',
     branches: ['A', 'B'],
-    station: 'place-davis',
-    order: 2,
+    station: 'place-knncl',
+    order: 6,
     stops: {
-      '0': ['70064'],
-      '1': ['70063'],
+      '0': ['70072'],
+      '1': ['70071'],
     },
   };
   const toStation: Station = {
@@ -60,7 +60,7 @@ export const HeadwaysWidget: React.FC = () => {
 
   return (
     <>
-      <HomescreenWidgetTitle title="Headways" href={`/${route.line}/headways`} />
+      <HomescreenWidgetTitle title="Headways" href={`/${linePath}/headways`} />
       <div className={classNames('bg-white p-2 shadow-dataBox')}>
         <div className={'charts main-column'}>
           <SingleDayLineChart
