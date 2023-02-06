@@ -8,7 +8,6 @@ import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/c
 import { SingleDayAPIParams } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useCustomQueries } from '../../common/api/datadashboard';
-import type { Station } from '../../common/types/stations';
 import { getCurrentDate } from '../../common/utils/date';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import type { Location } from '../../common/types/charts';

@@ -11,7 +11,6 @@ import { useCustomQueries } from '../../common/api/datadashboard';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getCurrentDate } from '../../common/utils/date';
 import type { Location } from '../../common/types/charts';
-import { LINE_OBJECTS } from '../../common/constants/lines';
 import Device from '../../common/components/general/Device/Device';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
@@ -81,10 +80,7 @@ export const TravelTimesWidget: React.FC = () => {
 
   return (
     <>
-      <HomescreenWidgetTitle
-        title="Travel Times"
-        href={`/${LINE_OBJECTS[linePath].path}/traveltimes`}
-      />
+      <HomescreenWidgetTitle title="Travel Times" href={`/${linePath}/traveltimes`} />
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <Device>
           {({ isMobile }) => (
