@@ -8,6 +8,7 @@ import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/c
 import { SingleDayAPIParams } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useCustomQueries } from '../../common/api/datadashboard';
+import type { Station } from '../../common/types/stations';
 import { getCurrentDate } from '../../common/utils/date';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import type { Location } from '../../common/types/charts';
@@ -17,9 +18,9 @@ import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/
 
 export const HeadwaysWidget: React.FC = () => {
   const startDate = getCurrentDate();
-  const route = useDelimitatedRoute();
+  const { linePath, lineShort } = useDelimitatedRoute();
 
-  const stations = optionsStation(route.lineShort);
+  const stations = optionsStation(lineShort);
   const toStation = stations?.[stations.length - 3];
   const fromStation = stations?.[3];
 
@@ -70,7 +71,7 @@ export const HeadwaysWidget: React.FC = () => {
         to: toStation?.stop_name || 'Loading...',
         from: fromStation?.stop_name || 'Loading...',
         direction: 'southbound',
-        line: route.lineShort,
+        line: lineShort,
       };
     }
 
@@ -78,9 +79,9 @@ export const HeadwaysWidget: React.FC = () => {
       to: toStation.stop_name,
       from: fromStation.stop_name,
       direction: 'southbound',
-      line: route.lineShort,
+      line: lineShort,
     };
-  }, [fromStation, route, toStation]);
+  }, [fromStation, lineShort, toStation]);
 
   const isLoading = headways.isLoading || toStation === undefined || fromStation === undefined;
 
@@ -90,12 +91,12 @@ export const HeadwaysWidget: React.FC = () => {
 
   return (
     <>
-      <HomescreenWidgetTitle title="Headways" href={`/${route.line}/headways`} />
+      <HomescreenWidgetTitle title="Headways" href={`/${linePath}/headways`} />
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <Device>
           {({ isMobile }) => (
             <SingleDayLineChart
-              chartId={`headways-widget-${route.line}`}
+              chartId={`headways-widget-${linePath}`}
               title={'Time between trains (headways)'}
               data={headways.data ?? []}
               date={startDate}

@@ -18,9 +18,9 @@ import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/
 
 export const TravelTimesWidget: React.FC = () => {
   const startDate = getCurrentDate();
-  const route = useDelimitatedRoute();
+  const { linePath, lineShort } = useDelimitatedRoute();
 
-  const stations = optionsStation(route.lineShort);
+  const stations = optionsStation(lineShort);
   const toStation = stations?.[stations.length - 3];
   const fromStation = stations?.[3];
 
@@ -61,7 +61,7 @@ export const TravelTimesWidget: React.FC = () => {
         to: toStation?.stop_name || 'Loading...',
         from: fromStation?.stop_name || 'Loading...',
         direction: 'southbound',
-        line: route.lineShort,
+        line: lineShort,
       };
     }
 
@@ -69,13 +69,13 @@ export const TravelTimesWidget: React.FC = () => {
       to: toStation.stop_name,
       from: fromStation.stop_name,
       direction: 'southbound',
-      line: route.lineShort,
+      line: lineShort,
     };
-  }, [fromStation, route, toStation]);
+  }, [fromStation, lineShort, toStation]);
 
   const isLoading = traveltimes.isLoading || toStation === undefined || fromStation === undefined;
 
-  if (traveltimes.isError || !route.line) {
+  if (traveltimes.isError || !linePath) {
     return <>Uh oh... error</>;
   }
 
@@ -83,13 +83,13 @@ export const TravelTimesWidget: React.FC = () => {
     <>
       <HomescreenWidgetTitle
         title="Travel Times"
-        href={`/${LINE_OBJECTS[route.line].path}/traveltimes`}
+        href={`/${LINE_OBJECTS[linePath].path}/traveltimes`}
       />
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <Device>
           {({ isMobile }) => (
             <SingleDayLineChart
-              chartId={`traveltimes-widget-${route.line}`}
+              chartId={`traveltimes-widget-${linePath}`}
               title={'Travel Times'}
               data={traveltimes.data ?? []}
               date={startDate}

@@ -17,7 +17,7 @@ import React from 'react';
 import type { AggregateLineProps } from '../../types/lines';
 import type { AggregateDataPoint } from '../../../src/charts/types';
 import { prettyDate } from '../../utils/date';
-import { CHART_COLORS } from '../../../common/utils/constants';
+import { CHART_COLORS } from '../../../common/constants/colors';
 import { LegendLongTerm } from './Legend';
 import { drawTitle } from './Title';
 

@@ -1,6 +1,6 @@
-import type { SelectOption } from '../types/inputs';
-import type { LineShort } from '../types/lines';
-import type { Station } from '../types/stations';
+import type { SelectOption } from '../../common/types/inputs';
+import type { LineShort } from '../../common/types/lines';
+import type { Station } from '../../common/types/stations';
 import { rtStations } from './../constants/stations';
 
 export const optionsForField = (
