@@ -1,6 +1,5 @@
 import type { Direction, SlowZone, SlowZoneResponse } from '../types/dataPoints';
 import type { Station } from '../types/stations';
-import { shortToLine } from './lines';
 import { lookup_station_by_id } from './stations';
 
 const getDirection = (to: Station, from: Station) => {
