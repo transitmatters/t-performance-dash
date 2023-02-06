@@ -1,3 +1,5 @@
+import type { LineShort } from './lines';
+
 export interface DataPoint {
   route_id: string;
   direction: number;
@@ -62,7 +64,7 @@ export type SlowZoneResponse = {
   duration: number;
   baseline: number;
   delay: number;
-  color: string;
+  color: Exclude<LineShort, 'Bus'>;
   fr_id: string;
   to_id: string;
 };

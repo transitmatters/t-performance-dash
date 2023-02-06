@@ -8,7 +8,7 @@ import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/c
 import { SingleDayAPIParams } from '../../common/types/api';
 import { stopIdsForStations } from '../../utils/stations';
 import { useCustomQueries } from '../../common/api/datadashboard';
-import { Station } from '../../common/types/stations';
+import type { Station } from '../../common/types/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getCurrentDate } from '../../utils/date';
 import { LINE_OBJECTS } from '../../common/constants/lines';
@@ -45,9 +45,9 @@ export const TravelTimesWidget: React.FC = () => {
 
   const { traveltimes } = useCustomQueries(
     {
-      [SingleDayAPIParams.fromStop]: fromStopIds,
-      [SingleDayAPIParams.toStop]: toStopIds,
-      [SingleDayAPIParams.stop]: fromStopIds,
+      [SingleDayAPIParams.fromStop]: fromStopIds || '',
+      [SingleDayAPIParams.toStop]: toStopIds || '',
+      [SingleDayAPIParams.stop]: fromStopIds || '',
       [SingleDayAPIParams.date]: startDate,
     },
     false
@@ -98,7 +98,7 @@ export const TravelTimesWidget: React.FC = () => {
             isLoading={traveltimes.isLoading}
             bothStops={true}
             location={'todo'}
-            fname={'todo'}
+            fname={'traveltimes'}
           />
         </div>
         <div className={classNames('flex w-full flex-row')}>

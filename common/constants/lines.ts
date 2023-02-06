@@ -1,15 +1,5 @@
+import type { LineObject } from '../types/lines';
 import { COLORS } from './colors';
-
-export type Line = 'RL' | 'OL' | 'GL' | 'BL' | 'BUS';
-export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus';
-export type LineMetadata = {
-  name: string;
-  color: string;
-  short: string;
-  path: LinePath;
-  key: Line;
-};
-export type LineObject = Record<Line, LineMetadata>;
 
 export const LINE_OBJECTS: LineObject = {
   RL: {

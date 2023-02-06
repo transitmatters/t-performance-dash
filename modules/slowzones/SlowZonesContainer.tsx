@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DayDelayTotals, SlowZoneResponse } from '../../common/types/dataPoints';
+import type { DayDelayTotals, SlowZoneResponse } from '../../common/types/dataPoints';
 import { LineSegments } from './charts/LineSegments';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 

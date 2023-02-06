@@ -1,21 +1,36 @@
-import { TimeUnit } from 'chart.js';
-import React from 'react';
-import {
+import type { TimeUnit } from 'chart.js';
+import type React from 'react';
+import type {
   AggregateDataPoint,
   BenchmarkField,
   MetricField,
   PointField,
   SingleDayDataPoint,
+  Location,
 } from './charts';
+
+export type Line = 'RL' | 'OL' | 'GL' | 'BL' | 'BUS';
+export type LineShort = 'Red' | 'Orange' | 'Green' | 'Blue' | 'Bus';
+export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus';
+export type LineMetadata = {
+  name: string;
+  color: string;
+  short: LineShort;
+  path: LinePath;
+  key: Line;
+};
+export type LineObject = { [key in Line]: LineMetadata };
+
+type DataName = 'traveltimes' | 'headways' | 'dwells' | 'traveltimesByHour';
 
 export interface LineProps {
   title: string;
   chartId: string;
-  location: any;
+  location: Location;
   isLoading: any;
   pointField: PointField; // X value
   bothStops?: boolean;
-  fname: any;
+  fname: DataName;
   showLegend: boolean;
 }
 
@@ -24,7 +39,7 @@ export interface AggregateLineProps extends LineProps {
   data: AggregateDataPoint[];
   timeFormat: string;
   seriesName: string;
-  fillColor: any;
+  fillColor: string;
   startDate: string;
   endDate: string;
   suggestedYMin?: number;

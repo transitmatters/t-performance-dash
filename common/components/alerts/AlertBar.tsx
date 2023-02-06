@@ -1,7 +1,8 @@
-import React, { ReactElement } from 'react';
+import type { ReactElement } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import Tippy from '@tippyjs/react';
-import { Alert } from '../../types/alerts';
+import type { Alert } from '../../types/alerts';
 import { LegendAlerts } from './LegendAlerts';
 import { findMatch } from './AlertFilter';
 import 'tippy.js/dist/tippy.css'; // optional

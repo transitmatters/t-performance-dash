@@ -5,7 +5,7 @@ import { enUS } from 'date-fns/locale';
 import { Line } from 'react-chartjs-2';
 import { LINE_COLORS } from '../../../utils/constants';
 
-import { DayDelayTotals } from '../../../common/types/dataPoints';
+import type { DayDelayTotals } from '../../../common/types/dataPoints';
 
 interface TotalSlowTimeProps {
   line: string;

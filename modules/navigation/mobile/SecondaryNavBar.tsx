@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
-import { DateValueType } from 'react-tailwindcss-datepicker/dist/types';
+import type { DateValueType } from 'react-tailwindcss-datepicker/dist/types';
 import { Dropdown } from '../../../common/components/dropdowns/Dropdown';
 import Device from '../../../common/components/general/Device/Device';
 import { Button } from '../../../common/components/inputs/Button';

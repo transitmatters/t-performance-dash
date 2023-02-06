@@ -1,15 +1,13 @@
-import * as ReactQuery from '@tanstack/react-query';
+import type * as ReactQuery from '@tanstack/react-query';
 import { useQueries } from '@tanstack/react-query';
-import { AggregateDataResponse, SingleDayDataPoint } from '../../src/charts/types';
-import {
-  AggregateAPIParams,
+import type { AggregateDataResponse, SingleDayDataPoint } from '../../src/charts/types';
+import type {
   AggregateAPIOptions,
   PartialAggregateAPIOptions,
   PartialSingleDayAPIOptions,
-  QueryNameKeys,
-  SingleDayAPIParams,
   SingleDayAPIOptions,
 } from '../types/api';
+import { AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../types/api';
 import { APP_DATA_BASE_PATH } from '../../utils/constants';
 
 // Fetch data for all single day charts.
@@ -73,10 +71,10 @@ const aggregateQueryDependencies = {
 
 // Overload call to specify type for single day queries
 type UseQueriesOverload = {
-  (parameters: SingleDayAPIOptions, aggregate: false, enabled: boolean): {
+  (parameters: SingleDayAPIOptions, aggregate: false, enabled?: boolean): {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<SingleDayDataPoint[]>;
   };
-  (parameters: AggregateAPIOptions, aggregate: true, enabled: boolean): {
+  (parameters: AggregateAPIOptions, aggregate: true, enabled?: boolean): {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<AggregateDataResponse>;
   };
 };
