@@ -11,14 +11,15 @@ import { useCustomQueries } from '../../common/api/datadashboard';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getCurrentDate } from '../../common/utils/date';
 import type { Location } from '../../common/types/charts';
-import Device from '../../common/components/general/Device/Device';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { averageTravelTime } from '../../common/utils/traveltimes';
+import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 
 export const TravelTimesWidget: React.FC = () => {
   const startDate = getCurrentDate();
   const { linePath, lineShort } = useDelimitatedRoute();
+  const isMobile = !useBreakpoint('sm');
 
   const stations = optionsStation(lineShort);
   const toStation = stations?.[stations.length - 3];
@@ -65,24 +66,20 @@ export const TravelTimesWidget: React.FC = () => {
     <>
       <HomescreenWidgetTitle title="Travel Times" href={`/${linePath}/traveltimes`} />
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <Device>
-          {({ isMobile }) => (
-            <SingleDayLineChart
-              chartId={`traveltimes-widget-${linePath}`}
-              title={'Travel Times'}
-              data={traveltimes.data ?? []}
-              date={startDate}
-              metricField={MetricFieldKeys.travelTimeSec}
-              pointField={PointFieldKeys.depDt}
-              benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
-              isLoading={isLoading}
-              bothStops={true}
-              location={location}
-              fname={'traveltimes'}
-              showLegend={!isMobile}
-            />
-          )}
-        </Device>
+        <SingleDayLineChart
+          chartId={`traveltimes-widget-${linePath}`}
+          title={'Travel Times'}
+          data={traveltimes.data ?? []}
+          date={startDate}
+          metricField={MetricFieldKeys.travelTimeSec}
+          pointField={PointFieldKeys.depDt}
+          benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
+          isLoading={isLoading}
+          bothStops={true}
+          location={location}
+          fname={'traveltimes'}
+          showLegend={!isMobile}
+        />
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Travel Time"

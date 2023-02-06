@@ -12,13 +12,14 @@ import { getCurrentDate } from '../../common/utils/date';
 import { averageHeadway, longestHeadway } from '../../common/utils/headways';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import type { Location } from '../../common/types/charts';
-import Device from '../../common/components/general/Device/Device';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
+import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 
 export const HeadwaysWidget: React.FC = () => {
   const startDate = getCurrentDate();
   const { linePath, lineShort } = useDelimitatedRoute();
+  const isMobile = !useBreakpoint('sm');
 
   const stations = optionsStation(lineShort);
   const toStation = stations?.[stations.length - 3];
@@ -65,23 +66,19 @@ export const HeadwaysWidget: React.FC = () => {
     <>
       <HomescreenWidgetTitle title="Headways" href={`/${linePath}/headways`} />
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <Device>
-          {({ isMobile }) => (
-            <SingleDayLineChart
-              chartId={`headways-widget-${linePath}`}
-              title={'Time between trains (headways)'}
-              data={headways.data ?? []}
-              date={startDate}
-              metricField={MetricFieldKeys.headWayTimeSec}
-              pointField={PointFieldKeys.currentDepDt}
-              benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
-              isLoading={isLoading}
-              location={location}
-              fname={'headways'}
-              showLegend={!isMobile}
-            />
-          )}
-        </Device>
+        <SingleDayLineChart
+          chartId={`headways-widget-${linePath}`}
+          title={'Time between trains (headways)'}
+          data={headways.data ?? []}
+          date={startDate}
+          metricField={MetricFieldKeys.headWayTimeSec}
+          pointField={PointFieldKeys.currentDepDt}
+          benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
+          isLoading={isLoading}
+          location={location}
+          fname={'headways'}
+          showLegend={!isMobile}
+        />
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Headway"
