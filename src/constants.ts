@@ -61,7 +61,8 @@ export const majorEvents: Record<string, MbtaMajorEvent> = {
     end: '2021-04-16T00:00:00Z',
     color: 'Orange',
     title: 'Orange line derailment',
-    description: 'An orange line train derailment damaged a switch, requiring track replacement. A speed restriction followed in order to give the new track time to settle.',
+    description:
+      'An orange line train derailment damaged a switch, requiring track replacement. A speed restriction followed in order to give the new track time to settle.',
     type: 'derailment',
   },
   OrangeShutdown: {
@@ -69,7 +70,8 @@ export const majorEvents: Record<string, MbtaMajorEvent> = {
     end: '2022-09-19T00:00:00Z',
     color: 'Orange',
     title: 'Orange line shutdown',
-    description: 'The orange line was shut down for 30 days to complete deferred maintenance',
+    description: 
+      'The orange line was shut down for 30 days to complete deferred maintenance',
     type: 'shutdown',
   },
 };
