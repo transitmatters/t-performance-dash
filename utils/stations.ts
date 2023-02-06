@@ -1,5 +1,6 @@
-import { SelectOption } from '../types/inputs';
-import { Line, Station } from '../types/stations';
+import type { SelectOption } from '../common/types/inputs';
+import type { LineShort } from '../common/types/lines';
+import type { Line, Station } from '../common/types/stations';
 import { stations as rtStations } from './constants';
 
 export const optionsForField = (
@@ -40,7 +41,7 @@ const options_station_ui = (line: Line): SelectOption<Station>[] | undefined => 
     .sort((a, b) => a.value.order - b.value.order);
 };
 
-export const optionsStation = (line: Line): Station[] | undefined => {
+export const optionsStation = (line: LineShort): Station[] | undefined => {
   if (!line || !rtStations[line]) {
     return undefined;
   }

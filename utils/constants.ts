@@ -1,4 +1,4 @@
-import { Line, LineMap } from '../types/stations';
+import { Line, LineMap } from '../common/types/stations';
 import stations_json from './stations.json';
 
 export const stations: { [key in Line]: LineMap } = stations_json;
