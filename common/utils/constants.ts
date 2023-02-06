@@ -1,8 +1,3 @@
-import type { Line, LineMap } from '../../common/types/stations';
-import stations_json from '../../common/constants/stations.json';
-
-export const stations: { [key in Line]: LineMap } = stations_json;
-
 export const PRODUCTION = 'dashboard-v4.transitmatters.org';
 export const BETA = 'dashboard-v4-beta.labs.transitmatters.org';
 const FRONTEND_TO_BACKEND_MAP = {

@@ -13,14 +13,15 @@ import type { Location } from '../../common/types/charts';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { SingleDayAPIParams } from '../../common/types/api';
+import { averageDwells, longestDwells } from '../../common/utils/dwells';
 
 export const DwellsWidget: React.FC = () => {
   const startDate = getCurrentDate();
-  const { linePath, line, lineShort } = useDelimitatedRoute();
+  const { linePath, lineShort } = useDelimitatedRoute();
 
   const stations = optionsStation(lineShort);
   const toStation = stations?.[stations.length - 3];
-  const fromStation = stations?.[1];
+  const fromStation = stations?.[3];
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 
@@ -35,41 +36,13 @@ export const DwellsWidget: React.FC = () => {
     fromStopIds !== null && toStopIds !== null
   );
 
-  const averageDwells = useMemo(() => {
-    if (dwells && dwells.data && dwells.data.length >= 1) {
-      const totalSum = dwells?.data
-        .map((trip) => trip.dwell_time_sec)
-        .reduce((a, b) => {
-          if (a && b) {
-            return a + b;
-          } else {
-            return 0;
-          }
-        });
-      return (totalSum || 0) / dwells.data.length;
-    } else {
-      return 0;
-    }
-  }, [dwells]);
-
-  const longestDwell = useMemo(() => {
-    if (dwells && dwells.data && dwells.data.length >= 1) {
-      const allDwells = dwells?.data
-        .map((trip) => trip.dwell_time_sec)
-        .filter((dwell) => dwell !== undefined) as number[];
-      return Math.max(...allDwells);
-    } else {
-      return 0;
-    }
-  }, [dwells]);
-
   const location: Location = useMemo(() => {
     if (toStation === undefined || fromStation === undefined) {
       return {
         to: toStation?.stop_name || 'Loading...',
         from: fromStation?.stop_name || 'Loading...',
         direction: 'southbound',
-        line: linePath,
+        line: lineShort,
       };
     }
 
@@ -77,9 +50,9 @@ export const DwellsWidget: React.FC = () => {
       to: toStation.stop_name,
       from: fromStation.stop_name,
       direction: 'southbound',
-      line: linePath,
+      line: lineShort,
     };
-  }, [fromStation, linePath, toStation]);
+  }, [fromStation, lineShort, toStation]);
 
   const isLoading = dwells.isLoading || toStation === undefined || fromStation === undefined;
 
@@ -92,9 +65,9 @@ export const DwellsWidget: React.FC = () => {
       <HomescreenWidgetTitle title="Dwells" href={`/${linePath}/dwells`} />
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <SingleDayLineChart
-          chartId={`dwells-widget-${line}`}
+          chartId={`dwells-widget-${linePath}`}
           title={'Time spent at station (dwells)'}
-          data={dwells.data || []}
+          data={dwells.data ?? []}
           date={startDate}
           metricField={MetricFieldKeys.dwellTimeSec}
           pointField={PointFieldKeys.arrDt}
@@ -106,14 +79,18 @@ export const DwellsWidget: React.FC = () => {
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Dwell"
-            value={secondsToMinutes(averageDwells).toString()}
+            value={
+              dwells.data ? secondsToMinutes(averageDwells(dwells.data)).toString() : 'Loading...'
+            }
             units="min"
             analysis="+1.0 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
           <BasicWidgetDataLayout
             title="Longest Dwell"
-            value={secondsToMinutes(longestDwell).toString()}
+            value={
+              dwells.data ? secondsToMinutes(longestDwells(dwells.data)).toString() : 'Loading...'
+            }
             units="min"
             analysis="+1.0 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}

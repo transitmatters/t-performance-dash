@@ -1,42 +1,29 @@
 'use client';
-import React from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
+import { secondsToMinutes } from 'date-fns';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { SingleDayAPIParams } from '../../common/types/api';
-import { stopIdsForStations } from '../../common/utils/stations';
+import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useCustomQueries } from '../../common/api/datadashboard';
-import type { Station } from '../../common/types/stations';
 import { getCurrentDate } from '../../common/utils/date';
+import { averageHeadway, longestHeadway } from '../../common/utils/headways';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
+import type { Location } from '../../common/types/charts';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
+import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
+import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 
 export const HeadwaysWidget: React.FC = () => {
   const startDate = getCurrentDate();
-  const { linePath } = useDelimitatedRoute();
+  const { linePath, lineShort } = useDelimitatedRoute();
+  const isMobile = !useBreakpoint('sm');
 
-  const fromStation: Station = {
-    stop_name: 'Kendall/MIT',
-    branches: ['A', 'B'],
-    station: 'place-knncl',
-    order: 6,
-    stops: {
-      '0': ['70072'],
-      '1': ['70071'],
-    },
-  };
-  const toStation: Station = {
-    stop_name: 'Downtown Crossing',
-    branches: ['A', 'B'],
-    station: 'place-dwnxg',
-    order: 9,
-    stops: {
-      '0': ['70078'],
-      '1': ['70077'],
-    },
-  };
+  const stations = optionsStation(lineShort);
+  const toStation = stations?.[stations.length - 3];
+  const fromStation = stations?.[3];
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 
@@ -47,12 +34,29 @@ export const HeadwaysWidget: React.FC = () => {
       [SingleDayAPIParams.stop]: fromStopIds || '',
       [SingleDayAPIParams.date]: startDate,
     },
-    false
+    false,
+    fromStopIds !== null && toStopIds !== null
   );
 
-  if (headways.isLoading) {
-    return <>Loading ... teehee</>;
-  }
+  const location: Location = useMemo(() => {
+    if (toStation === undefined || fromStation === undefined) {
+      return {
+        to: toStation?.stop_name || 'Loading...',
+        from: fromStation?.stop_name || 'Loading...',
+        direction: 'southbound',
+        line: lineShort,
+      };
+    }
+
+    return {
+      to: toStation.stop_name,
+      from: fromStation.stop_name,
+      direction: 'southbound',
+      line: lineShort,
+    };
+  }, [fromStation, lineShort, toStation]);
+
+  const isLoading = headways.isLoading || toStation === undefined || fromStation === undefined;
 
   if (headways.isError) {
     return <>Uh oh... error</>;
@@ -61,25 +65,39 @@ export const HeadwaysWidget: React.FC = () => {
   return (
     <>
       <HomescreenWidgetTitle title="Headways" href={`/${linePath}/headways`} />
-      <div className={classNames('bg-white p-2 shadow-dataBox')}>
-        <div className={'charts main-column'}>
-          <SingleDayLineChart
-            chartId={'headways'}
-            title={'Time between trains (headways)'}
-            data={headways.data || []}
-            date={startDate}
-            metricField={MetricFieldKeys.headWayTimeSec}
-            pointField={PointFieldKeys.currentDepDt}
-            benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
-            isLoading={headways.isLoading}
-            location={'todo'}
-            fname={'headways'}
-          />
-        </div>
+      <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
+        <SingleDayLineChart
+          chartId={`headways-widget-${linePath}`}
+          title={'Time between trains (headways)'}
+          data={headways.data ?? []}
+          date={startDate}
+          metricField={MetricFieldKeys.headWayTimeSec}
+          pointField={PointFieldKeys.currentDepDt}
+          benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
+          isLoading={isLoading}
+          location={location}
+          fname={'headways'}
+          showLegend={!isMobile}
+        />
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Headway"
-            value={'8'}
+            value={
+              headways.data
+                ? secondsToMinutes(averageHeadway(headways.data)).toString()
+                : 'Loading...'
+            }
+            units="min"
+            analysis="+1.0 since last week"
+            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+          />
+          <BasicWidgetDataLayout
+            title="Longest Headway"
+            value={
+              headways.data
+                ? secondsToMinutes(longestHeadway(headways.data)).toString()
+                : 'Loading...'
+            }
             units="min"
             analysis="+1.0 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}

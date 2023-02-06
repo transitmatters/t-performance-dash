@@ -9,7 +9,6 @@ interface NavItem {
   href: string;
   name: string;
   key: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon?: any;
   current?: boolean;
   children?: NavItem[];

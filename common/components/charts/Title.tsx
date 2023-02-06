@@ -1,4 +1,5 @@
 import type { Chart } from 'chart.js';
+import type { LineShort } from '../../types/lines';
 import type { Location } from '../../types/charts';
 
 interface TitleFormat {
@@ -6,15 +7,15 @@ interface TitleFormat {
   color: string;
 }
 
-export const colorsForLine: Record<string, string> = {
+export const colorsForLine: Record<LineShort, string> = {
   Red: '#da291c',
   Orange: '#ed8b00',
   Blue: '#003da5',
   Green: '#00834d',
-  bus: '#ffc72c',
+  Bus: '#ffc72c',
 };
 
-const getLineColor = (lineName: string) => colorsForLine[lineName] || 'black';
+const getLineColor = (lineShort: LineShort) => colorsForLine[lineShort] || 'black';
 const titleColor = 'gray';
 
 const parse_location_description = (location: Location, bothStops: boolean) => {

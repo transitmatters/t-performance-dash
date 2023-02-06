@@ -1,3 +1,5 @@
+import { LineShort } from './lines';
+
 export interface SingleDayDataPoint {
   route_id: string;
   direction: number;
@@ -31,7 +33,7 @@ export interface Location {
   to: string;
   from: string;
   direction: Direction;
-  line: string;
+  line: LineShort;
 }
 
 type Direction = 'northbound' | 'southbound' | 'eastbound' | 'westbound' | 'inbound' | 'outbound';

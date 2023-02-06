@@ -1,6 +1,6 @@
-import React from 'react';
 import classNames from 'classnames';
 import Link from 'next/link';
+import React from 'react';
 import { DATA_PAGES } from '../../../common/constants/datapages';
 import { LINE_OBJECTS } from '../../../common/constants/lines';
 import { useDelimitatedRoute } from '../../../common/utils/router';

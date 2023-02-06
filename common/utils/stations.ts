@@ -1,7 +1,7 @@
 import type { SelectOption } from '../../common/types/inputs';
 import type { LineShort } from '../../common/types/lines';
-import type { Line, Station } from '../../common/types/stations';
-import { stations as rtStations } from './constants';
+import type { Station } from '../../common/types/stations';
+import { rtStations } from './../constants/stations';
 
 export const optionsForField = (
   type: 'from' | 'to',
@@ -42,6 +42,11 @@ const options_station_ui = (line: LineShort): SelectOption<Station>[] | undefine
 };
 
 export const optionsStation = (line: LineShort): Station[] | undefined => {
+  if (line === 'Bus') {
+    // TODO: Remove bus conditions
+    return undefined;
+  }
+
   if (!line || !rtStations[line]) {
     return undefined;
   }

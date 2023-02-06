@@ -1,44 +1,29 @@
 'use client';
-import React from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { secondsToMinutes } from 'date-fns';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { SingleDayAPIParams } from '../../common/types/api';
-import { stopIdsForStations } from '../../common/utils/stations';
+import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useCustomQueries } from '../../common/api/datadashboard';
-import type { Station } from '../../common/types/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getCurrentDate } from '../../common/utils/date';
-import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
+import type { Location } from '../../common/types/charts';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
+import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
+import { averageTravelTime } from '../../common/utils/traveltimes';
+import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 
 export const TravelTimesWidget: React.FC = () => {
   const startDate = getCurrentDate();
+  const { linePath, lineShort } = useDelimitatedRoute();
+  const isMobile = !useBreakpoint('sm');
 
-  const fromStation: Station = {
-    stop_name: 'Kendall/MIT',
-    branches: ['A', 'B'],
-    station: 'place-knncl',
-    order: 6,
-    stops: {
-      '0': ['70072'],
-      '1': ['70071'],
-    },
-  };
-  const toStation: Station = {
-    stop_name: 'Downtown Crossing',
-    branches: ['A', 'B'],
-    station: 'place-dwnxg',
-    order: 9,
-    stops: {
-      '0': ['70078'],
-      '1': ['70077'],
-    },
-  };
-
-  const { linePath } = useDelimitatedRoute();
+  const stations = optionsStation(lineShort);
+  const toStation = stations?.[stations.length - 3];
+  const fromStation = stations?.[3];
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 
@@ -49,65 +34,71 @@ export const TravelTimesWidget: React.FC = () => {
       [SingleDayAPIParams.stop]: fromStopIds || '',
       [SingleDayAPIParams.date]: startDate,
     },
-    false
+    false,
+    fromStopIds !== null && toStopIds !== null
   );
 
-  // TODO: If these error out, should only affect the widget, not the title.
-  const averageTravelTime = React.useMemo(() => {
-    if (traveltimes && traveltimes.data) {
-      const totalSum = traveltimes?.data
-        .map((trip) => trip.travel_time_sec)
-        .reduce((a, b) => {
-          if (a && b) {
-            return a + b;
-          } else {
-            return 0;
-          }
-        });
-      return (totalSum || 0) / traveltimes.data.length;
-    } else {
-      return 0;
+  const location: Location = useMemo(() => {
+    if (toStation === undefined || fromStation === undefined) {
+      return {
+        to: toStation?.stop_name || 'Loading...',
+        from: fromStation?.stop_name || 'Loading...',
+        direction: 'southbound',
+        line: lineShort,
+      };
     }
-  }, [traveltimes]);
 
-  if (traveltimes.isLoading) {
-    return <>Loading ... teehee</>;
-  }
+    return {
+      to: toStation.stop_name,
+      from: fromStation.stop_name,
+      direction: 'southbound',
+      line: lineShort,
+    };
+  }, [fromStation, lineShort, toStation]);
 
-  if (traveltimes.isError) {
+  const isLoading = traveltimes.isLoading || toStation === undefined || fromStation === undefined;
+
+  if (traveltimes.isError || !linePath) {
     return <>Uh oh... error</>;
   }
 
   return (
     <>
       <HomescreenWidgetTitle title="Travel Times" href={`/${linePath}/traveltimes`} />
-      <div className={classNames('bg-white p-2 shadow-dataBox')}>
-        <div className={'charts main-column'}>
-          <SingleDayLineChart
-            chartId={'traveltimes'}
-            title={'Travel Times'}
-            data={traveltimes.data || []}
-            date={startDate}
-            metricField={MetricFieldKeys.travelTimeSec}
-            pointField={PointFieldKeys.depDt}
-            benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
-            isLoading={traveltimes.isLoading}
-            bothStops={true}
-            location={'todo'}
-            fname={'traveltimes'}
-          />
-        </div>
+      <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
+        <SingleDayLineChart
+          chartId={`traveltimes-widget-${linePath}`}
+          title={'Travel Times'}
+          data={traveltimes.data ?? []}
+          date={startDate}
+          metricField={MetricFieldKeys.travelTimeSec}
+          pointField={PointFieldKeys.depDt}
+          benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
+          isLoading={isLoading}
+          bothStops={true}
+          location={location}
+          fname={'traveltimes'}
+          showLegend={!isMobile}
+        />
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Travel Time"
-            value={secondsToMinutes(averageTravelTime).toString()}
+            value={
+              traveltimes.data
+                ? secondsToMinutes(averageTravelTime(traveltimes.data)).toString()
+                : 'Loading...'
+            }
             units="min"
             analysis="+1.0 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
           />
           <BasicWidgetDataLayout
             title="Round Trip"
-            value={secondsToMinutes(averageTravelTime * 2).toString()} //TODO: Show real time for a round trip
+            value={
+              traveltimes.data
+                ? secondsToMinutes(averageTravelTime(traveltimes.data) * 2).toString()
+                : 'Loading...'
+            } //TODO: Show real time for a round trip
             units="min"
             analysis="+2 since last week"
             Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}

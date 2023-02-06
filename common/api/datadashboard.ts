@@ -82,7 +82,6 @@ export const useCustomQueries: UseQueriesOverload = (
   parameters: SingleDayAPIOptions | AggregateAPIOptions,
   aggregate: boolean,
   enabled = true
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any => {
   const dependencies = aggregate ? aggregateQueryDependencies : singleDayQueryDependencies;
   // Create objects with keys of query names which contains keys and parameters.
@@ -103,7 +102,7 @@ export const useCustomQueries: UseQueriesOverload = (
   const requests = useQueries({
     queries: Object.keys(queries).map((name: QueryNameKeys) => {
       return {
-        queryKey: queries[name].keys,
+        queryKey: [name, queries[name].params],
         queryFn: () =>
           aggregate
             ? fetchAggregateData(name, queries[name].params)

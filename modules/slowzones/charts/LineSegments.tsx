@@ -15,10 +15,15 @@ import React, { useMemo, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { COLORS } from '../../../common/constants/colors';
 import type { SlowZoneResponse } from '../../../common/types/dataPoints';
+import type { LineShort } from '../../../common/types/lines';
 import { formatSlowZones, getRoutes } from '../../../common/utils/slowZoneUtils';
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, TimeScale);
 
-export const LineSegments = ({ data, line }: { data: SlowZoneResponse[]; line: string }) => {
+export const LineSegments: React.FC<{ data: SlowZoneResponse[]; line: LineShort | undefined }> = ({
+  data,
+  line,
+}) => {
   const ref = useRef();
   const formattedData = useMemo(
     () =>
@@ -40,7 +45,7 @@ export const LineSegments = ({ data, line }: { data: SlowZoneResponse[]; line: s
           {
             label: line,
             minBarLength: 28,
-            backgroundColor: COLORS.mbta[line.toLowerCase()],
+            backgroundColor: line && COLORS.mbta[line.toLowerCase()],
             borderSkipped: true,
             data: formattedData.map((sz) => {
               return { x: [sz.start, sz.end], id: sz.id, delay: sz.delay };

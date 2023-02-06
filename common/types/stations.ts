@@ -1,5 +1,3 @@
-export type Line = 'Red' | 'Orange' | 'Blue' | 'Green';
-
 export interface Direction {
   0: string;
   1: string;
