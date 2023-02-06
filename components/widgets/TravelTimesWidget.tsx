@@ -18,7 +18,6 @@ import { HomescreenWidgetTitle } from './HomescreenWidgetTitle';
 
 export const TravelTimesWidget: React.FC = () => {
   const startDate = getCurrentDate();
-
   const route = useDelimitatedRoute();
 
   const stations = optionsStation(route.lineShort);

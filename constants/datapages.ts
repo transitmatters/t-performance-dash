@@ -1,4 +1,4 @@
-import { DataPage, DataPageNames } from '../types/dataPages';
+import { DataPageNames } from '../types/dataPages';
 
 export const DATA_PAGE_NAMES: DataPageNames = {
   overview: 'Overview',
@@ -11,11 +11,10 @@ export const DATA_PAGE_NAMES: DataPageNames = {
   service: 'Service',
 };
 
-export const DATA_PAGES: DataPage[] = [
-  'overview',
-  'traveltimes',
-  'slowzones',
-  'headways',
-  'dwells',
-  'more',
-];
+export const DATA_PAGES = {
+  overview: { href: '/', name: 'Overview' },
+  traveltimes: { href: '/traveltimes', name: 'Travel Times' },
+  slowzones: { href: '/slowzones', name: 'Slow Zones' },
+  headways: { href: '/headways', name: 'Headways' },
+  dwells: { href: '/dwells', name: 'Dwells' },
+};

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { LineSelectorMobile } from '../Dropdowns/LineSelectorMobile';
-import { DataPageSelection } from './DataPageSelection';
+import { DataPageSelection } from '../general/DataPageSelection';
 
 export const BottomNavBar: React.FC = () => {
   return (

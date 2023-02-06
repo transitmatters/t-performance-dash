@@ -1,14 +1,20 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DashboardLayout } from '../components/DashboardLayout';
 import { Layout } from '../components/Layout';
 import '../styles/dashboard.css';
 import '../styles/globals.css';
 
 export default function App({ Component, pageProps }) {
-  const getLayout = Component.getLayout ?? ((page) => page);
+  const [loaded, setLoaded] = useState(false);
 
-  return getLayout(
+  // Don't load on the server. This prevents hydration errors between mobile/desktop layouts.
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+  if (!loaded) return null;
+
+  return (
     <Layout>
       <DashboardLayout>
         <Component {...pageProps} />

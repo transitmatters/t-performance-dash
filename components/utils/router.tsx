@@ -26,7 +26,7 @@ export const useDelimitatedRoute = (): Route => {
     line: linePathToKeyMap[pathItems[1]],
     linePath: pathItems[1] as LinePath, //TODO: Remove as
     lineShort: capitalize(pathItems[1]) as LineShort, //TODO: Remove as
-    datapage: pathItems[2] as DataPage, //TODO: Remove as
+    datapage: (pathItems[2] as DataPage) || 'overview', //TODO: Remove as
   };
 };
 
@@ -34,7 +34,9 @@ export const useDelimitatedRoute = (): Route => {
 export const getLineSelectionItemHref = (metadata: LineMetadata, route: Route): string => {
   let href = `/${metadata.path}`;
   if (metadata.key !== route.line && route.datapage) {
-    href += `/${route.datapage}`;
+    if (route.datapage !== 'overview') {
+      href += `/${route.datapage}`;
+    }
   }
   return href;
 };
