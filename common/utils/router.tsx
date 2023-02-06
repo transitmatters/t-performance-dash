@@ -11,7 +11,7 @@ const linePathToKeyMap: Record<string, Line> = {
   bus: 'BUS',
 };
 export type Route = {
-  line: Line;
+  line: Line | undefined;
   linePath: LinePath;
   lineShort: LineShort;
   datapage: DataPage;
@@ -23,10 +23,10 @@ export const useDelimitatedRoute = (): Route => {
   const pathItems = path.split('/');
 
   return {
-    line: linePathToKeyMap[pathItems[1]] as Line,
-    linePath: pathItems[1] as LinePath,
-    lineShort: capitalize(pathItems[1]) as LineShort,
-    datapage: (pathItems[2] as DataPage) || 'overview',
+    line: linePathToKeyMap[pathItems[1]],
+    linePath: pathItems[1] as LinePath, //TODO: Remove as
+    lineShort: capitalize(pathItems[1]) as LineShort, //TODO: Remove as
+    datapage: (pathItems[2] as DataPage) || 'overview', //TODO: Remove as
   };
 };
 

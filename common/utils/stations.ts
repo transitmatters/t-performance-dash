@@ -1,11 +1,11 @@
-import type { SelectOption } from '../common/types/inputs';
-import type { LineShort } from '../common/types/lines';
-import type { Line, Station } from '../common/types/stations';
+import type { SelectOption } from '../../common/types/inputs';
+import type { LineShort } from '../../common/types/lines';
+import type { Line, Station } from '../../common/types/stations';
 import { stations as rtStations } from './constants';
 
 export const optionsForField = (
   type: 'from' | 'to',
-  line: Line,
+  line: LineShort,
   fromStation: Station | null,
   toStation: Station | null
 ) => {
@@ -28,7 +28,7 @@ export const optionsForField = (
   }
 };
 
-const options_station_ui = (line: Line): SelectOption<Station>[] | undefined => {
+const options_station_ui = (line: LineShort): SelectOption<Station>[] | undefined => {
   return optionsStation(line)
     ?.map((station) => {
       return {
@@ -58,8 +58,8 @@ export const swapStations = (
   setToStation(fromStation);
 };
 
-export const lookup_station_by_id = (line: string, id: string) => {
-  if (line === '' || line === undefined || id === '' || id === undefined) {
+export const lookup_station_by_id = (line: Exclude<LineShort, 'Bus'>, id: string) => {
+  if (line === undefined || id === '' || id === undefined) {
     return undefined;
   }
 

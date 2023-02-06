@@ -1,5 +1,5 @@
-import { Station } from '../common/types/stations';
-import { Direction, SlowZone, SlowZoneResponse } from '../common/types/dataPoints';
+import type { Station } from '../../common/types/stations';
+import type { Direction, SlowZone, SlowZoneResponse } from '../../common/types/dataPoints';
 import { lookup_station_by_id } from './stations';
 
 const getDirection = (to: Station, from: Station) => {
