@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
@@ -15,7 +15,7 @@ import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 
 export const HeadwaysWidget: React.FC = () => {
   const startDate = getCurrentDate();
-  const route = useDelimitatedRoute();
+  const { linePath } = useDelimitatedRoute();
 
   const fromStation: Station = {
     stop_name: 'Kendall/MIT',
@@ -60,7 +60,7 @@ export const HeadwaysWidget: React.FC = () => {
 
   return (
     <>
-      <HomescreenWidgetTitle title="Headways" href={`/${route.line}/headways`} />
+      <HomescreenWidgetTitle title="Headways" href={`/${linePath}/headways`} />
       <div className={classNames('bg-white p-2 shadow-dataBox')}>
         <div className={'charts main-column'}>
           <SingleDayLineChart

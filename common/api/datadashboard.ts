@@ -15,7 +15,6 @@ export const fetchSingleDayData = (
   name: QueryNameKeys,
   options: PartialSingleDayAPIOptions
 ): Promise<SingleDayDataPoint[]> => {
-  // TODO: Remove `api/` from URL. Temporary fix to work with rewrites in development
   const url = new URL(`${APP_DATA_BASE_PATH}/api/${name}/${options.date}`, window.location.origin);
   Object.entries(options).forEach(([key, value]) => {
     // options includes date which is a string. Date is never used as a parameter since it is part of the URL, so it can be excluded.
@@ -88,7 +87,7 @@ export const useCustomQueries: UseQueriesOverload = (
   const dependencies = aggregate ? aggregateQueryDependencies : singleDayQueryDependencies;
   // Create objects with keys of query names which contains keys and parameters.
   const queries = Object.keys(dependencies).reduce((object, queryName: QueryNameKeys) => {
-    const keys = [queryName, APP_DATA_BASE_PATH];
+    const keys = [queryName];
     const params = {};
     dependencies[queryName].forEach((field: AggregateAPIParams | SingleDayAPIParams) => {
       keys.push(parameters[field].toString());
