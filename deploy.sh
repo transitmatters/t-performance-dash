@@ -65,13 +65,18 @@ BACKEND_BUCKET=datadashboard-backend$ENV_SUFFIX
 FRONTEND_HOSTNAME=dashboard$ENV_SUFFIX.labs.transitmatters.org # Must match in .chalice/config.json!
 CF_STACK_NAME=datadashboard$ENV_SUFFIX
 
+configurationArray=("$CHALICE_STAGE" "$BACKEND_BUCKET" "$FRONTEND_HOSTNAME" "$CF_STACK_NAME" "$FRONTEND_CERT_ARN" "$BACKEND_CERT_ARN")
+for i in ${!configurationArray[@]}; do
+    if [ -z "${configurationArray[$i]}" ]; then
+        echo "Failed: index [$i] in configuration array is null or empty";
+        exit;
+    fi
+done
+
 echo "Starting $CHALICE_STAGE deployment"
 echo "Backend bucket: $BACKEND_BUCKET"
 echo "Hostname: $FRONTEND_HOSTNAME"
 echo "CloudFormation stack name: $CF_STACK_NAME"
-echo "frontend cert arn: $FRONTEND_CERT_ARN"
-echo "backend cert arn: $BACKEND_CERT_ARN"
-echo "LABS cert arn: $TM_LABS_WILDCARD_CERT_ARN"
 
 # build frontend and patch in commit id
 npm run build-v4

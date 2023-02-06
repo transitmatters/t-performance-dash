@@ -12,13 +12,12 @@ from chalicelib import (
 
 app = Chalice(app_name="data-dashboard")
 
-# will run on localhost if TM_FRONTEND_HOST is not set in env
 TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", "localhost:3000")
 
 prefix = 'http'
 if (TM_FRONTEND_HOST != 'localhost:30000'):
-    prefix+='s'
-# TODO: Fix to use https again except when local
+    prefix='https'
+
 cors_config = CORSConfig(
     allow_origin=f"{prefix}://{TM_FRONTEND_HOST}", max_age=3600
 )
