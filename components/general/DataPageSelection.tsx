@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
-import { DATA_PAGES, DATA_PAGE_NAMES } from '../../constants/datapages';
+import { DATA_PAGES } from '../../constants/datapages';
 import { LINE_OBJECTS } from '../../constants/lines';
 import { useDelimitatedRoute } from '../utils/router';
 import { classNames } from '../utils/tailwind';
