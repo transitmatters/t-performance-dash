@@ -1,14 +1,13 @@
 'use client';
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
-import { capitalize } from 'lodash';
 import { secondsToMinutes } from 'date-fns';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
-import { optionsStation, stopIdsForStations } from '../../utils/stations';
+import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useCustomQueries } from '../../common/api/datadashboard';
-import { getCurrentDate } from '../../utils/date';
+import { getCurrentDate } from '../../common/utils/date';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import type { Location } from '../../common/types/charts';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';

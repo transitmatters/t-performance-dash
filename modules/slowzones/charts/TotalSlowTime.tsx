@@ -3,7 +3,7 @@ import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { Line } from 'react-chartjs-2';
-import { LINE_COLORS } from '../../../utils/constants';
+import { LINE_COLORS } from '../../../common/constants/colors';
 
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
 

@@ -6,7 +6,7 @@ import { SingleDayLineChart } from '../../common/components/charts/SingleDayLine
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { SingleDayAPIParams } from '../../common/types/api';
 import type { Station } from '../../common/types/stations';
-import { stopIdsForStations } from '../../utils/stations';
+import { stopIdsForStations } from '../../common/utils/stations';
 
 export default function TravelTimesDetails() {
   const startDate = '2023-01-23';

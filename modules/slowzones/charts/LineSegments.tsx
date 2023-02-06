@@ -15,7 +15,7 @@ import React, { useMemo, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { COLORS } from '../../../common/constants/colors';
 import type { SlowZoneResponse } from '../../../common/types/dataPoints';
-import { formatSlowZones, getRoutes } from '../../../utils/slowZoneUtils';
+import { formatSlowZones, getRoutes } from '../../../common/utils/slowZoneUtils';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, TimeScale);
 
 export const LineSegments = ({ data, line }: { data: SlowZoneResponse[]; line: string }) => {

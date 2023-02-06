@@ -8,7 +8,7 @@ import type {
   SingleDayAPIOptions,
 } from '../types/api';
 import { AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../types/api';
-import { APP_DATA_BASE_PATH } from '../../utils/constants';
+import { APP_DATA_BASE_PATH } from '../../common/utils/constants';
 
 // Fetch data for all single day charts.
 export const fetchSingleDayData = (

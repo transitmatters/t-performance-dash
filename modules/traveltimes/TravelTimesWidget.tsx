@@ -6,11 +6,11 @@ import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { SingleDayAPIParams } from '../../common/types/api';
-import { stopIdsForStations } from '../../utils/stations';
+import { stopIdsForStations } from '../../common/utils/stations';
 import { useCustomQueries } from '../../common/api/datadashboard';
 import type { Station } from '../../common/types/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { getCurrentDate } from '../../utils/date';
+import { getCurrentDate } from '../../common/utils/date';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 
