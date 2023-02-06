@@ -1,4 +1,4 @@
-import { DateType } from 'react-tailwindcss-datepicker/dist/types';
+import type { DateType } from 'react-tailwindcss-datepicker/dist/types';
 
 export interface SelectOption<T = any> {
   label: string;

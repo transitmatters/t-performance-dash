@@ -1,4 +1,4 @@
-import { DataPageNames } from '../types/dataPages';
+import type { DataPageNames } from '../types/dataPages';
 
 export const DATA_PAGE_NAMES: DataPageNames = {
   overview: 'Overview',

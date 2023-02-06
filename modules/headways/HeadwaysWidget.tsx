@@ -97,7 +97,7 @@ export const HeadwaysWidget: React.FC = () => {
             <SingleDayLineChart
               chartId={`headways-widget-${route.line}`}
               title={'Time between trains (headways)'}
-              data={headways.data || []}
+              data={headways.data ?? []}
               date={startDate}
               metricField={MetricFieldKeys.headWayTimeSec}
               pointField={PointFieldKeys.currentDepDt}

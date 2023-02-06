@@ -94,7 +94,7 @@ export const DwellsWidget: React.FC = () => {
         <SingleDayLineChart
           chartId={`dwells-widget-${route.line}`}
           title={'Time spent at station (dwells)'}
-          data={dwells.data || []}
+          data={dwells.data ?? []}
           date={startDate}
           metricField={MetricFieldKeys.dwellTimeSec}
           pointField={PointFieldKeys.arrDt}

@@ -91,7 +91,7 @@ export const TravelTimesWidget: React.FC = () => {
             <SingleDayLineChart
               chartId={`traveltimes-widget-${route.line}`}
               title={'Travel Times'}
-              data={traveltimes.data || []}
+              data={traveltimes.data ?? []}
               date={startDate}
               metricField={MetricFieldKeys.travelTimeSec}
               pointField={PointFieldKeys.depDt}

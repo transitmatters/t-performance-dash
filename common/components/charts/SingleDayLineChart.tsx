@@ -16,7 +16,7 @@ import { enUS } from 'date-fns/locale';
 import React from 'react';
 import type { DataPoint } from '../../types/dataPoints';
 import { CHART_COLORS } from '../../../common/utils/constants';
-import type { SingleDayLineProps } from '../../types/lines';
+import type { SingleDayLineProps } from '../../../common/types/lines';
 import { prettyDate } from '../../utils/date';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
@@ -82,6 +82,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   location,
   showLegend = true,
 }) => {
+  console.log(data);
+
   const labels = data.map((item) => item[pointField]);
   return (
     <div className={showLegend ? 'chart' : undefined}>
