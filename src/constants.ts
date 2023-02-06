@@ -7,7 +7,6 @@ export const PRODUCTION = 'dashboard.transitmatters.org';
 const FRONTEND_TO_BACKEND_MAP = new Map([
   [PRODUCTION, 'https://dashboard-api2.transitmatters.org'],
   ['dashboard-beta.transitmatters.org', 'https://dashboard-api-beta.transitmatters.org'],
-  ['dashboard-v4-beta.labs.transitmatters.org', 'https://dashboard-v4-api-beta.labs.transitmatters.org'],
 ]);
 
 // Fetch the absolute location of the API to load from; fallback to "" which
@@ -71,8 +70,7 @@ export const majorEvents: Record<string, MbtaMajorEvent> = {
     end: '2022-09-19T00:00:00Z',
     color: 'Orange',
     title: 'Orange line shutdown',
-    description:
-      'The orange line was shut down for 30 days to complete deferred maintenance',
+    description: 'The orange line was shut down for 30 days to complete deferred maintenance',
     type: 'shutdown',
   },
 };

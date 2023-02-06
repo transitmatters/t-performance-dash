@@ -12,6 +12,7 @@ import { useCustomQueries } from '../../api/datadashboard';
 import { getCurrentDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../utils/router';
 import { Location } from '../../types/charts';
+import { Station } from '../../types/stations';
 import { BasicWidgetDataLayout } from './internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from './HomescreenWidgetTitle';
 
@@ -20,8 +21,27 @@ export const DwellsWidget: React.FC = () => {
   const route = useDelimitatedRoute();
 
   const stations = optionsStation(capitalize(route.line));
-  const toStation = stations?.[stations.length - 3];
-  const fromStation = stations?.[1];
+
+  const fromStation: Station = {
+    stop_name: 'Kendall/MIT',
+    branches: ['A', 'B'],
+    station: 'place-knncl',
+    order: 6,
+    stops: {
+      '0': ['70072'],
+      '1': ['70071'],
+    },
+  };
+  const toStation: Station = {
+    stop_name: 'Downtown Crossing',
+    branches: ['A', 'B'],
+    station: 'place-dwnxg',
+    order: 9,
+    stops: {
+      '0': ['70078'],
+      '1': ['70077'],
+    },
+  };
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 

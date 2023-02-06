@@ -18,7 +18,7 @@ export const fetchSingleDayData = (
   options: PartialSingleDayAPIOptions
 ): Promise<SingleDayDataPoint[]> => {
   // TODO: Remove `api/` from URL. Temporary fix to work with rewrites in development
-  const url = new URL(`api/${name}/${options.date}`, window.location.origin);
+  const url = new URL(`${APP_DATA_BASE_PATH}/api/${name}/${options.date}`, window.location.origin);
   Object.entries(options).forEach(([key, value]) => {
     // options includes date which is a string. Date is never used as a parameter since it is part of the URL, so it can be excluded.
     if (!(typeof value === 'string') && key !== 'date')
@@ -41,8 +41,7 @@ export const fetchAggregateData = (
 ): Promise<AggregateDataResponse> => {
   const method = name === QueryNameKeys.traveltimes ? 'traveltimes2' : name;
 
-  // TODO: Remove `api/` from URL. Temporary fix to work with rewrites in development
-  const url = new URL(`api/${APP_DATA_BASE_PATH}/aggregate/${method}`, window.location.origin);
+  const url = new URL(`${APP_DATA_BASE_PATH}/api/aggregate/${method}`, window.location.origin);
   // Loop through each option and append values to searchParams.
   Object.entries(options).forEach(([key, value]) => {
     if (Array.isArray(value)) {
@@ -91,7 +90,7 @@ export const useCustomQueries: UseQueriesOverload = (
   const dependencies = aggregate ? aggregateQueryDependencies : singleDayQueryDependencies;
   // Create objects with keys of query names which contains keys and parameters.
   const queries = Object.keys(dependencies).reduce((object, queryName: QueryNameKeys) => {
-    const keys = [queryName];
+    const keys = [queryName, APP_DATA_BASE_PATH];
     const params = {};
     dependencies[queryName].forEach((field: AggregateAPIParams | SingleDayAPIParams) => {
       keys.push(parameters[field].toString());

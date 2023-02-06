@@ -20,14 +20,6 @@ export async function generateStaticParams() {
 export default function Overview() {
   return (
     <>
-      <BasicDataWidgetPair>
-        <BasicDataWidgetItem title="Median" value="5:37" analysis="-0:12 from last Weds." />
-        <BasicDataWidgetItem title="Median" value="5:37" analysis="-0:12 from last Weds." />
-      </BasicDataWidgetPair>
-      <BasicDataWidgetPair>
-        <BasicDataWidgetItem title="Today" value="5:37" analysis="-0:12 from last Weds." />
-        <BasicDataWidgetItem title="Today" value="5:37" analysis="-0:12 from last Weds." />
-      </BasicDataWidgetPair>
       <TravelTimesWidget />
       <SlowZonesWidget />
       <HeadwaysWidget />

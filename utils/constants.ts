@@ -37,8 +37,9 @@ const FRONTEND_TO_BACKEND_MAP = {
   BETA: 'https://dashboard-v4-beta-api.labs.transitmatters.org',
 };
 let index = '';
-// This is to prevent a next js render error https://nextjs.org/docs/messages/prerender-error
+// Wait for window to be available.
 if (typeof window !== 'undefined') {
   index = window.location.hostname;
 }
-export const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP[index];
+// If there is no value, this is running locally.
+export const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP[index] || '';

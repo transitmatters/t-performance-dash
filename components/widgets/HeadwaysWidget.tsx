@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../dashboard/charts/SingleDayLineChart';
@@ -18,13 +18,13 @@ export const HeadwaysWidget: React.FC = () => {
   const route = useDelimitatedRoute();
 
   const fromStation: Station = {
-    stop_name: 'Davis',
+    stop_name: 'Kendall/MIT',
     branches: ['A', 'B'],
-    station: 'place-davis',
-    order: 2,
+    station: 'place-knncl',
+    order: 6,
     stops: {
-      '0': ['70064'],
-      '1': ['70063'],
+      '0': ['70072'],
+      '1': ['70071'],
     },
   };
   const toStation: Station = {
@@ -37,6 +37,24 @@ export const HeadwaysWidget: React.FC = () => {
       '1': ['70077'],
     },
   };
+
+  const location: Location = useMemo(() => {
+    if (toStation === undefined || fromStation === undefined) {
+      return {
+        to: toStation?.stop_name || 'Loading...',
+        from: fromStation?.stop_name || 'Loading...',
+        direction: 'southbound',
+        line: route.linePath,
+      };
+    }
+
+    return {
+      to: toStation.stop_name,
+      from: fromStation.stop_name,
+      direction: 'southbound',
+      line: route.linePath,
+    };
+  }, [fromStation, route.linePath, toStation]);
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 
@@ -72,7 +90,7 @@ export const HeadwaysWidget: React.FC = () => {
             pointField={PointFieldKeys.currentDepDt}
             benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
             isLoading={headways.isLoading}
-            location={'todo'}
+            location={location}
             fname={'todo'}
           />
         </div>

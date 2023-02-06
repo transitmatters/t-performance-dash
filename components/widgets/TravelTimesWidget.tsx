@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { secondsToMinutes } from 'date-fns';
 import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
@@ -17,6 +17,7 @@ import { HomescreenWidgetTitle } from './HomescreenWidgetTitle';
 
 export const TravelTimesWidget: React.FC = () => {
   const startDate = getCurrentDate();
+  const route = useDelimitatedRoute();
 
   const fromStation: Station = {
     stop_name: 'Kendall/MIT',
@@ -38,8 +39,23 @@ export const TravelTimesWidget: React.FC = () => {
       '1': ['70077'],
     },
   };
+  const location: Location = useMemo(() => {
+    if (toStation === undefined || fromStation === undefined) {
+      return {
+        to: toStation?.stop_name || 'Loading...',
+        from: fromStation?.stop_name || 'Loading...',
+        direction: 'southbound',
+        line: route.linePath,
+      };
+    }
 
-  const route = useDelimitatedRoute();
+    return {
+      to: toStation.stop_name,
+      from: fromStation.stop_name,
+      direction: 'southbound',
+      line: route.linePath,
+    };
+  }, [fromStation, route.linePath, toStation]);
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 
@@ -83,7 +99,7 @@ export const TravelTimesWidget: React.FC = () => {
     <>
       <HomescreenWidgetTitle
         title="Travel Times"
-        href={`/${LINE_OBJECTS[route.line].path}/traveltimes`}
+        href={`/${LINE_OBJECTS[route.line]?.path}/traveltimes`}
       />
       <div className={classNames('bg-white p-2 shadow-dataBox')}>
         <div className={'charts main-column'}>
@@ -97,7 +113,7 @@ export const TravelTimesWidget: React.FC = () => {
             benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
             isLoading={traveltimes.isLoading}
             bothStops={true}
-            location={'todo'}
+            location={location}
             fname={'todo'}
           />
         </div>
