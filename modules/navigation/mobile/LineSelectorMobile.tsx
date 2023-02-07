@@ -18,7 +18,7 @@ export const LineSelectorMobile = () => {
   const buttonDiv = 'w-full relative ml-2 h-8 w-8 bg-white';
 
   // Don't render until we have the line.
-  if (!route.line) {
+  if (!route.line || !route) {
     return <div className={buttonDiv}></div>;
   }
 
@@ -30,7 +30,7 @@ export const LineSelectorMobile = () => {
             <div
               className={classNames(
                 'relative flex h-8 w-8 items-center justify-center rounded-full border-2 bg-opacity-80',
-                buttonConfig[route.line],
+                route.line && buttonConfig[route.line],
                 open ? 'shadow-simpleInset' : 'shadow-simple'
               )}
             >
