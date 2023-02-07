@@ -32,7 +32,6 @@ export class TimeWidgetValue implements WidgetValueInterface {
         return 'hrs.';
     }
   }
-  // todo: test 0s and nulls large and small negatives
   getFormattedValue() {
     if (typeof this.value === 'undefined') return '...';
     const absValue = Math.abs(this.value);
