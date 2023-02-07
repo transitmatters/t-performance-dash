@@ -12,6 +12,7 @@ import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { SingleDayAPIParams } from '../../common/types/api';
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
+import { TimeWidgetValue } from '../../common/types/basicWidgets';
 
 export const DwellsWidget: React.FC = () => {
   const startDate = getCurrentDate();
@@ -77,17 +78,17 @@ export const DwellsWidget: React.FC = () => {
         <div className={classNames('flex w-full flex-row space-x-8')}>
           <BasicWidgetDataLayout
             title="Average Dwell"
-            value={dwells.data ? averageDwells(dwells.data) : 0}
-            unit="time"
+            widgetValue={
+              new TimeWidgetValue(dwells.data ? averageDwells(dwells.data) : undefined, 1)
+            }
             analysis="since last week"
-            delta={1}
           />
           <BasicWidgetDataLayout
             title="Longest Dwell"
-            value={dwells.data ? longestDwells(dwells.data) : 0}
-            unit="time"
+            widgetValue={
+              new TimeWidgetValue(dwells.data ? longestDwells(dwells.data) : undefined, 1)
+            }
             analysis="since last week"
-            delta={1}
           />
         </div>
       </div>

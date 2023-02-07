@@ -8,6 +8,7 @@ import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
 import { TotalSlowTime } from './charts/TotalSlowTime';
+import { SZWidgetValue, TimeWidgetValue } from '../../common/types/basicWidgets';
 
 export default function SlowZonesWidget() {
   const { line, linePath } = useDelimitatedRoute();
@@ -38,17 +39,18 @@ export default function SlowZonesWidget() {
         <div className={classNames('flex w-full flex-row space-x-8')}>
           <BasicWidgetDataLayout
             title="Total Delay"
-            value={data && data[data.length - 1][LINE_OBJECTS[line]?.short]}
-            unit="time"
+            widgetValue={
+              new TimeWidgetValue(
+                data ? data[data.length - 1][LINE_OBJECTS[line]?.short] : undefined,
+                60
+              )
+            }
             analysis="since last week"
-            delta={60}
           />
           <BasicWidgetDataLayout
             title="# Slow Zones"
-            value={7}
-            unit="quantity"
+            widgetValue={new SZWidgetValue(0, -2)}
             analysis="since last week"
-            delta={-2}
           />
         </div>
       </div>

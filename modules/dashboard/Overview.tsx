@@ -1,6 +1,4 @@
 import React from 'react';
-import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
-import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { DwellsWidget } from '../../modules/dwells/DwellsWidget';
 import { HeadwaysWidget } from '../../modules/headways/HeadwaysWidget';
 import SlowZonesWidget from '../../modules/slowzones/SlowZonesWidget';

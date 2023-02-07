@@ -13,6 +13,7 @@ import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import { TimeWidgetValue } from '../../common/types/basicWidgets';
 
 export const TravelTimesWidget: React.FC = () => {
   const startDate = getCurrentDate();
@@ -81,17 +82,33 @@ export const TravelTimesWidget: React.FC = () => {
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Travel Time"
-            value={traveltimes.data ? averageTravelTime(traveltimes.data) : 0}
-            unit="time"
+            widgetValue={
+              new TimeWidgetValue(
+                traveltimes.data ? averageTravelTime(traveltimes.data) : undefined,
+                100
+              )
+            }
             analysis="since last week"
-            delta={1}
           />
           <BasicWidgetDataLayout
             title="Round Trip"
-            value={traveltimes.data ? averageTravelTime(traveltimes.data) * 2 : 0} //TODO: Show real time for a round trip
-            unit="time"
+            widgetValue={
+              new TimeWidgetValue(
+                traveltimes.data ? averageTravelTime(traveltimes.data) * 2 : undefined, //TODO: Show real time for a round trip
+                1200
+              )
+            }
             analysis="since last week"
-            delta={2}
+          />
+          <BasicWidgetDataLayout
+            title="test"
+            widgetValue={new TimeWidgetValue(37, -120)}
+            analysis="since last week"
+          />
+          <BasicWidgetDataLayout
+            title="test2"
+            widgetValue={new TimeWidgetValue(0, 0)}
+            analysis="since last week"
           />
         </div>
       </div>

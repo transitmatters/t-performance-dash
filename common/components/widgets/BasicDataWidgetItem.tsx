@@ -5,11 +5,9 @@ import { BasicWidgetDataLayout } from './internal/BasicWidgetDataLayout';
 
 export const BasicDataWidgetItem: React.FC<BasicWidgetDataLayoutProps> = ({
   title,
-  value,
   analysis,
-  delta,
-  unit,
-  sentiment,
+  widgetValue,
+  sentimentDirection,
 }) => {
   return (
     <div
@@ -19,11 +17,9 @@ export const BasicDataWidgetItem: React.FC<BasicWidgetDataLayoutProps> = ({
     >
       <BasicWidgetDataLayout
         title={title}
-        value={value}
         analysis={analysis}
-        delta={delta}
-        unit={unit}
-        sentiment={sentiment}
+        widgetValue={widgetValue}
+        sentimentDirection={sentimentDirection}
       />
     </div>
   );

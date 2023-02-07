@@ -1,8 +1,6 @@
 'use client';
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
-import { secondsToMinutes } from 'date-fns';
-import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { SingleDayAPIParams } from '../../common/types/api';
@@ -15,6 +13,7 @@ import type { Location } from '../../common/types/charts';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import { TimeWidgetValue } from '../../common/types/basicWidgets';
 
 export const HeadwaysWidget: React.FC = () => {
   const startDate = getCurrentDate();
@@ -82,17 +81,17 @@ export const HeadwaysWidget: React.FC = () => {
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Headway"
-            value={headways.data ? averageHeadway(headways.data) : 0} // todo: send null and loads
-            unit="time"
+            widgetValue={
+              new TimeWidgetValue(headways.data ? averageHeadway(headways.data) : undefined, 1)
+            }
             analysis="since last week"
-            delta={1}
           />
           <BasicWidgetDataLayout
             title="Longest Headway"
-            value={headways.data ? longestHeadway(headways.data) : 0}
-            unit="time"
+            widgetValue={
+              new TimeWidgetValue(headways.data ? longestHeadway(headways.data) : undefined, 1)
+            }
             analysis="since last week"
-            delta={1}
           />
         </div>
       </div>
