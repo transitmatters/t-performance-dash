@@ -2,11 +2,10 @@ import classNames from 'classnames';
 import React from 'react';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { DATA_PAGES } from '../../../common/constants/datapages';
-import { LINE_OBJECTS } from '../../../common/constants/lines';
 import { ActiveLink } from '../../../common/components/general/ActiveLink';
 
 export const DataPageTabs = () => {
-  const { datapage, line } = useDelimitatedRoute();
+  const { datapage, linePath } = useDelimitatedRoute();
 
   return (
     <div className="md:mt-4">
@@ -15,7 +14,7 @@ export const DataPageTabs = () => {
           {Object.entries(DATA_PAGES).map(([key, page]) => (
             <ActiveLink
               key={key}
-              href={`/${LINE_OBJECTS[line]?.path}${page.href}`}
+              href={`/${linePath}${page.href}`}
               activeClassName={'border-gray-500 text-black'}
               lambda={() => {
                 return key === datapage;

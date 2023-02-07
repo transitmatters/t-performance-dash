@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import React from 'react';
 import { DATA_PAGES } from '../../../common/constants/datapages';
-import { LINE_OBJECTS } from '../../../common/constants/lines';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 
 interface DataPageSelectionItemProps {
@@ -33,12 +32,12 @@ const DataPageSelectionItem: React.FC<DataPageSelectionItemProps> = ({
 };
 
 export const DataPageSelection: React.FC = () => {
-  const page = useDelimitatedRoute();
-  const selectedDataPage = page.datapage || DATA_PAGES[0];
+  const { linePath, datapage } = useDelimitatedRoute();
+  const selectedDataPage = datapage || DATA_PAGES[0];
   return (
     <div className="flex h-8 items-center gap-x-4 overflow-auto rounded-md border-black">
       {Object.entries(DATA_PAGES).map(([key, dataPageItem]) => {
-        let href = `/${LINE_OBJECTS[page.line]?.path}`;
+        let href = `/${linePath}`;
         if (key !== 'overview') {
           href += `/${key}`;
         }
