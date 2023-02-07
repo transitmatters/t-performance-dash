@@ -20,8 +20,6 @@ import type { SingleDayLineProps } from '../../../common/types/lines';
 import { prettyDate } from '../../utils/date';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
-import { useDelimitatedRoute } from '../../utils/router';
-import { LINE_OBJECTS } from '../../constants/lines';
 
 ChartJS.register(
   CategoryScale,
@@ -85,7 +83,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   showLegend = true,
 }) => {
   const labels = data.map((item) => item[pointField]);
-  const { line } = useDelimitatedRoute();
   return (
     <div className={showLegend ? 'chart' : undefined}>
       <div className={'chart-container'}>
@@ -99,11 +96,10 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               {
                 label: `Actual`,
                 fill: false,
-                pointBackgroundColor: 'transparent',
-                pointBorderColor: 'transparent',
+                pointBackgroundColor: pointColors(data, metricField, benchmarkField),
                 pointHoverRadius: 3,
+                pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField),
                 pointRadius: 3,
-                borderColor: line ? LINE_OBJECTS[line].color : '#303030',
                 pointHitRadius: 10,
                 // TODO: would be nice to add types to these arrow functions - but causes an issue bc datapoint[field] might be undefined.
                 data: data.map((datapoint: any) => (datapoint[metricField] / 60).toFixed(2)),
@@ -187,6 +183,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   const high = new Date(today);
                   high.setDate(high.getDate() + 1);
                   high.setHours(1);
+                  axis.max = Math.max(axis.max, high.valueOf());
                 },
               },
             },
