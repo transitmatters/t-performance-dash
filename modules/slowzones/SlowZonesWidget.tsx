@@ -29,6 +29,10 @@ export default function SlowZonesWidget() {
     return <>Uh oh... error</>;
   }
 
+  if (line === 'BUS' || line === 'GL') {
+    return null;
+  }
+
   return (
     <>
       <HomescreenWidgetTitle title="Slow Zones" href={`/${linePath}/slowzones`} />
