@@ -12,6 +12,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
+import { TimeWidgetValue } from '../../common/types/basicWidgets';
 
 export default function DwellsDetails() {
   const startDate = getCurrentDate();
@@ -60,23 +61,20 @@ export default function DwellsDetails() {
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Average Dwell"
-          value={dwells.data ? averageDwells(dwells.data).toFixed(2).toString() : 'Loading...'}
-          units="sec"
-          analysis="+1.0 since last week"
-          icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+          widgetValue={new TimeWidgetValue(dwells.data ? averageDwells(dwells.data) : undefined, 1)}
+          analysis="since last week"
         />
         <BasicDataWidgetItem
           title="Longest Dwell"
-          value={
-            dwells.data && dwellsReversed.data
-              ? Math.max(longestDwells(dwells.data), longestDwells(dwellsReversed.data))
-                  .toFixed(2)
-                  .toString()
-              : 'Loading...'
+          widgetValue={
+            new TimeWidgetValue(
+              dwells.data && dwellsReversed.data
+                ? Math.max(longestDwells(dwells.data), longestDwells(dwellsReversed.data))
+                : undefined,
+              1
+            )
           }
-          units="sec"
-          analysis="+1.0 since last week"
-          icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+          analysis="since last week"
         />
       </BasicDataWidgetPair>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">

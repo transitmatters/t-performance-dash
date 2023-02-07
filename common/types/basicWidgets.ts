@@ -32,6 +32,7 @@ export class TimeWidgetValue implements WidgetValueInterface {
         return 'hrs.';
     }
   }
+
   getFormattedValue() {
     if (typeof this.value === 'undefined') return '...';
     const absValue = Math.abs(this.value);
