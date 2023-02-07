@@ -83,7 +83,7 @@ export const SideNavBar = () => {
               <div className="flex flex-shrink-0 px-2">
                 <TmLogoSvg alt="TransitMatters Logo" />
               </div>
-              <div className="mt-5 flex flex-grow flex-col px-2">
+              <div className="mt-5 flex flex-col px-2">
                 <SideNavigation items={NAV_ITEMS} />
               </div>
             </div>

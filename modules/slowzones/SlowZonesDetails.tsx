@@ -12,7 +12,7 @@ import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
 export default function SlowZonesDetails() {
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
   const allSlow = useQuery(['allSlow'], fetchAllSlow);
-  const route = useDelimitatedRoute();
+  const { lineShort } = useDelimitatedRoute();
 
   const formattedTotals = useMemo(
     () =>
@@ -35,7 +35,7 @@ export default function SlowZonesDetails() {
           title="Total Delay"
           value={
             formattedTotals &&
-            (formattedTotals[formattedTotals.length - 1][route.lineShort] / 60).toFixed(2)
+            (formattedTotals[formattedTotals.length - 1][lineShort] / 60).toFixed(2)
           }
           units="min"
           analysis="+1.0 since last week"
@@ -50,11 +50,7 @@ export default function SlowZonesDetails() {
         />
       </BasicDataWidgetPair>
       {}
-      <SlowZonesContainer
-        allSlow={allSlow.data}
-        delayTotals={formattedTotals}
-        line={route.lineShort}
-      />
+      <SlowZonesContainer allSlow={allSlow.data} delayTotals={formattedTotals} line={lineShort} />
     </>
   );
 }
