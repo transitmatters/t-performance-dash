@@ -82,25 +82,17 @@ export const HeadwaysWidget: React.FC = () => {
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Headway"
-            value={
-              headways.data
-                ? secondsToMinutes(averageHeadway(headways.data)).toString()
-                : 'Loading...'
-            }
-            units="min"
-            analysis="+1.0 since last week"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            value={headways.data ? averageHeadway(headways.data) : 0} // todo: send null and loads
+            unit="time"
+            analysis="since last week"
+            delta={1}
           />
           <BasicWidgetDataLayout
             title="Longest Headway"
-            value={
-              headways.data
-                ? secondsToMinutes(longestHeadway(headways.data)).toString()
-                : 'Loading...'
-            }
-            units="min"
-            analysis="+1.0 since last week"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            value={headways.data ? longestHeadway(headways.data) : 0}
+            unit="time"
+            analysis="since last week"
+            delta={1}
           />
         </div>
       </div>

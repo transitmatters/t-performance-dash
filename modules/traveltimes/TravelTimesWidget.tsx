@@ -83,25 +83,17 @@ export const TravelTimesWidget: React.FC = () => {
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Travel Time"
-            value={
-              traveltimes.data
-                ? secondsToMinutes(averageTravelTime(traveltimes.data)).toString()
-                : 'Loading...'
-            }
-            units="min"
-            analysis="+1.0 since last week"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            value={traveltimes.data ? averageTravelTime(traveltimes.data) : 0}
+            unit={'time'}
+            analysis="since last week"
+            delta={1}
           />
           <BasicWidgetDataLayout
             title="Round Trip"
-            value={
-              traveltimes.data
-                ? secondsToMinutes(averageTravelTime(traveltimes.data) * 2).toString()
-                : 'Loading...'
-            } //TODO: Show real time for a round trip
-            units="min"
-            analysis="+2 since last week"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            value={traveltimes.data ? averageTravelTime(traveltimes.data) * 2 : 0} //TODO: Show real time for a round trip
+            unit="time"
+            analysis="since last week"
+            delta={2}
           />
         </div>
       </div>
