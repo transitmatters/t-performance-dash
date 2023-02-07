@@ -1,14 +1,13 @@
 'use client';
-import React, { useMemo } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { SingleDayAPIParams } from '../../common/types/api';
-import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
+import { locationDetails, optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useCustomQueries } from '../../common/api/datadashboard';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getCurrentDate } from '../../common/utils/date';
-import type { Location } from '../../common/types/charts';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { averageTravelTime } from '../../common/utils/traveltimes';
@@ -37,24 +36,6 @@ export const TravelTimesWidget: React.FC = () => {
     fromStopIds !== null && toStopIds !== null
   );
 
-  const location: Location = useMemo(() => {
-    if (toStation === undefined || fromStation === undefined) {
-      return {
-        to: toStation?.stop_name || 'Loading...',
-        from: fromStation?.stop_name || 'Loading...',
-        direction: 'southbound',
-        line: lineShort,
-      };
-    }
-
-    return {
-      to: toStation.stop_name,
-      from: fromStation.stop_name,
-      direction: 'southbound',
-      line: lineShort,
-    };
-  }, [fromStation, lineShort, toStation]);
-
   const isLoading = traveltimes.isLoading || toStation === undefined || fromStation === undefined;
 
   if (traveltimes.isError || !linePath) {
@@ -75,7 +56,7 @@ export const TravelTimesWidget: React.FC = () => {
           benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
           isLoading={isLoading}
           bothStops={true}
-          location={location}
+          location={locationDetails(fromStation, toStation, lineShort)}
           fname={'traveltimes'}
           showLegend={!isMobile}
         />

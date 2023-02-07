@@ -7,11 +7,12 @@ import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWi
 import { SlowZonesContainer } from '../../modules/slowzones/SlowZonesContainer';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
+import { TimeWidgetValue } from '../../common/types/basicWidgets';
 
 export default function SlowZonesDetails() {
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
   const allSlow = useQuery(['allSlow'], fetchAllSlow);
-  const route = useDelimitatedRoute();
+  const { lineShort } = useDelimitatedRoute();
 
   const formattedTotals = useMemo(
     () =>
@@ -32,27 +33,22 @@ export default function SlowZonesDetails() {
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Total Delay"
-          value={
-            formattedTotals ? formattedTotals[formattedTotals.length - 1][route.lineShort] / 60 : 0
+          widgetValue={
+            new TimeWidgetValue(
+              formattedTotals ? formattedTotals[formattedTotals.length - 1][lineShort] / 60 : 0,
+              1
+            )
           }
-          unit="time"
-          delta={1}
           analysis="since last week"
         />
         <BasicDataWidgetItem
           title="# Slow Zones"
-          value={7}
-          unit="time"
-          delta={2}
+          widgetValue={new TimeWidgetValue(7, 1)}
           analysis="since last week"
         />
       </BasicDataWidgetPair>
       {}
-      <SlowZonesContainer
-        allSlow={allSlow.data}
-        delayTotals={formattedTotals}
-        line={route.lineShort}
-      />
+      <SlowZonesContainer allSlow={allSlow.data} delayTotals={formattedTotals} line={lineShort} />
     </>
   );
 }

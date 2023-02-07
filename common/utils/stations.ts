@@ -1,6 +1,8 @@
 import type { SelectOption } from '../../common/types/inputs';
 import type { LineShort } from '../../common/types/lines';
 import type { Station } from '../../common/types/stations';
+import type { Location } from '../types/charts';
+import type { Direction } from '../types/dataPoints';
 import { rtStations } from './../constants/stations';
 
 export const optionsForField = (
@@ -85,5 +87,31 @@ export const stopIdsForStations = (
   return {
     fromStopIds: isDirection1 ? from.stops['1'] : from.stops['0'],
     toStopIds: isDirection1 ? to.stops['1'] : to.stops['0'],
+  };
+};
+
+export const travelDirection = (from: Station, to: Station): Direction => {
+  return from.order < to.order ? 'southbound' : 'northbound';
+};
+
+export const locationDetails = (
+  from: Station | undefined,
+  to: Station | undefined,
+  lineShort: LineShort
+): Location => {
+  if (to === undefined || from === undefined) {
+    return {
+      to: to?.stop_name || 'Loading...',
+      from: from?.stop_name || 'Loading...',
+      direction: 'southbound',
+      line: lineShort,
+    };
+  }
+
+  return {
+    to: to.stop_name,
+    from: from.stop_name,
+    direction: travelDirection(from, to),
+    line: lineShort,
   };
 };
