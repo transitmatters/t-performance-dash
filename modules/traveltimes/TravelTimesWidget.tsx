@@ -1,8 +1,6 @@
 'use client';
 import React from 'react';
 import classNames from 'classnames';
-import { secondsToMinutes } from 'date-fns';
-import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { SingleDayAPIParams } from '../../common/types/api';
@@ -14,6 +12,7 @@ import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import { TimeWidgetValue } from '../../common/types/basicWidgets';
 
 export const TravelTimesWidget: React.FC = () => {
   const startDate = getCurrentDate();
@@ -64,25 +63,23 @@ export const TravelTimesWidget: React.FC = () => {
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Travel Time"
-            value={
-              traveltimes.data
-                ? secondsToMinutes(averageTravelTime(traveltimes.data)).toString()
-                : 'Loading...'
+            widgetValue={
+              new TimeWidgetValue(
+                traveltimes.data ? averageTravelTime(traveltimes.data) : undefined,
+                100
+              )
             }
-            units="min"
-            analysis="+1.0 since last week"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            analysis="since last week"
           />
           <BasicWidgetDataLayout
             title="Round Trip"
-            value={
-              traveltimes.data
-                ? secondsToMinutes(averageTravelTime(traveltimes.data) * 2).toString()
-                : 'Loading...'
+            widgetValue={
+              new TimeWidgetValue(
+                traveltimes.data ? averageTravelTime(traveltimes.data) * 2 : undefined, //TODO: Show real time for a round trip
+                1200
+              )
             }
-            units="min"
-            analysis="+2 since last week"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            analysis="since last week"
           />
         </div>
       </div>

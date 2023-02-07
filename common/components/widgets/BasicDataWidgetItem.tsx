@@ -1,42 +1,26 @@
-import classNames from 'classnames';
-import type { ReactNode } from 'react';
 import React from 'react';
-import ArrowDownNegative from '../../../public/Icons/ArrowDownNegative.svg';
+import classNames from 'classnames';
+import type { BasicWidgetDataLayoutProps } from './internal/BasicWidgetDataLayout';
+import { BasicWidgetDataLayout } from './internal/BasicWidgetDataLayout';
 
-type BasicDataWidgetItemProps = {
-  title: string;
-  value?: string;
-  analysis: string;
-  units?: string;
-  icon?: ReactNode;
-};
-
-export const BasicDataWidgetItem: React.FC<BasicDataWidgetItemProps> = ({
+export const BasicDataWidgetItem: React.FC<BasicWidgetDataLayoutProps> = ({
   title,
-  value,
   analysis,
-  units,
-  icon,
+  widgetValue,
+  sentimentDirection,
 }) => {
   return (
     <div
-      className={classNames('w-1/2 rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox')}
+      className={classNames(
+        'w-1/2 rounded-lg border-design-lightGrey bg-white p-6 py-4 shadow-dataBox sm:w-auto'
+      )}
     >
-      <div className={classNames('flex flex-col items-start')}>
-        <p className={classNames('text-base')}>{title}</p>
-        <div className="flex flex-row items-baseline gap-x-1">
-          <p className={classNames('text-4xl text-black')}>{value}</p>
-          <p className="text-base text-design-subtitleGrey">{units}</p>
-        </div>
-        <div className="flex flex-row items-center gap-x-1">
-          {icon ? (
-            icon
-          ) : (
-            <ArrowDownNegative className="h-3 w-auto" alt="Negative Sentiment Indication" />
-          )}
-          <p className={classNames('text-xs text-design-subtitleGrey')}>{analysis}</p>
-        </div>
-      </div>
+      <BasicWidgetDataLayout
+        title={title}
+        analysis={analysis}
+        widgetValue={widgetValue}
+        sentimentDirection={sentimentDirection}
+      />
     </div>
   );
 };

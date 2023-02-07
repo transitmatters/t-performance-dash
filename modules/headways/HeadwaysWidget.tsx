@@ -1,8 +1,6 @@
 'use client';
 import React from 'react';
 import classNames from 'classnames';
-import { secondsToMinutes } from 'date-fns';
-import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { SingleDayAPIParams } from '../../common/types/api';
@@ -14,6 +12,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import { TimeWidgetValue } from '../../common/types/basicWidgets';
 
 export const HeadwaysWidget: React.FC = () => {
   const startDate = getCurrentDate();
@@ -63,25 +62,17 @@ export const HeadwaysWidget: React.FC = () => {
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Headway"
-            value={
-              headways.data
-                ? secondsToMinutes(averageHeadway(headways.data)).toString()
-                : 'Loading...'
+            widgetValue={
+              new TimeWidgetValue(headways.data ? averageHeadway(headways.data) : undefined, 1)
             }
-            units="min"
-            analysis="+1.0 since last week"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            analysis="since last week"
           />
           <BasicWidgetDataLayout
             title="Longest Headway"
-            value={
-              headways.data
-                ? secondsToMinutes(longestHeadway(headways.data)).toString()
-                : 'Loading...'
+            widgetValue={
+              new TimeWidgetValue(headways.data ? longestHeadway(headways.data) : undefined, 1)
             }
-            units="min"
-            analysis="+1.0 since last week"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            analysis="since last week"
           />
         </div>
       </div>

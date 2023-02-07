@@ -41,13 +41,15 @@ module.exports = {
         design: {
           darkGrey: '#353535',
           sideBar: '#403E3E',
-          subtitleGrey: '#808080',
+          subtitleGrey: '#807C7C',
           sideBarHeader: '#E0E0E0',
           sideBarText: '#B6B6B6',
           lightGrey: '#DADADA',
           background: '#F6F6F6',
-          'rb-900': '#1C1919',
+          'rb-100': '#F5F2F2',
+          'rb-500': '#524A4A',
           'rb-800': '#262525',
+          'rb-900': '#1C1919',
         },
         mbta: {
           red: '#D13434',

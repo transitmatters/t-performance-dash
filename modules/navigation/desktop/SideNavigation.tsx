@@ -48,7 +48,7 @@ export const SideNavigation = ({ items, setSidebarOpen }: SideNavigationProps) =
                     item.current
                       ? ' text-white'
                       : ' text-white hover:bg-gray-50 hover:text-gray-900',
-                    'cursor-pointerrounded-md group flex w-full items-center  py-2 pr-2 text-left text-sm font-medium focus:outline-none focus:ring-2 focus:ring-gray-600'
+                    'group flex w-full cursor-pointer items-center rounded-md  py-2 pr-2 text-left text-sm font-medium focus:outline-none focus:ring-2 focus:ring-gray-600'
                   )}
                 >
                   <item.icon

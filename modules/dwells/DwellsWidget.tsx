@@ -1,8 +1,6 @@
 'use client';
 import React from 'react';
 import classNames from 'classnames';
-import { secondsToMinutes } from 'date-fns';
-import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { locationDetails, optionsStation, stopIdsForStations } from '../../common/utils/stations';
@@ -13,6 +11,7 @@ import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { SingleDayAPIParams } from '../../common/types/api';
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
+import { TimeWidgetValue } from '../../common/types/basicWidgets';
 
 export const DwellsWidget: React.FC = () => {
   const startDate = getCurrentDate();
@@ -62,24 +61,20 @@ export const DwellsWidget: React.FC = () => {
           fname={'dwells'}
           showLegend={false}
         />
-        <div className={classNames('flex w-full flex-row')}>
+        <div className={classNames('flex w-full flex-row space-x-8')}>
           <BasicWidgetDataLayout
             title="Average Dwell"
-            value={
-              dwells.data ? secondsToMinutes(averageDwells(dwells.data)).toString() : 'Loading...'
+            widgetValue={
+              new TimeWidgetValue(dwells.data ? averageDwells(dwells.data) : undefined, 1)
             }
-            units="min"
-            analysis="+1.0 since last week"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            analysis="since last week"
           />
           <BasicWidgetDataLayout
             title="Longest Dwell"
-            value={
-              dwells.data ? secondsToMinutes(longestDwells(dwells.data)).toString() : 'Loading...'
+            widgetValue={
+              new TimeWidgetValue(dwells.data ? longestDwells(dwells.data) : undefined, 1)
             }
-            units="min"
-            analysis="+1.0 since last week"
-            Icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+            analysis="since last week"
           />
         </div>
       </div>

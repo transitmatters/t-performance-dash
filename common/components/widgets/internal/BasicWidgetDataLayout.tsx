@@ -1,35 +1,64 @@
-import classNames from 'classnames';
 import React from 'react';
+import classNames from 'classnames';
+import { WidgetValueInterface } from '../../../types/basicWidgets';
+import { LoadingSpinner } from '../../graphics/LoadingSpinner';
 
-type BasicWidgetDataLayoutProps = {
+type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';
+
+export type BasicWidgetDataLayoutProps = {
   title: string;
-  value?: string;
   analysis: string;
-  units?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Icon: any;
+  widgetValue: WidgetValueInterface;
+  sentimentDirection?: SentimentDirection;
 };
 
 export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
   title,
-  value,
   analysis,
-  units,
-  Icon,
+  widgetValue,
+  sentimentDirection = 'negativeOnIncrease',
 }) => {
+  const getDelta = () => {
+    const deltaValue = widgetValue.getFormattedDelta();
+    const increase = widgetValue.delta ? widgetValue.delta > 0 : false;
+    const positiveSentiment =
+      (!increase && sentimentDirection === 'negativeOnIncrease') ||
+      (increase && sentimentDirection === 'positiveOnIncrease');
+    const bgColor = positiveSentiment ? 'bg-green-100' : 'bg-red-100';
+    const textColor = positiveSentiment ? 'text-green-800' : 'text-red-800';
+    return (
+      <div
+        className={classNames(
+          'mt-1 flex flex-row rounded-full  px-3',
+          widgetValue.delta ? bgColor : 'bg-gray-100'
+        )}
+      >
+        <p className={classNames('text-sm', widgetValue.delta ? textColor : 'text-rb-800')}>
+          {deltaValue}
+        </p>
+      </div>
+    );
+  };
+
   return (
-    <div className={classNames('w-1/2 bg-white p-2')}>
-      <div className={classNames('flex flex-col items-start')}>
-        <p className={classNames('text-base')}>{title}</p>
-        <div className="flex flex-row items-baseline gap-x-1">
-          <p className={classNames('text-4xl text-black')}>{value}</p>
-          <p className="text-base text-design-subtitleGrey">{units}</p>
-        </div>
-        <div className="flex flex-row items-center gap-x-1">
-          <div>{Icon}</div>
-          <p className={classNames('text-xs text-design-subtitleGrey')}>{analysis}</p>
+    <>
+      <div className={classNames('relative bg-white')}>
+        {widgetValue.value === undefined && <LoadingSpinner />}
+        <div className={classNames('flex flex-col items-start p-2')}>
+          <p className={classNames('text-base text-gray-500')}>{title}</p>
+          <div className="flex flex-row items-baseline gap-x-1">
+            <p className={classNames('text-4xl font-semibold text-gray-900 sm:text-3xl')}>
+              {widgetValue.getFormattedValue()}
+            </p>
+            <p className="text-base text-design-subtitleGrey">{widgetValue.getUnits()}</p>
+          </div>
+          <div className="flex flex-row items-baseline gap-x-1">
+            {getDelta()}
+
+            <p className={classNames('text-sm text-design-subtitleGrey')}>{analysis}</p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

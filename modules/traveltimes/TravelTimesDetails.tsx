@@ -13,6 +13,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageTravelTime } from '../../common/utils/traveltimes';
+import { TimeWidgetValue } from '../../common/types/basicWidgets';
 
 export default function TravelTimesDetails() {
   const startDate = getCurrentDate();
@@ -61,27 +62,25 @@ export default function TravelTimesDetails() {
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Average Travel Time"
-          value={
-            traveltimes.data
-              ? secondsToMinutes(averageTravelTime(traveltimes.data)).toString()
-              : 'Loading...'
+          widgetValue={
+            new TimeWidgetValue(
+              traveltimes.data ? averageTravelTime(traveltimes.data) : undefined,
+              1
+            )
           }
-          units="min"
-          analysis="+1.0 since last week"
-          icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+          analysis="since last week"
         />
         <BasicDataWidgetItem
           title="Round Trip"
-          value={
-            traveltimes.data && traveltimesReversed.data
-              ? secondsToMinutes(
-                  averageTravelTime(traveltimes.data) + averageTravelTime(traveltimesReversed.data)
-                ).toString()
-              : 'Loading...'
+          widgetValue={
+            new TimeWidgetValue(
+              traveltimes.data && traveltimesReversed.data
+                ? averageTravelTime(traveltimes.data) + averageTravelTime(traveltimesReversed.data)
+                : undefined,
+              1
+            )
           }
-          units="min"
-          analysis="+2 since last week"
-          icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+          analysis="since last week"
         />
       </BasicDataWidgetPair>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">

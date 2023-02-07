@@ -13,6 +13,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageHeadway, longestHeadway } from '../../common/utils/headways';
+import { TimeWidgetValue } from '../../common/types/basicWidgets';
 
 export default function HeadwaysDetails() {
   const startDate = getCurrentDate();
@@ -61,25 +62,17 @@ export default function HeadwaysDetails() {
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Average Headway"
-          value={
-            headways.data
-              ? secondsToMinutes(averageHeadway(headways.data)).toString()
-              : 'Loading...'
+          widgetValue={
+            new TimeWidgetValue(headways.data ? averageHeadway(headways.data) : undefined, 1)
           }
-          units="min"
-          analysis="+1.0 since last week"
-          icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+          analysis="since last week"
         />
         <BasicDataWidgetItem
           title="Longest Headway"
-          value={
-            headways.data
-              ? secondsToMinutes(longestHeadway(headways.data)).toString()
-              : 'Loading...'
+          widgetValue={
+            new TimeWidgetValue(headways.data ? longestHeadway(headways.data) : undefined, 1)
           }
-          units="min"
-          analysis="+1.0 since last week"
-          icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+          analysis="since last week"
         />
       </BasicDataWidgetPair>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">

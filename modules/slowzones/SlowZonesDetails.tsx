@@ -3,11 +3,11 @@
 import React, { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
-import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { SlowZonesContainer } from '../../modules/slowzones/SlowZonesContainer';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
+import { TimeWidgetValue } from '../../common/types/basicWidgets';
 
 export default function SlowZonesDetails() {
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
@@ -33,20 +33,18 @@ export default function SlowZonesDetails() {
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Total Delay"
-          value={
-            formattedTotals &&
-            (formattedTotals[formattedTotals.length - 1][lineShort] / 60).toFixed(2)
+          widgetValue={
+            new TimeWidgetValue(
+              formattedTotals ? formattedTotals[formattedTotals.length - 1][lineShort] / 60 : 0,
+              1
+            )
           }
-          units="min"
-          analysis="+1.0 since last week"
-          icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+          analysis="since last week"
         />
         <BasicDataWidgetItem
           title="# Slow Zones"
-          value="7"
-          units="min"
-          analysis="+2 since last week"
-          icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+          widgetValue={new TimeWidgetValue(7, 1)}
+          analysis="since last week"
         />
       </BasicDataWidgetPair>
       {}
