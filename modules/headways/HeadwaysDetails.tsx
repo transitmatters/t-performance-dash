@@ -1,11 +1,10 @@
 'use client';
 
 import React from 'react';
-import { secondsToMinutes } from 'date-fns';
+import dayjs from 'dayjs';
 import { useCustomQueries } from '../../common/api/datadashboard';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
-import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayAPIParams } from '../../common/types/api';
 import { locationDetails, optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { getCurrentDate } from '../../common/utils/date';
@@ -65,14 +64,14 @@ export default function HeadwaysDetails() {
           widgetValue={
             new TimeWidgetValue(headways.data ? averageHeadway(headways.data) : undefined, 1)
           }
-          analysis="since last week"
+          analysis={`from last ${dayjs().format('ddd')}.`}
         />
         <BasicDataWidgetItem
           title="Longest Headway"
           widgetValue={
             new TimeWidgetValue(headways.data ? longestHeadway(headways.data) : undefined, 1)
           }
-          analysis="since last week"
+          analysis={`from last ${dayjs().format('ddd')}.`}
         />
       </BasicDataWidgetPair>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">

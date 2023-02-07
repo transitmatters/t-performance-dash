@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
+import dayjs from 'dayjs';
 import { useQuery } from '@tanstack/react-query';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
@@ -39,12 +40,12 @@ export default function SlowZonesDetails() {
               1
             )
           }
-          analysis="since last week"
+          analysis={`from last ${dayjs().format('ddd')}.`}
         />
         <BasicDataWidgetItem
           title="# Slow Zones"
           widgetValue={new TimeWidgetValue(7, 1)}
-          analysis="since last week"
+          analysis={`from last ${dayjs().format('ddd')}.`}
         />
       </BasicDataWidgetPair>
       {}

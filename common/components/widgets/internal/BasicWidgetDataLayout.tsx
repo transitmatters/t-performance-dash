@@ -29,11 +29,16 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
     return (
       <div
         className={classNames(
-          'mt-1 flex flex-row rounded-full  px-3',
+          'mt-1 flex flex-row rounded-full px-2',
           widgetValue.delta ? bgColor : 'bg-gray-100'
         )}
       >
-        <p className={classNames('text-sm', widgetValue.delta ? textColor : 'text-rb-800')}>
+        <p
+          className={classNames(
+            'text-xs sm:text-sm',
+            widgetValue.delta ? textColor : 'text-rb-800'
+          )}
+        >
           {deltaValue}
         </p>
       </div>
@@ -47,15 +52,14 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
         <div className={classNames('flex flex-col items-start p-2')}>
           <p className={classNames('text-base text-gray-500')}>{title}</p>
           <div className="flex flex-row items-baseline gap-x-1">
-            <p className={classNames('text-4xl font-semibold text-gray-900 sm:text-3xl')}>
+            <p className={classNames('text-3xl font-semibold text-gray-900 ')}>
               {widgetValue.getFormattedValue()}
             </p>
             <p className="text-base text-design-subtitleGrey">{widgetValue.getUnits()}</p>
           </div>
           <div className="flex flex-row items-baseline gap-x-1">
             {getDelta()}
-
-            <p className={classNames('text-sm text-design-subtitleGrey')}>{analysis}</p>
+            <p className={classNames('text-xs text-design-subtitleGrey sm:text-sm')}>{analysis}</p>
           </div>
         </div>
       </div>

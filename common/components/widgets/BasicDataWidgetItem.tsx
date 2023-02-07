@@ -12,7 +12,7 @@ export const BasicDataWidgetItem: React.FC<BasicWidgetDataLayoutProps> = ({
   return (
     <div
       className={classNames(
-        'w-1/2 rounded-lg border-design-lightGrey bg-white p-6 py-4 shadow-dataBox sm:w-auto'
+        'w-1/2 rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox sm:w-auto sm:p-4'
       )}
     >
       <BasicWidgetDataLayout

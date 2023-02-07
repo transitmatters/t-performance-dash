@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import classNames from 'classnames';
+import dayjs from 'dayjs';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { locationDetails, optionsStation, stopIdsForStations } from '../../common/utils/stations';
@@ -67,14 +68,14 @@ export const DwellsWidget: React.FC = () => {
             widgetValue={
               new TimeWidgetValue(dwells.data ? averageDwells(dwells.data) : undefined, 1)
             }
-            analysis="since last week"
+            analysis={`from last ${dayjs().format('ddd')}.`}
           />
           <BasicWidgetDataLayout
             title="Longest Dwell"
             widgetValue={
               new TimeWidgetValue(dwells.data ? longestDwells(dwells.data) : undefined, 1)
             }
-            analysis="since last week"
+            analysis={`from last ${dayjs().format('ddd')}.`}
           />
         </div>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import classNames from 'classnames';
+import dayjs from 'dayjs';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { SingleDayAPIParams } from '../../common/types/api';
@@ -57,7 +58,7 @@ export const HeadwaysWidget: React.FC = () => {
           isLoading={isLoading}
           location={locationDetails(fromStation, toStation, lineShort)}
           fname={'headways'}
-          showLegend={!isMobile}
+          showLegend={false}
         />
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
@@ -65,14 +66,14 @@ export const HeadwaysWidget: React.FC = () => {
             widgetValue={
               new TimeWidgetValue(headways.data ? averageHeadway(headways.data) : undefined, 1)
             }
-            analysis="since last week"
+            analysis={`from last ${dayjs().format('ddd')}.`}
           />
           <BasicWidgetDataLayout
             title="Longest Headway"
             widgetValue={
               new TimeWidgetValue(headways.data ? longestHeadway(headways.data) : undefined, 1)
             }
-            analysis="since last week"
+            analysis={`from last ${dayjs().format('ddd')}.`}
           />
         </div>
       </div>

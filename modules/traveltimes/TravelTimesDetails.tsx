@@ -1,11 +1,10 @@
 'use client';
 
 import React from 'react';
-import { secondsToMinutes } from 'date-fns';
+import dayjs from 'dayjs';
 import { useCustomQueries } from '../../common/api/datadashboard';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
-import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayAPIParams } from '../../common/types/api';
 import { locationDetails, optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { getCurrentDate } from '../../common/utils/date';
@@ -61,14 +60,14 @@ export default function TravelTimesDetails() {
     <>
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
-          title="Average Travel Time"
+          title="Avg. Travel Time"
           widgetValue={
             new TimeWidgetValue(
               traveltimes.data ? averageTravelTime(traveltimes.data) : undefined,
               1
             )
           }
-          analysis="since last week"
+          analysis={`from last ${dayjs().format('ddd')}.`}
         />
         <BasicDataWidgetItem
           title="Round Trip"
@@ -80,7 +79,7 @@ export default function TravelTimesDetails() {
               1
             )
           }
-          analysis="since last week"
+          analysis={`from last ${dayjs().format('ddd')}.`}
         />
       </BasicDataWidgetPair>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">

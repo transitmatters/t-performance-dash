@@ -1,6 +1,6 @@
 'use client';
-
 import React from 'react';
+import dayjs from 'dayjs';
 import { useCustomQueries } from '../../common/api/datadashboard';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
@@ -62,7 +62,7 @@ export default function DwellsDetails() {
         <BasicDataWidgetItem
           title="Average Dwell"
           widgetValue={new TimeWidgetValue(dwells.data ? averageDwells(dwells.data) : undefined, 1)}
-          analysis="since last week"
+          analysis={`from last ${dayjs().format('ddd')}.`}
         />
         <BasicDataWidgetItem
           title="Longest Dwell"
@@ -74,7 +74,7 @@ export default function DwellsDetails() {
               1
             )
           }
-          analysis="since last week"
+          analysis={`from last ${dayjs().format('ddd')}.`}
         />
       </BasicDataWidgetPair>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
