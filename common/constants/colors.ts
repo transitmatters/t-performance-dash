@@ -37,7 +37,7 @@ export const CHART_COLORS = {
 };
 
 export const LINE_COLORS = {
-  RED: '#da291c',
+  RED: '#D13434',
   ORANGE: '#ed8b00',
   BLUE: '#003da5',
   GREEN: '#00834d',

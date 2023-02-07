@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import dayjs from 'dayjs';
 import classNames from 'classnames';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
@@ -58,18 +59,18 @@ export const TravelTimesWidget: React.FC = () => {
           bothStops={true}
           location={locationDetails(fromStation, toStation, lineShort)}
           fname={'traveltimes'}
-          showLegend={!isMobile}
+          showLegend={false}
         />
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
-            title="Average Travel Time"
+            title="Avg. Travel Time"
             widgetValue={
               new TimeWidgetValue(
                 traveltimes.data ? averageTravelTime(traveltimes.data) : undefined,
                 100
               )
             }
-            analysis="since last week"
+            analysis={`from last ${dayjs().format('ddd')}.`}
           />
           <BasicWidgetDataLayout
             title="Round Trip"
@@ -79,7 +80,7 @@ export const TravelTimesWidget: React.FC = () => {
                 1200
               )
             }
-            analysis="since last week"
+            analysis={`from last ${dayjs().format('ddd')}.`}
           />
         </div>
       </div>

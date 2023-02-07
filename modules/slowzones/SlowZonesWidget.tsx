@@ -1,5 +1,6 @@
 'use client';
 import React, { useMemo } from 'react';
+import dayjs from 'dayjs';
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -49,12 +50,12 @@ export default function SlowZonesWidget() {
                 60
               )
             }
-            analysis="since last week"
+            analysis={`from last ${dayjs().format('ddd')}.`}
           />
           <BasicWidgetDataLayout
             title="# Slow Zones"
             widgetValue={new SZWidgetValue(0, -2)}
-            analysis="since last week"
+            analysis={`from last ${dayjs().format('ddd')}.`}
           />
         </div>
       </div>
