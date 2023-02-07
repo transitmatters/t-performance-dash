@@ -3,7 +3,6 @@
 import React, { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
-import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { SlowZonesContainer } from '../../modules/slowzones/SlowZonesContainer';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -34,19 +33,18 @@ export default function SlowZonesDetails() {
         <BasicDataWidgetItem
           title="Total Delay"
           value={
-            formattedTotals &&
-            (formattedTotals[formattedTotals.length - 1][route.lineShort] / 60).toFixed(2)
+            formattedTotals ? formattedTotals[formattedTotals.length - 1][route.lineShort] / 60 : 0
           }
-          units="min"
-          analysis="+1.0 since last week"
-          icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+          unit="time"
+          delta={1}
+          analysis="since last week"
         />
         <BasicDataWidgetItem
           title="# Slow Zones"
-          value="7"
-          units="min"
-          analysis="+2 since last week"
-          icon={<ArrowDownNegative className="h-3 w-auto" alt="Your Company" />}
+          value={7}
+          unit="time"
+          delta={2}
+          analysis="since last week"
         />
       </BasicDataWidgetPair>
       {}

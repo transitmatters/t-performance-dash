@@ -1,8 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
-dayjs.extend(duration);
+import { WidgetUnit, WIDGET_UNITS } from '../../../types/basicWidgets';
 
 export type BasicWidgetDataLayoutProps = {
   title: string;
@@ -12,24 +10,6 @@ export type BasicWidgetDataLayoutProps = {
   unit: WidgetUnit;
   // If sentiment is true -> increase in stat = negative sentiment.
   sentiment?: boolean;
-};
-
-export type WidgetUnit = 'time' | 'quantity';
-
-export type WidgetType = {
-  format: (value: number) => string;
-  description?: string;
-};
-export type WidgetFormat = Record<WidgetUnit, WidgetType>;
-
-export const WIDGET_UNITS: WidgetFormat = {
-  time: {
-    description: 'min.',
-    format: (seconds) => dayjs.duration(Math.abs(seconds), 'seconds').format('m:ss'),
-  },
-  quantity: {
-    format: (quantity) => Math.abs(quantity).toString(),
-  },
 };
 
 export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({

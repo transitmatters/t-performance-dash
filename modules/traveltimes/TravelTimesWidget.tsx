@@ -1,8 +1,6 @@
 'use client';
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
-import { secondsToMinutes } from 'date-fns';
-import ArrowDownNegative from '../../public/Icons/ArrowDownNegative.svg';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { BenchmarkFieldKeys, MetricFieldKeys, PointFieldKeys } from '../../src/charts/types';
 import { SingleDayAPIParams } from '../../common/types/api';
@@ -84,7 +82,7 @@ export const TravelTimesWidget: React.FC = () => {
           <BasicWidgetDataLayout
             title="Average Travel Time"
             value={traveltimes.data ? averageTravelTime(traveltimes.data) : 0}
-            unit={'time'}
+            unit="time"
             analysis="since last week"
             delta={1}
           />
