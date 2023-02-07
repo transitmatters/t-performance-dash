@@ -70,8 +70,7 @@ export const majorEvents: Record<string, MbtaMajorEvent> = {
     end: '2022-09-19T00:00:00Z',
     color: 'Orange',
     title: 'Orange line shutdown',
-    description:
-      'The orange line was shut down for 30 days to complete deferred maintenance',
+    description: 'The orange line was shut down for 30 days to complete deferred maintenance',
     type: 'shutdown',
   },
 };
