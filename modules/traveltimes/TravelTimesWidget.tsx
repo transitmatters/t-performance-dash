@@ -81,16 +81,6 @@ export const TravelTimesWidget: React.FC = () => {
             }
             analysis="since last week"
           />
-          <BasicWidgetDataLayout
-            title="test"
-            widgetValue={new TimeWidgetValue(37, -120)}
-            analysis="since last week"
-          />
-          <BasicWidgetDataLayout
-            title="test2"
-            widgetValue={new TimeWidgetValue(0, 0)}
-            analysis="since last week"
-          />
         </div>
       </div>
     </>
