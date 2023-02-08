@@ -35,4 +35,4 @@ export const busStations: { [key: string]: LineMap } = {
   ...bus_114_116_117,
 };
 
-export const stations = { ...rtStations, BUS: busStations };
+export const stations = { ...rtStations, Bus: busStations };

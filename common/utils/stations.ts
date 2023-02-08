@@ -3,7 +3,7 @@ import type { LineShort } from '../../common/types/lines';
 import type { Station } from '../../common/types/stations';
 import type { Location } from '../types/charts';
 import type { Direction } from '../types/dataPoints';
-import { rtStations } from './../constants/stations';
+import { rtStations, stations } from './../constants/stations';
 
 export const optionsForField = (
   type: 'from' | 'to',
@@ -24,9 +24,6 @@ export const optionsForField = (
       }
       return true;
     });
-  } else {
-    // This will never be reached thanks to TS
-    return [];
   }
 };
 
@@ -43,16 +40,20 @@ const options_station_ui = (line: LineShort): SelectOption<Station>[] | undefine
     .sort((a, b) => a.value.order - b.value.order);
 };
 
-export const optionsStation = (line: LineShort): Station[] | undefined => {
-  if (line === 'Bus') {
-    // TODO: Remove bus conditions
+export const optionsStation = (line: LineShort, busLine?: string): Station[] | undefined => {
+  if (!line || !stations[line]) {
     return undefined;
   }
 
-  if (!line || !rtStations[line]) {
-    return undefined;
+  if (line === 'Bus') {
+    if (!busLine || !stations[line][busLine]) {
+      return undefined;
+    }
+
+    return stations[line][busLine].stations.sort((a, b) => a.order - b.order);
   }
-  return rtStations[line].stations.sort((a, b) => a.order - b.order);
+
+  return stations[line].stations.sort((a, b) => a.order - b.order);
 };
 
 export const swapStations = (
