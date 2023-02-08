@@ -11,7 +11,7 @@ export enum SingleDayAPIParams {
   toStop = 'to_stop',
   date = 'date',
 }
-export type SingleDayAPIOptions = { [key in SingleDayAPIParams]: string[] | string };
+export type SingleDayAPIOptions = { [key in SingleDayAPIParams]?: string[] | string };
 export type PartialSingleDayAPIOptions = Partial<SingleDayAPIOptions>;
 
 export enum AggregateAPIParams {
@@ -22,5 +22,5 @@ export enum AggregateAPIParams {
   endDate = 'end_date',
 }
 
-export type AggregateAPIOptions = { [key in AggregateAPIParams]: string[] | string };
+export type AggregateAPIOptions = { [key in AggregateAPIParams]?: string[] | string };
 export type PartialAggregateAPIOptions = Partial<AggregateAPIOptions>;

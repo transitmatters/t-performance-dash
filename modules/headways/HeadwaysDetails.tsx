@@ -10,7 +10,6 @@ import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWi
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageHeadway, longestHeadway } from '../../common/utils/headways';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
-import { getCurrentDate } from '../../common/utils/date';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 
 export default function HeadwaysDetails() {
@@ -31,10 +30,10 @@ export default function HeadwaysDetails() {
 
   const { headways } = useCustomQueries(
     {
-      [SingleDayAPIParams.fromStop]: fromStopIds || '',
-      [SingleDayAPIParams.toStop]: toStopIds || '',
-      [SingleDayAPIParams.stop]: fromStopIds || '',
-      [SingleDayAPIParams.date]: startDate ?? getCurrentDate(),
+      [SingleDayAPIParams.fromStop]: fromStopIds,
+      [SingleDayAPIParams.toStop]: toStopIds,
+      [SingleDayAPIParams.stop]: fromStopIds,
+      [SingleDayAPIParams.date]: startDate,
     },
     false,
     startDate !== undefined && fromStopIds !== null && toStopIds !== null
@@ -42,13 +41,13 @@ export default function HeadwaysDetails() {
 
   const { headways: headwaysReversed } = useCustomQueries(
     {
-      [SingleDayAPIParams.fromStop]: fromStopIdsNorth || '',
-      [SingleDayAPIParams.toStop]: toStopIdsNorth || '',
-      [SingleDayAPIParams.stop]: fromStopIdsNorth || '',
-      [SingleDayAPIParams.date]: startDate ?? getCurrentDate(),
+      [SingleDayAPIParams.fromStop]: fromStopIdsNorth,
+      [SingleDayAPIParams.toStop]: toStopIdsNorth,
+      [SingleDayAPIParams.stop]: fromStopIdsNorth,
+      [SingleDayAPIParams.date]: startDate,
     },
     false,
-    startDate !== undefined && fromStopIds !== null && toStopIds !== null
+    startDate !== undefined && fromStopIdsNorth !== null && toStopIdsNorth !== null
   );
 
   if (headways.isError) {

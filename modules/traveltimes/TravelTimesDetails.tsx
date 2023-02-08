@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import { useCustomQueries } from '../../common/api/datadashboard';
 import { SingleDayAPIParams } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
-import { getCurrentDate } from '../../common/utils/date';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
@@ -32,10 +31,10 @@ export default function TravelTimesDetails() {
 
   const { traveltimes } = useCustomQueries(
     {
-      [SingleDayAPIParams.fromStop]: fromStopIds || '',
-      [SingleDayAPIParams.toStop]: toStopIds || '',
-      [SingleDayAPIParams.stop]: fromStopIds || '',
-      [SingleDayAPIParams.date]: startDate ?? getCurrentDate(),
+      [SingleDayAPIParams.fromStop]: fromStopIds,
+      [SingleDayAPIParams.toStop]: toStopIds,
+      [SingleDayAPIParams.stop]: fromStopIds,
+      [SingleDayAPIParams.date]: startDate,
     },
     false,
     startDate !== undefined && fromStopIds !== null && toStopIds !== null
@@ -43,13 +42,13 @@ export default function TravelTimesDetails() {
 
   const { traveltimes: traveltimesReversed } = useCustomQueries(
     {
-      [SingleDayAPIParams.fromStop]: fromStopIdsNorth || '',
-      [SingleDayAPIParams.toStop]: toStopIdsNorth || '',
-      [SingleDayAPIParams.stop]: fromStopIdsNorth || '',
-      [SingleDayAPIParams.date]: startDate ?? getCurrentDate(),
+      [SingleDayAPIParams.fromStop]: fromStopIdsNorth,
+      [SingleDayAPIParams.toStop]: toStopIdsNorth,
+      [SingleDayAPIParams.stop]: fromStopIdsNorth,
+      [SingleDayAPIParams.date]: startDate,
     },
     false,
-    startDate !== undefined && fromStopIds !== null && toStopIds !== null
+    startDate !== undefined && fromStopIdsNorth !== null && toStopIdsNorth !== null
   );
 
   if (traveltimes.isError || !linePath) {

@@ -6,7 +6,6 @@ import { SingleDayAPIParams } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useCustomQueries } from '../../common/api/datadashboard';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { getCurrentDate } from '../../common/utils/date';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { averageTravelTime } from '../../common/utils/traveltimes';
@@ -28,10 +27,10 @@ export const TravelTimesWidget: React.FC = () => {
 
   const { traveltimes } = useCustomQueries(
     {
-      [SingleDayAPIParams.fromStop]: fromStopIds || '',
-      [SingleDayAPIParams.toStop]: toStopIds || '',
-      [SingleDayAPIParams.stop]: fromStopIds || '',
-      [SingleDayAPIParams.date]: startDate ?? getCurrentDate(),
+      [SingleDayAPIParams.fromStop]: fromStopIds,
+      [SingleDayAPIParams.toStop]: toStopIds,
+      [SingleDayAPIParams.stop]: fromStopIds,
+      [SingleDayAPIParams.date]: startDate,
     },
     false,
     startDate !== undefined && fromStopIds !== null && toStopIds !== null
