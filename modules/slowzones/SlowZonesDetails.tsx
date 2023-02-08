@@ -7,8 +7,8 @@ import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWi
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { SlowZonesContainer } from '../../modules/slowzones/SlowZonesContainer';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
+import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
 
 export default function SlowZonesDetails() {
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);

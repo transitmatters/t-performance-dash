@@ -12,13 +12,11 @@ import { getCurrentDate } from '../../common/utils/date';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { averageTravelTime } from '../../common/utils/traveltimes';
-import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 
 export const TravelTimesWidget: React.FC = () => {
   const startDate = getCurrentDate();
   const { linePath, lineShort } = useDelimitatedRoute();
-  const isMobile = !useBreakpoint('sm');
 
   const stations = optionsStation(lineShort);
   const toStation = stations?.[stations.length - 3];

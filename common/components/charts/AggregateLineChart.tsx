@@ -13,7 +13,7 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
-import React from 'react';
+import React, { useMemo, useRef } from 'react';
 import type { AggregateLineProps } from '../../types/lines';
 import type { AggregateDataPoint } from '../../../src/charts/types';
 import { prettyDate } from '../../utils/date';
@@ -62,14 +62,18 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   suggestedYMax,
   ...props
 }) => {
+  const ref = useRef();
   const hourly = timeUnit === 'hour';
-  const labels = data.map((item: AggregateDataPoint) => item[pointField]);
+  const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
+
   return (
     <div className="chart">
       <div className="chart-container">
         <Line
           id={chartId}
+          ref={ref}
           height={250}
+          redraw={true}
           data={{
             labels,
             datasets: [
