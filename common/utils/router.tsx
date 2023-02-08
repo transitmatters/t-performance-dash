@@ -15,8 +15,8 @@ const linePathToKeyMap: Record<string, Line> = {
 
 export const useDelimitatedRoute = (): Route => {
   const router = useRouter();
-  const path = router.asPath;
-  const pathItems = path.split('/');
+  const path = router.asPath.split('?');
+  const pathItems = path[0].split('/');
   const { startDate, endDate } = router.query;
 
   return {

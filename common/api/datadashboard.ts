@@ -108,6 +108,7 @@ export const useCustomQueries: UseQueriesOverload = (
             ? fetchAggregateData(name, queries[name].params)
             : fetchSingleDayData(name, queries[name].params),
         enabled,
+        staleTime: 30000, // Don't refetch within 30 seconds
       };
     }),
   });

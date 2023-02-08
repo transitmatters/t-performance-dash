@@ -32,7 +32,7 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
   const chart = useMemo(() => {
     return (
       <SingleDayLineChart
-        chartId={`dwells-widget-${linePath}`}
+        chartId={`dwells-chart-${linePath}`}
         title={'Time spent at station (dwells)'}
         data={dwells.data ?? []}
         date={startDate}
