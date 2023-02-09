@@ -17,7 +17,7 @@ export const useDelimitatedRoute = (): Route => {
   const router = useRouter();
   const path = router.asPath.split('?');
   const pathItems = path[0].split('/');
-  const { startDate, endDate } = router.query;
+  const { startDate, endDate, busLine } = router.query;
 
   return {
     line: linePathToKeyMap[pathItems[1]],
@@ -27,6 +27,7 @@ export const useDelimitatedRoute = (): Route => {
     query: {
       startDate: Array.isArray(startDate) ? startDate[0] : startDate,
       endDate: Array.isArray(endDate) ? endDate[0] : endDate,
+      busLine: Array.isArray(busLine) ? busLine[0] : busLine,
     },
   };
 };

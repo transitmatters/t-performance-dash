@@ -12,4 +12,5 @@ export interface Route {
 export interface QueryParams {
   startDate?: string;
   endDate?: string;
+  busLine?: string;
 }

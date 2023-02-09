@@ -16,10 +16,10 @@ export const HeadwaysWidget: React.FC = () => {
   const {
     linePath,
     lineShort,
-    query: { startDate },
+    query: { startDate, busLine },
   } = useDelimitatedRoute();
 
-  const stations = optionsStation(lineShort);
+  const stations = optionsStation(lineShort, busLine);
   const toStation = stations?.[stations.length - 3];
   const fromStation = stations?.[3];
 
