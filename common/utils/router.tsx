@@ -27,7 +27,7 @@ export const useDelimitatedRoute = (): Route => {
     query: {
       startDate: Array.isArray(startDate) ? startDate[0] : startDate,
       endDate: Array.isArray(endDate) ? endDate[0] : endDate,
-      busLine: Array.isArray(busLine) ? busLine[0] : busLine,
+      busLine: Array.isArray(busLine) ? busLine[0] : busLine ?? '22', // TODO: Remove default bus
     },
   };
 };
