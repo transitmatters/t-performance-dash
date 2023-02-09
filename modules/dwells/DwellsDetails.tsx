@@ -9,7 +9,6 @@ import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWi
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
-import { getCurrentDate } from '../../common/utils/date';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 
 export default function DwellsDetails() {
@@ -30,10 +29,10 @@ export default function DwellsDetails() {
 
   const { dwells } = useCustomQueries(
     {
-      [SingleDayAPIParams.fromStop]: fromStopIds || '',
-      [SingleDayAPIParams.toStop]: toStopIds || '',
-      [SingleDayAPIParams.stop]: fromStopIds || '',
-      [SingleDayAPIParams.date]: startDate ?? getCurrentDate(),
+      [SingleDayAPIParams.fromStop]: fromStopIds,
+      [SingleDayAPIParams.toStop]: toStopIds,
+      [SingleDayAPIParams.stop]: fromStopIds,
+      [SingleDayAPIParams.date]: startDate,
     },
     false,
     startDate !== undefined && fromStopIds !== null && toStopIds !== null
@@ -41,10 +40,10 @@ export default function DwellsDetails() {
 
   const { dwells: dwellsReversed } = useCustomQueries(
     {
-      [SingleDayAPIParams.fromStop]: fromStopIdsNorth || '',
-      [SingleDayAPIParams.toStop]: toStopIdsNorth || '',
-      [SingleDayAPIParams.stop]: fromStopIdsNorth || '',
-      [SingleDayAPIParams.date]: startDate ?? getCurrentDate(),
+      [SingleDayAPIParams.fromStop]: fromStopIdsNorth,
+      [SingleDayAPIParams.toStop]: toStopIdsNorth,
+      [SingleDayAPIParams.stop]: fromStopIdsNorth,
+      [SingleDayAPIParams.date]: startDate,
     },
     false,
     startDate !== undefined && fromStopIdsNorth !== null && toStopIdsNorth !== null

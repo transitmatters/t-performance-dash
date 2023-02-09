@@ -10,7 +10,6 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
-import { getCurrentDate } from '../../common/utils/date';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 
 export const HeadwaysWidget: React.FC = () => {
@@ -28,10 +27,10 @@ export const HeadwaysWidget: React.FC = () => {
 
   const { headways } = useCustomQueries(
     {
-      [SingleDayAPIParams.fromStop]: fromStopIds || '',
-      [SingleDayAPIParams.toStop]: toStopIds || '',
-      [SingleDayAPIParams.stop]: fromStopIds || '',
-      [SingleDayAPIParams.date]: startDate ?? getCurrentDate(),
+      [SingleDayAPIParams.fromStop]: fromStopIds,
+      [SingleDayAPIParams.toStop]: toStopIds,
+      [SingleDayAPIParams.stop]: fromStopIds,
+      [SingleDayAPIParams.date]: startDate,
     },
     false,
     startDate !== undefined && fromStopIds !== null && toStopIds !== null

@@ -26,6 +26,10 @@ export const getCurrentDate = (): string => {
   return maxDate;
 };
 
+/**
+ * @deprecated
+ * TODO: IDeally replace this with a dayJs function
+ */
 export const getOffsetDate = (date: string): string => {
   const isoDate = new Date(date);
   const offset = isoDate.getTimezoneOffset();

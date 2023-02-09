@@ -9,13 +9,15 @@ import type {
 } from '../types/api';
 import { AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../types/api';
 import { APP_DATA_BASE_PATH } from '../../common/utils/constants';
+import { getCurrentDate } from '../utils/date';
 
 // Fetch data for all single day charts.
 export const fetchSingleDayData = (
   name: QueryNameKeys,
   options: PartialSingleDayAPIOptions
 ): Promise<SingleDayDataPoint[]> => {
-  const url = new URL(`${APP_DATA_BASE_PATH}/api/${name}/${options.date}`, window.location.origin);
+  const date = options.date ?? getCurrentDate();
+  const url = new URL(`${APP_DATA_BASE_PATH}/api/${name}/${date}`, window.location.origin);
   Object.entries(options).forEach(([key, value]) => {
     // options includes date which is a string. Date is never used as a parameter since it is part of the URL, so it can be excluded.
     if (!(typeof value === 'string') && key !== 'date')
@@ -87,7 +89,7 @@ export const useCustomQueries: UseQueriesOverload = (
   // Create objects with keys of query names which contains keys and parameters.
   const queries = Object.keys(dependencies).reduce((object, queryName: QueryNameKeys) => {
     const keys = [queryName];
-    const params = {};
+    const params: Partial<SingleDayAPIOptions | AggregateAPIOptions> = {};
     dependencies[queryName].forEach((field: AggregateAPIParams | SingleDayAPIParams) => {
       keys.push(parameters[field].toString());
       params[field] = parameters[field];
