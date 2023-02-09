@@ -24,10 +24,10 @@
       "autogen_policy": false,
       "iam_policy_file": "policy.json",
       "environment_variables": {
-        "TM_FRONTEND_HOST": "dashboard-beta.transitmatters.org"
+        "TM_FRONTEND_HOST": "dashboard-beta.labs.transitmatters.org"
       },
       "api_gateway_custom_domain": {
-        "domain_name": "dashboard-api-beta.transitmatters.org",
+        "domain_name": "dashboard-api-beta.labs.transitmatters.org",
         "tls_version": "TLS_1_2",
         "certificate_arn": ""
       }
