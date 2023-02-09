@@ -7,9 +7,9 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
+import { SZWidgetValue, TimeWidgetValue } from '../../common/types/basicWidgets';
 import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
 import { TotalSlowTime } from './charts/TotalSlowTime';
-import { SZWidgetValue, TimeWidgetValue } from '../../common/types/basicWidgets';
 
 export default function SlowZonesWidget() {
   const { line, linePath } = useDelimitatedRoute();

@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { WidgetValueInterface } from '../../../types/basicWidgets';
+import type { WidgetValueInterface } from '../../../types/basicWidgets';
 import { LoadingSpinner } from '../../graphics/LoadingSpinner';
 
 type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';

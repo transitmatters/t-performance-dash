@@ -78,9 +78,9 @@ export const lookup_station_by_id = (line: Exclude<LineShort, 'Bus'>, id: string
 export const stopIdsForStations = (
   from: Station | undefined,
   to: Station | undefined
-): { fromStopIds: string[] | null; toStopIds: string[] | null } => {
+): { fromStopIds: string[] | undefined; toStopIds: string[] | undefined } => {
   if (to === undefined || from === undefined) {
-    return { fromStopIds: null, toStopIds: null };
+    return { fromStopIds: undefined, toStopIds: undefined };
   }
 
   const isDirection1 = from.order < to.order;
