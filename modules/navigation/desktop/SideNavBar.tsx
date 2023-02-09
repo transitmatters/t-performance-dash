@@ -5,10 +5,30 @@ import Train from '../../../public/Icons/Train.svg';
 import TmLogoSvg from '../../../public/tm-logo-big.svg';
 import TmIconSvg from '../../../public/tm-logo-small.svg';
 
+import { getLineSelectionItemHref, useDelimitatedRoute } from '../../../common/utils/router';
+import { LINE_OBJECTS } from '../../../common/constants/lines';
 import { SideNavigation } from './SideNavigation';
 
 export const SideNavBar = () => {
+  const route = useDelimitatedRoute();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const NAV_ITEMS = [
+    {
+      name: 'Lines',
+      current: true,
+      href: '/',
+      icon: Train,
+      key: 'Lines',
+      children: [
+        { name: 'Red', href: getLineSelectionItemHref(LINE_OBJECTS['RL'], route), key: 'RL' },
+        { name: 'Orange', href: getLineSelectionItemHref(LINE_OBJECTS['OL'], route), key: 'OL' },
+        { name: 'Blue', href: getLineSelectionItemHref(LINE_OBJECTS['BL'], route), key: 'BL' },
+        { name: 'Green', href: getLineSelectionItemHref(LINE_OBJECTS['GL'], route), key: 'GL' },
+        { name: 'Bus', href: getLineSelectionItemHref(LINE_OBJECTS['BUS'], route), key: 'BUS' },
+      ],
+    },
+  ];
 
   return (
     <>
@@ -106,20 +126,3 @@ export const SideNavBar = () => {
     </>
   );
 };
-
-const NAV_ITEMS = [
-  {
-    name: 'Lines',
-    current: true,
-    href: '/',
-    icon: Train,
-    key: 'Lines',
-    children: [
-      { name: 'Red', href: '/red', key: 'RL' },
-      { name: 'Orange', href: '/orange', key: 'OL' },
-      { name: 'Blue', href: '/blue', key: 'BL' },
-      { name: 'Green', href: '/green', key: 'GL' },
-      { name: 'Bus', href: '/bus', key: 'BUS' },
-    ],
-  },
-];
