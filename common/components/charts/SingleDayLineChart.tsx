@@ -13,7 +13,7 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
-import React from 'react';
+import React, { useMemo, useRef } from 'react';
 import type { DataPoint } from '../../types/dataPoints';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { SingleDayLineProps } from '../../../common/types/lines';
@@ -82,12 +82,15 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   location,
   showLegend = true,
 }) => {
-  const labels = data.map((item) => item[pointField]);
+  const ref = useRef();
+  const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
+
   return (
     <div className={showLegend ? 'chart' : undefined}>
       <div className={'chart-container'}>
         <Line
           id={chartId}
+          ref={ref}
           height={250}
           redraw={true}
           data={{
@@ -172,7 +175,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 display: true,
                 title: {
                   display: true,
-                  text: prettyDate(date, true),
+                  text: date ? prettyDate(date, true) : 'No date selected',
                 },
 
                 afterDataLimits: (axis) => {
@@ -183,17 +186,18 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   const high = new Date(today);
                   high.setDate(high.getDate() + 1);
                   high.setHours(1);
+                  high.setMinutes(15);
                   axis.max = Math.max(axis.max, high.valueOf());
                 },
               },
             },
-            animation: false,
+            // animation: false,
           }}
           plugins={[
             {
               id: 'customTitle',
               afterDraw: (chart) => {
-                if (date.length === 0 && !isLoading) {
+                if ((date === undefined || date.length === 0) && !isLoading) {
                   // No data is present
                   const ctx = chart.ctx;
                   const width = chart.width;

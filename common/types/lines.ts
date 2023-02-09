@@ -50,6 +50,6 @@ export interface AggregateLineProps extends LineProps {
 export interface SingleDayLineProps extends LineProps {
   data: SingleDayDataPoint[];
   metricField: MetricField; // Y value
-  date: string;
+  date: string | undefined;
   benchmarkField?: BenchmarkField;
 }
