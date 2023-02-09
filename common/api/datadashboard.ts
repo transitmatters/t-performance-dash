@@ -90,9 +90,11 @@ export const useCustomQueries: UseQueriesOverload = (
   const queries = Object.keys(dependencies).reduce((object, queryName: QueryNameKeys) => {
     const keys = [queryName];
     const params: Partial<SingleDayAPIOptions | AggregateAPIOptions> = {};
-    dependencies[queryName].forEach((field: AggregateAPIParams | SingleDayAPIParams) => {
-      keys.push(parameters[field].toString());
-      params[field] = parameters[field];
+    dependencies[queryName].forEach((field: Partial<AggregateAPIParams | SingleDayAPIParams>) => {
+      if (parameters[field]) {
+        keys.push(parameters[field].toString());
+        params[field] = parameters[field];
+      }
     });
     return {
       ...object,
