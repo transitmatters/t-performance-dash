@@ -27,7 +27,7 @@ export const useDelimitatedRoute = (): Route => {
     query: {
       startDate: Array.isArray(startDate) ? startDate[0] : startDate,
       endDate: Array.isArray(endDate) ? endDate[0] : endDate,
-      busLine: Array.isArray(busLine) ? busLine[0] : busLine,
+      busLine: Array.isArray(busLine) ? busLine[0] : busLine ?? '22', // TODO: Remove default bus
     },
   };
 };
@@ -54,10 +54,17 @@ export const useUpdateQuery = () => {
 
 // If a datapage is selected, stay on that datapage. If the current line is selected, go to overview.
 export const getLineSelectionItemHref = (metadata: LineMetadata, route: Route): string => {
+  const { datapage, line, query } = route;
+  const queryParams = new URLSearchParams(
+    Object.entries(query).filter(([, value]) => value !== undefined)
+  ).toString();
   let href = `/${metadata.path}`;
-  if (metadata.key !== route.line && route.datapage) {
-    if (route.datapage !== 'overview') {
-      href += `/${route.datapage}`;
+  if (metadata.key !== line && datapage) {
+    if (datapage !== 'overview') {
+      href += `/${datapage}`;
+    }
+    if (queryParams !== '') {
+      href += `?${queryParams}`;
     }
   }
   return href;
