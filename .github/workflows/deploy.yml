@@ -29,6 +29,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Check if package-lock.json is up to date
+        run: |
+          npx --yes package-lock-utd@1.x.x
       - name: Generate AWS profile
         run: |
           mkdir ~/.aws
