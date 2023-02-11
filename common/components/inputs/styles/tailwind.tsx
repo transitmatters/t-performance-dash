@@ -9,6 +9,13 @@ export const formConfig = {
   },
 };
 
+export const mbtaTextConfig = {
+  RL: `text-mbta-red`,
+  OL: `text-mbta-orange`,
+  GL: `text-mbta-green`,
+  BL: `text-mbta-blue`,
+  BUS: `text-mbta-bus`,
+};
 export const otherConfig = {
   selected: {
     red: `text-mbta-red`,

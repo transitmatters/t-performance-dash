@@ -15,9 +15,10 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
 import type { DataPoint } from '../../types/dataPoints';
-import { CHART_COLORS } from '../../../common/constants/colors';
+import { CHART_COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { SingleDayLineProps } from '../../../common/types/lines';
 import { prettyDate } from '../../utils/date';
+import { useDelimitatedRoute } from '../../utils/router';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
 
@@ -84,7 +85,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
 }) => {
   const ref = useRef();
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
-
+  const { line } = useDelimitatedRoute();
   return (
     <div className={showLegend ? 'chart' : undefined}>
       <div className={'chart-container'}>
@@ -99,9 +100,16 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               {
                 label: `Actual`,
                 fill: false,
-                pointBackgroundColor: pointColors(data, metricField, benchmarkField),
+                borderColor: showLegend || !line ? undefined : LINE_COLORS[line],
+                pointBackgroundColor: showLegend
+                  ? pointColors(data, metricField, benchmarkField)
+                  : undefined,
+                pointBorderWidth: showLegend ? undefined : 0,
                 pointHoverRadius: 3,
-                pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField),
+                pointHoverBackgroundColor:
+                  showLegend || !line
+                    ? pointColors(data, metricField, benchmarkField)
+                    : LINE_COLORS[line],
                 pointRadius: 3,
                 pointHitRadius: 10,
                 // TODO: would be nice to add types to these arrow functions - but causes an issue bc datapoint[field] might be undefined.
@@ -183,11 +191,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   const low = new Date(today);
                   low.setHours(6);
                   axis.min = Math.min(axis.min, low.valueOf());
-                  const high = new Date(today);
-                  high.setDate(high.getDate() + 1);
-                  high.setHours(1);
-                  high.setMinutes(15);
-                  axis.max = Math.max(axis.max, high.valueOf());
                 },
               },
             },

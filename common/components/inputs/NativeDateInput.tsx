@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import type { QueryParams } from '../../types/router';
 import { formatDate, getOffsetDate } from '../../utils/date';
@@ -16,15 +17,14 @@ export const NativeDateInput: React.FC<NativeDateInputProps> = ({ range }) => {
   } = useDelimitatedRoute();
 
   const updateQueryParams = useUpdateQuery();
-
   const [dates, setDates] = useState<{ startDate?: string; endDate?: string }>({
-    startDate: startDate,
+    startDate: dayjs().format('YYYY-MM-DD'),
     endDate: endDate,
   });
 
   React.useEffect(() => {
     setDates({
-      startDate: startDate,
+      startDate: dayjs().format('YYYY-MM-DD'),
       endDate: endDate ?? startDate,
     });
   }, [endDate, startDate]);

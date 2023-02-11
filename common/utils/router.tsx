@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { capitalize, isEqual } from 'lodash';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
@@ -18,15 +19,14 @@ export const useDelimitatedRoute = (): Route => {
   const path = router.asPath.split('?');
   const pathItems = path[0].split('/');
   const { startDate, endDate, busLine } = router.query;
-
   return {
     line: linePathToKeyMap[pathItems[1]],
     linePath: pathItems[1] as LinePath, //TODO: Remove as
     lineShort: capitalize(pathItems[1]) as LineShort, //TODO: Remove as
     datapage: (pathItems[2] as DataPage) || 'overview', //TODO: Remove as
     query: {
-      startDate: Array.isArray(startDate) ? startDate[0] : startDate,
-      endDate: Array.isArray(endDate) ? endDate[0] : endDate,
+      startDate: Array.isArray(startDate) ? startDate[0] : dayjs().format('YYYY-MM-DD'),
+      endDate: Array.isArray(endDate) ? endDate[0] : dayjs().format('YYYY-MM-DD'),
       busLine: Array.isArray(busLine) ? busLine[0] : busLine,
     },
   };
