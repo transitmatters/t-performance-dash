@@ -9,6 +9,7 @@
     "@tanstack/react-query": "^4.24.4",
     "@tanstack/react-query-devtools": "^4.24.4",
     "@tippyjs/react": "^4.2.6",
+    "bezier-js": "^6.1.0",
     "chart.js": "^4.2.0",
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-plugin-datalabels": "^2.2.0",

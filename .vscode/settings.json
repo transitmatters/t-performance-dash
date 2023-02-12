@@ -12,6 +12,6 @@
     "typescriptreact"
   ],
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "editor.formatOnSave": true
+  // "editor.formatOnSave": true
 
 }
