@@ -1,5 +1,5 @@
 {
-  "Parameters" : {
+  "Parameters": {
     "TMFrontendHostname": {
       "Type": "String",
       "Default": "dashboard-v4-beta.labs.transitmatters.org",
@@ -9,9 +9,27 @@
       ],
       "Description": "The frontend hostname for the data dashboard."
     },
+    "TMFrontendZone": {
+      "Type": "String",
+      "Default": "labs.transitmatters.org",
+      "AllowedPattern": "^dashboard\\.transitmatters\\.org$|^labs\\.transitmatters\\.org$",
+      "Description": "The frontend's DNS zone file name. Most likely dashboard.transitmatters.org or labs.transitmatters.org."
+    },
+    "TMBackendZone": {
+      "Type": "String",
+      "Default": "labs.transitmatters.org",
+      "AllowedPattern": "^dashboard-api2\\.transitmatters\\.org$|^labs\\.transitmatters\\.org$",
+      "Description": "The backend's DNS zone file name. Most likely dashboard.transitmatters.org or labs.transitmatters.org."
+    },
     "TMFrontendCertArn": {
       "Type": "String",
       "Description": "The ACM ARN of the frontend certificate."
+    },
+    "TMBackendHostname": {
+      "Type": "String",
+      "Default": "dashboard-api.labs.transitmatters.org",
+      "AllowedPattern": "^dashboard-api2\\.transitmatters\\.org$|^.*\\.labs\\.transitmatters\\.org$",
+      "Description": "The backend hostname for the data dashboard."
     },
     "TMBackendCertArn": {
       "Type": "String",
@@ -36,10 +54,7 @@
         "AliasTarget": {
           "HostedZoneId": "Z2FDTNDATAQYW2",
           "DNSName": {
-            "Fn::GetAtt": [
-              "FrontendCloudFront",
-              "DomainName"
-            ]
+            "Fn::GetAtt": ["FrontendCloudFront", "DomainName"]
           }
         },
         "Type": "A"
@@ -52,16 +67,10 @@
         "HostedZoneName": "labs.transitmatters.org.",
         "AliasTarget": {
           "HostedZoneId": {
-            "Fn::GetAtt": [
-              "ApiGatewayCustomDomain",
-              "RegionalHostedZoneId"
-            ]
+            "Fn::GetAtt": ["ApiGatewayCustomDomain", "RegionalHostedZoneId"]
           },
           "DNSName": {
-            "Fn::GetAtt": [
-              "ApiGatewayCustomDomain",
-              "RegionalDomainName"
-            ]
+            "Fn::GetAtt": ["ApiGatewayCustomDomain", "RegionalDomainName"]
           }
         },
         "Type": "A"
@@ -99,7 +108,7 @@
               "Effect": "Allow",
               "Principal": "*",
               "Action": "s3:GetObject",
-              "Resource": { "Fn::Join" : [ "", [ { "Fn::GetAtt" : [ "FrontendBucket", "Arn" ] }, "/*" ] ] }
+              "Resource": { "Fn::Join": ["", [{ "Fn::GetAtt": ["FrontendBucket", "Arn"] }, "/*"]] }
             }
           ]
         }
@@ -109,9 +118,7 @@
       "Type": "AWS::CloudFront::Distribution",
       "Properties": {
         "DistributionConfig": {
-          "Aliases": [
-            { "Ref": "TMFrontendHostname" }
-          ],
+          "Aliases": [{ "Ref": "TMFrontendHostname" }],
           "Enabled": "true",
           "DefaultCacheBehavior": {
             "Compress": true,
@@ -129,7 +136,7 @@
                 "HTTPSPort": "443",
                 "OriginProtocolPolicy": "http-only"
               },
-              "DomainName": { "Fn::GetAtt" : [ "FrontendBucket", "DomainName" ] },
+              "DomainName": { "Fn::GetAtt": ["FrontendBucket", "DomainName"] },
               "Id": "only-origin"
             }
           ],
