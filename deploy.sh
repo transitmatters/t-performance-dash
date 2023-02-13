@@ -75,8 +75,7 @@ done
 
 echo "Starting $CHALICE_STAGE deployment"
 echo "Backend bucket: $BACKEND_BUCKET"
-echo "Frontend hostname: $FRONTEND_HOSTNAME"
-echo "Backend hostname: $BACKEND_HOSTNAME"
+echo "Hostname: $FRONTEND_HOSTNAME"
 echo "CloudFormation stack name: $CF_STACK_NAME"
 
 # build frontend and patch in commit id
@@ -89,11 +88,8 @@ poetry run chalice package --stage $CHALICE_STAGE --merge-template frontend-cfn.
 aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUCKET --output-template-file cfn/packaged.yaml
 aws cloudformation deploy --template-file cfn/packaged.yaml --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset --parameter-overrides \
     TMFrontendHostname=$FRONTEND_HOSTNAME \
-    TMFrontendZone=$FRONTEND_ZONE \
     TMFrontendCertArn=$FRONTEND_CERT_ARN \
     TMBackendCertArn=$BACKEND_CERT_ARN \
-    TMBackendHostname=$BACKEND_HOSTNAME \
-    TMBackendZone=$BACKEND_ZONE \
     MbtaV2ApiKey=$MBTA_V2_API_KEY
 
 popd > /dev/null
