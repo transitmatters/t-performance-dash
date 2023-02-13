@@ -1,6 +1,7 @@
 import React from 'react';
 import { Disclosure } from '@headlessui/react';
 import classNames from 'classnames';
+import Train from '../../../public/Icons/Components/trainBlue.svg';
 import { ActiveLink } from '../../../common/components/general/ActiveLink';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { buttonConfig, lineSelectionConfig } from '../styles/lineSelector';
@@ -55,6 +56,7 @@ export const SideNavigation = ({ items, setSidebarOpen }: SideNavigationProps) =
                     className="ml-1 mr-3 h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                     aria-hidden="true"
                   />
+
                   <span className="flex-1">{item.name}</span>
                   <svg
                     className={classNames(
@@ -94,6 +96,8 @@ export const SideNavigation = ({ items, setSidebarOpen }: SideNavigationProps) =
                             )
                           }
                         >
+                          <Train className="h-5 w-auto sm:h-4" alt="TransitMatters Logo" />
+
                           {subItem.name}
                         </Disclosure.Button>
                       </ActiveLink>
