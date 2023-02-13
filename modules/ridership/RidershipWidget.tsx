@@ -31,10 +31,10 @@ export const RidershipWidget: React.FC = () => {
     <>
       <HomescreenWidgetTitle title="Ridership & Service Levels" href={`/${linePath}/ridership`} />
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <div className={classNames('h-48 pr-4')}>
+        <div className={classNames('h-50 pr-4')}>
           <ServiceRidershipChart lineData={lineData} startDate={startDate} color={color} />
         </div>
-        <div className={classNames('h-48 pr-4')}>
+        <div className={classNames('h-50 pr-4')}>
           <TphChart
             lineData={lineData}
             serviceDay={serviceDay}
