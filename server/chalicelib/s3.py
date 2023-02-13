@@ -8,7 +8,7 @@ import zlib
 from chalicelib import parallel
 
 BUCKET = "tm-mbta-performance"
-s3 = boto3.client('s3', config=botocore.client.Config(max_pool_connections=15))
+s3 = boto3.client("s3", config=botocore.client.Config(max_pool_connections=15))
 
 
 # General downloading/uploading
@@ -29,22 +29,22 @@ def upload(key, bytes, compress=True):
 
 
 def is_bus(stop_id):
-    return ('-0-' in stop_id) or ('-1-' in stop_id)
+    return ("-0-" in stop_id) or ("-1-" in stop_id)
 
 
 def download_one_event_file(date, stop_id):
     """As advertised: single event file from s3"""
     year, month = date.year, date.month
 
-    folder = 'monthly-bus-data' if is_bus(stop_id) else 'monthly-data'
+    folder = "monthly-bus-data" if is_bus(stop_id) else "monthly-data"
     key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
 
     # Download events from S3
     try:
-        decompressed = download(key, 'ascii')
+        decompressed = download(key, "ascii")
 
     except ClientError as ex:
-        if ex.response['Error']['Code'] == 'NoSuchKey':
+        if ex.response["Error"]["Code"] == "NoSuchKey":
             # raise Exception(f"Data not available on S3 for key {key} ") from None
             print(f"WARNING: No data available on S3 for key: {key}")
             return []
@@ -70,5 +70,5 @@ def parallel_download_events(datestop):
 def download_events(sdate, edate, stops):
     datestops = itertools.product(parallel.month_range(sdate, edate), stops)
     result = parallel_download_events(datestops)
-    result = filter(lambda row: sdate.strftime("%Y-%m-%d") <= row['service_date'] <= edate.strftime("%Y-%m-%d"), result)
+    result = filter(lambda row: sdate.strftime("%Y-%m-%d") <= row["service_date"] <= edate.strftime("%Y-%m-%d"), result)
     return sorted(result, key=lambda row: row["event_time"])
