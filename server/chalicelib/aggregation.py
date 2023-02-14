@@ -30,17 +30,11 @@ def faster_describe(grouped):
     # also we can specify population std instead of sample, and add additional quantiles.
     stats = grouped.aggregate(['count', 'mean', 'min', 'median', 'max'])
     std = grouped.std(ddof=0)
-    q10 = grouped.quantile(0.10)
-    q25 = grouped.quantile(0.25)
-    q75 = grouped.quantile(0.75)
-    q90 = grouped.quantile(0.90)
     std.name = 'std'
-    q10.name = '10%'
-    q25.name = '25%'
-    q75.name = '75%'
-    q90.name = '90%'
+    quants = grouped.quantile([0.1, 0.25, 0.75, 0.9]).unstack()
+    quants.columns = ['10%', '25%', '75%', '90%']
     stats.rename(columns={'median': '50%'}, inplace=True)
-    stats = pd.concat([stats, q10, q25, q75, q90, std], axis=1).reset_index()
+    stats = pd.concat([stats, quants, std], axis=1).reset_index()
 
     # This will filter out some probable outliers.
     return stats.loc[stats['count'] > 4]
