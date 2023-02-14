@@ -3,6 +3,7 @@ import { DwellsWidget } from '../../modules/dwells/DwellsWidget';
 import { HeadwaysWidget } from '../../modules/headways/HeadwaysWidget';
 import SlowZonesWidget from '../../modules/slowzones/SlowZonesWidget';
 import { TravelTimesWidget } from '../../modules/traveltimes/TravelTimesWidget';
+import { RidershipWidget } from '../ridership/RidershipWidget';
 
 // This might be useless.
 export async function generateStaticParams() {
@@ -22,6 +23,7 @@ export default function Overview() {
       <SlowZonesWidget />
       <HeadwaysWidget />
       <DwellsWidget />
+      <RidershipWidget />
     </div>
   );
 }

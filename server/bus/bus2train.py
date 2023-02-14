@@ -1,7 +1,10 @@
 import argparse
 import pathlib
 import pandas as pd
+import numpy as np
 from datetime import datetime
+
+from gtfs_archive import add_gtfs_headways
 
 
 def load_data(input_csv, routes):
@@ -52,6 +55,7 @@ def load_data(input_csv, routes):
     df.route_id = df.route_id.str.lstrip("0")
     if routes:
         df = df.loc[df.route_id.isin(routes)]
+    df.stop_id = df.stop_id.astype(str)
 
     # Convert dates
     df.scheduled = pd.to_datetime(df.scheduled)
@@ -76,15 +80,20 @@ def process_events(df):
     - Calculate event_type column with ARR and DEP entries
     """
     CSV_HEADER = ["service_date", "route_id", "trip_id", "direction_id", "stop_id",
-                  "stop_sequence", "vehicle_id", "vehicle_label", "event_type", "event_time"]
+                  "stop_sequence", "vehicle_id", "vehicle_label", "event_type", "event_time",
+                  "scheduled_headway", "scheduled_tt"]
 
     df = df.rename(columns={"half_trip_id": "trip_id",
                             "time_point_order": "stop_sequence",
                             "actual": "event_time"})
-    df.drop(columns=["time_point_id", "standard_type", "scheduled", "scheduled_headway", "headway"])
+    df = df.drop(columns=["time_point_id", "standard_type", "scheduled", "scheduled_headway", "headway"])
+
+    df = add_gtfs_headways(df)
+    # We can't use headway info for the combined routes since gtfs won't be grouped this way.
+    df.loc[df.route_id.isin(['114', '116', '117']), 'scheduled_headway'] = np.nan
+
     df["vehicle_id"] = ""
     df["vehicle_label"] = ""
-
     df["event_type"] = df.point_type.map({"Startpoint": ["DEP"],
                                           "Midpoint": ["ARR", "DEP"],
                                           "Endpoint": ["ARR"]})

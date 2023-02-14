@@ -79,3 +79,47 @@ export class SZWidgetValue implements WidgetValueInterface {
     return `${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta).toString()}`;
   }
 }
+
+export class PercentageWidgetValue implements WidgetValueInterface {
+  value?: number | undefined;
+  delta?: number | undefined;
+  constructor(value: number | undefined, delta: number | undefined) {
+    this.value = value;
+    this.delta = delta;
+  }
+  getUnits() {
+    return '%';
+  }
+
+  getFormattedValue() {
+    if (this.value === undefined) return '...';
+    return Math.round(100 * this.value).toString();
+  }
+
+  getFormattedDelta() {
+    if (this.delta === undefined) return '...';
+    return `${this.delta >= 0 ? '+' : '-'}${Math.round(100 * this.delta).toString()}%`;
+  }
+}
+
+export class TripsWidgetValue implements WidgetValueInterface {
+  value?: number | undefined;
+  delta?: number | undefined;
+  constructor(value: number | undefined, delta: number | undefined) {
+    this.value = value;
+    this.delta = delta;
+  }
+  getUnits() {
+    return 'daily trips';
+  }
+
+  getFormattedValue() {
+    if (this.value === undefined) return '...';
+    return Math.abs(this.value).toString();
+  }
+
+  getFormattedDelta() {
+    if (this.delta === undefined) return '...';
+    return `${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta).toString()}`;
+  }
+}
