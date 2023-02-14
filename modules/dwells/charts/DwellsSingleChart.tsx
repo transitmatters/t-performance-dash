@@ -11,7 +11,6 @@ interface DwellsSingleChartProps {
   dwells: UseQueryResult<SingleDayDataPoint[]>;
   toStation: Station | undefined;
   fromStation: Station | undefined;
-  showLegend?: boolean;
   homescreen?: boolean;
 }
 
@@ -19,7 +18,6 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
   dwells,
   toStation,
   fromStation,
-  showLegend = false,
   homescreen = false,
 }) => {
   const {
@@ -45,21 +43,11 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
         isLoading={isLoading}
         location={locationDetails(fromStation, toStation, lineShort)}
         fname={'dwells'}
-        showLegend={showLegend}
+        showLegend={false}
         homescreen={homescreen}
       />
     );
-  }, [
-    dwells.data,
-    fromStation,
-    isLoading,
-    linePath,
-    lineShort,
-    startDate,
-    toStation,
-    showLegend,
-    homescreen,
-  ]);
+  }, [dwells.data, fromStation, isLoading, linePath, lineShort, startDate, toStation, homescreen]);
 
   return chart;
 };

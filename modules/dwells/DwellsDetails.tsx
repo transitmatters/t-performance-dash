@@ -75,12 +75,7 @@ export default function DwellsDetails() {
         />
       </BasicDataWidgetPair>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
-        <DwellsSingleChart
-          dwells={dwells}
-          toStation={toStation}
-          fromStation={fromStation}
-          showLegend={false}
-        />
+        <DwellsSingleChart dwells={dwells} toStation={toStation} fromStation={fromStation} />
       </div>
       <div className="flex w-full flex-row items-center justify-between text-lg">
         <h3>Return Trip</h3>
@@ -90,7 +85,6 @@ export default function DwellsDetails() {
           dwells={dwellsReversed}
           toStation={fromStation}
           fromStation={toStation}
-          showLegend={false}
         />
       </div>
     </>

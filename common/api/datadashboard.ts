@@ -85,7 +85,6 @@ export const useCustomQueries: UseQueriesOverload = (
   aggregate: boolean,
   enabled = true
 ): any => {
-  console.log('here', parameters);
   const dependencies = aggregate ? aggregateQueryDependencies : singleDayQueryDependencies;
   // Create objects with keys of query names which contains keys and parameters.
   const queries = Object.keys(dependencies).reduce((object, queryName: QueryNameKeys) => {

@@ -193,6 +193,11 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   const low = new Date(today);
                   low.setHours(6);
                   axis.min = Math.min(axis.min, low.valueOf());
+                  const high = new Date(today);
+                  high.setDate(high.getDate() + 1);
+                  high.setHours(1);
+                  high.setMinutes(15);
+                  axis.max = Math.max(axis.max, high.valueOf());
                 },
               },
             },
