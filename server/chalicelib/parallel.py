@@ -29,7 +29,7 @@ def month_range(start, end):
     # This is kinda funky, but is stil simpler than other approaches
     # pandas won't generate a monthly date_range that includes Jan and Feb for Jan31-Feb1 e.g.
     # So we generate a daily date_range and then resample it down (summing 0s as a no-op in the process) so it aligns.
-    dates = pd.date_range(start, end, freq='1D', inclusive='both')
+    dates = pd.date_range(start, end, freq="1D", inclusive="both")
     series = pd.Series(0, index=dates)
-    months = series.resample('1M').sum().index
+    months = series.resample("1M").sum().index
     return months
