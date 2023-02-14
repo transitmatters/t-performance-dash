@@ -17,4 +17,5 @@ export const DATA_PAGES = {
   slowzones: { href: '/slowzones', name: 'Slow Zones' },
   headways: { href: '/headways', name: 'Headways' },
   dwells: { href: '/dwells', name: 'Dwells' },
+  ridership: { href: '/ridership', name: 'Ridership' },
 };
