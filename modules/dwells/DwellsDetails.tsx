@@ -79,7 +79,7 @@ export default function DwellsDetails() {
           dwells={dwells}
           toStation={toStation}
           fromStation={fromStation}
-          showLegend={true}
+          showLegend={false}
         />
       </div>
       <div className="flex w-full flex-row items-center justify-between text-lg">
@@ -90,7 +90,7 @@ export default function DwellsDetails() {
           dwells={dwellsReversed}
           toStation={fromStation}
           fromStation={toStation}
-          showLegend={true}
+          showLegend={false}
         />
       </div>
     </>

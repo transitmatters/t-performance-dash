@@ -44,7 +44,7 @@ export default function SlowZonesWidget() {
     <>
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <HomescreenWidgetTitle title="Slow Zones" href={`/${linePath}/slowzones`} />
-        <div className={classNames('flex w-full flex-row space-x-8 divide-x')}>
+        <div className={classNames('flex w-full flex-row space-x-8')}>
           <BasicWidgetDataLayout
             title="Total Delay"
             widgetValue={new TimeWidgetValue(totalDelay, totalDelay - totalDelayLasteek)}

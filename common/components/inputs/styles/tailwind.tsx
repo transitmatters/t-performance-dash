@@ -16,6 +16,7 @@ export const mbtaTextConfig = {
   BL: `text-mbta-blue`,
   BUS: `text-mbta-bus`,
 };
+
 export const otherConfig = {
   selected: {
     red: `text-mbta-red`,

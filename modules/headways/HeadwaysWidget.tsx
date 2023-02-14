@@ -45,7 +45,7 @@ export const HeadwaysWidget: React.FC = () => {
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <HomescreenWidgetTitle title="Headways" href={`/${linePath}/headways`} />
 
-        <div className={classNames('flex w-full flex-row divide-x')}>
+        <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Headway"
             widgetValue={
@@ -66,6 +66,7 @@ export const HeadwaysWidget: React.FC = () => {
           fromStation={toStation}
           toStation={fromStation}
           showLegend={false}
+          homescreen={true}
         />
       </div>
     </>

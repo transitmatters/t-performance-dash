@@ -45,7 +45,7 @@ export const TravelTimesWidget: React.FC = () => {
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <HomescreenWidgetTitle title="Travel Times" href={`/${linePath}/traveltimes`} />
 
-        <div className={classNames('space-between flex w-full flex-row divide-x')}>
+        <div className={classNames('space-between flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Avg. Travel Time"
             widgetValue={
@@ -72,6 +72,7 @@ export const TravelTimesWidget: React.FC = () => {
           fromStation={fromStation}
           toStation={toStation}
           showLegend={false}
+          homescreen={true}
         />
       </div>
     </>

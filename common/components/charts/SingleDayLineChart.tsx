@@ -81,6 +81,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   isLoading,
   bothStops = false,
   location,
+  homescreen = false,
   showLegend = true,
 }) => {
   const ref = useRef();
@@ -100,16 +101,17 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               {
                 label: `Actual`,
                 fill: false,
-                borderColor: showLegend || !line ? undefined : LINE_COLORS[line],
-                pointBackgroundColor: showLegend
-                  ? pointColors(data, metricField, benchmarkField)
-                  : undefined,
-                pointBorderWidth: showLegend ? undefined : 0,
+                borderColor: homescreen && line ? LINE_COLORS[line] : undefined,
+                pointBackgroundColor:
+                  homescreen && line
+                    ? LINE_COLORS[line]
+                    : pointColors(data, metricField, benchmarkField),
+                pointBorderWidth: homescreen ? 0 : undefined,
                 pointHoverRadius: 3,
                 pointHoverBackgroundColor:
-                  showLegend || !line
-                    ? pointColors(data, metricField, benchmarkField)
-                    : LINE_COLORS[line],
+                  homescreen && line
+                    ? LINE_COLORS[line]
+                    : pointColors(data, metricField, benchmarkField),
                 pointRadius: 3,
                 pointHitRadius: 10,
                 // TODO: would be nice to add types to these arrow functions - but causes an issue bc datapoint[field] might be undefined.
