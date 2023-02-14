@@ -3,7 +3,7 @@ import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { Line } from 'react-chartjs-2';
-import { LINE_COLORS } from '../../../common/constants/colors';
+import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 
@@ -56,13 +56,20 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data }) => {
         scales: {
           y: {
             display: true,
+            ticks: {
+              color: COLORS.design.subtitleGrey,
+            },
             title: {
               display: true,
               text: 'Minutes',
+              color: COLORS.design.subtitleGrey,
             },
           },
           x: {
             type: 'time',
+            ticks: {
+              color: COLORS.design.subtitleGrey,
+            },
             time: {
               unit: 'month',
               displayFormats: {

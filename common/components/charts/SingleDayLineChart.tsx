@@ -15,7 +15,7 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
 import type { DataPoint } from '../../types/dataPoints';
-import { CHART_COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { SingleDayLineProps } from '../../../common/types/lines';
 import { prettyDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../utils/router';
@@ -166,9 +166,13 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
             scales: {
               y: {
                 display: true,
+                ticks: {
+                  color: COLORS.design.subtitleGrey,
+                },
                 title: {
                   display: true,
                   text: 'Minutes',
+                  color: COLORS.design.subtitleGrey,
                 },
               },
               x: {
@@ -176,6 +180,9 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 time: {
                   unit: 'hour',
                   tooltipFormat: 'h:mm:ss a', // locale time with seconds
+                },
+                ticks: {
+                  color: COLORS.design.subtitleGrey,
                 },
                 adapters: {
                   date: {
@@ -186,6 +193,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 title: {
                   display: true,
                   text: date ? prettyDate(date, true) : 'No date selected',
+                  color: COLORS.design.subtitleGrey,
                 },
 
                 afterDataLimits: (axis) => {

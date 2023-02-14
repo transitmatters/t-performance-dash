@@ -14,6 +14,7 @@ import {
   getRidershipNoun,
   normalizeToPercent,
 } from '../../../common/utils/ridership';
+import { COLORS } from '../../../common/constants/colors';
 
 ChartJS.register(...registerables);
 
@@ -102,6 +103,9 @@ export const ServiceRidershipChart: React.FC<ServiceRidershipChartProps> = ({
             x: {
               grid: { display: false },
               type: 'time',
+              ticks: {
+                color: COLORS.design.subtitleGrey,
+              },
               adapters: {
                 date: {
                   locale: enUS,
@@ -121,6 +125,7 @@ export const ServiceRidershipChart: React.FC<ServiceRidershipChartProps> = ({
                 stepSize: 0.2,
                 maxTicksLimit: 6,
                 callback: asPercentString,
+                color: COLORS.design.subtitleGrey,
               },
               grid: { display: false },
             },
