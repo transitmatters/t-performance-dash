@@ -27,17 +27,20 @@ def train_peak_status(df):
 
 def faster_describe(grouped):
     # This does the same thing as pandas.DataFrame.describe(), but is up to 25x faster!
-    # also, we can specify population std instead of sample.
+    # also we can specify population std instead of sample, and add additional quantiles.
     stats = grouped.aggregate(['count', 'mean', 'min', 'median', 'max'])
     std = grouped.std(ddof=0)
-    q1 = grouped.quantile(0.25)
-    q3 = grouped.quantile(0.75)
+    q10 = grouped.quantile(0.10)
+    q25 = grouped.quantile(0.25)
+    q75 = grouped.quantile(0.75)
+    q90 = grouped.quantile(0.90)
     std.name = 'std'
-    q1.name = '25%'
-    q3.name = '75%'
-    # TODO: we can take this out if we filter for 'median' in the front end
+    q10.name = '10%'
+    q25.name = '25%'
+    q75.name = '75%'
+    q90.name = '90%'
     stats.rename(columns={'median': '50%'}, inplace=True)
-    stats = pd.concat([stats, q1, q3, std], axis=1).reset_index()
+    stats = pd.concat([stats, q10, q25, q75, q90, std], axis=1).reset_index()
 
     # This will filter out some probable outliers.
     return stats.loc[stats['count'] > 4]
