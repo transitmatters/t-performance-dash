@@ -23,7 +23,7 @@ export const HomescreenWidgetTitle: React.FC<HomescreenWidgetTitle> = ({ title, 
         >
           {title}
         </h3>
-        <ExploreArrow fill={LINE_COLORS[line]} className="h-4 w-auto pl-2" />
+        <ExploreArrow fill={LINE_COLORS[line ?? 'default']} className="h-4 w-auto pl-2" />
       </div>
     </Link>
   );

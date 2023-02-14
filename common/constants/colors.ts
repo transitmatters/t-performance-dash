@@ -42,4 +42,5 @@ export const LINE_COLORS = {
   BL: '#003da5',
   GL: '#00834d',
   BUS: '#ffc72c',
+  default: '#303030',
 };
