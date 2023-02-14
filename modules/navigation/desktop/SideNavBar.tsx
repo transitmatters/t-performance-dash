@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import Train from '../../../public/Icons/Components/train.svg';
+import Train from '../../../public/Icons/Train.svg';
 import TmLogoSvg from '../../../public/tm-logo-big.svg';
 import TmIconSvg from '../../../public/tm-logo-small.svg';
 
