@@ -9,8 +9,18 @@ import { DateSelector } from '../../common/components/inputs/DateSelector';
 export const DataPageHeader = () => {
   const isDesktop = useBreakpoint('lg');
 
-  const { line } = useDelimitatedRoute();
-  const [range, setRange] = useState<boolean>(false);
+  const {
+    line,
+    query: { endDate },
+  } = useDelimitatedRoute();
+  const [range, setRange] = useState<boolean>(endDate !== undefined);
+
+  React.useEffect(() => {
+    if (!range && endDate !== undefined) {
+      setRange(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [endDate]);
 
   return (
     <div className="relative border-b border-gray-200 sm:pb-0">

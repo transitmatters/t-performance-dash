@@ -40,8 +40,8 @@ export interface AggregateLineProps extends LineProps {
   timeFormat: string;
   seriesName: string;
   fillColor: string;
-  startDate: string;
-  endDate: string;
+  startDate: string | undefined;
+  endDate: string | undefined;
   suggestedYMin?: number;
   suggestedYMax?: number;
   children?: React.ReactNode;

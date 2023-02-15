@@ -37,6 +37,8 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ range }) => {
       }
       if (range && dates.endDate && typeof dates.endDate === 'string') {
         newDateQuery.endDate = getOffsetDate(dates.endDate);
+      } else if (!range) {
+        newDateQuery.endDate = undefined;
       }
       updateQueryParams(newDateQuery);
     }
