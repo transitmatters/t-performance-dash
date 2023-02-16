@@ -21,7 +21,6 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ range }) => {
     startDate: startDate ?? null,
     endDate: endDate ?? null,
   });
-
   React.useEffect(() => {
     setDates({
       startDate: startDate ?? null,

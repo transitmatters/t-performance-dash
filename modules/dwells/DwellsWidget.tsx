@@ -48,10 +48,9 @@ export const DwellsWidget: React.FC = () => {
 
   return (
     <>
-      <HomescreenWidgetTitle title="Dwells" href={`/${linePath}/dwells`} />
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <DwellsSingleChart dwells={dwells} toStation={toStation} fromStation={fromStation} />
-        <div className={classNames('flex w-full flex-row space-x-8')}>
+        <HomescreenWidgetTitle title="Dwells" href={`/${linePath}/dwells`} />
+        <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Dwell"
             widgetValue={
@@ -67,6 +66,12 @@ export const DwellsWidget: React.FC = () => {
             analysis={`from last ${dayjs().format('ddd')}.`}
           />
         </div>
+        <DwellsSingleChart
+          dwells={dwells}
+          toStation={toStation}
+          fromStation={fromStation}
+          homescreen={true}
+        />
       </div>
     </>
   );

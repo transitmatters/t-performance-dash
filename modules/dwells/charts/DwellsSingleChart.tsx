@@ -11,12 +11,14 @@ interface DwellsSingleChartProps {
   dwells: UseQueryResult<SingleDayDataPoint[]>;
   toStation: Station | undefined;
   fromStation: Station | undefined;
+  homescreen?: boolean;
 }
 
 export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
   dwells,
   toStation,
   fromStation,
+  homescreen = false,
 }) => {
   const {
     linePath,
@@ -42,9 +44,10 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
         location={locationDetails(fromStation, toStation, lineShort)}
         fname={'dwells'}
         showLegend={false}
+        homescreen={homescreen}
       />
     );
-  }, [dwells.data, fromStation, isLoading, linePath, lineShort, startDate, toStation]);
+  }, [dwells.data, fromStation, isLoading, linePath, lineShort, startDate, toStation, homescreen]);
 
   return chart;
 };

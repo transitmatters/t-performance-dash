@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { LINE_OBJECTS } from '../../common/constants/lines';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { SZWidgetValue, TimeWidgetValue } from '../../common/types/basicWidgets';
@@ -43,12 +42,9 @@ export default function SlowZonesWidget() {
 
   return (
     <>
-      <HomescreenWidgetTitle title="Slow Zones" href={`/${linePath}/slowzones`} />
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <div className={classNames('h-48 pr-4')}>
-          <TotalSlowTime line={LINE_OBJECTS[line]?.short} data={formattedTotals} />
-        </div>
-        <div className={classNames('flex w-full flex-row space-x-8')}>
+        <HomescreenWidgetTitle title="Slow Zones" href={`/${linePath}/slowzones`} />
+        <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Total Delay"
             widgetValue={new TimeWidgetValue(totalDelay, totalDelay - totalDelayLasteek)}
@@ -59,6 +55,9 @@ export default function SlowZonesWidget() {
             widgetValue={new SZWidgetValue(current, current && lastWeek ? current - lastWeek : 0)}
             analysis={`from last ${dayjs().format('ddd')}.`}
           />
+        </div>
+        <div className={classNames('h-48 pr-4')}>
+          <TotalSlowTime data={formattedTotals} />
         </div>
       </div>
     </>
