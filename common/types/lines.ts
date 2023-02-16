@@ -1,14 +1,3 @@
-import type { TimeUnit } from 'chart.js';
-import type React from 'react';
-import type {
-  AggregateDataPoint,
-  BenchmarkField,
-  MetricField,
-  PointField,
-  SingleDayDataPoint,
-  Location,
-} from './charts';
-
 export type Line = 'RL' | 'OL' | 'GL' | 'BL' | 'BUS';
 export type LineShort = 'Red' | 'Orange' | 'Green' | 'Blue' | 'Bus';
 export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus';
@@ -20,49 +9,3 @@ export type LineMetadata = {
   key: Line;
 };
 export type LineObject = { [key in Line]: LineMetadata };
-
-type DataName = 'traveltimes' | 'headways' | 'dwells' | 'traveltimesByHour';
-
-export interface LineProps {
-  title: string;
-  chartId: string;
-  location: Location;
-  isLoading: boolean;
-  pointField: PointField; // X value
-  bothStops?: boolean;
-  fname: DataName;
-  showLegend?: boolean;
-}
-
-export interface AggregateLineProps extends LineProps {
-  timeUnit: TimeUnit;
-  data: AggregateDataPoint[];
-  timeFormat: string;
-  seriesName: string;
-  fillColor: string;
-  startDate: string;
-  endDate: string;
-  suggestedYMin?: number;
-  suggestedYMax?: number;
-  children?: React.ReactNode;
-}
-
-export interface SingleDayLineProps extends LineProps {
-  data: SingleDayDataPoint[];
-  metricField: MetricField; // Y value
-  date: string | undefined;
-  benchmarkField?: BenchmarkField;
-}
-
-export interface HeadwayHistogramProps {
-  title: string;
-  chartId: string;
-  data: SingleDayDataPoint[];
-  date: string | undefined;
-  location: Location;
-  isLoading: boolean;
-  bothStops?: boolean;
-  fname: DataName;
-  showLegend?: boolean;
-  metricField: MetricField; // Y value
-}

@@ -1,4 +1,7 @@
+import type { UseQueryResult } from '@tanstack/react-query';
+import type { TimeUnit } from 'chart.js';
 import type { LineShort } from './lines';
+import type { Station } from './stations';
 
 export interface SingleDayDataPoint {
   route_id: string;
@@ -59,3 +62,56 @@ export enum BenchmarkFieldKeys {
 export type PointField = PointFieldKeys;
 export type MetricField = MetricFieldKeys;
 export type BenchmarkField = BenchmarkFieldKeys;
+
+export type DataName = 'traveltimes' | 'headways' | 'dwells' | 'traveltimesByHour';
+
+export interface LineProps {
+  title: string;
+  chartId: string;
+  location: Location;
+  isLoading: boolean;
+  pointField: PointField; // X value
+  bothStops?: boolean;
+  fname: DataName;
+  showLegend?: boolean;
+}
+
+export interface AggregateLineProps extends LineProps {
+  timeUnit: TimeUnit;
+  data: AggregateDataPoint[];
+  timeFormat: string;
+  seriesName: string;
+  fillColor: string;
+  startDate: string;
+  endDate: string;
+  suggestedYMin?: number;
+  suggestedYMax?: number;
+  children?: React.ReactNode;
+}
+
+export interface SingleDayLineProps extends LineProps {
+  data: SingleDayDataPoint[];
+  metricField: MetricField;
+  date: string | undefined;
+  benchmarkField?: BenchmarkField;
+}
+
+export interface HeadwayHistogramProps {
+  title: string;
+  chartId: string;
+  data: SingleDayDataPoint[];
+  date: string | undefined;
+  location: Location;
+  isLoading: boolean;
+  bothStops?: boolean;
+  fname: DataName;
+  showLegend?: boolean;
+  metricField: MetricField;
+}
+
+export interface HeadwaysChartProps {
+  headways: UseQueryResult<SingleDayDataPoint[]>;
+  toStation: Station | undefined;
+  fromStation: Station | undefined;
+  showLegend?: boolean;
+}
