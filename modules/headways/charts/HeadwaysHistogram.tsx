@@ -4,7 +4,7 @@ import 'chartjs-adapter-date-fns';
 import React, { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { LINE_COLORS } from '../../../common/constants/colors';
+import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { drawTitle } from '../../../common/components/charts/Title';
 import { MetricFieldKeys } from '../../../src/charts/types';
 import { locationDetails } from '../../../common/utils/stations';
@@ -85,16 +85,22 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
               },
               ticks: {
                 stepSize: 1,
+                color: COLORS.design.subtitleGrey,
               },
               title: {
                 display: true,
                 text: `Minutes`,
+                color: COLORS.design.subtitleGrey,
               },
             },
             y: {
               title: {
                 display: true,
                 text: 'Trains',
+                color: COLORS.design.subtitleGrey,
+              },
+              ticks: {
+                color: COLORS.design.subtitleGrey,
               },
             },
           },

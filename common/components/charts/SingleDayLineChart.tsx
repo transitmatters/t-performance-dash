@@ -15,9 +15,10 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
 import type { DataPoint } from '../../types/dataPoints';
-import { CHART_COLORS } from '../../../common/constants/colors';
+import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { SingleDayLineProps } from '../../../common/types/charts';
 import { prettyDate } from '../../utils/date';
+import { useDelimitatedRoute } from '../../utils/router';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
 
@@ -80,11 +81,12 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   isLoading,
   bothStops = false,
   location,
+  homescreen = false,
   showLegend = true,
 }) => {
   const ref = useRef();
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
-
+  const { line } = useDelimitatedRoute();
   return (
     <div className={showLegend ? 'chart' : undefined}>
       <div className={'chart-container'}>
@@ -99,9 +101,17 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               {
                 label: `Actual`,
                 fill: false,
-                pointBackgroundColor: pointColors(data, metricField, benchmarkField),
+                borderColor: '#a0a0a030',
+                pointBackgroundColor:
+                  homescreen && line
+                    ? LINE_COLORS[line]
+                    : pointColors(data, metricField, benchmarkField),
+                pointBorderWidth: homescreen ? 0 : undefined,
                 pointHoverRadius: 3,
-                pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField),
+                pointHoverBackgroundColor:
+                  homescreen && line
+                    ? LINE_COLORS[line]
+                    : pointColors(data, metricField, benchmarkField),
                 pointRadius: 3,
                 pointHitRadius: 10,
                 // TODO: would be nice to add types to these arrow functions - but causes an issue bc datapoint[field] might be undefined.
@@ -109,7 +119,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               },
               {
                 label: `Benchmark MBTA`,
-                backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                backgroundColor: '#a0a0a030',
                 data: benchmarkField
                   ? data.map((datapoint: any) => (datapoint[benchmarkField] / 60).toFixed(2))
                   : [],
@@ -149,16 +159,16 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 text: '',
               },
             },
-            interaction: {
-              mode: 'index',
-              intersect: false,
-            },
             scales: {
               y: {
                 display: true,
+                ticks: {
+                  color: COLORS.design.subtitleGrey,
+                },
                 title: {
                   display: true,
                   text: 'Minutes',
+                  color: COLORS.design.subtitleGrey,
                 },
               },
               x: {
@@ -166,6 +176,9 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 time: {
                   unit: 'hour',
                   tooltipFormat: 'h:mm:ss a', // locale time with seconds
+                },
+                ticks: {
+                  color: COLORS.design.subtitleGrey,
                 },
                 adapters: {
                   date: {
@@ -176,6 +189,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 title: {
                   display: true,
                   text: date ? prettyDate(date, true) : 'No date selected',
+                  color: COLORS.design.subtitleGrey,
                 },
 
                 afterDataLimits: (axis) => {

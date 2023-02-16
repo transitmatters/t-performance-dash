@@ -32,7 +32,7 @@ def emit_stop_obj(entry, branches=False):
         "stops": {
             "1": sorted(entry.loc[entry.direction_id == 1].full_stop_id.tolist()),
             "0": sorted(entry.loc[entry.direction_id == 0].full_stop_id.tolist()),
-        }
+        },
     }
 
 
@@ -42,7 +42,12 @@ def create_manifest(df, routes, checkpoint_file):
     df["time_point_id"] = df["time_point_id"].str.lower()
     df["time_point_order"] = df["time_point_order"].fillna(0)
 
-    tpts = df[["route_id", "stop_id", "time_point_id", "direction_id"]].value_counts(dropna=False).rename("counts").reset_index()
+    tpts = (
+        df[["route_id", "stop_id", "time_point_id", "direction_id"]]
+        .value_counts(dropna=False)
+        .rename("counts")
+        .reset_index()
+    )
 
     # use checkpoint file to map time_point_id to stop_name
     station_names = load_checkpoints(checkpoint_file)
@@ -52,21 +57,20 @@ def create_manifest(df, routes, checkpoint_file):
     tpts["full_stop_id"] = tpts[["route_id", "direction_id", "stop_id"]].astype(str).agg("-".join, axis=1)
 
     # Must be arranged by inbound direction. Use most common (mode) as guess (w/ max in case 2 modes)
-    orders = df.loc[df.direction_id == 1].groupby("time_point_id", dropna=False)["time_point_order"].agg(lambda x: x.mode().max())
+    orders = (
+        df.loc[df.direction_id == 1]
+        .groupby("time_point_id", dropna=False)["time_point_order"]
+        .agg(lambda x: x.mode().max())
+    )
     tpts["order_guess"] = tpts["time_point_id"].map(orders).fillna(0).astype(int)
 
-    stop_objs = tpts.groupby("time_point_id", dropna=False).apply(
-        lambda x: emit_stop_obj(x, len(routes) > 1)
-    ).dropna()
+    stop_objs = tpts.groupby("time_point_id", dropna=False).apply(lambda x: emit_stop_obj(x, len(routes) > 1)).dropna()
 
     manifest = {
         output_route_name: {
             "type": "bus",
-            "direction": {
-                "0": "outbound",
-                "1": "inbound"
-            },
-            "stations": sorted(stop_objs.values, key=lambda x: x["order"])
+            "direction": {"0": "outbound", "1": "inbound"},
+            "stations": sorted(stop_objs.values, key=lambda x: x["order"]),
         }
     }
 

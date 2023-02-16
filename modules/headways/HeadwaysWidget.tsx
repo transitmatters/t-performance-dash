@@ -42,14 +42,9 @@ export const HeadwaysWidget: React.FC = () => {
 
   return (
     <>
-      <HomescreenWidgetTitle title="Headways" href={`/${linePath}/headways`} />
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <HeadwaysSingleChart
-          headways={headways}
-          fromStation={toStation}
-          toStation={fromStation}
-          showLegend={false}
-        />
+        <HomescreenWidgetTitle title="Headways" href={`/${linePath}/headways`} />
+
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Headway"
@@ -66,6 +61,13 @@ export const HeadwaysWidget: React.FC = () => {
             analysis={`from last ${dayjs().format('ddd')}.`}
           />
         </div>
+        <HeadwaysSingleChart
+          headways={headways}
+          fromStation={toStation}
+          toStation={fromStation}
+          showLegend={false}
+          homescreen={true}
+        />
       </div>
     </>
   );

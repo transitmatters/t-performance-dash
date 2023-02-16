@@ -12,6 +12,7 @@ interface TravelTimesSingleChartProps {
   toStation: Station | undefined;
   fromStation: Station | undefined;
   showLegend?: boolean;
+  homescreen?: boolean;
 }
 
 export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
@@ -19,6 +20,7 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
   toStation,
   fromStation,
   showLegend = true,
+  homescreen = false,
 }) => {
   const {
     linePath,
@@ -46,6 +48,7 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
         location={locationDetails(fromStation, toStation, lineShort)}
         fname={'traveltimes'}
         showLegend={showLegend}
+        homescreen={homescreen}
       />
     );
   }, [
@@ -57,6 +60,7 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
     toStation,
     lineShort,
     showLegend,
+    homescreen,
   ]);
 
   return chart;

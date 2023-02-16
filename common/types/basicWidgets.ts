@@ -38,7 +38,7 @@ export class TimeWidgetValue implements WidgetValueInterface {
     const absValue = Math.abs(this.value);
     switch (true) {
       case absValue < 90:
-        return dayjs.duration(absValue, 'seconds').format('s');
+        return absValue.toFixed(0);
       case absValue < 3600:
         return dayjs.duration(absValue, 'seconds').format('m:ss');
       default:

@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useRidershipData } from '../../common/api/ridership';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
-import { colorsForLine } from '../../common/constants/colors';
+import { LINE_COLORS } from '../../common/constants/colors';
 import { PercentageWidgetValue, TripsWidgetValue } from '../../common/types/basicWidgets';
 import type { ServiceDay } from '../../common/types/ridership';
 import { getHighestTphValue, normalizeToPercent } from '../../common/utils/ridership';
@@ -13,10 +13,10 @@ import { TphChart } from './charts/TphChart';
 export default function TravelTimesDetails() {
   const allRidership = useRidershipData();
 
-  const { lineShort } = useDelimitatedRoute();
+  const { line, lineShort } = useDelimitatedRoute();
   const lineData = allRidership.data?.lineData[`line-${lineShort}`];
 
-  const color = colorsForLine[lineShort.toLowerCase()] ?? 'black';
+  const color = LINE_COLORS[line ?? 'default'];
   const [serviceDay, setServiceDay] = useState<ServiceDay>('weekday');
   const highestTph = useMemo(() => (lineData ? getHighestTphValue(lineData) : 0), [lineData]);
   const startDate = useMemo(

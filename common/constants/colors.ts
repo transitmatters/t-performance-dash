@@ -44,11 +44,3 @@ export const LINE_COLORS = {
   BUS: '#ffc72c',
   default: '#303030',
 };
-
-export const colorsForLine: Record<string, string> = {
-  red: LINE_COLORS.RL,
-  orange: LINE_COLORS.OL,
-  blue: LINE_COLORS.BL,
-  green: LINE_COLORS.GL,
-  bus: LINE_COLORS.BUS,
-};

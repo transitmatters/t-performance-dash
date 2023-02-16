@@ -5,6 +5,7 @@ import { Chart as ChartJS, registerables } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import type { LineData, ServiceDay } from '../../../common/types/ridership';
 import { getHourlyTickValues } from '../../../common/utils/ridership';
+import { COLORS } from '../../../common/constants/colors';
 
 const hourLabels = getHourlyTickValues(1);
 
@@ -77,6 +78,7 @@ export const TphChart: React.FC<TphChartProps> = ({ color, lineData, serviceDay,
               grid: { display: false },
               ticks: {
                 maxTicksLimit: 12,
+                color: COLORS.design.subtitleGrey,
               },
             },
             y: {
@@ -84,6 +86,7 @@ export const TphChart: React.FC<TphChartProps> = ({ color, lineData, serviceDay,
               suggestedMax: highestTph,
               ticks: {
                 maxTicksLimit: 4,
+                color: COLORS.design.subtitleGrey,
               },
             },
           },

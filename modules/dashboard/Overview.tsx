@@ -18,12 +18,12 @@ export async function generateStaticParams() {
 
 export default function Overview() {
   return (
-    <>
+    <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
       <TravelTimesWidget />
       <SlowZonesWidget />
       <HeadwaysWidget />
       <DwellsWidget />
       <RidershipWidget />
-    </>
+    </div>
   );
 }

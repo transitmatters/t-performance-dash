@@ -3,21 +3,21 @@ import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { Line } from 'react-chartjs-2';
-import { LINE_COLORS } from '../../../common/constants/colors';
+import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
-import type { LineShort } from '../../../common/types/lines';
+import { useDelimitatedRoute } from '../../../common/utils/router';
 
 interface TotalSlowTimeProps {
-  line: LineShort | undefined;
   data?: DayDelayTotals[];
 }
 Chart.register(...registerables);
 
-export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data, line }) => {
+export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data }) => {
   const ref = useRef();
   const labels = data?.map((item) => item['date']);
+  const { line, lineShort } = useDelimitatedRoute();
 
-  if (!line) {
+  if (!(lineShort && line)) {
     return null;
   }
 
@@ -29,10 +29,10 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data, line }) => {
         labels,
         datasets: [
           {
-            label: `${line} Line`,
-            data: data?.map((d) => (d[line] / 60).toFixed(2)),
-            borderColor: LINE_COLORS[line.toUpperCase()],
-            backgroundColor: LINE_COLORS[line.toUpperCase()],
+            label: `${lineShort} Line`,
+            data: data?.map((d) => (d[lineShort] / 60).toFixed(2)),
+            borderColor: LINE_COLORS[line],
+            backgroundColor: LINE_COLORS[line],
             pointRadius: 0,
             tension: 0.1,
           },
@@ -56,13 +56,20 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data, line }) => {
         scales: {
           y: {
             display: true,
+            ticks: {
+              color: COLORS.design.subtitleGrey,
+            },
             title: {
               display: true,
               text: 'Minutes',
+              color: COLORS.design.subtitleGrey,
             },
           },
           x: {
             type: 'time',
+            ticks: {
+              color: COLORS.design.subtitleGrey,
+            },
             time: {
               unit: 'month',
               displayFormats: {
