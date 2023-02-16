@@ -30,17 +30,7 @@ export const RidershipWidget: React.FC = () => {
   return (
     <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
       <HomescreenWidgetTitle title="Ridership & Service Levels" href={`/${linePath}/ridership`} />
-      <div className={classNames('h-50 pr-4')}>
-        <ServiceRidershipChart lineData={lineData} startDate={startDate} color={color} />
-      </div>
-      <div className={classNames('h-50 pr-4')}>
-        <TphChart
-          lineData={lineData}
-          serviceDay={serviceDay}
-          color={color}
-          highestTph={highestTph}
-        />
-      </div>
+
       <div className={classNames('flex w-full flex-row')}>
         <BasicWidgetDataLayout
           title="Pre-COVID Ridership"
@@ -65,6 +55,17 @@ export const RidershipWidget: React.FC = () => {
           }
           analysis={`since last year.`}
           sentimentDirection={'positiveOnIncrease'}
+        />
+      </div>
+      <div className={classNames('h-50 pr-4')}>
+        <ServiceRidershipChart lineData={lineData} startDate={startDate} color={color} />
+      </div>
+      <div className={classNames('h-50 pr-4')}>
+        <TphChart
+          lineData={lineData}
+          serviceDay={serviceDay}
+          color={color}
+          highestTph={highestTph}
         />
       </div>
     </div>

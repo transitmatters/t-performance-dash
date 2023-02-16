@@ -50,7 +50,7 @@ export const DwellsWidget: React.FC = () => {
     <>
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <HomescreenWidgetTitle title="Dwells" href={`/${linePath}/dwells`} />
-        <div className={classNames('flex w-full flex-row space-x-8')}>
+        <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Dwell"
             widgetValue={

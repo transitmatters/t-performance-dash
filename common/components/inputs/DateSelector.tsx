@@ -1,7 +1,6 @@
 import Datepicker from 'react-tailwindcss-datepicker';
 import React, { useState } from 'react';
 import type { DateValueType } from 'react-tailwindcss-datepicker/dist/types';
-import dayjs from 'dayjs';
 import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
 import { getCurrentDate, getOffsetDate } from '../../utils/date';
 import type { QueryParams } from '../../types/router';
@@ -45,9 +44,7 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ range }) => {
   return (
     <Datepicker
       primaryColor={linePath !== 'bus' ? linePath : 'yellow'}
-      value={
-        dates ?? { startDate: dayjs().format('YYYY-MM-DD'), endDate: dayjs().format('YYYY-MM-DD') }
-      }
+      value={dates}
       onChange={setDates}
       maxDate={maxDate}
       asSingle={!range}

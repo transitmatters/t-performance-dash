@@ -101,7 +101,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               {
                 label: `Actual`,
                 fill: false,
-                borderColor: homescreen && line ? LINE_COLORS[line] : undefined,
+                borderColor: '#a0a0a030',
                 pointBackgroundColor:
                   homescreen && line
                     ? LINE_COLORS[line]
@@ -119,7 +119,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               },
               {
                 label: `Benchmark MBTA`,
-                backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                backgroundColor: '#a0a0a030',
                 data: benchmarkField
                   ? data.map((datapoint: any) => (datapoint[benchmarkField] / 60).toFixed(2))
                   : [],
@@ -158,10 +158,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 display: true,
                 text: '',
               },
-            },
-            interaction: {
-              mode: 'index',
-              intersect: false,
             },
             scales: {
               y: {
