@@ -27,7 +27,7 @@ export interface LineProps {
   title: string;
   chartId: string;
   location: Location;
-  isLoading: any;
+  isLoading: boolean;
   pointField: PointField; // X value
   bothStops?: boolean;
   fname: DataName;
@@ -52,4 +52,17 @@ export interface SingleDayLineProps extends LineProps {
   metricField: MetricField; // Y value
   date: string | undefined;
   benchmarkField?: BenchmarkField;
+}
+
+export interface HeadwayHistogramProps {
+  title: string;
+  chartId: string;
+  data: SingleDayDataPoint[];
+  date: string | undefined;
+  location: Location;
+  isLoading: boolean;
+  bothStops?: boolean;
+  fname: DataName;
+  showLegend?: boolean;
+  metricField: MetricField; // Y value
 }

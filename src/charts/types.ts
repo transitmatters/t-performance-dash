@@ -51,7 +51,7 @@ export enum PointFieldKeys {
 
 export enum MetricFieldKeys {
   travelTimeSec = 'travel_time_sec',
-  headWayTimeSec = 'headway_time_sec',
+  headwayTimeSec = 'headway_time_sec',
   dwellTimeSec = 'dwell_time_sec',
 }
 export enum BenchmarkFieldKeys {

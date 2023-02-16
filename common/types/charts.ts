@@ -1,4 +1,4 @@
-import { LineShort } from './lines';
+import type { LineShort } from './lines';
 
 export interface SingleDayDataPoint {
   route_id: string;
@@ -48,7 +48,7 @@ export enum PointFieldKeys {
 
 export enum MetricFieldKeys {
   travelTimeSec = 'travel_time_sec',
-  headWayTimeSec = 'headway_time_sec',
+  headwayTimeSec = 'headway_time_sec',
   dwellTimeSec = 'dwell_time_sec',
 }
 export enum BenchmarkFieldKeys {

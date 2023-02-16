@@ -46,6 +46,7 @@ export const HeadwaysWidget: React.FC = () => {
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <HeadwaysSingleChart
           headways={headways}
+          chartType="singleday"
           fromStation={toStation}
           toStation={fromStation}
           showLegend={false}

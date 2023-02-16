@@ -1,6 +1,6 @@
 import type { UseQueryResult } from '@tanstack/react-query';
 import React, { useMemo } from 'react';
-import { HeadwayHistogram } from '../../../common/components/charts/HeadwayHistogram';
+import { SingleDayLineChart } from '../../../common/components/charts/SingleDayLineChart';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { locationDetails } from '../../../common/utils/stations';
@@ -33,12 +33,12 @@ export const HeadwaysSingleChart: React.FC<HeadwaysSingleChartProps> = ({
 
   const chart = useMemo(() => {
     return (
-      <HeadwayHistogram
+      <SingleDayLineChart
         chartId={`headways-chart-${linePath}`}
         title={'Time between trains (headways)'}
         data={headways.data ?? []}
         date={startDate}
-        metricField={MetricFieldKeys.headWayTimeSec}
+        metricField={MetricFieldKeys.headwayTimeSec}
         pointField={PointFieldKeys.currentDepDt}
         benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
         isLoading={isLoading}
