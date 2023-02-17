@@ -11,6 +11,7 @@ import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWi
 import { averageHeadway, longestHeadway } from '../../common/utils/headways';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
+import { HeadwaysHistogram } from './charts/HeadwaysHistogram';
 
 export default function HeadwaysDetails() {
   const {
@@ -84,6 +85,9 @@ export default function HeadwaysDetails() {
           fromStation={toStation}
           toStation={fromStation}
         />
+      </div>
+      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+        <HeadwaysHistogram headways={headways} fromStation={toStation} toStation={fromStation} />
       </div>
     </>
   );
