@@ -8,8 +8,8 @@ import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { drawTitle } from '../../../common/components/charts/Title';
 import { MetricFieldKeys } from '../../../src/charts/types';
 import { locationDetails } from '../../../common/utils/stations';
-import type { HeadwayPoint } from '../../../common/types/dataPoints';
 import type { HeadwaysChartProps } from '../../../common/types/charts';
+import type { HeadwayPoint } from '../../../common/types/dataPoints';
 
 ChartJS.register(BarController, BarElement, LinearScale, Title, Tooltip);
 
@@ -30,26 +30,19 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
   // dataObject is a mapping from headway bucket -> number of trains.
   // All keys are increased by 0.5. This is a workaround to get chartjs to display the tick labels in between the bars.
   const dataObject: Record<string, number> = useMemo(() => {
-    let max = 0.5;
-    return (
-      headways.data?.reduce(
-        (datapointMap: Record<string, number>, datapoint: HeadwayPoint) => {
-          const bucketString = (
-            Math.floor(datapoint[MetricFieldKeys.headwayTimeSec] / 60) + 0.5
-          ).toString();
-
-          // If the bucket doesn't exist, create all buckets leading up to it and set them to 0.
-          while (datapointMap[bucketString] == null) {
-            max += 1;
-            datapointMap[max.toString()] = 0;
-          }
-          // Increment the value for this bucket.
-          datapointMap[bucketString] = datapointMap[bucketString] + 1;
-          return datapointMap;
-        },
-        { '0.5': 0 }
-      ) || {}
-    );
+    const values =
+      headways.data?.map(
+        (datapoint: HeadwayPoint) =>
+          Math.floor(datapoint[MetricFieldKeys.headwayTimeSec] / 60) + 0.5
+      ) || [];
+    const max = Math.max(...values);
+    const headwayBuckets = {};
+    for (let i = 0.5; i <= max; i++) {
+      headwayBuckets[i] = 0;
+    }
+    return values.forEach((datapoint) => {
+      headwayBuckets[datapoint] += 1;
+    });
   }, [headways.data]);
 
   const isLoading = useMemo(
