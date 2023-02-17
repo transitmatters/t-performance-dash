@@ -16,7 +16,7 @@ import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
 import type { DataPoint } from '../../types/dataPoints';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
-import type { SingleDayLineProps } from '../../../common/types/lines';
+import type { SingleDayLineProps } from '../../../common/types/charts';
 import { prettyDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../utils/router';
 import { drawTitle } from './Title';
