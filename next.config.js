@@ -27,6 +27,7 @@ const nextConfig = {
   async rewrites() {
     return rewrites;
   },
+  trailingSlash: true,
   reactStrictMode: true,
   swcMinify: true,
   typescript: tsSettings,
