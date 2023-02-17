@@ -40,9 +40,10 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
     for (let i = 0.5; i <= max; i++) {
       headwayBuckets[i] = 0;
     }
-    return values.forEach((datapoint) => {
+    values.forEach((datapoint) => {
       headwayBuckets[datapoint] += 1;
     });
+    return headwayBuckets;
   }, [headways.data]);
 
   const isLoading = useMemo(
