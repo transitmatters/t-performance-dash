@@ -25,7 +25,7 @@ export const NativeDateInput: React.FC<NativeDateInputProps> = ({ range }) => {
   React.useEffect(() => {
     setDates({
       startDate: startDate,
-      endDate: endDate ?? startDate,
+      endDate: endDate,
     });
   }, [endDate, startDate]);
 
@@ -37,6 +37,8 @@ export const NativeDateInput: React.FC<NativeDateInputProps> = ({ range }) => {
       }
       if (range && dates.endDate && typeof dates.endDate === 'string') {
         newDateQuery.endDate = getOffsetDate(dates.endDate);
+      } else if (!range) {
+        newDateQuery.endDate = undefined;
       }
       updateQueryParams(newDateQuery);
     }
