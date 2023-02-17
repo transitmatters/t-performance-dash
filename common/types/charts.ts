@@ -63,7 +63,7 @@ export type PointField = PointFieldKeys;
 export type MetricField = MetricFieldKeys;
 export type BenchmarkField = BenchmarkFieldKeys;
 
-export type DataName = 'traveltimes' | 'headways' | 'dwells' | 'traveltimesByHour';
+type DataName = 'traveltimes' | 'headways' | 'dwells' | 'traveltimesByHour';
 
 export interface LineProps {
   title: string;
@@ -83,8 +83,8 @@ export interface AggregateLineProps extends LineProps {
   timeFormat: string;
   seriesName: string;
   fillColor: string;
-  startDate: string;
-  endDate: string;
+  startDate: string | undefined;
+  endDate: string | undefined;
   suggestedYMin?: number;
   suggestedYMax?: number;
   children?: React.ReactNode;

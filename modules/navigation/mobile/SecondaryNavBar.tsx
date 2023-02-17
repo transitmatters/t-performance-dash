@@ -4,6 +4,7 @@ import Device from '../../../common/components/general/Device/Device';
 import { Button } from '../../../common/components/inputs/Button';
 import { NativeDateInput } from '../../../common/components/inputs/NativeDateInput';
 import { DateSelector } from '../../../common/components/inputs/DateSelector';
+import { useDelimitatedRoute } from '../../../common/utils/router';
 
 const visualizationOptions = [
   { name: 'Map', id: 1 },
@@ -12,7 +13,17 @@ const visualizationOptions = [
 ];
 
 export const SecondaryNavBar: React.FC = () => {
-  const [range, setRange] = useState<boolean>(false);
+  const {
+    query: { endDate },
+  } = useDelimitatedRoute();
+  const [range, setRange] = useState<boolean>(endDate !== undefined);
+
+  React.useEffect(() => {
+    if (!range && endDate !== undefined) {
+      setRange(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [endDate]);
 
   return (
     <div className="pb-safe fixed bottom-11 z-20 w-full border border-gray-300 bg-white px-2">

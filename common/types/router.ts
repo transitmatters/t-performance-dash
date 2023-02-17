@@ -10,6 +10,7 @@ export interface Route {
 }
 
 export interface QueryParams {
+  line?: Line;
   startDate?: string;
   endDate?: string;
   busLine?: string;

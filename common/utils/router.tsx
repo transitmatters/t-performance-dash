@@ -1,4 +1,4 @@
-import { capitalize, isEqual } from 'lodash';
+import { capitalize, isEqual, pickBy } from 'lodash';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import type { DataPage } from '../types/dataPages';
@@ -41,8 +41,9 @@ export const useUpdateQuery = () => {
         ...router.query,
         ...newQueryParams,
       };
-      if (!isEqual(router.query, newQuery)) {
-        router.query = newQuery;
+
+      if (!isEqual(router.query, newQuery) && newQuery.line !== undefined) {
+        router.query = pickBy(newQuery, (attr) => attr !== undefined);
         router.push(router);
       }
     },
