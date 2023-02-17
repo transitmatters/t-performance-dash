@@ -87,11 +87,7 @@ export default function HeadwaysDetails() {
         />
       </div>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
-        <HeadwaysHistogram
-          headways={headwaysReversed}
-          fromStation={toStation}
-          toStation={fromStation}
-        />
+        <HeadwaysHistogram headways={headways} fromStation={toStation} toStation={fromStation} />
       </div>
     </>
   );
