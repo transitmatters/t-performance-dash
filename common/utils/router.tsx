@@ -1,9 +1,11 @@
 import { capitalize, isEqual, pickBy } from 'lodash';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
+import type { DateRangeType } from 'react-tailwindcss-datepicker/dist/types';
 import type { DataPage } from '../types/dataPages';
 import type { Line, LineMetadata, LinePath, LineShort } from '../types/lines';
 import type { QueryParams, Route } from '../types/router';
+import { getOffsetDate } from './date';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'RL',
@@ -32,22 +34,39 @@ export const useDelimitatedRoute = (): Route => {
   };
 };
 
-export const useUpdateQuery = () => {
+export const useUpdateQuery = ({ range }: { range: boolean }) => {
   const router = useRouter();
 
   const updateQueryParams = useCallback(
-    (newQueryParams: Partial<QueryParams>) => {
-      const newQuery = {
-        ...router.query,
-        ...newQueryParams,
-      };
+    (newQueryParams: Partial<DateRangeType> | null) => {
+      if (!newQueryParams) return;
 
-      if (!isEqual(router.query, newQuery) && newQuery.line !== undefined) {
-        router.query = pickBy(newQuery, (attr) => attr !== undefined);
-        router.push(router);
+      const { startDate, endDate } = newQueryParams;
+
+      const newDateQuery: Partial<QueryParams> = {};
+
+      if (startDate) {
+        if (startDate && typeof startDate === 'string') {
+          newDateQuery.startDate = getOffsetDate(startDate);
+        }
+        if (range && endDate && typeof endDate === 'string') {
+          newDateQuery.endDate = getOffsetDate(endDate);
+        } else if (!range) {
+          newDateQuery.endDate = undefined;
+        }
+
+        const newQuery = {
+          ...router.query,
+          ...newDateQuery,
+        };
+
+        if (!isEqual(router.query, newQuery) && newQuery.line !== undefined) {
+          const query = pickBy(newQuery, (attr) => attr !== undefined);
+          router.push({ pathname: router.pathname, query });
+        }
       }
     },
-    [router]
+    [range, router]
   );
 
   return updateQueryParams;
