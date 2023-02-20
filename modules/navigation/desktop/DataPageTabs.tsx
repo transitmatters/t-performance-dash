@@ -1,11 +1,12 @@
 import classNames from 'classnames';
 import React from 'react';
+import { pickBy } from 'lodash';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { DATA_PAGES } from '../../../common/constants/datapages';
 import { ActiveLink } from '../../../common/components/general/ActiveLink';
 
 export const DataPageTabs = () => {
-  const { datapage, linePath } = useDelimitatedRoute();
+  const { datapage, linePath, query } = useDelimitatedRoute();
 
   return (
     <div className="md:mt-4">
@@ -14,7 +15,10 @@ export const DataPageTabs = () => {
           {Object.entries(DATA_PAGES).map(([key, page]) => (
             <ActiveLink
               key={key}
-              href={`/${linePath}${page.href}`}
+              href={{
+                pathname: `/${linePath}${page.href}`,
+                query: pickBy(query, (attr) => attr !== undefined),
+              }}
               activeClassName={'border-gray-500 text-black'}
               lambda={() => {
                 return key === datapage;

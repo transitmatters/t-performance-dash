@@ -1,7 +1,6 @@
 import classNames from 'classnames';
-import React, { useState } from 'react';
-import type { QueryParams } from '../../types/router';
-import { formatDate, getOffsetDate } from '../../utils/date';
+import React, { useMemo } from 'react';
+import { formatDate } from '../../utils/date';
 import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
 import { buttonHighlightConfig } from './styles/inputStyle';
 
@@ -15,34 +14,15 @@ export const NativeDateInput: React.FC<NativeDateInputProps> = ({ range }) => {
     query: { startDate, endDate },
   } = useDelimitatedRoute();
 
-  const updateQueryParams = useUpdateQuery();
+  const updateQueryParams = useUpdateQuery({ range });
 
-  const [dates, setDates] = useState<{ startDate?: string; endDate?: string }>({
-    startDate: startDate,
-    endDate: endDate,
-  });
-
-  React.useEffect(() => {
-    setDates({
+  const dates = useMemo(
+    () => ({
       startDate: startDate,
       endDate: endDate,
-    });
-  }, [endDate, startDate]);
-
-  React.useEffect(() => {
-    const newDateQuery: Partial<QueryParams> = {};
-    if (dates) {
-      if (dates.startDate && typeof dates.startDate === 'string') {
-        newDateQuery.startDate = getOffsetDate(dates.startDate);
-      }
-      if (range && dates.endDate && typeof dates.endDate === 'string') {
-        newDateQuery.endDate = getOffsetDate(dates.endDate);
-      } else if (!range) {
-        newDateQuery.endDate = undefined;
-      }
-      updateQueryParams(newDateQuery);
-    }
-  }, [dates, range, updateQueryParams]);
+    }),
+    [startDate, endDate]
+  );
 
   return (
     <div className="flex flex-row">
@@ -54,7 +34,7 @@ export const NativeDateInput: React.FC<NativeDateInputProps> = ({ range }) => {
           line && buttonHighlightConfig[line]
         )}
         value={dates.startDate}
-        onChange={(event) => setDates({ ...dates, startDate: event.target.value })}
+        onChange={(event) => updateQueryParams({ ...dates, startDate: event.target.value })}
         max={formatDate(new Date())}
       />
       {range && (
@@ -69,7 +49,7 @@ export const NativeDateInput: React.FC<NativeDateInputProps> = ({ range }) => {
               )}
               value={dates.endDate}
               onChange={(event) => {
-                setDates({ ...dates, endDate: event.target.value });
+                updateQueryParams({ ...dates, endDate: event.target.value });
               }}
               max={formatDate(new Date())}
             />
