@@ -9,3 +9,17 @@ export type LineMetadata = {
   key: Line;
 };
 export type LineObject = { [key in Line]: LineMetadata };
+
+export const ALL_LINE_PATHS = ['red', 'orange', 'green', 'blue'].map((line) => {
+  return {
+    params: {
+      line: line,
+    },
+  };
+});
+
+export const BUS_PATH = {
+  params: {
+    line: 'bus',
+  },
+};
