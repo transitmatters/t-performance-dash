@@ -20,6 +20,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Check if package-lock.json is up to date
+        run: |
+          npx --yes package-lock-utd@1.1.0
       - name: Fully build frontend code
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
