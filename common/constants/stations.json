@@ -10,6 +10,8 @@
         "stop_name": "Alewife",
         "branches": ["A", "B"],
         "station": "place-alfcl",
+        "accessible": true,
+        "pedal_park": true,
         "order": 1,
         "stops": {
           "0": ["70061"],
@@ -20,6 +22,8 @@
         "stop_name": "Davis",
         "branches": ["A", "B"],
         "station": "place-davis",
+        "accessible": true,
+        "pedal_park": true,
         "order": 2,
         "stops": {
           "0": ["70064"],
@@ -30,6 +34,7 @@
         "stop_name": "Porter",
         "branches": ["A", "B"],
         "station": "place-portr",
+        "accessible": true,
         "order": 3,
         "stops": {
           "0": ["70066"],
@@ -40,6 +45,7 @@
         "stop_name": "Harvard",
         "branches": ["A", "B"],
         "station": "place-harsq",
+        "accessible": true,
         "order": 4,
         "stops": {
           "0": ["70068"],
@@ -50,6 +56,7 @@
         "stop_name": "Central",
         "branches": ["A", "B"],
         "station": "place-cntsq",
+        "accessible": true,
         "order": 5,
         "stops": {
           "0": ["70070"],
@@ -60,6 +67,7 @@
         "stop_name": "Kendall/MIT",
         "branches": ["A", "B"],
         "station": "place-knncl",
+        "accessible": true,
         "order": 6,
         "stops": {
           "0": ["70072"],
@@ -70,6 +78,7 @@
         "stop_name": "Charles/MGH",
         "branches": ["A", "B"],
         "station": "place-chmnl",
+        "accessible": true,
         "order": 7,
         "stops": {
           "0": ["70074"],
@@ -80,6 +89,7 @@
         "stop_name": "Park Street",
         "branches": ["A", "B"],
         "station": "place-pktrm",
+        "accessible": true,
         "order": 8,
         "stops": {
           "0": ["70076"],
@@ -90,6 +100,7 @@
         "stop_name": "Downtown Crossing",
         "branches": ["A", "B"],
         "station": "place-dwnxg",
+        "accessible": true,
         "order": 9,
         "stops": {
           "0": ["70078"],
@@ -100,6 +111,8 @@
         "stop_name": "South Station",
         "branches": ["A", "B"],
         "station": "place-sstat",
+        "accessible": true,
+        "pedal_park": true,
         "order": 10,
         "stops": {
           "0": ["70080"],
@@ -110,6 +123,7 @@
         "stop_name": "Broadway",
         "branches": ["A", "B"],
         "station": "place-brdwy",
+        "accessible": true,
         "order": 11,
         "stops": {
           "0": ["70082"],
@@ -120,6 +134,7 @@
         "stop_name": "Andrew",
         "branches": ["A", "B"],
         "station": "place-andrw",
+        "accessible": true,
         "order": 12,
         "stops": {
           "0": ["70084"],
@@ -130,6 +145,7 @@
         "stop_name": "JFK/UMass (Ashmont)",
         "branches": ["A"],
         "station": "place-jfk",
+        "accessible": true,
         "order": 101,
         "stops": {
           "0": ["70086"],
@@ -140,6 +156,7 @@
         "stop_name": "Savin Hill",
         "branches": ["A"],
         "station": "place-shmnl",
+        "accessible": true,
         "order": 102,
         "stops": {
           "0": ["70088"],
@@ -150,6 +167,7 @@
         "stop_name": "Fields Corner",
         "branches": ["A"],
         "station": "place-fldcr",
+        "accessible": true,
         "order": 103,
         "stops": {
           "0": ["70090"],
@@ -160,6 +178,7 @@
         "stop_name": "Shawmut",
         "branches": ["A"],
         "station": "place-smmnl",
+        "accessible": true,
         "order": 104,
         "stops": {
           "0": ["70092"],
@@ -170,6 +189,8 @@
         "stop_name": "Ashmont",
         "branches": ["A"],
         "station": "place-asmnl",
+        "accessible": true,
+        "pedal_park": true,
         "order": 105,
         "stops": {
           "0": ["70094"],
@@ -180,6 +201,7 @@
         "stop_name": "JFK/UMass (Braintree)",
         "branches": ["B"],
         "station": "place-jfk",
+        "accessible": true,
         "order": 201,
         "stops": {
           "0": ["70096"],
@@ -190,6 +212,7 @@
         "stop_name": "North Quincy",
         "branches": ["B"],
         "station": "place-nqncy",
+        "accessible": true,
         "order": 202,
         "stops": {
           "0": ["70098"],
@@ -200,6 +223,8 @@
         "stop_name": "Wollaston",
         "branches": ["B"],
         "station": "place-wlsta",
+        "accessible": true,
+        "pedal_park": true,
         "order": 203,
         "stops": {
           "0": ["70100"],
@@ -210,6 +235,7 @@
         "stop_name": "Quincy Center",
         "branches": ["B"],
         "station": "place-qnctr",
+        "accessible": true,
         "order": 204,
         "stops": {
           "0": ["70102"],
@@ -220,6 +246,7 @@
         "stop_name": "Quincy Adams",
         "branches": ["B"],
         "station": "place-qamnl",
+        "accessible": true,
         "order": 205,
         "stops": {
           "0": ["70104"],
@@ -230,6 +257,8 @@
         "stop_name": "Braintree",
         "branches": ["B"],
         "station": "place-brntn",
+        "accessible": true,
+        "pedal_park": true,
         "order": 206,
         "stops": {
           "0": ["70105"],
@@ -249,6 +278,7 @@
         "stop_name": "Oak Grove",
         "branches": null,
         "station": "place-ogmnl",
+        "pedal_park": true,
         "order": 1,
         "stops": {
           "0": ["70036"],
@@ -259,6 +289,7 @@
         "stop_name": "Malden Center",
         "branches": null,
         "station": "place-mlmnl",
+        "pedal_park": true,
         "order": 2,
         "stops": {
           "0": ["70035"],
@@ -369,6 +400,7 @@
         "stop_name": "Back Bay",
         "branches": null,
         "station": "place-bbsta",
+        "pedal_park": true,
         "order": 13,
         "stops": {
           "0": ["70015"],
@@ -439,6 +471,7 @@
         "stop_name": "Forest Hills",
         "branches": null,
         "station": "place-forhl",
+        "pedal_park": true,
         "order": 20,
         "stops": {
           "0": ["70001"],
@@ -458,6 +491,7 @@
         "stop_name": "Wonderland",
         "branches": null,
         "station": "place-wondl",
+        "pedal_park": true,
         "order": 1,
         "stops": {
           "0": ["70060"],
@@ -568,6 +602,7 @@
         "stop_name": "Bowdoin",
         "branches": null,
         "station": "place-bomnl",
+        "accessible": false,
         "order": 12,
         "stops": {
           "0": ["70038"],
@@ -584,11 +619,72 @@
     },
     "stations": [
       {
+        "stop_name": "Medford/Tufts",
+        "branches": ["E"],
+        "station": "place-mdftf",
+        "pedal_park": true,
+        "disabled": false,
+        "order": 1,
+        "stops": {
+          "0": ["70511"],
+          "1": ["70512"]
+        }
+      },
+      {
+        "stop_name": "Ball Square",
+        "branches": ["E"],
+        "station": "place-balsq",
+        "pedal_park": true,
+        "disabled": false,
+        "order": 2,
+        "stops": {
+          "0": ["70509"],
+          "1": ["70510"]
+        }
+      },
+      {
+        "stop_name": "Magoun Square",
+        "branches": ["E"],
+        "station": "place-mgngl",
+        "pedal_park": true,
+        "disabled": false,
+        "order": 3,
+        "stops": {
+          "0": ["70507"],
+          "1": ["70508"]
+        }
+      },
+      {
+        "stop_name": "Gilman Square",
+        "branches": ["E"],
+        "station": "place-gilmn",
+        "pedal_park": true,
+        "disabled": false,
+        "order": 4,
+        "stops": {
+          "0": ["70505"],
+          "1": ["70506"]
+        }
+      },
+      {
+        "stop_name": "East Somerville",
+        "branches": ["E"],
+        "station": "place-esomr",
+        "pedal_park": true,
+        "disabled": false,
+        "order": 5,
+        "stops": {
+          "0": ["70513"],
+          "1": ["70514"]
+        }
+      },
+      {
         "stop_name": "Union Square",
         "branches": ["E"],
         "station": "place-unsqu",
+        "pedal_park": true,
         "disabled": true,
-        "order": 1,
+        "order": 6,
         "stops": {
           "0": ["70503"],
           "1": ["70504"]
@@ -598,7 +694,8 @@
         "stop_name": "Lechmere",
         "branches": ["D", "E"],
         "station": "place-lech",
-        "order": 2,
+        "pedal_park": true,
+        "order": 7,
         "stops": {
           "0": ["70501", "70209"],
           "1": ["70502", "70210"]
@@ -608,7 +705,7 @@
         "stop_name": "Science Park",
         "branches": ["D", "E"],
         "station": "place-spmnl",
-        "order": 3,
+        "order": 8,
         "stops": {
           "0": ["70207"],
           "1": ["70208"]
@@ -618,7 +715,7 @@
         "stop_name": "North Station",
         "branches": ["C", "D", "E"],
         "station": "place-north",
-        "order": 4,
+        "order": 9,
         "stops": {
           "0": ["70205"],
           "1": ["70206"]
@@ -628,7 +725,7 @@
         "stop_name": "Haymarket",
         "branches": ["C", "D", "E"],
         "station": "place-haecl",
-        "order": 5,
+        "order": 10,
         "stops": {
           "0": ["70203"],
           "1": ["70204"]
@@ -638,7 +735,7 @@
         "stop_name": "Government Center",
         "branches": ["B", "C", "D", "E"],
         "station": "place-gover",
-        "order": 6,
+        "order": 11,
         "stops": {
           "0": ["70201"],
           "1": ["70202"]
@@ -648,7 +745,7 @@
         "stop_name": "Park Street",
         "branches": ["B", "C", "D", "E"],
         "station": "place-pktrm",
-        "order": 7,
+        "order": 12,
         "stops": {
           "0": ["70200"],
           "1": ["70196", "70197", "70198", "70199"]
@@ -658,7 +755,7 @@
         "stop_name": "Boylston",
         "branches": ["B", "C", "D", "E"],
         "station": "place-boyls",
-        "order": 8,
+        "order": 13,
         "stops": {
           "0": ["70158"],
           "1": ["70159"]
@@ -668,7 +765,7 @@
         "stop_name": "Arlington",
         "branches": ["B", "C", "D", "E"],
         "station": "place-armnl",
-        "order": 9,
+        "order": 14,
         "stops": {
           "0": ["70156"],
           "1": ["70157"]
@@ -678,7 +775,7 @@
         "stop_name": "Copley",
         "branches": ["B", "C", "D", "E"],
         "station": "place-coecl",
-        "order": 10,
+        "order": 15,
         "stops": {
           "0": ["70154"],
           "1": ["70155"]
@@ -688,7 +785,7 @@
         "stop_name": "Hynes",
         "branches": ["B", "C", "D"],
         "station": "place-hymnl",
-        "order": 11,
+        "order": 16,
         "stops": {
           "0": ["70152"],
           "1": ["70153"]
@@ -698,7 +795,7 @@
         "stop_name": "Kenmore",
         "branches": ["B", "C", "D"],
         "station": "place-kencl",
-        "order": 12,
+        "order": 17,
         "stops": {
           "0": ["70150", "71150"],
           "1": ["70151", "71151"]

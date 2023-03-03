@@ -7,6 +7,8 @@ export interface Station {
   stop_name: string;
   branches: string[] | null;
   station: string;
+  accessible?: boolean;
+  pedal_park?: boolean;
   order: number;
   disabled?: boolean;
   stops: {

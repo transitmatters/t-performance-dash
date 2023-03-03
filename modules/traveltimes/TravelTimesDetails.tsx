@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
+import classNames from 'classnames';
 import { useCustomQueries } from '../../common/api/datadashboard';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
@@ -11,6 +12,7 @@ import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWi
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
+import { StationSelector } from '../../common/components/inputs/StationSelector';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
@@ -22,14 +24,20 @@ export default function TravelTimesDetails() {
   } = useDelimitatedRoute();
 
   const stations = optionsStation(lineShort, busLine);
-  const toStation = stations?.[stations.length - 3];
-  const fromStation = stations?.[3];
+
+  const [toStation, setToStation] = useState(stations?.[stations.length - 3]);
+  const [fromStation, setFromStation] = useState(stations?.[3]);
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
   const { fromStopIds: fromStopIdsNorth, toStopIds: toStopIdsNorth } = stopIdsForStations(
     toStation,
     fromStation
   );
+
+  React.useEffect(() => {
+    setToStation(stations?.[stations.length - 3]);
+    setFromStation(stations?.[3]);
+  }, [stations]);
 
   const aggregate = startDate !== undefined && endDate !== undefined;
   const parameters: SingleDayAPIOptions | AggregateAPIOptions = aggregate
@@ -55,9 +63,9 @@ export default function TravelTimesDetails() {
 
   const { traveltimes: traveltimesReversed } = useCustomQueries(
     {
-      [SingleDayAPIParams.fromStop]: toStopIds,
-      [SingleDayAPIParams.toStop]: fromStopIds,
-      [SingleDayAPIParams.stop]: toStopIds,
+      [SingleDayAPIParams.fromStop]: fromStopIdsNorth,
+      [SingleDayAPIParams.toStop]: toStopIdsNorth,
+      [SingleDayAPIParams.stop]: fromStopIdsNorth,
       [SingleDayAPIParams.date]: startDate,
     },
     false,
@@ -70,6 +78,27 @@ export default function TravelTimesDetails() {
 
   return (
     <>
+      {/* TODO Move station Selector pair */}
+      {fromStation && toStation ? (
+        <div
+          className={classNames(
+            'w-1/2 rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox sm:w-auto sm:p-4'
+          )}
+        >
+          <StationSelector
+            type={'from'}
+            fromStation={fromStation}
+            toStation={toStation}
+            setStation={setFromStation}
+          />
+          <StationSelector
+            type={'to'}
+            fromStation={fromStation}
+            toStation={toStation}
+            setStation={setToStation}
+          />
+        </div>
+      ) : null}
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Avg. Travel Time"

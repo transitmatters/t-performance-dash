@@ -12,10 +12,10 @@ export const optionsForField = (
   toStation: Station | null
 ) => {
   if (type === 'from') {
-    return options_station_ui(line)?.filter((entry) => entry.value !== toStation);
+    return optionsStation(line)?.filter((entry) => entry !== toStation);
   }
   if (type === 'to') {
-    return options_station_ui(line)?.filter(({ value }) => {
+    return optionsStation(line)?.filter((value) => {
       if (value === fromStation) {
         return false;
       }
@@ -25,19 +25,6 @@ export const optionsForField = (
       return true;
     });
   }
-};
-
-const options_station_ui = (line: LineShort): SelectOption<Station>[] | undefined => {
-  return optionsStation(line)
-    ?.map((station) => {
-      return {
-        id: station.station,
-        value: station,
-        disabled: station.disabled,
-        label: station.stop_name,
-      };
-    })
-    .sort((a, b) => a.value.order - b.value.order);
 };
 
 export const optionsStation = (line: LineShort, busLine?: string): Station[] | undefined => {
