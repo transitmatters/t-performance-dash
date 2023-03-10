@@ -12,7 +12,7 @@ import { APP_DATA_BASE_PATH } from '../../common/utils/constants';
 import { getCurrentDate } from '../utils/date';
 
 // Fetch data for all single day charts.
-export const fetchSingleDayData = (
+export const fetchSingleDayData = async (
   name: QueryNameKeys,
   options: PartialSingleDayAPIOptions
 ): Promise<SingleDayDataPoint[]> => {
@@ -23,7 +23,11 @@ export const fetchSingleDayData = (
     if (!(typeof value === 'string') && key !== 'date')
       value.forEach((subvalue) => url.searchParams.append(key, subvalue));
   });
-  return fetch(url.toString()).then((resp) => resp.json());
+  const response = await fetch(url.toString());
+  if (!response.ok) {
+    throw new Error('network request failed');
+  }
+  return await response.json();
 };
 
 // Object to contain the name of each single day query and the parameters/keys it takes.
@@ -34,7 +38,7 @@ const singleDayQueryDependencies = {
 };
 
 // Fetch data for all aggregate charts except traveltimes.
-export const fetchAggregateData = (
+export const fetchAggregateData = async (
   name: QueryNameKeys,
   options: PartialAggregateAPIOptions
 ): Promise<AggregateDataResponse> => {
@@ -49,12 +53,12 @@ export const fetchAggregateData = (
       url.searchParams.append(key, value.toString());
     }
   });
-  return fetch(url.toString())
-    .then((resp) => resp.json())
-    .then((resp) => {
-      // traveltimes API returns data under two fields: by_date and by_time. This formats the other two APIs to be the same shape.
-      return name === QueryNameKeys.traveltimes ? resp : { by_date: resp };
-    });
+  const response = await fetch(url.toString());
+  if (!response.ok) {
+    throw new Error('network request failed');
+  }
+  const responseJson = await response.json();
+  return name === QueryNameKeys.traveltimes ? responseJson : { by_date: responseJson };
 };
 
 // Object to contain name of each aggregate query and the parameters/keys it takes.
