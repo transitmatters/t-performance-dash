@@ -3,6 +3,8 @@
   "version": "4.0.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.3.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "^1.7.10",
     "@heroicons/react": "^2.0.15",
     "@svgr/webpack": "^6.5.1",

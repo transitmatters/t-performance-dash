@@ -1,10 +1,31 @@
-export interface AlertsResponse {
+export type AlertTime = {
+  end: string | null;
+  start: string | null;
+  upcoming: boolean;
+  current: boolean;
+};
+export interface OldAlert {
+  text: string;
+  valid_from: string;
+  valid_to: string;
+}
+
+export type UpcomingOrCurrent = 'upcoming' | 'current';
+
+export interface FormattedAlert {
   type: AlertEffect;
-  active_period: [{ end: string | null; start: string | null }];
+  active_period: AlertTime[];
+  relevantTimes: AlertTime[];
   stops: number[];
   header: string;
 }
 
+export interface AlertsResponse {
+  type: AlertEffect;
+  active_period: AlertTime[];
+  stops: number[];
+  header: string;
+}
 export type AlertEffectTypes = AlertEffect;
 
 export enum AlertEffect {

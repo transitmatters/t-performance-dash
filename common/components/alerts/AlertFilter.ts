@@ -1,4 +1,4 @@
-import type { Alert } from '../../types/alerts';
+import type { OldAlert } from '../../types/alerts';
 
 const known = [
   /[Uu]p to ([0-9]+) min/, // "Up to 15 minutes"
@@ -20,7 +20,7 @@ const anti = [
  * Given an alert object, findMatch returns a boolean with whether or not the alert is a known format
  * like "Reduced speeds" or "Up to 15 minutes"
  */
-export const findMatch = (alert: Alert) => {
+export const findMatch = (alert: OldAlert) => {
   const text = alert.text;
 
   if (anti.some((exp) => text.match(exp))) {
