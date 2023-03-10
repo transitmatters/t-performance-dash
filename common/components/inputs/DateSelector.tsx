@@ -34,7 +34,7 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ range }) => {
       asSingle={!range}
       useRange={range}
       showShortcuts={true}
-      displayFormat={'M/D/YY'}
+      displayFormat={'MMM D, YYYY'}
       containerClassName={'w-auto'}
       inputClassName={'h-8'}
       i18n={'en-us'}
