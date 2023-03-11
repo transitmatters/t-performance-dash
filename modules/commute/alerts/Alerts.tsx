@@ -13,57 +13,10 @@ import { ShuttleAlert } from './ShuttleAlert';
 import classNames from 'classnames';
 import DropdownArrow from '../../../public/Icons/DropdownArrow.svg';
 import { lineColorBackground } from '../../../common/styles/general';
-
-const getAlertComponent = (
-  alert: FormattedAlert,
-  lineShort: LineShort,
-  type: UpcomingOrCurrent,
-  line?: Line
-) => {
-  if (alert.type === AlertEffect.SHUTTLE && alert.stops.length > 0) {
-    return (
-      <ShuttleAlert alert={alert} lineShort={lineShort} type={type} line={line} key={alert.id} />
-    );
-  }
-};
-
-interface AlertBoxProps {
-  alerts: AlertsResponse[];
-  lineShort: LineShort;
-  line: Line;
-  type: UpcomingOrCurrent;
-}
-
-const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, line, type }) => {
-  const alertBox = useMemo(() => {
-    const relevantAlerts = alerts
-      .map((alert) => {
-        const relevantTimes = alert.active_period.filter((period) => period[type] === true);
-        if (relevantTimes.length > 0) {
-          return { ...alert, relevantTimes: relevantTimes };
-        }
-      })
-      // Remove alerts with no relevant times.
-      .filter((relevantAlert) => relevantAlert != null);
-
-    if (!relevantAlerts || relevantAlerts.length === 0) {
-      return (
-        <div className="w-full">
-          <p>No {type} alerts.</p>
-        </div>
-      );
-    } else {
-      return (
-        <div className="flex w-full flex-col-reverse gap-y-2">
-          {relevantAlerts.map((alert: FormattedAlert) =>
-            getAlertComponent(alert, lineShort, type, line)
-          )}
-        </div>
-      );
-    }
-  }, [alerts]);
-  return alertBox;
-};
+import { DelayAlert } from './DelayAlert';
+import { SuspensionAlert } from './SuspensionAlert';
+import { lightLineBorder } from './styles/AlertStyles';
+import { AlertBox } from './AlertBox';
 
 export const Alerts: React.FC = () => {
   const { line, lineShort } = useDelimitatedRoute();
@@ -86,10 +39,10 @@ export const Alerts: React.FC = () => {
     <div className={divStyle}>
       <h3 className="text-xl font-bold">Alerts</h3>
       <div className="w-full">
-        <p className="text-sm">Current</p>
+        <p className="text-sm">Today</p>
       </div>
 
-      <AlertBox alerts={alerts.data} line={line} lineShort={lineShort} type={'current'} />
+      <AlertBox alerts={alerts.data} lineShort={lineShort} line={line} type={'current'} />
       <div className="flex w-full flex-col">
         <div
           className={classNames('flew-row mb-2 flex cursor-pointer select-none gap-x-1 rounded-sm')}
@@ -100,7 +53,7 @@ export const Alerts: React.FC = () => {
         </div>
 
         {showUpcoming && (
-          <AlertBox alerts={alerts.data} line={line} lineShort={lineShort} type={'upcoming'} />
+          <AlertBox alerts={alerts.data} lineShort={lineShort} line={line} type={'upcoming'} />
         )}
       </div>
     </div>

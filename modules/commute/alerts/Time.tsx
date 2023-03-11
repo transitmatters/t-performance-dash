@@ -13,6 +13,9 @@ export const CurrentTime: React.FC<TimeProps> = ({ times }) => {
   const dayEnd = dayjs().add(1, 'day').set('hour', 2).set('minute', 0);
   const now = dayjs();
   const timeStrings = times.map((time) => {
+    if (time.end == null) {
+      return 'Indefinitely';
+    }
     const startTime = dayjs(time.start);
     const endTime = dayjs(time.end);
     if (startTime.isAfter(now)) {

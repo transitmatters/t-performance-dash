@@ -35,12 +35,34 @@ def shuttle_alert(attributes, id):
     }
 
 
+def delay_alert(attributes, id):
+    '''Format alerts for delays'''
+    routes = []
+    stops = []
+    for entity in attributes['informed_entity']:
+        if entity.get('stop') and entity['stop'].isdigit():  # Ignore stops of format `place-brntn`
+            stops.append(int(entity['stop']))
+        if entity.get('route') and entity.get('route') is not 'Mattapan':
+            routes.append(entity['route'])
+    return {
+        "id": id,
+        "routes": routes,
+        "stops": stops,
+        "header": attributes['header'],
+        "type": attributes['effect'],
+        "active_period": format_active_alerts(attributes['active_period'])
+    }
+
+
 def format_response(alerts_data):
     alerts_filtered = []
     for alert in alerts_data:
         attributes = alert['attributes']
-        if attributes['effect'] == 'SHUTTLE':
+        if attributes['effect'] == 'SHUTTLE' or attributes['effect'] == 'SUSPENSION':
             alerts_filtered.append(shuttle_alert(attributes, alert['id']))
+        if attributes['effect'] == 'DELAY':
+            alerts_filtered.append(delay_alert(attributes, alert['id']))
+
     return alerts_filtered
 
 
@@ -52,6 +74,12 @@ def get_active(alert_period):
 
     These two things are not mutually exclusive.
     '''
+    if alert_period['end'] is None:
+        alert_period['current'] = True
+        alert_period['upcoming'] = False
+        return alert_period  # No end date
+
+
     start = bos_tz.localize(datetime.fromisoformat(alert_period['start'][:-6]))
     end = bos_tz.localize(datetime.fromisoformat(alert_period['end'][:-6]))
     today = bos_tz.localize(datetime(now.year, now.month, now.day))
