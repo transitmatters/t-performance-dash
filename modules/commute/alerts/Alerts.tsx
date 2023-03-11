@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAlertsForLine } from '../../../common/api/alerts';
 import {
@@ -21,7 +21,9 @@ const getAlertComponent = (
   line?: Line
 ) => {
   if (alert.type === AlertEffect.SHUTTLE && alert.stops.length > 0) {
-    return <ShuttleAlert alert={alert} lineShort={lineShort} type={type} line={line} />;
+    return (
+      <ShuttleAlert alert={alert} lineShort={lineShort} type={type} line={line} key={alert.id} />
+    );
   }
 };
 
@@ -33,31 +35,34 @@ interface AlertBoxProps {
 }
 
 const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, line, type }) => {
-  const relevantAlerts = alerts
-    .map((alert) => {
-      const relevantTimes = alert.active_period.filter((period) => period[type] === true);
-      if (relevantTimes.length > 0) {
-        return { ...alert, relevantTimes: relevantTimes };
-      }
-    })
-    // Remove alerts with no relevant times.
-    .filter((relevantAlert) => relevantAlert === null);
+  const alertBox = useMemo(() => {
+    const relevantAlerts = alerts
+      .map((alert) => {
+        const relevantTimes = alert.active_period.filter((period) => period[type] === true);
+        if (relevantTimes.length > 0) {
+          return { ...alert, relevantTimes: relevantTimes };
+        }
+      })
+      // Remove alerts with no relevant times.
+      .filter((relevantAlert) => relevantAlert != null);
 
-  if (!relevantAlerts || relevantAlerts.length === 0) {
-    return (
-      <div className="w-full">
-        <p>No {type} alerts.</p>
-      </div>
-    );
-  } else {
-    return (
-      <div className="flex w-full flex-col-reverse gap-y-2">
-        {relevantAlerts.map((alert: FormattedAlert) =>
-          getAlertComponent(alert, lineShort, type, line)
-        )}
-      </div>
-    );
-  }
+    if (!relevantAlerts || relevantAlerts.length === 0) {
+      return (
+        <div className="w-full">
+          <p>No {type} alerts.</p>
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex w-full flex-col-reverse gap-y-2">
+          {relevantAlerts.map((alert: FormattedAlert) =>
+            getAlertComponent(alert, lineShort, type, line)
+          )}
+        </div>
+      );
+    }
+  }, [alerts]);
+  return alertBox;
 };
 
 export const Alerts: React.FC = () => {

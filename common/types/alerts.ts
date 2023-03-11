@@ -13,6 +13,7 @@ export interface OldAlert {
 export type UpcomingOrCurrent = 'upcoming' | 'current';
 
 export interface FormattedAlert {
+  id: string;
   type: AlertEffect;
   active_period: AlertTime[];
   relevantTimes: AlertTime[];
@@ -21,6 +22,7 @@ export interface FormattedAlert {
 }
 
 export interface AlertsResponse {
+  id: string;
   type: AlertEffect;
   active_period: AlertTime[];
   stops: number[];
