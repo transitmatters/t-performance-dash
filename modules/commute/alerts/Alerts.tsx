@@ -11,8 +11,8 @@ import { Line, LineShort } from '../../../common/types/lines';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { ShuttleAlert } from './ShuttleAlert';
 import classNames from 'classnames';
-import { lineBackground } from './styles/AlertStyles';
 import DropdownArrow from '../../../public/Icons/DropdownArrow.svg';
+import { lineColorBackground } from '../../../common/styles/general';
 
 const getAlertComponent = (
   alert: FormattedAlert,
@@ -33,13 +33,15 @@ interface AlertBoxProps {
 }
 
 const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, line, type }) => {
-  const relevantAlerts: FormattedAlert[] = [];
-  alerts.forEach((alert) => {
-    const relevantTimes = alert.active_period.filter((period) => period[type] === true);
-    if (relevantTimes.length > 0) {
-      relevantAlerts.push({ ...alert, relevantTimes: relevantTimes });
-    }
-  });
+  const relevantAlerts = alerts
+    .map((alert) => {
+      const relevantTimes = alert.active_period.filter((period) => period[type] === true);
+      if (relevantTimes.length > 0) {
+        return { ...alert, relevantTimes: relevantTimes };
+      }
+    })
+    // Remove alerts with no relevant times.
+    .filter((relevantAlert) => relevantAlert === null);
 
   if (!relevantAlerts || relevantAlerts.length === 0) {
     return (
@@ -65,7 +67,7 @@ export const Alerts: React.FC = () => {
 
   const divStyle = classNames(
     'flex flex-col items-center rounded-md p-2 text-white shadow-dataBox w-full xl:w-1/2 gap-y-2',
-    lineBackground[line ?? 'DEFAULT']
+    lineColorBackground[line ?? 'DEFAULT']
   );
 
   if (alerts.isLoading || !line || !lineShort) {

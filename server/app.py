@@ -137,3 +137,11 @@ def get_git_id():
         return json.dumps({"git_id": git_id})
     else:
         raise ConflictError("Cannot get git id from serverless host")
+<<<<<<< HEAD
+=======
+
+@app.route("/api/alerts", cors=cors_config)
+def get_alerts():
+    response = mbta_v3.getV3('alerts', app.current_request.query_params)
+    return json.dumps(response, indent=4, sort_keys=True, default=str)
+>>>>>>> parent of 407926c (backend lint)

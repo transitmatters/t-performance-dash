@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import React, { useState } from 'react';
+import { lineColorBackground } from '../../../common/styles/general';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
 import type { Line, LineShort } from '../../../common/types/lines';
 import BetweenArrow from '../../../public/Icons/BetweenArrow.svg';
@@ -24,8 +25,9 @@ export const ShuttleAlert: React.FC<ShuttleAlertProps> = ({ alert, lineShort, ty
         setExpanded(!expanded);
       }}
       className={classNames(
-        'flex w-full cursor-pointer flex-col gap-y-2 rounded-2xl py-1 pl-1 pr-4 shadow-simple',
-        lightLineBorder[line ?? 'DEFAULT']
+        'flex w-full cursor-pointer flex-col gap-y-2 rounded-2xl border py-1 pl-1 pr-4 shadow-simple',
+        lightLineBorder[line ?? 'DEFAULT'],
+        lineColorBackground[line ?? 'DEFAULT']
       )}
     >
       <div className="flex w-full flex-row items-center">
