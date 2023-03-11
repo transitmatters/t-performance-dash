@@ -3,8 +3,7 @@ import os
 import subprocess
 from chalice import Chalice, CORSConfig, ConflictError, Response
 from datetime import date, timedelta
-from chalicelib import aggregation, data_funcs, MbtaPerformanceAPI, secrets, mbta_v3
-
+from chalicelib import aggregation, data_funcs, MbtaPerformanceAPI, secrets
 
 app = Chalice(app_name="data-dashboard")
 
@@ -138,9 +137,3 @@ def get_git_id():
         return json.dumps({"git_id": git_id})
     else:
         raise ConflictError("Cannot get git id from serverless host")
-
-
-@app.route("/api/alerts", cors=cors_config)
-def get_alerts():
-    response = mbta_v3.getV3('alerts', app.current_request.query_params)
-    return json.dumps(response, indent=4, sort_keys=True, default=str)
