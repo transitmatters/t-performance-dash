@@ -18,6 +18,8 @@ jobs:
       TM_BACKEND_CERT_ARN: ${{ secrets.TM_BACKEND_CERT_ARN }}
       TM_BACKEND_CERT_ARN_BETA: ${{ secrets.TM_BACKEND_CERT_ARN_BETA }}
       MBTA_V2_API_KEY: ${{ secrets.MBTA_V2_API_KEY }}
+      REACT_APP_DATADOG_APP_ID: ${{ secrets.REACT_APP_DATADOG_APP_ID }}
+      REACT_APP_DATADOG_CLIENT_TOKEN: ${{ secrets.REACT_APP_DATADOG_CLIENT_TOKEN }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
