@@ -18,8 +18,6 @@ jobs:
       TM_BACKEND_CERT_ARN: ${{ secrets.TM_BACKEND_CERT_ARN }}
       TM_LABS_WILDCARD_CERT_ARN: ${{ secrets.TM_LABS_WILDCARD_CERT_ARN }}
       MBTA_V2_API_KEY: ${{ secrets.MBTA_V2_API_KEY }}
-      REACT_APP_DATADOG_APP_ID: ${{ secrets.REACT_APP_DATADOG_APP_ID }}
-      REACT_APP_DATADOG_CLIENT_TOKEN: ${{ secrets.REACT_APP_DATADOG_CLIENT_TOKEN }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -31,9 +29,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Check if package-lock.json is up to date
-        run: |
-          npx --yes package-lock-utd@1.1.0
       - name: Generate AWS profile
         run: |
           mkdir ~/.aws

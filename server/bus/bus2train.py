@@ -61,9 +61,9 @@ def load_data(input_csv, routes):
     df.stop_id = df.stop_id.astype(str)
 
     # Convert dates
-    df.scheduled = pd.to_datetime(df.scheduled).dt.tz_localize(None)
+    df.scheduled = pd.to_datetime(df.scheduled)
     df.service_date = pd.to_datetime(df.service_date)
-    df.actual = pd.to_datetime(df.actual).dt.tz_localize(None)
+    df.actual = pd.to_datetime(df.actual)
 
     OFFSET = datetime(1900, 1, 1, 0, 0, 0)
     df.scheduled = df.service_date + (df.scheduled - OFFSET)
