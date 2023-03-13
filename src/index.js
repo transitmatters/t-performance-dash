@@ -1,25 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { datadogRum } from '@datadog/browser-rum';
 import './index.css';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import App from './App';
 import { OpenSource } from './OpenSource';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { SlowZones } from './slowzones/SlowZones';
-
-datadogRum.init({
-  applicationId: process.env.REACT_APP_DATADOG_APP_ID,
-  clientToken: process.env.REACT_APP_DATADOG_CLIENT_TOKEN,
-  site: 'datadoghq.com',
-  service: process.env.REACT_APP_NAME,
-  version: process.env.REACT_APP_VERSION,
-  sessionSampleRate: 100,
-  sessionReplaySampleRate: 20,
-  trackUserInteractions: true,
-  trackResources: true,
-  trackLongTasks: true,
-});
-datadogRum.startSessionReplayRecording();
 
 ReactDOM.render(
   <BrowserRouter>

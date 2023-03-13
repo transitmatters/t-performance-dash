@@ -36,7 +36,6 @@ module.exports = {
     'no-console': 'off',
     '@typescript-eslint/ban-ts-comment': 'warn',
     'import/no-default-export': 'warn',
-    'import/order': 'off',
     '@typescript-eslint/no-explicit-any': 'off', // TODO: Turn on when TS migration done
   },
   settings: {
