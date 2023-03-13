@@ -1,9 +1,11 @@
 import React, { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import Train from '../../../public/Icons/Train.svg';
+import { faBus, faTrainSubway } from '@fortawesome/free-solid-svg-icons';
+
 import TmLogoSvg from '../../../public/tm-logo-big.svg';
 import TmIconSvg from '../../../public/tm-logo-small.svg';
+import { getBusLines } from '../../../common/constants/stations';
 import { SideNavigation } from './SideNavigation';
 
 export const SideNavBar = () => {
@@ -11,11 +13,10 @@ export const SideNavBar = () => {
 
   const NAV_ITEMS = [
     {
-      name: 'Lines',
+      name: 'Subway',
       current: true,
-      path: '/',
-      icon: Train,
-      key: 'Lines',
+      icon: faTrainSubway,
+      key: 'Subway',
       children: [
         { name: 'Red', path: 'red', key: 'RL' },
         { name: 'Orange', path: 'orange', key: 'OL' },
@@ -23,6 +24,15 @@ export const SideNavBar = () => {
         { name: 'Green', path: 'green', key: 'GL' },
         { name: 'Bus', path: 'bus', key: 'BUS' },
       ],
+    },
+    {
+      name: 'Bus',
+      current: false,
+      icon: faBus,
+      key: 'Routes',
+      children: getBusLines().map((busRoute) => {
+        return { name: busRoute, path: busRoute, key: busRoute };
+      }),
     },
   ];
 

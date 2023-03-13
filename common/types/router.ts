@@ -7,6 +7,7 @@ export interface Route {
   lineShort: LineShort;
   datapage: DataPage;
   query: QueryParams;
+  tab: Tabs;
 }
 
 export interface QueryParams {
@@ -15,3 +16,5 @@ export interface QueryParams {
   endDate?: string;
   busLine?: string;
 }
+
+export type Tabs = 'Bus' | 'Subway' | '';

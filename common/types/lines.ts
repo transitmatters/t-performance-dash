@@ -10,7 +10,9 @@ export type LineMetadata = {
 };
 export type LineObject = { [key in Line]: LineMetadata };
 
-export const ALL_LINE_PATHS = ['red', 'orange', 'green', 'blue'].map((line) => {
+export const RAIL_LINES = ['red', 'orange', 'green', 'blue'];
+
+export const ALL_LINE_PATHS = RAIL_LINES.map((line) => {
   return {
     params: {
       line: line,
