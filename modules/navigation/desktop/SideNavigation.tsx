@@ -1,13 +1,14 @@
-import React from 'react';
-import { Disclosure } from '@headlessui/react';
+import React, { Fragment } from 'react';
+import { Listbox } from '@headlessui/react';
 import classNames from 'classnames';
-import { ActiveLink } from '../../../common/components/general/ActiveLink';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { getLineSelectionItemHref, useDelimitatedRoute } from '../../../common/utils/router';
 import { buttonConfig, lineSelectionConfig } from '../styles/lineSelector';
+import router from 'next/router';
+import { LINE_OBJECTS } from '../../../common/constants/lines';
 
 interface NavItem {
-  href: string;
   name: string;
+  path: string;
   key: string;
   icon?: any;
   current?: boolean;
@@ -20,7 +21,7 @@ interface SideNavigationProps {
 }
 
 export const SideNavigation = ({ items, setSidebarOpen }: SideNavigationProps) => {
-  const { linePath } = useDelimitatedRoute();
+  const route = useDelimitatedRoute();
 
   return (
     <nav className="flex-1" aria-label="Sidebar">
@@ -28,7 +29,7 @@ export const SideNavigation = ({ items, setSidebarOpen }: SideNavigationProps) =
         !item.children ? (
           <div key={item.name}>
             <a
-              href={item.href}
+              href={`/${item.path}`}
               className={classNames(
                 item.current
                   ? `border-l-4 bg-opacity-20`
@@ -40,10 +41,19 @@ export const SideNavigation = ({ items, setSidebarOpen }: SideNavigationProps) =
             </a>
           </div>
         ) : (
-          <Disclosure as="div" key={item.name} className="space-y-1" defaultOpen={true}>
+          <Listbox
+            as="div"
+            key={item.name}
+            className="space-y-1"
+            value={route.line}
+            onChange={(value) => {
+              setSidebarOpen && setSidebarOpen(false);
+              router.push(getLineSelectionItemHref(LINE_OBJECTS[value], route));
+            }}
+          >
             {({ open }) => (
               <>
-                <Disclosure.Button
+                <Listbox.Button
                   className={classNames(
                     item.current
                       ? ' text-white'
@@ -66,43 +76,34 @@ export const SideNavigation = ({ items, setSidebarOpen }: SideNavigationProps) =
                   >
                     <path d="M6 6L14 10L6 14V6Z" fill="currentColor" />
                   </svg>
-                </Disclosure.Button>
+                </Listbox.Button>
                 {item.children && (
-                  <Disclosure.Panel className="space-y-1">
+                  <Listbox.Options className="space-y-1">
                     {item.children.map((subItem) => (
-                      <ActiveLink
-                        key={subItem.key}
-                        href={subItem.href}
-                        activeClassName={`${lineSelectionConfig[subItem.key]} ${
-                          buttonConfig[subItem.key]
-                        } text-white`}
-                        lambda={() => subItem.name.toLowerCase() === linePath}
-                      >
-                        <Disclosure.Button
-                          onClick={() => {
-                            if (setSidebarOpen) {
-                              setSidebarOpen(false);
-                            }
-                          }}
-                          key={subItem.name}
-                          as="a"
-                          className={() =>
-                            classNames(
-                              `group flex w-full items-center rounded-md py-2 pl-10 pr-2 text-sm font-medium ${
-                                linePath !== item.name && 'hover:bg-design-rb-800'
-                              }  cursor-pointer hover:text-white `
-                            )
-                          }
-                        >
-                          {subItem.name}
-                        </Disclosure.Button>
-                      </ActiveLink>
+                      <Listbox.Option key={subItem.name} as={Fragment} value={subItem.key}>
+                        {({ active, selected }) => (
+                          <span
+                            className={classNames(
+                              'group flex w-full items-center rounded-md py-2 pl-10 pr-2 text-sm font-medium',
+                              selected &&
+                                `${lineSelectionConfig[subItem.key]} ${
+                                  buttonConfig[subItem.key]
+                                } text-white`,
+                              active && !selected && 'bg-design-rb-800',
+                              active && selected && 'bg-opacity-90',
+                              'cursor-pointer hover:text-white '
+                            )}
+                          >
+                            {subItem.name}
+                          </span>
+                        )}
+                      </Listbox.Option>
                     ))}
-                  </Disclosure.Panel>
+                  </Listbox.Options>
                 )}
               </>
             )}
-          </Disclosure>
+          </Listbox>
         )
       )}
     </nav>
