@@ -1,17 +1,28 @@
 import classNames from 'classnames';
 import React, { useState } from 'react';
 import { lineColorBackground } from '../../../common/styles/general';
+import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
 import type { Line } from '../../../common/types/lines';
 import { lightLineBorder } from './styles/AlertStyles';
+import { CurrentTime, UpcomingTime } from './Time';
 
 interface AlertBoxInnerProps {
   header: string;
-  Icon: any;
+  Icon: React.ElementType;
+  alert: FormattedAlert;
+  type: UpcomingOrCurrent;
+  children: React.ReactNode;
   line?: Line;
-  children?: React.ReactNode;
 }
 
-export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({ header, Icon, line, children }) => {
+export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
+  header,
+  Icon,
+  alert,
+  type,
+  children,
+  line,
+}) => {
   const [expanded, setExpanded] = useState(false);
   return (
     <div
@@ -25,8 +36,17 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({ header, Icon, line
       )}
     >
       <div className="flex w-full flex-row items-center">
-        {Icon}
-        {children}
+        <Icon className="ml-2 mr-4 h-10 w-10" />
+        <div className="flex w-full flex-col items-center justify-center">
+          {children}
+          <div className="flex w-full flex-row items-center gap-x-1 text-center ">
+            {type === 'current' ? (
+              <CurrentTime times={alert.relevantTimes} />
+            ) : (
+              <UpcomingTime times={alert.relevantTimes} />
+            )}
+          </div>
+        </div>
       </div>
       {expanded && (
         <div className="p-4">

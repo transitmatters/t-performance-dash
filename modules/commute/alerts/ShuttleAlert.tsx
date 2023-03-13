@@ -5,7 +5,6 @@ import BetweenArrow from '../../../public/Icons/BetweenArrow.svg';
 import ShuttleIcon from '../../../public/Icons/ShuttleIcon.svg';
 import { AlertBoxInner } from './AlertBoxInner';
 import { getStop } from './AlertUtils';
-import { CurrentTime, UpcomingTime } from './Time';
 
 interface ShuttleAlertProps {
   alert: FormattedAlert;
@@ -17,25 +16,12 @@ export const ShuttleAlert: React.FC<ShuttleAlertProps> = ({ alert, lineShort, ty
   const min = Math.min(...alert.stops);
   const max = Math.max(...alert.stops);
   return (
-    <AlertBoxInner
-      header={alert.header}
-      line={line}
-      Icon={<ShuttleIcon className="ml-2 mr-4 h-10 w-10" />}
-    >
-      <div className="flex w-full flex-col items-center justify-center">
-        <div className="flex w-full flex-row items-center pr-2 text-center text-lg">
-          <p className="mr-1 ">Shuttling</p>
-          <p className="font-bold">{getStop(min, lineShort)}</p>
-          <BetweenArrow className="mx-2 h-4 w-4" />
-          <p className="font-bold">{getStop(max, lineShort)}</p>
-        </div>
-        <div className="flex w-full flex-row items-center gap-x-1 text-center ">
-          {type === 'current' ? (
-            <CurrentTime times={alert.relevantTimes} />
-          ) : (
-            <UpcomingTime times={alert.relevantTimes} />
-          )}
-        </div>
+    <AlertBoxInner header={alert.header} line={line} Icon={ShuttleIcon} type={type} alert={alert}>
+      <div className="flex w-full flex-row items-center pr-2 text-center text-lg">
+        <p className="mr-1 ">Shuttling</p>
+        <p className="font-bold">{getStop(min, lineShort)}</p>
+        <BetweenArrow className="mx-2 h-4 w-4" />
+        <p className="font-bold">{getStop(max, lineShort)}</p>
       </div>
     </AlertBoxInner>
   );

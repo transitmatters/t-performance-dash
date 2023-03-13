@@ -42,7 +42,7 @@ def delay_alert(attributes, id):
     for entity in attributes['informed_entity']:
         if entity.get('stop') and entity['stop'].isdigit():  # Ignore stops of format `place-brntn`
             stops.append(int(entity['stop']))
-        if entity.get('route') and entity.get('route') is not 'Mattapan':
+        if entity.get('route') and entity.get('route') != 'Mattapan':
             routes.append(entity['route'])
     return {
         "id": id,
@@ -78,7 +78,6 @@ def get_active(alert_period):
         alert_period['current'] = True
         alert_period['upcoming'] = False
         return alert_period  # No end date
-
 
     start = bos_tz.localize(datetime.fromisoformat(alert_period['start'][:-6]))
     end = bos_tz.localize(datetime.fromisoformat(alert_period['end'][:-6]))

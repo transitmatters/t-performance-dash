@@ -5,7 +5,6 @@ import BetweenArrow from '../../../public/Icons/BetweenArrow.svg';
 import DelayIcon from '../../../public/Icons/DelayIcon.svg';
 import { AlertBoxInner } from './AlertBoxInner';
 import { getStop } from './AlertUtils';
-import { CurrentTime, UpcomingTime } from './Time';
 
 interface DelayAlertProps {
   alert: FormattedAlert;
@@ -45,22 +44,9 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort) => {
 
 export const DelayAlert: React.FC<DelayAlertProps> = ({ alert, lineShort, type, line }) => {
   return (
-    <AlertBoxInner
-      header={alert.header}
-      line={line}
-      Icon={<DelayIcon className="ml-2 mr-4 h-10 w-10" />}
-    >
-      <div className="flex w-full flex-col items-center justify-center">
-        <div className="flex w-full flex-row items-center pr-2 text-center text-lg">
-          {getDescription(alert, lineShort)}
-        </div>
-        <div className="flex w-full flex-row items-center gap-x-1 text-center ">
-          {type === 'current' ? (
-            <CurrentTime times={alert.relevantTimes} />
-          ) : (
-            <UpcomingTime times={alert.relevantTimes} />
-          )}
-        </div>
+    <AlertBoxInner header={alert.header} line={line} Icon={DelayIcon} alert={alert} type={type}>
+      <div className="flex w-full flex-row items-center pr-2 text-center text-lg">
+        {getDescription(alert, lineShort)}
       </div>
     </AlertBoxInner>
   );

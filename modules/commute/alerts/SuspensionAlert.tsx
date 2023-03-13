@@ -5,7 +5,6 @@ import BetweenArrow from '../../../public/Icons/BetweenArrow.svg';
 import DetourIcon from '../../../public/Icons/DetourIcon.svg';
 import { AlertBoxInner } from './AlertBoxInner';
 import { getStop } from './AlertUtils';
-import { CurrentTime, UpcomingTime } from './Time';
 
 interface SuspensionAlertProps {
   alert: FormattedAlert;
@@ -37,22 +36,9 @@ export const SuspensionAlert: React.FC<SuspensionAlertProps> = ({
   line,
 }) => {
   return (
-    <AlertBoxInner
-      header={alert.header}
-      line={line}
-      Icon={<DetourIcon className="ml-2 mr-4 h-10 w-10" />}
-    >
-      <div className="flex w-full flex-col items-center justify-center">
-        <div className="flex w-full flex-row items-center pr-2 text-center text-lg">
-          {getDescription(alert, lineShort)}
-        </div>
-        <div className="flex w-full flex-row items-center gap-x-1 text-center ">
-          {type === 'current' ? (
-            <CurrentTime times={alert.relevantTimes} />
-          ) : (
-            <UpcomingTime times={alert.relevantTimes} />
-          )}
-        </div>
+    <AlertBoxInner header={alert.header} line={line} Icon={DetourIcon} alert={alert} type={type}>
+      <div className="flex w-full flex-row items-center pr-2 text-center text-lg">
+        {getDescription(alert, lineShort)}
       </div>
     </AlertBoxInner>
   );
