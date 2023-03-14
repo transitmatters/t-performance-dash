@@ -1,4 +1,4 @@
-import type { Station } from '../types/stations';
+import type { Bezier } from 'bezier-js';
 
 export type Turtle = {
   x: number;
@@ -6,59 +6,35 @@ export type Turtle = {
   theta: number;
 };
 
-export type PathStart = {
-  type: 'start';
-  turtle: Turtle;
+export type BaseCommand = {
+  range?: string;
 };
 
-export type PathSegment = {
-  type: 'line' | 'curve' | 'wiggle';
-  path: string;
-  turtle: Turtle;
+export type LineCommand = BaseCommand & {
+  type: 'line';
   length: number;
-  get: (frac: number) => Turtle;
 };
 
-export type PathCommand = (t: Turtle) => PathSegment;
-
-export type StationRange = {
-  type: 'stationRange';
-  start: null | string;
-  end: null | string;
-  stations: null | string[];
-  commands: PathCommand[];
+export type CurveCommand = BaseCommand & {
+  type: 'curve';
+  length: number;
+  angle: number;
 };
 
-export type PathShape = readonly (PathStart | PathCommand | StationRange)[];
-
-export type PathInterpolator = (progress: number) => Turtle;
-
-export const pathEntryIsStationRange = (el: PathShape[number]): el is StationRange =>
-  el && typeof el === 'object' && el.type === 'stationRange';
-
-export type RoutePatternDescriptor = {
-  shape: PathShape;
-  stationIds: string[];
+export type WiggleCommand = BaseCommand & {
+  type: 'wiggle';
+  length: number;
+  width: number;
 };
 
-export type PrerenderedRoutePattern = {
-  id: string;
-  pathInterpolator: PathInterpolator;
-  progressPathInterpolator: PathInterpolator;
-  stationOffsets: Record<string, number>;
+export type Command = LineCommand | CurveCommand | WiggleCommand;
+
+export type CommandPath = {
+  start: Turtle;
+  commands: Command[];
 };
 
-export type RoutePattern = {
-  shape: PathShape;
-  stations: Station[];
+export type CommandResult = {
+  turtle: Turtle;
+  curve: Bezier;
 };
-
-export type Route = {
-  routePatterns: Record<string, RoutePattern>;
-};
-
-export type Line = {
-  route: Route;
-};
-
-export type LineName = 'Red' | 'Blue' | 'Green' | 'Orange';

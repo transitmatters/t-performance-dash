@@ -1,0 +1,9 @@
+.container {
+    display: flex;
+    justify-content: center;
+    
+}
+
+.inner {
+    overflow-x: scroll;
+}
