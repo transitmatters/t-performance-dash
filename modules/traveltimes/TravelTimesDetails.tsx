@@ -18,10 +18,10 @@ export default function TravelTimesDetails() {
   const {
     linePath,
     lineShort,
-    query: { startDate, endDate, busLine },
+    query: { startDate, endDate, busRoute },
   } = useDelimitatedRoute();
 
-  const stations = optionsStation(lineShort, busLine);
+  const stations = optionsStation(lineShort, busRoute);
   const toStation = stations?.[stations.length - 3];
   const fromStation = stations?.[3];
 

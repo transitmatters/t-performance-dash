@@ -40,17 +40,17 @@ const options_station_ui = (line: LineShort): SelectOption<Station>[] | undefine
     .sort((a, b) => a.value.order - b.value.order);
 };
 
-export const optionsStation = (line: LineShort, busLine?: string): Station[] | undefined => {
+export const optionsStation = (line: LineShort, busRoute?: string): Station[] | undefined => {
   if (!line || !stations[line]) {
     return undefined;
   }
 
   if (line === 'Bus') {
-    if (!busLine || !stations[line][busLine]) {
+    if (!busRoute || !stations[line][busRoute]) {
       return undefined;
     }
 
-    return stations[line][busLine].stations.sort((a, b) => a.order - b.order);
+    return stations[line][busRoute].stations.sort((a, b) => a.order - b.order);
   }
 
   return stations[line].stations.sort((a, b) => a.order - b.order);

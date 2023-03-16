@@ -85,7 +85,7 @@ export const getLineSelectionItemHref = (metadata: LineMetadata, route: Route): 
     return href;
   }
   const queryParams = query
-    ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busLine'))
+    ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
     : new URLSearchParams();
   href += datapage ? `/${datapage}` : '';
   const queryString = queryParams.toString();
@@ -93,15 +93,15 @@ export const getLineSelectionItemHref = (metadata: LineMetadata, route: Route): 
   return href;
 };
 
-export const getBusRouteSelectionItemHref = (busLine: string, route: Route): string => {
+export const getBusRouteSelectionItemHref = (busRoute: string, route: Route): string => {
   const { query, datapage } = route;
-  if (busLine === route.query.busLine || datapage === 'overview') {
-    return `/bus?busLine=${busLine}`;
+  if (busRoute === route.query.busRoute || datapage === 'overview') {
+    return `/bus?busRoute=${busRoute}`;
   }
   const queryParams = query
-    ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busLine'))
+    ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
     : new URLSearchParams();
-  queryParams.append('busLine', busLine);
+  queryParams.append('busRoute', busRoute);
   let href = '/bus';
   href += `?${queryParams.toString() ?? ''}`;
   return href;

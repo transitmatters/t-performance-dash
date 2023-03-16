@@ -10,12 +10,12 @@ interface DelayAlertProps {
   alert: FormattedAlert;
   lineShort: LineShort;
   type: UpcomingOrCurrent;
-  busLine?: BusRoute;
+  busRoute?: BusRoute;
   line?: Line;
 }
 
-const getDescription = (alert: FormattedAlert, lineShort: LineShort, busLine?: BusRoute) => {
-  const lineOrRoute = busLine ?? lineShort;
+const getDescription = (alert: FormattedAlert, lineShort: LineShort, busRoute?: BusRoute) => {
+  const lineOrRoute = busRoute ?? lineShort;
   if (alert.stops.length) {
     const min = Math.min(...alert.stops);
     const max = Math.max(...alert.stops);
@@ -37,7 +37,7 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort, busLine?: B
       });
     return (
       <p className="mr-1 ">
-        Delays on {lineOrRoute} {!busLine && 'Line'} ({formattedRoutes?.join(', ')})
+        Delays on {lineOrRoute} {!busRoute && 'Line'} ({formattedRoutes?.join(', ')})
       </p>
     );
   }
@@ -48,12 +48,12 @@ export const DelayAlert: React.FC<DelayAlertProps> = ({
   alert,
   lineShort,
   type,
-  busLine,
+  busRoute,
   line,
 }) => {
   return (
     <AlertBoxInner header={alert.header} line={line} Icon={DelayIcon} alert={alert} type={type}>
-      {getDescription(alert, lineShort, busLine)}
+      {getDescription(alert, lineShort, busRoute)}
     </AlertBoxInner>
   );
 };

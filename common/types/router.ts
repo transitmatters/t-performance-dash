@@ -13,7 +13,7 @@ export interface Route {
 export interface QueryParams {
   startDate?: string;
   endDate?: string;
-  busLine?: BusRoute;
+  busRoute?: BusRoute;
 }
 
 export type Tabs = 'Bus' | 'Subway' | '';

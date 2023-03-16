@@ -15,7 +15,7 @@ interface AlertBoxProps {
   alerts: AlertsResponse[];
   lineShort: LineShort;
   type: UpcomingOrCurrent;
-  busLine?: BusRoute;
+  busRoute?: BusRoute;
   line?: Line;
 }
 
@@ -23,7 +23,7 @@ const getAlertComponent = (
   alert: FormattedAlert,
   lineShort: LineShort,
   type: UpcomingOrCurrent,
-  busLine?: BusRoute,
+  busRoute?: BusRoute,
   line?: Line
 ) => {
   if (alert.type === AlertEffect.SHUTTLE && alert.stops.length > 0) {
@@ -39,7 +39,7 @@ const getAlertComponent = (
         line={line}
         type={type}
         key={alert.id}
-        busLine={busLine}
+        busRoute={busRoute}
       />
     );
   }
@@ -48,12 +48,12 @@ const getAlertComponent = (
       <SuspensionAlert alert={alert} lineShort={lineShort} line={line} type={type} key={alert.id} />
     );
   }
-  if (alert.type === AlertEffect.STOP_CLOSURE && busLine) {
-    return <StopClosure alert={alert} busLine={busLine} type={type} key={alert.id} line={line} />;
+  if (alert.type === AlertEffect.STOP_CLOSURE && busRoute) {
+    return <StopClosure alert={alert} busRoute={busRoute} type={type} key={alert.id} line={line} />;
   }
 };
 
-export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, busLine, line, type }) => {
+export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, busRoute, line, type }) => {
   const alertBox = useMemo(() => {
     const relevantAlerts = alerts
       .map((alert) => {
@@ -75,11 +75,11 @@ export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, busLine, 
       return (
         <div className="flex w-full flex-row-reverse gap-x-2 md:flex-col-reverse md:gap-x-0 md:gap-y-2">
           {relevantAlerts.map((alert: FormattedAlert) =>
-            getAlertComponent(alert, lineShort, type, busLine, line)
+            getAlertComponent(alert, lineShort, type, busRoute, line)
           )}
         </div>
       );
     }
-  }, [alerts, type, lineShort, busLine, line]);
+  }, [alerts, type, lineShort, busRoute, line]);
   return alertBox;
 };
