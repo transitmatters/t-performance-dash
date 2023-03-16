@@ -5,7 +5,7 @@ import { faBus, faTrainSubway } from '@fortawesome/free-solid-svg-icons';
 
 import TmLogoSvg from '../../../public/tm-logo-big.svg';
 import TmIconSvg from '../../../public/tm-logo-small.svg';
-import { getBusLines } from '../../../common/constants/stations';
+import { getBusRoutes } from '../../../common/constants/stations';
 import { SideNavigation } from './SideNavigation';
 
 export const SideNavBar = () => {
@@ -29,7 +29,7 @@ export const SideNavBar = () => {
       current: false,
       icon: faBus,
       key: 'Routes',
-      children: getBusLines().map((busRoute) => {
+      children: getBusRoutes().map((busRoute) => {
         return { name: busRoute, path: busRoute, key: busRoute };
       }),
     },
