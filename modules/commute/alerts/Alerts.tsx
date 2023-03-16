@@ -9,8 +9,8 @@ import { Divider } from '../../../common/components/general/Divider';
 
 export const Alerts: React.FC = () => {
   const { line, lineShort, query } = useDelimitatedRoute();
-  const alerts = useQuery(['alerts', lineShort, query.busLine], () =>
-    fetchAlerts(lineShort, query.busLine)
+  const alerts = useQuery(['alerts', lineShort, query.busRoute], () =>
+    fetchAlerts(lineShort, query.busRoute)
   );
 
   const divStyle = classNames(
@@ -36,7 +36,7 @@ export const Alerts: React.FC = () => {
             alerts={alerts.data}
             lineShort={lineShort}
             line={line}
-            busLine={query.busLine}
+            busRoute={query.busRoute}
             type={'current'}
           />
         </div>
@@ -47,7 +47,7 @@ export const Alerts: React.FC = () => {
             alerts={alerts.data}
             lineShort={lineShort}
             line={line}
-            busLine={query.busLine}
+            busRoute={query.busRoute}
             type={'upcoming'}
           />
         </div>

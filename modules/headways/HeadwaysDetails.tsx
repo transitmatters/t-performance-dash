@@ -16,10 +16,10 @@ import { HeadwaysHistogram } from './charts/HeadwaysHistogram';
 export default function HeadwaysDetails() {
   const {
     lineShort,
-    query: { startDate, busLine },
+    query: { startDate, busRoute },
   } = useDelimitatedRoute();
 
-  const stations = optionsStation(lineShort, busLine);
+  const stations = optionsStation(lineShort, busRoute);
   const toStation = stations?.[stations.length - 3];
   const fromStation = stations?.[3];
 

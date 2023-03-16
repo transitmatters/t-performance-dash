@@ -21,7 +21,7 @@ export const useDelimitatedRoute = (): Route => {
   const router = useRouter();
   const path = router.asPath.split('?');
   const pathItems = path[0].split('/');
-  const { startDate, endDate, busLine } = router.query;
+  const { startDate, endDate, busRoute } = router.query;
   let tab: Tabs = '';
   if (RAIL_LINES.includes(pathItems[1])) {
     tab = 'Subway';
@@ -41,9 +41,9 @@ export const useDelimitatedRoute = (): Route => {
             ? startDate[0]
             : startDate ?? dayjs().format('YYYY-MM-DD'),
           endDate: Array.isArray(endDate) ? endDate[0] : endDate,
-          busLine: (Array.isArray(busLine) ? busLine[0] : busLine) as BusRoute,
+          busRoute: (Array.isArray(busRoute) ? busRoute[0] : busRoute) as BusRoute,
         }
-      : { startDate: undefined, endDate: undefined, busLine: undefined },
+      : { startDate: undefined, endDate: undefined, busRoute: undefined },
   };
 };
 
@@ -95,7 +95,7 @@ export const getLineSelectionItemHref = (metadata: LineMetadata, route: Route): 
   }
   const queryParams = query
     ? new URLSearchParams(
-        Object.entries(query).filter(([key, value]) => value !== undefined && key !== 'busLine')
+        Object.entries(query).filter(([key, value]) => value !== undefined && key !== 'busRoute')
       )
     : new URLSearchParams();
   href += datapage ? `/${datapage}` : '';
@@ -104,17 +104,17 @@ export const getLineSelectionItemHref = (metadata: LineMetadata, route: Route): 
   return href;
 };
 
-export const getBusRouteSelectionItemHref = (busLine: string, route: Route): string => {
+export const getBusRouteSelectionItemHref = (busRoute: string, route: Route): string => {
   const { query, datapage } = route;
-  if (busLine === route.query.busLine || datapage === 'overview') {
-    return `/bus?busLine=${busLine}`;
+  if (busRoute === route.query.busRoute || datapage === 'overview') {
+    return `/bus?busRoute=${busRoute}`;
   }
   const queryParams = query
     ? new URLSearchParams(
-        Object.entries(query).filter(([key, value]) => value !== undefined && key !== 'busLine')
+        Object.entries(query).filter(([key, value]) => value !== undefined && key !== 'busRoute')
       )
     : new URLSearchParams();
-  queryParams.append('busLine', busLine);
+  queryParams.append('busRoute', busRoute);
   let href = '/bus';
   href += `?${queryParams.toString() ?? ''}`;
   return href;

@@ -51,7 +51,7 @@ export const SideNavigation = ({ items, setSidebarOpen }: SideNavigationProps) =
             as="div"
             key={item.name}
             className="space-y-1"
-            value={route.line === 'BUS' ? route.query.busLine : route.line}
+            value={route.line === 'BUS' ? route.query.busRoute : route.line}
             onChange={(value) => {
               setSidebarOpen && setSidebarOpen(false);
               if (item.name === 'Bus') {

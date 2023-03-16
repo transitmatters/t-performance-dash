@@ -8,10 +8,10 @@ const alertsAPIConfig = {
 
 export const fetchAlerts = async (
   route: LineShort,
-  busLine?: string
+  busRoute?: string
 ): Promise<AlertsResponse[]> => {
-  if (route === 'Bus' && busLine) {
-    return fetchAlertsForBus(busLine);
+  if (route === 'Bus' && busRoute) {
+    return fetchAlertsForBus(busRoute);
   }
   return fetchAlertsForLine(route);
 };
@@ -36,11 +36,11 @@ const fetchAlertsForLine = async (route: LineShort): Promise<AlertsResponse[]> =
   return await response.json();
 };
 
-const fetchAlertsForBus = async (busLine: string): Promise<AlertsResponse[]> => {
+const fetchAlertsForBus = async (busRoute: string): Promise<AlertsResponse[]> => {
   const url = new URL(`${APP_DATA_BASE_PATH}/api/alerts`, window.location.origin);
   const options = { ...alertsAPIConfig };
   options['route_type'] = '3';
-  options['route'] = busLine;
+  options['route'] = busRoute;
   Object.entries(options).forEach(([key, value]) => {
     url.searchParams.append(key, value.toString());
   });
