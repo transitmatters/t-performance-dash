@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDelimitatedRoute } from '../../common/utils/router';
 import { DwellsWidget } from '../../modules/dwells/DwellsWidget';
 import { HeadwaysWidget } from '../../modules/headways/HeadwaysWidget';
 import SlowZonesWidget from '../../modules/slowzones/SlowZonesWidget';
@@ -7,6 +8,7 @@ import { Alerts } from '../commute/alerts/Alerts';
 import { RidershipWidget } from '../ridership/RidershipWidget';
 
 export default function Overview() {
+  const { tab } = useDelimitatedRoute();
   return (
     <div className="flex flex-col gap-y-8 pt-2">
       <div>
@@ -20,9 +22,9 @@ export default function Overview() {
 
         <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
           <TravelTimesWidget />
-          <SlowZonesWidget />
+          {tab === 'Subway' && <SlowZonesWidget />}
           <HeadwaysWidget />
-          <DwellsWidget />
+          {tab === 'Subway' && <DwellsWidget />}
           <RidershipWidget />
         </div>
       </div>
