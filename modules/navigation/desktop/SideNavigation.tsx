@@ -1,17 +1,17 @@
 import React from 'react';
 import { Listbox } from '@headlessui/react';
 import classNames from 'classnames';
+import router from 'next/router';
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   getBusRouteSelectionItemHref,
   getLineSelectionItemHref,
   useDelimitatedRoute,
 } from '../../../common/utils/router';
-import router from 'next/router';
 import { LINE_OBJECTS } from '../../../common/constants/lines';
 import { LinesDropdownItem } from './LinesDropdownItem';
 import { BusDropdownItem } from './BusDropdownItem';
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export interface NavItem {
   name: string;
@@ -51,7 +51,7 @@ export const SideNavigation = ({ items, setSidebarOpen }: SideNavigationProps) =
             as="div"
             key={item.name}
             className="space-y-1"
-            value={route.line === 'BUS' ? route.query.busRoute : route.line}
+            value={route.line === 'BUS' && route.query.busRoute ? route.query.busRoute : route.line}
             onChange={(value) => {
               setSidebarOpen && setSidebarOpen(false);
               if (item.name === 'Bus') {

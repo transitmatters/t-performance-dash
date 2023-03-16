@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { fetchAlerts } from '../../../common/api/alerts';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { lineColorBackground } from '../../../common/styles/general';
-import { AlertBox } from './AlertBox';
 import { Divider } from '../../../common/components/general/Divider';
+import { AlertBox } from './AlertBox';
 
 export const Alerts: React.FC = () => {
   const { line, lineShort, query } = useDelimitatedRoute();
