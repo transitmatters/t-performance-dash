@@ -15,7 +15,7 @@ export type BusRoute =
   | '73'
   | '77'
   | '111'
-  | '114_116_117';
+  | '114/116/117';
 
 export type LineMetadata = {
   name: string;

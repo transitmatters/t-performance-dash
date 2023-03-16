@@ -10,11 +10,11 @@ interface DelayAlertProps {
   alert: FormattedAlert;
   lineShort: LineShort;
   type: UpcomingOrCurrent;
-  busLine?: string;
+  busLine?: BusRoute;
   line?: Line;
 }
 
-const getDescription = (alert: FormattedAlert, lineShort: LineShort, busLine: BusRoute) => {
+const getDescription = (alert: FormattedAlert, lineShort: LineShort, busLine?: BusRoute) => {
   const lineOrRoute = busLine ?? lineShort;
   if (alert.stops.length) {
     const min = Math.min(...alert.stops);

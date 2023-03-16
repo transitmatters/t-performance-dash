@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import type { DateRangeType } from 'react-tailwindcss-datepicker/dist/types';
 import type { DataPage } from '../types/dataPages';
-import type { Line, LineMetadata, LinePath, LineShort } from '../types/lines';
+import type { BusRoute, Line, LineMetadata, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route, Tabs } from '../types/router';
 import { getOffsetDate } from './date';
@@ -41,7 +41,7 @@ export const useDelimitatedRoute = (): Route => {
             ? startDate[0]
             : startDate ?? dayjs().format('YYYY-MM-DD'),
           endDate: Array.isArray(endDate) ? endDate[0] : endDate,
-          busLine: Array.isArray(busLine) ? busLine[0] : busLine,
+          busLine: (Array.isArray(busLine) ? busLine[0] : busLine) as BusRoute,
         }
       : { startDate: undefined, endDate: undefined, busLine: undefined },
   };
@@ -73,7 +73,7 @@ export const useUpdateQuery = ({ range }: { range: boolean }) => {
           ...newDateQuery,
         };
 
-        if (!isEqual(router.query, newQuery) && newQuery.line !== undefined) {
+        if (!isEqual(router.query, newQuery)) {
           const query = pickBy(newQuery, (attr) => attr !== undefined);
           router.push({ pathname: router.pathname, query });
         }
