@@ -22,7 +22,6 @@ export const SideNavBar = () => {
         { name: 'Orange', path: 'orange', key: 'OL' },
         { name: 'Blue', path: 'blue', key: 'BL' },
         { name: 'Green', path: 'green', key: 'GL' },
-        { name: 'Bus', path: 'bus', key: 'BUS' },
       ],
     },
     {

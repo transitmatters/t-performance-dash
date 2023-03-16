@@ -1,6 +1,22 @@
 export type Line = 'RL' | 'OL' | 'GL' | 'BL' | 'BUS';
 export type LineShort = 'Red' | 'Orange' | 'Green' | 'Blue' | 'Bus';
 export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus';
+export type BusRoute =
+  | '1'
+  | '15'
+  | '22'
+  | '23'
+  | '28'
+  | '32'
+  | '39'
+  | '57'
+  | '66'
+  | '71'
+  | '73'
+  | '77'
+  | '111'
+  | '114_116_117';
+
 export type LineMetadata = {
   name: string;
   color: string;

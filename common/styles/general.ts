@@ -4,5 +4,5 @@ export const lineColorBackground = {
   GL: `bg-mbta-green`,
   BL: `bg-mbta-blue`,
   BUS: `bg-mbta-bus`,
-  DEFAULT: `bg-white`,
+  DEFAULT: `bg-stone-800`,
 };
