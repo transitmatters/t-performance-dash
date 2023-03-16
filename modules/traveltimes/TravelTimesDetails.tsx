@@ -2,8 +2,8 @@
 
 import React from 'react';
 import dayjs from 'dayjs';
-import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadashboard';
-import { AggregateAPIOptions, QueryNameKeys, SingleDayAPIOptions } from '../../common/types/api';
+import { useCustomQueries } from '../../common/api/datadashboard';
+import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -13,7 +13,6 @@ import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
-import { useQuery } from '@tanstack/react-query';
 
 export default function TravelTimesDetails() {
   const {
@@ -27,9 +26,12 @@ export default function TravelTimesDetails() {
   const fromStation = stations?.[3];
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
+  const { fromStopIds: fromStopIdsNorth, toStopIds: toStopIdsNorth } = stopIdsForStations(
+    toStation,
+    fromStation
+  );
 
   const aggregate = startDate !== undefined && endDate !== undefined;
-  const enabled = fromStopIds !== null && toStopIds !== null && startDate !== null;
   const parameters: SingleDayAPIOptions | AggregateAPIOptions = aggregate
     ? {
         [AggregateAPIParams.fromStop]: fromStopIds,
@@ -44,21 +46,23 @@ export default function TravelTimesDetails() {
         [SingleDayAPIParams.date]: startDate,
       };
 
-  const travelTimesAggregate = useQuery({
-    queryKey: [QueryNameKeys.traveltimes, aggregate, fromStopIds, toStopIds, startDate, endDate],
-    enabled: aggregate && enabled,
-    queryFn: () => fetchAggregateData(QueryNameKeys.traveltimes, parameters),
-  });
-  const travelTimesSingle = useQuery({
-    queryKey: [QueryNameKeys.traveltimes, aggregate, fromStopIds, toStopIds, startDate, endDate],
-    enabled: !aggregate && enabled,
-    queryFn: () => fetchSingleDayData(QueryNameKeys.traveltimes, parameters),
-  });
+  const { traveltimes } = useCustomQueries(
+    parameters,
+    // @ts-expect-error The overloading doesn't seem to handle this const
+    aggregate,
+    startDate !== undefined && fromStopIds !== null && toStopIds !== null
+  );
 
-  const traveltimes = aggregate ? travelTimesAggregate : travelTimesSingle;
-  const travelTimeValues = aggregate
-    ? travelTimesAggregate?.data?.by_date?.map((tt) => tt.mean)
-    : travelTimesSingle?.data?.map((tt) => tt.travel_time_sec);
+  const { traveltimes: traveltimesReversed } = useCustomQueries(
+    {
+      [SingleDayAPIParams.fromStop]: toStopIds,
+      [SingleDayAPIParams.toStop]: fromStopIds,
+      [SingleDayAPIParams.stop]: toStopIds,
+      [SingleDayAPIParams.date]: startDate,
+    },
+    false,
+    startDate !== undefined && fromStopIdsNorth !== null && toStopIdsNorth !== null
+  );
 
   if (traveltimes.isError || !linePath) {
     return <>Uh oh... error</>;
@@ -71,7 +75,19 @@ export default function TravelTimesDetails() {
           title="Avg. Travel Time"
           widgetValue={
             new TimeWidgetValue(
-              travelTimeValues ? averageTravelTime(travelTimeValues) : undefined,
+              traveltimes.data ? averageTravelTime(traveltimes.data) : undefined,
+              1
+            )
+          }
+          analysis={`from last ${dayjs().format('ddd')}.`}
+        />
+        <BasicDataWidgetItem
+          title="Round Trip"
+          widgetValue={
+            new TimeWidgetValue(
+              traveltimes.data && traveltimesReversed.data
+                ? averageTravelTime(traveltimes.data) + averageTravelTime(traveltimesReversed.data)
+                : undefined,
               1
             )
           }
@@ -81,18 +97,32 @@ export default function TravelTimesDetails() {
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
         {aggregate ? (
           <TravelTimesAggregateChart
-            traveltimes={travelTimesAggregate}
+            traveltimes={traveltimes}
             fromStation={fromStation}
             toStation={toStation}
           />
         ) : (
           <TravelTimesSingleChart
-            traveltimes={travelTimesSingle}
+            traveltimes={traveltimes}
             fromStation={fromStation}
             toStation={toStation}
           />
         )}
       </div>
+      {!aggregate && (
+        <>
+          <div className="flex w-full flex-row items-center justify-between text-lg">
+            <h3>Return Trip</h3>
+          </div>
+          <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+            <TravelTimesSingleChart
+              traveltimes={traveltimesReversed}
+              fromStation={toStation}
+              toStation={fromStation}
+            />
+          </div>
+        </>
+      )}
     </>
   );
 }
