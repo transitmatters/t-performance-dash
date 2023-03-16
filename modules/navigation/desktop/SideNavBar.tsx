@@ -1,32 +1,37 @@
 import React, { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import Train from '../../../public/Icons/Train.svg';
+import { faBus, faTrainSubway } from '@fortawesome/free-solid-svg-icons';
+
 import TmLogoSvg from '../../../public/tm-logo-big.svg';
 import TmIconSvg from '../../../public/tm-logo-small.svg';
-
-import { getLineSelectionItemHref, useDelimitatedRoute } from '../../../common/utils/router';
-import { LINE_OBJECTS } from '../../../common/constants/lines';
+import { getBusLines } from '../../../common/constants/stations';
 import { SideNavigation } from './SideNavigation';
 
 export const SideNavBar = () => {
-  const route = useDelimitatedRoute();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const NAV_ITEMS = [
     {
-      name: 'Lines',
+      name: 'Subway',
       current: true,
-      href: '/',
-      icon: Train,
-      key: 'Lines',
+      icon: faTrainSubway,
+      key: 'Subway',
       children: [
-        { name: 'Red', href: getLineSelectionItemHref(LINE_OBJECTS['RL'], route), key: 'RL' },
-        { name: 'Orange', href: getLineSelectionItemHref(LINE_OBJECTS['OL'], route), key: 'OL' },
-        { name: 'Blue', href: getLineSelectionItemHref(LINE_OBJECTS['BL'], route), key: 'BL' },
-        { name: 'Green', href: getLineSelectionItemHref(LINE_OBJECTS['GL'], route), key: 'GL' },
-        { name: 'Bus', href: getLineSelectionItemHref(LINE_OBJECTS['BUS'], route), key: 'BUS' },
+        { name: 'Red', path: 'red', key: 'RL' },
+        { name: 'Orange', path: 'orange', key: 'OL' },
+        { name: 'Blue', path: 'blue', key: 'BL' },
+        { name: 'Green', path: 'green', key: 'GL' },
       ],
+    },
+    {
+      name: 'Bus',
+      current: false,
+      icon: faBus,
+      key: 'Routes',
+      children: getBusLines().map((busRoute) => {
+        return { name: busRoute, path: busRoute, key: busRoute };
+      }),
     },
   ];
 

@@ -6,7 +6,17 @@ const alertsAPIConfig = {
   activity: 'BOARD,EXIT,RIDE',
 };
 
-export const fetchAlertsForLine = async (route: LineShort): Promise<AlertsResponse[]> => {
+export const fetchAlerts = async (
+  route: LineShort,
+  busLine?: string
+): Promise<AlertsResponse[]> => {
+  if (route === 'Bus' && busLine) {
+    return fetchAlertsForBus(busLine);
+  }
+  return fetchAlertsForLine(route);
+};
+
+const fetchAlertsForLine = async (route: LineShort): Promise<AlertsResponse[]> => {
   const url = new URL(`${APP_DATA_BASE_PATH}/api/alerts`, window.location.origin);
   const options = { ...alertsAPIConfig };
   if (route === 'Green') {
@@ -16,6 +26,21 @@ export const fetchAlertsForLine = async (route: LineShort): Promise<AlertsRespon
     options['route_type'] = '1';
     options['route'] = route;
   }
+  Object.entries(options).forEach(([key, value]) => {
+    url.searchParams.append(key, value.toString());
+  });
+  const response = await fetch(url.toString());
+  if (!response.ok) {
+    throw new Error('Failed to fetch alerts');
+  }
+  return await response.json();
+};
+
+const fetchAlertsForBus = async (busLine: string): Promise<AlertsResponse[]> => {
+  const url = new URL(`${APP_DATA_BASE_PATH}/api/alerts`, window.location.origin);
+  const options = { ...alertsAPIConfig };
+  options['route_type'] = '3';
+  options['route'] = busLine;
   Object.entries(options).forEach(([key, value]) => {
     url.searchParams.append(key, value.toString());
   });

@@ -37,9 +37,7 @@ export const SuspensionAlert: React.FC<SuspensionAlertProps> = ({
 }) => {
   return (
     <AlertBoxInner header={alert.header} line={line} Icon={DetourIcon} alert={alert} type={type}>
-      <div className="flex w-full flex-row items-center pr-2 text-center text-lg">
-        {getDescription(alert, lineShort)}
-      </div>
+      {getDescription(alert, lineShort)}
     </AlertBoxInner>
   );
 };

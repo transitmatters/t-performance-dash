@@ -22,13 +22,13 @@ def format_parameters(params={}):
 
 def shuttle_alert(attributes, id):
     '''Format alerts for shuttling'''
-    stops = []
+    stops = set()  # Eliminate duplicates (bus alerts sometimes have entries for multiple routes for one stop.)
     for entity in attributes['informed_entity']:
         if entity.get('stop') and entity['stop'].isdigit():  # Ignore stops of format `place-brntn`
-            stops.append(int(entity['stop']))
+            stops.add(int(entity['stop']))
     return {
         "id": id,
-        "stops": stops,
+        "stops": list(stops),
         "header": attributes['header'],
         "type": attributes['effect'],
         "active_period": format_active_alerts(attributes['active_period'])
@@ -38,29 +38,29 @@ def shuttle_alert(attributes, id):
 def delay_alert(attributes, id):
     '''Format alerts for delays'''
     routes = []
-    stops = []
+    stops = set()  # Eliminate duplicates (bus alerts sometimes have entries for multiple routes for one stop.)
     for entity in attributes['informed_entity']:
         if entity.get('stop') and entity['stop'].isdigit():  # Ignore stops of format `place-brntn`
-            stops.append(int(entity['stop']))
+            stops.add(int(entity['stop']))
         if entity.get('route') and entity.get('route') != 'Mattapan':
             routes.append(entity['route'])
     return {
         "id": id,
         "routes": routes,
-        "stops": stops,
+        "stops": list(stops),
         "header": attributes['header'],
         "type": attributes['effect'],
         "active_period": format_active_alerts(attributes['active_period'])
     }
 
 
-def format_response(alerts_data):
+def format_response(alerts_data):  # TODO: separate logic for bus to avoid repeat stops.
     alerts_filtered = []
     for alert in alerts_data:
         attributes = alert['attributes']
-        if attributes['effect'] == 'SHUTTLE' or attributes['effect'] == 'SUSPENSION':
+        if attributes['effect'] == 'SHUTTLE' or attributes['effect'] == 'SUSPENSION' or attributes['effect'] == 'STOP_CLOSURE':
             alerts_filtered.append(shuttle_alert(attributes, alert['id']))
-        if attributes['effect'] == 'DELAY':
+        if attributes['effect'] == 'DELAY' or attributes['effect'] == 'DETOUR':
             alerts_filtered.append(delay_alert(attributes, alert['id']))
 
     return alerts_filtered
@@ -85,8 +85,6 @@ def get_active(alert_period):
 
     end_tomorrow = today + timedelta(days=1, hours=4)  # Anything before 4 am is "today"
     end_today = today + timedelta(hours=11, minutes=59)
-    print("endt{}", end_tomorrow)
-    print("start{}", start)
 
     if end <= now:
         alert_period['current'] = False

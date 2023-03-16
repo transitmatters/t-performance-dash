@@ -5,15 +5,17 @@ import type {
   UpcomingOrCurrent,
 } from '../../../common/types/alerts';
 import { AlertEffect } from '../../../common/types/alerts';
-import type { Line, LineShort } from '../../../common/types/lines';
+import type { BusRoute, Line, LineShort } from '../../../common/types/lines';
 import { DelayAlert } from './DelayAlert';
 import { ShuttleAlert } from './ShuttleAlert';
+import { StopClosure } from './StopClosureAlert';
 import { SuspensionAlert } from './SuspensionAlert';
 
 interface AlertBoxProps {
   alerts: AlertsResponse[];
   lineShort: LineShort;
   type: UpcomingOrCurrent;
+  busLine?: BusRoute;
   line?: Line;
 }
 
@@ -21,6 +23,7 @@ const getAlertComponent = (
   alert: FormattedAlert,
   lineShort: LineShort,
   type: UpcomingOrCurrent,
+  busLine?: BusRoute,
   line?: Line
 ) => {
   if (alert.type === AlertEffect.SHUTTLE && alert.stops.length > 0) {
@@ -30,7 +33,14 @@ const getAlertComponent = (
   }
   if (alert.type === AlertEffect.DELAY) {
     return (
-      <DelayAlert alert={alert} lineShort={lineShort} line={line} type={type} key={alert.id} />
+      <DelayAlert
+        alert={alert}
+        lineShort={lineShort}
+        line={line}
+        type={type}
+        key={alert.id}
+        busLine={busLine}
+      />
     );
   }
   if (alert.type === AlertEffect.SUSPENSION) {
@@ -38,9 +48,12 @@ const getAlertComponent = (
       <SuspensionAlert alert={alert} lineShort={lineShort} line={line} type={type} key={alert.id} />
     );
   }
+  if (alert.type === AlertEffect.STOP_CLOSURE && busLine) {
+    return <StopClosure alert={alert} busLine={busLine} type={type} key={alert.id} line={line} />;
+  }
 };
 
-export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, line, type }) => {
+export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, busLine, line, type }) => {
   const alertBox = useMemo(() => {
     const relevantAlerts = alerts
       .map((alert) => {
@@ -54,19 +67,19 @@ export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, line, typ
 
     if (!relevantAlerts || relevantAlerts.length === 0) {
       return (
-        <div className="w-full">
-          <p>No {type} alerts.</p>
+        <div className="flex w-full justify-center rounded-sm bg-white bg-opacity-10 px-4 py-2 pb-2">
+          <p className="text-stone-100">None</p>
         </div>
       );
     } else {
       return (
-        <div className="flex w-full flex-col-reverse gap-y-2">
+        <div className="flex w-full flex-row-reverse gap-x-2 md:flex-col-reverse md:gap-x-0 md:gap-y-2">
           {relevantAlerts.map((alert: FormattedAlert) =>
-            getAlertComponent(alert, lineShort, type, line)
+            getAlertComponent(alert, lineShort, type, busLine, line)
           )}
         </div>
       );
     }
-  }, [alerts, lineShort, line, type]);
+  }, [alerts, type, lineShort, busLine, line]);
   return alertBox;
 };

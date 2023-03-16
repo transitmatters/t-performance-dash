@@ -32,6 +32,14 @@ export interface AlertsResponse {
 }
 export type AlertEffectTypes = AlertEffect;
 
+export enum AlertNames {
+  DELAY = 'Delays',
+  SHUTTLE = 'Shuttling',
+  STOP_CLOSURE = 'Stop Closure',
+  DETOUR = 'Detour',
+  SUSPENSION = 'Suspension',
+}
+
 export enum AlertEffect {
   ACCESS_ISSUE = 'ACCESS_ISSUE',
   ADDITIONAL_SERVICE = 'ADDITIONAL_SERVICE',

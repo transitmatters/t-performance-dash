@@ -1,9 +1,7 @@
-import classNames from 'classnames';
 import React, { useState } from 'react';
-import { lineColorBackground } from '../../../common/styles/general';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
 import type { Line } from '../../../common/types/lines';
-import { lightLineBorder } from './styles/AlertStyles';
+import { AlertModal } from './AlertModal';
 import { CurrentTime, UpcomingTime } from './Time';
 
 interface AlertBoxInnerProps {
@@ -23,23 +21,32 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
   children,
   line,
 }) => {
-  const [expanded, setExpanded] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   return (
     <div
       onClick={() => {
-        setExpanded(!expanded);
+        setShowModal(!showModal);
       }}
-      className={classNames(
-        'flex w-full cursor-pointer flex-col gap-y-2 rounded-2xl border py-1 pl-1 pr-4 shadow-simple',
-        lightLineBorder[line ?? 'DEFAULT'],
-        lineColorBackground[line ?? 'DEFAULT']
-      )}
+      className="flex cursor-pointer flex-col gap-y-2 whitespace-nowrap rounded-md border border-black border-opacity-20 bg-black bg-opacity-[15%] py-1 pl-1 pr-4 shadow-sm hover:bg-opacity-10 md:w-full md:whitespace-normal"
     >
+      {showModal && (
+        <AlertModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          header={header}
+          Icon={Icon}
+          type={alert.type}
+        />
+      )}
+      {/* doubled divs here. */}
       <div className="flex w-full flex-row items-center">
-        <Icon className="ml-2 mr-4 h-10 w-10" />
-        <div className="flex w-full flex-col items-center justify-center">
-          {children}
-          <div className="flex w-full flex-row items-center gap-x-1 text-center ">
+        <Icon className="ml-2 mr-4 h-10 w-10" aria-hidden="true" />
+        <div className="flex w-full flex-col items-center justify-center text-stone-100">
+          <div className="flex w-full flex-row items-center pr-2 text-center text-lg md:flex-wrap">
+            {children}
+          </div>
+
+          <div className="flex w-full flex-row items-center  gap-x-1 text-center text-stone-200 md:flex-wrap">
             {type === 'current' ? (
               <CurrentTime times={alert.relevantTimes} />
             ) : (
@@ -48,11 +55,6 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
           </div>
         </div>
       </div>
-      {expanded && (
-        <div className="p-4">
-          <p>{header}</p>
-        </div>
-      )}
     </div>
   );
 };
