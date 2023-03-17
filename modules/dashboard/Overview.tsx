@@ -4,6 +4,7 @@ import { HeadwaysWidget } from '../../modules/headways/HeadwaysWidget';
 import SlowZonesWidget from '../../modules/slowzones/SlowZonesWidget';
 import { TravelTimesWidget } from '../../modules/traveltimes/TravelTimesWidget';
 import { Alerts } from '../commute/alerts/Alerts';
+import { Speed } from '../commute/speed/Speed';
 import { RidershipWidget } from '../ridership/RidershipWidget';
 
 export default function Overview() {
@@ -12,7 +13,10 @@ export default function Overview() {
       <div>
         <h1 className="text-xl">Today's Commute</h1>
         <hr className="my-2 h-[2px] border-0 border-b border-white bg-gray-400" />
-        <Alerts />
+        <div className="flex flex-col gap-y-2">
+          <Alerts />
+          <Speed />
+        </div>
       </div>
       <div>
         <h1 className="text-xl">Line Health</h1>
