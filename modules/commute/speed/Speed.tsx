@@ -8,9 +8,6 @@ import { lineColorBackground } from '../../../common/styles/general';
 export const Speed = () => {
   const { line } = useDelimitatedRoute();
   const speed = useQuery(['speed', line], () => fetchSpeed(line));
-  if (speed.isLoading) {
-    return <p>loading...</p>;
-  }
   if (speed.isError) {
     return <p>Error</p>;
   }
@@ -24,7 +21,7 @@ export const Speed = () => {
       )}
     >
       <p className="text-white">Speed</p>
-      <p className="text-3xl font-semibold text-white">{speedData[0].value}%</p>
+      <p className="text-3xl font-semibold text-white">{speedData[0]?.value ?? ''}%</p>
     </div>
   );
 };

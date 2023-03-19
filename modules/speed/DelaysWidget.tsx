@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
+import { useMemo } from 'react';
 import { fetchLineTraversalTimes } from '../../common/api/speed';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { PercentageWidgetValue, TimeWidgetValue } from '../../common/types/basicWidgets';
+import { TimeRange } from '../../common/types/inputs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
-import { TimeRange } from '../dashboard/LineHealth';
 import { DELAYS_RANGE_PARAMS_MAP, MINIMUMS } from './constants/delays';
 import { Delays } from './Delays';
 
@@ -23,7 +24,7 @@ export const DelaysWidget: React.FC<DelaysWidgetProps> = ({ timeRange }) => {
     () => fetchLineTraversalTimes({ start_date: startDate, end_date: endDate, agg, line }),
     { enabled: line != undefined }
   );
-  const comparisonTravelTimes = useQuery(
+  const compTravelTimes = useQuery(
     ['traversalComparison', line, comparisonStartDate, startDate, agg],
     () =>
       fetchLineTraversalTimes({
@@ -38,17 +39,20 @@ export const DelaysWidget: React.FC<DelaysWidgetProps> = ({ timeRange }) => {
   if (medianTravelTimes.isError) {
     return <div>Error</div>;
   }
-
-  const data = medianTravelTimes?.data ?? [];
   const min = MINIMUMS[line ?? 'DEFAULT'];
-  const values = data.map((datapoint) => datapoint.value / min - 1);
-  const average = values?.reduce((a, b) => a + b, 0) / values.length;
 
-  const comparisonValues = comparisonTravelTimes?.data?.map(
-    (datapoint) => datapoint.value / min - 1
-  );
-  const comparisonAverage = comparisonValues?.reduce((a, b) => a + b, 0) / comparisonValues?.length;
-  const delta = average - comparisonAverage;
+  const { average, delta } = useMemo(() => {
+    if (medianTravelTimes.data == undefined || compTravelTimes.data == undefined) {
+      return { average: undefined, delta: undefined };
+    }
+    const values = medianTravelTimes.data.map((datapoint) => datapoint.value / min - 1);
+    const compValues = compTravelTimes.data.map((datapoint) => datapoint.value / min - 1);
+    const average = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+    const compAverage = compValues?.reduce((a, b) => a + b, 0) / compValues?.length;
+    const delta = average - compAverage;
+    return { average, delta };
+  }, [medianTravelTimes.data, compTravelTimes.data]);
+
   return (
     <>
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
@@ -65,7 +69,7 @@ export const DelaysWidget: React.FC<DelaysWidgetProps> = ({ timeRange }) => {
             analysis={`from prev. ${timeRange}`}
           />
         </div>
-        <Delays timeRange={timeRange} data={data} />
+        <Delays timeRange={timeRange} data={medianTravelTimes.data ?? []} />
       </div>
     </>
   );

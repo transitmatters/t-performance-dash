@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
+import type { TimeRange } from '../../common/types/inputs';
+import { TimeRangeNames } from '../../common/types/inputs';
 import { DwellsWidget } from '../dwells/DwellsWidget';
 import { HeadwaysWidget } from '../headways/HeadwaysWidget';
 import { RidershipWidget } from '../ridership/RidershipWidget';
@@ -7,17 +9,9 @@ import SlowZonesWidget from '../slowzones/SlowZonesWidget';
 import { DelaysWidget } from '../speed/DelaysWidget';
 import { TravelTimesWidget } from '../traveltimes/TravelTimesWidget';
 
-export type TimeRange = 'week' | 'month' | 'year' | 'all';
-
-enum TimeRangeNames {
-  'week' = 'Past Week',
-  'month' = 'Past Month',
-  'year' = 'Past Year',
-  'all' = 'All Time',
-}
-
 export const LineHealth = () => {
   const [timeRange, setTimeRange] = useState<TimeRange>('week');
+
   return (
     <div>
       <div className="flex w-full flex-col justify-between sm:flex-row">

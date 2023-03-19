@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -16,9 +16,10 @@ import { enUS } from 'date-fns/locale';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
-import { TimeRange } from '../dashboard/LineHealth';
 import { DELAYS_RANGE_PARAMS_MAP, MINIMUMS } from './constants/delays';
 import { MedianTraversalTime } from '../../common/types/dataPoints';
+import { TimeRange, TimeRangeNames } from '../../common/types/inputs';
+import { drawPlainTitle } from '../../common/components/charts/Title';
 
 ChartJS.register(
   CategoryScale,
@@ -39,8 +40,9 @@ interface DelaysProps {
 
 // TODO: memoize this shit
 export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
-  const { line } = useDelimitatedRoute();
+  const { line, lineShort } = useDelimitatedRoute();
   const { tooltipFormat, unit, startDate, endDate } = DELAYS_RANGE_PARAMS_MAP[timeRange];
+  const ref = useRef();
 
   const min = MINIMUMS[line ?? 'DEFAULT'];
   const labels = data.map((point) => point.date);
@@ -48,7 +50,7 @@ export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
     <div>
       <Line
         id={'Traversal Times'}
-        // TODO: add ref???
+        ref={ref}
         height={250}
         redraw={true}
         data={{
@@ -56,20 +58,17 @@ export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
           datasets: [
             {
               label: `Percent`,
-              borderColor: '#a0a0a030',
+              borderColor: 'transparent',
               pointRadius: 8,
               pointBackgroundColor: 'transparent',
               fill: {
                 target: 'origin',
                 above: LINE_COLORS[line ?? 'default'],
               },
-
               pointBorderWidth: 0,
               pointHoverRadius: 3,
               pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
-
-              // TODO: would be nice to add types to these arrow functions - but causes an issue bc datapoint[field] might be undefined.
-              data: data.map((datapoint: any) => (100 * datapoint['value']) / min - 100),
+              data: data.map((datapoint) => (100 * datapoint.value) / min - 100),
             },
           ],
         }}
@@ -80,6 +79,9 @@ export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
             padding: {
               top: 25,
             },
+          },
+          interaction: {
+            intersect: false,
           },
           plugins: {
             tooltip: {
@@ -97,7 +99,7 @@ export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
           },
           scales: {
             y: {
-              min: -5,
+              suggestedMin: 0,
               suggestedMax: 100,
               display: true,
               ticks: {
@@ -128,13 +130,34 @@ export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
               display: true,
               title: {
                 display: true,
-                text: 'No date selected',
+                text: `${TimeRangeNames[timeRange]}`,
                 color: COLORS.design.subtitleGrey,
               },
             },
           },
-          // animation: false,
         }}
+        plugins={[
+          {
+            id: 'customTitle',
+            afterDraw: (chart) => {
+              if (startDate === undefined || startDate.length === 0) {
+                // No data is present
+                const ctx = chart.ctx;
+                const width = chart.width;
+                const height = chart.height;
+                chart.clear();
+
+                ctx.save();
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = "16px normal 'Helvetica Nueue'";
+                ctx.fillText('No data to display', width / 2, height / 2);
+                ctx.restore();
+              }
+              drawPlainTitle(`Delay compared to peak speed`, chart);
+            },
+          },
+        ]}
       />
     </div>
   );
