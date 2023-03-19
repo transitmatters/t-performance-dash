@@ -18,7 +18,7 @@ termini = {
 
 
 # TODO: Maybe this should be a x hour rolling average of the past x hours of active service (?) or maybe last x trips
-def get_speed(line):  # TODO: deal with case when no trains have run yet.
+def get_schedule_adherence(line):  # TODO: deal with case when no trains have run yet.
     total_time = 0
     benchmark = 0
     now = datetime.datetime.now()
@@ -33,7 +33,7 @@ def get_speed(line):  # TODO: deal with case when no trains have run yet.
 
     percentage = int(100 * benchmark / total_time) if total_time > 0 else 0
     executor = concurrent.futures.ThreadPoolExecutor()
-    executor.submit(dynamo.update_speed, [line, now, percentage])
+    executor.submit(dynamo.update_speed_adherence, [line, now, percentage])
     return [{
         "last_updated": f'{now.strftime(data_funcs.DATE_FORMAT)}',
         "value": percentage,
@@ -46,19 +46,19 @@ def is_fresh(response, now):
     return diff < datetime.timedelta(minutes=10)
 
 
-def fetch_speed(line):
+def fetch_schedule_adherence(line):
     now = datetime.datetime.now()
     try:
         response = table.query(
             KeyConditionExpression='line = :line and stat = :stat',
             ExpressionAttributeValues={
                 ':line': line,
-                ':stat': 'Speed'
+                ':stat': 'SpeedAdherence'
             }
         )
     except ClientError:
         print("could not read from table.")
         raise
     if len(response["Items"]) == 0 or not is_fresh(response, now):  # If no value or expired - get fresh.
-        return get_speed(line)
+        return get_schedule_adherence(line)
     return response["Items"]

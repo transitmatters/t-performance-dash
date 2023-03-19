@@ -4,12 +4,12 @@ import boto3
 dynamodb = boto3.resource('dynamodb')
 
 
-def update_speed(line, now, value):
+def update_speed_adherence(line, now, value):
     table = dynamodb.Table("OverviewStats")
 
     try:
         table.update_item(
-            Key={"line": line, "stat": "Speed"},
+            Key={"line": line, "stat": "SpeedAdherence"},
             UpdateExpression='SET #last_updated = :last_updated, #value = :value',
             ExpressionAttributeNames={
                 '#last_updated': 'last_updated',
