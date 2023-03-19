@@ -1,9 +1,26 @@
+import type { TooltipCallbacks, TooltipItem, TooltipModel } from 'chart.js';
+import type { _DeepPartialObject } from 'chart.js/dist/types/utils';
 import dayjs from 'dayjs';
 import { DATE_FORMAT } from '../../../common/constants/dates';
 
 const today = dayjs();
 const endDate = today.format(DATE_FORMAT);
-export const DELAYS_RANGE_PARAMS_MAP = {
+
+type ParamsType = {
+  agg: 'daily' | 'weekly' | 'monthly';
+  endDate: string;
+  startDate: string;
+  comparisonStartDate: string;
+  comparisonEndDate: string;
+  tooltipFormat: 'MMM d, yyyy' | 'MMM yyyy';
+  unit: 'day' | 'month' | 'year';
+  callbacks?:
+    | _DeepPartialObject<TooltipCallbacks<'line', TooltipModel<'line'>, TooltipItem<'line'>>>
+    | undefined;
+};
+
+export const DELAYS_RANGE_PARAMS_MAP: { [s: string]: ParamsType } = {
+  // TODO: type this
   week: {
     agg: 'daily',
     endDate: endDate,
@@ -20,6 +37,7 @@ export const DELAYS_RANGE_PARAMS_MAP = {
     comparisonStartDate: today.subtract(60, 'days').format(DATE_FORMAT),
     comparisonEndDate: today.subtract(30, 'days').subtract(1, 'days').format(DATE_FORMAT),
     tooltipFormat: 'MMM d, yyyy',
+
     unit: 'day',
   },
   year: {
@@ -29,6 +47,9 @@ export const DELAYS_RANGE_PARAMS_MAP = {
     comparisonStartDate: today.subtract(2, 'years').format(DATE_FORMAT),
     comparisonEndDate: today.subtract(1, 'years').subtract(1, 'days').format(DATE_FORMAT),
     tooltipFormat: 'MMM d, yyyy',
+    callbacks: {
+      title: (context) => `Week of ${context[0].label}`,
+    },
     unit: 'month',
   },
   all: {

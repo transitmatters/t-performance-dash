@@ -32,7 +32,6 @@ def get_speed(line):  # TODO: deal with case when no trains have run yet.
         benchmark += sum(tt["benchmark_travel_time_sec"] for tt in tts if "benchmark_travel_time_sec" in tt)
 
     percentage = int(100 * benchmark / total_time) if total_time > 0 else 0
-    # dynamo.update_speed(line, now, percentage)
     executor = concurrent.futures.ThreadPoolExecutor()
     executor.submit(dynamo.update_speed, [line, now, percentage])
     return [{

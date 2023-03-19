@@ -41,7 +41,7 @@ interface DelaysProps {
 // TODO: memoize this shit
 export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
   const { line, lineShort } = useDelimitatedRoute();
-  const { tooltipFormat, unit, startDate, endDate } = DELAYS_RANGE_PARAMS_MAP[timeRange];
+  const { tooltipFormat, unit, startDate, endDate, callbacks } = DELAYS_RANGE_PARAMS_MAP[timeRange];
   const ref = useRef();
 
   const min = MINIMUMS[line ?? 'DEFAULT'];
@@ -68,7 +68,7 @@ export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
               pointBorderWidth: 0,
               pointHoverRadius: 3,
               pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
-              data: data.map((datapoint) => (100 * datapoint.value) / min - 100),
+              data: data.map((datapoint) => Math.round((100 * datapoint.value) / min - 100)),
             },
           ],
         }}
@@ -87,6 +87,7 @@ export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
             tooltip: {
               mode: 'index',
               position: 'nearest',
+              callbacks: callbacks,
             },
             legend: {
               display: false,
@@ -117,7 +118,7 @@ export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
               type: 'time',
               time: {
                 unit: unit,
-                tooltipFormat: tooltipFormat, // locale time with seconds
+                tooltipFormat: tooltipFormat,
               },
               ticks: {
                 color: COLORS.design.subtitleGrey,

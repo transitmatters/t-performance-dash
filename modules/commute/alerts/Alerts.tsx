@@ -14,7 +14,7 @@ export const Alerts: React.FC = () => {
   );
 
   const divStyle = classNames(
-    'flex flex-col items-center rounded-md p-4 text-white shadow-dataBox w-full xl:w-1/2 gap-y-2 md:max-h-[240px] md:overflow-y-auto',
+    'flex flex-col items-center rounded-md p-4 text-white shadow-dataBox w-full xl:w-1/2 gap-y-2 md:max-h-[300px] md:overflow-y-auto',
     lineColorBackground[line ?? 'DEFAULT']
   );
 
