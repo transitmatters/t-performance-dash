@@ -46,6 +46,118 @@
         "RegionalCertificateArn": { "Ref": "TMBackendCertArn" }
       }
     },
+    "OverviewDatabase": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "OverviewStats",
+        "KeySchema": [
+          {
+            "AttributeName": "line",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "stat",
+            "KeyType": "RANGE"
+          }
+        ],
+
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "line",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "stat",
+            "AttributeType": "S"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST"
+      }
+    },
+    "LineTraversalTimeDatabase": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "LineTraversalTime",
+        "KeySchema": [
+          {
+            "AttributeName": "line",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "date",
+            "KeyType": "RANGE"
+          }
+        ],
+
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "line",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "date",
+            "AttributeType": "S"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST"
+      }
+    },
+    "LineTraversalTimeWeeklyDatabase": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "LineTraversalTimeWeekly",
+        "KeySchema": [
+          {
+            "AttributeName": "line",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "date",
+            "KeyType": "RANGE"
+          }
+        ],
+
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "line",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "date",
+            "AttributeType": "S"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST"
+      }
+    },
+    "LineTraversalTimeMonthlyDatabase": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "LineTraversalTimeMonthly",
+        "KeySchema": [
+          {
+            "AttributeName": "line",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "date",
+            "KeyType": "RANGE"
+          }
+        ],
+
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "line",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "date",
+            "AttributeType": "S"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST"
+      }
+    },
     "FrontendDNSRecordSet": {
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
@@ -136,7 +248,12 @@
                 "HTTPSPort": "443",
                 "OriginProtocolPolicy": "http-only"
               },
-              "DomainName": { "Fn::Join": ["", [{ "Ref": "TMFrontendHostname" }, ".s3-website-us-east-1.amazonaws.com"]] },
+              "DomainName": {
+                "Fn::Join": [
+                  "",
+                  [{ "Ref": "TMFrontendHostname" }, ".s3-website-us-east-1.amazonaws.com"]
+                ]
+              },
               "Id": "only-origin"
             }
           ],
