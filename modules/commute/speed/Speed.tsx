@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchLineTraversalTimes, fetchScheduleAdherence } from '../../../common/api/speed';
+import { fetchLineTraversalTimes } from '../../../common/api/speed';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import classNames from 'classnames';
 import { lineColorBackground } from '../../../common/styles/general';

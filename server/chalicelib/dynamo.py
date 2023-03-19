@@ -3,28 +3,6 @@ import boto3
 # Create a DynamoDB resource
 dynamodb = boto3.resource('dynamodb')
 
-
-def update_speed_adherence(line, now, value):
-    table = dynamodb.Table("OverviewStats")
-
-    try:
-        table.update_item(
-            Key={"line": line, "stat": "SpeedAdherence"},
-            UpdateExpression='SET #last_updated = :last_updated, #value = :value',
-            ExpressionAttributeNames={
-                '#last_updated': 'last_updated',
-                '#value': 'value',
-            },
-            ExpressionAttributeValues={
-                ':last_updated': f'{now.strftime("%Y-%m-%dT%H:%M:%S")}',
-                ':value': value,
-            },
-        )
-    except Exception as e:
-        print(e)
-        raise
-
-
 aggToTable = {
     'daily': "LineTraversalTime",
     'weekly': "LineTraversalTimeWeekly",
