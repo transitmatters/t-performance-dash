@@ -4,9 +4,9 @@ import type { MedianTraversalTime, SpeedMetric } from '../types/dataPoints';
 import type { Line } from '../types/lines';
 import { APP_DATA_BASE_PATH } from '../utils/constants';
 
-export const fetchSpeed = async (line?: Line): Promise<SpeedMetric[] | undefined> => {
+export const fetchScheduleAdherence = async (line?: Line): Promise<SpeedMetric[] | undefined> => {
   if (!line) return undefined;
-  const url = new URL(`${APP_DATA_BASE_PATH}/api/speed`, window.location.origin);
+  const url = new URL(`${APP_DATA_BASE_PATH}/api/scheduleAdherence`, window.location.origin);
   url.searchParams.append('line', line);
   const response = await fetch(url.toString());
   if (!response.ok) {
