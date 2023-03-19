@@ -24,3 +24,14 @@ export enum AggregateAPIParams {
 
 export type AggregateAPIOptions = { [key in AggregateAPIParams]?: string[] | string };
 export type PartialAggregateAPIOptions = Partial<AggregateAPIOptions>;
+
+export type fetchLineTraversalTimesOptions = {
+  [key in FetchLineTraversalTimeParams]?: string;
+};
+
+export enum FetchLineTraversalTimeParams {
+  startDate = 'start_date',
+  endDate = 'end_date',
+  agg = 'agg',
+  line = 'line',
+}

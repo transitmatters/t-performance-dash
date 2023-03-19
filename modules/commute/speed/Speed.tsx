@@ -15,7 +15,7 @@ export const Speed = () => {
     return <p>Error</p>;
   }
 
-  const speedData = speed.data;
+  const speedData = speed.data || [];
   return (
     <div
       className={classNames(

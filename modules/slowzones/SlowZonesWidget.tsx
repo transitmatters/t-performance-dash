@@ -10,27 +10,65 @@ import { SZWidgetValue, TimeWidgetValue } from '../../common/types/basicWidgets'
 import { useSlowZoneCalculations } from '../../common/utils/slowZoneUtils';
 import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
 import { TotalSlowTime } from './charts/TotalSlowTime';
+import { TimeRange } from '../dashboard/LineHealth';
+import { DATE_FORMAT } from '../../common/constants/dates';
 
-export default function SlowZonesWidget() {
+interface SlowZonesWidgetProps {
+  timeRange: TimeRange;
+}
+
+const today = dayjs();
+const endDate = today.format(DATE_FORMAT);
+const rangeToParams = {
+  week: {
+    endDate: endDate,
+    startDate: today.subtract(6, 'days'),
+    comparisonStartDate: today.subtract(13, 'days').format(DATE_FORMAT),
+    tooltipFormat: 'MMM d, yyyy',
+    unit: 'day',
+  },
+  month: {
+    endDate: endDate,
+    startDate: today.subtract(30, 'days'),
+    comparisonStartDate: today.subtract(60, 'days').format(DATE_FORMAT),
+    tooltipFormat: 'MMM d, yyyy',
+    unit: 'day',
+  },
+  year: {
+    endDate: endDate,
+    startDate: today.subtract(1, 'years'),
+    comparisonStartDate: today.subtract(2, 'years').format(DATE_FORMAT),
+    tooltipFormat: 'MMM d, yyyy',
+    unit: 'month',
+  },
+  all: {
+    endDate: endDate,
+    startDate: dayjs('2016-01-01'),
+    comparisonStartDate: today.subtract(2, 'years').format(DATE_FORMAT), // TODO: better comparison for all times (?)
+    tooltipFormat: 'MMM yyyy',
+    unit: 'year',
+  },
+};
+
+export const SlowZonesWidget: React.FC<SlowZonesWidgetProps> = ({ timeRange }) => {
   const { line, linePath, lineShort } = useDelimitatedRoute();
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
   const allSlow = useQuery(['allSlow'], fetchAllSlow);
+  const { startDate, endDate, comparisonStartDate } = rangeToParams[timeRange];
 
   const formattedTotals = useMemo(
     () =>
-      delayTotals.data && delayTotals.data.filter((t) => new Date(t.date) > new Date(2022, 0, 1)),
-    [delayTotals.data]
+      delayTotals.data &&
+      delayTotals.data.filter((t) => {
+        return dayjs(t.date).isAfter(startDate);
+      }),
+    [delayTotals.data, startDate]
   );
-
-  const { current, lastWeek, totalDelay, totalDelayLasteek } = useSlowZoneCalculations({
+  const { current, totalDelay } = useSlowZoneCalculations({
     lineShort,
     allSlow: allSlow.data,
     formattedTotals,
   });
-
-  if (delayTotals.isLoading || allSlow.isLoading || !line) {
-    return <>Loading ... teehee</>;
-  }
 
   if (delayTotals.isError || allSlow.isError) {
     return <>Uh oh... error</>;
@@ -47,12 +85,12 @@ export default function SlowZonesWidget() {
         <div className={classNames('flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Total Delay"
-            widgetValue={new TimeWidgetValue(totalDelay, totalDelay - totalDelayLasteek)}
+            widgetValue={new TimeWidgetValue(0, 0)}
             analysis={`from last ${dayjs().format('ddd')}.`}
           />
           <BasicWidgetDataLayout
             title="# Slow Zones"
-            widgetValue={new SZWidgetValue(current, current && lastWeek ? current - lastWeek : 0)}
+            widgetValue={new SZWidgetValue(0, 0)}
             analysis={`from last ${dayjs().format('ddd')}.`}
           />
         </div>
@@ -62,4 +100,4 @@ export default function SlowZonesWidget() {
       </div>
     </>
   );
-}
+};

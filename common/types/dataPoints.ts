@@ -1,4 +1,4 @@
-import type { LineShort } from './lines';
+import type { Line, LineShort } from './lines';
 
 export interface DataPoint {
   route_id: string;
@@ -68,3 +68,17 @@ export type SlowZoneResponse = {
   fr_id: string;
   to_id: string;
 };
+
+export interface MedianTraversalTime {
+  count: number;
+  date: string;
+  line: Line;
+  value: number;
+}
+
+export interface SpeedMetric {
+  line: Line;
+  stat: string;
+  last_updated: string;
+  value: number;
+}
