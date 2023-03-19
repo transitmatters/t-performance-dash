@@ -3,7 +3,7 @@ import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { DwellsWidget } from '../dwells/DwellsWidget';
 import { HeadwaysWidget } from '../headways/HeadwaysWidget';
 import { RidershipWidget } from '../ridership/RidershipWidget';
-import { SlowZonesWidget } from '../slowzones/SlowZonesWidget';
+import SlowZonesWidget from '../slowzones/SlowZonesWidget';
 import { DelaysWidget } from '../speed/DelaysWidget';
 import { TravelTimesWidget } from '../traveltimes/TravelTimesWidget';
 
