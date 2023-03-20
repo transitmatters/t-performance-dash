@@ -20,6 +20,8 @@
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.7",
     "fast-memoize": "^2.5.2",
+    "flowbite": "^1.6.4",
+    "flowbite-react": "^0.4.2",
     "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.7.2",
     "next": "13.1.6",

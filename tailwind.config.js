@@ -6,6 +6,7 @@ module.exports = {
     './common/**/*.{js,ts,jsx,tsx}',
     './modules/**/*.{js,ts,jsx,tsx}',
     './node_modules/react-tailwindcss-datepicker/dist/index.esm.js',
+    'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}',
   ],
   safelist: [
     {
@@ -70,5 +71,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [require('@tailwindcss/forms'), require('flowbite/plugin')],
 };
