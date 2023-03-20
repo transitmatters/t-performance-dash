@@ -2,15 +2,16 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import classNames from 'classnames';
-import { SingleDayAPIParams } from '../../common/types/api';
+import { QueryNameKeys } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
-import { useCustomQueries } from '../../common/api/datadashboard';
+import { fetchSingleDayData } from '../../common/api/datadashboard';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
+import { useQuery } from '@tanstack/react-query';
 
 export const TravelTimesWidget: React.FC = () => {
   const {
@@ -24,17 +25,14 @@ export const TravelTimesWidget: React.FC = () => {
   const fromStation = stations?.[3];
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
-
-  const { traveltimes } = useCustomQueries(
-    {
-      [SingleDayAPIParams.fromStop]: fromStopIds,
-      [SingleDayAPIParams.toStop]: toStopIds,
-      [SingleDayAPIParams.stop]: fromStopIds,
-      [SingleDayAPIParams.date]: startDate,
-    },
-    false,
-    startDate !== undefined && fromStopIds !== null && toStopIds !== null
+  const traveltimes = useQuery([QueryNameKeys.traveltimes, fromStopIds, toStopIds, startDate], () =>
+    fetchSingleDayData(QueryNameKeys.traveltimes, {
+      date: startDate,
+      from_stop: fromStopIds,
+      to_stop: toStopIds,
+    })
   );
+  const travelTimeValues = traveltimes?.data?.map((tt) => tt.travel_time_sec);
 
   if (traveltimes.isError || !linePath) {
     return <>Uh oh... error</>;
@@ -50,7 +48,7 @@ export const TravelTimesWidget: React.FC = () => {
             title="Avg. Travel Time"
             widgetValue={
               new TimeWidgetValue(
-                traveltimes.data ? averageTravelTime(traveltimes.data) : undefined,
+                travelTimeValues ? averageTravelTime(travelTimeValues) : undefined,
                 100
               )
             }
@@ -60,7 +58,7 @@ export const TravelTimesWidget: React.FC = () => {
             title="Round Trip"
             widgetValue={
               new TimeWidgetValue(
-                traveltimes.data ? averageTravelTime(traveltimes.data) * 2 : undefined, //TODO: Show real time for a round trip
+                travelTimeValues ? averageTravelTime(travelTimeValues) * 2 : undefined, //TODO: Show real time for a round trip
                 1200
               )
             }
