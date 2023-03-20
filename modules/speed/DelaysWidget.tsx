@@ -45,8 +45,8 @@ export const DelaysWidget: React.FC<DelaysWidgetProps> = ({ timeRange }) => {
     if (medianTravelTimes.data == undefined || compTravelTimes.data == undefined) {
       return { average: undefined, delta: undefined };
     }
-    const values = medianTravelTimes.data.map((datapoint) => datapoint.value / min - 1);
-    const compValues = compTravelTimes.data.map((datapoint) => datapoint.value / min - 1);
+    const values = medianTravelTimes.data.map((datapoint) => min / datapoint.value);
+    const compValues = compTravelTimes.data.map((datapoint) => min / datapoint.value);
     const average = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
     const compAverage = compValues?.reduce((a, b) => a + b, 0) / compValues?.length;
     const delta = average - compAverage;
@@ -59,9 +59,10 @@ export const DelaysWidget: React.FC<DelaysWidgetProps> = ({ timeRange }) => {
         <HomescreenWidgetTitle title="Travel Times" href={`/${linePath}/traveltimes`} />
         <div className={classNames('space-between flex w-full flex-row')}>
           <BasicWidgetDataLayout
-            title="Average Delay"
+            title="Average Speed"
             widgetValue={new PercentageWidgetValue(average ?? undefined, delta)}
             analysis={`from prev. ${timeRange}`}
+            sentimentDirection={'positiveOnIncrease'}
           />
           <BasicWidgetDataLayout
             title="TBD"

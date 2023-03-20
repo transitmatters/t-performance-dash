@@ -98,7 +98,7 @@ export class PercentageWidgetValue implements WidgetValueInterface {
 
   getFormattedDelta() {
     if (this.delta === undefined) return '...';
-    return `${this.delta >= 0 ? '+' : '-'}${Math.round(100 * this.delta).toString()}%`;
+    return `${this.delta >= 0 ? '+' : ''}${Math.round(100 * this.delta).toString()}%`;
   }
 }
 

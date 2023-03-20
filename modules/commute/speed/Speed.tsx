@@ -22,7 +22,7 @@ export const Speed: React.FC = () => {
   return (
     <div
       className={classNames(
-        'w-full items-center justify-center rounded-lg p-4 text-center xl:w-1/2',
+        'items-center justify-center rounded-lg p-4 text-center',
         lineColorBackground[line ?? 'DEFAULT']
       )}
     >

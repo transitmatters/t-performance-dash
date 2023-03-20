@@ -68,7 +68,7 @@ export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
               pointBorderWidth: 0,
               pointHoverRadius: 3,
               pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
-              data: data.map((datapoint) => Math.round((100 * datapoint.value) / min - 100)),
+              data: data.map((datapoint) => Math.round((100 * min) / datapoint.value)),
             },
           ],
         }}
@@ -155,7 +155,7 @@ export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
                 ctx.fillText('No data to display', width / 2, height / 2);
                 ctx.restore();
               }
-              drawPlainTitle(`Delay compared to peak speed`, chart);
+              drawPlainTitle(`Speed compared to peak`, chart);
             },
           },
         ]}
