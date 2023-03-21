@@ -14,7 +14,7 @@ export const CurrentTime: React.FC<TimeProps> = ({ times }) => {
   const now = dayjs();
   const timeStrings = times.map((time) => {
     if (time.end == null) {
-      return 'Indefinitely';
+      return 'Ongoing';
     }
     const startTime = dayjs(time.start);
     const endTime = dayjs(time.end);

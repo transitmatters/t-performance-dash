@@ -5,16 +5,17 @@ import { Tooltip } from 'flowbite-react';
 
 interface InfoTooltipProps {
   info: string;
+  size?: number;
 }
 
-export const InfoTooltip: React.FC<InfoTooltipProps> = ({ info }) => {
+export const InfoTooltip: React.FC<InfoTooltipProps> = ({ info, size = 6 }) => {
   const textComponent = <p className="max-w-xs">{info}</p>;
   return (
     <Tooltip content={textComponent}>
       <FontAwesomeIcon
         icon={faCircleInfo}
         size={'sm'}
-        className={'m-0 mr-1 h-6 w-6 rounded-sm text-white'}
+        className={`h-${size} w-${size} rounded-sm text-white`}
       />
     </Tooltip>
   );

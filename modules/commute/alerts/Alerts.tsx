@@ -27,7 +27,7 @@ export const Alerts: React.FC = () => {
 
   return (
     <div className={divStyle}>
-      <h3 className="w-full text-2xl font-bold md:w-auto">Alerts</h3>
+      <h3 className="w-full text-2xl font-semibold md:w-auto">Alerts</h3>
       <div className="flex w-full flex-row gap-x-4 overflow-x-scroll pb-2 md:flex-col md:gap-x-0 md:overflow-x-auto">
         <div className="md:w-full">
           <Divider title="Today" line={line} />

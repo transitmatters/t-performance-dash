@@ -2,8 +2,9 @@ import React from 'react';
 import classNames from 'classnames';
 import type { WidgetValueInterface } from '../../../types/basicWidgets';
 import { LoadingSpinner } from '../../graphics/LoadingSpinner';
+import { Delta } from './Delta';
 
-type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';
+export type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';
 
 export type BasicWidgetDataLayoutProps = {
   title: string;
@@ -18,33 +19,6 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
   widgetValue,
   sentimentDirection = 'negativeOnIncrease',
 }) => {
-  const getDelta = () => {
-    const deltaValue = widgetValue.getFormattedDelta();
-    const increase = widgetValue.delta ? widgetValue.delta > 0 : false;
-    const positiveSentiment =
-      (!increase && sentimentDirection === 'negativeOnIncrease') ||
-      (increase && sentimentDirection === 'positiveOnIncrease');
-    const bgColor = positiveSentiment ? 'bg-green-100' : 'bg-red-100';
-    const textColor = positiveSentiment ? 'text-green-800' : 'text-red-800';
-    return (
-      <div
-        className={classNames(
-          'mt-1 flex flex-row rounded-full px-2',
-          widgetValue.delta ? bgColor : 'bg-gray-100'
-        )}
-      >
-        <p
-          className={classNames(
-            'text-xs sm:text-sm',
-            widgetValue.delta ? textColor : 'text-rb-800'
-          )}
-        >
-          {deltaValue}
-        </p>
-      </div>
-    );
-  };
-
   return (
     <>
       <div className={classNames('relative flex flex-1 bg-white')}>
@@ -57,8 +31,8 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
             </p>
             <p className="text-base text-design-subtitleGrey">{widgetValue.getUnits()}</p>
           </div>
-          <div className="flex flex-row items-baseline gap-x-1">
-            {getDelta()}
+          <div className="mt-1 flex flex-row items-baseline gap-x-1">
+            <Delta widgetValue={widgetValue} sentimentDirection={sentimentDirection} />
             <p className={classNames('text-xs text-design-subtitleGrey sm:text-sm')}>{analysis}</p>
           </div>
         </div>

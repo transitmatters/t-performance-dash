@@ -16,7 +16,12 @@ import { enUS } from 'date-fns/locale';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
-import { DELAYS_RANGE_PARAMS_MAP, MINIMUMS } from './constants/delays';
+import {
+  CORE_TRACK_LENGTHS,
+  DELAYS_RANGE_PARAMS_MAP,
+  MINIMUMS,
+  PEAK_MPH,
+} from './constants/delays';
 import { MedianTraversalTime } from '../../common/types/dataPoints';
 import { TimeRange, TimeRangeNames } from '../../common/types/inputs';
 import { drawPlainTitle } from '../../common/components/charts/Title';
@@ -40,7 +45,7 @@ interface DelaysProps {
 
 // TODO: memoize this shit
 export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
-  const { line, lineShort } = useDelimitatedRoute();
+  const { line } = useDelimitatedRoute();
   const { tooltipFormat, unit, startDate, endDate, callbacks } = DELAYS_RANGE_PARAMS_MAP[timeRange];
   const ref = useRef();
 
@@ -57,18 +62,16 @@ export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
           labels,
           datasets: [
             {
-              label: `Percent`,
-              borderColor: 'transparent',
+              label: `MPH`,
+              borderColor: LINE_COLORS[line ?? 'default'],
               pointRadius: 8,
               pointBackgroundColor: 'transparent',
-              fill: {
-                target: 'origin',
-                above: LINE_COLORS[line ?? 'default'],
-              },
               pointBorderWidth: 0,
               pointHoverRadius: 3,
               pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
-              data: data.map((datapoint) => Math.round((100 * min) / datapoint.value)),
+              data: data.map((datapoint) =>
+                (CORE_TRACK_LENGTHS[line ?? 'DEFAULT'] / (datapoint.value / 3600)).toFixed(1)
+              ),
             },
           ],
         }}
@@ -101,14 +104,14 @@ export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
           scales: {
             y: {
               suggestedMin: 0,
-              suggestedMax: 100,
+              suggestedMax: PEAK_MPH[line ?? 'DEFAULT'],
               display: true,
               ticks: {
                 color: COLORS.design.subtitleGrey,
               },
               title: {
                 display: true,
-                text: 'Percent',
+                text: 'mph',
                 color: COLORS.design.subtitleGrey,
               },
             },
@@ -155,7 +158,7 @@ export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
                 ctx.fillText('No data to display', width / 2, height / 2);
                 ctx.restore();
               }
-              drawPlainTitle(`Speed compared to peak`, chart);
+              drawPlainTitle(`Speed`, chart);
             },
           },
         ]}

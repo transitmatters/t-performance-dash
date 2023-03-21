@@ -70,3 +70,19 @@ export const MINIMUMS = {
   OL: 3776.75,
   DEFAULT: 1,
 };
+
+// As per MBTA Blue book: https://archives.lib.state.ma.us/handle/2452/827917 2003-2004
+
+export const CORE_TRACK_LENGTHS = {
+  RL: 14.82 + 14.82 + 10.13 + 10.13, // Quincy Adams -> Davis + reverse + Shawmut -> Davis + reverse
+  OL: 9.64 + 9.58, // Malden Station -> Green Street + Green Street -> Malden Station
+  BL: 5.38 + 5.37, //Gov. Center -> Revere + Reverse
+  DEFAULT: 1,
+};
+
+export const PEAK_MPH = {
+  RL: CORE_TRACK_LENGTHS['RL'] / (MINIMUMS['RL'] / 3600),
+  OL: CORE_TRACK_LENGTHS['OL'] / (MINIMUMS['OL'] / 3600),
+  BL: CORE_TRACK_LENGTHS['BL'] / (MINIMUMS['BL'] / 3600),
+  DEFAULT: 1,
+};
