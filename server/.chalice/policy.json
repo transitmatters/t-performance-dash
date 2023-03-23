@@ -17,9 +17,14 @@
       "Resource": ["arn:aws:s3:::tm-mbta-performance/*"]
     },
     {
-      "Action": ["dynamodb:GetItem", "dynamodb:UpdateItem", "dynamodb:BatchGetItem", "dynamodb:Query"],
+      "Action": ["dynamodb:Query"],
       "Effect": "Allow",
-      "Resource": ["*"]
+      "Resource": [
+        "arn:aws:dynamodb:*:*:table/DailySpeed",
+        "arn:aws:dynamodb:*:*:table/WeeklySpeed",
+        "arn:aws:dynamodb:*:*:table/MonthlySpeed",
+        "arn:aws:dynamodb:*:*:table/DailyScheduledSpeed"
+      ]
     }
   ]
 }

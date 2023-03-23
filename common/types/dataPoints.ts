@@ -69,16 +69,15 @@ export type SlowZoneResponse = {
   to_id: string;
 };
 
-export interface MedianTraversalTime {
+export interface SpeedDataPoint {
   count: number;
   date: string;
   line: Line;
   value: number;
 }
 
-export interface SpeedMetric {
+export interface ScheduledSpeedDataPoint {
   line: Line;
-  stat: string;
-  last_updated: string;
+  date: string;
   value: number;
 }

@@ -22,7 +22,7 @@ import {
   MINIMUMS,
   PEAK_MPH,
 } from './constants/speeds';
-import { MedianTraversalTime } from '../../common/types/dataPoints';
+import { SpeedDataPoint } from '../../common/types/dataPoints';
 import { TimeRange, TimeRangeNames } from '../../common/types/inputs';
 import { drawPlainTitle } from '../../common/components/charts/Title';
 
@@ -40,7 +40,7 @@ ChartJS.register(
 
 interface SpeedGraphProps {
   timeRange: TimeRange;
-  data: MedianTraversalTime[]; //todo: type
+  data: SpeedDataPoint[];
 }
 
 export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {

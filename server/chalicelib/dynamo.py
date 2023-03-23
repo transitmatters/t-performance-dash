@@ -10,7 +10,7 @@ aggToTable = {
 }
 
 
-def query_line_travel_times(params):
+def query_speed_tables(params):
     table = dynamodb.Table(aggToTable[params['agg']])
 
     # Define the query parameters

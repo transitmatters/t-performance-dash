@@ -154,5 +154,5 @@ def get_speed():
 
 @app.route("/api/speed", cors=cors_config)
 def get_speed():
-    response = dynamo.query_line_travel_times(app.current_request.query_params)
+    response = dynamo.query_speed_tables(app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True, default=lambda x: eval(str(x)))  # The eval() converts dynamo default decimal type numbers to ints
