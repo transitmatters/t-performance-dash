@@ -6,10 +6,11 @@ import classNames from 'classnames';
 import { lineColorBackground } from '../../../common/styles/general';
 import dayjs from 'dayjs';
 import { DATE_FORMAT } from '../../../common/constants/dates';
-import { DELAYS_RANGE_PARAMS_MAP, PEAK_MPH } from '../../speed/constants/speeds';
+import { DELAYS_RANGE_PARAMS_MAP } from '../../speed/constants/speeds';
 import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { Delta } from '../../../common/components/widgets/internal/Delta';
 import { calculateCommuteSpeedWidgetValues } from './utils/utils';
+import { CompWidget } from './CompWidget';
 
 export const Speed: React.FC = () => {
   const { line } = useDelimitatedRoute();
@@ -28,11 +29,7 @@ export const Speed: React.FC = () => {
 
   const scheduledSpeed = useQuery(['scheduledSpeed', line], () => fetchScheduledSpeed(today, line));
 
-  if (speed.isError) {
-    return <p>Error</p>;
-  }
-
-  const { weeklyAverageMPH, peakWidget, schedAdherenceWidget, MPH, mphWidget } = useMemo(() => {
+  const { peakWidget, schedAdherenceWidget, MPH, mphWidget, weeklyComp, peakComp } = useMemo(() => {
     return calculateCommuteSpeedWidgetValues(
       weekly.data ?? [],
       speed.data ?? [],
@@ -40,76 +37,52 @@ export const Speed: React.FC = () => {
       scheduledSpeed.data ?? []
     );
   }, [weekly.data, speed.data, line, scheduledSpeed.data]);
+
+  const divStyle = classNames(
+    'items-center justify-center rounded-lg py-4 px-6 text-center sm:w-1/2 xl:w-1/3 text-opacity-95 text-white',
+    lineColorBackground[line ?? 'DEFAULT']
+  );
+  if (speed.isError) {
+    return <div className={divStyle}>Error</div>;
+  }
+  if (speed.isLoading) {
+    return <div className={divStyle}>Loading...</div>;
+  }
+
   return (
-    <div
-      className={classNames(
-        'items-center justify-center rounded-lg py-4 px-6 text-center sm:w-1/2 xl:w-1/3',
-        lineColorBackground[line ?? 'DEFAULT']
-      )}
-    >
+    <div className={divStyle}>
       <div className="flex flex-row items-baseline justify-between">
-        <p className="text-2xl font-semibold text-white">Speed</p>
+        <p className="text-2xl font-semibold ">Speed</p>
         <InfoTooltip
           info={`Speed is how quickly a train traverses the entire line, including time spent at stations.`}
         />
       </div>
       <div className="mt-2 flex flex-row items-baseline justify-center gap-x-1">
-        <p className={classNames('text-5xl font-semibold text-gray-100 ')}>{MPH.toFixed(1)}</p>
-        <p className="text-2xl text-gray-200">mph</p>
+        <p className={classNames('text-5xl font-semibold')}>
+          {isNaN(MPH) ? '...' : MPH.toFixed(1)}
+        </p>
+        <p className="text-2xl text-opacity-90">mph</p>
       </div>
       <div className="pt-4">
-        <div className="relative flex w-full items-center justify-center rounded-full border border-white border-opacity-50 shadow-sm">
-          <div
-            className={classNames(
-              'z-10 my-1 flex flex-row rounded-full  border border-black border-opacity-20 px-2 shadow-sm',
-              lineColorBackground[line ?? 'DEFAULT']
-            )}
-          >
-            <p className="whitespace-nowrap pr-2 text-center text-white">
-              {peakWidget.getFormattedDelta().slice(1)} of peak
-            </p>
-            <InfoTooltip
-              info={`The peak speed is the fastest recorded monthly speed (${PEAK_MPH[
-                line ?? 'default'
-              ].toFixed(1)})`}
-              size={4}
-            />
-          </div>
-          <div
-            className="absolute left-0 h-full rounded-full bg-white bg-opacity-50 shadow-md"
-            style={{ width: `${peakWidget.getFormattedDelta().slice(1)}` }}
-          ></div>
-        </div>
-        <div className="mt-2 flex flex-col gap-x-2 gap-y-2 lg:flex-row">
-          <div className="flex w-full flex-row items-baseline justify-between gap-x-1 rounded-lg border-black border-opacity-30 bg-black bg-opacity-20 px-2 py-1">
-            <div className="flex flex-row items-center">
-              <div>
-                <Delta widgetValue={mphWidget} sentimentDirection={'positiveOnIncrease'} />
-              </div>
-              <p className={classNames('pl-1 text-xs text-gray-100 sm:text-sm')}>
-                from weekly avg.
+        <div className="mt-2 flex flex-col gap-x-2 gap-y-2">
+          <CompWidget
+            value={weeklyComp}
+            text={
+              <p>
+                Than <b>7 day</b> average
               </p>
-            </div>
-            <InfoTooltip
-              info={`Current speed compared to the speed over the last 7 days`}
-              size={4}
-            />
-          </div>
-          <div className="flex  w-full flex-row items-baseline justify-between gap-x-1 rounded-lg border-black border-opacity-30 bg-black bg-opacity-20 px-2 py-1">
-            <div className="flex flex-row items-center">
-              <div>
-                <Delta
-                  widgetValue={schedAdherenceWidget}
-                  sentimentDirection={'positiveOnIncrease'}
-                />
-              </div>
-              <p className={classNames('pl-1 text-xs text-gray-100 sm:text-sm')}>from schedule</p>
-            </div>
-            <InfoTooltip
-              info={`The current speed compared to the speed the MBTA has scheduled.`}
-              size={4}
-            />
-          </div>
+            }
+            info={'This is the tooltip info'}
+          />
+          <CompWidget
+            value={peakComp}
+            text={
+              <p>
+                Than <b>system peak</b> (April 2020)
+              </p>
+            }
+            info={'This is the tooltip info'}
+          />
         </div>
       </div>
     </div>

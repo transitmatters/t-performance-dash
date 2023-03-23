@@ -25,5 +25,18 @@ export const calculateCommuteSpeedWidgetValues = (
     MPH - scheduledMPH ?? undefined
   );
 
-  return { weeklyAverageMPH, peakWidget, schedAdherenceWidget, MPH, mphWidget };
+  const weeklyComp = Math.round((100 * (MPH - weeklyAverageMPH)) / weeklyAverageMPH);
+  const peakComp = Math.round(
+    (100 * (MPH - PEAK_MPH[line ?? 'DEFAULT'])) / PEAK_MPH[line ?? 'DEFAULT']
+  );
+
+  return {
+    weeklyAverageMPH,
+    peakWidget,
+    schedAdherenceWidget,
+    MPH,
+    mphWidget,
+    weeklyComp,
+    peakComp,
+  };
 };
