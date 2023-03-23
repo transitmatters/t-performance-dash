@@ -65,7 +65,7 @@ export const StationSelector: React.FC<StationSelector> = ({
                             className={'m-0 h-2.5 w-2.5 rounded-sm bg-blue-500 p-[2px]'}
                           />
                         )}
-                        {station.pedal_park && (
+                        {station.enclosed_bike_parking && (
                           <FontAwesomeIcon
                             icon={faBicycle}
                             size={'sm'}
