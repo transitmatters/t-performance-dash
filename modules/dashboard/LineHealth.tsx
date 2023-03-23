@@ -6,7 +6,7 @@ import { DwellsWidget } from '../dwells/DwellsWidget';
 import { HeadwaysWidget } from '../headways/HeadwaysWidget';
 import { RidershipWidget } from '../ridership/RidershipWidget';
 import SlowZonesWidget from '../slowzones/SlowZonesWidget';
-import { DelaysWidget } from '../speed/DelaysWidget';
+import { SpeedWidget } from '../speed/SpeedWidget';
 import { TravelTimesWidget } from '../traveltimes/TravelTimesWidget';
 
 export const LineHealth = () => {
@@ -20,7 +20,7 @@ export const LineHealth = () => {
       </div>
       <hr className="my-2 h-[2px] border-0 border-b border-white bg-gray-400" />
       <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
-        <DelaysWidget timeRange={timeRange} />
+        <SpeedWidget timeRange={timeRange} />
         <SlowZonesWidget />
         <TravelTimesWidget />
         <HeadwaysWidget />

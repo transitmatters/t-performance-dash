@@ -4,14 +4,13 @@ import boto3
 dynamodb = boto3.resource('dynamodb')
 
 aggToTable = {
-    'daily': "LineTraversalTime",
-    'weekly': "LineTraversalTimeWeekly",
-    'monthly': "LineTraversalTimeMonthly"
+    'daily': "DailySpeed",
+    'weekly': "WeeklySpeed",
+    'monthly': "MonthlySpeed"
 }
 
 
 def query_line_travel_times(params):
-    # Get a reference to the LineTraversalTime table
     table = dynamodb.Table(aggToTable[params['agg']])
 
     # Define the query parameters

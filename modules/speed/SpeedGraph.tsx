@@ -21,7 +21,7 @@ import {
   DELAYS_RANGE_PARAMS_MAP,
   MINIMUMS,
   PEAK_MPH,
-} from './constants/delays';
+} from './constants/speeds';
 import { MedianTraversalTime } from '../../common/types/dataPoints';
 import { TimeRange, TimeRangeNames } from '../../common/types/inputs';
 import { drawPlainTitle } from '../../common/components/charts/Title';
@@ -38,18 +38,16 @@ ChartJS.register(
   Legend
 );
 
-interface DelaysProps {
+interface SpeedGraphProps {
   timeRange: TimeRange;
   data: MedianTraversalTime[]; //todo: type
 }
 
-// TODO: memoize this shit
-export const Delays: React.FC<DelaysProps> = ({ data, timeRange }) => {
+export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {
   const { line } = useDelimitatedRoute();
   const { tooltipFormat, unit, startDate, endDate, callbacks } = DELAYS_RANGE_PARAMS_MAP[timeRange];
   const ref = useRef();
 
-  const min = MINIMUMS[line ?? 'DEFAULT'];
   const labels = data.map((point) => point.date);
   return (
     <div>
