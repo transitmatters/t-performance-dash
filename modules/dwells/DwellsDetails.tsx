@@ -1,6 +1,7 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
+import { useQuery } from '@tanstack/react-query';
 import { fetchSingleDayData } from '../../common/api/datadashboard';
 import { QueryNameKeys } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
@@ -9,8 +10,8 @@ import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWi
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
+import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
-import { useQuery } from '@tanstack/react-query';
 
 export default function DwellsDetails() {
   const {
@@ -19,8 +20,9 @@ export default function DwellsDetails() {
   } = useDelimitatedRoute();
 
   const stations = optionsStation(lineShort);
-  const toStation = stations?.[stations.length - 3];
-  const fromStation = stations?.[3];
+
+  const [toStation, setToStation] = useState(stations?.[stations.length - 3]);
+  const [fromStation, setFromStation] = useState(stations?.[3]);
 
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
 
@@ -34,6 +36,14 @@ export default function DwellsDetails() {
 
   return (
     <>
+      {fromStation && toStation ? (
+        <StationSelectorWidget
+          fromStation={fromStation}
+          toStation={toStation}
+          setFromStation={setFromStation}
+          setToStation={setToStation}
+        />
+      ) : null}
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Average Dwell"

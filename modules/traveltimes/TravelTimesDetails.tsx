@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
-import classNames from 'classnames';
 import { useQuery } from '@tanstack/react-query';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadashboard';
@@ -13,7 +12,7 @@ import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWi
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
-import { StationSelector } from '../../common/components/inputs/StationSelector';
+import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
@@ -74,26 +73,13 @@ export default function TravelTimesDetails() {
 
   return (
     <>
-      {/* TODO Move station Selector pair */}
       {fromStation && toStation ? (
-        <div
-          className={classNames(
-            'w-1/2 rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox sm:w-auto sm:p-4'
-          )}
-        >
-          <StationSelector
-            type={'from'}
-            fromStation={fromStation}
-            toStation={toStation}
-            setStation={setFromStation}
-          />
-          <StationSelector
-            type={'to'}
-            fromStation={fromStation}
-            toStation={toStation}
-            setStation={setToStation}
-          />
-        </div>
+        <StationSelectorWidget
+          fromStation={fromStation}
+          toStation={toStation}
+          setFromStation={setFromStation}
+          setToStation={setToStation}
+        />
       ) : null}
       <BasicDataWidgetPair>
         <BasicDataWidgetItem

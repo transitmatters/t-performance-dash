@@ -2,6 +2,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
+import { useQuery } from '@tanstack/react-query';
 import { QueryNameKeys } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { fetchSingleDayData } from '../../common/api/datadashboard';
@@ -11,7 +12,6 @@ import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
-import { useQuery } from '@tanstack/react-query';
 
 export const HeadwaysWidget: React.FC = () => {
   const {
