@@ -2,8 +2,8 @@
 
 import React from 'react';
 import dayjs from 'dayjs';
-import { useCustomQueries } from '../../common/api/datadashboard';
-import { SingleDayAPIParams } from '../../common/types/api';
+import { fetchSingleDayData } from '../../common/api/datadashboard';
+import { QueryNameKeys } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
@@ -12,43 +12,21 @@ import { averageHeadway, longestHeadway } from '../../common/utils/headways';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 import { HeadwaysHistogram } from './charts/HeadwaysHistogram';
+import { useQuery } from '@tanstack/react-query';
 
 export default function HeadwaysDetails() {
   const {
     lineShort,
-    query: { startDate, busLine },
+    query: { startDate, busRoute },
   } = useDelimitatedRoute();
 
-  const stations = optionsStation(lineShort, busLine);
+  const stations = optionsStation(lineShort, busRoute);
   const toStation = stations?.[stations.length - 3];
   const fromStation = stations?.[3];
 
-  const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
-  const { fromStopIds: fromStopIdsNorth, toStopIds: toStopIdsNorth } = stopIdsForStations(
-    toStation,
-    fromStation
-  );
-
-  const { headways } = useCustomQueries(
-    {
-      [SingleDayAPIParams.fromStop]: fromStopIds,
-      [SingleDayAPIParams.toStop]: toStopIds,
-      [SingleDayAPIParams.stop]: fromStopIds,
-      [SingleDayAPIParams.date]: startDate,
-    },
-    false,
-    startDate !== undefined && fromStopIds !== null && toStopIds !== null
-  );
-
-  const { headways: headwaysReversed } = useCustomQueries(
-    {
-      [SingleDayAPIParams.fromStop]: fromStopIdsNorth,
-      [SingleDayAPIParams.toStop]: toStopIdsNorth,
-      [SingleDayAPIParams.stop]: fromStopIdsNorth,
-      [SingleDayAPIParams.date]: startDate,
-    },
-    false,
-    startDate !== undefined && fromStopIdsNorth !== null && toStopIdsNorth !== null
+  const { fromStopIds } = stopIdsForStations(fromStation, toStation);
+  const headways = useQuery([fromStopIds, startDate], () =>
+    fetchSingleDayData(QueryNameKeys.headways, { date: startDate, stop: fromStopIds })
   );
 
   if (headways.isError) {
@@ -79,13 +57,7 @@ export default function HeadwaysDetails() {
       <div className="flex w-full flex-row items-center justify-between text-lg">
         <h3>Return Trip</h3>
       </div>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
-        <HeadwaysSingleChart
-          headways={headwaysReversed}
-          fromStation={toStation}
-          toStation={fromStation}
-        />
-      </div>
+
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
         <HeadwaysHistogram headways={headways} fromStation={toStation} toStation={fromStation} />
       </div>
