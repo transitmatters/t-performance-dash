@@ -6,9 +6,9 @@ import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { drawTitle } from '../../../common/components/charts/Title';
-import { MetricFieldKeys } from '../../../src/charts/types';
 import { locationDetails } from '../../../common/utils/stations';
 import type { HeadwaysChartProps } from '../../../common/types/charts';
+import { MetricFieldKeys } from '../../../common/types/charts';
 import type { HeadwayPoint } from '../../../common/types/dataPoints';
 
 ChartJS.register(BarController, BarElement, LinearScale, Title, Tooltip);

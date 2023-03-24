@@ -58,7 +58,6 @@ module.exports = {
     },
   },
   overrides: [
-    // TODO: Remove exceptions for src after v4 is done
     {
       files: ['app/**/*.tsx'],
       rules: {
