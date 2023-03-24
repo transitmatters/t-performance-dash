@@ -14,8 +14,9 @@ import { TphChart } from './charts/TphChart';
 export const RidershipWidget: React.FC = () => {
   const allRidership = useRidershipData();
 
-  const { line, linePath, lineShort } = useDelimitatedRoute();
-  const lineData = allRidership.data?.lineData[`line-${lineShort}`];
+  const { line, linePath, lineShort, query } = useDelimitatedRoute();
+  const routeOrLine = line === 'BUS' ? query.busRoute : lineShort;
+  const lineData = allRidership.data?.lineData[`line-${routeOrLine}`];
 
   const color = LINE_COLORS[line ?? 'default'];
   const [serviceDay, setServiceDay] = useState<ServiceDay>('weekday');
