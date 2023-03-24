@@ -26,7 +26,7 @@ export interface AlertsResponse {
   id: string;
   type: AlertEffect;
   active_period: AlertTime[];
-  stops: number[];
+  stops: string[];
   routes?: string[];
   header: string;
 }

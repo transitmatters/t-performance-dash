@@ -7,6 +7,7 @@ export const getEndStations = (stations: Station[]) => {
   let max = stations[0];
 
   stations.forEach((station) => {
+    if (station.station === 'place-jfk') station.stop_name = 'JFK/UMass'; // Sub out branch names of JFK
     if (station.order < min.order) {
       min = station;
     }
