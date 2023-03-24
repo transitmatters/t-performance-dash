@@ -17,7 +17,7 @@ export interface FormattedAlert {
   type: AlertEffect;
   active_period: AlertTime[];
   relevantTimes: AlertTime[];
-  stops: number[];
+  stops: string[];
   routes?: string[];
   header: string;
 }

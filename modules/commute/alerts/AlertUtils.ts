@@ -1,18 +1,28 @@
 import { stations } from '../../../common/constants/stations';
 import type { BusRoute, LineShort } from '../../../common/types/lines';
+import type { Station } from '../../../common/types/stations';
 
-export const getStop = (stopId: number, routeOrLine: LineShort | BusRoute) => {
-  // TODO: Bus stops in alerts don't match values in stations.json.
+export const getEndStations = (stations: Station[]) => {
+  let min = stations[0];
+  let max = stations[0];
+
+  stations.forEach((station) => {
+    if (station.order < min.order) {
+      min = station;
+    }
+    if (station.order > max.order) {
+      max = station;
+    }
+  });
+  return { min, max };
+};
+
+export const getStations = (stops: string[], routeOrLine: LineShort | BusRoute) => {
   const station = stations[routeOrLine] ?? stations['Bus'][routeOrLine];
 
-  const stop = station.stations.find(
-    (station) =>
-      station.stops[0].includes(stopId.toString()) || station.stops[1].includes(stopId.toString())
-  );
-  // Convert JFK/UMass (Asmont) and JFK/UMass (Braintree) to just JFK/UMass
-  if (stop && stop.station === 'place-jfk') {
-    return 'JFK/UMass';
-  } else {
-    return stop?.stop_name;
-  }
+  const stop_objects = stops.map((stop) => {
+    return station.stations.find((station: { station: string }) => station.station === stop);
+  });
+
+  return getEndStations(stop_objects);
 };
