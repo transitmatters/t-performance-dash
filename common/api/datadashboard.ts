@@ -2,7 +2,7 @@ import type { PartialAggregateAPIOptions, PartialSingleDayAPIOptions } from '../
 import { QueryNameKeys } from '../types/api';
 import { APP_DATA_BASE_PATH } from '../../common/utils/constants';
 import { getCurrentDate } from '../utils/date';
-import type { SingleDayDataPoint } from '../types/charts';
+import type { AggregateDataResponse, SingleDayDataPoint } from '../types/charts';
 
 // Fetch data for all single day charts.
 export const fetchSingleDayData = async (
