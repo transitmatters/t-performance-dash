@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { LINE_OBJECTS } from '../../common/constants/lines';
-import { Button } from '../../common/components/inputs/Button';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { DataPageTabs } from '../navigation/desktop/DataPageTabs';
 import { DateSelector } from '../../common/components/inputs/DateSelector';
+import { RangeButton } from '../../common/components/inputs/RangeButton';
 
 export const DataPageHeader = () => {
   const isDesktop = useBreakpoint('lg');
@@ -30,9 +30,9 @@ export const DataPageHeader = () => {
         </h3>
         <div className="mt-3 flex md:absolute md:top-3 md:right-0 md:mt-0">
           {isDesktop && (
-            <div className="mt-4 flex flex-row gap-x-2 md:mt-0 md:ml-4">
+            <div className="mt-4 flex flex-row gap-x-1 md:mt-0 md:ml-4">
               <DateSelector range={range} />
-              <Button content={range ? '🅧' : 'Range'} onClick={() => setRange(!range)} />
+              <RangeButton range={range} setRange={setRange} />
             </div>
           )}
         </div>
