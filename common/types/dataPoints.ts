@@ -75,9 +75,3 @@ export interface SpeedDataPoint {
   line: Line;
   value: number;
 }
-
-export interface ScheduledSpeedDataPoint {
-  line: Line;
-  date: string;
-  value: number;
-}
