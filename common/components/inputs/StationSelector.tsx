@@ -2,10 +2,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Listbox, Transition } from '@headlessui/react';
 import React, { Fragment } from 'react';
 import { faBicycle, faWheelchair } from '@fortawesome/free-solid-svg-icons';
+import { capitalize } from 'lodash';
+import classNames from 'classnames';
 import type { Station } from '../../types/stations';
 import { useDelimitatedRoute } from '../../utils/router';
 import { optionsForField } from '../../utils/stations';
 import { selectConfig } from './styles/tailwind';
+import { buttonHighlightConfig } from './styles/inputStyle';
 
 interface StationSelector {
   type: 'from' | 'to';
@@ -20,18 +23,40 @@ export const StationSelector: React.FC<StationSelector> = ({
   toStation,
   setStation,
 }) => {
-  const { linePath, lineShort } = useDelimitatedRoute();
+  const { line, linePath, lineShort } = useDelimitatedRoute();
 
   const station = type === 'from' ? fromStation : toStation;
 
-  const stationOptions = optionsForField(type, lineShort, toStation, fromStation);
+  const stationOptions = optionsForField(type, lineShort, fromStation, toStation);
 
   return (
-    <div className="">
+    <div className="w-full">
       <Listbox value={station} onChange={setStation}>
-        <div className="relative mt-1">
-          <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-            <span className="block truncate">{station.stop_name}</span>
+        <div className="relative">
+          <Listbox.Button
+            className={classNames(
+              'inline-flex h-8 w-full items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2  focus:ring-offset-2',
+              line && buttonHighlightConfig[line]
+            )}
+          >
+            <span className={`flex items-center gap-x-1 truncate font-normal`}>
+              <span className={`font-medium`}>{capitalize(type)}: </span>
+              {station.stop_name}
+              {station.accessible && (
+                <FontAwesomeIcon
+                  icon={faWheelchair}
+                  size={'sm'}
+                  className={'m-0 h-2.5 w-2.5 rounded-sm bg-blue-500 p-[2px]'}
+                />
+              )}
+              {station.enclosed_bike_parking && (
+                <FontAwesomeIcon
+                  icon={faBicycle}
+                  size={'sm'}
+                  className={'m-0 h-2.5 w-2.5 rounded-sm bg-green-400 p-[2px]'}
+                />
+              )}
+            </span>
           </Listbox.Button>
           <Transition
             as={Fragment}

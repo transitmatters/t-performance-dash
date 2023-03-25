@@ -15,12 +15,12 @@ export const optionsForField = (
     return optionsStation(line)?.filter((entry) => entry !== toStation);
   }
   if (type === 'to') {
-    return optionsStation(line)?.filter((value) => {
-      if (value === fromStation) {
+    return optionsStation(line)?.filter((entry) => {
+      if (entry === fromStation) {
         return false;
       }
-      if (fromStation && fromStation.branches && value.branches) {
-        return value.branches.some((entryBranch) => fromStation.branches?.includes(entryBranch));
+      if (fromStation && fromStation.branches && entry.branches) {
+        return entry.branches.some((entryBranch) => fromStation.branches?.includes(entryBranch));
       }
       return true;
     });

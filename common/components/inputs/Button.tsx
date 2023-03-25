@@ -8,10 +8,10 @@ interface ButtonProps
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
-  text: string;
+  content: string | React.ReactNode;
 }
 
-export const Button: React.FC<ButtonProps> = ({ text, ...props }) => {
+export const Button: React.FC<ButtonProps> = ({ content, ...props }) => {
   const route = useDelimitatedRoute();
 
   return (
@@ -23,7 +23,7 @@ export const Button: React.FC<ButtonProps> = ({ text, ...props }) => {
       )}
       {...props}
     >
-      {text}
+      {content}
     </button>
   );
 };
