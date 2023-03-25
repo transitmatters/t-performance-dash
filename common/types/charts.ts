@@ -32,6 +32,11 @@ export interface AggregateDataPoint {
   peak?: string;
 }
 
+export interface AggregateDataResponse {
+  by_date: AggregateDataPoint[];
+  by_time?: AggregateDataPoint[];
+}
+
 export interface Location {
   to: string;
   from: string;

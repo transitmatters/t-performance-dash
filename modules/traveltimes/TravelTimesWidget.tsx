@@ -2,6 +2,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import classNames from 'classnames';
+import { useQuery } from '@tanstack/react-query';
 import { QueryNameKeys } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { fetchSingleDayData } from '../../common/api/datadashboard';
@@ -11,7 +12,6 @@ import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
-import { useQuery } from '@tanstack/react-query';
 
 export const TravelTimesWidget: React.FC = () => {
   const {

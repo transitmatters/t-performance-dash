@@ -2,11 +2,11 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import React, { useMemo } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
+import type { AggregateDataResponse } from '../../../common/types/charts';
 import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { locationDetails } from '../../../common/utils/stations';
-import type { AggregateDataResponse } from '../../../src/charts/types';
 
 interface TravelTimesAggregateChartProps {
   traveltimes: UseQueryResult<AggregateDataResponse>;
