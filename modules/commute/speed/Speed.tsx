@@ -66,7 +66,6 @@ export const Speed: React.FC = () => {
                 Than <b>7 day</b> average
               </p>
             }
-            info={'This is the tooltip info'}
           />
           <CompWidget
             value={peakComp}
@@ -75,7 +74,6 @@ export const Speed: React.FC = () => {
                 Than <b>system peak</b> (April 2020)
               </p>
             }
-            info={'This is the tooltip info'}
           />
         </div>
       </div>
