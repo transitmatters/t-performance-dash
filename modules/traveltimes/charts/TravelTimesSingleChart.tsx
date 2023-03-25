@@ -1,11 +1,11 @@
 import type { UseQueryResult } from '@tanstack/react-query';
 import React, { useMemo } from 'react';
 import { SingleDayLineChart } from '../../../common/components/charts/SingleDayLineChart';
+import type { SingleDayDataPoint } from '../../../common/types/charts';
+import { BenchmarkFieldKeys, PointFieldKeys, MetricFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { locationDetails } from '../../../common/utils/stations';
-import type { SingleDayDataPoint } from '../../../src/charts/types';
-import { BenchmarkFieldKeys, PointFieldKeys, MetricFieldKeys } from '../../../src/charts/types';
 
 interface TravelTimesSingleChartProps {
   traveltimes: UseQueryResult<SingleDayDataPoint[]>;
