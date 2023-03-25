@@ -37,7 +37,7 @@ export const SecondaryNavBar: React.FC = () => {
             return <DateSelector range={range} />;
           }}
         </Device>
-        <Button text={range ? '🅧' : 'Range'} onClick={() => setRange(!range)} />
+        <Button content={range ? '🅧' : 'Range'} onClick={() => setRange(!range)} />
         <Dropdown
           options={visualizationOptions}
           setValue={() => null}
