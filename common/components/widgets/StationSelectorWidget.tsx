@@ -28,7 +28,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
   };
 
   return (
-    <div className={classNames('my-2 flex flex-col items-baseline gap-1 md:flex-row')}>
+    <div className={classNames('relative my-2 flex flex-col items-center gap-1 md:flex-row')}>
       <StationSelector
         type={'from'}
         fromStation={fromStation}
@@ -42,15 +42,9 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
         toStation={toStation}
         setStation={setToStation}
       />
-      <Button
-        content={
-          <>
-            {'Swap'}&nbsp;
-            <FontAwesomeIcon icon={faRightLeft} />
-          </>
-        }
-        onClick={swapStations}
-      />
+      <Button onClick={swapStations}>
+        <FontAwesomeIcon icon={faRightLeft} className="h-4 w-4" />
+      </Button>
     </div>
   );
 };

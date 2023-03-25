@@ -10,6 +10,7 @@ import { optionsForField } from '../../utils/stations';
 import { selectConfig } from './styles/tailwind';
 import { buttonHighlightConfig } from './styles/inputStyle';
 import { lineColorBackground } from '../../styles/general';
+import { Button } from './Button';
 
 interface StationSelector {
   type: 'from' | 'to';
@@ -33,36 +34,14 @@ export const StationSelector: React.FC<StationSelector> = ({
   return (
     <Listbox value={station} onChange={setStation}>
       <div className="relative">
-        <Listbox.Button
-          className={classNames(
-            'focus:otline-none ufocus:ring-2 inline-flex h-8 w-full items-center rounded-md border border-black border-opacity-20 bg-opacity-10 px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50  focus:ring-offset-2',
-            line && buttonHighlightConfig[line],
-            lineColorBackground[line ?? 'DEFAULT']
-          )}
-        >
-          <span
-            className={`flex items-center gap-x-1 truncate text-xl font-semibold ${
-              mbtaTextConfig[line ?? 'DEFAULT']
-            }`}
-          >
-            {station.stop_name}
-            {station.accessible && (
-              <FontAwesomeIcon
-                title="Wheelchair accessible"
-                icon={faWheelchair}
-                size={'sm'}
-                className={'m-0 h-4 w-4 rounded-sm bg-blue-500 p-[2px] text-white'}
-              />
-            )}
-            {station.enclosed_bike_parking && (
-              <FontAwesomeIcon
-                title="Enclosed bike parking"
-                icon={faBicycle}
-                size={'sm'}
-                className={'m-0 h-4 w-4 rounded-sm bg-green-400 p-[2px] text-white'}
-              />
-            )}
-          </span>
+        <Listbox.Button>
+          <Button>
+            <span
+              className={`flex items-center gap-x-1 truncate text-xl font-semibold text-white text-opacity-90`}
+            >
+              {station.stop_name}
+            </span>
+          </Button>
         </Listbox.Button>
         <Transition
           as={Fragment}
@@ -89,11 +68,7 @@ export const StationSelector: React.FC<StationSelector> = ({
                     <>
                       <span
                         className={`flex items-center	gap-x-1 truncate ${
-                          selected
-                            ? `bg-opacity-30 font-semibold ${
-                                lineColorBackground[line ?? 'DEFAULT']
-                              }`
-                            : 'font-normal'
+                          selected ? 'font-semibold' : 'font-normal'
                         }`}
                       >
                         {station.stop_name}
@@ -101,14 +76,7 @@ export const StationSelector: React.FC<StationSelector> = ({
                           <FontAwesomeIcon
                             icon={faWheelchair}
                             size={'sm'}
-                            className={'m-0 h-4 w-4 rounded-sm bg-blue-500 p-[2px] text-white'}
-                          />
-                        )}
-                        {station.enclosed_bike_parking && (
-                          <FontAwesomeIcon
-                            icon={faBicycle}
-                            size={'sm'}
-                            className={'m-0 h-4 w-4 rounded-sm bg-green-400 p-[2px] text-white'}
+                            className={'m-0 h-2.5 w-2.5 rounded-sm bg-blue-500 p-[2px] text-white'}
                           />
                         )}
                       </span>
