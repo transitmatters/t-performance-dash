@@ -15,6 +15,7 @@ interface SpeedWidgetProps {
   timeRange: TimeRange;
 }
 
+
 export const SpeedWidget: React.FC<SpeedWidgetProps> = ({ timeRange }) => {
   const { line, linePath } = useDelimitatedRoute();
   const { agg, endDate, startDate, comparisonStartDate, comparisonEndDate } =
@@ -37,13 +38,13 @@ export const SpeedWidget: React.FC<SpeedWidgetProps> = ({ timeRange }) => {
     { enabled: line != undefined }
   );
 
-  if (medianTravelTimes.isError) {
-    return <div>Error</div>;
-  }
-
   const { average, delta } = useMemo(() => {
     return getSpeedWidgetValues(medianTravelTimes, compTravelTimes, line);
   }, [medianTravelTimes.data, compTravelTimes.data]);
+
+  if (medianTravelTimes.isError) {
+    return <div>Error</div>;
+  }
 
   return (
     <>
