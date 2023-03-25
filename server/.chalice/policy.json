@@ -22,8 +22,7 @@
       "Resource": [
         "arn:aws:dynamodb:*:*:table/DailySpeed",
         "arn:aws:dynamodb:*:*:table/WeeklySpeed",
-        "arn:aws:dynamodb:*:*:table/MonthlySpeed",
-        "arn:aws:dynamodb:*:*:table/DailyScheduledSpeed"
+        "arn:aws:dynamodb:*:*:table/MonthlySpeed"
       ]
     }
   ]
