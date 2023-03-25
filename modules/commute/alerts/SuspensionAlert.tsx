@@ -4,7 +4,7 @@ import type { Line, LineShort } from '../../../common/types/lines';
 import BetweenArrow from '../../../public/Icons/BetweenArrow.svg';
 import DetourIcon from '../../../public/Icons/DetourIcon.svg';
 import { AlertBoxInner } from './AlertBoxInner';
-import { getStop } from './AlertUtils';
+import { getStations } from './AlertUtils';
 
 interface SuspensionAlertProps {
   alert: FormattedAlert;
@@ -15,14 +15,14 @@ interface SuspensionAlertProps {
 
 const getDescription = (alert: FormattedAlert, lineShort: LineShort) => {
   if (alert.stops.length) {
-    const min = Math.min(...alert.stops);
-    const max = Math.max(...alert.stops);
+    const { min, max } = getStations(alert.stops, lineShort);
+
     return (
       <>
         <p className="mr-1 ">No service</p>
-        <p className="font-bold">{getStop(min, lineShort)}</p>
+        <p className="font-bold">{min.stop_name}</p>
         <BetweenArrow className="mx-2 h-4 w-4" />
-        <p className="font-bold">{getStop(max, lineShort)}</p>
+        <p className="font-bold">{max.stop_name}</p>
       </>
     );
   }
