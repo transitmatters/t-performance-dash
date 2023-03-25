@@ -4,7 +4,7 @@ import type { Line, LineShort } from '../../../common/types/lines';
 import BetweenArrow from '../../../public/Icons/BetweenArrow.svg';
 import ShuttleIcon from '../../../public/Icons/ShuttleIcon.svg';
 import { AlertBoxInner } from './AlertBoxInner';
-import { getStop } from './AlertUtils';
+import { getStations } from './AlertUtils';
 
 interface ShuttleAlertProps {
   alert: FormattedAlert;
@@ -13,14 +13,13 @@ interface ShuttleAlertProps {
   line?: Line;
 }
 export const ShuttleAlert: React.FC<ShuttleAlertProps> = ({ alert, lineShort, type, line }) => {
-  const min = Math.min(...alert.stops);
-  const max = Math.max(...alert.stops);
+  const { min, max } = getStations(alert.stops, lineShort);
   return (
     <AlertBoxInner header={alert.header} line={line} Icon={ShuttleIcon} type={type} alert={alert}>
       <p className="mr-1 ">Shuttling</p>
-      <p className="font-bold">{getStop(min, lineShort)}</p>
+      <p className="font-bold">{min.stop_name}</p>
       <BetweenArrow className="mx-2 h-4 w-4" />
-      <p className="font-bold">{getStop(max, lineShort)}</p>
+      <p className="font-bold">{max.stop_name}</p>
     </AlertBoxInner>
   );
 };
