@@ -32,7 +32,7 @@ export const DataPageHeader = () => {
           {isDesktop && (
             <div className="mt-4 flex flex-row gap-x-2 md:mt-0 md:ml-4">
               <DateSelector range={range} />
-              <Button text={range ? '🅧' : 'Range'} onClick={() => setRange(!range)} />
+              <Button content={range ? '🅧' : 'Range'} onClick={() => setRange(!range)} />
             </div>
           )}
         </div>

@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import { useQuery } from '@tanstack/react-query';
-import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadashboard';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
+import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadashboard';
 import { QueryNameKeys, AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -12,6 +12,7 @@ import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWi
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
+import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
@@ -23,10 +24,16 @@ export default function TravelTimesDetails() {
   } = useDelimitatedRoute();
 
   const stations = optionsStation(lineShort, busRoute);
-  const toStation = stations?.[stations.length - 3];
-  const fromStation = stations?.[3];
+
+  const [toStation, setToStation] = useState(stations?.[stations.length - 3]);
+  const [fromStation, setFromStation] = useState(stations?.[3]);
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
+
+  React.useEffect(() => {
+    setToStation(stations?.[stations.length - 3]);
+    setFromStation(stations?.[3]);
+  }, [stations]);
 
   const aggregate = startDate !== undefined && endDate !== undefined;
   const enabled = fromStopIds !== null && toStopIds !== null && startDate !== null;
@@ -66,6 +73,14 @@ export default function TravelTimesDetails() {
 
   return (
     <>
+      {fromStation && toStation ? (
+        <StationSelectorWidget
+          fromStation={fromStation}
+          toStation={toStation}
+          setFromStation={setFromStation}
+          setToStation={setToStation}
+        />
+      ) : null}
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Avg. Travel Time"

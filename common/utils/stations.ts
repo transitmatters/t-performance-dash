@@ -12,32 +12,19 @@ export const optionsForField = (
   toStation: Station | null
 ) => {
   if (type === 'from') {
-    return options_station_ui(line)?.filter((entry) => entry.value !== toStation);
+    return optionsStation(line)?.filter((entry) => entry !== toStation);
   }
   if (type === 'to') {
-    return options_station_ui(line)?.filter(({ value }) => {
-      if (value === fromStation) {
+    return optionsStation(line)?.filter((entry) => {
+      if (entry === fromStation) {
         return false;
       }
-      if (fromStation && fromStation.branches && value.branches) {
-        return value.branches.some((entryBranch) => fromStation.branches?.includes(entryBranch));
+      if (fromStation && fromStation.branches && entry.branches) {
+        return entry.branches.some((entryBranch) => fromStation.branches?.includes(entryBranch));
       }
       return true;
     });
   }
-};
-
-const options_station_ui = (line: LineShort): SelectOption<Station>[] | undefined => {
-  return optionsStation(line)
-    ?.map((station) => {
-      return {
-        id: station.station,
-        value: station,
-        disabled: station.disabled,
-        label: station.stop_name,
-      };
-    })
-    .sort((a, b) => a.value.order - b.value.order);
 };
 
 export const optionsStation = (line: LineShort, busRoute?: string): Station[] | undefined => {

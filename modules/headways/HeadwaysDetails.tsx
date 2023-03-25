@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
+import { useQuery } from '@tanstack/react-query';
 import { fetchSingleDayData } from '../../common/api/datadashboard';
 import { QueryNameKeys } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
@@ -10,9 +11,9 @@ import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWi
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageHeadway, longestHeadway } from '../../common/utils/headways';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
+import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 import { HeadwaysHistogram } from './charts/HeadwaysHistogram';
-import { useQuery } from '@tanstack/react-query';
 
 export default function HeadwaysDetails() {
   const {
@@ -21,8 +22,9 @@ export default function HeadwaysDetails() {
   } = useDelimitatedRoute();
 
   const stations = optionsStation(lineShort, busRoute);
-  const toStation = stations?.[stations.length - 3];
-  const fromStation = stations?.[3];
+
+  const [toStation, setToStation] = useState(stations?.[stations.length - 3]);
+  const [fromStation, setFromStation] = useState(stations?.[3]);
 
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
   const headways = useQuery([fromStopIds, startDate], () =>
@@ -35,6 +37,14 @@ export default function HeadwaysDetails() {
 
   return (
     <>
+      {fromStation && toStation ? (
+        <StationSelectorWidget
+          fromStation={fromStation}
+          toStation={toStation}
+          setFromStation={setFromStation}
+          setToStation={setToStation}
+        />
+      ) : null}
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Average Headway"
