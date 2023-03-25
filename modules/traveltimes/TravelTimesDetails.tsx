@@ -8,13 +8,13 @@ import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadas
 import { QueryNameKeys, AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
-import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
+import classNames from 'classnames';
+import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 
 export default function TravelTimesDetails() {
   const {
@@ -72,7 +72,7 @@ export default function TravelTimesDetails() {
   }
 
   return (
-    <>
+    <div className={classNames('h-full rounded-lg bg-white p-4 shadow-dataBox')}>
       {fromStation && toStation ? (
         <StationSelectorWidget
           fromStation={fromStation}
@@ -81,33 +81,26 @@ export default function TravelTimesDetails() {
           setToStation={setToStation}
         />
       ) : null}
-      <BasicDataWidgetPair>
-        <BasicDataWidgetItem
-          title="Avg. Travel Time"
-          widgetValue={
-            new TimeWidgetValue(
-              travelTimeValues ? averageTravelTime(travelTimeValues) : undefined,
-              1
-            )
-          }
-          analysis={`from last ${dayjs().format('ddd')}.`}
+      <BasicWidgetDataLayout
+        title="Avg. Travel Time"
+        widgetValue={
+          new TimeWidgetValue(travelTimeValues ? averageTravelTime(travelTimeValues) : undefined, 1)
+        }
+        analysis={`from last ${dayjs().format('ddd')}.`}
+      />
+      {aggregate ? (
+        <TravelTimesAggregateChart
+          traveltimes={travelTimesAggregate}
+          fromStation={fromStation}
+          toStation={toStation}
         />
-      </BasicDataWidgetPair>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
-        {aggregate ? (
-          <TravelTimesAggregateChart
-            traveltimes={travelTimesAggregate}
-            fromStation={fromStation}
-            toStation={toStation}
-          />
-        ) : (
-          <TravelTimesSingleChart
-            traveltimes={travelTimesSingle}
-            fromStation={fromStation}
-            toStation={toStation}
-          />
-        )}
-      </div>
-    </>
+      ) : (
+        <TravelTimesSingleChart
+          traveltimes={travelTimesSingle}
+          fromStation={fromStation}
+          toStation={toStation}
+        />
+      )}
+    </div>
   );
 }

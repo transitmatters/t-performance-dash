@@ -15,6 +15,7 @@ export const mbtaTextConfig = {
   GL: `text-mbta-green`,
   BL: `text-mbta-blue`,
   BUS: `text-mbta-bus`,
+  DEFAULT: `text-black`,
 };
 
 export const otherConfig = {

@@ -28,17 +28,14 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
   };
 
   return (
-    <div
-      className={classNames(
-        'flex w-1/2 flex-row gap-1 rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox sm:w-auto sm:p-4'
-      )}
-    >
+    <div className={classNames('my-2 flex flex-col items-baseline gap-1 md:flex-row')}>
       <StationSelector
         type={'from'}
         fromStation={fromStation}
         toStation={toStation}
         setStation={setFromStation}
       />
+      <p className="text-xl">to</p>
       <StationSelector
         type={'to'}
         fromStation={fromStation}
