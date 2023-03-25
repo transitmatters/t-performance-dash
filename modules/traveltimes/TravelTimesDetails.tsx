@@ -2,9 +2,10 @@
 
 import React from 'react';
 import dayjs from 'dayjs';
+import { useQuery } from '@tanstack/react-query';
 import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadashboard';
-import { AggregateAPIOptions, QueryNameKeys, SingleDayAPIOptions } from '../../common/types/api';
-import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
+import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
+import { QueryNameKeys, AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
@@ -13,7 +14,6 @@ import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
-import { useQuery } from '@tanstack/react-query';
 
 export default function TravelTimesDetails() {
   const {

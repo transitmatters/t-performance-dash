@@ -4,7 +4,7 @@ import type { BusRoute, Line, LineShort } from '../../../common/types/lines';
 import BetweenArrow from '../../../public/Icons/BetweenArrow.svg';
 import DelayIcon from '../../../public/Icons/DelayIcon.svg';
 import { AlertBoxInner } from './AlertBoxInner';
-import { getStop } from './AlertUtils';
+import { getStations } from './AlertUtils';
 
 interface DelayAlertProps {
   alert: FormattedAlert;
@@ -17,14 +17,13 @@ interface DelayAlertProps {
 const getDescription = (alert: FormattedAlert, lineShort: LineShort, busRoute?: BusRoute) => {
   const lineOrRoute = busRoute ?? lineShort;
   if (alert.stops.length) {
-    const min = Math.min(...alert.stops);
-    const max = Math.max(...alert.stops);
+    const { min, max } = getStations(alert.stops, lineOrRoute);
     return (
       <>
         <p className="mr-1 ">Delays</p>
-        <p className="font-bold">{getStop(min, lineOrRoute)}</p>
+        <p className="font-bold">{min.stop_name}</p>
         <BetweenArrow className="mx-2 h-4 w-4" />
-        <p className="font-bold">{getStop(max, lineOrRoute)}</p>
+        <p className="font-bold">{max.stop_name}</p>
       </>
     );
   }

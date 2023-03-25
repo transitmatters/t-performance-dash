@@ -24,8 +24,8 @@ def shuttle_alert(attributes, id):
     '''Format alerts for shuttling'''
     stops = set()  # Eliminate duplicates (bus alerts sometimes have entries for multiple routes for one stop.)
     for entity in attributes['informed_entity']:
-        if entity.get('stop') and entity['stop'].isdigit():  # Ignore stops of format `place-brntn`
-            stops.add(int(entity['stop']))
+        if entity.get('stop') and not entity['stop'].isdigit():  # Only get `place-<name>` stop types - no numbers.
+            stops.add(entity['stop'])
     return {
         "id": id,
         "stops": list(stops),

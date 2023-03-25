@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { SingleDayLineChart } from '../../../common/components/charts/SingleDayLineChart';
 import type { HeadwaysChartProps } from '../../../common/types/charts';
+import { BenchmarkFieldKeys, PointFieldKeys, MetricFieldKeys } from '../../../common/types/charts';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { locationDetails } from '../../../common/utils/stations';
-import { BenchmarkFieldKeys, PointFieldKeys, MetricFieldKeys } from '../../../src/charts/types';
 
 export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
   headways,

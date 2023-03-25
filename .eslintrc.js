@@ -58,27 +58,6 @@ module.exports = {
     },
   },
   overrides: [
-    // TODO: Remove exceptions for src after v4 is done
-    {
-      files: ['src/**/*.js', 'src/**/*.ts', 'src/**/*.tsx'],
-      rules: {
-        'import/named': 'off',
-        'import/no-unresolved': 'off',
-        'prettier/prettier': 'off',
-        'react/prop-types': 'off',
-        'react/jsx-no-target-blank': 'off',
-        'react/no-unescaped-entities': 'off',
-        'react-hooks/rules-of-hooks': 'off',
-        'react-hooks/exhaustive-deps': 'off',
-        'react/react-in-jsx-scope': 'off',
-        'no-console': 'off',
-        '@typescript-eslint/ban-ts-comment': 'off',
-        'import/no-default-export': 'off',
-        'import/order': 'off',
-        '@typescript-eslint/no-explicit-any': 'off',
-        '@typescript-eslint/consistent-type-imports': ['off'],
-      },
-    },
     {
       files: ['app/**/*.tsx'],
       rules: {
