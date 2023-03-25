@@ -8,9 +8,10 @@ DATE_FORMAT_BACKEND = "%Y-%m-%d"
 
 AGG_TO_CONFIG_MAP = {
     "daily": {"table_name": "DailySpeed", "delta": 150},
-    "weekly": {"table_name": "WeeklySpeed", "delta": 7*150},
-    "monthly": {"table_name": "MonthlySpeed", "delta": 30*150},
+    "weekly": {"table_name": "WeeklySpeed", "delta": 7 * 150},
+    "monthly": {"table_name": "MonthlySpeed", "delta": 30 * 150},
 }
+
 
 def query_speed_tables(params):
     config = AGG_TO_CONFIG_MAP[params["agg"]]
@@ -21,8 +22,6 @@ def query_speed_tables(params):
     if start_datetime + timedelta(days=config["delta"]) < end_datetime:
         return {"Error": "Invalid Query - too many items requested."}
 
-
-    # Define the query parameters
     query_params = {
         'KeyConditionExpression': '#pk = :pk and #date BETWEEN :start_date and :end_date',
         'ExpressionAttributeNames': {
@@ -36,6 +35,5 @@ def query_speed_tables(params):
         }
     }
 
-    # Execute the query and return the results
     response = table.query(**query_params)
     return response['Items']

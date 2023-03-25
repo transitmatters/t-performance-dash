@@ -2,7 +2,8 @@ import boto3
 
 dyn_resource = boto3.resource("dynamodb")
 table = dyn_resource.Table("DailyScheduledSpeed")
-  
+
+
 def fetch_scheduled_speed(params):
     query_params = {
         'KeyConditionExpression': '#pk = :pk and #date = :date',

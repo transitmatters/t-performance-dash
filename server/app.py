@@ -147,7 +147,7 @@ def get_alerts():
 
 
 @app.route("/api/scheduledSpeed", cors=cors_config)
-def get_speed():
+def get_scheduled_speed():
     response = scheduled_speed.fetch_scheduled_speed(app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True, default=lambda x: eval(str(x)))  # The eval() converts dynamo default decimal type numbers to ints
 
