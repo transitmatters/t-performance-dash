@@ -5,6 +5,7 @@ import React from 'react';
 import type { Station } from '../../types/stations';
 import { Button } from '../inputs/Button';
 import { StationSelector } from '../inputs/StationSelector';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 interface StationSelectorWidgetProps {
   fromStation: Station;
@@ -19,6 +20,8 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
   toStation,
   setToStation,
 }) => {
+  const isMobile = !useBreakpoint('sm');
+
   const swapStations = () => {
     const tempFromStation = fromStation;
     const tempToStation = toStation;
@@ -30,7 +33,8 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
   return (
     <div
       className={classNames(
-        'flex w-1/2 flex-row gap-1 rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox sm:w-auto sm:p-4'
+        isMobile ? 'flex-col items-end' : 'flex-row',
+        'flex gap-1 rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox'
       )}
     >
       <StationSelector

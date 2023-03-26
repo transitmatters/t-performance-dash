@@ -28,7 +28,7 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ range }) => {
     <Datepicker
       primaryColor={linePath !== 'bus' ? linePath : 'yellow'}
       value={dates}
-      placeholder="Date"
+      placeholder={range ? 'Date Range' : 'Date'}
       onChange={(evt) => updateQueryParams(evt)}
       maxDate={maxDate}
       asSingle={!range}
@@ -38,6 +38,15 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ range }) => {
       containerClassName={'w-auto'}
       inputClassName={'h-8'}
       i18n={'en-us'}
+      configs={{
+        shortcuts: range
+          ? {
+              pastMonth: 'Last Month',
+              currentMonth: 'This Month',
+              past: (period) => `Last ${period} days`,
+            }
+          : { today: 'Today', yesterday: 'Yesterday' },
+      }}
     />
   );
 };

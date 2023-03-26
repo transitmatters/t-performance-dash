@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Dropdown } from '../../../common/components/dropdowns/Dropdown';
 import Device from '../../../common/components/general/Device/Device';
-import { Button } from '../../../common/components/inputs/Button';
 import { NativeDateInput } from '../../../common/components/inputs/NativeDateInput';
 import { DateSelector } from '../../../common/components/inputs/DateSelector';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import type { SelectOption } from '../../../common/types/inputs';
+import { RangeButton } from '../../../common/components/inputs/RangeButton';
 
 const visualizationOptions: SelectOption[] = [
   { label: 'Map', id: 1, value: 'Map' },
@@ -37,7 +37,7 @@ export const SecondaryNavBar: React.FC = () => {
             return <DateSelector range={range} />;
           }}
         </Device>
-        <Button content={range ? '🅧' : 'Range'} onClick={() => setRange(!range)} />
+        <RangeButton range={range} setRange={setRange} />
         <Dropdown
           options={visualizationOptions}
           setValue={() => null}
