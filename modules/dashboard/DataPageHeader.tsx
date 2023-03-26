@@ -5,6 +5,7 @@ import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { DataPageTabs } from '../navigation/desktop/DataPageTabs';
 import { DateSelector } from '../../common/components/inputs/DateSelector';
 import { RangeButton } from '../../common/components/inputs/RangeButton';
+import { DateSelection } from '../../common/components/inputs/DateSelection/DateSelection';
 
 export const DataPageHeader = () => {
   const isDesktop = useBreakpoint('lg');
@@ -31,8 +32,7 @@ export const DataPageHeader = () => {
         <div className="mt-3 flex md:absolute md:top-3 md:right-0 md:mt-0">
           {isDesktop && (
             <div className="mt-4 flex flex-row gap-x-1 md:mt-0 md:ml-4">
-              <DateSelector range={range} />
-              <RangeButton range={range} setRange={setRange} />
+              <DateSelection />
             </div>
           )}
         </div>

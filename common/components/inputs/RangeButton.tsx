@@ -10,12 +10,9 @@ interface RangeButtonProps {
 
 export const RangeButton: React.FC<RangeButtonProps> = ({ range, setRange }) => {
   return (
-    <Button
-      content={
-        range ? <FontAwesomeIcon icon={faCalendarDay} /> : <FontAwesomeIcon icon={faCalendarWeek} />
-      }
-      title={range ? 'Single Date' : 'Range of Dates'}
-      onClick={() => setRange(!range)}
-    />
+    <Button title={range ? 'Single Date' : 'Range of Dates'} onClick={() => setRange(!range)}>
+      {' '}
+      {range ? <FontAwesomeIcon icon={faCalendarDay} /> : <FontAwesomeIcon icon={faCalendarWeek} />}
+    </Button>
   );
 };

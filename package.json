@@ -30,7 +30,8 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "18.2.0",
     "react-responsive": "^9.0.2",
-    "react-tailwindcss-datepicker": "^1.5.1"
+    "react-tailwindcss-datepicker": "^1.5.1",
+    "tailwind-datepicker-react": "^1.2.3"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.3",
