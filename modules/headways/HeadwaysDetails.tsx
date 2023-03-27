@@ -101,13 +101,21 @@ export default function HeadwaysDetails() {
           />
         )}
       </div>
-      <div className="flex w-full flex-row items-center justify-between text-lg">
-        <h3>Headway Variance</h3>
-      </div>
+      {!aggregate && (
+        <>
+          <div className="flex w-full flex-row items-center justify-between text-lg">
+            <h3>Headway Variance</h3>
+          </div>
 
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
-        <HeadwaysHistogram headways={headways} fromStation={toStation} toStation={fromStation} />
-      </div>
+          <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+            <HeadwaysHistogram
+              headways={headways}
+              fromStation={toStation}
+              toStation={fromStation}
+            />
+          </div>
+        </>
+      )}
     </>
   );
 }
