@@ -96,7 +96,8 @@
         "stops": {
           "0": ["70076"],
           "1": ["70075"]
-        }
+        },
+        "accessible": true
       },
       {
         "stop_name": "Downtown Crossing",
@@ -106,7 +107,8 @@
         "stops": {
           "0": ["70078"],
           "1": ["70077"]
-        }
+        },
+        "accessible": true
       },
       {
         "stop_name": "South Station",
@@ -149,7 +151,8 @@
         "stops": {
           "0": ["70086"],
           "1": ["70085"]
-        }
+        },
+        "accessible": true
       },
       {
         "stop_name": "Savin Hill",
@@ -358,7 +361,8 @@
         "stops": {
           "0": ["70027"],
           "1": ["70026"]
-        }
+        },
+        "accessible": true
       },
       {
         "stop_name": "Haymarket",
@@ -368,7 +372,8 @@
         "stops": {
           "0": ["70025"],
           "1": ["70024"]
-        }
+        },
+        "accessible": true
       },
       {
         "stop_name": "State Street",
@@ -378,7 +383,8 @@
         "stops": {
           "0": ["70023"],
           "1": ["70022"]
-        }
+        },
+        "accessible": true
       },
       {
         "stop_name": "Downtown Crossing",
@@ -640,7 +646,8 @@
         "stops": {
           "0": ["70040"],
           "1": ["70039"]
-        }
+        },
+        "accessible": true
       },
       {
         "stop_name": "Bowdoin",
