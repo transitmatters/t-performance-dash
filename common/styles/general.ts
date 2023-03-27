@@ -24,3 +24,12 @@ export const lineColorBorder = {
   BUS: `border-mbta-bus`,
   DEFAULT: `border-stone-800`,
 };
+
+export const lineColorText = {
+  RL: `text-mbta-red`,
+  OL: `text-mbta-orange`,
+  GL: `text-mbta-green`,
+  BL: `text-mbta-blue`,
+  BUS: `text-mbta-bus`,
+  DEFAULT: `text-stone-800`,
+};

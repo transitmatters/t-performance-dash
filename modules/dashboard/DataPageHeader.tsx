@@ -8,10 +8,11 @@ import { RangeButton } from '../../common/components/inputs/RangeButton';
 import { DateSelection } from '../../common/components/inputs/DateSelection/DateSelection';
 
 export const DataPageHeader = () => {
-  const isDesktop = useBreakpoint('lg');
+  const isDesktop = useBreakpoint('md');
 
   const {
     line,
+    datapage,
     query: { endDate },
   } = useDelimitatedRoute();
   const [range, setRange] = useState<boolean>(endDate !== undefined);
@@ -30,7 +31,7 @@ export const DataPageHeader = () => {
           {line && LINE_OBJECTS[line]?.name}
         </h3>
         <div className="mt-3 flex md:absolute md:top-3 md:right-0 md:mt-0">
-          {isDesktop && (
+          {isDesktop && datapage !== 'overview' && (
             <div className="mt-4 flex flex-row gap-x-1 md:mt-0 md:ml-4">
               <DateSelection />
             </div>

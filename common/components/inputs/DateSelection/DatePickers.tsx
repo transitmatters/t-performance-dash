@@ -1,16 +1,17 @@
 import dayjs from 'dayjs';
+import { AnyNsRecord } from 'dns';
 import type { SetStateAction } from 'react';
 import React, { useEffect, useState } from 'react';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { Button } from '../Button';
 
 interface DatePickerProps {
-  range: boolean;
-  setRange: React.Dispatch<SetStateAction<boolean>>;
+  config: any;
+  setConfig: React.Dispatch<SetStateAction<any>>;
 }
 const today = dayjs().format('YYYY-MM-DD');
 
-export const DatePickers = ({ range, setRange }) => {
+export const DatePickers = ({ config, setConfig }) => {
   const updateQueryParams = useUpdateQuery();
   const { query } = useDelimitatedRoute();
   const { startDate, endDate } = query;
@@ -27,15 +28,15 @@ export const DatePickers = ({ range, setRange }) => {
     if (startDateObject.isAfter(endDateObject)) {
       (document.getElementById('start') as HTMLInputElement).value = endDateInput ?? '';
       (document.getElementById('end') as HTMLInputElement).value = startDateInput ?? '';
-      updateQueryParams({ startDate: endDateInput, endDate: startDateInput }, range);
+      updateQueryParams({ startDate: endDateInput, endDate: startDateInput }, config.range);
     } else {
-      updateQueryParams({ startDate: startDateInput, endDate: endDateInput }, range);
+      updateQueryParams({ startDate: startDateInput, endDate: endDateInput }, config.range);
     }
   };
 
   const handleRangeToggle = () => {
-    updateQueryParams({ startDate: startDate }, !range);
-    setRange(!range);
+    updateQueryParams({ startDate: startDate }, !config.range);
+    setConfig({ ...config, range: !config.range });
   };
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export const DatePickers = ({ range, setRange }) => {
         onChange={handleChange}
         style={{ borderRadius: '4px', paddingTop: '4px', paddingBottom: '4px' }}
       />
-      {range && (
+      {config.range && (
         <>
           <p>to</p>
           <input
@@ -69,7 +70,7 @@ export const DatePickers = ({ range, setRange }) => {
         </>
       )}
       <Button onClick={handleRangeToggle}>
-        <p>{range ? 'X' : 'Range...'}</p>
+        <p>{config.range ? 'X' : 'Range...'}</p>
       </Button>
     </>
   );
