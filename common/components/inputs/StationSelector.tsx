@@ -23,11 +23,16 @@ export const StationSelector: React.FC<StationSelector> = ({
   toStation,
   setStation,
 }) => {
-  const { line, linePath, lineShort } = useDelimitatedRoute();
+  const {
+    line,
+    linePath,
+    lineShort,
+    query: { busRoute },
+  } = useDelimitatedRoute();
 
   const station = type === 'from' ? fromStation : toStation;
 
-  const stationOptions = optionsForField(type, lineShort, fromStation, toStation);
+  const stationOptions = optionsForField(type, lineShort, fromStation, toStation, busRoute);
 
   return (
     <div className="w-full">

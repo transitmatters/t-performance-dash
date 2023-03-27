@@ -9,13 +9,14 @@ export const optionsForField = (
   type: 'from' | 'to',
   line: LineShort,
   fromStation: Station | null,
-  toStation: Station | null
+  toStation: Station | null,
+  busRoute?: string
 ) => {
   if (type === 'from') {
-    return optionsStation(line)?.filter((entry) => entry !== toStation);
+    return optionsStation(line, busRoute)?.filter((entry) => entry !== toStation);
   }
   if (type === 'to') {
-    return optionsStation(line)?.filter((entry) => {
+    return optionsStation(line, busRoute)?.filter((entry) => {
       if (entry === fromStation) {
         return false;
       }
