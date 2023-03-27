@@ -5,7 +5,12 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { lineColorBackground, lineColorBorder, lineColorText } from '../../../styles/general';
+import {
+  lineColorBackground,
+  lineColorBorder,
+  lineColorDarkBorder,
+  lineColorText,
+} from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { buttonHighlightConfig } from '../styles/inputStyle';
 import { DatePickers } from './DatePickers';
@@ -13,6 +18,7 @@ import { DatePickers } from './DatePickers';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { useRouter } from 'next/router';
+import { useBreakpoint } from '../../../hooks/useBreakpoint';
 const est = 'America/New_York';
 
 dayjs.extend(utc);
@@ -32,12 +38,11 @@ const options = {
       },
     },
     {
-      name: `One year ago today`,
+      name: `One year ago`,
       input: {
         startDate: today.subtract(1, 'year').format(dateFormat),
       },
     },
-    { name: 'Custom' },
   ],
   range: [
     {
@@ -69,7 +74,6 @@ const options = {
         endDate: today.subtract(1, 'month').endOf('month').format(dateFormat),
       },
     },
-    { name: 'Custom' },
   ],
 };
 const rangeOptions = ['Single Day', 'Range'];
@@ -85,14 +89,15 @@ export const DateSelection = () => {
     todayLink = true;
   }
   const updateQueryParams = useUpdateQuery();
-  const [custom, setCustom] = useState<boolean>(false);
-  const [config, setConfig] = useState<{ range: boolean; selection: number }>({
+  const [custom, setCustom] = useState<boolean>(false); // TODO: remove this and determine based on selected != undefined
+  const [config, setConfig] = useState<{ range: boolean; selection: number | undefined }>({
     range: false,
     selection: 0,
   });
   const [firstLoad, setFirstLoad] = useState(true);
   const selectedOptions = config.range ? options.range : options.singleDay;
-  const currentSelection = selectedOptions[config.selection];
+  const currentSelection =
+    config.selection != undefined ? selectedOptions[config.selection] : undefined;
 
   const handleSelection = (selection, range) => {
     const newOptions = range ? options.range : options.singleDay;
@@ -117,19 +122,22 @@ export const DateSelection = () => {
   }, [router.isReady]);
 
   return (
-    <div className="flex flex-row items-baseline gap-1">
-      {custom && <DatePickers config={config} setConfig={setConfig} />}
-
-      <Popover className="relative inline-block h-full text-left">
+    <div
+      className={classNames(
+        'flex h-full max-w-full flex-row items-baseline overflow-hidden',
+        lineColorBackground[line ?? 'DEFAULT']
+      )}
+    >
+      <Popover className="flex h-full self-stretch overflow-hidden text-left">
         <Popover.Button
           className={classNames(
-            'inline-flex items-center self-stretch rounded-sm px-3 py-1 text-white text-opacity-90 shadow-sm hover:bg-opacity-70  focus:outline-none focus:ring-2  focus:ring-offset-2',
+            'flex h-full w-full items-center self-stretch border bg-black bg-opacity-10 px-3 py-1 text-white text-opacity-90 shadow-sm hover:bg-opacity-5  focus:outline-none focus:ring-2  focus:ring-offset-2',
             line && buttonHighlightConfig[line],
-            line && lineColorBackground[line]
+            lineColorDarkBorder[line ?? 'DEFAULT']
           )}
         >
-          <FontAwesomeIcon icon={faCalendar} className="pr-2 text-white" />
-          <span>{currentSelection.name}</span>
+          <FontAwesomeIcon icon={faCalendar} className="pr-1 text-white" />
+          <p className="truncate">{currentSelection?.name ?? 'Custom'}</p>
         </Popover.Button>
 
         <Transition
@@ -141,7 +149,7 @@ export const DateSelection = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Popover.Panel className="absolute right-0 z-20 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Popover.Panel className="absolute left-4 bottom-11 z-20 overflow-visible rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-auto md:right-0 md:mt-2 md:origin-top-right">
             {({ close }) => (
               <div className="flex w-screen max-w-[240px] flex-col gap-2 overflow-hidden rounded-md bg-white  p-4  leading-6 shadow-lg ring-1 ring-gray-900/5">
                 <Tab.Group
@@ -172,40 +180,36 @@ export const DateSelection = () => {
                     ))}
                   </Tab.List>
                 </Tab.Group>
-                <Tab.Group
-                  vertical
-                  manual
-                  onChange={(event) => {
-                    handleSelection(event, config.range);
-                    close();
-                  }}
-                  selectedIndex={config.selection}
-                >
-                  <Tab.List className="flex w-full flex-col">
-                    {selectedOptions.map((item, index) => (
-                      <Tab onClick={() => close()} key={index} className="w-full">
-                        {({ selected }) => (
-                          <div
-                            className={classNames(
-                              selected
-                                ? 'bg-gray-200 text-gray-900'
-                                : 'text-gray-70 bg-gray-100 bg-opacity-0',
-                              'flex w-full items-start px-4 py-2 text-sm hover:bg-opacity-80',
-                              index === selectedOptions.length - 1 && 'font-semibold'
-                            )}
-                          >
-                            {item.name}
-                          </div>
-                        )}
-                      </Tab>
-                    ))}
-                  </Tab.List>
-                </Tab.Group>
+                <div className="flex w-full flex-col">
+                  {selectedOptions.map((item, index) => (
+                    <div key={index} className="w-full">
+                      <button
+                        className="w-full"
+                        onClick={() => {
+                          handleSelection(index, config.range);
+                          close();
+                        }}
+                      >
+                        <div
+                          className={classNames(
+                            index === config.selection
+                              ? 'bg-gray-200 text-gray-900'
+                              : 'text-gray-70 bg-gray-100 bg-opacity-0',
+                            'flex w-full items-start px-4 py-2 text-sm hover:bg-opacity-80'
+                          )}
+                        >
+                          {item.name}
+                        </div>
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </Popover.Panel>
         </Transition>
       </Popover>
+      <DatePickers config={config} setConfig={setConfig} setCustom={setCustom} />
     </div>
   );
 };

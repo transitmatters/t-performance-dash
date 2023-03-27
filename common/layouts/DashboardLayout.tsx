@@ -7,7 +7,7 @@ import { SideNavBar } from '../../modules/navigation/desktop/SideNavBar';
 import { SecondaryNavBar } from '../../modules/navigation/mobile/SecondaryNavBar';
 
 export const DashboardLayout = ({ children }) => {
-  const isMobile = !useBreakpoint('sm');
+  const isMobile = !useBreakpoint('md');
 
   return (
     <div>

@@ -32,7 +32,7 @@ export const DataPageHeader = () => {
         </h3>
         <div className="mt-3 flex md:absolute md:top-3 md:right-0 md:mt-0">
           {isDesktop && datapage !== 'overview' && (
-            <div className="mt-4 flex flex-row gap-x-1 md:mt-0 md:ml-4">
+            <div className="mt-4 flex  flex-row gap-x-1 md:mt-0 md:ml-4">
               <DateSelection />
             </div>
           )}

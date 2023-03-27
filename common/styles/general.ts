@@ -6,6 +6,14 @@ export const lineColorBackground = {
   BUS: `bg-mbta-bus`,
   DEFAULT: `bg-stone-800`,
 };
+export const lineColorDarkBorder = {
+  RL: `border-mbta-darkRed`,
+  OL: `border-mbta-orange`,
+  GL: `border-mbta-green`,
+  BL: `border-mbta-blue`,
+  BUS: `border-mbta-bus`,
+  DEFAULT: `border-stone-800`,
+};
 
 export const lineColorRing = {
   RL: `ring-mbta-red`,

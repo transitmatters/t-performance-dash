@@ -1,19 +1,24 @@
 import dayjs from 'dayjs';
-import { AnyNsRecord } from 'dns';
 import type { SetStateAction } from 'react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import classNames from 'classnames';
+import { faClose, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
-import { Button } from '../Button';
+import { DatePickerButton } from '../DatePickerButton';
+import { lineColorBackground, lineColorDarkBorder } from '../../../styles/general';
+import Device from '../../general/Device/Device';
 
 interface DatePickerProps {
   config: any;
   setConfig: React.Dispatch<SetStateAction<any>>;
+  setCustom: React.Dispatch<SetStateAction<boolean>>;
 }
 const today = dayjs().format('YYYY-MM-DD');
 
-export const DatePickers = ({ config, setConfig }) => {
+export const DatePickers = ({ config, setConfig, setCustom }) => {
   const updateQueryParams = useUpdateQuery();
-  const { query } = useDelimitatedRoute();
+  const { line, query } = useDelimitatedRoute();
   const { startDate, endDate } = query;
 
   const handleChange = () => {
@@ -32,11 +37,18 @@ export const DatePickers = ({ config, setConfig }) => {
     } else {
       updateQueryParams({ startDate: startDateInput, endDate: endDateInput }, config.range);
     }
+    setCustom(true);
+    setConfig({ ...config, selection: undefined });
   };
 
   const handleRangeToggle = () => {
-    updateQueryParams({ startDate: startDate }, !config.range);
-    setConfig({ ...config, range: !config.range });
+    if (config.range) {
+      updateQueryParams({ startDate: startDate }, !config.range);
+    } else {
+      updateQueryParams({ startDate: startDate, endDate: startDate }, !config.range);
+    }
+    setConfig({ selection: undefined, range: !config.range });
+    setCustom(true);
   };
 
   useEffect(() => {
@@ -47,31 +59,83 @@ export const DatePickers = ({ config, setConfig }) => {
   }, [endDate, startDate]);
 
   return (
-    <>
-      <input
-        id="start"
-        type="date"
-        max={today}
-        min={'2016-01-15'}
-        onChange={handleChange}
-        style={{ borderRadius: '4px', paddingTop: '4px', paddingBottom: '4px' }}
-      />
-      {config.range && (
-        <>
-          <p>to</p>
-          <input
-            id="end"
-            type="date"
-            max={today}
-            min={'2016-01-15'}
-            onChange={handleChange}
-            style={{ borderRadius: '4px', paddingTop: '4px', paddingBottom: '4px' }}
-          />
-        </>
+    <div
+      className={classNames(
+        '-ml-[1px] flex flex-row border',
+        lineColorDarkBorder[line ?? 'DEFAULT']
       )}
-      <Button onClick={handleRangeToggle}>
-        <p>{config.range ? 'X' : 'Range...'}</p>
-      </Button>
-    </>
+    >
+      <div className={classNames(lineColorBackground[line ?? 'DEFAULT'], 'flex flex-row')}>
+        <label htmlFor="start" className="hidden">
+          Start Date
+        </label>
+        <input
+          id="start"
+          type="date"
+          max={today}
+          min={'2016-01-15'}
+          onChange={handleChange}
+          placeholder="mm/dd/yyyy"
+          style={{
+            paddingTop: '4px',
+            paddingBottom: '4px',
+            backgroundColor: '#00000018',
+            color: 'white',
+            colorScheme: 'dark',
+            fontSize: '12px',
+            border: '0px',
+            cursor: 'pointer',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        />
+        {config.range ? (
+          <>
+            <div
+              className={classNames(
+                'flex items-center self-stretch bg-black bg-opacity-10 text-sm text-white'
+              )}
+            >
+              <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4 text-white" />
+            </div>
+
+            <>
+              <label htmlFor="end" className="hidden">
+                End Date
+              </label>
+              <input
+                id="end"
+                type="date"
+                max={today}
+                min={'2016-01-15'}
+                placeholder="mm/dd/yyyy"
+                onChange={handleChange}
+                style={{
+                  paddingTop: '4px',
+                  paddingBottom: '4px',
+                  backgroundColor: '#00000018',
+                  color: 'white',
+                  colorScheme: 'dark',
+                  fontSize: '12px',
+                  border: '0px',
+                  cursor: 'pointer',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              />
+            </>
+          </>
+        ) : null}
+        <DatePickerButton onClick={handleRangeToggle}>
+          {config.range ? (
+            <FontAwesomeIcon icon={faClose} className="h-4 w-4 text-white" />
+          ) : (
+            <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4 text-white" />
+          )}
+        </DatePickerButton>
+      </div>
+    </div>
   );
 };
