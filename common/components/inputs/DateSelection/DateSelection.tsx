@@ -1,17 +1,50 @@
 import { Popover, Tab, Transition } from '@headlessui/react';
 import classNames from 'classnames';
+import dayjs from 'dayjs';
 import React, { Fragment, useState } from 'react';
 import { lineColorBackground, lineColorBorder } from '../../../styles/general';
-import { useDelimitatedRoute } from '../../../utils/router';
+import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
+import { buttonHighlightConfig } from '../styles/inputStyle';
 import { DatePickers } from './DatePickers';
+
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+const est = 'America/New_York';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+const dateFormat = 'YYYY-MM-DD';
+const today = dayjs().tz(est);
+
 const options = {
-  singleDay: ['Today', 'Yesterday', 'Custom'],
-  range: ['Past week', 'Past month', 'Custom'],
+  singleDay: [
+    { name: 'Today', input: { startDate: today.format(dateFormat) } },
+    { name: 'Yesterday', input: { startDate: today.subtract(1, 'day').format(dateFormat) } },
+    { name: 'Custom' },
+  ],
+  range: [
+    {
+      name: 'Past week',
+      input: {
+        startDate: today.subtract(7, 'days').format(dateFormat),
+        endDate: today.format(dateFormat),
+      },
+    },
+    {
+      name: 'Past 30 days',
+      input: {
+        startDate: today.subtract(30, 'days').format(dateFormat),
+        endDate: today.format(dateFormat),
+      },
+    },
+    { name: 'Custom' },
+  ],
 };
 const rangeOptions = ['Single Day', 'Range'];
 
 export const DateSelection = () => {
   const { line } = useDelimitatedRoute();
+  const updateQueryParams = useUpdateQuery();
   const [selection, setSelection] = useState<number>(0);
   const [range, setRange] = useState<boolean>(false);
   const [custom, setCustom] = useState<boolean>(false);
@@ -19,20 +52,28 @@ export const DateSelection = () => {
   const currentSelection = range ? options.range[selection] : options.singleDay[selection];
 
   const handleSelection = (value) => {
-    if (selectedOptions[value] === 'Custom') {
+    if (selectedOptions[value].name === 'Custom') {
       setCustom(true);
-    } else {
+    } else if (selectedOptions[value].input) {
       setCustom(false);
+      updateQueryParams(selectedOptions[value].input, range);
     }
     setSelection(value);
   };
-  console.log('custom', custom);
 
   return (
     <div className="flex flex-row items-baseline gap-1">
-      <Popover className="relative inline-block text-left">
-        <Popover.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-          <span>{currentSelection}</span>
+      {custom && <DatePickers range={range} setRange={setRange} />}
+
+      <Popover className="relative inline-block h-full text-left">
+        <Popover.Button
+          className={classNames(
+            'inline-flex items-center self-stretch rounded-sm px-3 py-1 font-medium text-white text-opacity-90 shadow-sm hover:bg-opacity-70  focus:outline-none focus:ring-2  focus:ring-offset-2',
+            line && buttonHighlightConfig[line],
+            line && lineColorBackground[line]
+          )}
+        >
+          <span>{currentSelection.name}</span>
         </Popover.Button>
 
         <Transition
@@ -44,9 +85,9 @@ export const DateSelection = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Popover.Panel className="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Popover.Panel className="absolute right-0 z-20 mt-2 origin-top-right rounded-sm bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             {({ close }) => (
-              <div className="flex  w-screen max-w-sm flex-col overflow-hidden rounded-md bg-white  text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
+              <div className="flex  w-screen max-w-sm flex-col overflow-hidden rounded-sm bg-white  text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
                 <Tab.Group
                   onChange={(value) => {
                     setRange(Boolean(value));
@@ -95,7 +136,7 @@ export const DateSelection = () => {
                               'block px-4 py-2 text-sm'
                             )}
                           >
-                            {item}
+                            {item.name}
                           </div>
                         )}
                       </Tab>
@@ -107,7 +148,6 @@ export const DateSelection = () => {
           </Popover.Panel>
         </Transition>
       </Popover>
-      {custom && <DatePickers range={range} setRange={setRange} />}
     </div>
   );
 };

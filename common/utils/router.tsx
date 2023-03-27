@@ -23,7 +23,6 @@ export const useDelimitatedRoute = (): Route => {
   const pathItems = path[0].split('/');
   const queryParams: QueryParams = router.query;
   const tab = RAIL_LINES.includes(pathItems[1]) ? 'Subway' : 'Bus';
-
   if (!queryParams.startDate) {
     queryParams.startDate = dayjs().format('YYYY-MM-DD');
   }
@@ -34,15 +33,21 @@ export const useDelimitatedRoute = (): Route => {
     lineShort: capitalize(pathItems[1]) as LineShort, //TODO: Remove as
     datapage: (pathItems[2] as DataPage) || 'overview', //TODO: Remove as
     tab: tab,
-    query: router.isReady ? queryParams : {},
+    query: router.isReady
+      ? {
+          startDate: queryParams.startDate,
+          endDate: queryParams.endDate,
+          busRoute: queryParams.busRoute,
+        }
+      : {},
   };
 };
 
-export const useUpdateQuery = ({ range }: { range: boolean }) => {
+export const useUpdateQuery = () => {
   const router = useRouter();
 
   const updateQueryParams = useCallback(
-    (newQueryParams: Partial<DateRangeType> | null) => {
+    (newQueryParams: Partial<DateRangeType> | null, range: boolean) => {
       if (!newQueryParams) return;
 
       const { startDate, endDate } = newQueryParams;
@@ -70,7 +75,7 @@ export const useUpdateQuery = ({ range }: { range: boolean }) => {
         }
       }
     },
-    [range, router]
+    [router]
   );
 
   return updateQueryParams;

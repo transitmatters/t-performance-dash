@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import type { SetStateAction } from 'react';
-import React, { useState } from 'react';
-import Datepicker from 'tailwind-datepicker-react';
+import React, { useEffect, useState } from 'react';
+import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { Button } from '../Button';
 
 interface DatePickerProps {
@@ -10,46 +10,65 @@ interface DatePickerProps {
 }
 const today = dayjs().format('YYYY-MM-DD');
 
-const options = {
-  autoHide: true,
-  todayBtn: false,
-  clearBtn: true,
-  maxDate: new Date(today),
-  minDate: new Date('2016-01-15'),
-
-  icons: {
-    // () => ReactElement | JSX.Element
-    prev: () => <span>Previous</span>,
-    next: () => <span>Next</span>,
-  },
-  datepickerClassNames: 'top-12',
-  defaultDate: new Date(today),
-  language: 'en',
-};
-
 export const DatePickers = ({ range, setRange }) => {
-  const [showStart, setShowStart] = useState<boolean>(false);
-  const [showEnd, setShowEnd] = useState<boolean>(false);
+  const updateQueryParams = useUpdateQuery();
+  const { query } = useDelimitatedRoute();
+  const { startDate, endDate } = query;
+
+  const handleChange = () => {
+    const startDateInput = document.getElementById('start')
+      ? (document.getElementById('start') as HTMLInputElement).value
+      : undefined;
+    const endDateInput = document.getElementById('end')
+      ? (document.getElementById('end') as HTMLInputElement).value
+      : undefined;
+    const startDateObject = dayjs(startDateInput);
+    const endDateObject = dayjs(endDateInput);
+    if (startDateObject.isAfter(endDateObject)) {
+      (document.getElementById('start') as HTMLInputElement).value = endDateInput ?? '';
+      (document.getElementById('end') as HTMLInputElement).value = startDateInput ?? '';
+      updateQueryParams({ startDate: endDateInput, endDate: startDateInput }, range);
+    } else {
+      updateQueryParams({ startDate: startDateInput, endDate: endDateInput }, range);
+    }
+  };
+
+  const handleRangeToggle = () => {
+    updateQueryParams({ startDate: startDate }, !range);
+    setRange(!range);
+  };
+
+  useEffect(() => {
+    if (startDate && document.getElementById('start'))
+      (document.getElementById('start') as HTMLInputElement).value = startDate;
+    if (endDate && document.getElementById('end'))
+      (document.getElementById('end') as HTMLInputElement).value = endDate;
+  }, [endDate, startDate]);
+
   return (
     <>
-      <Datepicker
-        options={options}
-        onChange={(event) => console.log(event)}
-        show={showStart}
-        setShow={() => setShowStart(!showStart)}
+      <input
+        id="start"
+        type="date"
+        max={today}
+        min={'2016-01-15'}
+        onChange={handleChange}
+        style={{ borderRadius: '4px', paddingTop: '4px', paddingBottom: '4px' }}
       />
       {range && (
         <>
           <p>to</p>
-          <Datepicker
-            options={options}
-            onChange={(event) => console.log(event)}
-            show={showEnd}
-            setShow={() => setShowEnd(!showEnd)}
+          <input
+            id="end"
+            type="date"
+            max={today}
+            min={'2016-01-15'}
+            onChange={handleChange}
+            style={{ borderRadius: '4px', paddingTop: '4px', paddingBottom: '4px' }}
           />
         </>
       )}
-      <Button onClick={() => setRange(!range)}>
+      <Button onClick={handleRangeToggle}>
         <p>{range ? 'X' : 'Range...'}</p>
       </Button>
     </>

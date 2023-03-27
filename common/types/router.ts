@@ -11,9 +11,9 @@ export interface Route {
 }
 
 export interface QueryParams {
-  startDate?: string;
-  endDate?: string;
-  busRoute?: BusRoute;
+  startDate?: string | string[];
+  endDate?: string | string[];
+  busRoute?: BusRoute | string[];
 }
 
 export type Tabs = 'Bus' | 'Subway' | '';
