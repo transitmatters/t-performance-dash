@@ -34,7 +34,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
     <div
       className={classNames(
         isMobile ? 'flex-col items-end' : 'flex-row',
-        'flex gap-1 rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox'
+        'z-10 flex gap-1 rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox'
       )}
     >
       <StationSelector

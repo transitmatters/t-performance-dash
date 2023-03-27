@@ -5,7 +5,6 @@ import { NativeDateInput } from '../../../common/components/inputs/NativeDateInp
 import { DateSelector } from '../../../common/components/inputs/DateSelector';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import type { SelectOption } from '../../../common/types/inputs';
-import { RangeButton } from '../../../common/components/inputs/RangeButton';
 
 const visualizationOptions: SelectOption[] = [
   { label: 'Map', id: 1, value: 'Map' },
@@ -28,7 +27,7 @@ export const SecondaryNavBar: React.FC = () => {
 
   return (
     <div className="pb-safe fixed bottom-11 z-20 w-full border border-gray-300 bg-white px-2">
-      <div className="flex h-11 w-full flex-row items-center gap-x-2 bg-white">
+      <div className="my-1 flex w-full flex-row items-center gap-x-2 bg-white">
         <Device>
           {({ isMobile }) => {
             if (isMobile) {
@@ -37,7 +36,6 @@ export const SecondaryNavBar: React.FC = () => {
             return <DateSelector range={range} />;
           }}
         </Device>
-        <RangeButton range={range} setRange={setRange} />
         <Dropdown
           options={visualizationOptions}
           setValue={() => null}

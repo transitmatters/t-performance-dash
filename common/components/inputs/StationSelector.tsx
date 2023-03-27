@@ -30,7 +30,7 @@ export const StationSelector: React.FC<StationSelector> = ({
   const stationOptions = optionsForField(type, lineShort, fromStation, toStation);
 
   return (
-    <div className="w-full">
+    <div className="z-10 w-full">
       <Listbox value={station} onChange={setStation}>
         <div className="relative">
           <Listbox.Button
@@ -79,7 +79,7 @@ export const StationSelector: React.FC<StationSelector> = ({
                     <>
                       <span
                         className={`flex items-center	gap-x-1 truncate ${
-                          selected ? 'font-medium' : 'font-normal'
+                          selected ? 'font-semibold' : 'font-normal'
                         }`}
                       >
                         {station.stop_name}
@@ -87,15 +87,11 @@ export const StationSelector: React.FC<StationSelector> = ({
                           <FontAwesomeIcon
                             icon={faWheelchair}
                             size={'sm'}
-                            className={'m-0 h-2.5 w-2.5 rounded-sm bg-blue-500 p-[2px]'}
+                            className={'m-0 h-2.5 w-2.5 rounded-sm bg-blue-500 p-[2px] text-white'}
                           />
                         )}
                         {station.enclosed_bike_parking && (
-                          <FontAwesomeIcon
-                            icon={faBicycle}
-                            size={'sm'}
-                            className={'m-0 h-2.5 w-2.5 rounded-sm bg-green-400 p-[2px]'}
-                          />
+                          <FontAwesomeIcon icon={faBicycle} size={'sm'} />
                         )}
                       </span>
                     </>

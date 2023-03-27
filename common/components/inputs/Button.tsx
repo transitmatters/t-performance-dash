@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
+import { lineColorBackground } from '../../styles/general';
 import { useDelimitatedRoute } from '../../utils/router';
 import { buttonHighlightConfig } from './styles/inputStyle';
 
@@ -13,14 +14,15 @@ interface ButtonProps
 }
 
 export const Button: React.FC<ButtonProps> = ({ children, isFullWidth = false, ...props }) => {
-  const route = useDelimitatedRoute();
+  const { line } = useDelimitatedRoute();
 
   return (
     <button
       type="button"
       className={classNames(
-        'inline-flex h-8 items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-normal leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2',
-        route.line && buttonHighlightConfig[route.line],
+        'inline-flex  items-center  self-stretch  rounded-sm px-3 py-1 text-sm font-medium text-white text-opacity-90 shadow-sm hover:bg-opacity-70  focus:outline-none focus:ring-2  focus:ring-offset-2',
+        line && buttonHighlightConfig[line],
+        line && lineColorBackground[line],
         isFullWidth ? 'w-auto' : 'w-fit'
       )}
       {...props}
