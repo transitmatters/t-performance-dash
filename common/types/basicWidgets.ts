@@ -37,7 +37,7 @@ export class TimeWidgetValue implements WidgetValueInterface {
     if (typeof this.value === 'undefined') return '...';
     const absValue = Math.abs(this.value);
     switch (true) {
-      case absValue < 90:
+      case absValue < 99:
         return absValue.toFixed(0);
       case absValue < 3600:
         return dayjs.duration(absValue, 'seconds').format('m:ss');
@@ -51,7 +51,7 @@ export class TimeWidgetValue implements WidgetValueInterface {
     const absDelta = Math.abs(this.delta);
     const sign = this.delta >= 0 ? '+' : '-';
     switch (true) {
-      case absValue < 90:
+      case absValue < 99:
         return `${sign}${absDelta}`;
       case absValue < 3600:
         return `${sign}${dayjs.duration(absDelta, 'seconds').format('m:ss')}`;
