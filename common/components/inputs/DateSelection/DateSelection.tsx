@@ -79,7 +79,7 @@ export const DateSelection = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Popover.Panel className="bottom-22 absolute left-4 z-20 overflow-visible rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-auto md:right-0 md:top-6 md:mt-2 md:origin-top-right">
+          <Popover.Panel className="absolute bottom-[5.25rem] left-4 z-20 origin-bottom-left overflow-visible rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:right-auto md:left-4 md:top-8 md:mt-2 md:origin-top-left">
             {({ close }) => (
               <div className="flex w-screen max-w-[240px] flex-col gap-2 overflow-hidden rounded-md bg-white  p-4  leading-6 shadow-lg ring-1 ring-gray-900/5">
                 <RangeSelectionTab config={config} handleSelection={handleSelection} />
