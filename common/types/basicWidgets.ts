@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import { getFormattedTimeValue, getTimeUnit } from '../utils/time';
 dayjs.extend(duration);
 
 export interface WidgetValueInterface {
@@ -21,30 +22,16 @@ export class TimeWidgetValue implements WidgetValueInterface {
   }
 
   getUnits() {
-    if (typeof this.value === 'undefined') return '...';
-    const secondsAbs = Math.abs(this.value);
-    switch (true) {
-      case secondsAbs < 99:
-        return 'sec';
-      case secondsAbs < 3600:
-        return 'min.';
-      default:
-        return 'hrs.';
-    }
+    if (this.value === undefined) return '...';
+    return getTimeUnit(this.value);
   }
 
   getFormattedValue() {
-    if (typeof this.value === 'undefined') return '...';
-    const absValue = Math.abs(this.value);
-    switch (true) {
-      case absValue < 99:
-        return absValue.toFixed(0);
-      case absValue < 3600:
-        return dayjs.duration(absValue, 'seconds').format('m:ss');
-      default:
-        return (absValue / 3600).toFixed(2);
-    }
+    const formattedValue = getFormattedTimeValue(this.value);
+    if (formattedValue === undefined) return '...';
+    return formattedValue;
   }
+
   getFormattedDelta() {
     if (typeof this.value === 'undefined' || typeof this.delta === 'undefined') return '...';
     const absValue = Math.abs(this.value);
