@@ -8,11 +8,20 @@ export const lineColorBackground = {
 };
 export const lineColorDarkBorder = {
   RL: `border-mbta-darkRed`,
-  OL: `border-mbta-orange`,
-  GL: `border-mbta-green`,
-  BL: `border-mbta-blue`,
-  BUS: `border-mbta-bus`,
-  DEFAULT: `border-stone-800`,
+  OL: `border-mbta-darkOrange`,
+  GL: `border-mbta-darkGreen`,
+  BL: `border-mbta-darkBlue`,
+  BUS: `border-mbta-darkBus`,
+  DEFAULT: `border-stone-900`,
+};
+
+export const lineColorDarkBackground = {
+  RL: `bg-mbta-darkRed`,
+  OL: `bg-mbta-darkOrange`,
+  GL: `bg-mbta-darkGreen`,
+  BL: `bg-mbta-darkBlue`,
+  BUS: `bg-mbta-darkBus`,
+  DEFAULT: `bg-stone-900`,
 };
 
 export const lineColorRing = {

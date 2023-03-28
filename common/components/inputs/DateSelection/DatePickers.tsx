@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import type { SetStateAction } from 'react';
+import { SetStateAction, useRef } from 'react';
 import React, { useEffect } from 'react';
 import classNames from 'classnames';
 import { faClose, faArrowRight } from '@fortawesome/free-solid-svg-icons';
@@ -7,19 +7,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { DatePickerButton } from '../DatePickerButton';
 import { lineColorBackground, lineColorDarkBorder } from '../../../styles/general';
-import Device from '../../general/Device/Device';
 
 interface DatePickerProps {
   config: any;
   setConfig: React.Dispatch<SetStateAction<any>>;
   setCustom: React.Dispatch<SetStateAction<boolean>>;
 }
+
 const today = dayjs().format('YYYY-MM-DD');
 
-export const DatePickers = ({ config, setConfig, setCustom }) => {
+export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig, setCustom }) => {
   const updateQueryParams = useUpdateQuery();
   const { line, query } = useDelimitatedRoute();
   const { startDate, endDate } = query;
+  const startDateRef = useRef(null);
+  const endDateRef = useRef(null);
 
   const handleChange = () => {
     const startDateInput = document.getElementById('start')
@@ -65,12 +67,20 @@ export const DatePickers = ({ config, setConfig, setCustom }) => {
         lineColorDarkBorder[line ?? 'DEFAULT']
       )}
     >
-      <div className={classNames(lineColorBackground[line ?? 'DEFAULT'], 'flex flex-row')}>
+      <div
+        className={classNames(
+          lineColorBackground[line ?? 'DEFAULT'],
+          ' flex flex-row bg-opacity-80'
+        )}
+      >
         <label htmlFor="start" className="hidden">
           Start Date
         </label>
         <input
           id="start"
+          ref={startDateRef}
+          onMouseOver={() => (startDateRef?.current.style.backgroundColor = '#00000000')}
+          onMouseOut={() => (startDateRef?.current.style.backgroundColor = '#00000018')}
           type="date"
           max={today}
           min={'2016-01-15'}
@@ -82,9 +92,7 @@ export const DatePickers = ({ config, setConfig, setCustom }) => {
             backgroundColor: '#00000018',
             color: 'white',
             colorScheme: 'dark',
-            fontSize: '12px',
             border: '0px',
-            cursor: 'pointer',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
@@ -106,6 +114,9 @@ export const DatePickers = ({ config, setConfig, setCustom }) => {
               </label>
               <input
                 id="end"
+                ref={endDateRef}
+                onMouseOver={() => (endDateRef?.current.style.backgroundColor = '#00000000')}
+                onMouseOut={() => (endDateRef?.current.style.backgroundColor = '#00000018')}
                 type="date"
                 max={today}
                 min={'2016-01-15'}
@@ -117,9 +128,7 @@ export const DatePickers = ({ config, setConfig, setCustom }) => {
                   backgroundColor: '#00000018',
                   color: 'white',
                   colorScheme: 'dark',
-                  fontSize: '12px',
                   border: '0px',
-                  cursor: 'pointer',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',

@@ -4,7 +4,6 @@ import { useBreakpoint } from '../hooks/useBreakpoint';
 import { DataPageHeader } from '../../modules/dashboard/DataPageHeader';
 import { WidgetPage } from '../components/widgets/Widget';
 import { SideNavBar } from '../../modules/navigation/desktop/SideNavBar';
-import { SecondaryNavBar } from '../../modules/navigation/mobile/SecondaryNavBar';
 
 export const DashboardLayout = ({ children }) => {
   const isMobile = !useBreakpoint('md');
@@ -25,7 +24,6 @@ export const DashboardLayout = ({ children }) => {
         </main>
         {isMobile && (
           <>
-            <SecondaryNavBar />
             <BottomNavBar />
           </>
         )}

@@ -122,16 +122,16 @@ export const DateSelection = () => {
   }, [router.isReady]);
 
   return (
-    <div
-      className={classNames(
-        'flex h-full max-w-full flex-row items-baseline overflow-hidden',
-        lineColorBackground[line ?? 'DEFAULT']
-      )}
-    >
-      <Popover className="flex h-full self-stretch overflow-hidden text-left">
+    <div className={classNames('flex h-full max-w-full flex-row items-baseline overflow-hidden')}>
+      <Popover
+        className={classNames(
+          'flex h-full self-stretch overflow-hidden text-left',
+          lineColorBackground[line ?? 'DEFAULT']
+        )}
+      >
         <Popover.Button
           className={classNames(
-            'flex h-full w-full items-center self-stretch border bg-black bg-opacity-10 px-3 py-1 text-white text-opacity-90 shadow-sm hover:bg-opacity-5  focus:outline-none focus:ring-2  focus:ring-offset-2',
+            'flex h-full w-full items-center self-stretch border bg-black bg-opacity-10 px-3 py-1 text-white text-opacity-90 shadow-sm hover:bg-opacity-0 focus:bg-opacity-0 focus:outline-none',
             line && buttonHighlightConfig[line],
             lineColorDarkBorder[line ?? 'DEFAULT']
           )}

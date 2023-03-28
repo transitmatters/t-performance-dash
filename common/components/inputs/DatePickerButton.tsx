@@ -24,7 +24,7 @@ export const DatePickerButton: React.FC<ButtonProps> = ({
     <button
       type="button"
       className={classNames(
-        'inline-flex  items-center self-stretch border-l bg-black bg-opacity-10 px-3 py-1 text-sm font-medium text-white text-opacity-90 shadow-sm  hover:bg-opacity-5 focus:outline-none focus:ring-2  focus:ring-offset-2',
+        'inline-flex  items-center self-stretch border-l bg-black bg-opacity-10 px-3 py-1 text-sm font-medium text-white text-opacity-90 shadow-sm  hover:bg-opacity-5 focus:bg-opacity-0 focus:outline-none ',
         line && buttonHighlightConfig[line],
         lineColorDarkBorder[line ?? 'DEFAULT'],
         isFullWidth ? 'w-auto' : 'w-fit'
