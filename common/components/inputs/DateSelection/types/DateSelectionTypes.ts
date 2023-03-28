@@ -5,10 +5,10 @@ export interface DateSelectionInput {
 
 export interface DateSelectionDefaultOptions {
   name: string;
-  input: { startDate: string; endDate?: string };
+  input: DateParams;
 }
 
 export interface DateParams {
-  startDate: string;
+  startDate?: string;
   endDate?: string;
 }
