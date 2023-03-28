@@ -1,156 +1,111 @@
 import dayjs from 'dayjs';
 import type { SetStateAction } from 'react';
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { faClose, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Flatpickr from 'react-flatpickr';
+import 'flatpickr/dist/themes/light.css';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
-import { lineColorBackground, lineColorDarkBorder } from '../../../styles/general';
 import { RangeButton } from './RangeButton';
 import type { DateSelectionInput } from './types/DateSelectionTypes';
+import { DATE_PICKER_PRESETS, FLAT_PICKER_OPTIONS, TODAY_STRING } from './DateConstants';
 
 interface DatePickerProps {
   config: DateSelectionInput;
   setConfig: React.Dispatch<SetStateAction<DateSelectionInput>>;
 }
 
-const today = dayjs().format('YYYY-MM-DD');
-
 export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig }) => {
   const updateQueryParams = useUpdateQuery();
-  const { line, query } = useDelimitatedRoute();
+  const { query } = useDelimitatedRoute();
   const { startDate, endDate } = query;
-  const startDateRef = useRef(null);
-  const endDateRef = useRef(null);
+  const endDateObject = dayjs(endDate);
+  const startDateObject = dayjs(startDate);
 
-  /* Update URL when new date is selected */
-  const handleChange = () => {
-    // Get Input values from HTML
-    const startDateInput = document.getElementById('start')
-      ? (document.getElementById('start') as HTMLInputElement).value
-      : undefined;
-    const endDateInput = document.getElementById('end')
-      ? (document.getElementById('end') as HTMLInputElement).value
-      : undefined;
-    const startDateObject = dayjs(startDateInput);
-    const endDateObject = dayjs(endDateInput);
-
-    // If start date is after end date -> Swap them.
-    if (startDateObject.isAfter(endDateObject)) {
-      (document.getElementById('start') as HTMLInputElement).value = endDateInput ?? '';
-      (document.getElementById('end') as HTMLInputElement).value = startDateInput ?? '';
-      updateQueryParams({ startDate: endDateInput, endDate: startDateInput }, config.range);
+  const handleEndDateChange = (date: string) => {
+    const updatedDate = dayjs(date);
+    if (updatedDate.isSame(startDateObject)) {
+      // Convert to single day mode when startDate == endDate
+      handleRangeToggle();
+      return;
+    }
+    if (updatedDate.isBefore(startDateObject)) {
+      // Swap start and end if new end < startDate
+      updateQueryParams({ startDate: date, endDate: startDate }, config.range);
     } else {
-      updateQueryParams({ startDate: startDateInput, endDate: endDateInput }, config.range);
+      updateQueryParams({ startDate: startDate, endDate: date }, config.range);
     }
     setConfig({ ...config, selection: undefined });
   };
 
+  const handleStartDateChange = (date: string) => {
+    const updatedDate = dayjs(date);
+    if (updatedDate.isSame(endDateObject)) {
+      // Convert to single day mode when startDate == endDate
+      handleRangeToggle();
+      return;
+    }
+    if (updatedDate.isAfter(endDateObject)) {
+      // Swap start and end if new start > endDate
+      updateQueryParams({ startDate: endDate, endDate: date }, config.range);
+    } else {
+      updateQueryParams({ startDate: date, endDate: endDate }, config.range);
+    }
+    setConfig({ ...config, selection: undefined });
+  };
+
+  // Handle swapping between single day and aggregates.
   const handleRangeToggle = () => {
     if (config.range) {
       updateQueryParams({ startDate: startDate }, !config.range);
+    } else if (startDate === TODAY_STRING) {
+      // If start date is today -> set range to past week. This prevents bugs with startDate === endDate
+      updateQueryParams(DATE_PICKER_PRESETS.range[0].input, !config.range);
     } else {
-      // If switching to range, use startDate as endDate. This prevents having an empty HTML input on mobile which doesn't look good.
-      updateQueryParams({ startDate: startDate, endDate: startDate }, !config.range);
+      updateQueryParams({ startDate: startDate }, !config.range);
     }
-    // set selection to undefined because any interaction with date pickers goes to "custom" date selection.
     setConfig({ selection: undefined, range: !config.range });
   };
 
-  // Update date pickers with URL params
-  useEffect(() => {
-    if (startDate && document.getElementById('start'))
-      (document.getElementById('start') as HTMLInputElement).value = startDate;
-    if (endDate && document.getElementById('end'))
-      (document.getElementById('end') as HTMLInputElement).value = endDate;
-  }, [endDate, startDate]);
-
   return (
-    <div
-      className={classNames(
-        '-ml-[1px] flex flex-row border',
-        lineColorDarkBorder[line ?? 'DEFAULT']
-      )}
-    >
-      <div
-        className={classNames(
-          lineColorBackground[line ?? 'DEFAULT'],
-          ' flex flex-row bg-opacity-80'
-        )}
-      >
-        <label htmlFor="start" className="hidden">
-          Start Date
-        </label>
-        <input
-          id="start"
-          ref={startDateRef}
-          // @ts-expect-error
-          onMouseOver={() => (startDateRef?.current.style.backgroundColor = '#00000000')}
-          // @ts-expect-error
-          onMouseOut={() => (startDateRef?.current.style.backgroundColor = '#00000018')}
-          type="date"
-          max={today}
-          min={'2016-01-15'}
-          onChange={handleChange}
-          placeholder="mm/dd/yyyy"
-          style={{
-            paddingTop: '4px',
-            paddingBottom: '4px',
-            backgroundColor: '#00000018',
-            color: 'white',
-            colorScheme: 'dark',
-            border: '0px',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
+    <div className={'-ml-[1px] flex flex-row self-stretch '}>
+      <div className={classNames('flex h-full flex-row self-stretch bg-opacity-80')}>
+        <Flatpickr
+          className="pointer w-32 border-0 py-0"
+          value={startDate}
+          key={'start'}
+          placeholder={'mm/dd/yyyy'}
+          options={FLAT_PICKER_OPTIONS}
+          onChange={(dates, currentDateString) => {
+            handleStartDateChange(currentDateString);
           }}
         />
         {config.range ? (
           <>
             <div
-              className={classNames(
-                'flex items-center self-stretch bg-black bg-opacity-10 text-sm text-white'
-              )}
+              className={classNames('flex items-center self-stretch bg-white text-sm text-black')}
             >
-              <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4 text-white" />
+              <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4 text-black" />
             </div>
 
-            <>
-              <label htmlFor="end" className="hidden">
-                End Date
-              </label>
-              <input
-                id="end"
-                ref={endDateRef}
-                // @ts-expect-error
-                onMouseOver={() => (endDateRef?.current.style.backgroundColor = '#00000000')}
-                // @ts-expect-error
-                onMouseOut={() => (endDateRef?.current.style.backgroundColor = '#00000018')}
-                type="date"
-                max={today}
-                min={'2016-01-15'}
-                placeholder="mm/dd/yyyy"
-                onChange={handleChange}
-                style={{
-                  paddingTop: '4px',
-                  paddingBottom: '4px',
-                  backgroundColor: '#00000018',
-                  color: 'white',
-                  colorScheme: 'dark',
-                  border: '0px',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-              />
-            </>
+            <Flatpickr
+              className="pointer w-32 border-0 py-0"
+              value={endDate}
+              key={'end'}
+              placeholder={'mm/dd/yyyy'}
+              options={FLAT_PICKER_OPTIONS}
+              onChange={(dates, currentDateString) => {
+                handleEndDateChange(currentDateString);
+              }}
+            />
           </>
         ) : null}
         <RangeButton onClick={handleRangeToggle}>
           {config.range ? (
-            <FontAwesomeIcon icon={faClose} className="h-4 w-4 text-white" />
+            <FontAwesomeIcon icon={faClose} className="h-4 w-4 text-black" />
           ) : (
-            <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4 text-white" />
+            <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4 text-black" />
           )}
         </RangeButton>
       </div>

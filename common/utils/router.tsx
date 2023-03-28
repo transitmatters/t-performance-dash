@@ -17,14 +17,22 @@ const linePathToKeyMap: Record<string, Line> = {
   bus: 'BUS',
 };
 
+const getParams = (params: QueryParams) => {
+  return Object.fromEntries(
+    Object.entries(params).filter(([key, value]) => key !== 'line' && value)
+  );
+};
+
 export const useDelimitatedRoute = (): Route => {
   const router = useRouter();
   const path = router.asPath.split('?');
   const pathItems = path[0].split('/');
   const queryParams: QueryParams = router.query;
   const tab = RAIL_LINES.includes(pathItems[1]) ? 'Subway' : 'Bus';
-  if (!queryParams.startDate) {
-    queryParams.startDate = dayjs().format('YYYY-MM-DD');
+
+  const newParams = getParams(queryParams);
+  if (!newParams.startDate) {
+    newParams.startDate = dayjs().format('YYYY-MM-DD');
   }
 
   return {
@@ -33,13 +41,7 @@ export const useDelimitatedRoute = (): Route => {
     lineShort: capitalize(pathItems[1]) as LineShort, //TODO: Remove as
     datapage: (pathItems[2] as DataPage) || 'overview', //TODO: Remove as
     tab: tab,
-    query: router.isReady
-      ? {
-          startDate: queryParams.startDate,
-          endDate: queryParams.endDate,
-          busRoute: queryParams.busRoute,
-        }
-      : {},
+    query: router.isReady ? newParams : {},
   };
 };
 

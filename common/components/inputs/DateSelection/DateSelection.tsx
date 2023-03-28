@@ -8,7 +8,7 @@ import { lineColorBackground, lineColorDarkBorder } from '../../../styles/genera
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { buttonHighlightConfig } from '../styles/inputStyle';
 import { DatePickers } from './DatePickers';
-import { DATE_PICKER_OPTIONS, TODAY_STRING } from './PresetDates';
+import { DATE_PICKER_PRESETS, TODAY_STRING } from './DateConstants';
 import type { DateSelectionInput } from './types/DateSelectionTypes';
 import { RangeSelectionTab } from './RangeSelectionTab';
 import { DatePickerPresets } from './DatePickerPresets';
@@ -23,10 +23,10 @@ export const DateSelection = () => {
   const [firstLoad, setFirstLoad] = useState(true);
   const router = useRouter();
   const updateQueryParams = useUpdateQuery();
-  const selectedOptions = config.range ? DATE_PICKER_OPTIONS.range : DATE_PICKER_OPTIONS.singleDay;
+  const selectedOptions = config.range ? DATE_PICKER_PRESETS.range : DATE_PICKER_PRESETS.singleDay;
 
   const handleSelection = (selection: number, range: boolean) => {
-    const newOptions = range ? DATE_PICKER_OPTIONS.range : DATE_PICKER_OPTIONS.singleDay;
+    const newOptions = range ? DATE_PICKER_PRESETS.range : DATE_PICKER_PRESETS.singleDay;
     updateQueryParams(newOptions[selection].input ?? null, range);
     setConfig({ range: range, selection: selection });
   };
@@ -42,21 +42,25 @@ export const DateSelection = () => {
       setConfig({ range: isRange, selection: isToday ? 0 : undefined });
       setFirstLoad(false);
     }
-  }, [router.isReady]);
+  }, [router.isReady, startDate, endDate, firstLoad]);
 
   return (
-    <div className={classNames('flex h-full max-w-full flex-row items-baseline overflow-hidden')}>
+    <div
+      className={classNames(
+        'flex h-full max-w-full flex-row  items-baseline overflow-hidden rounded-t-md border md:rounded-md',
+        lineColorDarkBorder[line ?? 'DEFAULT']
+      )}
+    >
       <Popover
         className={classNames(
-          'flex h-full self-stretch overflow-hidden text-left',
+          'flex h-full w-full self-stretch overflow-hidden text-left',
           lineColorBackground[line ?? 'DEFAULT']
         )}
       >
         <Popover.Button
           className={classNames(
-            'flex h-full w-full items-center self-stretch border bg-black bg-opacity-10 px-3 py-1 text-white text-opacity-90 shadow-sm hover:bg-opacity-0 focus:bg-opacity-0 focus:outline-none',
-            line && buttonHighlightConfig[line],
-            lineColorDarkBorder[line ?? 'DEFAULT']
+            'flex h-full w-full items-center justify-center self-stretch bg-black bg-opacity-10 px-3 py-1 text-white text-opacity-90 shadow-sm hover:bg-opacity-0 focus:bg-opacity-0 focus:outline-none',
+            line && buttonHighlightConfig[line]
           )}
         >
           <FontAwesomeIcon icon={faCalendar} className="pr-1 text-white" />

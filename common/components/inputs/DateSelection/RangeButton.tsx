@@ -18,8 +18,9 @@ export const RangeButton: React.FC<RangeButtonProps> = ({ children, ...props }) 
   return (
     <button
       type="button"
+      title="Range"
       className={classNames(
-        'inline-flex  items-center self-stretch border-l bg-black bg-opacity-10 px-3 py-1 text-sm font-medium text-white text-opacity-90 shadow-sm  hover:bg-opacity-5 focus:bg-opacity-0 focus:outline-none ',
+        'inline-flex  items-center self-stretch border-l bg-white bg-opacity-50 px-3 py-1 text-sm font-medium text-white text-opacity-90 shadow-sm  hover:bg-opacity-100 focus:bg-opacity-100 focus:outline-none ',
         line && buttonHighlightConfig[line],
         lineColorDarkBorder[line ?? 'DEFAULT']
       )}
