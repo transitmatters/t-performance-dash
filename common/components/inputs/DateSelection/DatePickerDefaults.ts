@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import type { DateSelectionDefaultOptions } from './types/DateSelectionTypes';
 const est = 'America/New_York';
 
 dayjs.extend(utc);
@@ -11,7 +12,7 @@ const dateFormat = 'YYYY-MM-DD';
 export const TODAY = dayjs().tz(est);
 export const TODAY_STRING = TODAY.format(dateFormat);
 export const RANGE_OPTIONS = ['Single Day', 'Range'];
-export const DATE_PICKER_OPTIONS = {
+export const DATE_PICKER_OPTIONS: { [key: string]: DateSelectionDefaultOptions[] } = {
   singleDay: [
     { name: 'Today', input: { startDate: TODAY_STRING } },
     { name: 'Yesterday', input: { startDate: TODAY.subtract(1, 'day').format(dateFormat) } },

@@ -1,21 +1,17 @@
-import { Popover, Tab, Transition } from '@headlessui/react';
+import { Popover, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import React, { Fragment, useEffect, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import {
-  lineColorBackground,
-  lineColorBorder,
-  lineColorDarkBorder,
-  lineColorText,
-} from '../../../styles/general';
+import { lineColorBackground, lineColorDarkBorder } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { buttonHighlightConfig } from '../styles/inputStyle';
 import { DatePickers } from './DatePickers';
 import { useRouter } from 'next/router';
-import { DATE_PICKER_OPTIONS, TODAY_STRING, RANGE_OPTIONS } from './DatePickerDefaults';
+import { DATE_PICKER_OPTIONS, TODAY_STRING } from './DatePickerDefaults';
 import type { DateSelectionInput } from './types/DateSelectionTypes';
+import { RangeSelectionTab } from './RangeSelectionTab';
+import { DatePickerDefaultTabs } from './DatePickerDefaultTabs';
 
 export const DateSelection = () => {
   const {
@@ -30,8 +26,6 @@ export const DateSelection = () => {
   const router = useRouter();
   const updateQueryParams = useUpdateQuery();
   const selectedOptions = config.range ? DATE_PICKER_OPTIONS.range : DATE_PICKER_OPTIONS.singleDay;
-  const currentSelection =
-    config.selection != undefined ? selectedOptions[config.selection] : undefined;
 
   const handleSelection = (selection: number, range: boolean) => {
     const newOptions = range ? DATE_PICKER_OPTIONS.range : DATE_PICKER_OPTIONS.singleDay;
@@ -42,7 +36,10 @@ export const DateSelection = () => {
     setConfig({ range: range, selection: selection });
   };
 
-  // This allows us to set the preset to "today" if someone navigates to the page with today's date in the params. Wait until startDate & endDate are populated.
+  /*
+    This allows us to set the preset to "today" if someone navigates to the page with today's date in the params.
+    Wait until router.isReady so startDate & endDate are populated.
+  */
   useEffect(() => {
     const isRange = Boolean(startDate && endDate);
     const isToday = Boolean(startDate === TODAY_STRING);
@@ -68,7 +65,9 @@ export const DateSelection = () => {
           )}
         >
           <FontAwesomeIcon icon={faCalendar} className="pr-1 text-white" />
-          <p className="truncate">{currentSelection?.name ?? 'Custom'}</p>
+          <p className="truncate">
+            {config.selection ? selectedOptions[config.selection].name : 'Custom'}
+          </p>
         </Popover.Button>
 
         <Transition
@@ -80,61 +79,16 @@ export const DateSelection = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Popover.Panel className="absolute left-4 bottom-11 z-20 overflow-visible rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-auto md:right-0 md:mt-2 md:origin-top-right">
+          <Popover.Panel className="bottom-22 absolute left-4 z-20 overflow-visible rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-auto md:right-0 md:top-6 md:mt-2 md:origin-top-right">
             {({ close }) => (
               <div className="flex w-screen max-w-[240px] flex-col gap-2 overflow-hidden rounded-md bg-white  p-4  leading-6 shadow-lg ring-1 ring-gray-900/5">
-                <Tab.Group
-                  onChange={(value) => {
-                    handleSelection(0, Boolean(value));
-                  }}
-                  selectedIndex={config.range ? 1 : 0}
-                >
-                  <Tab.List className="flex w-full flex-row justify-center">
-                    {RANGE_OPTIONS.map((option, index) => (
-                      <Tab key={index} className="w-1/2 items-center shadow-sm">
-                        {({ selected }) => (
-                          <div
-                            className={classNames(
-                              lineColorBackground[line ?? 'DEFAULT'],
-                              selected
-                                ? 'bg-opacity-100 text-white text-opacity-90'
-                                : `bg-opacity-0 ${lineColorText[line ?? 'DEFAULT']}`,
-                              'border text-sm',
-                              index === 0 ? 'rounded-l-lg' : 'rounded-r-lg',
-                              lineColorBorder[line ?? 'DEFAULT']
-                            )}
-                          >
-                            <p>{option}</p>
-                          </div>
-                        )}
-                      </Tab>
-                    ))}
-                  </Tab.List>
-                </Tab.Group>
-                <div className="flex w-full flex-col">
-                  {selectedOptions.map((item, index) => (
-                    <div key={index} className="w-full">
-                      <button
-                        className="w-full"
-                        onClick={() => {
-                          handleSelection(index, config.range);
-                          close();
-                        }}
-                      >
-                        <div
-                          className={classNames(
-                            index === config.selection
-                              ? 'bg-gray-200 text-gray-900'
-                              : 'text-gray-70 bg-gray-100 bg-opacity-0',
-                            'flex w-full items-start px-4 py-2 text-sm hover:bg-opacity-80'
-                          )}
-                        >
-                          {item.name}
-                        </div>
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                <RangeSelectionTab config={config} handleSelection={handleSelection} />
+                <DatePickerDefaultTabs
+                  config={config}
+                  selectedOptions={selectedOptions}
+                  handleSelection={handleSelection}
+                  close={close}
+                />
               </div>
             )}
           </Popover.Panel>
