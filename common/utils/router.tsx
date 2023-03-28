@@ -2,11 +2,11 @@ import { capitalize, isEqual, pickBy } from 'lodash';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
-import type { DateRangeType } from 'react-tailwindcss-datepicker/dist/types';
 import type { DataPage } from '../types/dataPages';
 import type { Line, LineMetadata, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route } from '../types/router';
+import type { DateParams } from '../components/inputs/DateSelection/types/DateSelectionTypes';
 import { getOffsetDate } from './date';
 
 const linePathToKeyMap: Record<string, Line> = {
@@ -47,7 +47,7 @@ export const useUpdateQuery = () => {
   const router = useRouter();
 
   const updateQueryParams = useCallback(
-    (newQueryParams: Partial<DateRangeType> | null, range: boolean) => {
+    (newQueryParams: DateParams, range: boolean) => {
       if (!newQueryParams) return;
 
       const { startDate, endDate } = newQueryParams;
