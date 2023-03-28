@@ -89,7 +89,6 @@ export const DateSelection = () => {
     todayLink = true;
   }
   const updateQueryParams = useUpdateQuery();
-  const [custom, setCustom] = useState<boolean>(false); // TODO: remove this and determine based on selected != undefined
   const [config, setConfig] = useState<{ range: boolean; selection: number | undefined }>({
     range: false,
     selection: 0,
@@ -102,9 +101,7 @@ export const DateSelection = () => {
   const handleSelection = (selection, range) => {
     const newOptions = range ? options.range : options.singleDay;
     if (newOptions[selection].name === 'Custom') {
-      setCustom(true);
     } else if (newOptions[selection].input) {
-      setCustom(false);
       updateQueryParams(newOptions[selection].input ?? null, range);
     }
     setConfig({ range: range, selection: selection });
@@ -115,7 +112,6 @@ export const DateSelection = () => {
     const isToday = Boolean(startDate === todayString);
     if (firstLoad && router.isReady) {
       setConfig({ range: isRange, selection: isToday ? 0 : selectedOptions.length - 1 });
-      setCustom(!isToday);
     } else {
       setFirstLoad(!router.isReady);
     }
@@ -209,7 +205,7 @@ export const DateSelection = () => {
           </Popover.Panel>
         </Transition>
       </Popover>
-      <DatePickers config={config} setConfig={setConfig} setCustom={setCustom} />
+      <DatePickers config={config} setConfig={setConfig} />
     </div>
   );
 };

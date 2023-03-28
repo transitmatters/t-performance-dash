@@ -11,12 +11,11 @@ import { lineColorBackground, lineColorDarkBorder } from '../../../styles/genera
 interface DatePickerProps {
   config: any;
   setConfig: React.Dispatch<SetStateAction<any>>;
-  setCustom: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const today = dayjs().format('YYYY-MM-DD');
 
-export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig, setCustom }) => {
+export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig }) => {
   const updateQueryParams = useUpdateQuery();
   const { line, query } = useDelimitatedRoute();
   const { startDate, endDate } = query;
@@ -50,7 +49,6 @@ export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig, setC
       updateQueryParams({ startDate: startDate, endDate: startDate }, !config.range);
     }
     setConfig({ selection: undefined, range: !config.range });
-    setCustom(true);
   };
 
   useEffect(() => {
