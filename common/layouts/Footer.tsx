@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import React from 'react';
 
-import { version } from '../../package.json';
+import packageJson from '../../package.json';
 
 export const Footer: React.FC = () => {
+  const { version } = packageJson;
+
   return (
     <footer className="pb-safe mb-24 mt-5 text-center text-sm md:mb-0 md:pb-2 md:pl-64">
       Version:{' '}
