@@ -3,8 +3,6 @@ import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { DataPageTabs } from '../navigation/desktop/DataPageTabs';
-import { DateSelector } from '../../common/components/inputs/DateSelector';
-import { RangeButton } from '../../common/components/inputs/RangeButton';
 import { DateSelection } from '../../common/components/inputs/DateSelection/DateSelection';
 
 export const DataPageHeader = () => {

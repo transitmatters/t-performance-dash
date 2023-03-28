@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import React from 'react';
-import { lineColorBackground, lineColorDarkBorder } from '../../styles/general';
-import { useDelimitatedRoute } from '../../utils/router';
-import { buttonHighlightConfig } from './styles/inputStyle';
+import { lineColorBackground, lineColorDarkBorder } from '../../../styles/general';
+import { useDelimitatedRoute } from '../../../utils/router';
+import { buttonHighlightConfig } from '../styles/inputStyle';
 
 interface ButtonProps
   extends React.DetailedHTMLProps<

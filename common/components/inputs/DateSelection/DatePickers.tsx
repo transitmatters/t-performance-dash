@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { faClose, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
-import { DatePickerButton } from '../DatePickerButton';
+import { DatePickerButton } from './DatePickerButton';
 import { lineColorBackground, lineColorDarkBorder } from '../../../styles/general';
 import type { DateSelectionInput } from './types/DateSelectionTypes';
 
