@@ -6,7 +6,6 @@ module.exports = {
     './common/**/*.{js,ts,jsx,tsx}',
     './modules/**/*.{js,ts,jsx,tsx}',
     './node_modules/react-tailwindcss-datepicker/dist/index.esm.js',
-    './node_modules/tailwind-datepicker-react/dist/**/*.js',
   ],
   safelist: [
     {

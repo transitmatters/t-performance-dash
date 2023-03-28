@@ -34,7 +34,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
     <div
       className={classNames(
         isMobile ? 'flex-col items-end' : 'flex-row',
-        'z-10 flex gap-1 rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox'
+        'flex gap-1 rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox'
       )}
     >
       <StationSelector
@@ -49,11 +49,15 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
         toStation={toStation}
         setStation={setToStation}
       />
-      <Button onClick={swapStations}>
-        {' '}
-        {'Swap'}&nbsp;
-        <FontAwesomeIcon icon={faRightLeft} />
-      </Button>
+      <Button
+        content={
+          <>
+            {'Swap'}&nbsp;
+            <FontAwesomeIcon icon={faRightLeft} />
+          </>
+        }
+        onClick={swapStations}
+      />
     </div>
   );
 };
