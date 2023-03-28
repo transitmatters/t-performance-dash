@@ -5,7 +5,17 @@ import { version } from '../../package.json';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className={'mt-5 text-center text-sm'}>
+    <footer className="pb-safe mb-24 mt-5 text-center text-sm md:mb-0 md:pb-2 md:pl-64">
+      Version:{' '}
+      <Link
+        href={`https://github.com/transitmatters/t-performance-dash/releases/tag/${version.substring(
+          0,
+          3
+        )}`}
+      >
+        {version}
+      </Link>{' '}
+      |{' '}
       <Link
         className={'text-blue-600 hover:text-black dark:text-blue-500'}
         href="https://transitmatters.org/transitmatters-labs"
@@ -37,17 +47,6 @@ export const Footer: React.FC = () => {
       >
         🚀 Send feedback
       </Link>
-      <div className={'mt-1'}>
-        Version:{' '}
-        <Link
-          href={`https://github.com/transitmatters/t-performance-dash/releases/tag/${version.substring(
-            0,
-            3
-          )}`}
-        >
-          {version}
-        </Link>
-      </div>
     </footer>
   );
 };
