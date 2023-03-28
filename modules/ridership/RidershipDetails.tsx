@@ -13,8 +13,13 @@ import { TphChart } from './charts/TphChart';
 export default function TravelTimesDetails() {
   const allRidership = useRidershipData();
 
-  const { line, lineShort } = useDelimitatedRoute();
-  const lineData = allRidership.data?.lineData[`line-${lineShort}`];
+  const {
+    line,
+    lineShort,
+    query: { busRoute },
+  } = useDelimitatedRoute();
+  const routeOrLine = line === 'BUS' ? busRoute : lineShort;
+  const lineData = allRidership.data?.lineData[`line-${routeOrLine}`];
 
   const color = LINE_COLORS[line ?? 'default'];
   const [serviceDay, setServiceDay] = useState<ServiceDay>('weekday');

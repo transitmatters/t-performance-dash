@@ -126,6 +126,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 pointRadius: 0,
                 pointHoverRadius: 3,
                 fill: true,
+                hidden: benchmarkField === undefined,
               },
             ],
           }}
@@ -142,6 +143,15 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 mode: 'index',
                 position: 'nearest',
                 callbacks: {
+                  label: (tooltipItem) => {
+                    if (
+                      tooltipItem.parsed.y === 0 &&
+                      tooltipItem.dataset.label === 'Benchmark MBTA'
+                    ) {
+                      return '';
+                    }
+                    return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y} minutes`;
+                  },
                   afterBody: (tooltipItems) => {
                     return departureFromNormalString(
                       tooltipItems[0].parsed.y,
@@ -191,7 +201,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   text: date ? prettyDate(date, true) : 'No date selected',
                   color: COLORS.design.subtitleGrey,
                 },
-
                 afterDataLimits: (axis) => {
                   const today = new Date(`${date}T00:00:00`);
                   const low = new Date(today);
