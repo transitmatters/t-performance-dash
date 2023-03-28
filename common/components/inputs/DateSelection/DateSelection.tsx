@@ -1,6 +1,5 @@
 import { Popover, Tab, Transition } from '@headlessui/react';
 import classNames from 'classnames';
-import dayjs from 'dayjs';
 import React, { Fragment, useEffect, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,92 +13,28 @@ import {
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { buttonHighlightConfig } from '../styles/inputStyle';
 import { DatePickers } from './DatePickers';
-
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 import { useRouter } from 'next/router';
-import { useBreakpoint } from '../../../hooks/useBreakpoint';
-const est = 'America/New_York';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-const dateFormat = 'YYYY-MM-DD';
-const today = dayjs().tz(est);
-const todayString = today.format(dateFormat);
-
-const options = {
-  singleDay: [
-    { name: 'Today', input: { startDate: todayString } },
-    { name: 'Yesterday', input: { startDate: today.subtract(1, 'day').format(dateFormat) } },
-    {
-      name: `Last ${today.subtract(7, 'days').format('dddd')}`,
-      input: {
-        startDate: today.subtract(7, 'days').format(dateFormat),
-      },
-    },
-    {
-      name: `One year ago`,
-      input: {
-        startDate: today.subtract(1, 'year').format(dateFormat),
-      },
-    },
-  ],
-  range: [
-    {
-      name: 'Past week',
-      input: {
-        startDate: today.subtract(7, 'days').format(dateFormat),
-        endDate: todayString,
-      },
-    },
-
-    {
-      name: 'Past 30 days',
-      input: {
-        startDate: today.subtract(30, 'days').format(dateFormat),
-        endDate: todayString,
-      },
-    },
-    {
-      name: today.format('MMMM YYYY'),
-      input: {
-        startDate: today.startOf('month').format(dateFormat),
-        endDate: todayString,
-      },
-    },
-    {
-      name: today.subtract(1, 'month').format('MMMM YYYY'),
-      input: {
-        startDate: today.subtract(1, 'month').startOf('month').format(dateFormat),
-        endDate: today.subtract(1, 'month').endOf('month').format(dateFormat),
-      },
-    },
-  ],
-};
-const rangeOptions = ['Single Day', 'Range'];
+import { DATE_PICKER_OPTIONS, TODAY_STRING, RANGE_OPTIONS } from './DatePickerDefaults';
+import type { DateSelectionInput } from './types/DateSelectionTypes';
 
 export const DateSelection = () => {
   const {
     line,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
-  const router = useRouter();
-  let todayLink = false;
-  if (startDate === todayString) {
-    todayLink = true;
-  }
-  const updateQueryParams = useUpdateQuery();
-  const [config, setConfig] = useState<{ range: boolean; selection: number | undefined }>({
+  const [config, setConfig] = useState<DateSelectionInput>({
     range: false,
     selection: 0,
   });
   const [firstLoad, setFirstLoad] = useState(true);
-  const selectedOptions = config.range ? options.range : options.singleDay;
+  const router = useRouter();
+  const updateQueryParams = useUpdateQuery();
+  const selectedOptions = config.range ? DATE_PICKER_OPTIONS.range : DATE_PICKER_OPTIONS.singleDay;
   const currentSelection =
     config.selection != undefined ? selectedOptions[config.selection] : undefined;
 
-  const handleSelection = (selection, range) => {
-    const newOptions = range ? options.range : options.singleDay;
+  const handleSelection = (selection: number, range: boolean) => {
+    const newOptions = range ? DATE_PICKER_OPTIONS.range : DATE_PICKER_OPTIONS.singleDay;
     if (newOptions[selection].name === 'Custom') {
     } else if (newOptions[selection].input) {
       updateQueryParams(newOptions[selection].input ?? null, range);
@@ -107,13 +42,13 @@ export const DateSelection = () => {
     setConfig({ range: range, selection: selection });
   };
 
+  // This allows us to set the preset to "today" if someone navigates to the page with today's date in the params. Wait until startDate & endDate are populated.
   useEffect(() => {
     const isRange = Boolean(startDate && endDate);
-    const isToday = Boolean(startDate === todayString);
+    const isToday = Boolean(startDate === TODAY_STRING);
     if (firstLoad && router.isReady) {
-      setConfig({ range: isRange, selection: isToday ? 0 : selectedOptions.length - 1 });
-    } else {
-      setFirstLoad(!router.isReady);
+      setConfig({ range: isRange, selection: isToday ? 0 : undefined });
+      setFirstLoad(false);
     }
   }, [router.isReady]);
 
@@ -150,12 +85,12 @@ export const DateSelection = () => {
               <div className="flex w-screen max-w-[240px] flex-col gap-2 overflow-hidden rounded-md bg-white  p-4  leading-6 shadow-lg ring-1 ring-gray-900/5">
                 <Tab.Group
                   onChange={(value) => {
-                    handleSelection(0, value);
+                    handleSelection(0, Boolean(value));
                   }}
                   selectedIndex={config.range ? 1 : 0}
                 >
                   <Tab.List className="flex w-full flex-row justify-center">
-                    {rangeOptions.map((option, index) => (
+                    {RANGE_OPTIONS.map((option, index) => (
                       <Tab key={index} className="w-1/2 items-center shadow-sm">
                         {({ selected }) => (
                           <div

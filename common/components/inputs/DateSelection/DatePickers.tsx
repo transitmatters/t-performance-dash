@@ -7,10 +7,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { DatePickerButton } from '../DatePickerButton';
 import { lineColorBackground, lineColorDarkBorder } from '../../../styles/general';
+import type { DateSelectionInput } from './types/DateSelectionTypes';
 
 interface DatePickerProps {
-  config: any;
-  setConfig: React.Dispatch<SetStateAction<any>>;
+  config: DateSelectionInput;
+  setConfig: React.Dispatch<SetStateAction<DateSelectionInput>>;
 }
 
 const today = dayjs().format('YYYY-MM-DD');
@@ -22,7 +23,9 @@ export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig }) =>
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
 
+  /* Update URL when new date is selected */
   const handleChange = () => {
+    // Get Input values from HTML
     const startDateInput = document.getElementById('start')
       ? (document.getElementById('start') as HTMLInputElement).value
       : undefined;
@@ -31,6 +34,8 @@ export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig }) =>
       : undefined;
     const startDateObject = dayjs(startDateInput);
     const endDateObject = dayjs(endDateInput);
+
+    // If start date is after end date -> Swap them.
     if (startDateObject.isAfter(endDateObject)) {
       (document.getElementById('start') as HTMLInputElement).value = endDateInput ?? '';
       (document.getElementById('end') as HTMLInputElement).value = startDateInput ?? '';
@@ -38,7 +43,6 @@ export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig }) =>
     } else {
       updateQueryParams({ startDate: startDateInput, endDate: endDateInput }, config.range);
     }
-    setCustom(true);
     setConfig({ ...config, selection: undefined });
   };
 
@@ -46,11 +50,14 @@ export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig }) =>
     if (config.range) {
       updateQueryParams({ startDate: startDate }, !config.range);
     } else {
+      // If switching to range, use startDate as endDate. This prevents having an empty HTML input on mobile which doesn't look good.
       updateQueryParams({ startDate: startDate, endDate: startDate }, !config.range);
     }
+    // set selection to undefined because any interaction with date pickers goes to "custom" date selection.
     setConfig({ selection: undefined, range: !config.range });
   };
 
+  // Update date pickers with URL params
   useEffect(() => {
     if (startDate && document.getElementById('start'))
       (document.getElementById('start') as HTMLInputElement).value = startDate;
