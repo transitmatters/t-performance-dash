@@ -14,10 +14,8 @@ import { RangeSelectionTab } from './RangeSelectionTab';
 import { DatePickerDefaultTabs } from './DatePickerDefaultTabs';
 
 export const DateSelection = () => {
-  const {
-    line,
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { line, query } = useDelimitatedRoute();
+  const { startDate, endDate } = query;
   const [config, setConfig] = useState<DateSelectionInput>({
     range: false,
     selection: 0,
@@ -29,10 +27,7 @@ export const DateSelection = () => {
 
   const handleSelection = (selection: number, range: boolean) => {
     const newOptions = range ? DATE_PICKER_OPTIONS.range : DATE_PICKER_OPTIONS.singleDay;
-    if (newOptions[selection].name === 'Custom') {
-    } else if (newOptions[selection].input) {
-      updateQueryParams(newOptions[selection].input ?? null, range);
-    }
+    updateQueryParams(newOptions[selection].input ?? null, range);
     setConfig({ range: range, selection: selection });
   };
 
@@ -44,7 +39,6 @@ export const DateSelection = () => {
     const isRange = Boolean(startDate && endDate);
     const isToday = Boolean(startDate === TODAY_STRING);
     if (firstLoad && router.isReady) {
-      console.log(isToday);
       setConfig({ range: isRange, selection: isToday ? 0 : undefined });
       setFirstLoad(false);
     }
