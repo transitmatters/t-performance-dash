@@ -1,10 +1,10 @@
 import React from 'react';
 import { Tab } from '@headlessui/react';
 import classNames from 'classnames';
-import { RANGE_OPTIONS } from './DatePickerDefaults';
 import { lineColorBackground, lineColorBorder, lineColorText } from '../../../styles/general';
 import { useDelimitatedRoute } from '../../../utils/router';
-import { DateSelectionInput } from './types/DateSelectionTypes';
+import { RANGE_OPTIONS } from './PresetDates';
+import type { DateSelectionInput } from './types/DateSelectionTypes';
 
 interface RangeSelectionTabProps {
   config: DateSelectionInput;

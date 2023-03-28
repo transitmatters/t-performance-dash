@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
-import { SetStateAction, useRef } from 'react';
-import React, { useEffect } from 'react';
+import type { SetStateAction } from 'react';
+import React, { useRef, useEffect } from 'react';
 import classNames from 'classnames';
 import { faClose, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
-import { DatePickerButton } from './DatePickerButton';
 import { lineColorBackground, lineColorDarkBorder } from '../../../styles/general';
+import { RangeButton } from './RangeButton';
 import type { DateSelectionInput } from './types/DateSelectionTypes';
 
 interface DatePickerProps {
@@ -146,13 +146,13 @@ export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig }) =>
             </>
           </>
         ) : null}
-        <DatePickerButton onClick={handleRangeToggle}>
+        <RangeButton onClick={handleRangeToggle}>
           {config.range ? (
             <FontAwesomeIcon icon={faClose} className="h-4 w-4 text-white" />
           ) : (
             <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4 text-white" />
           )}
-        </DatePickerButton>
+        </RangeButton>
       </div>
     </div>
   );

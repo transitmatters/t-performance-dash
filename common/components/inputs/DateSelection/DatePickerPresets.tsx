@@ -2,14 +2,14 @@ import React from 'react';
 import classNames from 'classnames';
 import type { DateSelectionDefaultOptions, DateSelectionInput } from './types/DateSelectionTypes';
 
-interface DatePickerDefaultTabsProps {
+interface DatePickerPresetsProps {
   config: DateSelectionInput;
   selectedOptions: DateSelectionDefaultOptions[];
   handleSelection: (selection: number, range: boolean) => void;
   close: () => void;
 }
 
-export const DatePickerDefaultTabs: React.FC<DatePickerDefaultTabsProps> = ({
+export const DatePickerPresets: React.FC<DatePickerPresetsProps> = ({
   config,
   selectedOptions,
   handleSelection,

@@ -3,15 +3,15 @@ import classNames from 'classnames';
 import React, { Fragment, useEffect, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useRouter } from 'next/router';
 import { lineColorBackground, lineColorDarkBorder } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { buttonHighlightConfig } from '../styles/inputStyle';
 import { DatePickers } from './DatePickers';
-import { useRouter } from 'next/router';
-import { DATE_PICKER_OPTIONS, TODAY_STRING } from './DatePickerDefaults';
+import { DATE_PICKER_OPTIONS, TODAY_STRING } from './PresetDates';
 import type { DateSelectionInput } from './types/DateSelectionTypes';
 import { RangeSelectionTab } from './RangeSelectionTab';
-import { DatePickerDefaultTabs } from './DatePickerDefaultTabs';
+import { DatePickerPresets } from './DatePickerPresets';
 
 export const DateSelection = () => {
   const { line, query } = useDelimitatedRoute();
@@ -78,7 +78,7 @@ export const DateSelection = () => {
             {({ close }) => (
               <div className="flex w-screen max-w-[240px] flex-col overflow-hidden rounded-md bg-white leading-6 shadow-lg ring-1 ring-gray-900/5">
                 <RangeSelectionTab config={config} handleSelection={handleSelection} />
-                <DatePickerDefaultTabs
+                <DatePickerPresets
                   config={config}
                   selectedOptions={selectedOptions}
                   handleSelection={handleSelection}
