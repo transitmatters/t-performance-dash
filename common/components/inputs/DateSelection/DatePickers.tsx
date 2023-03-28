@@ -84,7 +84,9 @@ export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig }) =>
         <input
           id="start"
           ref={startDateRef}
+          // @ts-expect-error
           onMouseOver={() => (startDateRef?.current.style.backgroundColor = '#00000000')}
+          // @ts-expect-error
           onMouseOut={() => (startDateRef?.current.style.backgroundColor = '#00000018')}
           type="date"
           max={today}
@@ -120,7 +122,9 @@ export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig }) =>
               <input
                 id="end"
                 ref={endDateRef}
+                // @ts-expect-error
                 onMouseOver={() => (endDateRef?.current.style.backgroundColor = '#00000000')}
+                // @ts-expect-error
                 onMouseOut={() => (endDateRef?.current.style.backgroundColor = '#00000018')}
                 type="date"
                 max={today}
