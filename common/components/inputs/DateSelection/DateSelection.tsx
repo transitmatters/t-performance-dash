@@ -44,6 +44,7 @@ export const DateSelection = () => {
     const isRange = Boolean(startDate && endDate);
     const isToday = Boolean(startDate === TODAY_STRING);
     if (firstLoad && router.isReady) {
+      console.log(isToday);
       setConfig({ range: isRange, selection: isToday ? 0 : undefined });
       setFirstLoad(false);
     }
@@ -66,7 +67,7 @@ export const DateSelection = () => {
         >
           <FontAwesomeIcon icon={faCalendar} className="pr-1 text-white" />
           <p className="truncate">
-            {config.selection ? selectedOptions[config.selection].name : 'Custom'}
+            {config.selection != undefined ? selectedOptions[config.selection].name : 'Custom'}
           </p>
         </Popover.Button>
 
@@ -81,7 +82,7 @@ export const DateSelection = () => {
         >
           <Popover.Panel className="absolute bottom-[5.25rem] left-4 z-20 origin-bottom-left overflow-visible rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:right-auto md:left-4 md:top-8 md:mt-2 md:origin-top-left">
             {({ close }) => (
-              <div className="flex w-screen max-w-[240px] flex-col gap-2 overflow-hidden rounded-md bg-white  p-4  leading-6 shadow-lg ring-1 ring-gray-900/5">
+              <div className="flex w-screen max-w-[240px] flex-col overflow-hidden rounded-md bg-white leading-6 shadow-lg ring-1 ring-gray-900/5">
                 <RangeSelectionTab config={config} handleSelection={handleSelection} />
                 <DatePickerDefaultTabs
                   config={config}
