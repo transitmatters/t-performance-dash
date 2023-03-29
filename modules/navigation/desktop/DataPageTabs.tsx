@@ -1,59 +1,46 @@
 import classNames from 'classnames';
 import React from 'react';
 import { pickBy } from 'lodash';
-import { Tab } from '@headlessui/react';
-import { useRouter } from 'next/router';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { DATA_PAGES } from '../../../common/constants/datapages';
-import { lineColorBorder } from '../../../common/styles/general';
+import { ActiveLink } from '../../../common/components/general/ActiveLink';
 
 export const DataPageTabs = () => {
-  const route = useDelimitatedRoute();
-  const { query, linePath, lineShort, line } = route;
-  const router = useRouter();
+  const { datapage, line, linePath, query } = useDelimitatedRoute();
 
   return (
     <div className="md:mt-4">
       <div className="hidden sm:block">
-        <Tab.Group
-          onChange={(value) => {
-            const [, page] = Object.entries(DATA_PAGES)[value];
-            router.push({
-              pathname: `/${linePath}${page.href}`,
-              query: pickBy(query, (attr) => attr !== undefined),
-            });
-          }}
-        >
-          <Tab.List className="flex">
-            {Object.entries(DATA_PAGES).map(
-              ([key, page]) =>
-                line && (
-                  <Tab key={key} disabled={!page.lines.includes(line)}>
-                    {({ selected }) => (
-                      <div
-                        title={
-                          page.lines.includes(line)
-                            ? DATA_PAGES[key].name
-                            : `${DATA_PAGES[key].name} not available for ${lineShort}.`
-                        }
-                        className={classNames(
-                          `select-none whitespace-nowrap border-b-2 px-4 pb-4 text-sm font-medium focus:outline-none focus:ring-0`,
-                          page.lines.includes(line)
-                            ? 'cursor-pointer hover:border-gray-300 hover:text-gray-700'
-                            : 'cursor-select text-opacity-40',
-                          selected
-                            ? lineColorBorder[line ?? 'DEFAULT']
-                            : 'border-transparent text-gray-600 '
-                        )}
-                      >
-                        {page.name}
-                      </div>
+        <nav className="-mb-px flex space-x-8">
+          {Object.entries(DATA_PAGES).map(
+            ([key, page]) =>
+              line &&
+              page.lines.includes(line) && (
+                <ActiveLink
+                  key={key}
+                  href={{
+                    pathname: `/${linePath}${page.href}`,
+                    query: pickBy(query, (attr) => attr !== undefined),
+                  }}
+                  activeClassName={'border-gray-500 text-black'}
+                  lambda={() => {
+                    return key === datapage;
+                  }}
+                >
+                  <div
+                    className={classNames(
+                      `cursor-pointer select-none whitespace-nowrap border-b-2 ${
+                        datapage !== key &&
+                        'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                      }  whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium`
                     )}
-                  </Tab>
-                )
-            )}
-          </Tab.List>
-        </Tab.Group>
+                  >
+                    {page.name}
+                  </div>
+                </ActiveLink>
+              )
+          )}
+        </nav>
       </div>
     </div>
   );
