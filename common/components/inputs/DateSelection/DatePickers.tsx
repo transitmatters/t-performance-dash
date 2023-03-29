@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/light.css';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
+import { buttonHighlightConfig } from '../styles/inputStyle';
 import { RangeButton } from './RangeButton';
 import type { DateSelectionInput } from './types/DateSelectionTypes';
 import { DATE_PICKER_PRESETS, FLAT_PICKER_OPTIONS, TODAY_STRING } from './DateConstants';
@@ -18,7 +19,7 @@ interface DatePickerProps {
 
 export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig }) => {
   const updateQueryParams = useUpdateQuery();
-  const { query } = useDelimitatedRoute();
+  const { query, line, tab } = useDelimitatedRoute();
   const { startDate, endDate } = query;
   const endDateObject = dayjs(endDate);
   const startDateObject = dayjs(startDate);
@@ -72,11 +73,15 @@ export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig }) =>
     <div className={'-ml-[1px] flex flex-row self-stretch '}>
       <div className={classNames('flex h-full flex-row self-stretch bg-opacity-80')}>
         <Flatpickr
-          className="pointer w-32 border-0 py-0"
+          //TODO: Change calendar to line color
+          className={classNames(
+            'w-32 cursor-pointer border-none py-0 focus:ring-opacity-0',
+            line && buttonHighlightConfig[line]
+          )}
           value={startDate}
           key={'start'}
           placeholder={'mm/dd/yyyy'}
-          options={FLAT_PICKER_OPTIONS}
+          options={FLAT_PICKER_OPTIONS[tab]}
           onChange={(dates, currentDateString) => {
             handleStartDateChange(currentDateString);
           }}
@@ -90,11 +95,15 @@ export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig }) =>
             </div>
 
             <Flatpickr
-              className="pointer w-32 border-0 py-0"
+              //TODO: Change calendar to line color
+              className={classNames(
+                'w-32 cursor-pointer border-none py-0 focus:ring-opacity-0',
+                line && buttonHighlightConfig[line]
+              )}
               value={endDate}
               key={'end'}
               placeholder={'mm/dd/yyyy'}
-              options={FLAT_PICKER_OPTIONS}
+              options={FLAT_PICKER_OPTIONS[tab]}
               onChange={(dates, currentDateString) => {
                 handleEndDateChange(currentDateString);
               }}

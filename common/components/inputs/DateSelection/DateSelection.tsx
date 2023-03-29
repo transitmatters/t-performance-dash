@@ -1,9 +1,9 @@
 import { Popover, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import React, { Fragment, useEffect, useState } from 'react';
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
+import { faCalendarDay, faCalendarWeek } from '@fortawesome/free-solid-svg-icons';
 import { lineColorBackground, lineColorDarkBorder } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { buttonHighlightConfig } from '../styles/inputStyle';
@@ -63,7 +63,10 @@ export const DateSelection = () => {
             line && buttonHighlightConfig[line]
           )}
         >
-          <FontAwesomeIcon icon={faCalendar} className="pr-1 text-white" />
+          <FontAwesomeIcon
+            icon={config.range ? faCalendarWeek : faCalendarDay}
+            className="pr-1 text-white"
+          />
           <p className="truncate">
             {config.selection != undefined ? selectedOptions[config.selection].name : 'Custom'}
           </p>
