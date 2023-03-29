@@ -59,7 +59,7 @@ export const DateSelection = () => {
       >
         <Popover.Button
           className={classNames(
-            'flex h-full w-full items-center justify-center self-stretch bg-black bg-opacity-10 px-3 py-1 text-white text-opacity-90 shadow-sm hover:bg-opacity-0 focus:bg-opacity-0 focus:outline-none',
+            'flex h-full w-full items-center justify-center self-stretch bg-black bg-opacity-10 px-3 py-1 text-white text-opacity-95 shadow-sm hover:bg-opacity-0 focus:bg-opacity-0 focus:outline-none',
             line && buttonHighlightConfig[line]
           )}
         >
