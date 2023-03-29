@@ -4,23 +4,24 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { Line } from 'react-chartjs-2';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
 import { useDelimitatedRoute } from '../../../common/utils/router';
+dayjs.extend(utc);
 
 interface TotalSlowTimeProps {
+  // Data is always all data. We filter it by adjusting the X axis of the graph.
   data?: DayDelayTotals[];
+  startDate?: dayjs.Dayjs;
+  endDate?: dayjs.Dayjs;
 }
 Chart.register(...registerables);
 
-export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data }) => {
+export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data, startDate, endDate }) => {
   const ref = useRef();
-  const labels = data?.map((item) => item['date']);
-  const {
-    line,
-    lineShort,
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const labels = data?.map((item) => dayjs.utc(item.date).format('YYYY-MM-DD'));
+  const { line, lineShort } = useDelimitatedRoute();
 
   if (!(lineShort && line)) {
     return null;

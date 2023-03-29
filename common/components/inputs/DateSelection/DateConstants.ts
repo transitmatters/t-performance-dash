@@ -12,6 +12,8 @@ dayjs.extend(timezone);
 export const DATE_FORMAT = 'YYYY-MM-DD';
 
 export const TODAY = dayjs().tz(est);
+export const TODAY_UTC = dayjs.utc().startOf('day');
+export const YESTERDAY_UTC = TODAY_UTC.subtract(1, 'day');
 export const TODAY_STRING = TODAY.format(DATE_FORMAT);
 export const RANGE_OPTIONS = ['Single Day', 'Range'];
 

@@ -4,17 +4,18 @@ import dayjs from 'dayjs';
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
-import { SZWidgetValue, TimeWidgetValue } from '../../common/types/basicWidgets';
-import { useSlowZoneCalculations } from '../../common/utils/slowZoneUtils';
+import { TimeWidgetValue } from '../../common/types/basicWidgets';
+import { getSlowZoneDeltas } from '../../common/utils/slowZoneUtils';
+import { TODAY_UTC } from '../../common/components/inputs/DateSelection/DateConstants';
+import { WidgetDataLayoutNoComparison } from '../../common/components/widgets/internal/WidgetDataLayoutNoComparison';
 import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 
 export default function SlowZonesWidget() {
   const { line, linePath, lineShort } = useDelimitatedRoute();
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
-  const allSlow = useQuery(['allSlow'], fetchAllSlow);
+  const allSlow = useQuery(['allSlowOverview'], fetchAllSlow);
 
   const formattedTotals = useMemo(
     () =>
@@ -22,10 +23,12 @@ export default function SlowZonesWidget() {
     [delayTotals.data]
   );
 
-  const { current, lastWeek, totalDelay, totalDelayLasteek } = useSlowZoneCalculations({
+  const { delayDelta } = getSlowZoneDeltas({
     lineShort,
     allSlow: allSlow.data,
-    formattedTotals,
+    endDateUTC: TODAY_UTC,
+    startDateUTC: dayjs.utc('2022-1-1'),
+    totals: formattedTotals,
   });
 
   if (delayTotals.isLoading || allSlow.isLoading || !line) {
@@ -45,19 +48,18 @@ export default function SlowZonesWidget() {
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <HomescreenWidgetTitle title="Slow Zones" href={`/${linePath}/slowzones`} />
         <div className={classNames('flex w-full flex-row')}>
-          <BasicWidgetDataLayout
-            title="Total Delay"
-            widgetValue={new TimeWidgetValue(totalDelay, totalDelay - totalDelayLasteek)}
-            analysis={`from last ${dayjs().format('ddd')}.`}
-          />
-          <BasicWidgetDataLayout
-            title="# Slow Zones"
-            widgetValue={new SZWidgetValue(current, current && lastWeek ? current - lastWeek : 0)}
+          <WidgetDataLayoutNoComparison
+            title="Delay"
+            widgetValue={new TimeWidgetValue(delayDelta, delayDelta)}
             analysis={`from last ${dayjs().format('ddd')}.`}
           />
         </div>
         <div className={classNames('h-48 pr-4')}>
-          <TotalSlowTime data={formattedTotals} />
+          <TotalSlowTime
+            data={formattedTotals}
+            startDate={dayjs('2022-06-01')}
+            endDate={TODAY_UTC}
+          />
         </div>
       </div>
     </>
