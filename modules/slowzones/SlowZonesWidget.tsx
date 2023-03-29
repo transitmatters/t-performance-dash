@@ -8,7 +8,7 @@ import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { getSlowZoneDeltas } from '../../common/utils/slowZoneUtils';
 import { TODAY_UTC } from '../../common/components/inputs/DateSelection/DateConstants';
-import { WidgetDataLayoutNoComparison } from '../../common/components/widgets/internal/WidgetDataLayoutNoComparison';
+import { SimpleDeltaWidget } from '../../common/components/widgets/internal/SimpleDeltaWidget';
 import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 
@@ -48,11 +48,7 @@ export default function SlowZonesWidget() {
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <HomescreenWidgetTitle title="Slow Zones" href={`/${linePath}/slowzones`} />
         <div className={classNames('flex w-full flex-row')}>
-          <WidgetDataLayoutNoComparison
-            title="Delay"
-            widgetValue={new TimeWidgetValue(delayDelta, delayDelta)}
-            analysis={`from last ${dayjs().format('ddd')}.`}
-          />
+          <SimpleDeltaWidget widgetValue={new TimeWidgetValue(delayDelta, delayDelta)} />
         </div>
         <div className={classNames('h-48 pr-4')}>
           <TotalSlowTime

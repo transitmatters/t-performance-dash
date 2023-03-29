@@ -19,7 +19,6 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
 dayjs.extend(timezone);
-const est = 'America/New_York';
 
 const getDirection = (to: Station, from: Station) => {
   const toOrder = to.order;

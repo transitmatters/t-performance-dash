@@ -81,8 +81,8 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data, startDate, e
           x: {
             type: 'time',
 
-            min: dayjs(startDate).toISOString(),
-            max: dayjs(endDate).toISOString(),
+            min: startDate?.toISOString(),
+            max: endDate?.toISOString(),
             ticks: {
               color: COLORS.design.subtitleGrey,
             },

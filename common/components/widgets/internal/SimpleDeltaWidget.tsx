@@ -1,8 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
-import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { WidgetValueInterface } from '../../../types/basicWidgets';
 
 import { LoadingSpinner } from '../../graphics/LoadingSpinner';
@@ -11,15 +9,11 @@ import { useDelimitatedRoute } from '../../../utils/router';
 type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';
 
 export type BasicWidgetDataLayoutProps = {
-  title: string;
-  analysis: string;
   widgetValue: WidgetValueInterface;
   sentimentDirection?: SentimentDirection;
 };
 
-export const WidgetDataLayoutNoComparison: React.FC<BasicWidgetDataLayoutProps> = ({
-  title,
-  analysis,
+export const SimpleDeltaWidget: React.FC<BasicWidgetDataLayoutProps> = ({
   widgetValue,
   sentimentDirection = 'negativeOnIncrease',
 }) => {
@@ -36,19 +30,20 @@ export const WidgetDataLayoutNoComparison: React.FC<BasicWidgetDataLayoutProps> 
     const textColor = positiveSentiment ? 'text-green-800' : 'text-red-800';
     return (
       <div className="flex flex-row gap-x-2">
-        <div
-          className={classNames(
-            'mt-1 flex flex-row items-center rounded-full',
-            widgetValue.delta ? bgColor : 'bg-gray-100',
-            widgetValue.delta ? textColor : 'text-rb-800'
-          )}
-        >
-          <FontAwesomeIcon icon={increase ? faArrowUp : faArrowDown} className="h-6 px-2" />
-        </div>
         <div className="flex flex-row items-baseline gap-x-1">
-          <p className={classNames('text-3xl', widgetValue.delta ? textColor : 'text-rb-800')}>
-            {deltaValue}
-          </p>
+          <div
+            className={classNames(
+              'mt-1 flex flex-row items-center rounded-full',
+              widgetValue.delta ? bgColor : 'bg-gray-100',
+              widgetValue.delta ? textColor : 'text-rb-800'
+            )}
+          >
+            <p
+              className={classNames('px-4 text-3xl', widgetValue.delta ? textColor : 'text-rb-800')}
+            >
+              {deltaValue}
+            </p>
+          </div>
           <p className="text-base text-design-subtitleGrey">{widgetValue.getUnits()}</p>
         </div>
       </div>
@@ -60,13 +55,11 @@ export const WidgetDataLayoutNoComparison: React.FC<BasicWidgetDataLayoutProps> 
       <div className={classNames('relative flex  flex-1 bg-white')}>
         {widgetValue.value === undefined && <LoadingSpinner />}
         <div className={classNames('flex flex-col items-start p-2')}>
-          <p className={classNames('text-base text-gray-500')}>{title}</p>
+          <p className={classNames('text-xs text-design-subtitleGrey sm:text-sm')}>
+            {dayjs(startDate).format('MMM D, YYYY')} - {dayjs(endDate).format('MMM D, YYYY')}
+          </p>
           <div className="flex flex-row items-baseline gap-x-1">{getDelta()}</div>
-          <div className="flex flex-row items-baseline gap-x-1">
-            <p className={classNames('text-xs text-design-subtitleGrey sm:text-sm')}>
-              {dayjs(startDate).format('MMM D, YYYY')} - {dayjs(endDate).format('MMM D, YYYY')}
-            </p>
-          </div>
+          <div className="flex flex-row items-baseline gap-x-1"></div>
         </div>
       </div>
     </>

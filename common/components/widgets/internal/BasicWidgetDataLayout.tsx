@@ -10,7 +10,6 @@ export type BasicWidgetDataLayoutProps = {
   analysis: string;
   widgetValue: WidgetValueInterface;
   sentimentDirection?: SentimentDirection;
-  comparison?: boolean;
 };
 
 export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
