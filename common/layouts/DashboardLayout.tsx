@@ -4,11 +4,10 @@ import { useBreakpoint } from '../hooks/useBreakpoint';
 import { DataPageHeader } from '../../modules/dashboard/DataPageHeader';
 import { WidgetPage } from '../components/widgets/Widget';
 import { SideNavBar } from '../../modules/navigation/desktop/SideNavBar';
-import { SecondaryNavBar } from '../../modules/navigation/mobile/SecondaryNavBar';
 import { Footer } from './Footer';
 
 export const DashboardLayout = ({ children }) => {
-  const isMobile = !useBreakpoint('sm');
+  const isMobile = !useBreakpoint('md');
 
   return (
     <div className="flex min-h-full flex-col justify-between">
@@ -26,7 +25,6 @@ export const DashboardLayout = ({ children }) => {
         </main>
         {isMobile && (
           <>
-            <SecondaryNavBar />
             <BottomNavBar />
           </>
         )}

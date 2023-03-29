@@ -2,11 +2,11 @@ import { capitalize, isEqual, pickBy } from 'lodash';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
-import type { DateRangeType } from 'react-tailwindcss-datepicker/dist/types';
 import type { DataPage } from '../types/dataPages';
 import type { Line, LineMetadata, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route } from '../types/router';
+import type { DateParams } from '../components/inputs/DateSelection/types/DateSelectionTypes';
 import { getOffsetDate } from './date';
 
 const linePathToKeyMap: Record<string, Line> = {
@@ -17,6 +17,12 @@ const linePathToKeyMap: Record<string, Line> = {
   bus: 'BUS',
 };
 
+const getParams = (params: QueryParams) => {
+  return Object.fromEntries(
+    Object.entries(params).filter(([key, value]) => key !== 'line' && value)
+  );
+};
+
 export const useDelimitatedRoute = (): Route => {
   const router = useRouter();
   const path = router.asPath.split('?');
@@ -24,8 +30,9 @@ export const useDelimitatedRoute = (): Route => {
   const queryParams: QueryParams = router.query;
   const tab = RAIL_LINES.includes(pathItems[1]) ? 'Subway' : 'Bus';
 
-  if (!queryParams.startDate) {
-    queryParams.startDate = dayjs().format('YYYY-MM-DD');
+  const newParams = getParams(queryParams);
+  if (!newParams.startDate) {
+    newParams.startDate = dayjs().format('YYYY-MM-DD');
   }
 
   return {
@@ -34,15 +41,15 @@ export const useDelimitatedRoute = (): Route => {
     lineShort: capitalize(pathItems[1]) as LineShort, //TODO: Remove as
     datapage: (pathItems[2] as DataPage) || 'overview', //TODO: Remove as
     tab: tab,
-    query: router.isReady ? queryParams : {},
+    query: router.isReady ? newParams : {},
   };
 };
 
-export const useUpdateQuery = ({ range }: { range: boolean }) => {
+export const useUpdateQuery = () => {
   const router = useRouter();
 
   const updateQueryParams = useCallback(
-    (newQueryParams: Partial<DateRangeType> | null) => {
+    (newQueryParams: DateParams, range: boolean) => {
       if (!newQueryParams) return;
 
       const { startDate, endDate } = newQueryParams;
@@ -70,7 +77,7 @@ export const useUpdateQuery = ({ range }: { range: boolean }) => {
         }
       }
     },
-    [range, router]
+    [router]
   );
 
   return updateQueryParams;
