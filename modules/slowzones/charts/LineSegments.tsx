@@ -59,7 +59,7 @@ export const LineSegments: React.FC<{ data: SlowZoneResponse[]; line: LineShort 
   if (!endDate) {
     return (
       <p>
-        Select a date <b>range</b> to see slow zone segments
+        Select a date <b>range</b> to see slow zone segments graph.
       </p>
     );
   }

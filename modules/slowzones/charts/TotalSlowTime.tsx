@@ -26,10 +26,11 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data, startDate, e
   if (!(lineShort && line)) {
     return null;
   }
+  console.log(endDate);
   if (!endDate) {
     return (
       <p>
-        Select a date <b>range</b> to see total slow times.
+        Select a date <b>range</b> to see total slow times graph.
       </p>
     );
   }

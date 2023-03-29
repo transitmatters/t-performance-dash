@@ -31,15 +31,20 @@ export const SlowZonesContainer: React.FC<SlowZonesContainerProps> = ({
     <div className="flex flex-col gap-4">
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
         <WidgetTitle title="Total delays" />
-        <SimpleDeltaWidget widgetValue={delayWidget} />
+        {/* TODO: display current total when a range is not selected. */}
+        {endDate ? <SimpleDeltaWidget widgetValue={delayWidget} /> : null}
         <div>
-          <TotalSlowTime data={delayTotals} startDate={dayjs(startDate)} endDate={dayjs(endDate)} />
+          <TotalSlowTime
+            data={delayTotals}
+            startDate={dayjs(startDate)}
+            endDate={endDate ? dayjs(endDate) : undefined}
+          />
         </div>
       </div>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
         <WidgetTitle title="Locations" />
-
-        <SimpleDeltaWidget widgetValue={zonesWidget} />
+        {/* TODO: display current total when a range is not selected. */}
+        {endDate ? <SimpleDeltaWidget widgetValue={zonesWidget} /> : null}
         <div>
           <LineSegments data={allSlow} line={line} />
         </div>
