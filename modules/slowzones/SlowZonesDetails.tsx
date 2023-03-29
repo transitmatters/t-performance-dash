@@ -6,12 +6,13 @@ import utc from 'dayjs/plugin/utc';
 import { useQuery } from '@tanstack/react-query';
 
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
-import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
+import { WidgetWrapper } from '../../common/components/widgets/BasicDataWidgetItem';
 import { SlowZonesContainer } from '../../modules/slowzones/SlowZonesContainer';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { SZWidgetValue, TimeWidgetValue } from '../../common/types/basicWidgets';
 import { getSlowZoneDeltas } from '../../common/utils/slowZoneUtils';
 import { TODAY_UTC } from '../../common/components/inputs/DateSelection/DateConstants';
+import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
 dayjs.extend(utc);
 
@@ -62,18 +63,22 @@ export default function SlowZonesDetails() {
   return (
     <>
       <BasicDataWidgetPair>
-        <BasicDataWidgetItem
-          title="Delay Change"
-          widgetValue={new TimeWidgetValue(delayDelta, delayDelta)}
-          analysis={`from last ${dayjs().format('ddd')}.`}
-          comparison={false}
-        />
-        <BasicDataWidgetItem
-          title="# Slow Zones"
-          widgetValue={new SZWidgetValue(zonesDelta, zonesDelta)}
-          analysis={`from last ${dayjs().format('ddd')}.`}
-          comparison={false}
-        />
+        <WidgetWrapper>
+          <BasicWidgetDataLayout
+            title="Delay Change"
+            widgetValue={new TimeWidgetValue(delayDelta, delayDelta)}
+            analysis={`from last ${dayjs().format('ddd')}.`}
+            comparison={false}
+          />
+        </WidgetWrapper>
+        <WidgetWrapper>
+          <BasicWidgetDataLayout
+            title="# Slow Zones"
+            widgetValue={new SZWidgetValue(zonesDelta, zonesDelta)}
+            analysis={`from last ${dayjs().format('ddd')}.`}
+            comparison={false}
+          />
+        </WidgetWrapper>
       </BasicDataWidgetPair>
 
       <SlowZonesContainer

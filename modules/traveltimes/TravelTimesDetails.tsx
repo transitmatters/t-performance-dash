@@ -9,10 +9,11 @@ import { QueryNameKeys, AggregateAPIParams, SingleDayAPIParams } from '../../com
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
-import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
+import { WidgetWrapper } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
+import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
@@ -82,16 +83,18 @@ export default function TravelTimesDetails() {
         />
       ) : null}
       <BasicDataWidgetPair>
-        <BasicDataWidgetItem
-          title="Avg. Travel Time"
-          widgetValue={
-            new TimeWidgetValue(
-              travelTimeValues ? averageTravelTime(travelTimeValues) : undefined,
-              1
-            )
-          }
-          analysis={`from last ${dayjs().format('ddd')}.`}
-        />
+        <WidgetWrapper>
+          <BasicWidgetDataLayout
+            title="Avg. Travel Time"
+            widgetValue={
+              new TimeWidgetValue(
+                travelTimeValues ? averageTravelTime(travelTimeValues) : undefined,
+                1
+              )
+            }
+            analysis={`from last ${dayjs().format('ddd')}.`}
+          />
+        </WidgetWrapper>
       </BasicDataWidgetPair>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
         {aggregate ? (

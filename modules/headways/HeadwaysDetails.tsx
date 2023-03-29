@@ -9,10 +9,11 @@ import { AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../../com
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
-import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
+import { WidgetWrapper } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageHeadway, longestHeadway } from '../../common/utils/headways';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
+import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 import { HeadwaysHistogram } from './charts/HeadwaysHistogram';
 import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
@@ -71,20 +72,24 @@ export default function HeadwaysDetails() {
         />
       ) : null}
       <BasicDataWidgetPair>
-        <BasicDataWidgetItem
-          title="Average Headway"
-          widgetValue={
-            new TimeWidgetValue(headwaysData ? averageHeadway(headwaysData) : undefined, 1)
-          }
-          analysis={`from last ${dayjs().format('ddd')}.`}
-        />
-        <BasicDataWidgetItem
-          title="Longest Headway"
-          widgetValue={
-            new TimeWidgetValue(headwaysData ? longestHeadway(headwaysData) : undefined, 1)
-          }
-          analysis={`from last ${dayjs().format('ddd')}.`}
-        />
+        <WidgetWrapper>
+          <BasicWidgetDataLayout
+            title="Average Headway"
+            widgetValue={
+              new TimeWidgetValue(headwaysData ? averageHeadway(headwaysData) : undefined, 1)
+            }
+            analysis={`from last ${dayjs().format('ddd')}.`}
+          />
+        </WidgetWrapper>
+        <WidgetWrapper>
+          <BasicWidgetDataLayout
+            title="Longest Headway"
+            widgetValue={
+              new TimeWidgetValue(headwaysData ? longestHeadway(headwaysData) : undefined, 1)
+            }
+            analysis={`from last ${dayjs().format('ddd')}.`}
+          />
+        </WidgetWrapper>
       </BasicDataWidgetPair>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
         {aggregate ? (
