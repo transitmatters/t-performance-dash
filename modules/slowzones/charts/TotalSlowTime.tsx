@@ -26,7 +26,11 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data }) => {
     return null;
   }
   if (!endDate) {
-    return <p>Select a date range to see total slow times.</p>;
+    return (
+      <p>
+        Select a date <b>range</b> to see total slow times.
+      </p>
+    );
   }
 
   return (

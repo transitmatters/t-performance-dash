@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import dayjs from 'dayjs';
 
 import { useQuery } from '@tanstack/react-query';
@@ -15,18 +15,20 @@ import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
 export default function SlowZonesDetails() {
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
   const allSlow = useQuery(['allSlow'], fetchAllSlow);
-  const { lineShort } = useDelimitatedRoute();
+  const {
+    lineShort,
+    query: { startDate, endDate },
+  } = useDelimitatedRoute();
 
-  const formattedTotals = useMemo(
-    () =>
-      delayTotals.data && delayTotals.data.filter((t) => new Date(t.date) > new Date(2022, 0, 1)),
-    [delayTotals.data]
+  const delayTotalsData = delayTotals.data ?? [];
+  const filteredDelayTotals = delayTotalsData.filter(
+    (t) => dayjs(t.date).isAfter(dayjs(startDate)) && dayjs(t.date).isBefore(dayjs(endDate))
   );
 
-  const { current, lastWeek, totalDelay, totalDelayLasteek } = useSlowZoneCalculations({
+  const { current, delayDelta } = useSlowZoneCalculations({
     lineShort,
     allSlow: allSlow.data,
-    formattedTotals,
+    totals: filteredDelayTotals,
   });
 
   if (delayTotals.isLoading || allSlow.isLoading) {
@@ -41,18 +43,22 @@ export default function SlowZonesDetails() {
     <>
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
-          title="Total Delay"
-          widgetValue={new TimeWidgetValue(totalDelay, totalDelay - totalDelayLasteek)}
+          title="Delay Change"
+          widgetValue={new TimeWidgetValue(delayDelta, 0)}
           analysis={`from last ${dayjs().format('ddd')}.`}
         />
         <BasicDataWidgetItem
           title="# Slow Zones"
-          widgetValue={new SZWidgetValue(current, current && lastWeek ? current - lastWeek : 0)}
+          widgetValue={new SZWidgetValue(current, 0)}
           analysis={`from last ${dayjs().format('ddd')}.`}
         />
       </BasicDataWidgetPair>
 
-      <SlowZonesContainer allSlow={allSlow.data} delayTotals={formattedTotals} line={lineShort} />
+      <SlowZonesContainer
+        allSlow={allSlow.data}
+        delayTotals={filteredDelayTotals}
+        line={lineShort}
+      />
     </>
   );
 }

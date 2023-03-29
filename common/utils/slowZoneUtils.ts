@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -12,6 +11,7 @@ import type {
   SlowZoneResponse,
 } from '../../common/types/dataPoints';
 import { lookup_station_by_id } from './stations';
+import { useDelimitatedRoute } from './router';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -79,46 +79,29 @@ export const getRoutes = (data: SlowZone[], direction: Direction) => {
 export const useSlowZoneCalculations = ({
   lineShort,
   allSlow,
-  formattedTotals,
+  totals,
 }: {
-  lineShort: string;
+  lineShort?: string;
   allSlow?: SlowZoneResponse[];
-  formattedTotals?: DayDelayTotals[];
+  totals?: DayDelayTotals[];
 }) => {
-  const current = useMemo(
-    () =>
-      allSlow &&
-      allSlow.filter(
-        (sz) =>
-          sz.color === lineShort && dayjs.tz(sz.end, est).isSame(dayjs().subtract(1, 'day'), 'day')
-      ).length,
-    [allSlow, lineShort]
-  );
+  const {
+    query: { endDate },
+  } = useDelimitatedRoute();
+  const current =
+    allSlow && lineShort
+      ? allSlow.filter(
+          (sz) =>
+            sz.color === lineShort &&
+            dayjs.tz(sz.end, est).isSameOrAfter(dayjs(endDate).subtract(1, 'day'), 'day')
+        ).length
+      : 0;
 
-  const lastWeek = useMemo(
-    () =>
-      allSlow &&
-      allSlow.filter((sz) => {
-        const start = dayjs(sz.start);
-        const end = dayjs(sz.end);
-        const aWeekAgo = dayjs().subtract(7, 'days');
-        return (
-          sz.color === lineShort && start.isSameOrBefore(aWeekAgo) && end.isSameOrAfter(aWeekAgo)
-        );
-      }).length,
-    [allSlow, lineShort]
-  );
-
-  const totalDelay = formattedTotals ? formattedTotals[formattedTotals.length - 1][lineShort] : 0;
-
-  const totalDelayLasteek = formattedTotals
-    ? formattedTotals[formattedTotals.length - 8][lineShort]
-    : 0;
+  const delayDelta =
+    totals?.length && lineShort ? totals[totals.length - 1][lineShort] - totals[0][lineShort] : 0;
 
   return {
     current,
-    lastWeek,
-    totalDelay,
-    totalDelayLasteek,
+    delayDelta,
   };
 };

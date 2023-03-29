@@ -43,7 +43,11 @@ export const LineSegments: React.FC<{ data: SlowZoneResponse[]; line: LineShort 
   const routes = useMemo(() => getRoutes(formattedData, 'southbound'), [formattedData]);
 
   if (!endDate) {
-    return <p>Select a date range to see slow zone segments</p>;
+    return (
+      <p>
+        Select a date <b>range</b> to see slow zone segments
+      </p>
+    );
   }
 
   return (
