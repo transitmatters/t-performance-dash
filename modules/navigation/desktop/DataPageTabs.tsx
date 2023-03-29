@@ -9,15 +9,17 @@ import { lineColorBorder } from '../../../common/styles/general';
 
 export const DataPageTabs = () => {
   const route = useDelimitatedRoute();
-  const { query, linePath, lineShort, line } = route;
+  const { query, linePath, lineShort, line, datapage } = route;
   const router = useRouter();
+  const dataPageEntries = Object.entries(DATA_PAGES);
 
   return (
     <div className="md:mt-4">
       <div className="hidden sm:block">
         <Tab.Group
+          selectedIndex={dataPageEntries.findIndex(([key]) => key === datapage)}
           onChange={(value) => {
-            const [, page] = Object.entries(DATA_PAGES)[value];
+            const [, page] = dataPageEntries[value];
             router.push({
               pathname: `/${linePath}${page.href}`,
               query: pickBy(query, (attr) => attr !== undefined),
@@ -25,7 +27,7 @@ export const DataPageTabs = () => {
           }}
         >
           <Tab.List className="flex">
-            {Object.entries(DATA_PAGES).map(
+            {dataPageEntries.map(
               ([key, page]) =>
                 line && (
                   <Tab key={key} disabled={!page.lines.includes(line)}>
