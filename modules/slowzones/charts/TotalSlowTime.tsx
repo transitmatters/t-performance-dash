@@ -3,6 +3,7 @@ import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { Line } from 'react-chartjs-2';
+import dayjs from 'dayjs';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
 import { useDelimitatedRoute } from '../../../common/utils/router';
@@ -15,10 +16,17 @@ Chart.register(...registerables);
 export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data }) => {
   const ref = useRef();
   const labels = data?.map((item) => item['date']);
-  const { line, lineShort } = useDelimitatedRoute();
+  const {
+    line,
+    lineShort,
+    query: { startDate, endDate },
+  } = useDelimitatedRoute();
 
   if (!(lineShort && line)) {
     return null;
+  }
+  if (!endDate) {
+    return <p>Select a date range to see total slow times.</p>;
   }
 
   return (
@@ -67,6 +75,9 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data }) => {
           },
           x: {
             type: 'time',
+
+            min: dayjs(startDate).toISOString(),
+            max: dayjs(endDate).toISOString(),
             ticks: {
               color: COLORS.design.subtitleGrey,
             },

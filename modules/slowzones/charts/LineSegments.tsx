@@ -11,11 +11,13 @@ import {
 import 'chartjs-adapter-date-fns';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { enUS } from 'date-fns/locale';
+import dayjs from 'dayjs';
 import React, { useMemo, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { COLORS } from '../../../common/constants/colors';
 import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
+import { useDelimitatedRoute } from '../../../common/utils/router';
 import { formatSlowZones, getRoutes } from '../../../common/utils/slowZoneUtils';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, TimeScale);
@@ -25,14 +27,24 @@ export const LineSegments: React.FC<{ data: SlowZoneResponse[]; line: LineShort 
   line,
 }) => {
   const ref = useRef();
+  const {
+    query: { startDate, endDate },
+  } = useDelimitatedRoute();
   const formattedData = useMemo(
     () =>
-      formatSlowZones(data.filter((d) => new Date(d.end) > new Date(2022, 5, 1))).filter(
-        (sz) => sz.direction === 'southbound' && sz.color === line
-      ),
-    [data, line]
+      formatSlowZones(
+        data.filter((d) => {
+          const szDate = dayjs(d.end);
+          return szDate.isAfter(dayjs(startDate));
+        })
+      ).filter((sz) => sz.direction === 'southbound' && sz.color === line),
+    [data, line, startDate]
   );
   const routes = useMemo(() => getRoutes(formattedData, 'southbound'), [formattedData]);
+
+  if (!endDate) {
+    return <p>Select a date range to see slow zone segments</p>;
+  }
 
   return (
     <Bar
@@ -68,7 +80,8 @@ export const LineSegments: React.FC<{ data: SlowZoneResponse[]; line: LineShort 
         indexAxis: 'y',
         scales: {
           x: {
-            min: new Date(2022, 5, 1).toISOString(),
+            min: dayjs(startDate).toISOString(),
+            max: dayjs(endDate).toISOString(),
             type: 'time',
             time: {
               unit: 'month',
