@@ -97,22 +97,23 @@ const getSlowZoneQuantityDelta = ({
   startDateUTC?: dayjs.Dayjs;
   endDateUTC: dayjs.Dayjs;
 }) => {
-  const zonesStart =
+  const numZonesOnStartDate =
     allSlow?.filter((sz) => {
-      const zoneStart = dayjs.utc(sz.start);
-      return zoneStart.isSameOrBefore(startDateUTC);
+      return dayjs.utc(sz.start).isSameOrBefore(startDateUTC);
     }).length ?? null;
-  const zonesEnd =
+  const numZonesOnEndDate =
     allSlow?.filter((sz) => {
       const zoneEnd = dayjs.utc(sz.end);
       if (endDateUTC.isSame(TODAY_UTC, 'day')) {
-        // Our latest SZ data is always 1 day behind
+        // Our latest SZ data is always 1 day behind. So use yesterday's data.
         return zoneEnd.isSameOrAfter(endDateUTC.subtract(1, 'day'));
       }
       return zoneEnd.isSameOrAfter(endDateUTC);
     }).length ?? null;
 
-  return zonesEnd != undefined && zonesStart != undefined ? zonesEnd - zonesStart : undefined;
+  return numZonesOnEndDate != undefined && numZonesOnStartDate != undefined
+    ? numZonesOnEndDate - numZonesOnStartDate
+    : undefined;
 };
 
 export const getSlowZoneDeltas = ({
