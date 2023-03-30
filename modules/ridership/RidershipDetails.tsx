@@ -1,8 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useRidershipData } from '../../common/api/ridership';
-import { WidgetWrapper } from '../../common/components/widgets/BasicDataWidgetItem';
+import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
-import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { LINE_COLORS } from '../../common/constants/colors';
 import { PercentageWidgetValue, TripsWidgetValue } from '../../common/types/basicWidgets';
 import type { ServiceDay } from '../../common/types/ridership';
@@ -35,34 +34,30 @@ export default function TravelTimesDetails() {
   return (
     <>
       <BasicDataWidgetPair>
-        <WidgetWrapper>
-          <BasicWidgetDataLayout
-            title="Pre-COVID Ridership"
-            widgetValue={
-              new PercentageWidgetValue(
-                ridershipPercentage[ridershipPercentage.length - 1],
-                ridershipPercentage[ridershipPercentage.length - 1] -
-                  ridershipPercentage[ridershipPercentage.length - 31]
-              )
-            }
-            analysis={`from last month.`}
-            sentimentDirection={'positiveOnIncrease'}
-          />
-        </WidgetWrapper>
-        <WidgetWrapper>
-          <BasicWidgetDataLayout
-            title="Service Levels"
-            widgetValue={
-              new TripsWidgetValue(
-                serviceHistory?.[serviceHistory.length - 1],
-                serviceHistory?.[serviceHistory.length - 1] -
-                  serviceHistory?.[serviceHistory.length - 365]
-              )
-            }
-            analysis={`since last year.`}
-            sentimentDirection={'positiveOnIncrease'}
-          />
-        </WidgetWrapper>
+        <BasicDataWidgetItem
+          title="Pre-COVID Ridership"
+          widgetValue={
+            new PercentageWidgetValue(
+              ridershipPercentage[ridershipPercentage.length - 1],
+              ridershipPercentage[ridershipPercentage.length - 1] -
+                ridershipPercentage[ridershipPercentage.length - 31]
+            )
+          }
+          analysis={`from last month.`}
+          sentimentDirection={'positiveOnIncrease'}
+        />
+        <BasicDataWidgetItem
+          title="Service Levels"
+          widgetValue={
+            new TripsWidgetValue(
+              serviceHistory?.[serviceHistory.length - 1],
+              serviceHistory?.[serviceHistory.length - 1] -
+                serviceHistory?.[serviceHistory.length - 365]
+            )
+          }
+          analysis={`since last year.`}
+          sentimentDirection={'positiveOnIncrease'}
+        />
       </BasicDataWidgetPair>
       <div className="flex w-full flex-row items-center justify-between text-lg">
         <h3>Weekday ridership and service levels</h3>

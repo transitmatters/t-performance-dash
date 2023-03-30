@@ -8,11 +8,10 @@ import { AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../../com
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
-import { WidgetWrapper } from '../../common/components/widgets/BasicDataWidgetItem';
+import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
-import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 
@@ -70,20 +69,16 @@ export default function DwellsDetails() {
         />
       ) : null}
       <BasicDataWidgetPair>
-        <WidgetWrapper>
-          <BasicWidgetDataLayout
-            title="Average Dwell"
-            widgetValue={new TimeWidgetValue(dwellsData ? averageDwells(dwellsData) : undefined, 1)}
-            analysis={`from last ${dayjs().format('ddd')}.`}
-          />
-        </WidgetWrapper>
-        <WidgetWrapper>
-          <BasicWidgetDataLayout
-            title="Longest Dwell"
-            widgetValue={new TimeWidgetValue(dwellsData ? longestDwells(dwellsData) : undefined, 1)}
-            analysis={`from last ${dayjs().format('ddd')}.`}
-          />
-        </WidgetWrapper>
+        <BasicDataWidgetItem
+          title="Average Dwell"
+          widgetValue={new TimeWidgetValue(dwellsData ? averageDwells(dwellsData) : undefined, 1)}
+          analysis={`from last ${dayjs().format('ddd')}.`}
+        />
+        <BasicDataWidgetItem
+          title="Longest Dwell"
+          widgetValue={new TimeWidgetValue(dwellsData ? longestDwells(dwellsData) : undefined, 1)}
+          analysis={`from last ${dayjs().format('ddd')}.`}
+        />
       </BasicDataWidgetPair>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
         {aggregate ? (
