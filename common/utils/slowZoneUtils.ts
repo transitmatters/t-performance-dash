@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import { useMemo } from 'react';
 import type { Station } from '../../common/types/stations';
 import type {
   DayDelayTotals,
@@ -11,6 +12,7 @@ import type {
   SlowZoneResponse,
 } from '../../common/types/dataPoints';
 import { TODAY_UTC } from '../components/inputs/DateSelection/DateConstants';
+import type { LineShort } from '../types/lines';
 import { lookup_station_by_id } from './stations';
 
 dayjs.extend(utc);
@@ -65,7 +67,19 @@ export const groupByLine = (data: SlowZone[]) =>
     return series;
   }, {});
 
-export const getRoutes = (data: SlowZone[], direction: Direction) => {
+export const useFormatSegments = (data: SlowZoneResponse[], startDateUTC: dayjs.Dayjs) => {
+  return useMemo(() => {
+    return formatSlowZones(
+      data.filter((d) => {
+        const szDate = dayjs.utc(d.end);
+        return szDate.isAfter(startDateUTC);
+      })
+    ).filter((sz) => sz.direction === 'southbound');
+  }, [data, startDateUTC]);
+};
+
+export const getRoutes = (direction: Direction, data?: SlowZone[]) => {
+  if (!data) return undefined;
   // group by line, sort by order , flatten, get ids, filter out duplicates
   const routes = Object.values(groupByLine(data))
     .map((sz: SlowZone[]) =>
@@ -76,65 +90,63 @@ export const getRoutes = (data: SlowZone[], direction: Direction) => {
   return [...new Set(routes)];
 };
 
-export const getSlowZoneDelayDelta = ({
-  totals,
-  lineShort,
-}: {
-  lineShort?: string;
-  totals?: DayDelayTotals[];
-}) => {
-  return totals?.length && lineShort
-    ? totals[totals.length - 1][lineShort] - totals[0][lineShort]
-    : undefined;
+export const getSlowZoneDelayDelta = (totals: DayDelayTotals[], lineShort: string) => {
+  if (!totals.length) return 0;
+  return totals[totals.length - 1][lineShort] - totals[0][lineShort];
 };
 
-const getSlowZoneQuantityDelta = ({
-  allSlow,
-  startDateUTC,
-  endDateUTC,
-}: {
-  allSlow?: SlowZoneResponse[];
-  startDateUTC?: dayjs.Dayjs;
-  endDateUTC: dayjs.Dayjs;
-}) => {
-  const numZonesOnStartDate =
-    allSlow?.filter((sz) => {
-      return dayjs.utc(sz.start).isSameOrBefore(startDateUTC);
-    }).length ?? null;
-  const numZonesOnEndDate =
-    allSlow?.filter((sz) => {
-      const zoneEnd = dayjs.utc(sz.end);
-      if (endDateUTC.isSame(TODAY_UTC, 'day')) {
-        // Our latest SZ data is always 1 day behind. So use yesterday's data.
-        return zoneEnd.isSameOrAfter(endDateUTC.subtract(1, 'day'));
-      }
-      return zoneEnd.isSameOrAfter(endDateUTC);
-    }).length ?? null;
-
-  return numZonesOnEndDate != undefined && numZonesOnStartDate != undefined
-    ? numZonesOnEndDate - numZonesOnStartDate
-    : undefined;
+export const useFilteredAllSlow = (
+  data: SlowZoneResponse[],
+  startDateUTC: dayjs.Dayjs,
+  endDateUTC: dayjs.Dayjs,
+  lineShort: LineShort
+) => {
+  return useMemo(() => {
+    return data.filter((t) => {
+      const start = dayjs.utc(t.start);
+      const end = dayjs.utc(t.end);
+      return (
+        t.color === lineShort &&
+        (start.isAfter(startDateUTC) || end.isAfter(startDateUTC)) &&
+        start.isBefore(endDateUTC)
+      );
+    });
+  }, [data, startDateUTC, endDateUTC, lineShort]);
 };
 
-export const getSlowZoneDeltas = ({
-  lineShort,
-  totals,
-  allSlow,
-  startDateUTC,
-  endDateUTC,
-}: {
-  lineShort?: string;
-  totals?: DayDelayTotals[];
-  allSlow?: SlowZoneResponse[];
-  startDateUTC?: dayjs.Dayjs;
-  endDateUTC: dayjs.Dayjs;
-}): { zonesDelta: number | undefined; delayDelta: undefined | number } => {
-  const zonesDelta = allSlow
-    ? getSlowZoneQuantityDelta({ allSlow, startDateUTC, endDateUTC })
-    : undefined;
-  const delayDelta = totals ? getSlowZoneDelayDelta({ totals, lineShort }) : undefined;
-  return {
-    zonesDelta,
-    delayDelta,
-  };
+export const useFilteredDelayTotals = (
+  data: DayDelayTotals[],
+  startDateUTC: dayjs.Dayjs,
+  endDateUTC: dayjs.Dayjs
+) => {
+  return useMemo(() => {
+    return data.filter((t) => {
+      const date = dayjs.utc(t.date);
+      return date.isSameOrAfter(startDateUTC) && date.isSameOrBefore(endDateUTC);
+    });
+  }, [data, startDateUTC, endDateUTC]);
+};
+
+export const useSlowZoneQuantityDelta = (
+  allSlow: SlowZoneResponse[],
+  endDateUTC: dayjs.Dayjs,
+  startDateUTC: dayjs.Dayjs
+) => {
+  return useMemo(() => {
+    const start =
+      allSlow.filter((sz) => {
+        return dayjs.utc(sz.start).isSameOrBefore(startDateUTC);
+      }).length ?? 0;
+    const end =
+      allSlow.filter((sz) => {
+        const zoneEnd = dayjs.utc(sz.end);
+        if (endDateUTC.isSame(TODAY_UTC, 'day')) {
+          // Our latest SZ data is always 1 day behind. So use yesterday's data.
+          return zoneEnd.isSameOrAfter(endDateUTC.subtract(1, 'day'));
+        }
+        return zoneEnd.isSameOrAfter(endDateUTC);
+      }).length ?? 0;
+
+    return end - start;
+  }, [allSlow, startDateUTC, endDateUTC]);
 };

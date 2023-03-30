@@ -5,12 +5,12 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useQuery } from '@tanstack/react-query';
 
-import { SlowZonesContainer } from '../../modules/slowzones/SlowZonesContainer';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { SZWidgetValue, TimeWidgetValue } from '../../common/types/basicWidgets';
-import { getSlowZoneDeltas } from '../../common/utils/slowZoneUtils';
-import { TODAY_UTC } from '../../common/components/inputs/DateSelection/DateConstants';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
+import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
+import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 dayjs.extend(utc);
 
 export default function SlowZonesDetails() {
@@ -18,54 +18,59 @@ export default function SlowZonesDetails() {
   const allSlow = useQuery(['allSlow'], fetchAllSlow);
   const {
     lineShort,
+    line,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
 
-  const startDateUTC = dayjs.utc(startDate);
-  const endDateUTC = endDate ? dayjs.utc(endDate) : TODAY_UTC;
+  const startDateUTC = startDate ? dayjs.utc(startDate).startOf('day') : undefined;
+  const endDateUTC = endDate ? dayjs.utc(endDate).startOf('day') : undefined;
+  const totalSlowTimeReady =
+    !delayTotals.isError && delayTotals.data && startDateUTC && endDateUTC && lineShort && line;
+  const segmentsReady = !allSlow.isError && allSlow.data && startDateUTC && lineShort;
 
-  const delayTotalsData = delayTotals.data ?? [];
-  const filteredDelayTotals = delayTotalsData.filter((t) => {
-    const date = dayjs.utc(t.date);
-    return date.isSameOrAfter(startDateUTC) && date.isSameOrBefore(endDateUTC);
-  });
-
-  const allSlowData = allSlow.data ?? [];
-  const filteredAllSlow = allSlowData.filter((t) => {
-    const start = dayjs.utc(t.start);
-    const end = dayjs.utc(t.end);
+  if (!endDateUTC || !startDateUTC) {
     return (
-      t.color === lineShort &&
-      (start.isAfter(startDateUTC) || end.isAfter(startDateUTC)) &&
-      start.isBefore(endDateUTC)
+      <p>
+        Select a date <b>range</b> to load Slow Zone graphs.
+      </p>
     );
-  });
-
-  const { zonesDelta, delayDelta } = getSlowZoneDeltas({
-    lineShort,
-    allSlow: filteredAllSlow,
-    totals: filteredDelayTotals,
-    startDateUTC: startDateUTC,
-    endDateUTC: endDateUTC,
-  });
-
-  if (delayTotals.isLoading || allSlow.isLoading) {
-    return <>Loading...</>;
   }
-  // TODO: Error should only be shown on the individual graphs. Same with loading
-  if (delayTotals.isError || allSlow.isError) {
-    return <>Uh oh... error</>;
-  }
-
   return (
-    <>
-      <SlowZonesContainer
-        allSlow={filteredAllSlow}
-        delayTotals={delayTotalsData}
-        line={lineShort}
-        delayWidget={new TimeWidgetValue(delayDelta, delayDelta)}
-        zonesWidget={new SZWidgetValue(zonesDelta, zonesDelta)}
-      />
-    </>
+    <div className="flex flex-col gap-4">
+      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+        {/* TODO: display current total when a range is not selected. */}
+        <WidgetTitle title="Total delays" />
+        <div className="relative flex flex-col">
+          {totalSlowTimeReady ? (
+            <TotalSlowTimeWrapper
+              data={delayTotals.data}
+              startDateUTC={startDateUTC}
+              endDateUTC={endDateUTC}
+              line={line}
+              lineShort={lineShort}
+            />
+          ) : (
+            <div className="relative flex h-full">
+              <ChartPlaceHolder query={delayTotals} />
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+        <WidgetTitle title="Locations" />
+        <div className="relative flex flex-col">
+          {segmentsReady ? (
+            <SlowZonesSegmentsWrapper
+              data={allSlow.data}
+              lineShort={lineShort}
+              endDateUTC={endDateUTC}
+              startDateUTC={startDateUTC}
+            />
+          ) : (
+            <ChartPlaceHolder query={allSlow} />
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

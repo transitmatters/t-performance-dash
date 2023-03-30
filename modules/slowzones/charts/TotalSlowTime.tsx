@@ -7,33 +7,28 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import type { LineShort, Line as TrainLine } from '../../../common/types/lines';
 dayjs.extend(utc);
 
 interface TotalSlowTimeProps {
   // Data is always all data. We filter it by adjusting the X axis of the graph.
-  data?: DayDelayTotals[];
-  startDate?: dayjs.Dayjs;
-  endDate?: dayjs.Dayjs;
+  data: DayDelayTotals[];
+  startDateUTC: dayjs.Dayjs;
+  endDateUTC: dayjs.Dayjs;
+  lineShort: LineShort;
+  line: TrainLine;
 }
 Chart.register(...registerables);
 
-export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data, startDate, endDate }) => {
+export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
+  data,
+  startDateUTC,
+  endDateUTC,
+  lineShort,
+  line,
+}) => {
   const ref = useRef();
-  const labels = data?.map((item) => dayjs.utc(item.date).format('YYYY-MM-DD'));
-  const { line, lineShort } = useDelimitatedRoute();
-
-  if (!(lineShort && line)) {
-    return null;
-  }
-  console.log(endDate);
-  if (!endDate) {
-    return (
-      <p>
-        Select a date <b>range</b> to see total slow times graph.
-      </p>
-    );
-  }
+  const labels = data.map((item) => dayjs.utc(item.date).format('YYYY-MM-DD'));
 
   return (
     <Line
@@ -82,8 +77,8 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data, startDate, e
           x: {
             type: 'time',
 
-            min: startDate?.toISOString(),
-            max: endDate?.toISOString(),
+            min: startDateUTC?.toISOString(),
+            max: endDateUTC?.toISOString(),
             ticks: {
               color: COLORS.design.subtitleGrey,
             },
@@ -103,6 +98,9 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data, startDate, e
           },
         },
         plugins: {
+          tooltip: {
+            intersect: false,
+          },
           legend: {
             display: false,
           },

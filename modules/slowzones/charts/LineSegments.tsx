@@ -19,50 +19,35 @@ import React, { useMemo, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { YESTERDAY_UTC } from '../../../common/components/inputs/DateSelection/DateConstants';
 import { COLORS } from '../../../common/constants/colors';
-import type { LineSegmentData, SlowZoneResponse } from '../../../common/types/dataPoints';
+import type { LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
-import { useDelimitatedRoute } from '../../../common/utils/router';
-import { formatSlowZones, getRoutes } from '../../../common/utils/slowZoneUtils';
+import { getRoutes } from '../../../common/utils/slowZoneUtils';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, TimeScale);
 
-export const LineSegments: React.FC<{ data: SlowZoneResponse[]; line: LineShort | undefined }> = ({
+interface LineSegmentsProps {
+  data: SlowZone[];
+  line: LineShort;
+  startDateUTC: dayjs.Dayjs;
+  endDateUTC: dayjs.Dayjs;
+}
+
+export const LineSegments: React.FC<LineSegmentsProps> = ({
   data,
   line,
+  startDateUTC,
+  endDateUTC,
 }) => {
   const ref = useRef();
-  const {
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
-  const startDateUTC = dayjs.utc(startDate);
-  const endDateUTC = dayjs.utc(endDate);
-  const formattedData = useMemo(
-    () =>
-      formatSlowZones(
-        data.filter((d) => {
-          const szDate = dayjs.utc(d.end);
-          return szDate.isAfter(dayjs(startDateUTC));
-        })
-      ).filter((sz) => sz.direction === 'southbound'),
-    [data, startDateUTC]
-  );
-  const routes = useMemo(() => getRoutes(formattedData, 'southbound'), [formattedData]);
+  const routes = useMemo(() => getRoutes('southbound', data), [data]);
 
-  const lineSegmentData: LineSegmentData[] = formattedData.map((sz) => {
+  const lineSegmentData: LineSegmentData[] | undefined = data.map((sz) => {
     return {
       x: [dayjs.utc(sz.start).format('YYYY-MM-DD'), dayjs.utc(sz.end).format('YYYY-MM-DD')],
       id: sz.id,
       delay: sz.delay,
     };
   });
-
-  if (!endDate) {
-    return (
-      <p>
-        Select a date <b>range</b> to see slow zone segments graph.
-      </p>
-    );
-  }
 
   return (
     <Bar

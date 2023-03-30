@@ -39,7 +39,7 @@ export const SimpleDeltaWidget: React.FC<BasicWidgetDataLayoutProps> = ({
             )}
           >
             <p
-              className={classNames('px-4 text-3xl', widgetValue.delta ? textColor : 'text-rb-800')}
+              className={classNames('px-4 text-2xl', widgetValue.delta ? textColor : 'text-rb-800')}
             >
               {deltaValue}
             </p>
