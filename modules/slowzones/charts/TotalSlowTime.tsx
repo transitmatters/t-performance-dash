@@ -6,6 +6,7 @@ import { Line } from 'react-chartjs-2';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
 import { useDelimitatedRoute } from '../../../common/utils/router';
+import { drawSimpleTitle } from '../../../common/components/charts/Title';
 
 interface TotalSlowTimeProps {
   data?: DayDelayTotals[];
@@ -86,11 +87,24 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data }) => {
           },
         },
         plugins: {
+          title: {
+            // empty title to set font and leave room for drawTitle fn
+            display: true,
+            text: '',
+          },
           legend: {
             display: false,
           },
         },
       }}
+      plugins={[
+        {
+          id: 'customTitle',
+          afterDraw: (chart) => {
+            drawSimpleTitle('Total Slow Time', chart);
+          },
+        },
+      ]}
     />
   );
 };
