@@ -24,7 +24,7 @@ import {
 } from './constants/speeds';
 import { SpeedDataPoint } from '../../common/types/dataPoints';
 import { TimeRange, TimeRangeNames } from '../../common/types/inputs';
-import { drawPlainTitle } from '../../common/components/charts/Title';
+import { drawSimpleTitle } from '../../common/components/charts/Title';
 
 ChartJS.register(
   CategoryScale,
@@ -156,7 +156,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {
                 ctx.fillText('No data to display', width / 2, height / 2);
                 ctx.restore();
               }
-              drawPlainTitle(`Speed`, chart);
+              drawSimpleTitle(`Speed`, chart);
             },
           },
         ]}

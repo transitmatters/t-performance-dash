@@ -157,6 +157,20 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
               legend: {
                 display: false,
               },
+              title: {
+                // empty title to set font and leave room for drawTitle fn
+                display: true,
+                text: '',
+              },
+              tooltip: {
+                mode: 'index',
+                position: 'nearest',
+                callbacks: {
+                  label: (tooltipItem) => {
+                    return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y} minutes`;
+                  },
+                },
+              },
             },
           }}
           plugins={[

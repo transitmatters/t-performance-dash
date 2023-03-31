@@ -11,7 +11,7 @@ import { lineColorBackground } from '../../../common/styles/general';
 export const LineSelectorMobile = () => {
   const route = useDelimitatedRoute();
 
-  const buttonDiv = 'w-full relative ml-2 h-8 w-8 bg-white';
+  const buttonDiv = 'relative ml-2 h-8 w-8 bg-white';
 
   // Don't render until we have the line.
   if (!route.line || !route) {

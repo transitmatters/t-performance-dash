@@ -2,6 +2,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
+import { useQuery } from '@tanstack/react-query';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { fetchSingleDayData } from '../../common/api/datadashboard';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -11,7 +12,6 @@ import { QueryNameKeys } from '../../common/types/api';
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
-import { useQuery } from '@tanstack/react-query';
 
 export const DwellsWidget: React.FC = () => {
   const {

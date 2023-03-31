@@ -33,6 +33,10 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
     [traveltimes.isLoading, fromStation, toStation]
   );
 
+  const anyTravelBenchmarks =
+    Array.isArray(traveltimes.data) &&
+    traveltimes.data?.some((e) => e.benchmark_travel_time_sec && e.benchmark_travel_time_sec > 0);
+
   const chart = useMemo(() => {
     return (
       <SingleDayLineChart
@@ -47,7 +51,7 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
         bothStops={true}
         location={locationDetails(fromStation, toStation, lineShort)}
         fname={'traveltimes'}
-        showLegend={showLegend}
+        showLegend={showLegend && anyTravelBenchmarks}
         homescreen={homescreen}
       />
     );
@@ -60,6 +64,7 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
     toStation,
     lineShort,
     showLegend,
+    anyTravelBenchmarks,
     homescreen,
   ]);
 

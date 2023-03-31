@@ -15,6 +15,7 @@ export const mbtaTextConfig = {
   GL: `text-mbta-green`,
   BL: `text-mbta-blue`,
   BUS: `text-mbta-bus`,
+  DEFAULT: `text-black`,
 };
 
 export const otherConfig = {
@@ -47,4 +48,12 @@ export const dateInputConfig = {
     blue: 'hover:bg-mbta-blue border-mbta-blue',
     bus: 'hover:bg-mbta-bus border-mbta-bus',
   },
+};
+
+export const selectConfig = {
+  red: 'bg-mbta-lightRed',
+  orange: 'bg-mbta-lightOrange',
+  green: 'bg-mbta-lightGreen',
+  blue: 'bg-mbta-lightBlue',
+  bus: 'bg-mbta-lightBus',
 };

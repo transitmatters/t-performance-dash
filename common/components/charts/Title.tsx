@@ -102,7 +102,7 @@ export const drawTitle = (title: string, location: Location, bothStops: boolean,
   ctx.restore();
 };
 
-export const drawPlainTitle = (title: string, chart: Chart) => {
+export const drawSimpleTitle = (title: string, chart: Chart) => {
   const ctx = chart.ctx;
   ctx.save();
 
