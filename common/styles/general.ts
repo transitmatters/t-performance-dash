@@ -32,3 +32,12 @@ export const lineColorText = {
   BUS: `text-mbta-bus`,
   DEFAULT: `text-stone-800`,
 };
+
+export const lineColorRing = {
+  RL: `ring-mbta-red`,
+  OL: `ring-mbta-orange`,
+  GL: `ring-mbta-green`,
+  BL: `ring-mbta-blue`,
+  BUS: `ring-mbta-bus`,
+  DEFAULT: `ring-stone-800`,
+};
