@@ -5,11 +5,11 @@ import { useDelimitatedRoute } from '../../../common/utils/router';
 import classNames from 'classnames';
 import { lineColorBackground } from '../../../common/styles/general';
 import dayjs from 'dayjs';
-import { DATE_FORMAT } from '../../../common/constants/dates';
 import { DELAYS_RANGE_PARAMS_MAP } from '../../speed/constants/speeds';
 import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { calculateCommuteSpeedWidgetValues } from './utils/utils';
 import { CompWidget } from './CompWidget';
+import { DATE_FORMAT } from '../../../common/components/inputs/DateSelection/DateConstants';
 
 export const Speed: React.FC = () => {
   const { line } = useDelimitatedRoute();

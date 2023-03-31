@@ -1,7 +1,7 @@
 import type { TooltipCallbacks, TooltipItem, TooltipModel } from 'chart.js';
 import type { _DeepPartialObject } from 'chart.js/dist/types/utils';
 import dayjs from 'dayjs';
-import { DATE_FORMAT } from '../../../common/constants/dates';
+import { DATE_FORMAT } from '../../../common/components/inputs/DateSelection/DateConstants';
 
 const today = dayjs();
 const endDate = today.format(DATE_FORMAT);
