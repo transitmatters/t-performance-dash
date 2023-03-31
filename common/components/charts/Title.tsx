@@ -101,3 +101,32 @@ export const drawTitle = (title: string, location: Location, bothStops: boolean,
   }
   ctx.restore();
 };
+
+export const drawSimpleTitle = (title: string, chart: Chart) => {
+  const ctx = chart.ctx;
+  ctx.save();
+
+  const leftMargin = chart.scales.x.left;
+  const rightMargin = chart.width - chart.scales.x.right;
+  const minGap = 10;
+  const vpos_row1 = 25;
+  const vpos_row2 = 50;
+
+  const fontSize = 16;
+  ctx.font = font(fontSize);
+  const titleWidth = ctx.measureText(title).width;
+
+  if (leftMargin + titleWidth + minGap + rightMargin > chart.width) {
+    // small screen: centered title stacks vertically
+    ctx.textAlign = 'center';
+    ctx.fillStyle = titleColor;
+    ctx.fillText(title, chart.width / 2, vpos_row1);
+  } else {
+    // larger screen
+    // Primary chart title goes left
+    ctx.textAlign = 'left';
+    ctx.fillStyle = titleColor;
+    ctx.fillText(title, leftMargin, vpos_row2);
+  }
+  ctx.restore();
+};

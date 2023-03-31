@@ -157,6 +157,11 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
               legend: {
                 display: false,
               },
+              title: {
+                // empty title to set font and leave room for drawTitle fn
+                display: true,
+                text: '',
+              },
               tooltip: {
                 mode: 'index',
                 position: 'nearest',
