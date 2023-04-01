@@ -10,12 +10,14 @@ import { locationDetails } from '../../../common/utils/stations';
 
 interface HeadwaysAggregateChartProps {
   headways: UseQueryResult<AggregateDataResponse>;
+  toStation: Station | undefined;
   fromStation: Station | undefined;
   showLegend?: boolean;
 }
 
 export const HeadwaysAggregateChart: React.FC<HeadwaysAggregateChartProps> = ({
   headways,
+  toStation,
   fromStation,
 }) => {
   const {
@@ -37,13 +39,13 @@ export const HeadwaysAggregateChart: React.FC<HeadwaysAggregateChartProps> = ({
         startDate={startDate}
         endDate={endDate}
         fillColor={CHART_COLORS.FILL}
-        location={locationDetails(fromStation, undefined, lineShort)}
+        location={locationDetails(fromStation, toStation, lineShort)}
         isLoading={false}
         bothStops={false}
         fname="headways"
       />
     );
-  }, [headways?.data?.by_date, startDate, endDate, fromStation, lineShort]);
+  }, [headways?.data?.by_date, startDate, endDate, fromStation, toStation, lineShort]);
 
   return chart;
 };

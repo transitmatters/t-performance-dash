@@ -1,8 +1,8 @@
 import React from 'react';
 import { useCustomQueries } from '../../common/api/datadashboard';
-import { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
-import { Station } from '../../common/types/stations';
+import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
+import type { Station } from '../../common/types/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { stopIdsForStations } from '../../common/utils/stations';
 import { DwellsAggregateChart } from '../dwells/charts/DwellsAggregateChart';
@@ -57,8 +57,12 @@ export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }
             fromStation={fromStation}
             toStation={toStation}
           />
-          <HeadwaysAggregateChart headways={headways} fromStation={fromStation} />
-          <DwellsAggregateChart dwells={dwells} fromStation={fromStation} />
+          <HeadwaysAggregateChart
+            headways={headways}
+            fromStation={fromStation}
+            toStation={toStation}
+          />
+          <DwellsAggregateChart dwells={dwells} fromStation={fromStation} toStation={toStation} />
         </>
       ) : (
         <>
@@ -68,8 +72,12 @@ export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }
             toStation={toStation}
           />
 
-          <HeadwaysSingleChart headways={headways} fromStation={fromStation} />
-          <DwellsSingleChart dwells={dwells} fromStation={fromStation} />
+          <HeadwaysSingleChart
+            headways={headways}
+            fromStation={fromStation}
+            toStation={toStation}
+          />
+          <DwellsSingleChart dwells={dwells} fromStation={fromStation} toStation={toStation} />
         </>
       )}
     </div>

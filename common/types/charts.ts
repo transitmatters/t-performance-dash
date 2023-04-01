@@ -118,7 +118,7 @@ export interface HeadwayHistogramProps {
 export interface HeadwaysChartProps {
   headways: UseQueryResult<SingleDayDataPoint[]>;
   fromStation: Station | undefined;
-  toStation?: Station | undefined;
+  toStation: Station | undefined;
   showLegend?: boolean;
   homescreen?: boolean;
 }

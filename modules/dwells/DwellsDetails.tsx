@@ -82,9 +82,13 @@ export default function DwellsDetails() {
       </BasicDataWidgetPair>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
         {aggregate ? (
-          <DwellsAggregateChart dwells={dwellsAggregate} fromStation={fromStation} />
+          <DwellsAggregateChart
+            dwells={dwellsAggregate}
+            toStation={toStation}
+            fromStation={fromStation}
+          />
         ) : (
-          <DwellsSingleChart dwells={dwells} fromStation={fromStation} />
+          <DwellsSingleChart dwells={dwells} toStation={toStation} fromStation={fromStation} />
         )}
       </div>
     </>

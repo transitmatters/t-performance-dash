@@ -9,12 +9,14 @@ import { locationDetails } from '../../../common/utils/stations';
 
 interface DwellsSingleChartProps {
   dwells: UseQueryResult<SingleDayDataPoint[]>;
+  toStation: Station | undefined;
   fromStation: Station | undefined;
   homescreen?: boolean;
 }
 
 export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
   dwells,
+  toStation,
   fromStation,
   homescreen = false,
 }) => {
@@ -25,8 +27,8 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
   } = useDelimitatedRoute();
 
   const isLoading = useMemo(
-    () => dwells.isLoading || fromStation === undefined,
-    [dwells.isLoading, fromStation]
+    () => dwells.isLoading || toStation === undefined || fromStation === undefined,
+    [dwells.isLoading, fromStation, toStation]
   );
 
   const chart = useMemo(() => {
@@ -39,13 +41,13 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
         metricField={MetricFieldKeys.dwellTimeSec}
         pointField={PointFieldKeys.arrDt}
         isLoading={isLoading}
-        location={locationDetails(fromStation, undefined, lineShort)}
+        location={locationDetails(fromStation, toStation, lineShort)}
         fname={'dwells'}
         showLegend={false}
         homescreen={homescreen}
       />
     );
-  }, [dwells.data, fromStation, isLoading, linePath, lineShort, startDate, homescreen]);
+  }, [dwells.data, fromStation, isLoading, linePath, lineShort, startDate, toStation, homescreen]);
 
   return chart;
 };

@@ -60,7 +60,12 @@ export const DwellsWidget: React.FC = () => {
             analysis={`from last ${dayjs().format('ddd')}.`}
           />
         </div>
-        <DwellsSingleChart dwells={dwells} fromStation={fromStation} homescreen={true} />
+        <DwellsSingleChart
+          dwells={dwells}
+          toStation={toStation}
+          fromStation={fromStation}
+          homescreen={true}
+        />
       </div>
     </>
   );

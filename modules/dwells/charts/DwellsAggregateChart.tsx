@@ -10,12 +10,14 @@ import { locationDetails } from '../../../common/utils/stations';
 
 interface DwellsAggregateChartProps {
   dwells: UseQueryResult<AggregateDataResponse>;
+  toStation: Station | undefined;
   fromStation: Station | undefined;
   showLegend?: boolean;
 }
 
 export const DwellsAggregateChart: React.FC<DwellsAggregateChartProps> = ({
   dwells,
+  toStation,
   fromStation,
 }) => {
   const {
@@ -37,13 +39,13 @@ export const DwellsAggregateChart: React.FC<DwellsAggregateChartProps> = ({
         startDate={startDate}
         endDate={endDate}
         fillColor={CHART_COLORS.FILL}
-        location={locationDetails(fromStation, undefined, lineShort)}
+        location={locationDetails(fromStation, toStation, lineShort)}
         isLoading={false}
         bothStops={false}
         fname="dwells"
       />
     );
-  }, [dwells?.data?.by_date, startDate, endDate, fromStation, lineShort]);
+  }, [dwells?.data?.by_date, startDate, endDate, fromStation, toStation, lineShort]);
 
   return chart;
 };
