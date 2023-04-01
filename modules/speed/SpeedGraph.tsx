@@ -54,6 +54,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {
       <Line
         id={'Traversal Times'}
         ref={ref}
+        height={250}
         redraw={true}
         data={{
           labels,
