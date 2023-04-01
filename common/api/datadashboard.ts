@@ -1,15 +1,16 @@
 import type * as ReactQuery from '@tanstack/react-query';
 import { useQueries } from '@tanstack/react-query';
-import type { AggregateDataResponse, SingleDayDataPoint } from '../../src/charts/types';
 import type {
   AggregateAPIOptions,
   PartialAggregateAPIOptions,
   PartialSingleDayAPIOptions,
+  QueryNameOptions,
   SingleDayAPIOptions,
 } from '../types/api';
-import { AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../types/api';
+import { QUERIES, AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../types/api';
 import { APP_DATA_BASE_PATH } from '../../common/utils/constants';
 import { getCurrentDate } from '../utils/date';
+import type { AggregateDataResponse, SingleDayDataPoint } from '../types/charts';
 
 // Fetch data for all single day charts.
 export const fetchSingleDayData = async (
@@ -31,7 +32,7 @@ export const fetchSingleDayData = async (
 };
 
 // Object to contain the name of each single day query and the parameters/keys it takes.
-const singleDayQueryDependencies = {
+const singleDayQueryDependencies: { [key in QueryNameOptions]: SingleDayAPIParams[] } = {
   traveltimes: [SingleDayAPIParams.fromStop, SingleDayAPIParams.toStop, SingleDayAPIParams.date],
   headways: [SingleDayAPIParams.stop, SingleDayAPIParams.date],
   dwells: [SingleDayAPIParams.stop, SingleDayAPIParams.date],
@@ -62,7 +63,7 @@ export const fetchAggregateData = async (
 };
 
 // Object to contain name of each aggregate query and the parameters/keys it takes.
-const aggregateQueryDependencies = {
+const aggregateQueryDependencies: { [key in QueryNameKeys]: AggregateAPIParams[] } = {
   traveltimes: [
     AggregateAPIParams.fromStop,
     AggregateAPIParams.toStop,
@@ -91,7 +92,8 @@ export const useCustomQueries: UseQueriesOverload = (
 ): any => {
   const dependencies = aggregate ? aggregateQueryDependencies : singleDayQueryDependencies;
   // Create objects with keys of query names which contains keys and parameters.
-  const queries = Object.keys(dependencies).reduce((object, queryName: QueryNameKeys) => {
+  const queries = {};
+  QUERIES.forEach((queryName) => {
     const keys = [queryName];
     const params: Partial<SingleDayAPIOptions | AggregateAPIOptions> = {};
     dependencies[queryName].forEach((field: Partial<AggregateAPIParams | SingleDayAPIParams>) => {
@@ -99,16 +101,13 @@ export const useCustomQueries: UseQueriesOverload = (
         keys.push(parameters[field].toString());
         params[field] = parameters[field];
       }
+      queries[queryName] = { keys: keys, params: params };
     });
-    return {
-      ...object,
-      [queryName]: { keys: keys, params: params },
-    };
-  }, {});
+  });
 
   // Create multiple queries.
   const requests = useQueries({
-    queries: Object.keys(queries).map((name: QueryNameKeys) => {
+    queries: QUERIES.map((name) => {
       return {
         queryKey: [name, queries[name].params],
         queryFn: () =>

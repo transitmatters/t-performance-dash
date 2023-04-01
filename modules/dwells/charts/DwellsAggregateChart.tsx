@@ -43,7 +43,7 @@ export const DwellsAggregateChart: React.FC<DwellsAggregateChartProps> = ({
         fname="dwells"
       />
     );
-  }, [dwells?.data?.by_date, startDate, endDate, fromStation, toStation, lineShort]);
+  }, [dwells?.data?.by_date, startDate, endDate, fromStation, lineShort]);
 
   return chart;
 };

@@ -88,17 +88,9 @@ export default function HeadwaysDetails() {
       </BasicDataWidgetPair>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
         {aggregate ? (
-          <HeadwaysAggregateChart
-            headways={headwaysAggregate}
-            fromStation={fromStation}
-            toStation={toStation}
-          />
+          <HeadwaysAggregateChart headways={headwaysAggregate} fromStation={fromStation} />
         ) : (
-          <HeadwaysSingleChart
-            headways={headways}
-            fromStation={fromStation}
-            toStation={toStation}
-          />
+          <HeadwaysSingleChart headways={headways} fromStation={fromStation} />
         )}
       </div>
       {!aggregate && (
@@ -108,11 +100,7 @@ export default function HeadwaysDetails() {
           </div>
 
           <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
-            <HeadwaysHistogram
-              headways={headways}
-              fromStation={fromStation}
-              toStation={toStation}
-            />
+            <HeadwaysHistogram headways={headways} fromStation={fromStation} />
           </div>
         </>
       )}

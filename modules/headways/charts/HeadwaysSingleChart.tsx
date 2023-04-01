@@ -7,7 +7,6 @@ import { locationDetails } from '../../../common/utils/stations';
 
 export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
   headways,
-  toStation,
   fromStation,
   showLegend = true,
   homescreen = false,
@@ -19,8 +18,8 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
   } = useDelimitatedRoute();
 
   const isLoading = useMemo(
-    () => headways.isLoading || toStation === undefined || fromStation === undefined,
-    [headways.isLoading, fromStation, toStation]
+    () => headways.isLoading || fromStation === undefined,
+    [headways.isLoading, fromStation]
   );
 
   const anyHeadwayBenchmarks = headways.data?.some(
@@ -38,7 +37,7 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
         pointField={PointFieldKeys.currentDepDt}
         benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
         isLoading={isLoading}
-        location={locationDetails(fromStation, toStation, lineShort)}
+        location={locationDetails(fromStation, undefined, lineShort)}
         fname={'headways'}
         showLegend={showLegend && anyHeadwayBenchmarks}
         homescreen={homescreen}
@@ -50,7 +49,6 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
     startDate,
     isLoading,
     fromStation,
-    toStation,
     lineShort,
     showLegend,
     anyHeadwayBenchmarks,
