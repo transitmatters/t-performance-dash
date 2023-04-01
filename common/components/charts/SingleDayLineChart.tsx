@@ -12,6 +12,7 @@ import {
   Legend,
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
 import type { DataPoint } from '../../types/dataPoints';
@@ -28,6 +29,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  ChartjsPluginWatermark,
   Filler,
   Title,
   Tooltip,
@@ -137,6 +139,20 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               padding: {
                 top: 25,
               },
+            },
+            // @ts-expect-error The watermark plugin doesn't have typescript support
+            watermark: {
+              image:
+                'https://images.squarespace-cdn.com/content/533b9a24e4b01d79d0ae4376/1491867656317-WB0K3NNCQ18RF39RRD52/Logo_Logotype_Dark_transparent.png',
+              x: 10,
+              y: 10,
+              opacity: 0.1,
+              width: 104,
+              height: 30,
+              alignToChartArea: true,
+              alignX: 'left',
+              alignY: 'bottom',
+              position: 'back',
             },
             plugins: {
               tooltip: {

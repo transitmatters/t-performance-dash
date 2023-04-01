@@ -17,6 +17,7 @@
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-color": "^2.4.1",
     "chartjs-plugin-datalabels": "^2.2.0",
+    "chartjs-plugin-watermark": "^2.0.0",
     "classnames": "^2.3.2",
     "concurrently": "^7.6.0",
     "date-fns": "^2.29.3",
