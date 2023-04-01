@@ -3,7 +3,7 @@ import os
 import subprocess
 from chalice import Chalice, CORSConfig, ConflictError, Response
 from datetime import date, timedelta
-from chalicelib import aggregation, data_funcs, MbtaPerformanceAPI, secrets, mbta_v3, dynamo
+from chalicelib import aggregation, data_funcs, MbtaPerformanceAPI, secrets, mbta_v3, speed
 
 
 app = Chalice(app_name="data-dashboard")
@@ -148,5 +148,5 @@ def get_alerts():
 
 @app.route("/api/speed", cors=cors_config)
 def get_speed():
-    response = dynamo.query_speed_tables(app.current_request.query_params)
+    response = speed.get_speeds(app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True, default=lambda x: eval(str(x)))  # The eval() converts dynamo default decimal type numbers to ints
