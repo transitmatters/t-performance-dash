@@ -6,7 +6,11 @@ import { useQuery } from '@tanstack/react-query';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadashboard';
 import { QueryNameKeys, AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
-import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
+import {
+  lookup_station_by_id,
+  optionsStation,
+  stopIdsForStations,
+} from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
@@ -20,13 +24,17 @@ export default function TravelTimesDetails() {
   const {
     linePath,
     lineShort,
-    query: { startDate, endDate, busRoute },
+    query: { startDate, endDate, busRoute, to, from },
   } = useDelimitatedRoute();
 
   const stations = optionsStation(lineShort, busRoute);
 
-  const [toStation, setToStation] = useState(stations?.[stations.length - 3]);
-  const [fromStation, setFromStation] = useState(stations?.[3]);
+  const [toStation, setToStation] = useState(
+    to ? lookup_station_by_id(lineShort, to) : stations?.[stations.length - 3]
+  );
+  const [fromStation, setFromStation] = useState(
+    from ? lookup_station_by_id(lineShort, from) : stations?.[3]
+  );
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 

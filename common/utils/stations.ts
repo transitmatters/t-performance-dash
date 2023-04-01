@@ -3,7 +3,7 @@ import type { LineShort } from '../../common/types/lines';
 import type { Station } from '../../common/types/stations';
 import type { Location } from '../types/charts';
 import type { Direction } from '../types/dataPoints';
-import { rtStations, stations } from './../constants/stations';
+import { stations } from './../constants/stations';
 
 export const optionsForField = (
   type: 'from' | 'to',
@@ -54,12 +54,12 @@ export const swapStations = (
   setToStation(fromStation);
 };
 
-export const lookup_station_by_id = (line: Exclude<LineShort, 'Bus'>, id: string) => {
+export const lookup_station_by_id = (line: LineShort, id: string, busRoute?: string) => {
   if (line === undefined || id === '' || id === undefined) {
     return undefined;
   }
 
-  return rtStations[line].stations.find((x) =>
+  return optionsStation(line, busRoute)?.find((x) =>
     [...(x.stops['0'] || []), ...(x.stops['1'] || [])].includes(id)
   );
 };
