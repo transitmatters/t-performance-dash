@@ -13,7 +13,7 @@ export const LinesDropdownItem: React.FC<LinesDropdownItemProps> = ({ item }) =>
     <Listbox.Options className="space-y-1 pl-2">
       {item.children &&
         item.children.map((subItem) => (
-          <Listbox.Option key={subItem.name} as={Fragment} value={subItem.key}>
+          <Listbox.Option key={subItem.name} as={Fragment} value={subItem.path}>
             {({ active, selected }) => (
               <span
                 className={classNames(

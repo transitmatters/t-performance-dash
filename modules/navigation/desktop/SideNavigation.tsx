@@ -4,14 +4,8 @@ import classNames from 'classnames';
 import router from 'next/router';
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  getBusRouteSelectionItemHref,
-  getLineSelectionItemHref,
-  useDelimitatedRoute,
-} from '../../../common/utils/router';
-import { LINE_OBJECTS } from '../../../common/constants/lines';
+import { useDelimitatedRoute } from '../../../common/utils/router';
 import { LinesDropdownItem } from './LinesDropdownItem';
-import { BusDropdownItem } from './BusDropdownItem';
 
 export interface NavItem {
   name: string;
@@ -54,11 +48,10 @@ export const SideNavigation = ({ items, setSidebarOpen }: SideNavigationProps) =
             value={route.line === 'BUS' && route.query.busRoute ? route.query.busRoute : route.line}
             onChange={(value) => {
               setSidebarOpen && setSidebarOpen(false);
-              if (item.name === 'Bus') {
-                router.push(getBusRouteSelectionItemHref(value, route));
-              } else {
-                router.push(getLineSelectionItemHref(LINE_OBJECTS[value], route));
-              }
+              console.log(value);
+              router.push({
+                pathname: value,
+              });
             }}
           >
             {({ open }) => (
@@ -90,8 +83,7 @@ export const SideNavigation = ({ items, setSidebarOpen }: SideNavigationProps) =
                     <path d="M6 6L14 10L6 14V6Z" fill="currentColor" />
                   </svg>
                 </Listbox.Button>
-                {item.name === 'Bus' && <BusDropdownItem item={item} />}
-                {item.name === 'Subway' && <LinesDropdownItem item={item} />}
+                <LinesDropdownItem item={item} />
               </>
             )}
           </Listbox>

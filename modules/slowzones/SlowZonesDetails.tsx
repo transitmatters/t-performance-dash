@@ -56,3 +56,4 @@ export default function SlowZonesDetails() {
     </>
   );
 }
+SlowZonesDetails.Layout = 'Metrics';

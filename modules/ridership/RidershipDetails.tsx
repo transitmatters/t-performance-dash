@@ -10,7 +10,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
 import { TphChart } from './charts/TphChart';
 
-export default function TravelTimesDetails() {
+export default function RidershipDetails() {
   const allRidership = useRidershipData();
 
   const {
@@ -80,3 +80,4 @@ export default function TravelTimesDetails() {
     </>
   );
 }
+RidershipDetails.Layout = 'Metrics';

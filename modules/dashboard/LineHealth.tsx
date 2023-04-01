@@ -16,7 +16,6 @@ export const LineHealth = () => {
   return (
     <div>
       <div className="flex w-full flex-col justify-between sm:flex-row">
-        <h1 className="text-xl">Line Health</h1>
         <ButtonGroup pressFunction={setTimeRange} options={Object.entries(TimeRangeNames)} />
       </div>
       <hr className="my-2 h-[2px] border-0 border-b border-white bg-gray-400" />

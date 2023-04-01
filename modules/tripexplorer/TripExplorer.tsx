@@ -25,3 +25,5 @@ export const TripExplorer = () => {
     </div>
   );
 };
+
+TripExplorer.Layout = 'Trips';
