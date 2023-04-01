@@ -14,7 +14,7 @@ export const Alerts: React.FC = () => {
   );
 
   const divStyle = classNames(
-    'flex flex-col items-center rounded-md p-4 text-white shadow-dataBox w-full xl:w-1/2 gap-y-2 md:h-[240px] lg:h-[360px] md:overflow-y-auto',
+    'flex flex-col rounded-md p-4 text-white shadow-dataBox w-full xl:w-1/3 gap-y-2 md:max-h-[309px] md:overflow-y-auto',
     lineColorBackground[line ?? 'DEFAULT']
   );
 
@@ -27,7 +27,7 @@ export const Alerts: React.FC = () => {
 
   return (
     <div className={divStyle}>
-      <h3 className="w-full text-2xl font-bold md:w-auto">Alerts</h3>
+      <h3 className="w-full text-2xl font-semibold md:w-auto">Alerts</h3>
       <div className="flex w-full flex-row gap-x-4 overflow-x-scroll pb-2 md:flex-col md:gap-x-0 md:overflow-x-auto">
         <div className="md:w-full">
           <Divider title="Today" line={line} />

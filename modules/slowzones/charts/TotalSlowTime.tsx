@@ -9,6 +9,7 @@ import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
 import type { LineShort, Line as TrainLine } from '../../../common/types/lines';
 dayjs.extend(utc);
+import { drawSimpleTitle } from '../../../common/components/charts/Title';
 
 interface TotalSlowTimeProps {
   // Data is always all data. We filter it by adjusting the X axis of the graph.
@@ -101,11 +102,24 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
           tooltip: {
             intersect: false,
           },
+          title: {
+            // empty title to set font and leave room for drawTitle fn
+            display: true,
+            text: '',
+          },
           legend: {
             display: false,
           },
         },
       }}
+      plugins={[
+        {
+          id: 'customTitle',
+          afterDraw: (chart) => {
+            drawSimpleTitle('Total Slow Time', chart);
+          },
+        },
+      ]}
     />
   );
 };
