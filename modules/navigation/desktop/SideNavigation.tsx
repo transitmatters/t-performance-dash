@@ -57,7 +57,6 @@ export const SideNavigation = ({ items, setSidebarOpen }: SideNavigationProps) =
               if (item.name === 'Bus') {
                 router.push(getBusRouteSelectionItemHref(value, route));
               } else {
-                console.log(value);
                 router.push(getLineSelectionItemHref(LINE_OBJECTS[value], route));
               }
             }}
