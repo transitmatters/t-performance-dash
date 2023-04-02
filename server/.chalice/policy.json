@@ -2,30 +2,27 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Action": [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ],
+      "Action": ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
       "Effect": "Allow",
       "Resource": "arn:*:logs:*:*:*"
     },
     {
-      "Action": [
-        "s3:ListBucket"
-      ],
+      "Action": ["s3:ListBucket"],
       "Effect": "Allow",
-      "Resource": [
-        "arn:aws:s3:::tm-mbta-performance"
-      ]
+      "Resource": ["arn:aws:s3:::tm-mbta-performance"]
     },
     {
-      "Action": [
-        "s3:GetObject"
-      ],
+      "Action": ["s3:GetObject"],
+      "Effect": "Allow",
+      "Resource": ["arn:aws:s3:::tm-mbta-performance/*"]
+    },
+    {
+      "Action": ["dynamodb:Query"],
       "Effect": "Allow",
       "Resource": [
-        "arn:aws:s3:::tm-mbta-performance/*"
+        "arn:aws:dynamodb:*:*:table/DailySpeed",
+        "arn:aws:dynamodb:*:*:table/WeeklySpeed",
+        "arn:aws:dynamodb:*:*:table/MonthlySpeed"
       ]
     }
   ]
