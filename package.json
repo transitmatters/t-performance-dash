@@ -29,6 +29,15 @@
     "zustand": "^4.3.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.21.4",
+    "@storybook/addon-actions": "^6.5.16",
+    "@storybook/addon-essentials": "^6.5.16",
+    "@storybook/addon-interactions": "^6.5.16",
+    "@storybook/addon-links": "^6.5.16",
+    "@storybook/builder-webpack5": "^6.5.16",
+    "@storybook/manager-webpack5": "^6.5.16",
+    "@storybook/react": "^6.5.16",
+    "@storybook/testing-library": "^0.0.13",
     "@tailwindcss/forms": "^0.5.3",
     "@types/bezier-js": "^4.1.0",
     "@types/lodash": "^4.14.191",
@@ -37,6 +46,7 @@
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "autoprefixer": "^10.4.13",
+    "babel-loader": "^8.3.0",
     "babel-plugin-inline-react-svg": "^2.0.1",
     "eslint": "^8.33.0",
     "eslint-config-next": "13.1.6",
@@ -45,6 +55,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-storybook": "^0.6.11",
     "eslint-plugin-unused-imports": "^2.0.0",
     "postcss": "^8.4.21",
     "prettier": "^2.8.3",
@@ -68,7 +79,9 @@
     "lint-backend": "cd server && poetry run flake8",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postinstall": "cd server && poetry install"
+    "postinstall": "cd server && poetry install",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "proxy": "http://localhost:5000",
   "engines": {

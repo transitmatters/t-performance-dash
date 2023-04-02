@@ -23,24 +23,30 @@ export const createRedLineDiagram = () => {
   const stationsTrunk = stationsA.slice(0, splitIndex + 1);
   const stationsABranch = stationsA.slice(splitIndex + 1);
   const stationsBBranch = stationsB.slice(splitIndex + 1);
-  const trunk = line(PX_PER_STATION * (1 + stationsTrunk.length), 'trunk');
+  const trunk = line(PX_PER_STATION * (1 + stationsTrunk.length), ['trunk']);
   const pathA = execute({
     start,
-    commands: [trunk, line(30), line(PX_PER_STATION * stationsABranch.length, 'branch-a')],
+    ranges: ['branch-a'],
+    commands: [
+      trunk,
+      line(30),
+      line(PX_PER_STATION * stationsABranch.length, ['branch-a-stations']),
+    ],
   });
   const pathB = execute({
     start,
+    ranges: ['branch-b'],
     commands: [
       trunk,
       wiggle(10, 5),
       line(80),
       wiggle(10, -5),
-      line(PX_PER_STATION * stationsBBranch.length, 'branch-b'),
+      line(PX_PER_STATION * stationsBBranch.length, ['branch-b-stations']),
     ],
   });
   return new Diagram([pathA, pathB], {
     trunk: stationsTrunk,
-    'branch-a': stationsABranch,
-    'branch-b': stationsBBranch,
+    'branch-a-stations': stationsABranch,
+    'branch-b-stations': stationsBBranch,
   });
 };

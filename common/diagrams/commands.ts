@@ -1,27 +1,27 @@
-import type { CurveCommand, LineCommand, WiggleCommand } from './types';
+import type { CurveCommand, LineCommand, RangeNames, WiggleCommand } from './types';
 
-export const line = (length: number, range?: string): LineCommand => {
+export const line = (length: number, ranges: RangeNames = []): LineCommand => {
   return {
     type: 'line',
     length,
-    range,
+    ranges,
   };
 };
 
-export const curve = (length: number, angle: number, range?: string): CurveCommand => {
+export const curve = (length: number, angle: number, ranges: RangeNames = []): CurveCommand => {
   return {
     type: 'curve',
     length,
     angle,
-    range,
+    ranges,
   };
 };
 
-export const wiggle = (length: number, width: number, range?: string): WiggleCommand => {
+export const wiggle = (length: number, width: number, ranges: RangeNames = []): WiggleCommand => {
   return {
     type: 'wiggle',
     length,
     width,
-    range,
+    ranges,
   };
 };

@@ -101,13 +101,13 @@ const executeCommand = (command: Command, turtle: Turtle) => {
 };
 
 export const execute = (path: CommandPath) => {
-  const { start, commands } = path;
+  const { start, commands, ranges: sharedRanges = [] } = path;
   const { curves, ranges } = commands.reduce(
     (state, command) => {
       const { turtle, curve } = executeCommand(command, state.turtle);
       return {
         curves: [...state.curves, curve],
-        ranges: [...state.ranges, command.range ?? null],
+        ranges: [...state.ranges, [...sharedRanges, ...command.ranges]],
         turtle,
       };
     },

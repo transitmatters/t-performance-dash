@@ -1,5 +1,5 @@
 import type { Station } from '../types/stations';
-import type { Path } from './path';
+import type { Path, RangeLookup } from './path';
 
 const indexRangesNamesByStationId = (stationIdsByRangeName: Record<string, Station[]>) => {
   const index: Record<string, string> = {};
@@ -22,31 +22,24 @@ export class Diagram {
     this.rangeNamesByStationId = indexRangesNamesByStationId(stationIdsByRangeName);
   }
 
-  private getRangeNameWithStationIds(stationIds: string[]) {
-    for (const [rangeName, stationsInRange] of Object.entries(this.stationsByRangeName)) {
-      const stationIdsInRange = stationsInRange.map((station) => station.station);
-      if (stationIds.every((id) => stationIdsInRange.includes(id))) {
-        return rangeName;
-      }
-    }
-    throw new Error(`No range with station IDs: ${stationIds}`);
-  }
-
   private getPathWithStationIds(stationIds: string[]) {
-    const range = this.getRangeNameWithStationIds(stationIds);
+    const rangeNames = stationIds.map((stationId) => this.rangeNamesByStationId[stationId]);
     for (const path of this.paths) {
-      if (path.namedRanges.includes(range)) {
+      if (rangeNames.every((rangeName) => path.hasRange(rangeName))) {
         return path;
       }
     }
-    throw new Error(`No path for station IDs: ${stationIds} (inferred range: ${range})`);
+    throw new Error(`No path has all stations by id: ${stationIds}`);
   }
 
-  private getStationFractionInRange(stationId: string) {
+  private lookupStationRange(stationId: string): RangeLookup {
     const rangeNameWithStationId = this.rangeNamesByStationId[stationId];
     const stationIds = this.stationsByRangeName[rangeNameWithStationId];
     const indexInPath = stationIds.findIndex((station) => station.station === stationId);
-    return indexInPath / (stationIds.length - 1);
+    return {
+      range: rangeNameWithStationId,
+      fraction: indexInPath / (stationIds.length - 1),
+    };
   }
 
   getStations() {
@@ -54,25 +47,18 @@ export class Diagram {
   }
 
   getStationPosition(stationId: string) {
-    const rangeNameWithStationId = this.rangeNamesByStationId[stationId];
     const pathWithStationId = this.getPathWithStationIds([stationId]);
-    const fractionOfPath = this.getStationFractionInRange(stationId);
-    return pathWithStationId.sliceRange(rangeNameWithStationId).get(fractionOfPath);
+    const lookup = this.lookupStationRange(stationId);
+    return pathWithStationId.getWithinRange(lookup);
   }
 
   getPathBetweenStations(fromStationId: string, toStationId: string) {
     const path = this.getPathWithStationIds([fromStationId, toStationId]);
-    const fromStationRangeName = this.getRangeNameWithStationIds([fromStationId]);
-    const toStationRangeName = this.getRangeNameWithStationIds([toStationId]);
-    const fromStationRange = path.getRange(fromStationRangeName);
-    const toStationRange = path.getRange(toStationRangeName);
-    const fromStationFraction = this.getStationFractionInRange(fromStationId);
-    const toStationFraction = this.getStationFractionInRange(toStationId);
-    const fromStationTotalProgress =
-      fromStationRange[0] + (fromStationRange[1] - fromStationRange[0]) * fromStationFraction;
-    const toStationTotalProgress =
-      toStationRange[0] + (toStationRange[1] - toStationRange[0]) * toStationFraction;
-    return path.cut(fromStationTotalProgress, toStationTotalProgress);
+    const fromLookup = this.lookupStationRange(fromStationId);
+    const toLookup = this.lookupStationRange(toStationId);
+    const fromDisplacement = path.getDisplacementInRange(fromLookup);
+    const toDisplacement = path.getDisplacementInRange(toLookup);
+    return path.cut(fromDisplacement, toDisplacement);
   }
 
   toSVG() {

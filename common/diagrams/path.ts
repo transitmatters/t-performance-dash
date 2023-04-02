@@ -1,55 +1,77 @@
 import type { Bezier } from 'bezier-js';
+import type { RangeNames } from './types';
 
-type RangeName = string | null;
-type RangesIndex = Record<string, [number, number]>;
+type Range = [number, number];
+type RangesByName = Record<string, Range>;
+export type RangeLookup = { range: string; fraction: number };
 
-const getRangesIndex = (ranges: RangeName[]): RangesIndex => {
-  const index: RangesIndex = {};
-  if (ranges.length === 0) {
-    return index;
-  }
-  let open = ranges[0];
-  let openStartIdx = 0;
-  for (let idx = 1; idx < ranges.length; idx++) {
-    const next = ranges[idx];
-    if (next !== open) {
-      if (open !== null) {
-        if (open in index) {
-          throw new Error(`RangeName reused in segments`);
-        }
-        index[open] = [openStartIdx, idx - 1];
-      }
-      open = next;
-      openStartIdx = idx;
-    }
-  }
-  if (open !== null) {
-    index[open] = [openStartIdx, ranges.length - 1];
+const getRangesIndex = (ranges: RangeNames[]): RangesByName => {
+  const index: RangesByName = {};
+  const allNames = new Set(ranges.flat());
+  for (const name of allNames) {
+    const firstIndexWithName = ranges.findIndex((range) => range.includes(name));
+    const lastIndexInRestWithoutName = ranges
+      .slice(firstIndexWithName + 1)
+      .findIndex((range) => !range.includes(name));
+    const lastIndexWithName =
+      lastIndexInRestWithoutName === -1
+        ? ranges.length - 1
+        : firstIndexWithName + lastIndexInRestWithoutName;
+    index[name] = [firstIndexWithName, lastIndexWithName];
   }
   return index;
 };
 
+const getAccumulatedLengths = (segments: Bezier[]): number[] => {
+  return segments.reduce((lengths, segment) => {
+    const accumulated = lengths[lengths.length - 1] ?? 0;
+    return [...lengths, accumulated + segment.length()];
+  }, []);
+};
+
 export class Path {
   private segments: Bezier[];
-  private readonly ranges: RangeName[];
-  private readonly rangesIndex: RangesIndex;
+  private readonly ranges: RangeNames[];
+  private readonly rangesIndex: RangesByName;
+  private readonly accumulatedLengths: number[];
   readonly length: number;
-  readonly namedRanges: string[];
 
-  constructor(segments: Bezier[], ranges?: RangeName[]) {
+  constructor(segments: Bezier[], ranges: RangeNames[] = []) {
     this.segments = segments;
-    this.length = segments.map((seg) => seg.length()).reduce((a, b) => a + b, 0);
-    this.ranges = ranges ?? Array(segments.length).fill(null);
+    this.ranges = ranges;
     this.rangesIndex = getRangesIndex(this.ranges);
-    this.namedRanges = this.ranges.filter((range): range is string => typeof range === 'string');
+    this.accumulatedLengths = getAccumulatedLengths(segments);
+    this.length = this.accumulatedLengths[this.accumulatedLengths.length - 1];
   }
 
-  concat(curve: Bezier, range?: string) {
-    return new Path([...this.segments, curve], [...this.ranges, range ?? null]);
+  private seek(target: number): { segment: Bezier; index: number; displacement: number } {
+    let displacement = 0;
+    for (let index = 0; index < this.segments.length; index++) {
+      const segment = this.segments[index];
+      const segmentLength = segment.length();
+      if (displacement + segmentLength >= target) {
+        return {
+          index,
+          segment,
+          displacement: target - displacement,
+        };
+      } else {
+        displacement += segmentLength;
+      }
+    }
+    throw new Error('Failed to seek');
+  }
+
+  concat(curve: Bezier, ranges: RangeNames = []) {
+    return new Path([...this.segments, curve], [...this.ranges, ranges]);
   }
 
   slice(from: number, to: number) {
     return new Path(this.segments.slice(from, to), this.ranges.slice(from, to));
+  }
+
+  hasRange(name: string) {
+    return !!this.rangesIndex[name];
   }
 
   getRange(name: string) {
@@ -65,58 +87,66 @@ export class Path {
     return this.slice(from, to + 1);
   }
 
-  private seek(target: number): { segment: Bezier; index: number; position: number } {
-    let position = 0;
-    for (let index = 0; index < this.segments.length; index++) {
-      const segment = this.segments[index];
-      const segmentLength = segment.length();
-      if (position + segmentLength >= target) {
-        return {
-          index,
-          segment,
-          position: target - position,
-        };
-      } else {
-        position += segmentLength;
-      }
-    }
-    throw new Error('Failed to seek');
+  getDisplacementInRange(lookup: RangeLookup) {
+    const { range, fraction } = lookup;
+    const [from, to] = this.getRange(range);
+    const fromLength = from === 0 ? 0 : this.accumulatedLengths[from - 1];
+    const toLength = this.accumulatedLengths[to];
+    return fromLength + fraction * (toLength - fromLength);
+  }
+
+  getWithinRange(lookup: RangeLookup) {
+    const displacement = this.getDisplacementInRange(lookup);
+    return this.get(displacement / this.length);
   }
 
   get(fraction: number) {
-    const fractionalPosition = fraction * this.length;
-    const { segment, position } = this.seek(fractionalPosition);
-    return segment.get(position / segment.length());
+    const fractionalDisplacement = fraction * this.length;
+    const { segment, displacement } = this.seek(fractionalDisplacement);
+    return segment.get(displacement / segment.length());
   }
 
-  cut(fromPosition: number, toPosition: number) {
+  cut(fromDisplacement: number, toDisplacement: number) {
     const {
       segment: fromSegment,
       index: fromIndex,
-      position: positionInFromSegment,
-    } = this.seek(fromPosition);
+      displacement: displacementInFromSegment,
+    } = this.seek(fromDisplacement);
     const {
       segment: toSegment,
       index: toIndex,
-      position: positionInToSegment,
-    } = this.seek(toPosition);
+      displacement: displacementInToSegment,
+    } = this.seek(toDisplacement);
     const fromSegmentLength = fromSegment.length();
     const toSegmentLength = toSegment.length();
     if (fromSegment === toSegment) {
       return new Path([
         fromSegment.split(
-          positionInFromSegment / fromSegmentLength,
-          positionInToSegment / fromSegmentLength
+          displacementInFromSegment / fromSegmentLength,
+          displacementInToSegment / fromSegmentLength
         ),
       ]);
     }
-    const intermediate = this.cut(fromIndex + 1, toIndex);
-    const partOfFromSegment = fromSegment.split(
-      positionInFromSegment / fromSegmentLength,
-      fromSegmentLength
+    const fractionInFromSegment = displacementInFromSegment / fromSegmentLength;
+    const partOfFromSegment = fromSegment.split(fractionInFromSegment, fromSegmentLength);
+    const intermediate = this.segments.slice(fromIndex + 1, toIndex);
+    const fractionInToSegment = displacementInToSegment / toSegmentLength;
+    const partOfToSegment = toSegment.split(0, fractionInToSegment);
+    const includedParts = [
+      fractionInFromSegment !== 1 && partOfFromSegment,
+      ...intermediate,
+      fractionInToSegment !== 0 && partOfToSegment,
+    ].filter((x): x is Bezier => !!x);
+    return new Path(includedParts);
+  }
+
+  offset(distance: number) {
+    if (distance === 0) {
+      return this;
+    }
+    return new Path(
+      this.segments.map((segment) => segment.offset(distance) as unknown as Bezier).flat()
     );
-    const partOfToSegment = toSegment.split(0, positionInToSegment / toSegmentLength);
-    return new Path([partOfFromSegment, ...intermediate.segments, partOfToSegment]);
   }
 
   toSVG() {

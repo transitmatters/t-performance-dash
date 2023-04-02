@@ -1,5 +1,7 @@
 import type { Bezier } from 'bezier-js';
 
+export type RangeNames = string[];
+
 export type Turtle = {
   x: number;
   y: number;
@@ -7,7 +9,7 @@ export type Turtle = {
 };
 
 export type BaseCommand = {
-  range?: string;
+  ranges: RangeNames;
 };
 
 export type LineCommand = BaseCommand & {
@@ -32,6 +34,7 @@ export type Command = LineCommand | CurveCommand | WiggleCommand;
 export type CommandPath = {
   start: Turtle;
   commands: Command[];
+  ranges?: RangeNames;
 };
 
 export type CommandResult = {
