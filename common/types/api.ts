@@ -5,6 +5,12 @@ export enum QueryNameKeys {
 }
 export type QueryNameOptions = QueryNameKeys;
 
+export const QUERIES: QueryNameOptions[] = [
+  QueryNameKeys.traveltimes,
+  QueryNameKeys.headways,
+  QueryNameKeys.dwells,
+];
+
 export enum SingleDayAPIParams {
   stop = 'stop',
   fromStop = 'from_stop',

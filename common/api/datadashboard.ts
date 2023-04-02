@@ -1,5 +1,13 @@
-import type { PartialAggregateAPIOptions, PartialSingleDayAPIOptions } from '../types/api';
-import { QueryNameKeys } from '../types/api';
+import type * as ReactQuery from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
+import type {
+  AggregateAPIOptions,
+  PartialAggregateAPIOptions,
+  PartialSingleDayAPIOptions,
+  QueryNameOptions,
+  SingleDayAPIOptions,
+} from '../types/api';
+import { QUERIES, AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../types/api';
 import { APP_DATA_BASE_PATH } from '../../common/utils/constants';
 import { getCurrentDate } from '../utils/date';
 import type { AggregateDataResponse, SingleDayDataPoint } from '../types/charts';
@@ -21,6 +29,13 @@ export const fetchSingleDayData = async (
     throw new Error('network request failed');
   }
   return await response.json();
+};
+
+// Object to contain the name of each single day query and the parameters/keys it takes.
+const singleDayQueryDependencies: { [key in QueryNameOptions]: SingleDayAPIParams[] } = {
+  traveltimes: [SingleDayAPIParams.fromStop, SingleDayAPIParams.toStop, SingleDayAPIParams.date],
+  headways: [SingleDayAPIParams.stop, SingleDayAPIParams.date],
+  dwells: [SingleDayAPIParams.stop, SingleDayAPIParams.date],
 };
 
 // Fetch data for all aggregate charts except traveltimes.
@@ -45,4 +60,70 @@ export const fetchAggregateData = async (
   }
   const responseJson = await response.json();
   return name === QueryNameKeys.traveltimes ? responseJson : { by_date: responseJson };
+};
+
+// Object to contain name of each aggregate query and the parameters/keys it takes.
+const aggregateQueryDependencies: { [key in QueryNameKeys]: AggregateAPIParams[] } = {
+  traveltimes: [
+    AggregateAPIParams.fromStop,
+    AggregateAPIParams.toStop,
+    AggregateAPIParams.startDate,
+    AggregateAPIParams.endDate,
+  ],
+  headways: [AggregateAPIParams.stop, AggregateAPIParams.startDate, AggregateAPIParams.endDate],
+  dwells: [AggregateAPIParams.stop, AggregateAPIParams.startDate, AggregateAPIParams.endDate],
+};
+
+// Overload call to specify type for single day queries
+type UseQueriesOverload = {
+  (parameters: SingleDayAPIOptions, aggregate: false, enabled?: boolean): {
+    [key in QueryNameKeys]: ReactQuery.UseQueryResult<SingleDayDataPoint[]>;
+  };
+  (parameters: AggregateAPIOptions, aggregate: true, enabled?: boolean): {
+    [key in QueryNameKeys]: ReactQuery.UseQueryResult<AggregateDataResponse>;
+  };
+};
+
+// Return type `any` because the return type is specified in the overload in `UseQueriesOverload`
+export const useCustomQueries: UseQueriesOverload = (
+  parameters: SingleDayAPIOptions | AggregateAPIOptions,
+  aggregate: boolean,
+  enabled = true
+): any => {
+  const dependencies = aggregate ? aggregateQueryDependencies : singleDayQueryDependencies;
+  // Create objects with keys of query names which contains keys and parameters.
+  const queries = {};
+  QUERIES.forEach((queryName) => {
+    const keys = [queryName];
+    const params: Partial<SingleDayAPIOptions | AggregateAPIOptions> = {};
+    dependencies[queryName].forEach((field: Partial<AggregateAPIParams | SingleDayAPIParams>) => {
+      if (parameters[field]) {
+        keys.push(parameters[field].toString());
+        params[field] = parameters[field];
+      }
+      queries[queryName] = { keys: keys, params: params };
+    });
+  });
+
+  // Create multiple queries.
+  const requests = useQueries({
+    queries: QUERIES.map((name) => {
+      return {
+        queryKey: [name, queries[name].params],
+        queryFn: () =>
+          aggregate
+            ? fetchAggregateData(name, queries[name].params)
+            : fetchSingleDayData(name, queries[name].params),
+        enabled,
+        staleTime: 30000, // Don't refetch within 30 seconds
+      };
+    }),
+  });
+
+  // Return each query.
+  return {
+    [QueryNameKeys.traveltimes]: requests[0],
+    [QueryNameKeys.headways]: requests[1],
+    [QueryNameKeys.dwells]: requests[2],
+  };
 };
