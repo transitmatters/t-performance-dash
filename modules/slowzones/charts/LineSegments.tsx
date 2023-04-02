@@ -17,7 +17,7 @@ dayjs.extend(utc);
 
 import React, { useMemo, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { YESTERDAY_UTC } from '../../../common/components/inputs/DateSelection/DateConstants';
+import { YESTERDAY_UTC } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
 import type { LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
@@ -108,25 +108,23 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
           },
           tooltip: {
             callbacks: {
-              title: function (context) {
+              title: (context) => {
                 return context[0].label;
               },
-              label: function (context) {
-                // @ts-expect-error data type is unknown
-                return 'Delay: ' + context.raw.delay.toFixed(0) + ' s';
+              label: (context) => {
+                return 'Delay: ' + data[context.datasetIndex].delay.toFixed(0) + ' sec';
               },
-              beforeBody: function (context) {
-                const data = context[0].raw;
-                return (
-                  // @ts-expect-error data type is unknown
-                  `${dayjs.utc(data.x[0]).format('MMM D, YYYY')} - ${
-                    // @ts-expect-error data type is unknown
-                    dayjs.utc(data.x[1]).isSame(YESTERDAY_UTC)
-                      ? 'Ongoing'
-                      : // @ts-expect-error data type is unknown
-                        dayjs(data.x[1]).format('MMM D, YYYY')
-                  }`
-                );
+              beforeBody: (context) => {
+                const start = context[0].parsed._custom?.barStart;
+                const end = context[0].parsed._custom?.barEnd;
+                if (!(start && end)) return 'Unknown dates';
+                const startUTC = dayjs.utc(start);
+                const endUTC = dayjs.utc(end);
+                return `${startUTC.format('MMM D, YYYY')} - ${
+                  dayjs.utc(endUTC).isSame(YESTERDAY_UTC)
+                    ? 'Ongoing'
+                    : dayjs(endUTC).format('MMM D, YYYY')
+                }`;
               },
             },
           },

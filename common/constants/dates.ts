@@ -3,14 +3,14 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import type { DateTimePickerProps } from 'react-flatpickr';
-import type { Tabs } from '../../../types/router';
-import type { DateSelectionDefaultOptions } from './types/DateSelectionTypes';
-const est = 'America/New_York';
-
+import type { Tabs } from '../types/router';
+import type { DateSelectionDefaultOptions } from '../components/inputs/DateSelection/types/DateSelectionTypes';
 dayjs.extend(utc);
 dayjs.extend(timezone);
-export const DATE_FORMAT = 'YYYY-MM-DD';
 
+const est = 'America/New_York';
+
+export const DATE_FORMAT = 'YYYY-MM-DD';
 export const TODAY = dayjs().tz(est);
 export const TODAY_UTC = dayjs.utc().startOf('day');
 export const YESTERDAY_UTC = TODAY_UTC.subtract(1, 'day');

@@ -11,7 +11,7 @@ import type {
   SlowZone,
   SlowZoneResponse,
 } from '../../common/types/dataPoints';
-import { TODAY_UTC } from '../components/inputs/DateSelection/DateConstants';
+import { TODAY_UTC } from '../constants/dates';
 import type { LineShort } from '../types/lines';
 import { lookup_station_by_id } from './stations';
 
