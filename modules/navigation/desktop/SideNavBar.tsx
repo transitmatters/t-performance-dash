@@ -88,7 +88,7 @@ export const SideNavBar = () => {
                       <TmLogoSvg className="h-7 w-auto sm:h-12" alt="TransitMatters Logo" />
                     </div>
                     <div className="mt-5 h-0 flex-1 text-white">
-                      <SideNavigation items={NAV_ITEMS} setSidebarOpen={setSidebarOpen} />
+                      <SideNavigation setSidebarOpen={setSidebarOpen} />
                     </div>
                   </div>
                 </Dialog.Panel>
@@ -109,7 +109,7 @@ export const SideNavBar = () => {
                 <TmLogoSvg alt="TransitMatters Logo" />
               </div>
               <div className="mt-5 flex flex-col px-2">
-                <SideNavigation items={NAV_ITEMS} />
+                <SideNavigation />
               </div>
             </div>
           </div>
