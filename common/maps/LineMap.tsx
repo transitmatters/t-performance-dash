@@ -8,8 +8,9 @@ import { useBreakpoint } from '../hooks/useBreakpoint';
 import styles from './LineMap.module.css';
 
 type StrokeOptions = {
-  color: string;
-  width: number;
+  stroke: string;
+  strokeWidth: number;
+  opacity: number;
 };
 
 type OffsetStrokeOptions = StrokeOptions & { offset?: number };
@@ -32,7 +33,15 @@ type Props = {
   segments?: SegmentRenderOptions[];
 };
 
-const DEFAULT_STROKE_OPTIONS: StrokeOptions = { color: 'black', width: 1 };
+const getPropsForStrokeOptions = (options: Partial<StrokeOptions>) => {
+  return {
+    fill: 'transparent',
+    stroke: 'black',
+    strokeWidth: 1,
+    opacity: 1,
+    ...options,
+  };
+};
 
 const getScaleBasis = (viewportWidth: null | number, viewportHeight: null | number) => {
   const MAX_SCALE_BASIS = 3.5;
@@ -50,11 +59,9 @@ const LineMap = (props: Props) => {
     diagram,
     direction = 'horizontal-on-desktop',
     getStationLabel,
-    strokeOptions: providedLineOptions,
+    strokeOptions = {},
     segments = [],
   } = props;
-
-  const strokeOptions = { ...DEFAULT_STROKE_OPTIONS, ...providedLineOptions };
 
   const [svg, setSvg] = useState<null | SVGSVGElement>(null);
   const [container, setContainer] = useState<null | HTMLElement>(null);
@@ -124,6 +131,7 @@ const LineMap = (props: Props) => {
   }, [svg, container, viewportWidth, viewportHeight, horizontal]);
 
   const renderStationDots = () => {
+    const strokeProps = getPropsForStrokeOptions(strokeOptions);
     return Object.entries(stationPositions).map(([stationId, pos]) => {
       return (
         <circle
@@ -132,9 +140,8 @@ const LineMap = (props: Props) => {
           r={1.5}
           key={`${stationId}-dot`}
           transform={`translate(${pos.x}, ${pos.y})`}
+          {...strokeProps}
           fill="white"
-          stroke={strokeOptions.color}
-          strokeWidth={strokeOptions.width}
         />
       );
     });
@@ -166,12 +173,7 @@ const LineMap = (props: Props) => {
 
   const renderLine = () => {
     return (
-      <path
-        d={pathDirective}
-        stroke={strokeOptions.color}
-        strokeWidth={strokeOptions.width}
-        fill="transparent"
-      />
+      <path d={pathDirective} fill="transparent" {...getPropsForStrokeOptions(strokeOptions)} />
     );
   };
 
@@ -183,8 +185,7 @@ const LineMap = (props: Props) => {
             <path
               key={`computed-stroke-${segmentIndex}-${strokeIndex}`}
               d={stroke.pathDirective}
-              stroke={stroke.color}
-              fill="transparent"
+              {...getPropsForStrokeOptions(stroke)}
             />
           );
         });

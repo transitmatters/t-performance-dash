@@ -107,6 +107,11 @@ export class Path {
   }
 
   cut(fromDisplacement: number, toDisplacement: number) {
+    if (fromDisplacement > toDisplacement) {
+      const intermediate = toDisplacement;
+      toDisplacement = fromDisplacement;
+      fromDisplacement = intermediate;
+    }
     const {
       segment: fromSegment,
       index: fromIndex,
@@ -128,7 +133,7 @@ export class Path {
       ]);
     }
     const fractionInFromSegment = displacementInFromSegment / fromSegmentLength;
-    const partOfFromSegment = fromSegment.split(fractionInFromSegment, fromSegmentLength);
+    const partOfFromSegment = fromSegment.split(fractionInFromSegment, 1);
     const intermediate = this.segments.slice(fromIndex + 1, toIndex);
     const fractionInToSegment = displacementInToSegment / toSegmentLength;
     const partOfToSegment = toSegment.split(0, fractionInToSegment);

@@ -14,12 +14,12 @@ const redLine = createRedLineDiagram();
 const redLineSegments: SegmentRenderOptions[] = [
   {
     location: {
-      fromStationId: 'place-jfk',
-      toStationId: 'place-wlsta',
+      toStationId: 'place-cntsq',
+      fromStationId: 'place-wlsta',
     },
     strokes: [
-      { offset: 1, color: 'rgba(255, 0, 0, 0.4)' },
-      { offset: -1, color: 'rgba(255, 0, 0, 0.2)' },
+      { offset: 1, stroke: 'red', opacity: 0.1 },
+      { offset: -1, stroke: 'red', opacity: 0.2 },
     ],
   },
 ];
@@ -29,7 +29,7 @@ export const Testing = () => {
     <LineMap
       diagram={redLine}
       getStationLabel={(options) => options.stationId}
-      strokeOptions={{ color: 'red' }}
+      strokeOptions={{ stroke: 'red' }}
       segments={redLineSegments}
     />
   );
