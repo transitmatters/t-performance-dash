@@ -11,20 +11,6 @@ import { SideNavigation } from './SideNavigation';
 export const SideNavBar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const new_nav_items = [
-    {
-      name: 'Red Line',
-      current: true,
-      icon: faTrainSubway,
-      key: 'RL',
-      children: [
-        { name: 'Home', path: '/red', key: 'RL' },
-        { name: 'Metrics', path: '/red/overview', key: 'RL-metrics' },
-        { name: 'Trip Explorer', path: '/red/trips', key: 'RL-trips' },
-      ],
-    },
-  ];
-
   const NAV_ITEMS = [
     {
       name: 'Subway',
@@ -102,7 +88,7 @@ export const SideNavBar = () => {
                       <TmLogoSvg className="h-7 w-auto sm:h-12" alt="TransitMatters Logo" />
                     </div>
                     <div className="mt-5 h-0 flex-1 text-white">
-                      <SideNavigation items={new_nav_items} setSidebarOpen={setSidebarOpen} />
+                      <SideNavigation items={NAV_ITEMS} setSidebarOpen={setSidebarOpen} />
                     </div>
                   </div>
                 </Dialog.Panel>
@@ -123,7 +109,7 @@ export const SideNavBar = () => {
                 <TmLogoSvg alt="TransitMatters Logo" />
               </div>
               <div className="mt-5 flex flex-col px-2">
-                <SideNavigation items={new_nav_items} />
+                <SideNavigation items={NAV_ITEMS} />
               </div>
             </div>
           </div>

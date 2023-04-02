@@ -10,6 +10,7 @@ import { SlowZonesContainer } from '../../modules/slowzones/SlowZonesContainer';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { SZWidgetValue, TimeWidgetValue } from '../../common/types/basicWidgets';
 import { useSlowZoneCalculations } from '../../common/utils/slowZoneUtils';
+import { LayoutType } from '../../common/layouts/layoutTypes';
 import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
 
 export default function SlowZonesDetails() {
@@ -56,4 +57,4 @@ export default function SlowZonesDetails() {
     </>
   );
 }
-SlowZonesDetails.Layout = 'Metrics';
+SlowZonesDetails.Layout = LayoutType.Metrics;

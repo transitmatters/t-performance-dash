@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
+import { LayoutType } from '../common/layouts/layoutTypes';
 
 export default function Home() {
   return (
@@ -28,3 +29,4 @@ export default function Home() {
     </>
   );
 }
+Home.Layout = LayoutType.Dashboards;

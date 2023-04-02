@@ -1,12 +1,9 @@
 import React from 'react';
-import { useBreakpoint } from '../hooks/useBreakpoint';
 import { WidgetPage } from '../components/widgets/Widget';
 import { SideNavBar } from '../../modules/navigation/desktop/SideNavBar';
 import { Footer } from './Footer';
 
 export const DashboardLayout = ({ children }) => {
-  const isMobile = !useBreakpoint('md');
-
   return (
     <div className="flex min-h-full flex-col justify-between">
       <SideNavBar />

@@ -12,6 +12,7 @@ import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWi
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
+import { LayoutType } from '../../common/layouts/layoutTypes';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 
@@ -94,4 +95,4 @@ export default function DwellsDetails() {
     </>
   );
 }
-DwellsDetails.Layout = 'Metrics';
+DwellsDetails.Layout = LayoutType.Metrics;

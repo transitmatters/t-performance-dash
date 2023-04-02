@@ -13,7 +13,7 @@ export const DATA_PAGE_NAMES: DataPageNames = {
 };
 
 export const DATA_PAGES: { [key in string]: { href: string; name: string; lines: Line[] } } = {
-  overview: { href: '/overview', name: 'Overview', lines: ['RL', 'BL', 'GL', 'OL', 'BUS'] },
+  overview: { href: '/', name: 'Overview', lines: ['RL', 'BL', 'GL', 'OL', 'BUS'] },
   traveltimes: {
     href: '/traveltimes',
     name: 'Travel Times',
