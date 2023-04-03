@@ -7,5 +7,3 @@ export type DataPage =
   | 'ridership'
   | 'service'
   | 'more';
-
-export type DataPageNames = Record<DataPage, string>;

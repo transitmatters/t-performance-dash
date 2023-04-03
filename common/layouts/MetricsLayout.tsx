@@ -1,9 +1,10 @@
 import React from 'react';
 import { BottomNavBar } from '../../modules/navigation/mobile/BottomNavBar';
 import { useBreakpoint } from '../hooks/useBreakpoint';
-import { DataPageHeader } from '../../modules/dashboard/DataPageHeader';
 import { WidgetPage } from '../components/widgets/Widget';
 import { SideNavBar } from '../../modules/navigation/desktop/SideNavBar';
+import { DateSelection } from '../components/inputs/DateSelection/DateSelection';
+import { DataPageHeader } from '../../modules/dashboard/DataPageHeader';
 import { Footer } from './Footer';
 
 export const MetricsLayout = ({ children }) => {
@@ -16,6 +17,12 @@ export const MetricsLayout = ({ children }) => {
         <main className="flex-1">
           <div className="py-2 md:py-6">
             <div className="h-full px-4 sm:px-6 md:px-8">
+              {!isMobile && (
+                <div className="w-sm fixed right-4 top-4 z-10">
+                  <DateSelection />
+                </div>
+              )}
+
               <WidgetPage>
                 <DataPageHeader />
                 {children}

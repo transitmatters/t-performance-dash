@@ -4,12 +4,11 @@ import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import { getBusRoutes } from '../../../common/constants/stations';
 import { lineColorBackground, lineColorDarkBorder } from '../../../common/styles/general';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { getBusRouteSelectionItemHref, useDelimitatedRoute } from '../../../common/utils/router';
 
 export const BusSelection = () => {
-  const {
-    query: { busRoute },
-  } = useDelimitatedRoute();
+  const route = useDelimitatedRoute();
+
   const router = useRouter();
   return (
     <Popover>
@@ -17,12 +16,13 @@ export const BusSelection = () => {
         <>
           <Popover.Button
             className={classNames(
-              'flex w-full justify-center rounded-md border bg-opacity-10 py-1 text-white hover:bg-opacity-80',
+              'flex w-full justify-center rounded-md border border-opacity-30 bg-opacity-10  py-1 text-white hover:bg-opacity-80',
               lineColorBackground['BUS'],
-              lineColorDarkBorder['BUS']
+              lineColorDarkBorder['BUS'],
+              route.line === 'BUS' && 'bg-opacity-100'
             )}
           >
-            <p>Bus{busRoute ? ` #${busRoute}` : ''}</p>
+            <p>Route{route.query.busRoute ? ` #${route.query.busRoute}` : ''}</p>
           </Popover.Button>
           <Transition
             as={Fragment}
@@ -36,11 +36,11 @@ export const BusSelection = () => {
             <Popover.Panel className="absolute left-0 z-20 mt-3 w-full transform rounded-md bg-design-rb-900 p-2">
               <div className="relative grid grid-cols-3 gap-2 ">
                 {getBusRoutes().map((key) => {
-                  const selected = busRoute === key;
+                  const selected = route.query.busRoute === key;
                   return (
                     <span
                       onClick={() => {
-                        router.push({ pathname: `/bus`, query: { busRoute: key } });
+                        router.push(getBusRouteSelectionItemHref(key, route));
                       }}
                       key={key}
                       className={classNames(

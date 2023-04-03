@@ -1,13 +1,13 @@
 import React from 'react';
 import { LayoutType } from '../../common/layouts/layoutTypes';
-import { LineHealth } from './LineHealth';
+import { TodaysCommute } from './TodaysCommute';
 
-export default function Overview() {
+export default function Today() {
   return (
     <div className="flex flex-col pt-2">
-      <LineHealth />
+      <TodaysCommute />
     </div>
   );
 }
 
-Overview.Layout = LayoutType.Metrics;
+Today.Layout = LayoutType.Metrics;

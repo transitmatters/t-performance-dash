@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
-import { DataPageTabs } from '../navigation/desktop/DataPageTabs';
-import { DateSelection } from '../../common/components/inputs/DateSelection/DateSelection';
+import { ALL_PAGES } from '../../common/constants/datapages';
+import { lineColorText } from '../../common/styles/general';
 
 export const DataPageHeader = () => {
   const isDesktop = useBreakpoint('md');
@@ -25,16 +25,13 @@ export const DataPageHeader = () => {
   return (
     <div className="relative border-b border-gray-200 sm:pb-0">
       <div className="md:flex md:items-center md:justify-between">
-        <h3 className="text-2xl font-medium leading-6 text-gray-900 md:text-xl">
-          {line && LINE_OBJECTS[line]?.name}
+        <h3 className="select-none text-4xl font-medium leading-6 text-stone-900 md:text-2xl">
+          <span className={lineColorText[line ?? 'DEFAULT']}>
+            {line && LINE_OBJECTS[line]?.name}
+          </span>
+          <span> - {ALL_PAGES[datapage]?.name}</span>
         </h3>
-        {isDesktop && datapage !== 'overview' && (
-          <div className="absolute top-1 right-0 mt-0">
-            <DateSelection />
-          </div>
-        )}
       </div>
-      <DataPageTabs />
     </div>
   );
 };
