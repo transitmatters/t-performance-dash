@@ -72,7 +72,6 @@ export const MINIMUMS = {
 };
 
 // As per MBTA Blue book: https://archives.lib.state.ma.us/handle/2452/827917 2003-2004
-
 export const CORE_TRACK_LENGTHS = {
   RL: 14.82 + 14.82 + 10.13 + 10.13, // <Quincy Adams -> Davis> + <reverse> + <Shawmut -> Davis> + <reverse>
   OL: 9.64 + 9.58, // <Malden Station -> Green Street> + <reverse>
