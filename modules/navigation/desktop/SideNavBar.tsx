@@ -79,10 +79,10 @@ export const SideNavBar = () => {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex min-h-0 flex-1 flex-col">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
-              <div className="flex flex-shrink-0 px-2">
+              <div className="flex flex-shrink-0 px-6">
                 <TmLogoSvg alt="TransitMatters Logo" />
               </div>
-              <div className="mt-5 flex flex-col px-2">
+              <div className="mt-5 flex flex-col ">
                 <SideNavigation />
               </div>
             </div>

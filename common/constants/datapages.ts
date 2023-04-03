@@ -1,3 +1,16 @@
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import {
+  faHouse,
+  faTrainSubway,
+  faUsers,
+  faArrowsLeftRightToLine,
+  faWarning,
+  faClockFour,
+  faGaugeHigh,
+  faTableColumns,
+  faCalendarWeek,
+  faCalendarDay,
+} from '@fortawesome/free-solid-svg-icons';
 import type { Line } from '../types/lines';
 
 export type Page =
@@ -29,6 +42,7 @@ export type NavTab = {
   path: string;
   name: string;
   lines: Line[];
+  icon: IconDefinition;
   sub?: boolean;
 };
 
@@ -42,27 +56,44 @@ export const ALL_PAGES: NavTabMap = {
     path: '/',
     name: 'Today',
     lines: ['RL', 'BL', 'GL', 'OL'],
+    icon: faHouse,
   },
   singleday: {
     key: 'singleday',
     path: '/singleday',
     name: 'Single Day',
     lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
+    icon: faCalendarDay,
   },
-  range: { key: 'range', path: '/range', name: 'Range', lines: ['RL', 'BL', 'GL', 'OL', 'BUS'] },
+  range: {
+    key: 'range',
+    path: '/range',
+    name: 'Range',
+    lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
+    icon: faCalendarWeek,
+  },
   overview: {
     key: 'overview',
     path: '/overview',
     name: 'Overview',
     lines: ['RL', 'BL', 'GL', 'OL'],
+    icon: faTableColumns,
   },
-  speed: { key: 'speed', path: '/speed', name: 'Speed', lines: [], sub: true },
-  service: { key: 'service', path: '/service', name: 'Service', lines: [], sub: true },
+  speed: { key: 'speed', path: '/speed', name: 'Speed', lines: [], icon: faGaugeHigh, sub: true },
+  service: {
+    key: 'service',
+    path: '/service',
+    name: 'Service',
+    lines: [],
+    icon: faClockFour,
+    sub: true,
+  },
   slowzones: {
     key: 'slowzones',
     path: '/slowzones',
     name: 'Slow Zones',
     lines: ['RL', 'BL', 'OL'],
+    icon: faWarning,
     sub: true,
   },
   headways: {
@@ -70,6 +101,7 @@ export const ALL_PAGES: NavTabMap = {
     path: '/headways',
     name: 'Headways',
     lines: ['RL', 'BL', 'GL', 'OL'],
+    icon: faArrowsLeftRightToLine,
     sub: true,
   },
   ridership: {
@@ -77,12 +109,14 @@ export const ALL_PAGES: NavTabMap = {
     path: '/ridership',
     name: 'Ridership',
     lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
+    icon: faUsers,
     sub: true,
   },
   ntt: {
     key: 'ntt',
     path: '/newtrains',
     name: 'New Train Tracker',
+    icon: faTrainSubway,
     lines: [],
   },
 };

@@ -9,9 +9,11 @@ const LINE_ITEMS = [LINE_OBJECTS['RL'], LINE_OBJECTS['OL'], LINE_OBJECTS['GL'], 
 export const SubwayNavMenu = () => (
   <>
     <LineSelection lineItems={LINE_ITEMS} />
-    <SidebarTabs tabs={TODAY} title="Today" />
-    <SidebarTabs tabs={LINE_PAGES} title="Line" />
-    <SidebarTabs tabs={TRIP_PAGES} title="Trips" />
-    <SidebarTabs tabs={MORE_PAGES} title={'More'} />
+    <div className="mx-2 mt-5 flex flex-col gap-y-7">
+      <SidebarTabs tabs={TODAY} title="Today" />
+      <SidebarTabs tabs={LINE_PAGES} title="Line" />
+      <SidebarTabs tabs={TRIP_PAGES} title="Trips" />
+      <SidebarTabs tabs={MORE_PAGES} title={'More'} />
+    </div>
   </>
 );

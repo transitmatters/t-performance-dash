@@ -18,7 +18,7 @@ export const SideNavigation = ({ setSidebarOpen }: SideNavigationProps) => {
   const { tab } = useDelimitatedRoute();
   return (
     <nav className="flex flex-1 flex-col px-4">
-      <ul role="list" className="flex flex-1 flex-col gap-y-7">
+      <ul role="list" className="flex flex-1 flex-col gap-y-3">
         <DashboardSelection />
         {getNavMenu(tab)}
       </ul>

@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { Tab } from '@headlessui/react';
 import { lineColorBackground, lineColorDarkBackground } from '../../../common/styles/general';
 import { getLineSelectionItemHref, useDelimitatedRoute } from '../../../common/utils/router';
+import type { LineMetadata } from '../../../common/types/lines';
 
 interface LineSelectionProps {
   lineItems: LineMetadata[];
@@ -18,7 +19,7 @@ export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems }) => {
       selectedIndex={lineItems.findIndex((lineItem) => lineItem.key === route.line)}
       onChange={(index) => router.push(getLineSelectionItemHref(lineItems[index].key, route))}
     >
-      <Tab.List className=" flex flex-col gap-y-1">
+      <Tab.List className=" mx-1 flex flex-col gap-y-1">
         {lineItems.map((lineItem) => {
           return (
             <Tab key={lineItem.key}>

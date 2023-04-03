@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
 import { useRouter } from 'next/router';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDelimitatedRoute, useSelectedPage } from '../../../common/utils/router';
 import type { NavTab } from '../../../common/constants/datapages';
 
@@ -35,14 +36,21 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs }) => {
                   selected
                     ? 'bg-stone-700 text-white'
                     : enabled && 'text-stone-300 hover:bg-stone-800 hover:text-white',
-                  'group flex cursor-pointer select-none gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                  'group flex cursor-pointer select-none items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
                   !enabled && 'cursor-auto  text-stone-600',
                   tab.sub && 'ml-4 text-xs'
                 )}
               >
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-stone-700 bg-stone-800 text-[0.625rem] font-medium text-stone-400 group-hover:text-white">
-                  {tab.initial}
-                </span>
+                <FontAwesomeIcon
+                  icon={tab.icon}
+                  aria-hidden={true}
+                  className={classNames(
+                    selected ? 'text-white' : 'text-stone-200 ',
+                    enabled ? 'group-hover:text-white' : 'text-stone-600',
+                    'shrink-0',
+                    tab.sub ? 'h-4 w-4' : 'h-6 w-6'
+                  )}
+                />
                 <span className="truncate">{tab.name}</span>
               </a>
             </li>
