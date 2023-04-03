@@ -3,7 +3,8 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDelimitatedRoute, useSelectedPage } from '../../../common/utils/router';
-import type { NavTab } from '../../../common/constants/datapages';
+import type { NavTab } from '../../../common/constants/pages';
+import { ALL_PAGES } from '../../../common/constants/pages';
 
 interface SidebarTabs {
   tabs: NavTab[];
@@ -12,8 +13,18 @@ interface SidebarTabs {
 
 export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs }) => {
   const router = useRouter();
-  const { linePath, line } = useDelimitatedRoute();
+  const { linePath, line, query, page } = useDelimitatedRoute();
   const selectedPage = useSelectedPage();
+
+  const handleChange = (enabled: boolean, tab: NavTab) => {
+    if (!enabled) return null;
+    if (ALL_PAGES[page].section === tab.section) {
+      router.push({ pathname: `/${linePath}${tab.path}`, query: query });
+    } else {
+      router.push({ pathname: `/${linePath}${tab.path}` });
+    }
+  };
+
   return (
     <div>
       <div className="text-xs font-semibold leading-6 text-stone-400">{title}</div>
@@ -26,12 +37,9 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs }) => {
               <a
                 tabIndex={enabled ? 0 : undefined}
                 onKeyUp={(e) => {
-                  if (enabled && (e.key === 'enter' || e.key == ' '))
-                    router.push({ pathname: `/${linePath}${tab.path}` });
+                  if (e.key === 'enter' || e.key == ' ') handleChange(enabled, tab.key);
                 }}
-                onClick={() => {
-                  if (enabled) router.push({ pathname: `/${linePath}${tab.path}` });
-                }}
+                onClick={() => handleChange(enabled, tab)}
                 className={classNames(
                   selected
                     ? 'bg-stone-700 text-white'

@@ -1,5 +1,5 @@
 import React from 'react';
-import { LINE_PAGES, MORE_PAGES, TODAY, TRIP_PAGES } from '../../../common/constants/datapages';
+import { LINE_PAGES, MORE_PAGES, TODAY, TRIP_PAGES } from '../../../common/constants/pages';
 import { LINE_OBJECTS } from '../../../common/constants/lines';
 import { LineSelection } from './LineSelection';
 import { SidebarTabs } from './SidebarTabs';

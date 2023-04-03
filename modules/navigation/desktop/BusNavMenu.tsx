@@ -1,5 +1,5 @@
 import React from 'react';
-import { TRIP_PAGES } from '../../../common/constants/datapages';
+import { TRIP_PAGES } from '../../../common/constants/pages';
 import { BusSelection } from './BusSelection';
 import { SidebarTabs } from './SidebarTabs';
 

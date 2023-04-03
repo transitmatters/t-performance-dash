@@ -6,8 +6,8 @@ import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route } from '../types/router';
 import type { DateParams } from '../components/inputs/DateSelection/types/DateSelectionTypes';
-import type { Page } from '../constants/datapages';
-import { ALL_PAGES, PATH_TO_PAGE_MAP } from '../constants/datapages';
+import type { Page } from '../constants/pages';
+import { ALL_PAGES, PATH_TO_PAGE_MAP } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
 import { getOffsetDate } from './date';
 
@@ -41,7 +41,7 @@ export const useDelimitatedRoute = (): Route => {
     line: linePathToKeyMap[pathItems[1]],
     linePath: pathItems[1] as LinePath, //TODO: Remove as
     lineShort: capitalize(pathItems[1]) as LineShort, //TODO: Remove as
-    datapage: (pathItems[2] as Page) || 'today', //TODO: Remove as
+    page: (pathItems[2] as Page) || 'today', //TODO: Remove as
     tab: tab,
     query: router.isReady ? newParams : {},
   };
@@ -86,7 +86,7 @@ export const useUpdateQuery = () => {
 };
 
 export const getLineSelectionItemHref = (newLine: Line, route: Route): string => {
-  const { datapage, line, query } = route;
+  const { page: datapage, line, query } = route;
   const { path, key } = LINE_OBJECTS[newLine];
   const validPage = line ? ALL_PAGES[datapage].lines.includes(newLine) : false;
   let href = `/${path}`;
@@ -105,7 +105,7 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
 };
 
 export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): string => {
-  const { query, datapage } = route;
+  const { query, page: datapage } = route;
   const validPage = ALL_PAGES[datapage].lines.includes('BUS');
   if (newRoute === route.query.busRoute || datapage === 'today' || !validPage) {
     return `/bus/singleday?busRoute=${newRoute}`;
@@ -121,7 +121,7 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
 
 export const useSelectedPage = () => {
   const router = useRouter();
-  const { datapage } = useDelimitatedRoute();
+  const { page: datapage } = useDelimitatedRoute();
   if (!router.isReady) return undefined;
   return PATH_TO_PAGE_MAP[datapage];
 };
