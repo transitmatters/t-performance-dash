@@ -15,19 +15,18 @@ interface SpeedWidgetProps {
   timeRange: TimeRange;
 }
 
-
 export const SpeedWidget: React.FC<SpeedWidgetProps> = ({ timeRange }) => {
   const { line, linePath } = useDelimitatedRoute();
   const { agg, endDate, startDate, comparisonStartDate, comparisonEndDate } =
     DELAYS_RANGE_PARAMS_MAP[timeRange];
 
-  const medianTravelTimes = useQuery(
-    ['traversal', line, startDate, endDate, agg],
+  const speeds = useQuery(
+    ['speed', line, startDate, endDate, agg],
     () => fetchSpeeds({ start_date: startDate, end_date: endDate, agg, line }),
     { enabled: line != undefined }
   );
-  const compTravelTimes = useQuery(
-    ['traversalComparison', line, comparisonStartDate, startDate, agg],
+  const compSpeeds = useQuery(
+    ['speedComparison', line, comparisonStartDate, startDate, agg],
     () =>
       fetchSpeeds({
         start_date: comparisonStartDate,
@@ -39,10 +38,10 @@ export const SpeedWidget: React.FC<SpeedWidgetProps> = ({ timeRange }) => {
   );
 
   const { average, delta } = useMemo(() => {
-    return getSpeedWidgetValues(medianTravelTimes, compTravelTimes, line);
-  }, [medianTravelTimes.data, compTravelTimes.data]);
+    return getSpeedWidgetValues(speeds, compSpeeds, line);
+  }, [speeds.data, compSpeeds.data]);
 
-  if (medianTravelTimes.isError) {
+  if (speeds.isError) {
     return <div>Error</div>;
   }
 
@@ -58,7 +57,9 @@ export const SpeedWidget: React.FC<SpeedWidgetProps> = ({ timeRange }) => {
             sentimentDirection={'positiveOnIncrease'}
           />
         </div>
-        <SpeedGraph timeRange={timeRange} data={medianTravelTimes.data ?? []} />
+        <div className={classNames('h-48 pr-4')}>
+          <SpeedGraph timeRange={timeRange} data={speeds.data ?? []} />
+        </div>
       </div>
     </>
   );
