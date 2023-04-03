@@ -24,8 +24,8 @@ export const DashboardSelection = () => {
             {({ selected }) => (
               <div
                 className={classNames(
-                  'flex items-center justify-center border py-1 text-sm font-semibold hover:bg-white hover:bg-opacity-70 hover:text-stone-800',
-                  selected && 'bg-white text-stone-900',
+                  'flex items-center justify-center border border-stone-200 py-1 text-sm font-semibold hover:bg-stone-200 hover:bg-opacity-80 hover:text-stone-800',
+                  selected && 'bg-stone-200 text-stone-900',
                   index === 0 && 'rounded-l-md',
                   index === tabs.length - 1 && 'rounded-r-md'
                 )}

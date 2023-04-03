@@ -9,7 +9,8 @@ const LINE_ITEMS = [LINE_OBJECTS['RL'], LINE_OBJECTS['OL'], LINE_OBJECTS['GL'], 
 export const SubwayNavMenu = () => (
   <>
     <LineSelection lineItems={LINE_ITEMS} />
-    <div className="mx-2 mt-5 flex flex-col gap-y-7">
+    <hr className="mt-3 h-1 w-full border-stone-400" />
+    <div className="mx-2 mt-3 flex flex-col gap-y-7">
       <SidebarTabs tabs={TODAY} title="Today" />
       <SidebarTabs tabs={LINE_PAGES} title="Line" />
       <SidebarTabs tabs={TRIP_PAGES} title="Trips" />
