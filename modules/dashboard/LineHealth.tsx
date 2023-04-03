@@ -12,7 +12,7 @@ import { TravelTimesWidget } from '../traveltimes/TravelTimesWidget';
 
 export const LineHealth = () => {
   const [timeRange, setTimeRange] = useState<TimeRange>('week');
-  const { tab } = useDelimitatedRoute();
+  const { tab, line } = useDelimitatedRoute();
 
   return (
     <div>
@@ -22,8 +22,8 @@ export const LineHealth = () => {
       </div>
       <hr className="my-2 h-[2px] border-0 border-b border-white bg-gray-400" />
       <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
-        <SpeedWidget timeRange={timeRange} />
-        {tab === 'Subway' && <SlowZonesWidget timeRange={timeRange} />}
+        {tab === 'Subway' && line !== 'GL' && <SpeedWidget timeRange={timeRange} />}
+        {tab === 'Subway' && line !== 'GL' && <SlowZonesWidget timeRange={timeRange} />}
         <TravelTimesWidget />
         <HeadwaysWidget />
         {tab === 'Subway' && <DwellsWidget />}

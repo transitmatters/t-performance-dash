@@ -1,39 +1,11 @@
 import boto3
-from datetime import datetime, timedelta
+from boto3.dynamodb.conditions import Key
 
 # Create a DynamoDB resource
 dynamodb = boto3.resource('dynamodb')
 
-DATE_FORMAT_BACKEND = "%Y-%m-%d"
 
-AGG_TO_CONFIG_MAP = {
-    "daily": {"table_name": "DailySpeed", "delta": 150},
-    "weekly": {"table_name": "WeeklySpeed", "delta": 7 * 150},
-    "monthly": {"table_name": "MonthlySpeed", "delta": 30 * 150},
-}
-
-
-def query_speed_tables(params):
-    config = AGG_TO_CONFIG_MAP[params["agg"]]
-    table = dynamodb.Table(config["table_name"])
-
-    start_datetime = datetime.strptime(params["start_date"], DATE_FORMAT_BACKEND)
-    end_datetime = datetime.strptime(params["end_date"], DATE_FORMAT_BACKEND)
-    if start_datetime + timedelta(days=config["delta"]) < end_datetime:
-        return {"Error": "Invalid Query - too many items requested."}
-
-    query_params = {
-        'KeyConditionExpression': '#pk = :pk and #date BETWEEN :start_date and :end_date',
-        'ExpressionAttributeNames': {
-            '#pk': 'line',
-            '#date': 'date'
-        },
-        'ExpressionAttributeValues': {
-            ':pk': params["line"],
-            ':start_date': params["start_date"],
-            ':end_date': params["end_date"]
-        }
-    }
-
-    response = table.query(**query_params)
+def query_speed_tables(table_name, line, start_date, end_date):
+    table = dynamodb.Table(table_name)
+    response = table.query(KeyConditionExpression=Key("line").eq(line) & Key("date").between(start_date, end_date))
     return response['Items']
