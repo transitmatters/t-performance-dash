@@ -9,6 +9,7 @@ export const ToolSelection = ({ toolItems }) => {
   const router = useRouter();
   return (
     <Tab.Group
+      manual
       onChange={(index) => {
         router.push({ pathname: `/${linePath}${toolItems[index].path}` });
       }}

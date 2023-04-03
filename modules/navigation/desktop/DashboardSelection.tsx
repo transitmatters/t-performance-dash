@@ -13,6 +13,7 @@ export const DashboardSelection = () => {
   const dashboardTabs = Object.values(DASHBOARD_TABS);
   return (
     <Tab.Group
+      manual
       onChange={(index) => {
         router.push(dashboardTabs[index].path);
       }}

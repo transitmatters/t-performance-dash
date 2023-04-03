@@ -18,6 +18,7 @@ export const RangeSelectionTab: React.FC<RangeSelectionTabProps> = ({
   const { line } = useDelimitatedRoute();
   return (
     <Tab.Group
+      manual
       onChange={(value) => {
         handleSelection(0, Boolean(value));
       }}

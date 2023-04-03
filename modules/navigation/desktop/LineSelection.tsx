@@ -16,6 +16,7 @@ export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems }) => {
   return (
     <Tab.Group
       vertical
+      manual
       selectedIndex={lineItems.findIndex((lineItem) => lineItem.key === route.line)}
       onChange={(index) => router.push(getLineSelectionItemHref(lineItems[index].key, route))}
     >

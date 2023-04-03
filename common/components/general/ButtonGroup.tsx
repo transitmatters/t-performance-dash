@@ -15,7 +15,7 @@ export const ButtonGroup: <T extends string>(
 ) => React.ReactElement<ButtonGroupProps<T>> = ({ options, pressFunction }) => {
   const { line } = useDelimitatedRoute();
   return (
-    <Tab.Group onChange={(value) => pressFunction(options[value][0])}>
+    <Tab.Group manual onChange={(value) => pressFunction(options[value][0])}>
       <Tab.List className="isolate inline-flex rounded-md shadow-sm">
         {options.map((option, index) => {
           return (
