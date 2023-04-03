@@ -95,12 +95,30 @@ export const useSlowZoneCalculations = ({
     [allSlow, lineShort]
   );
 
-  const totalDelay = formattedTotals?.length
-    ? formattedTotals[formattedTotals.length - 1][lineShort]
+  const lastWeek = useMemo(
+    () =>
+      allSlow &&
+      allSlow.filter((sz) => {
+        const start = dayjs(sz.start);
+        const end = dayjs(sz.end);
+        const aWeekAgo = dayjs().subtract(7, 'days');
+        return (
+          sz.color === lineShort && start.isSameOrBefore(aWeekAgo) && end.isSameOrAfter(aWeekAgo)
+        );
+      }).length,
+    [allSlow, lineShort]
+  );
+
+  const totalDelay = formattedTotals ? formattedTotals[formattedTotals.length - 1][lineShort] : 0;
+
+  const totalDelayLasteek = formattedTotals
+    ? formattedTotals[formattedTotals.length - 8][lineShort]
     : 0;
 
   return {
     current,
+    lastWeek,
     totalDelay,
+    totalDelayLasteek,
   };
 };
