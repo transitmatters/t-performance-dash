@@ -9,5 +9,4 @@ export default function Overview() {
     </div>
   );
 }
-
 Overview.Layout = LayoutType.Metrics;
