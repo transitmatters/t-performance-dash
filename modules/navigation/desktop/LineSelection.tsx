@@ -41,7 +41,7 @@ export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems }) => {
                   ></div>
                   <p
                     className={classNames(
-                      'font-semibold',
+                      'text-sm font-semibold',
                       selected ? 'text-stone-200' : 'text-white text-opacity-95'
                     )}
                   >

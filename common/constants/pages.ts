@@ -37,7 +37,7 @@ export enum PAGES {
   range = 'range',
 }
 
-type Section = 'today' | 'trips' | 'line' | 'ntt';
+type Section = 'today' | 'single' | 'range' | 'line' | 'ntt';
 
 export type NavTab = {
   key: string;
@@ -68,14 +68,14 @@ export const ALL_PAGES: NavTabMap = {
     name: 'Single Day',
     lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
     icon: faCalendarDay,
-    section: 'trips',
+    section: 'single',
   },
   range: {
     key: 'range',
     path: '/range',
     name: 'Range',
     lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
-    section: 'trips',
+    section: 'range',
     icon: faCalendarWeek,
   },
   overview: {

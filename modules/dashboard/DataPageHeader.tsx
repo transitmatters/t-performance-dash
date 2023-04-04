@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ALL_PAGES } from '../../common/constants/pages';
 import { lineColorText } from '../../common/styles/general';
 
 export const DataPageHeader = () => {
-  const isDesktop = useBreakpoint('md');
-
   const {
     line,
     page: datapage,
