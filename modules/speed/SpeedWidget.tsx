@@ -48,7 +48,7 @@ export const SpeedWidget: React.FC<SpeedWidgetProps> = ({ timeRange }) => {
   return (
     <>
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <HomescreenWidgetTitle title="Travel Times" href={`/${linePath}/traveltimes`} />
+        <HomescreenWidgetTitle title="Speed" href={`/${linePath}/speed`} />
         <div className={classNames('space-between flex w-full flex-row')}>
           <BasicWidgetDataLayout
             title="Average Speed"
@@ -57,7 +57,7 @@ export const SpeedWidget: React.FC<SpeedWidgetProps> = ({ timeRange }) => {
             sentimentDirection={'positiveOnIncrease'}
           />
         </div>
-        <div className={classNames('h-48 pr-4')}>
+        <div className={classNames('h-60 pr-4')}>
           <SpeedGraph timeRange={timeRange} data={speeds.data ?? []} />
         </div>
       </div>
