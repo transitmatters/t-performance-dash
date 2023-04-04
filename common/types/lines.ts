@@ -1,17 +1,22 @@
-import type { TimeUnit } from 'chart.js';
-import type React from 'react';
-import type {
-  AggregateDataPoint,
-  BenchmarkField,
-  MetricField,
-  PointField,
-  SingleDayDataPoint,
-  Location,
-} from './charts';
-
 export type Line = 'RL' | 'OL' | 'GL' | 'BL' | 'BUS';
 export type LineShort = 'Red' | 'Orange' | 'Green' | 'Blue' | 'Bus';
 export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus';
+export type BusRoute =
+  | '1'
+  | '15'
+  | '22'
+  | '23'
+  | '28'
+  | '32'
+  | '39'
+  | '57'
+  | '66'
+  | '71'
+  | '73'
+  | '77'
+  | '111'
+  | '114/116/117';
+
 export type LineMetadata = {
   name: string;
   color: string;
@@ -21,35 +26,18 @@ export type LineMetadata = {
 };
 export type LineObject = { [key in Line]: LineMetadata };
 
-type DataName = 'traveltimes' | 'headways' | 'dwells' | 'traveltimesByHour';
+export const RAIL_LINES = ['red', 'orange', 'green', 'blue'];
 
-export interface LineProps {
-  title: string;
-  chartId: string;
-  location: Location;
-  isLoading: any;
-  pointField: PointField; // X value
-  bothStops?: boolean;
-  fname: DataName;
-  showLegend?: boolean;
-}
+export const ALL_LINE_PATHS = RAIL_LINES.map((line) => {
+  return {
+    params: {
+      line: line,
+    },
+  };
+});
 
-export interface AggregateLineProps extends LineProps {
-  timeUnit: TimeUnit;
-  data: AggregateDataPoint[];
-  timeFormat: string;
-  seriesName: string;
-  fillColor: string;
-  startDate: string;
-  endDate: string;
-  suggestedYMin?: number;
-  suggestedYMax?: number;
-  children?: React.ReactNode;
-}
-
-export interface SingleDayLineProps extends LineProps {
-  data: SingleDayDataPoint[];
-  metricField: MetricField; // Y value
-  date: string | undefined;
-  benchmarkField?: BenchmarkField;
-}
+export const BUS_PATH = {
+  params: {
+    line: 'bus',
+  },
+};

@@ -1,37 +1,10 @@
-import React, { useState } from 'react';
-import { Dropdown } from '../../../common/components/dropdowns/Dropdown';
-import Device from '../../../common/components/general/Device/Device';
-import { Button } from '../../../common/components/inputs/Button';
-import { NativeDateInput } from '../../../common/components/inputs/NativeDateInput';
-import { DateSelector } from '../../../common/components/inputs/DateSelector';
-
-const visualizationOptions = [
-  { name: 'Map', id: 1 },
-  { name: 'Segments', id: 2 },
-  { name: 'Totals', id: 3 },
-];
+import React from 'react';
+import { DateSelection } from '../../../common/components/inputs/DateSelection/DateSelection';
 
 export const SecondaryNavBar: React.FC = () => {
-  const [range, setRange] = useState<boolean>(false);
-
   return (
-    <div className="pb-safe fixed bottom-11 z-20 w-full border border-gray-300 bg-white px-2">
-      <div className="flex h-11 w-full flex-row items-center gap-x-2 bg-white">
-        <Device>
-          {({ isMobile }) => {
-            if (isMobile) {
-              return <NativeDateInput range={range} />;
-            }
-            return <DateSelector range={range} />;
-          }}
-        </Device>
-        <Button text={range ? '🅧' : 'Range'} onClick={() => setRange(!range)} />
-        <Dropdown
-          options={visualizationOptions}
-          setSelectedValue={() => null}
-          selectedValue={visualizationOptions[0]}
-        />
-      </div>
+    <div className="z-20 w-full bg-gray-100">
+      <DateSelection />
     </div>
   );
 };

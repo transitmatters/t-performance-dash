@@ -9,29 +9,29 @@ def runone(path, first=False):
     current = json.load(open(path))
     # Print any removed stops first
     if not first:
-        my_stations = list(current.values())[0]['stations']
-        stat_map = dict(map(lambda x: (x['station'], x), my_stations))
+        my_stations = list(current.values())[0]["stations"]
+        stat_map = dict(map(lambda x: (x["station"], x), my_stations))
         for s in station_stops:
             if s not in stat_map:
                 print("  - Station %s removed in file %s. (Stops: %s)" % (s, path, station_stops[s]))
                 continue
             for d in station_stops[s]:
                 for stop in station_stops[s][d]:
-                    if stop not in stat_map[s]['stops'][d]:
+                    if stop not in stat_map[s]["stops"][d]:
                         print("  - Stop %s removed from %s in file %s" % (stop, s, path))
 
-    for i in list(current.values())[0]['stations']:
-        s = i['station']
+    for i in list(current.values())[0]["stations"]:
+        s = i["station"]
 
         if s not in station_stops:
             station_stops[s] = {}
             if not first:
                 print(" + Found new station %s" % s)
                 unchanged = False
-        for direction in i['stops']:
+        for direction in i["stops"]:
             if direction not in station_stops[s]:
                 station_stops[s][direction] = []
-            for stop in i['stops'][direction]:
+            for stop in i["stops"][direction]:
                 if stop not in station_stops[s][direction]:
                     station_stops[s][direction].append(stop)
                     if not first:

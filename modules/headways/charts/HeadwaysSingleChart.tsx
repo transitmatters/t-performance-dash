@@ -1,24 +1,16 @@
-import type { UseQueryResult } from '@tanstack/react-query';
 import React, { useMemo } from 'react';
 import { SingleDayLineChart } from '../../../common/components/charts/SingleDayLineChart';
-import type { Station } from '../../../common/types/stations';
+import type { HeadwaysChartProps } from '../../../common/types/charts';
+import { BenchmarkFieldKeys, PointFieldKeys, MetricFieldKeys } from '../../../common/types/charts';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { locationDetails } from '../../../common/utils/stations';
-import type { SingleDayDataPoint } from '../../../src/charts/types';
-import { BenchmarkFieldKeys, PointFieldKeys, MetricFieldKeys } from '../../../src/charts/types';
 
-interface HeadwaysSingleChartProps {
-  headways: UseQueryResult<SingleDayDataPoint[]>;
-  toStation: Station | undefined;
-  fromStation: Station | undefined;
-  showLegend?: boolean;
-}
-
-export const HeadwaysSingleChart: React.FC<HeadwaysSingleChartProps> = ({
+export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
   headways,
   toStation,
   fromStation,
   showLegend = true,
+  homescreen = false,
 }) => {
   const {
     linePath,
@@ -31,6 +23,10 @@ export const HeadwaysSingleChart: React.FC<HeadwaysSingleChartProps> = ({
     [headways.isLoading, fromStation, toStation]
   );
 
+  const anyHeadwayBenchmarks = headways.data?.some(
+    (e) => e.benchmark_headway_time_sec && e.benchmark_headway_time_sec > 0
+  );
+
   const chart = useMemo(() => {
     return (
       <SingleDayLineChart
@@ -38,13 +34,14 @@ export const HeadwaysSingleChart: React.FC<HeadwaysSingleChartProps> = ({
         title={'Time between trains (headways)'}
         data={headways.data ?? []}
         date={startDate}
-        metricField={MetricFieldKeys.headWayTimeSec}
+        metricField={MetricFieldKeys.headwayTimeSec}
         pointField={PointFieldKeys.currentDepDt}
         benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
         isLoading={isLoading}
         location={locationDetails(fromStation, toStation, lineShort)}
         fname={'headways'}
-        showLegend={showLegend}
+        showLegend={showLegend && anyHeadwayBenchmarks}
+        homescreen={homescreen}
       />
     );
   }, [
@@ -56,6 +53,8 @@ export const HeadwaysSingleChart: React.FC<HeadwaysSingleChartProps> = ({
     toStation,
     lineShort,
     showLegend,
+    anyHeadwayBenchmarks,
+    homescreen,
   ]);
 
   return chart;

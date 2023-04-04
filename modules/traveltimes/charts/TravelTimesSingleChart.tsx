@@ -1,17 +1,18 @@
 import type { UseQueryResult } from '@tanstack/react-query';
 import React, { useMemo } from 'react';
 import { SingleDayLineChart } from '../../../common/components/charts/SingleDayLineChart';
+import type { SingleDayDataPoint } from '../../../common/types/charts';
+import { BenchmarkFieldKeys, PointFieldKeys, MetricFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { locationDetails } from '../../../common/utils/stations';
-import type { SingleDayDataPoint } from '../../../src/charts/types';
-import { BenchmarkFieldKeys, PointFieldKeys, MetricFieldKeys } from '../../../src/charts/types';
 
 interface TravelTimesSingleChartProps {
   traveltimes: UseQueryResult<SingleDayDataPoint[]>;
   toStation: Station | undefined;
   fromStation: Station | undefined;
   showLegend?: boolean;
+  homescreen?: boolean;
 }
 
 export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
@@ -19,6 +20,7 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
   toStation,
   fromStation,
   showLegend = true,
+  homescreen = false,
 }) => {
   const {
     linePath,
@@ -30,6 +32,10 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
     () => traveltimes.isLoading || toStation === undefined || fromStation === undefined,
     [traveltimes.isLoading, fromStation, toStation]
   );
+
+  const anyTravelBenchmarks =
+    Array.isArray(traveltimes.data) &&
+    traveltimes.data?.some((e) => e.benchmark_travel_time_sec && e.benchmark_travel_time_sec > 0);
 
   const chart = useMemo(() => {
     return (
@@ -45,7 +51,8 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
         bothStops={true}
         location={locationDetails(fromStation, toStation, lineShort)}
         fname={'traveltimes'}
-        showLegend={showLegend}
+        showLegend={showLegend && anyTravelBenchmarks}
+        homescreen={homescreen}
       />
     );
   }, [
@@ -57,6 +64,8 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
     toStation,
     lineShort,
     showLegend,
+    anyTravelBenchmarks,
+    homescreen,
   ]);
 
   return chart;

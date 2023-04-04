@@ -32,7 +32,7 @@ const DataPageSelectionItem: React.FC<DataPageSelectionItemProps> = ({
 };
 
 export const DataPageSelection: React.FC = () => {
-  const { linePath, datapage } = useDelimitatedRoute();
+  const { linePath, line, datapage } = useDelimitatedRoute();
   const selectedDataPage = datapage || DATA_PAGES[0];
   return (
     <div className="flex h-8 items-center gap-x-4 overflow-auto rounded-md border-black">
@@ -41,14 +41,16 @@ export const DataPageSelection: React.FC = () => {
         if (key !== 'overview') {
           href += `/${key}`;
         }
-        return (
-          <DataPageSelectionItem
-            isSelected={selectedDataPage === dataPageItem.name}
-            key={dataPageItem.name}
-            name={dataPageItem.name}
-            href={href}
-          />
-        );
+        if (line && dataPageItem.lines.includes(line)) {
+          return (
+            <DataPageSelectionItem
+              isSelected={selectedDataPage === dataPageItem.name}
+              key={dataPageItem.name}
+              name={dataPageItem.name}
+              href={href}
+            />
+          );
+        }
       })}
     </div>
   );

@@ -2,7 +2,7 @@ import type { ReactElement } from 'react';
 import React from 'react';
 import classNames from 'classnames';
 import Tippy from '@tippyjs/react';
-import type { Alert } from '../../types/alerts';
+import type { OldAlert } from '../../types/alerts';
 import { LegendAlerts } from './LegendAlerts';
 import { findMatch } from './AlertFilter';
 import 'tippy.js/dist/tippy.css'; // optional
@@ -50,7 +50,7 @@ const BoxSection: React.FC<BoxSectionProps> = ({ title, width, left, border }) =
   );
 };
 interface AlertBarProps {
-  alerts: Alert[];
+  alerts: OldAlert[];
   today: string;
   isLoading: boolean;
   isHidden?: boolean;

@@ -1,27 +1,12 @@
 import React from 'react';
-import { DwellsWidget } from '../../modules/dwells/DwellsWidget';
-import { HeadwaysWidget } from '../../modules/headways/HeadwaysWidget';
-import SlowZonesWidget from '../../modules/slowzones/SlowZonesWidget';
-import { TravelTimesWidget } from '../../modules/traveltimes/TravelTimesWidget';
-
-// This might be useless.
-export async function generateStaticParams() {
-  return [
-    { line: 'red' },
-    { line: 'orange' },
-    { line: 'green' },
-    { line: 'blue' },
-    { line: 'bus' },
-  ];
-}
+import { LineHealth } from './LineHealth';
+import { TodaysCommute } from './TodaysCommute';
 
 export default function Overview() {
   return (
-    <>
-      <TravelTimesWidget />
-      <SlowZonesWidget />
-      <HeadwaysWidget />
-      <DwellsWidget />
-    </>
+    <div className="flex flex-col gap-y-8 pt-2">
+      <TodaysCommute />
+      <LineHealth />
+    </div>
   );
 }

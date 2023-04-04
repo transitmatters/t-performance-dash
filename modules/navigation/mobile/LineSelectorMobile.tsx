@@ -5,17 +5,13 @@ import Link from 'next/link';
 import classNames from 'classnames';
 import { LINE_OBJECTS } from '../../../common/constants/lines';
 import { getLineSelectionItemHref, useDelimitatedRoute } from '../../../common/utils/router';
-import {
-  buttonConfig,
-  lightColors,
-  lineSelectionButtonConfig,
-  lineSelectionConfig,
-} from '../styles/lineSelector';
+import { buttonConfig, lightColors, lineSelectionConfig } from '../styles/lineSelector';
+import { lineColorBackground } from '../../../common/styles/general';
 
 export const LineSelectorMobile = () => {
   const route = useDelimitatedRoute();
 
-  const buttonDiv = 'w-full relative ml-2 h-8 w-8 bg-white';
+  const buttonDiv = 'relative ml-2 h-8 w-8 bg-white';
 
   // Don't render until we have the line.
   if (!route.line || !route) {
@@ -78,7 +74,7 @@ export const LineSelectorMobile = () => {
                           <div
                             className={classNames(
                               'h-5 w-5 rounded-full border',
-                              lineSelectionButtonConfig[metadata.key],
+                              lineColorBackground[metadata.key],
                               selected || active
                                 ? lineSelectionConfig[metadata.key]
                                 : lightColors[metadata.key]

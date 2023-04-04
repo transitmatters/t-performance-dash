@@ -1,5 +1,5 @@
 import type { DataPage } from './dataPages';
-import type { Line, LinePath, LineShort } from './lines';
+import type { BusRoute, Line, LinePath, LineShort } from './lines';
 
 export interface Route {
   line: Line | undefined;
@@ -7,10 +7,13 @@ export interface Route {
   lineShort: LineShort;
   datapage: DataPage;
   query: QueryParams;
+  tab: Tabs;
 }
 
 export interface QueryParams {
   startDate?: string;
   endDate?: string;
-  busLine?: string;
+  busRoute?: BusRoute;
 }
+
+export type Tabs = 'Bus' | 'Subway' | '';

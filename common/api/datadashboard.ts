@@ -1,18 +1,19 @@
 import type * as ReactQuery from '@tanstack/react-query';
 import { useQueries } from '@tanstack/react-query';
-import type { AggregateDataResponse, SingleDayDataPoint } from '../../src/charts/types';
 import type {
   AggregateAPIOptions,
   PartialAggregateAPIOptions,
   PartialSingleDayAPIOptions,
+  QueryNameOptions,
   SingleDayAPIOptions,
 } from '../types/api';
-import { AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../types/api';
+import { QUERIES, AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../types/api';
 import { APP_DATA_BASE_PATH } from '../../common/utils/constants';
 import { getCurrentDate } from '../utils/date';
+import type { AggregateDataResponse, SingleDayDataPoint } from '../types/charts';
 
 // Fetch data for all single day charts.
-export const fetchSingleDayData = (
+export const fetchSingleDayData = async (
   name: QueryNameKeys,
   options: PartialSingleDayAPIOptions
 ): Promise<SingleDayDataPoint[]> => {
@@ -23,18 +24,22 @@ export const fetchSingleDayData = (
     if (!(typeof value === 'string') && key !== 'date')
       value.forEach((subvalue) => url.searchParams.append(key, subvalue));
   });
-  return fetch(url.toString()).then((resp) => resp.json());
+  const response = await fetch(url.toString());
+  if (!response.ok) {
+    throw new Error('network request failed');
+  }
+  return await response.json();
 };
 
 // Object to contain the name of each single day query and the parameters/keys it takes.
-const singleDayQueryDependencies = {
+const singleDayQueryDependencies: { [key in QueryNameOptions]: SingleDayAPIParams[] } = {
   traveltimes: [SingleDayAPIParams.fromStop, SingleDayAPIParams.toStop, SingleDayAPIParams.date],
   headways: [SingleDayAPIParams.stop, SingleDayAPIParams.date],
   dwells: [SingleDayAPIParams.stop, SingleDayAPIParams.date],
 };
 
 // Fetch data for all aggregate charts except traveltimes.
-export const fetchAggregateData = (
+export const fetchAggregateData = async (
   name: QueryNameKeys,
   options: PartialAggregateAPIOptions
 ): Promise<AggregateDataResponse> => {
@@ -49,16 +54,16 @@ export const fetchAggregateData = (
       url.searchParams.append(key, value.toString());
     }
   });
-  return fetch(url.toString())
-    .then((resp) => resp.json())
-    .then((resp) => {
-      // traveltimes API returns data under two fields: by_date and by_time. This formats the other two APIs to be the same shape.
-      return name === QueryNameKeys.traveltimes ? resp : { by_date: resp };
-    });
+  const response = await fetch(url.toString());
+  if (!response.ok) {
+    throw new Error('network request failed');
+  }
+  const responseJson = await response.json();
+  return name === QueryNameKeys.traveltimes ? responseJson : { by_date: responseJson };
 };
 
 // Object to contain name of each aggregate query and the parameters/keys it takes.
-const aggregateQueryDependencies = {
+const aggregateQueryDependencies: { [key in QueryNameKeys]: AggregateAPIParams[] } = {
   traveltimes: [
     AggregateAPIParams.fromStop,
     AggregateAPIParams.toStop,
@@ -87,7 +92,8 @@ export const useCustomQueries: UseQueriesOverload = (
 ): any => {
   const dependencies = aggregate ? aggregateQueryDependencies : singleDayQueryDependencies;
   // Create objects with keys of query names which contains keys and parameters.
-  const queries = Object.keys(dependencies).reduce((object, queryName: QueryNameKeys) => {
+  const queries = {};
+  QUERIES.forEach((queryName) => {
     const keys = [queryName];
     const params: Partial<SingleDayAPIOptions | AggregateAPIOptions> = {};
     dependencies[queryName].forEach((field: Partial<AggregateAPIParams | SingleDayAPIParams>) => {
@@ -95,16 +101,13 @@ export const useCustomQueries: UseQueriesOverload = (
         keys.push(parameters[field].toString());
         params[field] = parameters[field];
       }
+      queries[queryName] = { keys: keys, params: params };
     });
-    return {
-      ...object,
-      [queryName]: { keys: keys, params: params },
-    };
-  }, {});
+  });
 
   // Create multiple queries.
   const requests = useQueries({
-    queries: Object.keys(queries).map((name: QueryNameKeys) => {
+    queries: QUERIES.map((name) => {
       return {
         queryKey: [name, queries[name].params],
         queryFn: () =>

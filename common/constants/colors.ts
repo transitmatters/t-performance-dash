@@ -37,17 +37,10 @@ export const CHART_COLORS = {
 };
 
 export const LINE_COLORS = {
-  RED: '#D13434',
-  ORANGE: '#ed8b00',
-  BLUE: '#003da5',
-  GREEN: '#00834d',
+  RL: '#D13434',
+  OL: '#ed8b00',
+  BL: '#003da5',
+  GL: '#00834d',
   BUS: '#ffc72c',
-};
-
-export const colorsForLine: Record<string, string> = {
-  red: LINE_COLORS.RED,
-  orange: LINE_COLORS.ORANGE,
-  blue: LINE_COLORS.BLUE,
-  green: LINE_COLORS.GREEN,
-  bus: LINE_COLORS.BUS,
+  default: '#303030',
 };

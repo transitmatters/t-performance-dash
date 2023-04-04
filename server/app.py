@@ -3,20 +3,14 @@ import os
 import subprocess
 from chalice import Chalice, CORSConfig, ConflictError, Response
 from datetime import date, timedelta
-from chalicelib import (
-    aggregation,
-    data_funcs,
-    MbtaPerformanceAPI,
-    secrets
-)
+from chalicelib import aggregation, data_funcs, MbtaPerformanceAPI, secrets, mbta_v3, speed
+
 
 app = Chalice(app_name="data-dashboard")
 
 TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", "localhost:3000")
 
-cors_config = CORSConfig(
-    allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600
-)
+cors_config = CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600)
 
 
 def parse_user_date(user_date):
@@ -37,8 +31,15 @@ def healthcheck():
     # These functions must return True or False :-)
     checks = {
         "API Key Present": (lambda: len(secrets.MBTA_V2_API_KEY) > 0),
-        "S3 Headway Fetching": (lambda: "2020-11-07 10:33:40" in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))),
-        "Performance API Check": (lambda: MbtaPerformanceAPI.get_api_data("headways", {"stop": [70067]}, date.today() - timedelta(days=1), date.today()))
+        "S3 Headway Fetching": (
+            lambda: "2020-11-07 10:33:40"
+            in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))
+        ),
+        "Performance API Check": (
+            lambda: MbtaPerformanceAPI.get_api_data(
+                "headways", {"stop": [70067]}, date.today() - timedelta(days=1), date.today()
+            )
+        ),
     }
 
     failed_checks = {}
@@ -51,15 +52,12 @@ def healthcheck():
             failed_checks[check] = f"Check threw an exception: {e}"
 
     if len(failed_checks) == 0:
-        return Response(body={
-            "status": "pass"
-        }, status_code=200)
+        return Response(body={"status": "pass"}, status_code=200)
 
-    return Response(body={
-        "status": "fail",
-        "failed_checks_sum": len(failed_checks),
-        "failed_checks": failed_checks
-    }, status_code=500)
+    return Response(
+        body={"status": "fail", "failed_checks_sum": len(failed_checks), "failed_checks": failed_checks},
+        status_code=500,
+    )
 
 
 @app.route("/api/headways/{user_date}", cors=cors_config)
@@ -136,7 +134,19 @@ def dwells_aggregate_route():
 def get_git_id():
     # Only do this on localhost
     if TM_FRONTEND_HOST == "localhost":
-        git_id = str(subprocess.check_output(['git', 'describe', '--always', '--dirty', '--abbrev=10']))[2:-3]
+        git_id = str(subprocess.check_output(["git", "describe", "--always", "--dirty", "--abbrev=10"]))[2:-3]
         return json.dumps({"git_id": git_id})
     else:
         raise ConflictError("Cannot get git id from serverless host")
+
+
+@app.route("/api/alerts", cors=cors_config)
+def get_alerts():
+    response = mbta_v3.getV3('alerts', app.current_request.query_params)
+    return json.dumps(response, indent=4, sort_keys=True, default=str)
+
+
+@app.route("/api/speed", cors=cors_config)
+def get_speed():
+    response = speed.get_speeds(app.current_request.query_params)
+    return json.dumps(response, indent=4, sort_keys=True, default=lambda x: eval(str(x)))  # The eval() converts dynamo default decimal type numbers to ints

@@ -36,3 +36,7 @@ export const busStations: { [key: string]: LineMap } = {
 };
 
 export const stations = { ...rtStations, Bus: busStations };
+
+export const getBusRoutes = (): string[] => {
+  return Object.keys(busStations);
+};

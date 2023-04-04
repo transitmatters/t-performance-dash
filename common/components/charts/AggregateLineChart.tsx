@@ -14,8 +14,7 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
-import type { AggregateLineProps } from '../../types/lines';
-import type { AggregateDataPoint } from '../../../src/charts/types';
+import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import { LegendLongTerm } from './Legend';
@@ -157,6 +156,20 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
             plugins: {
               legend: {
                 display: false,
+              },
+              title: {
+                // empty title to set font and leave room for drawTitle fn
+                display: true,
+                text: '',
+              },
+              tooltip: {
+                mode: 'index',
+                position: 'nearest',
+                callbacks: {
+                  label: (tooltipItem) => {
+                    return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y} minutes`;
+                  },
+                },
               },
             },
           }}

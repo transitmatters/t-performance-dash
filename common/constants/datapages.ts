@@ -1,4 +1,5 @@
 import type { DataPageNames } from '../types/dataPages';
+import type { Line } from '../types/lines';
 
 export const DATA_PAGE_NAMES: DataPageNames = {
   overview: 'Overview',
@@ -11,10 +12,15 @@ export const DATA_PAGE_NAMES: DataPageNames = {
   service: 'Service',
 };
 
-export const DATA_PAGES = {
-  overview: { href: '/', name: 'Overview' },
-  traveltimes: { href: '/traveltimes', name: 'Travel Times' },
-  slowzones: { href: '/slowzones', name: 'Slow Zones' },
-  headways: { href: '/headways', name: 'Headways' },
-  dwells: { href: '/dwells', name: 'Dwells' },
+export const DATA_PAGES: { [key in string]: { href: string; name: string; lines: Line[] } } = {
+  overview: { href: '/', name: 'Overview', lines: ['RL', 'BL', 'GL', 'OL', 'BUS'] },
+  traveltimes: {
+    href: '/traveltimes',
+    name: 'Travel Times',
+    lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
+  },
+  slowzones: { href: '/slowzones', name: 'Slow Zones', lines: ['RL', 'BL', 'OL'] },
+  headways: { href: '/headways', name: 'Headways', lines: ['RL', 'BL', 'GL', 'OL', 'BUS'] },
+  dwells: { href: '/dwells', name: 'Dwells', lines: ['RL', 'BL', 'GL', 'OL'] },
+  ridership: { href: '/ridership', name: 'Ridership', lines: ['RL', 'BL', 'GL', 'OL', 'BUS'] },
 };

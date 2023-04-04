@@ -1,55 +1,71 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
-import { useCustomQueries } from '../../common/api/datadashboard';
-import { SingleDayAPIParams } from '../../common/types/api';
+import { useQuery } from '@tanstack/react-query';
+import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
+import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadashboard';
+import { QueryNameKeys, AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
+import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
+import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
 export default function TravelTimesDetails() {
   const {
     linePath,
     lineShort,
-    query: { startDate, busLine },
+    query: { startDate, endDate, busRoute },
   } = useDelimitatedRoute();
 
-  const stations = optionsStation(lineShort, busLine);
-  const toStation = stations?.[stations.length - 3];
-  const fromStation = stations?.[3];
+  const stations = optionsStation(lineShort, busRoute);
+
+  const [toStation, setToStation] = useState(stations?.[stations.length - 3]);
+  const [fromStation, setFromStation] = useState(stations?.[3]);
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
-  const { fromStopIds: fromStopIdsNorth, toStopIds: toStopIdsNorth } = stopIdsForStations(
-    toStation,
-    fromStation
-  );
 
-  const { traveltimes } = useCustomQueries(
-    {
-      [SingleDayAPIParams.fromStop]: fromStopIds,
-      [SingleDayAPIParams.toStop]: toStopIds,
-      [SingleDayAPIParams.stop]: fromStopIds,
-      [SingleDayAPIParams.date]: startDate,
-    },
-    false,
-    startDate !== undefined && fromStopIds !== null && toStopIds !== null
-  );
+  React.useEffect(() => {
+    setToStation(stations?.[stations.length - 3]);
+    setFromStation(stations?.[3]);
+  }, [stations]);
 
-  const { traveltimes: traveltimesReversed } = useCustomQueries(
-    {
-      [SingleDayAPIParams.fromStop]: fromStopIdsNorth,
-      [SingleDayAPIParams.toStop]: toStopIdsNorth,
-      [SingleDayAPIParams.stop]: fromStopIdsNorth,
-      [SingleDayAPIParams.date]: startDate,
-    },
-    false,
-    startDate !== undefined && fromStopIdsNorth !== null && toStopIdsNorth !== null
-  );
+  const aggregate = startDate !== undefined && endDate !== undefined;
+  const enabled = fromStopIds !== null && toStopIds !== null && startDate !== null;
+  const parameters: SingleDayAPIOptions | AggregateAPIOptions = aggregate
+    ? {
+        [AggregateAPIParams.fromStop]: fromStopIds,
+        [AggregateAPIParams.toStop]: toStopIds,
+        [AggregateAPIParams.startDate]: startDate,
+        [AggregateAPIParams.endDate]: endDate,
+      }
+    : {
+        [SingleDayAPIParams.fromStop]: fromStopIds,
+        [SingleDayAPIParams.toStop]: toStopIds,
+        [SingleDayAPIParams.stop]: fromStopIds,
+        [SingleDayAPIParams.date]: startDate,
+      };
+
+  const travelTimesAggregate = useQuery({
+    queryKey: [QueryNameKeys.traveltimes, aggregate, fromStopIds, toStopIds, startDate, endDate],
+    enabled: aggregate && enabled,
+    queryFn: () => fetchAggregateData(QueryNameKeys.traveltimes, parameters),
+  });
+  const travelTimesSingle = useQuery({
+    queryKey: [QueryNameKeys.traveltimes, aggregate, fromStopIds, toStopIds, startDate, endDate],
+    enabled: !aggregate && enabled,
+    queryFn: () => fetchSingleDayData(QueryNameKeys.traveltimes, parameters),
+  });
+
+  const traveltimes = aggregate ? travelTimesAggregate : travelTimesSingle;
+  const travelTimeValues = aggregate
+    ? travelTimesAggregate?.data?.by_date?.map((tt) => tt.mean)
+    : travelTimesSingle?.data?.map((tt) => tt.travel_time_sec);
 
   if (traveltimes.isError || !linePath) {
     return <>Uh oh... error</>;
@@ -57,24 +73,20 @@ export default function TravelTimesDetails() {
 
   return (
     <>
+      {fromStation && toStation ? (
+        <StationSelectorWidget
+          fromStation={fromStation}
+          toStation={toStation}
+          setFromStation={setFromStation}
+          setToStation={setToStation}
+        />
+      ) : null}
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Avg. Travel Time"
           widgetValue={
             new TimeWidgetValue(
-              traveltimes.data ? averageTravelTime(traveltimes.data) : undefined,
-              1
-            )
-          }
-          analysis={`from last ${dayjs().format('ddd')}.`}
-        />
-        <BasicDataWidgetItem
-          title="Round Trip"
-          widgetValue={
-            new TimeWidgetValue(
-              traveltimes.data && traveltimesReversed.data
-                ? averageTravelTime(traveltimes.data) + averageTravelTime(traveltimesReversed.data)
-                : undefined,
+              travelTimeValues ? averageTravelTime(travelTimeValues) : undefined,
               1
             )
           }
@@ -82,21 +94,19 @@ export default function TravelTimesDetails() {
         />
       </BasicDataWidgetPair>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
-        <TravelTimesSingleChart
-          traveltimes={traveltimes}
-          fromStation={fromStation}
-          toStation={toStation}
-        />
-      </div>
-      <div className="flex w-full flex-row items-center justify-between text-lg">
-        <h3>Return Trip</h3>
-      </div>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
-        <TravelTimesSingleChart
-          traveltimes={traveltimesReversed}
-          fromStation={toStation}
-          toStation={fromStation}
-        />
+        {aggregate ? (
+          <TravelTimesAggregateChart
+            traveltimes={travelTimesAggregate}
+            fromStation={fromStation}
+            toStation={toStation}
+          />
+        ) : (
+          <TravelTimesSingleChart
+            traveltimes={travelTimesSingle}
+            fromStation={fromStation}
+            toStation={toStation}
+          />
+        )}
       </div>
     </>
   );

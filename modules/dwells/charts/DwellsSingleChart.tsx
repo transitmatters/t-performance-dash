@@ -1,22 +1,24 @@
 import type { UseQueryResult } from '@tanstack/react-query';
 import React, { useMemo } from 'react';
 import { SingleDayLineChart } from '../../../common/components/charts/SingleDayLineChart';
+import type { SingleDayDataPoint } from '../../../common/types/charts';
+import { PointFieldKeys, MetricFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { locationDetails } from '../../../common/utils/stations';
-import type { SingleDayDataPoint } from '../../../src/charts/types';
-import { PointFieldKeys, MetricFieldKeys } from '../../../src/charts/types';
 
 interface DwellsSingleChartProps {
   dwells: UseQueryResult<SingleDayDataPoint[]>;
   toStation: Station | undefined;
   fromStation: Station | undefined;
+  homescreen?: boolean;
 }
 
 export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
   dwells,
   toStation,
   fromStation,
+  homescreen = false,
 }) => {
   const {
     linePath,
@@ -42,9 +44,10 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
         location={locationDetails(fromStation, toStation, lineShort)}
         fname={'dwells'}
         showLegend={false}
+        homescreen={homescreen}
       />
     );
-  }, [dwells.data, fromStation, isLoading, linePath, lineShort, startDate, toStation]);
+  }, [dwells.data, fromStation, isLoading, linePath, lineShort, startDate, toStation, homescreen]);
 
   return chart;
 };

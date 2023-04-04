@@ -1,12 +1,12 @@
 import React from 'react';
-import { spinnerFillColor } from './styles/spinnerFillColor';
 import { useDelimitatedRoute } from '../../utils/router';
+import { spinnerFillColor } from './styles/spinnerFillColor';
 export const LoadingSpinner = () => {
   const { line } = useDelimitatedRoute();
   return (
     <div
       role="status"
-      className="absolute flex h-full w-full items-center justify-center rounded-md bg-white bg-opacity-90"
+      className="absolute top-0 bottom-0 left-0 right-0 flex h-auto w-auto items-center justify-center rounded-md bg-white bg-opacity-90"
     >
       <svg
         aria-hidden="true"

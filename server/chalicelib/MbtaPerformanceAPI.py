@@ -65,9 +65,7 @@ def get_product_of_list_dict_values(dict_of_lists):
 
 
 def get_many_urls(start_day, end_day, module, params):
-    exploded_params = list(
-        get_product_of_list_dict_values(params)
-    )  # get all possible parameter combinations
+    exploded_params = list(get_product_of_list_dict_values(params))  # get all possible parameter combinations
     url_list = []
     # get url for each pair, add to list
     for single_param in exploded_params:

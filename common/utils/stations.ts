@@ -9,48 +9,36 @@ export const optionsForField = (
   type: 'from' | 'to',
   line: LineShort,
   fromStation: Station | null,
-  toStation: Station | null
+  toStation: Station | null,
+  busRoute?: string
 ) => {
   if (type === 'from') {
-    return options_station_ui(line)?.filter((entry) => entry.value !== toStation);
+    return optionsStation(line, busRoute)?.filter((entry) => entry !== toStation);
   }
   if (type === 'to') {
-    return options_station_ui(line)?.filter(({ value }) => {
-      if (value === fromStation) {
+    return optionsStation(line, busRoute)?.filter((entry) => {
+      if (entry === fromStation) {
         return false;
       }
-      if (fromStation && fromStation.branches && value.branches) {
-        return value.branches.some((entryBranch) => fromStation.branches?.includes(entryBranch));
+      if (fromStation && fromStation.branches && entry.branches) {
+        return entry.branches.some((entryBranch) => fromStation.branches?.includes(entryBranch));
       }
       return true;
     });
   }
 };
 
-const options_station_ui = (line: LineShort): SelectOption<Station>[] | undefined => {
-  return optionsStation(line)
-    ?.map((station) => {
-      return {
-        id: station.station,
-        value: station,
-        disabled: station.disabled,
-        label: station.stop_name,
-      };
-    })
-    .sort((a, b) => a.value.order - b.value.order);
-};
-
-export const optionsStation = (line: LineShort, busLine?: string): Station[] | undefined => {
+export const optionsStation = (line: LineShort, busRoute?: string): Station[] | undefined => {
   if (!line || !stations[line]) {
     return undefined;
   }
 
   if (line === 'Bus') {
-    if (!busLine || !stations[line][busLine]) {
+    if (!busRoute || !stations[line][busRoute]) {
       return undefined;
     }
 
-    return stations[line][busLine].stations.sort((a, b) => a.order - b.order);
+    return stations[line][busRoute].stations.sort((a, b) => a.order - b.order);
   }
 
   return stations[line].stations.sort((a, b) => a.order - b.order);
