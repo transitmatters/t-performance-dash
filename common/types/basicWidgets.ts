@@ -85,7 +85,7 @@ export class PercentageWidgetValue implements WidgetValueInterface {
 
   getFormattedDelta() {
     if (this.delta === undefined) return '...';
-    return `${this.delta >= 0 ? '+' : '-'}${Math.round(100 * this.delta).toString()}%`;
+    return `${this.delta >= 0 ? '+' : ''}${Math.round(100 * this.delta).toString()}%`;
   }
 }
 
@@ -108,5 +108,29 @@ export class TripsWidgetValue implements WidgetValueInterface {
   getFormattedDelta() {
     if (this.delta === undefined) return '...';
     return `${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta).toString()}`;
+  }
+}
+
+export class MPHWidgetValue implements WidgetValueInterface {
+  value?: number | undefined;
+  delta?: number | undefined;
+  constructor(value: number | undefined, delta: number | undefined) {
+    this.value = value;
+    this.delta = delta;
+  }
+
+  getUnits() {
+    return 'MPH';
+  }
+
+  getFormattedValue() {
+    if (typeof this.value === 'undefined') return '...';
+    return this.value.toFixed(1);
+  }
+  getFormattedDelta() {
+    if (typeof this.value === 'undefined' || typeof this.delta === 'undefined') return '...';
+    const absDelta = Math.abs(this.delta);
+    const sign = this.delta >= 0 ? '+' : '-';
+    return `${sign}${absDelta.toFixed(1)}`;
   }
 }

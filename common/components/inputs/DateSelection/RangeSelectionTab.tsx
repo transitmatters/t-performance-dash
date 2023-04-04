@@ -3,7 +3,7 @@ import { Tab } from '@headlessui/react';
 import classNames from 'classnames';
 import { lineColorBackground, lineColorBorder, lineColorText } from '../../../styles/general';
 import { useDelimitatedRoute } from '../../../utils/router';
-import { RANGE_OPTIONS } from './DateConstants';
+import { RANGE_OPTIONS } from '../../../constants/dates';
 import type { DateSelectionInput } from './types/DateSelectionTypes';
 
 interface RangeSelectionTabProps {
