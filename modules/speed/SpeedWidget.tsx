@@ -1,33 +1,30 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSpeeds } from '../../common/api/speed';
-import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
-import { MPHWidgetValue } from '../../common/types/basicWidgets';
 import { TimeRange } from '../../common/types/inputs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { DELAYS_RANGE_PARAMS_MAP } from './constants/speeds';
-import { SpeedGraph } from './SpeedGraph';
-import { getSpeedWidgetValues } from './utils/utils';
+import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
+import { SpeedGraphWrapper } from './SpeedWidgetWrapper';
 
 interface SpeedWidgetProps {
   timeRange: TimeRange;
 }
-
 
 export const SpeedWidget: React.FC<SpeedWidgetProps> = ({ timeRange }) => {
   const { line, linePath } = useDelimitatedRoute();
   const { agg, endDate, startDate, comparisonStartDate, comparisonEndDate } =
     DELAYS_RANGE_PARAMS_MAP[timeRange];
 
-  const medianTravelTimes = useQuery(
-    ['traversal', line, startDate, endDate, agg],
+  const speeds = useQuery(
+    ['speed', line, startDate, endDate, agg],
     () => fetchSpeeds({ start_date: startDate, end_date: endDate, agg, line }),
     { enabled: line != undefined }
   );
-  const compTravelTimes = useQuery(
-    ['traversalComparison', line, comparisonStartDate, startDate, agg],
+  const compSpeeds = useQuery(
+    ['speedComparison', line, comparisonStartDate, startDate, agg],
     () =>
       fetchSpeeds({
         start_date: comparisonStartDate,
@@ -37,28 +34,23 @@ export const SpeedWidget: React.FC<SpeedWidgetProps> = ({ timeRange }) => {
       }),
     { enabled: line != undefined }
   );
-
-  const { average, delta } = useMemo(() => {
-    return getSpeedWidgetValues(medianTravelTimes, compTravelTimes, line);
-  }, [medianTravelTimes.data, compTravelTimes.data]);
-
-  if (medianTravelTimes.isError) {
-    return <div>Error</div>;
-  }
+  const speedReady =
+    !compSpeeds.isError && !speeds.isError && speeds.data && compSpeeds.data && line;
 
   return (
     <>
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <HomescreenWidgetTitle title="Travel Times" href={`/${linePath}/traveltimes`} />
-        <div className={classNames('space-between flex w-full flex-row')}>
-          <BasicWidgetDataLayout
-            title="Average Speed"
-            widgetValue={new MPHWidgetValue(average ?? undefined, delta)}
-            analysis={`from prev. ${timeRange}`}
-            sentimentDirection={'positiveOnIncrease'}
+        <HomescreenWidgetTitle title="Speed" href={`/${linePath}/speed`} />
+        {speedReady ? (
+          <SpeedGraphWrapper
+            timeRange={timeRange}
+            data={speeds.data}
+            compData={compSpeeds.data}
+            line={line}
           />
-        </div>
-        <SpeedGraph timeRange={timeRange} data={medianTravelTimes.data ?? []} />
+        ) : (
+          <ChartPlaceHolder query={speeds} />
+        )}
       </div>
     </>
   );

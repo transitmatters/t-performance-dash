@@ -46,7 +46,7 @@ export const Speed: React.FC = () => {
   return (
     <div className={divStyle}>
       <div className="flex flex-row items-baseline justify-between">
-        <p className="text-2xl font-semibold ">Speed</p>
+        <p className="text-2xl font-semibold">Speed</p>
         <InfoTooltip
           info={`Speed is how quickly a train traverses the entire line, including time spent at stations.`}
         />

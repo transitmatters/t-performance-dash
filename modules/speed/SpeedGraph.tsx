@@ -50,117 +50,114 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {
 
   const labels = data.map((point) => point.date);
   return (
-    <div>
-      <Line
-        id={'Traversal Times'}
-        ref={ref}
-        height={240}
-        redraw={true}
-        data={{
-          labels,
-          datasets: [
-            {
-              label: `MPH`,
-              borderColor: LINE_COLORS[line ?? 'default'],
-              pointRadius: 8,
-              pointBackgroundColor: 'transparent',
-              pointBorderWidth: 0,
-              pointHoverRadius: 3,
-              pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
-              data: data.map((datapoint) =>
-                (CORE_TRACK_LENGTHS[line ?? 'DEFAULT'] / (datapoint.value / 3600)).toFixed(1)
-              ),
-            },
-          ],
-        }}
-        options={{
-          responsive: true,
-          maintainAspectRatio: false,
-          layout: {
-            padding: {
-              top: 25,
-            },
+    <Line
+      id={'Speed'}
+      height={240}
+      ref={ref}
+      redraw={true}
+      data={{
+        labels,
+        datasets: [
+          {
+            label: `MPH`,
+            borderColor: LINE_COLORS[line ?? 'default'],
+            pointRadius: 8,
+            pointBackgroundColor: 'transparent',
+            pointBorderWidth: 0,
+            pointHoverRadius: 3,
+            pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
+            data: data.map((datapoint) =>
+              (CORE_TRACK_LENGTHS[line ?? 'DEFAULT'] / (datapoint.value / 3600)).toFixed(1)
+            ),
           },
-          interaction: {
-            intersect: false,
+        ],
+      }}
+      options={{
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {
+          padding: {
+            top: 25,
           },
-          plugins: {
-            tooltip: {
-              mode: 'index',
-              position: 'nearest',
-              callbacks: callbacks,
-            },
-            legend: {
-              display: false,
+        },
+        interaction: {
+          intersect: false,
+        },
+        plugins: {
+          tooltip: {
+            mode: 'index',
+            position: 'nearest',
+            callbacks: callbacks,
+          },
+          legend: {
+            display: false,
+          },
+          title: {
+            // empty title to set font and leave room for drawTitle fn
+            display: true,
+            text: '',
+          },
+        },
+        scales: {
+          y: {
+            suggestedMin: 0,
+            suggestedMax: PEAK_MPH[line ?? 'DEFAULT'],
+            display: true,
+            ticks: {
+              color: COLORS.design.subtitleGrey,
             },
             title: {
-              // empty title to set font and leave room for drawTitle fn
               display: true,
-              text: '',
+              text: 'mph',
+              color: COLORS.design.subtitleGrey,
             },
           },
-          scales: {
-            y: {
-              suggestedMin: 0,
-              suggestedMax: PEAK_MPH[line ?? 'DEFAULT'],
-              display: true,
-              ticks: {
-                color: COLORS.design.subtitleGrey,
-              },
-              title: {
-                display: true,
-                text: 'mph',
-                color: COLORS.design.subtitleGrey,
+          x: {
+            min: startDate,
+            max: endDate,
+            type: 'time',
+            time: {
+              unit: unit,
+              tooltipFormat: tooltipFormat,
+            },
+            ticks: {
+              color: COLORS.design.subtitleGrey,
+            },
+            adapters: {
+              date: {
+                locale: enUS,
               },
             },
-            x: {
-              min: startDate,
-              max: endDate,
-              type: 'time',
-              time: {
-                unit: unit,
-                tooltipFormat: tooltipFormat,
-              },
-              ticks: {
-                color: COLORS.design.subtitleGrey,
-              },
-              adapters: {
-                date: {
-                  locale: enUS,
-                },
-              },
-              display: true,
-              title: {
-                display: true,
-                text: `${TimeRangeNames[timeRange]}`,
-                color: COLORS.design.subtitleGrey,
-              },
+            display: true,
+            title: {
+              display: false,
+              text: ``,
             },
           },
-        }}
-        plugins={[
-          {
-            id: 'customTitle',
-            afterDraw: (chart) => {
-              if (startDate === undefined || startDate.length === 0) {
-                // No data is present
-                const ctx = chart.ctx;
-                const width = chart.width;
-                const height = chart.height;
-                chart.clear();
+        },
+      }}
+      plugins={[
+        {
+          id: 'customTitle',
+          afterDraw: (chart) => {
+            if (startDate === undefined || startDate.length === 0) {
+              // No data is present
+              const ctx = chart.ctx;
+              const width = chart.width;
+              const height = chart.height;
+              chart.clear();
 
-                ctx.save();
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.font = "16px normal 'Helvetica Nueue'";
-                ctx.fillText('No data to display', width / 2, height / 2);
-                ctx.restore();
-              }
-              drawSimpleTitle(`Speed`, chart);
-            },
+              ctx.save();
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.font = "16px normal 'Helvetica Nueue'";
+              ctx.fillText('No data to display', width / 2, height / 2);
+              ctx.restore();
+            }
+            drawSimpleTitle(`Speed`, chart);
           },
-        ]}
-      />
-    </div>
+        },
+      ]}
+    />
   );
 };
