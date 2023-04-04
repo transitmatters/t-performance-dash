@@ -9,7 +9,7 @@ import { DELAYS_RANGE_PARAMS_MAP } from '../../speed/constants/speeds';
 import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { calculateCommuteSpeedWidgetValues } from './utils/utils';
 import { CompWidget } from './CompWidget';
-import { DATE_FORMAT } from '../../../common/components/inputs/DateSelection/DateConstants';
+import { DATE_FORMAT } from '../../../common/constants/dates';
 
 export const Speed: React.FC = () => {
   const { line } = useDelimitatedRoute();
