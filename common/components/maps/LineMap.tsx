@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react';
 
 import type { Station } from '../../types/stations';
-import type { Diagram } from '../diagrams';
 
-import type { Path } from './diagrams';
+import type { Path, Diagram } from './diagrams';
 
 import { useLineMapCoordinates } from './useLineMapCoordinates';
 import styles from './LineMap.module.css';

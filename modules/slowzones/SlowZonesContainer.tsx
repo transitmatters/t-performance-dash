@@ -38,10 +38,7 @@ export const SlowZonesContainer: React.FC<SlowZonesContainerProps> = ({
     }
     if (selectedView.id === 2) {
       return (
-        <TotalSlowTime
-          data={delayTotals?.filter((t) => new Date(t.date) > new Date(2020, 0, 1))}
-          line={line}
-        />
+        <TotalSlowTime data={delayTotals?.filter((t) => new Date(t.date) > new Date(2020, 0, 1))} />
       );
     }
     return null;

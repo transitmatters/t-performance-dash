@@ -1,4 +1,4 @@
-import type { Station } from '../types/stations';
+import type { Station } from '../../../types/stations';
 import type { Path, RangeLookup } from './path';
 
 const indexRangesNamesByStationId = (stationIdsByRangeName: Record<string, Station[]>) => {
