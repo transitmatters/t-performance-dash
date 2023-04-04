@@ -75,3 +75,9 @@ export interface SpeedDataPoint {
   line: Line;
   value: number;
 }
+
+export type LineSegmentData = {
+  x: string[];
+  id: string;
+  delay: number;
+};
