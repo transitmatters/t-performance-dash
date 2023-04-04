@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 
 import { LINE_OBJECTS } from '../../../common/constants/lines';
+import type { SegmentLocation } from '../../../common/components/maps';
 import { LineMap, createDefaultDiagramForLine } from '../../../common/components/maps';
 import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 import type { SlowZonesLineName } from '../types';
@@ -8,6 +9,7 @@ import type { SegmentRenderOptions } from '../../../common/components/maps/LineM
 
 import { segmentSlowZones } from './segment';
 import SlowSegmentLabel from './SlowSegmentLabel';
+import SlowZonesTooltip from './SlowZonesTooltip';
 
 type SlowZonesMapProps = {
   slowZones: SlowZoneResponse[];
@@ -96,6 +98,30 @@ const SlowZonesMap: React.FC<SlowZonesMapProps> = (props) => {
     return createDefaultDiagramForLine(lineName, { pxPerStation: 15 });
   }, [lineName]);
 
+  const renderSlowZonesTooltip = (options: {
+    segmentLocation: SegmentLocation<true>;
+    isHorizontal: boolean;
+  }) => {
+    const {
+      segmentLocation: { fromStationId, toStationId },
+      isHorizontal,
+    } = options;
+
+    const slowSegment = segmentedSlowZones.find(
+      (seg) =>
+        seg.segmentLocation.fromStationId === fromStationId &&
+        seg.segmentLocation.toStationId === toStationId
+    );
+
+    if (slowSegment) {
+      return (
+        <SlowZonesTooltip isHorizontal={isHorizontal} segment={slowSegment} color={line.color} />
+      );
+    }
+
+    return null;
+  };
+
   return (
     <LineMap
       diagram={diagram}
@@ -103,6 +129,7 @@ const SlowZonesMap: React.FC<SlowZonesMapProps> = (props) => {
       strokeOptions={{ stroke: line.color }}
       segments={segmentsForSlowZones}
       direction={direction}
+      tooltip={{ snapToSegment: true, render: renderSlowZonesTooltip }}
     />
   );
 };

@@ -1,7 +1,9 @@
-import type { SegmentLocation } from '../../../common/components/maps/LineMap';
+import type { SegmentLocation } from '../../../common/components/maps';
 import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
 import { getParentStationForStopId } from '../../../common/utils/stations';
+
+export const DIRECTIONS = ['1', '0'] as const;
 
 export type SlowZoneDirection = '0' | '1';
 
@@ -9,13 +11,13 @@ type SlowZoneDirections = SlowZoneDirection[];
 
 export type SlowZonesByDirection = Partial<Record<SlowZoneDirection, SlowZoneResponse>>;
 
-type SegmentSlowZones = {
+export type SlowZonesSegment = {
   segmentLocation: SegmentLocation;
   slowZonesByDirection: SlowZonesByDirection;
 };
 
 type SegmentedSlowZones = {
-  segmentedSlowZones: SegmentSlowZones[];
+  segmentedSlowZones: SlowZonesSegment[];
   effectiveDate: Date;
 };
 
@@ -107,7 +109,7 @@ const getSegmentLocation = (index: SlowZonesByDirection): SegmentLocation => {
 
 export const segmentSlowZones = (options: SegmentSlowZonesOptions): SegmentedSlowZones => {
   const { date: desiredDate, slowZones, lineName, directions } = options;
-  const segmentedSlowZones: SegmentSlowZones[] = [];
+  const segmentedSlowZones: SlowZonesSegment[] = [];
   const handledSlowZones = new Set<SlowZoneResponse>([]);
   const effectiveDate = getEffectiveDate(desiredDate, slowZones);
   const activeZones = slowZones.filter(

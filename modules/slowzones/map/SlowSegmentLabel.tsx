@@ -5,8 +5,10 @@ import type { LineMetadata } from '../../../common/types/lines';
 import { stringifyTime } from '../../../common/utils/time';
 
 import type { SlowZoneDirection, SlowZonesByDirection } from './segment';
+import { DIRECTIONS } from './segment';
 
-import styles from './SlowZonesMap.module.css';
+import styles from './SlowSegmentLabel.module.css';
+import DirectionIndicator from './DirectionIndicator';
 
 type SlowSegmentLabelProps = {
   slowZonesByDirection: SlowZonesByDirection;
@@ -19,25 +21,6 @@ type SlowZoneLabelProps = {
   slowZone: SlowZoneResponse;
   color: string;
   isHorizontal: boolean;
-};
-
-type SlowZoneIndicatorProps = {
-  direction: SlowZoneDirection;
-  color: string;
-  isHorizontal: boolean;
-};
-
-const DIRECTIONS = ['0', '1'];
-
-const SlowZoneIndicator = (props: SlowZoneIndicatorProps) => {
-  const { direction, color, isHorizontal } = props;
-  const rotation = isHorizontal ? (direction === '0' ? 90 : 270) : direction === '0' ? 180 : 0;
-  return (
-    <div
-      className={styles.slowZoneTriangle}
-      style={{ borderTopColor: color, transform: `rotate(${rotation}deg)` }}
-    />
-  );
 };
 
 const SlowZoneLabel = (props: SlowZoneLabelProps) => {
@@ -60,10 +43,15 @@ const SlowZoneLabel = (props: SlowZoneLabelProps) => {
 
   return (
     <div
-      style={{ flexDirection: isHorizontal && direction === '1' ? 'row-reverse' : 'row' }}
+      style={{ flexDirection: isHorizontal && direction === '0' ? 'row-reverse' : 'row' }}
       className={styles.slowZoneLabel}
     >
-      <SlowZoneIndicator direction={direction} color={color} isHorizontal={isHorizontal} />
+      <DirectionIndicator
+        direction={direction}
+        color={color}
+        isHorizontal={isHorizontal}
+        size={2}
+      />
       {delayString}
     </div>
   );

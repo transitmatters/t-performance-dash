@@ -32,7 +32,7 @@ const defaultGetScaleBasis = (viewport: { width: null | number; height: null | n
   return MAX_SCALE_BASIS;
 };
 
-export const useLineMapCoordinates = (options: Options) => {
+export const useDiagramCoordinates = (options: Options) => {
   const { direction, getScaleBasis = defaultGetScaleBasis } = options;
   const [svg, setSvg] = useState<null | SVGSVGElement>(null);
   const [container, setContainer] = useState<null | HTMLElement>(null);
@@ -72,30 +72,14 @@ export const useLineMapCoordinates = (options: Options) => {
     }
   }, [svg, container, viewportWidth, viewportHeight, getScaleBasis, isHorizontal]);
 
-  const svgToViewport: CoordinateTransform = useCallback(
-    (svgPoint: Point): Point => {
-      if (svg) {
-        const pt = svg.createSVGPoint();
-        pt.x = svgPoint.x;
-        pt.y = svgPoint.y;
-        const transformed = pt.matrixTransform(svg.getScreenCTM()!);
-        return {
-          x: transformed.x,
-          y: transformed.y,
-        };
-      }
-      return { x: 0, y: 0 };
-    },
-    [svg]
-  );
-
-  const viewportToSvg: CoordinateTransform = useCallback(
+  const viewportCoordsToDiagram: CoordinateTransform = useCallback(
     (viewportPoint: Point) => {
       if (svg) {
+        const rotation = isHorizontal ? -90 : 0;
         const pt = svg.createSVGPoint();
         pt.x = viewportPoint.x;
         pt.y = viewportPoint.y;
-        const transformed = pt.matrixTransform(svg.getScreenCTM()!.inverse());
+        const transformed = pt.matrixTransform(svg.getScreenCTM()!.rotate(rotation).inverse());
         return {
           x: transformed.x,
           y: transformed.y,
@@ -103,7 +87,38 @@ export const useLineMapCoordinates = (options: Options) => {
       }
       return { x: 0, y: 0 };
     },
-    [svg]
+    [svg, isHorizontal]
+  );
+
+  const diagramCoordsToViewport: CoordinateTransform = useCallback(
+    (mapPoint: Point) => {
+      if (svg) {
+        const rotation = isHorizontal ? -90 : 0;
+        const pt = svg.createSVGPoint();
+        pt.x = mapPoint.x;
+        pt.y = mapPoint.y;
+        const transformed = pt.matrixTransform(svg.getScreenCTM()!.rotate(rotation));
+        return {
+          x: transformed.x,
+          y: transformed.y,
+        };
+      }
+      return { x: 0, y: 0 };
+    },
+    [svg, isHorizontal]
+  );
+
+  const viewportCoordsToContainer: CoordinateTransform = useCallback(
+    (viewportPoint: Point) => {
+      if (container) {
+        const rect = container.getBoundingClientRect();
+        const containerX = viewportPoint.x - rect.left;
+        const containerY = viewportPoint.y - rect.top;
+        return { x: containerX, y: containerY };
+      }
+      return { x: 0, y: 0 };
+    },
+    [container]
   );
 
   return {
@@ -111,7 +126,8 @@ export const useLineMapCoordinates = (options: Options) => {
     svgRef: setSvg,
     containerRef: setContainer,
     isHorizontal,
-    viewportToSvg,
-    svgToViewport,
+    viewportCoordsToDiagram,
+    viewportCoordsToContainer,
+    diagramCoordsToViewport,
   };
 };

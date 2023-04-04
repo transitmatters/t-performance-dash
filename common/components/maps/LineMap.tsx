@@ -2,9 +2,10 @@ import React, { useMemo } from 'react';
 
 import type { Station } from '../../types/stations';
 
-import type { Path, Diagram } from './diagrams';
+import type { Path, Diagram, SegmentLocation } from './diagrams';
+import { useDiagramCoordinates } from './useDiagramCoordinates';
+import { useLineTooltip } from './useLineTooltip';
 
-import { useLineMapCoordinates } from './useLineMapCoordinates';
 import styles from './LineMap.module.css';
 
 type MapSide = '0' | '1';
@@ -19,11 +20,6 @@ type Rect = ReturnType<InstanceType<typeof Path>['getBounds']>;
 
 type OffsetStrokeOptions = StrokeOptions & { offset?: number };
 
-export type SegmentLocation = {
-  fromStationId: string;
-  toStationId: string;
-};
-
 export type SegmentLabel = {
   widthWhenVertical?: number;
   heightWhenHorizontal?: number;
@@ -36,6 +32,16 @@ export type SegmentRenderOptions = {
   labels?: Partial<Record<MapSide, SegmentLabel>>;
 };
 
+export type TooltipRenderer = (props: {
+  segmentLocation: SegmentLocation<true>;
+  isHorizontal: boolean;
+}) => React.ReactNode;
+
+export type TooltipOptions = {
+  render: TooltipRenderer;
+  snapToSegment?: boolean;
+};
+
 export type Props = {
   diagram: Diagram;
   direction?: 'vertical' | 'horizontal' | 'horizontal-on-desktop';
@@ -43,6 +49,7 @@ export type Props = {
   getScaleBasis?: (viewport: { width: null | number; height: null | number }) => number;
   strokeOptions?: Partial<StrokeOptions>;
   segments?: SegmentRenderOptions[];
+  tooltip?: TooltipOptions;
 };
 
 const getPropsForStrokeOptions = (options: Partial<StrokeOptions>) => {
@@ -101,12 +108,32 @@ const LineMap = (props: Props) => {
     getStationLabel,
     getScaleBasis,
     strokeOptions = {},
+    tooltip,
     segments = [],
   } = props;
 
-  const { svgRef, svgProps, containerRef, isHorizontal } = useLineMapCoordinates({
+  const {
+    svgRef,
+    svgProps,
+    containerRef,
+    isHorizontal,
+    viewportCoordsToContainer,
+    viewportCoordsToDiagram,
+    diagramCoordsToViewport,
+  } = useDiagramCoordinates({
     getScaleBasis,
     direction,
+  });
+
+  const {
+    viewportCoordinates: tooltipViewportCoordinates,
+    segmentLocation: tooltipSegmentLocation,
+  } = useLineTooltip({
+    diagram,
+    diagramCoordsToViewport,
+    viewportCoordsToDiagram,
+    snapToSegment: !!tooltip?.snapToSegment,
+    enabled: !!tooltip,
   });
 
   const pathDirective = useMemo(() => diagram.toSVG(), [diagram]);
@@ -243,6 +270,27 @@ const LineMap = (props: Props) => {
     return computedSegmentExtras.map((segment) => segment.computedLabels).flat();
   };
 
+  const renderTooltip = () => {
+    const tooltipContents =
+      tooltipSegmentLocation &&
+      tooltip?.render({ segmentLocation: tooltipSegmentLocation, isHorizontal });
+    if (tooltipViewportCoordinates && tooltipContents) {
+      const { x, y } = viewportCoordsToContainer(tooltipViewportCoordinates);
+      return (
+        <div
+          className={styles.tooltipContainer}
+          style={{
+            left: x,
+            top: y,
+            transform: isHorizontal ? `translateY(-100%) translateX(-50%)` : `translateY(-50%)`,
+          }}
+        >
+          {tooltipContents}
+        </div>
+      );
+    }
+  };
+
   return (
     <div className={styles.container} ref={containerRef}>
       <div className={styles.inner}>
@@ -256,6 +304,7 @@ const LineMap = (props: Props) => {
           </g>
         </svg>
       </div>
+      {renderTooltip()}
     </div>
   );
 };

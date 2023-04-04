@@ -1,7 +1,6 @@
 export const formatDate = (date: Date) => {
-  return `${date.getFullYear()}-${date.getMonth() < 9 ? '0' : ''}${date.getMonth() + 1}-${
-    date.getDate() < 10 ? '0' : ''
-  }${date.getDate()}`;
+  return `${date.getFullYear()}-${date.getMonth() < 9 ? '0' : ''}${date.getMonth() + 1}-${date.getDate() < 10 ? '0' : ''
+    }${date.getDate()}`;
 };
 
 export const prettyDate = (dateString: string, withDow: boolean) => {
@@ -12,7 +11,9 @@ export const prettyDate = (dateString: string, withDow: boolean) => {
     weekday: withDow ? 'long' : undefined,
   };
 
-  return new Date(`${dateString}T00:00:00`).toLocaleDateString(
+  const fullDate = dateString.includes('T') ? dateString : `${dateString}T00:00:00`;
+
+  return new Date(fullDate).toLocaleDateString(
     undefined, // user locale/language
     options
   );

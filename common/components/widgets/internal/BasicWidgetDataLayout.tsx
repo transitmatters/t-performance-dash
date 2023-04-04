@@ -6,8 +6,8 @@ import { LoadingSpinner } from '../../graphics/LoadingSpinner';
 type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';
 
 export type BasicWidgetDataLayoutProps = {
-  title: string;
-  analysis: string;
+  title: React.ReactNode;
+  analysis: React.ReactNode;
   widgetValue: WidgetValueInterface;
   sentimentDirection?: SentimentDirection;
 };

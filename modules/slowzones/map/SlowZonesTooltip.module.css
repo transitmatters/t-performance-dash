@@ -1,0 +1,59 @@
+.slowZonesTooltip {
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    user-select: none;
+    --tooltip-background: white;
+}
+
+.vertical {
+    flex-direction: row;
+}
+
+.horizontal {
+    flex-direction: column-reverse;
+    align-items: center;
+    transform: translateY(-5px);
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    z-index: 1;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid white;
+}
+
+.triangleHorizontal {
+    width: 0;
+    height: 0;
+    z-index: 1;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid white;
+}
+
+.content {
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--tooltip-background);
+}
+
+.title {
+    font-weight: 500;
+    padding: 6px 10px;
+    background: var(--tooltip-accent-color);
+    color: white;
+}
+
+.direction {
+    padding: 6px;
+}
+
+.directionTitle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 4px;
+}

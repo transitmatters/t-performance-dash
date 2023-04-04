@@ -44,7 +44,7 @@ export const stringifyTime = (totalSeconds: number, options: StringifyTimeOption
     return `${timeString} ${isPM ? 'PM' : 'AM'}`;
   }
   return timeString;
-}
+};
 
 export const getTimeUnit = (value: number) => {
   const secondsAbs = Math.abs(value);

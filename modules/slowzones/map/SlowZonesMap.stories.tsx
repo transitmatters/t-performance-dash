@@ -1,6 +1,7 @@
 import React from 'react';
 
 import type { SlowZoneResponse } from '../../../common/types/dataPoints';
+
 import SlowZonesMap from './SlowZonesMap';
 
 export default {
@@ -36,8 +37,16 @@ const slowZonesResponses: SlowZoneResponse[] = [
 export const Primary = () => {
   return (
     <>
-      <SlowZonesMap lineName="Red" slowZones={slowZonesResponses} direction="horizontal" />
-      <SlowZonesMap lineName="Red" slowZones={slowZonesResponses} direction="vertical" />
+      <SlowZonesMap
+        lineName="Red"
+        slowZones={slowZonesResponses as SlowZoneResponse[]}
+        direction="horizontal"
+      />
+      <SlowZonesMap
+        lineName="Red"
+        slowZones={slowZonesResponses as SlowZoneResponse[]}
+        direction="vertical"
+      />
     </>
   );
 };

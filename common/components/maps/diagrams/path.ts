@@ -1,9 +1,8 @@
-import type { Bezier } from 'bezier-js';
-import type { RangeNames } from './types';
+import type { Bezier, Point, Projection } from 'bezier-js';
+import type { RangeNames, RangeLookup, PathProjection } from './types';
 
 type Range = [number, number];
 type RangesByName = Record<string, Range>;
-export type RangeLookup = { range: string; fraction: number };
 
 const getRangesIndex = (ranges: RangeNames[]): RangesByName => {
   const index: RangesByName = {};
@@ -70,6 +69,10 @@ export class Path {
     return new Path(this.segments.slice(from, to), this.ranges.slice(from, to));
   }
 
+  getRanges(): string[] {
+    return Object.keys(this.rangesIndex);
+  }
+
   hasRange(name: string) {
     return !!this.rangesIndex[name];
   }
@@ -87,7 +90,7 @@ export class Path {
     return this.slice(from, to + 1);
   }
 
-  getDisplacementInRange(lookup: RangeLookup) {
+  getDisplacementFromRangeLookup(lookup: RangeLookup) {
     const { range, fraction } = lookup;
     const [from, to] = this.getRange(range);
     const fromLength = from === 0 ? 0 : this.accumulatedLengths[from - 1];
@@ -95,12 +98,17 @@ export class Path {
     return fromLength + fraction * (toLength - fromLength);
   }
 
-  getWithinRange(lookup: RangeLookup) {
-    const displacement = this.getDisplacementInRange(lookup);
-    return this.get(displacement / this.length);
+  getPointFromRangeLookup(lookup: RangeLookup) {
+    const displacement = this.getDisplacementFromRangeLookup(lookup);
+    return this.getPointFromFraction(displacement / this.length);
   }
 
-  get(fraction: number) {
+  getPointFromDisplacement(displacement: number) {
+    const { segment, displacement: segmentDisplacement } = this.seek(displacement);
+    return segment.get(segmentDisplacement / segment.length());
+  }
+
+  getPointFromFraction(fraction: number) {
     const fractionalDisplacement = fraction * this.length;
     const { segment, displacement } = this.seek(fractionalDisplacement);
     return segment.get(displacement / segment.length());
@@ -181,5 +189,30 @@ export class Path {
       width: maxRight - maxLeft,
       height: maxBottom - maxTop,
     };
+  }
+
+  project(point: Point): null | PathProjection {
+    let closestProjection: null | Projection = null;
+    let closestSegment: null | Bezier = null;
+    for (const segment of this.segments) {
+      const projection = segment.project(point);
+      if (projection.d && (!closestProjection || projection.d < closestProjection.d!)) {
+        closestProjection = projection;
+        closestSegment = segment;
+      }
+    }
+    if (closestProjection && closestSegment) {
+      const indexOfSegment = this.segments.indexOf(closestSegment);
+      const displacementBeforeSegment =
+        indexOfSegment === 0 ? 0 : this.accumulatedLengths[indexOfSegment - 1];
+      const displacementWithinSegment = closestProjection.t! * closestSegment.length();
+      const totalDisplacement = displacementBeforeSegment + displacementWithinSegment;
+      return {
+        segmentProjection: closestProjection,
+        distance: closestProjection.d!,
+        displacement: totalDisplacement,
+      };
+    }
+    return null;
   }
 }

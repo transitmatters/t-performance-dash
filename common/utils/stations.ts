@@ -54,6 +54,16 @@ export const swapStations = (
   setToStation(fromStation);
 };
 
+const createRapidTransitStationIndex = () => {
+  const index: Record<string, Station> = {};
+  Object.values(rtStations).forEach((line) => {
+    line.stations.forEach((station) => {
+      index[station.station] = station;
+    });
+  });
+  return index;
+};
+
 const createParentRapidTransitStationIndex = () => {
   const index: Record<string, Station> = {};
   Object.values(rtStations).forEach((line) => {
@@ -67,7 +77,12 @@ const createParentRapidTransitStationIndex = () => {
   return index;
 };
 
+const rapidTransitStationIndex = createRapidTransitStationIndex();
 const parentRapidTransitStationIndex = createParentRapidTransitStationIndex();
+
+export const getStationById = (stationStopId: string) => {
+  return rapidTransitStationIndex[stationStopId];
+};
 
 export const getParentStationForStopId = (stopId: string) => {
   return parentRapidTransitStationIndex[stopId];

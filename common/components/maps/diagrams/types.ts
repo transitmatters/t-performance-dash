@@ -1,6 +1,6 @@
-import type { Bezier } from 'bezier-js';
+import type { Bezier, Projection } from 'bezier-js';
 
-export type RangeNames = string[];
+import type { Path } from './path';
 
 export type Turtle = {
   x: number;
@@ -40,4 +40,25 @@ export type CommandPath = {
 export type CommandResult = {
   turtle: Turtle;
   curve: Bezier;
+};
+
+export type SegmentLocation<Nullable extends boolean = false> = {
+  fromStationId: (Nullable extends true ? null : never) | string;
+  toStationId: (Nullable extends true ? null : never) | string;
+};
+
+export type RangeNames = string[];
+
+export type RangeLookup = { range: string; fraction: number };
+
+export type PathProjection = {
+  segmentProjection: Projection;
+  distance: number;
+  displacement: number;
+};
+
+export type DiagramProjection = {
+  segmentProjection: Projection;
+  path: Path;
+  segmentLocation: SegmentLocation<true>;
 };
