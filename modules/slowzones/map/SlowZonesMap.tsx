@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 import { LINE_OBJECTS } from '../../../common/constants/lines';
-import { createRedLineDiagram } from '../../../common/diagrams';
+import { createDefaultDiagramForLine } from '../../../common/diagrams';
 import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 
 import type { SlowZonesLineName } from '../types';
@@ -96,8 +96,8 @@ const SlowZonesMap: React.FC<SlowZonesMapProps> = (props) => {
   }, [line, segmentedSlowZones]);
 
   const diagram = useMemo(() => {
-    return createRedLineDiagram();
-  }, []);
+    return createDefaultDiagramForLine(lineName, { pxPerStation: 15 });
+  }, [lineName]);
 
   return (
     <LineMap

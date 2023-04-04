@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { createRedLineDiagram } from '../diagrams';
+import { createDefaultDiagramForLine } from '../diagrams';
 
 import type { SegmentRenderOptions } from './LineMap';
 import LineMap from './LineMap';
@@ -10,7 +10,7 @@ export default {
   component: LineMap,
 };
 
-const redLine = createRedLineDiagram();
+const redLine = createDefaultDiagramForLine('Red');
 const redLineSegments: SegmentRenderOptions[] = [
   {
     location: {

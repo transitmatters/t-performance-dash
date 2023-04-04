@@ -7,6 +7,14 @@ import type { Turtle } from './types';
 
 type DiagrammableLineName = 'Red' | 'Orange' | 'Blue';
 
+type CreateDiagramOptions = {
+  pxPerStation?: number;
+};
+
+type DiagramFactory = (options: CreateDiagramOptions) => Diagram;
+
+const DEFAULT_PX_PER_STATION = 10;
+
 const getStationsForLine = (line: DiagrammableLineName, branch?: string) => {
   const stationsForLine = stations[line].stations;
   return stationsForLine
@@ -14,8 +22,8 @@ const getStationsForLine = (line: DiagrammableLineName, branch?: string) => {
     .sort((a, b) => a.order - b.order);
 };
 
-export const createRedLineDiagram = () => {
-  const PX_PER_STATION = 10;
+export const createRedLineDiagram = (options: CreateDiagramOptions = {}) => {
+  const { pxPerStation = DEFAULT_PX_PER_STATION } = options;
   const start: Turtle = { x: 0, y: 0, theta: 90 };
   const stationsA = getStationsForLine('Red', 'A');
   const stationsB = getStationsForLine('Red', 'B');
@@ -23,7 +31,7 @@ export const createRedLineDiagram = () => {
   const stationsTrunk = stationsA.slice(0, splitIndex + 1);
   const stationsABranch = stationsA.slice(splitIndex + 1);
   const stationsBBranch = stationsB.slice(splitIndex + 1);
-  const trunk = line(PX_PER_STATION * (1 + stationsTrunk.length), ['trunk']);
+  const trunk = line(pxPerStation * (1 + stationsTrunk.length), ['trunk']);
   const pathA = execute({
     start,
     ranges: ['branch-a'],
@@ -31,7 +39,7 @@ export const createRedLineDiagram = () => {
       trunk,
       wiggle(15, -15),
       line(10),
-      line(PX_PER_STATION * stationsABranch.length, ['branch-a-stations']),
+      line(pxPerStation * stationsABranch.length, ['branch-a-stations']),
     ],
   });
   const pathB = execute({
@@ -41,7 +49,7 @@ export const createRedLineDiagram = () => {
       trunk,
       wiggle(15, 15),
       line(60),
-      line(PX_PER_STATION * stationsBBranch.length, ['branch-b-stations']),
+      line(pxPerStation * stationsBBranch.length, ['branch-b-stations']),
     ],
   });
   return new Diagram([pathA, pathB], {
@@ -49,4 +57,29 @@ export const createRedLineDiagram = () => {
     'branch-a-stations': stationsABranch,
     'branch-b-stations': stationsBBranch,
   });
+};
+
+const createStraightLineDiagram = (
+  lineName: DiagrammableLineName,
+  options: CreateDiagramOptions = {}
+) => {
+  const { pxPerStation = DEFAULT_PX_PER_STATION } = options;
+  const start: Turtle = { x: 0, y: 0, theta: 90 };
+  const stations = getStationsForLine(lineName);
+  const path = execute({
+    start,
+    ranges: ['main'],
+    commands: [line(pxPerStation * stations.length)],
+  });
+  return new Diagram([path], { main: stations });
+};
+
+export const createDefaultDiagramForLine = (
+  lineName: DiagrammableLineName,
+  options: CreateDiagramOptions = {}
+) => {
+  if (lineName === 'Red') {
+    return createRedLineDiagram(options);
+  }
+  return createStraightLineDiagram(lineName, options);
 };
