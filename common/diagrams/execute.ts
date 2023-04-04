@@ -1,4 +1,5 @@
 import { Bezier } from 'bezier-js';
+
 import { Path } from './path';
 import type {
   Command,
@@ -6,6 +7,7 @@ import type {
   CommandResult,
   CurveCommand,
   LineCommand,
+  RangeNames,
   Turtle,
   WiggleCommand,
 } from './types';
@@ -113,7 +115,7 @@ export const execute = (path: CommandPath) => {
     },
     {
       curves: [] as Bezier[],
-      ranges: [] as (string | null)[],
+      ranges: [] as RangeNames[],
       turtle: start,
     }
   );

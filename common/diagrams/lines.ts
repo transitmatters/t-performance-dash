@@ -29,7 +29,8 @@ export const createRedLineDiagram = () => {
     ranges: ['branch-a'],
     commands: [
       trunk,
-      line(30),
+      wiggle(15, -15),
+      line(10),
       line(PX_PER_STATION * stationsABranch.length, ['branch-a-stations']),
     ],
   });
@@ -38,9 +39,8 @@ export const createRedLineDiagram = () => {
     ranges: ['branch-b'],
     commands: [
       trunk,
-      wiggle(10, 5),
-      line(80),
-      wiggle(10, -5),
+      wiggle(15, 15),
+      line(60),
       line(PX_PER_STATION * stationsBBranch.length, ['branch-b-stations']),
     ],
   });

@@ -31,14 +31,7 @@ export const SlowZonesContainer: React.FC<SlowZonesContainerProps> = ({
       return null;
     }
     if (selectedView.id === 0 && line) {
-      return (
-        <SlowZonesMap
-          slowZones={allSlow}
-          lineName={line}
-          direction="horizontal-on-desktop"
-          key={line}
-        />
-      );
+      return <SlowZonesMap slowZones={allSlow} lineName={line} key={line} />;
     }
     if (selectedView.id === 1) {
       return <LineSegments data={allSlow} line={line} />;

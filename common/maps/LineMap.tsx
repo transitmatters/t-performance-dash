@@ -1,11 +1,13 @@
-import React, { useState, useMemo, useLayoutEffect } from 'react';
+import React, { useMemo } from 'react';
 
 import type { Station } from '../types/stations';
 import type { Diagram } from '../diagrams';
-import { useViewport } from '../hooks/useViewport';
-import { useBreakpoint } from '../hooks/useBreakpoint';
 
+import type { Path } from '../diagrams/path';
 import styles from './LineMap.module.css';
+import { useLineMapCoordinates } from './useLineMapCoordinates';
+
+type MapSide = '0' | '1';
 
 type StrokeOptions = {
   stroke: string;
@@ -13,22 +15,32 @@ type StrokeOptions = {
   opacity: number;
 };
 
+type Rect = ReturnType<InstanceType<typeof Path>['getBounds']>;
+
 type OffsetStrokeOptions = StrokeOptions & { offset?: number };
 
-type SegmentLocation = {
+export type SegmentLocation = {
   fromStationId: string;
   toStationId: string;
 };
 
-export type SegmentRenderOptions = {
-  location: SegmentLocation;
-  strokes: Partial<OffsetStrokeOptions>[];
+export type SegmentLabel = {
+  widthWhenVertical?: number;
+  heightWhenHorizontal?: number;
+  content: React.ReactNode | ((props: { isHorizontal: boolean }) => React.ReactNode);
 };
 
-type Props = {
+export type SegmentRenderOptions = {
+  location: SegmentLocation;
+  strokes?: Partial<OffsetStrokeOptions>[];
+  labels?: Partial<Record<MapSide, SegmentLabel>>;
+};
+
+export type Props = {
   diagram: Diagram;
   direction?: 'vertical' | 'horizontal' | 'horizontal-on-desktop';
   getStationLabel?: (options: { stationId: string; stationName: string }) => string;
+  getScaleBasis?: (viewport: { width: null | number; height: null | number }) => number;
   strokeOptions?: Partial<StrokeOptions>;
   segments?: SegmentRenderOptions[];
 };
@@ -43,15 +55,43 @@ const getPropsForStrokeOptions = (options: Partial<StrokeOptions>) => {
   };
 };
 
-const getScaleBasis = (viewportWidth: null | number, viewportHeight: null | number) => {
-  const MAX_SCALE_BASIS = 3.5;
-  if (viewportWidth && viewportHeight) {
-    if (viewportWidth > 750) {
-      return MAX_SCALE_BASIS;
-    }
-    return Math.min(MAX_SCALE_BASIS, viewportHeight / 100);
+const getLabelPositionProps = (
+  segmentBounds: Rect,
+  mapSide: MapSide,
+  isHorizontal: boolean,
+  widthWhenVertical: number,
+  heightWhenHorizontal: number
+) => {
+  const { top, left, right, width, height } = segmentBounds;
+  if (isHorizontal) {
+    const moveAcross = mapSide === '0';
+    return {
+      foreignObjectProps: {
+        x: top,
+        y: 0 - left - (moveAcross ? heightWhenHorizontal + width : 0),
+        width: height,
+        height: heightWhenHorizontal,
+        style: { transform: 'rotate(90deg)' },
+      },
+      wrapperDivStyles: {
+        flexDirection: 'row',
+        alignItems: moveAcross ? 'flex-end' : 'flex-start',
+      },
+    } as const;
   }
-  return MAX_SCALE_BASIS;
+  const moveAcross = mapSide === '1';
+  return {
+    foreignObjectProps: {
+      x: right - (moveAcross ? widthWhenVertical + width : 0),
+      y: top,
+      height,
+      width: widthWhenVertical,
+    },
+    wrapperDivStyles: {
+      flexDirection: 'column',
+      alignItems: moveAcross ? 'flex-end' : 'flex-start',
+    },
+  } as const;
 };
 
 const LineMap = (props: Props) => {
@@ -59,19 +99,15 @@ const LineMap = (props: Props) => {
     diagram,
     direction = 'horizontal-on-desktop',
     getStationLabel,
+    getScaleBasis,
     strokeOptions = {},
     segments = [],
   } = props;
 
-  const [svg, setSvg] = useState<null | SVGSVGElement>(null);
-  const [container, setContainer] = useState<null | HTMLElement>(null);
-  const [width, setWidth] = useState<null | number>(null);
-  const [height, setHeight] = useState<null | number>(null);
-  const [viewbox, setViewbox] = useState<null | string>(null);
-
-  const { viewportWidth, viewportHeight } = useViewport();
-  const isMobile = !useBreakpoint('lg');
-  const horizontal = direction === 'horizontal-on-desktop' ? !isMobile : direction === 'horizontal';
+  const { svgRef, svgProps, containerRef, isHorizontal } = useLineMapCoordinates({
+    getScaleBasis,
+    direction,
+  });
 
   const pathDirective = useMemo(() => diagram.toSVG(), [diagram]);
 
@@ -91,44 +127,56 @@ const LineMap = (props: Props) => {
     return positions;
   }, [diagram]);
 
-  const computedStrokes = useMemo(() => {
+  const computedSegmentExtras = useMemo(() => {
     return segments.map((segment) => {
       const {
         location: { fromStationId, toStationId },
-        strokes,
+        strokes = [],
+        labels = {},
       } = segment;
+
       const path = diagram.getPathBetweenStations(fromStationId, toStationId);
-      return strokes.map((stroke) => {
+      const bounds = path.getBounds();
+
+      const computedStrokes = strokes.map((stroke) => {
         const pathDirective = path.offset(stroke.offset ?? 0).toSVG();
         return { pathDirective, ...stroke };
       });
-    });
-  }, [segments, diagram]);
 
-  useLayoutEffect(() => {
-    if (svg) {
-      const paddingX = 2;
-      const paddingY = 2;
-      const bbox = svg.getBBox();
-      const x = Math.round(bbox.x - paddingX);
-      const width = Math.round(bbox.width + paddingX * 2);
-      const y = Math.round(bbox.y - paddingY);
-      const height = Math.round(bbox.height + paddingY * 2);
-      if (horizontal && container) {
-        const containerWidth = container.getBoundingClientRect().width;
-        const mapWidth = Math.min(4 * width, Math.max(Math.max(3 * width, containerWidth)));
-        const aspectRatio = width / height;
-        setViewbox(`${x} ${y} ${width} ${height}`);
-        setWidth(mapWidth);
-        setHeight(mapWidth / aspectRatio);
-      } else {
-        const scaleBasis = getScaleBasis(viewportWidth, viewportHeight);
-        setViewbox(`${x} ${y} ${width} ${height}`);
-        setWidth(width * scaleBasis);
-        setHeight(height * scaleBasis);
-      }
-    }
-  }, [svg, container, viewportWidth, viewportHeight, horizontal]);
+      const computedLabels = Object.entries(labels).map(([mapSide, label]) => {
+        const { widthWhenVertical = 10, heightWhenHorizontal = 10, content } = label;
+
+        const { foreignObjectProps, wrapperDivStyles } = getLabelPositionProps(
+          bounds,
+          mapSide as MapSide,
+          isHorizontal,
+          widthWhenVertical,
+          heightWhenHorizontal
+        );
+
+        const contentNode = typeof content === 'function' ? content({ isHorizontal }) : content;
+        return (
+          <foreignObject
+            key={`label-${fromStationId}-${toStationId}-${mapSide}`}
+            {...foreignObjectProps}
+          >
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                ...wrapperDivStyles,
+              }}
+            >
+              {contentNode}
+            </div>
+          </foreignObject>
+        );
+      });
+
+      return { computedStrokes, computedLabels };
+    });
+  }, [segments, diagram, isHorizontal]);
 
   const renderStationDots = () => {
     const strokeProps = getPropsForStrokeOptions(strokeOptions);
@@ -161,7 +209,7 @@ const LineMap = (props: Props) => {
             x={-4}
             y={1.5}
             aria-hidden="true"
-            transform={`translate(${pos.x} ${pos.y}) rotate(${horizontal ? 45 : 0})`}
+            transform={`translate(${pos.x} ${pos.y}) rotate(${isHorizontal ? 45 : 0})`}
           >
             {stationLabel}
           </text>
@@ -172,15 +220,13 @@ const LineMap = (props: Props) => {
   };
 
   const renderLine = () => {
-    return (
-      <path d={pathDirective} fill="transparent" {...getPropsForStrokeOptions(strokeOptions)} />
-    );
+    return <path d={pathDirective} {...getPropsForStrokeOptions(strokeOptions)} />;
   };
 
   const renderComputedStrokes = () => {
-    return computedStrokes
+    return computedSegmentExtras
       .map((segment, segmentIndex) => {
-        return segment.map((stroke, strokeIndex) => {
+        return segment.computedStrokes.map((stroke, strokeIndex) => {
           return (
             <path
               key={`computed-stroke-${segmentIndex}-${strokeIndex}`}
@@ -193,18 +239,18 @@ const LineMap = (props: Props) => {
       .flat();
   };
 
+  const renderComputedLabels = () => {
+    return computedSegmentExtras.map((segment) => segment.computedLabels).flat();
+  };
+
   return (
-    <div className={styles.container} ref={setContainer}>
+    <div className={styles.container} ref={containerRef}>
       <div className={styles.inner}>
-        <svg
-          ref={setSvg}
-          width={width ?? undefined}
-          height={height ?? undefined}
-          viewBox={viewbox ?? undefined}
-        >
-          <g transform={`rotate(${horizontal ? -90 : 0})`}>
+        <svg ref={svgRef} {...svgProps}>
+          <g transform={`rotate(${isHorizontal ? -90 : 0})`}>
             {renderLine()}
             {renderComputedStrokes()}
+            {renderComputedLabels()}
             {renderStationDots()}
             {renderStationLabels()}
           </g>

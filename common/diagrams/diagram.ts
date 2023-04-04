@@ -62,6 +62,6 @@ export class Diagram {
   }
 
   toSVG() {
-    return this.paths.map((path) => path.toSVG()).reduce((a, b) => `${a} ${b}`);
+    return this.paths.map((path) => path.toSVG()).reduce((a, b) => `${a} ${b}`, '');
   }
 }

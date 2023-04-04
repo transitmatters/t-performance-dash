@@ -155,6 +155,31 @@ export class Path {
   }
 
   toSVG() {
-    return this.segments.map((segment) => segment.toSVG()).reduce((a, b) => `${a} ${b}`);
+    return this.segments.map((segment) => segment.toSVG()).reduce((a, b) => `${a} ${b}`, '');
+  }
+
+  getBounds() {
+    let maxLeft = Infinity;
+    let maxRight = -Infinity;
+    let maxTop = Infinity;
+    let maxBottom = -Infinity;
+    for (const segment of this.segments) {
+      const {
+        x: { min: left, max: right },
+        y: { min: top, max: bottom },
+      } = segment.bbox();
+      maxLeft = Math.min(maxLeft, left);
+      maxRight = Math.max(maxRight, right);
+      maxTop = Math.min(maxTop, top);
+      maxBottom = Math.max(maxBottom, bottom);
+    }
+    return {
+      left: maxLeft,
+      right: maxRight,
+      top: maxTop,
+      bottom: maxBottom,
+      width: maxRight - maxLeft,
+      height: maxBottom - maxTop,
+    };
   }
 }
