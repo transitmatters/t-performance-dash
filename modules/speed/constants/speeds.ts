@@ -20,7 +20,6 @@ type ParamsType = {
 };
 
 export const DELAYS_RANGE_PARAMS_MAP: { [s: string]: ParamsType } = {
-  // TODO: type this
   week: {
     agg: 'daily',
     endDate: endDate,

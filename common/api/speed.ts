@@ -3,10 +3,8 @@ import { FetchSpeedsParams as FetchSpeedsParams } from '../types/api';
 import type { SpeedDataPoint } from '../types/dataPoints';
 import { APP_DATA_BASE_PATH } from '../utils/constants';
 
-export const fetchSpeeds = async (
-  params: FetchSpeedsOptions
-): Promise<SpeedDataPoint[] | undefined> => {
-  if (!params[FetchSpeedsParams.line]) return undefined;
+export const fetchSpeeds = async (params: FetchSpeedsOptions): Promise<SpeedDataPoint[]> => {
+  if (!params[FetchSpeedsParams.line]) return [];
   const url = new URL(`${APP_DATA_BASE_PATH}/api/speed`, window.location.origin);
   Object.keys(params).forEach((paramKey) => {
     url.searchParams.append(paramKey, params[paramKey]);

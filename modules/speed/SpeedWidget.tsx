@@ -1,15 +1,13 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSpeeds } from '../../common/api/speed';
-import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
-import { MPHWidgetValue } from '../../common/types/basicWidgets';
 import { TimeRange } from '../../common/types/inputs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { DELAYS_RANGE_PARAMS_MAP } from './constants/speeds';
-import { SpeedGraph } from './SpeedGraph';
-import { getSpeedWidgetValues } from './utils/utils';
+import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
+import { SpeedGraphWrapper } from './SpeedWidgetWrapper';
 
 interface SpeedWidgetProps {
   timeRange: TimeRange;
@@ -36,30 +34,23 @@ export const SpeedWidget: React.FC<SpeedWidgetProps> = ({ timeRange }) => {
       }),
     { enabled: line != undefined }
   );
-
-  const { average, delta } = useMemo(() => {
-    return getSpeedWidgetValues(speeds, compSpeeds, line);
-  }, [speeds.data, compSpeeds.data]);
-
-  if (speeds.isError) {
-    return <div>Error</div>;
-  }
+  const speedReady =
+    !compSpeeds.isError && !speeds.isError && speeds.data && compSpeeds.data && line;
 
   return (
     <>
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <HomescreenWidgetTitle title="Speed" href={`/${linePath}/speed`} />
-        <div className={classNames('space-between flex w-full flex-row')}>
-          <BasicWidgetDataLayout
-            title="Average Speed"
-            widgetValue={new MPHWidgetValue(average ?? undefined, delta)}
-            analysis={`from prev. ${timeRange}`}
-            sentimentDirection={'positiveOnIncrease'}
+        {speedReady ? (
+          <SpeedGraphWrapper
+            timeRange={timeRange}
+            data={speeds.data}
+            compData={compSpeeds.data}
+            line={line}
           />
-        </div>
-        <div className={classNames('h-60 pr-4')}>
-          <SpeedGraph timeRange={timeRange} data={speeds.data ?? []} />
-        </div>
+        ) : (
+          <ChartPlaceHolder query={speeds} />
+        )}
       </div>
     </>
   );
