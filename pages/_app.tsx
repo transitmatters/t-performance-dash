@@ -6,12 +6,13 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 import '../styles/dashboard.css';
 import '../styles/globals.css';
 import { Layouts } from '../common/components/Layouts';
+import { LayoutType } from '../common/layouts/layoutTypes';
 
 config.autoAddCss = false;
 
 export default function App({ Component, pageProps }) {
   const [loaded, setLoaded] = useState(false);
-  const SecondaryLayout = Layouts[Component.Layout] ?? ((page) => page);
+  const SecondaryLayout = Layouts[Component.Layout ?? LayoutType.Empty];
   // Don't load on the server. This prevents hydration errors between mobile/desktop layouts.
   useEffect(() => {
     setLoaded(true);
