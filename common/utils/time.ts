@@ -50,7 +50,7 @@ export const getTimeUnit = (value: number) => {
   const secondsAbs = Math.abs(value);
   switch (true) {
     case secondsAbs < 99:
-      return 'sec';
+      return 'sec.';
     case secondsAbs < 3600:
       return 'min.';
     default:

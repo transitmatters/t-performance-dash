@@ -129,7 +129,7 @@ const SlowZonesMap: React.FC<SlowZonesMapProps> = (props) => {
       strokeOptions={{ stroke: line.color }}
       segments={segmentsForSlowZones}
       direction={direction}
-      tooltip={{ snapToSegment: true, render: renderSlowZonesTooltip }}
+      tooltip={{ snapToSegment: true, maxDistance: 20, render: renderSlowZonesTooltip }}
     />
   );
 };

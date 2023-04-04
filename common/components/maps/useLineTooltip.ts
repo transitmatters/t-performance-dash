@@ -9,6 +9,7 @@ type Options = {
     diagramCoordsToViewport: CoordinateTransform;
     snapToSegment: boolean;
     enabled?: boolean;
+    maxDistance?: number;
 };
 
 export const useLineTooltip = (options: Options) => {
@@ -18,11 +19,15 @@ export const useLineTooltip = (options: Options) => {
         diagramCoordsToViewport,
         snapToSegment,
         enabled = true,
+        maxDistance,
     } = options;
     const [projection, setProjection] = useState<null | DiagramProjection>(null);
 
     const mapCoordinates = useMemo(() => {
         if (projection) {
+            if (typeof maxDistance === 'number' && projection.segmentProjection.d! > maxDistance) {
+                return null;
+            }
             if (snapToSegment) {
                 const {
                     segmentLocation: { fromStationId, toStationId },
@@ -36,7 +41,7 @@ export const useLineTooltip = (options: Options) => {
             return projection.segmentProjection;
         }
         return null;
-    }, [diagram, projection, snapToSegment]);
+    }, [diagram, projection, maxDistance, snapToSegment]);
 
     const viewportCoordinates = useMemo(
         () => mapCoordinates && diagramCoordsToViewport(mapCoordinates),

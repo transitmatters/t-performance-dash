@@ -51,7 +51,7 @@ const SlowZonesTooltip = (props: Props) => {
     if (slowZone) {
       return (
         <BasicWidgetDataLayout
-          widgetValue={new TimeWidgetValue(slowZone.delay, 0)}
+          widgetValue={new TimeWidgetValue(slowZone.delay + slowZone.baseline, slowZone.delay)}
           title={
             <div className={styles.directionTitle}>
               <DirectionIndicator
@@ -63,7 +63,8 @@ const SlowZonesTooltip = (props: Props) => {
               {direction === '0' ? 'Southbound' : 'Northbound'}
             </div>
           }
-          analysis="since last xyz"
+          layoutKind="delta-and-percent-change"
+          analysis="compared to baseline"
         />
       );
     }

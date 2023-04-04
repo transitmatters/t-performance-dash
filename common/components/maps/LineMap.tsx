@@ -40,6 +40,7 @@ export type TooltipRenderer = (props: {
 export type TooltipOptions = {
   render: TooltipRenderer;
   snapToSegment?: boolean;
+  maxDistance?: number;
 };
 
 export type Props = {
@@ -134,6 +135,7 @@ const LineMap = (props: Props) => {
     viewportCoordsToDiagram,
     snapToSegment: !!tooltip?.snapToSegment,
     enabled: !!tooltip,
+    maxDistance: tooltip?.maxDistance,
   });
 
   const pathDirective = useMemo(() => diagram.toSVG(), [diagram]);
