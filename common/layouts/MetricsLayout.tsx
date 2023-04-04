@@ -1,9 +1,14 @@
 import React from 'react';
+import { BottomNavBar } from '../../modules/navigation/mobile/BottomNavBar';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 import { WidgetPage } from '../components/widgets/Widget';
 import { SideNavBar } from '../../modules/navigation/desktop/SideNavBar';
+import { DataPageHeader } from '../../modules/dashboard/DataPageHeader';
 import { Footer } from './Footer';
 
-export const DashboardLayout = ({ children }) => {
+export const MetricsLayout = ({ children }) => {
+  const isMobile = !useBreakpoint('md');
+
   return (
     <div className="flex min-h-full flex-col justify-between">
       <SideNavBar />
@@ -11,10 +16,18 @@ export const DashboardLayout = ({ children }) => {
         <main className="flex-1">
           <div className="py-2 md:py-6">
             <div className="h-full px-4 sm:px-6 md:px-8">
-              <WidgetPage>{children}</WidgetPage>
+              <WidgetPage>
+                <DataPageHeader />
+                {children}
+              </WidgetPage>
             </div>
           </div>
         </main>
+        {isMobile && (
+          <>
+            <BottomNavBar />
+          </>
+        )}
       </div>
       <Footer />
     </div>

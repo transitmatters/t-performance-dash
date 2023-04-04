@@ -7,8 +7,8 @@ import { faCalendarDay, faCalendarWeek } from '@fortawesome/free-solid-svg-icons
 import { lineColorBackground, lineColorDarkBorder } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { buttonHighlightConfig } from '../styles/inputStyle';
-import { DatePickers } from './DatePickers';
 import { DATE_PICKER_PRESETS, TODAY_STRING } from '../../../constants/dates';
+import { DatePickers } from './DatePickers';
 import type { DateSelectionInput } from './types/DateSelectionTypes';
 import { RangeSelectionTab } from './RangeSelectionTab';
 import { DatePickerPresets } from './DatePickerPresets';
@@ -47,7 +47,7 @@ export const DateSelection = () => {
   return (
     <div
       className={classNames(
-        'flex h-full max-w-full flex-row  items-baseline overflow-hidden rounded-t-md border md:rounded-md',
+        'flex h-full max-w-full flex-row items-baseline  overflow-hidden rounded-t-md border md:max-w-sm md:rounded-md',
         lineColorDarkBorder[line ?? 'DEFAULT']
       )}
     >

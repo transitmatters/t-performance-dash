@@ -6,6 +6,7 @@ import utc from 'dayjs/plugin/utc';
 import { useQuery } from '@tanstack/react-query';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
+import { LayoutType } from '../../common/layouts/layoutTypes';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
@@ -74,3 +75,4 @@ export default function SlowZonesDetails() {
     </div>
   );
 }
+SlowZonesDetails.Layout = LayoutType.Metrics;
