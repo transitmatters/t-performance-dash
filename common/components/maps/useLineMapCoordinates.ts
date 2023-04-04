@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 
-import { useBreakpoint } from '../hooks/useBreakpoint';
-import { useViewport } from '../hooks/useViewport';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { useViewport } from '../../hooks/useViewport';
 
 import type { Props as LineMapProps } from './LineMap';
 

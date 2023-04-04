@@ -1,4 +1,4 @@
-import type { SegmentLocation } from '../../../common/maps/LineMap';
+import type { SegmentLocation } from '../../../common/components/maps/LineMap';
 import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
 import { getParentStationForStopId } from '../../../common/utils/stations';

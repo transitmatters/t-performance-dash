@@ -1,13 +1,10 @@
 import React, { useMemo } from 'react';
 
 import { LINE_OBJECTS } from '../../../common/constants/lines';
-import { createDefaultDiagramForLine } from '../../../common/diagrams';
+import { LineMap, createDefaultDiagramForLine } from '../../../common/components/maps';
 import type { SlowZoneResponse } from '../../../common/types/dataPoints';
-
 import type { SlowZonesLineName } from '../types';
-
-import type { SegmentRenderOptions } from '../../../common/maps/LineMap';
-import LineMap from '../../../common/maps/LineMap';
+import type { SegmentRenderOptions } from '../../../common/components/maps/LineMap';
 
 import { segmentSlowZones } from './segment';
 import SlowSegmentLabel from './SlowSegmentLabel';

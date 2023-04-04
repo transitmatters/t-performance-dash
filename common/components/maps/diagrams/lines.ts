@@ -1,4 +1,4 @@
-import { stations } from '../constants/stations';
+import { stations } from '../../../constants/stations';
 
 import { line, wiggle } from './commands';
 import { Diagram } from './diagram';
@@ -10,8 +10,6 @@ type DiagrammableLineName = 'Red' | 'Orange' | 'Blue';
 type CreateDiagramOptions = {
   pxPerStation?: number;
 };
-
-type DiagramFactory = (options: CreateDiagramOptions) => Diagram;
 
 const DEFAULT_PX_PER_STATION = 10;
 
