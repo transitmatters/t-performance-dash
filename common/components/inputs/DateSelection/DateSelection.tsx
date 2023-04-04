@@ -8,7 +8,7 @@ import { lineColorBackground, lineColorDarkBorder } from '../../../styles/genera
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { buttonHighlightConfig } from '../styles/inputStyle';
 import { DatePickers } from './DatePickers';
-import { DATE_PICKER_PRESETS, TODAY_STRING } from './DateConstants';
+import { DATE_PICKER_PRESETS, TODAY_STRING } from '../../../constants/dates';
 import type { DateSelectionInput } from './types/DateSelectionTypes';
 import { RangeSelectionTab } from './RangeSelectionTab';
 import { DatePickerPresets } from './DatePickerPresets';

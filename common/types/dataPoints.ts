@@ -68,3 +68,9 @@ export type SlowZoneResponse = {
   fr_id: string;
   to_id: string;
 };
+
+export type LineSegmentData = {
+  x: string[];
+  id: string;
+  delay: number;
+};
