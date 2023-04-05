@@ -11,12 +11,7 @@ interface ChartPlaceHolder {
 
 export const ChartPlaceHolder: React.FC<ChartPlaceHolder> = ({ query, inverse }) => {
   return (
-    <div
-      className={classNames(
-        'relative flex h-60 w-full items-center justify-center',
-        !inverse && 'bg-white bg-opacity-90'
-      )}
-    >
+    <div className={classNames('relative flex h-60 w-full items-center justify-center')}>
       {query.isError ? <ErrorNotice inverse={inverse} /> : <LoadingSpinner />}
     </div>
   );

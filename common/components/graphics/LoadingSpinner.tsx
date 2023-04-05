@@ -1,12 +1,19 @@
 import React from 'react';
 import { useDelimitatedRoute } from '../../utils/router';
 import { spinnerFillColor } from './styles/spinnerFillColor';
-export const LoadingSpinner = () => {
+
+interface LoadingSpinnerProps {
+  widget?: boolean;
+}
+
+export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ widget }) => {
   const { line } = useDelimitatedRoute();
   return (
     <div
       role="status"
-      className="absolute bottom-0 left-0 right-0 top-0 flex h-auto w-auto items-center justify-center rounded-md "
+      className={`absolute bottom-0 left-0 right-0 top-0 flex h-auto w-auto items-center justify-center rounded-md ${
+        widget && 'bg-white bg-opacity-90'
+      }`}
     >
       <svg
         aria-hidden="true"

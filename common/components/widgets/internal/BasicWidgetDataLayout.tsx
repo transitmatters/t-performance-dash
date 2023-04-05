@@ -22,7 +22,7 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
   return (
     <>
       <div className={classNames('relative flex flex-1 bg-white')}>
-        {widgetValue.value === undefined && <LoadingSpinner />}
+        {widgetValue.value === undefined && <LoadingSpinner widget />}
         <div className={classNames('flex flex-col items-start p-2')}>
           <p className={classNames('text-base text-gray-500')}>{title}</p>
           <div className="flex flex-row items-baseline gap-x-1">

@@ -13,7 +13,7 @@ interface ErrorNoticeProps {
 export const ErrorNotice: React.FC<ErrorNoticeProps> = ({ isWidget, inverse }) => {
   const { line } = useDelimitatedRoute();
 
-  const color = !inverse && line ? mbtaTextConfig[line] : 'white';
+  const color = !inverse && line ? mbtaTextConfig[line] : undefined;
   return (
     <div
       className={classNames(
