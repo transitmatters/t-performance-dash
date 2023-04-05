@@ -12,6 +12,7 @@ import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWi
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
+import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 
@@ -55,7 +56,7 @@ export default function DwellsDetails() {
   const dwellsData = aggregate ? dwellsAggregate?.data?.by_date : dwells?.data;
 
   if (dwells.isError) {
-    return <>Uh oh... error</>;
+    return <ErrorNotice />;
   }
 
   return (

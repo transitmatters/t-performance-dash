@@ -136,7 +136,12 @@
                 "HTTPSPort": "443",
                 "OriginProtocolPolicy": "http-only"
               },
-              "DomainName": { "Fn::Join": ["", [{ "Ref": "TMFrontendHostname" }, ".s3-website-us-east-1.amazonaws.com"]] },
+              "DomainName": {
+                "Fn::Join": [
+                  "",
+                  [{ "Ref": "TMFrontendHostname" }, ".s3-website-us-east-1.amazonaws.com"]
+                ]
+              },
               "Id": "only-origin"
             }
           ],
