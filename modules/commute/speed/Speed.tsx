@@ -9,7 +9,7 @@ import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { CompWidget } from '../../../common/components/widgets/internal/CompWidget';
 import { DATE_FORMAT } from '../../../common/constants/dates';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
-import { DELAYS_RANGE_PARAMS_MAP } from '../../speed/constants/speeds';
+import { DELAYS_RANGE_PARAMS_MAP, MINIMUMS } from '../../speed/constants/speeds';
 import { calculateCommuteSpeedWidgetValues } from './utils/utils';
 
 export const Speed: React.FC = () => {
@@ -81,7 +81,7 @@ export const Speed: React.FC = () => {
             value={peakComp}
             text={
               <p>
-                Than <b>system peak</b> (April 2020)
+                Than <b>system peak</b> ({MINIMUMS[line ?? 'DEFAULT'].date})
               </p>
             }
           />
