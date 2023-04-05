@@ -54,7 +54,7 @@ export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[]
       },
     },
     {
-      name: `30 Days ago`,
+      name: `30 days ago`,
       input: {
         startDate: TODAY.subtract(30, 'days').format(DATE_FORMAT),
       },
