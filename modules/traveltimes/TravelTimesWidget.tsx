@@ -11,6 +11,7 @@ import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
+import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 
 export const TravelTimesWidget: React.FC = () => {
@@ -35,7 +36,7 @@ export const TravelTimesWidget: React.FC = () => {
   const travelTimeValues = traveltimes?.data?.map((tt) => tt.travel_time_sec);
 
   if (traveltimes.isError || !linePath) {
-    return <>Uh oh... error</>;
+    return <ErrorNotice isWidget />;
   }
 
   return (

@@ -11,6 +11,7 @@ import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { QueryNameKeys } from '../../common/types/api';
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
+import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 
 export const DwellsWidget: React.FC = () => {
@@ -32,7 +33,7 @@ export const DwellsWidget: React.FC = () => {
   );
 
   if (dwells.isError) {
-    return <>Uh oh... error</>;
+    return <ErrorNotice isWidget />;
   }
 
   // Buses don't record dwells

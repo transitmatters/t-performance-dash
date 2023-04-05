@@ -11,6 +11,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
+import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 
 export const HeadwaysWidget: React.FC = () => {
@@ -30,7 +31,7 @@ export const HeadwaysWidget: React.FC = () => {
   );
 
   if (headways.isError) {
-    return <>Uh oh... error</>;
+    return <ErrorNotice isWidget />;
   }
 
   return (
