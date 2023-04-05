@@ -5,12 +5,16 @@ import { LoadingSpinner } from './LoadingSpinner';
 
 interface ChartPlaceHolder {
   query: UseQueryResult<unknown>;
+  isInverse?: boolean;
 }
 
-export const ChartPlaceHolder: React.FC<ChartPlaceHolder> = ({ query }) => {
+export const ChartPlaceHolder: React.FC<ChartPlaceHolder> = ({
+  query,
+  isInverse: inverse = false,
+}) => {
   return (
     <div className="relative flex h-60 w-full items-center justify-center">
-      {query.isError ? <ErrorNotice /> : <LoadingSpinner />}
+      {query.isError ? <ErrorNotice inverse={inverse} /> : <LoadingSpinner />}
     </div>
   );
 };
