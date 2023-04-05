@@ -1,5 +1,4 @@
 import { capitalize, isEqual, pickBy } from 'lodash';
-import dayjs from 'dayjs';
 import type { Router } from 'next/router';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
@@ -10,7 +9,6 @@ import type { DateParams } from '../components/inputs/DateSelection/types/DateSe
 import type { NavTab, Page } from '../constants/pages';
 import { ALL_PAGES, PATH_TO_PAGE_MAP } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
-import { getOffsetDate } from './date';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'RL',
@@ -34,9 +32,6 @@ export const useDelimitatedRoute = (): Route => {
   const tab = RAIL_LINES.includes(pathItems[1]) ? 'Subway' : 'Bus';
 
   const newParams = getParams(queryParams);
-  if (!newParams.startDate) {
-    newParams.startDate = dayjs().format('YYYY-MM-DD');
-  }
 
   return {
     line: linePathToKeyMap[pathItems[1]],
@@ -61,10 +56,10 @@ export const useUpdateQuery = () => {
 
       if (startDate) {
         if (startDate && typeof startDate === 'string') {
-          newDateQuery.startDate = getOffsetDate(startDate);
+          newDateQuery.startDate = startDate;
         }
         if (range && endDate && typeof endDate === 'string') {
-          newDateQuery.endDate = getOffsetDate(endDate);
+          newDateQuery.endDate = endDate;
         } else if (!range) {
           newDateQuery.endDate = undefined;
         }

@@ -17,9 +17,8 @@ import { enUS } from 'date-fns/locale';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { SpeedDataPoint } from '../../common/types/dataPoints';
-import type { TimeRange } from '../../common/types/inputs';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
-import { CORE_TRACK_LENGTHS, DELAYS_RANGE_PARAMS_MAP, PEAK_MPH } from './constants/speeds';
+import { CORE_TRACK_LENGTHS, PEAK_MPH, ParamsType } from './constants/speeds';
 
 ChartJS.register(
   CategoryScale,
@@ -34,13 +33,16 @@ ChartJS.register(
 );
 
 interface SpeedGraphProps {
-  timeRange: TimeRange;
   data: SpeedDataPoint[];
+  config: ParamsType;
 }
 
-export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {
-  const { line } = useDelimitatedRoute();
-  const { tooltipFormat, unit, startDate, endDate, callbacks } = DELAYS_RANGE_PARAMS_MAP[timeRange];
+export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, config }) => {
+  const {
+    line,
+    query: { startDate, endDate },
+  } = useDelimitatedRoute();
+  const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef();
 
   const labels = data.map((point) => point.date);

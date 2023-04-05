@@ -3,14 +3,12 @@ import { BottomNavBar } from '../../modules/navigation/mobile/BottomNavBar';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { WidgetPage } from '../components/widgets/Widget';
 import { SideNavBar } from '../../modules/navigation/desktop/SideNavBar';
-import { DateSelection } from '../components/inputs/DateSelection/DateSelection';
-import { useDelimitatedRoute } from '../utils/router';
-import { DateSelectionSingle } from '../components/inputs/DateSelection/DateSelectionSingle';
+import { DataPageHeader } from '../../modules/dashboard/DataPageHeader';
+import { OverviewDateSelection } from '../components/inputs/DateSelection/OverviewDateSelection';
 import { Footer } from './Footer';
 
-export const TripExplorerLayout = ({ children }) => {
+export const OverviewLayout = ({ children }) => {
   const isMobile = !useBreakpoint('md');
-  const { page } = useDelimitatedRoute();
 
   return (
     <div className="flex min-h-full flex-col justify-between">
@@ -19,8 +17,16 @@ export const TripExplorerLayout = ({ children }) => {
         <main className="flex-1">
           <div className="py-2 md:py-6">
             <div className="h-full px-4 sm:px-6 md:px-8">
-              {page === 'singleday' ? <DateSelectionSingle /> : <DateSelection />}
-              <WidgetPage>{children}</WidgetPage>
+              {!isMobile && (
+                <div className="w-sm fixed right-4 top-4 z-10">
+                  <OverviewDateSelection />
+                </div>
+              )}
+
+              <WidgetPage>
+                <DataPageHeader />
+                {children}
+              </WidgetPage>
             </div>
           </div>
         </main>

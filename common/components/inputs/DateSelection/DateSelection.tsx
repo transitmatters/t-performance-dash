@@ -9,26 +9,21 @@ import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { buttonHighlightConfig } from '../styles/inputStyle';
 import { DATE_PICKER_PRESETS, TODAY_STRING } from '../../../constants/dates';
 import { DatePickers } from './DatePickers';
-import type { DateSelectionInput } from './types/DateSelectionTypes';
-import { RangeSelectionTab } from './RangeSelectionTab';
 import { DatePickerPresets } from './DatePickerPresets';
 
-export const DateSelection = () => {
+export const DateSelection = (range) => {
   const { line, query } = useDelimitatedRoute();
   const { startDate, endDate } = query;
-  const [config, setConfig] = useState<DateSelectionInput>({
-    range: false,
-    selection: 0,
-  });
+  const [selection, setSelection] = useState<number | undefined>(0);
   const [firstLoad, setFirstLoad] = useState(true);
   const router = useRouter();
   const updateQueryParams = useUpdateQuery();
-  const selectedOptions = config.range ? DATE_PICKER_PRESETS.range : DATE_PICKER_PRESETS.singleDay;
+  const selectedOptions = range ? DATE_PICKER_PRESETS.range : DATE_PICKER_PRESETS.singleDay;
 
   const handleSelection = (selection: number, range: boolean) => {
     const newOptions = range ? DATE_PICKER_PRESETS.range : DATE_PICKER_PRESETS.singleDay;
     updateQueryParams(newOptions[selection].input ?? null, range);
-    setConfig({ range: range, selection: selection });
+    setSelection(selection);
   };
 
   /*
@@ -39,7 +34,7 @@ export const DateSelection = () => {
     const isRange = Boolean(startDate && endDate);
     const isToday = Boolean(startDate === TODAY_STRING);
     if (firstLoad && router.isReady) {
-      setConfig({ range: isRange, selection: isToday ? 0 : undefined });
+      setSelection(isToday ? 0 : undefined);
       setFirstLoad(false);
     }
   }, [router.isReady, startDate, endDate, firstLoad]);
@@ -64,11 +59,11 @@ export const DateSelection = () => {
           )}
         >
           <FontAwesomeIcon
-            icon={config.range ? faCalendarWeek : faCalendarDay}
+            icon={range ? faCalendarWeek : faCalendarDay}
             className="pr-1 text-white"
           />
           <p className="truncate">
-            {config.selection != undefined ? selectedOptions[config.selection].name : 'Custom'}
+            {selection != undefined ? selectedOptions[selection].name : 'Custom'}
           </p>
         </Popover.Button>
 
@@ -84,9 +79,9 @@ export const DateSelection = () => {
           <Popover.Panel className="absolute bottom-[5.25rem] left-4 z-20 origin-bottom-left overflow-visible rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-4 md:right-auto md:top-8 md:mt-2 md:origin-top-left">
             {({ close }) => (
               <div className="flex w-screen max-w-[240px] flex-col overflow-hidden rounded-md bg-white leading-6 shadow-lg ring-1 ring-gray-900/5">
-                <RangeSelectionTab config={config} handleSelection={handleSelection} />
                 <DatePickerPresets
-                  config={config}
+                  selection={selection}
+                  range={range}
                   selectedOptions={selectedOptions}
                   handleSelection={handleSelection}
                   close={close}
@@ -96,7 +91,7 @@ export const DateSelection = () => {
           </Popover.Panel>
         </Transition>
       </Popover>
-      <DatePickers config={config} setConfig={setConfig} />
+      <DatePickers setSelection={setSelection} range={range} />
     </div>
   );
 };

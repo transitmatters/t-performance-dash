@@ -6,48 +6,32 @@ import type { TimeRange } from '../../common/types/inputs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
-import { DELAYS_RANGE_PARAMS_MAP } from './constants/speeds';
+import { DELAYS_RANGE_PARAMS_MAP, getSpeedGraphConfig } from './constants/speeds';
 import { SpeedGraphWrapper } from './SpeedWidgetWrapper';
+import dayjs from 'dayjs';
 
-interface SpeedWidgetProps {
-  timeRange: TimeRange;
-}
-
-export const SpeedWidget: React.FC<SpeedWidgetProps> = ({ timeRange }) => {
-  const { line, linePath } = useDelimitatedRoute();
-  const { agg, endDate, startDate, comparisonStartDate, comparisonEndDate } =
-    DELAYS_RANGE_PARAMS_MAP[timeRange];
+export const SpeedWidget: React.FC = () => {
+  const {
+    line,
+    linePath,
+    query: { startDate, endDate },
+  } = useDelimitatedRoute();
+  const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
 
   const speeds = useQuery(
-    ['speed', line, startDate, endDate, agg],
-    () => fetchSpeeds({ start_date: startDate, end_date: endDate, agg, line }),
+    ['speed', line, startDate, endDate, config.agg],
+    () => fetchSpeeds({ start_date: startDate, end_date: endDate, agg: config.agg, line }),
     { enabled: line != undefined }
   );
-  const compSpeeds = useQuery(
-    ['speedComparison', line, comparisonStartDate, startDate, agg],
-    () =>
-      fetchSpeeds({
-        start_date: comparisonStartDate,
-        end_date: comparisonEndDate,
-        agg,
-        line,
-      }),
-    { enabled: line != undefined }
-  );
-  const speedReady =
-    !compSpeeds.isError && !speeds.isError && speeds.data && compSpeeds.data && line;
+
+  const speedReady = !speeds.isError && speeds.data && line;
 
   return (
     <>
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <HomescreenWidgetTitle title="Speed" href={`/${linePath}/speed`} />
         {speedReady ? (
-          <SpeedGraphWrapper
-            timeRange={timeRange}
-            data={speeds.data}
-            compData={compSpeeds.data}
-            line={line}
-          />
+          <SpeedGraphWrapper data={speeds.data} config={config} line={line} />
         ) : (
           <ChartPlaceHolder query={speeds} />
         )}

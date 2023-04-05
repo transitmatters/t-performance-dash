@@ -16,6 +16,7 @@ export const YESTERDAY_UTC = TODAY_UTC.subtract(1, 'day');
 export const TODAY_STRING = TODAY.format(DATE_FORMAT);
 export const RANGE_OPTIONS = ['Single Day', 'Range'];
 
+const OVERVIEW_TRAIN_MIN_DATE = '2016-01-01';
 const TRAIN_MIN_DATE = '2016-01-15';
 const BUS_MIN_DATE = '2018-08-01';
 const BUS_MAX_DATE = '2022-12-31';
@@ -109,4 +110,20 @@ export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[]
       },
     },
   ],
+};
+
+export const OVERVIEW_OPTIONS = {
+  weekly: {
+    startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
+  },
+  monthly: {
+    startDate: TODAY.subtract(31, 'days').format(DATE_FORMAT),
+  },
+  yearly: {
+    startDate: TODAY.subtract(365, 'days').format(DATE_FORMAT),
+  },
+
+  all: {
+    startDate: dayjs(OVERVIEW_TRAIN_MIN_DATE).format(DATE_FORMAT),
+  },
 };

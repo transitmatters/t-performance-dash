@@ -37,7 +37,7 @@ export enum PAGES {
   range = 'range',
 }
 
-type Section = 'today' | 'trip' | 'line' | 'ntt';
+type Section = 'today' | 'trip' | 'line' | 'ntt' | 'overview';
 
 export type NavTab = {
   key: string;
@@ -83,7 +83,7 @@ export const ALL_PAGES: NavTabMap = {
     path: '/overview',
     name: 'Overview',
     lines: ['RL', 'BL', 'GL', 'OL'],
-    section: 'line',
+    section: 'overview',
     icon: faTableColumns,
   },
   speed: {
