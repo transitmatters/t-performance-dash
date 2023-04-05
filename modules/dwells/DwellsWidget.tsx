@@ -11,7 +11,7 @@ import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { QueryNameKeys } from '../../common/types/api';
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
-import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
+import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 
 export const DwellsWidget: React.FC = () => {
@@ -32,9 +32,7 @@ export const DwellsWidget: React.FC = () => {
     fetchSingleDayData(QueryNameKeys.dwells, { date: startDate, stop: fromStopIds })
   );
 
-  if (dwells.isError) {
-    return <ErrorNotice isWidget />;
-  }
+  const dwellsReady = !dwells.isError && dwells.data && line && lineShort && linePath;
 
   // Buses don't record dwells
   if (line === 'BUS') {
@@ -45,28 +43,34 @@ export const DwellsWidget: React.FC = () => {
     <>
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <HomescreenWidgetTitle title="Dwells" href={`/${linePath}/dwells`} />
-        <div className={classNames('flex w-full flex-row')}>
-          <BasicWidgetDataLayout
-            title="Average Dwell"
-            widgetValue={
-              new TimeWidgetValue(dwells.data ? averageDwells(dwells.data) : undefined, 1)
-            }
-            analysis={`from last ${dayjs().format('ddd')}.`}
-          />
-          <BasicWidgetDataLayout
-            title="Longest Dwell"
-            widgetValue={
-              new TimeWidgetValue(dwells.data ? longestDwells(dwells.data) : undefined, 1)
-            }
-            analysis={`from last ${dayjs().format('ddd')}.`}
-          />
-        </div>
-        <DwellsSingleChart
-          dwells={dwells}
-          toStation={toStation}
-          fromStation={fromStation}
-          homescreen={true}
-        />
+        {dwellsReady ? (
+          <>
+            <div className={classNames('flex w-full flex-row')}>
+              <BasicWidgetDataLayout
+                title="Average Dwell"
+                widgetValue={
+                  new TimeWidgetValue(dwells.data ? averageDwells(dwells.data) : undefined, 1)
+                }
+                analysis={`from last ${dayjs().format('ddd')}.`}
+              />
+              <BasicWidgetDataLayout
+                title="Longest Dwell"
+                widgetValue={
+                  new TimeWidgetValue(dwells.data ? longestDwells(dwells.data) : undefined, 1)
+                }
+                analysis={`from last ${dayjs().format('ddd')}.`}
+              />
+            </div>
+            <DwellsSingleChart
+              dwells={dwells}
+              toStation={toStation}
+              fromStation={fromStation}
+              homescreen={true}
+            />
+          </>
+        ) : (
+          <ChartPlaceHolder query={dwells} />
+        )}
       </div>
     </>
   );
