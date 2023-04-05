@@ -11,7 +11,11 @@ import { DATE_PICKER_PRESETS, TODAY_STRING } from '../../../constants/dates';
 import { DatePickers } from './DatePickers';
 import { DatePickerPresets } from './DatePickerPresets';
 
-export const DateSelection = (range) => {
+interface DateSelectionProps {
+  range: boolean;
+}
+
+export const DateSelection: React.FC<DateSelectionProps> = ({ range }) => {
   const { line, query } = useDelimitatedRoute();
   const { startDate, endDate } = query;
   const [selection, setSelection] = useState<number | undefined>(0);
@@ -31,7 +35,6 @@ export const DateSelection = (range) => {
     Wait until router.isReady so startDate & endDate are populated.
   */
   useEffect(() => {
-    const isRange = Boolean(startDate && endDate);
     const isToday = Boolean(startDate === TODAY_STRING);
     if (firstLoad && router.isReady) {
       setSelection(isToday ? 0 : undefined);

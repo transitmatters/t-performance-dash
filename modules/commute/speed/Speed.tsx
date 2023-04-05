@@ -9,7 +9,7 @@ import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { CompWidget } from '../../../common/components/widgets/internal/CompWidget';
 import { DATE_FORMAT, OVERVIEW_OPTIONS } from '../../../common/constants/dates';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
-import { DELAYS_RANGE_PARAMS_MAP, MINIMUMS } from '../../speed/constants/speeds';
+import { MINIMUMS } from '../../speed/constants/speeds';
 import { calculateCommuteSpeedWidgetValues } from './utils/utils';
 
 export const Speed: React.FC = () => {
@@ -43,7 +43,7 @@ export const Speed: React.FC = () => {
             info={`Speed is how quickly a train traverses the entire line, including time spent at stations.`}
           />
         </div>
-        <ChartPlaceHolder query={speed} />
+        <ChartPlaceHolder query={speed} isInverse />
       </div>
     );
   }

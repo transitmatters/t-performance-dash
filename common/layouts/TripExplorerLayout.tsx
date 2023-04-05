@@ -5,7 +5,6 @@ import { WidgetPage } from '../components/widgets/Widget';
 import { SideNavBar } from '../../modules/navigation/desktop/SideNavBar';
 import { DateSelection } from '../components/inputs/DateSelection/DateSelection';
 import { useDelimitatedRoute } from '../utils/router';
-import { DateSelectionSingle } from '../components/inputs/DateSelection/DateSelectionSingle';
 import { Footer } from './Footer';
 
 export const TripExplorerLayout = ({ children }) => {
@@ -19,7 +18,7 @@ export const TripExplorerLayout = ({ children }) => {
         <main className="flex-1">
           <div className="py-2 md:py-6">
             <div className="h-full px-4 sm:px-6 md:px-8">
-              {page === 'singleday' ? <DateSelectionSingle /> : <DateSelection />}
+              <DateSelection range={page === 'range'} />
               <WidgetPage>{children}</WidgetPage>
             </div>
           </div>

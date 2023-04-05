@@ -49,10 +49,10 @@ export const DELAYS_RANGE_PARAMS_MAP: { [s: string]: ParamsType } = {
 
 // TODO: Upload this to overviewStats db
 export const MINIMUMS = {
-  RL: 8374.5,
-  BL: 1860.5,
-  OL: 3776.75,
-  DEFAULT: 1,
+  RL: { date: 'May 2020', value: 8374.5 },
+  BL: { date: 'May 2020', value: 1860.5 },
+  OL: { date: 'May 2020', value: 3776.75 },
+  DEFAULT: { date: '', value: 1 },
 };
 
 // As per MBTA Blue book: https://archives.lib.state.ma.us/handle/2452/827917 2003-2004
@@ -64,8 +64,8 @@ export const CORE_TRACK_LENGTHS = {
 };
 
 export const PEAK_MPH = {
-  RL: CORE_TRACK_LENGTHS['RL'] / (MINIMUMS['RL'] / 3600),
-  OL: CORE_TRACK_LENGTHS['OL'] / (MINIMUMS['OL'] / 3600),
-  BL: CORE_TRACK_LENGTHS['BL'] / (MINIMUMS['BL'] / 3600),
+  RL: CORE_TRACK_LENGTHS['RL'] / (MINIMUMS['RL'].value / 3600),
+  OL: CORE_TRACK_LENGTHS['OL'] / (MINIMUMS['OL'].value / 3600),
+  BL: CORE_TRACK_LENGTHS['BL'] / (MINIMUMS['BL'].value / 3600),
   DEFAULT: 1,
 };
