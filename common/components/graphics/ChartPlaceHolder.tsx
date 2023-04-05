@@ -8,7 +8,7 @@ interface ChartPlaceHolder {
 
 export const ChartPlaceHolder: React.FC<ChartPlaceHolder> = ({ query }) => {
   return (
-    <div className="relative flex h-48 w-full items-center justify-center">
+    <div className="relative flex h-60 w-full items-center justify-center">
       {query.isError ? <p>An error has occurred.</p> : <LoadingSpinner />}
     </div>
   );

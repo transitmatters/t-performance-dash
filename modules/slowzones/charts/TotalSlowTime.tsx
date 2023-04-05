@@ -35,6 +35,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
     <Line
       ref={ref}
       id={'total_slow_time'}
+      height={240}
       data={{
         labels,
         datasets: [

@@ -29,7 +29,7 @@ export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
   return (
     <>
       <SimpleDeltaWidget widgetValue={new TimeWidgetValue(delayDelta, delayDelta)} />
-      <div className="relative flex">
+      <div className="relative flex h-60">
         <TotalSlowTime
           // Pass all data and not filtered because we can filter using the X axis of the graph.
           data={data}
