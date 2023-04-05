@@ -4,17 +4,11 @@ import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 import type { LineMetadata } from '../../../common/types/lines';
 import { stringifyTime } from '../../../common/utils/time';
 
-import type { SlowZoneDirection, SlowZonesByDirection } from './segment';
+import type { SlowZoneDirection, SlowZonesSegment } from './segment';
 import { DIRECTIONS } from './segment';
 
 import styles from './SlowSegmentLabel.module.css';
 import DirectionIndicator from './DirectionIndicator';
-
-interface SlowSegmentLabelProps {
-  slowZonesByDirection: SlowZonesByDirection;
-  line: LineMetadata;
-  isHorizontal: boolean;
-}
 
 interface SlowZoneLabelProps {
   direction: SlowZoneDirection;
@@ -57,12 +51,22 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = (props) => {
   );
 };
 
-const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
-  const { isHorizontal, slowZonesByDirection, line } = props;
+interface SlowSegmentLabelProps {
+  segment: SlowZonesSegment;
+  line: LineMetadata;
+  isHorizontal: boolean;
+}
+
+const SlowSegmentLabel = (props: SlowSegmentLabelProps) => {
+  const {
+    isHorizontal,
+    segment: { slowZones },
+    line,
+  } = props;
   return (
     <div className={styles.slowSegmentLabel} style={{ marginBottom: isHorizontal ? 1 : 0 }}>
       {DIRECTIONS.map((direction) => {
-        const zone = slowZonesByDirection[direction];
+        const [zone] = slowZones[direction];
         if (!zone) {
           return null;
         }

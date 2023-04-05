@@ -8,15 +8,17 @@ import { useQuery } from '@tanstack/react-query';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
+import { fetchAllSlow, fetchDelayTotals, fetchSpeedRestrictions } from './api/slowzones';
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
+
 dayjs.extend(utc);
 
 export default function SlowZonesDetails() {
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
   const allSlow = useQuery(['allSlow'], fetchAllSlow);
+  const speedRestrictions = useQuery(['speedRestrictions'], fetchSpeedRestrictions);
   const {
     lineShort,
     line,
@@ -62,9 +64,10 @@ export default function SlowZonesDetails() {
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
         <WidgetTitle title="Line Map" />
         <div className="relative flex flex-col">
-          {allSlow.data && canShowSlowZonesMap ? (
+          {allSlow.data && speedRestrictions.data && canShowSlowZonesMap ? (
             <SlowZonesMap
               slowZones={allSlow.data}
+              speedRestrictions={speedRestrictions.data}
               lineName={lineShort}
               direction="horizontal-on-desktop"
             />

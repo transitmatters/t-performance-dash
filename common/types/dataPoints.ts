@@ -81,3 +81,17 @@ export type LineSegmentData = {
   id: string;
   delay: number;
 };
+
+export type SpeedRestriction = {
+  id: string;
+  line: Exclude<LineShort, 'Bus'>;
+  description: string;
+  reason: string;
+  status: string;
+  fromStopId: null | string;
+  toStopId: null | string;
+  reported: string;
+  cleared: string;
+  speedMph: number;
+  trackFeet: number;
+};

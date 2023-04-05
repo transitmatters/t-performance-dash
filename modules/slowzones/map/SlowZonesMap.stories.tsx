@@ -37,8 +37,18 @@ const slowZonesResponses: SlowZoneResponse[] = [
 export const Primary = () => {
   return (
     <>
-      <SlowZonesMap lineName="Red" slowZones={slowZonesResponses} direction="horizontal" />
-      <SlowZonesMap lineName="Red" slowZones={slowZonesResponses} direction="vertical" />
+      <SlowZonesMap
+        lineName="Red"
+        slowZones={slowZonesResponses}
+        direction="horizontal"
+        speedRestrictions={[]}
+      />
+      <SlowZonesMap
+        lineName="Red"
+        slowZones={slowZonesResponses}
+        direction="vertical"
+        speedRestrictions={[]}
+      />
     </>
   );
 };

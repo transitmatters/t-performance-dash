@@ -5,11 +5,14 @@ import { getParentStationForStopId } from '../../../common/utils/stations';
 
 import { BasicWidgetDataLayout } from '../../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { TimeWidgetValue } from '../../../common/types/basicWidgets';
-import type { SlowZoneDirection, SlowZonesSegment } from './segment';
+import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
+import { prettyDate } from '../../../common/utils/date';
+import type { ByDirection, SlowZoneDirection, SlowZonesSegment } from './segment';
+
 import { DIRECTIONS } from './segment';
+import DirectionIndicator from './DirectionIndicator';
 
 import styles from './SlowZonesTooltip.module.css';
-import DirectionIndicator from './DirectionIndicator';
 
 type Props = {
   segment: SlowZonesSegment;
@@ -17,55 +20,108 @@ type Props = {
   color: string;
 };
 
-const getOrderedStationNames = (slowZonesByDirection: SlowZonesSegment['slowZonesByDirection']) => {
-  if (slowZonesByDirection['0']) {
-    const { fr_id, to_id } = slowZonesByDirection['0'];
+const getOrderedStationNames = (slowZones: ByDirection<SlowZoneResponse[]>) => {
+  const {
+    ['0']: [zeroSide],
+    ['1']: [oneSide],
+  } = slowZones;
+  if (zeroSide) {
+    const { fr_id, to_id } = zeroSide;
     return {
       fromStationName: getParentStationForStopId(fr_id).stop_name,
       toStationName: getParentStationForStopId(to_id).stop_name,
     };
   }
-  if (slowZonesByDirection['1']) {
-    const { fr_id, to_id } = slowZonesByDirection['1'];
+  if (oneSide) {
+    const { fr_id, to_id } = oneSide;
     return {
       fromStationName: getParentStationForStopId(to_id).stop_name,
       toStationName: getParentStationForStopId(fr_id).stop_name,
     };
   }
+  return {};
 };
 
 const SlowZonesTooltip = (props: Props) => {
   const {
     isHorizontal,
     color,
-    segment: { slowZonesByDirection },
+    segment: { slowZones, speedRestrictions },
   } = props;
 
   const { fromStationName, toStationName } = useMemo(
-    () => getOrderedStationNames(slowZonesByDirection)!,
-    [slowZonesByDirection]
+    () => getOrderedStationNames(slowZones)!,
+    [slowZones]
   );
 
+  if (!fromStationName || !toStationName) {
+    return null;
+  }
+
+  const renderSpeedRestrictions = (speedRestrictions: SpeedRestriction[]) => {
+    if (speedRestrictions.length) {
+      const minimumSpeed = speedRestrictions.reduce(
+        (min, sr) => Math.min(min, sr.speedMph),
+        Infinity
+      );
+      const totalFeet = speedRestrictions.reduce((sum, sr) => sum + sr.trackFeet, 0);
+      const [oldest] = speedRestrictions
+        .filter((sr) => sr.reported)
+        .map((sr) => new Date(sr.reported).toISOString())
+        .sort();
+      const oldestString = prettyDate(oldest, false);
+      return (
+        <div
+          className={classNames(
+            styles.speedRestriction,
+            'bg-slate-200 text-base text-xs text-slate-700'
+          )}
+        >
+          <b>MBTA speed restrictions</b>
+          <div className={styles.speedRestrictionStats}>
+            <div>
+              <i>Total:</i> {totalFeet} feet
+            </div>
+            <div>
+              <i>Slowest:</i> {minimumSpeed} mph
+            </div>
+            <div>
+              <i>Oldest:</i> {oldestString}
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   const renderSlowZoneForDirection = (direction: SlowZoneDirection) => {
-    const slowZone = slowZonesByDirection[direction];
+    const [slowZone] = slowZones[direction];
+    const speedRestrictionsForDirection = speedRestrictions[direction];
     if (slowZone) {
       return (
-        <BasicWidgetDataLayout
-          widgetValue={new TimeWidgetValue(slowZone.delay + slowZone.baseline, slowZone.delay)}
-          title={
-            <div className={styles.directionTitle}>
-              <DirectionIndicator
-                color={color}
-                size={10}
-                isHorizontal={isHorizontal}
-                direction={direction}
-              />
-              {direction === '0' ? 'Southbound' : 'Northbound'}
-            </div>
-          }
-          layoutKind="delta-and-percent-change"
-          analysis="compared to baseline"
-        />
+        <div className={styles.direction}>
+          <BasicWidgetDataLayout
+            widgetValue={new TimeWidgetValue(slowZone.delay + slowZone.baseline, slowZone.delay)}
+            title={
+              <div
+                className={styles.directionTitle}
+                style={{ flexDirection: isHorizontal && direction === '0' ? 'row-reverse' : 'row' }}
+              >
+                <DirectionIndicator
+                  color={color}
+                  size={10}
+                  isHorizontal={isHorizontal}
+                  direction={direction}
+                />
+                {direction === '0' ? 'Southbound' : 'Northbound'}
+              </div>
+            }
+            layoutKind="delta-and-percent-change"
+            analysis="over baseline"
+          />
+          {renderSpeedRestrictions(speedRestrictionsForDirection)}
+        </div>
       );
     }
     return null;
@@ -81,7 +137,7 @@ const SlowZonesTooltip = (props: Props) => {
         <div className={classNames(styles.title)}>
           {fromStationName} — {toStationName}
         </div>
-        <div className={styles.body}>
+        <div className={styles.body} style={{ flexDirection: isHorizontal ? 'row' : 'column' }}>
           {DIRECTIONS.map((direction) => renderSlowZoneForDirection(direction))}
         </div>
       </div>
