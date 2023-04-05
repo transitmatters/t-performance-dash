@@ -16,15 +16,10 @@ import { enUS } from 'date-fns/locale';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
-import {
-  CORE_TRACK_LENGTHS,
-  DELAYS_RANGE_PARAMS_MAP,
-  MINIMUMS,
-  PEAK_MPH,
-} from './constants/speeds';
-import { SpeedDataPoint } from '../../common/types/dataPoints';
-import { TimeRange, TimeRangeNames } from '../../common/types/inputs';
+import type { SpeedDataPoint } from '../../common/types/dataPoints';
+import type { TimeRange } from '../../common/types/inputs';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
+import { CORE_TRACK_LENGTHS, DELAYS_RANGE_PARAMS_MAP, PEAK_MPH } from './constants/speeds';
 
 ChartJS.register(
   CategoryScale,
