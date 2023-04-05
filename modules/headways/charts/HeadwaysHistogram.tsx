@@ -62,7 +62,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
           datasets: [
             {
               backgroundColor: LINE_COLORS[line ?? 'default'],
-              label: `Trains`,
+              label: lineShort !== 'Bus' ? 'Trains' : 'Buses',
               data: dataObject,
             },
           ],
@@ -90,7 +90,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
             y: {
               title: {
                 display: true,
-                text: 'Trains',
+                text: lineShort !== 'Bus' ? 'Trains' : 'Buses',
                 color: COLORS.design.subtitleGrey,
               },
               ticks: {
