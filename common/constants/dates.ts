@@ -42,6 +42,7 @@ export const FLAT_PICKER_OPTIONS: {
   },
 };
 
+// TODO Different presets for buses
 export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[] } = {
   singleDay: [
     { name: 'Today', input: { startDate: TODAY_STRING } },
@@ -50,6 +51,12 @@ export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[]
       name: `Last ${TODAY.subtract(7, 'days').format('dddd')}`,
       input: {
         startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
+      },
+    },
+    {
+      name: `30 days ago`,
+      input: {
+        startDate: TODAY.subtract(30, 'days').format(DATE_FORMAT),
       },
     },
     {
@@ -67,7 +74,6 @@ export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[]
         endDate: TODAY_STRING,
       },
     },
-
     {
       name: 'Past 30 days',
       input: {
@@ -87,6 +93,20 @@ export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[]
       input: {
         startDate: TODAY.subtract(1, 'month').startOf('month').format(DATE_FORMAT),
         endDate: TODAY.subtract(1, 'month').endOf('month').format(DATE_FORMAT),
+      },
+    },
+    {
+      name: 'This year',
+      input: {
+        startDate: TODAY.startOf('year').format(DATE_FORMAT),
+        endDate: TODAY_STRING,
+      },
+    },
+    {
+      name: 'Last year',
+      input: {
+        startDate: TODAY.startOf('year').subtract(1, 'year').format(DATE_FORMAT),
+        endDate: TODAY.endOf('year').subtract(1, 'year').format(DATE_FORMAT),
       },
     },
   ],
