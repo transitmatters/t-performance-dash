@@ -8,9 +8,9 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/light.css';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { buttonHighlightConfig } from '../styles/inputStyle';
+import { DATE_PICKER_PRESETS, FLAT_PICKER_OPTIONS, TODAY_STRING } from '../../../constants/dates';
 import { RangeButton } from './RangeButton';
 import type { DateSelectionInput } from './types/DateSelectionTypes';
-import { DATE_PICKER_PRESETS, FLAT_PICKER_OPTIONS, TODAY_STRING } from './DateConstants';
 
 interface DatePickerProps {
   config: DateSelectionInput;

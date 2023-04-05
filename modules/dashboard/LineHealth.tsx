@@ -7,11 +7,12 @@ import { DwellsWidget } from '../dwells/DwellsWidget';
 import { HeadwaysWidget } from '../headways/HeadwaysWidget';
 import { RidershipWidget } from '../ridership/RidershipWidget';
 import SlowZonesWidget from '../slowzones/SlowZonesWidget';
+import { SpeedWidget } from '../speed/SpeedWidget';
 import { TravelTimesWidget } from '../traveltimes/TravelTimesWidget';
 
 export const LineHealth = () => {
   const [timeRange, setTimeRange] = useState<TimeRange>('week');
-  const { tab } = useDelimitatedRoute();
+  const { tab, line } = useDelimitatedRoute();
 
   return (
     <div>
@@ -21,7 +22,8 @@ export const LineHealth = () => {
       </div>
       <hr className="my-2 h-[2px] border-0 border-b border-white bg-gray-400" />
       <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
-        {tab === 'Subway' && <SlowZonesWidget />}
+        {tab === 'Subway' && line !== 'GL' && <SpeedWidget timeRange={timeRange} />}
+        {tab === 'Subway' && line !== 'GL' && <SlowZonesWidget />}
         <TravelTimesWidget />
         <HeadwaysWidget />
         {tab === 'Subway' && <DwellsWidget />}

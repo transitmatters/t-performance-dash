@@ -17,6 +17,7 @@ import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWi
 import { averageHeadway, longestHeadway } from '../../common/utils/headways';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
+import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 import { HeadwaysHistogram } from './charts/HeadwaysHistogram';
 import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
@@ -65,7 +66,7 @@ export default function HeadwaysDetails() {
   const headwaysData = aggregate ? headwaysAggregate?.data?.by_date : headways?.data;
 
   if (headways.isError) {
-    return <>Uh oh... error</>;
+    return <ErrorNotice />;
   }
 
   return (

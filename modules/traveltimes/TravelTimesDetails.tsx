@@ -17,6 +17,7 @@ import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWi
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
+import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
@@ -76,7 +77,7 @@ export default function TravelTimesDetails() {
     : travelTimesSingle?.data?.map((tt) => tt.travel_time_sec);
 
   if (traveltimes.isError || !linePath) {
-    return <>Uh oh... error</>;
+    return <ErrorNotice />;
   }
 
   return (

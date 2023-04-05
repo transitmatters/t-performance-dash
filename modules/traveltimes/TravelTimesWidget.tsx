@@ -11,6 +11,7 @@ import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
+import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 
 export const TravelTimesWidget: React.FC = () => {
@@ -33,45 +34,47 @@ export const TravelTimesWidget: React.FC = () => {
     })
   );
   const travelTimeValues = traveltimes?.data?.map((tt) => tt.travel_time_sec);
-
-  if (traveltimes.isError || !linePath) {
-    return <>Uh oh... error</>;
-  }
+  const traveltimesReady = !traveltimes.isError && traveltimes.data && lineShort && linePath;
 
   return (
     <>
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <HomescreenWidgetTitle title="Travel Times" href={`/${linePath}/traveltimes`} />
-
-        <div className={classNames('space-between flex w-full flex-row')}>
-          <BasicWidgetDataLayout
-            title="Avg. Travel Time"
-            widgetValue={
-              new TimeWidgetValue(
-                travelTimeValues ? averageTravelTime(travelTimeValues) : undefined,
-                100
-              )
-            }
-            analysis={`from last ${dayjs().format('ddd')}.`}
-          />
-          <BasicWidgetDataLayout
-            title="Round Trip"
-            widgetValue={
-              new TimeWidgetValue(
-                travelTimeValues ? averageTravelTime(travelTimeValues) * 2 : undefined, //TODO: Show real time for a round trip
-                1200
-              )
-            }
-            analysis={`from last ${dayjs().format('ddd')}.`}
-          />
-        </div>
-        <TravelTimesSingleChart
-          traveltimes={traveltimes}
-          fromStation={fromStation}
-          toStation={toStation}
-          showLegend={false}
-          homescreen={true}
-        />
+        {traveltimesReady ? (
+          <>
+            <div className={classNames('space-between flex w-full flex-row')}>
+              <BasicWidgetDataLayout
+                title="Avg. Travel Time"
+                widgetValue={
+                  new TimeWidgetValue(
+                    travelTimeValues ? averageTravelTime(travelTimeValues) : undefined,
+                    100
+                  )
+                }
+                analysis={`from last ${dayjs().format('ddd')}.`}
+              />
+              <BasicWidgetDataLayout
+                title="Round Trip"
+                widgetValue={
+                  new TimeWidgetValue(
+                    travelTimeValues ? averageTravelTime(travelTimeValues) * 2 : undefined, //TODO: Show real time for a round trip
+                    1200
+                  )
+                }
+                analysis={`from last ${dayjs().format('ddd')}.`}
+              />
+            </div>
+            <TravelTimesSingleChart
+              traveltimes={traveltimes}
+              fromStation={fromStation}
+              toStation={toStation}
+              showLegend={false}
+              homescreen={true}
+            />
+          </>
+        ) : (
+          <ChartPlaceHolder query={traveltimes} />
+        )}
       </div>
     </>
   );

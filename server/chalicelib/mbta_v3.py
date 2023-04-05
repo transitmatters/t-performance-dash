@@ -7,7 +7,7 @@ import pytz
 from datetime import datetime, timedelta
 
 bos_tz = pytz.timezone("America/New_York")
-now = bos_tz.localize(datetime.now())
+now = datetime.now(tz=bos_tz)
 
 BASE_URL_V3 = "https://api-v3.mbta.com/{command}?{parameters}"
 
