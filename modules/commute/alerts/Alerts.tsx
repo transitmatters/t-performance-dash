@@ -5,6 +5,7 @@ import { fetchAlerts } from '../../../common/api/alerts';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { lineColorBackground } from '../../../common/styles/general';
 import { Divider } from '../../../common/components/general/Divider';
+import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { AlertBox } from './AlertBox';
 
 export const Alerts: React.FC = () => {
@@ -17,6 +18,17 @@ export const Alerts: React.FC = () => {
     'flex flex-col rounded-md p-4 text-white shadow-dataBox w-full xl:w-1/3 gap-y-2 md:max-h-[309px] md:overflow-y-auto',
     lineColorBackground[line ?? 'DEFAULT']
   );
+
+  const alertsReady = !alerts.isError && !alerts.isLoading && line && lineShort;
+
+  if (!alertsReady) {
+    return (
+      <div className={divStyle}>
+        <h3 className="w-full text-2xl font-semibold md:w-auto">Alerts</h3>
+        <ChartPlaceHolder query={alerts} inverse />
+      </div>
+    );
+  }
 
   if (alerts.isLoading || !line || !lineShort) {
     return <div className={divStyle}>Loading...</div>;
