@@ -2,11 +2,11 @@ import React from 'react';
 import classNames from 'classnames';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSpeeds } from '../../common/api/speed';
-import { TimeRange } from '../../common/types/inputs';
+import type { TimeRange } from '../../common/types/inputs';
 import { useDelimitatedRoute } from '../../common/utils/router';
+import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { DELAYS_RANGE_PARAMS_MAP } from './constants/speeds';
-import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { SpeedGraphWrapper } from './SpeedWidgetWrapper';
 
 interface SpeedWidgetProps {

@@ -1,5 +1,5 @@
-import { SpeedDataPoint } from '../../../common/types/dataPoints';
-import { Line } from '../../../common/types/lines';
+import type { SpeedDataPoint } from '../../../common/types/dataPoints';
+import type { Line } from '../../../common/types/lines';
 import { CORE_TRACK_LENGTHS } from '../constants/speeds';
 
 export const getSpeedWidgetValues = (

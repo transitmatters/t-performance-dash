@@ -7,8 +7,8 @@ import { faCalendarDay, faCalendarWeek } from '@fortawesome/free-solid-svg-icons
 import { lineColorBackground, lineColorDarkBorder } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { buttonHighlightConfig } from '../styles/inputStyle';
-import { DatePickers } from './DatePickers';
 import { DATE_PICKER_PRESETS, TODAY_STRING } from '../../../constants/dates';
+import { DatePickers } from './DatePickers';
 import type { DateSelectionInput } from './types/DateSelectionTypes';
 import { RangeSelectionTab } from './RangeSelectionTab';
 import { DatePickerPresets } from './DatePickerPresets';
@@ -81,7 +81,7 @@ export const DateSelection = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Popover.Panel className="absolute bottom-[5.25rem] left-4 z-20 origin-bottom-left overflow-visible rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:right-auto md:left-4 md:top-8 md:mt-2 md:origin-top-left">
+          <Popover.Panel className="absolute bottom-[5.25rem] left-4 z-20 origin-bottom-left overflow-visible rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-4 md:right-auto md:top-8 md:mt-2 md:origin-top-left">
             {({ close }) => (
               <div className="flex w-screen max-w-[240px] flex-col overflow-hidden rounded-md bg-white leading-6 shadow-lg ring-1 ring-gray-900/5">
                 <RangeSelectionTab config={config} handleSelection={handleSelection} />
