@@ -1,31 +1,38 @@
-import type { SegmentLocation } from '../../../common/components/maps';
-import type { SlowZoneResponse } from '../../../common/types/dataPoints';
+import type { Diagram, SegmentLocation } from '../../../common/components/maps';
+import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
-import { getParentStationForStopId } from '../../../common/utils/stations';
+import type { Station } from '../../../common/types/stations';
+import { getParentStationForStopId, getStationById } from '../../../common/utils/stations';
 
 export const DIRECTIONS = ['1', '0'] as const;
 
 export type SlowZoneDirection = '0' | '1';
 
-type SlowZoneDirections = SlowZoneDirection[];
-
-export type SlowZonesByDirection = Partial<Record<SlowZoneDirection, SlowZoneResponse>>;
+export type ByDirection<T> = Record<SlowZoneDirection, T>;
 
 export type SlowZonesSegment = {
   segmentLocation: SegmentLocation;
-  slowZonesByDirection: SlowZonesByDirection;
+  slowZones: ByDirection<SlowZoneResponse[]>;
+  speedRestrictions: ByDirection<SpeedRestriction[]>;
 };
 
-type SegmentedSlowZones = {
-  segmentedSlowZones: SlowZonesSegment[];
+type SegmentationResult = {
+  segments: SlowZonesSegment[];
   effectiveDate: Date;
 };
 
 type SegmentSlowZonesOptions = {
   date: Date;
-  directions: SlowZoneDirections;
+  diagram: Diagram;
+  speedRestrictions: SpeedRestriction[];
   slowZones: SlowZoneResponse[];
   lineName: LineShort;
+};
+
+type WithSegmentLocation<T> = {
+  segmentLocation: SegmentLocation;
+  direction: SlowZoneDirection;
+  value: T;
 };
 
 // TODO(ian): our slow zones calculations currently set the end_date of all active slow zones
@@ -41,95 +48,108 @@ const getEffectiveDate = (desiredDate: Date, slowZones: SlowZoneResponse[]) => {
   return desiredDate;
 };
 
-const indexSlowZonesByDirection = (
-  zones: SlowZoneResponse[],
-  requestedDirections: SlowZoneDirections
-): SlowZonesByDirection => {
-  const index: SlowZonesByDirection = {};
-  for (const zone of zones) {
-    const fromStation = getParentStationForStopId(zone.fr_id);
-    const toStation = getParentStationForStopId(zone.to_id);
-    const fromComesFirst = fromStation.order < toStation.order;
-    const direction: SlowZoneDirection = fromComesFirst ? '0' : '1';
-    if (requestedDirections.includes(direction)) {
-      index[direction] = zone;
-    }
-  }
-  return index;
-};
-
-const findOtherZonesBetweenSameStations = (
-  zone: SlowZoneResponse,
-  otherZones: SlowZoneResponse[]
+const filterActiveElements = <T extends Record<string, unknown>>(
+  records: T[],
+  targetLine: LineShort,
+  targetDate: Date,
+  getRecordDate: (t: T) => Date,
+  getRecordLine: (t: T) => LineShort
 ) => {
-  const fromStation = getParentStationForStopId(zone.fr_id);
-  const toStation = getParentStationForStopId(zone.to_id);
-  return otherZones.filter((otherZone) => {
-    if (otherZone === zone) {
-      return false;
-    }
-    const otherFromStation = getParentStationForStopId(otherZone.fr_id);
-    const otherToStation = getParentStationForStopId(otherZone.to_id);
-    if (
-      otherFromStation.station === fromStation.station &&
-      otherToStation.station === toStation.station
-    ) {
-      return true;
-    }
-    if (
-      otherFromStation.station === toStation.station &&
-      otherToStation.station === fromStation.station
-    ) {
-      return true;
-    }
-    return false;
-  });
-};
-
-const getSegmentLocation = (index: SlowZonesByDirection): SegmentLocation => {
-  const { ['0']: forward, ['1']: backward } = index;
-  if (forward) {
-    const fromStation = getParentStationForStopId(forward.fr_id);
-    const toStation = getParentStationForStopId(forward.to_id);
-    return {
-      fromStationId: fromStation.station,
-      toStationId: toStation.station,
-    };
-  }
-  if (backward) {
-    const toStation = getParentStationForStopId(backward.fr_id);
-    const fromStation = getParentStationForStopId(backward.to_id);
-    return {
-      fromStationId: fromStation.station,
-      toStationId: toStation.station,
-    };
-  }
-  throw new Error('Index must have at least one zone');
-};
-
-export const segmentSlowZones = (options: SegmentSlowZonesOptions): SegmentedSlowZones => {
-  const { date: desiredDate, slowZones, lineName, directions } = options;
-  const segmentedSlowZones: SlowZonesSegment[] = [];
-  const handledSlowZones = new Set<SlowZoneResponse>([]);
-  const effectiveDate = getEffectiveDate(desiredDate, slowZones);
-  const activeZones = slowZones.filter(
-    (zone) => new Date(zone.end).valueOf() >= effectiveDate.valueOf() && zone.color === lineName
+  return records.filter(
+    (record) =>
+      getRecordDate(record).valueOf() >= targetDate.valueOf() &&
+      getRecordLine(record) === targetLine
   );
-  activeZones.forEach((zone) => {
-    if (handledSlowZones.has(zone)) {
-      return;
-    }
-    handledSlowZones.add(zone);
-    const otherMatchingZones = findOtherZonesBetweenSameStations(zone, activeZones);
-    const allZonesForSegment = [zone, ...otherMatchingZones];
-    const slowZonesByDirection = indexSlowZonesByDirection(allZonesForSegment, directions);
-    if (Object.keys(slowZonesByDirection).length > 0) {
-      segmentedSlowZones.push({
-        segmentLocation: getSegmentLocation(slowZonesByDirection),
-        slowZonesByDirection,
+};
+
+const locateIntoSegments = <T extends Record<string, unknown>>(
+  records: T[],
+  getFromStation: (t: T) => null | Station,
+  getToStation: (t: T) => null | Station
+) => {
+  const located: WithSegmentLocation<T>[] = [];
+  for (const record of records) {
+    const fromStation = getFromStation(record);
+    const toStation = getToStation(record);
+    if (fromStation && toStation) {
+      const fromComesFirst = fromStation.order < toStation.order;
+      const direction: SlowZoneDirection = fromComesFirst ? '0' : '1';
+      located.push({
+        direction,
+        segmentLocation: {
+          fromStationId: fromStation.station,
+          toStationId: toStation.station,
+        },
+        value: record,
       });
     }
-    otherMatchingZones.forEach((zone) => handledSlowZones.add(zone));
-  });
-  return { segmentedSlowZones, effectiveDate };
+  }
+  return located;
+};
+
+const matchSegmentLocations = (first: SegmentLocation, second: SegmentLocation) => {
+  return (
+    (first.fromStationId === second.fromStationId && first.toStationId === second.toStationId) ||
+    (first.toStationId === second.fromStationId && first.fromStationId === second.toStationId)
+  );
+};
+
+const indexByDirection = <T>(records: WithSegmentLocation<T>[]): ByDirection<T[]> => {
+  return {
+    '0': records.filter((r) => r.direction === '0').map((r) => r.value),
+    '1': records.filter((r) => r.direction === '1').map((r) => r.value),
+  };
+};
+
+const mergeByLocation = (
+  slowZones: WithSegmentLocation<SlowZoneResponse>[],
+  speedRestrictions: WithSegmentLocation<SpeedRestriction>[],
+  diagram: Diagram
+) => {
+  const mergeResult: SlowZonesSegment[] = [];
+  for (const segmentLocation of diagram.getAdjacentSegmentLocations()) {
+    const matchingSlowZones = slowZones.filter((sz) =>
+      matchSegmentLocations(sz.segmentLocation, segmentLocation)
+    );
+    const matchingSpeedRestrictions = speedRestrictions.filter((sr) =>
+      matchSegmentLocations(sr.segmentLocation, segmentLocation)
+    );
+    mergeResult.push({
+      segmentLocation,
+      slowZones: indexByDirection(matchingSlowZones),
+      speedRestrictions: indexByDirection(matchingSpeedRestrictions),
+    });
+  }
+  return mergeResult;
+};
+
+export const segmentSlowZones = (options: SegmentSlowZonesOptions): SegmentationResult => {
+  const { date: desiredDate, slowZones, speedRestrictions, lineName, diagram } = options;
+  const effectiveDate = getEffectiveDate(desiredDate, slowZones);
+  const activeSlowZones = locateIntoSegments(
+    filterActiveElements(
+      slowZones,
+      lineName,
+      effectiveDate,
+      (sz) => new Date(sz.end),
+      (sz) => sz.color
+    ),
+    (sz) => getParentStationForStopId(sz.fr_id),
+    (sz) => getParentStationForStopId(sz.to_id)
+  );
+  const activeSpeedRestrictions = locateIntoSegments(
+    filterActiveElements(
+      speedRestrictions,
+      lineName,
+      effectiveDate,
+      (rs) => new Date(rs.cleared ?? '4000'),
+      (rs) => rs.line
+    ),
+    (rs) => getStationById(rs.fromStopId!),
+    (rs) => getStationById(rs.toStopId!)
+  );
+  return {
+    effectiveDate,
+    segments: mergeByLocation(activeSlowZones, activeSpeedRestrictions, diagram),
+  };
 };
