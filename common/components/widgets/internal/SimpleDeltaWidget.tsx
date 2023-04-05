@@ -53,7 +53,7 @@ export const SimpleDeltaWidget: React.FC<BasicWidgetDataLayoutProps> = ({
   return (
     <>
       <div className={classNames('relative flex  flex-1 bg-white')}>
-        {widgetValue.value === undefined && <LoadingSpinner widget />}
+        {widgetValue.value === undefined && <LoadingSpinner isWidget />}
         <div className={classNames('flex flex-col items-start p-2')}>
           <p className={classNames('text-xs text-design-subtitleGrey sm:text-sm')}>
             {dayjs(startDate).format('MMM D, YYYY')} - {dayjs(endDate).format('MMM D, YYYY')}

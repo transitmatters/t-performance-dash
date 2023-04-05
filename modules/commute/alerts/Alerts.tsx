@@ -25,18 +25,10 @@ export const Alerts: React.FC = () => {
     return (
       <div className={divStyle}>
         <h3 className="w-full text-2xl font-semibold md:w-auto">Alerts</h3>
-        <ChartPlaceHolder query={alerts} inverse />
+        <ChartPlaceHolder query={alerts} isInverse />
       </div>
     );
   }
-
-  if (alerts.isLoading || !line || !lineShort) {
-    return <div className={divStyle}>Loading...</div>;
-  }
-  if (alerts.isError) {
-    return <div className={divStyle}>Error getting alerts.</div>;
-  }
-
   return (
     <div className={divStyle}>
       <h3 className="w-full text-2xl font-semibold md:w-auto">Alerts</h3>

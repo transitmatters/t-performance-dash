@@ -43,7 +43,7 @@ export const Speed: React.FC = () => {
             info={`Speed is how quickly a train traverses the entire line, including time spent at stations.`}
           />
         </div>
-        <ChartPlaceHolder query={speed} inverse />
+        <ChartPlaceHolder query={speed} isInverse />
       </div>
     );
   }
