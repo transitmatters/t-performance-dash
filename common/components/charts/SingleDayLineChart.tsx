@@ -19,6 +19,7 @@ import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/col
 import type { SingleDayLineProps } from '../../../common/types/charts';
 import { prettyDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../utils/router';
+import { DownloadButton } from '../general/DownloadButton';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
 
@@ -79,6 +80,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   benchmarkField,
   // TODO: loading animation?
   isLoading,
+  fname,
   bothStops = false,
   location,
   homescreen = false,
@@ -114,14 +116,13 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                     : pointColors(data, metricField, benchmarkField),
                 pointRadius: 3,
                 pointHitRadius: 10,
-                // TODO: would be nice to add types to these arrow functions - but causes an issue bc datapoint[field] might be undefined.
-                data: data.map((datapoint: any) => (datapoint[metricField] / 60).toFixed(2)),
+                data: data.map((datapoint) => ((datapoint[metricField] as number) / 60).toFixed(2)),
               },
               {
                 label: `Benchmark MBTA`,
                 backgroundColor: '#a0a0a030',
                 data: benchmarkField
-                  ? data.map((datapoint: any) => (datapoint[benchmarkField] / 60).toFixed(2))
+                  ? data.map((datapoint) => ((datapoint[benchmarkField] as number) / 60).toFixed(2))
                   : [],
                 pointRadius: 0,
                 pointHoverRadius: 3,
@@ -241,6 +242,15 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
         />
       </div>
       {showLegend && <div className="chart-extras">{benchmarkField && <LegendView />}</div>}
+      {showLegend && date && (
+        <DownloadButton
+          data={data}
+          datasetName={fname}
+          location={location}
+          bothStops={bothStops}
+          startDate={date}
+        />
+      )}
     </div>
   );
 };
