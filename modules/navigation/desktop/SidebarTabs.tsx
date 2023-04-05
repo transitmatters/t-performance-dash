@@ -1,10 +1,13 @@
 import classNames from 'classnames';
 import React from 'react';
-import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useDelimitatedRoute, useSelectedPage } from '../../../common/utils/router';
+import { useRouter } from 'next/router';
+import {
+  handlePageNavigation,
+  useDelimitatedRoute,
+  useSelectedPage,
+} from '../../../common/utils/router';
 import type { NavTab } from '../../../common/constants/pages';
-import { ALL_PAGES } from '../../../common/constants/pages';
 
 interface SidebarTabs {
   tabs: NavTab[];
@@ -12,17 +15,13 @@ interface SidebarTabs {
 }
 
 export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs }) => {
-  const router = useRouter();
   const { linePath, line, query, page } = useDelimitatedRoute();
+  const router = useRouter();
   const selectedPage = useSelectedPage();
 
   const handleChange = (enabled: boolean, tab: NavTab) => {
     if (!enabled) return null;
-    if (ALL_PAGES[page].section === tab.section) {
-      router.push({ pathname: `/${linePath}${tab.path}`, query: query });
-    } else {
-      router.push({ pathname: `/${linePath}${tab.path}` });
-    }
+    handlePageNavigation(page, tab, query, linePath, router);
   };
 
   return (

@@ -11,6 +11,7 @@ export const TripExplorer = () => {
 
   const [toStation, setToStation] = useState(stations?.[stations.length - 3]);
   const [fromStation, setFromStation] = useState(stations?.[3]);
+
   if (!(fromStation && toStation)) {
     return null;
   }

@@ -14,7 +14,7 @@ export const SubwayNavMenu = () => (
       <SidebarTabs tabs={TODAY} title="Today" />
       <SidebarTabs tabs={LINE_PAGES} title="Line" />
       <SidebarTabs tabs={TRIP_PAGES} title="Trips" />
-      <SidebarTabs tabs={MORE_PAGES} title={'More'} />
+      <SidebarTabs tabs={MORE_PAGES} title="More" />
     </div>
   </>
 );

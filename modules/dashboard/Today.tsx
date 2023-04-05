@@ -10,4 +10,4 @@ export default function Today() {
   );
 }
 
-Today.Layout = LayoutType.Metrics;
+Today.Layout = LayoutType.Dashboards;

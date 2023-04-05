@@ -7,7 +7,7 @@ import { lineColorText } from '../../common/styles/general';
 export const DataPageHeader = () => {
   const {
     line,
-    page: datapage,
+    page,
     query: { endDate },
   } = useDelimitatedRoute();
   const [range, setRange] = useState<boolean>(endDate !== undefined);
@@ -26,7 +26,7 @@ export const DataPageHeader = () => {
           <span className={lineColorText[line ?? 'DEFAULT']}>
             {line && LINE_OBJECTS[line]?.name}
           </span>
-          <span> - {ALL_PAGES[datapage]?.name}</span>
+          <span> - {ALL_PAGES[page]?.name}</span>
         </h3>
       </div>
     </div>

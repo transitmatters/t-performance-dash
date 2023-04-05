@@ -1,12 +1,13 @@
 import { capitalize, isEqual, pickBy } from 'lodash';
 import dayjs from 'dayjs';
+import type { Router } from 'next/router';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route } from '../types/router';
 import type { DateParams } from '../components/inputs/DateSelection/types/DateSelectionTypes';
-import type { Page } from '../constants/pages';
+import type { NavTab, Page } from '../constants/pages';
 import { ALL_PAGES, PATH_TO_PAGE_MAP } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
 import { getOffsetDate } from './date';
@@ -124,4 +125,21 @@ export const useSelectedPage = () => {
   const { page: datapage } = useDelimitatedRoute();
   if (!router.isReady) return undefined;
   return PATH_TO_PAGE_MAP[datapage];
+};
+
+export const handlePageNavigation = (
+  currentPage: Page,
+  tab: NavTab,
+  query: QueryParams,
+  linePath: LinePath,
+  router: Router
+) => {
+  if (tab.key === 'singleday') {
+    delete query.endDate;
+  }
+  if (ALL_PAGES[currentPage].section === tab.section) {
+    router.push({ pathname: `/${linePath}${tab.path}`, query: query });
+  } else {
+    router.push({ pathname: `/${linePath}${tab.path}` });
+  }
 };

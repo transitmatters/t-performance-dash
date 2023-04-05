@@ -30,3 +30,14 @@ export enum AggregateAPIParams {
 
 export type AggregateAPIOptions = { [key in AggregateAPIParams]?: string[] | string };
 export type PartialAggregateAPIOptions = Partial<AggregateAPIOptions>;
+
+export type FetchSpeedsOptions = {
+  [key in FetchSpeedsParams]?: string;
+};
+
+export enum FetchSpeedsParams {
+  startDate = 'start_date',
+  endDate = 'end_date',
+  agg = 'agg',
+  line = 'line',
+}
