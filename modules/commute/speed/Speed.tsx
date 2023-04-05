@@ -1,16 +1,16 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchSpeeds } from '../../../common/api/speed';
-import { useDelimitatedRoute } from '../../../common/utils/router';
 import classNames from 'classnames';
-import { lineColorBackground } from '../../../common/styles/general';
 import dayjs from 'dayjs';
-import { DELAYS_RANGE_PARAMS_MAP } from '../../speed/constants/speeds';
+import { useDelimitatedRoute } from '../../../common/utils/router';
+import { lineColorBackground } from '../../../common/styles/general';
+import { fetchSpeeds } from '../../../common/api/speed';
 import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
-import { calculateCommuteSpeedWidgetValues } from './utils/utils';
 import { CompWidget } from '../../../common/components/widgets/internal/CompWidget';
 import { DATE_FORMAT } from '../../../common/constants/dates';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
+import { DELAYS_RANGE_PARAMS_MAP } from '../../speed/constants/speeds';
+import { calculateCommuteSpeedWidgetValues } from './utils/utils';
 
 export const Speed: React.FC = () => {
   const { line } = useDelimitatedRoute();

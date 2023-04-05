@@ -1,4 +1,4 @@
-import { SpeedDataPoint } from '../../../../common/types/dataPoints';
+import type { SpeedDataPoint } from '../../../../common/types/dataPoints';
 import { CORE_TRACK_LENGTHS, PEAK_MPH } from '../../../speed/constants/speeds';
 
 export const calculateCommuteSpeedWidgetValues = (
