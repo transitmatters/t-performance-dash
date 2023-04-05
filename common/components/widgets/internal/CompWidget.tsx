@@ -1,5 +1,5 @@
 import React from 'react';
-import { BigDelta } from '../../../common/components/widgets/internal/BigDelta';
+import { BigDelta } from './BigDelta';
 
 const getDescription = (value: number) => {
   if (value >= 0 || !value) {

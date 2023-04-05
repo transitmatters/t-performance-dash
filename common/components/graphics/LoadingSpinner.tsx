@@ -6,7 +6,7 @@ export const LoadingSpinner = () => {
   return (
     <div
       role="status"
-      className="absolute bottom-0 left-0 right-0 top-0 flex h-auto w-auto items-center justify-center rounded-md bg-white bg-opacity-90"
+      className="absolute bottom-0 left-0 right-0 top-0 flex h-auto w-auto items-center justify-center rounded-md "
     >
       <svg
         aria-hidden="true"

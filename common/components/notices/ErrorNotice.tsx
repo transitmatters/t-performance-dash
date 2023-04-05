@@ -7,11 +7,13 @@ import { mbtaTextConfig } from '../inputs/styles/tailwind';
 
 interface ErrorNoticeProps {
   isWidget?: boolean;
+  inverse?: boolean;
 }
 
-export const ErrorNotice: React.FC<ErrorNoticeProps> = ({ isWidget }) => {
+export const ErrorNotice: React.FC<ErrorNoticeProps> = ({ isWidget, inverse }) => {
   const { line } = useDelimitatedRoute();
 
+  const color = !inverse && line ? mbtaTextConfig[line] : 'white';
   return (
     <div
       className={classNames(
@@ -19,11 +21,7 @@ export const ErrorNotice: React.FC<ErrorNoticeProps> = ({ isWidget }) => {
         isWidget ? 'bg-white p-2 shadow-dataBox' : ''
       )}
     >
-      <FontAwesomeIcon
-        size={'3x'}
-        icon={faTriangleExclamation}
-        className={line && classNames(mbtaTextConfig[line])}
-      />
+      <FontAwesomeIcon size={'3x'} icon={faTriangleExclamation} className={color} />
       <>Uh oh... error</>
     </div>
   );

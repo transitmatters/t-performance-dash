@@ -8,40 +8,50 @@ import dayjs from 'dayjs';
 import { DELAYS_RANGE_PARAMS_MAP } from '../../speed/constants/speeds';
 import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { calculateCommuteSpeedWidgetValues } from './utils/utils';
-import { CompWidget } from './CompWidget';
+import { CompWidget } from '../../../common/components/widgets/internal/CompWidget';
 import { DATE_FORMAT } from '../../../common/constants/dates';
+import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 
 export const Speed: React.FC = () => {
   const { line } = useDelimitatedRoute();
   const today = dayjs().format(DATE_FORMAT);
   const { agg, endDate, startDate } = DELAYS_RANGE_PARAMS_MAP['week'];
 
-  const speed = useQuery(['speed', line], () =>
+  const speed = useQuery(['todaySpeed', line], () =>
     fetchSpeeds({ start_date: today, end_date: today, agg: 'daily', line: line })
   );
 
-  // This query is shared with the overview page - they both get the weekly times.
   const weekly = useQuery(
-    ['traversal', line, today, endDate, agg],
+    ['speed', line, startDate, endDate, agg],
     () => fetchSpeeds({ start_date: startDate, end_date: endDate, agg, line }),
     { enabled: line != undefined }
   );
 
-  const { MPH, weeklyComp, peakComp } = useMemo(() => {
-    return calculateCommuteSpeedWidgetValues(weekly.data ?? [], speed.data ?? [], line);
-  }, [weekly.data, speed.data, line]);
+  const speedReady = line && weekly.data && speed.data && !speed.isLoading && !speed.isError;
 
   const divStyle = classNames(
     'items-center justify-center rounded-lg py-4 px-6 text-center sm:w-1/2 xl:w-1/3 text-opacity-95 text-white',
     lineColorBackground[line ?? 'DEFAULT']
   );
 
-  if (speed.isError) {
-    return <div className={divStyle}>Error</div>;
+  if (!speedReady) {
+    return (
+      <div className={divStyle}>
+        <div className="flex flex-row items-baseline justify-between">
+          <p className="text-2xl font-semibold">Speed</p>
+          <InfoTooltip
+            info={`Speed is how quickly a train traverses the entire line, including time spent at stations.`}
+          />
+        </div>
+        <ChartPlaceHolder query={speed} inverse />
+      </div>
+    );
   }
-  if (speed.isLoading) {
-    return <div className={divStyle}>Loading...</div>;
-  }
+  const { MPH, weeklyComp, peakComp } = calculateCommuteSpeedWidgetValues(
+    weekly.data,
+    speed.data,
+    line
+  );
 
   return (
     <div className={divStyle}>

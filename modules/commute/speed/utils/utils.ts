@@ -2,9 +2,9 @@ import { SpeedDataPoint } from '../../../../common/types/dataPoints';
 import { CORE_TRACK_LENGTHS, PEAK_MPH } from '../../../speed/constants/speeds';
 
 export const calculateCommuteSpeedWidgetValues = (
-  weeklyData: any[],
-  speed: SpeedDataPoint[] | [],
-  line: string | undefined
+  weeklyData: SpeedDataPoint[],
+  speed: SpeedDataPoint[],
+  line: string
 ) => {
   const weeklyAverage =
     weeklyData.reduce((sum, next) => sum + next.value, 0) / weeklyData.length / 3600;
