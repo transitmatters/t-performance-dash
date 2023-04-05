@@ -69,7 +69,7 @@
     "get-szs": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/slowzones/all_slow.json",
     "generate-oss-list": "generate-attribution --outputDir common/constants/licenses",
     "lint": "npm run lint-frontend && npm run lint-backend",
-    "lint-frontend": "tsc --noEmit && next lint",
+    "lint-frontend": "tsc --noEmit && eslint . && next lint",
     "lint-backend": "cd server && poetry run flake8",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
