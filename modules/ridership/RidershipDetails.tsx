@@ -19,7 +19,7 @@ export default function TravelTimesDetails() {
     query: { busRoute },
   } = useDelimitatedRoute();
   const routeOrLine = line === 'BUS' ? busRoute : lineShort;
-  const lineData = allRidership.data?.lineData[`line-${routeOrLine}`];
+  const lineData = allRidership.data?.lineData[`line-${routeOrLine?.replace(/\//g, '')}`];
 
   const color = LINE_COLORS[line ?? 'default'];
   const [serviceDay, setServiceDay] = useState<ServiceDay>('weekday');

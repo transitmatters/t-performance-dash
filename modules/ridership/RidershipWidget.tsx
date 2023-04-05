@@ -16,7 +16,7 @@ export const RidershipWidget: React.FC = () => {
 
   const { line, linePath, lineShort, query } = useDelimitatedRoute();
   const routeOrLine = line === 'BUS' ? query.busRoute : lineShort;
-  const lineData = allRidership.data?.lineData[`line-${routeOrLine}`];
+  const lineData = allRidership.data?.lineData[`line-${routeOrLine?.replace(/\//g, '')}`];
 
   const color = LINE_COLORS[line ?? 'default'];
   const [serviceDay, setServiceDay] = useState<ServiceDay>('weekday');
