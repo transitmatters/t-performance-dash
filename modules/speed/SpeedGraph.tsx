@@ -19,6 +19,7 @@ import { COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { SpeedDataPoint } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { CORE_TRACK_LENGTHS, PEAK_MPH, ParamsType } from './constants/speeds';
+import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 
 ChartJS.register(
   CategoryScale,
@@ -38,13 +39,9 @@ interface SpeedGraphProps {
 }
 
 export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, config }) => {
-  const {
-    line,
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { line } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef();
-
   const labels = data.map((point) => point.date);
   return (
     <Line
@@ -110,8 +107,8 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, config }) => {
             },
           },
           x: {
-            min: startDate,
-            max: endDate,
+            min: OVERVIEW_OPTIONS.year.startDate,
+            max: TODAY_STRING,
             type: 'time',
             time: {
               unit: unit,
@@ -137,7 +134,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, config }) => {
         {
           id: 'customTitle',
           afterDraw: (chart) => {
-            if (startDate === undefined || startDate.length === 0) {
+            if (!data) {
               // No data is present
               const ctx = chart.ctx;
               const width = chart.width;

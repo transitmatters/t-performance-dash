@@ -1,5 +1,5 @@
 import { capitalize, isEqual, pickBy } from 'lodash';
-import type { Router } from 'next/router';
+import type { NextRouter } from 'next/router';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import type { Line, LinePath, LineShort } from '../types/lines';
@@ -7,7 +7,7 @@ import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route } from '../types/router';
 import type { DateParams } from '../components/inputs/DateSelection/types/DateSelectionTypes';
 import type { NavTab, Page } from '../constants/pages';
-import { ALL_PAGES, PATH_TO_PAGE_MAP } from '../constants/pages';
+import { SUB_PAGES_MAP, ALL_PAGES, PATH_TO_PAGE_MAP } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
 
 const linePathToKeyMap: Record<string, Line> = {
@@ -24,20 +24,27 @@ const getParams = (params: QueryParams) => {
   );
 };
 
+const getPage = (pageArray: string[]): Page => {
+  if (pageArray[1]) {
+    return PATH_TO_PAGE_MAP[SUB_PAGES_MAP[pageArray[0]][pageArray[1]]];
+  }
+  return PATH_TO_PAGE_MAP[pageArray[0]] ?? 'today';
+};
+
 export const useDelimitatedRoute = (): Route => {
   const router = useRouter();
   const path = router.asPath.split('?');
   const pathItems = path[0].split('/');
   const queryParams: QueryParams = router.query;
   const tab = RAIL_LINES.includes(pathItems[1]) ? 'Subway' : 'Bus';
-
+  const page = getPage(pathItems.slice(2));
   const newParams = getParams(queryParams);
 
   return {
     line: linePathToKeyMap[pathItems[1]],
     linePath: pathItems[1] as LinePath, //TODO: Remove as
     lineShort: capitalize(pathItems[1]) as LineShort, //TODO: Remove as
-    page: (pathItems[2] as Page) || 'today', //TODO: Remove as
+    page: page, //TODO: Remove as
     tab: tab,
     query: router.isReady ? newParams : {},
   };
@@ -117,22 +124,23 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
 
 export const useSelectedPage = () => {
   const router = useRouter();
-  const { page: datapage } = useDelimitatedRoute();
+  const { page, subPage } = useDelimitatedRoute();
   if (!router.isReady) return undefined;
-  return PATH_TO_PAGE_MAP[datapage];
+  return subPage ? PATH_TO_PAGE_MAP[subPage] : PATH_TO_PAGE_MAP[page];
 };
 
+// TODO: make the params an object
 export const handlePageNavigation = (
   currentPage: Page,
   tab: NavTab,
   query: QueryParams,
   linePath: LinePath,
-  router: Router
+  router: NextRouter
 ) => {
   if (tab.key === 'singleday') {
     delete query.endDate;
   }
-  if (ALL_PAGES[currentPage].section === tab.section) {
+  if (ALL_PAGES[currentPage]?.section === tab.section) {
     router.push({ pathname: `/${linePath}${tab.path}`, query: query });
   } else {
     router.push({ pathname: `/${linePath}${tab.path}` });

@@ -29,4 +29,4 @@ export default function Home() {
     </>
   );
 }
-Home.Layout = LayoutType.Dashboards;
+Home.Layout = LayoutType.Empty;

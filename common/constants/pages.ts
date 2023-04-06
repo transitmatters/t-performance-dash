@@ -1,7 +1,8 @@
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import {
+  faHourglass,
+  faClock,
   faHouse,
-  faTrainSubway,
   faUsers,
   faArrowsLeftRightToLine,
   faWarning,
@@ -21,9 +22,15 @@ export type Page =
   | 'slowzones'
   | 'headways'
   | 'ridership'
-  | 'ntt'
   | 'singleday'
+  | 'sdHeadways'
+  | 'sdTraveltimes'
+  | 'sdDwells'
+  | 'rangeHeadways'
+  | 'rangeTraveltimes'
+  | 'rangeDwells'
   | 'range';
+
 export enum PAGES {
   today = 'today',
   overview = 'overview',
@@ -32,12 +39,17 @@ export enum PAGES {
   slowzones = 'slowzones',
   headways = 'headways',
   ridership = 'ridership',
-  ntt = 'ntt',
   singleday = 'singleday',
+  sdHeadways = 'sdHeadways',
+  sdTraveltimes = 'sdTraveltimes',
+  sdDwells = 'sdDwells',
+  rangeHeadways = 'rangeHeadways',
+  rangeTraveltimes = 'rangeTraveltimes',
+  rangeDwells = 'rangeDwells',
   range = 'range',
 }
 
-type Section = 'today' | 'trip' | 'line' | 'ntt' | 'overview';
+type Section = 'today' | 'line' | 'overview' | 'single' | 'range';
 
 export type NavTab = {
   key: string;
@@ -68,15 +80,69 @@ export const ALL_PAGES: NavTabMap = {
     name: 'Single Day',
     lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
     icon: faCalendarDay,
-    section: 'trip',
+    section: 'single',
+  },
+  sdHeadways: {
+    key: 'sdHeadways',
+    path: '/singleday/headways',
+    name: 'Headways',
+    lines: ['RL', 'BL', 'GL', 'OL'],
+    icon: faArrowsLeftRightToLine,
+    section: 'single',
+    sub: true,
+  },
+  sdTraveltimes: {
+    key: 'sdTraveltimes',
+    path: '/singleday/traveltimes',
+    name: 'Travel Times',
+    lines: ['RL', 'BL', 'GL', 'OL'],
+    icon: faClock,
+    section: 'single',
+    sub: true,
+  },
+  sdDwells: {
+    key: 'sdDwells',
+    path: '/singleday/dwells',
+    name: 'Dwells',
+    lines: ['RL', 'BL', 'GL', 'OL'],
+    icon: faHourglass,
+    section: 'single',
+    sub: true,
   },
   range: {
     key: 'range',
     path: '/range',
     name: 'Range',
     lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
-    section: 'trip',
+    section: 'range',
     icon: faCalendarWeek,
+  },
+  rangeHeadways: {
+    key: 'rangeHeadways',
+    path: '/range/headways',
+    name: 'Headways',
+    lines: ['RL', 'BL', 'GL', 'OL'],
+    icon: faArrowsLeftRightToLine,
+    section: 'range',
+    sub: true,
+  },
+  rangeTraveltimes: {
+    key: 'rangeTraveltimes',
+    path: '/range/traveltimes',
+    name: 'Travel Times',
+    lines: ['RL', 'BL', 'GL', 'OL'],
+    icon: faClock,
+    section: 'range',
+    sub: true,
+  },
+  rangeDwells: {
+    key: 'rangeDwells',
+    path: '/range/dwells',
+    name: 'Dwells',
+    lines: ['RL', 'BL', 'GL', 'OL'],
+    icon: faHourglass,
+    section: 'range',
+    sub: true,
   },
   overview: {
     key: 'overview',
@@ -117,7 +183,7 @@ export const ALL_PAGES: NavTabMap = {
     key: 'headways',
     path: '/headways',
     name: 'Headways',
-    lines: ['RL', 'BL', 'GL', 'OL'],
+    lines: [],
     icon: faArrowsLeftRightToLine,
     section: 'line',
     sub: true,
@@ -129,20 +195,20 @@ export const ALL_PAGES: NavTabMap = {
     lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
     icon: faUsers,
     section: 'line',
-
     sub: true,
-  },
-  ntt: {
-    key: 'ntt',
-    path: '/newtrains',
-    name: 'New Train Tracker',
-    icon: faTrainSubway,
-    section: 'ntt',
-    lines: [],
   },
 };
 
-export const TRIP_PAGES = [ALL_PAGES.singleday, ALL_PAGES.range];
+export const TRIP_PAGES = [
+  ALL_PAGES.singleday,
+  ALL_PAGES.sdTraveltimes,
+  ALL_PAGES.sdHeadways,
+  ALL_PAGES.sdDwells,
+  ALL_PAGES.range,
+  ALL_PAGES.rangeTraveltimes,
+  ALL_PAGES.rangeHeadways,
+  ALL_PAGES.rangeDwells,
+];
 
 export const TODAY = [ALL_PAGES.today];
 
@@ -154,17 +220,35 @@ export const LINE_PAGES = [
   ALL_PAGES.headways,
   ALL_PAGES.ridership,
 ];
-export const MORE_PAGES = [ALL_PAGES.ntt];
 
 export const PATH_TO_PAGE_MAP: { [key in Page]: string } = {
   today: 'today',
   overview: 'overview',
   singleday: 'singleday',
+  sdHeadways: 'sdHeadways',
+  sdTraveltimes: 'sdTraveltimes',
+  sdDwells: 'sdDwells',
+  rangeHeadways: 'rangeHeadways',
+  rangeTraveltimes: 'rangeTraveltimes',
+  rangeDwells: 'rangeDwells',
   range: 'range',
   speed: 'speed',
   service: 'service',
   slowzones: 'slowzones',
   headways: 'headways',
   ridership: 'ridership',
-  ntt: 'ntt',
+};
+
+// TODO: type this
+export const SUB_PAGES_MAP = {
+  singleday: {
+    headways: 'sdHeadways',
+    traveltimes: 'sdTraveltimes',
+    dwells: 'sdDwells',
+  },
+  range: {
+    headways: 'rangeHeadways',
+    traveltimes: 'rangeTraveltimes',
+    dwells: 'rangeDwells',
+  },
 };

@@ -96,4 +96,4 @@ export default function DwellsDetails() {
     </>
   );
 }
-DwellsDetails.Layout = LayoutType.Metrics;
+DwellsDetails.Layout = LayoutType.Trips;

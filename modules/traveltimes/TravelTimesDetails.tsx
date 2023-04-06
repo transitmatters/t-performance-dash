@@ -113,4 +113,4 @@ export default function TravelTimesDetails() {
     </>
   );
 }
-TravelTimesDetails.Layout = LayoutType.Metrics;
+TravelTimesDetails.Layout = LayoutType.Trips;

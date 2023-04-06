@@ -2,25 +2,28 @@ import React from 'react';
 import classNames from 'classnames';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSpeeds } from '../../common/api/speed';
-import type { TimeRange } from '../../common/types/inputs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
-import { DELAYS_RANGE_PARAMS_MAP, getSpeedGraphConfig } from './constants/speeds';
+import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { SpeedGraphWrapper } from './SpeedWidgetWrapper';
+import { getSpeedGraphConfig } from './constants/speeds';
 import dayjs from 'dayjs';
 
 export const SpeedWidget: React.FC = () => {
-  const {
-    line,
-    linePath,
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { line, linePath } = useDelimitatedRoute();
+  const startDate = OVERVIEW_OPTIONS.year.startDate;
+  const endDate = TODAY_STRING;
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
-
   const speeds = useQuery(
-    ['speed', line, startDate, endDate, config.agg],
-    () => fetchSpeeds({ start_date: startDate, end_date: endDate, agg: config.agg, line }),
+    ['speed', line, startDate, endDate, OVERVIEW_OPTIONS.year.agg],
+    () =>
+      fetchSpeeds({
+        start_date: startDate,
+        end_date: endDate,
+        agg: OVERVIEW_OPTIONS.year.agg,
+        line,
+      }),
     { enabled: line != undefined }
   );
 

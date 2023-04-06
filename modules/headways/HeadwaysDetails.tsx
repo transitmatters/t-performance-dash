@@ -121,4 +121,4 @@ export default function HeadwaysDetails() {
     </>
   );
 }
-HeadwaysDetails.Layout = LayoutType.Metrics;
+HeadwaysDetails.Layout = LayoutType.Trips;

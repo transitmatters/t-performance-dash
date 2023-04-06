@@ -113,17 +113,21 @@ export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[]
 };
 
 export const OVERVIEW_OPTIONS = {
-  weekly: {
+  week: {
     startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
+    agg: 'daily',
   },
-  monthly: {
+  month: {
     startDate: TODAY.subtract(31, 'days').format(DATE_FORMAT),
+    agg: 'daily',
   },
-  yearly: {
+  year: {
     startDate: TODAY.subtract(365, 'days').format(DATE_FORMAT),
+    agg: 'weekly',
   },
 
   all: {
     startDate: dayjs(OVERVIEW_TRAIN_MIN_DATE).format(DATE_FORMAT),
+    agg: 'monthly',
   },
 };

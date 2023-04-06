@@ -7,6 +7,7 @@ import '../styles/dashboard.css';
 import '../styles/globals.css';
 import { Layouts } from '../common/components/Layouts';
 import { LayoutType } from '../common/layouts/layoutTypes';
+import { DashboardLayout } from '../common/layouts/DashboardLayout';
 
 config.autoAddCss = false;
 
@@ -21,9 +22,11 @@ export default function App({ Component, pageProps }) {
 
   return (
     <Layout>
-      <SecondaryLayout>
-        <Component {...pageProps} />
-      </SecondaryLayout>
+      <DashboardLayout>
+        <SecondaryLayout>
+          <Component {...pageProps} />
+        </SecondaryLayout>
+      </DashboardLayout>
     </Layout>
   );
 }
