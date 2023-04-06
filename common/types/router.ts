@@ -14,9 +14,6 @@ export type QueryParams = {
   startDate?: string;
   endDate?: string;
   busRoute?: BusRoute;
-  view?: View;
 };
-
-export type View = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'all';
 
 export type Tab = 'Bus' | 'Subway' | 'System';
