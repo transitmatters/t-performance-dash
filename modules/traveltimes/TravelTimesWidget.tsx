@@ -69,7 +69,7 @@ export const TravelTimesWidget: React.FC = () => {
               fromStation={fromStation}
               toStation={toStation}
               showLegend={false}
-              homescreen={true}
+              isHomescreen={true}
             />
           </>
         ) : (
