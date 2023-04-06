@@ -8,15 +8,17 @@ import type { NavTab } from '../../../common/constants/pages';
 interface SidebarTabs {
   tabs: NavTab[];
   title: string;
+  setSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs }) => {
+export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs, setSidebarOpen }) => {
   const { linePath, line, query, page } = useDelimitatedRoute();
   const router = useRouter();
 
   const handleChange = (enabled: boolean, tab: NavTab) => {
     if (!enabled) return null;
     handleTabNavigation(page, tab, query, linePath, router);
+    setSidebarOpen && setSidebarOpen(false);
   };
 
   return (
