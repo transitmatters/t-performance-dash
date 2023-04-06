@@ -2,12 +2,12 @@ import React from 'react';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { WidgetPage } from '../components/widgets/Widget';
 import { DataPageHeader } from '../../modules/dashboard/DataPageHeader';
+import { SideNavBar } from '../../modules/navigation/SideNavBar';
 import { useDelimitatedRoute } from '../utils/router';
 import { ALL_PAGES } from '../constants/pages';
 import { DateSelection } from '../components/inputs/DateSelection/DateSelection';
 import { OverviewDateSelection } from '../components/inputs/DateSelection/OverviewDateSelection';
 import { Footer } from './Footer';
-import { SideNavBar } from '../../modules/navigation/SideNavBar';
 
 export const DashboardLayout = ({ children }) => {
   const isMobile = !useBreakpoint('md');

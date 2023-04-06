@@ -6,7 +6,7 @@ import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/
 import { MPHWidgetValue } from '../../common/types/basicWidgets';
 import { getSpeedWidgetValues } from './utils/utils';
 import { SpeedGraph } from './SpeedGraph';
-import { ParamsType } from './constants/speeds';
+import type { ParamsType } from './constants/speeds';
 
 interface TotalSlowTimeWrapperProps {
   data: SpeedDataPoint[];

@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { useQuery } from '@tanstack/react-query';
+import dayjs from 'dayjs';
 import { fetchSpeeds } from '../../common/api/speed';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -8,7 +9,6 @@ import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { SpeedGraphWrapper } from './SpeedWidgetWrapper';
 import { getSpeedGraphConfig } from './constants/speeds';
-import dayjs from 'dayjs';
 
 export const SpeedWidget: React.FC = () => {
   const { line, linePath } = useDelimitatedRoute();

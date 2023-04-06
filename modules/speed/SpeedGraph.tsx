@@ -18,8 +18,9 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { SpeedDataPoint } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
-import { CORE_TRACK_LENGTHS, PEAK_MPH, ParamsType } from './constants/speeds';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
+import { CORE_TRACK_LENGTHS, PEAK_MPH } from './constants/speeds';
+import type { ParamsType } from './constants/speeds';
 
 ChartJS.register(
   CategoryScale,
