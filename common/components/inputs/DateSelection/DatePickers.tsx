@@ -7,8 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/light.css';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
-import { buttonHighlightConfig } from '../styles/inputStyle';
 import { FLAT_PICKER_OPTIONS } from '../../../constants/dates';
+import { buttonHighlightFocus } from '../../../styles/general';
 
 interface DatePickerProps {
   range: boolean;
@@ -59,7 +59,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setSelection }) 
           //TODO: Change calendar to line color
           className={classNames(
             'w-28 cursor-pointer border-none py-0 text-sm focus:ring-opacity-0',
-            line && buttonHighlightConfig[line]
+            line && buttonHighlightFocus[line]
           )}
           value={startDate}
           key={'start'}
@@ -81,7 +81,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setSelection }) 
               //TODO: Change calendar to line color
               className={classNames(
                 'w-28 cursor-pointer border-none py-0 text-sm focus:ring-opacity-0',
-                line && buttonHighlightConfig[line]
+                line && buttonHighlightFocus[line]
               )}
               value={endDate}
               key={'end'}

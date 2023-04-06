@@ -4,9 +4,12 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import { faCalendarDay, faCalendarWeek } from '@fortawesome/free-solid-svg-icons';
-import { lineColorBackground, lineColorDarkBorder } from '../../../styles/general';
+import {
+  buttonHighlightFocus,
+  lineColorBackground,
+  lineColorDarkBorder,
+} from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
-import { buttonHighlightConfig } from '../styles/inputStyle';
 import { DATE_PICKER_PRESETS, TODAY_STRING } from '../../../constants/dates';
 import { DatePickers } from './DatePickers';
 import { DatePickerPresets } from './DatePickerPresets';
@@ -58,7 +61,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ range }) => {
         <Popover.Button
           className={classNames(
             'flex h-full w-full items-center justify-center self-stretch bg-black bg-opacity-10 px-3 py-1 text-white text-opacity-95 shadow-sm hover:bg-opacity-0 focus:bg-opacity-0 focus:outline-none',
-            line && buttonHighlightConfig[line]
+            line && buttonHighlightFocus[line]
           )}
         >
           <FontAwesomeIcon
