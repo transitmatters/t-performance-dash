@@ -3,7 +3,7 @@ import { TimeRangeNames } from '../../../types/inputs';
 import { ButtonGroup } from '../../general/ButtonGroup';
 
 export const OverviewDateSelection = () => {
-  const handlePresetSelection = (value) => {
+  const handlePresetSelection = () => {
     null;
   };
   return (

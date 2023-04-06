@@ -7,7 +7,7 @@ import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route } from '../types/router';
 import type { DateParams } from '../components/inputs/DateSelection/types/DateSelectionTypes';
 import type { NavTab, Page } from '../constants/pages';
-import { SUB_PAGES_MAP, ALL_PAGES, PATH_TO_PAGE_MAP } from '../constants/pages';
+import { SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
 
 const linePathToKeyMap: Record<string, Line> = {
@@ -24,11 +24,12 @@ const getParams = (params: QueryParams) => {
   );
 };
 
-const getPage = (pageArray: string[]): Page => {
+const getPage = (pageArray: string[]): string => {
+  if (pageArray[0] === '') return 'today';
   if (pageArray[1]) {
-    return PATH_TO_PAGE_MAP[SUB_PAGES_MAP[pageArray[0]][pageArray[1]]];
+    return SUB_PAGES_MAP[pageArray[0]][pageArray[1]];
   }
-  return PATH_TO_PAGE_MAP[pageArray[0]] ?? 'today';
+  return pageArray[0];
 };
 
 export const useDelimitatedRoute = (): Route => {
@@ -37,14 +38,14 @@ export const useDelimitatedRoute = (): Route => {
   const pathItems = path[0].split('/');
   const queryParams: QueryParams = router.query;
   const tab = RAIL_LINES.includes(pathItems[1]) ? 'Subway' : 'Bus';
-  const page = getPage(pathItems.slice(2));
+  const page = getPage(pathItems.slice(2)) as Page;
   const newParams = getParams(queryParams);
 
   return {
     line: linePathToKeyMap[pathItems[1]],
     linePath: pathItems[1] as LinePath, //TODO: Remove as
     lineShort: capitalize(pathItems[1]) as LineShort, //TODO: Remove as
-    page: page, //TODO: Remove as
+    page: page,
     tab: tab,
     query: router.isReady ? newParams : {},
   };
@@ -89,7 +90,9 @@ export const useUpdateQuery = () => {
 };
 
 export const getLineSelectionItemHref = (newLine: Line, route: Route): string => {
+  console.log('yes', newLine, route);
   const { page, line, query } = route;
+  console.log(page);
   const { path, key } = LINE_OBJECTS[newLine];
   const currentPage = ALL_PAGES[page];
   const currentPath = currentPage.path;
@@ -126,13 +129,6 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   return href;
 };
 
-export const useSelectedPage = () => {
-  const router = useRouter();
-  const { page, subPage } = useDelimitatedRoute();
-  if (!router.isReady) return undefined;
-  return subPage ? PATH_TO_PAGE_MAP[subPage] : PATH_TO_PAGE_MAP[page];
-};
-
 // TODO: make the params an object
 export const handleTabNavigation = (
   currentPage: Page,
@@ -145,6 +141,7 @@ export const handleTabNavigation = (
     delete query.endDate;
   }
 
+  // If we are on bus mode we want to keep the bus mode query param when switching tab sections.
   const busRouteOnly = query.busRoute ? { busRoute: query.busRoute } : undefined;
 
   if (ALL_PAGES[currentPage]?.section === tab.section) {

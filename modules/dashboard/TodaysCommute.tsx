@@ -6,7 +6,7 @@ export const TodaysCommute = () => {
   const { tab, line } = useDelimitatedRoute();
   return (
     <div>
-      <div className="flex flex-col gap-y-2 gap-x-4 xl:flex-row">
+      <div className="flex flex-col gap-x-4 gap-y-2 xl:flex-row">
         <Alerts />
         {tab === 'Subway' && line !== 'GL' && <Speed />}
       </div>

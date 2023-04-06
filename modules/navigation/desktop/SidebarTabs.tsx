@@ -2,11 +2,7 @@ import classNames from 'classnames';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
-import {
-  handleTabNavigation,
-  useDelimitatedRoute,
-  useSelectedPage,
-} from '../../../common/utils/router';
+import { handleTabNavigation, useDelimitatedRoute } from '../../../common/utils/router';
 import type { NavTab } from '../../../common/constants/pages';
 
 interface SidebarTabs {
@@ -17,7 +13,6 @@ interface SidebarTabs {
 export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs }) => {
   const { linePath, line, query, page } = useDelimitatedRoute();
   const router = useRouter();
-  const selectedPage = useSelectedPage();
 
   const handleChange = (enabled: boolean, tab: NavTab) => {
     if (!enabled) return null;
@@ -30,7 +25,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs }) => {
       <ul role="list" className={`-mx-2 mt-2 space-y-1`}>
         {tabs.map((tab: NavTab) => {
           const enabled = line ? tab.lines.includes(line) : true;
-          const selected = selectedPage === tab.key;
+          const selected = page === tab.key;
           return (
             <li key={tab.key}>
               <a

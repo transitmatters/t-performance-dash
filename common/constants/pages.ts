@@ -199,6 +199,7 @@ export const ALL_PAGES: NavTabMap = {
   },
 };
 
+/* Groups of pages for tab sections */
 export const TRIP_PAGES = [
   ALL_PAGES.singleday,
   ALL_PAGES.sdTraveltimes,
@@ -232,25 +233,6 @@ export const LINE_PAGES = [
   ALL_PAGES.ridership,
 ];
 
-export const PATH_TO_PAGE_MAP: { [key in Page]: string } = {
-  today: 'today',
-  overview: 'overview',
-  singleday: 'singleday',
-  sdHeadways: 'sdHeadways',
-  sdTraveltimes: 'sdTraveltimes',
-  sdDwells: 'sdDwells',
-  rangeHeadways: 'rangeHeadways',
-  rangeTraveltimes: 'rangeTraveltimes',
-  rangeDwells: 'rangeDwells',
-  range: 'range',
-  speed: 'speed',
-  service: 'service',
-  slowzones: 'slowzones',
-  headways: 'headways',
-  ridership: 'ridership',
-};
-
-// TODO: type this
 export const SUB_PAGES_MAP = {
   singleday: {
     headways: 'sdHeadways',

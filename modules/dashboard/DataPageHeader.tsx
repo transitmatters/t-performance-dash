@@ -22,11 +22,11 @@ export const DataPageHeader = () => {
   return (
     <div className="relative border-b border-gray-200 sm:pb-0">
       <div className="md:flex md:items-center md:justify-between">
-        <h3 className="select-none text-4xl font-medium leading-6 text-stone-900 md:text-2xl">
+        <h3 className="select-none text-3xl font-medium leading-8 text-stone-900 md:text-2xl">
           <span className={lineColorText[line ?? 'DEFAULT']}>
             {line && LINE_OBJECTS[line]?.name}
           </span>
-          <span> - {ALL_PAGES[page]?.name}</span>
+          <span className="text-2xl font-normal md:text-xl"> - {ALL_PAGES[page]?.name}</span>
         </h3>
       </div>
     </div>

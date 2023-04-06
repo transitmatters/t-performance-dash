@@ -5,8 +5,6 @@ import { useRouter } from 'next/router';
 import { DASHBOARD_TABS } from '../../../common/constants/dashboardTabs';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 
-const tabs = ['Subway', 'Bus', 'System'];
-
 export const DashboardSelection = () => {
   const { tab } = useDelimitatedRoute();
   const router = useRouter();
@@ -21,14 +19,17 @@ export const DashboardSelection = () => {
     >
       <Tab.List className="space-between flex w-full flex-row">
         {dashboardTabs.map((tab, index) => (
-          <Tab key={tab.name} className="w-full">
+          <Tab key={tab.name} className="w-full" disabled={tab.disabled}>
             {({ selected }) => (
               <div
                 className={classNames(
-                  'flex items-center justify-center border border-stone-200 py-1 text-sm font-semibold hover:bg-stone-200 hover:bg-opacity-80 hover:text-stone-800',
+                  'flex items-center justify-center border border-stone-200 py-1 text-sm font-semibold',
                   selected && 'bg-stone-200 text-stone-900',
                   index === 0 && 'rounded-l-md',
-                  index === tabs.length - 1 && 'rounded-r-md'
+                  index === dashboardTabs.length - 1 && 'rounded-r-md',
+                  tab.disabled
+                    ? 'text-stone-500'
+                    : 'cursor-pointer hover:bg-stone-200 hover:bg-opacity-80 hover:text-stone-800'
                 )}
               >
                 <p>{tab.name}</p>

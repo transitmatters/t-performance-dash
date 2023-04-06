@@ -6,7 +6,6 @@ export interface Route {
   linePath: LinePath;
   lineShort: LineShort;
   page: Page;
-  subPage?: Page;
   query: QueryParams;
   tab: Tab;
 }
