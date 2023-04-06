@@ -15,7 +15,7 @@ import { DatePickers } from './DatePickers';
 import { DatePickerPresets } from './DatePickerPresets';
 
 interface DateSelectionProps {
-  range?: boolean;
+  range: boolean;
 }
 
 export const DateSelection: React.FC<DateSelectionProps> = ({ range }) => {
