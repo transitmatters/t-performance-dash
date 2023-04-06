@@ -59,7 +59,7 @@ export const HeadwaysWidget: React.FC = () => {
               fromStation={toStation}
               toStation={fromStation}
               showLegend={false}
-              homescreen={true}
+              isHomescreen={true}
             />
           </>
         ) : (

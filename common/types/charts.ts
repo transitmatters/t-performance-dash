@@ -78,7 +78,7 @@ export interface LineProps {
   pointField: PointField; // X value
   bothStops?: boolean;
   fname: DataName;
-  homescreen?: boolean;
+  isHomescreen?: boolean;
   showLegend?: boolean;
 }
 
@@ -120,5 +120,5 @@ export interface HeadwaysChartProps {
   fromStation: Station | undefined;
   toStation: Station | undefined;
   showLegend?: boolean;
-  homescreen?: boolean;
+  isHomescreen?: boolean;
 }

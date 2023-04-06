@@ -83,7 +83,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   fname,
   bothStops = false,
   location,
-  homescreen = false,
+  isHomescreen = false,
   showLegend = true,
 }) => {
   const ref = useRef();
@@ -105,13 +105,13 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 fill: false,
                 borderColor: '#a0a0a030',
                 pointBackgroundColor:
-                  homescreen && line
+                  isHomescreen && line
                     ? LINE_COLORS[line]
                     : pointColors(data, metricField, benchmarkField),
-                pointBorderWidth: homescreen ? 0 : undefined,
+                pointBorderWidth: isHomescreen ? 0 : undefined,
                 pointHoverRadius: 3,
                 pointHoverBackgroundColor:
-                  homescreen && line
+                  isHomescreen && line
                     ? LINE_COLORS[line]
                     : pointColors(data, metricField, benchmarkField),
                 pointRadius: 3,
@@ -242,7 +242,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
         />
       </div>
       {showLegend && <div className="chart-extras">{benchmarkField && <LegendView />}</div>}
-      {showLegend && date && (
+      {!isHomescreen && date && (
         <DownloadButton
           data={data}
           datasetName={fname}
