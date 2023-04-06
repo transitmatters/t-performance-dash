@@ -35,7 +35,7 @@ export const DwellsWidget: React.FC = () => {
   const dwellsReady = !dwells.isError && dwells.data && line && lineShort && linePath;
 
   // Buses don't record dwells
-  if (line === 'BUS') {
+  if (line === 'line-bus') {
     return null;
   }
 

@@ -4,7 +4,7 @@ import { useDelimitatedRoute } from '../../utils/router';
 export const BusDataNotice: React.FC = () => {
   const { line, linePath } = useDelimitatedRoute();
 
-  if (line === 'BUS' || linePath === 'bus') {
+  if (line === 'line-bus' || linePath === 'bus') {
     return (
       <div className={'m-3 text-sm italic'}>
         <p>

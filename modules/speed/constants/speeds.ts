@@ -64,23 +64,23 @@ export const DELAYS_RANGE_PARAMS_MAP: { [s: string]: ParamsType } = {
 
 // TODO: Upload this to overviewStats db
 export const MINIMUMS = {
-  RL: { date: 'May 2020', value: 8374.5 },
-  BL: { date: 'May 2020', value: 1860.5 },
-  OL: { date: 'May 2020', value: 3776.75 },
+  'line-red': { date: 'May 2020', value: 8374.5 },
+  'line-blue': { date: 'May 2020', value: 1860.5 },
+  'line-orange': { date: 'May 2020', value: 3776.75 },
   DEFAULT: { date: '', value: 1 },
 };
 
 // As per MBTA Blue book: https://archives.lib.state.ma.us/handle/2452/827917 2003-2004
 export const CORE_TRACK_LENGTHS = {
-  RL: 14.82 + 14.82 + 10.13 + 10.13, // <Quincy Adams -> Davis> + <reverse> + <Shawmut -> Davis> + <reverse>
-  OL: 9.64 + 9.58, // <Malden Station -> Green Street> + <reverse>
-  BL: 5.38 + 5.37, //<Gov. Center -> Revere> + <reverse>
+  'line-red': 14.82 + 14.82 + 10.13 + 10.13, // <Quincy Adams -> Davis> + <reverse> + <Shawmut -> Davis> + <reverse>
+  'line-orange': 9.64 + 9.58, // <Malden Station -> Green Street> + <reverse>
+  'line-blue': 5.38 + 5.37, //<Gov. Center -> Revere> + <reverse>
   DEFAULT: 1,
 };
 
 export const PEAK_MPH = {
-  RL: CORE_TRACK_LENGTHS['RL'] / (MINIMUMS['RL'].value / 3600),
-  OL: CORE_TRACK_LENGTHS['OL'] / (MINIMUMS['OL'].value / 3600),
-  BL: CORE_TRACK_LENGTHS['BL'] / (MINIMUMS['BL'].value / 3600),
+  'line-red': CORE_TRACK_LENGTHS['line-red'] / (MINIMUMS['line-red'].value / 3600),
+  'line-orange': CORE_TRACK_LENGTHS['line-orange'] / (MINIMUMS['line-orange'].value / 3600),
+  'line-blue': CORE_TRACK_LENGTHS['line-blue'] / (MINIMUMS['line-blue'].value / 3600),
   DEFAULT: 1,
 };

@@ -20,7 +20,7 @@ export default function SlowZonesWidget() {
   const totalSlowTimeReady =
     !delayTotals.isError && delayTotals.data && startDateUTC && endDateUTC && lineShort && line;
 
-  if (line === 'BUS' || line === 'GL') {
+  if (line === 'line-bus' || line === 'line-green') {
     return null;
   }
   return (

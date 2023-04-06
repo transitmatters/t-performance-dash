@@ -22,8 +22,8 @@ export const LineHealth = () => {
       </div>
       <hr className="my-2 h-[2px] border-0 border-b border-white bg-gray-400" />
       <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
-        {tab === 'Subway' && line !== 'GL' && <SpeedWidget timeRange={timeRange} />}
-        {tab === 'Subway' && line !== 'GL' && <SlowZonesWidget />}
+        {tab === 'Subway' && line !== 'line-green' && <SpeedWidget timeRange={timeRange} />}
+        {tab === 'Subway' && line !== 'line-green' && <SlowZonesWidget />}
         <TravelTimesWidget />
         <HeadwaysWidget />
         {tab === 'Subway' && <DwellsWidget />}

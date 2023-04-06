@@ -10,7 +10,7 @@ export const TodaysCommute = () => {
       <hr className="my-2 h-[2px] border-0 border-b border-white bg-gray-400" />
       <div className="flex flex-col gap-x-4 gap-y-2 xl:flex-row">
         <Alerts />
-        {tab === 'Subway' && line !== 'GL' && <Speed />}
+        {tab === 'Subway' && line !== 'line-green' && <Speed />}
       </div>
     </div>
   );

@@ -18,10 +18,10 @@ export const SideNavBar = () => {
       icon: faTrainSubway,
       key: 'Subway',
       children: [
-        { name: 'Red', path: 'red', key: 'RL' },
-        { name: 'Orange', path: 'orange', key: 'OL' },
-        { name: 'Blue', path: 'blue', key: 'BL' },
-        { name: 'Green', path: 'green', key: 'GL' },
+        { name: 'Red', path: 'red', key: 'line-red' },
+        { name: 'Orange', path: 'orange', key: 'line-orange' },
+        { name: 'Blue', path: 'blue', key: 'line-blue' },
+        { name: 'Green', path: 'green', key: 'line-green' },
       ],
     },
     {

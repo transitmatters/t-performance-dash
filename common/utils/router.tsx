@@ -10,11 +10,11 @@ import type { DateParams } from '../components/inputs/DateSelection/types/DateSe
 import { getOffsetDate } from './date';
 
 const linePathToKeyMap: Record<string, Line> = {
-  red: 'RL',
-  orange: 'OL',
-  green: 'GL',
-  blue: 'BL',
-  bus: 'BUS',
+  red: 'line-red',
+  orange: 'line-orange',
+  green: 'line-green',
+  blue: 'line-blue',
+  bus: 'line-bus',
 };
 
 const getParams = (params: QueryParams) => {

@@ -13,14 +13,34 @@ export const DATA_PAGE_NAMES: DataPageNames = {
 };
 
 export const DATA_PAGES: { [key in string]: { href: string; name: string; lines: Line[] } } = {
-  overview: { href: '/', name: 'Overview', lines: ['RL', 'BL', 'GL', 'OL', 'BUS'] },
+  overview: {
+    href: '/',
+    name: 'Overview',
+    lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
+  },
   traveltimes: {
     href: '/traveltimes',
     name: 'Travel Times',
-    lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
+    lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
   },
-  slowzones: { href: '/slowzones', name: 'Slow Zones', lines: ['RL', 'BL', 'OL'] },
-  headways: { href: '/headways', name: 'Headways', lines: ['RL', 'BL', 'GL', 'OL', 'BUS'] },
-  dwells: { href: '/dwells', name: 'Dwells', lines: ['RL', 'BL', 'GL', 'OL'] },
-  ridership: { href: '/ridership', name: 'Ridership', lines: ['RL', 'BL', 'GL', 'OL', 'BUS'] },
+  slowzones: {
+    href: '/slowzones',
+    name: 'Slow Zones',
+    lines: ['line-red', 'line-blue', 'line-orange'],
+  },
+  headways: {
+    href: '/headways',
+    name: 'Headways',
+    lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
+  },
+  dwells: {
+    href: '/dwells',
+    name: 'Dwells',
+    lines: ['line-red', 'line-blue', 'line-green', 'line-orange'],
+  },
+  ridership: {
+    href: '/ridership',
+    name: 'Ridership',
+    lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
+  },
 };
