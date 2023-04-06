@@ -86,7 +86,7 @@ export const ALL_PAGES: NavTabMap = {
     key: 'sdHeadways',
     path: '/singleday/headways',
     name: 'Headways',
-    lines: ['RL', 'BL', 'GL', 'OL'],
+    lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
     icon: faArrowsLeftRightToLine,
     section: 'single',
     sub: true,
@@ -95,7 +95,7 @@ export const ALL_PAGES: NavTabMap = {
     key: 'sdTraveltimes',
     path: '/singleday/traveltimes',
     name: 'Travel Times',
-    lines: ['RL', 'BL', 'GL', 'OL'],
+    lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
     icon: faClock,
     section: 'single',
     sub: true,
@@ -121,7 +121,7 @@ export const ALL_PAGES: NavTabMap = {
     key: 'rangeHeadways',
     path: '/range/headways',
     name: 'Headways',
-    lines: ['RL', 'BL', 'GL', 'OL'],
+    lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
     icon: faArrowsLeftRightToLine,
     section: 'range',
     sub: true,
@@ -130,7 +130,7 @@ export const ALL_PAGES: NavTabMap = {
     key: 'rangeTraveltimes',
     path: '/range/traveltimes',
     name: 'Travel Times',
-    lines: ['RL', 'BL', 'GL', 'OL'],
+    lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
     icon: faClock,
     section: 'range',
     sub: true,
@@ -211,6 +211,17 @@ export const TRIP_PAGES = [
 ];
 
 export const TODAY = [ALL_PAGES.today];
+
+export const BUS_OVERVIEW = [ALL_PAGES.ridership];
+
+export const BUS_PAGES = [
+  ALL_PAGES.singleday,
+  ALL_PAGES.sdTraveltimes,
+  ALL_PAGES.sdHeadways,
+  ALL_PAGES.range,
+  ALL_PAGES.rangeTraveltimes,
+  ALL_PAGES.rangeHeadways,
+];
 
 export const LINE_PAGES = [
   ALL_PAGES.overview,

@@ -15,7 +15,7 @@ import { calculateCommuteSpeedWidgetValues } from './utils/utils';
 export const Speed: React.FC = () => {
   const { line } = useDelimitatedRoute();
   const today = dayjs().format(DATE_FORMAT);
-  const { startDate } = OVERVIEW_OPTIONS['weekly'];
+  const { startDate } = OVERVIEW_OPTIONS.week;
 
   const speed = useQuery(['todaySpeed', line], () =>
     fetchSpeeds({ start_date: today, end_date: today, agg: 'daily', line: line })

@@ -89,35 +89,39 @@ export const useUpdateQuery = () => {
 };
 
 export const getLineSelectionItemHref = (newLine: Line, route: Route): string => {
-  const { page: datapage, line, query } = route;
+  const { page, line, query } = route;
   const { path, key } = LINE_OBJECTS[newLine];
-  const validPage = line ? ALL_PAGES[datapage].lines.includes(newLine) : false;
+  const currentPage = ALL_PAGES[page];
+  const currentPath = currentPage.path;
+  const validPage = line ? currentPage.lines.includes(newLine) : false;
   let href = `/${path}`;
 
   // Go to homepage if current line is selected or the selected page is not valid for the given line.
-  if (key === line || datapage === 'today' || !validPage) {
+  if (key === line || currentPath === 'today' || !validPage) {
     return href;
   }
   const queryParams = query
     ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
     : new URLSearchParams();
-  href += datapage ? `/${datapage}` : '';
+  href += currentPath ? `${currentPath}` : '';
   const queryString = queryParams.toString();
   href += queryString ? `?${queryString}` : '';
   return href;
 };
 
 export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): string => {
-  const { query, page: datapage } = route;
-  const validPage = ALL_PAGES[datapage].lines.includes('BUS');
-  if (newRoute === route.query.busRoute || datapage === 'today' || !validPage) {
+  const { query, page } = route;
+  const currentPage = ALL_PAGES[page];
+  const currentPath = currentPage.path;
+  const validPage = currentPage.lines.includes('BUS');
+  if (newRoute === route.query.busRoute || !validPage) {
     return `/bus/singleday?busRoute=${newRoute}`;
   }
   const queryParams = query
     ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
     : new URLSearchParams();
   queryParams.append('busRoute', newRoute);
-  let href = '/bus';
+  let href = `/bus${currentPath}`;
   href += `?${queryParams.toString() ?? ''}`;
   return href;
 };
@@ -130,7 +134,7 @@ export const useSelectedPage = () => {
 };
 
 // TODO: make the params an object
-export const handlePageNavigation = (
+export const handleTabNavigation = (
   currentPage: Page,
   tab: NavTab,
   query: QueryParams,
@@ -140,9 +144,12 @@ export const handlePageNavigation = (
   if (tab.key === 'singleday') {
     delete query.endDate;
   }
+
+  const busRouteOnly = query.busRoute ? { busRoute: query.busRoute } : undefined;
+
   if (ALL_PAGES[currentPage]?.section === tab.section) {
     router.push({ pathname: `/${linePath}${tab.path}`, query: query });
   } else {
-    router.push({ pathname: `/${linePath}${tab.path}` });
+    router.push({ pathname: `/${linePath}${tab.path}`, query: busRouteOnly });
   }
 };

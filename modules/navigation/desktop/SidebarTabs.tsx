@@ -3,7 +3,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import {
-  handlePageNavigation,
+  handleTabNavigation,
   useDelimitatedRoute,
   useSelectedPage,
 } from '../../../common/utils/router';
@@ -21,7 +21,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs }) => {
 
   const handleChange = (enabled: boolean, tab: NavTab) => {
     if (!enabled) return null;
-    handlePageNavigation(page, tab, query, linePath, router);
+    handleTabNavigation(page, tab, query, linePath, router);
   };
 
   return (
@@ -32,7 +32,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs }) => {
           const enabled = line ? tab.lines.includes(line) : true;
           const selected = selectedPage === tab.key;
           return (
-            <li key={tab.name}>
+            <li key={tab.key}>
               <a
                 tabIndex={enabled ? 0 : undefined}
                 onKeyUp={(e) => {
