@@ -7,8 +7,8 @@ import classNames from 'classnames';
 import type { Station } from '../../types/stations';
 import { useDelimitatedRoute } from '../../utils/router';
 import { optionsForField } from '../../utils/stations';
+import { buttonHighlightFocus } from '../../styles/general';
 import { selectConfig } from './styles/tailwind';
-import { buttonHighlightConfig } from './styles/inputStyle';
 
 interface StationSelector {
   type: 'from' | 'to';
@@ -41,7 +41,7 @@ export const StationSelector: React.FC<StationSelector> = ({
           <Listbox.Button
             className={classNames(
               'inline-flex h-8 w-full items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2  focus:ring-offset-2',
-              line && buttonHighlightConfig[line]
+              line && buttonHighlightFocus[line]
             )}
           >
             <span className={`flex items-center gap-x-1 truncate font-normal`}>
