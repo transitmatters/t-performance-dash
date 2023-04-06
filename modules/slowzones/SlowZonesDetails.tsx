@@ -6,7 +6,6 @@ import utc from 'dayjs/plugin/utc';
 import { useQuery } from '@tanstack/react-query';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
-
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';

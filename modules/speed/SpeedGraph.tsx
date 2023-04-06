@@ -42,6 +42,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, config }) => {
   const { line } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef();
+
   const labels = data.map((point) => point.date);
   return (
     <Line

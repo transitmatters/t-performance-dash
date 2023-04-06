@@ -1,8 +1,6 @@
 import type { TooltipCallbacks, TooltipItem, TooltipModel } from 'chart.js';
 import type { _DeepPartialObject } from 'chart.js/dist/types/utils';
-import dayjs from 'dayjs';
-
-const today = dayjs();
+import type dayjs from 'dayjs';
 
 export type ParamsType = {
   agg: 'daily' | 'weekly' | 'monthly';

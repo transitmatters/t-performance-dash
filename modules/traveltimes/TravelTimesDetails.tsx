@@ -13,7 +13,6 @@ import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWi
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
-
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';

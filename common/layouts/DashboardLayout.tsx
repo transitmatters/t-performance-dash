@@ -31,7 +31,6 @@ export const DashboardLayout = ({ children }) => {
               {!isMobile && <div className="w-sm fixed right-4 top-4 z-10">{getDatePicker()}</div>}
               <WidgetPage>
                 <DataPageHeader />
-
                 {children}
               </WidgetPage>
             </div>

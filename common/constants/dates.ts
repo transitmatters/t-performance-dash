@@ -4,6 +4,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import type { DateTimePickerProps } from 'react-flatpickr';
 import type { DateSelectionDefaultOptions } from '../components/inputs/DateSelection/types/DateSelectionTypes';
+import type { Tab } from './dashboardTabs';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -22,7 +23,7 @@ const BUS_MIN_DATE = '2018-08-01';
 const BUS_MAX_DATE = '2022-12-31';
 
 export const FLAT_PICKER_OPTIONS: {
-  [key in Exclude<Tab, ''>]: DateTimePickerProps['options'];
+  [key in Tab]?: DateTimePickerProps['options'];
 } = {
   Subway: {
     enableTime: false,

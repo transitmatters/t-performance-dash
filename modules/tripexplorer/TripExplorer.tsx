@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { optionsStation } from '../../common/utils/stations';
-
 import { TripGraphs } from './TripGraphs';
 
 export const TripExplorer = () => {
@@ -11,7 +10,6 @@ export const TripExplorer = () => {
 
   const [toStation, setToStation] = useState(stations?.[stations.length - 3]);
   const [fromStation, setFromStation] = useState(stations?.[3]);
-
   if (!(fromStation && toStation)) {
     return null;
   }
