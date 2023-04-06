@@ -96,7 +96,8 @@
   },
   "proxy": "http://localhost:5000",
   "engines": {
-    "node": ">=18.13.0"
+    "node": ">=18.13.0",
+    "npm": ">=9.0.0"
   },
   "browserslist": {
     "production": [
