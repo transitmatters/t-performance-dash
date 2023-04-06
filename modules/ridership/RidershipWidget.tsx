@@ -16,6 +16,7 @@ export const RidershipWidget: React.FC = () => {
 
   const { line, linePath, lineShort, query } = useDelimitatedRoute();
   const routeOrLine = line === 'BUS' ? query.busRoute : lineShort;
+  // Get the proper line- index, replace slashes for 114/116/117 route
   const lineData = allRidership.data?.lineData[`line-${routeOrLine?.replace(/\//g, '')}`];
 
   const color = LINE_COLORS[line ?? 'default'];
