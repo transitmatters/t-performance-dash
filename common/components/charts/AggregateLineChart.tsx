@@ -61,6 +61,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   suggestedYMin,
   suggestedYMax,
   showLegend = true,
+  isHomescreen = false,
   children,
 }) => {
   const ref = useRef();
@@ -192,7 +193,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           {children}
         </div>
       )}
-      {showLegend && startDate && (
+      {!isHomescreen && startDate && (
         <DownloadButton
           data={data}
           datasetName={fname}
