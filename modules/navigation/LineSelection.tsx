@@ -2,9 +2,9 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import classNames from 'classnames';
 import { Tab } from '@headlessui/react';
-import { lineColorBackground, lineColorDarkBackground } from '../../../common/styles/general';
-import { getLineSelectionItemHref, useDelimitatedRoute } from '../../../common/utils/router';
-import type { LineMetadata } from '../../../common/types/lines';
+import { lineColorBackground, lineColorDarkBackground } from '../../common/styles/general';
+import { getLineSelectionItemHref, useDelimitatedRoute } from '../../common/utils/router';
+import type { LineMetadata } from '../../common/types/lines';
 
 interface LineSelectionProps {
   lineItems: LineMetadata[];

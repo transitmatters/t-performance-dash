@@ -2,8 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import { Tab } from '@headlessui/react';
-import { getBusRoutes } from '../../../common/constants/stations';
-import { getBusRouteSelectionItemHref, useDelimitatedRoute } from '../../../common/utils/router';
+import { getBusRoutes } from '../../common/constants/stations';
+import { getBusRouteSelectionItemHref, useDelimitatedRoute } from '../../common/utils/router';
 
 export const BusSelection = () => {
   const route = useDelimitatedRoute();

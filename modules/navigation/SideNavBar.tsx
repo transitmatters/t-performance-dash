@@ -2,8 +2,8 @@ import React, { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
-import TmLogoSvg from '../../../public/tm-logo-big.svg';
-import TmIconSvg from '../../../public/tm-logo-small.svg';
+import TmLogoSvg from '../../public/tm-logo-big.svg';
+import TmIconSvg from '../../public/tm-logo-small.svg';
 import { SideNavigation } from './SideNavigation';
 
 export const SideNavBar = () => {

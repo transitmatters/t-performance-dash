@@ -1,6 +1,6 @@
 import React from 'react';
-import { LINE_PAGES, TODAY, TRIP_PAGES } from '../../../common/constants/pages';
-import { LINE_OBJECTS } from '../../../common/constants/lines';
+import { LINE_PAGES, TODAY, TRIP_PAGES } from '../../common/constants/pages';
+import { LINE_OBJECTS } from '../../common/constants/lines';
 import { LineSelection } from './LineSelection';
 import { SidebarTabs } from './SidebarTabs';
 
@@ -8,7 +8,6 @@ interface SubwayNavMenuProps {
   setSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-// TODO: this already exists elsewhere
 const LINE_ITEMS = [LINE_OBJECTS['RL'], LINE_OBJECTS['OL'], LINE_OBJECTS['GL'], LINE_OBJECTS['BL']];
 export const SubwayNavMenu: React.FC<SubwayNavMenuProps> = ({ setSidebarOpen }) => (
   <>

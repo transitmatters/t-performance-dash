@@ -2,8 +2,8 @@ import React from 'react';
 import { Tab } from '@headlessui/react';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
-import { DASHBOARD_TABS } from '../../../common/constants/dashboardTabs';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { DASHBOARD_TABS } from '../../common/constants/dashboardTabs';
+import { useDelimitatedRoute } from '../../common/utils/router';
 
 export const DashboardSelection = () => {
   const { tab } = useDelimitatedRoute();

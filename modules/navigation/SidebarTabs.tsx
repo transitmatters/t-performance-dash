@@ -2,8 +2,8 @@ import classNames from 'classnames';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
-import { handleTabNavigation, useDelimitatedRoute } from '../../../common/utils/router';
-import type { NavTab } from '../../../common/constants/pages';
+import { handleTabNavigation, useDelimitatedRoute } from '../../common/utils/router';
+import type { NavTab } from '../../common/constants/pages';
 
 interface SidebarTabs {
   tabs: NavTab[];

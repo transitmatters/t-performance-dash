@@ -1,5 +1,5 @@
 import React from 'react';
-import { BUS_OVERVIEW, BUS_PAGES } from '../../../common/constants/pages';
+import { BUS_OVERVIEW, BUS_PAGES } from '../../common/constants/pages';
 import { BusSelection } from './BusSelection';
 import { SidebarTabs } from './SidebarTabs';
 

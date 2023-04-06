@@ -1,6 +1,6 @@
 import React from 'react';
-import { useDelimitatedRoute } from '../../../common/utils/router';
-import type { Tab } from '../../../common/types/router';
+import { useDelimitatedRoute } from '../../common/utils/router';
+import type { Tab } from '../../common/types/router';
 import { DashboardSelection } from './DashboardSelection';
 import { BusNavMenu } from './BusNavMenu';
 import { SubwayNavMenu } from './SubwayNavMenu';

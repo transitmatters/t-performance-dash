@@ -90,9 +90,7 @@ export const useUpdateQuery = () => {
 };
 
 export const getLineSelectionItemHref = (newLine: Line, route: Route): string => {
-  console.log('yes', newLine, route);
   const { page, line, query } = route;
-  console.log(page);
   const { path, key } = LINE_OBJECTS[newLine];
   const currentPage = ALL_PAGES[page];
   const currentPath = currentPage.path;
