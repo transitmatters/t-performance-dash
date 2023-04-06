@@ -127,7 +127,6 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   return href;
 };
 
-// TODO: make the params an object
 export const handleTabNavigation = (
   currentPage: Page,
   tab: NavTab,
@@ -139,7 +138,7 @@ export const handleTabNavigation = (
     delete query.endDate;
   }
 
-  // If we are on bus mode we want to keep the bus mode query param when switching tab sections.
+  // If we are on bus mode we want to keep the busRoute query param when switching sections.
   const busRouteOnly = query.busRoute ? { busRoute: query.busRoute } : undefined;
 
   if (ALL_PAGES[currentPage]?.section === tab.section) {
