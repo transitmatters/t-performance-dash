@@ -1,5 +1,4 @@
 import React from 'react';
-import { LayoutType } from '../../common/layouts/layoutTypes';
 import { TodaysCommute } from './TodaysCommute';
 
 export default function Today() {
@@ -9,5 +8,3 @@ export default function Today() {
     </div>
   );
 }
-
-Today.Layout = LayoutType.Empty;

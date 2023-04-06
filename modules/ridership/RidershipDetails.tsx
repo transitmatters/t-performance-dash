@@ -7,7 +7,7 @@ import { PercentageWidgetValue, TripsWidgetValue } from '../../common/types/basi
 import type { ServiceDay } from '../../common/types/ridership';
 import { getHighestTphValue, normalizeToPercent } from '../../common/utils/ridership';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { LayoutType } from '../../common/layouts/layoutTypes';
+
 import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
 import { TphChart } from './charts/TphChart';
 
@@ -81,4 +81,3 @@ export default function RidershipDetails() {
     </>
   );
 }
-RidershipDetails.Layout = LayoutType.Metrics;

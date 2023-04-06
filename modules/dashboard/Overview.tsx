@@ -1,5 +1,4 @@
 import React from 'react';
-import { LayoutType } from '../../common/layouts/layoutTypes';
 import { LineHealth } from './LineHealth';
 
 export default function Overview() {
@@ -9,4 +8,3 @@ export default function Overview() {
     </div>
   );
 }
-Overview.Layout = LayoutType.Overview;

@@ -13,7 +13,7 @@ import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWi
 import { averageHeadway, longestHeadway } from '../../common/utils/headways';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
-import { LayoutType } from '../../common/layouts/layoutTypes';
+
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 import { HeadwaysHistogram } from './charts/HeadwaysHistogram';
@@ -121,4 +121,3 @@ export default function HeadwaysDetails() {
     </>
   );
 }
-HeadwaysDetails.Layout = LayoutType.Trips;

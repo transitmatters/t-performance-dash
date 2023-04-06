@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { optionsStation } from '../../common/utils/stations';
-import { LayoutType } from '../../common/layouts/layoutTypes';
+
 import { TripGraphs } from './TripGraphs';
 
 export const TripExplorer = () => {
@@ -27,5 +27,3 @@ export const TripExplorer = () => {
     </div>
   );
 };
-
-TripExplorer.Layout = LayoutType.Trips;
