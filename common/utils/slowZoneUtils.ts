@@ -11,7 +11,7 @@ import type {
   SlowZone,
   SlowZoneResponse,
 } from '../../common/types/dataPoints';
-import { TODAY_UTC } from '../constants/dates';
+import { TODAY_MIDNIGHT } from '../constants/dates';
 import type { LineShort } from '../types/lines';
 import { lookup_station_by_id } from './stations';
 
@@ -140,7 +140,7 @@ export const useSlowZoneQuantityDelta = (
     const end =
       allSlow.filter((sz) => {
         const zoneEnd = dayjs.utc(sz.end);
-        if (endDateUTC.isSame(TODAY_UTC, 'day')) {
+        if (endDateUTC.isSame(TODAY_MIDNIGHT, 'day')) {
           // Our latest SZ data is always 1 day behind. So use yesterday's data.
           return zoneEnd.isSameOrAfter(endDateUTC.subtract(1, 'day'));
         }
