@@ -62,14 +62,14 @@ export const Testing = () => {
         diagram={redLine}
         getStationLabel={(options) => options.stationId}
         strokeOptions={{ stroke: 'red' }}
-        segments={redLineSegments}
+        getSegments={redLineSegments}
       />
       <LineMap
         direction="vertical"
         diagram={redLine}
         getStationLabel={(options) => options.stationId}
         strokeOptions={{ stroke: 'red' }}
-        segments={redLineSegments}
+        getSegments={redLineSegments}
       />
     </>
   );
