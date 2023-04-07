@@ -13,6 +13,7 @@ module.exports = {
     'plugin:import/recommended',
     'next/core-web-vitals',
     'prettier',
+    'plugin:storybook/recommended',
   ],
   globals: {
     Atomics: 'readonly',
@@ -44,6 +45,7 @@ module.exports = {
     'no-console': 'error',
     '@typescript-eslint/ban-ts-comment': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/consistent-type-imports': [
       'error',
       {
