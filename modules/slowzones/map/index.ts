@@ -1,1 +1,1 @@
-export { default as SlowZonesMap } from './SlowZonesMap';
+export { SlowZonesMap } from './SlowZonesMap';

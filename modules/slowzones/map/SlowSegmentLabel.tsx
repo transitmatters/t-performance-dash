@@ -23,14 +23,12 @@ interface SlowZoneLabelProps {
   isHorizontal: boolean;
 }
 
-const SlowZoneLabel: React.FC<SlowZoneLabelProps> = (props) => {
-  const {
-    direction,
-    isHorizontal,
-    color,
-    slowZone: { delay },
-  } = props;
-
+const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
+  direction,
+  isHorizontal,
+  color,
+  slowZone: { delay },
+}) => {
   const delayString = useMemo(
     () =>
       stringifyTime(delay, {
@@ -57,7 +55,7 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = (props) => {
   );
 };
 
-const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
+export const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
   const { isHorizontal, slowZonesByDirection, line } = props;
   return (
     <div className={styles.slowSegmentLabel} style={{ marginBottom: isHorizontal ? 1 : 0 }}>
@@ -79,5 +77,3 @@ const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
     </div>
   );
 };
-
-export default SlowSegmentLabel;

@@ -8,8 +8,8 @@ import type { SlowZonesLineName } from '../types';
 import type { SegmentRenderOptions } from '../../../common/components/maps/LineMap';
 
 import { segmentSlowZones } from './segment';
-import SlowSegmentLabel from './SlowSegmentLabel';
-import SlowZonesTooltip from './SlowZonesTooltip';
+import { SlowSegmentLabel } from './SlowSegmentLabel';
+import { SlowZonesTooltip } from './SlowZonesTooltip';
 
 interface SlowZonesMapProps extends Pick<React.ComponentProps<typeof LineMap>, 'direction'> {
   slowZones: SlowZoneResponse[];
@@ -44,9 +44,7 @@ const sigmoid = (x: number, steepness = 2, midpoint = 0.5) => {
   return 1 / (1 + Math.exp(-1 * steepness * (x - midpoint)));
 };
 
-const SlowZonesMap: React.FC<SlowZonesMapProps> = (props) => {
-  const { lineName, slowZones, direction } = props;
-
+export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({ lineName, slowZones, direction }) => {
   const line = useMemo(
     () => Object.values(LINE_OBJECTS).find((obj) => obj.short === lineName)!,
     [lineName]
@@ -133,5 +131,3 @@ const SlowZonesMap: React.FC<SlowZonesMapProps> = (props) => {
     />
   );
 };
-
-export default SlowZonesMap;
