@@ -21,7 +21,7 @@ const anti = [
  * like "Reduced speeds" or "Up to 15 minutes"
  */
 export const findMatch = (alert: OldAlert) => {
-  const text = alert.text;
+  const { text } = alert;
 
   if (anti.some((exp) => text.match(exp))) {
     return false;

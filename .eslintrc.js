@@ -51,6 +51,13 @@ module.exports = {
         disallowTypeAnnotations: false,
       },
     ],
+    'prefer-destructuring': [
+      'warn',
+      {
+        array: false,
+        object: true,
+      },
+    ],
   },
   settings: {
     react: {
