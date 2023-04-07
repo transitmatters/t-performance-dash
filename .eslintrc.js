@@ -40,6 +40,7 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
     'react/react-in-jsx-scope': 'warn',
+    'react/no-unused-prop-types': 'warn',
     'unused-imports/no-unused-imports': 'error',
     'no-console': 'error',
     '@typescript-eslint/ban-ts-comment': 'warn',
