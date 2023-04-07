@@ -15,17 +15,15 @@ interface TotalSlowTimeWrapperProps {
 }
 
 export const SpeedGraphWrapper: React.FC<TotalSlowTimeWrapperProps> = ({ data, config, line }) => {
-  const { current, delta } = useMemo(() => {
-    return getSpeedWidgetValues(data, line);
-  }, [data, line]);
+  const { current, delta } = getSpeedWidgetValues(data, line);
 
   return (
     <>
       <div className={classNames('space-between flex w-full flex-row')}>
         <BasicWidgetDataLayout
-          title="Current Speed"
+          title={config.getWidgetTitle(data[data.length - 1].date)}
           widgetValue={new MPHWidgetValue(current, delta)}
-          analysis={`over period.`}
+          analysis="over period"
           sentimentDirection={'positiveOnIncrease'}
         />
       </div>
