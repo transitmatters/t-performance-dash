@@ -1,44 +1,44 @@
 .on-time {
-  background-color: #64b96a !important;
+    background-color: #64b96a !important
 }
 
 .twenty-five-percent {
-  background-color: #f5ed00 !important;
+    background-color: #f5ed00 !important
 }
 
 .fifty-percent {
-  background-color: #c33149 !important;
+    background-color: #c33149 !important
 }
 
 .hundred-percent {
-  background-color: #bb5cc1 !important;
+    background-color: #bb5cc1 !important
 }
 
 .legend {
-  text-align: left;
-  font-size: 12px;
-  padding: 4px;
+    text-align: left;
+    font-size: 12px;
+    padding: 4px;
 }
 
 .legend-dot {
-  height: 6px;
-  width: 6px;
-  background-color: #bbb;
-  border-radius: 50%;
-  margin-right: 4px;
-  display: inline-block;
+    height: 6px;
+    width: 6px;
+    background-color: #bbb;
+    border-radius: 50%;
+    margin-right: 4px;
+    display: inline-block;
 }
 
 .legend-line {
-  height: 3px;
-  width: 15px;
-  vertical-align: middle;
-  background-color: #bbb;
-  margin-right: 4px;
-  display: inline-block;
+    height: 3px;
+    width: 15px;
+    vertical-align: middle;
+    background-color: #bbb;
+    margin-right: 4px;
+    display: inline-block;
 }
 
 .chart .legend {
-  grid-area: legend;
-  margin-top: 65px;
+    grid-area: legend;
+    margin-top: 65px;
 }
