@@ -39,14 +39,14 @@ const getSegmentLabelOverrides = (
   // JFK to Savin Hill — on a steep curve
   if (toStationId === 'place-shmnl') {
     return {
-      mapSide: '1',
+      mapSide: '1' as const,
       offset: isHorizontal ? { x: -12, y: -5 } : { x: 0, y: 0 },
     };
   }
   // Shawmut to Ashmont — obscured by "North Quincy" label
   if (!isHorizontal && toStationId === 'place-asmnl') {
     return {
-      mapSide: '1',
+      mapSide: '1' as const,
     };
   }
   return null;
@@ -89,7 +89,7 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({ lineName, slowZones,
         location: segment.segmentLocation,
         labels: [
           {
-            mapSide: '0',
+            mapSide: '0' as const,
             boundingSize: isHorizontal ? 15 : 20,
             ...getSegmentLabelOverrides(segment.segmentLocation, isHorizontal),
             content: (

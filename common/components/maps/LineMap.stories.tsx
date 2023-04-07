@@ -22,24 +22,24 @@ const redLineSegments: SegmentRenderOptions[] = [
       { offset: -2, stroke: 'red', opacity: 0.6 },
       { offset: -3, stroke: 'red', opacity: 0.8 },
     ],
-    labels: {
-      '0': {
-        widthWhenVertical: 40,
-        heightWhenHorizontal: 40,
+    labels: [
+      {
+        mapSide: '0',
+        boundingSize: 40,
         content: (
           <div style={{ fontSize: 4 }}>
             Greetings amigos thank you for inviting me into your SVG
           </div>
         ),
       },
-      '1': {
-        widthWhenVertical: 40,
-        heightWhenHorizontal: 40,
+      {
+        mapSide: '1',
+        boundingSize: 40,
         content: (
           <div style={{ fontSize: 4 }}>And on this side too! I also like being on this side!</div>
         ),
       },
-    },
+    ],
   },
   {
     location: {
@@ -62,14 +62,14 @@ export const Testing = () => {
         diagram={redLine}
         getStationLabel={(options) => options.stationId}
         strokeOptions={{ stroke: 'red' }}
-        getSegments={redLineSegments}
+        getSegments={() => redLineSegments}
       />
       <LineMap
         direction="vertical"
         diagram={redLine}
         getStationLabel={(options) => options.stationId}
         strokeOptions={{ stroke: 'red' }}
-        getSegments={redLineSegments}
+        getSegments={() => redLineSegments}
       />
     </>
   );
