@@ -11,10 +11,10 @@ import { segmentSlowZones } from './segment';
 import SlowSegmentLabel from './SlowSegmentLabel';
 import SlowZonesTooltip from './SlowZonesTooltip';
 
-type SlowZonesMapProps = {
+interface SlowZonesMapProps extends Pick<React.ComponentProps<typeof LineMap>, 'direction'> {
   slowZones: SlowZoneResponse[];
   lineName: SlowZonesLineName;
-} & Pick<React.ComponentProps<typeof LineMap>, 'direction'>;
+}
 
 const abbreviateStationName = ({ stationName }) => {
   if (stationName.startsWith('JFK')) {

@@ -43,7 +43,7 @@ export type TooltipOptions = {
   maxDistance?: number;
 };
 
-export type Props = {
+export interface LineMapProps {
   diagram: Diagram;
   direction?: 'vertical' | 'horizontal' | 'horizontal-on-desktop';
   getStationLabel?: (options: { stationId: string; stationName: string }) => string;
@@ -51,7 +51,7 @@ export type Props = {
   strokeOptions?: Partial<StrokeOptions>;
   segments?: SegmentRenderOptions[];
   tooltip?: TooltipOptions;
-};
+}
 
 const getPropsForStrokeOptions = (options: Partial<StrokeOptions>) => {
   return {
@@ -102,7 +102,7 @@ const getLabelPositionProps = (
   } as const;
 };
 
-const LineMap = (props: Props) => {
+const LineMap: React.FC<LineMapProps> = (props) => {
   const {
     diagram,
     direction = 'horizontal-on-desktop',

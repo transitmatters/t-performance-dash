@@ -3,7 +3,7 @@ import { useCallback, useLayoutEffect, useState } from 'react';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useViewport } from '../../hooks/useViewport';
 
-import type { Props as LineMapProps } from './LineMap';
+import type { LineMapProps as LineMapProps } from './LineMap';
 
 type Options = Pick<LineMapProps, 'getScaleBasis' | 'direction'>;
 

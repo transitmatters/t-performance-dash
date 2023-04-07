@@ -10,20 +10,20 @@ import { DIRECTIONS } from './segment';
 import styles from './SlowSegmentLabel.module.css';
 import DirectionIndicator from './DirectionIndicator';
 
-type SlowSegmentLabelProps = {
+interface SlowSegmentLabelProps {
   slowZonesByDirection: SlowZonesByDirection;
   line: LineMetadata;
   isHorizontal: boolean;
-};
+}
 
-type SlowZoneLabelProps = {
+interface SlowZoneLabelProps {
   direction: SlowZoneDirection;
   slowZone: SlowZoneResponse;
   color: string;
   isHorizontal: boolean;
-};
+}
 
-const SlowZoneLabel = (props: SlowZoneLabelProps) => {
+const SlowZoneLabel: React.FC<SlowZoneLabelProps> = (props) => {
   const {
     direction,
     isHorizontal,
@@ -57,7 +57,7 @@ const SlowZoneLabel = (props: SlowZoneLabelProps) => {
   );
 };
 
-const SlowSegmentLabel = (props: SlowSegmentLabelProps) => {
+const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
   const { isHorizontal, slowZonesByDirection, line } = props;
   return (
     <div className={styles.slowSegmentLabel} style={{ marginBottom: isHorizontal ? 1 : 0 }}>
