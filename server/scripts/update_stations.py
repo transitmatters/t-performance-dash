@@ -1,5 +1,4 @@
 import json
-import pathlib
 
 import requests
 
@@ -32,12 +31,8 @@ stops = r_s.json()
 for platform in stops["data"]:
     station_id = platform["relationships"]["parent_station"]["data"]["id"]
 
-    accessibility_by_station[station_id] = accessibility_by_station.get(
-        station_id, dict()
-    )
-    accessibility_by_station[station_id][platform["id"]] = platform["attributes"][
-        "wheelchair_boarding"
-    ]
+    accessibility_by_station[station_id] = accessibility_by_station.get(station_id, dict())
+    accessibility_by_station[station_id][platform["id"]] = platform["attributes"]["wheelchair_boarding"]
 
 for station_id, val in accessibility_by_station.items():
     # Mark as accessible if and only if all platforms are accessible
