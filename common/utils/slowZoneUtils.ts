@@ -13,7 +13,7 @@ import type {
 } from '../../common/types/dataPoints';
 import { TODAY_MIDNIGHT } from '../constants/dates';
 import type { LineShort } from '../types/lines';
-import { lookup_station_by_id } from './stations';
+import { getParentStationForStopId } from './stations';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -32,8 +32,8 @@ const getDirection = (to: Station, from: Station) => {
 export const formatSlowZones = (data: SlowZoneResponse[]): SlowZone[] =>
   data.map((x) => {
     // This will never be undefined unless there is a new station that we don't have in our const file
-    const from = lookup_station_by_id(x.color, x.fr_id) as Station;
-    const to = lookup_station_by_id(x.color, x.to_id) as Station;
+    const from = getParentStationForStopId(x.fr_id) as Station;
+    const to = getParentStationForStopId(x.to_id) as Station;
     const direction = getDirection(to, from);
     return {
       order: from.order,

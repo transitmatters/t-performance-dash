@@ -137,9 +137,9 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {
           afterDraw: (chart) => {
             if (startDate === undefined || startDate.length === 0) {
               // No data is present
-              const ctx = chart.ctx;
-              const width = chart.width;
-              const height = chart.height;
+              const { ctx } = chart;
+              const { width } = chart;
+              const { height } = chart;
               chart.clear();
 
               ctx.save();
