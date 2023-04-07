@@ -9,7 +9,7 @@ export const BusDataNotice: React.FC = () => {
   if (line === 'BUS' || linePath === 'bus') {
     return (
       <div className={'flex items-center'}>
-        <FontAwesomeIcon icon={faMagnifyingGlassChart} size={'2x'} />
+        <FontAwesomeIcon icon={faMagnifyingGlassChart} size={'lg'} />
         <div className={'m-3 text-sm italic'}>
           <p>
             Due to data collection issues, bus data is not guaranteed to be complete for any stop or
