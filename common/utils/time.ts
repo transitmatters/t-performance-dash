@@ -27,6 +27,8 @@ export const stringifyTime = (totalSeconds: number, options: StringifyTimeOption
   hours += hoursToAdd;
   const isPM = hours >= 12 && hours < 24;
   hours = (use12Hour && hours > 12 ? hours - 12 : hours) % 24;
+  // We never reassign to secondString but it's nice to destructure this way
+  // eslint-disable-next-line prefer-const
   let [hoursString, minutesString, secondsString] = [hours, minutes, seconds].map((num) =>
     num.toString().padStart(2, '0')
   );
