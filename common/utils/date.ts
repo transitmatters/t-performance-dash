@@ -12,7 +12,9 @@ export const prettyDate = (dateString: string, withDow: boolean) => {
     weekday: withDow ? 'long' : undefined,
   };
 
-  return new Date(`${dateString}T00:00:00`).toLocaleDateString(
+  const fullDate = dateString.includes('T') ? dateString : `${dateString}T00:00:00`;
+
+  return new Date(fullDate).toLocaleDateString(
     undefined, // user locale/language
     options
   );
