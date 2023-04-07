@@ -112,7 +112,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
                 return context[0].label;
               },
               label: (context) => {
-                return 'Delay: ' + data[context.datasetIndex].delay.toFixed(0) + ' sec';
+                return 'Delay: ' + data[context.dataIndex].delay.toFixed(0) + ' sec';
               },
               beforeBody: (context) => {
                 const start = context[0].parsed._custom?.barStart;
