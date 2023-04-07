@@ -11,6 +11,7 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
+import { SlowZonesMap } from './map';
 dayjs.extend(utc);
 
 export default function SlowZonesDetails() {
@@ -27,6 +28,7 @@ export default function SlowZonesDetails() {
   const totalSlowTimeReady =
     !delayTotals.isError && delayTotals.data && startDateUTC && endDateUTC && lineShort && line;
   const segmentsReady = !allSlow.isError && allSlow.data && startDateUTC && lineShort;
+  const canShowSlowZonesMap = lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange';
 
   if (!endDateUTC || !startDateUTC) {
     return (
@@ -35,6 +37,7 @@ export default function SlowZonesDetails() {
       </p>
     );
   }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
@@ -48,6 +51,22 @@ export default function SlowZonesDetails() {
               endDateUTC={endDateUTC}
               line={line}
               lineShort={lineShort}
+            />
+          ) : (
+            <div className="relative flex h-full">
+              <ChartPlaceHolder query={delayTotals} />
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+        <WidgetTitle title="Line Map" />
+        <div className="relative flex flex-col">
+          {allSlow.data && canShowSlowZonesMap ? (
+            <SlowZonesMap
+              slowZones={allSlow.data}
+              lineName={lineShort}
+              direction="horizontal-on-desktop"
             />
           ) : (
             <div className="relative flex h-full">

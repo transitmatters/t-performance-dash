@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  justify-content: center;
+  font-family: sans-serif;
+  position: relative;
+}
+
+.tooltipContainer {
+  position: absolute;
+}
+
+.inner {
+  overflow-x: scroll;
+}
