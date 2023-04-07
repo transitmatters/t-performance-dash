@@ -29,7 +29,7 @@ export const DataPageHeader = () => {
           {line && LINE_OBJECTS[line]?.name}
         </h3>
         {isDesktop && datapage !== 'overview' && (
-          <div className="absolute top-1 right-0 mt-0">
+          <div className="absolute right-0 top-1 mt-0">
             <DateSelection />
           </div>
         )}

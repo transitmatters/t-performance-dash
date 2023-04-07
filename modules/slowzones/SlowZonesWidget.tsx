@@ -1,64 +1,43 @@
 'use client';
-import React, { useMemo } from 'react';
-import dayjs from 'dayjs';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
-import { SZWidgetValue, TimeWidgetValue } from '../../common/types/basicWidgets';
-import { useSlowZoneCalculations } from '../../common/utils/slowZoneUtils';
-import { fetchAllSlow, fetchDelayTotals } from './api/slowzones';
-import { TotalSlowTime } from './charts/TotalSlowTime';
+import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
+import { fetchDelayTotals } from './api/slowzones';
+import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
+dayjs.extend(utc);
 
 export default function SlowZonesWidget() {
   const { line, linePath, lineShort } = useDelimitatedRoute();
   const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
-  const allSlow = useQuery(['allSlow'], fetchAllSlow);
 
-  const formattedTotals = useMemo(
-    () =>
-      delayTotals.data && delayTotals.data.filter((t) => new Date(t.date) > new Date(2022, 0, 1)),
-    [delayTotals.data]
-  );
-
-  const { current, lastWeek, totalDelay, totalDelayLasteek } = useSlowZoneCalculations({
-    lineShort,
-    allSlow: allSlow.data,
-    formattedTotals,
-  });
-
-  if (delayTotals.isLoading || allSlow.isLoading || !line) {
-    return <>Loading ... teehee</>;
-  }
-
-  if (delayTotals.isError || allSlow.isError) {
-    return <>Uh oh... error</>;
-  }
+  const startDateUTC = dayjs.utc('2022-01-01').startOf('day');
+  const endDateUTC = dayjs.utc().startOf('day');
+  const totalSlowTimeReady =
+    !delayTotals.isError && delayTotals.data && startDateUTC && endDateUTC && lineShort && line;
 
   if (line === 'BUS' || line === 'GL') {
     return null;
   }
-
   return (
     <>
-      <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
+      <div className={classNames('relative h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <HomescreenWidgetTitle title="Slow Zones" href={`/${linePath}/slowzones`} />
-        <div className={classNames('flex w-full flex-row')}>
-          <BasicWidgetDataLayout
-            title="Total Delay"
-            widgetValue={new TimeWidgetValue(totalDelay, totalDelay - totalDelayLasteek)}
-            analysis={`from last ${dayjs().format('ddd')}.`}
+        {totalSlowTimeReady ? (
+          <TotalSlowTimeWrapper
+            data={delayTotals.data}
+            startDateUTC={startDateUTC}
+            endDateUTC={endDateUTC}
+            line={line}
+            lineShort={lineShort}
           />
-          <BasicWidgetDataLayout
-            title="# Slow Zones"
-            widgetValue={new SZWidgetValue(current, current && lastWeek ? current - lastWeek : 0)}
-            analysis={`from last ${dayjs().format('ddd')}.`}
-          />
-        </div>
-        <div className={classNames('h-48 pr-4')}>
-          <TotalSlowTime data={formattedTotals} />
-        </div>
+        ) : (
+          <ChartPlaceHolder query={delayTotals} />
+        )}
       </div>
     </>
   );

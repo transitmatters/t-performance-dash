@@ -2,9 +2,10 @@ import React from 'react';
 import classNames from 'classnames';
 import type { WidgetValueInterface } from '../../../types/basicWidgets';
 import { LoadingSpinner } from '../../graphics/LoadingSpinner';
+import { Delta } from './Delta';
 
-type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';
-type LayoutKind = 'total-and-delta' | 'delta-and-percent-change';
+export type LayoutKind = 'total-and-delta' | 'delta-and-percent-change';
+export type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';
 
 export type BasicWidgetDataLayoutProps = {
   title: React.ReactNode;
@@ -29,36 +30,10 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
     return widgetValue.getFormattedValue();
   };
 
-  const getSecondaryValue = () => {
-    const useDelta = layoutKind === 'total-and-delta';
-    const changingValue = useDelta ? widgetValue.delta : widgetValue.percentChange;
-    const formattedChangingValue = useDelta
-      ? widgetValue.getFormattedDelta()
-      : widgetValue.getFormattedPercentChange();
-    const increase = changingValue ? changingValue > 0 : false;
-    const positiveSentiment =
-      (!increase && sentimentDirection === 'negativeOnIncrease') ||
-      (increase && sentimentDirection === 'positiveOnIncrease');
-    const bgColor = positiveSentiment ? 'bg-green-100' : 'bg-red-100';
-    const textColor = positiveSentiment ? 'text-green-800' : 'text-red-800';
-    return (
-      <div
-        className={classNames(
-          'mt-1 flex flex-row rounded-full px-2',
-          changingValue ? bgColor : 'bg-gray-100'
-        )}
-      >
-        <p className={classNames('text-xs sm:text-sm', changingValue ? textColor : 'text-rb-800')}>
-          {formattedChangingValue}
-        </p>
-      </div>
-    );
-  };
-
   return (
     <>
-      <div className={classNames('relative flex  flex-1 bg-white')}>
-        {widgetValue.value === undefined && <LoadingSpinner />}
+      <div className={classNames('relative flex flex-1 bg-white')}>
+        {widgetValue.value === undefined && <LoadingSpinner isWidget />}
         <div className={classNames('flex flex-col items-start p-2')}>
           <p className={classNames('text-base text-gray-500')}>{title}</p>
           <div className="flex flex-row items-baseline gap-x-1">
@@ -67,8 +42,12 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
             </p>
             <p className="text-base text-design-subtitleGrey">{widgetValue.getUnits()}</p>
           </div>
-          <div className="flex flex-row items-baseline gap-x-1">
-            {getSecondaryValue()}
+          <div className="mt-1 flex flex-row items-baseline gap-x-1">
+            <Delta
+              widgetValue={widgetValue}
+              sentimentDirection={sentimentDirection}
+              usePercentChange={layoutKind === 'delta-and-percent-change'}
+            />
             <p className={classNames('text-xs text-design-subtitleGrey sm:text-sm')}>{analysis}</p>
           </div>
         </div>

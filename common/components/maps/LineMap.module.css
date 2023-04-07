@@ -1,15 +1,14 @@
 .container {
-    display: flex;
-    justify-content: center;
-    font-family: sans-serif;
-    position: relative;
-
+  display: flex;
+  justify-content: center;
+  font-family: sans-serif;
+  position: relative;
 }
 
 .tooltipContainer {
-    position: absolute;
+  position: absolute;
 }
 
 .inner {
-    overflow-x: scroll;
+  overflow-x: scroll;
 }

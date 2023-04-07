@@ -3,15 +3,17 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import type { DateTimePickerProps } from 'react-flatpickr';
-import type { Tabs } from '../../../types/router';
-import type { DateSelectionDefaultOptions } from './types/DateSelectionTypes';
-const est = 'America/New_York';
-
+import type { Tabs } from '../types/router';
+import type { DateSelectionDefaultOptions } from '../components/inputs/DateSelection/types/DateSelectionTypes';
 dayjs.extend(utc);
 dayjs.extend(timezone);
-export const DATE_FORMAT = 'YYYY-MM-DD';
 
+const est = 'America/New_York';
+
+export const DATE_FORMAT = 'YYYY-MM-DD';
 export const TODAY = dayjs().tz(est);
+export const TODAY_MIDNIGHT = dayjs().startOf('day');
+export const YESTERDAY_MIDNIGHT = TODAY_MIDNIGHT.subtract(1, 'day');
 export const TODAY_STRING = TODAY.format(DATE_FORMAT);
 export const RANGE_OPTIONS = ['Single Day', 'Range'];
 
@@ -40,6 +42,7 @@ export const FLAT_PICKER_OPTIONS: {
   },
 };
 
+// TODO Different presets for buses
 export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[] } = {
   singleDay: [
     { name: 'Today', input: { startDate: TODAY_STRING } },
@@ -48,6 +51,12 @@ export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[]
       name: `Last ${TODAY.subtract(7, 'days').format('dddd')}`,
       input: {
         startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
+      },
+    },
+    {
+      name: `30 days ago`,
+      input: {
+        startDate: TODAY.subtract(30, 'days').format(DATE_FORMAT),
       },
     },
     {
@@ -65,7 +74,6 @@ export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[]
         endDate: TODAY_STRING,
       },
     },
-
     {
       name: 'Past 30 days',
       input: {
@@ -85,6 +93,20 @@ export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[]
       input: {
         startDate: TODAY.subtract(1, 'month').startOf('month').format(DATE_FORMAT),
         endDate: TODAY.subtract(1, 'month').endOf('month').format(DATE_FORMAT),
+      },
+    },
+    {
+      name: 'This year',
+      input: {
+        startDate: TODAY.startOf('year').format(DATE_FORMAT),
+        endDate: TODAY_STRING,
+      },
+    },
+    {
+      name: 'Last year',
+      input: {
+        startDate: TODAY.startOf('year').subtract(1, 'year').format(DATE_FORMAT),
+        endDate: TODAY.endOf('year').subtract(1, 'year').format(DATE_FORMAT),
       },
     },
   ],

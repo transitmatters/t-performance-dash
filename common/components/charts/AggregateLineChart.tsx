@@ -17,6 +17,7 @@ import React, { useMemo, useRef } from 'react';
 import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../../common/constants/colors';
+import { DownloadButton } from '../general/DownloadButton';
 import { LegendLongTerm } from './Legend';
 import { drawTitle } from './Title';
 
@@ -59,7 +60,9 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   fillColor,
   suggestedYMin,
   suggestedYMax,
-  ...props
+  showLegend = true,
+  isHomescreen = false,
+  children,
 }) => {
   const ref = useRef();
   const hourly = timeUnit === 'hour';
@@ -71,7 +74,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
         <Line
           id={chartId}
           ref={ref}
-          height={250}
+          height={240}
           redraw={true}
           data={{
             labels,
@@ -183,12 +186,23 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
             },
           ]}
         />
-        {/* TODO: add back download button */}
       </div>
-      <div className="chart-extras">
-        <LegendLongTerm />
-        {props.children}
-      </div>
+      {showLegend && (
+        <div className="chart-extras">
+          <LegendLongTerm />
+          {children}
+        </div>
+      )}
+      {!isHomescreen && startDate && (
+        <DownloadButton
+          data={data}
+          datasetName={fname}
+          location={location}
+          bothStops={bothStops}
+          startDate={startDate}
+          endDate={endDate}
+        />
+      )}
     </div>
   );
 };

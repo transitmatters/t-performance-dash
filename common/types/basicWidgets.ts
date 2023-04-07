@@ -90,7 +90,7 @@ export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValu
 
   getFormattedDelta() {
     if (this.delta === undefined) return '...';
-    return `${this.delta >= 0 ? '+' : '-'}${Math.round(100 * this.delta).toString()}%`;
+    return `${this.delta >= 0 ? '+' : ''}${Math.round(100 * this.delta).toString()}%`;
   }
 }
 
@@ -107,5 +107,22 @@ export class TripsWidgetValue extends BaseWidgetValue implements WidgetValueInte
   getFormattedDelta() {
     if (this.delta === undefined) return '...';
     return `${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta).toString()}`;
+  }
+}
+
+export class MPHWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
+  getUnits() {
+    return 'MPH';
+  }
+
+  getFormattedValue() {
+    if (typeof this.value === 'undefined') return '...';
+    return this.value.toFixed(1);
+  }
+  getFormattedDelta() {
+    if (typeof this.value === 'undefined' || typeof this.delta === 'undefined') return '...';
+    const absDelta = Math.abs(this.delta);
+    const sign = this.delta >= 0 ? '+' : '-';
+    return `${sign}${absDelta.toFixed(1)}`;
   }
 }
