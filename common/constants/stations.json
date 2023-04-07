@@ -17,7 +17,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       },
       {
         "stop_name": "Davis",
@@ -199,7 +200,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       },
       {
         "stop_name": "JFK/UMass (Braintree)",
@@ -270,7 +272,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       }
     ]
   },
@@ -292,7 +295,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       },
       {
         "stop_name": "Malden Center",
@@ -512,7 +516,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       }
     ]
   },
@@ -534,7 +539,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       },
       {
         "stop_name": "Revere Beach",
@@ -658,7 +664,8 @@
           "0": ["70038"],
           "1": ["70838"]
         },
-        "accessible": false
+        "accessible": false,
+        "terminus": true
       }
     ]
   },
@@ -680,7 +687,8 @@
           "1": ["70512"]
         },
         "accessible": true,
-        "enclosed_bike_parking": true
+        "enclosed_bike_parking": true,
+        "terminus": true
       },
       {
         "stop_name": "Ball Square",
@@ -744,7 +752,8 @@
           "1": ["70504"]
         },
         "accessible": true,
-        "enclosed_bike_parking": true
+        "enclosed_bike_parking": true,
+        "terminus": true
       },
       {
         "stop_name": "Lechmere",
@@ -1043,7 +1052,8 @@
           "0": ["70106"],
           "1": ["70107"]
         },
-        "accessible": true
+        "accessible": true,
+        "terminus": true
       },
       {
         "stop_name": "Saint Marys Street",
@@ -1187,7 +1197,8 @@
           "0": ["70238"],
           "1": ["70237"]
         },
-        "accessible": true
+        "accessible": true,
+        "terminus": true
       },
       {
         "stop_name": "Fenway",
@@ -1336,7 +1347,8 @@
           "1": ["70161"]
         },
         "accessible": true,
-        "enclosed_bike_parking": true
+        "enclosed_bike_parking": true,
+        "terminus": true
       },
       {
         "stop_name": "Prudential",
@@ -1457,7 +1469,8 @@
           "0": ["70260"],
           "1": ["70260"]
         },
-        "accessible": true
+        "accessible": true,
+        "terminus": true
       }
     ]
   }
