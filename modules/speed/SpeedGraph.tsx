@@ -138,9 +138,9 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, config }) => {
           afterDraw: (chart) => {
             if (!data) {
               // No data is present
-              const ctx = chart.ctx;
-              const width = chart.width;
-              const height = chart.height;
+              const { ctx } = chart;
+              const { width } = chart;
+              const { height } = chart;
               chart.clear();
 
               ctx.save();

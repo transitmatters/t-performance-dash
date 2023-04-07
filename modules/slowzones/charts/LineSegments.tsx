@@ -17,7 +17,7 @@ dayjs.extend(utc);
 
 import React, { useMemo, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { YESTERDAY_UTC } from '../../../common/constants/dates';
+import { YESTERDAY_MIDNIGHT } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
 import type { LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
@@ -112,7 +112,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
                 return context[0].label;
               },
               label: (context) => {
-                return 'Delay: ' + data[context.datasetIndex].delay.toFixed(0) + ' sec';
+                return 'Delay: ' + data[context.dataIndex].delay.toFixed(0) + ' sec';
               },
               beforeBody: (context) => {
                 const start = context[0].parsed._custom?.barStart;
@@ -121,7 +121,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
                 const startUTC = dayjs.utc(start);
                 const endUTC = dayjs.utc(end);
                 return `${startUTC.format('MMM D, YYYY')} - ${
-                  dayjs.utc(endUTC).isSame(YESTERDAY_UTC)
+                  dayjs.utc(endUTC).isSame(YESTERDAY_MIDNIGHT)
                     ? 'Ongoing'
                     : dayjs(endUTC).format('MMM D, YYYY')
                 }`;

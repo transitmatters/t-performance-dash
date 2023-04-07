@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { optionsStation } from '../../common/utils/stations';
+import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { TripGraphs } from './TripGraphs';
 
 export const TripExplorer = () => {
@@ -22,6 +23,7 @@ export const TripExplorer = () => {
         setToStation={setToStation}
       />
       <TripGraphs fromStation={fromStation} toStation={toStation} />
+      <TerminusNotice toStation={toStation} fromStation={fromStation} />
     </div>
   );
 };

@@ -223,9 +223,9 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               afterDraw: (chart) => {
                 if ((date === undefined || date.length === 0) && !isLoading) {
                   // No data is present
-                  const ctx = chart.ctx;
-                  const width = chart.width;
-                  const height = chart.height;
+                  const { ctx } = chart;
+                  const { width } = chart;
+                  const { height } = chart;
                   chart.clear();
 
                   ctx.save();
