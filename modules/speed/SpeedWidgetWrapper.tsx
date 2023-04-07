@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import type { SpeedDataPoint } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
