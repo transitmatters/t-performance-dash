@@ -15,9 +15,8 @@ export const DashboardLayout = ({ children }) => {
 
   const section = ALL_PAGES[page]?.section;
   const getDatePicker = () => {
-    if (section === 'range' || section === 'line') return <DateSelection range />;
+    if (section === 'trips' || section === 'line') return <DateSelection range={true} />;
     if (section === 'overview') return <OverviewDateSelection />;
-    if (section === 'single') return <DateSelection range={false} />;
   };
 
   return (

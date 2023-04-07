@@ -3,6 +3,7 @@ import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ALL_PAGES } from '../../common/constants/pages';
 import { lineColorText } from '../../common/styles/general';
+import { RangeTabs } from '../navigation/RangeTabs';
 
 export const DataPageHeader = () => {
   const {
@@ -26,9 +27,13 @@ export const DataPageHeader = () => {
           <span className={lineColorText[line ?? 'DEFAULT']}>
             {line && LINE_OBJECTS[line]?.name}
           </span>
-          <span className="text-2xl font-normal md:text-xl"> - {ALL_PAGES[page]?.name}</span>
+          <span className="text-2xl font-normal md:text-xl">
+            {' '}
+            - {ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}
+          </span>
         </h3>
       </div>
+      <RangeTabs />
     </div>
   );
 };
