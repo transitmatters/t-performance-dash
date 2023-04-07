@@ -65,7 +65,7 @@ export const DwellsWidget: React.FC = () => {
               dwells={dwells}
               toStation={toStation}
               fromStation={fromStation}
-              homescreen={true}
+              isHomescreen={true}
             />
           </>
         ) : (
