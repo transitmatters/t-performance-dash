@@ -57,7 +57,7 @@ interface SlowSegmentLabelProps {
   isHorizontal: boolean;
 }
 
-const SlowSegmentLabel = (props: SlowSegmentLabelProps) => {
+const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
   const {
     isHorizontal,
     segment: { slowZones },
