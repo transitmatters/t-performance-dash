@@ -5,8 +5,8 @@ import type { SegmentLocation } from '../../../common/components/maps';
 import { LineMap, createDefaultDiagramForLine } from '../../../common/components/maps';
 import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 import type { SlowZonesLineName } from '../types';
-import type { SegmentRenderOptions } from '../../../common/components/maps/LineMap';
 
+import type { SegmentLabel } from '../../../common/components/maps/LineMap';
 import { segmentSlowZones } from './segment';
 import { SlowSegmentLabel } from './SlowSegmentLabel';
 import { SlowZonesTooltip } from './SlowZonesTooltip';
@@ -27,7 +27,29 @@ const abbreviateStationName = ({ stationName }) => {
     .replace('Government Center', "Gov't Center")
     .replace('Northeastern University', 'Northeastern')
     .replace('Museum of Fine Arts', 'MFA')
-    .replace('Massachusetts Avenue', 'Mass Ave');
+    .replace('Massachusetts Avenue', 'Mass Ave')
+    .replace('North Quincy', 'N. Quincy');
+};
+
+const getSegmentLabelOverrides = (
+  segmentLocation: SegmentLocation,
+  isHorizontal: boolean
+): null | Partial<SegmentLabel> => {
+  const { toStationId } = segmentLocation;
+  // JFK to Savin Hill — on a steep curve
+  if (toStationId === 'place-shmnl') {
+    return {
+      mapSide: '1' as const,
+      offset: isHorizontal ? { x: -12, y: -5 } : { x: 0, y: 0 },
+    };
+  }
+  // Shawmut to Ashmont — obscured by "North Quincy" label
+  if (!isHorizontal && toStationId === 'place-asmnl') {
+    return {
+      mapSide: '1' as const,
+    };
+  }
+  return null;
 };
 
 const getSlownessFactor = (zones: SlowZoneResponse | SlowZoneResponse[]) => {
@@ -61,16 +83,16 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({ lineName, slowZones,
     [slowZones, line]
   );
 
-  const segmentsForSlowZones: SegmentRenderOptions[] = useMemo(() => {
+  const getSegmentsForSlowZones = ({ isHorizontal }: { isHorizontal: boolean }) => {
     return segmentedSlowZones.map((segment) => {
-      const side = segment.segmentLocation.toStationId === 'place-shmnl' ? '1' : '0';
       return {
         location: segment.segmentLocation,
-        labels: {
-          [side]: {
-            heightWhenHorizontal: 10,
-            widthWhenVertical: 15,
-            content: ({ isHorizontal }) => (
+        labels: [
+          {
+            mapSide: '0' as const,
+            boundingSize: isHorizontal ? 15 : 20,
+            ...getSegmentLabelOverrides(segment.segmentLocation, isHorizontal),
+            content: (
               <SlowSegmentLabel
                 isHorizontal={isHorizontal}
                 slowZonesByDirection={segment.slowZonesByDirection}
@@ -78,7 +100,7 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({ lineName, slowZones,
               />
             ),
           },
-        },
+        ],
         strokes: Object.entries(segment.slowZonesByDirection).map(([direction, zone]) => {
           const offset = direction === '0' ? 1 : -1;
           return {
@@ -90,7 +112,7 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({ lineName, slowZones,
         }),
       };
     });
-  }, [line, segmentedSlowZones]);
+  };
 
   const diagram = useMemo(() => {
     return createDefaultDiagramForLine(lineName, { pxPerStation: 15 });
@@ -123,10 +145,10 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({ lineName, slowZones,
   return (
     <LineMap
       diagram={diagram}
-      getStationLabel={abbreviateStationName}
       strokeOptions={{ stroke: line.color }}
-      segments={segmentsForSlowZones}
       direction={direction}
+      getSegments={getSegmentsForSlowZones}
+      getStationLabel={abbreviateStationName}
       tooltip={{ snapToSegment: true, maxDistance: 20, render: renderSlowZonesTooltip }}
     />
   );

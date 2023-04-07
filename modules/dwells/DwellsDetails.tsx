@@ -13,6 +13,7 @@ import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
+import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 
@@ -92,6 +93,7 @@ export default function DwellsDetails() {
           <DwellsSingleChart dwells={dwells} toStation={toStation} fromStation={fromStation} />
         )}
       </div>
+      <TerminusNotice toStation={toStation} fromStation={fromStation} />
     </>
   );
 }

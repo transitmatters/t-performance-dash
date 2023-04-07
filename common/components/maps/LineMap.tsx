@@ -21,15 +21,16 @@ type Rect = ReturnType<InstanceType<typeof Path>['getBounds']>;
 type OffsetStrokeOptions = StrokeOptions & { offset?: number };
 
 export type SegmentLabel = {
-  widthWhenVertical?: number;
-  heightWhenHorizontal?: number;
-  content: React.ReactNode | ((props: { isHorizontal: boolean }) => React.ReactNode);
+  mapSide: MapSide;
+  boundingSize?: number;
+  offset?: { x: number; y: number };
+  content: React.ReactNode;
 };
 
 export type SegmentRenderOptions = {
   location: SegmentLocation;
   strokes?: Partial<OffsetStrokeOptions>[];
-  labels?: Partial<Record<MapSide, SegmentLabel>>;
+  labels?: SegmentLabel[];
 };
 
 export type TooltipRenderer = (props: {
@@ -46,11 +47,11 @@ export type TooltipOptions = {
 export interface LineMapProps {
   diagram: Diagram;
   direction?: 'vertical' | 'horizontal' | 'horizontal-on-desktop';
+  strokeOptions?: Partial<StrokeOptions>;
+  tooltip?: TooltipOptions;
   getStationLabel?: (options: { stationId: string; stationName: string }) => string;
   getScaleBasis?: (viewport: { width: null | number; height: null | number }) => number;
-  strokeOptions?: Partial<StrokeOptions>;
-  segments?: SegmentRenderOptions[];
-  tooltip?: TooltipOptions;
+  getSegments?: (options: { isHorizontal: boolean }) => SegmentRenderOptions[];
 }
 
 const getPropsForStrokeOptions = (options: Partial<StrokeOptions>) => {
@@ -65,20 +66,20 @@ const getPropsForStrokeOptions = (options: Partial<StrokeOptions>) => {
 
 const getLabelPositionProps = (
   segmentBounds: Rect,
-  mapSide: MapSide,
-  isHorizontal: boolean,
-  widthWhenVertical: number,
-  heightWhenHorizontal: number
+  segmentLabel: SegmentLabel,
+  isHorizontal: boolean
 ) => {
   const { top, left, right, width, height } = segmentBounds;
+  const { boundingSize = 10, offset: providedOffset, mapSide } = segmentLabel;
+  const offset = providedOffset || { x: 0, y: 0 };
   if (isHorizontal) {
     const moveAcross = mapSide === '0';
     return {
       foreignObjectProps: {
-        x: top,
-        y: 0 - left - (moveAcross ? heightWhenHorizontal + width : 0),
+        x: top + offset.x,
+        y: 0 - left - (moveAcross ? boundingSize + width : 0) + offset.y,
         width: height,
-        height: heightWhenHorizontal,
+        height: boundingSize,
         style: { transform: 'rotate(90deg)' },
       },
       wrapperDivStyles: {
@@ -90,10 +91,10 @@ const getLabelPositionProps = (
   const moveAcross = mapSide === '1';
   return {
     foreignObjectProps: {
-      x: right - (moveAcross ? widthWhenVertical + width : 0),
-      y: top,
+      x: right - (moveAcross ? boundingSize + width : 0) + offset.x,
+      y: top + offset.y,
       height,
-      width: widthWhenVertical,
+      width: boundingSize,
     },
     wrapperDivStyles: {
       flexDirection: 'column',
@@ -109,7 +110,7 @@ export const LineMap: React.FC<LineMapProps> = ({
   getScaleBasis,
   strokeOptions = {},
   tooltip,
-  segments = [],
+  getSegments,
 }) => {
   const {
     svgRef,
@@ -155,11 +156,12 @@ export const LineMap: React.FC<LineMapProps> = ({
   }, [diagram]);
 
   const computedSegmentExtras = useMemo(() => {
+    const segments = getSegments ? getSegments({ isHorizontal }) : [];
     return segments.map((segment) => {
       const {
         location: { fromStationId, toStationId },
         strokes = [],
-        labels = {},
+        labels = [],
       } = segment;
 
       const path = diagram.getPathBetweenStations(fromStationId, toStationId);
@@ -170,21 +172,15 @@ export const LineMap: React.FC<LineMapProps> = ({
         return { pathDirective, ...stroke };
       });
 
-      const computedLabels = Object.entries(labels).map(([mapSide, label]) => {
-        const { widthWhenVertical = 10, heightWhenHorizontal = 10, content } = label;
-
+      const computedLabels = labels.map((label, index) => {
         const { foreignObjectProps, wrapperDivStyles } = getLabelPositionProps(
           bounds,
-          mapSide as MapSide,
-          isHorizontal,
-          widthWhenVertical,
-          heightWhenHorizontal
+          label,
+          isHorizontal
         );
-
-        const contentNode = typeof content === 'function' ? content({ isHorizontal }) : content;
         return (
           <foreignObject
-            key={`label-${fromStationId}-${toStationId}-${mapSide}`}
+            key={`label-${fromStationId}-${toStationId}-${index}`}
             {...foreignObjectProps}
           >
             <div
@@ -195,7 +191,7 @@ export const LineMap: React.FC<LineMapProps> = ({
                 ...wrapperDivStyles,
               }}
             >
-              {contentNode}
+              {label.content}
             </div>
           </foreignObject>
         );
@@ -203,7 +199,7 @@ export const LineMap: React.FC<LineMapProps> = ({
 
       return { computedStrokes, computedLabels };
     });
-  }, [segments, diagram, isHorizontal]);
+  }, [getSegments, diagram, isHorizontal]);
 
   const renderStationDots = () => {
     const strokeProps = getPropsForStrokeOptions(strokeOptions);
