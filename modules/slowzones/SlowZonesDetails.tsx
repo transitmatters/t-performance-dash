@@ -69,6 +69,7 @@ export default function SlowZonesDetails() {
               slowZones={allSlow.data}
               speedRestrictions={speedRestrictions.data}
               lineName={lineShort}
+              key={lineShort}
               direction="horizontal-on-desktop"
             />
           ) : (
