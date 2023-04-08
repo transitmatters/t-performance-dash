@@ -10,6 +10,7 @@ export interface Station {
   accessible?: boolean;
   pedal_park?: boolean;
   enclosed_bike_parking?: boolean;
+  terminus?: boolean;
   order: number;
   disabled?: boolean;
   stops: {

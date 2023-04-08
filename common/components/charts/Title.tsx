@@ -44,7 +44,7 @@ const calcLocationWidth = (words: TitleFormat[], ctx: CanvasRenderingContext2D) 
 };
 
 export const drawTitle = (title: string, location: Location, bothStops: boolean, chart: Chart) => {
-  const ctx = chart.ctx;
+  const { ctx } = chart;
   ctx.save();
 
   const leftMargin = chart.scales.x.left;
@@ -103,7 +103,7 @@ export const drawTitle = (title: string, location: Location, bothStops: boolean,
 };
 
 export const drawSimpleTitle = (title: string, chart: Chart) => {
-  const ctx = chart.ctx;
+  const { ctx } = chart;
   ctx.save();
 
   const leftMargin = chart.scales.x.left;

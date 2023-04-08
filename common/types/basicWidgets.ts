@@ -4,23 +4,39 @@ import { getFormattedTimeValue, getTimeUnit } from '../utils/time';
 dayjs.extend(duration);
 
 export interface WidgetValueInterface {
-  value?: number;
-  delta?: number;
+  readonly value?: number;
+  readonly delta?: number;
+  readonly percentChange?: number;
 
   getUnits: () => string;
   getFormattedValue: () => string;
   getFormattedDelta: () => string;
+  getFormattedPercentChange: () => string;
 }
 
-// This will eventually include the logic of the analysis (past week, since last Weds, etc.)
-export class TimeWidgetValue implements WidgetValueInterface {
+class BaseWidgetValue {
   value?: number | undefined;
   delta?: number | undefined;
+  percentChange?: number | undefined;
+
   constructor(value: number | undefined, delta: number | undefined) {
     this.value = value;
     this.delta = delta;
+    this.percentChange =
+      typeof this.value === 'number' && typeof this.delta === 'number'
+        ? 100 * (this.value / (this.value - this.delta) - 1)
+        : undefined;
   }
 
+  getFormattedPercentChange() {
+    if (typeof this.percentChange === 'undefined') return '...';
+    const sign = this.percentChange >= 0 ? '+' : '-';
+    return `${sign}${Math.floor(this.percentChange)}%`;
+  }
+}
+
+// This will eventually include the logic of the analysis (past week, since last Weds, etc.)
+export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
     if (this.value === undefined) return '...';
     return getTimeUnit(this.value);
@@ -47,13 +63,8 @@ export class TimeWidgetValue implements WidgetValueInterface {
     }
   }
 }
-export class SZWidgetValue implements WidgetValueInterface {
-  value?: number | undefined;
-  delta?: number | undefined;
-  constructor(value: number | undefined, delta: number | undefined) {
-    this.value = value;
-    this.delta = delta;
-  }
+
+export class SZWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
     return 'Zones';
   }
@@ -67,13 +78,7 @@ export class SZWidgetValue implements WidgetValueInterface {
   }
 }
 
-export class PercentageWidgetValue implements WidgetValueInterface {
-  value?: number | undefined;
-  delta?: number | undefined;
-  constructor(value: number | undefined, delta: number | undefined) {
-    this.value = value;
-    this.delta = delta;
-  }
+export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
     return '%';
   }
@@ -89,13 +94,7 @@ export class PercentageWidgetValue implements WidgetValueInterface {
   }
 }
 
-export class TripsWidgetValue implements WidgetValueInterface {
-  value?: number | undefined;
-  delta?: number | undefined;
-  constructor(value: number | undefined, delta: number | undefined) {
-    this.value = value;
-    this.delta = delta;
-  }
+export class TripsWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
     return 'daily trips';
   }
@@ -111,14 +110,7 @@ export class TripsWidgetValue implements WidgetValueInterface {
   }
 }
 
-export class MPHWidgetValue implements WidgetValueInterface {
-  value?: number | undefined;
-  delta?: number | undefined;
-  constructor(value: number | undefined, delta: number | undefined) {
-    this.value = value;
-    this.delta = delta;
-  }
-
+export class MPHWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
     return 'MPH';
   }
