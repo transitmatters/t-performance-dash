@@ -23,20 +23,16 @@ const getAlertComponent = (
   alert: FormattedAlert,
   lineShort: LineShort,
   type: UpcomingOrCurrent,
-  busRoute?: BusRoute,
-  line?: Line
+  busRoute?: BusRoute
 ) => {
   if (alert.type === AlertEffect.SHUTTLE && alert.stops.length > 0) {
-    return (
-      <ShuttleAlert alert={alert} lineShort={lineShort} line={line} type={type} key={alert.id} />
-    );
+    return <ShuttleAlert alert={alert} lineShort={lineShort} type={type} key={alert.id} />;
   }
   if (alert.type === AlertEffect.DELAY) {
     return (
       <DelayAlert
         alert={alert}
         lineShort={lineShort}
-        line={line}
         type={type}
         key={alert.id}
         busRoute={busRoute}
@@ -44,16 +40,14 @@ const getAlertComponent = (
     );
   }
   if (alert.type === AlertEffect.SUSPENSION) {
-    return (
-      <SuspensionAlert alert={alert} lineShort={lineShort} line={line} type={type} key={alert.id} />
-    );
+    return <SuspensionAlert alert={alert} lineShort={lineShort} type={type} key={alert.id} />;
   }
   if (alert.type === AlertEffect.STOP_CLOSURE && busRoute) {
-    return <StopClosure alert={alert} busRoute={busRoute} type={type} key={alert.id} line={line} />;
+    return <StopClosure alert={alert} type={type} key={alert.id} />;
   }
 };
 
-export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, busRoute, line, type }) => {
+export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, busRoute, type }) => {
   const alertBox = useMemo(() => {
     const relevantAlerts = alerts
       .map((alert) => {
@@ -75,11 +69,11 @@ export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, busRoute,
       return (
         <div className="flex w-full flex-row-reverse gap-x-2 md:flex-col-reverse md:gap-x-0 md:gap-y-2">
           {relevantAlerts.map((alert: FormattedAlert) =>
-            getAlertComponent(alert, lineShort, type, busRoute, line)
+            getAlertComponent(alert, lineShort, type, busRoute)
           )}
         </div>
       );
     }
-  }, [alerts, type, lineShort, busRoute, line]);
+  }, [alerts, type, lineShort, busRoute]);
   return alertBox;
 };

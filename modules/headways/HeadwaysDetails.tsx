@@ -14,6 +14,7 @@ import { averageHeadway, longestHeadway } from '../../common/utils/headways';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
+import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 import { HeadwaysHistogram } from './charts/HeadwaysHistogram';
 import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
@@ -117,6 +118,7 @@ export default function HeadwaysDetails() {
           </div>
         </>
       )}
+      <TerminusNotice toStation={toStation} fromStation={fromStation} />
     </>
   );
 }

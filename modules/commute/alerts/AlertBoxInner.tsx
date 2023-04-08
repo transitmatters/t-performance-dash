@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
-import type { Line } from '../../../common/types/lines';
 import { AlertModal } from './AlertModal';
 import { CurrentTime, UpcomingTime } from './Time';
 
@@ -10,7 +9,6 @@ interface AlertBoxInnerProps {
   alert: FormattedAlert;
   type: UpcomingOrCurrent;
   children: React.ReactNode;
-  line?: Line;
 }
 
 export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
@@ -19,7 +17,6 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
   alert,
   type,
   children,
-  line,
 }) => {
   const [showModal, setShowModal] = useState(false);
   return (

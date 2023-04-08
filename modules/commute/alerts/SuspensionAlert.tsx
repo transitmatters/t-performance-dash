@@ -1,6 +1,6 @@
 import React from 'react';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
-import type { Line, LineShort } from '../../../common/types/lines';
+import type { LineShort } from '../../../common/types/lines';
 import BetweenArrow from '../../../public/Icons/BetweenArrow.svg';
 import DetourIcon from '../../../public/Icons/DetourIcon.svg';
 import { AlertBoxInner } from './AlertBoxInner';
@@ -10,7 +10,6 @@ interface SuspensionAlertProps {
   alert: FormattedAlert;
   lineShort: LineShort;
   type: UpcomingOrCurrent;
-  line?: Line;
 }
 
 const getDescription = (alert: FormattedAlert, lineShort: LineShort) => {
@@ -29,14 +28,9 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort) => {
   return <p className="mr-1 ">Detours on {lineShort} Line</p>;
 };
 
-export const SuspensionAlert: React.FC<SuspensionAlertProps> = ({
-  alert,
-  lineShort,
-  type,
-  line,
-}) => {
+export const SuspensionAlert: React.FC<SuspensionAlertProps> = ({ alert, lineShort, type }) => {
   return (
-    <AlertBoxInner header={alert.header} line={line} Icon={DetourIcon} alert={alert} type={type}>
+    <AlertBoxInner header={alert.header} Icon={DetourIcon} alert={alert} type={type}>
       {getDescription(alert, lineShort)}
     </AlertBoxInner>
   );

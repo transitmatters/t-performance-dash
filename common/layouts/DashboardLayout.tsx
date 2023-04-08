@@ -9,7 +9,11 @@ import { DateSelection } from '../components/inputs/DateSelection/DateSelection'
 import { OverviewDateSelection } from '../components/inputs/DateSelection/OverviewDateSelection';
 import { Footer } from './Footer';
 
-export const DashboardLayout = ({ children }) => {
+interface DashboardLayoutProps {
+  children?: React.ReactNode;
+}
+
+export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const isMobile = !useBreakpoint('md');
   const { page } = useDelimitatedRoute();
 
