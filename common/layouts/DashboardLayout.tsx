@@ -15,11 +15,15 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const isMobile = !useBreakpoint('md');
-  const { page } = useDelimitatedRoute();
+  const {
+    page,
+    query: { single },
+  } = useDelimitatedRoute();
 
   const section = ALL_PAGES[page]?.section;
   const getDatePicker = () => {
-    if (section === 'trips' || section === 'line') return <DateSelection range={true} />;
+    if (section === 'trips' || section === 'line')
+      return <DateSelection range={single ? false : true} />;
     if (section === 'overview') return <OverviewDateSelection />;
   };
 

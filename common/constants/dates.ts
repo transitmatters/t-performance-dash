@@ -16,6 +16,8 @@ export const TODAY_MIDNIGHT = dayjs().startOf('day');
 export const YESTERDAY_MIDNIGHT = TODAY_MIDNIGHT.subtract(1, 'day');
 export const TODAY_STRING = TODAY.format(DATE_FORMAT);
 export const RANGE_OPTIONS = ['Single Day', 'Range'];
+export const ONE_WEEK_AGO = TODAY.subtract(7, 'days');
+export const ONE_WEEK_AGO_STRING = ONE_WEEK_AGO.format(DATE_FORMAT);
 
 const OVERVIEW_TRAIN_MIN_DATE = '2016-01-01';
 const TRAIN_MIN_DATE = '2016-01-15';

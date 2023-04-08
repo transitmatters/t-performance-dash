@@ -18,7 +18,7 @@ const linePathToKeyMap: Record<string, Line> = {
   bus: 'BUS',
 };
 
-const getParams = (params: QueryParams) => {
+const getParams = (params) => {
   return Object.fromEntries(
     Object.entries(params).filter(([key, value]) => key !== 'line' && value)
   );
@@ -36,7 +36,7 @@ export const useDelimitatedRoute = (): Route => {
   const router = useRouter();
   const path = router.asPath.split('?');
   const pathItems = path[0].split('/');
-  const queryParams: QueryParams = router.query;
+  const queryParams = router.query;
   const tab = RAIL_LINES.includes(pathItems[1]) ? 'Subway' : 'Bus';
   const page = getPage(pathItems.slice(2)) as Page;
   const newParams = getParams(queryParams);

@@ -10,7 +10,6 @@ import {
   faClockFour,
   faGaugeHigh,
   faTableColumns,
-  faCalendarWeek,
 } from '@fortawesome/free-solid-svg-icons';
 import type { Line } from '../types/lines';
 
@@ -25,13 +24,9 @@ export enum PAGES {
   headways = 'headways',
   ridership = 'ridership',
   trips = 'trips',
-  sdHeadways = 'sdHeadways',
-  sdTraveltimes = 'sdTraveltimes',
-  sdDwells = 'sdDwells',
-  rangeHeadways = 'rangeHeadways',
-  rangeTraveltimes = 'rangeTraveltimes',
-  rangeDwells = 'rangeDwells',
-  range = 'range',
+  tripHeadways = 'tripHeadways',
+  tripTraveltimes = 'tripTraveltimes',
+  tripDwells = 'tripDwells',
 }
 
 type Section = 'today' | 'line' | 'overview' | 'trips';
@@ -69,62 +64,27 @@ export const ALL_PAGES: NavTabMap = {
     icon: faMapLocation,
     section: 'trips',
   },
-  sdHeadways: {
-    key: 'sdHeadways',
-    path: '/singleday/headways',
+  tripHeadways: {
+    key: 'tripHeadways',
+    path: '/trips/headways',
     name: 'Headways',
     lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
     icon: faArrowsLeftRightToLine,
     section: 'trips',
     sub: true,
   },
-  sdTraveltimes: {
-    key: 'sdTraveltimes',
-    path: '/singleday/traveltimes',
+  tripTraveltimes: {
+    key: 'tripTraveltimes',
+    path: '/trips/traveltimes',
     name: 'Travel Times',
     lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
     icon: faClock,
     section: 'trips',
     sub: true,
   },
-  sdDwells: {
-    key: 'sdDwells',
-    path: '/singleday/dwells',
-    name: 'Dwells',
-    lines: ['RL', 'BL', 'GL', 'OL'],
-    icon: faHourglass,
-    section: 'trips',
-    sub: true,
-  },
-  range: {
-    key: 'range',
-    path: '/range',
-    name: 'Range',
-    lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
-    section: 'trips',
-    icon: faCalendarWeek,
-  },
-  rangeHeadways: {
-    key: 'rangeHeadways',
-    path: '/range/headways',
-    name: 'Headways',
-    lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
-    icon: faArrowsLeftRightToLine,
-    section: 'trips',
-    sub: true,
-  },
-  rangeTraveltimes: {
-    key: 'rangeTraveltimes',
-    path: '/range/traveltimes',
-    name: 'Travel Times',
-    lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
-    icon: faClock,
-    section: 'trips',
-    sub: true,
-  },
-  rangeDwells: {
-    key: 'rangeDwells',
-    path: '/range/dwells',
+  tripDwells: {
+    key: 'tripDwells',
+    path: '/trips/dwells',
     name: 'Dwells',
     lines: ['RL', 'BL', 'GL', 'OL'],
     icon: faHourglass,
@@ -189,16 +149,16 @@ export const ALL_PAGES: NavTabMap = {
 /* Groups of pages for tab sections */
 export const TRIP_PAGES = [
   ALL_PAGES.trips,
-  ALL_PAGES.sdTraveltimes,
-  ALL_PAGES.sdHeadways,
-  ALL_PAGES.sdDwells,
+  ALL_PAGES.tripTraveltimes,
+  ALL_PAGES.tripHeadways,
+  ALL_PAGES.tripDwells,
 ];
 
 export const TODAY = [ALL_PAGES.today];
 
 export const BUS_OVERVIEW = [ALL_PAGES.ridership];
 
-export const BUS_PAGES = [ALL_PAGES.trips, ALL_PAGES.sdTraveltimes, ALL_PAGES.sdHeadways];
+export const BUS_PAGES = [ALL_PAGES.trips, ALL_PAGES.tripTraveltimes, ALL_PAGES.tripHeadways];
 
 export const LINE_PAGES = [
   ALL_PAGES.overview,
@@ -210,14 +170,9 @@ export const LINE_PAGES = [
 ];
 
 export const SUB_PAGES_MAP = {
-  singleday: {
-    headways: 'sdHeadways',
-    traveltimes: 'sdTraveltimes',
-    dwells: 'sdDwells',
-  },
-  range: {
-    headways: 'rangeHeadways',
-    traveltimes: 'rangeTraveltimes',
-    dwells: 'rangeDwells',
+  trips: {
+    headways: 'tripHeadways',
+    traveltimes: 'tripTraveltimes',
+    dwells: 'tripDwells',
   },
 };
