@@ -52,18 +52,8 @@ const getSegmentLabelOverrides = (
   return null;
 };
 
-const getSlownessFactor = (zones: SlowZoneResponse | SlowZoneResponse[]) => {
-  if (!Array.isArray(zones)) {
-    zones = [zones];
-  }
-  const zonesArray = zones as SlowZoneResponse[];
-  const delay = zonesArray.reduce((sum, zone) => sum + zone.delay, 0);
-  const baseline = zonesArray.reduce((sum, zone) => sum + zone.baseline, 0);
-  return delay / baseline;
-};
-
-const sigmoid = (x: number, steepness = 2, midpoint = 0.5) => {
-  return 1 / (1 + Math.exp(-1 * steepness * (x - midpoint)));
+const getSlowZoneOpacity = (zone: SlowZoneResponse) => {
+  return Math.min(zone.delay / (60 * 2.5), 0.9);
 };
 
 export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({ lineName, slowZones, direction }) => {
@@ -107,7 +97,7 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({ lineName, slowZones,
             offset,
             stroke: line.color,
             strokeWidth: 2,
-            opacity: sigmoid(getSlownessFactor(zone)),
+            opacity: getSlowZoneOpacity(zone),
           };
         }),
       };
