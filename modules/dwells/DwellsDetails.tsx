@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import { useQuery } from '@tanstack/react-query';
-import { fetchSingleDayData } from '../../common/api/datadashboard';
-import { QueryNameKeys } from '../../common/types/api';
+import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadashboard';
+import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
+import { AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
@@ -11,12 +12,15 @@ import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWi
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
+import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
+import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
+import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 
 export default function DwellsDetails() {
   const {
     lineShort,
-    query: { startDate },
+    query: { startDate, endDate },
   } = useDelimitatedRoute();
 
   const stations = optionsStation(lineShort);
@@ -26,12 +30,34 @@ export default function DwellsDetails() {
 
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
 
-  const dwells = useQuery([fromStopIds, startDate], () =>
-    fetchSingleDayData(QueryNameKeys.dwells, { date: startDate, stop: fromStopIds })
-  );
+  const aggregate = startDate !== undefined && endDate !== undefined;
+  const enabled = fromStopIds !== null && startDate !== null;
+  const parameters: SingleDayAPIOptions | AggregateAPIOptions = aggregate
+    ? {
+        [AggregateAPIParams.stop]: fromStopIds,
+        [AggregateAPIParams.startDate]: startDate,
+        [AggregateAPIParams.endDate]: endDate,
+      }
+    : {
+        [SingleDayAPIParams.stop]: fromStopIds,
+        [SingleDayAPIParams.date]: startDate,
+      };
+
+  const dwells = useQuery({
+    queryKey: [QueryNameKeys.dwells, aggregate, fromStopIds, startDate],
+    enabled: !aggregate && enabled,
+    queryFn: () => fetchSingleDayData(QueryNameKeys.dwells, parameters),
+  });
+  const dwellsAggregate = useQuery({
+    queryKey: [QueryNameKeys.dwells, aggregate, fromStopIds, startDate, endDate],
+    enabled: aggregate && enabled,
+    queryFn: () => fetchAggregateData(QueryNameKeys.dwells, parameters),
+  });
+
+  const dwellsData = aggregate ? dwellsAggregate?.data?.by_date : dwells?.data;
 
   if (dwells.isError) {
-    return <>Uh oh... error</>;
+    return <ErrorNotice />;
   }
 
   return (
@@ -47,21 +73,27 @@ export default function DwellsDetails() {
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Average Dwell"
-          widgetValue={new TimeWidgetValue(dwells.data ? averageDwells(dwells.data) : undefined, 1)}
+          widgetValue={new TimeWidgetValue(dwellsData ? averageDwells(dwellsData) : undefined, 1)}
           analysis={`from last ${dayjs().format('ddd')}.`}
         />
         <BasicDataWidgetItem
           title="Longest Dwell"
-          widgetValue={new TimeWidgetValue(dwells.data ? longestDwells(dwells.data) : undefined, 1)}
+          widgetValue={new TimeWidgetValue(dwellsData ? longestDwells(dwellsData) : undefined, 1)}
           analysis={`from last ${dayjs().format('ddd')}.`}
         />
       </BasicDataWidgetPair>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
-        <DwellsSingleChart dwells={dwells} toStation={toStation} fromStation={fromStation} />
+        {aggregate ? (
+          <DwellsAggregateChart
+            dwells={dwellsAggregate}
+            toStation={toStation}
+            fromStation={fromStation}
+          />
+        ) : (
+          <DwellsSingleChart dwells={dwells} toStation={toStation} fromStation={fromStation} />
+        )}
       </div>
-      <div className="flex w-full flex-row items-center justify-between text-lg">
-        <h3>Return Trip</h3>
-      </div>
+      <TerminusNotice toStation={toStation} fromStation={fromStation} />
     </>
   );
 }

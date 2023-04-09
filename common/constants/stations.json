@@ -17,7 +17,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       },
       {
         "stop_name": "Davis",
@@ -96,7 +97,8 @@
         "stops": {
           "0": ["70076"],
           "1": ["70075"]
-        }
+        },
+        "accessible": true
       },
       {
         "stop_name": "Downtown Crossing",
@@ -106,7 +108,8 @@
         "stops": {
           "0": ["70078"],
           "1": ["70077"]
-        }
+        },
+        "accessible": true
       },
       {
         "stop_name": "South Station",
@@ -149,7 +152,8 @@
         "stops": {
           "0": ["70086"],
           "1": ["70085"]
-        }
+        },
+        "accessible": true
       },
       {
         "stop_name": "Savin Hill",
@@ -196,7 +200,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       },
       {
         "stop_name": "JFK/UMass (Braintree)",
@@ -267,7 +272,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       }
     ]
   },
@@ -289,7 +295,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       },
       {
         "stop_name": "Malden Center",
@@ -358,7 +365,8 @@
         "stops": {
           "0": ["70027"],
           "1": ["70026"]
-        }
+        },
+        "accessible": true
       },
       {
         "stop_name": "Haymarket",
@@ -368,7 +376,8 @@
         "stops": {
           "0": ["70025"],
           "1": ["70024"]
-        }
+        },
+        "accessible": true
       },
       {
         "stop_name": "State Street",
@@ -378,7 +387,8 @@
         "stops": {
           "0": ["70023"],
           "1": ["70022"]
-        }
+        },
+        "accessible": true
       },
       {
         "stop_name": "Downtown Crossing",
@@ -506,7 +516,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       }
     ]
   },
@@ -528,7 +539,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       },
       {
         "stop_name": "Revere Beach",
@@ -640,7 +652,8 @@
         "stops": {
           "0": ["70040"],
           "1": ["70039"]
-        }
+        },
+        "accessible": true
       },
       {
         "stop_name": "Bowdoin",
@@ -651,7 +664,8 @@
           "0": ["70038"],
           "1": ["70838"]
         },
-        "accessible": false
+        "accessible": false,
+        "terminus": true
       }
     ]
   },
@@ -673,7 +687,8 @@
           "1": ["70512"]
         },
         "accessible": true,
-        "enclosed_bike_parking": true
+        "enclosed_bike_parking": true,
+        "terminus": true
       },
       {
         "stop_name": "Ball Square",
@@ -737,7 +752,8 @@
           "1": ["70504"]
         },
         "accessible": true,
-        "enclosed_bike_parking": true
+        "enclosed_bike_parking": true,
+        "terminus": true
       },
       {
         "stop_name": "Lechmere",
@@ -1036,7 +1052,8 @@
           "0": ["70106"],
           "1": ["70107"]
         },
-        "accessible": true
+        "accessible": true,
+        "terminus": true
       },
       {
         "stop_name": "Saint Marys Street",
@@ -1180,7 +1197,8 @@
           "0": ["70238"],
           "1": ["70237"]
         },
-        "accessible": true
+        "accessible": true,
+        "terminus": true
       },
       {
         "stop_name": "Fenway",
@@ -1329,7 +1347,8 @@
           "1": ["70161"]
         },
         "accessible": true,
-        "enclosed_bike_parking": true
+        "enclosed_bike_parking": true,
+        "terminus": true
       },
       {
         "stop_name": "Prudential",
@@ -1450,7 +1469,8 @@
           "0": ["70260"],
           "1": ["70260"]
         },
-        "accessible": true
+        "accessible": true,
+        "terminus": true
       }
     ]
   }

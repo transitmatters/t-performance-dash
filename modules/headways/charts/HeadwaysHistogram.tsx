@@ -62,7 +62,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
           datasets: [
             {
               backgroundColor: LINE_COLORS[line ?? 'default'],
-              label: `Trains`,
+              label: lineShort !== 'Bus' ? 'Trains' : 'Buses',
               data: dataObject,
             },
           ],
@@ -90,7 +90,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
             y: {
               title: {
                 display: true,
-                text: 'Trains',
+                text: lineShort !== 'Bus' ? 'Trains' : 'Buses',
                 color: COLORS.design.subtitleGrey,
               },
               ticks: {
@@ -112,7 +112,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
                     return '';
                   }
                   const item = items[0];
-                  const x = item.parsed.x;
+                  const { x } = item.parsed;
                   const min = x - 0.5;
                   const max = x + 0.5;
                   return `${min} - ${max} min.`;
@@ -139,9 +139,9 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
             afterDraw: (chart) => {
               if ((startDate === undefined || startDate.length === 0) && !isLoading) {
                 // No data is present
-                const ctx = chart.ctx;
-                const width = chart.width;
-                const height = chart.height;
+                const { ctx } = chart;
+                const { width } = chart;
+                const { height } = chart;
                 chart.clear();
 
                 ctx.save();

@@ -3,28 +3,39 @@ import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { Line } from 'react-chartjs-2';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import type { LineShort, Line as TrainLine } from '../../../common/types/lines';
+dayjs.extend(utc);
+import { drawSimpleTitle } from '../../../common/components/charts/Title';
 
 interface TotalSlowTimeProps {
-  data?: DayDelayTotals[];
+  // Data is always all data. We filter it by adjusting the X axis of the graph.
+  data: DayDelayTotals[];
+  startDateUTC: dayjs.Dayjs;
+  endDateUTC: dayjs.Dayjs;
+  lineShort: LineShort;
+  line: TrainLine;
 }
 Chart.register(...registerables);
 
-export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data }) => {
+export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
+  data,
+  startDateUTC,
+  endDateUTC,
+  lineShort,
+  line,
+}) => {
   const ref = useRef();
-  const labels = data?.map((item) => item['date']);
-  const { line, lineShort } = useDelimitatedRoute();
-
-  if (!(lineShort && line)) {
-    return null;
-  }
+  const labels = data.map((item) => dayjs.utc(item.date).format('YYYY-MM-DD'));
 
   return (
     <Line
       ref={ref}
       id={'total_slow_time'}
+      height={240}
       data={{
         labels,
         datasets: [
@@ -67,6 +78,9 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data }) => {
           },
           x: {
             type: 'time',
+
+            min: startDateUTC?.toISOString(),
+            max: endDateUTC?.toISOString(),
             ticks: {
               color: COLORS.design.subtitleGrey,
             },
@@ -86,11 +100,27 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({ data }) => {
           },
         },
         plugins: {
+          tooltip: {
+            intersect: false,
+          },
+          title: {
+            // empty title to set font and leave room for drawTitle fn
+            display: true,
+            text: '',
+          },
           legend: {
             display: false,
           },
         },
       }}
+      plugins={[
+        {
+          id: 'customTitle',
+          afterDraw: (chart) => {
+            drawSimpleTitle('Total Slow Time', chart);
+          },
+        },
+      ]}
     />
   );
 };

@@ -9,13 +9,14 @@ export const optionsForField = (
   type: 'from' | 'to',
   line: LineShort,
   fromStation: Station | null,
-  toStation: Station | null
+  toStation: Station | null,
+  busRoute?: string
 ) => {
   if (type === 'from') {
-    return optionsStation(line)?.filter((entry) => entry !== toStation);
+    return optionsStation(line, busRoute)?.filter((entry) => entry !== toStation);
   }
   if (type === 'to') {
-    return optionsStation(line)?.filter((entry) => {
+    return optionsStation(line, busRoute)?.filter((entry) => {
       if (entry === fromStation) {
         return false;
       }
@@ -53,14 +54,38 @@ export const swapStations = (
   setToStation(fromStation);
 };
 
-export const lookup_station_by_id = (line: Exclude<LineShort, 'Bus'>, id: string) => {
-  if (line === undefined || id === '' || id === undefined) {
-    return undefined;
-  }
+const createRapidTransitStationIndex = () => {
+  const index: Record<string, Station> = {};
+  Object.values(rtStations).forEach((line) => {
+    line.stations.forEach((station) => {
+      index[station.station] = station;
+    });
+  });
+  return index;
+};
 
-  return rtStations[line].stations.find((x) =>
-    [...(x.stops['0'] || []), ...(x.stops['1'] || [])].includes(id)
-  );
+const createParentRapidTransitStationIndex = () => {
+  const index: Record<string, Station> = {};
+  Object.values(rtStations).forEach((line) => {
+    line.stations.forEach((station) => {
+      const allStopIds = [...(station.stops['0'] || []), ...(station.stops['1'] || [])];
+      allStopIds.forEach((stopId) => {
+        index[stopId] = station;
+      });
+    });
+  });
+  return index;
+};
+
+const rapidTransitStationIndex = createRapidTransitStationIndex();
+const parentRapidTransitStationIndex = createParentRapidTransitStationIndex();
+
+export const getStationById = (stationStopId: string) => {
+  return rapidTransitStationIndex[stationStopId];
+};
+
+export const getParentStationForStopId = (stopId: string) => {
+  return parentRapidTransitStationIndex[stopId];
 };
 
 export const stopIdsForStations = (

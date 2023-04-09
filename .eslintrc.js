@@ -13,6 +13,7 @@ module.exports = {
     'plugin:import/recommended',
     'next/core-web-vitals',
     'prettier',
+    'plugin:storybook/recommended',
   ],
   globals: {
     Atomics: 'readonly',
@@ -33,22 +34,31 @@ module.exports = {
     'import/no-self-import': 'error',
     'import/no-default-export': 'off',
     'import/order': 'error',
-    'prettier/prettier': 'warn',
-    'react/prop-types': 'off',
-    'react/jsx-no-target-blank': 'off',
+    'prettier/prettier': 'error',
+    'react/prop-types': 'warn',
+    'react/jsx-no-target-blank': 'warn',
     'react/no-unescaped-entities': 'off',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
     'react/react-in-jsx-scope': 'warn',
+    'react/no-unused-prop-types': 'warn',
     'unused-imports/no-unused-imports': 'error',
     'no-console': 'error',
     '@typescript-eslint/ban-ts-comment': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/consistent-type-imports': [
       'error',
       {
         prefer: 'type-imports',
         disallowTypeAnnotations: false,
+      },
+    ],
+    'prefer-destructuring': [
+      'warn',
+      {
+        array: false,
+        object: true,
       },
     ],
   },
@@ -65,4 +75,5 @@ module.exports = {
       },
     },
   ],
+  ignorePatterns: ['node_modules/**/*', 'build/**/*', 'out/**/*'],
 };

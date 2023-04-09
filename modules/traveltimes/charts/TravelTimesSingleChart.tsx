@@ -12,7 +12,7 @@ interface TravelTimesSingleChartProps {
   toStation: Station | undefined;
   fromStation: Station | undefined;
   showLegend?: boolean;
-  homescreen?: boolean;
+  isHomescreen?: boolean;
 }
 
 export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
@@ -20,7 +20,7 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
   toStation,
   fromStation,
   showLegend = true,
-  homescreen = false,
+  isHomescreen = false,
 }) => {
   const {
     linePath,
@@ -32,6 +32,10 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
     () => traveltimes.isLoading || toStation === undefined || fromStation === undefined,
     [traveltimes.isLoading, fromStation, toStation]
   );
+
+  const anyTravelBenchmarks =
+    Array.isArray(traveltimes.data) &&
+    traveltimes.data?.some((e) => e.benchmark_travel_time_sec && e.benchmark_travel_time_sec > 0);
 
   const chart = useMemo(() => {
     return (
@@ -47,8 +51,8 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
         bothStops={true}
         location={locationDetails(fromStation, toStation, lineShort)}
         fname={'traveltimes'}
-        showLegend={showLegend}
-        homescreen={homescreen}
+        showLegend={showLegend && anyTravelBenchmarks}
+        isHomescreen={isHomescreen}
       />
     );
   }, [
@@ -60,7 +64,8 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
     toStation,
     lineShort,
     showLegend,
-    homescreen,
+    anyTravelBenchmarks,
+    isHomescreen,
   ]);
 
   return chart;

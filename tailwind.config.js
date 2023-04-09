@@ -6,6 +6,7 @@ module.exports = {
     './common/**/*.{js,ts,jsx,tsx}',
     './modules/**/*.{js,ts,jsx,tsx}',
     './node_modules/react-tailwindcss-datepicker/dist/index.esm.js',
+    'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}',
   ],
   safelist: [
     {
@@ -54,14 +55,19 @@ module.exports = {
         mbta: {
           red: '#D13434',
           lightRed: '#E89999',
+          darkRed: '#962222',
           orange: '#ed8b00',
           lightOrange: '#F6C580',
+          darkOrange: '#A86403',
           blue: '#003da5',
           lightBlue: '#809ED2',
+          darkBlue: '#19376B',
           green: '#00834d',
           lightGreen: '#80C1A6',
+          darkGreen: '#0E5E3D',
           bus: '#ffc72c',
           lightBus: '#FFE395',
+          darkBus: '#C49E33',
         },
         tm: {
           red: '#a31e1e',
@@ -70,5 +76,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [require('@tailwindcss/forms'), require('flowbite/plugin')],
 };

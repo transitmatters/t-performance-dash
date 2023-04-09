@@ -5,6 +5,7 @@ import { fetchAlerts } from '../../../common/api/alerts';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { lineColorBackground } from '../../../common/styles/general';
 import { Divider } from '../../../common/components/general/Divider';
+import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { AlertBox } from './AlertBox';
 
 export const Alerts: React.FC = () => {
@@ -14,20 +15,23 @@ export const Alerts: React.FC = () => {
   );
 
   const divStyle = classNames(
-    'flex flex-col items-center rounded-md p-4 text-white shadow-dataBox w-full xl:w-1/2 gap-y-2 md:h-[240px] lg:h-[360px] md:overflow-y-auto',
+    'flex flex-col rounded-md p-4 text-white shadow-dataBox w-full xl:w-1/3 gap-y-2 md:max-h-[309px] md:overflow-y-auto',
     lineColorBackground[line ?? 'DEFAULT']
   );
 
-  if (alerts.isLoading || !line || !lineShort) {
-    return <div className={divStyle}>Loading...</div>;
-  }
-  if (alerts.isError) {
-    return <div className={divStyle}>Error getting alerts.</div>;
-  }
+  const alertsReady = !alerts.isError && !alerts.isLoading && line && lineShort;
 
+  if (!alertsReady) {
+    return (
+      <div className={divStyle}>
+        <h3 className="w-full text-2xl font-semibold md:w-auto">Alerts</h3>
+        <ChartPlaceHolder query={alerts} isInverse />
+      </div>
+    );
+  }
   return (
     <div className={divStyle}>
-      <h3 className="w-full text-2xl font-bold md:w-auto">Alerts</h3>
+      <h3 className="w-full text-2xl font-semibold md:w-auto">Alerts</h3>
       <div className="flex w-full flex-row gap-x-4 overflow-x-scroll pb-2 md:flex-col md:gap-x-0 md:overflow-x-auto">
         <div className="md:w-full">
           <Divider title="Today" line={line} />

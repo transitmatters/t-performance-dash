@@ -10,7 +10,7 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
   toStation,
   fromStation,
   showLegend = true,
-  homescreen = false,
+  isHomescreen = false,
 }) => {
   const {
     linePath,
@@ -23,11 +23,15 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
     [headways.isLoading, fromStation, toStation]
   );
 
+  const anyHeadwayBenchmarks = headways.data?.some(
+    (e) => e.benchmark_headway_time_sec && e.benchmark_headway_time_sec > 0
+  );
+
   const chart = useMemo(() => {
     return (
       <SingleDayLineChart
         chartId={`headways-chart-${linePath}`}
-        title={'Time between trains (headways)'}
+        title={`Time between ${lineShort !== 'Bus' ? 'trains' : 'bus'} (headways)`}
         data={headways.data ?? []}
         date={startDate}
         metricField={MetricFieldKeys.headwayTimeSec}
@@ -36,8 +40,8 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
         isLoading={isLoading}
         location={locationDetails(fromStation, toStation, lineShort)}
         fname={'headways'}
-        showLegend={showLegend}
-        homescreen={homescreen}
+        showLegend={showLegend && anyHeadwayBenchmarks}
+        isHomescreen={isHomescreen}
       />
     );
   }, [
@@ -49,7 +53,8 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
     toStation,
     lineShort,
     showLegend,
-    homescreen,
+    anyHeadwayBenchmarks,
+    isHomescreen,
   ]);
 
   return chart;

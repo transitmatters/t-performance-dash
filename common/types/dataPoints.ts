@@ -1,4 +1,4 @@
-import type { LineShort } from './lines';
+import type { Line, LineShort } from './lines';
 
 export interface DataPoint {
   route_id: string;
@@ -67,4 +67,17 @@ export type SlowZoneResponse = {
   color: Exclude<LineShort, 'Bus'>;
   fr_id: string;
   to_id: string;
+};
+
+export interface SpeedDataPoint {
+  count: number;
+  date: string;
+  line: Line;
+  value: number;
+}
+
+export type LineSegmentData = {
+  x: string[];
+  id: string;
+  delay: number;
 };

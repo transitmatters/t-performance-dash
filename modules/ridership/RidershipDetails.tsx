@@ -10,11 +10,17 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
 import { TphChart } from './charts/TphChart';
 
-export default function TravelTimesDetails() {
+export default function RidershipDetails() {
   const allRidership = useRidershipData();
 
-  const { line, lineShort } = useDelimitatedRoute();
-  const lineData = allRidership.data?.lineData[`line-${lineShort}`];
+  const {
+    line,
+    lineShort,
+    query: { busRoute },
+  } = useDelimitatedRoute();
+  const routeOrLine = line === 'BUS' ? busRoute : lineShort;
+  // Get the proper line- index, replace slashes for 114/116/117 route
+  const lineData = allRidership.data?.lineData[`line-${routeOrLine?.replace(/\//g, '')}`];
 
   const color = LINE_COLORS[line ?? 'default'];
   const [serviceDay, setServiceDay] = useState<ServiceDay>('weekday');
