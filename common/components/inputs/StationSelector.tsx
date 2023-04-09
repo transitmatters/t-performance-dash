@@ -40,7 +40,7 @@ export const StationSelector: React.FC<StationSelector> = ({
           <Button>
             <span
               className={classNames(
-                `flex items-center gap-x-1 truncate text-xl font-semibold text-white text-opacity-90`,
+                `flex items-center gap-x-1 truncate text-base font-semibold text-white text-opacity-90`,
                 line && buttonHighlightFocus[line]
               )}
             >
@@ -72,24 +72,24 @@ export const StationSelector: React.FC<StationSelector> = ({
                   {({ selected }) => (
                     <>
                       <div
-                        className={`flex items-center	gap-x-1 truncate justify-between${
+                        className={`flex items-center	justify-between gap-x-1 truncate ${
                           selected ? 'font-semibold' : 'font-normal'
                         }`}
                       >
                         {station.stop_name}
-                        <div>
-                          {station.accessible && (
-                            <FontAwesomeIcon
-                              icon={faWheelchair}
-                              size={'sm'}
-                              className={'m-0 h-2.5 w-2.5 rounded-sm bg-blue-500 p-[2px]'}
-                            />
-                          )}
+                        <div className="gap-x-1">
                           {station.enclosed_bike_parking && (
                             <FontAwesomeIcon
                               icon={faBicycle}
                               size={'sm'}
                               className={'m-0 h-2.5 w-2.5 rounded-sm bg-green-400 p-[2px]'}
+                            />
+                          )}
+                          {station.accessible && (
+                            <FontAwesomeIcon
+                              icon={faWheelchair}
+                              size={'sm'}
+                              className={'m-0 h-2.5 w-2.5 rounded-sm bg-blue-500 p-[2px]'}
                             />
                           )}
                         </div>
