@@ -30,7 +30,7 @@ export const DataPageHeader = () => {
         </h3>
         {isDesktop && datapage !== 'overview' && (
           <div className="absolute right-0 top-1 mt-0">
-            <DateSelection range />
+            <DateSelection />
           </div>
         )}
       </div>

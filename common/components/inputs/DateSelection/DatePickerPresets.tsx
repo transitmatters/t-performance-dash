@@ -1,18 +1,16 @@
 import React from 'react';
 import classNames from 'classnames';
-import type { DateSelectionDefaultOptions } from './types/DateSelectionTypes';
+import type { DateSelectionDefaultOptions, DateSelectionInput } from './types/DateSelectionTypes';
 
 interface DatePickerPresetsProps {
-  selection: number | undefined;
-  range: boolean;
+  config: DateSelectionInput;
   selectedOptions: DateSelectionDefaultOptions[];
   handleSelection: (selection: number, range: boolean) => void;
   close: () => void;
 }
 
 export const DatePickerPresets: React.FC<DatePickerPresetsProps> = ({
-  selection,
-  range,
+  config,
   selectedOptions,
   handleSelection,
   close,
@@ -24,13 +22,13 @@ export const DatePickerPresets: React.FC<DatePickerPresetsProps> = ({
           <button
             className="w-full"
             onClick={() => {
-              handleSelection(index, range);
+              handleSelection(index, config.range);
               close();
             }}
           >
             <div
               className={classNames(
-                index === selection
+                index === config.selection
                   ? 'bg-gray-200 text-gray-900'
                   : 'text-gray-70 bg-gray-100 bg-opacity-0',
                 'flex w-full items-start px-4 py-2 text-sm hover:bg-opacity-80'

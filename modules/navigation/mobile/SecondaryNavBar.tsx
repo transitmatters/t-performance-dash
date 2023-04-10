@@ -4,7 +4,7 @@ import { DateSelection } from '../../../common/components/inputs/DateSelection/D
 export const SecondaryNavBar: React.FC = () => {
   return (
     <div className="z-20 w-full bg-gray-100">
-      <DateSelection range />
+      <DateSelection />
     </div>
   );
 };
