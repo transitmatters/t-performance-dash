@@ -27,7 +27,7 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
   direction,
   isHorizontal,
   color,
-  slowZone: { delay },
+  slowZone: { delay, baseline },
 }) => {
   const delayString = useMemo(
     () =>
@@ -39,9 +39,14 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
     [delay]
   );
 
+  const fractionOverBaseline = -1 + (delay + baseline) / baseline;
+
   return (
     <div
-      style={{ flexDirection: isHorizontal && direction === '0' ? 'row-reverse' : 'row' }}
+      style={{
+        flexDirection: isHorizontal && direction === '0' ? 'row-reverse' : 'row',
+        fontWeight: fractionOverBaseline >= 0.5 ? 'bold' : 'normal',
+      }}
       className={styles.slowZoneLabel}
     >
       <DirectionIndicator
@@ -50,7 +55,7 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
         isHorizontal={isHorizontal}
         size={2}
       />
-      {delayString}
+      +{delayString}
     </div>
   );
 };
@@ -58,7 +63,7 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
 export const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
   const { isHorizontal, slowZonesByDirection, line } = props;
   return (
-    <div className={styles.slowSegmentLabel} style={{ marginBottom: isHorizontal ? 1 : 0 }}>
+    <div className={styles.slowSegmentLabel}>
       {DIRECTIONS.map((direction) => {
         const zone = slowZonesByDirection[direction];
         if (!zone) {
