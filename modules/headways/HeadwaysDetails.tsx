@@ -47,8 +47,8 @@ export default function HeadwaysDetails() {
         [SingleDayAPIParams.date]: startDate,
       };
 
-  const headways = useHeadwaysSingleDayData(parameters, enabled);
-  const headwaysAggregate = useHeadwaysAggregateData(parameters, enabled);
+  const headways = useHeadwaysSingleDayData(parameters, !aggregate && enabled);
+  const headwaysAggregate = useHeadwaysAggregateData(parameters, aggregate && enabled);
 
   const headwaysData = aggregate ? headwaysAggregate?.data?.by_date : headways?.data;
 
