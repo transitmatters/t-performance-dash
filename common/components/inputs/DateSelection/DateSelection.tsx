@@ -50,7 +50,7 @@ export const DateSelection = () => {
   return (
     <div
       className={classNames(
-        'flex h-full max-w-full flex-row  items-baseline overflow-hidden rounded-t-md border md:rounded-md',
+        'flex h-full w-full flex-row  items-baseline overflow-hidden rounded-t-md border md:rounded-md',
         lineColorDarkBorder[line ?? 'DEFAULT']
       )}
     >

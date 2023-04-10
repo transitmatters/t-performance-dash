@@ -13,10 +13,10 @@ interface ButtonProps
     HTMLButtonElement
   > {
   children: React.ReactNode;
-  isFullWidth?: boolean;
+  additionalClasses?: string;
 }
 
-export const Button: React.FC<ButtonProps> = ({ children, isFullWidth = false, ...props }) => {
+export const Button: React.FC<ButtonProps> = ({ children, additionalClasses, ...props }) => {
   const { line } = useDelimitatedRoute();
 
   return (
@@ -27,7 +27,7 @@ export const Button: React.FC<ButtonProps> = ({ children, isFullWidth = false, .
         line && buttonHighlightFocus[line],
         line && lineColorBackground[line],
         line && lineColorDarkBorder[line],
-        isFullWidth ? 'w-auto' : 'w-fit'
+        additionalClasses
       )}
       {...props}
     >

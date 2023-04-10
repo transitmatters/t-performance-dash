@@ -75,7 +75,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig }) =>
         <Flatpickr
           //TODO: Change calendar to line color
           className={classNames(
-            'w-28 cursor-pointer border-none py-0 text-sm focus:ring-opacity-0',
+            'w-[6.75rem] cursor-pointer border-none py-0 text-sm focus:ring-opacity-0',
             line && buttonHighlightFocus[line]
           )}
           value={startDate}
@@ -97,7 +97,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ config, setConfig }) =>
             <Flatpickr
               //TODO: Change calendar to line color
               className={classNames(
-                'w-28 cursor-pointer border-none py-0 text-sm focus:ring-opacity-0',
+                'w-[6.75rem] cursor-pointer border-none py-0 text-sm focus:ring-opacity-0',
                 line && buttonHighlightFocus[line]
               )}
               value={endDate}

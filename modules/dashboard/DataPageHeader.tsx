@@ -22,8 +22,8 @@ export const DataPageHeader = () => {
 
   const stations = optionsStation(lineShort);
 
-  const toStation = stations?.[stations.length - 2];
-  const fromStation = stations?.[3];
+  const toStation = stations?.[stations.length - 7];
+  const fromStation = stations?.[1];
 
   React.useEffect(() => {
     if (!range && endDate !== undefined) {
@@ -41,7 +41,7 @@ export const DataPageHeader = () => {
         {isDesktop && datapage !== 'overview' && (
           <div
             className={classNames(
-              'absolute right-0 top-1 mt-0 flex max-w-sm flex-col gap-y-2 rounded-lg bg-opacity-20 p-2',
+              'absolute right-0 top-1 mt-0 flex w-[26rem] flex-col items-center gap-y-1 rounded-lg bg-opacity-20 p-2',
               lineColorBackground[line ?? 'DEFAULT']
             )}
           >

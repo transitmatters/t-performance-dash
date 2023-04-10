@@ -35,9 +35,9 @@ export const StationSelector: React.FC<StationSelector> = ({
 
   return (
     <Listbox value={station} onChange={setStation}>
-      <div className="relative">
-        <Listbox.Button>
-          <Button>
+      <div className="relative w-full">
+        <Listbox.Button className="flex w-full">
+          <Button additionalClasses="w-full justify-between">
             <p
               className={classNames(
                 `flex items-center gap-x-1 truncate text-sm font-semibold text-white text-opacity-90`,
