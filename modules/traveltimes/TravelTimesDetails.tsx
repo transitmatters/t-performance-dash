@@ -7,7 +7,7 @@ import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/type
 import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadashboard';
 import { QueryNameKeys, AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
 import {
-  lookup_station_by_id,
+  getParentStationForStopId,
   optionsStation,
   stopIdsForStations,
 } from '../../common/utils/stations';
@@ -32,10 +32,10 @@ export default function TravelTimesDetails() {
   const stations = optionsStation(lineShort, busRoute);
 
   const [toStation, setToStation] = useState(
-    to ? lookup_station_by_id(lineShort, to) : stations?.[stations.length - 3]
+    to ? getParentStationForStopId(to) : stations?.[stations.length - 3]
   );
   const [fromStation, setFromStation] = useState(
-    from ? lookup_station_by_id(lineShort, from) : stations?.[3]
+    from ? getParentStationForStopId(from) : stations?.[3]
   );
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);

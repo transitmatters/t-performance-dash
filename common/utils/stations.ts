@@ -3,7 +3,7 @@ import type { LineShort } from '../../common/types/lines';
 import type { Station } from '../../common/types/stations';
 import type { Location } from '../types/charts';
 import type { Direction } from '../types/dataPoints';
-import { stations } from './../constants/stations';
+import { stations, rtStations } from './../constants/stations';
 
 export const optionsForField = (
   type: 'from' | 'to',

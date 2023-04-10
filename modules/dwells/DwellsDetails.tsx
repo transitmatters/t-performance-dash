@@ -6,7 +6,7 @@ import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadas
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../../common/types/api';
 import {
-  lookup_station_by_id,
+  getParentStationForStopId,
   optionsStation,
   stopIdsForStations,
 } from '../../common/utils/stations';
@@ -30,10 +30,10 @@ export default function DwellsDetails() {
   const stations = optionsStation(lineShort);
 
   const [toStation, setToStation] = useState(
-    to ? lookup_station_by_id(lineShort, to) : stations?.[stations.length - 3]
+    to ? getParentStationForStopId(to) : stations?.[stations.length - 3]
   );
   const [fromStation, setFromStation] = useState(
-    from ? lookup_station_by_id(lineShort, from) : stations?.[3]
+    from ? getParentStationForStopId(from) : stations?.[3]
   );
 
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
