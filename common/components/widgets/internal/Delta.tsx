@@ -6,14 +6,19 @@ import type { SentimentDirection } from './BasicWidgetDataLayout';
 interface DeltaProps {
   widgetValue: WidgetValueInterface;
   sentimentDirection?: SentimentDirection;
+  usePercentChange?: boolean;
 }
 
 export const Delta: React.FC<DeltaProps> = ({
   widgetValue,
   sentimentDirection = 'negativeOnIncrease',
+  usePercentChange = false,
 }) => {
-  const deltaValue = widgetValue.getFormattedDelta();
-  const increase = widgetValue.delta ? widgetValue.delta > 0 : false;
+  const changingValue = usePercentChange ? widgetValue.percentChange : widgetValue.delta;
+  const formattedChangingValue = usePercentChange
+    ? widgetValue.getFormattedPercentChange()
+    : widgetValue.getFormattedDelta();
+  const increase = changingValue ? changingValue > 0 : false;
   const positiveSentiment =
     (!increase && sentimentDirection === 'negativeOnIncrease') ||
     (increase && sentimentDirection === 'positiveOnIncrease');
@@ -23,13 +28,11 @@ export const Delta: React.FC<DeltaProps> = ({
     <div
       className={classNames(
         'flex flex-row rounded-full px-2',
-        widgetValue.delta ? bgColor : 'bg-gray-100'
+        changingValue ? bgColor : 'bg-gray-100'
       )}
     >
-      <p
-        className={classNames('text-xs sm:text-sm', widgetValue.delta ? textColor : 'text-rb-800')}
-      >
-        {deltaValue}
+      <p className={classNames('text-xs sm:text-sm', changingValue ? textColor : 'text-rb-800')}>
+        {formattedChangingValue}
       </p>
     </div>
   );

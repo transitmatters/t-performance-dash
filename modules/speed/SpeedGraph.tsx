@@ -17,9 +17,10 @@ import { enUS } from 'date-fns/locale';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { SpeedDataPoint } from '../../common/types/dataPoints';
-import type { TimeRange } from '../../common/types/inputs';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
-import { CORE_TRACK_LENGTHS, DELAYS_RANGE_PARAMS_MAP, PEAK_MPH } from './constants/speeds';
+import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
+import { CORE_TRACK_LENGTHS, PEAK_MPH } from './constants/speeds';
+import type { ParamsType } from './constants/speeds';
 
 ChartJS.register(
   CategoryScale,
@@ -34,13 +35,13 @@ ChartJS.register(
 );
 
 interface SpeedGraphProps {
-  timeRange: TimeRange;
   data: SpeedDataPoint[];
+  config: ParamsType;
 }
 
-export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {
+export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, config }) => {
   const { line } = useDelimitatedRoute();
-  const { tooltipFormat, unit, startDate, endDate, callbacks } = DELAYS_RANGE_PARAMS_MAP[timeRange];
+  const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef();
 
   const labels = data.map((point) => point.date);
@@ -108,8 +109,8 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {
             },
           },
           x: {
-            min: startDate,
-            max: endDate,
+            min: OVERVIEW_OPTIONS.year.startDate,
+            max: TODAY_STRING,
             type: 'time',
             time: {
               unit: unit,
@@ -135,11 +136,11 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {
         {
           id: 'customTitle',
           afterDraw: (chart) => {
-            if (startDate === undefined || startDate.length === 0) {
+            if (!data) {
               // No data is present
-              const ctx = chart.ctx;
-              const width = chart.width;
-              const height = chart.height;
+              const { ctx } = chart;
+              const { width } = chart;
+              const { height } = chart;
               chart.clear();
 
               ctx.save();

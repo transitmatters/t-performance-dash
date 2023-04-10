@@ -12,11 +12,12 @@ const est = 'America/New_York';
 
 export const DATE_FORMAT = 'YYYY-MM-DD';
 export const TODAY = dayjs().tz(est);
-export const TODAY_UTC = dayjs.utc().startOf('day');
-export const YESTERDAY_UTC = TODAY_UTC.subtract(1, 'day');
+export const TODAY_MIDNIGHT = dayjs().startOf('day');
+export const YESTERDAY_MIDNIGHT = TODAY_MIDNIGHT.subtract(1, 'day');
 export const TODAY_STRING = TODAY.format(DATE_FORMAT);
 export const RANGE_OPTIONS = ['Single Day', 'Range'];
 
+const OVERVIEW_TRAIN_MIN_DATE = '2016-01-01';
 const TRAIN_MIN_DATE = '2016-01-15';
 const BUS_MIN_DATE = '2018-08-01';
 const BUS_MAX_DATE = '2022-12-31';
@@ -42,6 +43,7 @@ export const FLAT_PICKER_OPTIONS: {
   },
 };
 
+// TODO Different presets for buses
 export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[] } = {
   singleDay: [
     { name: 'Today', input: { startDate: TODAY_STRING } },
@@ -50,6 +52,12 @@ export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[]
       name: `Last ${TODAY.subtract(7, 'days').format('dddd')}`,
       input: {
         startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
+      },
+    },
+    {
+      name: `30 days ago`,
+      input: {
+        startDate: TODAY.subtract(30, 'days').format(DATE_FORMAT),
       },
     },
     {
@@ -67,7 +75,6 @@ export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[]
         endDate: TODAY_STRING,
       },
     },
-
     {
       name: 'Past 30 days',
       input: {
@@ -89,5 +96,39 @@ export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[]
         endDate: TODAY.subtract(1, 'month').endOf('month').format(DATE_FORMAT),
       },
     },
+    {
+      name: 'This year',
+      input: {
+        startDate: TODAY.startOf('year').format(DATE_FORMAT),
+        endDate: TODAY_STRING,
+      },
+    },
+    {
+      name: 'Last year',
+      input: {
+        startDate: TODAY.startOf('year').subtract(1, 'year').format(DATE_FORMAT),
+        endDate: TODAY.endOf('year').subtract(1, 'year').format(DATE_FORMAT),
+      },
+    },
   ],
+};
+
+export const OVERVIEW_OPTIONS = {
+  week: {
+    startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
+    agg: 'daily',
+  },
+  month: {
+    startDate: TODAY.subtract(31, 'days').format(DATE_FORMAT),
+    agg: 'daily',
+  },
+  year: {
+    startDate: TODAY.subtract(365, 'days').format(DATE_FORMAT),
+    agg: 'weekly',
+  },
+
+  all: {
+    startDate: dayjs(OVERVIEW_TRAIN_MIN_DATE).format(DATE_FORMAT),
+    agg: 'monthly',
+  },
 };
