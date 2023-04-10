@@ -1,4 +1,4 @@
-import { faRightLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import React from 'react';
@@ -28,14 +28,15 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
   };
 
   return (
-    <div className={classNames('relative my-2 flex flex-col items-center gap-1 md:flex-row')}>
+    <div className={classNames('relative flex flex-col items-center gap-1 md:flex-row')}>
       <StationSelector
         type={'from'}
         fromStation={fromStation}
         toStation={toStation}
         setStation={setFromStation}
       />
-      <p className="text-xl">to</p>
+      <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" />
+
       <StationSelector
         type={'to'}
         fromStation={fromStation}

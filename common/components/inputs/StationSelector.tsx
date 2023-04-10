@@ -1,12 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Listbox, Transition } from '@headlessui/react';
 import React, { Fragment } from 'react';
-import { faBicycle, faWheelchair } from '@fortawesome/free-solid-svg-icons';
+import { faBicycle, faChevronDown, faWheelchair } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
 import type { Station } from '../../types/stations';
 import { useDelimitatedRoute } from '../../utils/router';
 import { optionsForField } from '../../utils/stations';
-import { buttonHighlightFocus } from '../../styles/general';
+import { buttonHighlightFocus, lineColorBackground } from '../../styles/general';
 import { selectConfig } from './styles/tailwind';
 import { Button } from './Button';
 
@@ -38,14 +38,15 @@ export const StationSelector: React.FC<StationSelector> = ({
       <div className="relative">
         <Listbox.Button>
           <Button>
-            <span
+            <p
               className={classNames(
-                `flex items-center gap-x-1 truncate text-base font-semibold text-white text-opacity-90`,
+                `flex items-center gap-x-1 truncate text-sm font-semibold text-white text-opacity-90`,
                 line && buttonHighlightFocus[line]
               )}
             >
               {station.stop_name}
-            </span>
+            </p>
+            <FontAwesomeIcon icon={faChevronDown} className="h-4 w-4 pl-2 text-white" />
           </Button>
         </Listbox.Button>
         <Transition
@@ -57,45 +58,45 @@ export const StationSelector: React.FC<StationSelector> = ({
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Listbox.Options className="absolute left-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Listbox.Options className="max-w-screen absolute right-0 z-10 mt-1 max-h-96 origin-top-right overflow-auto rounded-md bg-white  shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ">
             <div className="py-1">
               {stationOptions?.map((station, stationIndex) => (
                 <Listbox.Option
                   key={stationIndex}
-                  className={({ active }) =>
-                    `relative cursor-default select-none px-4 py-2 ${
-                      active ? selectConfig[linePath] : 'text-gray-900'
-                    }`
+                  className={({ active, selected }) =>
+                    classNames(
+                      'relative cursor-pointer select-none items-center px-4 py-2',
+                      active ? selectConfig[linePath] : 'text-gray-900',
+                      selected
+                        ? `bg-opacity-20 font-semibold ${lineColorBackground[line ?? 'DEFAULT']}`
+                        : 'font-normal'
+                    )
                   }
                   value={station}
                 >
-                  {({ selected }) => (
-                    <>
-                      <div
-                        className={`flex items-center	justify-between gap-x-1 truncate ${
-                          selected ? 'font-semibold' : 'font-normal'
-                        }`}
-                      >
-                        {station.stop_name}
-                        <div className="gap-x-1">
-                          {station.enclosed_bike_parking && (
-                            <FontAwesomeIcon
-                              icon={faBicycle}
-                              size={'sm'}
-                              className={'m-0 h-2.5 w-2.5 rounded-sm bg-green-400 p-[2px]'}
-                            />
-                          )}
-                          {station.accessible && (
-                            <FontAwesomeIcon
-                              icon={faWheelchair}
-                              size={'sm'}
-                              className={'m-0 h-2.5 w-2.5 rounded-sm bg-blue-500 p-[2px]'}
-                            />
-                          )}
-                        </div>
-                      </div>
-                    </>
-                  )}
+                  <div className="flex items-baseline justify-between gap-x-1 truncate">
+                    {station.stop_name}
+                    <div className="flex flex-row gap-x-1 pl-4">
+                      {station.enclosed_bike_parking ? (
+                        <FontAwesomeIcon
+                          title="Enclosed Bicycle Parking"
+                          icon={faBicycle}
+                          className={'m-0 h-3 w-3 rounded-sm bg-gray-800 p-[2px] text-white'}
+                        />
+                      ) : (
+                        <div className="h-4 w-4" />
+                      )}
+                      {station.accessible ? (
+                        <FontAwesomeIcon
+                          title="Wheelchair Accessible"
+                          icon={faWheelchair}
+                          className={'m-0 h-3 w-3 rounded-sm bg-[#167cb9] p-[2px] text-white'}
+                        />
+                      ) : (
+                        <div className="h-2 w-4" />
+                      )}
+                    </div>
+                  </div>
                 </Listbox.Option>
               ))}
             </div>

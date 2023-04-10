@@ -33,6 +33,15 @@ export const lineColorDarkBorder = {
   DEFAULT: `border-stone-900`,
 };
 
+export const lineColorDarkBackground = {
+  RL: `bg-mbta-darkRed`,
+  OL: `bg-mbta-darkOrange`,
+  GL: `bg-mbta-darkGreen`,
+  BL: `bg-mbta-darkBlue`,
+  BUS: `bg-mbta-darkBus`,
+  DEFAULT: `bg-stone-900`,
+};
+
 export const lineColorBorder = {
   RL: `border-mbta-red`,
   OL: `border-mbta-orange`,
