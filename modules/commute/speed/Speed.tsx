@@ -6,18 +6,18 @@ import { lineColorBackground } from '../../../common/styles/general';
 import { useSpeedData } from '../../../common/api/hooks/speed';
 import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { CompWidget } from '../../../common/components/widgets/internal/CompWidget';
-import { DATE_FORMAT } from '../../../common/constants/dates';
+import { DATE_FORMAT, OVERVIEW_OPTIONS } from '../../../common/constants/dates';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
-import { DELAYS_RANGE_PARAMS_MAP, MINIMUMS } from '../../speed/constants/speeds';
+import { MINIMUMS } from '../../speed/constants/speeds';
 import { calculateCommuteSpeedWidgetValues } from './utils/utils';
 
 export const Speed: React.FC = () => {
   const { line } = useDelimitatedRoute();
   const today = dayjs().format(DATE_FORMAT);
-  const { agg, endDate, startDate } = DELAYS_RANGE_PARAMS_MAP['week'];
+  const { startDate } = OVERVIEW_OPTIONS.week;
 
   const speed = useSpeedData({ line, start_date: today, end_date: today, agg: 'daily' });
-  const weekly = useSpeedData({ line, start_date: startDate, end_date: endDate, agg });
+  const weekly = useSpeedData({ line, start_date: startDate, end_date: today, agg: 'daily' });
 
   const speedReady = line && weekly.data && speed.data && !speed.isLoading && !speed.isError;
 
