@@ -90,6 +90,18 @@ export default function SlowZonesDetails() {
           )}
         </div>
       </div>
+      <div className="flex h-10 w-[400px] bg-blue-400">
+        <div className="flex w-full">
+          <div className="flex w-full shrink overflow-hidden">
+            <p className="truncate">
+              ttest etset setse tet setset set set set set set setse tes set se tse tset est
+            </p>
+          </div>
+          <div className="flex w-full shrink overflow-hidden">
+            <p className="truncate">ttest etset</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

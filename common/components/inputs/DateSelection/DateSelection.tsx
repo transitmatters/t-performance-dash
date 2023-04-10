@@ -57,7 +57,7 @@ export const DateSelection = () => {
       <Popover className={classNames('flex h-full w-full self-stretch overflow-hidden text-left')}>
         <Popover.Button
           className={classNames(
-            'flex h-full w-full items-center justify-center self-stretch px-3 py-1 text-white text-opacity-95 shadow-sm hover:bg-opacity-70 focus:bg-opacity-70 focus:outline-none',
+            'flex h-full w-full items-center justify-center self-stretch px-3 py-1 text-white text-opacity-95 hover:bg-opacity-70 focus:bg-opacity-70 focus:outline-none',
             line && buttonHighlightFocus[line],
             line && lineColorBackground[line]
           )}

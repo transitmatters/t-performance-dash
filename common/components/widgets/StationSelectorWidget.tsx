@@ -43,7 +43,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
         toStation={toStation}
         setStation={setToStation}
       />
-      <Button onClick={swapStations}>
+      <Button onClick={swapStations} additionalClasses="shrink-0">
         <FontAwesomeIcon icon={faRightLeft} className="h-4 w-4" />
       </Button>
     </div>
