@@ -45,7 +45,7 @@ export const TphChart: React.FC<TphChartProps> = ({ color, lineData, serviceDay,
   ];
 
   return (
-    <div>
+    <div className={'w-full'}>
       <Line
         height={200}
         data={{
