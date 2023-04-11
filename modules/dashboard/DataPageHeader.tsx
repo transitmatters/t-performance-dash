@@ -41,7 +41,7 @@ export const DataPageHeader = () => {
         {isDesktop && datapage !== 'overview' && (
           <div
             className={classNames(
-              'fixed right-2 top-2 z-30 mt-0 flex w-[26rem] flex-col items-center gap-y-1 rounded-lg border border-opacity-50 bg-opacity-90 p-2 shadow-md',
+              'fixed right-4 top-4 z-30 mt-0 flex w-[26rem] flex-col items-center gap-y-1 rounded-lg border border-opacity-50 bg-opacity-90 p-2 shadow-md',
               lineColorLightBackground[line ?? 'DEFAULT'],
               lineColorBorder[line ?? 'DEFAULT']
             )}
