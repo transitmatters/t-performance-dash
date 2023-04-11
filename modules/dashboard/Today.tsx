@@ -4,8 +4,10 @@ import { Alerts } from '../commute/alerts/Alerts';
 import { Speed } from '../commute/speed/Speed';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { SlowZonesMap } from '../slowzones/map';
-import { fetchAllSlow } from '../slowzones/api/slowzones';
+
 import { WidgetTitle } from './WidgetTitle';
+import { fetchAllSlow } from '../../common/api/slowzones';
+
 export default function TodaysCommute() {
   const { tab, line, lineShort } = useDelimitatedRoute();
   const allSlow = useQuery(['allSlow'], fetchAllSlow);

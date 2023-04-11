@@ -7,7 +7,7 @@ import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { fetchDelayTotals } from './api/slowzones';
+import { fetchDelayTotals } from '../../common/api/slowzones';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 dayjs.extend(utc);
 
