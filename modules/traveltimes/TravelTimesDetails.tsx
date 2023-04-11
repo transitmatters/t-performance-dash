@@ -2,10 +2,8 @@
 
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
-import { useQuery } from '@tanstack/react-query';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
-import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadashboard';
-import { QueryNameKeys, AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
+import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
@@ -15,6 +13,10 @@ import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
+import {
+  useTravelTimesAggregateData,
+  useTravelTimesSingleDayData,
+} from '../../common/api/hooks/traveltimes';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
@@ -53,16 +55,8 @@ export default function TravelTimesDetails() {
         [SingleDayAPIParams.date]: startDate,
       };
 
-  const travelTimesAggregate = useQuery({
-    queryKey: [QueryNameKeys.traveltimes, aggregate, fromStopIds, toStopIds, startDate, endDate],
-    enabled: aggregate && enabled,
-    queryFn: () => fetchAggregateData(QueryNameKeys.traveltimes, parameters),
-  });
-  const travelTimesSingle = useQuery({
-    queryKey: [QueryNameKeys.traveltimes, aggregate, fromStopIds, toStopIds, startDate, endDate],
-    enabled: !aggregate && enabled,
-    queryFn: () => fetchSingleDayData(QueryNameKeys.traveltimes, parameters),
-  });
+  const travelTimesSingle = useTravelTimesSingleDayData(parameters, !aggregate && enabled);
+  const travelTimesAggregate = useTravelTimesAggregateData(parameters, aggregate && enabled);
 
   const traveltimes = aggregate ? travelTimesAggregate : travelTimesSingle;
   const travelTimeValues = aggregate

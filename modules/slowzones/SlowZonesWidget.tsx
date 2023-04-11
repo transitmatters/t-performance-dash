@@ -1,19 +1,18 @@
 'use client';
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { fetchDelayTotals } from './api/slowzones';
+import { useSlowzoneDelayTotalData } from '../../common/api/hooks/slowzones';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 dayjs.extend(utc);
 
 export default function SlowZonesWidget() {
   const { line, linePath, lineShort } = useDelimitatedRoute();
-  const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
+  const delayTotals = useSlowzoneDelayTotalData();
 
   const startDateUTC = dayjs.utc('2022-01-01').startOf('day');
   const endDateUTC = dayjs.utc().startOf('day');
