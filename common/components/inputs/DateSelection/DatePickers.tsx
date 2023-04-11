@@ -2,31 +2,46 @@ import dayjs from 'dayjs';
 import type { SetStateAction } from 'react';
 import React from 'react';
 import classNames from 'classnames';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/light.css';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
-import { FLAT_PICKER_OPTIONS } from '../../../constants/dates';
+import { FLAT_PICKER_OPTIONS, DATE_PICKER_PRESETS, TODAY_STRING } from '../../../constants/dates';
 import { buttonHighlightFocus } from '../../../styles/general';
+import { RangeButton } from './RangeButton';
 
 interface DatePickerProps {
   range: boolean;
+  setRange: React.Dispatch<SetStateAction<boolean>>;
+  type: 'combo' | 'range' | 'single';
   setSelection: React.Dispatch<SetStateAction<number | undefined>>;
 }
 
-export const DatePickers: React.FC<DatePickerProps> = ({ range, setSelection }) => {
+export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, setSelection }) => {
   const updateQueryParams = useUpdateQuery();
   const { query, line, tab } = useDelimitatedRoute();
   const { startDate, endDate } = query;
   const endDateObject = dayjs(endDate);
   const startDateObject = dayjs(startDate);
 
+  const handleRangeToggle = () => {
+    if (range) {
+      updateQueryParams({ startDate: startDate }, !range);
+    } else if (startDate === TODAY_STRING) {
+      // If start date is today -> set range to past week. This prevents bugs with startDate === endDate
+      updateQueryParams(DATE_PICKER_PRESETS.range[0].input, !range);
+    } else {
+      updateQueryParams({ startDate: startDate }, !range);
+    }
+    setRange(!range);
+    setSelection(undefined);
+  };
+
   const handleEndDateChange = (date: string) => {
     const updatedDate = dayjs(date);
     if (updatedDate.isSame(startDateObject)) {
-      // TODO: set to undefined?
-      return;
+      if (type === 'combo') handleRangeToggle();
     }
     if (updatedDate.isBefore(startDateObject)) {
       // Swap start and end if new end < startDate
@@ -93,6 +108,15 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setSelection }) 
             />
           </>
         ) : null}
+        {type === 'combo' && (
+          <RangeButton onClick={handleRangeToggle}>
+            {range ? (
+              <FontAwesomeIcon icon={faClose} className="h-4 w-4 text-black" />
+            ) : (
+              <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4 text-black" />
+            )}
+          </RangeButton>
+        )}
       </div>
     </div>
   );

@@ -15,21 +15,27 @@ import { DatePickers } from './DatePickers';
 import { DatePickerPresets } from './DatePickerPresets';
 
 interface DateSelectionProps {
-  range: boolean;
+  type: 'combo' | 'range' | 'single';
 }
 
-export const DateSelection: React.FC<DateSelectionProps> = ({ range }) => {
+export const DateSelection: React.FC<DateSelectionProps> = ({ type }) => {
   const { line, query } = useDelimitatedRoute();
   const { startDate, endDate } = query;
   const [selection, setSelection] = useState<number | undefined>(0);
   const [firstLoad, setFirstLoad] = useState(true);
+  const [range, setRange] = useState<boolean>(false);
   const router = useRouter();
   const updateQueryParams = useUpdateQuery();
   const selectedOptions = range ? DATE_PICKER_PRESETS.range : DATE_PICKER_PRESETS.singleDay;
 
+  useEffect(() => {
+    setRange(type !== 'single');
+  }, [type]);
+
   const handleSelection = (selection: number, range: boolean) => {
     const newOptions = range ? DATE_PICKER_PRESETS.range : DATE_PICKER_PRESETS.singleDay;
     updateQueryParams(newOptions[selection].input ?? null, range);
+    setRange(range);
     setSelection(selection);
   };
 
@@ -97,7 +103,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ range }) => {
           </Popover.Panel>
         </Transition>
       </Popover>
-      <DatePickers setSelection={setSelection} range={range} />
+      <DatePickers setSelection={setSelection} setRange={setRange} range={range} type={type} />
     </div>
   );
 };

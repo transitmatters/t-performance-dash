@@ -23,7 +23,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   const section = ALL_PAGES[page]?.section;
   const getDatePicker = () => {
     if (section === 'trips' || section === 'line')
-      return <DateSelection range={single ? false : true} />;
+      return <DateSelection type={single ? 'single' : 'range'} />;
     if (section === 'overview') return <OverviewDateSelection />;
   };
 
