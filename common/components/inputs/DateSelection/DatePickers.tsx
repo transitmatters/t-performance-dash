@@ -42,6 +42,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
     const updatedDate = dayjs(date);
     if (updatedDate.isSame(startDateObject)) {
       if (type === 'combo') handleRangeToggle();
+      return;
     }
     if (updatedDate.isBefore(startDateObject)) {
       // Swap start and end if new end < startDate
@@ -55,7 +56,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
   const handleStartDateChange = (date: string) => {
     const updatedDate = dayjs(date);
     if (updatedDate.isSame(endDateObject)) {
-      // TODO: set to undefined?
+      if (type === 'combo') handleRangeToggle();
       return;
     }
     if (updatedDate.isAfter(endDateObject)) {
