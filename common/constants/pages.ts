@@ -58,7 +58,7 @@ export const ALL_PAGES: NavTabMap = {
   trips: {
     key: 'trips',
     path: '/trips',
-    name: 'Overview',
+    name: 'Explore',
     title: 'Trip Overview',
     lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
     icon: faMapLocation,
