@@ -1,10 +1,8 @@
 'use client';
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
-import { useQuery } from '@tanstack/react-query';
-import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadashboard';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
-import { AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../../common/types/api';
+import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
@@ -13,6 +11,8 @@ import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
+import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
+import { useDwellsAggregateData, useDwellsSingleDayData } from '../../common/api/hooks/dwells';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 
@@ -42,16 +42,8 @@ export default function DwellsDetails() {
         [SingleDayAPIParams.date]: startDate,
       };
 
-  const dwells = useQuery({
-    queryKey: [QueryNameKeys.dwells, aggregate, fromStopIds, startDate],
-    enabled: !aggregate && enabled,
-    queryFn: () => fetchSingleDayData(QueryNameKeys.dwells, parameters),
-  });
-  const dwellsAggregate = useQuery({
-    queryKey: [QueryNameKeys.dwells, aggregate, fromStopIds, startDate, endDate],
-    enabled: aggregate && enabled,
-    queryFn: () => fetchAggregateData(QueryNameKeys.dwells, parameters),
-  });
+  const dwells = useDwellsSingleDayData(parameters, !aggregate && enabled);
+  const dwellsAggregate = useDwellsAggregateData(parameters, aggregate && enabled);
 
   const dwellsData = aggregate ? dwellsAggregate?.data?.by_date : dwells?.data;
 
@@ -92,6 +84,7 @@ export default function DwellsDetails() {
           <DwellsSingleChart dwells={dwells} toStation={toStation} fromStation={fromStation} />
         )}
       </div>
+      <TerminusNotice toStation={toStation} fromStation={fromStation} />
     </>
   );
 }

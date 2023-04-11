@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { useRidershipData } from '../../common/api/ridership';
+import { useRidershipData } from '../../common/api/hooks/ridership';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { LINE_COLORS } from '../../common/constants/colors';
@@ -7,10 +7,11 @@ import { PercentageWidgetValue, TripsWidgetValue } from '../../common/types/basi
 import type { ServiceDay } from '../../common/types/ridership';
 import { getHighestTphValue, normalizeToPercent } from '../../common/utils/ridership';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
+import { ServiceDayPicker } from '../../common/components/inputs/ServiceDayPicker';
 import { TphChart } from './charts/TphChart';
+import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
 
-export default function TravelTimesDetails() {
+export default function RidershipDetails() {
   const allRidership = useRidershipData();
 
   const {
@@ -31,6 +32,26 @@ export default function TravelTimesDetails() {
   );
   const ridershipPercentage = normalizeToPercent(lineData?.ridershipHistory ?? []);
   const serviceHistory = lineData?.serviceHistory ?? [];
+
+  // Only re-render chart when necesarry
+  const serviceRidershipChart = useMemo(() => {
+    return <ServiceRidershipChart lineData={lineData} startDate={startDate} color={color} />;
+  }, [color, lineData, startDate]);
+
+  // Only re-render chart when necesarry
+  const serviceLevelChart = useMemo(() => {
+    return (
+      <>
+        <TphChart
+          lineData={lineData}
+          serviceDay={serviceDay}
+          color={color}
+          highestTph={highestTph}
+        />
+        <ServiceDayPicker serviceDay={serviceDay} setServiceDay={setServiceDay} />
+      </>
+    );
+  }, [color, highestTph, lineData, serviceDay]);
 
   return (
     <>
@@ -64,19 +85,18 @@ export default function TravelTimesDetails() {
         <h3>Weekday ridership and service levels</h3>
       </div>
       <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
-        <ServiceRidershipChart lineData={lineData} startDate={startDate} color={color} />
+        {serviceRidershipChart}
       </div>
 
       <div className="flex w-full flex-row items-center justify-between text-lg">
         <h3>Service Levels</h3>
       </div>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
-        <TphChart
-          lineData={lineData}
-          serviceDay={serviceDay}
-          color={color}
-          highestTph={highestTph}
-        />
+      <div
+        className={
+          'flex h-full rounded-lg border-design-lightGrey bg-white p-2 pr-3 shadow-dataBox'
+        }
+      >
+        {serviceLevelChart}
       </div>
     </>
   );

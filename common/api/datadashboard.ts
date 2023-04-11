@@ -11,6 +11,7 @@ import { QUERIES, AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '
 import { APP_DATA_BASE_PATH } from '../../common/utils/constants';
 import { getCurrentDate } from '../utils/date';
 import type { AggregateDataResponse, SingleDayDataPoint } from '../types/charts';
+import { ONE_MINUTE } from '../constants/time';
 
 // Fetch data for all single day charts.
 export const fetchSingleDayData = async (
@@ -115,7 +116,7 @@ export const useCustomQueries: UseQueriesOverload = (
             ? fetchAggregateData(name, queries[name].params)
             : fetchSingleDayData(name, queries[name].params),
         enabled,
-        staleTime: 30000, // Don't refetch within 30 seconds
+        staleTime: ONE_MINUTE,
       };
     }),
   });

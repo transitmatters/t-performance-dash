@@ -2,16 +2,14 @@
 import React from 'react';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
-import { useQuery } from '@tanstack/react-query';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
-import { fetchSingleDayData } from '../../common/api/datadashboard';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
-import { QueryNameKeys } from '../../common/types/api';
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
+import { useDwellsSingleDayData } from '../../common/api/hooks/dwells';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 
 export const DwellsWidget: React.FC = () => {
@@ -28,9 +26,7 @@ export const DwellsWidget: React.FC = () => {
 
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
 
-  const dwells = useQuery([QueryNameKeys.dwells, fromStopIds, startDate], () =>
-    fetchSingleDayData(QueryNameKeys.dwells, { date: startDate, stop: fromStopIds })
-  );
+  const dwells = useDwellsSingleDayData({ date: startDate, stop: fromStopIds });
 
   const dwellsReady = !dwells.isError && dwells.data && line && lineShort && linePath;
 
