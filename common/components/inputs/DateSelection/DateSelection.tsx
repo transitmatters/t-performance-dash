@@ -13,12 +13,13 @@ import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { DATE_PICKER_PRESETS, TODAY_STRING } from '../../../constants/dates';
 import { DatePickers } from './DatePickers';
 import { DatePickerPresets } from './DatePickerPresets';
+import { RangeSelectionTab } from './RangeSelectionTab';
 
 interface DateSelectionProps {
-  type: 'combo' | 'range' | 'single';
+  type?: 'combo' | 'range' | 'single';
 }
 
-export const DateSelection: React.FC<DateSelectionProps> = ({ type }) => {
+export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) => {
   const { line, query } = useDelimitatedRoute();
   const { startDate, endDate } = query;
   const [selection, setSelection] = useState<number | undefined>(0);
@@ -91,6 +92,9 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type }) => {
           <Popover.Panel className="absolute bottom-[5.25rem] left-4 z-20 origin-bottom-left overflow-visible rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-4 md:right-auto md:top-8 md:mt-2 md:origin-top-left">
             {({ close }) => (
               <div className="flex w-screen max-w-[240px] flex-col overflow-hidden rounded-md bg-white leading-6 shadow-lg ring-1 ring-gray-900/5">
+                {type === 'combo' && (
+                  <RangeSelectionTab range={range} handleSelection={handleSelection} />
+                )}
                 <DatePickerPresets
                   selection={selection}
                   range={range}
