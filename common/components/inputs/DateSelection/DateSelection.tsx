@@ -16,7 +16,7 @@ import { DatePickerPresets } from './DatePickerPresets';
 import { RangeSelectionTab } from './RangeSelectionTab';
 
 interface DateSelectionProps {
-  type: 'combo' | 'range' | 'single';
+  type?: 'combo' | 'range' | 'single';
 }
 
 export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) => {
