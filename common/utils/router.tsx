@@ -94,10 +94,10 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
   const { path, key } = LINE_OBJECTS[newLine];
   const currentPage = ALL_PAGES[page];
   const currentPath = currentPage.path;
-  const validPage = line ? currentPage.lines.includes(newLine) : false;
   let href = `/${path}`;
 
   // Go to homepage if current line is selected or the selected page is not valid for the given line.
+  const validPage = currentPage.lines.includes(newLine);
   if (key === line || currentPath === 'today' || !validPage) {
     return href;
   }
@@ -134,10 +134,6 @@ export const handleTabNavigation = (
   linePath: LinePath,
   router: NextRouter
 ) => {
-  if (tab.key === 'singleday') {
-    delete query.endDate;
-  }
-
   // If we are on bus mode we want to keep the busRoute query param when switching sections.
   const busRouteOnly = query.busRoute ? { busRoute: query.busRoute } : undefined;
 
