@@ -7,6 +7,15 @@ export const lineColorBackground = {
   DEFAULT: `bg-stone-800`,
 };
 
+export const lineColorLightBackground = {
+  RL: `bg-mbta-lightRed`,
+  OL: `bg-mbta-lightOrange`,
+  GL: `bg-mbta-lightGreen`,
+  BL: `bg-mbta-lightBlue`,
+  BUS: `bg-mbta-lightBus`,
+  DEFAULT: `bg-stone-500`,
+};
+
 export const buttonHighlightFocus = {
   RL: `focus:ring-mbta-red`,
   OL: `focus:ring-mbta-orange`,

@@ -7,7 +7,7 @@ import { DataPageTabs } from '../navigation/desktop/DataPageTabs';
 import { DateSelection } from '../../common/components/inputs/DateSelection/DateSelection';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { optionsStation } from '../../common/utils/stations';
-import { lineColorBackground, lineColorBorder } from '../../common/styles/general';
+import { lineColorBorder, lineColorLightBackground } from '../../common/styles/general';
 
 export const DataPageHeader = () => {
   const isDesktop = useBreakpoint('md');
@@ -41,8 +41,8 @@ export const DataPageHeader = () => {
         {isDesktop && datapage !== 'overview' && (
           <div
             className={classNames(
-              'absolute right-0 top-1 mt-0 flex w-[26rem] flex-col items-center gap-y-1 rounded-lg border border-opacity-50 bg-opacity-20 p-2 shadow-md',
-              lineColorBackground[line ?? 'DEFAULT'],
+              'fixed right-2 top-2 z-30 mt-0 flex w-[26rem] flex-col items-center gap-y-1 rounded-lg border border-opacity-50 bg-opacity-90 p-2 shadow-md',
+              lineColorLightBackground[line ?? 'DEFAULT'],
               lineColorBorder[line ?? 'DEFAULT']
             )}
           >
