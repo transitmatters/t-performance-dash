@@ -2,10 +2,8 @@
 
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
-import { useQuery } from '@tanstack/react-query';
-import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadashboard';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
-import { AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../../common/types/api';
+import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
 import {
   getParentStationForStopId,
   optionsStation,
@@ -19,6 +17,10 @@ import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
+import {
+  useHeadwaysAggregateData,
+  useHeadwaysSingleDayData,
+} from '../../common/api/hooks/headways';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 import { HeadwaysHistogram } from './charts/HeadwaysHistogram';
 import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
@@ -53,16 +55,8 @@ export default function HeadwaysDetails() {
         [SingleDayAPIParams.date]: startDate,
       };
 
-  const headways = useQuery({
-    queryKey: [QueryNameKeys.headways, aggregate, fromStopIds, startDate],
-    enabled: !aggregate && enabled,
-    queryFn: () => fetchSingleDayData(QueryNameKeys.headways, parameters),
-  });
-  const headwaysAggregate = useQuery({
-    queryKey: [QueryNameKeys.headways, aggregate, fromStopIds, startDate, endDate],
-    enabled: aggregate && enabled,
-    queryFn: () => fetchAggregateData(QueryNameKeys.headways, parameters),
-  });
+  const headways = useHeadwaysSingleDayData(parameters, !aggregate && enabled);
+  const headwaysAggregate = useHeadwaysAggregateData(parameters, aggregate && enabled);
 
   const headwaysData = aggregate ? headwaysAggregate?.data?.by_date : headways?.data;
 

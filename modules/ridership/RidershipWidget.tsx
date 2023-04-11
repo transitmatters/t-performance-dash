@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React, { useMemo, useState } from 'react';
-import { useRidershipData } from '../../common/api/ridership';
+import { useRidershipData } from '../../common/api/hooks/ridership';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { LINE_COLORS } from '../../common/constants/colors';
 import { PercentageWidgetValue, TripsWidgetValue } from '../../common/types/basicWidgets';
@@ -8,6 +8,7 @@ import type { ServiceDay } from '../../common/types/ridership';
 import { getHighestTphValue, normalizeToPercent } from '../../common/utils/ridership';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
+import { ServiceDayPicker } from '../../common/components/inputs/ServiceDayPicker';
 import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
 import { TphChart } from './charts/TphChart';
 
@@ -28,6 +29,26 @@ export const RidershipWidget: React.FC = () => {
   );
   const ridershipPercentage = normalizeToPercent(lineData?.ridershipHistory ?? []);
   const serviceHistory = lineData?.serviceHistory ?? [];
+
+  // Only re-render chart when necesarry
+  const serviceRidershipChart = useMemo(() => {
+    return <ServiceRidershipChart lineData={lineData} startDate={startDate} color={color} />;
+  }, [color, lineData, startDate]);
+
+  // Only re-render chart when necesarry
+  const serviceLevelChart = useMemo(() => {
+    return (
+      <>
+        <TphChart
+          lineData={lineData}
+          serviceDay={serviceDay}
+          color={color}
+          highestTph={highestTph}
+        />
+        <ServiceDayPicker serviceDay={serviceDay} setServiceDay={setServiceDay} />
+      </>
+    );
+  }, [color, highestTph, lineData, serviceDay]);
 
   return (
     <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
@@ -59,17 +80,8 @@ export const RidershipWidget: React.FC = () => {
           sentimentDirection={'positiveOnIncrease'}
         />
       </div>
-      <div className={classNames('h-50 pr-4')}>
-        <ServiceRidershipChart lineData={lineData} startDate={startDate} color={color} />
-      </div>
-      <div className={classNames('h-50 pr-4')}>
-        <TphChart
-          lineData={lineData}
-          serviceDay={serviceDay}
-          color={color}
-          highestTph={highestTph}
-        />
-      </div>
+      <div className={classNames('h-50 pr-4')}>{serviceRidershipChart}</div>
+      <div className={classNames('h-50 flex pr-3')}>{serviceLevelChart}</div>
     </div>
   );
 };

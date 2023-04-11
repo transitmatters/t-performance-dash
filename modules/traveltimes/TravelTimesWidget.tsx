@@ -2,16 +2,14 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import classNames from 'classnames';
-import { useQuery } from '@tanstack/react-query';
-import { QueryNameKeys } from '../../common/types/api';
 import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
-import { fetchSingleDayData } from '../../common/api/datadashboard';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
+import { useTravelTimesSingleDayData } from '../../common/api/hooks/traveltimes';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 
 export const TravelTimesWidget: React.FC = () => {
@@ -26,13 +24,11 @@ export const TravelTimesWidget: React.FC = () => {
   const fromStation = stations?.[3];
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
-  const traveltimes = useQuery([QueryNameKeys.traveltimes, fromStopIds, toStopIds, startDate], () =>
-    fetchSingleDayData(QueryNameKeys.traveltimes, {
-      date: startDate,
-      from_stop: fromStopIds,
-      to_stop: toStopIds,
-    })
-  );
+  const traveltimes = useTravelTimesSingleDayData({
+    date: startDate,
+    from_stop: fromStopIds,
+    to_stop: toStopIds,
+  });
   const travelTimeValues = traveltimes?.data?.map((tt) => tt.travel_time_sec);
   const traveltimesReady = !traveltimes.isError && traveltimes.data && lineShort && linePath;
 
