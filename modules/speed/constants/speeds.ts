@@ -1,11 +1,12 @@
 import type { TooltipCallbacks, TooltipItem, TooltipModel } from 'chart.js';
 import type { _DeepPartialObject } from 'chart.js/dist/types/utils';
-import type dayjs from 'dayjs';
+import dayjs from 'dayjs';
 
 export type ParamsType = {
   agg: 'daily' | 'weekly' | 'monthly';
   tooltipFormat: 'MMM d, yyyy' | 'MMM yyyy';
   unit: 'day' | 'month' | 'year';
+  getWidgetTitle: (date?: string) => string;
   callbacks?:
     | _DeepPartialObject<TooltipCallbacks<'line', TooltipModel<'line'>, TooltipItem<'line'>>>
     | undefined;
@@ -23,11 +24,22 @@ export const getSpeedGraphConfig = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs
   return DELAYS_RANGE_PARAMS_MAP.month;
 };
 
+const getWeeklyTitle = (date: string) => {
+  const dateObject = dayjs(date);
+  return `Week of ${dateObject.format('MMM D, YYYY')}`;
+};
+
+const getMonthlyTitle = (date: string) => {
+  const dateObject = dayjs(date);
+  return `${dateObject.format('MMMM YYYY')}`;
+};
+
 export const DELAYS_RANGE_PARAMS_MAP: { [s: string]: ParamsType } = {
   day: {
     agg: 'daily',
     tooltipFormat: 'MMM d, yyyy',
     unit: 'day',
+    getWidgetTitle: () => 'Today',
   },
   week: {
     agg: 'weekly',
@@ -36,12 +48,14 @@ export const DELAYS_RANGE_PARAMS_MAP: { [s: string]: ParamsType } = {
       title: (context) => `Week of ${context[0].label}`,
     },
     unit: 'month',
+    getWidgetTitle: getWeeklyTitle,
   },
   month: {
     agg: 'monthly',
 
     tooltipFormat: 'MMM yyyy',
     unit: 'year',
+    getWidgetTitle: getMonthlyTitle,
   },
 };
 
