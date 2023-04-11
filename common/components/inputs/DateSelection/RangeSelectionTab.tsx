@@ -4,24 +4,20 @@ import classNames from 'classnames';
 import { lineColorBackground, lineColorBorder, lineColorText } from '../../../styles/general';
 import { useDelimitatedRoute } from '../../../utils/router';
 import { RANGE_OPTIONS } from '../../../constants/dates';
-import type { DateSelectionInput } from './types/DateSelectionTypes';
 
 interface RangeSelectionTabProps {
-  config: DateSelectionInput;
+  range: boolean;
   handleSelection: (selection: number, range: boolean) => void;
 }
 
-export const RangeSelectionTab: React.FC<RangeSelectionTabProps> = ({
-  config,
-  handleSelection,
-}) => {
+export const RangeSelectionTab: React.FC<RangeSelectionTabProps> = ({ range, handleSelection }) => {
   const { line } = useDelimitatedRoute();
   return (
     <Tab.Group
       onChange={(value) => {
         handleSelection(0, Boolean(value));
       }}
-      selectedIndex={config.range ? 1 : 0}
+      selectedIndex={range ? 1 : 0}
     >
       <Tab.List className="flex w-full flex-row justify-center">
         {RANGE_OPTIONS.map((option, index) => (
