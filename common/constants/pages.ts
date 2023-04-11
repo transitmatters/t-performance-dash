@@ -162,10 +162,10 @@ export const BUS_PAGES = [ALL_PAGES.trips, ALL_PAGES.tripTraveltimes, ALL_PAGES.
 
 export const LINE_PAGES = [
   ALL_PAGES.overview,
-  ALL_PAGES.speed,
   ALL_PAGES.service,
   ALL_PAGES.slowzones,
   ALL_PAGES.headways,
+  ALL_PAGES.speed,
   ALL_PAGES.ridership,
 ];
 
