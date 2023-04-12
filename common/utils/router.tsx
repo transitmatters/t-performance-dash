@@ -116,7 +116,7 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   const currentPath = currentPage.path;
   const validPage = currentPage.lines.includes('BUS');
   if (newRoute === route.query.busRoute || !validPage) {
-    return `/bus/singleday?busRoute=${newRoute}`;
+    return `/bus/trips?busRoute=${newRoute}`;
   }
   const queryParams = query
     ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))

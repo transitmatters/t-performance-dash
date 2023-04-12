@@ -11,7 +11,7 @@ export const RangeTabs = () => {
   const { query, line } = route;
   const router = useRouter();
 
-  const selected = query.single === 'yes' ? 1 : 0;
+  const selected = query.single === 'true' ? 1 : 0;
 
   const range = [
     { name: 'Range', selected: true },
@@ -20,7 +20,7 @@ export const RangeTabs = () => {
 
   const handleChange = (index: number) => {
     if (index) {
-      router.query.single = 'yes';
+      router.query.single = 'true';
       router.query.startDate = router.query.endDate;
       delete router.query.endDate;
       router.push(router);

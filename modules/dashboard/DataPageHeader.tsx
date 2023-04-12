@@ -16,12 +16,12 @@ export const DataPageHeader = () => {
             {line && LINE_OBJECTS[line]?.name}
           </span>
           <span className="text-2xl font-normal md:text-xl">
-            {' '}
-            - {ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}
+            {' - '}
+            {ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}
           </span>
         </h3>
       </div>
-      {ALL_PAGES[page].section === 'trips' && <RangeTabs />}
+      {ALL_PAGES[page]?.section === 'trips' && <RangeTabs />}
     </div>
   );
 };

@@ -8,7 +8,7 @@ import { SlowZonesMap } from '../slowzones/map';
 import { WidgetTitle } from './WidgetTitle';
 
 export default function TodaysCommute() {
-  const { tab, line, lineShort } = useDelimitatedRoute();
+  const { tab, lineShort } = useDelimitatedRoute();
   const allSlow = useQuery(['allSlow'], fetchAllSlow);
   const canShowSlowZonesMap = lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange';
 
@@ -16,7 +16,7 @@ export default function TodaysCommute() {
     <div className="flex flex-col gap-y-4">
       <div className="flex flex-col gap-x-4 gap-y-4 xl:flex-row">
         <Alerts />
-        {tab === 'Subway' && line !== 'GL' && <Speed />}
+        {tab === 'Subway' && canShowSlowZonesMap && <Speed />}
       </div>
       {tab === 'Subway' && canShowSlowZonesMap && allSlow.data && (
         <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">

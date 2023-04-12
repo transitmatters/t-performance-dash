@@ -1,4 +1,4 @@
-import { ALL_LINE_PATHS, BUS_PATH } from '../../common/types/lines';
+import { ALL_LINE_PATHS } from '../../common/types/lines';
 import Today from '../../modules/dashboard/Today';
 
 export async function getStaticProps() {
@@ -7,7 +7,7 @@ export async function getStaticProps() {
 
 export async function getStaticPaths() {
   return {
-    paths: [...ALL_LINE_PATHS, BUS_PATH],
+    paths: [...ALL_LINE_PATHS],
     fallback: false,
   };
 }
