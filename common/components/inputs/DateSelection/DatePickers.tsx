@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/light.css';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
-import { FLAT_PICKER_OPTIONS, DATE_PICKER_PRESETS, TODAY_STRING } from '../../../constants/dates';
+import { FLAT_PICKER_OPTIONS, TODAY_STRING, RANGE_PRESETS } from '../../../constants/dates';
 import { buttonHighlightFocus } from '../../../styles/general';
 import { RangeButton } from './RangeButton';
 
@@ -30,7 +30,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
       updateQueryParams({ startDate: startDate }, !range);
     } else if (startDate === TODAY_STRING) {
       // If start date is today -> set range to past week. This prevents bugs with startDate === endDate
-      updateQueryParams(DATE_PICKER_PRESETS.range[0].input, !range);
+      updateQueryParams(RANGE_PRESETS[0].input, !range);
     } else {
       updateQueryParams({ startDate: startDate }, !range);
     }

@@ -1,11 +1,12 @@
 import { capitalize, isEqual, pickBy } from 'lodash';
-import type { NextRouter } from 'next/router';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route } from '../types/router';
-import type { PageMetadata, Page } from '../constants/pages';
+import type { PageMetadata, Page, Section } from '../constants/pages';
+import type { DashboardConfig } from '../state/dashboardConfig';
+import { useDashboardConfig } from '../state/dashboardConfig';
 import { SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
 
@@ -104,12 +105,13 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
   const currentPage = ALL_PAGES[page];
   const currentPath = currentPage.path;
   let href = `/${path}`;
-
   // Go to homepage if current line is selected or the selected page is not valid for the given line.
   const validPage = currentPage.lines.includes(newLine);
   if (key === line || currentPath === 'today' || !validPage) {
     return href;
   }
+  delete query.from;
+  delete query.to;
   const queryParams = query
     ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
     : new URLSearchParams();
@@ -127,6 +129,8 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   if (newRoute === route.query.busRoute || !validPage) {
     return `/bus/trips?busRoute=${newRoute}`;
   }
+  delete query.from;
+  delete query.to;
   const queryParams = query
     ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
     : new URLSearchParams();
@@ -136,19 +140,51 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   return href;
 };
 
-export const handleTabNavigation = (
-  currentPage: Page,
-  tab: PageMetadata,
-  query: QueryParams,
-  linePath: LinePath,
-  router: NextRouter
-) => {
-  // If we are on bus mode we want to keep the busRoute query param when switching sections.
-  const busRouteOnly = query.busRoute ? { busRoute: query.busRoute } : undefined;
+export const useHandlePageNavigation = () => {
+  const router = useRouter();
+  const { page, query, linePath } = useDelimitatedRoute();
+  const pageObject = ALL_PAGES[page];
+  const dashboardConfig = useDashboardConfig();
 
-  if (ALL_PAGES[currentPage]?.section === tab.section) {
-    router.push({ pathname: `/${linePath}${tab.path}`, query: query });
-  } else {
-    router.push({ pathname: `/${linePath}${tab.path}`, query: busRouteOnly });
+  const handlePageNavigation = useCallback(
+    (tab: PageMetadata) => {
+      if (pageObject?.section === tab.section) {
+        router.push({ pathname: `/${linePath}${tab.path}`, query: query });
+      } else {
+        // If we are on bus mode we want to keep the busRoute query param when switching sections.
+        const busRouteOnly = query.busRoute ?? undefined;
+        saveOldParams(pageObject.section, query, dashboardConfig);
+        const params = getNewParams(tab.section, dashboardConfig);
+        const newQuery = busRouteOnly ? { ...params, busRoute: busRouteOnly } : params;
+        router.push({ pathname: `/${linePath}${tab.path}`, query: newQuery });
+      }
+    },
+    [router, query, linePath, pageObject, dashboardConfig]
+  );
+  return handlePageNavigation;
+};
+
+// Save params when leaving section.
+const saveOldParams = (section: Section, query: QueryParams, dashboardConfig: DashboardConfig) => {
+  if (section === 'trips') {
+    // TODO: filter out invalid keys.
+    const params = getParams(query);
+    if (params.startDate) dashboardConfig.setTripConfig(params);
+  }
+  if (section === 'line') {
+    dashboardConfig.setLineConfig({ startDate: query.startDate, endDate: query.endDate });
+  }
+};
+
+// get saved params of new section.
+const getNewParams = (section: Section, dashboardConfig: DashboardConfig) => {
+  if (section === 'trips') {
+    return dashboardConfig.tripConfig;
+  }
+  if (section === 'line') {
+    return dashboardConfig.lineConfig;
+  }
+  if (section === 'overview') {
+    return dashboardConfig.overviewPreset;
   }
 };

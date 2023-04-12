@@ -38,7 +38,7 @@ export const DwellsWidget: React.FC = () => {
   return (
     <>
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <HomescreenWidgetTitle title="Dwells" href={`/${linePath}/dwells`} />
+        <HomescreenWidgetTitle title="Dwells" tab="tripDwells" />
         {dwellsReady ? (
           <>
             <div className={classNames('flex w-full flex-row')}>

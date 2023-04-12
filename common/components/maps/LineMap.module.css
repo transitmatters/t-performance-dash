@@ -10,5 +10,5 @@
 }
 
 .inner {
-  overflow-x: scroll;
+  overflow-x: auto;
 }

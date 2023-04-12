@@ -45,77 +45,123 @@ export const FLAT_PICKER_OPTIONS: {
   },
 };
 
-// TODO Different presets for buses
-export const DATE_PICKER_PRESETS: { [key: string]: DateSelectionDefaultOptions[] } = {
-  singleDay: [
-    { name: 'Today', input: { startDate: TODAY_STRING } },
-    { name: 'Yesterday', input: { startDate: TODAY.subtract(1, 'day').format(DATE_FORMAT) } },
-    {
-      name: `Last ${TODAY.subtract(7, 'days').format('dddd')}`,
-      input: {
-        startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
-      },
+export const SINGLE_PRESETS: { [key in DATE_PRESET_KEY]?: DateSelectionDefaultOptions } = {
+  today: { key: 'today', name: 'Today', input: { startDate: TODAY_STRING } },
+  yesterday: {
+    key: 'yesterday',
+    name: 'Yesterday',
+    input: { startDate: TODAY.subtract(1, 'day').format(DATE_FORMAT) },
+  },
+  week: {
+    key: 'week',
+    name: `Last ${TODAY.subtract(7, 'days').format('dddd')}`,
+    input: {
+      startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
     },
-    {
-      name: `30 days ago`,
-      input: {
-        startDate: TODAY.subtract(30, 'days').format(DATE_FORMAT),
-      },
+  },
+  month: {
+    key: 'month',
+    name: `30 days ago`,
+    input: {
+      startDate: TODAY.subtract(30, 'days').format(DATE_FORMAT),
     },
-    {
-      name: `One year ago`,
-      input: {
-        startDate: TODAY.subtract(1, 'year').format(DATE_FORMAT),
-      },
+  },
+  year: {
+    key: 'year',
+    name: `One year ago`,
+    input: {
+      startDate: TODAY.subtract(1, 'year').format(DATE_FORMAT),
     },
-  ],
-  range: [
-    {
-      name: 'Past week',
-      input: {
-        startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
-        endDate: TODAY_STRING,
-      },
-    },
-    {
-      name: 'Past 30 days',
-      input: {
-        startDate: TODAY.subtract(30, 'days').format(DATE_FORMAT),
-        endDate: TODAY_STRING,
-      },
-    },
-    {
-      name: TODAY.format('MMMM YYYY'),
-      input: {
-        startDate: TODAY.startOf('month').format(DATE_FORMAT),
-        endDate: TODAY_STRING,
-      },
-    },
-    {
-      name: TODAY.subtract(1, 'month').format('MMMM YYYY'),
-      input: {
-        startDate: TODAY.subtract(1, 'month').startOf('month').format(DATE_FORMAT),
-        endDate: TODAY.subtract(1, 'month').endOf('month').format(DATE_FORMAT),
-      },
-    },
-    {
-      name: 'This year',
-      input: {
-        startDate: TODAY.startOf('year').format(DATE_FORMAT),
-        endDate: TODAY_STRING,
-      },
-    },
-    {
-      name: 'Last year',
-      input: {
-        startDate: TODAY.startOf('year').subtract(1, 'year').format(DATE_FORMAT),
-        endDate: TODAY.endOf('year').subtract(1, 'year').format(DATE_FORMAT),
-      },
-    },
-  ],
+  },
 };
 
-export const OVERVIEW_OPTIONS = {
+// TODO Different presets for buses
+export const RANGE_PRESETS: { [key in DATE_PRESET_KEY]?: DateSelectionDefaultOptions } = {
+  week: {
+    key: 'week',
+    name: 'Past week',
+    input: {
+      startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
+      endDate: TODAY_STRING,
+    },
+  },
+  month: {
+    key: 'month',
+
+    name: 'Past month',
+    input: {
+      startDate: TODAY.subtract(31, 'days').format(DATE_FORMAT),
+      endDate: TODAY_STRING,
+    },
+  },
+  thisMonth: {
+    key: 'thisMonth',
+
+    name: TODAY.format('MMMM YYYY'),
+    input: {
+      startDate: TODAY.startOf('month').format(DATE_FORMAT),
+      endDate: TODAY_STRING,
+    },
+  },
+  lastMonth: {
+    key: 'lastMonth',
+
+    name: TODAY.subtract(1, 'month').format('MMMM YYYY'),
+    input: {
+      startDate: TODAY.subtract(1, 'month').startOf('month').format(DATE_FORMAT),
+      endDate: TODAY.subtract(1, 'month').endOf('month').format(DATE_FORMAT),
+    },
+  },
+  year: {
+    key: 'year',
+    name: 'Past year',
+    input: {
+      startDate: TODAY.subtract(1, 'year').format(DATE_FORMAT),
+      endDate: TODAY_STRING,
+    },
+  },
+  thisYear: {
+    key: 'thisYear',
+    name: TODAY.format('YYYY'),
+    input: {
+      startDate: TODAY.startOf('year').format(DATE_FORMAT),
+      endDate: TODAY_STRING,
+    },
+  },
+  lastYear: {
+    key: 'lastYear',
+    name: TODAY.subtract(1, 'year').format('YYYY'),
+    input: {
+      startDate: TODAY.startOf('year').subtract(1, 'year').format(DATE_FORMAT),
+      endDate: TODAY.endOf('year').subtract(1, 'year').format(DATE_FORMAT),
+    },
+  },
+
+  all: {
+    key: 'all',
+    name: 'All time',
+    input: {
+      startDate: dayjs(OVERVIEW_TRAIN_MIN_DATE).format(DATE_FORMAT),
+      endDate: TODAY_STRING,
+    },
+  },
+};
+
+export type DATE_PRESET_KEY =
+  | OverviewDatePresetKey
+  | 'today'
+  | 'lastYear'
+  | 'thisYear'
+  | 'lastMonth'
+  | 'thisMonth'
+  | 'yesterday';
+
+export type AggregationTypes = 'daily' | 'weekly' | 'monthly';
+
+// TODO: can probably consolidate this with the RANGE_PRESETS object.
+export const OVERVIEW_OPTIONS: {
+  [key in OverviewDatePresetKey]: { startDate: string; agg: AggregationTypes };
+} = {
   week: {
     startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
     agg: 'daily',
@@ -143,3 +189,16 @@ export enum OverviewRangeTypes {
   'year' = 'Past Year',
   'all' = 'All Time',
 }
+
+export const RANGE_DATE_KEYS = Object.fromEntries(
+  Object.values(RANGE_PRESETS).map((rangePreset) => [
+    `${rangePreset.input.startDate}${rangePreset.input.endDate}`,
+    rangePreset.key,
+  ])
+);
+export const SINGLE_DATE_KEYS = Object.fromEntries(
+  Object.values(SINGLE_PRESETS).map((singlePreset) => [
+    `${singlePreset.input.startDate}${singlePreset.input.endDate}`,
+    singlePreset.key,
+  ])
+);

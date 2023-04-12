@@ -7,15 +7,15 @@ import { RANGE_OPTIONS } from '../../../constants/dates';
 
 interface RangeSelectionTabProps {
   range: boolean;
-  handleSelection: (selection: number, range: boolean) => void;
+  setRange: (range: boolean) => void;
 }
 
-export const RangeSelectionTab: React.FC<RangeSelectionTabProps> = ({ range, handleSelection }) => {
+export const RangeSelectionTab: React.FC<RangeSelectionTabProps> = ({ range, setRange }) => {
   const { line } = useDelimitatedRoute();
   return (
     <Tab.Group
       onChange={(value) => {
-        handleSelection(0, Boolean(value));
+        setRange(Boolean(value));
       }}
       selectedIndex={range ? 1 : 0}
     >

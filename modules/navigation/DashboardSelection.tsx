@@ -4,16 +4,19 @@ import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import { DASHBOARD_TABS } from '../../common/constants/dashboardTabs';
 import { useDelimitatedRoute } from '../../common/utils/router';
+import { useDashboardConfig } from '../../common/state/dashboardConfig';
 
 export const DashboardSelection = () => {
   const { tab } = useDelimitatedRoute();
   const router = useRouter();
+  const swapDashboardTabs = useDashboardConfig((state) => state.swapDashboardTabs);
   const dashboardTabs = Object.values(DASHBOARD_TABS);
   return (
     <Tab.Group
       manual
       onChange={(index) => {
-        router.push(dashboardTabs[index].path);
+        router.push({ pathname: dashboardTabs[index].path, query: dashboardTabs[index].query });
+        swapDashboardTabs(dashboardTabs[index].name);
       }}
       selectedIndex={dashboardTabs.findIndex((currTab) => tab === currTab.name)}
     >
