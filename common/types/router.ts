@@ -1,4 +1,3 @@
-import type { OverviewDatePresetKey } from '../constants/dates';
 import type { Page } from '../constants/pages';
 import type { BusRoute, Line, LinePath, LineShort } from './lines';
 
@@ -9,7 +8,6 @@ export interface Route {
   page: Page;
   query: QueryParams;
   tab: Tab;
-  view: OverviewDatePresetKey;
 }
 
 export type QueryParams = {
