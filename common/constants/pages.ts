@@ -29,9 +29,9 @@ export enum PAGES {
   tripDwells = 'tripDwells',
 }
 
-type Section = 'today' | 'line' | 'overview' | 'trips';
+export type Section = 'today' | 'line' | 'overview' | 'trips';
 
-export type NavTab = {
+export type PageMetadata = {
   key: string;
   path: string;
   name: string;
@@ -42,11 +42,11 @@ export type NavTab = {
   title?: string;
 };
 
-export type NavTabMap = {
-  [key in PAGES]: NavTab;
+export type PageMap = {
+  [key in PAGES]: PageMetadata;
 };
 
-export const ALL_PAGES: NavTabMap = {
+export const ALL_PAGES: PageMap = {
   today: {
     key: 'today',
     path: '/',

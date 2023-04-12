@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route } from '../types/router';
-import type { NavTab, Page } from '../constants/pages';
+import type { PageMetadata, Page } from '../constants/pages';
 import { SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
 
@@ -137,7 +137,7 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
 
 export const handleTabNavigation = (
   currentPage: Page,
-  tab: NavTab,
+  tab: PageMetadata,
   query: QueryParams,
   linePath: LinePath,
   router: NextRouter

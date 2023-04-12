@@ -3,10 +3,10 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import { handleTabNavigation, useDelimitatedRoute } from '../../common/utils/router';
-import type { NavTab } from '../../common/constants/pages';
+import type { PageMetadata } from '../../common/constants/pages';
 
 interface SidebarTabs {
-  tabs: NavTab[];
+  tabs: PageMetadata[];
   title: string;
   setSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -15,7 +15,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs, setSidebarOpen
   const { linePath, line, query, page } = useDelimitatedRoute();
   const router = useRouter();
 
-  const handleChange = (enabled: boolean, tab: NavTab) => {
+  const handleChange = (enabled: boolean, tab: PageMetadata) => {
     if (!enabled) return null;
     handleTabNavigation(page, tab, query, linePath, router);
     setSidebarOpen && setSidebarOpen(false);
@@ -25,7 +25,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs, setSidebarOpen
     <div>
       <div className="text-xs font-semibold leading-6 text-stone-400">{title}</div>
       <ul role="list" className={`-mx-2 mt-2 space-y-1`}>
-        {tabs.map((tab: NavTab) => {
+        {tabs.map((tab: PageMetadata) => {
           const enabled = line ? tab.lines.includes(line) : true;
           const selected = page === tab.key;
           return (

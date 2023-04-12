@@ -37,7 +37,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
   React.useEffect(() => {
     // Update from
     updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });
-  }, [fromStation, fromStopIds, toStation, toStopIds]);
+  }, [fromStation, fromStopIds, toStation, toStopIds, updateQueryParams]);
 
   return (
     <div

@@ -19,10 +19,10 @@ export const RANGE_OPTIONS = ['Single Day', 'Range'];
 export const ONE_WEEK_AGO = TODAY.subtract(7, 'days');
 export const ONE_WEEK_AGO_STRING = ONE_WEEK_AGO.format(DATE_FORMAT);
 
-const OVERVIEW_TRAIN_MIN_DATE = '2016-01-01';
+const OVERVIEW_TRAIN_MIN_DATE = '2016-02-01';
 const TRAIN_MIN_DATE = '2016-01-15';
 const BUS_MIN_DATE = '2018-08-01';
-const BUS_MAX_DATE = '2022-12-31';
+export const BUS_MAX_DATE = '2022-12-31';
 
 export const FLAT_PICKER_OPTIONS: {
   [key in Exclude<Tab, 'System'>]: DateTimePickerProps['options'];
@@ -134,3 +134,12 @@ export const OVERVIEW_OPTIONS = {
     agg: 'monthly',
   },
 };
+
+export type OverviewDatePresetKey = keyof typeof OverviewRangeTypes;
+
+export enum OverviewRangeTypes {
+  'week' = 'Past Week',
+  'month' = 'Past Month',
+  'year' = 'Past Year',
+  'all' = 'All Time',
+}

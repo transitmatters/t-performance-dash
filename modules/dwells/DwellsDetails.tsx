@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
@@ -29,11 +29,16 @@ export default function DwellsDetails() {
   const stations = optionsStation(lineShort);
 
   const [toStation, setToStation] = useState(
-    to ? getParentStationForStopId(to) : stations?.[stations.length - 3]
+    to ? getParentStationForStopId(to) : stations?.[stations.length - 1]
   );
   const [fromStation, setFromStation] = useState(
-    from ? getParentStationForStopId(from) : stations?.[3]
+    from ? getParentStationForStopId(from) : stations?.[2]
   );
+
+  useEffect(() => {
+    if (!from) setFromStation(stations?.[2]);
+    if (!to) setToStation(stations?.[stations.length - 2]);
+  }, [lineShort, from, to, stations, setFromStation, setToStation]);
 
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
 
