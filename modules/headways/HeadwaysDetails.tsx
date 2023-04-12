@@ -4,7 +4,11 @@ import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
-import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
+import {
+  getParentStationForStopId,
+  optionsStation,
+  stopIdsForStations,
+} from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
@@ -24,13 +28,17 @@ import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
 export default function HeadwaysDetails() {
   const {
     lineShort,
-    query: { startDate, endDate, busRoute },
+    query: { startDate, endDate, busRoute, to, from },
   } = useDelimitatedRoute();
 
   const stations = optionsStation(lineShort, busRoute);
 
-  const [toStation, setToStation] = useState(stations?.[stations.length - 3]);
-  const [fromStation, setFromStation] = useState(stations?.[3]);
+  const [toStation, setToStation] = useState(
+    to ? getParentStationForStopId(to) : stations?.[stations.length - 3]
+  );
+  const [fromStation, setFromStation] = useState(
+    from ? getParentStationForStopId(from) : stations?.[3]
+  );
 
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
 

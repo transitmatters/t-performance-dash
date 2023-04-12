@@ -3,7 +3,11 @@ import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
-import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
+import {
+  getParentStationForStopId,
+  optionsStation,
+  stopIdsForStations,
+} from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
@@ -19,13 +23,17 @@ import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 export default function DwellsDetails() {
   const {
     lineShort,
-    query: { startDate, endDate },
+    query: { startDate, endDate, to, from },
   } = useDelimitatedRoute();
 
   const stations = optionsStation(lineShort);
 
-  const [toStation, setToStation] = useState(stations?.[stations.length - 3]);
-  const [fromStation, setFromStation] = useState(stations?.[3]);
+  const [toStation, setToStation] = useState(
+    to ? getParentStationForStopId(to) : stations?.[stations.length - 3]
+  );
+  const [fromStation, setFromStation] = useState(
+    from ? getParentStationForStopId(from) : stations?.[3]
+  );
 
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
 

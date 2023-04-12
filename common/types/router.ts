@@ -15,6 +15,8 @@ export type QueryParams = {
   endDate?: string;
   queryType?: 'single' | 'range';
   busRoute?: BusRoute;
+  to?: string;
+  from?: string;
 };
 
 export type Tab = 'Bus' | 'Subway' | 'System';
