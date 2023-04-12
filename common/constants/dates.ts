@@ -3,8 +3,8 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import type { DateTimePickerProps } from 'react-flatpickr';
-import type { Tabs } from '../types/router';
 import type { DateSelectionDefaultOptions } from '../components/inputs/DateSelection/types/DateSelectionTypes';
+import type { Tab } from './dashboardTabs';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -16,6 +16,8 @@ export const TODAY_MIDNIGHT = dayjs().startOf('day');
 export const YESTERDAY_MIDNIGHT = TODAY_MIDNIGHT.subtract(1, 'day');
 export const TODAY_STRING = TODAY.format(DATE_FORMAT);
 export const RANGE_OPTIONS = ['Single Day', 'Range'];
+export const ONE_WEEK_AGO = TODAY.subtract(7, 'days');
+export const ONE_WEEK_AGO_STRING = ONE_WEEK_AGO.format(DATE_FORMAT);
 
 const OVERVIEW_TRAIN_MIN_DATE = '2016-01-01';
 const TRAIN_MIN_DATE = '2016-01-15';
@@ -23,7 +25,7 @@ const BUS_MIN_DATE = '2018-08-01';
 const BUS_MAX_DATE = '2022-12-31';
 
 export const FLAT_PICKER_OPTIONS: {
-  [key in Exclude<Tabs, ''>]: DateTimePickerProps['options'];
+  [key in Exclude<Tab, 'System'>]: DateTimePickerProps['options'];
 } = {
   Subway: {
     enableTime: false,

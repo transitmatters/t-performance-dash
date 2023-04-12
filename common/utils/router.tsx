@@ -1,12 +1,13 @@
 import { capitalize, isEqual, pickBy } from 'lodash';
-import dayjs from 'dayjs';
+import type { NextRouter } from 'next/router';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
-import type { DataPage } from '../types/dataPages';
-import type { Line, LineMetadata, LinePath, LineShort } from '../types/lines';
+import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route } from '../types/router';
-import { getOffsetDate } from './date';
+import type { NavTab, Page } from '../constants/pages';
+import { SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
+import { LINE_OBJECTS } from '../constants/lines';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'RL',
@@ -16,29 +17,34 @@ const linePathToKeyMap: Record<string, Line> = {
   bus: 'BUS',
 };
 
-const getParams = (params: QueryParams) => {
+const getParams = (params) => {
   return Object.fromEntries(
     Object.entries(params).filter(([key, value]) => key !== 'line' && value)
   );
+};
+
+const getPage = (pageArray: string[]): string => {
+  if (pageArray[0] === '') return 'today';
+  if (pageArray[1]) {
+    return SUB_PAGES_MAP[pageArray[0]][pageArray[1]];
+  }
+  return pageArray[0];
 };
 
 export const useDelimitatedRoute = (): Route => {
   const router = useRouter();
   const path = router.asPath.split('?');
   const pathItems = path[0].split('/');
-  const queryParams: QueryParams = router.query;
+  const queryParams = router.query;
   const tab = RAIL_LINES.includes(pathItems[1]) ? 'Subway' : 'Bus';
-
+  const page = getPage(pathItems.slice(2)) as Page;
   const newParams = getParams(queryParams);
-  if (!newParams.startDate) {
-    newParams.startDate = dayjs().format('YYYY-MM-DD');
-  }
 
   return {
     line: linePathToKeyMap[pathItems[1]],
     linePath: pathItems[1] as LinePath, //TODO: Remove as
     lineShort: capitalize(pathItems[1]) as LineShort, //TODO: Remove as
-    datapage: (pathItems[2] as DataPage) || 'overview', //TODO: Remove as
+    page: page,
     tab: tab,
     query: router.isReady ? newParams : {},
   };
@@ -57,10 +63,10 @@ export const useUpdateQuery = () => {
 
       if (startDate) {
         if (startDate && typeof startDate === 'string') {
-          newTempQuery.startDate = getOffsetDate(startDate);
+          newTempQuery.startDate = startDate;
         }
         if (range && endDate && typeof endDate === 'string') {
-          newTempQuery.endDate = getOffsetDate(endDate);
+          newTempQuery.endDate = endDate;
         } else if (!range) {
           newTempQuery.endDate = undefined;
         }
@@ -91,33 +97,57 @@ export const useUpdateQuery = () => {
   return updateQueryParams;
 };
 
-export const getLineSelectionItemHref = (metadata: LineMetadata, route: Route): string => {
-  const { datapage, line, query } = route;
-  let href = `/${metadata.path}`;
+export const getLineSelectionItemHref = (newLine: Line, route: Route): string => {
+  const { page, line, query } = route;
+  const { path, key } = LINE_OBJECTS[newLine];
+  const currentPage = ALL_PAGES[page];
+  const currentPath = currentPage.path;
+  let href = `/${path}`;
 
-  // Go to homepage if current line is selected.
-  if (metadata.key === line || datapage === 'overview') {
+  // Go to homepage if current line is selected or the selected page is not valid for the given line.
+  const validPage = currentPage.lines.includes(newLine);
+  if (key === line || currentPath === 'today' || !validPage) {
     return href;
   }
   const queryParams = query
     ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
     : new URLSearchParams();
-  href += datapage ? `/${datapage}` : '';
+  href += currentPath ? `${currentPath}` : '';
   const queryString = queryParams.toString();
   href += queryString ? `?${queryString}` : '';
   return href;
 };
 
-export const getBusRouteSelectionItemHref = (busRoute: string, route: Route): string => {
-  const { query, datapage } = route;
-  if (busRoute === route.query.busRoute || datapage === 'overview') {
-    return `/bus?busRoute=${busRoute}`;
+export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): string => {
+  const { query, page } = route;
+  const currentPage = ALL_PAGES[page];
+  const currentPath = currentPage.path;
+  const validPage = currentPage.lines.includes('BUS');
+  if (newRoute === route.query.busRoute || !validPage) {
+    return `/bus/trips?busRoute=${newRoute}`;
   }
   const queryParams = query
     ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
     : new URLSearchParams();
-  queryParams.append('busRoute', busRoute);
-  let href = '/bus';
+  queryParams.append('busRoute', newRoute);
+  let href = `/bus${currentPath}`;
   href += `?${queryParams.toString() ?? ''}`;
   return href;
+};
+
+export const handleTabNavigation = (
+  currentPage: Page,
+  tab: NavTab,
+  query: QueryParams,
+  linePath: LinePath,
+  router: NextRouter
+) => {
+  // If we are on bus mode we want to keep the busRoute query param when switching sections.
+  const busRouteOnly = query.busRoute ? { busRoute: query.busRoute } : undefined;
+
+  if (ALL_PAGES[currentPage]?.section === tab.section) {
+    router.push({ pathname: `/${linePath}${tab.path}`, query: query });
+  } else {
+    router.push({ pathname: `/${linePath}${tab.path}`, query: busRouteOnly });
+  }
 };
