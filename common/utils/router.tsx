@@ -6,7 +6,6 @@ import type { DataPage } from '../types/dataPages';
 import type { Line, LineMetadata, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route } from '../types/router';
-import type { DateParams } from '../components/inputs/DateSelection/types/DateSelectionTypes';
 import { getOffsetDate } from './date';
 
 const linePathToKeyMap: Record<string, Line> = {
@@ -49,32 +48,41 @@ export const useUpdateQuery = () => {
   const router = useRouter();
 
   const updateQueryParams = useCallback(
-    (newQueryParams: DateParams, range: boolean) => {
+    (newQueryParams: QueryParams, range?: boolean) => {
       if (!newQueryParams) return;
 
-      const { startDate, endDate } = newQueryParams;
+      const { startDate, endDate, to, from } = newQueryParams;
 
-      const newDateQuery: Partial<QueryParams> = {};
+      const newTempQuery: Partial<QueryParams> = {};
 
       if (startDate) {
         if (startDate && typeof startDate === 'string') {
-          newDateQuery.startDate = getOffsetDate(startDate);
+          newTempQuery.startDate = getOffsetDate(startDate);
         }
         if (range && endDate && typeof endDate === 'string') {
-          newDateQuery.endDate = getOffsetDate(endDate);
+          newTempQuery.endDate = getOffsetDate(endDate);
         } else if (!range) {
-          newDateQuery.endDate = undefined;
+          newTempQuery.endDate = undefined;
         }
+      }
 
-        const newQuery = {
-          ...router.query,
-          ...newDateQuery,
-        };
-
-        if (!isEqual(router.query, newQuery)) {
-          const query = pickBy(newQuery, (attr) => attr !== undefined);
-          router.push({ pathname: router.pathname, query });
+      if (to || from) {
+        if ((to && typeof to === 'string') || typeof to === 'number') {
+          newTempQuery.to = to;
         }
+        if ((from && typeof from === 'string') || typeof from === 'number') {
+          newTempQuery.from = from;
+        }
+      }
+
+      const newQuery = {
+        ...router.query,
+        ...newTempQuery,
+      };
+
+      if (!isEqual(router.query, newQuery)) {
+        const query = pickBy(newQuery, (attr) => attr !== undefined);
+        router.push({ pathname: router.pathname, query });
       }
     },
     [router]

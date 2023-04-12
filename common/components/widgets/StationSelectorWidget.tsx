@@ -6,6 +6,8 @@ import type { Station } from '../../types/stations';
 import { Button } from '../inputs/Button';
 import { StationSelector } from '../inputs/StationSelector';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { useUpdateQuery } from '../../utils/router';
+import { stopIdsForStations } from '../../utils/stations';
 
 interface StationSelectorWidgetProps {
   fromStation: Station;
@@ -21,6 +23,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
   setToStation,
 }) => {
   const isMobile = !useBreakpoint('sm');
+  const updateQueryParams = useUpdateQuery();
 
   const swapStations = () => {
     const tempFromStation = fromStation;
@@ -29,6 +32,12 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
     setFromStation(tempToStation);
     setToStation(tempFromStation);
   };
+
+  const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
+  React.useEffect(() => {
+    // Update from
+    updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });
+  }, [fromStation, fromStopIds, toStation, toStopIds]);
 
   return (
     <div
