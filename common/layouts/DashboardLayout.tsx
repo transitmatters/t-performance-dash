@@ -17,13 +17,13 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   const isMobile = !useBreakpoint('md');
   const {
     page,
-    query: { single },
+    query: { queryType },
   } = useDelimitatedRoute();
 
   const section = ALL_PAGES[page]?.section;
   const getDatePicker = () => {
     if (section === 'trips' || section === 'line')
-      return <DateSelection type={single ? 'single' : 'range'} />;
+      return <DateSelection type={queryType ?? 'range'} />;
     if (section === 'overview') return <OverviewDateSelection />;
   };
 

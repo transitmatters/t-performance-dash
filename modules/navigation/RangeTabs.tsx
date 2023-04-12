@@ -11,16 +11,13 @@ export const RangeTabs = () => {
   const { query, line } = route;
   const router = useRouter();
 
-  const selected = query.single === 'true' ? 1 : 0;
+  const selected = query.queryType === 'single' ? 1 : 0;
 
-  const range = [
-    { name: 'Range', selected: true },
-    { name: 'Single Day', selected: false },
-  ];
+  const rangeOptions = ['Range', 'Single Day'];
 
   const handleChange = (index: number) => {
     if (index) {
-      router.query.single = 'true';
+      router.query.queryType = 'single';
       router.query.startDate = router.query.endDate;
       delete router.query.endDate;
       router.push(router);
@@ -30,7 +27,7 @@ export const RangeTabs = () => {
       router.query.startDate = ONE_WEEK_AGO_STRING;
       router.query.endDate = TODAY_STRING;
     }
-    delete router.query.single;
+    router.query.queryType = 'range';
     router.push(router);
   };
 
@@ -39,10 +36,10 @@ export const RangeTabs = () => {
       <div className="hidden sm:block">
         <Tab.Group selectedIndex={selected} onChange={handleChange}>
           <Tab.List className="flex">
-            {range.map(
+            {rangeOptions.map(
               (range) =>
                 line && (
-                  <Tab key={range.name}>
+                  <Tab key={range}>
                     {({ selected }) => (
                       <div
                         className={classNames(
@@ -52,7 +49,7 @@ export const RangeTabs = () => {
                             : 'border-transparent text-gray-600 '
                         )}
                       >
-                        {range.name}
+                        {range}
                       </div>
                     )}
                   </Tab>

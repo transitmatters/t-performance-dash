@@ -13,7 +13,7 @@ export interface Route {
 export type QueryParams = {
   startDate?: string;
   endDate?: string;
-  single?: 'true';
+  queryType?: 'single' | 'range';
   busRoute?: BusRoute;
 };
 
