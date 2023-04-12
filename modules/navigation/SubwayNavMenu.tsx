@@ -8,7 +8,7 @@ interface SubwayNavMenuProps {
   setSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const LINE_ITEMS = [LINE_OBJECTS['RL'], LINE_OBJECTS['OL'], LINE_OBJECTS['GL'], LINE_OBJECTS['BL']];
+const LINE_ITEMS = [LINE_OBJECTS['RL'], LINE_OBJECTS['OL'], LINE_OBJECTS['BL'], LINE_OBJECTS['GL']];
 export const SubwayNavMenu: React.FC<SubwayNavMenuProps> = ({ setSidebarOpen }) => (
   <>
     <LineSelection lineItems={LINE_ITEMS} />
