@@ -13,10 +13,12 @@ export interface Route {
 export type QueryParams = {
   startDate?: string;
   endDate?: string;
-  queryType?: 'single' | 'range';
+  queryType?: QueryTypeOptions;
   busRoute?: BusRoute;
   to?: string;
   from?: string;
 };
+
+export type QueryTypeOptions = 'single' | 'range';
 
 export type Tab = 'Bus' | 'Subway' | 'System';

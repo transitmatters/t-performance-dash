@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
@@ -30,15 +30,19 @@ export default function HeadwaysDetails() {
     lineShort,
     query: { startDate, endDate, busRoute, to, from },
   } = useDelimitatedRoute();
-
   const stations = optionsStation(lineShort, busRoute);
 
   const [toStation, setToStation] = useState(
-    to ? getParentStationForStopId(to) : stations?.[stations.length - 3]
+    to ? getParentStationForStopId(to) : stations?.[stations.length - 2]
   );
   const [fromStation, setFromStation] = useState(
-    from ? getParentStationForStopId(from) : stations?.[3]
+    from ? getParentStationForStopId(from) : stations?.[1]
   );
+
+  useEffect(() => {
+    if (!from) setFromStation(stations?.[1]);
+    if (!to) setToStation(stations?.[stations.length - 2]);
+  }, [lineShort, from, to, stations, setFromStation, setToStation]);
 
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
 
