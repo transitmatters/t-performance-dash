@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { Tab } from '@headlessui/react';
 import { lineColorBackground, lineColorDarkBackground } from '../../common/styles/general';
 import { getLineSelectionItemHref, useDelimitatedRoute } from '../../common/utils/router';
-import type { LineMetadata } from '../../common/types/lines';
+import type { Line, LineMetadata } from '../../common/types/lines';
 
 interface LineSelectionProps {
   lineItems: LineMetadata[];
@@ -13,12 +13,14 @@ interface LineSelectionProps {
 export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems }) => {
   const router = useRouter();
   const route = useDelimitatedRoute();
+  const onChange = (key: Line) => router.push(getLineSelectionItemHref(key, route));
+
   return (
     <Tab.Group
       vertical
       manual
       selectedIndex={lineItems.findIndex((lineItem) => lineItem.key === route.line)}
-      onChange={(index) => router.push(getLineSelectionItemHref(lineItems[index].key, route))}
+      onChange={(index) => onChange(lineItems[index].key)}
     >
       <Tab.List className=" mx-1 flex flex-col gap-y-1">
         {lineItems.map((lineItem) => {
@@ -26,6 +28,7 @@ export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems }) => {
             <Tab key={lineItem.key}>
               {({ selected }) => (
                 <div
+                  onClick={() => onChange(lineItem.key)}
                   key={lineItem.key}
                   className={classNames(
                     'space-between flex w-full cursor-pointer select-none items-center rounded-md bg-opacity-0 py-1 pl-2 text-stone-200  hover:bg-opacity-80',
