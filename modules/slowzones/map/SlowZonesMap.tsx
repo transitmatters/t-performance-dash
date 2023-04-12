@@ -53,7 +53,7 @@ const getSegmentLabelOverrides = (
 };
 
 const getSlowZoneOpacity = (zone: SlowZoneResponse) => {
-  return Math.min(zone.delay / (60 * 2.5), 0.9);
+  return Math.min(Math.sqrt(zone.delay / 240), 0.9);
 };
 
 export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({ lineName, slowZones, direction }) => {
