@@ -56,6 +56,7 @@ export const useUpdateQuery = () => {
   const updateQueryParams = useCallback(
     (newQueryParams: QueryParams, range?: boolean) => {
       if (!newQueryParams) return;
+      if (!router.isReady) return;
 
       const { startDate, endDate, to, from } = newQueryParams;
 
