@@ -12,12 +12,6 @@ module.exports = {
     name: '@storybook/react-webpack5',
     options: {},
   },
-  // features: {
-  //   babelModeV7: true,
-  // },
-  // core: {
-  //   builder: '@storybook/builder-webpack5',
-  // },
   docs: {
     autodocs: true,
   },
