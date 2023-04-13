@@ -49,7 +49,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs, setSidebarOpen
                   icon={tab.icon}
                   aria-hidden={true}
                   className={classNames(
-                    selected ? 'text-white' : 'text-stone-200 ',
+                    selected ? 'text-white' : 'text-stone-200',
                     enabled ? 'group-hover:text-white' : 'text-stone-600',
                     'shrink-0',
                     tab.sub ? 'h-4 w-4' : 'h-6 w-6'
