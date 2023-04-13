@@ -12,7 +12,6 @@ export const ServiceDayPicker: React.FC<ServiceDayPickerProps> = ({ setServiceDa
     saturday: 'Saturday',
     sunday: 'Sunday',
   };
-  // const test = Object.entries<ServiceDay>(options);
   return (
     <div className={'flex w-full justify-center pt-2'}>
       <ButtonGroup
