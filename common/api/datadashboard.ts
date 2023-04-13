@@ -1,13 +1,14 @@
 import type * as ReactQuery from '@tanstack/react-query';
 import { useQueries } from '@tanstack/react-query';
+import { QUERIES, AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../types/api';
 import type {
   AggregateAPIOptions,
   PartialAggregateAPIOptions,
   PartialSingleDayAPIOptions,
   QueryNameOptions,
   SingleDayAPIOptions,
+  BusOrSubway,
 } from '../types/api';
-import { QUERIES, AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../types/api';
 import { APP_DATA_BASE_PATH } from '../../common/utils/constants';
 import { getCurrentDate } from '../utils/date';
 import type { AggregateDataResponse, SingleDayDataPoint } from '../types/charts';
@@ -77,24 +78,31 @@ const aggregateQueryDependencies: { [key in QueryNameKeys]: AggregateAPIParams[]
 
 // Overload call to specify type for single day queries
 type UseQueriesOverload = {
-  (parameters: SingleDayAPIOptions, aggregate: false, enabled?: boolean): {
+  (
+    busOrSubway: BusOrSubway,
+    parameters: SingleDayAPIOptions,
+    aggregate: false,
+    enabled?: boolean
+  ): {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<SingleDayDataPoint[]>;
   };
-  (parameters: AggregateAPIOptions, aggregate: true, enabled?: boolean): {
+  (busOrSubway: BusOrSubway, parameters: AggregateAPIOptions, aggregate: true, enabled?: boolean): {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<AggregateDataResponse>;
   };
 };
 
 // Return type `any` because the return type is specified in the overload in `UseQueriesOverload`
-export const useCustomQueries: UseQueriesOverload = (
+export const useTripExplorerQueries: UseQueriesOverload = (
+  busOrSubway: BusOrSubway,
   parameters: SingleDayAPIOptions | AggregateAPIOptions,
   aggregate: boolean,
   enabled = true
 ): any => {
+  const queryTypes = QUERIES[busOrSubway];
   const dependencies = aggregate ? aggregateQueryDependencies : singleDayQueryDependencies;
   // Create objects with keys of query names which contains keys and parameters.
   const queries = {};
-  QUERIES.forEach((queryName) => {
+  queryTypes.forEach((queryName) => {
     const keys = [queryName];
     const params: Partial<SingleDayAPIOptions | AggregateAPIOptions> = {};
     dependencies[queryName].forEach((field: Partial<AggregateAPIParams | SingleDayAPIParams>) => {
@@ -108,7 +116,7 @@ export const useCustomQueries: UseQueriesOverload = (
 
   // Create multiple queries.
   const requests = useQueries({
-    queries: QUERIES.map((name) => {
+    queries: queryTypes.map((name) => {
       return {
         queryKey: [name, queries[name].params],
         queryFn: () =>
@@ -122,6 +130,12 @@ export const useCustomQueries: UseQueriesOverload = (
   });
 
   // Return each query.
+  if (busOrSubway === 'bus') {
+    return {
+      [QueryNameKeys.traveltimes]: requests[0],
+      [QueryNameKeys.headways]: requests[1],
+    };
+  }
   return {
     [QueryNameKeys.traveltimes]: requests[0],
     [QueryNameKeys.headways]: requests[1],
