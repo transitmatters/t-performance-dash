@@ -6,8 +6,11 @@ import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
+import type { DashboardConfig } from '../state/dashboardConfig';
+import { useDashboardConfig } from '../state/dashboardConfig';
 import { SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
+import { getDashboardConfig, saveDashboardConfig } from '../state/utils/utils';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'RL',
@@ -17,7 +20,7 @@ const linePathToKeyMap: Record<string, Line> = {
   bus: 'BUS',
 };
 
-const getParams = (params) => {
+export const getParams = (params) => {
   return Object.fromEntries(
     Object.entries(params).filter(([key, value]) => key !== 'line' && value)
   );
@@ -104,12 +107,13 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
   const currentPage = ALL_PAGES[page];
   const currentPath = currentPage.path;
   let href = `/${path}`;
-
   // Go to homepage if current line is selected or the selected page is not valid for the given line.
   const validPage = currentPage.lines.includes(newLine);
   if (key === line || currentPath === 'today' || !validPage) {
     return href;
   }
+  delete query.from;
+  delete query.to;
   const queryParams = query
     ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
     : new URLSearchParams();
@@ -127,6 +131,8 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   if (newRoute === route.query.busRoute || !validPage) {
     return `/bus/trips?busRoute=${newRoute}`;
   }
+  delete query.from;
+  delete query.to;
   const queryParams = query
     ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
     : new URLSearchParams();
@@ -136,19 +142,44 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   return href;
 };
 
-export const handleTabNavigation = (
-  currentPage: Page,
-  tab: PageMetadata,
-  query: QueryParams,
-  linePath: LinePath,
-  router: NextRouter
-) => {
-  // If we are on bus mode we want to keep the busRoute query param when switching sections.
-  const busRouteOnly = query.busRoute ? { busRoute: query.busRoute } : undefined;
+export const useHandlePageNavigation = () => {
+  const router = useRouter();
+  const { page, query, linePath } = useDelimitatedRoute();
+  const pageObject = ALL_PAGES[page];
+  const dashboardConfig = useDashboardConfig();
 
-  if (ALL_PAGES[currentPage]?.section === tab.section) {
-    router.push({ pathname: `/${linePath}${tab.path}`, query: query });
-  } else {
-    router.push({ pathname: `/${linePath}${tab.path}`, query: busRouteOnly });
-  }
+  const handlePageNavigation = useCallback(
+    (page: PageMetadata) => {
+      if (pageObject?.section === page.section) {
+        navigateWithinSection(router, linePath, page, query);
+        return;
+      }
+      saveDashboardConfig(pageObject.section, query, dashboardConfig);
+      navigateToNewSection(router, linePath, page, query, dashboardConfig);
+    },
+    [router, query, linePath, pageObject, dashboardConfig]
+  );
+  return handlePageNavigation;
+};
+
+const navigateWithinSection = (
+  router: NextRouter,
+  linePath: LinePath,
+  page: PageMetadata,
+  query: QueryParams
+) => {
+  router.push({ pathname: `/${linePath}${page.path}`, query: query });
+};
+
+const navigateToNewSection = (
+  router: NextRouter,
+  linePath: LinePath,
+  page: PageMetadata,
+  query: QueryParams,
+  dashboardConfig: DashboardConfig
+) => {
+  const params = getDashboardConfig(page.section, dashboardConfig);
+  const busRouteOnly = query.busRoute ?? undefined;
+  const newQuery = busRouteOnly ? { ...params, busRoute: busRouteOnly } : params;
+  router.push({ pathname: `/${linePath}${page.path}`, query: newQuery });
 };

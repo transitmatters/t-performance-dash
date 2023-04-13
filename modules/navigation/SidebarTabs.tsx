@@ -1,8 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useRouter } from 'next/router';
-import { handleTabNavigation, useDelimitatedRoute } from '../../common/utils/router';
+import { useDelimitatedRoute, useHandlePageNavigation } from '../../common/utils/router';
 import type { PageMetadata } from '../../common/constants/pages';
 
 interface SidebarTabs {
@@ -12,12 +11,13 @@ interface SidebarTabs {
 }
 
 export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs, setSidebarOpen }) => {
-  const { linePath, line, query, page } = useDelimitatedRoute();
-  const router = useRouter();
+  const { line, page } = useDelimitatedRoute();
+
+  const handlePageNavigation = useHandlePageNavigation();
 
   const handleChange = (enabled: boolean, tab: PageMetadata) => {
     if (!enabled) return null;
-    handleTabNavigation(page, tab, query, linePath, router);
+    handlePageNavigation(tab);
     setSidebarOpen && setSidebarOpen(false);
   };
 
@@ -49,7 +49,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs, setSidebarOpen
                   icon={tab.icon}
                   aria-hidden={true}
                   className={classNames(
-                    selected ? 'text-white' : 'text-stone-200 ',
+                    selected ? 'text-white' : 'text-stone-200',
                     enabled ? 'group-hover:text-white' : 'text-stone-600',
                     'shrink-0',
                     tab.sub ? 'h-4 w-4' : 'h-6 w-6'
