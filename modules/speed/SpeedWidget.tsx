@@ -1,14 +1,13 @@
 import React from 'react';
-import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { useSpeedData } from '../../common/api/hooks/speed';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
+import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { SpeedGraphWrapper } from './SpeedWidgetWrapper';
 import { getSpeedGraphConfig } from './constants/speeds';
-import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 
 export const SpeedWidget: React.FC = () => {
   const { line, query } = useDelimitatedRoute();

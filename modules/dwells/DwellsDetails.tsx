@@ -17,6 +17,7 @@ import { StationSelectorWidget } from '../../common/components/widgets/StationSe
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { useDwellsAggregateData, useDwellsSingleDayData } from '../../common/api/hooks/dwells';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 
