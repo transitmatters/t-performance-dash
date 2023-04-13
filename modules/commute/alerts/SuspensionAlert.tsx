@@ -19,9 +19,9 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort) => {
     return (
       <>
         <p className="mr-1 ">No service</p>
-        <p className="font-bold">{min.stop_name}</p>
+        <p className="font-bold">{min?.stop_name}</p>
         <BetweenArrow className="mx-2 h-4 w-4" />
-        <p className="font-bold">{max.stop_name}</p>
+        <p className="font-bold">{max?.stop_name}</p>
       </>
     );
   }
