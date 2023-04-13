@@ -4,6 +4,7 @@ import { fetchAllSlow } from '../../common/api/slowzones';
 import { Alerts } from '../commute/alerts/Alerts';
 import { Speed } from '../commute/speed/Speed';
 import { SlowZonesMap } from '../slowzones/map';
+import { widgetStyle } from '../../common/styles/widgets';
 import { WidgetTitle } from './WidgetTitle';
 
 interface TodayProps {
@@ -21,7 +22,7 @@ export const Today: React.FC<TodayProps> = ({ lineShort }) => {
         {canShowSlowZonesMap && <Speed />}
       </div>
       {canShowSlowZonesMap && allSlow.data && (
-        <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+        <div className={widgetStyle}>
           <WidgetTitle title="Slow Zones" />
           <SlowZonesMap
             slowZones={allSlow.data}

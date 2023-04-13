@@ -8,6 +8,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useSlowzoneAllData, useSlowzoneDelayTotalData } from '../../common/api/hooks/slowzones';
+import { widgetStyle } from '../../common/styles/widgets';
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
@@ -39,7 +40,7 @@ export default function SlowZonesDetails() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+      <div className={widgetStyle}>
         {/* TODO: display current total when a range is not selected. */}
         <WidgetTitle title="Total delays" />
         <div className="relative flex flex-col">
@@ -58,7 +59,7 @@ export default function SlowZonesDetails() {
           )}
         </div>
       </div>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+      <div className={widgetStyle}>
         <WidgetTitle title="Line Map" />
         <div className="relative flex flex-col">
           {allSlow.data && canShowSlowZonesMap ? (
@@ -74,7 +75,7 @@ export default function SlowZonesDetails() {
           )}
         </div>
       </div>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+      <div className={widgetStyle}>
         <WidgetTitle title="Locations" />
         <div className="relative flex flex-col">
           {segmentsReady ? (

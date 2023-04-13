@@ -7,6 +7,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useSlowzoneDelayTotalData } from '../../common/api/hooks/slowzones';
+import { widgetStyle } from '../../common/styles/widgets';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 dayjs.extend(utc);
 
@@ -24,7 +25,7 @@ export default function SlowZonesWidget() {
   }
   return (
     <>
-      <div className={classNames('relative h-full rounded-lg bg-white p-2 shadow-dataBox')}>
+      <div className={classNames('relative', widgetStyle)}>
         <HomescreenWidgetTitle title="Slow Zones" href={`/${linePath}/slowzones`} />
         {totalSlowTimeReady ? (
           <TotalSlowTimeWrapper

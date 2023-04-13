@@ -1,9 +1,9 @@
 import React from 'react';
-import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { useSpeedData } from '../../common/api/hooks/speed';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
+import { widgetStyle } from '../../common/styles/widgets';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { SpeedGraphWrapper } from './SpeedWidgetWrapper';
@@ -25,7 +25,7 @@ export const SpeedWidget: React.FC = () => {
 
   return (
     <>
-      <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
+      <div className={widgetStyle}>
         <HomescreenWidgetTitle title="Speed" href={`/${linePath}/speed`} />
         {speedReady ? (
           <SpeedGraphWrapper data={speeds.data} config={config} line={line} />

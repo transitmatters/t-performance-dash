@@ -28,7 +28,7 @@ export const TripExplorer = () => {
     return null;
   }
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       <StationSelectorWidget
         fromStation={fromStation}
         toStation={toStation}
