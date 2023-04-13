@@ -52,7 +52,7 @@ export const RidershipWidget: React.FC = () => {
 
   return (
     <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-      <HomescreenWidgetTitle title="Ridership & Service Levels" href={`/${linePath}/ridership`} />
+      <HomescreenWidgetTitle title="Ridership & Service Levels" tab="ridership" />
 
       <div className={classNames('flex w-full flex-row')}>
         <BasicWidgetDataLayout

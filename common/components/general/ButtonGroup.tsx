@@ -8,14 +8,19 @@ import { useDelimitatedRoute } from '../../utils/router';
 interface ButtonGroupProps<K, T> {
   options: [K, T][];
   pressFunction: React.Dispatch<SetStateAction<K>>;
+  selectedIndex?: number;
 }
 
 export const ButtonGroup: <T extends string, K extends string>(
   props: ButtonGroupProps<K, T>
-) => React.ReactElement<ButtonGroupProps<K, T>> = ({ options, pressFunction }) => {
+) => React.ReactElement<ButtonGroupProps<K, T>> = ({ options, pressFunction, selectedIndex }) => {
   const { line } = useDelimitatedRoute();
   return (
-    <Tab.Group manual onChange={(value) => pressFunction(options[value][0])}>
+    <Tab.Group
+      selectedIndex={selectedIndex}
+      manual
+      onChange={(value) => pressFunction(options[value][0])}
+    >
       <Tab.List className="isolate inline-flex w-full rounded-t-md shadow-sm md:w-fit md:rounded-md">
         {options.map((option, index) => {
           return (

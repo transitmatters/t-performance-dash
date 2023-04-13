@@ -25,7 +25,7 @@ export default function SlowZonesWidget() {
   return (
     <>
       <div className={classNames('relative h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <HomescreenWidgetTitle title="Slow Zones" href={`/${linePath}/slowzones`} />
+        <HomescreenWidgetTitle title="Slow Zones" tab="slowzones" />
         {totalSlowTimeReady ? (
           <TotalSlowTimeWrapper
             data={delayTotals.data}

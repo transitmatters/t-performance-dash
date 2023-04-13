@@ -10,14 +10,14 @@ import { SpeedGraphWrapper } from './SpeedWidgetWrapper';
 import { getSpeedGraphConfig } from './constants/speeds';
 
 export const SpeedWidget: React.FC = () => {
-  const { line, linePath } = useDelimitatedRoute();
-  const { startDate } = OVERVIEW_OPTIONS.year;
+  const { line, query } = useDelimitatedRoute();
+  const { startDate, agg } = OVERVIEW_OPTIONS[query.view ?? 'year'];
   const endDate = TODAY_STRING;
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const speeds = useSpeedData({
     start_date: startDate,
     end_date: endDate,
-    agg: OVERVIEW_OPTIONS.year.agg,
+    agg: agg,
     line,
   });
 
@@ -26,7 +26,7 @@ export const SpeedWidget: React.FC = () => {
   return (
     <>
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <HomescreenWidgetTitle title="Speed" href={`/${linePath}/speed`} />
+        <HomescreenWidgetTitle title="Speed" tab="speed" />
         {speedReady ? (
           <SpeedGraphWrapper data={speeds.data} config={config} line={line} />
         ) : (
