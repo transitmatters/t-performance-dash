@@ -1,8 +1,7 @@
 import { Popover, Transition } from '@headlessui/react';
 import classNames from 'classnames';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useRouter } from 'next/router';
 import { faCalendarDay, faCalendarWeek } from '@fortawesome/free-solid-svg-icons';
 import {
   buttonHighlightFocus,
@@ -10,7 +9,8 @@ import {
   lineColorDarkBorder,
 } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
-import { DATE_PICKER_PRESETS, TODAY_STRING } from '../../../constants/dates';
+import { RANGE_PRESETS, SINGLE_PRESETS } from '../../../constants/dates';
+import { ALL_PAGES } from '../../../constants/pages';
 import { DatePickers } from './DatePickers';
 import { DatePickerPresets } from './DatePickerPresets';
 import { RangeSelectionTab } from './RangeSelectionTab';
@@ -20,42 +20,34 @@ interface DateSelectionProps {
 }
 
 export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) => {
-  const { line, query } = useDelimitatedRoute();
-  const { startDate, endDate } = query;
-  const [selection, setSelection] = useState<number | undefined>(0);
-  const [firstLoad, setFirstLoad] = useState(true);
+  const { line, query, page } = useDelimitatedRoute();
   const [range, setRange] = useState<boolean>(false);
-  const router = useRouter();
+  const [selection, setSelection] = useState<number | undefined>(undefined);
   const updateQueryParams = useUpdateQuery();
-  const selectedOptions = range ? DATE_PICKER_PRESETS.range : DATE_PICKER_PRESETS.singleDay;
-
-  useEffect(() => {
-    setRange(type !== 'single');
-  }, [type]);
-
+  const selectedOptions = range ? RANGE_PRESETS : SINGLE_PRESETS;
+  const selectedOptionsArray = Object.values(selectedOptions);
+  const { section } = ALL_PAGES[page];
   const handleSelection = (selection: number, range: boolean) => {
-    const newOptions = range ? DATE_PICKER_PRESETS.range : DATE_PICKER_PRESETS.singleDay;
+    const newOptions = range ? Object.values(RANGE_PRESETS) : Object.values(SINGLE_PRESETS);
     updateQueryParams(newOptions[selection].input ?? null, range);
     setRange(range);
     setSelection(selection);
   };
 
-  /*
-    This allows us to set the preset to "today" if someone navigates to the page with today's date in the params.
-    Wait until router.isReady so startDate & endDate are populated.
-  */
   useEffect(() => {
-    const isToday = Boolean(startDate === TODAY_STRING);
-    if (firstLoad && router.isReady) {
-      setSelection(isToday ? 0 : undefined);
-      setFirstLoad(false);
-    }
-  }, [router.isReady, startDate, endDate, firstLoad]);
+    setRange(type !== 'single');
+  }, [type]);
+
+  // Temporary solution to prevent presets carrying over across selection.
+  // TODO: remove once presetContext is done.
+  useEffect(() => {
+    setSelection(undefined);
+  }, [section, query.queryType]);
 
   return (
     <div
       className={classNames(
-        'flex h-full max-w-full flex-row items-baseline  overflow-hidden rounded-t-md border md:max-w-sm md:rounded-md',
+        'flex h-full max-w-full flex-row items-baseline overflow-hidden rounded-t-md border md:max-w-sm md:rounded-md',
         lineColorDarkBorder[line ?? 'DEFAULT']
       )}
     >
@@ -76,7 +68,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
             className="pr-1 text-white"
           />
           <p className="truncate">
-            {selection != undefined ? selectedOptions[selection].name : 'Custom'}
+            {selection != undefined ? selectedOptionsArray[selection].name : 'Custom'}
           </p>
         </Popover.Button>
 
@@ -92,13 +84,11 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
           <Popover.Panel className="absolute bottom-[5.25rem] left-4 z-20 origin-bottom-left overflow-visible rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-4 md:right-auto md:top-8 md:mt-2 md:origin-top-left">
             {({ close }) => (
               <div className="flex w-screen max-w-[240px] flex-col overflow-hidden rounded-md bg-white leading-6 shadow-lg ring-1 ring-gray-900/5">
-                {type === 'combo' && (
-                  <RangeSelectionTab range={range} handleSelection={handleSelection} />
-                )}
+                {type === 'combo' && <RangeSelectionTab range={range} setRange={setRange} />}
                 <DatePickerPresets
                   selection={selection}
                   range={range}
-                  selectedOptions={selectedOptions}
+                  selectedOptions={selectedOptionsArray}
                   handleSelection={handleSelection}
                   close={close}
                 />

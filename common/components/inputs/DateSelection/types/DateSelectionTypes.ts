@@ -4,6 +4,7 @@ export interface DateSelectionInput {
 }
 
 export interface DateSelectionDefaultOptions {
+  key: string;
   name: string;
   input: DateParams;
 }
