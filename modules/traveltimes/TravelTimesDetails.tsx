@@ -21,7 +21,6 @@ import {
   useTravelTimesAggregateData,
   useTravelTimesSingleDayData,
 } from '../../common/api/hooks/traveltimes';
-import { widgetStyle } from '../../common/styles/widgets';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
@@ -95,7 +94,7 @@ export default function TravelTimesDetails() {
           analysis={`from last ${dayjs().format('ddd')}.`}
         />
       </BasicDataWidgetPair>
-      <div className={widgetStyle}>
+      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
         {aggregate ? (
           <TravelTimesAggregateChart
             traveltimes={travelTimesAggregate}

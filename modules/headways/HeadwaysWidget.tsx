@@ -10,7 +10,6 @@ import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useHeadwaysSingleDayData } from '../../common/api/hooks/headways';
-import { widgetStyle } from '../../common/styles/widgets';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 
 export const HeadwaysWidget: React.FC = () => {
@@ -31,7 +30,7 @@ export const HeadwaysWidget: React.FC = () => {
 
   return (
     <>
-      <div className={widgetStyle}>
+      <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <HomescreenWidgetTitle title="Headways" href={`/${linePath}/headways`} />
         {headwaysReady ? (
           <>

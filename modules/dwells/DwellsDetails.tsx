@@ -17,7 +17,6 @@ import { StationSelectorWidget } from '../../common/components/widgets/StationSe
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { useDwellsAggregateData, useDwellsSingleDayData } from '../../common/api/hooks/dwells';
-import { widgetStyle } from '../../common/styles/widgets';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 
@@ -87,7 +86,7 @@ export default function DwellsDetails() {
           analysis={`from last ${dayjs().format('ddd')}.`}
         />
       </BasicDataWidgetPair>
-      <div className={widgetStyle}>
+      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
         {aggregate ? (
           <DwellsAggregateChart
             dwells={dwellsAggregate}

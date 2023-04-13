@@ -10,7 +10,11 @@ export const BasicDataWidgetItem: React.FC<BasicWidgetDataLayoutProps> = ({
   sentimentDirection,
 }) => {
   return (
-    <div className={classNames('w-1/2 rounded-lg bg-white p-2 shadow-dataBox sm:w-auto sm:p-4')}>
+    <div
+      className={classNames(
+        'w-1/2 rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox sm:w-auto sm:p-4'
+      )}
+    >
       <BasicWidgetDataLayout
         title={title}
         analysis={analysis}

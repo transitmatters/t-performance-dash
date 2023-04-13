@@ -11,7 +11,6 @@ import { HeadwaysAggregateChart } from '../headways/charts/HeadwaysAggregateChar
 import { HeadwaysSingleChart } from '../headways/charts/HeadwaysSingleChart';
 import { TravelTimesAggregateChart } from '../traveltimes/charts/TravelTimesAggregateChart';
 import { TravelTimesSingleChart } from '../traveltimes/charts/TravelTimesSingleChart';
-import { widgetStyle } from '../../common/styles/widgets';
 
 interface TripGraphsProps {
   fromStation: Station;
@@ -53,43 +52,32 @@ export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }
     <div className="flex flex-col gap-4">
       {aggregate ? (
         <>
-          <div className={widgetStyle}>
-            <TravelTimesAggregateChart
-              traveltimes={traveltimes}
-              fromStation={fromStation}
-              toStation={toStation}
-            />
-          </div>
-          <div className={widgetStyle}>
-            <HeadwaysAggregateChart
-              headways={headways}
-              fromStation={fromStation}
-              toStation={toStation}
-            />
-          </div>
-          <div className={widgetStyle}>
-            <DwellsAggregateChart dwells={dwells} fromStation={fromStation} toStation={toStation} />
-          </div>
+          <TravelTimesAggregateChart
+            traveltimes={traveltimes}
+            fromStation={fromStation}
+            toStation={toStation}
+          />
+          <HeadwaysAggregateChart
+            headways={headways}
+            fromStation={fromStation}
+            toStation={toStation}
+          />
+          <DwellsAggregateChart dwells={dwells} fromStation={fromStation} toStation={toStation} />
         </>
       ) : (
         <>
-          <div className={widgetStyle}>
-            <TravelTimesSingleChart
-              traveltimes={traveltimes}
-              fromStation={fromStation}
-              toStation={toStation}
-            />
-          </div>
-          <div className={widgetStyle}>
-            <HeadwaysSingleChart
-              headways={headways}
-              fromStation={fromStation}
-              toStation={toStation}
-            />
-          </div>
-          <div className={widgetStyle}>
-            <DwellsSingleChart dwells={dwells} fromStation={fromStation} toStation={toStation} />
-          </div>
+          <TravelTimesSingleChart
+            traveltimes={traveltimes}
+            fromStation={fromStation}
+            toStation={toStation}
+          />
+
+          <HeadwaysSingleChart
+            headways={headways}
+            fromStation={fromStation}
+            toStation={toStation}
+          />
+          <DwellsSingleChart dwells={dwells} fromStation={fromStation} toStation={toStation} />
         </>
       )}
     </div>

@@ -10,7 +10,6 @@ import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useTravelTimesSingleDayData } from '../../common/api/hooks/traveltimes';
-import { widgetStyle } from '../../common/styles/widgets';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 
 export const TravelTimesWidget: React.FC = () => {
@@ -35,7 +34,7 @@ export const TravelTimesWidget: React.FC = () => {
 
   return (
     <>
-      <div className={widgetStyle}>
+      <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
         <HomescreenWidgetTitle title="Travel Times" href={`/${linePath}/traveltimes`} />
         {traveltimesReady ? (
           <>

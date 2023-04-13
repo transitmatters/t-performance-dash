@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import classNames from 'classnames';
 import { useRidershipData } from '../../common/api/hooks/ridership';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
@@ -9,7 +8,6 @@ import type { ServiceDay } from '../../common/types/ridership';
 import { getHighestTphValue, normalizeToPercent } from '../../common/utils/ridership';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ServiceDayPicker } from '../../common/components/inputs/ServiceDayPicker';
-import { widgetStyle } from '../../common/styles/widgets';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { TphChart } from './charts/TphChart';
 import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
@@ -84,13 +82,13 @@ export default function RidershipDetails() {
           sentimentDirection={'positiveOnIncrease'}
         />
       </BasicDataWidgetPair>
-      <div className={widgetStyle}>
+      <div className={'h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox'}>
         <WidgetTitle title="Weekday Ridership & Service" />
 
         {serviceRidershipChart}
       </div>
 
-      <div className={classNames(widgetStyle, 'flex flex-col justify-center pr-3')}>
+      <div className="flex h-full flex-col rounded-lg border-design-lightGrey bg-white p-2 pr-3 shadow-dataBox">
         <WidgetTitle title="Service Levels" />
         {serviceLevelChart}
       </div>
