@@ -42,7 +42,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
   // TODO: remove once presetContext is done.
   useEffect(() => {
     setSelection(undefined);
-  }, [section]);
+  }, [section, query.queryType]);
 
   return (
     <div
