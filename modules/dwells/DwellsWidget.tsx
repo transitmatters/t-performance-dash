@@ -10,6 +10,7 @@ import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useDwellsSingleDayData } from '../../common/api/hooks/dwells';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 
 export const DwellsWidget: React.FC = () => {
@@ -37,7 +38,7 @@ export const DwellsWidget: React.FC = () => {
 
   return (
     <>
-      <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
+      <WidgetDiv>
         <HomescreenWidgetTitle title="Dwells" tab="tripDwells" />
         {dwellsReady ? (
           <>
@@ -67,7 +68,7 @@ export const DwellsWidget: React.FC = () => {
         ) : (
           <ChartPlaceHolder query={dwells} />
         )}
-      </div>
+      </WidgetDiv>
     </>
   );
 };

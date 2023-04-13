@@ -1,12 +1,12 @@
 'use client';
 import React from 'react';
-import classNames from 'classnames';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useSlowzoneDelayTotalData } from '../../common/api/hooks/slowzones';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 dayjs.extend(utc);
 
@@ -24,7 +24,7 @@ export default function SlowZonesWidget() {
   }
   return (
     <>
-      <div className={classNames('relative h-full rounded-lg bg-white p-2 shadow-dataBox')}>
+      <WidgetDiv className="relative">
         <HomescreenWidgetTitle title="Slow Zones" tab="slowzones" />
         {totalSlowTimeReady ? (
           <TotalSlowTimeWrapper
@@ -37,7 +37,7 @@ export default function SlowZonesWidget() {
         ) : (
           <ChartPlaceHolder query={delayTotals} />
         )}
-      </div>
+      </WidgetDiv>
     </>
   );
 }

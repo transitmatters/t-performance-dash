@@ -21,6 +21,7 @@ import {
   useHeadwaysAggregateData,
   useHeadwaysSingleDayData,
 } from '../../common/api/hooks/headways';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 import { HeadwaysHistogram } from './charts/HeadwaysHistogram';
 import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
@@ -94,7 +95,7 @@ export default function HeadwaysDetails() {
           analysis={`from last ${dayjs().format('ddd')}.`}
         />
       </BasicDataWidgetPair>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+      <WidgetDiv>
         {aggregate ? (
           <HeadwaysAggregateChart
             headways={headwaysAggregate}
@@ -108,20 +109,20 @@ export default function HeadwaysDetails() {
             toStation={toStation}
           />
         )}
-      </div>
+      </WidgetDiv>
       {!aggregate && (
         <>
           <div className="flex w-full flex-row items-center justify-between text-lg">
             <h3>Headway Variance</h3>
           </div>
 
-          <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+          <WidgetDiv>
             <HeadwaysHistogram
               headways={headways}
               fromStation={fromStation}
               toStation={toStation}
             />
-          </div>
+          </WidgetDiv>
         </>
       )}
       <TerminusNotice toStation={toStation} fromStation={fromStation} />
