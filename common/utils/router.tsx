@@ -1,9 +1,10 @@
+import type { ParsedUrlQuery } from 'querystring';
 import { capitalize, isEqual, pickBy } from 'lodash';
 import type { NextRouter } from 'next/router';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
-import type { Line, LinePath, LineShort } from '../types/lines';
-import { RAIL_LINES } from '../types/lines';
+import type { BusRoute, Line, LinePath, LineShort } from '../types/lines';
+import { BUS_ROUTES, RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
 import type { DashboardConfig } from '../state/dashboardConfig';
@@ -20,7 +21,7 @@ const linePathToKeyMap: Record<string, Line> = {
   bus: 'BUS',
 };
 
-export const getParams = (params) => {
+export const getParams = (params: ParsedUrlQuery | QueryParams) => {
   return Object.fromEntries(
     Object.entries(params).filter(([key, value]) => key !== 'line' && value)
   );
@@ -51,6 +52,48 @@ export const useDelimitatedRoute = (): Route => {
     tab: tab,
     query: router.isReady ? newParams : {},
   };
+};
+
+export const useConvertConfigParam = ():
+  | { line: LinePath; queryParams: QueryParams }
+  | undefined => {
+  const router = useRouter();
+  const queryParams = getParams(router.query);
+  if ('config' in queryParams) {
+    const configArr = Array.isArray(queryParams.config)
+      ? queryParams.config
+      : queryParams.config?.split(',');
+    if (configArr && configArr.length === 5) {
+      const line = RAIL_LINES.includes(configArr[0].toLowerCase())
+        ? (configArr[0].toLowerCase() as LinePath)
+        : undefined;
+      const busRoute = BUS_ROUTES.includes(configArr[0].toString())
+        ? (configArr[0] as BusRoute)
+        : undefined;
+      if (line) {
+        return {
+          line: line,
+          queryParams: {
+            from: configArr[1] || undefined,
+            to: configArr[2] || undefined,
+            startDate: configArr[3] || undefined,
+            endDate: configArr[4] || undefined,
+          },
+        };
+      } else if (busRoute) {
+        return {
+          line: 'bus',
+          queryParams: {
+            from: configArr[1] || undefined,
+            to: configArr[2] || undefined,
+            startDate: configArr[3] || undefined,
+            endDate: configArr[4] || undefined,
+            busRoute: busRoute,
+          },
+        };
+      }
+    }
+  }
 };
 
 export const useUpdateQuery = () => {
@@ -158,6 +201,22 @@ export const useHandlePageNavigation = () => {
       navigateToNewSection(router, linePath, page, query, dashboardConfig);
     },
     [router, query, linePath, pageObject, dashboardConfig]
+  );
+  return handlePageNavigation;
+};
+
+export const useHandlePageRedirect = () => {
+  const router = useRouter();
+  const { page } = useDelimitatedRoute();
+  const pageObject = ALL_PAGES[page];
+  const dashboardConfig = useDashboardConfig();
+
+  const handlePageNavigation = useCallback(
+    (page: PageMetadata, linePath: LinePath, newQuery: QueryParams) => {
+      saveDashboardConfig(pageObject.section, newQuery, dashboardConfig);
+      navigateToNewSection(router, linePath, page, newQuery, dashboardConfig);
+    },
+    [router, pageObject, dashboardConfig]
   );
   return handlePageNavigation;
 };
