@@ -1,8 +1,8 @@
 import React from 'react';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { RidershipWidget } from '../ridership/RidershipWidget';
 import SlowZonesWidget from '../slowzones/SlowZonesWidget';
 import { SpeedWidget } from '../speed/SpeedWidget';
+import { RidershipWidget } from '../ridership/RidershipWidget';
 
 export default function Overview() {
   const { tab, line } = useDelimitatedRoute();

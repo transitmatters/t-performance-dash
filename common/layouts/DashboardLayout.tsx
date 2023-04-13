@@ -43,7 +43,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           </div>
         </main>
         {isMobile && (
-          <div className="pb-safe fixed bottom-0 z-20 w-full bg-white">{getDatePicker()}</div>
+          <div className="pb-safe fixed bottom-0 z-20 w-full bg-gray-300">{getDatePicker()}</div>
         )}
       </div>
       <Footer />

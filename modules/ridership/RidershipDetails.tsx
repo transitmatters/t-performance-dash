@@ -10,6 +10,7 @@ import { getHighestTphValue, normalizeToPercent } from '../../common/utils/rider
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ServiceDayPicker } from '../../common/components/inputs/ServiceDayPicker';
 import { widgetStyle } from '../../common/styles/widgets';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { TphChart } from './charts/TphChart';
 import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
 
@@ -50,7 +51,7 @@ export default function RidershipDetails() {
           color={color}
           highestTph={highestTph}
         />
-        <ServiceDayPicker serviceDay={serviceDay} setServiceDay={setServiceDay} />
+        <ServiceDayPicker setServiceDay={setServiceDay} />
       </>
     );
   }, [color, highestTph, lineData, serviceDay]);
@@ -83,15 +84,16 @@ export default function RidershipDetails() {
           sentimentDirection={'positiveOnIncrease'}
         />
       </BasicDataWidgetPair>
-      <div className="flex w-full flex-row items-center justify-between text-lg">
-        <h3>Weekday ridership and service levels</h3>
-      </div>
-      <div className={widgetStyle}>{serviceRidershipChart}</div>
+      <div className={widgetStyle}>
+        <WidgetTitle title="Weekday Ridership & Service" />
 
-      <div className="flex w-full flex-row items-center justify-between text-lg">
-        <h3>Service Levels</h3>
+        {serviceRidershipChart}
       </div>
-      <div className={classNames(widgetStyle, 'flex pr-3')}>{serviceLevelChart}</div>
+
+      <div className={classNames(widgetStyle, 'flex flex-col justify-center pr-3')}>
+        <WidgetTitle title="Service Levels" />
+        {serviceLevelChart}
+      </div>
     </>
   );
 }
