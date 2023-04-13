@@ -9,7 +9,6 @@ export interface Route {
   page: Page;
   query: QueryParams;
   tab: Tab;
-  view?: OverviewDatePresetKey;
 }
 
 export type QueryParams = {

@@ -3,7 +3,6 @@ import type { QueryParams } from '../../types/router';
 import { getParams } from '../../utils/router';
 import type { DashboardConfig } from '../dashboardConfig';
 
-// Save params when leaving section.
 export const saveDashboardConfig = (
   section: Section,
   query: QueryParams,
@@ -19,7 +18,6 @@ export const saveDashboardConfig = (
   }
 };
 
-// get saved params of new section.
 export const getDashboardConfig = (section: Section, dashboardConfig: DashboardConfig) => {
   if (section === 'trips') {
     return dashboardConfig.tripConfig;
