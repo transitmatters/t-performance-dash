@@ -31,7 +31,7 @@ export const HeadwaysWidget: React.FC = () => {
   return (
     <>
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <HomescreenWidgetTitle title="Headways" href={`/${linePath}/headways`} />
+        <HomescreenWidgetTitle title="Headways" tab="tripHeadways" />
         {headwaysReady ? (
           <>
             <div className={classNames('flex w-full flex-row')}>

@@ -1,3 +1,4 @@
+import type { OverviewDatePresetKey } from '../constants/dates';
 import type { Page } from '../constants/pages';
 import type { BusRoute, Line, LinePath, LineShort } from './lines';
 
@@ -15,6 +16,7 @@ export type QueryParams = {
   endDate?: string;
   queryType?: QueryTypeOptions;
   busRoute?: BusRoute;
+  view?: OverviewDatePresetKey;
   to?: string;
   from?: string;
 };

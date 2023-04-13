@@ -45,14 +45,14 @@ export const RidershipWidget: React.FC = () => {
           color={color}
           highestTph={highestTph}
         />
-        <ServiceDayPicker serviceDay={serviceDay} setServiceDay={setServiceDay} />
+        <ServiceDayPicker setServiceDay={setServiceDay} />
       </>
     );
   }, [color, highestTph, lineData, serviceDay]);
 
   return (
     <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-      <HomescreenWidgetTitle title="Ridership & Service Levels" href={`/${linePath}/ridership`} />
+      <HomescreenWidgetTitle title="Ridership & Service Levels" tab="ridership" />
 
       <div className={classNames('flex w-full flex-row')}>
         <BasicWidgetDataLayout

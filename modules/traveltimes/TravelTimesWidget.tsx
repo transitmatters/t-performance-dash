@@ -35,7 +35,7 @@ export const TravelTimesWidget: React.FC = () => {
   return (
     <>
       <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <HomescreenWidgetTitle title="Travel Times" href={`/${linePath}/traveltimes`} />
+        <HomescreenWidgetTitle title="Travel Times" tab={'tripTraveltimes'} />
         {traveltimesReady ? (
           <>
             <div className={classNames('space-between flex w-full flex-row')}>
