@@ -8,10 +8,10 @@ import { TripGraphs } from './TripGraphs';
 export const TripExplorer = () => {
   const {
     lineShort,
-    query: { to, from },
+    query: { to, from, busRoute },
   } = useDelimitatedRoute();
 
-  const stations = optionsStation(lineShort);
+  const stations = optionsStation(lineShort, busRoute);
   const [toStation, setToStation] = useState(
     to ? getParentStationForStopId(to) : stations?.[stations.length - 2]
   );
@@ -20,21 +20,22 @@ export const TripExplorer = () => {
   );
 
   useEffect(() => {
-    if (!from) setFromStation(stations?.[3]);
-    if (!to) setToStation(stations?.[stations.length - 3]);
+    if (!from) setFromStation(stations?.[1]);
+    if (!to) setToStation(stations?.[stations.length - 2]);
   }, [lineShort, from, to, stations, setFromStation, setToStation]);
-
   if (!(fromStation && toStation)) {
     return null;
   }
   return (
     <div>
-      <StationSelectorWidget
-        fromStation={fromStation}
-        toStation={toStation}
-        setFromStation={setFromStation}
-        setToStation={setToStation}
-      />
+      {fromStation && toStation && (
+        <StationSelectorWidget
+          fromStation={fromStation}
+          toStation={toStation}
+          setFromStation={setFromStation}
+          setToStation={setToStation}
+        />
+      )}
       <TripGraphs fromStation={fromStation} toStation={toStation} />
       <TerminusNotice toStation={toStation} fromStation={fromStation} />
     </div>
