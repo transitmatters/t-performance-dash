@@ -8,6 +8,7 @@ import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { SpeedGraphWrapper } from './SpeedWidgetWrapper';
 import { getSpeedGraphConfig } from './constants/speeds';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 
 export const SpeedWidget: React.FC = () => {
   const { line, query } = useDelimitatedRoute();
@@ -24,15 +25,13 @@ export const SpeedWidget: React.FC = () => {
   const speedReady = !speeds.isError && speeds.data && line;
 
   return (
-    <>
-      <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <HomescreenWidgetTitle title="Speed" tab="speed" />
-        {speedReady ? (
-          <SpeedGraphWrapper data={speeds.data} config={config} line={line} />
-        ) : (
-          <ChartPlaceHolder query={speeds} />
-        )}
-      </div>
-    </>
+    <WidgetDiv>
+      <HomescreenWidgetTitle title="Speed" tab="speed" />
+      {speedReady ? (
+        <SpeedGraphWrapper data={speeds.data} config={config} line={line} />
+      ) : (
+        <ChartPlaceHolder query={speeds} />
+      )}
+    </WidgetDiv>
   );
 };

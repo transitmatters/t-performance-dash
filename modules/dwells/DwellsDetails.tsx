@@ -86,7 +86,7 @@ export default function DwellsDetails() {
           analysis={`from last ${dayjs().format('ddd')}.`}
         />
       </BasicDataWidgetPair>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+      <WidgetDiv>
         {aggregate ? (
           <DwellsAggregateChart
             dwells={dwellsAggregate}
@@ -96,7 +96,7 @@ export default function DwellsDetails() {
         ) : (
           <DwellsSingleChart dwells={dwells} toStation={toStation} fromStation={fromStation} />
         )}
-      </div>
+      </WidgetDiv>
       <TerminusNotice toStation={toStation} fromStation={fromStation} />
     </>
   );
