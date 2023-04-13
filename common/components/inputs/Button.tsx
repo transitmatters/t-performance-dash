@@ -8,11 +8,11 @@ interface ButtonProps
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
-  content: string | React.ReactNode;
+  children: React.ReactNode;
   isFullWidth?: boolean;
 }
 
-export const Button: React.FC<ButtonProps> = ({ content, isFullWidth = false, ...props }) => {
+export const Button: React.FC<ButtonProps> = ({ children, isFullWidth = false, ...props }) => {
   const route = useDelimitatedRoute();
 
   return (
@@ -25,7 +25,7 @@ export const Button: React.FC<ButtonProps> = ({ content, isFullWidth = false, ..
       )}
       {...props}
     >
-      {content}
+      {children}
     </button>
   );
 };

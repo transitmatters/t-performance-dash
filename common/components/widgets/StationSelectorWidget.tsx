@@ -58,15 +58,12 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
         toStation={toStation}
         setStation={setToStation}
       />
-      <Button
-        content={
-          <>
-            {'Swap'}&nbsp;
-            <FontAwesomeIcon icon={faRightLeft} />
-          </>
-        }
-        onClick={swapStations}
-      />
+      <Button onClick={swapStations}>
+        <>
+          {'Swap'}&nbsp;
+          <FontAwesomeIcon icon={faRightLeft} />
+        </>
+      </Button>
     </div>
   );
 };
