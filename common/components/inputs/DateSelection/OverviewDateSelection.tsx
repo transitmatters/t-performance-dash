@@ -14,7 +14,7 @@ export const OverviewDateSelection = () => {
   const handlePresetSelection = (value: OverviewDatePresetKey) => {
     overviewPresetChange({ view: value });
     router.query.view = value;
-    router.push(router);
+    router.push({ pathname: router.pathname, query: router.query });
   };
 
   return (

@@ -1,32 +1,12 @@
 import { create } from 'zustand';
-import type { OverviewDatePresetKey } from '../constants/dates';
-import { BUS_MAX_DATE, OVERVIEW_OPTIONS, TODAY_STRING } from '../constants/dates';
+import { OVERVIEW_OPTIONS, TODAY_STRING } from '../constants/dates';
 import type { Tab } from '../constants/dashboardTabs';
-import type { QueryTypeOptions } from '../types/router';
-
-type LineSectionParams = {
-  startDate?: string;
-  endDate?: string;
-};
-
-// TODO: Review optionality of props. Maybe use Partial?
-type TripsSectionParams = {
-  startDate?: string;
-  endDate?: string;
-  queryType?: QueryTypeOptions;
-  from?: string;
-  to?: string;
-};
-
-type OverviewPresetParams = {
-  view: OverviewDatePresetKey;
-};
-
-interface FullConfig {
-  lineConfig: LineSectionParams;
-  tripConfig: TripsSectionParams;
-  overviewPreset?: OverviewPresetParams;
-}
+import { BUS_DEFAULTS, SUBWAY_DEFAULTS } from './dashboardDefaults';
+import type {
+  LineSectionParams,
+  OverviewPresetParams,
+  TripsSectionParams,
+} from './types/dashboardConfigTypes';
 
 export interface DashboardConfig {
   lineConfig: LineSectionParams;
@@ -37,18 +17,6 @@ export interface DashboardConfig {
   setTripConfig: (tripConfig: TripsSectionParams) => void;
   overviewPresetChange: (overviewConfig: OverviewPresetParams) => void;
 }
-
-export const SUBWAY_DEFAULTS: FullConfig = {
-  lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
-  tripConfig: { startDate: TODAY_STRING, queryType: 'single' },
-  overviewPreset: { view: 'year' },
-};
-
-export const BUS_DEFAULTS: FullConfig = {
-  lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
-  tripConfig: { startDate: BUS_MAX_DATE, queryType: 'single' },
-  overviewPreset: undefined,
-};
 
 export const useDashboardConfig = create<DashboardConfig>((set) => ({
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },

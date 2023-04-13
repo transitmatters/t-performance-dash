@@ -1,14 +1,16 @@
 import { capitalize, isEqual, pickBy } from 'lodash';
+import type { NextRouter } from 'next/router';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route } from '../types/router';
-import type { PageMetadata, Page, Section } from '../constants/pages';
+import type { PageMetadata, Page } from '../constants/pages';
 import type { DashboardConfig } from '../state/dashboardConfig';
 import { useDashboardConfig } from '../state/dashboardConfig';
 import { SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
+import { getDashboardConfig, saveDashboardConfig } from '../state/utils/utils';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'RL',
@@ -18,7 +20,7 @@ const linePathToKeyMap: Record<string, Line> = {
   bus: 'BUS',
 };
 
-const getParams = (params) => {
+export const getParams = (params) => {
   return Object.fromEntries(
     Object.entries(params).filter(([key, value]) => key !== 'line' && value)
   );
@@ -147,44 +149,37 @@ export const useHandlePageNavigation = () => {
   const dashboardConfig = useDashboardConfig();
 
   const handlePageNavigation = useCallback(
-    (tab: PageMetadata) => {
-      if (pageObject?.section === tab.section) {
-        router.push({ pathname: `/${linePath}${tab.path}`, query: query });
-      } else {
-        // If we are on bus mode we want to keep the busRoute query param when switching sections.
-        const busRouteOnly = query.busRoute ?? undefined;
-        saveOldParams(pageObject.section, query, dashboardConfig);
-        const params = getNewParams(tab.section, dashboardConfig);
-        const newQuery = busRouteOnly ? { ...params, busRoute: busRouteOnly } : params;
-        router.push({ pathname: `/${linePath}${tab.path}`, query: newQuery });
+    (page: PageMetadata) => {
+      if (pageObject?.section === page.section) {
+        navigateWithinSection(router, linePath, page, query);
+        return;
       }
+      saveDashboardConfig(pageObject.section, query, dashboardConfig);
+      navigateToNewSection(router, linePath, page, query, dashboardConfig);
     },
     [router, query, linePath, pageObject, dashboardConfig]
   );
   return handlePageNavigation;
 };
 
-// Save params when leaving section.
-const saveOldParams = (section: Section, query: QueryParams, dashboardConfig: DashboardConfig) => {
-  if (section === 'trips') {
-    // TODO: filter out invalid keys.
-    const params = getParams(query);
-    if (params.startDate) dashboardConfig.setTripConfig(params);
-  }
-  if (section === 'line') {
-    dashboardConfig.setLineConfig({ startDate: query.startDate, endDate: query.endDate });
-  }
+const navigateWithinSection = (
+  router: NextRouter,
+  linePath: LinePath,
+  page: PageMetadata,
+  query: QueryParams
+) => {
+  router.push({ pathname: `/${linePath}${page.path}`, query: query });
 };
 
-// get saved params of new section.
-const getNewParams = (section: Section, dashboardConfig: DashboardConfig) => {
-  if (section === 'trips') {
-    return dashboardConfig.tripConfig;
-  }
-  if (section === 'line') {
-    return dashboardConfig.lineConfig;
-  }
-  if (section === 'overview') {
-    return dashboardConfig.overviewPreset;
-  }
+const navigateToNewSection = (
+  router: NextRouter,
+  linePath: LinePath,
+  page: PageMetadata,
+  query: QueryParams,
+  dashboardConfig: DashboardConfig
+) => {
+  const params = getDashboardConfig(page.section, dashboardConfig);
+  const busRouteOnly = query.busRoute ?? undefined;
+  const newQuery = busRouteOnly ? { ...params, busRoute: busRouteOnly } : params;
+  router.push({ pathname: `/${linePath}${page.path}`, query: newQuery });
 };

@@ -45,7 +45,7 @@ export const FLAT_PICKER_OPTIONS: {
   },
 };
 
-export const SINGLE_PRESETS: { [key in DATE_PRESET_KEY]?: DateSelectionDefaultOptions } = {
+export const SINGLE_PRESETS: { [key in DatePresetKey]?: DateSelectionDefaultOptions } = {
   today: { key: 'today', name: 'Today', input: { startDate: TODAY_STRING } },
   yesterday: {
     key: 'yesterday',
@@ -76,7 +76,7 @@ export const SINGLE_PRESETS: { [key in DATE_PRESET_KEY]?: DateSelectionDefaultOp
 };
 
 // TODO Different presets for buses
-export const RANGE_PRESETS: { [key in DATE_PRESET_KEY]?: DateSelectionDefaultOptions } = {
+export const RANGE_PRESETS: { [key in DatePresetKey]?: DateSelectionDefaultOptions } = {
   week: {
     key: 'week',
     name: 'Past week',
@@ -147,7 +147,7 @@ export const RANGE_PRESETS: { [key in DATE_PRESET_KEY]?: DateSelectionDefaultOpt
   },
 };
 
-export type DATE_PRESET_KEY =
+export type DatePresetKey =
   | OverviewDatePresetKey
   | 'today'
   | 'lastYear'
@@ -189,16 +189,3 @@ export enum OverviewRangeTypes {
   'year' = 'Past Year',
   'all' = 'All Time',
 }
-
-export const RANGE_DATE_KEYS = Object.fromEntries(
-  Object.values(RANGE_PRESETS).map((rangePreset) => [
-    `${rangePreset.input.startDate}${rangePreset.input.endDate}`,
-    rangePreset.key,
-  ])
-);
-export const SINGLE_DATE_KEYS = Object.fromEntries(
-  Object.values(SINGLE_PRESETS).map((singlePreset) => [
-    `${singlePreset.input.startDate}${singlePreset.input.endDate}`,
-    singlePreset.key,
-  ])
-);

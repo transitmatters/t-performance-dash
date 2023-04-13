@@ -1,4 +1,4 @@
-import { BUS_DEFAULTS } from '../state/dashboardConfig';
+import { BUS_DEFAULTS } from '../state/dashboardDefaults';
 import type { QueryParams } from '../types/router';
 
 export type Tab = 'Subway' | 'Bus' | 'System';
