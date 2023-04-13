@@ -8,6 +8,7 @@ import type { ServiceDay } from '../../common/types/ridership';
 import { getHighestTphValue, normalizeToPercent } from '../../common/utils/ridership';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ServiceDayPicker } from '../../common/components/inputs/ServiceDayPicker';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { TphChart } from './charts/TphChart';
 import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
 
@@ -48,7 +49,7 @@ export default function RidershipDetails() {
           color={color}
           highestTph={highestTph}
         />
-        <ServiceDayPicker serviceDay={serviceDay} setServiceDay={setServiceDay} />
+        <ServiceDayPicker setServiceDay={setServiceDay} />
       </>
     );
   }, [color, highestTph, lineData, serviceDay]);
@@ -81,21 +82,14 @@ export default function RidershipDetails() {
           sentimentDirection={'positiveOnIncrease'}
         />
       </BasicDataWidgetPair>
-      <div className="flex w-full flex-row items-center justify-between text-lg">
-        <h3>Weekday ridership and service levels</h3>
-      </div>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+      <div className={'h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox'}>
+        <WidgetTitle title="Weekday Ridership & Service" />
+
         {serviceRidershipChart}
       </div>
 
-      <div className="flex w-full flex-row items-center justify-between text-lg">
-        <h3>Service Levels</h3>
-      </div>
-      <div
-        className={
-          'flex h-full rounded-lg border-design-lightGrey bg-white p-2 pr-3 shadow-dataBox'
-        }
-      >
+      <div className="flex h-full flex-col rounded-lg border-design-lightGrey bg-white p-2 pr-3 shadow-dataBox">
+        <WidgetTitle title="Service Levels" />
         {serviceLevelChart}
       </div>
     </>

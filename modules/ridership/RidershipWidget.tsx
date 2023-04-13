@@ -45,7 +45,7 @@ export const RidershipWidget: React.FC = () => {
           color={color}
           highestTph={highestTph}
         />
-        <ServiceDayPicker serviceDay={serviceDay} setServiceDay={setServiceDay} />
+        <ServiceDayPicker setServiceDay={setServiceDay} />
       </>
     );
   }, [color, highestTph, lineData, serviceDay]);
@@ -80,8 +80,10 @@ export const RidershipWidget: React.FC = () => {
           sentimentDirection={'positiveOnIncrease'}
         />
       </div>
-      <div className={classNames('h-50 pr-4')}>{serviceRidershipChart}</div>
-      <div className={classNames('h-50 flex pr-3')}>{serviceLevelChart}</div>
+      <div className="flex flex-col gap-8">
+        <div className={classNames('h-50 pr-4')}>{serviceRidershipChart}</div>
+        <div className={classNames('h-50 flex flex-col pr-3')}>{serviceLevelChart}</div>
+      </div>
     </div>
   );
 };
