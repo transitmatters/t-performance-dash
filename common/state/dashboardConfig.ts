@@ -32,7 +32,7 @@ export const useDashboardConfig = create<DashboardConfig>((set) => ({
       if (newTab === 'Bus') {
         return BUS_DEFAULTS;
       }
-      return SUBWAY_DEFAULTS;
+      return {};
     }),
   overviewPresetChange: (overviewConfig) =>
     set(() => ({
