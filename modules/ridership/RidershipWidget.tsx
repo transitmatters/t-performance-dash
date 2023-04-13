@@ -45,7 +45,7 @@ export const RidershipWidget: React.FC = () => {
           color={color}
           highestTph={highestTph}
         />
-        <ServiceDayPicker serviceDay={serviceDay} setServiceDay={setServiceDay} />
+        <ServiceDayPicker setServiceDay={setServiceDay} />
       </>
     );
   }, [color, highestTph, lineData, serviceDay]);
