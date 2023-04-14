@@ -9,6 +9,7 @@ import { getHighestTphValue, normalizeToPercent } from '../../common/utils/rider
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { ServiceDayPicker } from '../../common/components/inputs/ServiceDayPicker';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
 import { TphChart } from './charts/TphChart';
 
@@ -45,14 +46,14 @@ export const RidershipWidget: React.FC = () => {
           color={color}
           highestTph={highestTph}
         />
-        <ServiceDayPicker serviceDay={serviceDay} setServiceDay={setServiceDay} />
+        <ServiceDayPicker setServiceDay={setServiceDay} />
       </>
     );
   }, [color, highestTph, lineData, serviceDay]);
 
   return (
-    <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-      <HomescreenWidgetTitle title="Ridership & Service Levels" href={`/${linePath}/ridership`} />
+    <WidgetDiv>
+      <HomescreenWidgetTitle title="Ridership & Service Levels" tab="ridership" />
 
       <div className={classNames('flex w-full flex-row')}>
         <BasicWidgetDataLayout
@@ -80,8 +81,10 @@ export const RidershipWidget: React.FC = () => {
           sentimentDirection={'positiveOnIncrease'}
         />
       </div>
-      <div className={classNames('h-50 pr-4')}>{serviceRidershipChart}</div>
-      <div className={classNames('h-50 flex pr-3')}>{serviceLevelChart}</div>
-    </div>
+      <div className="flex flex-col gap-8">
+        <div className={classNames('h-50 pr-4')}>{serviceRidershipChart}</div>
+        <div className={classNames('h-50 flex flex-col pr-3')}>{serviceLevelChart}</div>
+      </div>
+    </WidgetDiv>
   );
 };

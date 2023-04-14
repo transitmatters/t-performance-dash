@@ -8,6 +8,14 @@ export const lineColorBackground: DefaultStyleMap = {
   'line-bus': `bg-mbta-bus`,
   DEFAULT: `bg-stone-800`,
 };
+export const lineColorDarkBackground = {
+  RL: `bg-mbta-darkRed`,
+  OL: `bg-mbta-darkOrange`,
+  GL: `bg-mbta-darkGreen`,
+  BL: `bg-mbta-darkBlue`,
+  BUS: `bg-mbta-darkBus`,
+  DEFAULT: `bg-stone-900`,
+};
 
 export const buttonHighlightFocus: DefaultStyleMap = {
   'line-red': `focus:ring-mbta-red`,

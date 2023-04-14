@@ -1,9 +1,13 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
-import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
+import {
+  getParentStationForStopId,
+  optionsStation,
+  stopIdsForStations,
+} from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
@@ -13,19 +17,29 @@ import { StationSelectorWidget } from '../../common/components/widgets/StationSe
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { useDwellsAggregateData, useDwellsSingleDayData } from '../../common/api/hooks/dwells';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 
 export default function DwellsDetails() {
   const {
     lineShort,
-    query: { startDate, endDate },
+    query: { startDate, endDate, to, from },
   } = useDelimitatedRoute();
 
   const stations = optionsStation(lineShort);
 
-  const [toStation, setToStation] = useState(stations?.[stations.length - 3]);
-  const [fromStation, setFromStation] = useState(stations?.[3]);
+  const [toStation, setToStation] = useState(
+    to ? getParentStationForStopId(to) : stations?.[stations.length - 1]
+  );
+  const [fromStation, setFromStation] = useState(
+    from ? getParentStationForStopId(from) : stations?.[2]
+  );
+
+  useEffect(() => {
+    if (!from) setFromStation(stations?.[2]);
+    if (!to) setToStation(stations?.[stations.length - 2]);
+  }, [lineShort, from, to, stations, setFromStation, setToStation]);
 
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
 
@@ -73,7 +87,7 @@ export default function DwellsDetails() {
           analysis={`from last ${dayjs().format('ddd')}.`}
         />
       </BasicDataWidgetPair>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+      <WidgetDiv>
         {aggregate ? (
           <DwellsAggregateChart
             dwells={dwellsAggregate}
@@ -83,7 +97,7 @@ export default function DwellsDetails() {
         ) : (
           <DwellsSingleChart dwells={dwells} toStation={toStation} fromStation={fromStation} />
         )}
-      </div>
+      </WidgetDiv>
       <TerminusNotice toStation={toStation} fromStation={fromStation} />
     </>
   );

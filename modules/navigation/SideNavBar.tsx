@@ -1,39 +1,13 @@
 import React, { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { faBus, faTrainSubway } from '@fortawesome/free-solid-svg-icons';
 
-import TmLogoSvg from '../../../public/tm-logo-big.svg';
-import TmIconSvg from '../../../public/tm-logo-small.svg';
-import { getBusRoutes } from '../../../common/constants/stations';
+import TmLogoSvg from '../../public/tm-logo-big.svg';
+import TmIconSvg from '../../public/tm-logo-small.svg';
 import { SideNavigation } from './SideNavigation';
 
 export const SideNavBar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const NAV_ITEMS = [
-    {
-      name: 'Subway',
-      current: true,
-      icon: faTrainSubway,
-      key: 'Subway',
-      children: [
-        { name: 'Red', path: 'red', key: 'line-red' },
-        { name: 'Orange', path: 'orange', key: 'line-orange' },
-        { name: 'Blue', path: 'blue', key: 'line-blue' },
-        { name: 'Green', path: 'green', key: 'line-green' },
-      ],
-    },
-    {
-      name: 'Bus',
-      current: false,
-      icon: faBus,
-      key: 'Routes',
-      children: getBusRoutes().map((busRoute) => {
-        return { name: busRoute, path: busRoute, key: busRoute };
-      }),
-    },
-  ];
 
   return (
     <>
@@ -88,7 +62,7 @@ export const SideNavBar = () => {
                       <TmLogoSvg className="h-7 w-auto sm:h-12" alt="TransitMatters Logo" />
                     </div>
                     <div className="mt-5 h-0 flex-1 text-white">
-                      <SideNavigation items={NAV_ITEMS} setSidebarOpen={setSidebarOpen} />
+                      <SideNavigation setSidebarOpen={setSidebarOpen} />
                     </div>
                   </div>
                 </Dialog.Panel>
@@ -105,11 +79,11 @@ export const SideNavBar = () => {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex min-h-0 flex-1 flex-col">
             <div className="flex flex-1 flex-col overflow-y-auto pb-4 pt-5">
-              <div className="flex flex-shrink-0 px-2">
+              <div className="flex flex-shrink-0 px-6">
                 <TmLogoSvg alt="TransitMatters Logo" />
               </div>
-              <div className="mt-5 flex flex-col px-2">
-                <SideNavigation items={NAV_ITEMS} />
+              <div className="mt-5 flex flex-col ">
+                <SideNavigation />
               </div>
             </div>
           </div>

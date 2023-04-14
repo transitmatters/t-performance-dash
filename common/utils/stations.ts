@@ -3,7 +3,7 @@ import type { LineShort } from '../../common/types/lines';
 import type { Station } from '../../common/types/stations';
 import type { Location } from '../types/charts';
 import type { Direction } from '../types/dataPoints';
-import { rtStations, stations } from './../constants/stations';
+import { stations, rtStations, busStations } from './../constants/stations';
 
 export const optionsForField = (
   type: 'from' | 'to',
@@ -54,9 +54,9 @@ export const swapStations = (
   setToStation(fromStation);
 };
 
-const createRapidTransitStationIndex = () => {
+const createStationIndex = () => {
   const index: Record<string, Station> = {};
-  Object.values(rtStations).forEach((line) => {
+  Object.values({ ...rtStations, ...busStations }).forEach((line) => {
     line.stations.forEach((station) => {
       index[station.station] = station;
     });
@@ -64,9 +64,9 @@ const createRapidTransitStationIndex = () => {
   return index;
 };
 
-const createParentRapidTransitStationIndex = () => {
+const createParentStationIndex = () => {
   const index: Record<string, Station> = {};
-  Object.values(rtStations).forEach((line) => {
+  Object.values({ ...rtStations, ...busStations }).forEach((line) => {
     line.stations.forEach((station) => {
       const allStopIds = [...(station.stops['0'] || []), ...(station.stops['1'] || [])];
       allStopIds.forEach((stopId) => {
@@ -77,15 +77,15 @@ const createParentRapidTransitStationIndex = () => {
   return index;
 };
 
-const rapidTransitStationIndex = createRapidTransitStationIndex();
-const parentRapidTransitStationIndex = createParentRapidTransitStationIndex();
+const stationIndex = createStationIndex();
+const parentStationIndex = createParentStationIndex();
 
 export const getStationById = (stationStopId: string) => {
-  return rapidTransitStationIndex[stationStopId];
+  return stationIndex[stationStopId];
 };
 
 export const getParentStationForStopId = (stopId: string) => {
-  return parentRapidTransitStationIndex[stopId];
+  return parentStationIndex[stopId];
 };
 
 export const stopIdsForStations = (

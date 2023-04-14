@@ -50,6 +50,7 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = ({
       return (
         <BasicWidgetDataLayout
           widgetValue={new TimeWidgetValue(slowZone.delay + slowZone.baseline, slowZone.delay)}
+          key={`${slowZone.fr_id}${slowZone.to_id}`}
           title={
             <div className={styles.directionTitle}>
               <DirectionIndicator
