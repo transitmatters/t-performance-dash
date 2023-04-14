@@ -8,6 +8,7 @@ import { TravelTimesSingleChart } from '../traveltimes/charts/TravelTimesSingleC
 import { DwellsAggregateChart } from '../dwells/charts/DwellsAggregateChart';
 import { DwellsSingleChart } from '../dwells/charts/DwellsSingleChart';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -36,32 +37,44 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
     <div className="flex flex-col gap-4">
       {aggregate ? (
         <>
-          <TravelTimesAggregateChart
-            traveltimes={traveltimes}
-            fromStation={fromStation}
-            toStation={toStation}
-          />
-          <HeadwaysAggregateChart
-            headways={headways}
-            fromStation={fromStation}
-            toStation={toStation}
-          />
-          <DwellsAggregateChart dwells={dwells} fromStation={fromStation} toStation={toStation} />
+          <WidgetDiv>
+            <TravelTimesAggregateChart
+              traveltimes={traveltimes}
+              fromStation={fromStation}
+              toStation={toStation}
+            />
+          </WidgetDiv>
+          <WidgetDiv>
+            <HeadwaysAggregateChart
+              headways={headways}
+              fromStation={fromStation}
+              toStation={toStation}
+            />
+          </WidgetDiv>
+          <WidgetDiv>
+            <DwellsAggregateChart dwells={dwells} fromStation={fromStation} toStation={toStation} />
+          </WidgetDiv>
         </>
       ) : (
         <>
-          <TravelTimesSingleChart
-            traveltimes={traveltimes}
-            fromStation={fromStation}
-            toStation={toStation}
-          />
+          <WidgetDiv>
+            <TravelTimesSingleChart
+              traveltimes={traveltimes}
+              fromStation={fromStation}
+              toStation={toStation}
+            />
+          </WidgetDiv>
 
-          <HeadwaysSingleChart
-            headways={headways}
-            fromStation={fromStation}
-            toStation={toStation}
-          />
-          <DwellsSingleChart dwells={dwells} fromStation={fromStation} toStation={toStation} />
+          <WidgetDiv>
+            <HeadwaysSingleChart
+              headways={headways}
+              fromStation={fromStation}
+              toStation={toStation}
+            />
+          </WidgetDiv>
+          <WidgetDiv>
+            <DwellsSingleChart dwells={dwells} fromStation={fromStation} toStation={toStation} />
+          </WidgetDiv>
         </>
       )}
     </div>

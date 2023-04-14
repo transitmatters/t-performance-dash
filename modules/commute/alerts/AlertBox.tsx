@@ -19,6 +19,20 @@ interface AlertBoxProps {
   line?: Line;
 }
 
+export const getRelevantAlerts = (alerts: AlertsResponse[], type: UpcomingOrCurrent) => {
+  return (
+    alerts
+      .map((alert) => {
+        const relevantTimes = alert.active_period.filter((period) => period[type] === true);
+        if (relevantTimes.length > 0) {
+          return { ...alert, relevantTimes: relevantTimes };
+        }
+      })
+      // Remove alerts with no relevant times.
+      .filter((relevantAlert) => relevantAlert != null)
+  );
+};
+
 const getAlertComponent = (
   alert: FormattedAlert,
   lineShort: LineShort,
@@ -49,15 +63,7 @@ const getAlertComponent = (
 
 export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, busRoute, type }) => {
   const alertBox = useMemo(() => {
-    const relevantAlerts = alerts
-      .map((alert) => {
-        const relevantTimes = alert.active_period.filter((period) => period[type] === true);
-        if (relevantTimes.length > 0) {
-          return { ...alert, relevantTimes: relevantTimes };
-        }
-      })
-      // Remove alerts with no relevant times.
-      .filter((relevantAlert) => relevantAlert != null);
+    const relevantAlerts = getRelevantAlerts(alerts, type);
 
     if (!relevantAlerts || relevantAlerts.length === 0) {
       return (

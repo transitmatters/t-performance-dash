@@ -9,6 +9,7 @@ import { getHighestTphValue, normalizeToPercent } from '../../common/utils/rider
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { ServiceDayPicker } from '../../common/components/inputs/ServiceDayPicker';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
 import { TphChart } from './charts/TphChart';
 
@@ -51,7 +52,7 @@ export const RidershipWidget: React.FC = () => {
   }, [color, highestTph, lineData, serviceDay]);
 
   return (
-    <div className={classNames('h-full rounded-lg bg-white p-2 shadow-dataBox')}>
+    <WidgetDiv>
       <HomescreenWidgetTitle title="Ridership & Service Levels" tab="ridership" />
 
       <div className={classNames('flex w-full flex-row')}>
@@ -84,6 +85,6 @@ export const RidershipWidget: React.FC = () => {
         <div className={classNames('h-50 pr-4')}>{serviceRidershipChart}</div>
         <div className={classNames('h-50 flex flex-col pr-3')}>{serviceLevelChart}</div>
       </div>
-    </div>
+    </WidgetDiv>
   );
 };
