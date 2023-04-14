@@ -8,12 +8,12 @@ export const lineColorBackground: DefaultStyleMap = {
   'line-bus': `bg-mbta-bus`,
   DEFAULT: `bg-stone-800`,
 };
-export const lineColorDarkBackground = {
-  RL: `bg-mbta-darkRed`,
-  OL: `bg-mbta-darkOrange`,
-  GL: `bg-mbta-darkGreen`,
-  BL: `bg-mbta-darkBlue`,
-  BUS: `bg-mbta-darkBus`,
+export const lineColorDarkBackground: DefaultStyleMap = {
+  'line-red': `bg-mbta-darkRed`,
+  'line-orange': `bg-mbta-darkOrange`,
+  'line-green': `bg-mbta-darkGreen`,
+  'line-blue': `bg-mbta-darkBlue`,
+  'line-bus': `bg-mbta-darkBus`,
   DEFAULT: `bg-stone-900`,
 };
 
