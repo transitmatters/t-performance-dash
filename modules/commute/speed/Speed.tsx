@@ -10,11 +10,12 @@ import { CompWidget } from '../../../common/components/widgets/internal/CompWidg
 import { DATE_FORMAT, OVERVIEW_OPTIONS } from '../../../common/constants/dates';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { MINIMUMS } from '../../speed/constants/speeds';
-import { useAlertsData } from '../../../common/api/hooks/alerts';
-import ShuttleIcon from '../../../public/Icons/ShuttleIcon.svg';
-import { AlertEffect, AlertsResponse } from '../../../common/types/alerts';
+import { AlertEffect } from '../../../common/types/alerts';
 import { ShuttleAlert } from '../alerts/ShuttleAlert';
 import { getRelevantAlerts } from '../alerts/AlertBox';
+import { randomUpsetEmoji } from '../../../common/utils/emoji';
+import { SuspensionAlert } from '../alerts/SuspensionAlert';
+import { useAlertsData } from '../../../common/api/hooks/alerts';
 import { calculateCommuteSpeedWidgetValues } from './utils/utils';
 
 export const Speed: React.FC = () => {
@@ -28,27 +29,11 @@ export const Speed: React.FC = () => {
   const speedReady = line && weekly.data && speed.data && !speed.isLoading && !speed.isError;
 
   // Check if shuttling
-  // const alerts = useAlertsData(lineShort);
-  const alerts = {
-    data: [
-      {
-        id: '1',
-        type: AlertEffect.SHUTTLE,
-        active_period: [{ start: 'test', end: 'test', current: true, upcoming: false }],
-        stops: ['place-wondl', 'place-wimnl'],
-        header: 'shuttling',
-      },
-      {
-        id: '2',
-        type: AlertEffect.SHUTTLE,
-        active_period: [{ start: 'test', end: 'test', current: true, upcoming: false }],
-        stops: ['place-wondl', 'place-wimnl'],
-        header: 'shuttling',
-      },
-    ],
-  };
-  const shuttlingAlert = alerts.data
-    ? getRelevantAlerts(alerts.data, 'current').find((alert) => alert?.type === AlertEffect.SHUTTLE)
+  const alerts = useAlertsData(lineShort);
+  const serviceAlert = alerts.data
+    ? getRelevantAlerts(alerts.data, 'current').find(
+        (alert) => alert?.type === AlertEffect.SHUTTLE || alert?.type === AlertEffect.SUSPENSION
+      )
     : undefined;
 
   const divStyle = classNames(
@@ -83,13 +68,15 @@ export const Speed: React.FC = () => {
           info={`Speed is how quickly trains traverse the entire line, including time spent at stations.`}
         />
       </div>
-      {shuttlingAlert ? (
+      {serviceAlert ? (
         <div className="mt-2 flex flex-col justify-center gap-x-1">
           <div className={'self-center'}>
             <Tooltip
               content={
                 <p className="max-w-xs">
-                  {"We can't calculate train speed during line shuttling (even partial shuttling)"}
+                  {
+                    "We can't calculate train speed during line shuttling (even partial shuttling) or service suspensions"
+                  }
                 </p>
               }
             >
@@ -98,11 +85,15 @@ export const Speed: React.FC = () => {
                   'm-3 select-none self-center rounded-lg bg-black bg-opacity-20 p-3 text-7xl'
                 )}
               >
-                😟
+                {randomUpsetEmoji()}
               </p>
             </Tooltip>
           </div>
-          <ShuttleAlert alert={shuttlingAlert} lineShort={lineShort} type={'current'} />
+          {serviceAlert.type === AlertEffect.SHUTTLE ? (
+            <ShuttleAlert alert={serviceAlert} lineShort={lineShort} type={'current'} />
+          ) : serviceAlert.type === AlertEffect.SUSPENSION ? (
+            <SuspensionAlert alert={serviceAlert} lineShort={lineShort} type={'current'} />
+          ) : null}
         </div>
       ) : (
         <>
