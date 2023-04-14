@@ -9,6 +9,7 @@ import { getHighestTphValue, normalizeToPercent } from '../../common/utils/rider
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ServiceDayPicker } from '../../common/components/inputs/ServiceDayPicker';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { TphChart } from './charts/TphChart';
 import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
 
@@ -82,16 +83,15 @@ export default function RidershipDetails() {
           sentimentDirection={'positiveOnIncrease'}
         />
       </BasicDataWidgetPair>
-      <div className={'h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox'}>
+      <WidgetDiv>
         <WidgetTitle title="Weekday Ridership & Service" />
-
         {serviceRidershipChart}
-      </div>
+      </WidgetDiv>
 
-      <div className="flex h-full flex-col rounded-lg border-design-lightGrey bg-white p-2 pr-3 shadow-dataBox">
+      <WidgetDiv className="flex flex-col pr-3">
         <WidgetTitle title="Service Levels" />
         {serviceLevelChart}
-      </div>
+      </WidgetDiv>
     </>
   );
 }
