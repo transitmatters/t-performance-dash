@@ -163,22 +163,6 @@ export const useHandlePageNavigation = () => {
   return handlePageNavigation;
 };
 
-export const useHandlePageRedirect = () => {
-  const router = useRouter();
-  const { page } = useDelimitatedRoute();
-  const pageObject = ALL_PAGES[page];
-  const dashboardConfig = useDashboardConfig();
-
-  const handlePageNavigation = useCallback(
-    (page: PageMetadata, linePath: LinePath, newQuery: QueryParams) => {
-      saveDashboardConfig(pageObject.section, newQuery, dashboardConfig);
-      navigateToNewSection(router, linePath, page, newQuery, dashboardConfig);
-    },
-    [router, pageObject, dashboardConfig]
-  );
-  return handlePageNavigation;
-};
-
 const navigateWithinSection = (
   router: NextRouter,
   linePath: LinePath,
