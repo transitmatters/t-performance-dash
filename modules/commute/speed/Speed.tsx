@@ -68,7 +68,7 @@ export const Speed: React.FC = () => {
           info={`Speed is how quickly trains traverse the entire line, including time spent at stations.`}
         />
       </div>
-      {serviceAlert ? (
+      {serviceAlert && isNaN(MPH) ? (
         <div className="mt-2 flex flex-col justify-center gap-x-1">
           <div className={'self-center'}>
             <Tooltip
