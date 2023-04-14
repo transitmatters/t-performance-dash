@@ -12,7 +12,7 @@ import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlace
 import { MINIMUMS } from '../../speed/constants/speeds';
 import { useAlertsData } from '../../../common/api/hooks/alerts';
 import ShuttleIcon from '../../../public/Icons/ShuttleIcon.svg';
-import { AlertEffect } from '../../../common/types/alerts';
+import { AlertEffect, AlertsResponse } from '../../../common/types/alerts';
 import { ShuttleAlert } from '../alerts/ShuttleAlert';
 import { getRelevantAlerts } from '../alerts/AlertBox';
 import { calculateCommuteSpeedWidgetValues } from './utils/utils';
@@ -28,7 +28,25 @@ export const Speed: React.FC = () => {
   const speedReady = line && weekly.data && speed.data && !speed.isLoading && !speed.isError;
 
   // Check if shuttling
-  const alerts = useAlertsData(lineShort);
+  // const alerts = useAlertsData(lineShort);
+  const alerts = {
+    data: [
+      {
+        id: '1',
+        type: AlertEffect.SHUTTLE,
+        active_period: [{ start: 'test', end: 'test', current: true, upcoming: false }],
+        stops: ['place-wondl', 'place-wimnl'],
+        header: 'shuttling',
+      },
+      {
+        id: '2',
+        type: AlertEffect.SHUTTLE,
+        active_period: [{ start: 'test', end: 'test', current: true, upcoming: false }],
+        stops: ['place-wondl', 'place-wimnl'],
+        header: 'shuttling',
+      },
+    ],
+  };
   const shuttlingAlert = alerts.data
     ? getRelevantAlerts(alerts.data, 'current').find((alert) => alert?.type === AlertEffect.SHUTTLE)
     : undefined;
@@ -62,10 +80,10 @@ export const Speed: React.FC = () => {
       <div className="flex flex-row items-baseline justify-between">
         <p className="text-2xl font-semibold">Speed</p>
         <InfoTooltip
-          info={`Speed is how quickly a train traverses the entire line, including time spent at stations.`}
+          info={`Speed is how quickly trains traverse the entire line, including time spent at stations.`}
         />
       </div>
-      {shuttlingAlert && isNaN(MPH) ? (
+      {shuttlingAlert ? (
         <div className="mt-2 flex flex-col justify-center gap-x-1">
           <div className={'self-center'}>
             <Tooltip
@@ -75,7 +93,13 @@ export const Speed: React.FC = () => {
                 </p>
               }
             >
-              <ShuttleIcon className="m-3 h-12 w-12 self-center" aria-hidden="true" />
+              <p
+                className={classNames(
+                  'm-3 select-none self-center rounded-lg bg-black bg-opacity-20 p-3 text-7xl'
+                )}
+              >
+                😟
+              </p>
             </Tooltip>
           </div>
           <ShuttleAlert alert={shuttlingAlert} lineShort={lineShort} type={'current'} />
