@@ -7,6 +7,7 @@ import { useDelimitatedRoute } from '../utils/router';
 import { ALL_PAGES } from '../constants/pages';
 import { DateSelection } from '../components/inputs/DateSelection/DateSelection';
 import { OverviewDateSelection } from '../components/inputs/DateSelection/OverviewDateSelection';
+import { ControlPanel } from '../components/controls/ControlPanel';
 import { Footer } from './Footer';
 
 interface DashboardLayoutProps {
@@ -16,11 +17,14 @@ interface DashboardLayoutProps {
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const isMobile = !useBreakpoint('md');
   const {
+    line,
     page,
-    query: { queryType },
+    query: { queryType, busRoute },
   } = useDelimitatedRoute();
-
   const section = ALL_PAGES[page]?.section;
+  const showControlParams = !isMobile && section && line;
+
+  // remove this once bottom nav is done.
   const getDatePicker = () => {
     if (section === 'trips' || section === 'line')
       return <DateSelection type={queryType ?? 'range'} />;
@@ -30,11 +34,19 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   return (
     <div className="flex min-h-full flex-col justify-between">
       <SideNavBar />
+
       <div className="flex flex-1 flex-col md:pl-64">
         <main className="flex-1">
           <div className="py-2 md:py-6">
             <div className="h-full px-4 sm:px-6 md:px-8">
-              {!isMobile && <div className="w-sm fixed right-4 top-4 z-10">{getDatePicker()}</div>}
+              {showControlParams && (
+                <ControlPanel
+                  section={section}
+                  line={line}
+                  queryType={queryType}
+                  busRoute={busRoute}
+                />
+              )}
               <WidgetPage>
                 <DataPageHeader />
                 {children}

@@ -21,7 +21,7 @@ export const lineColorLightBackground = {
   GL: `bg-mbta-lightGreen`,
   BL: `bg-mbta-lightBlue`,
   BUS: `bg-mbta-lightBus`,
-  DEFAULT: `bg-stone-500`,
+  DEFAULT: `bg-stone-200`,
 };
 
 export const buttonHighlightFocus = {

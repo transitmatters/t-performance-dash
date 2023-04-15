@@ -1,19 +1,14 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import dayjs from 'dayjs';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
-import {
-  getParentStationForStopId,
-  optionsStation,
-  stopIdsForStations,
-} from '../../common/utils/stations';
+import { getParentStationForStopId, stopIdsForStations } from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
-import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { useDwellsAggregateData, useDwellsSingleDayData } from '../../common/api/hooks/dwells';
@@ -23,24 +18,11 @@ import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 
 export default function DwellsDetails() {
   const {
-    lineShort,
     query: { startDate, endDate, to, from },
   } = useDelimitatedRoute();
 
-  const stations = optionsStation(lineShort);
-
-  const [toStation, setToStation] = useState(
-    to ? getParentStationForStopId(to) : stations?.[stations.length - 1]
-  );
-  const [fromStation, setFromStation] = useState(
-    from ? getParentStationForStopId(from) : stations?.[2]
-  );
-
-  useEffect(() => {
-    if (!from) setFromStation(stations?.[2]);
-    if (!to) setToStation(stations?.[stations.length - 2]);
-  }, [lineShort, from, to, stations, setFromStation, setToStation]);
-
+  const fromStation = from ? getParentStationForStopId(from) : undefined;
+  const toStation = to ? getParentStationForStopId(to) : undefined;
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
 
   const aggregate = startDate !== undefined && endDate !== undefined;
@@ -67,14 +49,6 @@ export default function DwellsDetails() {
 
   return (
     <>
-      {fromStation && toStation ? (
-        <StationSelectorWidget
-          fromStation={fromStation}
-          toStation={toStation}
-          setFromStation={setFromStation}
-          setToStation={setToStation}
-        />
-      ) : null}
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Average Dwell"
