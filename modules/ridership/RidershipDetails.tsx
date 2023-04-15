@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { useRidershipData } from '../../common/api/ridership';
+import { useRidershipData } from '../../common/api/hooks/ridership';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { LINE_COLORS } from '../../common/constants/colors';
@@ -7,8 +7,11 @@ import { PercentageWidgetValue, TripsWidgetValue } from '../../common/types/basi
 import type { ServiceDay } from '../../common/types/ridership';
 import { getHighestTphValue, normalizeToPercent } from '../../common/utils/ridership';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
+import { ServiceDayPicker } from '../../common/components/inputs/ServiceDayPicker';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { TphChart } from './charts/TphChart';
+import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
 
 export default function RidershipDetails() {
   const allRidership = useRidershipData();
@@ -31,6 +34,26 @@ export default function RidershipDetails() {
   );
   const ridershipPercentage = normalizeToPercent(lineData?.ridershipHistory ?? []);
   const serviceHistory = lineData?.serviceHistory ?? [];
+
+  // Only re-render chart when necesarry
+  const serviceRidershipChart = useMemo(() => {
+    return <ServiceRidershipChart lineData={lineData} startDate={startDate} color={color} />;
+  }, [color, lineData, startDate]);
+
+  // Only re-render chart when necesarry
+  const serviceLevelChart = useMemo(() => {
+    return (
+      <>
+        <TphChart
+          lineData={lineData}
+          serviceDay={serviceDay}
+          color={color}
+          highestTph={highestTph}
+        />
+        <ServiceDayPicker setServiceDay={setServiceDay} />
+      </>
+    );
+  }, [color, highestTph, lineData, serviceDay]);
 
   return (
     <>
@@ -60,24 +83,15 @@ export default function RidershipDetails() {
           sentimentDirection={'positiveOnIncrease'}
         />
       </BasicDataWidgetPair>
-      <div className="flex w-full flex-row items-center justify-between text-lg">
-        <h3>Weekday ridership and service levels</h3>
-      </div>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
-        <ServiceRidershipChart lineData={lineData} startDate={startDate} color={color} />
-      </div>
+      <WidgetDiv>
+        <WidgetTitle title="Weekday Ridership & Service" />
+        {serviceRidershipChart}
+      </WidgetDiv>
 
-      <div className="flex w-full flex-row items-center justify-between text-lg">
-        <h3>Service Levels</h3>
-      </div>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
-        <TphChart
-          lineData={lineData}
-          serviceDay={serviceDay}
-          color={color}
-          highestTph={highestTph}
-        />
-      </div>
+      <WidgetDiv className="flex flex-col pr-3">
+        <WidgetTitle title="Service Levels" />
+        {serviceLevelChart}
+      </WidgetDiv>
     </>
   );
 }

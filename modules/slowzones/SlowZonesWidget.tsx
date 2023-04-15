@@ -1,19 +1,18 @@
 'use client';
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import classNames from 'classnames';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { fetchDelayTotals } from './api/slowzones';
+import { useSlowzoneDelayTotalData } from '../../common/api/hooks/slowzones';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 dayjs.extend(utc);
 
 export default function SlowZonesWidget() {
   const { line, linePath, lineShort } = useDelimitatedRoute();
-  const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
+  const delayTotals = useSlowzoneDelayTotalData();
 
   const startDateUTC = dayjs.utc('2022-01-01').startOf('day');
   const endDateUTC = dayjs.utc().startOf('day');
@@ -25,8 +24,8 @@ export default function SlowZonesWidget() {
   }
   return (
     <>
-      <div className={classNames('relative h-full rounded-lg bg-white p-2 shadow-dataBox')}>
-        <HomescreenWidgetTitle title="Slow Zones" href={`/${linePath}/slowzones`} />
+      <WidgetDiv className="relative">
+        <HomescreenWidgetTitle title="Slow Zones" tab="slowzones" />
         {totalSlowTimeReady ? (
           <TotalSlowTimeWrapper
             data={delayTotals.data}
@@ -38,7 +37,7 @@ export default function SlowZonesWidget() {
         ) : (
           <ChartPlaceHolder query={delayTotals} />
         )}
-      </div>
+      </WidgetDiv>
     </>
   );
 }

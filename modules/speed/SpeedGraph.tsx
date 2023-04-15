@@ -40,7 +40,7 @@ interface SpeedGraphProps {
 }
 
 export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, config }) => {
-  const { line } = useDelimitatedRoute();
+  const { line, query } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef();
 
@@ -109,7 +109,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, config }) => {
             },
           },
           x: {
-            min: OVERVIEW_OPTIONS.year.startDate,
+            min: query.view ? OVERVIEW_OPTIONS[query.view].startDate : query.startDate,
             max: TODAY_STRING,
             type: 'time',
             time: {

@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import classNames from 'classnames';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
-import { DataPageTabs } from '../navigation/desktop/DataPageTabs';
-import { DateSelection } from '../../common/components/inputs/DateSelection/DateSelection';
-import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
-import { optionsStation } from '../../common/utils/stations';
-import { lineColorBorder, lineColorLightBackground } from '../../common/styles/general';
+import { lineColorText } from '../../common/styles/general';
+import { ALL_PAGES } from '../../common/constants/pages';
+import { RangeTabs } from '../navigation/RangeTabs';
 
 export const DataPageHeader = () => {
   const isDesktop = useBreakpoint('md');
@@ -15,15 +12,10 @@ export const DataPageHeader = () => {
   const {
     line,
     lineShort,
-    datapage,
+    page,
     query: { endDate },
   } = useDelimitatedRoute();
   const [range, setRange] = useState<boolean>(endDate !== undefined);
-
-  const stations = optionsStation(lineShort);
-
-  const toStation = stations?.[stations.length - 7];
-  const fromStation = stations?.[stations.length - 2];
 
   React.useEffect(() => {
     if (!range && endDate !== undefined) {
@@ -35,30 +27,17 @@ export const DataPageHeader = () => {
   return (
     <div className="relative border-b border-gray-200 sm:pb-0">
       <div className="md:flex md:items-center md:justify-between">
-        <h3 className="text-2xl font-medium leading-6 text-gray-900 md:text-xl">
-          {line && LINE_OBJECTS[line]?.name}
+        <h3 className="select-none text-3xl font-medium leading-8 text-stone-900 md:text-2xl">
+          <span className={lineColorText[line ?? 'DEFAULT']}>
+            {line && LINE_OBJECTS[line]?.name}
+          </span>
+          <span className="text-2xl font-normal md:text-xl">
+            {' - '}
+            {ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}
+          </span>
         </h3>
-        {isDesktop && datapage !== 'overview' && (
-          <div
-            className={classNames(
-              'fixed right-4 top-4 z-30 mt-0 flex w-[26rem] flex-col items-center gap-y-1 rounded-lg border border-opacity-50 bg-opacity-90 p-2 shadow-md',
-              lineColorLightBackground[line ?? 'DEFAULT'],
-              lineColorBorder[line ?? 'DEFAULT']
-            )}
-          >
-            <DateSelection />
-            {fromStation && toStation && (
-              <StationSelectorWidget
-                toStation={toStation}
-                fromStation={fromStation}
-                setToStation={() => null}
-                setFromStation={() => null}
-              />
-            )}
-          </div>
-        )}
       </div>
-      <DataPageTabs />
+      {ALL_PAGES[page]?.section === 'trips' && <RangeTabs />}
     </div>
   );
 };
