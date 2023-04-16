@@ -15,10 +15,10 @@ interface DatePickerProps {
   range: boolean;
   setRange: React.Dispatch<SetStateAction<boolean>>;
   type: 'combo' | 'range' | 'single';
-  setSelection: React.Dispatch<SetStateAction<number | undefined>>;
+  clearPreset: () => void;
 }
 
-export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, setSelection }) => {
+export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, clearPreset }) => {
   const updateQueryParams = useUpdateQuery();
   const { query, line, tab } = useDelimitatedRoute();
   const { startDate, endDate } = query;
@@ -35,7 +35,6 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
       updateQueryParams({ startDate: startDate }, !range);
     }
     setRange(!range);
-    setSelection(undefined);
   };
 
   const handleEndDateChange = (date: string) => {
@@ -50,7 +49,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
     } else {
       updateQueryParams({ startDate: startDate, endDate: date }, range);
     }
-    setSelection(undefined);
+    clearPreset();
   };
 
   const handleStartDateChange = (date: string) => {
@@ -65,7 +64,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
     } else {
       updateQueryParams({ startDate: date, endDate: endDate }, range);
     }
-    setSelection(undefined);
+    clearPreset();
   };
 
   return (

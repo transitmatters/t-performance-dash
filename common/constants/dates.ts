@@ -189,3 +189,16 @@ export enum OverviewRangeTypes {
   'year' = 'Past Year',
   'all' = 'All Time',
 }
+
+export const RANGE_DATE_KEYS = Object.fromEntries(
+  Object.values(RANGE_PRESETS).map((rangePreset) => [
+    `${rangePreset.input.startDate}${rangePreset.input.endDate}`,
+    rangePreset.key,
+  ])
+);
+export const SINGLE_DATE_KEYS = Object.fromEntries(
+  Object.values(SINGLE_PRESETS).map((singlePreset) => [
+    singlePreset.input.startDate,
+    singlePreset.key,
+  ])
+);

@@ -9,6 +9,7 @@ import { DateSelection } from '../components/inputs/DateSelection/DateSelection'
 import { OverviewDateSelection } from '../components/inputs/DateSelection/OverviewDateSelection';
 import { ControlPanel } from '../components/controls/ControlPanel';
 import { StationSelectorWidget } from '../components/widgets/StationSelectorWidget';
+import { usePresetsOnFirstLoad } from '../utils/firstLoad';
 import { Footer } from './Footer';
 
 interface DashboardLayoutProps {
@@ -17,13 +18,11 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const isMobile = !useBreakpoint('md');
-  const {
-    line,
-    page,
-    query: { queryType, busRoute },
-  } = useDelimitatedRoute();
-  const section = ALL_PAGES[page]?.section;
+  const { line, page, query } = useDelimitatedRoute();
+  const { busRoute, queryType } = query;
+  const section = page ? ALL_PAGES[page]?.section : undefined;
   const showControlParams = !isMobile && section && line && section !== 'today';
+  usePresetsOnFirstLoad(section, query);
 
   // remove this once bottom nav is done.
   const getDatePicker = () => {

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../constants/dates';
 import type { Tab } from '../constants/dashboardTabs';
-import { BUS_DEFAULTS, SUBWAY_DEFAULTS } from './dashboardDefaults';
+import { BUS_DEFAULTS, SUBWAY_DEFAULTS } from './defaults/dashboardDefaults';
 import type {
   LineSectionParams,
   OverviewPresetParams,
