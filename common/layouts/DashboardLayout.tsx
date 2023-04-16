@@ -7,6 +7,7 @@ import { useDelimitatedRoute } from '../utils/router';
 import { ALL_PAGES } from '../constants/pages';
 import { DateSelection } from '../components/inputs/DateSelection/DateSelection';
 import { OverviewDateSelection } from '../components/inputs/DateSelection/OverviewDateSelection';
+import { usePresetsOnFirstLoad } from '../utils/firstLoad';
 import { Footer } from './Footer';
 
 interface DashboardLayoutProps {
@@ -14,16 +15,14 @@ interface DashboardLayoutProps {
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+  const { page, query } = useDelimitatedRoute();
+  const section = page ? ALL_PAGES[page]?.section : undefined;
+  usePresetsOnFirstLoad(section, query);
   const isMobile = !useBreakpoint('md');
-  const {
-    page,
-    query: { queryType },
-  } = useDelimitatedRoute();
 
-  const section = ALL_PAGES[page]?.section;
   const getDatePicker = () => {
     if (section === 'trips' || section === 'line')
-      return <DateSelection type={queryType ?? 'range'} />;
+      return <DateSelection type={query.queryType ?? 'range'} />;
     if (section === 'overview') return <OverviewDateSelection />;
   };
 

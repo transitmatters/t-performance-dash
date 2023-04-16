@@ -10,7 +10,7 @@ import type { DashboardConfig } from '../state/dashboardConfig';
 import { useDashboardConfig } from '../state/dashboardConfig';
 import { SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
-import { getDashboardConfig, saveDashboardConfig } from '../state/utils/utils';
+import { getDashboardConfig, saveDashboardConfig } from '../state/utils/dashboardUtils';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'RL',
