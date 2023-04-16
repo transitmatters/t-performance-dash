@@ -31,7 +31,7 @@ export default function HeadwaysDetails() {
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
 
   const aggregate = startDate !== undefined && endDate !== undefined;
-  const enabled = fromStopIds !== null && startDate !== null;
+  const enabled = fromStopIds !== undefined && startDate !== undefined;
   const parameters: SingleDayAPIOptions | AggregateAPIOptions = aggregate
     ? {
         [AggregateAPIParams.stop]: fromStopIds,

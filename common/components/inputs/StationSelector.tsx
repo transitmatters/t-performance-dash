@@ -36,7 +36,7 @@ export const StationSelector: React.FC<StationSelector> = ({
   return (
     <Listbox value={station} onChange={setStation}>
       <div className="relative ">
-        <Listbox.Button className="flex w-[165px]">
+        <Listbox.Button className="flex w-[140px] md:w-[165px]">
           <Button additionalClasses="justify-between w-full ">
             <p
               className={classNames(
@@ -58,7 +58,7 @@ export const StationSelector: React.FC<StationSelector> = ({
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Listbox.Options className="max-w-screen absolute right-0 z-10 mt-1 max-h-96 origin-top-right overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ">
+          <Listbox.Options className="md:max-w-screen fixed bottom-16 left-0 right-0 z-10 m-auto mt-1 max-h-80 max-w-xs overflow-auto rounded-md border border-stone-200 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:absolute md:bottom-auto  md:left-auto md:max-h-96 md:origin-top-right md:border-none ">
             <div className="py-1">
               {stationOptions?.map((station, stationIndex) => (
                 <Listbox.Option

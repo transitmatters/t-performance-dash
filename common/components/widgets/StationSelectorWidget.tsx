@@ -50,7 +50,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
   }
 
   return (
-    <div className={classNames('relative flex w-full flex-col items-center gap-1 md:flex-row')}>
+    <div className={classNames('relative flex w-full flex-row items-center gap-1 p-2 md:p-0')}>
       <StationSelector
         type={'from'}
         fromStation={fromStation}

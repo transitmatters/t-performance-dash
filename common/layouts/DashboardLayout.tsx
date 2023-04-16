@@ -8,6 +8,7 @@ import { ALL_PAGES } from '../constants/pages';
 import { DateSelection } from '../components/inputs/DateSelection/DateSelection';
 import { OverviewDateSelection } from '../components/inputs/DateSelection/OverviewDateSelection';
 import { ControlPanel } from '../components/controls/ControlPanel';
+import { StationSelectorWidget } from '../components/widgets/StationSelectorWidget';
 import { Footer } from './Footer';
 
 interface DashboardLayoutProps {
@@ -22,7 +23,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
     query: { queryType, busRoute },
   } = useDelimitatedRoute();
   const section = ALL_PAGES[page]?.section;
-  const showControlParams = !isMobile && section && line;
+  const showControlParams = !isMobile && section && line && section !== 'today';
 
   // remove this once bottom nav is done.
   const getDatePicker = () => {
@@ -55,7 +56,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           </div>
         </main>
         {isMobile && (
-          <div className="pb-safe fixed bottom-0 z-20 w-full bg-gray-300">{getDatePicker()}</div>
+          <div className="pb-safe fixed bottom-0 z-20 flex w-full flex-col justify-center bg-gray-300">
+            {getDatePicker()}
+            <div className="flex flex-row items-center justify-center border border-t-0 border-mbta-darkRed bg-white">
+              <StationSelectorWidget line={'RL'} />
+            </div>
+          </div>
         )}
       </div>
       <Footer />
