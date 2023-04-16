@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
-import { useQuery } from '@tanstack/react-query';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
-import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadashboard';
-import { QueryNameKeys, AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
-import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
+import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
+import {
+  getParentStationForStopId,
+  optionsStation,
+  stopIdsForStations,
+} from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
@@ -14,6 +16,12 @@ import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
+import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
+import {
+  useTravelTimesAggregateData,
+  useTravelTimesSingleDayData,
+} from '../../common/api/hooks/traveltimes';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
@@ -21,20 +29,21 @@ export default function TravelTimesDetails() {
   const {
     linePath,
     lineShort,
-    query: { startDate, endDate, busRoute },
+    query: { startDate, endDate, busRoute, to, from },
   } = useDelimitatedRoute();
-
   const stations = optionsStation(lineShort, busRoute);
-
-  const [toStation, setToStation] = useState(stations?.[stations.length - 3]);
-  const [fromStation, setFromStation] = useState(stations?.[3]);
-
+  const [toStation, setToStation] = useState(
+    to ? getParentStationForStopId(to) : stations?.[stations.length - 2]
+  );
+  const [fromStation, setFromStation] = useState(
+    from ? getParentStationForStopId(from) : stations?.[1]
+  );
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 
-  React.useEffect(() => {
-    setToStation(stations?.[stations.length - 3]);
-    setFromStation(stations?.[3]);
-  }, [stations]);
+  useEffect(() => {
+    if (!from) setFromStation(stations?.[1]);
+    if (!to) setToStation(stations?.[stations.length - 2]);
+  }, [lineShort, from, to, stations, setFromStation, setToStation]);
 
   const aggregate = startDate !== undefined && endDate !== undefined;
   const enabled = fromStopIds !== null && toStopIds !== null && startDate !== null;
@@ -52,16 +61,8 @@ export default function TravelTimesDetails() {
         [SingleDayAPIParams.date]: startDate,
       };
 
-  const travelTimesAggregate = useQuery({
-    queryKey: [QueryNameKeys.traveltimes, aggregate, fromStopIds, toStopIds, startDate, endDate],
-    enabled: aggregate && enabled,
-    queryFn: () => fetchAggregateData(QueryNameKeys.traveltimes, parameters),
-  });
-  const travelTimesSingle = useQuery({
-    queryKey: [QueryNameKeys.traveltimes, aggregate, fromStopIds, toStopIds, startDate, endDate],
-    enabled: !aggregate && enabled,
-    queryFn: () => fetchSingleDayData(QueryNameKeys.traveltimes, parameters),
-  });
+  const travelTimesSingle = useTravelTimesSingleDayData(parameters, !aggregate && enabled);
+  const travelTimesAggregate = useTravelTimesAggregateData(parameters, aggregate && enabled);
 
   const traveltimes = aggregate ? travelTimesAggregate : travelTimesSingle;
   const travelTimeValues = aggregate
@@ -94,7 +95,7 @@ export default function TravelTimesDetails() {
           analysis={`from last ${dayjs().format('ddd')}.`}
         />
       </BasicDataWidgetPair>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+      <WidgetDiv>
         {aggregate ? (
           <TravelTimesAggregateChart
             traveltimes={travelTimesAggregate}
@@ -108,7 +109,8 @@ export default function TravelTimesDetails() {
             toStation={toStation}
           />
         )}
-      </div>
+      </WidgetDiv>
+      <TerminusNotice toStation={toStation} fromStation={fromStation} />
     </>
   );
 }

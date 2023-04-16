@@ -1,7 +1,7 @@
 import React from 'react';
-import classNames from 'classnames';
 import type { BasicWidgetDataLayoutProps } from './internal/BasicWidgetDataLayout';
 import { BasicWidgetDataLayout } from './internal/BasicWidgetDataLayout';
+import { WidgetDiv } from './WidgetDiv';
 
 export const BasicDataWidgetItem: React.FC<BasicWidgetDataLayoutProps> = ({
   title,
@@ -10,17 +10,13 @@ export const BasicDataWidgetItem: React.FC<BasicWidgetDataLayoutProps> = ({
   sentimentDirection,
 }) => {
   return (
-    <div
-      className={classNames(
-        'w-1/2 rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox sm:w-auto sm:p-4'
-      )}
-    >
+    <WidgetDiv className="w-1/2 sm:w-auto sm:p-4">
       <BasicWidgetDataLayout
         title={title}
         analysis={analysis}
         widgetValue={widgetValue}
         sentimentDirection={sentimentDirection}
       />
-    </div>
+    </WidgetDiv>
   );
 };

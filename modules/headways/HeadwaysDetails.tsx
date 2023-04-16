@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
-import { useQuery } from '@tanstack/react-query';
-import { fetchAggregateData, fetchSingleDayData } from '../../common/api/datadashboard';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
-import { AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../../common/types/api';
-import { optionsStation, stopIdsForStations } from '../../common/utils/stations';
+import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
+import {
+  getParentStationForStopId,
+  optionsStation,
+  stopIdsForStations,
+} from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
@@ -14,6 +16,12 @@ import { averageHeadway, longestHeadway } from '../../common/utils/headways';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { StationSelectorWidget } from '../../common/components/widgets/StationSelectorWidget';
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
+import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
+import {
+  useHeadwaysAggregateData,
+  useHeadwaysSingleDayData,
+} from '../../common/api/hooks/headways';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 import { HeadwaysHistogram } from './charts/HeadwaysHistogram';
 import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
@@ -21,13 +29,21 @@ import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
 export default function HeadwaysDetails() {
   const {
     lineShort,
-    query: { startDate, endDate, busRoute },
+    query: { startDate, endDate, busRoute, to, from },
   } = useDelimitatedRoute();
-
   const stations = optionsStation(lineShort, busRoute);
 
-  const [toStation, setToStation] = useState(stations?.[stations.length - 3]);
-  const [fromStation, setFromStation] = useState(stations?.[3]);
+  const [toStation, setToStation] = useState(
+    to ? getParentStationForStopId(to) : stations?.[stations.length - 2]
+  );
+  const [fromStation, setFromStation] = useState(
+    from ? getParentStationForStopId(from) : stations?.[1]
+  );
+
+  useEffect(() => {
+    if (!from) setFromStation(stations?.[1]);
+    if (!to) setToStation(stations?.[stations.length - 2]);
+  }, [lineShort, from, to, stations, setFromStation, setToStation]);
 
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
 
@@ -44,16 +60,8 @@ export default function HeadwaysDetails() {
         [SingleDayAPIParams.date]: startDate,
       };
 
-  const headways = useQuery({
-    queryKey: [QueryNameKeys.headways, aggregate, fromStopIds, startDate],
-    enabled: !aggregate && enabled,
-    queryFn: () => fetchSingleDayData(QueryNameKeys.headways, parameters),
-  });
-  const headwaysAggregate = useQuery({
-    queryKey: [QueryNameKeys.headways, aggregate, fromStopIds, startDate, endDate],
-    enabled: aggregate && enabled,
-    queryFn: () => fetchAggregateData(QueryNameKeys.headways, parameters),
-  });
+  const headways = useHeadwaysSingleDayData(parameters, !aggregate && enabled);
+  const headwaysAggregate = useHeadwaysAggregateData(parameters, aggregate && enabled);
 
   const headwaysData = aggregate ? headwaysAggregate?.data?.by_date : headways?.data;
 
@@ -87,7 +95,7 @@ export default function HeadwaysDetails() {
           analysis={`from last ${dayjs().format('ddd')}.`}
         />
       </BasicDataWidgetPair>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+      <WidgetDiv>
         {aggregate ? (
           <HeadwaysAggregateChart
             headways={headwaysAggregate}
@@ -101,22 +109,23 @@ export default function HeadwaysDetails() {
             toStation={toStation}
           />
         )}
-      </div>
+      </WidgetDiv>
       {!aggregate && (
         <>
           <div className="flex w-full flex-row items-center justify-between text-lg">
             <h3>Headway Variance</h3>
           </div>
 
-          <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+          <WidgetDiv>
             <HeadwaysHistogram
               headways={headways}
               fromStation={fromStation}
               toStation={toStation}
             />
-          </div>
+          </WidgetDiv>
         </>
       )}
+      <TerminusNotice toStation={toStation} fromStation={fromStation} />
     </>
   );
 }

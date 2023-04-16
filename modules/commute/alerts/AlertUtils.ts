@@ -2,17 +2,19 @@ import { stations } from '../../../common/constants/stations';
 import type { BusRoute, LineShort } from '../../../common/types/lines';
 import type { Station } from '../../../common/types/stations';
 
-export const getEndStations = (stations: Station[]) => {
+export const getEndStations = (stations: (Station | undefined)[]) => {
   let min = stations[0];
   let max = stations[0];
 
   stations.forEach((station) => {
-    if (station.station === 'place-jfk') station.stop_name = 'JFK/UMass'; // Sub out branch names of JFK
-    if (station.order < min.order) {
-      min = station;
-    }
-    if (station.order > max.order) {
-      max = station;
+    if (station) {
+      if (station?.station === 'place-jfk') station.stop_name = 'JFK/UMass'; // Sub out branch names of JFK
+      if (min && station?.order < min.order) {
+        min = station;
+      }
+      if (max && station?.order > max.order) {
+        max = station;
+      }
     }
   });
   return { min, max };

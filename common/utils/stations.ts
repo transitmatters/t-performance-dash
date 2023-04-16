@@ -3,7 +3,7 @@ import type { LineShort } from '../../common/types/lines';
 import type { Station } from '../../common/types/stations';
 import type { Location } from '../types/charts';
 import type { Direction } from '../types/dataPoints';
-import { rtStations, stations } from './../constants/stations';
+import { stations, rtStations, busStations } from './../constants/stations';
 
 export const optionsForField = (
   type: 'from' | 'to',
@@ -54,14 +54,38 @@ export const swapStations = (
   setToStation(fromStation);
 };
 
-export const lookup_station_by_id = (line: Exclude<LineShort, 'Bus'>, id: string) => {
-  if (line === undefined || id === '' || id === undefined) {
-    return undefined;
-  }
+const createStationIndex = () => {
+  const index: Record<string, Station> = {};
+  Object.values({ ...rtStations, ...busStations }).forEach((line) => {
+    line.stations.forEach((station) => {
+      index[station.station] = station;
+    });
+  });
+  return index;
+};
 
-  return rtStations[line].stations.find((x) =>
-    [...(x.stops['0'] || []), ...(x.stops['1'] || [])].includes(id)
-  );
+const createParentStationIndex = () => {
+  const index: Record<string, Station> = {};
+  Object.values({ ...rtStations, ...busStations }).forEach((line) => {
+    line.stations.forEach((station) => {
+      const allStopIds = [...(station.stops['0'] || []), ...(station.stops['1'] || [])];
+      allStopIds.forEach((stopId) => {
+        index[stopId] = station;
+      });
+    });
+  });
+  return index;
+};
+
+const stationIndex = createStationIndex();
+const parentStationIndex = createParentStationIndex();
+
+export const getStationById = (stationStopId: string) => {
+  return stationIndex[stationStopId];
+};
+
+export const getParentStationForStopId = (stopId: string) => {
+  return parentStationIndex[stopId];
 };
 
 export const stopIdsForStations = (

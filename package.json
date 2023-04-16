@@ -36,7 +36,8 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "18.2.0",
     "react-flatpickr": "^3.10.13",
-    "react-responsive": "^9.0.2"
+    "react-responsive": "^9.0.2",
+    "zustand": "^4.3.7"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
