@@ -19,8 +19,8 @@ export const ButtonGroup: <T extends string, K extends string>(
   options,
   pressFunction,
   selectedIndex,
-  additionalDivClass: className,
-  additionalButtonClass: buttonsClassName,
+  additionalDivClass,
+  additionalButtonClass,
 }) => {
   const { line } = useDelimitatedRoute();
   return (
@@ -32,7 +32,7 @@ export const ButtonGroup: <T extends string, K extends string>(
       <Tab.List
         className={classNames(
           'isolate inline-flex w-full rounded-t-md shadow-sm md:rounded-md',
-          className
+          additionalDivClass
         )}
       >
         {options.map((option, index) => {
@@ -42,7 +42,7 @@ export const ButtonGroup: <T extends string, K extends string>(
                 <button
                   type="button"
                   className={classNames(
-                    buttonsClassName,
+                    additionalButtonClass,
                     'relative inline-flex w-full items-center justify-center px-3 py-2 text-sm ring-1 ring-inset focus:z-10',
                     index === 0 ? 'rounded-tl-md md:rounded-l-md' : '-ml-px',
                     index === options.length - 1 && 'rounded-tr-md md:rounded-r-md',
