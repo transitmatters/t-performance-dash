@@ -9,13 +9,16 @@ on:
 jobs:
   frontend:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10']
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      - name: Set up Python 3.9
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v3
         with:
-          python-version: 3.9
+          python-version: ${{ matrix.python-version }}
       - name: Set up Node 18.x
         uses: actions/setup-node@v3
         with:
@@ -28,13 +31,16 @@ jobs:
 
   backend:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10']
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      - name: Set up Python 3.9
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v3
         with:
-          python-version: 3.9
+          python-version: ${{ matrix.python-version }}
       - name: Set up Node 18.x
         uses: actions/setup-node@v3
         with:
