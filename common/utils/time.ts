@@ -51,7 +51,7 @@ export const stringifyTime = (totalSeconds: number, options: StringifyTimeOption
 export const getTimeUnit = (value: number) => {
   const secondsAbs = Math.abs(value);
   switch (true) {
-    case secondsAbs < 600:
+    case secondsAbs < 100:
       return 'sec';
     case secondsAbs < 3600:
       return 'min';
@@ -64,7 +64,7 @@ export const getFormattedTimeValue = (value: number | undefined) => {
   if (value === undefined) return undefined;
   const absValue = Math.abs(value);
   switch (true) {
-    case absValue < 600:
+    case absValue < 100:
       return absValue.toFixed(0);
     case absValue < 3600:
       return dayjs.duration(absValue, 'seconds').format('m:ss');
