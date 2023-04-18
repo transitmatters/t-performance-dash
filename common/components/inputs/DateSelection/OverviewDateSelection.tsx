@@ -25,7 +25,7 @@ export const OverviewDateSelection = () => {
       selectedIndex={selectedIndex}
       pressFunction={handlePresetSelection}
       options={Object.entries(OverviewRangeTypes)}
-      buttonsClassName="w-fit"
+      additionalButtonClass="w-fit"
     />
   );
 };

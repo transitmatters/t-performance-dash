@@ -9,8 +9,8 @@ interface ButtonGroupProps<K, T> {
   options: [K, T][];
   pressFunction: React.Dispatch<SetStateAction<K>>;
   selectedIndex?: number;
-  className?: string;
-  buttonsClassName?: string;
+  additionalDivClass?: string;
+  additionalButtonClass?: string;
 }
 
 export const ButtonGroup: <T extends string, K extends string>(
@@ -19,8 +19,8 @@ export const ButtonGroup: <T extends string, K extends string>(
   options,
   pressFunction,
   selectedIndex,
-  className,
-  buttonsClassName,
+  additionalDivClass: className,
+  additionalButtonClass: buttonsClassName,
 }) => {
   const { line } = useDelimitatedRoute();
   return (
