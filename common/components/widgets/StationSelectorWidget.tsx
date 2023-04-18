@@ -1,7 +1,7 @@
 import { faArrowRight, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '../inputs/Button';
 import { StationSelector } from '../inputs/StationSelector';
 import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
@@ -26,29 +26,31 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
   } = useDelimitatedRoute();
 
   const stations = optionsStation(lineShort, busRoute);
-  const [toStation, setToStation] = useState(
-    to ? getParentStationForStopId(to) : stations?.[stations.length - 2]
-  );
-  const [fromStation, setFromStation] = useState(
-    from ? getParentStationForStopId(from) : stations?.[1]
-  );
-  const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
-
-  const swapStations = () => {
-    const tempFromStation = fromStation;
-    const tempToStation = toStation;
-    setFromStation(tempToStation);
-    setToStation(tempFromStation);
-  };
+  const toStation = to ? getParentStationForStopId(to) : stations?.[stations.length - 2];
+  const fromStation = from ? getParentStationForStopId(from) : stations?.[1];
 
   React.useEffect(() => {
+    const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
     updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });
-  }, [fromStation, fromStopIds, toStation, toStopIds, updateQueryParams]);
+  }, [fromStation, toStation, updateQueryParams]);
+
+  const updateToStation = (stationId) => {
+    const { toStopIds } = stopIdsForStations(fromStation, stationId);
+    updateQueryParams({ to: toStopIds?.[0] });
+  };
+  const updateFromStation = (stationId) => {
+    const { fromStopIds } = stopIdsForStations(stationId, toStation);
+    updateQueryParams({ from: fromStopIds?.[0] });
+  };
+
+  const swapStations = () => {
+    const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
+    updateQueryParams({ from: toStopIds?.[0], to: fromStopIds?.[0] });
+  };
 
   if (!fromStation || !toStation) {
     return null;
   }
-
   return (
     <div
       className={classNames(
@@ -60,7 +62,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
           type={'from'}
           fromStation={fromStation}
           toStation={toStation}
-          setStation={setFromStation}
+          setStation={updateFromStation}
         />
         <div className="flex h-4 w-4 items-center justify-center">
           <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" />
@@ -71,7 +73,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
           type={'to'}
           fromStation={fromStation}
           toStation={toStation}
-          setStation={setToStation}
+          setStation={updateToStation}
         />
         <Button onClick={swapStations} additionalClasses="shrink-0 w-fit">
           <FontAwesomeIcon icon={faRightLeft} className="h-4 w-4" />
