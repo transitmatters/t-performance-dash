@@ -1,20 +1,18 @@
 import React from 'react';
-import classNames from 'classnames';
-import { lineColorBorder } from '../../styles/general';
 import type { BusRoute, Line } from '../../types/lines';
 import type { Section } from '../../constants/pages';
 import type { QueryTypeOptions } from '../../types/router';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
 
-interface ControlPanelProps {
+interface MobileControlPanelProps {
   section: Section;
   line: Line;
-  busRoute?: BusRoute;
+  busRoute: BusRoute | undefined;
   queryType?: QueryTypeOptions;
 }
 
-export const ControlPanel: React.FC<ControlPanelProps> = ({
+export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   section,
   line,
   busRoute,
@@ -25,7 +23,9 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
       return (
         <>
           <DateControl section={section} queryType={queryType} />
-          <StationSelectorWidget line={line} busRoute={busRoute} />
+          <div className="flex flex-row items-center justify-center border border-t-0 border-mbta-darkRed bg-white">
+            <StationSelectorWidget line={line} busRoute={busRoute} />
+          </div>
         </>
       );
     }
@@ -35,12 +35,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   };
 
   return (
-    <div
-      className={classNames(
-        'fixed right-2 top-2 z-30 mt-0 flex flex-col items-center rounded-lg border border-opacity-50 bg-stone-100 p-2 shadow-md md:w-[16rem] md:gap-y-2 lg:w-[26rem] lg:gap-y-1',
-        lineColorBorder[line ?? 'DEFAULT']
-      )}
-    >
+    <div className="pb-safe fixed bottom-0 z-20 flex w-full flex-col justify-center bg-stone-100">
       {getControls()}
     </div>
   );

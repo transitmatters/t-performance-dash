@@ -19,7 +19,7 @@ const queryClient = new QueryClient({
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools position="bottom-right" />
+      <ReactQueryDevtools position="top-right" />
       <div className="flex h-screen flex-col">
         <main className="relative h-full">{children}</main>
       </div>

@@ -49,7 +49,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
   return (
     <div
       className={classNames(
-        'flex h-full w-full flex-row  items-baseline overflow-hidden rounded-t-md border md:rounded-md',
+        'flex h-full w-full flex-row items-baseline overflow-hidden  rounded-t-md border md:flex-col md:rounded-md lg:flex-row',
         lineColorDarkBorder[line ?? 'DEFAULT']
       )}
     >

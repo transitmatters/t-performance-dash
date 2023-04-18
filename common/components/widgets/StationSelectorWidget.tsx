@@ -15,7 +15,7 @@ import { LINE_OBJECTS } from '../../constants/lines';
 
 interface StationSelectorWidgetProps {
   line: Line;
-  busRoute?: BusRoute;
+  busRoute: BusRoute | undefined;
 }
 
 export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ line, busRoute }) => {
@@ -50,24 +50,33 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
   }
 
   return (
-    <div className={classNames('relative flex w-full flex-row items-center gap-1 p-2 md:p-0')}>
-      <StationSelector
-        type={'from'}
-        fromStation={fromStation}
-        toStation={toStation}
-        setStation={setFromStation}
-      />
-      <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" />
-
-      <StationSelector
-        type={'to'}
-        fromStation={fromStation}
-        toStation={toStation}
-        setStation={setToStation}
-      />
-      <Button onClick={swapStations} additionalClasses="shrink-0">
-        <FontAwesomeIcon icon={faRightLeft} className="h-4 w-4" />
-      </Button>
+    <div
+      className={classNames(
+        'relative flex w-full flex-row items-center gap-1 p-2 md:flex-col md:p-0 lg:flex-row'
+      )}
+    >
+      <div className="flex flex-row items-center gap-1 overflow-hidden md:w-[238px] md:overflow-visible lg:w-fit">
+        <StationSelector
+          type={'from'}
+          fromStation={fromStation}
+          toStation={toStation}
+          setStation={setFromStation}
+        />
+        <div className="flex h-4 w-4 items-center justify-center">
+          <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" />
+        </div>
+      </div>
+      <div className="flex flex-row items-center gap-1 overflow-hidden md:w-[238px] md:overflow-visible lg:w-fit">
+        <StationSelector
+          type={'to'}
+          fromStation={fromStation}
+          toStation={toStation}
+          setStation={setToStation}
+        />
+        <Button onClick={swapStations} additionalClasses="shrink-0 w-fit">
+          <FontAwesomeIcon icon={faRightLeft} className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 };

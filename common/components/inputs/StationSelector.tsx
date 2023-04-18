@@ -7,6 +7,7 @@ import type { Station } from '../../types/stations';
 import { useDelimitatedRoute } from '../../utils/router';
 import { optionsForField } from '../../utils/stations';
 import { buttonHighlightFocus, lineColorBackground } from '../../styles/general';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { selectConfig } from './styles/tailwind';
 import { Button } from './Button';
 
@@ -29,80 +30,86 @@ export const StationSelector: React.FC<StationSelector> = ({
     lineShort,
     query: { busRoute },
   } = useDelimitatedRoute();
+  const mdBreakpoint = useBreakpoint('md');
   const station = type === 'from' ? fromStation : toStation;
 
   const stationOptions = optionsForField(type, lineShort, fromStation, toStation, busRoute);
 
   return (
     <Listbox value={station} onChange={setStation}>
-      <div className="relative ">
-        <Listbox.Button className="flex w-[140px] md:w-[165px]">
-          <Button additionalClasses="justify-between w-full ">
-            <p
-              className={classNames(
-                `items-center gap-x-1 truncate text-sm font-semibold text-white text-opacity-90`,
-                line && buttonHighlightFocus[line]
-              )}
-            >
-              {station.stop_name}
-            </p>
-            <FontAwesomeIcon icon={faChevronDown} className="h-4 w-4 pl-2 text-white" />
-          </Button>
-        </Listbox.Button>
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Listbox.Options className="md:max-w-screen fixed bottom-16 left-0 right-0 z-10 m-auto mt-1 max-h-80 max-w-xs overflow-auto rounded-md border border-stone-200 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:absolute md:bottom-auto  md:left-auto md:max-h-96 md:origin-top-right md:border-none ">
-            <div className="py-1">
-              {stationOptions?.map((station, stationIndex) => (
-                <Listbox.Option
-                  key={stationIndex}
-                  className={({ active, selected }) =>
-                    classNames(
-                      'relative cursor-pointer select-none items-center px-4 py-2',
-                      active ? selectConfig[linePath] : 'text-gray-900',
-                      selected
-                        ? `bg-opacity-20 font-semibold ${lineColorBackground[line ?? 'DEFAULT']}`
-                        : 'font-normal'
-                    )
-                  }
-                  value={station}
-                >
-                  <div className="flex items-baseline justify-between gap-x-1 truncate">
-                    {station.stop_name}
-                    <div className="flex flex-row gap-x-1 pl-4">
-                      {station.enclosed_bike_parking ? (
-                        <FontAwesomeIcon
-                          title="Enclosed Bicycle Parking"
-                          icon={faBicycle}
-                          className={'m-0 h-3 w-3 rounded-sm bg-gray-800 p-[2px] text-white'}
-                        />
-                      ) : (
-                        <div className="h-4 w-4" />
-                      )}
-                      {station.accessible ? (
-                        <FontAwesomeIcon
-                          title="Wheelchair Accessible"
-                          icon={faWheelchair}
-                          className={'m-0 h-3 w-3 rounded-sm bg-[#167cb9] p-[2px] text-white'}
-                        />
-                      ) : (
-                        <div className="h-2 w-4" />
-                      )}
+      {({ open }) => (
+        <div className="relative overflow-hidden md:w-full md:overflow-visible lg:w-fit">
+          {open && !mdBreakpoint && (
+            <div className="fixed left-0 top-0 z-10 m-0 h-screen w-screen bg-white bg-opacity-50 p-0" />
+          )}
+          <Listbox.Button className="flex w-full lg:w-[165px]">
+            <Button additionalClasses="justify-between w-full">
+              <p
+                className={classNames(
+                  `items-center gap-x-1 truncate text-sm font-semibold text-white text-opacity-90`,
+                  line && buttonHighlightFocus[line]
+                )}
+              >
+                {station.stop_name}
+              </p>
+              <FontAwesomeIcon icon={faChevronDown} className="h-4 w-4 pl-2 text-white" />
+            </Button>
+          </Listbox.Button>
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Listbox.Options className="md:max-w-screen fixed bottom-0 left-0 right-0 top-0 z-10 m-auto max-h-96 max-w-xs overflow-auto rounded-md border border-stone-200 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:absolute md:bottom-auto md:left-auto md:mt-9 md:max-h-96 md:origin-top-right md:border-none ">
+              <div className="py-1">
+                {stationOptions?.map((station, stationIndex) => (
+                  <Listbox.Option
+                    key={stationIndex}
+                    className={({ active, selected }) =>
+                      classNames(
+                        'relative cursor-pointer select-none items-center px-4 py-2',
+                        active ? selectConfig[linePath] : 'text-gray-900',
+                        selected
+                          ? `bg-opacity-20 font-semibold ${lineColorBackground[line ?? 'DEFAULT']}`
+                          : 'font-normal'
+                      )
+                    }
+                    value={station}
+                  >
+                    <div className="flex items-baseline justify-between gap-x-1 truncate">
+                      {station.stop_name}
+                      <div className="flex flex-row gap-x-1 pl-4">
+                        {station.enclosed_bike_parking ? (
+                          <FontAwesomeIcon
+                            title="Enclosed Bicycle Parking"
+                            icon={faBicycle}
+                            className={'m-0 h-3 w-3 rounded-sm bg-gray-800 p-[2px] text-white'}
+                          />
+                        ) : (
+                          <div className="h-4 w-4" />
+                        )}
+                        {station.accessible ? (
+                          <FontAwesomeIcon
+                            title="Wheelchair Accessible"
+                            icon={faWheelchair}
+                            className={'m-0 h-3 w-3 rounded-sm bg-[#167cb9] p-[2px] text-white'}
+                          />
+                        ) : (
+                          <div className="h-2 w-4" />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </Listbox.Option>
-              ))}
-            </div>
-          </Listbox.Options>
-        </Transition>
-      </div>
+                  </Listbox.Option>
+                ))}
+              </div>
+            </Listbox.Options>
+          </Transition>
+        </div>
+      )}
     </Listbox>
   );
 };
