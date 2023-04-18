@@ -51,12 +51,12 @@ export const stringifyTime = (totalSeconds: number, options: StringifyTimeOption
 export const getTimeUnit = (value: number) => {
   const secondsAbs = Math.abs(value);
   switch (true) {
-    case secondsAbs < 99:
-      return 'sec.';
+    case secondsAbs < 600:
+      return 'sec';
     case secondsAbs < 3600:
-      return 'min.';
+      return 'min';
     default:
-      return 'hrs.';
+      return 'hrs';
   }
 };
 
@@ -64,11 +64,11 @@ export const getFormattedTimeValue = (value: number | undefined) => {
   if (value === undefined) return undefined;
   const absValue = Math.abs(value);
   switch (true) {
-    case absValue < 99:
+    case absValue < 600:
       return absValue.toFixed(0);
     case absValue < 3600:
       return dayjs.duration(absValue, 'seconds').format('m:ss');
     default:
-      return (absValue / 3600).toFixed(2);
+      return dayjs.duration(absValue, 'seconds').format('H:mm');
   }
 };

@@ -1,6 +1,5 @@
 import type dayjs from 'dayjs';
 import React from 'react';
-import { SimpleDeltaWidget } from '../../common/components/widgets/internal/SimpleDeltaWidget';
 import { SZWidgetValue } from '../../common/types/basicWidgets';
 import type { SlowZoneResponse } from '../../common/types/dataPoints';
 import type { LineShort } from '../../common/types/lines';
@@ -9,6 +8,8 @@ import {
   useFormatSegments,
   useSlowZoneQuantityDelta,
 } from '../../common/utils/slowZoneUtils';
+import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
+import { TODAY } from '../../common/constants/dates';
 import { LineSegments } from './charts/LineSegments';
 
 interface SlowZonesSegmentsWrapper {
@@ -25,13 +26,21 @@ export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
   startDateUTC,
 }) => {
   const filteredAllSlow = useFilteredAllSlow(data, startDateUTC, endDateUTC, lineShort);
-  const zonesDelta = useSlowZoneQuantityDelta(filteredAllSlow, endDateUTC, startDateUTC);
+  const { endValue, zonesDelta } = useSlowZoneQuantityDelta(
+    filteredAllSlow,
+    endDateUTC,
+    startDateUTC
+  );
 
   const allSlowGraphData = useFormatSegments(filteredAllSlow, startDateUTC);
 
   return (
     <>
-      <SimpleDeltaWidget widgetValue={new SZWidgetValue(zonesDelta, zonesDelta)} />
+      <BasicWidgetDataLayout
+        widgetValue={new SZWidgetValue(endValue, zonesDelta)}
+        title={endDateUTC.isSame(TODAY, 'day') ? 'Today' : endDateUTC.format('MMM D, YYYY')}
+        analysis={'over period'}
+      />
       <div className="relative flex">
         <LineSegments
           data={allSlowGraphData}

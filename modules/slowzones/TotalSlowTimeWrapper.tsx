@@ -1,11 +1,12 @@
 import type dayjs from 'dayjs';
 import React from 'react';
-import { SimpleDeltaWidget } from '../../common/components/widgets/internal/SimpleDeltaWidget';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import type { DayDelayTotals } from '../../common/types/dataPoints';
 import type { LineShort, Line } from '../../common/types/lines';
 import { getSlowZoneDelayDelta, useFilteredDelayTotals } from '../../common/utils/slowZoneUtils';
 
+import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
+import { TODAY } from '../../common/constants/dates';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 
 interface TotalSlowTimeWrapperProps {
@@ -28,7 +29,16 @@ export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
 
   return (
     <>
-      <SimpleDeltaWidget widgetValue={new TimeWidgetValue(delayDelta, delayDelta)} />
+      <BasicWidgetDataLayout
+        widgetValue={
+          new TimeWidgetValue(
+            filteredDelayTotals[filteredDelayTotals.length - 1][lineShort],
+            delayDelta
+          )
+        }
+        title={endDateUTC.isSame(TODAY, 'day') ? 'Today' : endDateUTC.format('MMM D, YYYY')}
+        analysis={'over period'}
+      />
       <div className="relative flex h-60">
         <TotalSlowTime
           // Pass all data and not filtered because we can filter using the X axis of the graph.
