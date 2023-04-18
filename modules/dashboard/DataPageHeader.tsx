@@ -1,28 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { lineColorText } from '../../common/styles/general';
 import { ALL_PAGES } from '../../common/constants/pages';
 import { RangeTabs } from '../navigation/RangeTabs';
 
 export const DataPageHeader = () => {
-  const isDesktop = useBreakpoint('md');
-
-  const {
-    line,
-    lineShort,
-    page,
-    query: { endDate },
-  } = useDelimitatedRoute();
-  const [range, setRange] = useState<boolean>(endDate !== undefined);
-
-  React.useEffect(() => {
-    if (!range && endDate !== undefined) {
-      setRange(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [endDate]);
+  const { line, page } = useDelimitatedRoute();
 
   return (
     <div className="relative border-b border-gray-200 sm:pb-0">
