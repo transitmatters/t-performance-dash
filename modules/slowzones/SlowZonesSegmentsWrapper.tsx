@@ -9,7 +9,7 @@ import {
   useSlowZoneQuantityDelta,
 } from '../../common/utils/slowZoneUtils';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
-import { TODAY } from '../../common/constants/dates';
+import { todayOrDate } from '../../common/constants/dates';
 import { LineSegments } from './charts/LineSegments';
 
 interface SlowZonesSegmentsWrapper {
@@ -38,7 +38,7 @@ export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
     <>
       <BasicWidgetDataLayout
         widgetValue={new SZWidgetValue(endValue, zonesDelta)}
-        title={endDateUTC.isSame(TODAY, 'day') ? 'Today' : endDateUTC.format('MMM D, YYYY')}
+        title={todayOrDate(endDateUTC)}
         analysis={'over period'}
       />
       <div className="relative flex">

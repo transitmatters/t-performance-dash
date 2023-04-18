@@ -6,7 +6,7 @@ import type { LineShort, Line } from '../../common/types/lines';
 import { getSlowZoneDelayDelta, useFilteredDelayTotals } from '../../common/utils/slowZoneUtils';
 
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
-import { TODAY } from '../../common/constants/dates';
+import { todayOrDate } from '../../common/constants/dates';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 
 interface TotalSlowTimeWrapperProps {
@@ -36,7 +36,7 @@ export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
             delayDelta
           )
         }
-        title={endDateUTC.isSame(TODAY, 'day') ? 'Today' : endDateUTC.format('MMM D, YYYY')}
+        title={todayOrDate(endDateUTC)}
         analysis={'over period'}
       />
       <div className="relative flex h-60">
