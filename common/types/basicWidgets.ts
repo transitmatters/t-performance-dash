@@ -54,12 +54,12 @@ export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInter
     const absDelta = Math.abs(this.delta);
     const sign = this.delta >= 0 ? '+' : '-';
     switch (true) {
-      case absValue < 99:
-        return `${sign}${absDelta}`;
+      case absValue < 100:
+        return `${sign}${absDelta.toFixed(0)} sec`;
       case absValue < 3600:
         return `${sign}${dayjs.duration(absDelta, 'seconds').format('m:ss')}`;
       default:
-        return `${sign}${(absDelta / 3600).toFixed(2)}`;
+        return `${sign}${dayjs.duration(absDelta, 'seconds').as('minutes').toFixed(0)} min`;
     }
   }
 }

@@ -147,6 +147,6 @@ export const useSlowZoneQuantityDelta = (
         return zoneEnd.isSameOrAfter(endDateUTC);
       }).length ?? 0;
 
-    return end - start;
+    return { endValue: end, zonesDelta: end - start };
   }, [allSlow, startDateUTC, endDateUTC]);
 };

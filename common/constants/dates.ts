@@ -202,3 +202,7 @@ export const SINGLE_DATE_KEYS = Object.fromEntries(
     singlePreset.key,
   ])
 );
+
+export const todayOrDate = (date: dayjs.Dayjs) => {
+  return date.isSame(TODAY, 'day') ? 'Today' : date.format('MMM D, YYYY');
+};
