@@ -33,7 +33,7 @@ export const SpeedDetailsWrapper: React.FC<SpeedDetailsWrapperProps> = ({
           <SpeedGraph config={config} data={data} startDate={startDate} endDate={endDate} />
         </div>
       </WidgetDiv>
-      <div className="flex flex-row gap-x-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         <WidgetDiv className="w-full">
           <BasicWidgetDataLayout
             title={`Current (${config.getWidgetTitle(data[data.length - 1].date)})`}
