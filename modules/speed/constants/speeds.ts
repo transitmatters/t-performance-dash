@@ -1,6 +1,7 @@
 import type { TooltipCallbacks, TooltipItem, TooltipModel } from 'chart.js';
 import type { _DeepPartialObject } from 'chart.js/dist/types/utils';
 import dayjs from 'dayjs';
+import { todayOrDate } from '../../../common/constants/dates';
 
 export type ParamsType = {
   agg: 'daily' | 'weekly' | 'monthly';
@@ -39,7 +40,7 @@ export const SPEED_RANGE_PARAM_MAP: { [s: string]: ParamsType } = {
     agg: 'daily',
     tooltipFormat: 'MMM d, yyyy',
     unit: 'day',
-    getWidgetTitle: () => 'Today',
+    getWidgetTitle: (date) => todayOrDate(dayjs(date)),
   },
   week: {
     agg: 'weekly',
