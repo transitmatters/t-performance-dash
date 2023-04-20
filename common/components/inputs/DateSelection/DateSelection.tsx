@@ -49,20 +49,16 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
   return (
     <div
       className={classNames(
-        'flex h-full max-w-full flex-row items-baseline overflow-hidden rounded-t-md border md:max-w-sm md:rounded-md',
+        'flex h-full w-full flex-row items-baseline overflow-hidden  rounded-t-md border md:flex-col md:rounded-md lg:flex-row',
         lineColorDarkBorder[line ?? 'DEFAULT']
       )}
     >
-      <Popover
-        className={classNames(
-          'flex h-full w-full self-stretch overflow-hidden text-left',
-          lineColorBackground[line ?? 'DEFAULT']
-        )}
-      >
+      <Popover className={classNames('flex h-full w-full self-stretch overflow-hidden text-left')}>
         <Popover.Button
           className={classNames(
-            'flex h-full w-full items-center justify-center self-stretch bg-black bg-opacity-10 px-3 py-1 text-white text-opacity-95 shadow-sm hover:bg-opacity-0 focus:bg-opacity-0 focus:outline-none',
-            line && buttonHighlightFocus[line]
+            'flex h-full w-full items-center justify-center self-stretch px-3 py-1 text-white text-opacity-95 hover:bg-opacity-70 focus:bg-opacity-70 focus:outline-none',
+            line && buttonHighlightFocus[line],
+            line && lineColorBackground[line]
           )}
         >
           <FontAwesomeIcon

@@ -17,6 +17,8 @@ export const ServiceDayPicker: React.FC<ServiceDayPickerProps> = ({ setServiceDa
       <ButtonGroup
         options={Object.entries(options)}
         pressFunction={(value: ServiceDay) => setServiceDay(value)}
+        additionalDivClass="md:w-auto"
+        additionalButtonClass="md:w-fit"
       />
     </div>
   );
