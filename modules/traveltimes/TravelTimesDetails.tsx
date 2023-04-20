@@ -30,8 +30,8 @@ export default function TravelTimesDetails() {
   const toStation = to ? getParentStationForStopId(to) : undefined;
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
 
-  const aggregate = startDate !== undefined && endDate !== undefined;
-  const enabled = fromStopIds !== undefined && toStopIds !== undefined && startDate !== undefined;
+  const aggregate = Boolean(startDate && endDate);
+  const enabled = Boolean(fromStopIds && toStopIds && startDate);
   const parameters: SingleDayAPIOptions | AggregateAPIOptions = aggregate
     ? {
         [AggregateAPIParams.fromStop]: fromStopIds,

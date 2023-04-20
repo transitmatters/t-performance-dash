@@ -12,6 +12,7 @@ import {
 } from '../../utils/stations';
 import type { BusRoute, Line } from '../../types/lines';
 import { LINE_OBJECTS } from '../../constants/lines';
+import type { Station } from '../../types/stations';
 
 interface StationSelectorWidgetProps {
   line: Line;
@@ -34,18 +35,24 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
     updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });
   }, [fromStation, toStation, updateQueryParams]);
 
-  const updateToStation = (stationId) => {
-    const { toStopIds } = stopIdsForStations(fromStation, stationId);
-    updateQueryParams({ to: toStopIds?.[0] });
-  };
-  const updateFromStation = (stationId) => {
-    const { fromStopIds } = stopIdsForStations(stationId, toStation);
-    updateQueryParams({ from: fromStopIds?.[0] });
-  };
-
-  const swapStations = () => {
-    const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
-    updateQueryParams({ from: toStopIds?.[0], to: fromStopIds?.[0] });
+  const updateStations = (action: 'to' | 'from' | 'swap', stationId?: Station) => {
+    switch (action) {
+      case 'to':
+        updateQueryParams({
+          to: stopIdsForStations(fromStation, stationId).toStopIds?.[0],
+        });
+        break;
+      case 'from':
+        updateQueryParams({
+          from: stopIdsForStations(stationId, toStation).fromStopIds?.[0],
+        });
+        break;
+      case 'swap': {
+        const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
+        updateQueryParams({ from: toStopIds?.[0], to: fromStopIds?.[0] });
+        break;
+      }
+    }
   };
 
   if (!fromStation || !toStation) {
@@ -62,7 +69,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
           type={'from'}
           fromStation={fromStation}
           toStation={toStation}
-          setStation={updateFromStation}
+          setStation={(stationId) => updateStations('from', stationId)}
         />
         <div className="flex h-4 w-4 items-center justify-center">
           <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" />
@@ -73,9 +80,9 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
           type={'to'}
           fromStation={fromStation}
           toStation={toStation}
-          setStation={updateToStation}
+          setStation={(stationId) => updateStations('to', stationId)}
         />
-        <Button onClick={swapStations} additionalClasses="shrink-0 w-fit">
+        <Button onClick={() => updateStations('swap')} additionalClasses="shrink-0 w-fit">
           <FontAwesomeIcon icon={faRightLeft} className="h-4 w-4" />
         </Button>
       </div>

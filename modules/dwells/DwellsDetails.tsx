@@ -25,8 +25,8 @@ export default function DwellsDetails() {
   const toStation = to ? getParentStationForStopId(to) : undefined;
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
 
-  const aggregate = startDate !== undefined && endDate !== undefined;
-  const enabled = fromStopIds !== undefined && startDate !== undefined;
+  const aggregate = Boolean(startDate && endDate);
+  const enabled = Boolean(fromStopIds && startDate);
   const parameters: SingleDayAPIOptions | AggregateAPIOptions = aggregate
     ? {
         [AggregateAPIParams.stop]: fromStopIds,
