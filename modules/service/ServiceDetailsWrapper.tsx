@@ -3,11 +3,11 @@ import classNames from 'classnames';
 import type { SpeedDataPoint } from '../../common/types/dataPoints';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import type { ParamsType } from '../speed/constants/speeds';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { TripsWidgetValue } from '../../common/types/basicWidgets';
 import { getDetailsServiceWidgetValues } from './utils/utils';
 import { ServiceGraph } from './ServiceGraph';
-import type { ParamsType } from '../speed/constants/speeds';
-import { WidgetTitle } from '../dashboard/WidgetTitle';
 
 interface ServiceDetailsWrapperProps {
   data: SpeedDataPoint[];
