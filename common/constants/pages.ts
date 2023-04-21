@@ -112,7 +112,7 @@ export const ALL_PAGES: PageMap = {
     key: 'service',
     path: '/service',
     name: 'Service',
-    lines: [],
+    lines: ['RL', 'OL', 'BL'],
     section: 'line',
     icon: faClockFour,
     sub: true,
