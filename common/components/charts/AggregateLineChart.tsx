@@ -48,7 +48,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   title,
   data,
   location,
-  isLoading,
   pointField,
   bothStops = false,
   fname,
@@ -62,15 +61,14 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   suggestedYMax,
   showLegend = true,
   isHomescreen = false,
-  children,
 }) => {
   const ref = useRef();
   const hourly = timeUnit === 'hour';
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
 
   return (
-    <div className="chart">
-      <div className="chart-container">
+    <div className="relative flex w-full flex-col pr-2">
+      <div className="flex h-60 w-full flex-row">
         <Line
           id={chartId}
           ref={ref}
@@ -187,22 +185,18 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           ]}
         />
       </div>
-      {showLegend && (
-        <div className="chart-extras">
-          <LegendLongTerm />
-          {children}
-        </div>
-      )}
-      {!isHomescreen && startDate && (
-        <DownloadButton
-          data={data}
-          datasetName={fname}
-          location={location}
-          bothStops={bothStops}
-          startDate={startDate}
-          endDate={endDate}
-        />
-      )}
+      <div className="flex flex-row items-end gap-4">
+        {showLegend && <LegendLongTerm />}
+        {!isHomescreen && startDate && (
+          <DownloadButton
+            data={data}
+            datasetName={fname}
+            location={location}
+            bothStops={bothStops}
+            startDate={startDate}
+          />
+        )}
+      </div>
     </div>
   );
 };

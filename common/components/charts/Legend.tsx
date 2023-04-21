@@ -1,26 +1,35 @@
 import React from 'react';
-import styles from './styles/Legend.module.css';
 
 export const Legend: React.FC = () => {
   return (
-    <div className={`legend`}>
+    <div
+      className={
+        'grid w-full grid-cols-2  items-baseline gap-2 p-1 text-left text-xs sm:flex sm:flex-row sm:gap-4'
+      }
+    >
       <p>
-        <span className={`legend-dot ${styles['on-time']}`}></span> On time
+        <span className="mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#57945B] bg-[#64b96a]"></span>
+        {'On time'}
       </p>
       <p>
-        <span className={`legend-dot ${styles['twenty-five-percent']}`}></span>{' '}
-        {'>25% longer than benchmark'}
+        <span className="mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#D9D31E] bg-[#f5ed00]"></span>
+        {'25%+ over Benchmark'}
       </p>
       <p>
-        <span className={`legend-dot ${styles['fifty-percent']}`}></span>{' '}
-        {'>50% longer than benchmark'}
+        <span
+          className={`mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#A1384A] bg-[#c33149]`}
+        ></span>{' '}
+        {'50%+ over Benchmark'}
       </p>
       <p>
-        <span className={`legend-dot ${styles['hundred-percent']}`}></span>{' '}
-        {'>100% longer than benchmark'}
+        <span
+          className={`mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#925396] bg-[#bb5cc1]`}
+        ></span>{' '}
+        {'100%+ over Benchmark'}
       </p>
       <p>
-        <span className={'legend-line'}></span> MBTA benchmark
+        <span className="mr-1 inline-block h-2.5 w-2.5 items-center border-t-2 border-[#bbb] bg-[#ddd] align-middle"></span>{' '}
+        MBTA Benchmark
       </p>
     </div>
   );
@@ -28,13 +37,13 @@ export const Legend: React.FC = () => {
 
 export const LegendLongTerm: React.FC = () => {
   return (
-    <div className={`legend ${styles['legend']}`}>
+    <div className="grid w-full grid-cols-2  items-baseline gap-2 p-1 text-left text-xs sm:flex sm:flex-row sm:gap-4">
       <p>
-        <span className={'legend-dot'} style={{ backgroundColor: 'black' }}></span> Median
+        <span className={'mr-1 inline-block h-2.5 w-2.5 rounded-full bg-[#000]'}></span> Median
       </p>
       <p>
-        <span className={'legend-dot'} style={{ backgroundColor: '#C8CCD2' }}></span> Interquartile
-        range
+        <span className={'mr-1 inline-block h-2.5 w-2.5 rounded-sm bg-[#C8CCD2]'}></span>{' '}
+        Interquartile range
       </p>
     </div>
   );

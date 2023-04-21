@@ -61,7 +61,7 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
   const { line } = useDelimitatedRoute();
   return (
     <div
-      className={classNames('mb-5 ml-3 mt-auto flex', line && lineColorTextHover[line])}
+      className={classNames('flex', line && lineColorTextHover[line])}
       title="Download data as CSV"
     >
       <CSVLink
