@@ -38,9 +38,16 @@ interface ServiceGraphProps {
   config: ParamsType;
   startDate: string;
   endDate: string;
+  showTitle?: boolean;
 }
 
-export const ServiceGraph: React.FC<ServiceGraphProps> = ({ data, config, startDate, endDate }) => {
+export const ServiceGraph: React.FC<ServiceGraphProps> = ({
+  data,
+  config,
+  startDate,
+  endDate,
+  showTitle = false,
+}) => {
   const { line } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef();
@@ -90,7 +97,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({ data, config, startD
           },
           title: {
             // empty title to set font and leave room for drawTitle fn
-            display: true,
+            display: showTitle,
             text: '',
           },
         },
@@ -152,7 +159,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({ data, config, startD
               ctx.fillText('No data to display', width / 2, height / 2);
               ctx.restore();
             }
-            drawSimpleTitle(`Daily round trips`, chart);
+            if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
           },
         },
       ]}

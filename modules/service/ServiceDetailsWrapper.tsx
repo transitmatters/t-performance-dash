@@ -7,6 +7,7 @@ import { TripsWidgetValue } from '../../common/types/basicWidgets';
 import { getDetailsServiceWidgetValues } from './utils/utils';
 import { ServiceGraph } from './ServiceGraph';
 import type { ParamsType } from '../speed/constants/speeds';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
 
 interface ServiceDetailsWrapperProps {
   data: SpeedDataPoint[];
@@ -26,6 +27,7 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
   return (
     <>
       <WidgetDiv>
+        <WidgetTitle title="Daily Round Trips" />
         <div className={classNames('flex h-60 flex-row items-center pr-4')}>
           <ServiceGraph config={config} data={data} startDate={startDate} endDate={endDate} />
         </div>
