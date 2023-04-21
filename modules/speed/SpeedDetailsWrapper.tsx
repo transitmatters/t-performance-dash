@@ -4,11 +4,11 @@ import type { SpeedDataPoint } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { MPHWidgetValue } from '../../common/types/basicWidgets';
 import { getDetailsSpeedWidgetValues } from './utils/utils';
 import { SpeedGraph } from './SpeedGraph';
 import type { ParamsType } from './constants/speeds';
-import { WidgetTitle } from '../dashboard/WidgetTitle';
 
 interface SpeedDetailsWrapperProps {
   data: SpeedDataPoint[];
