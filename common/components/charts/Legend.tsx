@@ -4,7 +4,7 @@ export const Legend: React.FC = () => {
   return (
     <div
       className={
-        'grid w-full grid-cols-2  items-baseline gap-2 p-1 text-left text-xs sm:flex sm:flex-row sm:gap-4'
+        'grid w-full grid-cols-2 items-baseline gap-2 p-1 text-left text-xs sm:flex sm:flex-row sm:gap-4'
       }
     >
       <p>
