@@ -243,7 +243,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
         />
       </div>
       <div className="flex flex-row items-end gap-4 pl-6 pr-2">
-        {showLegend && benchmarkField && <LegendView />}
+        {showLegend && benchmarkField ? <LegendView /> : <div className="w-full" />}
         {!isHomescreen && date && (
           <DownloadButton
             data={data}
