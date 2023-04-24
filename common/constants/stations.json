@@ -69,6 +69,7 @@
       },
       {
         "stop_name": "Kendall/MIT",
+        "short": "Kendall",
         "branches": ["A", "B"],
         "station": "place-knncl",
         "order": 6,
@@ -80,6 +81,7 @@
       },
       {
         "stop_name": "Charles/MGH",
+        "short": "MGH",
         "branches": ["A", "B"],
         "station": "place-chmnl",
         "order": 7,
@@ -91,6 +93,7 @@
       },
       {
         "stop_name": "Park Street",
+        "short": "Park St.",
         "branches": ["A", "B"],
         "station": "place-pktrm",
         "order": 8,
@@ -102,6 +105,7 @@
       },
       {
         "stop_name": "Downtown Crossing",
+        "short": "Dwntn Xing",
         "branches": ["A", "B"],
         "station": "place-dwnxg",
         "order": 9,
@@ -113,6 +117,7 @@
       },
       {
         "stop_name": "South Station",
+        "short": "S. Station",
         "branches": ["A", "B"],
         "station": "place-sstat",
         "order": 10,
@@ -146,6 +151,7 @@
       },
       {
         "stop_name": "JFK/UMass (Ashmont)",
+        "short": "JFK (A)",
         "branches": ["A"],
         "station": "place-jfk",
         "order": 101,
@@ -205,6 +211,7 @@
       },
       {
         "stop_name": "JFK/UMass (Braintree)",
+        "short": "JFK (B)",
         "branches": ["B"],
         "station": "place-jfk",
         "order": 201,
@@ -216,6 +223,7 @@
       },
       {
         "stop_name": "North Quincy",
+        "short": "N. Quincy",
         "branches": ["B"],
         "station": "place-nqncy",
         "order": 202,
@@ -241,6 +249,7 @@
       },
       {
         "stop_name": "Quincy Center",
+        "short": "Quincy Ctr.",
         "branches": ["B"],
         "station": "place-qnctr",
         "order": 204,
@@ -251,7 +260,7 @@
         "accessible": true
       },
       {
-        "stop_name": "Quincy Adams",
+        "stop_name": "Q. Adams",
         "branches": ["B"],
         "station": "place-qamnl",
         "order": 205,

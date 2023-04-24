@@ -10,6 +10,7 @@ import {
 } from '../../common/utils/slowZoneUtils';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { todayOrDate } from '../../common/constants/dates';
+import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { LineSegments } from './charts/LineSegments';
 
 interface SlowZonesSegmentsWrapper {
@@ -29,11 +30,13 @@ export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
 }) => {
   const filteredAllSlow = useFilteredAllSlow(data, startDateUTC, endDateUTC, lineShort);
   const allSlowGraphData = useFormatSegments(filteredAllSlow, startDateUTC, direction);
+  const isMobile = !useBreakpoint('sm');
   const { endValue, zonesDelta } = useSlowZoneQuantityDelta(
     allSlowGraphData,
     endDateUTC,
     startDateUTC
   );
+  const stationPairs = new Set(allSlowGraphData.map((dataPoint) => dataPoint.id));
 
   return (
     <>
@@ -42,14 +45,23 @@ export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
         title={todayOrDate(endDateUTC)}
         analysis={'over period'}
       />
-      <div className="relative flex">
-        <LineSegments
-          data={allSlowGraphData}
-          line={lineShort}
-          startDateUTC={startDateUTC}
-          endDateUTC={endDateUTC}
-          direction={direction}
-        />
+      <div style={{ width: '100%', overflowX: 'scroll', overflowY: 'hidden' }}>
+        <div
+          className="relative"
+          style={
+            isMobile
+              ? { width: stationPairs.size * 64, height: 480 }
+              : { height: stationPairs.size * 40 }
+          }
+        >
+          <LineSegments
+            data={allSlowGraphData}
+            line={lineShort}
+            startDateUTC={startDateUTC}
+            endDateUTC={endDateUTC}
+            direction={direction}
+          />
+        </div>
       </div>
     </>
   );

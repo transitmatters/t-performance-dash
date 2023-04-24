@@ -55,6 +55,7 @@ export interface SlowZone {
   id: string;
   direction: Direction;
   order: number;
+  title: string;
 }
 
 export type SlowZoneResponse = {
@@ -77,7 +78,9 @@ export interface SpeedDataPoint {
 }
 
 export type LineSegmentData = {
+  duration: number;
   x: string[];
+  y: string[];
   id: string;
   delay: number;
 };

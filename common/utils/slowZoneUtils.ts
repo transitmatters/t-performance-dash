@@ -42,6 +42,7 @@ export const formatSlowZones = (data: SlowZoneResponse[]): SlowZone[] =>
       from: from.stop_name,
       to: to.stop_name,
       id: from.stop_name + '-' + to.stop_name,
+      title: `${from.short ?? from.stop_name}-${to.short ?? to.stop_name}`,
       delay: +x.delay,
       duration: +x.duration,
       color: x.color,
@@ -90,7 +91,7 @@ export const getRoutes = (direction: Direction, data?: SlowZone[]) => {
       sz.sort((a, b) => (direction === 'southbound' ? a.order - b.order : b.order - a.order))
     )
     .flat()
-    .map((sz: SlowZone) => sz.id);
+    .map((sz: SlowZone) => sz.title);
   return [...new Set(routes)];
 };
 

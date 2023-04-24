@@ -1,3 +1,4 @@
+import type { CartesianScaleTypeRegistry, ScaleOptionsByType } from 'chart.js';
 import {
   BarElement,
   CategoryScale,
@@ -22,6 +23,9 @@ import { COLORS } from '../../../common/constants/colors';
 import type { Direction, LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
 import { getRoutes } from '../../../common/utils/slowZoneUtils';
+import { getSlowZoneOpacity } from '../map/SlowZonesMap';
+import { hexWithAlpha } from '../../../common/utils/general';
+import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, TimeScale);
 
@@ -42,28 +46,80 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
 }) => {
   const ref = useRef();
   const routes = useMemo(() => getRoutes(direction, data), [data, direction]);
+  const chartRange = endDateUTC.diff(startDateUTC, 'day');
+  const breakpoint = [
+    { active: useBreakpoint('xl'), value: chartRange / 36 },
+    { active: useBreakpoint('lg'), value: chartRange / 20 },
+    { active: useBreakpoint('md'), value: chartRange / 12 },
+    { active: useBreakpoint('sm'), value: chartRange / 12 },
+  ];
+  const getDisplayCutoff = () => {
+    for (const bp of breakpoint) {
+      if (bp.active) return bp.value;
+    }
+    return chartRange / 20;
+  };
 
-  const lineSegmentData: LineSegmentData[] | undefined = data.map((sz) => {
+  const isMobile = !breakpoint[3].active;
+
+  const dateAxisConfig: ScaleOptionsByType<keyof CartesianScaleTypeRegistry> = {
+    min: startDateUTC.toISOString(),
+    max: endDateUTC.toISOString(),
+    type: 'time',
+    time: {
+      unit: 'month',
+    },
+    adapters: {
+      date: {
+        locale: enUS,
+      },
+    },
+    display: true,
+  };
+  const stationAxisConfig: ScaleOptionsByType<keyof CartesianScaleTypeRegistry> = {
+    position: 'top',
+    stacked: true,
+    beginAtZero: true,
+    ticks: {
+      autoSkip: false,
+      maxRotation: isMobile ? 30 : 0,
+      minRotation: isMobile ? 30 : 0,
+    },
+  };
+
+  const lineSegmentData: LineSegmentData[] = data.map((sz) => {
+    const szStartDate = dayjs.utc(sz.start);
+    const szEndDate = dayjs.utc(sz.end);
     return {
-      x: [dayjs.utc(sz.start).format('YYYY-MM-DD'), dayjs.utc(sz.end).format('YYYY-MM-DD')],
-      id: sz.id,
+      duration: szEndDate.diff(szStartDate, 'day'),
+      x: [szStartDate.format('YYYY-MM-DD'), szEndDate.format('YYYY-MM-DD')],
+      y: [szStartDate.format('YYYY-MM-DD'), szEndDate.format('YYYY-MM-DD')],
+      id: sz.title,
       delay: sz.delay,
     };
   });
 
   return (
     <Bar
-      height={550}
       ref={ref}
       id={'timeline-slow-zones'}
       data={{
         labels: routes,
         datasets: [
           {
+            borderWidth: 2,
+            borderRadius: 4,
+
+            borderColor: line && COLORS.mbta[line.toLowerCase()],
+            backgroundColor: (context) => {
+              const index = context.dataIndex;
+              return hexWithAlpha(
+                line && COLORS.mbta[line.toLowerCase()],
+                getSlowZoneOpacity(lineSegmentData[index].delay)
+              );
+            },
             label: line,
-            minBarLength: 28,
-            backgroundColor: line && COLORS.mbta[line.toLowerCase()],
-            borderSkipped: true,
+            borderSkipped: false,
             data: lineSegmentData,
           },
         ],
@@ -77,33 +133,17 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
           padding: {},
         },
 
-        parsing: {
-          yAxisKey: 'id',
-        },
-        indexAxis: 'y',
+        parsing: isMobile
+          ? { xAxisKey: 'id' }
+          : {
+              yAxisKey: 'id',
+            },
+        indexAxis: isMobile ? 'x' : 'y',
         scales: {
-          x: {
-            min: startDateUTC.toISOString(),
-            max: endDateUTC.toISOString(),
-            type: 'time',
-            time: {
-              unit: 'month',
-            },
-            adapters: {
-              date: {
-                locale: enUS,
-              },
-            },
-            display: true,
-          },
-          y: {
-            stacked: true,
-            beginAtZero: true,
-            ticks: {
-              autoSkip: false,
-            },
-          },
+          y: isMobile ? dateAxisConfig : stationAxisConfig,
+          x: isMobile ? stationAxisConfig : dateAxisConfig,
         },
+
         plugins: {
           legend: {
             display: false,
@@ -134,18 +174,17 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
             anchor: 'center',
             clamp: true,
             clip: false,
-            formatter: function (context) {
+            formatter: (context) => {
               return context.delay.toFixed(0) + ' s';
             },
+            display: (context) => lineSegmentData[context.dataIndex].duration > getDisplayCutoff(),
+
             labels: {
               value: {
-                color: 'white',
+                backgroundColor: hexWithAlpha(line && COLORS.mbta[line.toLowerCase()], 0.8),
+                borderRadius: 4,
+                color: '#ffffff',
               },
-            },
-            display: function (ctx) {
-              const scale = ctx.chart.scales.y; // 'y' is your scale id
-              const range = Math.max(scale.max - scale.min, 1);
-              return (ctx.chart.height / range) * 3 > 16;
             },
           },
         },
