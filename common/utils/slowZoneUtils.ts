@@ -67,15 +67,19 @@ export const groupByLine = (data: SlowZone[]) =>
     return series;
   }, {});
 
-export const useFormatSegments = (data: SlowZoneResponse[], startDateUTC: dayjs.Dayjs) => {
+export const useFormatSegments = (
+  data: SlowZoneResponse[],
+  startDateUTC: dayjs.Dayjs,
+  direction: Direction
+) => {
   return useMemo(() => {
     return formatSlowZones(
       data.filter((d) => {
         const szDate = dayjs.utc(d.end);
         return szDate.isAfter(startDateUTC);
       })
-    ).filter((sz) => sz.direction === 'southbound');
-  }, [data, startDateUTC]);
+    ).filter((sz) => sz.direction === direction);
+  }, [data, startDateUTC, direction]);
 };
 
 export const getRoutes = (direction: Direction, data?: SlowZone[]) => {
@@ -128,7 +132,7 @@ export const useFilteredDelayTotals = (
 };
 
 export const useSlowZoneQuantityDelta = (
-  allSlow: SlowZoneResponse[],
+  allSlow: SlowZone[],
   endDateUTC: dayjs.Dayjs,
   startDateUTC: dayjs.Dayjs
 ) => {

@@ -19,7 +19,7 @@ import React, { useMemo, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { YESTERDAY_MIDNIGHT } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
-import type { LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
+import type { Direction, LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
 import { getRoutes } from '../../../common/utils/slowZoneUtils';
 
@@ -30,6 +30,7 @@ interface LineSegmentsProps {
   line: LineShort;
   startDateUTC: dayjs.Dayjs;
   endDateUTC: dayjs.Dayjs;
+  direction: Direction;
 }
 
 export const LineSegments: React.FC<LineSegmentsProps> = ({
@@ -37,9 +38,10 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
   line,
   startDateUTC,
   endDateUTC,
+  direction,
 }) => {
   const ref = useRef();
-  const routes = useMemo(() => getRoutes('southbound', data), [data]);
+  const routes = useMemo(() => getRoutes(direction, data), [data, direction]);
 
   const lineSegmentData: LineSegmentData[] | undefined = data.map((sz) => {
     return {

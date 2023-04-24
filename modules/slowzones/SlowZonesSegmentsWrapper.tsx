@@ -1,7 +1,7 @@
 import type dayjs from 'dayjs';
 import React from 'react';
 import { SZWidgetValue } from '../../common/types/basicWidgets';
-import type { SlowZoneResponse } from '../../common/types/dataPoints';
+import type { Direction, SlowZoneResponse } from '../../common/types/dataPoints';
 import type { LineShort } from '../../common/types/lines';
 import {
   useFilteredAllSlow,
@@ -17,6 +17,7 @@ interface SlowZonesSegmentsWrapper {
   lineShort: LineShort;
   endDateUTC: dayjs.Dayjs;
   startDateUTC: dayjs.Dayjs;
+  direction: Direction;
 }
 
 export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
@@ -24,15 +25,15 @@ export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
   lineShort,
   endDateUTC,
   startDateUTC,
+  direction,
 }) => {
   const filteredAllSlow = useFilteredAllSlow(data, startDateUTC, endDateUTC, lineShort);
+  const allSlowGraphData = useFormatSegments(filteredAllSlow, startDateUTC, direction);
   const { endValue, zonesDelta } = useSlowZoneQuantityDelta(
-    filteredAllSlow,
+    allSlowGraphData,
     endDateUTC,
     startDateUTC
   );
-
-  const allSlowGraphData = useFormatSegments(filteredAllSlow, startDateUTC);
 
   return (
     <>
@@ -47,6 +48,7 @@ export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
           line={lineShort}
           startDateUTC={startDateUTC}
           endDateUTC={endDateUTC}
+          direction={direction}
         />
       </div>
     </>
