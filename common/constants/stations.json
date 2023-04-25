@@ -260,7 +260,8 @@
         "accessible": true
       },
       {
-        "stop_name": "Q. Adams",
+        "stop_name": "Quincy Adams",
+        "short": "Q. Adams",
         "branches": ["B"],
         "station": "place-qamnl",
         "order": 205,
@@ -345,6 +346,7 @@
       },
       {
         "stop_name": "Sullivan Square",
+        "short": "Sullivan Sq.",
         "branches": null,
         "station": "place-sull",
         "order": 5,
@@ -357,6 +359,7 @@
       },
       {
         "stop_name": "Community College",
+        "short": "Comm. College",
         "branches": null,
         "station": "place-ccmnl",
         "order": 6,
@@ -368,6 +371,7 @@
       },
       {
         "stop_name": "North Station",
+        "short": "N. Station",
         "branches": null,
         "station": "place-north",
         "order": 7,
@@ -390,6 +394,7 @@
       },
       {
         "stop_name": "State Street",
+        "short": "State St.",
         "branches": null,
         "station": "place-state",
         "order": 9,
@@ -401,6 +406,8 @@
       },
       {
         "stop_name": "Downtown Crossing",
+        "short": "Dwntn Xing",
+
         "branches": null,
         "station": "place-dwnxg",
         "order": 10,
@@ -423,6 +430,7 @@
       },
       {
         "stop_name": "Tufts Medical Center",
+        "short": "Tufts Medical",
         "branches": null,
         "station": "place-tumnl",
         "order": 12,
@@ -447,6 +455,7 @@
       },
       {
         "stop_name": "Massachusetts Avenue",
+        "short": "Mass. Ave.",
         "branches": null,
         "station": "place-masta",
         "order": 14,
@@ -469,6 +478,7 @@
       },
       {
         "stop_name": "Roxbury Crossing",
+        "short": "Roxbury Xing",
         "branches": null,
         "station": "place-rcmnl",
         "order": 16,
@@ -481,6 +491,7 @@
       },
       {
         "stop_name": "Jackson Square",
+        "short": "Jackson Sq.",
         "branches": null,
         "station": "place-jaksn",
         "order": 17,
@@ -644,6 +655,7 @@
       },
       {
         "stop_name": "State Street",
+        "short": "State St.",
         "branches": null,
         "station": "place-state",
         "order": 10,
@@ -655,6 +667,7 @@
       },
       {
         "stop_name": "Government Center",
+        "short": "Gov. Center",
         "branches": null,
         "station": "place-gover",
         "order": 11,

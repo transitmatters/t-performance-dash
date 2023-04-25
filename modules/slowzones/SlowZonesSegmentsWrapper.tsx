@@ -37,7 +37,7 @@ export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
     startDateUTC
   );
   const stationPairs = new Set(allSlowGraphData.map((dataPoint) => dataPoint.id));
-
+  console.log(stationPairs.size);
   return (
     <>
       <BasicWidgetDataLayout

@@ -22,7 +22,7 @@ import { YESTERDAY_MIDNIGHT } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
 import type { Direction, LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
-import { getRoutes } from '../../../common/utils/slowZoneUtils';
+import { getRoutes, getStationPairName } from '../../../common/utils/slowZoneUtils';
 import { getSlowZoneOpacity } from '../map/SlowZonesMap';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
@@ -45,7 +45,6 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
   direction,
 }) => {
   const ref = useRef();
-  const routes = useMemo(() => getRoutes(direction, data), [data, direction]);
   const chartRange = endDateUTC.diff(startDateUTC, 'day');
   const breakpoint = [
     { active: useBreakpoint('xl'), value: chartRange / 36 },
@@ -61,6 +60,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
   };
 
   const isMobile = !breakpoint[3].active;
+  const routes = useMemo(() => getRoutes(direction, data, isMobile), [data, direction, isMobile]);
 
   const dateAxisConfig: ScaleOptionsByType<keyof CartesianScaleTypeRegistry> = {
     min: startDateUTC.toISOString(),
@@ -94,7 +94,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
       duration: szEndDate.diff(szStartDate, 'day'),
       x: [szStartDate.format('YYYY-MM-DD'), szEndDate.format('YYYY-MM-DD')],
       y: [szStartDate.format('YYYY-MM-DD'), szEndDate.format('YYYY-MM-DD')],
-      id: sz.title,
+      id: getStationPairName(sz.from, sz.to, isMobile),
       delay: sz.delay,
     };
   });
@@ -151,7 +151,11 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
           tooltip: {
             callbacks: {
               title: (context) => {
-                return context[0].label;
+                return getStationPairName(
+                  data[context.dataIndex].from,
+                  data[context.dataIndex].to,
+                  isMobile
+                );
               },
               label: (context) => {
                 return 'Delay: ' + data[context.dataIndex].delay.toFixed(0) + ' sec';
