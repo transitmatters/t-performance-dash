@@ -82,8 +82,8 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
     beginAtZero: true,
     ticks: {
       autoSkip: false,
-      maxRotation: isMobile ? 30 : 0,
-      minRotation: isMobile ? 30 : 0,
+      maxRotation: isMobile ? 20 : 0,
+      minRotation: isMobile ? 20 : 0,
     },
   };
 
@@ -150,15 +150,14 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
           },
           tooltip: {
             callbacks: {
-              title: (context) => {
-                return getStationPairName(
-                  data[context.dataIndex].from,
-                  data[context.dataIndex].to,
-                  isMobile
-                );
-              },
               label: (context) => {
                 return 'Delay: ' + data[context.dataIndex].delay.toFixed(0) + ' sec';
+              },
+              title: (context) => {
+                return getStationPairName(
+                  data[context[0].dataIndex].from,
+                  data[context[0].dataIndex].to
+                );
               },
               beforeBody: (context) => {
                 const start = context[0].parsed._custom?.barStart;
