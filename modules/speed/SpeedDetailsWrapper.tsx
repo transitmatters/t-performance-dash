@@ -4,6 +4,7 @@ import type { SpeedDataPoint } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { MPHWidgetValue } from '../../common/types/basicWidgets';
 import { getDetailsSpeedWidgetValues } from './utils/utils';
 import { SpeedGraph } from './SpeedGraph';
@@ -29,6 +30,7 @@ export const SpeedDetailsWrapper: React.FC<SpeedDetailsWrapperProps> = ({
   return (
     <>
       <WidgetDiv>
+        <WidgetTitle title="Median Speed" />
         <div className={classNames('flex h-60 flex-row items-center pr-4')}>
           <SpeedGraph config={config} data={data} startDate={startDate} endDate={endDate} />
         </div>
