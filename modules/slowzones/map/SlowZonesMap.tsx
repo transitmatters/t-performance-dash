@@ -7,6 +7,7 @@ import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 import type { SlowZonesLineName } from '../types';
 
 import type { SegmentLabel } from '../../../common/components/maps/LineMap';
+import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
 import { segmentSlowZones } from './segment';
 import { SlowSegmentLabel } from './SlowSegmentLabel';
 import { SlowZonesTooltip } from './SlowZonesTooltip';
@@ -50,11 +51,6 @@ const getSegmentLabelOverrides = (
     };
   }
   return null;
-};
-
-// TODO: move to Utils.
-export const getSlowZoneOpacity = (delay: number) => {
-  return Math.min(Math.sqrt(delay / 240), 0.9);
 };
 
 export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({ lineName, slowZones, direction }) => {

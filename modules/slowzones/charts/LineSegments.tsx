@@ -22,8 +22,12 @@ import { YESTERDAY_MIDNIGHT } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
 import type { Direction, LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
-import { getRoutes, getStationPairName } from '../../../common/utils/slowZoneUtils';
-import { getSlowZoneOpacity } from '../map/SlowZonesMap';
+import {
+  getRoutes,
+  getSlowZoneOpacity,
+  getStationPairName,
+  getTimeUnitSlowzones,
+} from '../../../common/utils/slowZoneUtils';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 
@@ -66,13 +70,11 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
     [data, direction, shortNames]
   );
 
-  const dateAxisConfig: ScaleOptionsByType<keyof CartesianScaleTypeRegistry> = {
+  const dateAxisConfig: Partial<ScaleOptionsByType<keyof CartesianScaleTypeRegistry>> = {
     min: startDateUTC.toISOString(),
     max: endDateUTC.toISOString(),
     type: 'time',
-    time: {
-      unit: 'day',
-    },
+
     adapters: {
       date: {
         locale: enUS,
@@ -80,15 +82,12 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
     },
     display: true,
   };
-  const stationAxisConfig: ScaleOptionsByType<keyof CartesianScaleTypeRegistry> = {
+  if (dateAxisConfig.time)
+    dateAxisConfig.time.unit = getTimeUnitSlowzones(startDateUTC, endDateUTC);
+
+  const stationAxisConfig: Partial<ScaleOptionsByType<keyof CartesianScaleTypeRegistry>> = {
     position: 'top',
-    stacked: true,
     beginAtZero: true,
-    ticks: {
-      autoSkip: false,
-      maxRotation: isMobile ? 20 : 0,
-      minRotation: isMobile ? 20 : 0,
-    },
   };
 
   const lineSegmentData: LineSegmentData[] = data.map((sz) => {

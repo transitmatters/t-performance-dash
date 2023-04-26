@@ -1,5 +1,6 @@
 import timezone from 'dayjs/plugin/timezone';
 import dayjs from 'dayjs';
+import type { TimeUnit } from 'chart.js';
 import utc from 'dayjs/plugin/utc';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
@@ -156,4 +157,14 @@ export const useSlowZoneQuantityDelta = (
 
     return { endValue: end, zonesDelta: end - start };
   }, [allSlow, startDateUTC, endDateUTC]);
+};
+
+export const getTimeUnitSlowzones = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs): TimeUnit => {
+  if (endDate.diff(startDate, 'day') < 60) return 'day';
+  if (endDate.diff(startDate, 'year') < 3) return 'month';
+  return 'year';
+};
+
+export const getSlowZoneOpacity = (delay: number) => {
+  return Math.min(Math.sqrt(delay / 240), 0.9);
 };
