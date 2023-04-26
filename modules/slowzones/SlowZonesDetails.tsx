@@ -78,14 +78,14 @@ export default function SlowZonesDetails() {
           )}
         </div>
       </WidgetDiv>
-      <WidgetDiv>
-        <div className="flex flex-col md:flex-row">
+      <div className="h-full rounded-lg bg-white p-0 shadow-dataBox sm:p-2">
+        <div className="flex flex-col p-2 sm:p-0 md:flex-row">
           <WidgetTitle title={`${DirectionObject[direction]} Segments`} />
           <div className="pr-2 pt-2">
             <ButtonGroup pressFunction={setDirection} options={Object.entries(DirectionObject)} />
           </div>
         </div>
-        <div className="relative flex flex-col">
+        <div className="relative flex flex-col py-2 sm:py-0">
           {segmentsReady ? (
             <SlowZonesSegmentsWrapper
               data={allSlow.data}
@@ -98,7 +98,7 @@ export default function SlowZonesDetails() {
             <ChartPlaceHolder query={allSlow} />
           )}
         </div>
-      </WidgetDiv>
+      </div>
     </div>
   );
 }

@@ -37,7 +37,6 @@ export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
     startDateUTC
   );
   const stationPairs = new Set(allSlowGraphData.map((dataPoint) => dataPoint.id));
-  console.log(stationPairs.size);
   return (
     <>
       <BasicWidgetDataLayout
@@ -45,9 +44,9 @@ export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
         title={todayOrDate(endDateUTC)}
         analysis={'over period'}
       />
-      <div style={{ width: '100%', overflowX: 'scroll', overflowY: 'hidden' }}>
+      <div className="w-full overflow-x-auto overflow-y-hidden">
         <div
-          className="relative"
+          className="relative ml-2 sm:ml-0"
           style={
             isMobile
               ? { width: stationPairs.size * 64, height: 480 }
