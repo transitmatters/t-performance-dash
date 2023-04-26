@@ -52,6 +52,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
     { active: useBreakpoint('md'), value: chartRange / 12 },
     { active: useBreakpoint('sm'), value: chartRange / 12 },
   ];
+  const shortNames = !breakpoint[1].active;
   const getDisplayCutoff = () => {
     for (const bp of breakpoint) {
       if (bp.active) return bp.value;
@@ -60,14 +61,17 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
   };
 
   const isMobile = !breakpoint[3].active;
-  const routes = useMemo(() => getRoutes(direction, data, isMobile), [data, direction, isMobile]);
+  const routes = useMemo(
+    () => getRoutes(direction, data, shortNames),
+    [data, direction, shortNames]
+  );
 
   const dateAxisConfig: ScaleOptionsByType<keyof CartesianScaleTypeRegistry> = {
     min: startDateUTC.toISOString(),
     max: endDateUTC.toISOString(),
     type: 'time',
     time: {
-      unit: 'month',
+      unit: 'day',
     },
     adapters: {
       date: {
@@ -94,7 +98,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
       duration: szEndDate.diff(szStartDate, 'day'),
       x: [szStartDate.format('YYYY-MM-DD'), szEndDate.format('YYYY-MM-DD')],
       y: [szStartDate.format('YYYY-MM-DD'), szEndDate.format('YYYY-MM-DD')],
-      id: getStationPairName(sz.from, sz.to, isMobile),
+      id: getStationPairName(sz.from, sz.to, shortNames),
       delay: sz.delay,
     };
   });
@@ -115,7 +119,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
               const index = context.dataIndex;
               return hexWithAlpha(
                 line && COLORS.mbta[line.toLowerCase()],
-                getSlowZoneOpacity(lineSegmentData[index].delay)
+                getSlowZoneOpacity(lineSegmentData[index]?.delay)
               );
             },
             label: line,
