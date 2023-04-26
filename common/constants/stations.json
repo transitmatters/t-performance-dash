@@ -105,7 +105,7 @@
       },
       {
         "stop_name": "Downtown Crossing",
-        "short": "Dwntn Xing",
+        "short": "DTX",
         "branches": ["A", "B"],
         "station": "place-dwnxg",
         "order": 9,
@@ -174,6 +174,7 @@
       },
       {
         "stop_name": "Fields Corner",
+        "short": "Fields Cor.",
         "branches": ["A"],
         "station": "place-fldcr",
         "order": 103,
@@ -310,6 +311,7 @@
       },
       {
         "stop_name": "Malden Center",
+        "short": "Malden Ctr.",
         "branches": null,
         "station": "place-mlmnl",
         "order": 2,
@@ -359,7 +361,7 @@
       },
       {
         "stop_name": "Community College",
-        "short": "Comm. College",
+        "short": "Comm. Coll.",
         "branches": null,
         "station": "place-ccmnl",
         "order": 6,
@@ -406,8 +408,7 @@
       },
       {
         "stop_name": "Downtown Crossing",
-        "short": "Dwntn Xing",
-
+        "short": "DTX",
         "branches": null,
         "station": "place-dwnxg",
         "order": 10,
@@ -515,6 +516,7 @@
       },
       {
         "stop_name": "Green Street",
+        "short": "Green St.",
         "branches": null,
         "station": "place-grnst",
         "order": 19,
@@ -564,6 +566,7 @@
       },
       {
         "stop_name": "Revere Beach",
+        "short": "Revere Bch.",
         "branches": null,
         "station": "place-rbmnl",
         "order": 2,
@@ -586,6 +589,7 @@
       },
       {
         "stop_name": "Suffolk Downs",
+        "short": "Suff. Downs",
         "branches": null,
         "station": "place-sdmnl",
         "order": 4,
@@ -597,6 +601,7 @@
       },
       {
         "stop_name": "Orient Heights",
+        "short": "Orient Hts.",
         "branches": null,
         "station": "place-orhte",
         "order": 5,
