@@ -27,7 +27,7 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
       <SingleDayLineChart
         chartId={`headways-chart-${linePath}`}
         title={`Time between ${lineShort !== 'Bus' ? 'trains' : 'bus'} (headways)`}
-        data={headways}
+        data={headways ?? []}
         date={startDate}
         metricField={MetricFieldKeys.headwayTimeSec}
         pointField={PointFieldKeys.currentDepDt}
