@@ -15,10 +15,10 @@ interface DatePickerProps {
   range: boolean;
   setRange: React.Dispatch<SetStateAction<boolean>>;
   type: 'combo' | 'range' | 'single';
-  setSelection: React.Dispatch<SetStateAction<number | undefined>>;
+  clearPreset: () => void;
 }
 
-export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, setSelection }) => {
+export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, clearPreset }) => {
   const updateQueryParams = useUpdateQuery();
   const { query, line, tab } = useDelimitatedRoute();
   const { startDate, endDate } = query;
@@ -35,7 +35,6 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
       updateQueryParams({ startDate: startDate }, !range);
     }
     setRange(!range);
-    setSelection(undefined);
   };
 
   const handleEndDateChange = (date: string) => {
@@ -50,7 +49,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
     } else {
       updateQueryParams({ startDate: startDate, endDate: date }, range);
     }
-    setSelection(undefined);
+    clearPreset();
   };
 
   const handleStartDateChange = (date: string) => {
@@ -65,16 +64,16 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
     } else {
       updateQueryParams({ startDate: date, endDate: endDate }, range);
     }
-    setSelection(undefined);
+    clearPreset();
   };
 
   return (
-    <div className={'-ml-[1px] flex flex-row self-stretch '}>
+    <div className={'-ml-[1px] flex h-8 flex-row justify-center self-stretch bg-white'}>
       <div className={classNames('flex h-full flex-row self-stretch bg-opacity-80')}>
         <Flatpickr
           //TODO: Change calendar to line color
           className={classNames(
-            'w-28 cursor-pointer border-none py-0 text-sm focus:ring-opacity-0',
+            'flex w-[6.75rem] cursor-pointer border-none px-2 py-0 text-center text-sm focus:ring-opacity-0',
             line && buttonHighlightFocus[line]
           )}
           value={startDate}
@@ -96,7 +95,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
             <Flatpickr
               //TODO: Change calendar to line color
               className={classNames(
-                'w-28 cursor-pointer border-none py-0 text-sm focus:ring-opacity-0',
+                'flex w-[6.75rem] cursor-pointer border-none px-2 py-0 text-center text-sm focus:ring-opacity-0',
                 line && buttonHighlightFocus[line]
               )}
               value={endDate}

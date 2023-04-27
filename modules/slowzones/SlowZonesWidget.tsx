@@ -7,14 +7,16 @@ import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useSlowzoneDelayTotalData } from '../../common/api/hooks/slowzones';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import { OVERVIEW_OPTIONS } from '../../common/constants/dates';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 dayjs.extend(utc);
 
 export default function SlowZonesWidget() {
-  const { line, linePath, lineShort } = useDelimitatedRoute();
+  const { line, query, lineShort } = useDelimitatedRoute();
   const delayTotals = useSlowzoneDelayTotalData();
+  const { startDate } = OVERVIEW_OPTIONS[query.view ?? 'year'];
 
-  const startDateUTC = dayjs.utc('2022-01-01').startOf('day');
+  const startDateUTC = dayjs.utc(startDate).startOf('day');
   const endDateUTC = dayjs.utc().startOf('day');
   const totalSlowTimeReady =
     !delayTotals.isError && delayTotals.data && startDateUTC && endDateUTC && lineShort && line;
