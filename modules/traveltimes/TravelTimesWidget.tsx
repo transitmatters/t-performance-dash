@@ -14,7 +14,6 @@ import { SingleChartWrapper } from '../../common/components/charts/SingleChartWr
 
 export const TravelTimesWidget: React.FC = () => {
   const {
-    linePath,
     lineShort,
     query: { startDate, busRoute },
   } = useDelimitatedRoute();

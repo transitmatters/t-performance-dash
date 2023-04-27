@@ -15,7 +15,6 @@ import { SingleChartWrapper } from '../../common/components/charts/SingleChartWr
 export const DwellsWidget: React.FC = () => {
   const {
     line,
-    linePath,
     lineShort,
     query: { startDate },
   } = useDelimitatedRoute();
