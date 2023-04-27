@@ -1,4 +1,3 @@
-import type { CartesianScaleTypeRegistry, ScaleOptionsByType } from 'chart.js';
 import {
   BarElement,
   CategoryScale,
@@ -11,13 +10,11 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { enUS } from 'date-fns/locale';
+import { Bar } from 'react-chartjs-2';
+import React, { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc);
 
-import React, { useMemo, useRef } from 'react';
-import { Bar } from 'react-chartjs-2';
 import { YESTERDAY_MIDNIGHT } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
 import type { Direction, LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
@@ -26,10 +23,12 @@ import {
   getRoutes,
   getSlowZoneOpacity,
   getStationPairName,
-  getTimeUnitSlowzones,
 } from '../../../common/utils/slowZoneUtils';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
+import { stationAxisConfig, getDateAxisConfig } from '../constants/chartConfig';
+
+dayjs.extend(utc);
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, TimeScale);
 
@@ -56,7 +55,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
     { active: useBreakpoint('md'), value: chartRange / 12 },
     { active: useBreakpoint('sm'), value: chartRange / 12 },
   ];
-  const shortNames = !breakpoint[1].active;
+  const useShortStationNames = !breakpoint[1].active;
   const getDisplayCutoff = () => {
     for (const bp of breakpoint) {
       if (bp.active) return bp.value;
@@ -66,38 +65,19 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
 
   const isMobile = !breakpoint[3].active;
   const routes = useMemo(
-    () => getRoutes(direction, data, shortNames),
-    [data, direction, shortNames]
+    () => getRoutes(direction, data, useShortStationNames),
+    [data, direction, useShortStationNames]
   );
-
-  const dateAxisConfig: Partial<ScaleOptionsByType<keyof CartesianScaleTypeRegistry>> = {
-    min: startDateUTC.toISOString(),
-    max: endDateUTC.toISOString(),
-    type: 'time',
-
-    adapters: {
-      date: {
-        locale: enUS,
-      },
-    },
-    display: true,
-  };
-  if (dateAxisConfig.time)
-    dateAxisConfig.time.unit = getTimeUnitSlowzones(startDateUTC, endDateUTC);
-
-  const stationAxisConfig: Partial<ScaleOptionsByType<keyof CartesianScaleTypeRegistry>> = {
-    position: 'top',
-    beginAtZero: true,
-  };
 
   const lineSegmentData: LineSegmentData[] = data.map((sz) => {
     const szStartDate = dayjs.utc(sz.start);
     const szEndDate = dayjs.utc(sz.end);
+    const szTimePeriod = [szStartDate.format('YYYY-MM-DD'), szEndDate.format('YYYY-MM-DD')];
     return {
       duration: szEndDate.diff(szStartDate, 'day'),
-      x: [szStartDate.format('YYYY-MM-DD'), szEndDate.format('YYYY-MM-DD')],
-      y: [szStartDate.format('YYYY-MM-DD'), szEndDate.format('YYYY-MM-DD')],
-      id: getStationPairName(sz.from, sz.to, shortNames),
+      x: szTimePeriod,
+      y: szTimePeriod,
+      id: getStationPairName(sz.from, sz.to, useShortStationNames),
       delay: sz.delay,
     };
   });
@@ -112,13 +92,11 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
           {
             borderWidth: 2,
             borderRadius: 4,
-
             borderColor: line && COLORS.mbta[line.toLowerCase()],
             backgroundColor: (context) => {
-              const index = context.dataIndex;
               return hexWithAlpha(
                 line && COLORS.mbta[line.toLowerCase()],
-                getSlowZoneOpacity(lineSegmentData[index]?.delay)
+                getSlowZoneOpacity(lineSegmentData[context.dataIndex]?.delay)
               );
             },
             label: line,
@@ -143,8 +121,12 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
             },
         indexAxis: isMobile ? 'x' : 'y',
         scales: {
-          y: isMobile ? dateAxisConfig : stationAxisConfig,
-          x: isMobile ? stationAxisConfig : dateAxisConfig,
+          x: isMobile
+            ? stationAxisConfig
+            : { ...getDateAxisConfig(startDateUTC, endDateUTC), type: 'time' },
+          y: isMobile
+            ? { ...getDateAxisConfig(startDateUTC, endDateUTC), type: 'time' }
+            : stationAxisConfig,
         },
 
         plugins: {
@@ -180,11 +162,11 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
             anchor: 'center',
             clamp: true,
             clip: false,
+            padding: 2,
             formatter: (context) => {
               return context.delay.toFixed(0) + ' s';
             },
             display: (context) => lineSegmentData[context.dataIndex].duration > getDisplayCutoff(),
-
             labels: {
               value: {
                 backgroundColor: hexWithAlpha(line && COLORS.mbta[line.toLowerCase()], 0.8),

@@ -78,6 +78,7 @@ export default function SlowZonesDetails() {
           )}
         </div>
       </WidgetDiv>
+      {/* Not Using WidgetDiv here - removed the padding so the chart goes to the edge of the widget on mobile. */}
       <div className="h-full rounded-lg bg-white p-0 shadow-dataBox sm:p-2">
         <div className="flex flex-col p-2 sm:p-0 md:flex-row">
           <WidgetTitle title={`${DirectionObject[direction]} Segments`} />
