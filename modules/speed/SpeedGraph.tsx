@@ -115,6 +115,9 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, config }) => {
             time: {
               unit: unit,
               tooltipFormat: tooltipFormat,
+              displayFormats: {
+                month: 'MMM',
+              },
             },
             ticks: {
               color: COLORS.design.subtitleGrey,
