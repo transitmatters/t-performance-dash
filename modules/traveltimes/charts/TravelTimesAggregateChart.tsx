@@ -39,7 +39,6 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
         endDate={endDate}
         fillColor={CHART_COLORS.FILL}
         location={locationDetails(fromStation, toStation, lineShort)}
-        isLoading={false}
         bothStops={true}
         fname="traveltimes"
       />

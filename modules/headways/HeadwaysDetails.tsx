@@ -18,7 +18,7 @@ import {
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
-import { HeadwaysHistogram } from './charts/HeadwaysHistogram';
+import { HeadwaysHistogramWrapper } from './charts/HeadwaysHistogramWrapper';
 
 export default function HeadwaysDetails() {
   const {
@@ -89,7 +89,7 @@ export default function HeadwaysDetails() {
           </div>
 
           <WidgetDiv>
-            <HeadwaysHistogram
+            <HeadwaysHistogramWrapper
               headways={headways}
               fromStation={fromStation}
               toStation={toStation}

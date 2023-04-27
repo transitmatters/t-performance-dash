@@ -10,10 +10,7 @@ import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { useHeadwaysSingleDayData } from '../../common/api/hooks/headways';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import {
-  SingleChartWrapper,
-  SingleChartWrapper,
-} from '../../common/components/charts/SingleChartWrapper';
+import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
 
 export const HeadwaysWidget: React.FC = () => {
   const {

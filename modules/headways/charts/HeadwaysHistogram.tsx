@@ -31,7 +31,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
   // All keys are increased by 0.5. This is a workaround to get chartjs to display the tick labels in between the bars.
   const dataObject: Record<string, number> = useMemo(() => {
     const values =
-      headways.data?.map(
+      headways.map(
         (datapoint: HeadwayPoint) =>
           Math.floor(datapoint[MetricFieldKeys.headwayTimeSec] / 60) + 0.5
       ) || [];
@@ -44,12 +44,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
       headwayBuckets[datapoint] += 1;
     });
     return headwayBuckets;
-  }, [headways.data]);
-
-  const isLoading = useMemo(
-    () => headways.isLoading || toStation === undefined || fromStation === undefined,
-    [headways.isLoading, fromStation, toStation]
-  );
+  }, [headways]);
 
   const histogram = useMemo(() => {
     return (
@@ -162,6 +157,6 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
         ]}
       />
     );
-  }, [dataObject, fromStation, isLoading, line, linePath, lineShort, startDate, toStation]);
+  }, [dataObject, fromStation, line, linePath, lineShort, startDate, toStation]);
   return histogram;
 };
