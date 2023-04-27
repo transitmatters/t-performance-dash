@@ -22,7 +22,7 @@ export const AggregateChartWrapper: React.FC<AggregateChartWrapperProps> = ({
   type,
   showLegend,
 }) => {
-  const dataReady = query.data && toStation && fromStation;
+  const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
 
   switch (type) {
