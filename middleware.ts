@@ -16,26 +16,29 @@ const configToQueryParams = (search: string) => {
       const busRoute = BUS_ROUTES.includes(configArr[0].toString())
         ? (configArr[0] as BusRoute)
         : undefined;
+      const query = {
+        from: configArr[1] || undefined,
+        to: configArr[2] || undefined,
+        startDate: configArr[3] || undefined,
+        endDate: configArr[4] || undefined,
+      };
+
       if (line) {
-        const queryArr = Object.entries({
-          from: configArr[1] || undefined,
-          to: configArr[2] || undefined,
-          startDate: configArr[3] || undefined,
-          endDate: configArr[4] || undefined,
-        }).filter((pair) => pair[1] !== undefined) as [string, string][];
+        const queryArr = Object.entries(query).filter((pair) => pair[1] !== undefined) as [
+          string,
+          string
+        ][];
         const queryParams = new URLSearchParams(queryArr);
         return {
           line: line,
           queryParams: queryParams,
         };
       } else if (busRoute) {
-        const queryArr = Object.entries({
-          from: configArr[1] || undefined,
-          to: configArr[2] || undefined,
-          startDate: configArr[3] || undefined,
-          endDate: configArr[4] || undefined,
-          busRoute: busRoute,
-        }).filter((pair) => pair[1] !== undefined) as [string, string][];
+        const busQuery = { ...query, busRoute };
+        const queryArr = Object.entries(busQuery).filter((pair) => pair[1] !== undefined) as [
+          string,
+          string
+        ][];
         const queryParams = new URLSearchParams(queryArr);
         return {
           line: 'bus',
@@ -46,7 +49,6 @@ const configToQueryParams = (search: string) => {
   }
 };
 
-// This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
   const { search } = request.nextUrl;
   const resultParams = configToQueryParams(search);
@@ -64,7 +66,6 @@ export function middleware(request: NextRequest) {
   }
 }
 
-// See "Matching Paths" below to learn more
 export const config = {
   matcher: ['/rapidtransit/:path*', '/bus'],
 };
