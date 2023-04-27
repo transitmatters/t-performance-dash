@@ -1,4 +1,3 @@
-import type { UseQueryResult } from '@tanstack/react-query';
 import React, { useMemo } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
@@ -9,9 +8,9 @@ import { useDelimitatedRoute } from '../../../common/utils/router';
 import { locationDetails } from '../../../common/utils/stations';
 
 interface DwellsAggregateChartProps {
-  dwells: UseQueryResult<AggregateDataResponse>;
-  toStation: Station | undefined;
-  fromStation: Station | undefined;
+  dwells: AggregateDataResponse;
+  toStation: Station;
+  fromStation: Station;
   showLegend?: boolean;
 }
 
@@ -40,12 +39,11 @@ export const DwellsAggregateChart: React.FC<DwellsAggregateChartProps> = ({
         endDate={endDate}
         fillColor={CHART_COLORS.FILL}
         location={locationDetails(fromStation, toStation, lineShort)}
-        isLoading={false}
         bothStops={false}
         fname="dwells"
       />
     );
-  }, [dwells?.data?.by_date, startDate, endDate, fromStation, toStation, lineShort]);
+  }, [dwells.by_date, startDate, endDate, fromStation, toStation, lineShort]);
 
   return chart;
 };

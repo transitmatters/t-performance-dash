@@ -8,10 +8,12 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
-import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useHeadwaysSingleDayData } from '../../common/api/hooks/headways';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
+import {
+  SingleChartWrapper,
+  SingleChartWrapper,
+} from '../../common/components/charts/SingleChartWrapper';
 
 export const HeadwaysWidget: React.FC = () => {
   const {
@@ -27,41 +29,34 @@ export const HeadwaysWidget: React.FC = () => {
   const { fromStopIds } = stopIdsForStations(fromStation, toStation);
   const headways = useHeadwaysSingleDayData({ stop: fromStopIds, date: startDate });
 
-  const headwaysReady = !headways.isError && headways.data && lineShort && linePath;
-
   return (
     <>
       <WidgetDiv>
         <HomescreenWidgetTitle title="Headways" tab="tripHeadways" />
-        {headwaysReady ? (
-          <>
-            <div className={classNames('flex w-full flex-row')}>
-              <BasicWidgetDataLayout
-                title="Average Headway"
-                widgetValue={
-                  new TimeWidgetValue(headways.data ? averageHeadway(headways.data) : undefined, 1)
-                }
-                analysis={`from last ${dayjs().format('ddd')}.`}
-              />
-              <BasicWidgetDataLayout
-                title="Longest Headway"
-                widgetValue={
-                  new TimeWidgetValue(headways.data ? longestHeadway(headways.data) : undefined, 1)
-                }
-                analysis={`from last ${dayjs().format('ddd')}.`}
-              />
-            </div>
-            <HeadwaysSingleChart
-              headways={headways}
-              fromStation={toStation}
-              toStation={fromStation}
-              showLegend={false}
-              isHomescreen={true}
-            />
-          </>
-        ) : (
-          <ChartPlaceHolder query={headways} />
-        )}
+        <div className={classNames('flex w-full flex-row')}>
+          <BasicWidgetDataLayout
+            title="Average Headway"
+            widgetValue={
+              new TimeWidgetValue(headways.data ? averageHeadway(headways.data) : undefined, 1)
+            }
+            analysis={`from last ${dayjs().format('ddd')}.`}
+          />
+          <BasicWidgetDataLayout
+            title="Longest Headway"
+            widgetValue={
+              new TimeWidgetValue(headways.data ? longestHeadway(headways.data) : undefined, 1)
+            }
+            analysis={`from last ${dayjs().format('ddd')}.`}
+          />
+        </div>
+        <SingleChartWrapper
+          query={headways}
+          type={'headways'}
+          fromStation={fromStation}
+          toStation={toStation}
+          showLegend={false}
+          isHomescreen={true}
+        />
       </WidgetDiv>
     </>
   );

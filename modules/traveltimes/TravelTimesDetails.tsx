@@ -8,7 +8,6 @@ import { getParentStationForStopId, stopIdsForStations } from '../../common/util
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
-import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
@@ -17,8 +16,8 @@ import {
   useTravelTimesSingleDayData,
 } from '../../common/api/hooks/traveltimes';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
-import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
+import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
+import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 
 export default function TravelTimesDetails() {
   const {
@@ -46,17 +45,12 @@ export default function TravelTimesDetails() {
         [SingleDayAPIParams.date]: startDate,
       };
 
-  const travelTimesSingle = useTravelTimesSingleDayData(parameters, !aggregate && enabled);
+  const travelTimes = useTravelTimesSingleDayData(parameters, !aggregate && enabled);
   const travelTimesAggregate = useTravelTimesAggregateData(parameters, aggregate && enabled);
 
-  const traveltimes = aggregate ? travelTimesAggregate : travelTimesSingle;
   const travelTimeValues = aggregate
     ? travelTimesAggregate?.data?.by_date?.map((tt) => tt.mean)
-    : travelTimesSingle?.data?.map((tt) => tt.travel_time_sec);
-
-  if (traveltimes.isError || !linePath) {
-    return <ErrorNotice />;
-  }
+    : travelTimes?.data?.map((tt) => tt.travel_time_sec);
 
   return (
     <>
@@ -74,16 +68,18 @@ export default function TravelTimesDetails() {
       </BasicDataWidgetPair>
       <WidgetDiv>
         {aggregate ? (
-          <TravelTimesAggregateChart
-            traveltimes={travelTimesAggregate}
-            fromStation={fromStation}
+          <AggregateChartWrapper
+            query={travelTimesAggregate}
             toStation={toStation}
+            fromStation={fromStation}
+            type={'traveltimes'}
           />
         ) : (
-          <TravelTimesSingleChart
-            traveltimes={travelTimesSingle}
-            fromStation={fromStation}
+          <SingleChartWrapper
+            query={travelTimes}
             toStation={toStation}
+            fromStation={fromStation}
+            type={'traveltimes'}
           />
         )}
       </WidgetDiv>

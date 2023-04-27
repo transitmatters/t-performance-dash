@@ -79,8 +79,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   metricField,
   pointField,
   benchmarkField,
-  // TODO: loading animation?
-  isLoading,
   fname,
   bothStops = false,
   location,
@@ -222,7 +220,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
             {
               id: 'customTitle',
               afterDraw: (chart) => {
-                if ((date === undefined || date.length === 0) && !isLoading) {
+                if (date === undefined || date.length === 0) {
                   // No data is present
                   const { ctx } = chart;
                   const { width } = chart;
