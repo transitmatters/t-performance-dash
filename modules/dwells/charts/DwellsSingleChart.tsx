@@ -30,7 +30,7 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
       <SingleDayLineChart
         chartId={`dwells-chart-${linePath}`}
         title={'Time spent at station (dwells)'}
-        data={dwells ?? []}
+        data={dwells}
         date={startDate}
         metricField={MetricFieldKeys.dwellTimeSec}
         pointField={PointFieldKeys.arrDt}

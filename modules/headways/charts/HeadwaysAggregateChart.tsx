@@ -29,7 +29,7 @@ export const HeadwaysAggregateChart: React.FC<HeadwaysAggregateChartProps> = ({
       <AggregateLineChart
         chartId={'headways_agg'}
         title={`Time between ${lineShort !== 'Bus' ? 'trains' : 'bus'} (headways)`}
-        data={headways.by_date.filter((datapoint) => datapoint.peak === 'all') || []}
+        data={headways.by_date.filter((datapoint) => datapoint.peak === 'all')}
         // This is service date when agg by date. dep_time_from_epoch when agg by hour. Can probably remove this prop.
         pointField={PointFieldKeys.serviceDate}
         timeUnit={'day'}
