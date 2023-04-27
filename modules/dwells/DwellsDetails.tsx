@@ -14,6 +14,7 @@ import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { useDwellsAggregateData, useDwellsSingleDayData } from '../../common/api/hooks/dwells';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
+import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 
 export default function DwellsDetails() {
   const {
@@ -62,7 +63,7 @@ export default function DwellsDetails() {
       </BasicDataWidgetPair>
       <WidgetDiv>
         {aggregate ? (
-          <SingleChartWrapper
+          <AggregateChartWrapper
             query={dwellsAggregate}
             toStation={toStation}
             fromStation={fromStation}

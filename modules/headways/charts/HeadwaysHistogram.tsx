@@ -132,7 +132,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
           {
             id: 'customTitle',
             afterDraw: (chart) => {
-              if ((startDate === undefined || startDate.length === 0) && !isLoading) {
+              if (startDate === undefined || startDate.length === 0) {
                 // No data is present
                 const { ctx } = chart;
                 const { width } = chart;

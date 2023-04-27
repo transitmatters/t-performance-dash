@@ -14,7 +14,6 @@ import { SingleChartWrapper } from '../../common/components/charts/SingleChartWr
 
 export const HeadwaysWidget: React.FC = () => {
   const {
-    linePath,
     lineShort,
     query: { startDate, busRoute },
   } = useDelimitatedRoute();

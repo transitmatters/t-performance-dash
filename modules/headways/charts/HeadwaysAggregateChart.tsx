@@ -39,7 +39,6 @@ export const HeadwaysAggregateChart: React.FC<HeadwaysAggregateChartProps> = ({
         endDate={endDate}
         fillColor={CHART_COLORS.FILL}
         location={locationDetails(fromStation, toStation, lineShort)}
-        isLoading={false}
         bothStops={false}
         fname="headways"
       />

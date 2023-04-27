@@ -29,7 +29,7 @@ export const DwellsAggregateChart: React.FC<DwellsAggregateChartProps> = ({
       <AggregateLineChart
         chartId={'dwells_agg'}
         title={'Time spent at station (dwells)'}
-        data={dwells?.data?.by_date?.filter((datapoint) => datapoint.peak === 'all') || []}
+        data={dwells.by_date?.filter((datapoint) => datapoint.peak === 'all') || []}
         // This is service date when agg by date. dep_time_from_epoch when agg by hour. Can probably remove this prop.
         pointField={PointFieldKeys.serviceDate}
         timeUnit={'day'}

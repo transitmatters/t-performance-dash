@@ -30,7 +30,6 @@ export const TravelTimesWidget: React.FC = () => {
     to_stop: toStopIds,
   });
   const travelTimeValues = traveltimes?.data?.map((tt) => tt.travel_time_sec);
-  const traveltimesReady = !traveltimes.isError && traveltimes.data && lineShort && linePath;
 
   return (
     <WidgetDiv>

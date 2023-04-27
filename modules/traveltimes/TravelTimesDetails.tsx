@@ -21,7 +21,6 @@ import { AggregateChartWrapper } from '../../common/components/charts/AggregateC
 
 export default function TravelTimesDetails() {
   const {
-    linePath,
     query: { startDate, endDate, to, from },
   } = useDelimitatedRoute();
 
