@@ -9,7 +9,10 @@ import {
   lineColorDarkBorder,
 } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
+import type { DatePresetKey } from '../../../constants/dates';
 import { RANGE_PRESETS, SINGLE_PRESETS } from '../../../constants/dates';
+import { useDatePresetConfig } from '../../../state/datePresetConfig';
+import { useSelectedPreset } from '../../../state/utils/datePresetUtils';
 import { ALL_PAGES } from '../../../constants/pages';
 import { DatePickers } from './DatePickers';
 import { DatePickerPresets } from './DatePickerPresets';
@@ -20,47 +23,42 @@ interface DateSelectionProps {
 }
 
 export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) => {
-  const { line, query, page } = useDelimitatedRoute();
+  const { line, page } = useDelimitatedRoute();
   const [range, setRange] = useState<boolean>(false);
-  const [selection, setSelection] = useState<number | undefined>(undefined);
-  const updateQueryParams = useUpdateQuery();
-  const selectedOptions = range ? RANGE_PRESETS : SINGLE_PRESETS;
-  const selectedOptionsArray = Object.values(selectedOptions);
   const { section } = ALL_PAGES[page];
-  const handleSelection = (selection: number, range: boolean) => {
-    const newOptions = range ? Object.values(RANGE_PRESETS) : Object.values(SINGLE_PRESETS);
-    updateQueryParams(newOptions[selection].input ?? null, range);
-    setRange(range);
-    setSelection(selection);
+  const setDatePreset = useDatePresetConfig((state) => state.setDatePreset);
+  const datePreset = useSelectedPreset(range);
+  const updateQueryParams = useUpdateQuery();
+  const presets = range ? RANGE_PRESETS : SINGLE_PRESETS;
+  const presetDateArray = Object.values(presets);
+
+  const handleSelection = (datePresetKey: DatePresetKey) => {
+    const selectedPreset = presets[datePresetKey];
+    if (selectedPreset?.input) updateQueryParams(selectedPreset.input, range);
+    setDatePreset(datePresetKey, section, range);
   };
 
   useEffect(() => {
     setRange(type !== 'single');
   }, [type]);
 
-  // Temporary solution to prevent presets carrying over across selection.
-  // TODO: remove once presetContext is done.
-  useEffect(() => {
-    setSelection(undefined);
-  }, [section, query.queryType]);
+  const clearPreset = () => {
+    setDatePreset('custom', section, range);
+  };
 
   return (
     <div
       className={classNames(
-        'flex h-full max-w-full flex-row items-baseline overflow-hidden rounded-t-md border md:max-w-sm md:rounded-md',
+        'flex h-full w-full flex-row items-baseline overflow-hidden  rounded-t-md border md:flex-col md:rounded-md lg:flex-row',
         lineColorDarkBorder[line ?? 'DEFAULT']
       )}
     >
-      <Popover
-        className={classNames(
-          'flex h-full w-full self-stretch overflow-hidden text-left',
-          lineColorBackground[line ?? 'DEFAULT']
-        )}
-      >
+      <Popover className={classNames('flex h-full w-full self-stretch overflow-hidden text-left')}>
         <Popover.Button
           className={classNames(
-            'flex h-full w-full items-center justify-center self-stretch bg-black bg-opacity-10 px-3 py-1 text-white text-opacity-95 shadow-sm hover:bg-opacity-0 focus:bg-opacity-0 focus:outline-none',
-            line && buttonHighlightFocus[line]
+            'flex h-full w-full items-center justify-center self-stretch px-3 py-1 text-white text-opacity-95 hover:bg-opacity-70 focus:bg-opacity-70 focus:outline-none',
+            line && buttonHighlightFocus[line],
+            line && lineColorBackground[line]
           )}
         >
           <FontAwesomeIcon
@@ -68,7 +66,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
             className="pr-1 text-white"
           />
           <p className="truncate">
-            {selection != undefined ? selectedOptionsArray[selection].name : 'Custom'}
+            {datePreset && presets[datePreset] ? presets[datePreset].name : 'Custom'}
           </p>
         </Popover.Button>
 
@@ -86,9 +84,8 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
               <div className="flex w-screen max-w-[240px] flex-col overflow-hidden rounded-md bg-white leading-6 shadow-lg ring-1 ring-gray-900/5">
                 {type === 'combo' && <RangeSelectionTab range={range} setRange={setRange} />}
                 <DatePickerPresets
-                  selection={selection}
-                  range={range}
-                  selectedOptions={selectedOptionsArray}
+                  preset={datePreset}
+                  selectedOptions={presetDateArray}
                   handleSelection={handleSelection}
                   close={close}
                 />
@@ -97,7 +94,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
           </Popover.Panel>
         </Transition>
       </Popover>
-      <DatePickers setSelection={setSelection} setRange={setRange} range={range} type={type} />
+      <DatePickers clearPreset={clearPreset} setRange={setRange} range={range} type={type} />
     </div>
   );
 };
