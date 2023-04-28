@@ -1,8 +1,10 @@
 import React from 'react';
+import classNames from 'classnames';
 import type { BusRoute, Line } from '../../types/lines';
 import type { Section } from '../../constants/pages';
 import type { QueryTypeOptions } from '../../types/router';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
+import { lineColorDarkBackground } from '../../styles/general';
 import { DateControl } from './DateControl';
 
 interface MobileControlPanelProps {
@@ -35,7 +37,12 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   };
 
   return (
-    <div className="pb-safe fixed bottom-0 z-20 flex w-full flex-col justify-center bg-stone-100">
+    <div
+      className={classNames(
+        'pb-safe fixed bottom-0 z-20 flex w-full flex-col justify-center',
+        lineColorDarkBackground[line]
+      )}
+    >
       {getControls()}
     </div>
   );

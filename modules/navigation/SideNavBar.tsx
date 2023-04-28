@@ -3,7 +3,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 import TmLogoSvg from '../../public/tm-logo-big.svg';
-import TmIconSvg from '../../public/tm-logo-small.svg';
 import { SideNavigation } from './SideNavigation';
 
 export const SideNavBar = () => {
@@ -23,10 +22,10 @@ export const SideNavBar = () => {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className="fixed inset-0 bg-gray-600 bg-opacity-75" />
+              <div className="fixed bottom-0 right-0 top-0 bg-gray-600 bg-opacity-75" />
             </Transition.Child>
 
-            <div className="fixed inset-0 z-40 flex">
+            <div className="fixed bottom-0 right-0 top-0 z-40 flex">
               <Transition.Child
                 as={Fragment}
                 enter="transition ease-in-out duration-300 transform"
@@ -46,7 +45,7 @@ export const SideNavBar = () => {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                   >
-                    <div className="absolute right-0 top-0 -mr-12 pt-2">
+                    <div className="absolute left-0 top-0 -mr-12 pt-2">
                       <button
                         type="button"
                         className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
@@ -89,16 +88,16 @@ export const SideNavBar = () => {
           </div>
         </div>
         <div className="flex flex-1 flex-col md:pl-64">
-          <div className="sticky top-0 z-10 flex flex-row items-center justify-between bg-gray-100 pl-1 pt-1 sm:pl-3 sm:pt-3 md:hidden">
+          <div className="bg-design-tmgrey sticky top-0 z-10 flex flex-row items-center justify-between p-2 md:hidden">
+            <TmLogoSvg className="mr-4 h-9 w-auto text-black" alt="TransitMatters Logo" />
             <button
               type="button"
               className="-ml-0.5 -mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-400"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
-              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+              <Bars3Icon className="h-8 w-8 text-stone-100" aria-hidden="true" />
             </button>
-            <TmIconSvg className="w-19 mr-4 h-9" alt="TransitMatters Logo" />
           </div>
         </div>
       </div>
