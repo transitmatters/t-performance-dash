@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['18']
-        python-version: ['3.10']
+        python-version: ['3.9']
     env:
       AWS_PROFILE: transitmatters
       AWS_DEFAULT_REGION: us-east-1
@@ -55,5 +55,4 @@ jobs:
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           npm ci
-          aws --version
           bash deploy.sh -c
