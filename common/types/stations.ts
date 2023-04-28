@@ -16,8 +16,8 @@ export interface Station {
   pedal_park?: boolean;
   enclosed_bike_parking?: boolean;
   terminus?: boolean;
-  short?: string;
   disabled?: boolean;
+  short?: string;
 }
 
 export interface LineMap {
