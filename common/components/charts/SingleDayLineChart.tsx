@@ -15,11 +15,13 @@ import 'chartjs-adapter-date-fns';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
+import classNames from 'classnames';
 import type { DataPoint } from '../../types/dataPoints';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { SingleDayLineProps } from '../../../common/types/charts';
 import { prettyDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../utils/router';
+import { DownloadButton } from '../general/DownloadButton';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
 
@@ -62,11 +64,11 @@ const departureFromNormalString = (metric: number, benchmark: number) => {
   if (!isFinite(ratio) || ratio <= 1.25) {
     return '';
   } else if (ratio <= 1.5) {
-    return '>25% longer than normal';
+    return '25%+ over schedule';
   } else if (ratio <= 2.0) {
-    return '>50% longer than normal';
+    return '50%+ over schedule';
   } else if (ratio > 2.0) {
-    return '>100% longer than normal';
+    return '100%+ over schedule';
   }
   return '';
 };
@@ -81,17 +83,18 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   benchmarkField,
   // TODO: loading animation?
   isLoading,
+  fname,
   bothStops = false,
   location,
-  homescreen = false,
+  isHomescreen = false,
   showLegend = true,
 }) => {
   const ref = useRef();
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const { line } = useDelimitatedRoute();
   return (
-    <div className={showLegend ? 'chart' : undefined}>
-      <div className={'chart-container'}>
+    <div className={classNames('relative flex w-full flex-col pr-2')}>
+      <div className="flex h-60 w-full flex-row">
         <Line
           id={chartId}
           ref={ref}
@@ -105,25 +108,24 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 fill: false,
                 borderColor: '#a0a0a030',
                 pointBackgroundColor:
-                  homescreen && line
+                  isHomescreen && line
                     ? LINE_COLORS[line]
                     : pointColors(data, metricField, benchmarkField),
-                pointBorderWidth: homescreen ? 0 : undefined,
+                pointBorderWidth: isHomescreen ? 0 : undefined,
                 pointHoverRadius: 3,
                 pointHoverBackgroundColor:
-                  homescreen && line
+                  isHomescreen && line
                     ? LINE_COLORS[line]
                     : pointColors(data, metricField, benchmarkField),
                 pointRadius: 3,
                 pointHitRadius: 10,
-                // TODO: would be nice to add types to these arrow functions - but causes an issue bc datapoint[field] might be undefined.
-                data: data.map((datapoint: any) => (datapoint[metricField] / 60).toFixed(2)),
+                data: data.map((datapoint) => ((datapoint[metricField] as number) / 60).toFixed(2)),
               },
               {
                 label: `Benchmark MBTA`,
                 backgroundColor: '#a0a0a030',
                 data: benchmarkField
-                  ? data.map((datapoint: any) => (datapoint[benchmarkField] / 60).toFixed(2))
+                  ? data.map((datapoint) => ((datapoint[benchmarkField] as number) / 60).toFixed(2))
                   : [],
                 pointRadius: 0,
                 pointHoverRadius: 3,
@@ -238,9 +240,9 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               afterDraw: (chart) => {
                 if ((date === undefined || date.length === 0) && !isLoading) {
                   // No data is present
-                  const ctx = chart.ctx;
-                  const width = chart.width;
-                  const height = chart.height;
+                  const { ctx } = chart;
+                  const { width } = chart;
+                  const { height } = chart;
                   chart.clear();
 
                   ctx.save();
@@ -256,7 +258,18 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
           ]}
         />
       </div>
-      {showLegend && <div className="chart-extras">{benchmarkField && <LegendView />}</div>}
+      <div className="flex flex-row items-end gap-4 pl-6 pr-2">
+        {showLegend && benchmarkField ? <LegendView /> : <div className="w-full" />}
+        {!isHomescreen && date && (
+          <DownloadButton
+            data={data}
+            datasetName={fname}
+            location={location}
+            bothStops={bothStops}
+            startDate={date}
+          />
+        )}
+      </div>
     </div>
   );
 };

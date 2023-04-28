@@ -5,6 +5,13 @@ export enum QueryNameKeys {
 }
 export type QueryNameOptions = QueryNameKeys;
 
+export type BusOrSubway = 'bus' | 'subway';
+
+export const QUERIES: { [key in BusOrSubway]: QueryNameOptions[] } = {
+  subway: [QueryNameKeys.traveltimes, QueryNameKeys.headways, QueryNameKeys.dwells],
+  bus: [QueryNameKeys.traveltimes, QueryNameKeys.headways],
+};
+
 export enum SingleDayAPIParams {
   stop = 'stop',
   fromStop = 'from_stop',
@@ -24,3 +31,14 @@ export enum AggregateAPIParams {
 
 export type AggregateAPIOptions = { [key in AggregateAPIParams]?: string[] | string };
 export type PartialAggregateAPIOptions = Partial<AggregateAPIOptions>;
+
+export type FetchSpeedsOptions = {
+  [key in FetchSpeedsParams]?: string;
+};
+
+export enum FetchSpeedsParams {
+  startDate = 'start_date',
+  endDate = 'end_date',
+  agg = 'agg',
+  line = 'line',
+}

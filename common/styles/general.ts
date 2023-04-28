@@ -6,6 +6,32 @@ export const lineColorBackground = {
   BUS: `bg-mbta-bus`,
   DEFAULT: `bg-stone-800`,
 };
+export const lineColorDarkBackground = {
+  RL: `bg-mbta-darkRed`,
+  OL: `bg-mbta-darkOrange`,
+  GL: `bg-mbta-darkGreen`,
+  BL: `bg-mbta-darkBlue`,
+  BUS: `bg-mbta-darkBus`,
+  DEFAULT: `bg-stone-900`,
+};
+
+export const buttonHighlightFocus = {
+  RL: `focus:ring-mbta-red`,
+  OL: `focus:ring-mbta-orange`,
+  GL: `focus:ring-mbta-green`,
+  BL: `focus:ring-mbta-blue`,
+  BUS: `focus:ring-mbta-bus`,
+};
+
+export const lineColorTextHover = {
+  RL: `hover:text-mbta-red`,
+  OL: `hover:text-mbta-orange`,
+  GL: `hover:text-mbta-green`,
+  BL: `hover:text-mbta-blue`,
+  BUS: `hover:text-mbta-bus`,
+  DEFAULT: `hover:text-stone-800`,
+};
+
 export const lineColorDarkBorder = {
   RL: `border-mbta-darkRed`,
   OL: `border-mbta-darkOrange`,

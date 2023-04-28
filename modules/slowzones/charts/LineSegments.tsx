@@ -11,28 +11,43 @@ import {
 import 'chartjs-adapter-date-fns';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { enUS } from 'date-fns/locale';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
+
 import React, { useMemo, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
+import { YESTERDAY_MIDNIGHT } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
-import type { SlowZoneResponse } from '../../../common/types/dataPoints';
+import type { LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
-import { formatSlowZones, getRoutes } from '../../../common/utils/slowZoneUtils';
+import { getRoutes } from '../../../common/utils/slowZoneUtils';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, TimeScale);
 
-export const LineSegments: React.FC<{ data: SlowZoneResponse[]; line: LineShort | undefined }> = ({
+interface LineSegmentsProps {
+  data: SlowZone[];
+  line: LineShort;
+  startDateUTC: dayjs.Dayjs;
+  endDateUTC: dayjs.Dayjs;
+}
+
+export const LineSegments: React.FC<LineSegmentsProps> = ({
   data,
   line,
+  startDateUTC,
+  endDateUTC,
 }) => {
   const ref = useRef();
-  const formattedData = useMemo(
-    () =>
-      formatSlowZones(data.filter((d) => new Date(d.end) > new Date(2022, 5, 1))).filter(
-        (sz) => sz.direction === 'southbound' && sz.color === line
-      ),
-    [data, line]
-  );
-  const routes = useMemo(() => getRoutes(formattedData, 'southbound'), [formattedData]);
+  const routes = useMemo(() => getRoutes('southbound', data), [data]);
+
+  const lineSegmentData: LineSegmentData[] | undefined = data.map((sz) => {
+    return {
+      x: [dayjs.utc(sz.start).format('YYYY-MM-DD'), dayjs.utc(sz.end).format('YYYY-MM-DD')],
+      id: sz.id,
+      delay: sz.delay,
+    };
+  });
 
   return (
     <Bar
@@ -47,9 +62,7 @@ export const LineSegments: React.FC<{ data: SlowZoneResponse[]; line: LineShort 
             minBarLength: 28,
             backgroundColor: line && COLORS.mbta[line.toLowerCase()],
             borderSkipped: true,
-            data: formattedData.map((sz) => {
-              return { x: [sz.start, sz.end], id: sz.id, delay: sz.delay };
-            }),
+            data: lineSegmentData,
           },
         ],
       }}
@@ -68,7 +81,8 @@ export const LineSegments: React.FC<{ data: SlowZoneResponse[]; line: LineShort 
         indexAxis: 'y',
         scales: {
           x: {
-            min: new Date(2022, 5, 1).toISOString(),
+            min: startDateUTC.toISOString(),
+            max: endDateUTC.toISOString(),
             type: 'time',
             time: {
               unit: 'month',
@@ -94,19 +108,23 @@ export const LineSegments: React.FC<{ data: SlowZoneResponse[]; line: LineShort 
           },
           tooltip: {
             callbacks: {
-              title: function (context) {
+              title: (context) => {
                 return context[0].label;
               },
-              label: function (context) {
-                // @ts-expect-error data type is unknown
-                return 'Delay: ' + context.raw.delay.toFixed(0) + ' s';
+              label: (context) => {
+                return 'Delay: ' + data[context.dataIndex].delay.toFixed(0) + ' sec';
               },
-              beforeBody: function (context) {
-                const data = context[0].raw;
-                return (
-                  // @ts-expect-error data type is unknown
-                  new Date(data.x[0]).toDateString() + ' - ' + new Date(data.x[1]).toDateString()
-                );
+              beforeBody: (context) => {
+                const start = context[0].parsed._custom?.barStart;
+                const end = context[0].parsed._custom?.barEnd;
+                if (!(start && end)) return 'Unknown dates';
+                const startUTC = dayjs.utc(start);
+                const endUTC = dayjs.utc(end);
+                return `${startUTC.format('MMM D, YYYY')} - ${
+                  dayjs.utc(endUTC).isSame(YESTERDAY_MIDNIGHT)
+                    ? 'Ongoing'
+                    : dayjs(endUTC).format('MMM D, YYYY')
+                }`;
               },
             },
           },

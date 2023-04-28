@@ -18,6 +18,7 @@ import React, { useMemo, useRef } from 'react';
 import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../../common/constants/colors';
+import { DownloadButton } from '../general/DownloadButton';
 import { LegendLongTerm } from './Legend';
 import { drawTitle } from './Title';
 
@@ -49,7 +50,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   title,
   data,
   location,
-  isLoading,
   pointField,
   bothStops = false,
   fname,
@@ -61,19 +61,20 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   fillColor,
   suggestedYMin,
   suggestedYMax,
-  ...props
+  showLegend = true,
+  isHomescreen = false,
 }) => {
   const ref = useRef();
   const hourly = timeUnit === 'hour';
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
 
   return (
-    <div className="chart">
-      <div className="chart-container">
+    <div className="relative flex w-full flex-col pr-2">
+      <div className="flex h-60 w-full flex-row">
         <Line
           id={chartId}
           ref={ref}
-          height={250}
+          height={240}
           redraw={true}
           data={{
             labels,
@@ -198,11 +199,18 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
             },
           ]}
         />
-        {/* TODO: add back download button */}
       </div>
-      <div className="chart-extras">
-        <LegendLongTerm />
-        {props.children}
+      <div className="flex flex-row items-end gap-4 pl-6">
+        {showLegend && <LegendLongTerm />}
+        {!isHomescreen && startDate && (
+          <DownloadButton
+            data={data}
+            datasetName={fname}
+            location={location}
+            bothStops={bothStops}
+            startDate={startDate}
+          />
+        )}
       </div>
     </div>
   );
