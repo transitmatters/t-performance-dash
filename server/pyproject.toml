@@ -15,6 +15,8 @@ numpy = "1.24.2"
 pandas = "1.5.3"
 
 [tool.poetry.dev-dependencies]
+pip = ">=23.0"
+setuptools = ">=67.6.1"
 chalice = "1.28.0"
 flake8 = "6.0.0"
 black = "23.3.0"
