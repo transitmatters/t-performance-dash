@@ -14,6 +14,7 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
+import classNames from 'classnames';
 import type { DataPoint } from '../../types/dataPoints';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { SingleDayLineProps } from '../../../common/types/charts';
@@ -61,11 +62,11 @@ const departureFromNormalString = (metric: number, benchmark: number) => {
   if (!isFinite(ratio) || ratio <= 1.25) {
     return '';
   } else if (ratio <= 1.5) {
-    return '>25% longer than normal';
+    return '25%+ over schedule';
   } else if (ratio <= 2.0) {
-    return '>50% longer than normal';
+    return '50%+ over schedule';
   } else if (ratio > 2.0) {
-    return '>100% longer than normal';
+    return '100%+ over schedule';
   }
   return '';
 };
@@ -90,8 +91,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const { line } = useDelimitatedRoute();
   return (
-    <div className={showLegend ? 'chart' : undefined}>
-      <div className={'chart-container'}>
+    <div className={classNames('relative flex w-full flex-col pr-2')}>
+      <div className="flex h-60 w-full flex-row">
         <Line
           id={chartId}
           ref={ref}
@@ -241,16 +242,18 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
           ]}
         />
       </div>
-      {showLegend && <div className="chart-extras">{benchmarkField && <LegendView />}</div>}
-      {!isHomescreen && date && (
-        <DownloadButton
-          data={data}
-          datasetName={fname}
-          location={location}
-          bothStops={bothStops}
-          startDate={date}
-        />
-      )}
+      <div className="flex flex-row items-end gap-4 pl-6 pr-2">
+        {showLegend && benchmarkField ? <LegendView /> : <div className="w-full" />}
+        {!isHomescreen && date && (
+          <DownloadButton
+            data={data}
+            datasetName={fname}
+            location={location}
+            bothStops={bothStops}
+            startDate={date}
+          />
+        )}
+      </div>
     </div>
   );
 };

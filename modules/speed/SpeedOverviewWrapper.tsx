@@ -46,7 +46,7 @@ export const SpeedGraphWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
           layoutKind="no-delta"
         />
       </div>
-      <div className={classNames('h-60 pr-4')}>
+      <div className="h-60 pr-4">
         <SpeedGraph config={config} data={data} startDate={startDate} endDate={endDate} showTitle />
       </div>
     </>

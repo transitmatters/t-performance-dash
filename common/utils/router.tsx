@@ -1,3 +1,4 @@
+import type { ParsedUrlQuery } from 'querystring';
 import { capitalize, isEqual, pickBy } from 'lodash';
 import type { NextRouter } from 'next/router';
 import { useRouter } from 'next/router';
@@ -20,7 +21,7 @@ const linePathToKeyMap: Record<string, Line> = {
   bus: 'BUS',
 };
 
-export const getParams = (params) => {
+export const getParams = (params: ParsedUrlQuery | QueryParams) => {
   return Object.fromEntries(
     Object.entries(params).filter(([key, value]) => key !== 'line' && value)
   );
