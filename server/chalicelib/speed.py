@@ -7,7 +7,6 @@ AGG_TO_CONFIG_MAP = {
     "daily": {"table_name": "DailySpeed", "delta": 150},
     "weekly": {"table_name": "WeeklySpeed", "delta": 7 * 150},
     "monthly": {"table_name": "MonthlySpeed", "delta": 30 * 150},
-
 }
 
 DATE_FORMAT_BACKEND = "%Y-%m-%d"
@@ -15,11 +14,11 @@ DATE_FORMAT_BACKEND = "%Y-%m-%d"
 
 def get_speeds(params):
     try:
-        start_date = params['start_date']
-        end_date = params['end_date']
+        start_date = params["start_date"]
+        end_date = params["end_date"]
         config = AGG_TO_CONFIG_MAP[params["agg"]]
         line = params["line"]
-        if line not in ['RL', 'BL', 'GL', 'OL']:
+        if line not in ["RL", "BL", "GL", "OL"]:
             raise BadRequestError("Invalid Line key.")
     except KeyError:
         raise BadRequestError("Missing or invalid parameters.")
