@@ -82,7 +82,7 @@ export default function SlowZonesDetails() {
       <div className="h-full rounded-lg bg-white p-0 shadow-dataBox sm:p-2">
         <div className="flex flex-col p-2 sm:p-0 md:flex-row">
           <WidgetTitle title={`${DirectionObject[direction]} Segments`} />
-          <div className="pr-2 pt-2">
+          <div className="p-2">
             <ButtonGroup pressFunction={setDirection} options={Object.entries(DirectionObject)} />
           </div>
         </div>
