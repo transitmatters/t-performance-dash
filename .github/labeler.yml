@@ -9,6 +9,7 @@ dependencies:
 
 backend:
 - '**/*.py'
+- server/**/*
 
 frontend:
 - '**/*.js'
