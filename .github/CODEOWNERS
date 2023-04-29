@@ -1,3 +1,4 @@
 * @austinjpaul @skaplan-dev @devinmatte @PatrickCleary
 .github @nathan-weinberg
-deploy.sh @mathcolo
+.flake8 @nathan-weinberg
+deploy.sh @mathcolo @nathan-weinberg
