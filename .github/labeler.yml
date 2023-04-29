@@ -1,0 +1,18 @@
+ci/cd:
+- .github/**/*
+- deploy.sh
+
+dependencies:
+- package.json
+- package-lock.json
+- server/poetry.lock
+
+backend:
+- '**/*.py'
+- server/**/*
+
+frontend:
+- '**/*.js'
+- '**/*.jsx'
+- '**/*.ts'
+- '**/*.tsx'

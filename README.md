@@ -9,13 +9,18 @@ This is the repository for the TransitMatters Data Dashboard. Client code is wri
 
 ## Requirements to develop locally
 
-- node 18.x preferred, but should work with anything >=16.x and <19. (verify with `node -v`)
-- Python 3.10 with recent poetry (verify with python --version; poetry --version; `poetry self update` to update poetry)
+- node 18.x and npm 9.x required
+  - With `nvm` installed, use `nvm install && nvm use`
+  - verify with `node -v`
+- Python 3.9 with recent poetry
+  - Verify with `python --version && poetry --version`
+  - `poetry self update` to update poetry
 
 ## Development Instructions
 
-1. Add `MBTA_V2_API_KEY` to your shell environment:
+1. Add `MBTA_V2_API_KEY` and `MBTA_V3_API_KEY` to your shell environment:
    - `export MBTA_V2_API_KEY='KEY'` in ~/.bashrc or ~/.zshrc
+   - `export MBTA_V3_API_KEY='KEY'` in ~/.bashrc or ~/.zshrc
 2. Add your AWS credentials (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) to your shell environment, OR add them to a .boto config file with awscli command `aws configure`.
 3. In the root directory, run `npm install` to install all frontend and backend dependencies
 4. Run `npm start` to start both the JavaScript development server and the Python backend at the same time.
@@ -49,3 +54,7 @@ To lint just backend code, run `npm run lint-backend`
 #### VSCode
 
 If you're using VSCode, `.vscode` contains a based default workspace setup. It also includes recommended extentions that will improve the dev experience. This config is meant to be as small as possible to enable an "out of the box" easy experience for handling eslint.
+
+## Support TransitMatters
+
+If you've found this app helpful or interesting, please consider [donating](https://transitmatters.org/donate) to TransitMatters to help support our mission to provide data-driven advocacy for a more reliable, sustainable, and equitable transit system in Metropolitan Boston.
