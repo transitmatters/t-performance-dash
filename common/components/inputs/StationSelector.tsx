@@ -36,7 +36,7 @@ export const StationSelector: React.FC<StationSelector> = ({
   return (
     <Listbox value={station} onChange={setStation}>
       {({ open }) => (
-        <div className="w-fit overflow-hidden">
+        <div className="w-fit flex-grow overflow-hidden">
           {open && !mdBreakpoint && (
             <div className="fixed left-0 top-0 m-0 h-screen w-screen bg-white bg-opacity-50 p-0" />
           )}

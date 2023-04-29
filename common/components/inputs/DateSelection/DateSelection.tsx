@@ -49,15 +49,11 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
   return (
     <div
       className={classNames(
-        'flex h-full flex-row overflow-hidden rounded-t-md border md:overflow-visible md:rounded-md',
+        'flex w-full flex-row overflow-hidden rounded-t-md border md:max-w-sm md:overflow-visible md:rounded-md',
         lineColorDarkBorder[line ?? 'DEFAULT']
       )}
     >
-      <Popover
-        className={classNames(
-          'flex h-full w-full self-stretch overflow-hidden text-left md:overflow-visible'
-        )}
-      >
+      <Popover className={classNames('flex h-full w-full self-stretch overflow-hidden text-left')}>
         <Popover.Button
           className={classNames(
             'flex h-full w-full items-center justify-center self-stretch rounded-l-[.25rem] px-3 py-1 text-white text-opacity-95 hover:bg-opacity-70 focus:bg-opacity-70 focus:outline-none',

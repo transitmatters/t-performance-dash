@@ -6,12 +6,22 @@ export const lineColorBackground = {
   BUS: `bg-mbta-bus`,
   DEFAULT: `bg-stone-800`,
 };
+
 export const lineColorDarkBackground = {
   RL: `bg-mbta-darkRed`,
   OL: `bg-mbta-darkOrange`,
   GL: `bg-mbta-darkGreen`,
   BL: `bg-mbta-darkBlue`,
   BUS: `bg-mbta-darkBus`,
+  DEFAULT: `bg-stone-900`,
+};
+
+export const lineColorLightBackground = {
+  RL: `bg-mbta-lightRed`,
+  OL: `bg-mbta-lightOrange`,
+  GL: `bg-mbta-lightGreen`,
+  BL: `bg-mbta-lightBlue`,
+  BUS: `bg-mbta-lightBus`,
   DEFAULT: `bg-stone-900`,
 };
 

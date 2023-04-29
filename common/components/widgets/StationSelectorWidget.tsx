@@ -63,7 +63,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
         'flex w-full flex-row items-center gap-1 overflow-hidden p-1 md:p-0 xl:w-full'
       )}
     >
-      <div className="flex flex-row items-center gap-1 self-stretch overflow-hidden">
+      <div className="flex flex-grow flex-row items-center gap-1 self-stretch overflow-hidden">
         <StationSelector
           type={'from'}
           fromStation={fromStation}
@@ -74,7 +74,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
           <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" />
         </div>
       </div>
-      <div className="flex flex-row items-center gap-1 overflow-hidden">
+      <div className="flex flex-grow flex-row items-center gap-1 overflow-hidden">
         <StationSelector
           type={'to'}
           fromStation={fromStation}
