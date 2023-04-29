@@ -101,6 +101,7 @@ export const Speed: React.FC = () => {
             <p className={classNames('text-5xl font-semibold')}>
               {isNaN(MPH) ? '...' : MPH.toFixed(1)}
             </p>
+            <p className="text-xl">mph</p>
           </div>
           <div className="pt-4">
             <div className="mt-2 flex flex-col gap-x-2 gap-y-2">

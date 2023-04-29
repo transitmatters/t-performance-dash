@@ -1,0 +1,17 @@
+ci/cd:
+- .github/**/*
+- deploy.sh
+
+dependencies:
+- package.json
+- package-lock.json
+- server/poetry.lock
+
+python:
+- '**/*.py'
+
+javascript:
+- '**/*.js'
+- '**/*.jsx'
+- '**/*.ts'
+- '**/*.tsx'

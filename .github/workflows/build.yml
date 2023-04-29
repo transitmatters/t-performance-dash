@@ -33,6 +33,9 @@ jobs:
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+      - name: Check if package-lock.json is up to date
+        run: |
+          npx --yes package-lock-utd@1.1.0
       - name: Fully build frontend code
         run: |
           curl -sSL https://install.python-poetry.org | python3 -

@@ -24,6 +24,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Check if package-lock.json is up to date
+        run: |
+          npx --yes package-lock-utd@1.1.0
       - name: Lint frontend code with ESLint
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
@@ -47,6 +50,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Check if package-lock.json is up to date
+        run: |
+          npx --yes package-lock-utd@1.1.0
       - name: Lint backend code with Flake8
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
