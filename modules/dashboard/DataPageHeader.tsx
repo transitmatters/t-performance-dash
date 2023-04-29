@@ -40,7 +40,7 @@ export const DataPageHeader = () => {
         <h2 className="select-none pl-1 text-xl font-semibold">
           <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
         </h2>
-        {ALL_PAGES[page]?.section === 'trips' && <RangeTabs />}
+        {/* {ALL_PAGES[page]?.section === 'trips' && <RangeTabs />} */}
       </div>
       {!isMobile && showControlParams && (
         <ControlPanel section={section} line={line} queryType={queryType} busRoute={busRoute} />

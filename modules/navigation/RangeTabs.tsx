@@ -13,7 +13,7 @@ export const RangeTabs = () => {
   const router = useRouter();
   const dashboardConfig = useDashboardConfig();
   const selected = query.queryType === 'single' ? 1 : 0;
-  const rangeOptions = ['Aggregate', 'Daily'];
+  const rangeOptions = ['Daily avg.', 'Per trip'];
 
   const handleChange = (index: number) => {
     if (index) {
@@ -24,32 +24,30 @@ export const RangeTabs = () => {
   };
 
   return (
-    <div className="mt-4">
-      <div>
-        <Tab.Group selectedIndex={selected} onChange={handleChange}>
-          <Tab.List className="flex">
-            {rangeOptions.map(
-              (range) =>
-                line && (
-                  <Tab key={range}>
-                    {({ selected }) => (
-                      <div
-                        className={classNames(
-                          `select-none whitespace-nowrap border-b-2 px-4 pb-4 text-sm font-medium focus:outline-none focus:ring-0`,
-                          selected
-                            ? lineColorBorder[line ?? 'DEFAULT']
-                            : 'border-transparent text-gray-600 '
-                        )}
-                      >
-                        {range}
-                      </div>
-                    )}
-                  </Tab>
-                )
-            )}
-          </Tab.List>
-        </Tab.Group>
-      </div>
+    <div className="-mb-3 flex items-end">
+      <Tab.Group selectedIndex={selected} onChange={handleChange}>
+        <Tab.List className="flex">
+          {rangeOptions.map(
+            (range) =>
+              line && (
+                <Tab key={range}>
+                  {({ selected }) => (
+                    <div
+                      className={classNames(
+                        `select-none whitespace-nowrap border-b-2 px-4 pb-4 text-sm font-medium focus:outline-none focus:ring-0`,
+                        selected
+                          ? lineColorBorder[line ?? 'DEFAULT']
+                          : 'border-transparent text-gray-600 '
+                      )}
+                    >
+                      {range}
+                    </div>
+                  )}
+                </Tab>
+              )
+          )}
+        </Tab.List>
+      </Tab.Group>
     </div>
   );
 };
