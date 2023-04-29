@@ -8,7 +8,7 @@ interface WidgetPageProps {
 
 export const WidgetPage: React.FC<WidgetPageProps> = ({ children }) => {
   return (
-    <div className={classNames('flex w-full flex-1 flex-col gap-y-2 pb-28 lg:p-0')}>
+    <div className={classNames('flex w-full flex-1 flex-col gap-y-2 lg:p-0')}>
       {children}
       <BusDataNotice />
     </div>

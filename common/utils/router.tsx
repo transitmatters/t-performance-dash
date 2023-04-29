@@ -1,3 +1,4 @@
+import type { ParsedUrlQuery } from 'querystring';
 import { capitalize, isEqual, pickBy } from 'lodash';
 import type { NextRouter } from 'next/router';
 import { useRouter } from 'next/router';
@@ -10,7 +11,7 @@ import type { DashboardConfig } from '../state/dashboardConfig';
 import { useDashboardConfig } from '../state/dashboardConfig';
 import { SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
-import { getDashboardConfig, saveDashboardConfig } from '../state/utils/utils';
+import { getDashboardConfig, saveDashboardConfig } from '../state/utils/dashboardUtils';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'line-red',
@@ -20,7 +21,7 @@ const linePathToKeyMap: Record<string, Line> = {
   bus: 'line-bus',
 };
 
-export const getParams = (params) => {
+export const getParams = (params: ParsedUrlQuery | QueryParams) => {
   return Object.fromEntries(
     Object.entries(params).filter(([key, value]) => key !== 'line' && value)
   );

@@ -1,31 +1,37 @@
 import classNames from 'classnames';
 import React from 'react';
+import {
+  lineColorBackground,
+  buttonHighlightFocus,
+  lineColorDarkBorder,
+} from '../../styles/general';
 import { useDelimitatedRoute } from '../../utils/router';
-import { buttonHighlightFocus } from '../../styles/general';
 
 interface ButtonProps
   extends React.DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
-  content: string | React.ReactNode;
-  isFullWidth?: boolean;
+  children: React.ReactNode;
+  additionalClasses?: string;
 }
 
-export const Button: React.FC<ButtonProps> = ({ content, isFullWidth = false, ...props }) => {
-  const route = useDelimitatedRoute();
+export const Button: React.FC<ButtonProps> = ({ children, additionalClasses, ...props }) => {
+  const { line } = useDelimitatedRoute();
 
   return (
     <button
       type="button"
       className={classNames(
-        'inline-flex h-8 items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-normal leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2',
-        route.line && buttonHighlightFocus[route.line],
-        isFullWidth ? 'w-auto' : 'w-fit'
+        'flex items-center self-stretch rounded-md border px-3 py-1 text-sm font-medium text-white  text-opacity-90 shadow-sm hover:bg-opacity-70  focus:outline-none focus:ring-2  focus:ring-offset-2',
+        line && buttonHighlightFocus[line],
+        line && lineColorBackground[line],
+        line && lineColorDarkBorder[line],
+        additionalClasses
       )}
       {...props}
     >
-      {content}
+      {children}
     </button>
   );
 };

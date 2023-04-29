@@ -12,13 +12,13 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { SpeedDataPoint } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
-import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { CORE_TRACK_LENGTHS, PEAK_MPH } from './constants/speeds';
 import type { ParamsType } from './constants/speeds';
 
@@ -37,13 +37,21 @@ ChartJS.register(
 interface SpeedGraphProps {
   data: SpeedDataPoint[];
   config: ParamsType;
+  startDate: string;
+  endDate: string;
+  showTitle?: boolean;
 }
 
-export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, config }) => {
-  const { line, query } = useDelimitatedRoute();
+export const SpeedGraph: React.FC<SpeedGraphProps> = ({
+  data,
+  config,
+  startDate,
+  endDate,
+  showTitle = false,
+}) => {
+  const { line } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef();
-
   const labels = data.map((point) => point.date);
   return (
     <Line
@@ -90,7 +98,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, config }) => {
           },
           title: {
             // empty title to set font and leave room for drawTitle fn
-            display: true,
+            display: showTitle,
             text: '',
           },
         },
@@ -109,12 +117,15 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, config }) => {
             },
           },
           x: {
-            min: query.view ? OVERVIEW_OPTIONS[query.view].startDate : query.startDate,
-            max: TODAY_STRING,
+            min: startDate,
+            max: endDate,
             type: 'time',
             time: {
               unit: unit,
               tooltipFormat: tooltipFormat,
+              displayFormats: {
+                month: 'MMM',
+              },
             },
             ticks: {
               color: COLORS.design.subtitleGrey,
@@ -150,7 +161,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, config }) => {
               ctx.fillText('No data to display', width / 2, height / 2);
               ctx.restore();
             }
-            drawSimpleTitle(`Speed`, chart);
+            if (showTitle) drawSimpleTitle(`Median Speed`, chart);
           },
         },
       ]}

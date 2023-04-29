@@ -103,7 +103,7 @@ export const ALL_PAGES: PageMap = {
     key: 'speed',
     path: '/speed',
     name: 'Speed',
-    lines: [],
+    lines: ['RL', 'OL', 'BL'],
     icon: faGaugeHigh,
     section: 'line',
     sub: true,

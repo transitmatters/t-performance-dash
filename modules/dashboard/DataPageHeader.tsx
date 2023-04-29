@@ -1,8 +1,8 @@
 import React from 'react';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { ALL_PAGES } from '../../common/constants/pages';
 import { lineColorText } from '../../common/styles/general';
+import { ALL_PAGES } from '../../common/constants/pages';
 import { RangeTabs } from '../navigation/RangeTabs';
 
 export const DataPageHeader = () => {

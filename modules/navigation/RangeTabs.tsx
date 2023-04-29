@@ -4,36 +4,28 @@ import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { lineColorBorder } from '../../common/styles/general';
-import { ONE_WEEK_AGO_STRING, TODAY_STRING } from '../../common/constants/dates';
+import { useDashboardConfig } from '../../common/state/dashboardConfig';
+import { switchToRange, switchToSingleDay } from './utils/rangeTabUtils';
 
 export const RangeTabs = () => {
   const route = useDelimitatedRoute();
   const { query, line } = route;
   const router = useRouter();
-
+  const dashboardConfig = useDashboardConfig();
   const selected = query.queryType === 'single' ? 1 : 0;
-
-  const rangeOptions = ['Range', 'Single Day'];
+  const rangeOptions = ['Aggregate', 'Daily'];
 
   const handleChange = (index: number) => {
     if (index) {
-      router.query.queryType = 'single';
-      router.query.startDate = router.query.endDate;
-      delete router.query.endDate;
-      router.push(router);
+      switchToSingleDay(router, dashboardConfig);
       return;
     }
-    if (query.startDate === TODAY_STRING) {
-      router.query.startDate = ONE_WEEK_AGO_STRING;
-      router.query.endDate = TODAY_STRING;
-    }
-    router.query.queryType = 'range';
-    router.push(router);
+    switchToRange(router, dashboardConfig);
   };
 
   return (
-    <div className="md:mt-4">
-      <div className="hidden sm:block">
+    <div className="mt-4">
+      <div>
         <Tab.Group selectedIndex={selected} onChange={handleChange}>
           <Tab.List className="flex">
             {rangeOptions.map(

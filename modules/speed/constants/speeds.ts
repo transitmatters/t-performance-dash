@@ -1,6 +1,7 @@
 import type { TooltipCallbacks, TooltipItem, TooltipModel } from 'chart.js';
 import type { _DeepPartialObject } from 'chart.js/dist/types/utils';
 import dayjs from 'dayjs';
+import { todayOrDate } from '../../../common/constants/dates';
 
 export type ParamsType = {
   agg: 'daily' | 'weekly' | 'monthly';
@@ -16,12 +17,12 @@ export const getSpeedGraphConfig = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs
   const numDays = endDate.diff(startDate, 'day');
 
   if (numDays < 150) {
-    return DELAYS_RANGE_PARAMS_MAP.day;
+    return SPEED_RANGE_PARAM_MAP.day;
   }
   if (numDays <= 730) {
-    return DELAYS_RANGE_PARAMS_MAP.week;
+    return SPEED_RANGE_PARAM_MAP.week;
   }
-  return DELAYS_RANGE_PARAMS_MAP.month;
+  return SPEED_RANGE_PARAM_MAP.month;
 };
 
 const getWeeklyTitle = (date: string) => {
@@ -34,12 +35,12 @@ const getMonthlyTitle = (date: string) => {
   return `${dateObject.format('MMMM YYYY')}`;
 };
 
-export const DELAYS_RANGE_PARAMS_MAP: { [s: string]: ParamsType } = {
+export const SPEED_RANGE_PARAM_MAP: { [s: string]: ParamsType } = {
   day: {
     agg: 'daily',
     tooltipFormat: 'MMM d, yyyy',
     unit: 'day',
-    getWidgetTitle: () => 'Today',
+    getWidgetTitle: (date) => todayOrDate(dayjs(date)),
   },
   week: {
     agg: 'weekly',
@@ -52,7 +53,6 @@ export const DELAYS_RANGE_PARAMS_MAP: { [s: string]: ParamsType } = {
   },
   month: {
     agg: 'monthly',
-
     tooltipFormat: 'MMM yyyy',
     unit: 'year',
     getWidgetTitle: getMonthlyTitle,
