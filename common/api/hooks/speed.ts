@@ -3,9 +3,9 @@ import { fetchSpeeds } from '../speed';
 import type { FetchSpeedsOptions } from '../../types/api';
 import { FIVE_MINUTES } from '../../constants/time';
 
-export const useSpeedData = (params: FetchSpeedsOptions) => {
+export const useSpeedData = (params: FetchSpeedsOptions, enabled?: boolean) => {
   return useQuery(['speed', params], () => fetchSpeeds(params), {
-    enabled: params.line != undefined,
+    enabled: enabled,
     staleTime: FIVE_MINUTES,
   });
 };
