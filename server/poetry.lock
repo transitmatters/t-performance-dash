@@ -60,7 +60,7 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.29.114"
+version = "1.29.123"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -233,7 +233,10 @@ optional = false
 python-versions = ">=3.8"
 
 [package.dependencies]
-numpy = {version = ">=1.20.3", markers = "python_version < \"3.10\""}
+numpy = [
+    {version = ">=1.20.3", markers = "python_version < \"3.10\""},
+    {version = ">=1.21.0", markers = "python_version >= \"3.10\""},
+]
 python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"
 tzdata = ">=2022.1"
@@ -271,15 +274,15 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "platformdirs"
-version = "3.2.0"
+version = "3.5.0"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 
 [package.extras]
-docs = ["furo (>=2022.12.7)", "proselint (>=0.13)", "sphinx-autodoc-typehints (>=1.22,!=1.23.4)", "sphinx (>=6.1.3)"]
-test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest-cov (>=4)", "pytest-mock (>=3.10)", "pytest (>=7.2.2)"]
+docs = ["furo (>=2023.3.27)", "proselint (>=0.13)", "sphinx-autodoc-typehints (>=1.23,!=1.23.4)", "sphinx (>=6.1.3)"]
+test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest-cov (>=4)", "pytest-mock (>=3.10)", "pytest (>=7.3.1)"]
 
 [[package]]
 name = "pycodestyle"
@@ -427,8 +430,8 @@ python-versions = "*"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "~3.9"
-content-hash = "fc5fa86eede1011748549f3ff70ef4764737b9dfbf1b3f46a96d2f64e99d3073"
+python-versions = "^3.9, <3.11"
+content-hash = "beb596e75faadbeb5883e2a8dec2f0ede9dd8136291ce0016b39ff6c34150726"
 
 [metadata.files]
 ansicon = [
@@ -471,8 +474,8 @@ boto3 = [
     {file = "boto3-1.26.110.tar.gz", hash = "sha256:97d942d958cac28687187b89ee88ac760e0fa3007094cb1d6b16e241144306f3"},
 ]
 botocore = [
-    {file = "botocore-1.29.114-py3-none-any.whl", hash = "sha256:dd61f445eb53fe906dbde86405915cce61ffa13824a1bb7b826bfc7869a3e628"},
-    {file = "botocore-1.29.114.tar.gz", hash = "sha256:aeacb03303d6babb0490247158647346d27900fcf89bfb9713db41f1ce1cc93f"},
+    {file = "botocore-1.29.123-py3-none-any.whl", hash = "sha256:88f743e1db5bb65e3770af674400642f1d09fca159a1508bdbb8f8cc691589ca"},
+    {file = "botocore-1.29.123.tar.gz", hash = "sha256:b69cdf1c6f451ab1314a363bf97753dfbfe1da93d33853ed241edbdcb806867d"},
 ]
 certifi = [
     {file = "certifi-2022.12.7-py3-none-any.whl", hash = "sha256:4ad3232f5e926d6718ec31cfc1fcadfde020920e278684144551c91769c7bc18"},
@@ -665,8 +668,8 @@ pathspec = [
     {file = "pathspec-0.11.1.tar.gz", hash = "sha256:2798de800fa92780e33acca925945e9a19a133b715067cf165b8866c15a31687"},
 ]
 platformdirs = [
-    {file = "platformdirs-3.2.0-py3-none-any.whl", hash = "sha256:ebe11c0d7a805086e99506aa331612429a72ca7cd52a1f0d277dc4adc20cb10e"},
-    {file = "platformdirs-3.2.0.tar.gz", hash = "sha256:d5b638ca397f25f979350ff789db335903d7ea010ab28903f57b27e1b16c2b08"},
+    {file = "platformdirs-3.5.0-py3-none-any.whl", hash = "sha256:47692bc24c1958e8b0f13dd727307cff1db103fca36399f457da8e05f222fdc4"},
+    {file = "platformdirs-3.5.0.tar.gz", hash = "sha256:7954a68d0ba23558d753f73437c55f89027cf8f5108c19844d4b82e5af396335"},
 ]
 pycodestyle = [
     {file = "pycodestyle-2.10.0-py2.py3-none-any.whl", hash = "sha256:8a4eaf0d0495c7395bdab3589ac2db602797d76207242c17d470186815706610"},
