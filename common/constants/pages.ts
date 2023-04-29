@@ -30,6 +30,7 @@ export enum PAGES {
 }
 
 export type Section = 'today' | 'line' | 'overview' | 'trips';
+export type SectionTitle = 'Today' | 'Line' | 'Overview' | 'Trips';
 
 export type PageMetadata = {
   key: string;
@@ -38,6 +39,7 @@ export type PageMetadata = {
   lines: Line[];
   icon: IconDefinition;
   section: Section;
+  sectionTitle?: SectionTitle;
   sub?: boolean;
   title?: string;
 };
@@ -58,8 +60,8 @@ export const ALL_PAGES: PageMap = {
   trips: {
     key: 'trips',
     path: '/trips',
-    name: 'Explore',
-    title: 'Trip Overview',
+    name: 'Trips',
+    title: 'Trips',
     lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
     icon: faMapLocation,
     section: 'trips',
@@ -71,6 +73,7 @@ export const ALL_PAGES: PageMap = {
     lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
     icon: faArrowsLeftRightToLine,
     section: 'trips',
+    sectionTitle: 'Trips',
     sub: true,
   },
   tripTraveltimes: {
@@ -80,6 +83,7 @@ export const ALL_PAGES: PageMap = {
     lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
     icon: faClock,
     section: 'trips',
+    sectionTitle: 'Trips',
     sub: true,
   },
   tripDwells: {
@@ -89,12 +93,13 @@ export const ALL_PAGES: PageMap = {
     lines: ['RL', 'BL', 'GL', 'OL'],
     icon: faHourglass,
     section: 'trips',
+    sectionTitle: 'Trips',
     sub: true,
   },
   overview: {
     key: 'overview',
     path: '/overview',
-    name: 'Overview',
+    name: 'Line',
     lines: ['RL', 'BL', 'GL', 'OL'],
     section: 'overview',
     icon: faTableColumns,
@@ -106,6 +111,7 @@ export const ALL_PAGES: PageMap = {
     lines: [],
     icon: faGaugeHigh,
     section: 'line',
+    sectionTitle: 'Line',
     sub: true,
   },
   service: {
@@ -114,6 +120,7 @@ export const ALL_PAGES: PageMap = {
     name: 'Service',
     lines: [],
     section: 'line',
+    sectionTitle: 'Line',
     icon: faClockFour,
     sub: true,
   },
@@ -124,6 +131,7 @@ export const ALL_PAGES: PageMap = {
     lines: ['RL', 'BL', 'OL'],
     icon: faWarning,
     section: 'line',
+    sectionTitle: 'Line',
     sub: true,
   },
   headways: {
@@ -133,6 +141,7 @@ export const ALL_PAGES: PageMap = {
     lines: [],
     icon: faArrowsLeftRightToLine,
     section: 'line',
+    sectionTitle: 'Line',
     sub: true,
   },
   ridership: {
@@ -142,6 +151,7 @@ export const ALL_PAGES: PageMap = {
     lines: ['RL', 'BL', 'GL', 'OL', 'BUS'],
     icon: faUsers,
     section: 'line',
+    sectionTitle: 'Line',
     sub: true,
   },
 };

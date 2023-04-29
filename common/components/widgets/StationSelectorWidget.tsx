@@ -63,28 +63,24 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
         'flex w-full flex-row items-center gap-1 overflow-hidden p-1 md:p-0 xl:w-full'
       )}
     >
-      <div className="flex flex-grow flex-row items-center gap-1 self-stretch overflow-hidden">
-        <StationSelector
-          type={'from'}
-          fromStation={fromStation}
-          toStation={toStation}
-          setStation={(stationId) => updateStations('from', stationId)}
-        />
-        <div className="flex h-4 w-4 items-center justify-center">
-          <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" />
-        </div>
+      <StationSelector
+        type={'from'}
+        fromStation={fromStation}
+        toStation={toStation}
+        setStation={(stationId) => updateStations('from', stationId)}
+      />
+      <div className="flex h-4 w-4 items-center justify-center">
+        <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" />
       </div>
-      <div className="flex flex-grow flex-row items-center gap-1 overflow-hidden">
-        <StationSelector
-          type={'to'}
-          fromStation={fromStation}
-          toStation={toStation}
-          setStation={(stationId) => updateStations('to', stationId)}
-        />
-        <Button onClick={() => updateStations('swap')} additionalClasses="shrink-0 w-fit">
-          <FontAwesomeIcon icon={faRightLeft} className="h-4 w-4" />
-        </Button>
-      </div>
+      <StationSelector
+        type={'to'}
+        fromStation={fromStation}
+        toStation={toStation}
+        setStation={(stationId) => updateStations('to', stationId)}
+      />
+      <Button onClick={() => updateStations('swap')} additionalClasses="shrink-0 w-fit">
+        <FontAwesomeIcon icon={faRightLeft} className="h-4 w-4" />
+      </Button>
     </div>
   );
 };

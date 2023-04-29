@@ -68,7 +68,11 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
   };
 
   return (
-    <div className={'-ml-[1px] flex h-8 flex-row justify-center self-stretch rounded-md bg-white'}>
+    <div
+      className={
+        '-ml-[1px] flex h-10 flex-row justify-center self-stretch rounded-md bg-white md:h-7'
+      }
+    >
       <div className={classNames('flex h-full flex-row self-stretch bg-opacity-80')}>
         <Flatpickr
           //TODO: Change calendar to line color

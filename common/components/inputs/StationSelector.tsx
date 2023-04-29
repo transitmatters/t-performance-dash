@@ -40,7 +40,7 @@ export const StationSelector: React.FC<StationSelector> = ({
           {open && !mdBreakpoint && (
             <div className="fixed left-0 top-0 m-0 h-screen w-screen bg-white bg-opacity-50 p-0" />
           )}
-          <Listbox.Button className="flex w-full md:h-8">
+          <Listbox.Button className="flex h-10 w-full md:h-7">
             <Button additionalClasses="justify-between w-full">
               <p
                 className={classNames(

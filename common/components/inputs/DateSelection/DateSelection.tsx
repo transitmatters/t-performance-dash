@@ -53,10 +53,12 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
         lineColorDarkBorder[line ?? 'DEFAULT']
       )}
     >
-      <Popover className={classNames('flex h-full w-full self-stretch overflow-hidden text-left')}>
+      <Popover
+        className={classNames('flex h-10 w-full self-stretch overflow-hidden text-left md:h-7')}
+      >
         <Popover.Button
           className={classNames(
-            'flex h-full w-full items-center justify-center self-stretch rounded-l-[.25rem] px-3 py-1 text-white text-opacity-95 hover:bg-opacity-70 focus:bg-opacity-70 focus:outline-none',
+            'flex h-10 w-full items-center justify-center self-stretch rounded-l-[.25rem] px-3 py-1 text-white text-opacity-95 hover:bg-opacity-70 focus:bg-opacity-70 focus:outline-none md:h-7',
             line && buttonHighlightFocus[line],
             line && lineColorBackground[line]
           )}

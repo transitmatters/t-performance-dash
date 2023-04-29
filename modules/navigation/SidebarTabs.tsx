@@ -22,9 +22,9 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs, setSidebarOpen
   };
 
   return (
-    <div>
-      <div className="text-xs font-semibold leading-6 text-stone-400">{title}</div>
-      <ul role="list" className={`-mx-2 mt-2 space-y-1`}>
+    <div className="rounded-md bg-white bg-opacity-5 p-1">
+      {/* <div className="text-xs font-semibold leading-6 text-stone-400">{title}</div> */}
+      <ul role="list" className={`space-y-1`}>
         {tabs.map((tab: PageMetadata) => {
           const enabled = line ? tab.lines.includes(line) : true;
           const selected = page === tab.key;
@@ -38,7 +38,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs, setSidebarOpen
                 onClick={() => handleChange(enabled, tab)}
                 className={classNames(
                   selected
-                    ? 'bg-stone-700 text-white'
+                    ? 'bg-stone-900 text-white'
                     : enabled && 'text-stone-300 hover:bg-stone-800 hover:text-white',
                   'group flex select-none items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
                   enabled ? 'cursor-pointer' : 'cursor-default  text-stone-600',
