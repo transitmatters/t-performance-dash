@@ -11,6 +11,7 @@ dayjs.extend(timezone);
 const est = 'America/New_York';
 
 export const DATE_FORMAT = 'YYYY-MM-DD';
+export const PRETTY_DATE_FORMAT = 'MMM D, YYYY';
 export const TODAY = dayjs().tz(est);
 export const TODAY_MIDNIGHT = dayjs().startOf('day');
 export const YESTERDAY_MIDNIGHT = TODAY_MIDNIGHT.subtract(1, 'day');
@@ -204,5 +205,5 @@ export const SINGLE_DATE_KEYS = Object.fromEntries(
 );
 
 export const todayOrDate = (date: dayjs.Dayjs) => {
-  return date.isSame(TODAY, 'day') ? 'Today' : date.format('MMM D, YYYY');
+  return date.isSame(TODAY, 'day') ? 'Today' : date.format(PRETTY_DATE_FORMAT);
 };
