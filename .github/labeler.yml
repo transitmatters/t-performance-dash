@@ -7,10 +7,10 @@ dependencies:
 - package-lock.json
 - server/poetry.lock
 
-python:
+backend:
 - '**/*.py'
 
-javascript:
+frontend:
 - '**/*.js'
 - '**/*.jsx'
 - '**/*.ts'
