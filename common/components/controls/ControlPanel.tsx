@@ -37,7 +37,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   return (
     <div
       className={classNames(
-        'fixed right-2 top-2 z-30 mt-0 flex flex-col items-center rounded-lg border border-opacity-50 bg-stone-100 p-2 shadow-md md:w-[16rem] md:gap-y-2 lg:w-[26rem] lg:gap-y-1',
+        'relative flex flex-col items-start gap-x-4 gap-y-2 lg:flex-row',
         lineColorBorder[line ?? 'DEFAULT']
       )}
     >

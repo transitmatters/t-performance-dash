@@ -43,7 +43,7 @@ export const ButtonGroup: <T extends string, K extends string>(
                   type="button"
                   className={classNames(
                     additionalButtonClass,
-                    'relative inline-flex w-full items-center justify-center px-3 py-2 text-sm ring-1 ring-inset focus:z-10',
+                    'relative inline-flex w-full items-center justify-center px-3 py-2 text-sm ring-1 ring-inset',
                     index === 0 ? 'rounded-tl-md md:rounded-l-md' : '-ml-px',
                     index === options.length - 1 && 'rounded-tr-md md:rounded-r-md',
                     lineColorRing[line ?? 'DEFAULT'],

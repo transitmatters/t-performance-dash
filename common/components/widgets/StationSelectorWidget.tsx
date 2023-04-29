@@ -29,7 +29,6 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
   const stations = optionsStation(lineShort, busRoute);
   const toStation = to ? getParentStationForStopId(to) : stations?.[stations.length - 2];
   const fromStation = from ? getParentStationForStopId(from) : stations?.[1];
-
   React.useEffect(() => {
     const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
     updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });
@@ -61,10 +60,10 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
   return (
     <div
       className={classNames(
-        'relative flex w-full flex-row items-center gap-1 p-2 md:flex-col md:p-0 lg:flex-row'
+        'flex w-full flex-row items-center gap-1 overflow-hidden p-1 md:p-0 xl:w-full'
       )}
     >
-      <div className="flex flex-row items-center gap-1 overflow-hidden md:w-[238px] md:overflow-visible lg:w-fit">
+      <div className="flex flex-row items-center gap-1 self-stretch overflow-hidden">
         <StationSelector
           type={'from'}
           fromStation={fromStation}
@@ -75,7 +74,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
           <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" />
         </div>
       </div>
-      <div className="flex flex-row items-center gap-1 overflow-hidden md:w-[238px] md:overflow-visible lg:w-fit">
+      <div className="flex flex-row items-center gap-1 overflow-hidden">
         <StationSelector
           type={'to'}
           fromStation={fromStation}
