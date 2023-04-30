@@ -34,7 +34,7 @@ export const RangeTabs = () => {
                   {({ selected }) => (
                     <div
                       className={classNames(
-                        `select-none whitespace-nowrap border-b-2 px-4 pb-2 text-sm font-medium focus:outline-none focus:ring-0`,
+                        `select-none whitespace-nowrap border-b-2 px-4 pb-2 text-xs font-medium focus:outline-none focus:ring-0 md:text-sm`,
                         selected
                           ? lineColorBorder[line ?? 'DEFAULT']
                           : 'border-transparent text-gray-600 '

@@ -8,18 +8,16 @@ import { ControlPanel } from '../../common/components/controls/ControlPanel';
 import { lineColorLightBorder } from '../../common/styles/general';
 import { RangeTabs } from '../navigation/RangeTabs';
 
-export const DataPageHeader = () => {
+export const DesktopHeader = () => {
   const {
     line,
     page,
     query: { queryType, busRoute },
   } = useDelimitatedRoute();
   const section = page ? ALL_PAGES[page]?.section : undefined;
-  const md = useBreakpoint('md');
   const lg = useBreakpoint('lg');
-  const isMobile = !md;
-  const shortTitle = md && !lg;
-  const showControlParams = section && line && section !== 'today';
+
+  const showControls = section && line && section !== 'today';
 
   return (
     <div
@@ -36,24 +34,24 @@ export const DataPageHeader = () => {
       >
         <div className={classNames('flex shrink-0 flex-row items-baseline pl-3 text-stone-800')}>
           <h3 className={classNames('text-xl')}>
-            {!shortTitle ? line && LINE_OBJECTS[line]?.name : line && LINE_OBJECTS[line]?.key}
+            {lg ? line && LINE_OBJECTS[line]?.name : line && LINE_OBJECTS[line]?.key}
           </h3>
           {ALL_PAGES[page]?.sectionTitle && (
             <>
               <span className="px-1 text-lg">•</span>
-              <h2 className="select-none pl-1 text-xl">
+              <h2 className="select-none text-xl">
                 <span>{ALL_PAGES[page]?.sectionTitle}</span>
               </h2>
             </>
           )}
           <span className="px-1 text-lg">•</span>
-          <h2 className="select-none pl-1 text-xl font-semibold">
+          <h2 className="select-none text-xl font-semibold">
             <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
           </h2>
         </div>
         {ALL_PAGES[page]?.section === 'trips' && <RangeTabs />}
       </div>
-      {!isMobile && showControlParams && (
+      {showControls && (
         <ControlPanel section={section} line={line} queryType={queryType} busRoute={busRoute} />
       )}
     </div>

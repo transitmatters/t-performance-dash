@@ -1,8 +1,9 @@
 import React from 'react';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { WidgetPage } from '../components/widgets/Widget';
-import { DataPageHeader } from '../../modules/dashboard/DataPageHeader';
+import { DesktopHeader } from '../../modules/dashboard/DesktopHeader';
 import { SideNavBar } from '../../modules/navigation/SideNavBar';
+import { MobileHeader } from '../../modules/dashboard/MobileHeader';
 import { useDelimitatedRoute } from '../utils/router';
 import { ALL_PAGES } from '../constants/pages';
 import { usePresetsOnFirstLoad } from '../utils/firstLoad';
@@ -27,7 +28,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
 
       <div className="flex flex-1 flex-col md:pl-64">
         <main className="flex-1">
-          <DataPageHeader />
+          {isMobile ? <MobileHeader /> : <DesktopHeader />}
           <div className="py-2 md:py-6">
             <div className="h-full px-4 sm:px-6 md:px-8">
               <WidgetPage>{children}</WidgetPage>
