@@ -10,7 +10,7 @@ import { prettyDate } from '../../../common/utils/date';
 import type { ByDirection, SlowZoneDirection, SlowZonesSegment } from './segment';
 
 import { DIRECTIONS } from './segment';
-import DirectionIndicator from './DirectionIndicator';
+import { DirectionIndicator } from './DirectionIndicator';
 
 import styles from './SlowZonesTooltip.module.css';
 
@@ -42,13 +42,11 @@ const getOrderedStationNames = (slowZones: ByDirection<SlowZoneResponse[]>) => {
   return {};
 };
 
-const SlowZonesTooltip = (props: Props) => {
-  const {
-    isHorizontal,
-    color,
-    segment: { slowZones, speedRestrictions },
-  } = props;
-
+export const SlowZonesTooltip: React.FC<Props> = ({
+  isHorizontal,
+  color,
+  segment: { slowZones, speedRestrictions },
+}) => {
   const { fromStationName, toStationName } = useMemo(
     () => getOrderedStationNames(slowZones)!,
     [slowZones]
@@ -144,5 +142,3 @@ const SlowZonesTooltip = (props: Props) => {
     </div>
   );
 };
-
-export default SlowZonesTooltip;

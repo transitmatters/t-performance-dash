@@ -102,17 +102,15 @@ const getLabelPositionProps = (
   } as const;
 };
 
-const LineMap: React.FC<LineMapProps> = (props) => {
-  const {
-    diagram,
-    direction = 'horizontal-on-desktop',
-    getStationLabel,
-    getScaleBasis,
-    strokeOptions = {},
-    tooltip,
-    segments = [],
-  } = props;
-
+export const LineMap: React.FC<LineMapProps> = ({
+  diagram,
+  direction = 'horizontal-on-desktop',
+  getStationLabel,
+  getScaleBasis,
+  strokeOptions = {},
+  tooltip,
+  segments = [],
+}) => {
   const {
     svgRef,
     svgProps,
@@ -169,7 +167,7 @@ const LineMap: React.FC<LineMapProps> = (props) => {
 
       const computedStrokes = strokes.map((stroke) => {
         const pathDirective = path.offset(stroke.offset ?? 0).toSVG();
-        return { pathDirective, stroke };
+        return { pathDirective, ...stroke };
       });
 
       const computedLabels = Object.entries(labels).map(([mapSide, label]) => {
@@ -255,11 +253,11 @@ const LineMap: React.FC<LineMapProps> = (props) => {
   const renderComputedStrokes = () => {
     return computedSegmentExtras
       .map((segment, segmentIndex) => {
-        return segment.computedStrokes.map(({ pathDirective, stroke }, strokeIndex) => {
+        return segment.computedStrokes.map((stroke, strokeIndex) => {
           return (
             <path
               key={`computed-stroke-${segmentIndex}-${strokeIndex}`}
-              d={pathDirective}
+              d={stroke.pathDirective}
               {...getPropsForStrokeOptions(stroke)}
             />
           );
@@ -310,5 +308,3 @@ const LineMap: React.FC<LineMapProps> = (props) => {
     </div>
   );
 };
-
-export default LineMap;
