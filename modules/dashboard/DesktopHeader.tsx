@@ -34,7 +34,7 @@ export const DesktopHeader = () => {
       >
         <div className={classNames('flex shrink-0 flex-row items-baseline pl-3 text-stone-800')}>
           <h3 className={classNames('text-xl')}>
-            {lg ? line && LINE_OBJECTS[line]?.name : line && LINE_OBJECTS[line]?.key}
+            {lg ? line && LINE_OBJECTS[line]?.name : line && LINE_OBJECTS[line]?.short}
           </h3>
           {ALL_PAGES[page]?.sectionTitle && (
             <>

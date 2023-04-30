@@ -22,15 +22,21 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
     if (section === 'trips' && queryType) {
       return (
         <>
-          <DateControl section={section} queryType={queryType} />
-          <div className="flex flex-row items-center justify-center border border-t-0 bg-white">
+          <div className="p-1 pb-0">
+            <DateControl section={section} queryType={queryType} />
+          </div>
+          <div className="flex flex-row items-center justify-center bg-tm-grey">
             <StationSelectorWidget line={line} busRoute={busRoute} />
           </div>
         </>
       );
     }
     if (section === 'line' || section === 'overview') {
-      return <DateControl section={section} queryType={'range'} />;
+      return (
+        <div classNames="p-1">
+          <DateControl section={section} queryType={'range'} />
+        </div>
+      );
     }
   };
 
