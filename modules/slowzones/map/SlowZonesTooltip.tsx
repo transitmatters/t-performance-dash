@@ -14,11 +14,11 @@ import { DirectionIndicator } from './DirectionIndicator';
 
 import styles from './SlowZonesTooltip.module.css';
 
-type Props = {
+interface SlowZonesTooltipProps {
   segment: SlowZonesSegment;
   isHorizontal: boolean;
   color: string;
-};
+}
 
 const getOrderedStationNames = (slowZones: ByDirection<SlowZoneResponse[]>) => {
   const {
@@ -42,7 +42,7 @@ const getOrderedStationNames = (slowZones: ByDirection<SlowZoneResponse[]>) => {
   return {};
 };
 
-export const SlowZonesTooltip: React.FC<Props> = ({
+export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = ({
   isHorizontal,
   color,
   segment: { slowZones, speedRestrictions },
