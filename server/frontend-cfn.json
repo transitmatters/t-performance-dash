@@ -39,14 +39,6 @@
       "Type": "String",
       "Description": "MBTA-performance API key."
     },
-    "DDSite": {
-      "Type": "String",
-      "Default": "datadoghq.com"
-    },
-    "DD_TRACE_ENABLED": {
-      "Type": "Boolean",
-      "Default": true
-    },
     "DDApiKey": {
       "Type": "String",
       "Description": "Datadog API key."
@@ -93,8 +85,6 @@
         "Environment": {
           "Variables": {
             "MBTA_V2_API_KEY": { "Ref": "MbtaV2ApiKey" },
-            "DD_SITE": { "Ref": "DDSite" },
-            "DD_TRACE_ENABLED": { "Ref": "DDTraceEnabled" },
             "DD_API_KEY": { "Ref": "DDApiKey" }
           }
         }
