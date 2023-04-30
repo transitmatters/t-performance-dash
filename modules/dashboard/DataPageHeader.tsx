@@ -5,7 +5,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { ALL_PAGES } from '../../common/constants/pages';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ControlPanel } from '../../common/components/controls/ControlPanel';
-import { lineColorDarkBorder, lineColorText } from '../../common/styles/general';
+import { lineColorLightBorder } from '../../common/styles/general';
 import { RangeTabs } from '../navigation/RangeTabs';
 
 export const DataPageHeader = () => {
@@ -24,8 +24,8 @@ export const DataPageHeader = () => {
   return (
     <div
       className={classNames(
-        'sticky top-0 z-30 mx-2 mb-2 mt-2 flex flex-row justify-between gap-x-6 rounded-md border border-gray-200 bg-white shadow-md md:mx-4 ',
-        lineColorDarkBorder[line ?? 'DEFAULT']
+        'sticky top-0 z-30 mx-3 mb-2 flex flex-row justify-between gap-x-6 rounded-b rounded-br-md border-b border-l border-r border-gray-200 bg-white shadow-md md:mx-0 md:mr-4 md:rounded-bl-none md:rounded-br md:border-l-0',
+        lineColorLightBorder[line ?? 'DEFAULT']
       )}
     >
       <div
@@ -34,8 +34,8 @@ export const DataPageHeader = () => {
           section === 'trips' ? 'justify-between pt-2' : 'justify-center py-2'
         )}
       >
-        <div className={classNames('flex shrink-0 flex-row items-baseline pl-3')}>
-          <h3 className={classNames(lineColorText[line ?? 'DEFAULT'], 'text-xl')}>
+        <div className={classNames('flex shrink-0 flex-row items-baseline pl-3 text-stone-800')}>
+          <h3 className={classNames('text-xl')}>
             {!shortTitle ? line && LINE_OBJECTS[line]?.name : line && LINE_OBJECTS[line]?.key}
           </h3>
           {ALL_PAGES[page]?.sectionTitle && (
