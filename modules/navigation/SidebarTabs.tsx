@@ -6,11 +6,10 @@ import type { PageMetadata } from '../../common/constants/pages';
 
 interface SidebarTabs {
   tabs: PageMetadata[];
-  title: string;
   setSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs, setSidebarOpen }) => {
+export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => {
   const { line, page } = useDelimitatedRoute();
 
   const handlePageNavigation = useHandlePageNavigation();
@@ -23,7 +22,6 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ title, tabs, setSidebarOpen
 
   return (
     <div className="rounded-md bg-white bg-opacity-5 p-1">
-      {/* <div className="text-xs font-semibold leading-6 text-stone-400">{title}</div> */}
       <ul role="list" className={`space-y-1`}>
         {tabs.map((tab: PageMetadata) => {
           const enabled = line ? tab.lines.includes(line) : true;

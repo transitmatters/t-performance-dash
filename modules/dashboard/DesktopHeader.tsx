@@ -19,6 +19,11 @@ export const DesktopHeader = () => {
 
   const showControls = section && line && section !== 'today';
 
+  const getLineName = () => {
+    if (busRoute) return `Route ${busRoute}`;
+    if (line && !lg) return LINE_OBJECTS[line]?.short;
+    if (line) return LINE_OBJECTS[line]?.name;
+  };
   return (
     <div
       className={classNames(
@@ -33,9 +38,7 @@ export const DesktopHeader = () => {
         )}
       >
         <div className={classNames('flex shrink-0 flex-row items-baseline pl-3 text-stone-800')}>
-          <h3 className={classNames('text-xl')}>
-            {lg ? line && LINE_OBJECTS[line]?.name : line && LINE_OBJECTS[line]?.short}
-          </h3>
+          <h3 className={classNames('text-xl')}>{getLineName()}</h3>
           {ALL_PAGES[page]?.sectionTitle && (
             <>
               <span className="px-1 text-lg">•</span>

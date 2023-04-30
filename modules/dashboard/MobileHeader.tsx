@@ -12,7 +12,7 @@ export const MobileHeader = () => {
   const {
     line,
     page,
-    query: { queryType, busRoute, startDate, endDate, view },
+    query: { busRoute, startDate, endDate, view },
   } = useDelimitatedRoute();
   const section = page ? ALL_PAGES[page]?.section : undefined;
 
@@ -30,7 +30,9 @@ export const MobileHeader = () => {
         )}
       >
         <div className={classNames('flex shrink-0 flex-row items-baseline pl-2')}>
-          <h3 className={classNames('text-sm')}>{line && LINE_OBJECTS[line]?.short}</h3>
+          <h3 className={classNames('text-sm')}>
+            {busRoute ? `Route ${busRoute}` : line && LINE_OBJECTS[line]?.short}
+          </h3>
           {ALL_PAGES[page]?.sectionTitle && (
             <>
               <span className="px-1 text-sm">•</span>
