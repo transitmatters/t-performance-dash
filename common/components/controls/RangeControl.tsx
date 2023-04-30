@@ -24,7 +24,7 @@ export const RangeControl = () => {
   return (
     <ButtonGroup
       selectedIndex={selected}
-      options={Object.entries({ single: 'Per Trip', range: 'Daily Avg.' })}
+      options={Object.entries({ single: 'Daily', range: 'Multi-Day' })}
       pressFunction={handleChange}
       additionalDivClass="h-10 md:h-7 w-fit"
       additionalButtonClass="w-fit"

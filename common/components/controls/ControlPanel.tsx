@@ -6,7 +6,6 @@ import type { Section } from '../../constants/pages';
 import type { QueryTypeOptions } from '../../types/router';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
-import { RangeControl } from './RangeControl';
 
 interface ControlPanelProps {
   section: Section;
@@ -25,7 +24,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     if (section === 'trips' && queryType) {
       return (
         <>
-          <RangeControl />
+          {/* <RangeControl /> */}
           <DateControl section={section} queryType={queryType} />
           <StationSelectorWidget line={line} busRoute={busRoute} />
         </>
@@ -39,7 +38,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   return (
     <div
       className={classNames(
-        'shrink-1 flex w-full flex-col items-start justify-start gap-x-8 gap-y-2 overflow-hidden lg:max-w-6xl lg:flex-row',
+        'shrink-1 flex w-full flex-col items-end justify-end gap-x-8 gap-y-2 overflow-hidden lg:max-w-lg',
         lineColorBorder[line ?? 'DEFAULT']
       )}
     >

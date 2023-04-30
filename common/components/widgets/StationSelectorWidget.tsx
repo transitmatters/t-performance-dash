@@ -60,7 +60,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
   return (
     <div
       className={classNames(
-        'flex w-full flex-row items-center gap-1 overflow-hidden p-1 md:p-0 xl:w-full'
+        'flex w-full flex-row items-center gap-1 overflow-hidden p-1 md:p-0 xl:w-auto'
       )}
     >
       <StationSelector

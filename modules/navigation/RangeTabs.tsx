@@ -13,7 +13,7 @@ export const RangeTabs = () => {
   const router = useRouter();
   const dashboardConfig = useDashboardConfig();
   const selected = query.queryType === 'single' ? 1 : 0;
-  const rangeOptions = ['Daily avg.', 'Per trip'];
+  const rangeOptions = ['Multi Day', 'Single Day'];
 
   const handleChange = (index: number) => {
     if (index) {
@@ -24,7 +24,7 @@ export const RangeTabs = () => {
   };
 
   return (
-    <div className="-mb-3 flex items-end">
+    <div className="-mb-3 flex items-end pt-2">
       <Tab.Group selectedIndex={selected} onChange={handleChange}>
         <Tab.List className="flex">
           {rangeOptions.map(
