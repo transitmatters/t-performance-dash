@@ -55,12 +55,11 @@ interface SlowSegmentLabelProps {
   isHorizontal: boolean;
 }
 
-export const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
-  const {
-    isHorizontal,
-    segment: { slowZones },
-    line,
-  } = props;
+export const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = ({
+  isHorizontal,
+  segment: { slowZones },
+  line,
+}) => {
   return (
     <div className={styles.slowSegmentLabel} style={{ marginBottom: isHorizontal ? 1 : 0 }}>
       {DIRECTIONS.map((direction) => {

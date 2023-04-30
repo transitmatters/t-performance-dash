@@ -75,9 +75,12 @@ const getSegmentRenderOptions = (segment: SlowZonesSegment, line: LineMetadata) 
   };
 };
 
-export const SlowZonesMap: React.FC<SlowZonesMapProps> = (props) => {
-  const { lineName, slowZones, direction, speedRestrictions = [] } = props;
-
+export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
+  lineName,
+  slowZones,
+  direction,
+  speedRestrictions = [],
+}) => {
   const line = useMemo(
     () => Object.values(LINE_OBJECTS).find((obj) => obj.short === lineName)!,
     [lineName]
