@@ -13,6 +13,7 @@ pytz = "2023.3"
 boto3 = "1.26.110"
 numpy = "1.24.2"
 pandas = "1.5.3"
+datadog_lambda = "4.72.0"
 
 [tool.poetry.dev-dependencies]
 pip = ">=23.0"
