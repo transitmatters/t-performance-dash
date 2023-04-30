@@ -11,9 +11,11 @@ export const BusNavMenu: React.FC<BusNavMenuProps> = ({ setSidebarOpen }) => {
   return (
     <>
       <BusSelection />
-      <hr className="mt-3 h-1 w-full border-stone-400" />
-      <SidebarTabs tabs={BUS_OVERVIEW} title="Ridership" setSidebarOpen={setSidebarOpen} />
-      <SidebarTabs tabs={BUS_PAGES} title="Trips" setSidebarOpen={setSidebarOpen} />
+      <div className="mx-2 flex flex-col gap-y-4">
+        <hr className="h-1 w-full border-stone-400" />
+        <SidebarTabs tabs={BUS_OVERVIEW} title="Ridership" setSidebarOpen={setSidebarOpen} />
+        <SidebarTabs tabs={BUS_PAGES} title="Trips" setSidebarOpen={setSidebarOpen} />
+      </div>
     </>
   );
 };

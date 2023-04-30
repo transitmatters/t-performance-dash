@@ -28,8 +28,8 @@ export const DesktopHeader = () => {
     >
       <div
         className={classNames(
-          'flex shrink-0 flex-col',
-          section === 'trips' ? 'justify-between pt-2' : 'justify-center py-2'
+          'flex shrink-0 flex-col pt-2',
+          section === 'trips' ? 'justify-end gap-y-3' : 'h-14 justify-center'
         )}
       >
         <div className={classNames('flex shrink-0 flex-row items-baseline pl-3 text-stone-800')}>
