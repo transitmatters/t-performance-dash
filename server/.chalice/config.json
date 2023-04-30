@@ -11,6 +11,10 @@
       "autogen_policy": false,
       "iam_policy_file": "policy.json",
       "environment_variables": {
+        "DD_SERVICE": "t-performance-dash",
+        "DD_SITE": "datadoghq.com",
+        "DD_TRACE_ENABLED": true,
+        "DD_ENV": "prod",
         "TM_FRONTEND_HOST": "dashboard-v4.transitmatters.org"
       },
       "api_gateway_custom_domain": {
@@ -24,6 +28,10 @@
       "autogen_policy": false,
       "iam_policy_file": "policy.json",
       "environment_variables": {
+        "DD_SERVICE": "t-performance-dash",
+        "DD_SITE": "datadoghq.com",
+        "DD_TRACE_ENABLED": true,
+        "DD_ENV": "beta",
         "TM_FRONTEND_HOST": "dashboard-v4-beta.labs.transitmatters.org"
       },
       "api_gateway_custom_domain": {
