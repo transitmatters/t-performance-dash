@@ -138,20 +138,6 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
           {
             id: 'customTitle',
             afterDraw: (chart) => {
-              if ((startDate === undefined || startDate.length === 0) && !isLoading) {
-                // No data is present
-                const { ctx } = chart;
-                const { width } = chart;
-                const { height } = chart;
-                chart.clear();
-
-                ctx.save();
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.font = "16px normal 'Helvetica Nueue'";
-                ctx.fillText('No data to display', width / 2, height / 2);
-                ctx.restore();
-              }
               if (
                 (startDate === undefined ||
                   startDate.length === 0 ||
@@ -171,6 +157,16 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
         ]}
       />
     );
-  }, [dataObject, fromStation, isLoading, line, linePath, lineShort, startDate, toStation]);
+  }, [
+    dataObject,
+    fromStation,
+    headways?.data?.length,
+    isLoading,
+    line,
+    linePath,
+    lineShort,
+    startDate,
+    toStation,
+  ]);
   return histogram;
 };
