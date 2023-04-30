@@ -1,10 +1,8 @@
 import React from 'react';
-import classNames from 'classnames';
 import type { BusRoute, Line } from '../../types/lines';
 import type { Section } from '../../constants/pages';
 import type { QueryTypeOptions } from '../../types/router';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
-import { lineColorDarkBackground } from '../../styles/general';
 import { DateControl } from './DateControl';
 
 interface MobileControlPanelProps {
@@ -25,7 +23,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
       return (
         <>
           <DateControl section={section} queryType={queryType} />
-          <div className="flex flex-row items-center justify-center border border-t-0 border-mbta-darkRed bg-white">
+          <div className="flex flex-row items-center justify-center border border-t-0 bg-white">
             <StationSelectorWidget line={line} busRoute={busRoute} />
           </div>
         </>
@@ -37,12 +35,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   };
 
   return (
-    <div
-      className={classNames(
-        'pb-safe fixed bottom-0 z-20 flex w-full flex-col justify-center',
-        lineColorDarkBackground[line]
-      )}
-    >
+    <div className={'pb-safe fixed bottom-0 z-20 flex w-full flex-col justify-center bg-tm-grey'}>
       {getControls()}
     </div>
   );

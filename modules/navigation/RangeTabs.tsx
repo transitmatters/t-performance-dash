@@ -24,7 +24,7 @@ export const RangeTabs = () => {
   };
 
   return (
-    <div className="-mb-3 flex items-end pt-2">
+    <div className="bottom-0 flex items-end pt-4 md:pt-0">
       <Tab.Group selectedIndex={selected} onChange={handleChange}>
         <Tab.List className="flex">
           {rangeOptions.map(
@@ -34,7 +34,7 @@ export const RangeTabs = () => {
                   {({ selected }) => (
                     <div
                       className={classNames(
-                        `select-none whitespace-nowrap border-b-2 px-4 pb-4 text-sm font-medium focus:outline-none focus:ring-0`,
+                        `select-none whitespace-nowrap border-b-2 px-4 pb-2 text-sm font-medium focus:outline-none focus:ring-0`,
                         selected
                           ? lineColorBorder[line ?? 'DEFAULT']
                           : 'border-transparent text-gray-600 '

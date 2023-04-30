@@ -24,24 +24,29 @@ export const DataPageHeader = () => {
   return (
     <div
       className={classNames(
-        'sticky top-0 z-30 mb-4 mt-0 flex flex-row justify-between gap-x-4 rounded-b-md border border-t-0 border-gray-200 bg-white p-3 shadow-lg sm:pb-3 md:mx-4',
+        'sticky top-0 z-30 mx-2 mb-2 mt-2 flex flex-row justify-between gap-x-6 rounded-md border border-gray-200 bg-white shadow-md md:mx-4 ',
         lineColorDarkBorder[line ?? 'DEFAULT']
       )}
     >
-      <div className="flex flex-shrink-0 flex-col">
-        <div className={classNames('flex flex-shrink-0 flex-row items-baseline md:pb-2')}>
-          <h3 className={classNames(lineColorText[line ?? 'DEFAULT'], 'text-2xl font-semibold')}>
+      <div
+        className={classNames(
+          'flex shrink-0 flex-col',
+          section === 'trips' ? 'justify-between pt-2' : 'justify-center py-2'
+        )}
+      >
+        <div className={classNames('flex shrink-0 flex-row items-baseline pl-3')}>
+          <h3 className={classNames(lineColorText[line ?? 'DEFAULT'], 'text-xl')}>
             {!shortTitle ? line && LINE_OBJECTS[line]?.name : line && LINE_OBJECTS[line]?.key}
           </h3>
           {ALL_PAGES[page]?.sectionTitle && (
             <>
-              <span className="px-1 text-xl">•</span>
-              <h2 className="select-none pl-1 text-xl font-semibold">
+              <span className="px-1 text-lg">•</span>
+              <h2 className="select-none pl-1 text-xl">
                 <span>{ALL_PAGES[page]?.sectionTitle}</span>
               </h2>
             </>
           )}
-          <span className="px-1 text-xl">•</span>
+          <span className="px-1 text-lg">•</span>
           <h2 className="select-none pl-1 text-xl font-semibold">
             <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
           </h2>
