@@ -10,6 +10,7 @@ import { locationDetails } from '../../../common/utils/stations';
 import type { HeadwaysChartProps } from '../../../common/types/charts';
 import { MetricFieldKeys } from '../../../common/types/charts';
 import type { HeadwayPoint } from '../../../common/types/dataPoints';
+import { writeError } from '../../../common/utils/chartError';
 
 ChartJS.register(BarController, BarElement, LinearScale, Title, Tooltip);
 
@@ -150,6 +151,14 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
                 ctx.font = "16px normal 'Helvetica Nueue'";
                 ctx.fillText('No data to display', width / 2, height / 2);
                 ctx.restore();
+              }
+              if (
+                (startDate === undefined ||
+                  startDate.length === 0 ||
+                  headways?.data?.length === 0) &&
+                !isLoading
+              ) {
+                writeError(chart);
               }
               drawTitle(
                 `Headways by train (${dayjs(startDate).format('M/D/YYYY')})`,
