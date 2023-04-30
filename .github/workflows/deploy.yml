@@ -23,8 +23,6 @@ jobs:
       TM_LABS_WILDCARD_CERT_ARN: ${{ secrets.TM_LABS_WILDCARD_CERT_ARN }}
       MBTA_V2_API_KEY: ${{ secrets.MBTA_V2_API_KEY }}
       DD_API_KEY: ${{ secrets.DD_API_KEY }}
-      DD_SITE: datadoghq.com
-      DD_TRACE_ENABLED: true
 
     steps:
       - name: Checkout repo
