@@ -2,39 +2,39 @@ import type { LineObject } from '../types/lines';
 import { COLORS } from './colors';
 
 export const LINE_OBJECTS: LineObject = {
-  RL: {
+  'line-red': {
     name: 'Red Line',
     short: 'Red',
     path: 'red',
-    key: 'RL',
+    key: 'line-red',
     color: COLORS.mbta.red,
   },
-  OL: {
+  'line-orange': {
     name: 'Orange Line',
     short: 'Orange',
     path: 'orange',
-    key: 'OL',
+    key: 'line-orange',
     color: COLORS.mbta.orange,
   },
-  GL: {
+  'line-green': {
     name: 'Green Line',
     short: 'Green',
     path: 'green',
-    key: 'GL',
+    key: 'line-green',
     color: COLORS.mbta.green,
   },
-  BL: {
+  'line-blue': {
     name: 'Blue Line',
     short: 'Blue',
     path: 'blue',
-    key: 'BL',
+    key: 'line-blue',
     color: COLORS.mbta.blue,
   },
-  BUS: {
+  'line-bus': {
     name: 'Buses',
     short: 'Bus',
     path: 'bus',
-    key: 'BUS',
+    key: 'line-bus',
     color: COLORS.mbta.bus,
   },
 };

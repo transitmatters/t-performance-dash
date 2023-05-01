@@ -18,7 +18,7 @@ def get_speeds(params):
         end_date = params["end_date"]
         config = AGG_TO_CONFIG_MAP[params["agg"]]
         line = params["line"]
-        if line not in ["RL", "BL", "GL", "OL"]:
+        if line not in ["line-red", "line-blue", "line-green", "line-orange"]:
             raise BadRequestError("Invalid Line key.")
     except KeyError:
         raise BadRequestError("Missing or invalid parameters.")

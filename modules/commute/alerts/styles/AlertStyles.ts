@@ -1,8 +1,8 @@
 export const lightLineBorder = {
-  RL: `border-mbta-lightRed`,
-  OL: `border-mbta-lightOrange`,
-  GL: `border-mbta-lightGreen`,
-  BL: `border-mbta-lightBlue`,
-  BUS: `border-mbta-lightBus`,
+  'line-red': `border-mbta-lightRed`,
+  'line-orange': `border-mbta-lightOrange`,
+  'line-green': `border-mbta-lightGreen`,
+  'line-blue': `border-mbta-lightBlue`,
+  'line-bus': `border-mbta-lightBus`,
   DEFAULT: `border-white`,
 };
