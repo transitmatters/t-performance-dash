@@ -3,6 +3,7 @@ import { Chart as ChartJS, BarController, BarElement, LinearScale, Title, Toolti
 import 'chartjs-adapter-date-fns';
 import React, { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { drawTitle } from '../../../common/components/charts/Title';
@@ -12,7 +13,7 @@ import { MetricFieldKeys } from '../../../common/types/charts';
 import type { HeadwayPoint } from '../../../common/types/dataPoints';
 import { writeError } from '../../../common/utils/chartError';
 
-ChartJS.register(BarController, BarElement, LinearScale, Title, Tooltip);
+ChartJS.register(BarController, BarElement, LinearScale, ChartjsPluginWatermark, Title, Tooltip);
 
 export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
   headways,
@@ -103,6 +104,19 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
             padding: {
               top: 25,
             },
+          },
+          // @ts-expect-error The watermark plugin doesn't have typescript support
+          watermark: {
+            image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
+            x: 10,
+            y: 10,
+            opacity: 0.1,
+            width: 160,
+            height: 15,
+            alignToChartArea: true,
+            alignX: 'right',
+            alignY: 'top',
+            position: 'back',
           },
           plugins: {
             tooltip: {

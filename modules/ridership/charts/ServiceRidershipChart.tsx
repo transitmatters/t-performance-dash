@@ -8,6 +8,7 @@ import memoize from 'fast-memoize';
 
 import { Chart } from 'react-chartjs-2';
 import type { ChartDataset } from 'chart.js';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { LineData } from '../../../common/types/ridership';
 import {
   asPercentString,
@@ -16,7 +17,7 @@ import {
 } from '../../../common/utils/ridership';
 import { COLORS } from '../../../common/constants/colors';
 
-ChartJS.register(...registerables);
+ChartJS.register(...registerables, ChartjsPluginWatermark);
 
 interface ServiceRidershipChartProps {
   color: string;
@@ -133,6 +134,19 @@ export const ServiceRidershipChart: React.FC<ServiceRidershipChartProps> = ({
           elements: {
             point: { radius: 0 },
             line: { tension: 0 },
+          },
+          // @ts-expect-error The watermark plugin doesn't have typescript support
+          watermark: {
+            image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
+            x: 10,
+            y: 10,
+            opacity: 0.1,
+            width: 160,
+            height: 15,
+            alignToChartArea: true,
+            alignX: 'right',
+            alignY: 'top',
+            position: 'back',
           },
           plugins: {
             legend: {

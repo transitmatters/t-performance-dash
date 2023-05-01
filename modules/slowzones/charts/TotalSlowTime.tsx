@@ -5,6 +5,7 @@ import { enUS } from 'date-fns/locale';
 import { Line } from 'react-chartjs-2';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
 import type { LineShort, Line as TrainLine } from '../../../common/types/lines';
@@ -20,7 +21,7 @@ interface TotalSlowTimeProps {
   lineShort: LineShort;
   line: TrainLine;
 }
-Chart.register(...registerables);
+Chart.register(...registerables, ChartjsPluginWatermark);
 
 export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
   data,
@@ -99,6 +100,19 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
             },
             display: true,
           },
+        },
+        // @ts-expect-error The watermark plugin doesn't have typescript support
+        watermark: {
+          image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
+          x: 10,
+          y: 10,
+          opacity: 0.1,
+          width: 160,
+          height: 15,
+          alignToChartArea: true,
+          alignX: 'right',
+          alignY: 'top',
+          position: 'back',
         },
         plugins: {
           tooltip: {

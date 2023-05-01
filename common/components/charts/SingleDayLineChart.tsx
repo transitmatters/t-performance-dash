@@ -146,7 +146,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
               x: 10,
               y: 10,
-              opacity: 0.05,
+              opacity: 0.1,
               width: 160,
               height: 15,
               alignToChartArea: true,
