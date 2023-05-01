@@ -21,7 +21,7 @@ import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 import { HeadwaysHistogram } from './charts/HeadwaysHistogram';
 import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
 
-export default function HeadwaysDetails() {
+export function HeadwaysDetails() {
   const {
     query: { startDate, endDate, to, from },
   } = useDelimitatedRoute();

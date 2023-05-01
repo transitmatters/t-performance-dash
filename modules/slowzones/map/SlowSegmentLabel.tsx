@@ -8,7 +8,7 @@ import type { SlowZoneDirection, SlowZonesByDirection } from './segment';
 import { DIRECTIONS } from './segment';
 
 import styles from './SlowSegmentLabel.module.css';
-import DirectionIndicator from './DirectionIndicator';
+import { DirectionIndicator } from './DirectionIndicator';
 
 interface SlowSegmentLabelProps {
   slowZonesByDirection: SlowZonesByDirection;
