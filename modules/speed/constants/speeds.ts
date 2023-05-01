@@ -1,86 +1,83 @@
 import type { TooltipCallbacks, TooltipItem, TooltipModel } from 'chart.js';
 import type { _DeepPartialObject } from 'chart.js/dist/types/utils';
 import dayjs from 'dayjs';
-import { DATE_FORMAT } from '../../../common/constants/dates';
+import { todayOrDate } from '../../../common/constants/dates';
 
-const today = dayjs();
-const endDate = today.format(DATE_FORMAT);
-
-type ParamsType = {
+export type ParamsType = {
   agg: 'daily' | 'weekly' | 'monthly';
-  endDate: string;
-  startDate: string;
-  comparisonStartDate: string;
-  comparisonEndDate: string;
   tooltipFormat: 'MMM d, yyyy' | 'MMM yyyy';
   unit: 'day' | 'month' | 'year';
+  getWidgetTitle: (date?: string) => string;
   callbacks?:
     | _DeepPartialObject<TooltipCallbacks<'line', TooltipModel<'line'>, TooltipItem<'line'>>>
     | undefined;
 };
 
-export const DELAYS_RANGE_PARAMS_MAP: { [s: string]: ParamsType } = {
-  week: {
-    agg: 'daily',
-    endDate: endDate,
-    startDate: today.subtract(6, 'days').format(DATE_FORMAT),
-    comparisonStartDate: today.subtract(13, 'days').format(DATE_FORMAT),
-    comparisonEndDate: today.subtract(6, 'days').subtract(1, 'days').format(DATE_FORMAT),
-    tooltipFormat: 'MMM d, yyyy',
-    unit: 'day',
-  },
-  month: {
-    agg: 'daily',
-    endDate: endDate,
-    startDate: today.subtract(30, 'days').format(DATE_FORMAT),
-    comparisonStartDate: today.subtract(60, 'days').format(DATE_FORMAT),
-    comparisonEndDate: today.subtract(30, 'days').subtract(1, 'days').format(DATE_FORMAT),
-    tooltipFormat: 'MMM d, yyyy',
+export const getSpeedGraphConfig = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) => {
+  const numDays = endDate.diff(startDate, 'day');
 
+  if (numDays < 150) {
+    return SPEED_RANGE_PARAM_MAP.day;
+  }
+  if (numDays <= 730) {
+    return SPEED_RANGE_PARAM_MAP.week;
+  }
+  return SPEED_RANGE_PARAM_MAP.month;
+};
+
+const getWeeklyTitle = (date: string) => {
+  const dateObject = dayjs(date);
+  return `Week of ${dateObject.format('MMM D, YYYY')}`;
+};
+
+const getMonthlyTitle = (date: string) => {
+  const dateObject = dayjs(date);
+  return `${dateObject.format('MMMM YYYY')}`;
+};
+
+export const SPEED_RANGE_PARAM_MAP: { [s: string]: ParamsType } = {
+  day: {
+    agg: 'daily',
+    tooltipFormat: 'MMM d, yyyy',
     unit: 'day',
+    getWidgetTitle: (date) => todayOrDate(dayjs(date)),
   },
-  year: {
+  week: {
     agg: 'weekly',
-    endDate: endDate,
-    startDate: today.subtract(1, 'years').format(DATE_FORMAT),
-    comparisonStartDate: today.subtract(2, 'years').format(DATE_FORMAT),
-    comparisonEndDate: today.subtract(1, 'years').subtract(1, 'days').format(DATE_FORMAT),
     tooltipFormat: 'MMM d, yyyy',
     callbacks: {
       title: (context) => `Week of ${context[0].label}`,
     },
     unit: 'month',
+    getWidgetTitle: getWeeklyTitle,
   },
-  all: {
+  month: {
     agg: 'monthly',
-    endDate: endDate,
-    startDate: dayjs('2016-01-01').format(DATE_FORMAT),
-    comparisonStartDate: today.subtract(2, 'years').format(DATE_FORMAT), // TODO: better comparison for all times (?)
-    comparisonEndDate: today.subtract(1, 'years').subtract(1, 'days').format(DATE_FORMAT),
     tooltipFormat: 'MMM yyyy',
     unit: 'year',
+    getWidgetTitle: getMonthlyTitle,
   },
 };
 
 // TODO: Upload this to overviewStats db
 export const MINIMUMS = {
-  RL: { date: 'May 2020', value: 8374.5 },
-  BL: { date: 'May 2020', value: 1860.5 },
-  OL: { date: 'May 2020', value: 3776.75 },
+  'line-red': { date: 'May 2020', value: 8374.5 },
+  'line-blue': { date: 'May 2020', value: 1860.5 },
+  'line-orange': { date: 'May 2020', value: 3776.75 },
   DEFAULT: { date: '', value: 1 },
 };
 
 // As per MBTA Blue book: https://archives.lib.state.ma.us/handle/2452/827917 2003-2004
 export const CORE_TRACK_LENGTHS = {
-  RL: 14.82 + 14.82 + 10.13 + 10.13, // <Quincy Adams -> Davis> + <reverse> + <Shawmut -> Davis> + <reverse>
-  OL: 9.64 + 9.58, // <Malden Station -> Green Street> + <reverse>
-  BL: 5.38 + 5.37, //<Gov. Center -> Revere> + <reverse>
+  'line-red': 14.82 + 14.82 + 10.13 + 10.13, // <Quincy Adams -> Davis> + <reverse> + <Shawmut -> Davis> + <reverse>
+  'line-orange': 9.64 + 9.58, // <Malden Station -> Green Street> + <reverse>
+  'line-blue': 5.38 + 5.37, //<Gov. Center -> Revere> + <reverse>
   DEFAULT: 1,
 };
 
 export const PEAK_MPH = {
-  RL: CORE_TRACK_LENGTHS['RL'] / (MINIMUMS['RL'].value / 3600),
-  OL: CORE_TRACK_LENGTHS['OL'] / (MINIMUMS['OL'].value / 3600),
-  BL: CORE_TRACK_LENGTHS['BL'] / (MINIMUMS['BL'].value / 3600),
+  'line-red': CORE_TRACK_LENGTHS['line-red'] / (MINIMUMS['line-red'].value / 3600),
+  'line-orange': CORE_TRACK_LENGTHS['line-orange'] / (MINIMUMS['line-orange'].value / 3600),
+  'line-blue': CORE_TRACK_LENGTHS['line-blue'] / (MINIMUMS['line-blue'].value / 3600),
   DEFAULT: 1,
 };

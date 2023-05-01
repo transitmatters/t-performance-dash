@@ -14,12 +14,14 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
+import classNames from 'classnames';
 import type { DataPoint } from '../../types/dataPoints';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { SingleDayLineProps } from '../../../common/types/charts';
 import { prettyDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../utils/router';
 import { DownloadButton } from '../general/DownloadButton';
+import { writeError } from '../../utils/chartError';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
 
@@ -61,11 +63,11 @@ const departureFromNormalString = (metric: number, benchmark: number) => {
   if (!isFinite(ratio) || ratio <= 1.25) {
     return '';
   } else if (ratio <= 1.5) {
-    return '>25% longer than normal';
+    return '25%+ over schedule';
   } else if (ratio <= 2.0) {
-    return '>50% longer than normal';
+    return '50%+ over schedule';
   } else if (ratio > 2.0) {
-    return '>100% longer than normal';
+    return '100%+ over schedule';
   }
   return '';
 };
@@ -78,8 +80,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   metricField,
   pointField,
   benchmarkField,
-  // TODO: loading animation?
-  isLoading,
   fname,
   bothStops = false,
   location,
@@ -90,8 +90,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const { line } = useDelimitatedRoute();
   return (
-    <div className={showLegend ? 'chart' : undefined}>
-      <div className={'chart-container'}>
+    <div className={classNames('relative flex w-full flex-col pr-2')}>
+      <div className="flex h-60 w-full flex-row">
         <Line
           id={chartId}
           ref={ref}
@@ -215,25 +215,13 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 },
               },
             },
-            // animation: false,
           }}
           plugins={[
             {
               id: 'customTitle',
               afterDraw: (chart) => {
-                if ((date === undefined || date.length === 0) && !isLoading) {
-                  // No data is present
-                  const ctx = chart.ctx;
-                  const width = chart.width;
-                  const height = chart.height;
-                  chart.clear();
-
-                  ctx.save();
-                  ctx.textAlign = 'center';
-                  ctx.textBaseline = 'middle';
-                  ctx.font = "16px normal 'Helvetica Nueue'";
-                  ctx.fillText('No data to display', width / 2, height / 2);
-                  ctx.restore();
+                if (date === undefined || date.length === 0 || data.length === 0) {
+                  writeError(chart);
                 }
                 drawTitle(title, location, bothStops, chart);
               },
@@ -241,16 +229,18 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
           ]}
         />
       </div>
-      {showLegend && <div className="chart-extras">{benchmarkField && <LegendView />}</div>}
-      {!isHomescreen && date && (
-        <DownloadButton
-          data={data}
-          datasetName={fname}
-          location={location}
-          bothStops={bothStops}
-          startDate={date}
-        />
-      )}
+      <div className="flex flex-row items-end gap-4 pl-6 pr-2">
+        {showLegend && benchmarkField ? <LegendView /> : <div className="w-full" />}
+        {!isHomescreen && date && (
+          <DownloadButton
+            data={data}
+            datasetName={fname}
+            location={location}
+            bothStops={bothStops}
+            startDate={date}
+          />
+        )}
+      </div>
     </div>
   );
 };

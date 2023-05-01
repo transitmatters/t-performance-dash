@@ -12,14 +12,15 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { SpeedDataPoint } from '../../common/types/dataPoints';
-import type { TimeRange } from '../../common/types/inputs';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
-import { CORE_TRACK_LENGTHS, DELAYS_RANGE_PARAMS_MAP, PEAK_MPH } from './constants/speeds';
+import { CORE_TRACK_LENGTHS, PEAK_MPH } from './constants/speeds';
+import type { ParamsType } from './constants/speeds';
 
 ChartJS.register(
   CategoryScale,
@@ -34,15 +35,23 @@ ChartJS.register(
 );
 
 interface SpeedGraphProps {
-  timeRange: TimeRange;
   data: SpeedDataPoint[];
+  config: ParamsType;
+  startDate: string;
+  endDate: string;
+  showTitle?: boolean;
 }
 
-export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {
+export const SpeedGraph: React.FC<SpeedGraphProps> = ({
+  data,
+  config,
+  startDate,
+  endDate,
+  showTitle = false,
+}) => {
   const { line } = useDelimitatedRoute();
-  const { tooltipFormat, unit, startDate, endDate, callbacks } = DELAYS_RANGE_PARAMS_MAP[timeRange];
+  const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef();
-
   const labels = data.map((point) => point.date);
   return (
     <Line
@@ -89,7 +98,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {
           },
           title: {
             // empty title to set font and leave room for drawTitle fn
-            display: true,
+            display: showTitle,
             text: '',
           },
         },
@@ -114,6 +123,9 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {
             time: {
               unit: unit,
               tooltipFormat: tooltipFormat,
+              displayFormats: {
+                month: 'MMM',
+              },
             },
             ticks: {
               color: COLORS.design.subtitleGrey,
@@ -135,11 +147,11 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {
         {
           id: 'customTitle',
           afterDraw: (chart) => {
-            if (startDate === undefined || startDate.length === 0) {
+            if (!data) {
               // No data is present
-              const ctx = chart.ctx;
-              const width = chart.width;
-              const height = chart.height;
+              const { ctx } = chart;
+              const { width } = chart;
+              const { height } = chart;
               chart.clear();
 
               ctx.save();
@@ -149,7 +161,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({ data, timeRange }) => {
               ctx.fillText('No data to display', width / 2, height / 2);
               ctx.restore();
             }
-            drawSimpleTitle(`Speed`, chart);
+            if (showTitle) drawSimpleTitle(`Median Speed`, chart);
           },
         },
       ]}

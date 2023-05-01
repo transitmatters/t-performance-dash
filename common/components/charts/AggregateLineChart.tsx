@@ -18,6 +18,7 @@ import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts'
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import { DownloadButton } from '../general/DownloadButton';
+import { writeError } from '../../utils/chartError';
 import { LegendLongTerm } from './Legend';
 import { drawTitle } from './Title';
 
@@ -48,7 +49,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   title,
   data,
   location,
-  isLoading,
   pointField,
   bothStops = false,
   fname,
@@ -62,15 +62,14 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   suggestedYMax,
   showLegend = true,
   isHomescreen = false,
-  children,
 }) => {
   const ref = useRef();
   const hourly = timeUnit === 'hour';
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
 
   return (
-    <div className="chart">
-      <div className="chart-container">
+    <div className="relative flex w-full flex-col pr-2">
+      <div className="flex h-60 w-full flex-row">
         <Line
           id={chartId}
           ref={ref}
@@ -180,6 +179,9 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
             {
               id: 'customTitleAggregate',
               afterDraw: (chart: ChartJS) => {
+                if (startDate === undefined || endDate === undefined || data.length === 0) {
+                  writeError(chart);
+                }
                 // TODO: This is not placing the title correctly for aggregate charts.
                 drawTitle(title, location, bothStops, chart);
               },
@@ -187,22 +189,18 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           ]}
         />
       </div>
-      {showLegend && (
-        <div className="chart-extras">
-          <LegendLongTerm />
-          {children}
-        </div>
-      )}
-      {!isHomescreen && startDate && (
-        <DownloadButton
-          data={data}
-          datasetName={fname}
-          location={location}
-          bothStops={bothStops}
-          startDate={startDate}
-          endDate={endDate}
-        />
-      )}
+      <div className="flex flex-row items-end gap-4 pl-6">
+        {showLegend && <LegendLongTerm />}
+        {!isHomescreen && startDate && (
+          <DownloadButton
+            data={data}
+            datasetName={fname}
+            location={location}
+            bothStops={bothStops}
+            startDate={startDate}
+          />
+        )}
+      </div>
     </div>
   );
 };

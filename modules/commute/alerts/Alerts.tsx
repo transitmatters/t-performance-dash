@@ -1,18 +1,19 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
-import { fetchAlerts } from '../../../common/api/alerts';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { lineColorBackground } from '../../../common/styles/general';
 import { Divider } from '../../../common/components/general/Divider';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
+import { useAlertsData } from '../../../common/api/hooks/alerts';
 import { AlertBox } from './AlertBox';
 
 export const Alerts: React.FC = () => {
-  const { line, lineShort, query } = useDelimitatedRoute();
-  const alerts = useQuery(['alerts', lineShort, query.busRoute], () =>
-    fetchAlerts(lineShort, query.busRoute)
-  );
+  const {
+    line,
+    lineShort,
+    query: { busRoute },
+  } = useDelimitatedRoute();
+  const alerts = useAlertsData(lineShort, busRoute);
 
   const divStyle = classNames(
     'flex flex-col rounded-md p-4 text-white shadow-dataBox w-full xl:w-1/3 gap-y-2 md:max-h-[309px] md:overflow-y-auto',
@@ -39,8 +40,7 @@ export const Alerts: React.FC = () => {
           <AlertBox
             alerts={alerts.data}
             lineShort={lineShort}
-            line={line}
-            busRoute={query.busRoute}
+            busRoute={busRoute}
             type={'current'}
           />
         </div>
@@ -50,8 +50,7 @@ export const Alerts: React.FC = () => {
           <AlertBox
             alerts={alerts.data}
             lineShort={lineShort}
-            line={line}
-            busRoute={query.busRoute}
+            busRoute={busRoute}
             type={'upcoming'}
           />
         </div>

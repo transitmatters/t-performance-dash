@@ -1,23 +1,31 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useQuery } from '@tanstack/react-query';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { fetchAllSlow, fetchDelayTotals, fetchSpeedRestrictions } from './api/slowzones';
+import {
+  useSlowzoneAllData,
+  useSlowzoneDelayTotalData,
+  useSlowzoneSpeedRestrictions,
+} from '../../common/api/hooks/slowzones';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import type { Direction } from '../../common/types/dataPoints';
+import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
+import { DirectionObject } from './constants/constants';
 dayjs.extend(utc);
 
 export default function SlowZonesDetails() {
-  const delayTotals = useQuery(['delayTotals'], fetchDelayTotals);
-  const allSlow = useQuery(['allSlow'], fetchAllSlow);
-  const speedRestrictions = useQuery(['speedRestrictions'], fetchSpeedRestrictions);
+  const delayTotals = useSlowzoneDelayTotalData();
+  const [direction, setDirection] = useState<Direction>('northbound');
+  const allSlow = useSlowzoneAllData();
+  const speedRestrictions = useSlowzoneSpeedRestrictions();
   const {
     lineShort,
     line,
@@ -41,8 +49,7 @@ export default function SlowZonesDetails() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
-        {/* TODO: display current total when a range is not selected. */}
+      <WidgetDiv>
         <WidgetTitle title="Total delays" />
         <div className="relative flex flex-col">
           {totalSlowTimeReady ? (
@@ -59,8 +66,8 @@ export default function SlowZonesDetails() {
             </div>
           )}
         </div>
-      </div>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+      </WidgetDiv>
+      <WidgetDiv>
         <WidgetTitle title="Line Map" />
         <div className="relative flex flex-col">
           {allSlow.data && speedRestrictions.data && canShowSlowZonesMap ? (
@@ -77,16 +84,40 @@ export default function SlowZonesDetails() {
             </div>
           )}
         </div>
-      </div>
-      <div className="h-full rounded-lg border-design-lightGrey bg-white p-2 shadow-dataBox">
+      </WidgetDiv>
+      <WidgetDiv>
         <WidgetTitle title="Locations" />
         <div className="relative flex flex-col">
+          {allSlow.data && canShowSlowZonesMap && speedRestrictions.data ? (
+            <SlowZonesMap
+              slowZones={allSlow.data}
+              lineName={lineShort}
+              direction="horizontal-on-desktop"
+              speedRestrictions={speedRestrictions.data}
+            />
+          ) : (
+            <div className="relative flex h-full">
+              <ChartPlaceHolder query={delayTotals} />
+            </div>
+          )}
+        </div>
+      </WidgetDiv>
+      {/* Not Using WidgetDiv here - removed the padding so the chart goes to the edge of the widget on mobile. */}
+      <div className="h-full rounded-lg bg-white p-0 shadow-dataBox sm:p-2">
+        <div className="flex flex-col p-2 sm:p-0 md:flex-row">
+          <WidgetTitle title={`${DirectionObject[direction]} Segments`} />
+          <div className="p-2">
+            <ButtonGroup pressFunction={setDirection} options={Object.entries(DirectionObject)} />
+          </div>
+        </div>
+        <div className="relative flex flex-col py-2 sm:py-0">
           {segmentsReady ? (
             <SlowZonesSegmentsWrapper
               data={allSlow.data}
               lineShort={lineShort}
               endDateUTC={endDateUTC}
               startDateUTC={startDateUTC}
+              direction={direction}
             />
           ) : (
             <ChartPlaceHolder query={allSlow} />

@@ -4,7 +4,7 @@ import type { WidgetValueInterface } from '../../../types/basicWidgets';
 import { LoadingSpinner } from '../../graphics/LoadingSpinner';
 import { Delta } from './Delta';
 
-export type LayoutKind = 'total-and-delta' | 'delta-and-percent-change';
+export type LayoutKind = 'total-and-delta' | 'delta-and-percent-change' | 'no-delta';
 export type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';
 
 export type BasicWidgetDataLayoutProps = {

@@ -17,7 +17,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       },
       {
         "stop_name": "Davis",
@@ -68,6 +69,7 @@
       },
       {
         "stop_name": "Kendall/MIT",
+        "short": "Kendall",
         "branches": ["A", "B"],
         "station": "place-knncl",
         "order": 6,
@@ -79,6 +81,7 @@
       },
       {
         "stop_name": "Charles/MGH",
+        "short": "MGH",
         "branches": ["A", "B"],
         "station": "place-chmnl",
         "order": 7,
@@ -90,6 +93,7 @@
       },
       {
         "stop_name": "Park Street",
+        "short": "Park St.",
         "branches": ["A", "B"],
         "station": "place-pktrm",
         "order": 8,
@@ -101,6 +105,7 @@
       },
       {
         "stop_name": "Downtown Crossing",
+        "short": "DTX",
         "branches": ["A", "B"],
         "station": "place-dwnxg",
         "order": 9,
@@ -112,6 +117,7 @@
       },
       {
         "stop_name": "South Station",
+        "short": "S. Station",
         "branches": ["A", "B"],
         "station": "place-sstat",
         "order": 10,
@@ -145,6 +151,7 @@
       },
       {
         "stop_name": "JFK/UMass (Ashmont)",
+        "short": "JFK (A)",
         "branches": ["A"],
         "station": "place-jfk",
         "order": 101,
@@ -167,6 +174,7 @@
       },
       {
         "stop_name": "Fields Corner",
+        "short": "Fields Cor.",
         "branches": ["A"],
         "station": "place-fldcr",
         "order": 103,
@@ -199,10 +207,12 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       },
       {
         "stop_name": "JFK/UMass (Braintree)",
+        "short": "JFK (B)",
         "branches": ["B"],
         "station": "place-jfk",
         "order": 201,
@@ -214,6 +224,7 @@
       },
       {
         "stop_name": "North Quincy",
+        "short": "N. Quincy",
         "branches": ["B"],
         "station": "place-nqncy",
         "order": 202,
@@ -239,6 +250,7 @@
       },
       {
         "stop_name": "Quincy Center",
+        "short": "Quincy Ctr.",
         "branches": ["B"],
         "station": "place-qnctr",
         "order": 204,
@@ -250,6 +262,7 @@
       },
       {
         "stop_name": "Quincy Adams",
+        "short": "Q. Adams",
         "branches": ["B"],
         "station": "place-qamnl",
         "order": 205,
@@ -270,7 +283,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       }
     ]
   },
@@ -292,10 +306,12 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       },
       {
         "stop_name": "Malden Center",
+        "short": "Malden Ctr.",
         "branches": null,
         "station": "place-mlmnl",
         "order": 2,
@@ -332,6 +348,7 @@
       },
       {
         "stop_name": "Sullivan Square",
+        "short": "Sullivan Sq.",
         "branches": null,
         "station": "place-sull",
         "order": 5,
@@ -344,6 +361,7 @@
       },
       {
         "stop_name": "Community College",
+        "short": "Comm. Coll.",
         "branches": null,
         "station": "place-ccmnl",
         "order": 6,
@@ -355,6 +373,7 @@
       },
       {
         "stop_name": "North Station",
+        "short": "N. Station",
         "branches": null,
         "station": "place-north",
         "order": 7,
@@ -377,6 +396,7 @@
       },
       {
         "stop_name": "State Street",
+        "short": "State St.",
         "branches": null,
         "station": "place-state",
         "order": 9,
@@ -388,6 +408,7 @@
       },
       {
         "stop_name": "Downtown Crossing",
+        "short": "DTX",
         "branches": null,
         "station": "place-dwnxg",
         "order": 10,
@@ -410,6 +431,7 @@
       },
       {
         "stop_name": "Tufts Medical Center",
+        "short": "Tufts Medical",
         "branches": null,
         "station": "place-tumnl",
         "order": 12,
@@ -434,6 +456,7 @@
       },
       {
         "stop_name": "Massachusetts Avenue",
+        "short": "Mass. Ave.",
         "branches": null,
         "station": "place-masta",
         "order": 14,
@@ -456,6 +479,7 @@
       },
       {
         "stop_name": "Roxbury Crossing",
+        "short": "Roxbury Xing",
         "branches": null,
         "station": "place-rcmnl",
         "order": 16,
@@ -468,6 +492,7 @@
       },
       {
         "stop_name": "Jackson Square",
+        "short": "Jackson Sq.",
         "branches": null,
         "station": "place-jaksn",
         "order": 17,
@@ -491,6 +516,7 @@
       },
       {
         "stop_name": "Green Street",
+        "short": "Green St.",
         "branches": null,
         "station": "place-grnst",
         "order": 19,
@@ -512,7 +538,8 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       }
     ]
   },
@@ -534,10 +561,12 @@
         },
         "accessible": true,
         "enclosed_bike_parking": true,
-        "pedal_park": true
+        "pedal_park": true,
+        "terminus": true
       },
       {
         "stop_name": "Revere Beach",
+        "short": "Revere Bch.",
         "branches": null,
         "station": "place-rbmnl",
         "order": 2,
@@ -560,6 +589,7 @@
       },
       {
         "stop_name": "Suffolk Downs",
+        "short": "Suff. Downs",
         "branches": null,
         "station": "place-sdmnl",
         "order": 4,
@@ -571,6 +601,7 @@
       },
       {
         "stop_name": "Orient Heights",
+        "short": "Orient Hts.",
         "branches": null,
         "station": "place-orhte",
         "order": 5,
@@ -629,6 +660,7 @@
       },
       {
         "stop_name": "State Street",
+        "short": "State St.",
         "branches": null,
         "station": "place-state",
         "order": 10,
@@ -640,6 +672,7 @@
       },
       {
         "stop_name": "Government Center",
+        "short": "Gov. Center",
         "branches": null,
         "station": "place-gover",
         "order": 11,
@@ -658,7 +691,8 @@
           "0": ["70038"],
           "1": ["70838"]
         },
-        "accessible": false
+        "accessible": false,
+        "terminus": true
       }
     ]
   },
@@ -680,7 +714,8 @@
           "1": ["70512"]
         },
         "accessible": true,
-        "enclosed_bike_parking": true
+        "enclosed_bike_parking": true,
+        "terminus": true
       },
       {
         "stop_name": "Ball Square",
@@ -744,7 +779,8 @@
           "1": ["70504"]
         },
         "accessible": true,
-        "enclosed_bike_parking": true
+        "enclosed_bike_parking": true,
+        "terminus": true
       },
       {
         "stop_name": "Lechmere",
@@ -1043,7 +1079,8 @@
           "0": ["70106"],
           "1": ["70107"]
         },
-        "accessible": true
+        "accessible": true,
+        "terminus": true
       },
       {
         "stop_name": "Saint Marys Street",
@@ -1187,7 +1224,8 @@
           "0": ["70238"],
           "1": ["70237"]
         },
-        "accessible": true
+        "accessible": true,
+        "terminus": true
       },
       {
         "stop_name": "Fenway",
@@ -1336,7 +1374,8 @@
           "1": ["70161"]
         },
         "accessible": true,
-        "enclosed_bike_parking": true
+        "enclosed_bike_parking": true,
+        "terminus": true
       },
       {
         "stop_name": "Prudential",
@@ -1457,7 +1496,8 @@
           "0": ["70260"],
           "1": ["70260"]
         },
-        "accessible": true
+        "accessible": true,
+        "terminus": true
       }
     ]
   }

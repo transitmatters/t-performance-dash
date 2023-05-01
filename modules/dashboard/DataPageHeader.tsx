@@ -1,40 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { useBreakpoint } from '../../common/hooks/useBreakpoint';
-import { DataPageTabs } from '../navigation/desktop/DataPageTabs';
-import { DateSelection } from '../../common/components/inputs/DateSelection/DateSelection';
+import { lineColorText } from '../../common/styles/general';
+import { ALL_PAGES } from '../../common/constants/pages';
+import { RangeTabs } from '../navigation/RangeTabs';
 
 export const DataPageHeader = () => {
-  const isDesktop = useBreakpoint('md');
-
-  const {
-    line,
-    datapage,
-    query: { endDate },
-  } = useDelimitatedRoute();
-  const [range, setRange] = useState<boolean>(endDate !== undefined);
-
-  React.useEffect(() => {
-    if (!range && endDate !== undefined) {
-      setRange(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [endDate]);
+  const { line, page } = useDelimitatedRoute();
 
   return (
     <div className="relative border-b border-gray-200 sm:pb-0">
       <div className="md:flex md:items-center md:justify-between">
-        <h3 className="text-2xl font-medium leading-6 text-gray-900 md:text-xl">
-          {line && LINE_OBJECTS[line]?.name}
+        <h3 className="select-none text-3xl font-medium leading-8 text-stone-900 md:text-2xl">
+          <span className={lineColorText[line ?? 'DEFAULT']}>
+            {line && LINE_OBJECTS[line]?.name}
+          </span>
+          <span className="text-2xl font-normal md:text-xl">
+            {' - '}
+            {ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}
+          </span>
         </h3>
-        {isDesktop && datapage !== 'overview' && (
-          <div className="absolute right-0 top-1 mt-0">
-            <DateSelection />
-          </div>
-        )}
       </div>
-      <DataPageTabs />
+      {ALL_PAGES[page]?.section === 'trips' && <RangeTabs />}
     </div>
   );
 };

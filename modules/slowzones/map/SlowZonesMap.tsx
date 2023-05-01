@@ -30,7 +30,8 @@ const abbreviateStationName = ({ stationName }) => {
     .replace('Government Center', "Gov't Center")
     .replace('Northeastern University', 'Northeastern')
     .replace('Museum of Fine Arts', 'MFA')
-    .replace('Massachusetts Avenue', 'Mass Ave');
+    .replace('Massachusetts Avenue', 'Mass Ave')
+    .replace('North Quincy', 'N. Quincy');
 };
 
 const getSlownessFactor = (zones: SlowZoneResponse | SlowZoneResponse[]) => {

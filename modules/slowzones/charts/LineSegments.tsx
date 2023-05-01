@@ -10,18 +10,26 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { enUS } from 'date-fns/locale';
+import { Bar } from 'react-chartjs-2';
+import React, { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc);
 
-import React, { useMemo, useRef } from 'react';
-import { Bar } from 'react-chartjs-2';
 import { YESTERDAY_MIDNIGHT } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
-import type { LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
+import type { Direction, LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
-import { getRoutes } from '../../../common/utils/slowZoneUtils';
+import {
+  getRoutes,
+  getSlowZoneOpacity,
+  getStationPairName,
+  getDateAxisConfig,
+} from '../../../common/utils/slowZoneUtils';
+import { hexWithAlpha } from '../../../common/utils/general';
+import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
+import { stationAxisConfig } from '../constants/chartConfig';
+
+dayjs.extend(utc);
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, TimeScale);
 
@@ -30,6 +38,7 @@ interface LineSegmentsProps {
   line: LineShort;
   startDateUTC: dayjs.Dayjs;
   endDateUTC: dayjs.Dayjs;
+  direction: Direction;
 }
 
 export const LineSegments: React.FC<LineSegmentsProps> = ({
@@ -37,31 +46,62 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
   line,
   startDateUTC,
   endDateUTC,
+  direction,
 }) => {
   const ref = useRef();
-  const routes = useMemo(() => getRoutes('southbound', data), [data]);
+  const chartRange = endDateUTC.diff(startDateUTC, 'day');
+  const breakpoint = [
+    { active: useBreakpoint('xl'), value: chartRange / 36 },
+    { active: useBreakpoint('lg'), value: chartRange / 20 },
+    { active: useBreakpoint('md'), value: chartRange / 12 },
+    { active: useBreakpoint('sm'), value: chartRange / 12 },
+  ];
+  const useShortStationNames = !breakpoint[1].active;
+  const getDisplayCutoff = () => {
+    for (const bp of breakpoint) {
+      if (bp.active) return bp.value;
+    }
+    return chartRange / 20;
+  };
 
-  const lineSegmentData: LineSegmentData[] | undefined = data.map((sz) => {
+  const isMobile = !breakpoint[3].active;
+  const routes = useMemo(
+    () => getRoutes(direction, data, useShortStationNames),
+    [data, direction, useShortStationNames]
+  );
+
+  const lineSegmentData: LineSegmentData[] = data.map((sz) => {
+    const szStartDate = dayjs.utc(sz.start);
+    const szEndDate = dayjs.utc(sz.end);
+    const szTimePeriod = [szStartDate.format('YYYY-MM-DD'), szEndDate.format('YYYY-MM-DD')];
     return {
-      x: [dayjs.utc(sz.start).format('YYYY-MM-DD'), dayjs.utc(sz.end).format('YYYY-MM-DD')],
-      id: sz.id,
+      duration: szEndDate.diff(szStartDate, 'day'),
+      x: szTimePeriod,
+      y: szTimePeriod,
+      id: getStationPairName(sz.from, sz.to, useShortStationNames),
       delay: sz.delay,
     };
   });
 
   return (
     <Bar
-      height={550}
       ref={ref}
       id={'timeline-slow-zones'}
       data={{
         labels: routes,
         datasets: [
           {
+            borderWidth: 2,
+            borderRadius: 4,
+            borderColor: line && COLORS.mbta[line.toLowerCase()],
+            backgroundColor: (context) => {
+              return hexWithAlpha(
+                line && COLORS.mbta[line.toLowerCase()],
+                getSlowZoneOpacity(lineSegmentData[context.dataIndex]?.delay)
+              );
+            },
             label: line,
-            minBarLength: 28,
-            backgroundColor: line && COLORS.mbta[line.toLowerCase()],
-            borderSkipped: true,
+            borderSkipped: false,
             data: lineSegmentData,
           },
         ],
@@ -75,44 +115,35 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
           padding: {},
         },
 
-        parsing: {
-          yAxisKey: 'id',
-        },
-        indexAxis: 'y',
+        parsing: isMobile
+          ? { xAxisKey: 'id' }
+          : {
+              yAxisKey: 'id',
+            },
+        indexAxis: isMobile ? 'x' : 'y',
         scales: {
-          x: {
-            min: startDateUTC.toISOString(),
-            max: endDateUTC.toISOString(),
-            type: 'time',
-            time: {
-              unit: 'month',
-            },
-            adapters: {
-              date: {
-                locale: enUS,
-              },
-            },
-            display: true,
-          },
-          y: {
-            stacked: true,
-            beginAtZero: true,
-            ticks: {
-              autoSkip: false,
-            },
-          },
+          x: isMobile
+            ? stationAxisConfig
+            : { ...getDateAxisConfig(startDateUTC, endDateUTC), type: 'time' },
+          y: isMobile
+            ? { ...getDateAxisConfig(startDateUTC, endDateUTC), type: 'time' }
+            : stationAxisConfig,
         },
+
         plugins: {
           legend: {
             display: false,
           },
           tooltip: {
             callbacks: {
-              title: (context) => {
-                return context[0].label;
-              },
               label: (context) => {
-                return 'Delay: ' + data[context.datasetIndex].delay.toFixed(0) + ' sec';
+                return 'Delay: ' + data[context.dataIndex].delay.toFixed(0) + ' sec';
+              },
+              title: (context) => {
+                return getStationPairName(
+                  data[context[0].dataIndex].from,
+                  data[context[0].dataIndex].to
+                );
               },
               beforeBody: (context) => {
                 const start = context[0].parsed._custom?.barStart;
@@ -132,18 +163,17 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
             anchor: 'center',
             clamp: true,
             clip: false,
-            formatter: function (context) {
+            padding: 2,
+            formatter: (context) => {
               return context.delay.toFixed(0) + ' s';
             },
+            display: (context) => lineSegmentData[context.dataIndex].duration > getDisplayCutoff(),
             labels: {
               value: {
-                color: 'white',
+                backgroundColor: hexWithAlpha(line && COLORS.mbta[line.toLowerCase()], 0.8),
+                borderRadius: 4,
+                color: '#ffffff',
               },
-            },
-            display: function (ctx) {
-              const scale = ctx.chart.scales.y; // 'y' is your scale id
-              const range = Math.max(scale.max - scale.min, 1);
-              return (ctx.chart.height / range) * 3 > 16;
             },
           },
         },
