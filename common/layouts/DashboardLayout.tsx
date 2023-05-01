@@ -24,7 +24,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   usePresetsOnFirstLoad(section, query);
 
   return (
-    <div className="flex min-h-full flex-col justify-between">
+    <div className="flex min-h-full flex-col justify-between bg-stone-100">
       {isMobile ? <MobileNavHeader /> : <SideNavBar />}
 
       <div className="flex flex-1 flex-col md:pl-64">
