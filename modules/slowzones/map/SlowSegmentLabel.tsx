@@ -8,7 +8,7 @@ import type { SlowZoneDirection, SlowZonesSegment } from './segment';
 import { DIRECTIONS } from './segment';
 
 import styles from './SlowSegmentLabel.module.css';
-import DirectionIndicator from './DirectionIndicator';
+import { DirectionIndicator } from './DirectionIndicator';
 
 interface SlowZoneLabelProps {
   direction: SlowZoneDirection;
@@ -17,14 +17,12 @@ interface SlowZoneLabelProps {
   isHorizontal: boolean;
 }
 
-const SlowZoneLabel: React.FC<SlowZoneLabelProps> = (props) => {
-  const {
-    direction,
-    isHorizontal,
-    color,
-    slowZone: { delay },
-  } = props;
-
+const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
+  direction,
+  isHorizontal,
+  color,
+  slowZone: { delay },
+}) => {
   const delayString = useMemo(
     () =>
       stringifyTime(delay, {
@@ -57,12 +55,11 @@ interface SlowSegmentLabelProps {
   isHorizontal: boolean;
 }
 
-const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
-  const {
-    isHorizontal,
-    segment: { slowZones },
-    line,
-  } = props;
+export const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = ({
+  isHorizontal,
+  segment: { slowZones },
+  line,
+}) => {
   return (
     <div className={styles.slowSegmentLabel} style={{ marginBottom: isHorizontal ? 1 : 0 }}>
       {DIRECTIONS.map((direction) => {
@@ -83,5 +80,3 @@ const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
     </div>
   );
 };
-
-export default SlowSegmentLabel;

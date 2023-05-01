@@ -102,17 +102,15 @@ const getLabelPositionProps = (
   } as const;
 };
 
-const LineMap: React.FC<LineMapProps> = (props) => {
-  const {
-    diagram,
-    direction = 'horizontal-on-desktop',
-    getStationLabel,
-    getScaleBasis,
-    strokeOptions = {},
-    tooltip,
-    segments = [],
-  } = props;
-
+export const LineMap: React.FC<LineMapProps> = ({
+  diagram,
+  direction = 'horizontal-on-desktop',
+  getStationLabel,
+  getScaleBasis,
+  strokeOptions = {},
+  tooltip,
+  segments = [],
+}) => {
   const {
     svgRef,
     svgProps,
@@ -310,5 +308,3 @@ const LineMap: React.FC<LineMapProps> = (props) => {
     </div>
   );
 };
-
-export default LineMap;

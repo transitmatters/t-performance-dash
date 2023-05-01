@@ -12,7 +12,6 @@ import { fetchAllSlow, fetchDelayTotals, fetchSpeedRestrictions } from './api/sl
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
-
 dayjs.extend(utc);
 
 export default function SlowZonesDetails() {

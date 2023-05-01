@@ -1,7 +1,7 @@
 import React from 'react';
 
 import type { SegmentRenderOptions } from './LineMap';
-import LineMap from './LineMap';
+import { LineMap } from './LineMap';
 import { createDefaultDiagramForLine } from '.';
 
 export default {

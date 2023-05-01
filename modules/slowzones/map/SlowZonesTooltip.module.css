@@ -1,6 +1,5 @@
 .slowZonesTooltip {
     display: flex;
-    font-size: 14px;
     align-items: center;
     user-select: none;
     --tooltip-background: white;
@@ -39,7 +38,6 @@
     overflow: hidden;
     background: var(--tooltip-background);
 }
-
 
 .title {
     font-weight: 500;

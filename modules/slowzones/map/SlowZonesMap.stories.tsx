@@ -2,7 +2,7 @@ import React from 'react';
 
 import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 
-import SlowZonesMap from './SlowZonesMap';
+import { SlowZonesMap } from './SlowZonesMap';
 
 export default {
   title: 'SlowZonesMap',

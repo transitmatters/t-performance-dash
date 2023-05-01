@@ -11,8 +11,12 @@ interface Props {
   size?: number;
 }
 
-const DirectionIndicator: React.FC<Props> = (props: Props) => {
-  const { direction, color, isHorizontal, size = 5 } = props;
+export const DirectionIndicator: React.FC<Props> = ({
+  direction,
+  color,
+  isHorizontal,
+  size = 5,
+}) => {
   const rotation = isHorizontal ? (direction === '1' ? 90 : 270) : direction === '1' ? 180 : 0;
   return (
     <div
@@ -27,5 +31,3 @@ const DirectionIndicator: React.FC<Props> = (props: Props) => {
     />
   );
 };
-
-export default DirectionIndicator;
