@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
@@ -9,13 +9,17 @@ import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useSlowzoneAllData, useSlowzoneDelayTotalData } from '../../common/api/hooks/slowzones';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import type { Direction } from '../../common/types/dataPoints';
+import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
+import { DirectionObject } from './constants/constants';
 dayjs.extend(utc);
 
 export default function SlowZonesDetails() {
   const delayTotals = useSlowzoneDelayTotalData();
+  const [direction, setDirection] = useState<Direction>('northbound');
   const allSlow = useSlowzoneAllData();
   const {
     lineShort,
@@ -74,21 +78,28 @@ export default function SlowZonesDetails() {
           )}
         </div>
       </WidgetDiv>
-      <WidgetDiv>
-        <WidgetTitle title="Locations" />
-        <div className="relative flex flex-col">
+      {/* Not Using WidgetDiv here - removed the padding so the chart goes to the edge of the widget on mobile. */}
+      <div className="h-full rounded-lg bg-white p-0 shadow-dataBox sm:p-2">
+        <div className="flex flex-col p-2 sm:p-0 md:flex-row">
+          <WidgetTitle title={`${DirectionObject[direction]} Segments`} />
+          <div className="p-2">
+            <ButtonGroup pressFunction={setDirection} options={Object.entries(DirectionObject)} />
+          </div>
+        </div>
+        <div className="relative flex flex-col py-2 sm:py-0">
           {segmentsReady ? (
             <SlowZonesSegmentsWrapper
               data={allSlow.data}
               lineShort={lineShort}
               endDateUTC={endDateUTC}
               startDateUTC={startDateUTC}
+              direction={direction}
             />
           ) : (
             <ChartPlaceHolder query={allSlow} />
           )}
         </div>
-      </WidgetDiv>
+      </div>
     </div>
   );
 }

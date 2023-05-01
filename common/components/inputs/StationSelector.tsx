@@ -67,13 +67,19 @@ export const StationSelector: React.FC<StationSelector> = ({
                 {stationOptions?.map((station, stationIndex) => (
                   <Listbox.Option
                     key={stationIndex}
-                    className={({ active, selected }) =>
+                    disabled={
+                      type === 'from'
+                        ? station.station === toStation.station
+                        : station.station === fromStation.station
+                    }
+                    className={({ active, selected, disabled }) =>
                       classNames(
-                        'relative cursor-pointer select-none items-center px-4 py-2',
+                        'relative select-none items-center px-4 py-2',
                         active ? selectConfig[linePath] : 'text-gray-900',
                         selected
                           ? `bg-opacity-20 font-semibold ${lineColorBackground[line ?? 'DEFAULT']}`
-                          : 'font-normal'
+                          : 'font-normal',
+                        disabled ? 'cursor-default bg-stone-200 text-stone-600' : 'cursor-pointer'
                       )
                     }
                     value={station}
