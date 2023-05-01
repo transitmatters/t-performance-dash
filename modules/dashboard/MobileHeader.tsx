@@ -8,7 +8,7 @@ import { lineColorLightBorder } from '../../common/styles/general';
 import { RangeTabs } from '../navigation/RangeTabs';
 import { OverviewRangeTypes } from '../../common/constants/dates';
 
-export const MobileHeader = () => {
+export const MobileHeader: React.FC = () => {
   const {
     line,
     page,

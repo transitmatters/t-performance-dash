@@ -1,9 +1,9 @@
 import React from 'react';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { WidgetPage } from '../components/widgets/Widget';
-import { DesktopHeader } from '../../modules/dashboard/DesktopHeader';
 import { SideNavBar } from '../../modules/navigation/SideNavBar';
 import { MobileHeader } from '../../modules/dashboard/MobileHeader';
+import { DesktopHeader } from '../../modules/dashboard/DesktopHeader';
 import { useDelimitatedRoute } from '../utils/router';
 import { ALL_PAGES } from '../constants/pages';
 import { usePresetsOnFirstLoad } from '../utils/firstLoad';

@@ -8,7 +8,7 @@ import { ControlPanel } from '../../common/components/controls/ControlPanel';
 import { lineColorLightBorder } from '../../common/styles/general';
 import { RangeTabs } from '../navigation/RangeTabs';
 
-export const DesktopHeader = () => {
+export const DesktopHeader: React.FC = () => {
   const {
     line,
     page,

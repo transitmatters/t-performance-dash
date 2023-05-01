@@ -1,12 +1,13 @@
 import { Tab } from '@headlessui/react';
 import classNames from 'classnames';
+import type { SetStateAction } from 'react';
 import React, { Fragment } from 'react';
 import { lineColorBackground, lineColorBorder } from '../../styles/general';
 import { useDelimitatedRoute } from '../../utils/router';
 
 interface ButtonGroupProps<K, T> {
   options: [K, T][];
-  pressFunction: (index) => void;
+  pressFunction: React.Dispatch<SetStateAction<K>>;
   selectedIndex?: number;
   additionalDivClass?: string;
   additionalButtonClass?: string;

@@ -24,7 +24,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     if (section === 'trips' && queryType) {
       return (
         <>
-          {/* <RangeControl /> */}
           <DateControl section={section} queryType={queryType} />
           <StationSelectorWidget line={line} busRoute={busRoute} />
         </>
