@@ -2,7 +2,7 @@ import { Tab } from '@headlessui/react';
 import classNames from 'classnames';
 import type { SetStateAction } from 'react';
 import React, { Fragment } from 'react';
-import { lineColorBackground, lineColorRing } from '../../styles/general';
+import { lineColorBackground, lineColorBorder } from '../../styles/general';
 import { useDelimitatedRoute } from '../../utils/router';
 
 interface ButtonGroupProps<K, T> {
@@ -11,6 +11,7 @@ interface ButtonGroupProps<K, T> {
   selectedIndex?: number;
   additionalDivClass?: string;
   additionalButtonClass?: string;
+  isOverview?: boolean;
 }
 
 export const ButtonGroup: <T extends string, K extends string>(
@@ -21,6 +22,7 @@ export const ButtonGroup: <T extends string, K extends string>(
   selectedIndex,
   additionalDivClass,
   additionalButtonClass,
+  isOverview,
 }) => {
   const { line } = useDelimitatedRoute();
   return (
@@ -31,7 +33,9 @@ export const ButtonGroup: <T extends string, K extends string>(
     >
       <Tab.List
         className={classNames(
-          'isolate inline-flex w-full rounded-t-md shadow-sm md:rounded-md',
+          'isolate inline-flex w-full overflow-hidden border shadow-sm',
+          isOverview ? 'rounded-t-md md:rounded-md' : 'rounded-md',
+          lineColorBorder[line ?? 'DEFAULT'],
           additionalDivClass
         )}
       >
@@ -43,10 +47,9 @@ export const ButtonGroup: <T extends string, K extends string>(
                   type="button"
                   className={classNames(
                     additionalButtonClass,
-                    'relative inline-flex w-full items-center justify-center px-3 py-2 text-sm ring-1 ring-inset focus:z-10',
-                    index === 0 ? 'rounded-tl-md md:rounded-l-md' : '-ml-px',
-                    index === options.length - 1 && 'rounded-tr-md md:rounded-r-md',
-                    lineColorRing[line ?? 'DEFAULT'],
+                    'relative inline-flex w-full items-center justify-center px-3 py-2 text-sm focus:z-10',
+                    index > 0 && '-ml-px border-l',
+                    lineColorBorder[line ?? 'DEFAULT'],
                     selected
                       ? `${lineColorBackground[line ?? 'DEFAULT']} text-white hover:bg-opacity-90`
                       : `hover:${

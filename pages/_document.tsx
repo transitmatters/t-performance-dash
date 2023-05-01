@@ -3,9 +3,9 @@ import React from 'react';
 
 export default function Document() {
   return (
-    <Html lang="en" className="font-sans h-full bg-gray-100">
+    <Html lang="en" className="font-sans h-full">
       <Head />
-      <body>
+      <body className="bg-tm-grey">
         <Main />
         <NextScript />
       </body>
