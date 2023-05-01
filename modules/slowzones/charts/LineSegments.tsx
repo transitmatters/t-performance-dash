@@ -23,10 +23,11 @@ import {
   getRoutes,
   getSlowZoneOpacity,
   getStationPairName,
+  getDateAxisConfig,
 } from '../../../common/utils/slowZoneUtils';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { stationAxisConfig, getDateAxisConfig } from '../constants/chartConfig';
+import { stationAxisConfig } from '../constants/chartConfig';
 
 dayjs.extend(utc);
 

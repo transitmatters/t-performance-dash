@@ -1,5 +1,6 @@
 import timezone from 'dayjs/plugin/timezone';
 import dayjs from 'dayjs';
+import { enUS } from 'date-fns/locale';
 import type { TimeUnit } from 'chart.js';
 import utc from 'dayjs/plugin/utc';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
@@ -167,4 +168,18 @@ export const getTimeUnitSlowzones = (startDate: dayjs.Dayjs, endDate: dayjs.Dayj
 
 export const getSlowZoneOpacity = (delay: number) => {
   return Math.min(Math.sqrt(delay / 240), 0.9);
+};
+
+export const getDateAxisConfig = (startDateUTC: dayjs.Dayjs, endDateUTC: dayjs.Dayjs) => {
+  return {
+    min: startDateUTC.toISOString(),
+    max: endDateUTC.toISOString(),
+    time: { unit: getTimeUnitSlowzones(startDateUTC, endDateUTC) },
+    adapters: {
+      date: {
+        locale: enUS,
+      },
+    },
+    display: true,
+  };
 };
