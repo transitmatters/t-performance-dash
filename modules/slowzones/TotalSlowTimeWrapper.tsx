@@ -32,7 +32,7 @@ export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
       <BasicWidgetDataLayout
         widgetValue={
           new TimeWidgetValue(
-            filteredDelayTotals[filteredDelayTotals.length - 1][lineShort],
+            filteredDelayTotals[filteredDelayTotals.length - 1]?.[lineShort],
             delayDelta
           )
         }
