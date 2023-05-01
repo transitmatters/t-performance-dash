@@ -143,16 +143,15 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
             },
             // @ts-expect-error The watermark plugin doesn't have typescript support
             watermark: {
-              image:
-                'https://images.squarespace-cdn.com/content/533b9a24e4b01d79d0ae4376/1491867656317-WB0K3NNCQ18RF39RRD52/Logo_Logotype_Dark_transparent.png',
+              image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
               x: 10,
               y: 10,
-              opacity: 0.1,
-              width: 104,
-              height: 30,
+              opacity: 0.05,
+              width: 160,
+              height: 15,
               alignToChartArea: true,
               alignX: 'right',
-              alignY: 'bottom',
+              alignY: 'top',
               position: 'back',
             },
             plugins: {
