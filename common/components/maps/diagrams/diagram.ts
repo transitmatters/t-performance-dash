@@ -90,10 +90,17 @@ export class Diagram {
 
   getAdjacentSegmentLocations() {
     const pairs: SegmentLocation[] = [];
+    const seenPairKeys: Set<string> = new Set();
     for (const stationIndex of this.stationDisplacementMap.values()) {
       const stationIds = Object.keys(stationIndex);
       for (let i = 0; i < stationIds.length - 1; i++) {
-        pairs.push({ fromStationId: stationIds[i], toStationId: stationIds[i + 1] });
+        const fromStationId = stationIds[i];
+        const toStationId = stationIds[i + 1];
+        const pairKey = `${fromStationId}__${toStationId}`;
+        if (!seenPairKeys.has(pairKey)) {
+          seenPairKeys.add(pairKey);
+          pairs.push({ fromStationId: stationIds[i], toStationId: stationIds[i + 1] });
+        }
       }
     }
     return pairs;
