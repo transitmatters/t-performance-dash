@@ -43,12 +43,16 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
             <p className="text-base text-design-subtitleGrey">{widgetValue.getUnits()}</p>
           </div>
           <div className="mt-1 flex flex-row items-baseline gap-x-1">
-            <Delta
-              widgetValue={widgetValue}
-              sentimentDirection={sentimentDirection}
-              usePercentChange={layoutKind === 'delta-and-percent-change'}
-            />
-            <p className={classNames('text-xs text-design-subtitleGrey sm:text-sm')}>{analysis}</p>
+            {layoutKind !== 'no-delta' && (
+              <Delta
+                widgetValue={widgetValue}
+                sentimentDirection={sentimentDirection}
+                usePercentChange={layoutKind === 'delta-and-percent-change'}
+              />
+            )}
+            <p className={classNames('truncate text-xs text-design-subtitleGrey sm:text-sm')}>
+              {analysis}
+            </p>
           </div>
         </div>
       </div>
