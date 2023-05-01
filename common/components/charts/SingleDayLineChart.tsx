@@ -23,6 +23,7 @@ import { prettyDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../utils/router';
 import { DownloadButton } from '../general/DownloadButton';
 import { writeError } from '../../utils/chartError';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
 
@@ -89,6 +90,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   showLegend = true,
 }) => {
   const ref = useRef();
+  const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const { line } = useDelimitatedRoute();
   return (
@@ -146,9 +148,9 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
               x: 10,
               y: 10,
-              opacity: 0.3,
-              width: 160,
-              height: 15,
+              opacity: 0.2,
+              width: isMobile ? 120 : 160,
+              height: isMobile ? 11.25 : 15,
               alignToChartArea: true,
               alignX: 'right',
               alignY: 'top',

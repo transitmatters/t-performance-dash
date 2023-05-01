@@ -16,6 +16,7 @@ import {
   normalizeToPercent,
 } from '../../../common/utils/ridership';
 import { COLORS } from '../../../common/constants/colors';
+import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 
 ChartJS.register(...registerables, ChartjsPluginWatermark);
 
@@ -49,6 +50,8 @@ export const ServiceRidershipChart: React.FC<ServiceRidershipChartProps> = ({
   lineData,
 }) => {
   const { serviceHistory, ridershipHistory } = lineData ?? {};
+
+  const isMobile = !useBreakpoint('md');
 
   const { timestamps } = useMemo(() => getChartLabels(startDate), [startDate]);
 
@@ -140,9 +143,9 @@ export const ServiceRidershipChart: React.FC<ServiceRidershipChartProps> = ({
             image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
             x: 10,
             y: 10,
-            opacity: 0.3,
-            width: 160,
-            height: 15,
+            opacity: 0.2,
+            width: isMobile ? 120 : 160,
+            height: isMobile ? 11.25 : 15,
             alignToChartArea: true,
             alignX: 'right',
             alignY: 'top',

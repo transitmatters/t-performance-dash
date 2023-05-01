@@ -20,6 +20,7 @@ import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import { DownloadButton } from '../general/DownloadButton';
 import { writeError } from '../../utils/chartError';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { LegendLongTerm } from './Legend';
 import { drawTitle } from './Title';
 
@@ -67,6 +68,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
 }) => {
   const ref = useRef();
   const hourly = timeUnit === 'hour';
+  const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
 
   return (
@@ -161,9 +163,9 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
               image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
               x: 10,
               y: 10,
-              opacity: 0.3,
-              width: 160,
-              height: 15,
+              opacity: 0.2,
+              width: isMobile ? 120 : 160,
+              height: isMobile ? 11.25 : 15,
               alignToChartArea: true,
               alignX: 'right',
               alignY: 'top',

@@ -12,6 +12,7 @@ import type { HeadwaysChartProps } from '../../../common/types/charts';
 import { MetricFieldKeys } from '../../../common/types/charts';
 import type { HeadwayPoint } from '../../../common/types/dataPoints';
 import { writeError } from '../../../common/utils/chartError';
+import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 
 ChartJS.register(BarController, BarElement, LinearScale, ChartjsPluginWatermark, Title, Tooltip);
 
@@ -28,6 +29,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
   } = useDelimitatedRoute();
 
   const ref = useRef();
+  const isMobile = !useBreakpoint('md');
 
   // dataObject is a mapping from headway bucket -> number of trains.
   // All keys are increased by 0.5. This is a workaround to get chartjs to display the tick labels in between the bars.
@@ -110,9 +112,9 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
             image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
             x: 10,
             y: 10,
-            opacity: 0.3,
-            width: 160,
-            height: 15,
+            opacity: 0.2,
+            width: isMobile ? 120 : 160,
+            height: isMobile ? 11.25 : 15,
             alignToChartArea: true,
             alignX: 'right',
             alignY: 'top',
