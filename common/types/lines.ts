@@ -1,4 +1,4 @@
-export type Line = 'RL' | 'OL' | 'GL' | 'BL' | 'BUS';
+export type Line = 'line-red' | 'line-orange' | 'line-green' | 'line-blue' | 'line-bus';
 export type LineShort = 'Red' | 'Orange' | 'Green' | 'Blue' | 'Bus';
 export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus';
 export type BusRoute =

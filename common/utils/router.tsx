@@ -14,11 +14,11 @@ import { LINE_OBJECTS } from '../constants/lines';
 import { getDashboardConfig, saveDashboardConfig } from '../state/utils/dashboardUtils';
 
 const linePathToKeyMap: Record<string, Line> = {
-  red: 'RL',
-  orange: 'OL',
-  green: 'GL',
-  blue: 'BL',
-  bus: 'BUS',
+  red: 'line-red',
+  orange: 'line-orange',
+  green: 'line-green',
+  blue: 'line-blue',
+  bus: 'line-bus',
 };
 
 export const getParams = (params: ParsedUrlQuery | QueryParams) => {
@@ -128,7 +128,7 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   const { query, page } = route;
   const currentPage = ALL_PAGES[page];
   const currentPath = currentPage.path;
-  const validPage = currentPage.lines.includes('BUS');
+  const validPage = currentPage.lines.includes('line-bus');
   if (newRoute === route.query.busRoute || !validPage) {
     return `/bus/trips?busRoute=${newRoute}`;
   }
