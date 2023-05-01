@@ -1,8 +1,9 @@
 import json
 import os
 import subprocess
-from chalice import Chalice, CORSConfig, ConflictError, Response
+from chalice import Chalice, CORSConfig, ConflictError, Response, ConvertToMiddleware
 from datetime import date, timedelta
+from datadog_lambda.wrapper import datadog_lambda_wrapper
 from chalicelib import aggregation, data_funcs, MbtaPerformanceAPI, secrets, mbta_v3, speed
 
 
@@ -11,6 +12,8 @@ app = Chalice(app_name="data-dashboard")
 TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", "localhost:3000")
 
 cors_config = CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600)
+
+app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
 
 
 def parse_user_date(user_date):

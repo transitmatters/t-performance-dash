@@ -21,6 +21,7 @@ import type { SingleDayLineProps } from '../../../common/types/charts';
 import { prettyDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../utils/router';
 import { DownloadButton } from '../general/DownloadButton';
+import { writeError } from '../../utils/chartError';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
 
@@ -79,8 +80,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   metricField,
   pointField,
   benchmarkField,
-  // TODO: loading animation?
-  isLoading,
   fname,
   bothStops = false,
   location,
@@ -216,25 +215,13 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 },
               },
             },
-            // animation: false,
           }}
           plugins={[
             {
               id: 'customTitle',
               afterDraw: (chart) => {
-                if ((date === undefined || date.length === 0) && !isLoading) {
-                  // No data is present
-                  const { ctx } = chart;
-                  const { width } = chart;
-                  const { height } = chart;
-                  chart.clear();
-
-                  ctx.save();
-                  ctx.textAlign = 'center';
-                  ctx.textBaseline = 'middle';
-                  ctx.font = "16px normal 'Helvetica Nueue'";
-                  ctx.fillText('No data to display', width / 2, height / 2);
-                  ctx.restore();
+                if (date === undefined || date.length === 0 || data.length === 0) {
+                  writeError(chart);
                 }
                 drawTitle(title, location, bothStops, chart);
               },
