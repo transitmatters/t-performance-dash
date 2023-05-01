@@ -11,6 +11,7 @@
       "autogen_policy": false,
       "iam_policy_file": "policy.json",
       "environment_variables": {
+        "DD_LAMBDA_HANDLER": "app.app",
         "DD_SERVICE": "t-performance-dash",
         "DD_SITE": "datadoghq.com",
         "DD_TRACE_ENABLED": "true",
@@ -28,6 +29,7 @@
       "autogen_policy": false,
       "iam_policy_file": "policy.json",
       "environment_variables": {
+        "DD_LAMBDA_HANDLER": "app.app",
         "DD_SERVICE": "t-performance-dash",
         "DD_SITE": "datadoghq.com",
         "DD_TRACE_ENABLED": "true",
