@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay, faCalendarWeek } from '@fortawesome/free-solid-svg-icons';
 import {
   buttonHighlightFocus,
-  lineColorBackground,
-  lineColorDarkBorder,
+  lineColorDarkBackground,
+  lineColorLightBorder,
 } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import type { DatePresetKey } from '../../../constants/dates';
@@ -49,8 +49,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
   return (
     <div
       className={classNames(
-        'flex w-full flex-row overflow-hidden rounded-md border md:max-w-sm md:overflow-visible lg:w-auto',
-        lineColorDarkBorder[line ?? 'DEFAULT']
+        'flex w-full flex-row overflow-hidden rounded-md  md:max-w-sm md:overflow-visible lg:w-auto'
       )}
     >
       <Popover
@@ -58,9 +57,10 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
       >
         <Popover.Button
           className={classNames(
-            'flex h-10 w-full items-center justify-center self-stretch rounded-l-[.25rem] px-3 py-1 text-white text-opacity-95 hover:bg-opacity-70 focus:bg-opacity-70 focus:outline-none md:h-7',
+            'flex h-10 w-full items-center justify-center self-stretch rounded-l-[.25rem] border px-3 py-1 text-white text-opacity-95 hover:bg-opacity-70 focus:bg-opacity-70 focus:outline-none md:h-7',
             line && buttonHighlightFocus[line],
-            line && lineColorBackground[line]
+            lineColorLightBorder[line ?? 'DEFAULT'],
+            lineColorDarkBackground[line ?? 'DEFAULT']
           )}
         >
           <FontAwesomeIcon

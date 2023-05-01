@@ -70,7 +70,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
         setStation={(stationId) => updateStations('from', stationId)}
       />
       <div className="flex h-4 w-4 items-center justify-center">
-        <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4 text-white md:text-black" />
+        <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4 text-white" />
       </div>
       <StationSelector
         type={'to'}

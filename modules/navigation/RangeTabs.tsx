@@ -3,7 +3,6 @@ import React from 'react';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { lineColorBorder } from '../../common/styles/general';
 import { useDashboardConfig } from '../../common/state/dashboardConfig';
 import { switchToRange, switchToSingleDay } from './utils/rangeTabUtils';
 
@@ -34,10 +33,8 @@ export const RangeTabs = () => {
                   {({ selected }) => (
                     <div
                       className={classNames(
-                        `select-none whitespace-nowrap border-b-2 px-4 pb-2 text-xs font-medium text-stone-900 focus:outline-none focus:ring-0 md:text-sm`,
-                        selected
-                          ? lineColorBorder[line ?? 'DEFAULT']
-                          : 'border-transparent text-stone-800 '
+                        `select-none whitespace-nowrap border-b-2 border-white px-4 pb-2 text-xs font-medium text-stone-100 focus:outline-none focus:ring-0 md:text-sm`,
+                        !selected && 'border-b-0 text-stone-200 '
                       )}
                     >
                       {range}
