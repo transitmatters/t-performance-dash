@@ -6,7 +6,7 @@ import { useDelimitatedRoute } from '../../utils/router';
 export const BusDataNotice: React.FC = () => {
   const { line, linePath } = useDelimitatedRoute();
 
-  if (line === 'BUS' || linePath === 'bus') {
+  if (line === 'line-bus' || linePath === 'bus') {
     return (
       <div className={'flex items-center'}>
         <FontAwesomeIcon icon={faMagnifyingGlassChart} size={'lg'} />

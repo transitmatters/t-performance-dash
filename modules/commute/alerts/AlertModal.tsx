@@ -3,8 +3,8 @@ import React, { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import { AlertNames } from '../../../common/types/alerts';
-import { lineColorBackground } from '../../../common/styles/general';
 import { useDelimitatedRoute } from '../../../common/utils/router';
+import { lineColorBackground } from '../../../common/styles/general';
 
 interface AlertModalProps {
   showModal: boolean;

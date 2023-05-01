@@ -9,8 +9,8 @@ export default function Overview() {
   return (
     <div className="flex flex-col pt-2">
       <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
-        {tab === 'Subway' && line !== 'GL' && <SlowZonesWidget />}
-        {tab === 'Subway' && line !== 'GL' && <SpeedWidget />}
+        {tab === 'Subway' && line !== 'line-green' && <SlowZonesWidget />}
+        {tab === 'Subway' && line !== 'line-green' && <SpeedWidget />}
         <RidershipWidget />
       </div>
     </div>
