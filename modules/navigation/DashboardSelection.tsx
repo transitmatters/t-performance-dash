@@ -6,7 +6,7 @@ import { DASHBOARD_TABS } from '../../common/constants/dashboardTabs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useDashboardConfig } from '../../common/state/dashboardConfig';
 
-export const DashboardSelection = () => {
+export const DashboardSelection: React.FC = () => {
   const { tab } = useDelimitatedRoute();
   const router = useRouter();
   const swapDashboardTabs = useDashboardConfig((state) => state.swapDashboardTabs);
