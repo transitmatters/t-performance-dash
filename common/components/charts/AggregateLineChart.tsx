@@ -18,6 +18,7 @@ import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts'
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import { DownloadButton } from '../general/DownloadButton';
+import { writeError } from '../../utils/chartError';
 import { LegendLongTerm } from './Legend';
 import { drawTitle } from './Title';
 
@@ -178,7 +179,9 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
             {
               id: 'customTitleAggregate',
               afterDraw: (chart: ChartJS) => {
-                // TODO: This is not placing the title correctly for aggregate charts.
+                if (startDate === undefined || endDate === undefined || data.length === 0) {
+                  writeError(chart);
+                }
                 drawTitle(title, location, bothStops, chart);
               },
             },
