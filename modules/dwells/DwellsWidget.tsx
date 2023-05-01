@@ -28,7 +28,7 @@ export const DwellsWidget: React.FC = () => {
   const dwells = useDwellsSingleDayData({ date: startDate, stop: fromStopIds });
 
   // Buses don't record dwells
-  if (line === 'BUS') {
+  if (line === 'line-bus') {
     return null;
   }
 

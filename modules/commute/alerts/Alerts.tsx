@@ -40,7 +40,6 @@ export const Alerts: React.FC = () => {
           <AlertBox
             alerts={alerts.data}
             lineShort={lineShort}
-            line={line}
             busRoute={busRoute}
             type={'current'}
           />
@@ -51,7 +50,6 @@ export const Alerts: React.FC = () => {
           <AlertBox
             alerts={alerts.data}
             lineShort={lineShort}
-            line={line}
             busRoute={busRoute}
             type={'upcoming'}
           />

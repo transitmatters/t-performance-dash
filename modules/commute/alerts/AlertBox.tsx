@@ -5,7 +5,7 @@ import type {
   UpcomingOrCurrent,
 } from '../../../common/types/alerts';
 import { AlertEffect } from '../../../common/types/alerts';
-import type { BusRoute, Line, LineShort } from '../../../common/types/lines';
+import type { BusRoute, LineShort } from '../../../common/types/lines';
 import { DelayAlert } from './DelayAlert';
 import { ShuttleAlert } from './ShuttleAlert';
 import { StopClosure } from './StopClosureAlert';
@@ -16,7 +16,6 @@ interface AlertBoxProps {
   lineShort: LineShort;
   type: UpcomingOrCurrent;
   busRoute?: BusRoute;
-  line?: Line;
 }
 
 export const getRelevantAlerts = (alerts: AlertsResponse[], type: UpcomingOrCurrent) => {
