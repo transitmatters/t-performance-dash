@@ -8,6 +8,7 @@ import { ALL_PAGES } from '../constants/pages';
 import { ControlPanel } from '../components/controls/ControlPanel';
 import { usePresetsOnFirstLoad } from '../utils/firstLoad';
 import { MobileControlPanel } from '../components/controls/MobileControlPanel';
+import { MobileNavHeader } from '../../modules/navigation/MobileNavHeader';
 import { Footer } from './Footer';
 
 interface DashboardLayoutProps {
@@ -24,7 +25,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
 
   return (
     <div className="flex min-h-full flex-col justify-between">
-      <SideNavBar />
+      {isMobile ? <MobileNavHeader /> : <SideNavBar />}
 
       <div className="flex flex-1 flex-col md:pl-64">
         <main className="flex-1">
