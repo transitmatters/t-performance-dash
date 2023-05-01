@@ -37,10 +37,10 @@ export const CHART_COLORS = {
 };
 
 export const LINE_COLORS = {
-  RL: '#D13434',
-  OL: '#ed8b00',
-  BL: '#003da5',
-  GL: '#00834d',
-  BUS: '#ffc72c',
+  'line-red': '#D13434',
+  'line-orange': '#ed8b00',
+  'line-blue': '#003da5',
+  'line-green': '#00834d',
+  'line-bus': '#ffc72c',
   default: '#303030',
 };

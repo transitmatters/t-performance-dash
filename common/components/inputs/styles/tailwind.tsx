@@ -1,3 +1,5 @@
+import type { DefaultStyleMap } from '../../../types/styles';
+
 export const formConfig = {
   default: 'whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium',
   active: {
@@ -9,12 +11,12 @@ export const formConfig = {
   },
 };
 
-export const mbtaTextConfig = {
-  RL: `text-mbta-red`,
-  OL: `text-mbta-orange`,
-  GL: `text-mbta-green`,
-  BL: `text-mbta-blue`,
-  BUS: `text-mbta-bus`,
+export const mbtaTextConfig: DefaultStyleMap = {
+  'line-red': `text-mbta-red`,
+  'line-orange': `text-mbta-orange`,
+  'line-green': `text-mbta-green`,
+  'line-blue': `text-mbta-blue`,
+  'line-bus': `text-mbta-bus`,
   DEFAULT: `text-black`,
 };
 
