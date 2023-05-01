@@ -83,7 +83,7 @@ npm run build-v4
 # sed -i "s/git-id/version $GIT_ID/" ./build/index.html
 
 pushd server/ > /dev/null
-poetry export --output --without-hashes requirements.txt
+poetry export --without-hashes --output requirements.txt
 poetry run chalice package --stage $CHALICE_STAGE --merge-template frontend-cfn.json cfn/
 aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUCKET --output-template-file cfn/packaged.yaml
 aws cloudformation deploy --template-file cfn/packaged.yaml --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset --parameter-overrides \
