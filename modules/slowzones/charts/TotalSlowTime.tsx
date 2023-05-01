@@ -10,7 +10,7 @@ import type { DayDelayTotals } from '../../../common/types/dataPoints';
 import type { LineShort, Line as TrainLine } from '../../../common/types/lines';
 dayjs.extend(utc);
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
-import { getTotalSlowTimeGraphUnit } from '../utils/utils';
+import { getTimeUnitSlowzones } from '../../../common/utils/slowZoneUtils';
 
 interface TotalSlowTimeProps {
   // Data is always all data. We filter it by adjusting the X axis of the graph.
@@ -31,7 +31,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
 }) => {
   const ref = useRef();
   const labels = data.map((item) => dayjs.utc(item.date).format('YYYY-MM-DD'));
-  const unit = getTotalSlowTimeGraphUnit(startDateUTC, endDateUTC);
+  const unit = getTimeUnitSlowzones(startDateUTC, endDateUTC);
   return (
     <Line
       ref={ref}
