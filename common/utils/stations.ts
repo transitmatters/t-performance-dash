@@ -13,10 +13,13 @@ export const optionsForField = (
   busRoute?: string
 ) => {
   if (type === 'from') {
-    return optionsStation(line, busRoute);
+    return optionsStation(line, busRoute)?.filter((entry) => entry !== toStation);
   }
   if (type === 'to') {
     return optionsStation(line, busRoute)?.filter((entry) => {
+      if (entry === fromStation) {
+        return false;
+      }
       if (fromStation && fromStation.branches && entry.branches) {
         return entry.branches.some((entryBranch) => fromStation.branches?.includes(entryBranch));
       }
