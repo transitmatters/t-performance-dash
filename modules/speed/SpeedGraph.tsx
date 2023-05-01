@@ -87,6 +87,19 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
         interaction: {
           intersect: false,
         },
+        // @ts-expect-error The watermark plugin doesn't have typescript support
+        watermark: {
+          image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
+          x: 10,
+          y: 10,
+          opacity: 0.3,
+          width: 160,
+          height: 15,
+          alignToChartArea: true,
+          alignX: 'right',
+          alignY: 'top',
+          position: 'back',
+        },
         plugins: {
           tooltip: {
             mode: 'index',

@@ -143,7 +143,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
           image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
           x: 10,
           y: 10,
-          opacity: 0.1,
+          opacity: 0.3,
           width: 160,
           height: 15,
           alignToChartArea: true,
