@@ -83,7 +83,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
         >
           <Popover.Panel className="fixed bottom-[5.25rem] left-4 origin-bottom-left overflow-visible rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-auto md:right-auto md:top-auto md:mt-9 md:origin-top-left">
             {({ close }) => (
-              <div className="flex w-screen max-w-[240px] flex-col overflow-hidden rounded-md bg-white leading-6 shadow-lg ring-1 ring-gray-900/5">
+              <div className="flex w-screen max-w-[160px] flex-col overflow-hidden rounded-md bg-white leading-6 shadow-lg ring-1 ring-gray-900/5">
                 {type === 'combo' && <RangeSelectionTab range={range} setRange={setRange} />}
                 <DatePickerPresets
                   preset={datePreset}
