@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay, faCalendarWeek } from '@fortawesome/free-solid-svg-icons';
 import {
   buttonHighlightFocus,
-  lineColorBackground,
-  lineColorDarkBorder,
+  lineColorDarkBackground,
+  lineColorLightBorder,
 } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import type { DatePresetKey } from '../../../constants/dates';
@@ -49,16 +49,18 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
   return (
     <div
       className={classNames(
-        'flex h-full w-full flex-row items-baseline overflow-hidden  rounded-t-md border md:flex-col md:rounded-md lg:flex-row',
-        lineColorDarkBorder[line ?? 'DEFAULT']
+        'flex w-full flex-row overflow-hidden rounded-md border md:max-w-sm md:overflow-visible lg:w-auto',
+        lineColorLightBorder[line ?? 'DEFAULT']
       )}
     >
-      <Popover className={classNames('flex h-full w-full self-stretch overflow-hidden text-left')}>
+      <Popover
+        className={classNames('flex h-10 w-full self-stretch overflow-hidden text-left md:h-7')}
+      >
         <Popover.Button
           className={classNames(
-            'flex h-full w-full items-center justify-center self-stretch px-3 py-1 text-white text-opacity-95 hover:bg-opacity-70 focus:bg-opacity-70 focus:outline-none',
+            'flex h-10 w-full items-center justify-center self-stretch rounded-l-[.25rem] px-3 py-1 text-white text-opacity-95 hover:bg-opacity-70 focus:bg-opacity-70 focus:outline-none md:h-7',
             line && buttonHighlightFocus[line],
-            line && lineColorBackground[line]
+            lineColorDarkBackground[line ?? 'DEFAULT']
           )}
         >
           <FontAwesomeIcon
@@ -79,9 +81,9 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Popover.Panel className="absolute bottom-[5.25rem] left-4 z-20 origin-bottom-left overflow-visible rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-4 md:right-auto md:top-8 md:mt-2 md:origin-top-left">
+          <Popover.Panel className="fixed bottom-[5.25rem] left-4 origin-bottom-left overflow-visible rounded-md  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-auto md:right-auto md:top-auto md:mt-9 md:origin-top-left">
             {({ close }) => (
-              <div className="flex w-screen max-w-[240px] flex-col overflow-hidden rounded-md bg-white leading-6 shadow-lg ring-1 ring-gray-900/5">
+              <div className="flex w-screen max-w-[160px] flex-col overflow-hidden rounded-md bg-white leading-6 shadow-lg ring-1 ring-gray-900/5">
                 {type === 'combo' && <RangeSelectionTab range={range} setRange={setRange} />}
                 <DatePickerPresets
                   preset={datePreset}

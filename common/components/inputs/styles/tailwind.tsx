@@ -51,11 +51,3 @@ export const dateInputConfig = {
     bus: 'hover:bg-mbta-bus border-mbta-bus',
   },
 };
-
-export const selectConfig = {
-  red: 'bg-mbta-lightRed',
-  orange: 'bg-mbta-lightOrange',
-  green: 'bg-mbta-lightGreen',
-  blue: 'bg-mbta-lightBlue',
-  bus: 'bg-mbta-lightBus',
-};
