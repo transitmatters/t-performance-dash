@@ -1,4 +1,3 @@
-import type { UseQueryResult } from '@tanstack/react-query';
 import type { TimeUnit } from 'chart.js';
 import type { LineShort } from './lines';
 import type { Station } from './stations';
@@ -74,7 +73,6 @@ export interface LineProps {
   title: string;
   chartId: string;
   location: Location;
-  isLoading: boolean;
   pointField: PointField; // X value
   bothStops?: boolean;
   fname: DataName;
@@ -116,9 +114,9 @@ export interface HeadwayHistogramProps {
 }
 
 export interface HeadwaysChartProps {
-  headways: UseQueryResult<SingleDayDataPoint[]>;
-  fromStation: Station | undefined;
-  toStation: Station | undefined;
+  headways: SingleDayDataPoint[];
+  fromStation: Station;
+  toStation: Station;
   showLegend?: boolean;
   isHomescreen?: boolean;
 }

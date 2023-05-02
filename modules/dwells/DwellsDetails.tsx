@@ -13,8 +13,8 @@ import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { useDwellsAggregateData, useDwellsSingleDayData } from '../../common/api/hooks/dwells';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { DwellsSingleChart } from './charts/DwellsSingleChart';
-import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
+import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
+import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 
 export const DwellsDetails: React.FC = () => {
   const {
@@ -63,13 +63,19 @@ export const DwellsDetails: React.FC = () => {
       </BasicDataWidgetPair>
       <WidgetDiv>
         {aggregate ? (
-          <DwellsAggregateChart
-            dwells={dwellsAggregate}
+          <AggregateChartWrapper
+            query={dwellsAggregate}
             toStation={toStation}
             fromStation={fromStation}
+            type={'dwells'}
           />
         ) : (
-          <DwellsSingleChart dwells={dwells} toStation={toStation} fromStation={fromStation} />
+          <SingleChartWrapper
+            query={dwells}
+            toStation={toStation}
+            fromStation={fromStation}
+            type={'dwells'}
+          />
         )}
       </WidgetDiv>
       <TerminusNotice toStation={toStation} fromStation={fromStation} />
