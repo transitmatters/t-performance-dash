@@ -18,6 +18,7 @@ import {
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
+import { PageWrapper } from '../../common/layouts/PageWrapper';
 
 export function TravelTimesDetails() {
   const {
@@ -52,7 +53,7 @@ export function TravelTimesDetails() {
     : travelTimes?.data?.map((tt) => tt.travel_time_sec);
 
   return (
-    <>
+    <PageWrapper pageTitle={'Travel Times'}>
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Avg. Travel Time"
@@ -83,6 +84,6 @@ export function TravelTimesDetails() {
         )}
       </WidgetDiv>
       <TerminusNotice toStation={toStation} fromStation={fromStation} />
-    </>
+    </PageWrapper>
   );
 }
