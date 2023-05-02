@@ -16,7 +16,7 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 
-export default function DwellsDetails() {
+export const DwellsDetails: React.FC = () => {
   const {
     query: { startDate, endDate, to, from },
   } = useDelimitatedRoute();
@@ -75,4 +75,4 @@ export default function DwellsDetails() {
       <TerminusNotice toStation={toStation} fromStation={fromStation} />
     </>
   );
-}
+};

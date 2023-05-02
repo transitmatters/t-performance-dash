@@ -1,11 +1,11 @@
 import React from 'react';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import SlowZonesWidget from '../slowzones/SlowZonesWidget';
+import { SlowZonesWidget } from '../slowzones/SlowZonesWidget';
 import { SpeedWidget } from '../speed/SpeedWidget';
 import { RidershipWidget } from '../ridership/RidershipWidget';
 import { ServiceWidget } from '../service/ServiceWidget';
 
-export default function Overview() {
+export const Overview: React.FC = () => {
   const { tab, line } = useDelimitatedRoute();
   return (
     <div className="flex flex-col pt-2">
@@ -22,4 +22,4 @@ export default function Overview() {
       </div>
     </div>
   );
-}
+};

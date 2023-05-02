@@ -10,7 +10,7 @@ import { getSpeedGraphConfig } from './constants/speeds';
 import { SpeedDetailsWrapper } from './SpeedDetailsWrapper';
 dayjs.extend(utc);
 
-export default function SpeedDetails() {
+export function SpeedDetails() {
   const {
     line,
     query: { startDate, endDate },

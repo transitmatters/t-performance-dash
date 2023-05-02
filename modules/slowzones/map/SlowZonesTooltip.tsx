@@ -9,7 +9,7 @@ import type { SlowZoneDirection, SlowZonesSegment } from './segment';
 import { DIRECTIONS } from './segment';
 
 import styles from './SlowZonesTooltip.module.css';
-import DirectionIndicator from './DirectionIndicator';
+import { DirectionIndicator } from './DirectionIndicator';
 
 interface SlowZonesTooltipProps {
   segment: SlowZonesSegment;

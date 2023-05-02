@@ -20,7 +20,7 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
-export default function TravelTimesDetails() {
+export function TravelTimesDetails() {
   const {
     linePath,
     query: { startDate, endDate, to, from },

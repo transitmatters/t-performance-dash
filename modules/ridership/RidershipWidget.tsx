@@ -16,7 +16,7 @@ import { TphChart } from './charts/TphChart';
 export const RidershipWidget: React.FC = () => {
   const allRidership = useRidershipData();
 
-  const { line, linePath, lineShort, query } = useDelimitatedRoute();
+  const { line, lineShort, query } = useDelimitatedRoute();
   const routeOrLine = line === 'line-bus' ? query.busRoute : lineShort;
   // Get the proper line- index, replace slashes for 114/116/117 route
   const lineData = allRidership.data?.lineData[`line-${routeOrLine?.replace(/\//g, '')}`];

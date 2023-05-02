@@ -13,7 +13,7 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { TphChart } from './charts/TphChart';
 import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
 
-export default function RidershipDetails() {
+export function RidershipDetails() {
   const allRidership = useRidershipData();
 
   const {
