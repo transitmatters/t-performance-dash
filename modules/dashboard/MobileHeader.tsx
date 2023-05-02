@@ -29,14 +29,14 @@ export const MobileHeader: React.FC = () => {
           section === 'trips' ? 'justify-between' : 'justify-center'
         )}
       >
-        <div className={classNames('flex shrink-0 flex-row items-baseline pl-2')}>
-          <h3 className={classNames('text-lg')}>
+        <div className="flex shrink-0 flex-row items-baseline pl-2">
+          <h3 className="text-lg font-semibold">
             {busRoute ? `Route ${busRoute}` : line && LINE_OBJECTS[line]?.short}
           </h3>
           {ALL_PAGES[page]?.sectionTitle && (
             <>
               <span className="px-1 text-lg">•</span>
-              <h2 className="select-none text-lg">
+              <h2 className="select-none text-lg font-semibold">
                 <span>{ALL_PAGES[page]?.sectionTitle}</span>
               </h2>
             </>

@@ -37,12 +37,12 @@ export const DesktopHeader: React.FC = () => {
           section === 'trips' ? 'justify-end gap-y-3' : 'h-14 justify-center'
         )}
       >
-        <div className={classNames('flex shrink-0 flex-row items-baseline pl-3')}>
-          <h3 className={classNames('text-xl')}>{getLineName()}</h3>
+        <div className="flex shrink-0 flex-row items-baseline pl-3">
+          <h3 className="text-xl font-semibold">{getLineName()}</h3>
           {ALL_PAGES[page]?.sectionTitle && (
             <>
               <span className="px-1 text-xl">•</span>
-              <h2 className="select-none text-xl">
+              <h2 className="select-none text-xl font-semibold">
                 <span>{ALL_PAGES[page]?.sectionTitle}</span>
               </h2>
             </>
