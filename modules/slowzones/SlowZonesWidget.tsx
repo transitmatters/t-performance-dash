@@ -11,7 +11,7 @@ import { OVERVIEW_OPTIONS } from '../../common/constants/dates';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 dayjs.extend(utc);
 
-export default function SlowZonesWidget() {
+export const SlowZonesWidget: React.FC = () => {
   const { line, query, lineShort } = useDelimitatedRoute();
   const delayTotals = useSlowzoneDelayTotalData();
   const { startDate } = OVERVIEW_OPTIONS[query.view ?? 'year'];
@@ -42,4 +42,4 @@ export default function SlowZonesWidget() {
       </WidgetDiv>
     </>
   );
-}
+};

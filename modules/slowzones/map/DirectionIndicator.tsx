@@ -4,14 +4,19 @@ import type { SlowZoneDirection } from './segment';
 
 import styles from './DirectionIndicator.module.css';
 
-interface Props {
+interface DirectionIndicatorProps {
   direction: SlowZoneDirection;
   color: string;
   isHorizontal: boolean;
   size?: number;
 }
 
-const DirectionIndicator: React.FC<Props> = ({ direction, color, isHorizontal, size = 5 }) => {
+export const DirectionIndicator: React.FC<DirectionIndicatorProps> = ({
+  direction,
+  color,
+  isHorizontal,
+  size = 5,
+}) => {
   const rotation = isHorizontal ? (direction === '1' ? 90 : 270) : direction === '1' ? 180 : 0;
   return (
     <div
@@ -26,5 +31,3 @@ const DirectionIndicator: React.FC<Props> = ({ direction, color, isHorizontal, s
     />
   );
 };
-
-export default DirectionIndicator;

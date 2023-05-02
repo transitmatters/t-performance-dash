@@ -169,7 +169,7 @@ export const LineMap: React.FC<LineMapProps> = ({
 
       const computedStrokes = strokes.map((stroke) => {
         const pathDirective = path.offset(stroke.offset ?? 0).toSVG();
-        return { pathDirective, ...stroke };
+        return { pathDirective, stroke };
       });
 
       const computedLabels = labels.map((label, index) => {
@@ -249,11 +249,11 @@ export const LineMap: React.FC<LineMapProps> = ({
   const renderComputedStrokes = () => {
     return computedSegmentExtras
       .map((segment, segmentIndex) => {
-        return segment.computedStrokes.map((stroke, strokeIndex) => {
+        return segment.computedStrokes.map(({ pathDirective, stroke }, strokeIndex) => {
           return (
             <path
               key={`computed-stroke-${segmentIndex}-${strokeIndex}`}
-              d={stroke.pathDirective}
+              d={pathDirective}
               {...getPropsForStrokeOptions(stroke)}
             />
           );
