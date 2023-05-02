@@ -27,7 +27,7 @@ export const DesktopHeader: React.FC = () => {
   return (
     <div
       className={classNames(
-        'sticky top-0 z-30 mx-3 mb-2 flex flex-row justify-between gap-x-6 rounded-b rounded-br-md border-b border-l border-r border-gray-200 text-white shadow-md md:mx-0 md:mr-4 md:rounded-bl-none md:rounded-br md:border-l-0',
+        'sticky top-0 z-30 mx-3 mb-2 flex flex-row justify-between gap-x-6 rounded-bl-none rounded-br-md  border-gray-200 text-white shadow-md md:mx-0 md:mr-4 md:border-l-0',
         lineColorBackground[line ?? 'DEFAULT']
       )}
     >
@@ -38,16 +38,16 @@ export const DesktopHeader: React.FC = () => {
         )}
       >
         <div className={classNames('flex shrink-0 flex-row items-baseline pl-3')}>
-          <h3 className={classNames('text-lg')}>{getLineName()}</h3>
+          <h3 className={classNames('text-xl')}>{getLineName()}</h3>
           {ALL_PAGES[page]?.sectionTitle && (
             <>
-              <span className="px-1 text-lg">•</span>
-              <h2 className="select-none text-lg">
+              <span className="px-1 text-xl">•</span>
+              <h2 className="select-none text-xl">
                 <span>{ALL_PAGES[page]?.sectionTitle}</span>
               </h2>
             </>
           )}
-          <span className="px-1 text-lg">•</span>
+          <span className="px-1 text-xl">•</span>
           <h2 className="select-none text-xl font-semibold">
             <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
           </h2>

@@ -11,7 +11,6 @@ interface ButtonGroupProps<K, T> {
   selectedIndex?: number;
   additionalDivClass?: string;
   additionalButtonClass?: string;
-  isOverview?: boolean;
 }
 
 export const ButtonGroup: <T extends string, K extends string>(
@@ -22,7 +21,6 @@ export const ButtonGroup: <T extends string, K extends string>(
   selectedIndex,
   additionalDivClass,
   additionalButtonClass,
-  isOverview,
 }) => {
   const { line } = useDelimitatedRoute();
   return (
@@ -33,8 +31,7 @@ export const ButtonGroup: <T extends string, K extends string>(
     >
       <Tab.List
         className={classNames(
-          'isolate inline-flex w-full overflow-hidden border shadow-sm',
-          isOverview ? 'rounded-t-md md:rounded-md' : 'rounded-md',
+          'isolate inline-flex w-full overflow-hidden rounded-md border shadow-sm',
           lineColorBorder[line ?? 'DEFAULT'],
           additionalDivClass
         )}

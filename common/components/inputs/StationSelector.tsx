@@ -6,9 +6,12 @@ import classNames from 'classnames';
 import type { Station } from '../../types/stations';
 import { useDelimitatedRoute } from '../../utils/router';
 import { optionsForField } from '../../utils/stations';
-import { buttonHighlightFocus, lineColorBackground } from '../../styles/general';
+import {
+  buttonHighlightFocus,
+  lineColorBackground,
+  lineColorLightBackground,
+} from '../../styles/general';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { selectConfig } from './styles/tailwind';
 import { Button } from './Button';
 
 interface StationSelector {
@@ -26,7 +29,6 @@ export const StationSelector: React.FC<StationSelector> = ({
 }) => {
   const {
     line,
-    linePath,
     lineShort,
     query: { busRoute },
   } = useDelimitatedRoute();
@@ -75,7 +77,7 @@ export const StationSelector: React.FC<StationSelector> = ({
                     className={({ active, selected, disabled }) =>
                       classNames(
                         'relative select-none items-center px-4 py-2',
-                        active ? selectConfig[linePath] : 'text-gray-900',
+                        active ? lineColorLightBackground[line ?? 'DEFAULT'] : 'text-gray-900',
                         selected
                           ? `bg-opacity-20 font-semibold ${lineColorBackground[line ?? 'DEFAULT']}`
                           : 'font-normal',

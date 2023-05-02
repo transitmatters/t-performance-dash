@@ -27,7 +27,6 @@ export const OverviewDateSelection = () => {
       options={Object.entries(OverviewRangeTypes)}
       additionalButtonClass="w-fit"
       additionalDivClass="md:max-w-md h-10 md:h-7 "
-      isOverview
     />
   );
 };

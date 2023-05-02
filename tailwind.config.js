@@ -55,10 +55,10 @@ module.exports = {
         mbta: {
           red: '#D13434',
           lightRed: '#E89999',
-          darkRed: '#962222',
+          darkRed: '#bc2020',
           orange: '#ed8b00',
           lightOrange: '#F6C580',
-          darkOrange: '#DB9839',
+          darkOrange: '#e08300',
           blue: '#003da5',
           lightBlue: '#809ED2',
           darkBlue: '#19376B',

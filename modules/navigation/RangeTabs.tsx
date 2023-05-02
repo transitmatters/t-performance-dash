@@ -33,8 +33,8 @@ export const RangeTabs = () => {
                   {({ selected }) => (
                     <div
                       className={classNames(
-                        `select-none whitespace-nowrap border-b-2 border-white px-4 pb-2 text-xs font-medium text-stone-100 focus:outline-none focus:ring-0 md:text-sm`,
-                        !selected && 'border-b-0 text-stone-200 '
+                        `select-none whitespace-nowrap border-white px-4 pb-2 text-xs font-medium text-stone-100 focus:outline-none focus:ring-0 md:text-sm`,
+                        selected ? 'border-b-2' : 'border-b-0 text-stone-200 '
                       )}
                     >
                       {range}
