@@ -65,9 +65,9 @@ module.exports = {
           green: '#00834d',
           lightGreen: '#80C1A6',
           darkGreen: '#0E5E3D',
-          bus: '#ffc72c',
+          bus: '#f5B400',
           lightBus: '#FFE395',
-          darkBus: '#C49E33',
+          darkBus: '#E6A800',
         },
         tm: {
           red: '#a31e1e',

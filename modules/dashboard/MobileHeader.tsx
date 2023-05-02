@@ -19,7 +19,7 @@ export const MobileHeader: React.FC = () => {
   return (
     <div
       className={classNames(
-        'sticky top-12 z-30 mx-3 mb-2 flex flex-row justify-between gap-x-6 rounded-b-md text-white text-opacity-95 shadow-md',
+        'sticky top-12 z-10 mx-3 mb-2 flex flex-row justify-between gap-x-6 rounded-b-md text-white text-opacity-95 shadow-md',
         lineColorBackground[line ?? 'DEFAULT']
       )}
     >

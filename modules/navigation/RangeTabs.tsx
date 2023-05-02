@@ -23,7 +23,7 @@ export const RangeTabs = () => {
   };
 
   return (
-    <div className="bottom-0 flex items-end pt-4 md:pt-0">
+    <div className="bottom-0 flex items-end pt-1 md:pt-0">
       <Tab.Group selectedIndex={selected} onChange={handleChange} manual>
         <Tab.List className="flex">
           {rangeOptions.map(

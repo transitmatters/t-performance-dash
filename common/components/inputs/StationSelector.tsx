@@ -64,7 +64,7 @@ export const StationSelector: React.FC<StationSelector> = ({
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Listbox.Options className="md:max-w-screen fixed bottom-0 left-0 right-0 top-0 m-auto max-h-96 max-w-xs overflow-auto rounded-md  border border-stone-200 bg-white  shadow-lg  ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-auto md:right-auto md:top-auto md:mt-1 md:max-h-96 md:-translate-x-1/2 md:border-none">
+            <Listbox.Options className="md:max-w-screen fixed bottom-16 left-0 right-0 top-auto m-auto max-h-96 max-w-xs overflow-auto rounded-md  border border-stone-200 bg-white  shadow-lg  ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-auto md:right-auto md:top-auto md:mt-1 md:max-h-96 md:-translate-x-1/2 md:border-none">
               <div className="py-1">
                 {stationOptions?.map((station, stationIndex) => (
                   <Listbox.Option
