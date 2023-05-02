@@ -1,5 +1,5 @@
 import { ALL_LINE_PATHS } from '../../common/types/lines';
-import SlowZonesDetails from '../../modules/slowzones/SlowZonesDetails';
+import { SlowZonesDetails } from '../../modules/slowzones/SlowZonesDetails';
 
 export async function getStaticProps() {
   return { props: {} };

@@ -39,6 +39,7 @@
     background: var(--tooltip-background);
 }
 
+
 .title {
     font-weight: 500;
     padding: 6px 10px;
@@ -46,8 +47,9 @@
     color: white;
 }
 
-.direction {
-    padding: 6px;
+.body {
+    display: flex;
+    flex-direction: column;
 }
 
 .directionTitle {
@@ -55,4 +57,17 @@
     align-items: center;
     gap: 4px;
     margin-bottom: 4px;
+}
+
+.speedRestriction {
+    padding: 6px;
+    margin: 6px;
+    margin-top: 0px;
+    border-radius: 4px;
+    max-width: 300px;
+}
+
+.speedRestrictionStats {
+    display: flex;
+    flex-direction: column;
 }

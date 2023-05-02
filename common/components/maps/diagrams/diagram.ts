@@ -3,7 +3,7 @@ import type { Point } from 'bezier-js';
 import type { Station } from '../../../types/stations';
 
 import type { Path } from './path';
-import type { DiagramProjection, PathProjection } from './types';
+import type { DiagramProjection, PathProjection, SegmentLocation } from './types';
 
 type StationDisplacementMap = Map<Path, Record<string, number>>;
 
@@ -86,6 +86,24 @@ export class Diagram {
 
   getStations() {
     return this.stations;
+  }
+
+  getAdjacentSegmentLocations() {
+    const pairs: SegmentLocation[] = [];
+    const seenPairKeys: Set<string> = new Set();
+    for (const stationIndex of this.stationDisplacementMap.values()) {
+      const stationIds = Object.keys(stationIndex);
+      for (let i = 0; i < stationIds.length - 1; i++) {
+        const fromStationId = stationIds[i];
+        const toStationId = stationIds[i + 1];
+        const pairKey = `${fromStationId}__${toStationId}`;
+        if (!seenPairKeys.has(pairKey)) {
+          seenPairKeys.add(pairKey);
+          pairs.push({ fromStationId: stationIds[i], toStationId: stationIds[i + 1] });
+        }
+      }
+    }
+    return pairs;
   }
 
   getStationPosition(stationId: string) {

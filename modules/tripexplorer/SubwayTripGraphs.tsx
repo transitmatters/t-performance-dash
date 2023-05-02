@@ -1,14 +1,10 @@
 import React from 'react';
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import type { Station } from '../../common/types/stations';
-import { HeadwaysAggregateChart } from '../headways/charts/HeadwaysAggregateChart';
-import { HeadwaysSingleChart } from '../headways/charts/HeadwaysSingleChart';
-import { TravelTimesAggregateChart } from '../traveltimes/charts/TravelTimesAggregateChart';
-import { TravelTimesSingleChart } from '../traveltimes/charts/TravelTimesSingleChart';
-import { DwellsAggregateChart } from '../dwells/charts/DwellsAggregateChart';
-import { DwellsSingleChart } from '../dwells/charts/DwellsSingleChart';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
+import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -38,42 +34,56 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
       {aggregate ? (
         <>
           <WidgetDiv>
-            <TravelTimesAggregateChart
-              traveltimes={traveltimes}
-              fromStation={fromStation}
+            <AggregateChartWrapper
+              query={traveltimes}
               toStation={toStation}
+              fromStation={fromStation}
+              type={'traveltimes'}
             />
           </WidgetDiv>
           <WidgetDiv>
-            <HeadwaysAggregateChart
-              headways={headways}
-              fromStation={fromStation}
+            <AggregateChartWrapper
+              query={headways}
               toStation={toStation}
+              fromStation={fromStation}
+              type={'headways'}
             />
           </WidgetDiv>
           <WidgetDiv>
-            <DwellsAggregateChart dwells={dwells} fromStation={fromStation} toStation={toStation} />
+            <AggregateChartWrapper
+              query={dwells}
+              toStation={toStation}
+              fromStation={fromStation}
+              type={'dwells'}
+            />
           </WidgetDiv>
         </>
       ) : (
         <>
           <WidgetDiv>
-            <TravelTimesSingleChart
-              traveltimes={traveltimes}
-              fromStation={fromStation}
+            <SingleChartWrapper
+              query={traveltimes}
               toStation={toStation}
+              fromStation={fromStation}
+              type={'traveltimes'}
             />
           </WidgetDiv>
 
           <WidgetDiv>
-            <HeadwaysSingleChart
-              headways={headways}
-              fromStation={fromStation}
+            <SingleChartWrapper
+              query={headways}
               toStation={toStation}
+              fromStation={fromStation}
+              type={'headways'}
             />
           </WidgetDiv>
           <WidgetDiv>
-            <DwellsSingleChart dwells={dwells} fromStation={fromStation} toStation={toStation} />
+            <SingleChartWrapper
+              query={dwells}
+              toStation={toStation}
+              fromStation={fromStation}
+              type={'dwells'}
+            />
           </WidgetDiv>
         </>
       )}
