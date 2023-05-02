@@ -24,17 +24,20 @@ export const RangeTabs = () => {
 
   return (
     <div className="bottom-0 flex items-end pt-4 md:pt-0">
-      <Tab.Group selectedIndex={selected} onChange={handleChange}>
+      <Tab.Group selectedIndex={selected} onChange={handleChange} manual>
         <Tab.List className="flex">
           {rangeOptions.map(
             (range) =>
               line && (
-                <Tab key={range}>
+                <Tab
+                  key={range}
+                  className={'focus:bg-white focus:bg-opacity-20 focus:outline-none'}
+                >
                   {({ selected }) => (
                     <div
                       className={classNames(
-                        `select-none whitespace-nowrap border-white px-4 pb-2 text-xs font-medium text-stone-100 focus:outline-none focus:ring-0 md:text-sm`,
-                        selected ? 'border-b-2' : 'border-b-0 text-stone-200 '
+                        `select-none whitespace-nowrap border-white px-4 py-1 text-xs font-medium text-white md:text-sm`,
+                        selected ? 'border-b-2 text-opacity-95' : 'border-b-0 text-opacity-90'
                       )}
                     >
                       {range}

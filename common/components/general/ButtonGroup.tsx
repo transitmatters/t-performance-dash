@@ -2,7 +2,7 @@ import { Tab } from '@headlessui/react';
 import classNames from 'classnames';
 import type { SetStateAction } from 'react';
 import React, { Fragment } from 'react';
-import { lineColorBackground, lineColorBorder } from '../../styles/general';
+import { lineColorBackground, lineColorBorder, lineColorLightBorder } from '../../styles/general';
 import { useDelimitatedRoute } from '../../utils/router';
 
 interface ButtonGroupProps<K, T> {
@@ -11,6 +11,7 @@ interface ButtonGroupProps<K, T> {
   selectedIndex?: number;
   additionalDivClass?: string;
   additionalButtonClass?: string;
+  isOverview?: boolean;
 }
 
 export const ButtonGroup: <T extends string, K extends string>(
@@ -21,6 +22,7 @@ export const ButtonGroup: <T extends string, K extends string>(
   selectedIndex,
   additionalDivClass,
   additionalButtonClass,
+  isOverview,
 }) => {
   const { line } = useDelimitatedRoute();
   return (
@@ -32,7 +34,7 @@ export const ButtonGroup: <T extends string, K extends string>(
       <Tab.List
         className={classNames(
           'isolate inline-flex w-full overflow-hidden rounded-md border shadow-sm',
-          lineColorBorder[line ?? 'DEFAULT'],
+          isOverview ? lineColorLightBorder[line ?? 'DEFAULT'] : lineColorBorder[line ?? 'DEFAULT'],
           additionalDivClass
         )}
       >
