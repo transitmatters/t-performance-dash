@@ -7,7 +7,11 @@ import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { useSlowzoneAllData, useSlowzoneDelayTotalData } from '../../common/api/hooks/slowzones';
+import {
+  useSlowzoneAllData,
+  useSlowzoneDelayTotalData,
+  useSpeedRestrictionData,
+} from '../../common/api/hooks/slowzones';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import type { Direction } from '../../common/types/dataPoints';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
@@ -21,6 +25,7 @@ export function SlowZonesDetails() {
   const delayTotals = useSlowzoneDelayTotalData();
   const [direction, setDirection] = useState<Direction>('northbound');
   const allSlow = useSlowzoneAllData();
+  const speedRestrictions = useSpeedRestrictionData();
   const {
     lineShort,
     line,
@@ -65,9 +70,11 @@ export function SlowZonesDetails() {
       <WidgetDiv>
         <WidgetTitle title="Line Map" />
         <div className="relative flex flex-col">
-          {allSlow.data && canShowSlowZonesMap ? (
+          {allSlow.data && speedRestrictions.data && canShowSlowZonesMap ? (
             <SlowZonesMap
+              key={lineShort}
               slowZones={allSlow.data}
+              speedRestrictions={speedRestrictions.data}
               lineName={lineShort}
               direction="horizontal-on-desktop"
             />
