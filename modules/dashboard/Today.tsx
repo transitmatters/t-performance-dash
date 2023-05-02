@@ -1,10 +1,9 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { fetchAllSlow } from '../../common/api/slowzones';
 import { Alerts } from '../commute/alerts/Alerts';
 import { Speed } from '../commute/speed/Speed';
 import { SlowZonesMap } from '../slowzones/map';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import { useSlowzoneAllData, useSpeedRestrictionData } from '../../common/api/hooks/slowzones';
 import { WidgetTitle } from './WidgetTitle';
 
 interface TodayProps {
@@ -12,7 +11,8 @@ interface TodayProps {
 }
 
 export const Today: React.FC<TodayProps> = ({ lineShort }) => {
-  const allSlow = useQuery(['allSlow'], fetchAllSlow);
+  const allSlow = useSlowzoneAllData();
+  const speedRestrictions = useSpeedRestrictionData();
   const canShowSlowZonesMap = lineShort !== 'Green';
 
   return (
@@ -21,11 +21,13 @@ export const Today: React.FC<TodayProps> = ({ lineShort }) => {
         <Alerts />
         {canShowSlowZonesMap && <Speed />}
       </div>
-      {canShowSlowZonesMap && allSlow.data && (
+      {canShowSlowZonesMap && allSlow.data && speedRestrictions.data && (
         <WidgetDiv className="h-full">
           <WidgetTitle title="Slow Zones" />
           <SlowZonesMap
+            key={lineShort}
             slowZones={allSlow.data}
+            speedRestrictions={speedRestrictions.data}
             lineName={lineShort}
             direction="horizontal-on-desktop"
           />
