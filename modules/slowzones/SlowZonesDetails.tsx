@@ -17,7 +17,7 @@ import { SlowZonesMap } from './map';
 import { DirectionObject } from './constants/constants';
 dayjs.extend(utc);
 
-export default function SlowZonesDetails() {
+export function SlowZonesDetails() {
   const delayTotals = useSlowzoneDelayTotalData();
   const [direction, setDirection] = useState<Direction>('northbound');
   const allSlow = useSlowzoneAllData();

@@ -1,5 +1,5 @@
 import { ALL_LINE_PATHS, BUS_PATH } from '../../common/types/lines';
-import TravelTimesDetails from '../../modules/traveltimes/TravelTimesDetails';
+import { TravelTimesDetails } from '../../modules/traveltimes/TravelTimesDetails';
 
 export async function getStaticProps() {
   return { props: {} };

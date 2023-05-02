@@ -1,5 +1,5 @@
 import { ALL_LINE_PATHS } from '../../common/types/lines';
-import SpeedDetails from '../../modules/speed/SpeedDetails';
+import { SpeedDetails } from '../../modules/speed/SpeedDetails';
 
 export async function getStaticProps() {
   return { props: {} };
