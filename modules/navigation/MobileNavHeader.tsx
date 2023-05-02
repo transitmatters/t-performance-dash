@@ -10,7 +10,7 @@ export const MobileNavHeader = () => {
 
   return (
     <>
-      <div className="sticky top-0 z-20 bg-tm-grey text-gray-300">
+      <div className="sticky top-0 z-10 bg-tm-grey text-gray-300">
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog as="div" className="relative z-40 w-full" onClose={setSidebarOpen}>
             <div className="fixed bottom-0 right-0 top-0 bg-gray-600 bg-opacity-75" />

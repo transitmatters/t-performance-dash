@@ -68,12 +68,12 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
   };
 
   return (
-    <div className={'-ml-[1px] flex h-8 flex-row justify-center self-stretch bg-white'}>
+    <div className="-ml-[1px] flex h-10 flex-row justify-center self-stretch rounded-r-md bg-white md:h-7">
       <div className={classNames('flex h-full flex-row self-stretch bg-opacity-80')}>
         <Flatpickr
           //TODO: Change calendar to line color
           className={classNames(
-            'flex w-[6.75rem] cursor-pointer border-none px-2 py-0 text-center text-sm focus:ring-opacity-0',
+            'flex w-[6.75rem] cursor-pointer border-none bg-transparent px-2 py-0 text-center text-sm focus:ring-opacity-0',
             line && buttonHighlightFocus[line]
           )}
           value={startDate}
@@ -95,7 +95,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
             <Flatpickr
               //TODO: Change calendar to line color
               className={classNames(
-                'flex w-[6.75rem] cursor-pointer border-none px-2 py-0 text-center text-sm focus:ring-opacity-0',
+                'flex w-[6.75rem] cursor-pointer border-none bg-transparent px-2 py-0 text-center text-sm focus:ring-opacity-0',
                 line && buttonHighlightFocus[line]
               )}
               value={endDate}
