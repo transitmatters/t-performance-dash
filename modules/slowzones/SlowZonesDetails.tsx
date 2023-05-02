@@ -72,6 +72,7 @@ export function SlowZonesDetails() {
         <div className="relative flex flex-col">
           {allSlow.data && speedRestrictions.data && canShowSlowZonesMap ? (
             <SlowZonesMap
+              key={lineShort}
               slowZones={allSlow.data}
               speedRestrictions={speedRestrictions.data}
               lineName={lineShort}

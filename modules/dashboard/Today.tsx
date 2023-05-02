@@ -25,6 +25,7 @@ export const Today: React.FC<TodayProps> = ({ lineShort }) => {
         <WidgetDiv className="h-full">
           <WidgetTitle title="Slow Zones" />
           <SlowZonesMap
+            key={lineShort}
             slowZones={allSlow.data}
             speedRestrictions={speedRestrictions.data}
             lineName={lineShort}
