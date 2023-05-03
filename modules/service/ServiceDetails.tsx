@@ -10,7 +10,7 @@ import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { ServiceDetailsWrapper } from './ServiceDetailsWrapper';
 dayjs.extend(utc);
 
-export default function ServiceDetails() {
+export const ServiceDetails: React.FC = () => {
   const {
     line,
     query: { startDate, endDate },
@@ -50,4 +50,4 @@ export default function ServiceDetails() {
       </div>
     </div>
   );
-}
+};

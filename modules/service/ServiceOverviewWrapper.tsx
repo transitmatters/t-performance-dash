@@ -21,7 +21,6 @@ interface ServiceOverviewWrapperProps {
 export const ServiceOverviewWrapper: React.FC<ServiceOverviewWrapperProps> = ({
   data,
   config,
-  line,
   startDate,
   endDate,
 }) => {
