@@ -6,8 +6,9 @@ export const calculateCommuteSpeedWidgetValues = (
   speed: SpeedDataPoint[],
   line: string
 ) => {
+  const weeklyDataNoNulls = weeklyData.filter((datapoint) => datapoint.value != null);
   const weeklyAverage =
-    weeklyData.reduce((sum, next) => sum + next.value, 0) / weeklyData.length / 3600;
+    weeklyDataNoNulls.reduce((sum, next) => sum + next.value, 0) / weeklyDataNoNulls.length / 3600;
   const speedInHours = (speed[0]?.value ?? undefined) / 3600;
   const MPH = CORE_TRACK_LENGTHS[line ?? 'DEFAULT'] / speedInHours;
   const weeklyAverageMPH = CORE_TRACK_LENGTHS[line ?? 'DEFAULT'] / weeklyAverage;
