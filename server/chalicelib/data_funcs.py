@@ -118,32 +118,26 @@ def travel_times(sdate, from_stops, to_stops, edate=None):
 
 def process_mbta_travel_times(from_stops, to_stops, sdate, edate=None):
     # get data
-    api_data = MbtaPerformanceAPI.get_api_data("traveltimes",
-                                               {
-                                                   "from_stop": from_stops,
-                                                   "to_stop": to_stops
-                                               },
-                                               sdate, edate)
+    api_data = MbtaPerformanceAPI.get_api_data(
+        "traveltimes", {"from_stop": from_stops, "to_stop": to_stops}, sdate, edate
+    )
     # combine all travel times data
-    travel = []
+    trips = {}
     for dict_data in api_data:
-        travel += dict_data.get('travel_times', [])
+        for tt in dict_data.get("travel_times", []):
+            dep_dt = tt["dep_dt"]
+            if dep_dt not in trips:
+                # convert to datetime
+                trips[dep_dt] = tt
+                trips[dep_dt]["arr_dt"] = stamp_to_dt(tt["arr_dt"])
+                trips[dep_dt]["dep_dt"] = stamp_to_dt(tt["dep_dt"])
+                # convert to int
+                trips[dep_dt]["benchmark_travel_time_sec"] = int(tt["benchmark_travel_time_sec"])
+                trips[dep_dt]["travel_time_sec"] = int(tt["travel_time_sec"])
+                trips[dep_dt]["direction"] = int(tt["direction"])
 
-    # conversion
-    for travel_dict in travel:
-        # convert to datetime
-        travel_dict["arr_dt"] = stamp_to_dt(
-            travel_dict.get("arr_dt"))
-        travel_dict["dep_dt"] = stamp_to_dt(
-            travel_dict.get("dep_dt"))
-        # convert to int
-        travel_dict["benchmark_travel_time_sec"] = int(
-            travel_dict.get("benchmark_travel_time_sec")
-        )
-        travel_dict["travel_time_sec"] = int(travel_dict.get("travel_time_sec"))
-        travel_dict["direction"] = int(travel_dict.get("direction"))
-
-    return sorted(travel, key=lambda x: x["dep_dt"])
+    trips_list = list(trips.values())
+    return sorted(trips_list, key=lambda x: x["dep_dt"])
 
 
 def dwells(sdate, stops, edate=None):
