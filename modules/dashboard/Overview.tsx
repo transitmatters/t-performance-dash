@@ -10,14 +10,9 @@ export const Overview: React.FC = () => {
   return (
     <div className="flex flex-col pt-2">
       <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
-<<<<<<< HEAD
-        {tab === 'Subway' && line !== 'GL' && <SlowZonesWidget />}
-        {tab === 'Subway' && line !== 'GL' && <SpeedWidget />}
-        {tab === 'Subway' && line !== 'GL' && <ServiceWidget />}
-=======
         {tab === 'Subway' && line !== 'line-green' && <SlowZonesWidget />}
         {tab === 'Subway' && line !== 'line-green' && <SpeedWidget />}
->>>>>>> 29dcb89 (Swapping from RL keys to line-red (#459))
+        {tab === 'Subway' && line !== 'line-green' && <ServiceWidget />}
         <RidershipWidget />
       </div>
     </div>
