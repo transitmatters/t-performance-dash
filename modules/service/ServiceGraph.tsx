@@ -71,7 +71,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             pointBorderWidth: 0,
             pointHoverRadius: 3,
             pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
-            data: data.map((datapoint) => datapoint.count / 2),
+            data: data.map((datapoint) => (datapoint.value ? datapoint.count / 2 : -1000000000000)),
           },
         ],
       }}
@@ -103,7 +103,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
         },
         scales: {
           y: {
-            suggestedMin: 0,
+            min: 0,
             display: true,
             ticks: {
               color: COLORS.design.subtitleGrey,
