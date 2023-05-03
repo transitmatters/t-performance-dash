@@ -121,7 +121,7 @@ def process_mbta_travel_times(from_stops, to_stops, sdate, edate=None):
     api_data = MbtaPerformanceAPI.get_api_data(
         "traveltimes", {"from_stop": from_stops, "to_stop": to_stops}, sdate, edate
     )
-    # combine all travel times data
+    # combine all travel times data and remove duplicated values on `dep_dt`.
     trips = {}
     for dict_data in api_data:
         for tt in dict_data.get("travel_times", []):
