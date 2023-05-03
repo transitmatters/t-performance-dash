@@ -26,12 +26,12 @@ export const SpeedGraphWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
   endDate,
 }) => {
   const { current, delta, average } = getOverviewSpeedWidgetValues(data, line);
-  const dataWithoutNulls = data.filter((datapoint) => datapoint.value !== undefined);
+  const dataNoNulls = data.filter((datapoint) => datapoint.value !== undefined);
   return (
     <>
       <div className={classNames('space-between flex w-full flex-row')}>
         <BasicWidgetDataLayout
-          title={config.getWidgetTitle(dataWithoutNulls[dataWithoutNulls.length - 1].date)}
+          title={config.getWidgetTitle(dataNoNulls[dataNoNulls.length - 1].date)}
           widgetValue={new MPHWidgetValue(current, delta)}
           analysis="over period"
           sentimentDirection={'positiveOnIncrease'}
