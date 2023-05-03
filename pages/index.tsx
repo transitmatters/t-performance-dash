@@ -5,7 +5,7 @@ import { PageWrapper } from '../common/layouts/PageWrapper';
 
 export default function Home() {
   return (
-    <PageWrapper pageTitle={'Select Line'}>
+    <PageWrapper>
       <Link href="/red">
         <div>
           <p>Red Line</p>
