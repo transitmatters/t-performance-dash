@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Head from 'next/head';
 import licenses from '../common/constants/licenses/licenseInfos.json';
 import { Accordion } from '../common/components/accordion/Accordion';
 
@@ -20,6 +21,9 @@ export default function OpenSource() {
 
   return (
     <div className="w-full">
+      <Head>
+        <title>Data Dashboard - Open Source Licenses</title>
+      </Head>
       <Accordion contentList={licensesDisplays} />
     </div>
   );

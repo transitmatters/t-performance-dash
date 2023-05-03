@@ -29,7 +29,6 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
   const stations = optionsStation(lineShort, busRoute);
   const toStation = to ? getParentStationForStopId(to) : stations?.[stations.length - 2];
   const fromStation = from ? getParentStationForStopId(from) : stations?.[1];
-
   React.useEffect(() => {
     const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
     updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });
@@ -61,31 +60,27 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
   return (
     <div
       className={classNames(
-        'relative flex w-full flex-row items-center gap-1 p-2 md:flex-col md:p-0 lg:flex-row'
+        'flex w-full flex-row items-center gap-1 overflow-hidden p-1 md:p-0 xl:w-auto'
       )}
     >
-      <div className="flex flex-row items-center gap-1 overflow-hidden md:w-[238px] md:overflow-visible lg:w-fit">
-        <StationSelector
-          type={'from'}
-          fromStation={fromStation}
-          toStation={toStation}
-          setStation={(stationId) => updateStations('from', stationId)}
-        />
-        <div className="flex h-4 w-4 items-center justify-center">
-          <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" />
-        </div>
+      <StationSelector
+        type={'from'}
+        fromStation={fromStation}
+        toStation={toStation}
+        setStation={(stationId) => updateStations('from', stationId)}
+      />
+      <div className="flex h-4 w-4 items-center justify-center">
+        <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4 text-white" />
       </div>
-      <div className="flex flex-row items-center gap-1 overflow-hidden md:w-[238px] md:overflow-visible lg:w-fit">
-        <StationSelector
-          type={'to'}
-          fromStation={fromStation}
-          toStation={toStation}
-          setStation={(stationId) => updateStations('to', stationId)}
-        />
-        <Button onClick={() => updateStations('swap')} additionalClasses="shrink-0 w-fit">
-          <FontAwesomeIcon icon={faRightLeft} className="h-4 w-4" />
-        </Button>
-      </div>
+      <StationSelector
+        type={'to'}
+        fromStation={fromStation}
+        toStation={toStation}
+        setStation={(stationId) => updateStations('to', stationId)}
+      />
+      <Button onClick={() => updateStations('swap')} additionalClasses="shrink-0 w-fit">
+        <FontAwesomeIcon icon={faRightLeft} className="h-4 w-4" />
+      </Button>
     </div>
   );
 };

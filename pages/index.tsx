@@ -1,10 +1,11 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
+import { PageWrapper } from '../common/layouts/PageWrapper';
 
 export default function Home() {
   return (
-    <>
+    <PageWrapper>
       <Link href="/red">
         <div>
           <p>Red Line</p>
@@ -25,6 +26,6 @@ export default function Home() {
           <p>Blue Line</p>
         </div>
       </Link>
-    </>
+    </PageWrapper>
   );
 }

@@ -18,6 +18,7 @@ import {
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
+import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { HeadwaysHistogramWrapper } from './charts/HeadwaysHistogramWrapper';
 
 export function HeadwaysDetails() {
@@ -48,7 +49,7 @@ export function HeadwaysDetails() {
   const headwaysData = aggregate ? headwaysAggregate?.data?.by_date : headways?.data;
 
   return (
-    <>
+    <PageWrapper pageTitle={'Headways'}>
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Average Headway"
@@ -98,6 +99,6 @@ export function HeadwaysDetails() {
         </>
       )}
       <TerminusNotice toStation={toStation} fromStation={fromStation} />
-    </>
+    </PageWrapper>
   );
 }
