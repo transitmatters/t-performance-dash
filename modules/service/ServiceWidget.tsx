@@ -30,7 +30,6 @@ export const ServiceWidget: React.FC = () => {
         <ServiceOverviewWrapper
           data={serviceData.data}
           config={config}
-          line={line}
           startDate={startDate}
           endDate={endDate}
         />

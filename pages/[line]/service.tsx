@@ -1,5 +1,5 @@
 import { ALL_LINE_PATHS } from '../../common/types/lines';
-import ServiceDetails from '../../modules/service/ServiceDetails';
+import { ServiceDetails } from '../../modules/service/ServiceDetails';
 
 export async function getStaticProps() {
   return { props: {} };

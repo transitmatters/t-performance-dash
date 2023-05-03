@@ -2,7 +2,6 @@ import React from 'react';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import type { SpeedDataPoint } from '../../common/types/dataPoints';
-import type { Line } from '../../common/types/lines';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { TripsWidgetValue } from '../../common/types/basicWidgets';
 import { PRETTY_DATE_FORMAT } from '../../common/constants/dates';
@@ -13,7 +12,6 @@ import { getOverviewServiceWidgetValues } from './utils/utils';
 interface ServiceOverviewWrapperProps {
   data: SpeedDataPoint[];
   config: ParamsType;
-  line: Line;
   startDate: string;
   endDate: string;
 }
