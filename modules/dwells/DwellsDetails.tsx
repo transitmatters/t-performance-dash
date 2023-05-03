@@ -15,6 +15,7 @@ import { useDwellsAggregateData, useDwellsSingleDayData } from '../../common/api
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
+import { PageWrapper } from '../../common/layouts/PageWrapper';
 
 export const DwellsDetails: React.FC = () => {
   const {
@@ -48,7 +49,7 @@ export const DwellsDetails: React.FC = () => {
   }
 
   return (
-    <>
+    <PageWrapper pageTitle={'Dwells'}>
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Average Dwell"
@@ -79,6 +80,6 @@ export const DwellsDetails: React.FC = () => {
         )}
       </WidgetDiv>
       <TerminusNotice toStation={toStation} fromStation={fromStation} />
-    </>
+    </PageWrapper>
   );
 };
