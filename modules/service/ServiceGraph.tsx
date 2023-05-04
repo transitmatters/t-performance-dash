@@ -77,7 +77,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             fill: true,
             pointHoverRadius: 3,
             pointHoverBackgroundColor: lineColor,
-            data: data.map((datapoint) => (datapoint.value ? datapoint.count / 2 : -1000000000000)),
+            data: data.map((datapoint) => (datapoint.value ? datapoint.count / 2 : Number.NaN)),
           },
           {
             label: `MBTA scheduled trips`,
@@ -90,18 +90,13 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             data: predictedData.counts.map((count, index) =>
               data[index]?.value > 0 && count ? count / 2 : Number.NaN
             ),
-            backgroundColor: pattern.draw('diagonal', 'rgba(0,0,0,0)', lineColor, 5),
+            backgroundColor: pattern.draw('diagonal', '#FFFFFF', lineColor, 5),
           },
         ],
       }}
       options={{
         responsive: true,
         maintainAspectRatio: false,
-        layout: {
-          padding: {
-            top: 25,
-          },
-        },
         interaction: {
           intersect: false,
         },
@@ -116,11 +111,6 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             labels: {
               boxWidth: 15,
             },
-          },
-          title: {
-            // empty title to set font and leave room for drawTitle fn
-            display: showTitle,
-            text: '',
           },
         },
         scales: {
