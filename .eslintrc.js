@@ -61,6 +61,7 @@ module.exports = {
         object: true,
       },
     ],
+    eqeqeq: ['error', 'smart'],
   },
   settings: {
     react: {
