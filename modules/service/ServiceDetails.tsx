@@ -1,14 +1,13 @@
 'use client';
-
 import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useSpeedData } from '../../common/api/hooks/speed';
+import { useTripCounts } from '../../common/api/hooks/service';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { ServiceDetailsWrapper } from './ServiceDetailsWrapper';
-import { useTripCounts } from '../../common/api/hooks/service';
 dayjs.extend(utc);
 
 export const ServiceDetails: React.FC = () => {

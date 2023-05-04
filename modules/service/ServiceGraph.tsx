@@ -20,9 +20,8 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
-import type { ParamsType } from '../speed/constants/speeds';
 import { hexWithAlpha } from '../../common/utils/general';
-import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import type { ParamsType } from '../speed/constants/speeds';
 
 ChartJS.register(
   CategoryScale,
@@ -54,7 +53,6 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
   showTitle = false,
 }) => {
   const { line } = useDelimitatedRoute();
-  const isMobile = !useBreakpoint('md');
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef();
   const labels = data.map((point) => point.date);

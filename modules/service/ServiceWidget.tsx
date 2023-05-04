@@ -4,11 +4,11 @@ import { useSpeedData } from '../../common/api/hooks/speed';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import { useTripCounts } from '../../common/api/hooks/service';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { ServiceOverviewWrapper } from './ServiceOverviewWrapper';
-import { useTripCounts } from '../../common/api/hooks/service';
 
 export const ServiceWidget: React.FC = () => {
   const { line, query, lineShort } = useDelimitatedRoute();
