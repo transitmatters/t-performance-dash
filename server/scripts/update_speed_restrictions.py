@@ -28,9 +28,7 @@ def parse_weird_date(date: str) -> Union[None, str]:
 
 def process_row(row: Dict[str, str]) -> Dict[str, str]:
     try:
-        [from_stop_id, to_stop_id] = [
-            s.strip() for s in row["Loc_GTFS_Stop_ID"].split("|")
-        ]
+        [from_stop_id, to_stop_id] = [s.strip() for s in row["Loc_GTFS_Stop_ID"].split("|")]
     except ValueError:
         from_stop_id = row["Loc_GTFS_Stop_ID"].strip()
         to_stop_id = None

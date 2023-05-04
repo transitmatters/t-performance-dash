@@ -31,7 +31,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => 
               <a
                 tabIndex={enabled ? 0 : undefined}
                 onKeyUp={(e) => {
-                  if (e.key === 'enter' || e.key == ' ') handleChange(enabled, tab);
+                  if (e.key === 'enter' || e.key === ' ') handleChange(enabled, tab);
                 }}
                 onClick={() => handleChange(enabled, tab)}
                 className={classNames(

@@ -10,6 +10,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { ServiceDayPicker } from '../../common/components/inputs/ServiceDayPicker';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { TphChart } from './charts/TphChart';
 import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
 
@@ -56,7 +57,7 @@ export function RidershipDetails() {
   }, [color, highestTph, lineData, serviceDay]);
 
   return (
-    <>
+    <PageWrapper pageTitle={'Ridership'}>
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Pre-COVID Ridership"
@@ -92,6 +93,6 @@ export function RidershipDetails() {
         <WidgetTitle title="Service Levels" />
         {serviceLevelChart}
       </WidgetDiv>
-    </>
+    </PageWrapper>
   );
 }

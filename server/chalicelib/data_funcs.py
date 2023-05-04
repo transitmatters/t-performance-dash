@@ -1,10 +1,45 @@
 import datetime
 import pytz
 import traceback
+from datetime import date, timedelta
+from typing import Dict, Any, Callable, List, Union
 from chalicelib import MbtaPerformanceAPI, s3_historical, s3_alerts, s3
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
 WE_HAVE_ALERTS_SINCE = datetime.date(2017, 11, 6)
+
+
+def bucket_by(
+    items: List[any],
+    key_getter: Union[str, Callable[[Any], str]],
+) -> Dict[str, List[any]]:
+    res = {}
+    if isinstance(key_getter, str):
+        key_getter_as_str = key_getter
+        key_getter = lambda dict: dict[key_getter_as_str]
+    for item in items:
+        key = key_getter(item)
+        res.setdefault(key, [])
+        res[key].append(item)
+    return res
+
+
+def index_by(items: List[any], key_getter: Union[str, Callable[[Any], str]]):
+    res = {}
+    if isinstance(key_getter, str):
+        key_getter_as_str = key_getter
+        key_getter = lambda dict: dict[key_getter_as_str]
+    for item in items:
+        key = key_getter(item)
+        res[key] = item
+    return res
+
+
+def date_range(start_date: date, end_date: date):
+    now = start_date
+    while now <= end_date:
+        yield now
+        now = now + timedelta(days=1)
 
 
 def stamp_to_dt(stamp):
