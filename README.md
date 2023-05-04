@@ -46,6 +46,9 @@ To lint just frontend code, run `$ npm run lint-frontend`
 
 To lint just backend code, run `$ npm run lint-backend`
 
+### Updating backend data
+See server/rapid/gen_latest_rapid_data.sh and server/bus/gen_latest_bus_data.sh for instructions.
+
 ## Support TransitMatters
 
 If you've found this app helpful or interesting, please consider [donating](https://transitmatters.org/donate) to TransitMatters to help support our mission to provide data-driven advocacy for a more reliable, sustainable, and equitable transit system in Metropolitan Boston.
