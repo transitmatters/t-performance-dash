@@ -6,7 +6,6 @@ export default function Document() {
     <Html lang="en" className="font-sans h-full">
       <Head>
         <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:site" content="@transitmatters" />
