@@ -40,7 +40,7 @@ export const ServiceDetails: React.FC = () => {
   ).data;
 
   const serviceDataReady =
-    !serviceData.isError && serviceData.data && line && config && predictedData !== undefined;
+    !serviceData.isError && serviceData.data && line && config && predictedData;
 
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;

@@ -28,8 +28,7 @@ export const ServiceWidget: React.FC = () => {
     agg: agg,
   }).data;
 
-  const serviceReady =
-    !serviceData.isError && serviceData.data && line && predictedServiceData !== undefined;
+  const serviceReady = !serviceData.isError && serviceData.data && line && predictedServiceData;
 
   return (
     <WidgetDiv>
