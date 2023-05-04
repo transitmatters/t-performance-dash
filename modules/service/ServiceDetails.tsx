@@ -8,6 +8,7 @@ import { useSpeedData } from '../../common/api/hooks/speed';
 import { useTripCounts } from '../../common/api/hooks/service';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { ServiceDetailsWrapper } from './ServiceDetailsWrapper';
+import { PageWrapper } from '../../common/layouts/PageWrapper';
 dayjs.extend(utc);
 
 export const ServiceDetails: React.FC = () => {
@@ -46,22 +47,24 @@ export const ServiceDetails: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="relative flex flex-col gap-4">
-        {serviceDataReady ? (
-          <ServiceDetailsWrapper
-            data={serviceData.data}
-            predictedData={predictedData}
-            config={config}
-            startDate={startDate}
-            endDate={endDate}
-          />
-        ) : (
-          <div className="relative flex h-full">
-            <ChartPlaceHolder query={serviceData} />
-          </div>
-        )}
+    <PageWrapper pageTitle={'Service'}>
+      <div className="flex flex-col">
+        <div className="relative flex flex-col gap-4">
+          {serviceDataReady ? (
+            <ServiceDetailsWrapper
+              data={serviceData.data}
+              predictedData={predictedData}
+              config={config}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          ) : (
+            <div className="relative flex h-full">
+              <ChartPlaceHolder query={serviceData} />
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 };
