@@ -67,7 +67,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
         labels,
         datasets: [
           {
-            label: `Observed trips`,
+            label: `Actual trips`,
             borderColor: lineColor,
             backgroundColor: hexWithAlpha(lineColor, 0.8),
             pointRadius: 8,
