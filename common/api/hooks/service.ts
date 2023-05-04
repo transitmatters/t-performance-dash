@@ -4,7 +4,7 @@ import { ONE_HOUR } from '../../constants/time';
 import { fetchTripCounts } from '../service';
 
 export const useTripCounts = (params: FetchTripCountsOptions, enabled?: boolean) => {
-  return useQuery(['speed', params], () => fetchTripCounts(params), {
+  return useQuery(['trips', params], () => fetchTripCounts(params), {
     enabled: enabled,
     staleTime: ONE_HOUR,
   });

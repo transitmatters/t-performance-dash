@@ -1,8 +1,6 @@
 from datetime import date, datetime
-from re import A
 from typing import List, Dict, TypedDict, Union, Literal
 import pandas as pd
-import numpy as np
 
 from .dynamo import query_trip_counts
 from .data_funcs import index_by, date_range
@@ -76,6 +74,7 @@ def get_weekly_trip_counts(trip_counts_arr, start_date, end_date):
         weekly_df = weekly_df[1:]
     return weekly_df['value'].tolist()
 
+
 def get_monthly_trip_counts(trip_counts_arr, start_date, end_date):
     df = pd.DataFrame({'value': trip_counts_arr}, index=pd.date_range(start_date, end_date))
     monthly_df = df.resample('M').median()
@@ -90,7 +89,7 @@ def get_trip_counts(
     end_date: date,
     agg: AggTypes,
     route_id: str = None,
-    ) -> GetTripCountsResponse:
+) -> GetTripCountsResponse:
     trip_counts = query_trip_counts(
         start_date=start_date,
         end_date=end_date,

@@ -43,7 +43,7 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         <WidgetDiv className="w-full">
           <BasicWidgetDataLayout
-            title={`Current (${config.getWidgetTitle(data[data.length - 1].date)})`}
+            title={`Current (observed) - ${config.getWidgetTitle(data[data.length - 1].date)}`}
             widgetValue={new TripsWidgetValue(current, delta)}
             analysis="over period"
             sentimentDirection={'positiveOnIncrease'}
@@ -51,7 +51,7 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
         </WidgetDiv>
         <WidgetDiv className="w-full">
           <BasicWidgetDataLayout
-            title={'Average'}
+            title={'Average (observed)'}
             widgetValue={new TripsWidgetValue(average, undefined)}
             analysis={'Over this period'}
             sentimentDirection={'positiveOnIncrease'}
@@ -60,7 +60,7 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
         </WidgetDiv>
         <WidgetDiv className="w-full">
           <BasicWidgetDataLayout
-            title={'Peak'}
+            title={'Peak (observed)'}
             widgetValue={new TripsWidgetValue(peak.value, undefined)}
             analysis={config.getWidgetTitle(peak.date)}
             sentimentDirection={'positiveOnIncrease'}

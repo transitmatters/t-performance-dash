@@ -26,10 +26,10 @@ export const ServiceWidget: React.FC = () => {
     end_date: endDate,
     route_id: lineShort,
     agg: agg,
-  });
+  }).data;
 
   const serviceReady =
-    !serviceData.isError && serviceData.data && line && predictedServiceData.data !== undefined;
+    !serviceData.isError && serviceData.data && line && predictedServiceData !== undefined;
 
   return (
     <WidgetDiv>
@@ -37,7 +37,7 @@ export const ServiceWidget: React.FC = () => {
       {serviceReady ? (
         <ServiceOverviewWrapper
           data={serviceData.data}
-          predictedData={predictedServiceData.data}
+          predictedData={predictedServiceData}
           config={config}
           startDate={startDate}
           endDate={endDate}

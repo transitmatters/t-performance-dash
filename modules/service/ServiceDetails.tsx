@@ -37,10 +37,10 @@ export const ServiceDetails: React.FC = () => {
       agg: config.agg,
     },
     enabled
-  );
+  ).data;
 
   const serviceDataReady =
-    !serviceData.isError && serviceData.data && line && config && predictedData.data;
+    !serviceData.isError && serviceData.data && line && config && predictedData !== undefined;
 
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
@@ -52,7 +52,7 @@ export const ServiceDetails: React.FC = () => {
         {serviceDataReady ? (
           <ServiceDetailsWrapper
             data={serviceData.data}
-            predictedData={predictedData.data}
+            predictedData={predictedData}
             config={config}
             startDate={startDate}
             endDate={endDate}
