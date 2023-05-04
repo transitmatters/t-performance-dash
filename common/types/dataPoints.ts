@@ -96,3 +96,20 @@ export type SpeedRestriction = {
   speedMph: number;
   trackFeet: number;
 };
+
+export type DayKind = 'weekday' | 'saturday' | 'sunday';
+
+export type ServiceLevels = {
+  [key in DayKind]: {
+    date: string;
+    service_levels: number[] | undefined;
+  };
+};
+
+export type TripCounts = {
+  counts: number[];
+  start_date: string;
+  end_date: string;
+  start_date_service_levels: ServiceLevels;
+  end_date_service_levels: ServiceLevels;
+};

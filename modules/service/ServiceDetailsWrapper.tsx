@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import type { SpeedDataPoint } from '../../common/types/dataPoints';
+import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import type { ParamsType } from '../speed/constants/speeds';
@@ -11,6 +11,7 @@ import { ServiceGraph } from './ServiceGraph';
 
 interface ServiceDetailsWrapperProps {
   data: SpeedDataPoint[];
+  predictedData: TripCounts;
   config: ParamsType;
   startDate: string;
   endDate: string;
@@ -18,6 +19,7 @@ interface ServiceDetailsWrapperProps {
 
 export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
   data,
+  predictedData,
   config,
   startDate,
   endDate,
@@ -29,7 +31,13 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
       <WidgetDiv>
         <WidgetTitle title="Daily Round Trips" />
         <div className={classNames('flex h-60 flex-row items-center pr-4')}>
-          <ServiceGraph config={config} data={data} startDate={startDate} endDate={endDate} />
+          <ServiceGraph
+            config={config}
+            data={data}
+            startDate={startDate}
+            endDate={endDate}
+            predictedData={predictedData}
+          />
         </div>
       </WidgetDiv>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

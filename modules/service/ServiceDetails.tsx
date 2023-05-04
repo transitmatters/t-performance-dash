@@ -8,11 +8,13 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { useSpeedData } from '../../common/api/hooks/speed';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { ServiceDetailsWrapper } from './ServiceDetailsWrapper';
+import { useTripCounts } from '../../common/api/hooks/service';
 dayjs.extend(utc);
 
 export const ServiceDetails: React.FC = () => {
   const {
     line,
+    lineShort,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
@@ -26,7 +28,18 @@ export const ServiceDetails: React.FC = () => {
     },
     enabled
   );
-  const serviceDataReady = !serviceData.isError && serviceData.data && line && config;
+
+  const predictedData = useTripCounts(
+    {
+      start_date: startDate,
+      end_date: endDate,
+      route_id: lineShort,
+    },
+    enabled
+  );
+
+  const serviceDataReady =
+    !serviceData.isError && serviceData.data && line && config && predictedData.data;
 
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
@@ -38,6 +51,7 @@ export const ServiceDetails: React.FC = () => {
         {serviceDataReady ? (
           <ServiceDetailsWrapper
             data={serviceData.data}
+            predictedData={predictedData.data}
             config={config}
             startDate={startDate}
             endDate={endDate}

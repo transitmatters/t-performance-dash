@@ -8,9 +8,10 @@ import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { ServiceOverviewWrapper } from './ServiceOverviewWrapper';
+import { useTripCounts } from '../../common/api/hooks/service';
 
 export const ServiceWidget: React.FC = () => {
-  const { line, query } = useDelimitatedRoute();
+  const { line, query, lineShort } = useDelimitatedRoute();
   const { startDate, agg } = OVERVIEW_OPTIONS[query.view ?? 'year'];
   const endDate = TODAY_STRING;
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
@@ -20,8 +21,14 @@ export const ServiceWidget: React.FC = () => {
     agg: agg,
     line,
   });
+  const predictedServiceData = useTripCounts({
+    start_date: startDate,
+    end_date: endDate,
+    route_id: lineShort,
+  });
 
-  const serviceReady = !serviceData.isError && serviceData.data && line;
+  const serviceReady =
+    !serviceData.isError && serviceData.data && line && predictedServiceData.data !== undefined;
 
   return (
     <WidgetDiv>
@@ -29,6 +36,7 @@ export const ServiceWidget: React.FC = () => {
       {serviceReady ? (
         <ServiceOverviewWrapper
           data={serviceData.data}
+          predictedData={predictedServiceData.data}
           config={config}
           startDate={startDate}
           endDate={endDate}

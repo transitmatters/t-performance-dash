@@ -42,3 +42,13 @@ export enum FetchSpeedsParams {
   agg = 'agg',
   line = 'line',
 }
+
+export type FetchTripCountsOptions = {
+  [key in FetchTripCountsParams]?: string;
+};
+
+export enum FetchTripCountsParams {
+  startDate = 'start_date',
+  endDate = 'end_date',
+  routeId = 'route_id',
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
-import type { SpeedDataPoint } from '../../common/types/dataPoints';
+import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { TripsWidgetValue } from '../../common/types/basicWidgets';
 import { PRETTY_DATE_FORMAT } from '../../common/constants/dates';
@@ -11,6 +11,7 @@ import { getOverviewServiceWidgetValues } from './utils/utils';
 
 interface ServiceOverviewWrapperProps {
   data: SpeedDataPoint[];
+  predictedData: TripCounts;
   config: ParamsType;
   startDate: string;
   endDate: string;
@@ -18,6 +19,7 @@ interface ServiceOverviewWrapperProps {
 
 export const ServiceOverviewWrapper: React.FC<ServiceOverviewWrapperProps> = ({
   data,
+  predictedData,
   config,
   startDate,
   endDate,
@@ -47,6 +49,7 @@ export const ServiceOverviewWrapper: React.FC<ServiceOverviewWrapperProps> = ({
         <ServiceGraph
           config={config}
           data={data}
+          predictedData={predictedData}
           startDate={startDate}
           endDate={endDate}
           showTitle

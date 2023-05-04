@@ -17,9 +17,10 @@ import { enUS } from 'date-fns/locale';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedDataPoint } from '../../common/types/dataPoints';
+import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import type { ParamsType } from '../speed/constants/speeds';
+import { hexWithAlpha } from '../../common/utils/general';
 
 ChartJS.register(
   CategoryScale,
@@ -35,6 +36,7 @@ ChartJS.register(
 
 interface ServiceGraphProps {
   data: SpeedDataPoint[];
+  predictedData: TripCounts;
   config: ParamsType;
   startDate: string;
   endDate: string;
@@ -43,6 +45,7 @@ interface ServiceGraphProps {
 
 export const ServiceGraph: React.FC<ServiceGraphProps> = ({
   data,
+  predictedData,
   config,
   startDate,
   endDate,
@@ -65,13 +68,21 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             label: `trips`,
             borderColor: LINE_COLORS[line ?? 'default'],
             backgroundColor: `${LINE_COLORS[line ?? 'default']}80`,
-            fill: true,
             pointRadius: 8,
             pointBackgroundColor: 'transparent',
             pointBorderWidth: 0,
             pointHoverRadius: 3,
             pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
             data: data.map((datapoint) => (datapoint.value ? datapoint.count / 2 : -1000000000000)),
+          },
+          {
+            label: `MBTA scheduled trips`,
+            fill: true,
+            pointBackgroundColor: 'transparent',
+            pointBorderWidth: 0,
+            spanGaps: true,
+            data: predictedData.counts.map((count) => count / 2),
+            backgroundColor: hexWithAlpha(LINE_COLORS[line ?? 'default'], 0.5),
           },
         ],
       }}
