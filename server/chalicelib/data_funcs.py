@@ -124,18 +124,18 @@ def process_mbta_travel_times(from_stops, to_stops, sdate, edate=None):
     # combine all travel times data, remove threshold flags from performance API, and dedupe on `dep_dt`
     trips = {}
     for dict_data in api_data:
-        for tt in dict_data.get("travel_times", []):
-            dep_dt = tt["dep_dt"]
+        for event in dict_data.get("travel_times", []):
+            dep_dt = event["dep_dt"]
             if dep_dt not in trips:
                 trips[dep_dt] = {
-                    "route_id": tt["route_id"],
-                    "direction": int(tt["direction"]),
+                    "route_id": event["route_id"],
+                    "direction": int(event["direction"]),
                     # convert to datetime
-                    "dep_dt": stamp_to_dt(tt["dep_dt"]),
-                    "arr_dt": stamp_to_dt(tt["arr_dt"]),
+                    "dep_dt": stamp_to_dt(event["dep_dt"]),
+                    "arr_dt": stamp_to_dt(event["arr_dt"]),
                     # convert to int
-                    "travel_time_sec": int(tt["travel_time_sec"]),
-                    "benchmark_travel_time_sec": int(tt["benchmark_travel_time_sec"]),
+                    "travel_time_sec": int(event["travel_time_sec"]),
+                    "benchmark_travel_time_sec": int(event["benchmark_travel_time_sec"]),
                 }
     trips_list = list(trips.values())
     return sorted(trips_list, key=lambda x: x["dep_dt"])
