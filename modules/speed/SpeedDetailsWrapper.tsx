@@ -25,7 +25,8 @@ export const SpeedDetailsWrapper: React.FC<SpeedDetailsWrapperProps> = ({
   startDate,
   endDate,
 }) => {
-  const { current, delta, average, peak } = getDetailsSpeedWidgetValues(data, line);
+  const dataNoNulls = data.filter((datapoint) => datapoint.value !== null);
+  const { current, delta, average, peak } = getDetailsSpeedWidgetValues(dataNoNulls, line);
 
   return (
     <>
@@ -38,7 +39,7 @@ export const SpeedDetailsWrapper: React.FC<SpeedDetailsWrapperProps> = ({
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         <WidgetDiv className="w-full">
           <BasicWidgetDataLayout
-            title={`Current (${config.getWidgetTitle(data[data.length - 1].date)})`}
+            title={`Current (${config.getWidgetTitle(dataNoNulls[dataNoNulls.length - 1].date)})`}
             widgetValue={new MPHWidgetValue(current, delta)}
             analysis="over period"
             sentimentDirection={'positiveOnIncrease'}

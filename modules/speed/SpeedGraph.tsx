@@ -69,9 +69,12 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
             pointBackgroundColor: 'transparent',
             pointBorderWidth: 0,
             pointHoverRadius: 3,
+            spanGaps: false,
             pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
             data: data.map((datapoint) =>
-              (CORE_TRACK_LENGTHS[line ?? 'DEFAULT'] / (datapoint.value / 3600)).toFixed(1)
+              datapoint.value
+                ? (CORE_TRACK_LENGTHS[line ?? 'DEFAULT'] / (datapoint.value / 3600)).toFixed(1)
+                : Number.NaN
             ),
           },
         ],
