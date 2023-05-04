@@ -6,9 +6,9 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useSpeedData } from '../../common/api/hooks/speed';
 import { useTripCounts } from '../../common/api/hooks/service';
+import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { ServiceDetailsWrapper } from './ServiceDetailsWrapper';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
 dayjs.extend(utc);
 
 export const ServiceDetails: React.FC = () => {

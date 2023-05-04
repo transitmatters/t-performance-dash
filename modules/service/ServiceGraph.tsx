@@ -97,6 +97,11 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
       options={{
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            top: showTitle ? 25 : 0,
+          },
+        },
         interaction: {
           intersect: false,
         },
@@ -111,6 +116,11 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             labels: {
               boxWidth: 15,
             },
+          },
+          title: {
+            // empty title to set font and leave room for drawTitle fn
+            display: showTitle,
+            text: '',
           },
         },
         scales: {
@@ -153,6 +163,28 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
           },
         },
       }}
+      plugins={[
+        {
+          id: 'customTitle',
+          afterDraw: (chart) => {
+            if (!data) {
+              // No data is present
+              const { ctx } = chart;
+              const { width } = chart;
+              const { height } = chart;
+              chart.clear();
+
+              ctx.save();
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.font = "16px normal 'Helvetica Nueue'";
+              ctx.fillText('No data to display', width / 2, height / 2);
+              ctx.restore();
+            }
+            if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
+          },
+        },
+      ]}
     />
   );
 };
