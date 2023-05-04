@@ -26,7 +26,7 @@ export const SpeedGraphWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
   endDate,
 }) => {
   const { current, delta, average } = getOverviewSpeedWidgetValues(data, line);
-  const dataNoNulls = data.filter((datapoint) => datapoint.value !== undefined);
+  const dataNoNulls = data.filter((datapoint) => datapoint.value !== null);
   return (
     <>
       <div className={classNames('space-between flex w-full flex-row')}>
