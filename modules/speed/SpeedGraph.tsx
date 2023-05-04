@@ -68,6 +68,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
             pointRadius: 8,
             pointBackgroundColor: 'transparent',
             pointBorderWidth: 0,
+            stepped: true,
             pointHoverRadius: 3,
             spanGaps: false,
             pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],

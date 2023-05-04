@@ -34,6 +34,7 @@ export const ServiceDetails: React.FC = () => {
       start_date: startDate,
       end_date: endDate,
       route_id: lineShort,
+      agg: config.agg,
     },
     enabled
   );

@@ -14,6 +14,7 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
+import pattern from 'patternomaly';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
@@ -21,6 +22,7 @@ import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import type { ParamsType } from '../speed/constants/speeds';
 import { hexWithAlpha } from '../../common/utils/general';
+import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 
 ChartJS.register(
   CategoryScale,
@@ -52,9 +54,11 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
   showTitle = false,
 }) => {
   const { line } = useDelimitatedRoute();
+  const isMobile = !useBreakpoint('md');
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef();
   const labels = data.map((point) => point.date);
+  const lineColor = LINE_COLORS[line ?? 'default'];
   return (
     <Line
       id={'Service'}
@@ -65,24 +69,30 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
         labels,
         datasets: [
           {
-            label: `trips`,
-            borderColor: LINE_COLORS[line ?? 'default'],
-            backgroundColor: `${LINE_COLORS[line ?? 'default']}80`,
+            label: `Observed trips`,
+            borderColor: lineColor,
+            backgroundColor: hexWithAlpha(lineColor, 0.8),
             pointRadius: 8,
             pointBackgroundColor: 'transparent',
             pointBorderWidth: 0,
+            stepped: true,
+            fill: true,
             pointHoverRadius: 3,
-            pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
+            pointHoverBackgroundColor: lineColor,
             data: data.map((datapoint) => (datapoint.value ? datapoint.count / 2 : -1000000000000)),
           },
           {
             label: `MBTA scheduled trips`,
+            stepped: true,
             fill: true,
             pointBackgroundColor: 'transparent',
             pointBorderWidth: 0,
+            borderColor: lineColor,
             spanGaps: true,
-            data: predictedData.counts.map((count) => count / 2),
-            backgroundColor: hexWithAlpha(LINE_COLORS[line ?? 'default'], 0.5),
+            data: predictedData.counts.map((count, index) =>
+              data[index]?.value > 0 && count ? count / 2 : Number.NaN
+            ),
+            backgroundColor: pattern.draw('diagonal', 'rgba(0,0,0,0)', lineColor, 5),
           },
         ],
       }}
@@ -104,7 +114,10 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             callbacks: callbacks,
           },
           legend: {
-            display: false,
+            position: 'bottom',
+            labels: {
+              boxWidth: 15,
+            },
           },
           title: {
             // empty title to set font and leave room for drawTitle fn

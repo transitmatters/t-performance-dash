@@ -51,4 +51,5 @@ export enum FetchTripCountsParams {
   startDate = 'start_date',
   endDate = 'end_date',
   routeId = 'route_id',
+  agg = 'agg',
 }

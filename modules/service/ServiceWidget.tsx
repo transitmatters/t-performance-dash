@@ -25,6 +25,7 @@ export const ServiceWidget: React.FC = () => {
     start_date: startDate,
     end_date: endDate,
     route_id: lineShort,
+    agg: agg,
   });
 
   const serviceReady =
