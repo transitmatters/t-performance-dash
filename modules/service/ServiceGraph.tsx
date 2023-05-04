@@ -153,28 +153,6 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
           },
         },
       }}
-      plugins={[
-        {
-          id: 'customTitle',
-          afterDraw: (chart) => {
-            if (!data) {
-              // No data is present
-              const { ctx } = chart;
-              const { width } = chart;
-              const { height } = chart;
-              chart.clear();
-
-              ctx.save();
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
-              ctx.font = "16px normal 'Helvetica Nueue'";
-              ctx.fillText('No data to display', width / 2, height / 2);
-              ctx.restore();
-            }
-            if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
-          },
-        },
-      ]}
     />
   );
 };
