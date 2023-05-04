@@ -97,6 +97,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
             handleStartDateChange(currentDateString);
           }}
           onMonthChange={() => updateColor(line)}
+          onOpen={() => updateColor(line)}
         />
         {range ? (
           <>
@@ -119,6 +120,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
                 handleEndDateChange(currentDateString);
               }}
               onMonthChange={() => updateColor(line)}
+              onOpen={() => updateColor(line)}
             />
           </>
         ) : null}
