@@ -6,7 +6,7 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import type { ParamsType } from '../speed/constants/speeds';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { TripsWidgetValue } from '../../common/types/basicWidgets';
-import { getDetailsServiceWidgetValues } from './utils/utils';
+import { getServiceWidgetValues } from './utils/utils';
 import { ServiceGraph } from './ServiceGraph';
 
 interface ServiceDetailsWrapperProps {
@@ -24,10 +24,7 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
   startDate,
   endDate,
 }) => {
-  const { current, delta, average, peak } = getDetailsServiceWidgetValues(
-    data,
-    predictedData.counts
-  );
+  const { current, delta, average, peak } = getServiceWidgetValues(data, predictedData.counts);
 
   return (
     <>

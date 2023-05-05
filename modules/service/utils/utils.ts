@@ -1,6 +1,6 @@
 import type { SpeedDataPoint } from '../../../common/types/dataPoints';
 
-const calcValues = (datapoints: SpeedDataPoint[], predictedData: number[]) => {
+export const getServiceWidgetValues = (datapoints: SpeedDataPoint[], predictedData: number[]) => {
   const totals = datapoints.reduce(
     (totals, datapoint, index) => {
       if (datapoint.count && predictedData[index]) {
@@ -25,12 +25,3 @@ const calcValues = (datapoints: SpeedDataPoint[], predictedData: number[]) => {
 
   return { current, delta, average, peak, percentDelivered };
 };
-
-export const getOverviewServiceWidgetValues = (
-  datapoints: SpeedDataPoint[],
-  predictedData: number[]
-) => calcValues(datapoints, predictedData);
-export const getDetailsServiceWidgetValues = (
-  datapoints: SpeedDataPoint[],
-  predictedData: number[]
-) => calcValues(datapoints, predictedData);

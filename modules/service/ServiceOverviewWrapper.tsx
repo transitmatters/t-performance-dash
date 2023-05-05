@@ -5,7 +5,7 @@ import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/
 import { PercentageWidgetValue, TripsWidgetValue } from '../../common/types/basicWidgets';
 import type { ParamsType } from '../speed/constants/speeds';
 import { ServiceGraph } from './ServiceGraph';
-import { getOverviewServiceWidgetValues } from './utils/utils';
+import { getServiceWidgetValues } from './utils/utils';
 
 interface ServiceOverviewWrapperProps {
   data: SpeedDataPoint[];
@@ -22,7 +22,7 @@ export const ServiceOverviewWrapper: React.FC<ServiceOverviewWrapperProps> = ({
   startDate,
   endDate,
 }) => {
-  const { average, percentDelivered } = getOverviewServiceWidgetValues(data, predictedData.counts);
+  const { average, percentDelivered } = getServiceWidgetValues(data, predictedData.counts);
 
   return (
     <>
