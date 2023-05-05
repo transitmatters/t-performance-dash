@@ -24,7 +24,10 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
   startDate,
   endDate,
 }) => {
-  const { current, delta, average, peak } = getDetailsServiceWidgetValues(data);
+  const { current, delta, average, peak } = getDetailsServiceWidgetValues(
+    data,
+    predictedData.counts
+  );
 
   return (
     <>
@@ -61,8 +64,8 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
         <WidgetDiv className="w-full">
           <BasicWidgetDataLayout
             title={'Peak (actual)'}
-            widgetValue={new TripsWidgetValue(peak.value, undefined)}
-            analysis={config.getWidgetTitle(peak.date)}
+            widgetValue={new TripsWidgetValue(peak ? peak.count / 2 : undefined, undefined)}
+            analysis={config.getWidgetTitle(peak?.date)}
             sentimentDirection={'positiveOnIncrease'}
             layoutKind="no-delta"
           />

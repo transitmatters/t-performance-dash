@@ -86,7 +86,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             pointBackgroundColor: 'transparent',
             pointBorderWidth: 0,
             borderColor: lineColor,
-            spanGaps: true,
+            spanGaps: false,
             data: predictedData.counts.map((count, index) =>
               data[index]?.value > 0 && count ? count / 2 : Number.NaN
             ),
