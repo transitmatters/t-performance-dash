@@ -177,10 +177,12 @@ def get_trip_counts():
     start_date = parse_user_date(query["start_date"])
     end_date = parse_user_date(query["end_date"])
     route_id = query.get("route_id")
+    agg = query["agg"]
     response = service_levels.get_trip_counts(
         start_date=start_date,
         end_date=end_date,
         route_id=route_id,
+        agg=agg,
     )
     return json.dumps(response)
 

@@ -14,13 +14,14 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
+import pattern from 'patternomaly';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedDataPoint } from '../../common/types/dataPoints';
+import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
-import { CORE_TRACK_LENGTHS, PEAK_MPH } from './constants/speeds';
-import type { ParamsType } from './constants/speeds';
+import { hexWithAlpha } from '../../common/utils/general';
+import type { ParamsType } from '../speed/constants/speeds';
 
 ChartJS.register(
   CategoryScale,
@@ -34,16 +35,18 @@ ChartJS.register(
   Legend
 );
 
-interface SpeedGraphProps {
+interface ServiceGraphProps {
   data: SpeedDataPoint[];
+  predictedData: TripCounts;
   config: ParamsType;
   startDate: string;
   endDate: string;
   showTitle?: boolean;
 }
 
-export const SpeedGraph: React.FC<SpeedGraphProps> = ({
+export const ServiceGraph: React.FC<ServiceGraphProps> = ({
   data,
+  predictedData,
   config,
   startDate,
   endDate,
@@ -53,9 +56,10 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef();
   const labels = data.map((point) => point.date);
+  const lineColor = LINE_COLORS[line ?? 'default'];
   return (
     <Line
-      id={'Speed'}
+      id={'Service'}
       height={240}
       ref={ref}
       redraw={true}
@@ -63,20 +67,30 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
         labels,
         datasets: [
           {
-            label: `MPH`,
-            borderColor: LINE_COLORS[line ?? 'default'],
+            label: `Actual trips`,
+            borderColor: lineColor,
+            backgroundColor: hexWithAlpha(lineColor, 0.8),
             pointRadius: 8,
             pointBackgroundColor: 'transparent',
             pointBorderWidth: 0,
             stepped: true,
+            fill: true,
             pointHoverRadius: 3,
+            pointHoverBackgroundColor: lineColor,
+            data: data.map((datapoint) => (datapoint.value ? datapoint.count / 2 : Number.NaN)),
+          },
+          {
+            label: `MBTA scheduled trips`,
+            stepped: true,
+            fill: true,
+            pointBackgroundColor: 'transparent',
+            pointBorderWidth: 0,
+            borderColor: lineColor,
             spanGaps: false,
-            pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
-            data: data.map((datapoint) =>
-              datapoint.value
-                ? (CORE_TRACK_LENGTHS[line ?? 'DEFAULT'] / (datapoint.value / 3600)).toFixed(1)
-                : Number.NaN
+            data: predictedData.counts.map((count, index) =>
+              data[index]?.value > 0 && count ? count / 2 : Number.NaN
             ),
+            backgroundColor: pattern.draw('diagonal', '#FFFFFF', lineColor, 5),
           },
         ],
       }}
@@ -85,7 +99,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
         maintainAspectRatio: false,
         layout: {
           padding: {
-            top: 25,
+            top: showTitle ? 25 : 0,
           },
         },
         interaction: {
@@ -98,7 +112,10 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
             callbacks: callbacks,
           },
           legend: {
-            display: false,
+            position: 'bottom',
+            labels: {
+              boxWidth: 15,
+            },
           },
           title: {
             // empty title to set font and leave room for drawTitle fn
@@ -108,15 +125,14 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
         },
         scales: {
           y: {
-            suggestedMin: 0,
-            suggestedMax: PEAK_MPH[line ?? 'DEFAULT'],
+            min: 0,
             display: true,
             ticks: {
               color: COLORS.design.subtitleGrey,
             },
             title: {
               display: true,
-              text: 'mph',
+              text: 'trips',
               color: COLORS.design.subtitleGrey,
             },
           },
@@ -165,7 +181,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
               ctx.fillText('No data to display', width / 2, height / 2);
               ctx.restore();
             }
-            if (showTitle) drawSimpleTitle(`Median Speed`, chart);
+            if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
           },
         },
       ]}

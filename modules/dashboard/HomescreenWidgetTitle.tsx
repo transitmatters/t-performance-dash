@@ -15,18 +15,21 @@ export const HomescreenWidgetTitle: React.FC<HomescreenWidgetTitle> = ({ title, 
   const { line } = useDelimitatedRoute();
   const handlePageNavigation = useHandlePageNavigation();
   return (
-    <button onClick={() => handlePageNavigation(ALL_PAGES[tab])}>
-      <div className="flex w-full cursor-pointer flex-row items-center p-2 text-xl">
-        <h3
-          className={classNames(
-            'font-semibold',
-            line ? mbtaTextConfig[line] : 'text-design-subtitleGrey'
-          )}
-        >
-          {title}
-        </h3>
-        <ExploreArrow fill={LINE_COLORS[line ?? 'default']} className="h-4 w-auto pl-2" />
-      </div>
-    </button>
+    <div className="flex w-full items-baseline justify-between p-2">
+      <button onClick={() => handlePageNavigation(ALL_PAGES[tab])}>
+        <div className="flex w-full cursor-pointer flex-row items-center text-xl">
+          <h3
+            className={classNames(
+              'font-semibold',
+              line ? mbtaTextConfig[line] : 'text-design-subtitleGrey'
+            )}
+          >
+            {title}
+          </h3>
+          <ExploreArrow fill={LINE_COLORS[line ?? 'default']} className="h-4 w-auto pl-2" />
+        </div>
+      </button>
+      <p className="text-xs italic text-stone-700">{`Date Placeholder`}</p>
+    </div>
   );
 };
