@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -15,7 +15,7 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import pattern from 'patternomaly';
-import Annotations from 'chartjs-plugin-annotation';
+import Annotation from 'chartjs-plugin-annotation';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
@@ -23,7 +23,6 @@ import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
-import Annotation from 'chartjs-plugin-annotation';
 import { SERVICE_PEAKS_ACTUAL } from '../../common/constants/service';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
@@ -214,7 +213,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
           },
         },
-        Annotations,
+        Annotation,
       ]}
     />
   );
