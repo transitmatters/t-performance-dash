@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -15,13 +15,17 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import pattern from 'patternomaly';
+import Annotations from 'chartjs-plugin-annotation';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { COLORS, LINE_COLORS } from '../../common/constants/colors';
+import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
+import Annotation from 'chartjs-plugin-annotation';
+import { SERVICE_PEAKS_ACTUAL } from '../../common/constants/service';
+import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 ChartJS.register(
   CategoryScale,
@@ -29,6 +33,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  Annotation,
   Filler,
   Title,
   Tooltip,
@@ -57,6 +62,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
   const ref = useRef();
   const labels = data.map((point) => point.date);
   const lineColor = LINE_COLORS[line ?? 'default'];
+  const shuttlingBlocks = getShuttlingBlockAnnotations(data);
   return (
     <Line
       id={'Service'}
@@ -92,6 +98,11 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             ),
             backgroundColor: pattern.draw('diagonal', '#FFFFFF', lineColor, 5),
           },
+          {
+            label: 'Baseline',
+            backgroundColor: CHART_COLORS.ANNOTATIONS,
+            data: null,
+          },
         ],
       }}
       options={{
@@ -121,6 +132,25 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             // empty title to set font and leave room for drawTitle fn
             display: showTitle,
             text: '',
+          },
+          annotation: {
+            // Add your annotations here
+            annotations: [
+              {
+                type: 'line',
+                yMin: SERVICE_PEAKS_ACTUAL[line ?? 'DEFAULT'].value,
+                yMax: SERVICE_PEAKS_ACTUAL[line ?? 'DEFAULT'].value,
+                borderColor: CHART_COLORS.ANNOTATIONS,
+                display: (ctx) => ctx.chart.isDatasetVisible(2),
+                borderWidth: 2,
+                label: {
+                  backgroundColor: CHART_COLORS.ANNOTATIONS,
+                  content: 'Baseline',
+                  display: true,
+                },
+              },
+              ...shuttlingBlocks,
+            ],
           },
         },
         scales: {
@@ -184,6 +214,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
           },
         },
+        Annotations,
       ]}
     />
   );
