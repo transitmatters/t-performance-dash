@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 
 import TmLogoSvg from '../../public/tm-logo-big.svg';
+import { DonateButton } from '../../common/components/donate/DonateButton';
 import { SideNavigation } from './SideNavigation';
 
 export const SideNavBar = () => {
@@ -14,7 +15,9 @@ export const SideNavBar = () => {
           <div className="relative flex flex-col overflow-y-scroll pb-4">
             <div className="fixed h-5 w-64 bg-gradient-to-b from-tm-grey to-transparent"></div>
             <SideNavigation />
+            <div className="fixed bottom-12 h-5 w-64 bg-gradient-to-t from-tm-grey to-transparent"></div>
           </div>
+          <DonateButton />
         </div>
       </div>
     </>
