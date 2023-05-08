@@ -90,9 +90,9 @@ export const Speed: React.FC = () => {
             </Tooltip>
           </div>
           {serviceAlert.type === AlertEffect.SHUTTLE ? (
-            <ShuttleAlert alert={serviceAlert} lineShort={lineShort} type={'current'} />
+            <ShuttleAlert noShrink alert={serviceAlert} lineShort={lineShort} type={'current'} />
           ) : serviceAlert.type === AlertEffect.SUSPENSION ? (
-            <SuspensionAlert alert={serviceAlert} lineShort={lineShort} type={'current'} />
+            <SuspensionAlert noShrink alert={serviceAlert} lineShort={lineShort} type={'current'} />
           ) : null}
         </div>
       ) : (
