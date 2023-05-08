@@ -10,6 +10,7 @@ interface SuspensionAlertProps {
   alert: FormattedAlert;
   lineShort: LineShort;
   type: UpcomingOrCurrent;
+  noShrink?: boolean;
 }
 
 const getDescription = (alert: FormattedAlert, lineShort: LineShort) => {
@@ -28,9 +29,20 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort) => {
   return <p className="mr-1 ">Detours on {lineShort} Line</p>;
 };
 
-export const SuspensionAlert: React.FC<SuspensionAlertProps> = ({ alert, lineShort, type }) => {
+export const SuspensionAlert: React.FC<SuspensionAlertProps> = ({
+  alert,
+  lineShort,
+  type,
+  noShrink,
+}) => {
   return (
-    <AlertBoxInner header={alert.header} Icon={DetourIcon} alert={alert} type={type}>
+    <AlertBoxInner
+      header={alert.header}
+      Icon={DetourIcon}
+      alert={alert}
+      type={type}
+      noShrink={noShrink}
+    >
       {getDescription(alert, lineShort)}
     </AlertBoxInner>
   );
