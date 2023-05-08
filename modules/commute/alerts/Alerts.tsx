@@ -16,7 +16,7 @@ export const Alerts: React.FC = () => {
   const alerts = useAlertsData(lineShort, busRoute);
 
   const divStyle = classNames(
-    'flex flex-col rounded-md p-4 text-white shadow-dataBox w-full xl:w-1/3 gap-y-2 md:max-h-[309px] md:overflow-y-auto',
+    'flex flex-col rounded-md py-4 text-white shadow-dataBox w-full xl:w-1/3 gap-y-2 md:max-h-[309px] md:overflow-y-auto',
     lineColorBackground[line ?? 'DEFAULT']
   );
 
@@ -25,15 +25,15 @@ export const Alerts: React.FC = () => {
   if (!alertsReady) {
     return (
       <div className={divStyle}>
-        <h3 className="w-full text-2xl font-semibold md:w-auto">Alerts</h3>
+        <h3 className="w-full px-4 text-2xl font-semibold md:w-auto">Alerts</h3>
         <ChartPlaceHolder query={alerts} isInverse />
       </div>
     );
   }
   return (
     <div className={divStyle}>
-      <h3 className="w-full text-2xl font-semibold md:w-auto">Alerts</h3>
-      <div className="flex w-full flex-row gap-x-4 overflow-x-scroll pb-2 md:flex-col md:gap-x-0 md:overflow-x-auto">
+      <h3 className="w-full px-4 text-2xl font-semibold md:w-auto">Alerts</h3>
+      <div className="flex w-full flex-row gap-x-4 overflow-x-scroll px-4 md:flex-col md:gap-x-0 md:overflow-x-auto">
         <div className="md:w-full">
           <Divider title="Today" line={line} />
 
