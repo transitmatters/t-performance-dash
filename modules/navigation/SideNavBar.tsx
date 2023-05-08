@@ -7,16 +7,13 @@ export const SideNavBar = () => {
   return (
     <>
       <div className="bg-tm-grey text-gray-300">
-        <div className="fixed inset-y-0 flex w-64 flex-col bg-tm-grey">
-          <div className="flex min-h-0 flex-1 flex-col">
-            <div className="flex flex-1 flex-col overflow-y-auto pb-4 pt-5">
-              <div className="flex flex-shrink-0 px-6">
-                <TmLogoSvg alt="TransitMatters Logo" />
-              </div>
-              <div className="mt-5 flex flex-col ">
-                <SideNavigation />
-              </div>
-            </div>
+        <div className="fixed inset-y-0 flex w-64 flex-col overflow-y-hidden bg-tm-grey">
+          <div className="sticky flex flex-shrink-0 px-6 pb-2 pt-5">
+            <TmLogoSvg alt="TransitMatters Logo" />
+          </div>
+          <div className="relative flex flex-col overflow-y-scroll pb-4">
+            <div className="fixed h-5 w-64 bg-gradient-to-b from-tm-grey to-transparent"></div>
+            <SideNavigation />
           </div>
         </div>
       </div>
