@@ -16,7 +16,7 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({ setSidebarOpen }
   };
   const { tab } = useDelimitatedRoute();
   return (
-    <nav className="flex flex-1 flex-col pt-5 md:px-4">
+    <nav className="flex flex-1 flex-col md:px-4 md:pt-5">
       <ul role="list" className="flex flex-1 flex-col gap-y-5">
         <DashboardSelection />
         {getNavMenu(tab)}

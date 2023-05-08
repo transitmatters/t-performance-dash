@@ -3,6 +3,8 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 import TmLogoSvg from '../../public/tm-logo-big.svg';
+import { DonateButton } from '../../common/components/buttons/DonateButton';
+import { FeedbackButton } from '../../common/components/buttons/FeedbackButton';
 import { SideNavigation } from './SideNavigation';
 
 export const MobileNavHeader = () => {
@@ -17,7 +19,11 @@ export const MobileNavHeader = () => {
 
             <Dialog.Panel className="fixed bottom-0 left-0 right-0 top-12 flex w-full flex-col bg-tm-grey">
               <div className="h-0 flex-1 overflow-y-auto px-4 pb-4 pt-5">
-                <div className="mt-5 h-0 flex-1 text-white">
+                <div className="h-0 flex-1 text-white md:mt-5">
+                  <div className="flex flex-row gap-2 pb-6">
+                    <DonateButton />
+                    <FeedbackButton />
+                  </div>
                   <SideNavigation setSidebarOpen={setSidebarOpen} />
                 </div>
               </div>
