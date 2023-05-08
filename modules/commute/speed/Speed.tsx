@@ -82,7 +82,7 @@ export const Speed: React.FC = () => {
             >
               <p
                 className={classNames(
-                  'm-3 select-none self-center rounded-lg bg-black bg-opacity-20 p-3 text-7xl'
+                  'm-3 select-none self-center rounded-lg border border-white border-opacity-10 bg-white bg-opacity-5 p-3 text-7xl'
                 )}
               >
                 {randomUpsetEmoji()}
