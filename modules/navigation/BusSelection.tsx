@@ -14,8 +14,8 @@ export const BusSelection: React.FC<BusSelectionProps> = ({ setSidebarOpen }) =>
   const router = useRouter();
   const busRoutes = getBusRoutes();
 
-  const handleChange = (index) => {
-    router.push(getBusRouteSelectionItemHref(busRoutes[index], route));
+  const handleChange = (key: string) => {
+    router.push(getBusRouteSelectionItemHref(key, route));
     setSidebarOpen && setSidebarOpen(false);
   };
 
