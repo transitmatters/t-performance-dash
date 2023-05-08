@@ -142,11 +142,6 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                 borderColor: CHART_COLORS.ANNOTATIONS,
                 display: (ctx) => ctx.chart.isDatasetVisible(2),
                 borderWidth: 2,
-                label: {
-                  backgroundColor: CHART_COLORS.ANNOTATIONS,
-                  content: 'Baseline',
-                  display: true,
-                },
               },
               ...shuttlingBlocks,
             ],
