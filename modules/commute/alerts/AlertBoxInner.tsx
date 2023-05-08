@@ -24,7 +24,7 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
       onClick={() => {
         setShowModal(!showModal);
       }}
-      className="flex cursor-pointer flex-col gap-y-2 whitespace-nowrap rounded-md border border-white border-opacity-10 bg-white bg-opacity-5 py-1 pl-1 pr-4 shadow-sm hover:bg-opacity-0 md:w-full md:whitespace-normal"
+      className="flex cursor-pointer flex-col gap-y-2 whitespace-nowrap rounded-md border-2 border-white border-opacity-10 bg-white bg-opacity-5 py-1 pl-1 pr-4 shadow-sm hover:bg-opacity-0 md:w-full md:whitespace-normal"
     >
       {showModal && (
         <AlertModal
