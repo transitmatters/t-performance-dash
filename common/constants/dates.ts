@@ -23,7 +23,7 @@ export const ONE_WEEK_AGO_STRING = ONE_WEEK_AGO.format(DATE_FORMAT);
 const OVERVIEW_TRAIN_MIN_DATE = '2016-02-01';
 const TRAIN_MIN_DATE = '2016-01-15';
 const BUS_MIN_DATE = '2018-08-01';
-export const BUS_MAX_DATE = '2022-12-31';
+export const BUS_MAX_DATE = '2023-01-31';
 
 export const FLAT_PICKER_OPTIONS: {
   [key in Exclude<Tab, 'System'>]: DateTimePickerProps['options'];
