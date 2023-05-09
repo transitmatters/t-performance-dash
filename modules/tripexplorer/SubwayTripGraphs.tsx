@@ -61,7 +61,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               type={'dwells'}
             />
           </WidgetDiv>
-          <WidgetDiv>
+          <WidgetDiv className="flex flex-col justify-center">
             <AggregateChartWrapper
               query={traveltimes}
               toStation={toStation}
@@ -70,13 +70,17 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               timeUnit={'by_time'}
               peakTime={peakTime === 'weekday' ? true : false}
             />
-            <ButtonGroup
-              pressFunction={setPeakTime}
-              options={[
-                ['weekday', 'Weekday'],
-                ['weekend', 'Weekend/Holiday'],
-              ]}
-            />
+            <div className={'flex w-full justify-center pt-2'}>
+              <ButtonGroup
+                pressFunction={setPeakTime}
+                options={[
+                  ['weekday', 'Weekday'],
+                  ['weekend', 'Weekend/Holiday'],
+                ]}
+                additionalDivClass="md:w-auto"
+                additionalButtonClass="md:w-fit"
+              />
+            </div>
           </WidgetDiv>
         </>
       ) : (

@@ -66,6 +66,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   suggestedYMax,
   showLegend = true,
   isHomescreen = false,
+  byTime = false,
 }) => {
   const ref = useRef();
   const hourly = timeUnit === 'hour';
@@ -87,17 +88,20 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 label: seriesName,
                 fill: false,
                 tension: 0.1,
+                borderColor: byTime ? CHART_COLORS.DARK_LINE : undefined,
                 pointBackgroundColor: CHART_COLORS.GREY,
                 pointHoverRadius: 3,
                 pointHoverBackgroundColor: CHART_COLORS.GREY,
-                pointRadius: 3,
+                pointRadius: byTime ? 0 : 3,
                 pointHitRadius: 10,
+                stepped: byTime,
                 data: data.map((item: AggregateDataPoint) => (item['50%'] / 60).toFixed(2)),
               },
               {
                 label: '25th percentile',
                 fill: 1,
                 backgroundColor: fillColor,
+                stepped: byTime,
                 tension: 0.4,
                 pointRadius: 0,
                 data: data.map((item: AggregateDataPoint) => (item['25%'] / 60).toFixed(2)),
@@ -106,6 +110,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 label: '75th percentile',
                 fill: 1,
                 backgroundColor: fillColor,
+                stepped: byTime,
                 tension: 0.4,
                 pointRadius: 0,
                 data: data.map((item: AggregateDataPoint) => (item['75%'] / 60).toFixed(2)),
