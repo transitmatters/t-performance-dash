@@ -4,7 +4,16 @@ import subprocess
 from chalice import Chalice, CORSConfig, ConflictError, Response, ConvertToMiddleware
 from datetime import date, timedelta
 from datadog_lambda.wrapper import datadog_lambda_wrapper
-from chalicelib import aggregation, data_funcs, MbtaPerformanceAPI, secrets, mbta_v3, speed
+from chalicelib import (
+    aggregation,
+    data_funcs,
+    MbtaPerformanceAPI,
+    secrets,
+    mbta_v3,
+    speed,
+    service_levels,
+    ridership,
+)
 
 
 app = Chalice(app_name="data-dashboard")
@@ -40,7 +49,10 @@ def healthcheck():
         ),
         "Performance API Check": (
             lambda: MbtaPerformanceAPI.get_api_data(
-                "headways", {"stop": [70067]}, date.today() - timedelta(days=1), date.today()
+                "headways",
+                {"stop": [70067]},
+                date.today() - timedelta(days=1),
+                date.today(),
             )
         ),
     }
@@ -58,7 +70,11 @@ def healthcheck():
         return Response(body={"status": "pass"}, status_code=200)
 
     return Response(
-        body={"status": "fail", "failed_checks_sum": len(failed_checks), "failed_checks": failed_checks},
+        body={
+            "status": "fail",
+            "failed_checks_sum": len(failed_checks),
+            "failed_checks": failed_checks,
+        },
         status_code=500,
     )
 
@@ -152,6 +168,34 @@ def get_alerts():
 @app.route("/api/speed", cors=cors_config)
 def get_speed():
     response = speed.get_speeds(app.current_request.query_params)
-    return json.dumps(
-        response, indent=4, sort_keys=True, default=lambda x: eval(str(x))
-    )  # The eval() converts dynamo default decimal type numbers to ints
+    return json.dumps(response, indent=4, sort_keys=True)
+
+
+@app.route("/api/tripcounts", cors=cors_config)
+def get_trip_counts():
+    query = app.current_request.query_params
+    start_date = parse_user_date(query["start_date"])
+    end_date = parse_user_date(query["end_date"])
+    route_id = query.get("route_id")
+    agg = query["agg"]
+    response = service_levels.get_trip_counts(
+        start_date=start_date,
+        end_date=end_date,
+        route_id=route_id,
+        agg=agg,
+    )
+    return json.dumps(response)
+
+
+@app.route("/api/ridership", cors=cors_config)
+def get_ridership():
+    query = app.current_request.query_params
+    start_date = parse_user_date(query["start_date"])
+    end_date = parse_user_date(query["end_date"])
+    line_id = query.get("line_id")
+    response = ridership.get_ridership(
+        start_date=start_date,
+        end_date=end_date,
+        line_id=line_id,
+    )
+    return json.dumps(response)

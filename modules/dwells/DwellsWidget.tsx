@@ -8,15 +8,13 @@ import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { averageDwells, longestDwells } from '../../common/utils/dwells';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
-import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useDwellsSingleDayData } from '../../common/api/hooks/dwells';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { DwellsSingleChart } from './charts/DwellsSingleChart';
+import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
 
 export const DwellsWidget: React.FC = () => {
   const {
     line,
-    linePath,
     lineShort,
     query: { startDate },
   } = useDelimitatedRoute();
@@ -29,8 +27,6 @@ export const DwellsWidget: React.FC = () => {
 
   const dwells = useDwellsSingleDayData({ date: startDate, stop: fromStopIds });
 
-  const dwellsReady = !dwells.isError && dwells.data && line && lineShort && linePath;
-
   // Buses don't record dwells
   if (line === 'line-bus') {
     return null;
@@ -40,34 +36,30 @@ export const DwellsWidget: React.FC = () => {
     <>
       <WidgetDiv>
         <HomescreenWidgetTitle title="Dwells" tab="tripDwells" />
-        {dwellsReady ? (
-          <>
-            <div className={classNames('flex w-full flex-row')}>
-              <BasicWidgetDataLayout
-                title="Average Dwell"
-                widgetValue={
-                  new TimeWidgetValue(dwells.data ? averageDwells(dwells.data) : undefined, 1)
-                }
-                analysis={`from last ${dayjs().format('ddd')}.`}
-              />
-              <BasicWidgetDataLayout
-                title="Longest Dwell"
-                widgetValue={
-                  new TimeWidgetValue(dwells.data ? longestDwells(dwells.data) : undefined, 1)
-                }
-                analysis={`from last ${dayjs().format('ddd')}.`}
-              />
-            </div>
-            <DwellsSingleChart
-              dwells={dwells}
-              toStation={toStation}
-              fromStation={fromStation}
-              isHomescreen={true}
-            />
-          </>
-        ) : (
-          <ChartPlaceHolder query={dwells} />
-        )}
+        <div className={classNames('flex w-full flex-row')}>
+          <BasicWidgetDataLayout
+            title="Average Dwell"
+            widgetValue={
+              new TimeWidgetValue(dwells.data ? averageDwells(dwells.data) : undefined, 1)
+            }
+            analysis={`from last ${dayjs().format('ddd')}.`}
+          />
+          <BasicWidgetDataLayout
+            title="Longest Dwell"
+            widgetValue={
+              new TimeWidgetValue(dwells.data ? longestDwells(dwells.data) : undefined, 1)
+            }
+            analysis={`from last ${dayjs().format('ddd')}.`}
+          />
+        </div>
+        <SingleChartWrapper
+          query={dwells}
+          type={'dwells'}
+          fromStation={fromStation}
+          toStation={toStation}
+          showLegend={false}
+          isHomescreen={true}
+        />
       </WidgetDiv>
     </>
   );

@@ -9,6 +9,7 @@ import 'flatpickr/dist/themes/light.css';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { FLAT_PICKER_OPTIONS, TODAY_STRING, RANGE_PRESETS } from '../../../constants/dates';
 import { buttonHighlightFocus } from '../../../styles/general';
+import type { Line } from '../../../types/lines';
 import { RangeButton } from './RangeButton';
 
 interface DatePickerProps {
@@ -17,6 +18,15 @@ interface DatePickerProps {
   type: 'combo' | 'range' | 'single';
   clearPreset: () => void;
 }
+
+export const updateColor = (line: Line | undefined) => {
+  const selectedDates = document.querySelectorAll('.flatpickr-day.selected');
+  selectedDates.forEach((selectedDate) => {
+    if (line) {
+      selectedDate?.classList.add(`selected-date-${line}`);
+    }
+  });
+};
 
 export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, clearPreset }) => {
   const updateQueryParams = useUpdateQuery();
@@ -67,13 +77,16 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
     clearPreset();
   };
 
+  React.useEffect(() => {
+    updateColor(line);
+  });
+
   return (
-    <div className={'-ml-[1px] flex h-8 flex-row justify-center self-stretch bg-white'}>
+    <div className="-ml-[1px] flex h-10 flex-row justify-center self-stretch rounded-r-md bg-white md:h-7">
       <div className={classNames('flex h-full flex-row self-stretch bg-opacity-80')}>
         <Flatpickr
-          //TODO: Change calendar to line color
           className={classNames(
-            'flex w-[6.75rem] cursor-pointer border-none px-2 py-0 text-center text-sm focus:ring-opacity-0',
+            'flex w-[6.75rem] cursor-pointer border-none bg-transparent px-2 py-0 text-center text-sm focus:ring-opacity-0',
             line && buttonHighlightFocus[line]
           )}
           value={startDate}
@@ -83,6 +96,8 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
           onChange={(dates, currentDateString) => {
             handleStartDateChange(currentDateString);
           }}
+          onMonthChange={() => updateColor(line)}
+          onOpen={() => updateColor(line)}
         />
         {range ? (
           <>
@@ -93,9 +108,8 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
             </div>
 
             <Flatpickr
-              //TODO: Change calendar to line color
               className={classNames(
-                'flex w-[6.75rem] cursor-pointer border-none px-2 py-0 text-center text-sm focus:ring-opacity-0',
+                'flex w-[6.75rem] cursor-pointer border-none bg-transparent px-2 py-0 text-center text-sm focus:ring-opacity-0',
                 line && buttonHighlightFocus[line]
               )}
               value={endDate}
@@ -105,6 +119,8 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
               onChange={(dates, currentDateString) => {
                 handleEndDateChange(currentDateString);
               }}
+              onMonthChange={() => updateColor(line)}
+              onOpen={() => updateColor(line)}
             />
           </>
         ) : null}

@@ -1,4 +1,3 @@
-import type { UseQueryResult } from '@tanstack/react-query';
 import React, { useMemo } from 'react';
 import { SingleDayLineChart } from '../../../common/components/charts/SingleDayLineChart';
 import type { SingleDayDataPoint } from '../../../common/types/charts';
@@ -8,9 +7,9 @@ import { useDelimitatedRoute } from '../../../common/utils/router';
 import { locationDetails } from '../../../common/utils/stations';
 
 interface TravelTimesSingleChartProps {
-  traveltimes: UseQueryResult<SingleDayDataPoint[]>;
-  toStation: Station | undefined;
-  fromStation: Station | undefined;
+  traveltimes: SingleDayDataPoint[];
+  toStation: Station;
+  fromStation: Station;
   showLegend?: boolean;
   isHomescreen?: boolean;
 }
@@ -28,26 +27,20 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
     query: { startDate },
   } = useDelimitatedRoute();
 
-  const isLoading = useMemo(
-    () => traveltimes.isLoading || toStation === undefined || fromStation === undefined,
-    [traveltimes.isLoading, fromStation, toStation]
-  );
-
   const anyTravelBenchmarks =
-    Array.isArray(traveltimes.data) &&
-    traveltimes.data?.some((e) => e.benchmark_travel_time_sec && e.benchmark_travel_time_sec > 0);
+    Array.isArray(traveltimes) &&
+    traveltimes.some((e) => e.benchmark_travel_time_sec && e.benchmark_travel_time_sec > 0);
 
   const chart = useMemo(() => {
     return (
       <SingleDayLineChart
         chartId={`traveltimes-chart-${linePath}`}
         title={'Travel Times'}
-        data={traveltimes.data || []}
+        data={traveltimes}
         date={startDate}
         metricField={MetricFieldKeys.travelTimeSec}
         pointField={PointFieldKeys.depDt}
         benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
-        isLoading={isLoading}
         bothStops={true}
         location={locationDetails(fromStation, toStation, lineShort)}
         fname={'traveltimes'}
@@ -57,9 +50,8 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
     );
   }, [
     linePath,
-    traveltimes.data,
+    traveltimes,
     startDate,
-    isLoading,
     fromStation,
     toStation,
     lineShort,

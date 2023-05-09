@@ -26,7 +26,7 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort, busRoute?: 
       </>
     );
   }
-  if (lineShort == 'Green' && alert.routes && alert.routes.length) {
+  if (lineShort === 'Green' && alert.routes && alert.routes.length) {
     const formattedRoutes = alert.routes
       .filter((route) => route !== 'Mattapan')
       .map((route) => {

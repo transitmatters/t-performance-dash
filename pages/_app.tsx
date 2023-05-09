@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 'use client';
+
 import React, { useEffect, useState } from 'react';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';

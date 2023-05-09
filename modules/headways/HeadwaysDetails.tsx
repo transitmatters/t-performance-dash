@@ -10,18 +10,18 @@ import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWi
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import { averageHeadway, longestHeadway } from '../../common/utils/headways';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
-import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import {
   useHeadwaysAggregateData,
   useHeadwaysSingleDayData,
 } from '../../common/api/hooks/headways';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
-import { HeadwaysHistogram } from './charts/HeadwaysHistogram';
-import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
+import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
+import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
+import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { HeadwaysHistogramWrapper } from './charts/HeadwaysHistogramWrapper';
 
-export default function HeadwaysDetails() {
+export function HeadwaysDetails() {
   const {
     query: { startDate, endDate, to, from },
   } = useDelimitatedRoute();
@@ -48,12 +48,8 @@ export default function HeadwaysDetails() {
 
   const headwaysData = aggregate ? headwaysAggregate?.data?.by_date : headways?.data;
 
-  if (headways.isError) {
-    return <ErrorNotice />;
-  }
-
   return (
-    <>
+    <PageWrapper pageTitle={'Headways'}>
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Average Headway"
@@ -72,16 +68,18 @@ export default function HeadwaysDetails() {
       </BasicDataWidgetPair>
       <WidgetDiv>
         {aggregate ? (
-          <HeadwaysAggregateChart
-            headways={headwaysAggregate}
-            fromStation={fromStation}
+          <AggregateChartWrapper
+            query={headwaysAggregate}
             toStation={toStation}
+            fromStation={fromStation}
+            type={'headways'}
           />
         ) : (
-          <HeadwaysSingleChart
-            headways={headways}
-            fromStation={fromStation}
+          <SingleChartWrapper
+            query={headways}
             toStation={toStation}
+            fromStation={fromStation}
+            type={'headways'}
           />
         )}
       </WidgetDiv>
@@ -92,7 +90,7 @@ export default function HeadwaysDetails() {
           </div>
 
           <WidgetDiv>
-            <HeadwaysHistogram
+            <HeadwaysHistogramWrapper
               headways={headways}
               fromStation={fromStation}
               toStation={toStation}
@@ -101,6 +99,6 @@ export default function HeadwaysDetails() {
         </>
       )}
       <TerminusNotice toStation={toStation} fromStation={fromStation} />
-    </>
+    </PageWrapper>
   );
 }

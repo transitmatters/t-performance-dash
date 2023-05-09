@@ -1,5 +1,5 @@
 import { ALL_LINE_PATHS } from '../../common/types/lines';
-import DwellsDetails from '../../modules/dwells/DwellsDetails';
+import { ServiceDetails } from '../../modules/service/ServiceDetails';
 
 export async function getStaticProps() {
   return { props: {} };
@@ -12,4 +12,4 @@ export async function getStaticPaths() {
   };
 }
 
-export default DwellsDetails;
+export default ServiceDetails;

@@ -133,3 +133,29 @@
 .tippy-box .tippy-arrow {
     color: var(--incident-tooltip-color);
 }
+
+/* Datepicker Selected Date colors */
+.selected-date-line-red {
+    background: #E89999 !important;
+    border-color: #E89999 !important;
+}
+
+.selected-date-line-orange {
+    background: #F6C580 !important;
+    border-color: #F6C580 !important;
+}
+
+.selected-date-line-blue {
+    background: #809ED2 !important;
+    border-color: #809ED2 !important;
+}
+
+.selected-date-line-green {
+    background: #80C1A6 !important;
+    border-color: #80C1A6 !important;
+}
+
+.selected-date-line-bus {
+    background: #FFE395 !important;
+    border-color: #FFE395 !important;
+}

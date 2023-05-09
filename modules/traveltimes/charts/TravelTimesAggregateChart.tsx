@@ -1,4 +1,3 @@
-import type { UseQueryResult } from '@tanstack/react-query';
 import React, { useMemo } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
@@ -9,9 +8,9 @@ import { useDelimitatedRoute } from '../../../common/utils/router';
 import { locationDetails } from '../../../common/utils/stations';
 
 interface TravelTimesAggregateChartProps {
-  traveltimes: UseQueryResult<AggregateDataResponse>;
-  toStation: Station | undefined;
-  fromStation: Station | undefined;
+  traveltimes: AggregateDataResponse;
+  toStation: Station;
+  fromStation: Station;
   showLegend?: boolean;
 }
 
@@ -30,7 +29,7 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
       <AggregateLineChart
         chartId={'travel_times_agg'}
         title={'Travel times'}
-        data={traveltimes?.data?.by_date?.filter((datapoint) => datapoint.peak === 'all') || []}
+        data={traveltimes.by_date?.filter((datapoint) => datapoint.peak === 'all')}
         // This is service date when agg by date. dep_time_from_epoch when agg by hour. Can probably remove this prop.
         pointField={PointFieldKeys.serviceDate}
         timeUnit={'day'}
@@ -40,12 +39,11 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
         endDate={endDate}
         fillColor={CHART_COLORS.FILL}
         location={locationDetails(fromStation, toStation, lineShort)}
-        isLoading={false}
         bothStops={true}
         fname="traveltimes"
       />
     );
-  }, [traveltimes?.data?.by_date, startDate, endDate, fromStation, toStation, lineShort]);
+  }, [traveltimes.by_date, startDate, endDate, fromStation, toStation, lineShort]);
 
   return chart;
 };

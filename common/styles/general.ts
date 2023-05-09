@@ -8,6 +8,25 @@ export const lineColorBackground: DefaultStyleMap = {
   'line-bus': `bg-mbta-bus`,
   DEFAULT: `bg-stone-800`,
 };
+
+export const lineColorLightBorder = {
+  'line-red': `border-mbta-lightRed`,
+  'line-orange': `border-mbta-lightOrange`,
+  'line-green': `border-mbta-lightGreen`,
+  'line-blue': `border-mbta-lightBlue`,
+  'line-bus': `border-mbta-lightBus`,
+  DEFAULT: `border-stone-900`,
+};
+
+export const lineColorLightBackground: DefaultStyleMap = {
+  'line-red': `bg-mbta-lightRed`,
+  'line-orange': `bg-mbta-lightOrange`,
+  'line-green': `bg-mbta-lightGreen`,
+  'line-blue': `bg-mbta-lightBlue`,
+  'line-bus': `bg-mbta-lightBus`,
+  DEFAULT: `bg-stone-900`,
+};
+
 export const lineColorDarkBackground: DefaultStyleMap = {
   'line-red': `bg-mbta-darkRed`,
   'line-orange': `bg-mbta-darkOrange`,

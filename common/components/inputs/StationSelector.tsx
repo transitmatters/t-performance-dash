@@ -6,9 +6,12 @@ import classNames from 'classnames';
 import type { Station } from '../../types/stations';
 import { useDelimitatedRoute } from '../../utils/router';
 import { optionsForField } from '../../utils/stations';
-import { buttonHighlightFocus, lineColorBackground } from '../../styles/general';
+import {
+  buttonHighlightFocus,
+  lineColorBackground,
+  lineColorLightBackground,
+} from '../../styles/general';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { selectConfig } from './styles/tailwind';
 import { Button } from './Button';
 
 interface StationSelector {
@@ -26,22 +29,20 @@ export const StationSelector: React.FC<StationSelector> = ({
 }) => {
   const {
     line,
-    linePath,
     lineShort,
     query: { busRoute },
   } = useDelimitatedRoute();
   const mdBreakpoint = useBreakpoint('md');
   const station = type === 'from' ? fromStation : toStation;
   const stationOptions = optionsForField(type, lineShort, fromStation, toStation, busRoute);
-
   return (
     <Listbox value={station} onChange={setStation}>
       {({ open }) => (
-        <div className="relative overflow-hidden md:w-full md:overflow-visible lg:w-fit">
+        <div className="w-fit flex-grow overflow-hidden">
           {open && !mdBreakpoint && (
-            <div className="fixed left-0 top-0 z-10 m-0 h-screen w-screen bg-white bg-opacity-50 p-0" />
+            <div className="fixed left-0 top-0 m-0 h-screen w-screen bg-white bg-opacity-50 p-0" />
           )}
-          <Listbox.Button className="flex w-full lg:w-[165px]">
+          <Listbox.Button className="flex h-10 w-full md:h-7">
             <Button additionalClasses="justify-between w-full">
               <p
                 className={classNames(
@@ -63,7 +64,7 @@ export const StationSelector: React.FC<StationSelector> = ({
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Listbox.Options className="md:max-w-screen fixed bottom-0 left-0 right-0 top-0 z-10 m-auto max-h-96 max-w-xs overflow-auto rounded-md border border-stone-200 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:absolute md:bottom-auto md:left-auto md:mt-9 md:max-h-96 md:origin-top-right md:border-none ">
+            <Listbox.Options className="md:max-w-screen fixed bottom-16 left-0 right-0 top-auto m-auto max-h-96 max-w-xs overflow-auto rounded-md  border border-stone-200 bg-white  shadow-lg  ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-auto md:right-auto md:top-auto md:mt-1 md:max-h-96 md:-translate-x-1/2 md:border-none">
               <div className="py-1">
                 {stationOptions?.map((station, stationIndex) => (
                   <Listbox.Option
@@ -76,7 +77,7 @@ export const StationSelector: React.FC<StationSelector> = ({
                     className={({ active, selected, disabled }) =>
                       classNames(
                         'relative select-none items-center px-4 py-2',
-                        active ? selectConfig[linePath] : 'text-gray-900',
+                        active ? lineColorLightBackground[line ?? 'DEFAULT'] : 'text-gray-900',
                         selected
                           ? `bg-opacity-20 font-semibold ${lineColorBackground[line ?? 'DEFAULT']}`
                           : 'font-normal',

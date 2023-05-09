@@ -32,7 +32,7 @@ module.exports = {
     'import/named': 'warn',
     'import/no-unresolved': 'warn',
     'import/no-self-import': 'error',
-    'import/no-default-export': 'off',
+    'import/no-default-export': 'warn',
     'import/order': 'error',
     'prettier/prettier': 'error',
     'react/prop-types': 'warn',
@@ -61,6 +61,7 @@ module.exports = {
         object: true,
       },
     ],
+    eqeqeq: ['error', 'smart'],
   },
   settings: {
     react: {
@@ -69,7 +70,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['app/**/*.tsx'],
+      files: ['pages/**/*.tsx'],
       rules: {
         'import/no-default-export': 'off',
       },

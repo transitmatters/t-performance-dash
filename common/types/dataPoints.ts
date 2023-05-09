@@ -82,3 +82,34 @@ export type LineSegmentData = {
   id: string;
   delay: number;
 };
+
+export type SpeedRestriction = {
+  id: string;
+  line: Exclude<LineShort, 'Bus'>;
+  description: string;
+  reason: string;
+  status: string;
+  fromStopId: null | string;
+  toStopId: null | string;
+  reported: string;
+  cleared: string;
+  speedMph: number;
+  trackFeet: number;
+};
+
+export type DayKind = 'weekday' | 'saturday' | 'sunday';
+
+export type ServiceLevels = {
+  [key in DayKind]: {
+    date: string;
+    service_levels: number[] | undefined;
+  };
+};
+
+export type TripCounts = {
+  counts: number[];
+  start_date: string;
+  end_date: string;
+  start_date_service_levels: ServiceLevels;
+  end_date_service_levels: ServiceLevels;
+};

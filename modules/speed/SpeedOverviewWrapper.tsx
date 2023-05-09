@@ -1,11 +1,11 @@
 import React from 'react';
 import classNames from 'classnames';
-import dayjs from 'dayjs';
 import type { SpeedDataPoint } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
+import { useDelimitatedRoute } from '../../common/utils/router';
 import { MPHWidgetValue } from '../../common/types/basicWidgets';
-import { PRETTY_DATE_FORMAT } from '../../common/constants/dates';
+import { OverviewRangeTypes } from '../../common/constants/dates';
 import { getOverviewSpeedWidgetValues } from './utils/utils';
 import { SpeedGraph } from './SpeedGraph';
 import type { ParamsType } from './constants/speeds';
@@ -25,23 +25,24 @@ export const SpeedGraphWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
   startDate,
   endDate,
 }) => {
-  const { current, delta, average } = getOverviewSpeedWidgetValues(data, line);
-
+  const dataNoNulls = data.filter((datapoint) => datapoint.value !== null);
+  const { current, delta, average } = getOverviewSpeedWidgetValues(dataNoNulls, line);
+  const {
+    query: { view },
+  } = useDelimitatedRoute();
   return (
     <>
       <div className={classNames('space-between flex w-full flex-row')}>
         <BasicWidgetDataLayout
-          title={config.getWidgetTitle(data[data.length - 1].date)}
+          title={config.getWidgetTitle(dataNoNulls[dataNoNulls.length - 1].date)}
           widgetValue={new MPHWidgetValue(current, delta)}
-          analysis="over period"
+          analysis={`from peak (${view ? OverviewRangeTypes[view] : ''})`}
           sentimentDirection={'positiveOnIncrease'}
         />
         <BasicWidgetDataLayout
           title={'Average'}
           widgetValue={new MPHWidgetValue(average, undefined)}
-          analysis={`${dayjs(startDate).format(PRETTY_DATE_FORMAT)} - ${dayjs(endDate).format(
-            PRETTY_DATE_FORMAT
-          )}`}
+          analysis={`over period`}
           sentimentDirection={'positiveOnIncrease'}
           layoutKind="no-delta"
         />

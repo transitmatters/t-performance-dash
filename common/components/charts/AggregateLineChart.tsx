@@ -198,7 +198,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 if (startDate === undefined || endDate === undefined || data.length === 0) {
                   writeError(chart);
                 }
-                // TODO: This is not placing the title correctly for aggregate charts.
                 drawTitle(title, location, bothStops, chart);
               },
             },

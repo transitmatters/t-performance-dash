@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import React from 'react';
 import {
-  lineColorBackground,
   buttonHighlightFocus,
-  lineColorDarkBorder,
+  lineColorDarkBackground,
+  lineColorLightBorder,
 } from '../../styles/general';
 import { useDelimitatedRoute } from '../../utils/router';
 
@@ -23,10 +23,10 @@ export const Button: React.FC<ButtonProps> = ({ children, additionalClasses, ...
     <button
       type="button"
       className={classNames(
-        'flex items-center self-stretch rounded-md border px-3 py-1 text-sm font-medium text-white  text-opacity-90 shadow-sm hover:bg-opacity-70  focus:outline-none focus:ring-2  focus:ring-offset-2',
+        'flex items-center self-stretch rounded-md border px-3 py-1 text-sm font-medium text-white  text-opacity-90 shadow-sm hover:bg-opacity-70 focus:bg-opacity-0 focus:outline-none',
         line && buttonHighlightFocus[line],
-        line && lineColorBackground[line],
-        line && lineColorDarkBorder[line],
+        line && lineColorDarkBackground[line],
+        line && lineColorLightBorder[line],
         additionalClasses
       )}
       {...props}

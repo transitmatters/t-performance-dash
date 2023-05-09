@@ -13,10 +13,11 @@ import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { useDwellsAggregateData, useDwellsSingleDayData } from '../../common/api/hooks/dwells';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { DwellsSingleChart } from './charts/DwellsSingleChart';
-import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
+import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
+import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
+import { PageWrapper } from '../../common/layouts/PageWrapper';
 
-export default function DwellsDetails() {
+export const DwellsDetails: React.FC = () => {
   const {
     query: { startDate, endDate, to, from },
   } = useDelimitatedRoute();
@@ -48,7 +49,7 @@ export default function DwellsDetails() {
   }
 
   return (
-    <>
+    <PageWrapper pageTitle={'Dwells'}>
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Average Dwell"
@@ -63,16 +64,22 @@ export default function DwellsDetails() {
       </BasicDataWidgetPair>
       <WidgetDiv>
         {aggregate ? (
-          <DwellsAggregateChart
-            dwells={dwellsAggregate}
+          <AggregateChartWrapper
+            query={dwellsAggregate}
             toStation={toStation}
             fromStation={fromStation}
+            type={'dwells'}
           />
         ) : (
-          <DwellsSingleChart dwells={dwells} toStation={toStation} fromStation={fromStation} />
+          <SingleChartWrapper
+            query={dwells}
+            toStation={toStation}
+            fromStation={fromStation}
+            type={'dwells'}
+          />
         )}
       </WidgetDiv>
       <TerminusNotice toStation={toStation} fromStation={fromStation} />
-    </>
+    </PageWrapper>
   );
-}
+};

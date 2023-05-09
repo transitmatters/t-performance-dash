@@ -66,7 +66,7 @@ export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, busRoute,
 
     if (!relevantAlerts || relevantAlerts.length === 0) {
       return (
-        <div className="flex w-full justify-center rounded-sm bg-white bg-opacity-10 px-4 py-2 pb-2">
+        <div className="flex w-full justify-center rounded-sm bg-black bg-opacity-10 px-4 py-2 pb-2">
           <p className="text-stone-100">None</p>
         </div>
       );
