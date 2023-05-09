@@ -24,7 +24,7 @@ import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
-import { SERVICE_PEAKS_ACTUAL } from '../../common/constants/service';
+import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/service';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
@@ -105,7 +105,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
           },
           {
             // This null dataset produces the entry in the legend for the baseline annotation.
-            label: 'Baseline',
+            label: `Baseline (${PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']})`,
             backgroundColor: CHART_COLORS.ANNOTATIONS,
             data: null,
           },
@@ -157,8 +157,8 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             annotations: [
               {
                 type: 'line',
-                yMin: SERVICE_PEAKS_ACTUAL[line ?? 'DEFAULT'],
-                yMax: SERVICE_PEAKS_ACTUAL[line ?? 'DEFAULT'],
+                yMin: PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'],
+                yMax: PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'],
                 borderColor: CHART_COLORS.ANNOTATIONS,
                 display: (ctx) => ctx.chart.isDatasetVisible(2),
                 borderWidth: 2,
