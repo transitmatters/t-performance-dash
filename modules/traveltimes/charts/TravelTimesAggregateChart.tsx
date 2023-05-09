@@ -30,11 +30,13 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
       ? traveltimes.by_date.filter((datapoint) => datapoint.peak === 'all')
       : traveltimes.by_time.filter((datapoint) => datapoint.is_peak_day === true);
 
+  const title = timeUnit === 'by_date' ? 'Travel times' : 'Travel times by hour (weekday)';
+
   const chart = useMemo(() => {
     return (
       <AggregateLineChart
         chartId={'travel_times_agg'}
-        title={'Travel times'}
+        title={title}
         data={traveltimesData}
         // This is service date when agg by date. dep_time_from_epoch when agg by hour
         pointField={
@@ -51,7 +53,7 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
         fname="traveltimes"
       />
     );
-  }, [traveltimesData, timeUnit, startDate, endDate, fromStation, toStation, lineShort]);
+  }, [title, traveltimesData, timeUnit, startDate, endDate, fromStation, toStation, lineShort]);
 
   return chart;
 };
