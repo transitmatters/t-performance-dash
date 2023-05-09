@@ -92,6 +92,7 @@ export interface AggregateLineProps extends LineProps {
   endDate: string | undefined;
   suggestedYMin?: number;
   suggestedYMax?: number;
+  byTime?: boolean;
   children?: React.ReactNode;
 }
 
