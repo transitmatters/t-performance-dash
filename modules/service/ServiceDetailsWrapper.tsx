@@ -9,6 +9,7 @@ import { TripsWidgetValue } from '../../common/types/basicWidgets';
 import { getServiceWidgetValues } from './utils/utils';
 import { ServiceGraph } from './ServiceGraph';
 import { PercentageServiceGraph } from './PercentageServiceGraph';
+import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 
 interface ServiceDetailsWrapperProps {
   data: SpeedDataPoint[];
@@ -70,7 +71,7 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
         </WidgetDiv>
       </div>
       <WidgetDiv>
-        <WidgetTitle title="Scheduled Service Delivered" />
+        <WidgetTitle title="Service Delivered" />
         <div className={classNames('flex h-60 flex-row items-center pr-4')}>
           <PercentageServiceGraph
             config={config}
@@ -78,6 +79,14 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
             startDate={startDate}
             endDate={endDate}
             predictedData={predictedData}
+          />
+        </div>
+        <div className={'flex w-full justify-center pt-2'}>
+          <ButtonGroup
+            options={Object.entries({ Scheduled: 'Scheduled', Basline: 'Baseline' })}
+            pressFunction={() => {}}
+            additionalDivClass="md:w-auto"
+            additionalButtonClass="md:w-fit"
           />
         </div>
       </WidgetDiv>

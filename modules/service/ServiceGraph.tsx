@@ -101,7 +101,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             data: predictedData.counts.map((count, index) =>
               data[index]?.value > 0 && count ? count / 2 : Number.NaN
             ),
-            backgroundColor: pattern.draw('diagonal', '#FFFFFF', lineColor, 5),
+            backgroundColor: pattern.draw('diagonal', 'transparent', lineColor, 5),
           },
           {
             // This null dataset produces the entry in the legend for the baseline annotation.

@@ -15,6 +15,7 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
+import pattern from 'patternomaly';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -25,6 +26,7 @@ import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
+import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/service';
 
 ChartJS.register(
   CategoryScale,
@@ -64,8 +66,13 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
   const ref = useRef();
 
   const labels = data.map((point) => point.date);
-  const percentData = data.map((datapoint, index) =>
+  const percentOfScheduledData = data.map((datapoint, index) =>
     datapoint.value ? (100 * datapoint.count) / predictedData.counts[index] : Number.NaN
+  );
+  const percentOfBaselineData = data.map((datapoint, index) =>
+    datapoint.value
+      ? (100 * datapoint.count) / 2 / PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
+      : Number.NaN
   );
   const lineColor = LINE_COLORS[line ?? 'default'];
   const shuttlingBlocks = getShuttlingBlockAnnotations(data);
@@ -79,9 +86,8 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
         labels,
         datasets: [
           {
-            label: `% delivered`,
+            label: `% of scheduled`,
             borderColor: lineColor,
-            backgroundColor: hexWithAlpha(lineColor, 0.8),
             pointRadius: 8,
             pointBackgroundColor: 'transparent',
             pointBorderWidth: 0,
@@ -89,8 +95,22 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
             fill: true,
             pointHoverRadius: 3,
             pointHoverBackgroundColor: lineColor,
-            data: percentData,
+            backgroundColor: hexWithAlpha(lineColor, 0.8),
+            data: percentOfScheduledData,
           },
+          // {
+          //   label: `% of baseline`,
+          //   borderColor: lineColor,
+          //   backgroundColor: hexWithAlpha(lineColor, 0.8),
+          //   pointRadius: 8,
+          //   pointBackgroundColor: 'transparent',
+          //   pointBorderWidth: 0,
+          //   stepped: true,
+          //   fill: true,
+          //   pointHoverRadius: 3,
+          //   pointHoverBackgroundColor: lineColor,
+          //   data: percentOfBaselineData,
+          // },
         ],
       }}
       options={{
@@ -124,7 +144,10 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
             callbacks: callbacks,
           },
           legend: {
-            display: false,
+            position: 'bottom',
+            labels: {
+              boxWidth: 15,
+            },
           },
           title: {
             // empty title to set font and leave room for drawTitle fn
