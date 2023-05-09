@@ -8,12 +8,16 @@ import type { Line, LineMetadata } from '../../common/types/lines';
 
 interface LineSelectionProps {
   lineItems: LineMetadata[];
+  setSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems }) => {
+export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems, setSidebarOpen }) => {
   const router = useRouter();
   const route = useDelimitatedRoute();
-  const onChange = (key: Line) => router.push(getLineSelectionItemHref(key, route));
+  const onChange = (key: Line) => {
+    router.push(getLineSelectionItemHref(key, route));
+    setSidebarOpen && setSidebarOpen(false);
+  };
 
   return (
     <Tab.Group
