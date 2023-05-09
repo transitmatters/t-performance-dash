@@ -12,6 +12,7 @@ interface AggregateChartWrapperProps {
   toStation: Station | undefined;
   fromStation: Station | undefined;
   timeUnit?: TravelTimesUnit;
+  peakTime?: boolean;
   type: 'headways' | 'traveltimes' | 'dwells';
 }
 
@@ -20,6 +21,7 @@ export const AggregateChartWrapper: React.FC<AggregateChartWrapperProps> = ({
   toStation,
   fromStation,
   timeUnit,
+  peakTime,
   type,
 }) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
@@ -33,6 +35,7 @@ export const AggregateChartWrapper: React.FC<AggregateChartWrapperProps> = ({
           toStation={toStation}
           fromStation={fromStation}
           timeUnit={timeUnit}
+          peakTime={peakTime}
         />
       );
     case 'headways':
