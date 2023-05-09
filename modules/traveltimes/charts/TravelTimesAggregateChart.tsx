@@ -43,7 +43,7 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
           timeUnit === 'by_date' ? PointFieldKeys.serviceDate : PointFieldKeys.depTimeFromEpoch
         }
         timeUnit={timeUnit === 'by_date' ? 'day' : 'hour'}
-        timeFormat={'MMM d yyyy'}
+        timeFormat={timeUnit === 'by_date' ? 'MMM d yyyy' : 'H:mm aaaa'}
         seriesName={'Median travel time'}
         startDate={startDate}
         endDate={endDate}
