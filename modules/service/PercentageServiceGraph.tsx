@@ -14,17 +14,15 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
-import pattern from 'patternomaly';
 import Annotation from 'chartjs-plugin-annotation';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
+import { COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
-import { SERVICE_PEAKS_ACTUAL } from '../../common/constants/service';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
@@ -42,7 +40,7 @@ ChartJS.register(
   ChartjsPluginWatermark
 );
 
-interface ServiceGraphProps {
+interface PercentageServiceGraphProps {
   data: SpeedDataPoint[];
   predictedData: TripCounts;
   config: ParamsType;
@@ -51,7 +49,7 @@ interface ServiceGraphProps {
   showTitle?: boolean;
 }
 
-export const ServiceGraph: React.FC<ServiceGraphProps> = ({
+export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
   data,
   predictedData,
   config,
@@ -66,6 +64,9 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
   const ref = useRef();
 
   const labels = data.map((point) => point.date);
+  const percentData = data.map((datapoint, index) =>
+    datapoint.value ? (100 * datapoint.count) / predictedData.counts[index] : Number.NaN
+  );
   const lineColor = LINE_COLORS[line ?? 'default'];
   const shuttlingBlocks = getShuttlingBlockAnnotations(data);
   return (
@@ -78,7 +79,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
         labels,
         datasets: [
           {
-            label: `Actual trips`,
+            label: `% delivered`,
             borderColor: lineColor,
             backgroundColor: hexWithAlpha(lineColor, 0.8),
             pointRadius: 8,
@@ -88,25 +89,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             fill: true,
             pointHoverRadius: 3,
             pointHoverBackgroundColor: lineColor,
-            data: data.map((datapoint) => (datapoint.value ? datapoint.count / 2 : Number.NaN)),
-          },
-          {
-            label: `MBTA scheduled trips`,
-            stepped: true,
-            fill: true,
-            pointBackgroundColor: 'transparent',
-            pointBorderWidth: 0,
-            borderColor: lineColor,
-            spanGaps: false,
-            data: predictedData.counts.map((count, index) =>
-              data[index]?.value > 0 && count ? count / 2 : Number.NaN
-            ),
-            backgroundColor: pattern.draw('diagonal', '#FFFFFF', lineColor, 5),
-          },
-          {
-            label: `Baseline (${SERVICE_PEAKS_ACTUAL[line ?? 'DEFAULT'].value})`,
-            backgroundColor: CHART_COLORS.ANNOTATIONS,
-            data: null,
+            data: percentData,
           },
         ],
       }}
@@ -141,10 +124,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             callbacks: callbacks,
           },
           legend: {
-            position: 'bottom',
-            labels: {
-              boxWidth: 15,
-            },
+            display: false,
           },
           title: {
             // empty title to set font and leave room for drawTitle fn
@@ -153,17 +133,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
           },
           annotation: {
             // Add your annotations here
-            annotations: [
-              {
-                type: 'line',
-                yMin: SERVICE_PEAKS_ACTUAL[line ?? 'DEFAULT'].value,
-                yMax: SERVICE_PEAKS_ACTUAL[line ?? 'DEFAULT'].value,
-                borderColor: CHART_COLORS.ANNOTATIONS,
-                display: (ctx) => ctx.chart.isDatasetVisible(2),
-                borderWidth: 2,
-              },
-              ...shuttlingBlocks,
-            ],
+            annotations: [...shuttlingBlocks],
           },
         },
         scales: {
@@ -172,10 +142,11 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             display: true,
             ticks: {
               color: COLORS.design.subtitleGrey,
+              callback: (value) => `${value}%`,
             },
             title: {
               display: true,
-              text: 'trips',
+              text: 'Percentage',
               color: COLORS.design.subtitleGrey,
             },
           },

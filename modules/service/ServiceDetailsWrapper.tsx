@@ -8,6 +8,7 @@ import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { TripsWidgetValue } from '../../common/types/basicWidgets';
 import { getServiceWidgetValues } from './utils/utils';
 import { ServiceGraph } from './ServiceGraph';
+import { PercentageServiceGraph } from './PercentageServiceGraph';
 
 interface ServiceDetailsWrapperProps {
   data: SpeedDataPoint[];
@@ -68,6 +69,18 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
           />
         </WidgetDiv>
       </div>
+      <WidgetDiv>
+        <WidgetTitle title="Scheduled Service Delivered" />
+        <div className={classNames('flex h-60 flex-row items-center pr-4')}>
+          <PercentageServiceGraph
+            config={config}
+            data={data}
+            startDate={startDate}
+            endDate={endDate}
+            predictedData={predictedData}
+          />
+        </div>
+      </WidgetDiv>
     </>
   );
 };
