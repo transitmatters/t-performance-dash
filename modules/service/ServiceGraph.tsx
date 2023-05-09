@@ -104,6 +104,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             backgroundColor: pattern.draw('diagonal', '#FFFFFF', lineColor, 5),
           },
           {
+            // This null dataset produces the entry in the legend for the baseline annotation.
             label: 'Baseline',
             backgroundColor: CHART_COLORS.ANNOTATIONS,
             data: null,
@@ -156,8 +157,8 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             annotations: [
               {
                 type: 'line',
-                yMin: SERVICE_PEAKS_ACTUAL[line ?? 'DEFAULT'].value,
-                yMax: SERVICE_PEAKS_ACTUAL[line ?? 'DEFAULT'].value,
+                yMin: SERVICE_PEAKS_ACTUAL[line ?? 'DEFAULT'],
+                yMax: SERVICE_PEAKS_ACTUAL[line ?? 'DEFAULT'],
                 borderColor: CHART_COLORS.ANNOTATIONS,
                 display: (ctx) => ctx.chart.isDatasetVisible(2),
                 borderWidth: 2,
