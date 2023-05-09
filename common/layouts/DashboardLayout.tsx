@@ -1,7 +1,7 @@
 import React from 'react';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { WidgetPage } from '../components/widgets/Widget';
-import { SideNavBar } from '../../modules/navigation/SideNavBar';
+import { SideNavBar } from '../../modules/navigation/DesktopSideNavBar';
 import { MobileHeader } from '../../modules/dashboard/MobileHeader';
 import { DesktopHeader } from '../../modules/dashboard/DesktopHeader';
 import { useDelimitatedRoute } from '../utils/router';

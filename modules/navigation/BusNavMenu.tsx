@@ -10,7 +10,7 @@ interface BusNavMenuProps {
 export const BusNavMenu: React.FC<BusNavMenuProps> = ({ setSidebarOpen }) => {
   return (
     <>
-      <BusSelection />
+      <BusSelection setSidebarOpen={setSidebarOpen} />
       <div className="mx-2 flex flex-col gap-y-4">
         <hr className="h-1 w-full border-stone-400" />
         <SidebarTabs tabs={BUS_OVERVIEW} setSidebarOpen={setSidebarOpen} />
