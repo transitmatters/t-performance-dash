@@ -13,6 +13,7 @@ dayjs.extend(utc);
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { getTimeUnitSlowzones } from '../../../common/utils/slowZoneUtils';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
+import { watermarkLayout } from '../../../common/constants/charts';
 
 interface TotalSlowTimeProps {
   // Data is always all data. We filter it by adjusting the X axis of the graph.
@@ -104,18 +105,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
           },
         },
         // @ts-expect-error The watermark plugin doesn't have typescript support
-        watermark: {
-          image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
-          x: 10,
-          y: 10,
-          opacity: 0.2,
-          width: isMobile ? 120 : 160,
-          height: isMobile ? 11.25 : 15,
-          alignToChartArea: true,
-          alignX: 'right',
-          alignY: 'top',
-          position: 'back',
-        },
+        watermark: watermarkLayout(isMobile),
         plugins: {
           tooltip: {
             intersect: false,

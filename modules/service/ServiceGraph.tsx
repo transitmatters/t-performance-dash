@@ -24,6 +24,7 @@ import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import { watermarkLayout } from '../../common/constants/charts';
 
 ChartJS.register(
   CategoryScale,
@@ -113,18 +114,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
           intersect: false,
         },
         // @ts-expect-error The watermark plugin doesn't have typescript support
-        watermark: {
-          image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
-          x: 10,
-          y: 10,
-          opacity: 0.2,
-          width: isMobile ? 120 : 160,
-          height: isMobile ? 11.25 : 15,
-          alignToChartArea: true,
-          alignX: 'right',
-          alignY: 'top',
-          position: 'back',
-        },
+        watermark: watermarkLayout(isMobile),
         plugins: {
           tooltip: {
             mode: 'index',

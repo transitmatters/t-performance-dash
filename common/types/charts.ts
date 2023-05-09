@@ -33,7 +33,7 @@ export interface AggregateDataPoint {
 
 export interface AggregateDataResponse {
   by_date: AggregateDataPoint[];
-  by_time?: AggregateDataPoint[];
+  by_time: AggregateDataPoint[];
 }
 
 export interface Location {
@@ -42,6 +42,8 @@ export interface Location {
   direction: Direction;
   line: LineShort;
 }
+
+export type TravelTimesUnit = 'by_date' | 'by_time';
 
 type Direction = 'northbound' | 'southbound' | 'eastbound' | 'westbound' | 'inbound' | 'outbound';
 

@@ -39,6 +39,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               toStation={toStation}
               fromStation={fromStation}
               type={'traveltimes'}
+              timeUnit={'by_date'}
             />
           </WidgetDiv>
           <WidgetDiv>
@@ -55,6 +56,15 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               toStation={toStation}
               fromStation={fromStation}
               type={'dwells'}
+            />
+          </WidgetDiv>
+          <WidgetDiv>
+            <AggregateChartWrapper
+              query={traveltimes}
+              toStation={toStation}
+              fromStation={fromStation}
+              type={'traveltimes'}
+              timeUnit={'by_time'}
             />
           </WidgetDiv>
         </>
