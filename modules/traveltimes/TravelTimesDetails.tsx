@@ -19,6 +19,7 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 
 export function TravelTimesDetails() {
   const {
@@ -52,6 +53,8 @@ export function TravelTimesDetails() {
     ? travelTimesAggregate?.data?.by_date?.map((tt) => tt.mean)
     : travelTimes?.data?.map((tt) => tt.travel_time_sec);
 
+  const [peakTime, setPeakTime] = React.useState<'weekday' | 'weekend'>('weekday');
+
   return (
     <PageWrapper pageTitle={'Travel Times'}>
       <BasicDataWidgetPair>
@@ -73,6 +76,7 @@ export function TravelTimesDetails() {
             toStation={toStation}
             fromStation={fromStation}
             type={'traveltimes'}
+            timeUnit={'by_date'}
           />
         ) : (
           <SingleChartWrapper
@@ -83,6 +87,29 @@ export function TravelTimesDetails() {
           />
         )}
       </WidgetDiv>
+      {aggregate && (
+        <WidgetDiv className="flex flex-col justify-center">
+          <AggregateChartWrapper
+            query={travelTimesAggregate}
+            toStation={toStation}
+            fromStation={fromStation}
+            type={'traveltimes'}
+            timeUnit={'by_time'}
+            peakTime={peakTime === 'weekday' ? true : false}
+          />
+          <div className={'flex w-full justify-center pt-2'}>
+            <ButtonGroup
+              pressFunction={setPeakTime}
+              options={[
+                ['weekday', 'Weekday'],
+                ['weekend', 'Weekend/Holiday'],
+              ]}
+              additionalDivClass="md:w-auto"
+              additionalButtonClass="md:w-fit"
+            />
+          </div>
+        </WidgetDiv>
+      )}
       <TerminusNotice toStation={toStation} fromStation={fromStation} />
     </PageWrapper>
   );
