@@ -21,6 +21,7 @@ import { CHART_COLORS } from '../../../common/constants/colors';
 import { DownloadButton } from '../general/DownloadButton';
 import { writeError } from '../../utils/chartError';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { watermarkLayout } from '../../constants/charts';
 import { LegendLongTerm } from './Legend';
 import { drawTitle } from './Title';
 
@@ -65,6 +66,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   suggestedYMax,
   showLegend = true,
   isHomescreen = false,
+  byTime = false,
 }) => {
   const ref = useRef();
   const hourly = timeUnit === 'hour';
@@ -86,17 +88,20 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 label: seriesName,
                 fill: false,
                 tension: 0.1,
+                borderColor: byTime ? CHART_COLORS.DARK_LINE : undefined,
                 pointBackgroundColor: CHART_COLORS.GREY,
                 pointHoverRadius: 3,
                 pointHoverBackgroundColor: CHART_COLORS.GREY,
-                pointRadius: 3,
+                pointRadius: byTime ? 0 : 3,
                 pointHitRadius: 10,
+                stepped: byTime,
                 data: data.map((item: AggregateDataPoint) => (item['50%'] / 60).toFixed(2)),
               },
               {
                 label: '25th percentile',
                 fill: 1,
                 backgroundColor: fillColor,
+                stepped: byTime,
                 tension: 0.4,
                 pointRadius: 0,
                 data: data.map((item: AggregateDataPoint) => (item['25%'] / 60).toFixed(2)),
@@ -105,6 +110,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 label: '75th percentile',
                 fill: 1,
                 backgroundColor: fillColor,
+                stepped: byTime,
                 tension: 0.4,
                 pointRadius: 0,
                 data: data.map((item: AggregateDataPoint) => (item['75%'] / 60).toFixed(2)),
@@ -159,18 +165,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
               mode: 'index',
               intersect: false,
             },
-            watermark: {
-              image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
-              x: 10,
-              y: 10,
-              opacity: 0.2,
-              width: isMobile ? 120 : 160,
-              height: isMobile ? 11.25 : 15,
-              alignToChartArea: true,
-              alignX: 'right',
-              alignY: 'top',
-              position: 'back',
-            },
+            watermark: watermarkLayout(isMobile),
             plugins: {
               legend: {
                 display: false,

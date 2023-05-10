@@ -8,6 +8,7 @@ import type { LineData, ServiceDay } from '../../../common/types/ridership';
 import { getHourlyTickValues } from '../../../common/utils/ridership';
 import { COLORS } from '../../../common/constants/colors';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
+import { watermarkLayout } from '../../../common/constants/charts';
 
 const hourLabels = getHourlyTickValues(1);
 
@@ -61,18 +62,7 @@ export const TphChart: React.FC<TphChartProps> = ({ color, lineData, serviceDay,
           maintainAspectRatio: false,
           animation: { duration: 0 },
           // @ts-expect-error The watermark plugin doesn't have typescript support
-          watermark: {
-            image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
-            x: 10,
-            y: 10,
-            opacity: 0.2,
-            width: isMobile ? 120 : 160,
-            height: isMobile ? 11.25 : 15,
-            alignToChartArea: true,
-            alignX: 'right',
-            alignY: 'top',
-            position: 'back',
-          },
+          watermark: watermarkLayout(isMobile),
           plugins: {
             legend: {
               position: 'top',

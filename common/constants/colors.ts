@@ -36,6 +36,7 @@ export const CHART_COLORS = {
   PURPLE: '#bb5cc1',
   FILL: '#bfc8d680',
   FILL_HOURLY: '#88aee680',
+  DARK_LINE: '#303030a0',
   ANNOTATIONS: hexWithAlpha('#202020', 0.4),
   BLOCKS: hexWithAlpha('#202020', 0.2),
 };

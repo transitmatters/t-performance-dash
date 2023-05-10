@@ -13,6 +13,7 @@ import { MetricFieldKeys } from '../../../common/types/charts';
 import type { HeadwayPoint } from '../../../common/types/dataPoints';
 import { writeError } from '../../../common/utils/chartError';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
+import { watermarkLayout } from '../../../common/constants/charts';
 
 ChartJS.register(BarController, BarElement, LinearScale, ChartjsPluginWatermark, Title, Tooltip);
 
@@ -103,18 +104,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
             },
           },
           // @ts-expect-error The watermark plugin doesn't have typescript support
-          watermark: {
-            image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
-            x: 10,
-            y: 10,
-            opacity: 0.2,
-            width: isMobile ? 120 : 160,
-            height: isMobile ? 11.25 : 15,
-            alignToChartArea: true,
-            alignX: 'right',
-            alignY: 'top',
-            position: 'back',
-          },
+          watermark: watermarkLayout(isMobile),
           plugins: {
             tooltip: {
               mode: 'index',
@@ -163,6 +153,16 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
         ]}
       />
     );
-  }, [dataObject, fromStation, headways.length, line, linePath, lineShort, startDate, toStation]);
+  }, [
+    dataObject,
+    fromStation,
+    headways.length,
+    isMobile,
+    line,
+    linePath,
+    lineShort,
+    startDate,
+    toStation,
+  ]);
   return histogram;
 };
