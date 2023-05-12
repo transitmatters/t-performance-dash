@@ -72,7 +72,6 @@ module.exports = {
         tm: {
           red: '#a31e1e',
           grey: '#2e2d2c',
-          lightGrey: '#424140',
         },
       },
     },
