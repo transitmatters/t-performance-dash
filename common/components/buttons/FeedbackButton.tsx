@@ -12,7 +12,7 @@ export const FeedbackButton: React.FC = () => {
         onMouseLeave={() => setHovered(false)}
         className="flex w-full cursor-pointer justify-center gap-x-2 rounded-md bg-stone-100 p-2  md:justify-start"
       >
-        <div className="relative flex flex-row items-center text-stone-900 md:pl-1">
+        <div className="relative flex flex-row items-center text-sm text-stone-900 md:pl-1">
           <FontAwesomeIcon
             icon={hovered ? faCommentDotsSolid : faCommentDots}
             className="pr-2"
