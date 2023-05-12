@@ -12,6 +12,7 @@ import {
   Legend,
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
 import classNames from 'classnames';
@@ -22,6 +23,8 @@ import { prettyDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../utils/router';
 import { DownloadButton } from '../general/DownloadButton';
 import { writeError } from '../../utils/chartError';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { watermarkLayout } from '../../constants/charts';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
 
@@ -31,6 +34,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  ChartjsPluginWatermark,
   Filler,
   Title,
   Tooltip,
@@ -87,6 +91,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   showLegend = true,
 }) => {
   const ref = useRef();
+  const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const { line } = useDelimitatedRoute();
   return (
@@ -139,6 +144,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 top: 25,
               },
             },
+            // @ts-expect-error The watermark plugin doesn't have typescript support
+            watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
                 mode: 'index',

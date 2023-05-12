@@ -10,7 +10,7 @@ interface TimeProps {
 
 export const CurrentTime: React.FC<TimeProps> = ({ times }) => {
   // Get end of service day (2 am)
-  const dayEnd = dayjs().add(1, 'day').set('hour', 2).set('minute', 0);
+  const dayEnd = dayjs().tz('America/New_York').add(1, 'day').set('hour', 2).set('minute', 0);
   const now = dayjs();
   const timeStrings = times.map((time) => {
     if (time.end == null) {

@@ -8,6 +8,7 @@ import memoize from 'fast-memoize';
 
 import { Chart } from 'react-chartjs-2';
 import type { ChartDataset } from 'chart.js';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { LineData } from '../../../common/types/ridership';
 import {
   asPercentString,
@@ -15,8 +16,10 @@ import {
   normalizeToPercent,
 } from '../../../common/utils/ridership';
 import { COLORS } from '../../../common/constants/colors';
+import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
+import { watermarkLayout } from '../../../common/constants/charts';
 
-ChartJS.register(...registerables);
+ChartJS.register(...registerables, ChartjsPluginWatermark);
 
 interface ServiceRidershipChartProps {
   color: string;
@@ -48,6 +51,8 @@ export const ServiceRidershipChart: React.FC<ServiceRidershipChartProps> = ({
   lineData,
 }) => {
   const { serviceHistory, ridershipHistory } = lineData ?? {};
+
+  const isMobile = !useBreakpoint('md');
 
   const { timestamps } = useMemo(() => getChartLabels(startDate), [startDate]);
 
@@ -134,6 +139,8 @@ export const ServiceRidershipChart: React.FC<ServiceRidershipChartProps> = ({
             point: { radius: 0 },
             line: { tension: 0 },
           },
+          // @ts-expect-error The watermark plugin doesn't have typescript support
+          watermark: watermarkLayout(isMobile),
           plugins: {
             legend: {
               position: 'top',

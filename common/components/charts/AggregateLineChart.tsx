@@ -12,6 +12,7 @@ import {
   Legend,
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
 import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
@@ -19,6 +20,8 @@ import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import { DownloadButton } from '../general/DownloadButton';
 import { writeError } from '../../utils/chartError';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { watermarkLayout } from '../../constants/charts';
 import { LegendLongTerm } from './Legend';
 import { drawTitle } from './Title';
 
@@ -28,6 +31,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  ChartjsPluginWatermark,
   Filler,
   Title,
   Tooltip,
@@ -62,9 +66,11 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   suggestedYMax,
   showLegend = true,
   isHomescreen = false,
+  byTime = false,
 }) => {
   const ref = useRef();
   const hourly = timeUnit === 'hour';
+  const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
 
   return (
@@ -82,17 +88,20 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 label: seriesName,
                 fill: false,
                 tension: 0.1,
+                borderColor: byTime ? CHART_COLORS.DARK_LINE : undefined,
                 pointBackgroundColor: CHART_COLORS.GREY,
                 pointHoverRadius: 3,
                 pointHoverBackgroundColor: CHART_COLORS.GREY,
-                pointRadius: 3,
+                pointRadius: byTime ? 0 : 3,
                 pointHitRadius: 10,
+                stepped: byTime,
                 data: data.map((item: AggregateDataPoint) => (item['50%'] / 60).toFixed(2)),
               },
               {
                 label: '25th percentile',
                 fill: 1,
                 backgroundColor: fillColor,
+                stepped: byTime,
                 tension: 0.4,
                 pointRadius: 0,
                 data: data.map((item: AggregateDataPoint) => (item['25%'] / 60).toFixed(2)),
@@ -101,6 +110,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 label: '75th percentile',
                 fill: 1,
                 backgroundColor: fillColor,
+                stepped: byTime,
                 tension: 0.4,
                 pointRadius: 0,
                 data: data.map((item: AggregateDataPoint) => (item['75%'] / 60).toFixed(2)),
@@ -155,6 +165,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
               mode: 'index',
               intersect: false,
             },
+            watermark: watermarkLayout(isMobile),
             plugins: {
               legend: {
                 display: false,

@@ -19,6 +19,8 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { SpeedDataPoint } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
+import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import { watermarkLayout } from '../../common/constants/charts';
 import { CORE_TRACK_LENGTHS, PEAK_MPH } from './constants/speeds';
 import type { ParamsType } from './constants/speeds';
 
@@ -52,6 +54,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
   const { line } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef();
+  const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   return (
     <Line
@@ -91,6 +94,8 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
         interaction: {
           intersect: false,
         },
+        // @ts-expect-error The watermark plugin doesn't have typescript support
+        watermark: watermarkLayout(isMobile),
         plugins: {
           tooltip: {
             mode: 'index',

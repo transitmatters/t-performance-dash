@@ -10,9 +10,14 @@ dependencies:
 backend:
 - '**/*.py'
 - server/**/*
+- .flake8
 
 frontend:
 - '**/*.js'
 - '**/*.jsx'
 - '**/*.ts'
 - '**/*.tsx'
+
+documentation:
+- README.md
+- LICENSE

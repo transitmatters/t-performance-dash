@@ -55,6 +55,10 @@ To lint just backend code, run `npm run lint-backend`
 
 If you're using VSCode, `.vscode` contains a based default workspace setup. It also includes recommended extentions that will improve the dev experience. This config is meant to be as small as possible to enable an "out of the box" easy experience for handling eslint.
 
+### Updating backend data
+
+See `server/rapid/gen_latest_rapid_data.sh` and `server/bus/gen_latest_bus_data.sh` for instructions.
+
 ## Support TransitMatters
 
 If you've found this app helpful or interesting, please consider [donating](https://transitmatters.org/donate) to TransitMatters to help support our mission to provide data-driven advocacy for a more reliable, sustainable, and equitable transit system in Metropolitan Boston.

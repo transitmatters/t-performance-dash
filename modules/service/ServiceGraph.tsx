@@ -15,13 +15,19 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import pattern from 'patternomaly';
+import Annotation from 'chartjs-plugin-annotation';
 
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { COLORS, LINE_COLORS } from '../../common/constants/colors';
+import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
+import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/service';
+import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import { watermarkLayout } from '../../common/constants/charts';
+import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 ChartJS.register(
   CategoryScale,
@@ -29,10 +35,12 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  Annotation,
   Filler,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ChartjsPluginWatermark
 );
 
 interface ServiceGraphProps {
@@ -54,9 +62,13 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
 }) => {
   const { line } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
+
+  const isMobile = !useBreakpoint('md');
   const ref = useRef();
+
   const labels = data.map((point) => point.date);
   const lineColor = LINE_COLORS[line ?? 'default'];
+  const shuttlingBlocks = getShuttlingBlockAnnotations(data);
   return (
     <Line
       id={'Service'}
@@ -92,6 +104,12 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             ),
             backgroundColor: pattern.draw('diagonal', '#FFFFFF', lineColor, 5),
           },
+          {
+            // This null dataset produces the entry in the legend for the baseline annotation.
+            label: `Baseline (${PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']})`,
+            backgroundColor: CHART_COLORS.ANNOTATIONS,
+            data: null,
+          },
         ],
       }}
       options={{
@@ -105,6 +123,8 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
         interaction: {
           intersect: false,
         },
+        // @ts-expect-error The watermark plugin doesn't have typescript support
+        watermark: watermarkLayout(isMobile),
         plugins: {
           tooltip: {
             mode: 'index',
@@ -121,6 +141,20 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             // empty title to set font and leave room for drawTitle fn
             display: showTitle,
             text: '',
+          },
+          annotation: {
+            // Add your annotations here
+            annotations: [
+              {
+                type: 'line',
+                yMin: PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'],
+                yMax: PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'],
+                borderColor: CHART_COLORS.ANNOTATIONS,
+                display: (ctx) => ctx.chart.isDatasetVisible(2),
+                borderWidth: 2,
+              },
+              ...shuttlingBlocks,
+            ],
           },
         },
         scales: {
@@ -184,6 +218,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
           },
         },
+        Annotation,
       ]}
     />
   );

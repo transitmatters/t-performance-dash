@@ -3,6 +3,7 @@ import { Chart as ChartJS, BarController, BarElement, LinearScale, Title, Toolti
 import 'chartjs-adapter-date-fns';
 import React, { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { drawTitle } from '../../../common/components/charts/Title';
@@ -11,8 +12,10 @@ import type { HeadwaysChartProps } from '../../../common/types/charts';
 import { MetricFieldKeys } from '../../../common/types/charts';
 import type { HeadwayPoint } from '../../../common/types/dataPoints';
 import { writeError } from '../../../common/utils/chartError';
+import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
+import { watermarkLayout } from '../../../common/constants/charts';
 
-ChartJS.register(BarController, BarElement, LinearScale, Title, Tooltip);
+ChartJS.register(BarController, BarElement, LinearScale, ChartjsPluginWatermark, Title, Tooltip);
 
 export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
   headways,
@@ -27,6 +30,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
   } = useDelimitatedRoute();
 
   const ref = useRef();
+  const isMobile = !useBreakpoint('md');
 
   // dataObject is a mapping from headway bucket -> number of trains.
   // All keys are increased by 0.5. This is a workaround to get chartjs to display the tick labels in between the bars.
@@ -99,6 +103,8 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
               top: 25,
             },
           },
+          // @ts-expect-error The watermark plugin doesn't have typescript support
+          watermark: watermarkLayout(isMobile),
           plugins: {
             tooltip: {
               mode: 'index',
@@ -147,6 +153,16 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
         ]}
       />
     );
-  }, [dataObject, fromStation, headways.length, line, linePath, lineShort, startDate, toStation]);
+  }, [
+    dataObject,
+    fromStation,
+    headways.length,
+    isMobile,
+    line,
+    linePath,
+    lineShort,
+    startDate,
+    toStation,
+  ]);
   return histogram;
 };

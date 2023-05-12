@@ -149,22 +149,24 @@ def process_mbta_travel_times(from_stops, to_stops, sdate, edate=None):
     api_data = MbtaPerformanceAPI.get_api_data(
         "traveltimes", {"from_stop": from_stops, "to_stop": to_stops}, sdate, edate
     )
-    # combine all travel times data
-    travel = []
+    # combine all travel times data, remove threshold flags from performance API, and dedupe on `dep_dt`
+    trips = {}
     for dict_data in api_data:
-        travel += dict_data.get("travel_times", [])
-
-    # conversion
-    for travel_dict in travel:
-        # convert to datetime
-        travel_dict["arr_dt"] = stamp_to_dt(travel_dict.get("arr_dt"))
-        travel_dict["dep_dt"] = stamp_to_dt(travel_dict.get("dep_dt"))
-        # convert to int
-        travel_dict["benchmark_travel_time_sec"] = int(travel_dict.get("benchmark_travel_time_sec"))
-        travel_dict["travel_time_sec"] = int(travel_dict.get("travel_time_sec"))
-        travel_dict["direction"] = int(travel_dict.get("direction"))
-
-    return sorted(travel, key=lambda x: x["dep_dt"])
+        for event in dict_data.get("travel_times", []):
+            dep_dt = event["dep_dt"]
+            if dep_dt not in trips:
+                trips[dep_dt] = {
+                    "route_id": event["route_id"],
+                    "direction": int(event["direction"]),
+                    # convert to datetime
+                    "dep_dt": stamp_to_dt(event["dep_dt"]),
+                    "arr_dt": stamp_to_dt(event["arr_dt"]),
+                    # convert to int
+                    "travel_time_sec": int(event["travel_time_sec"]),
+                    "benchmark_travel_time_sec": int(event["benchmark_travel_time_sec"]),
+                }
+    trips_list = list(trips.values())
+    return sorted(trips_list, key=lambda x: x["dep_dt"])
 
 
 def dwells(sdate, stops, edate=None):

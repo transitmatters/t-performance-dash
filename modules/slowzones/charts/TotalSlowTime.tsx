@@ -5,12 +5,15 @@ import { enUS } from 'date-fns/locale';
 import { Line } from 'react-chartjs-2';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
 import type { LineShort, Line as TrainLine } from '../../../common/types/lines';
 dayjs.extend(utc);
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { getTimeUnitSlowzones } from '../../../common/utils/slowZoneUtils';
+import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
+import { watermarkLayout } from '../../../common/constants/charts';
 
 interface TotalSlowTimeProps {
   // Data is always all data. We filter it by adjusting the X axis of the graph.
@@ -20,7 +23,7 @@ interface TotalSlowTimeProps {
   lineShort: LineShort;
   line: TrainLine;
 }
-Chart.register(...registerables);
+Chart.register(...registerables, ChartjsPluginWatermark);
 
 export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
   data,
@@ -30,6 +33,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
   line,
 }) => {
   const ref = useRef();
+  const isMobile = !useBreakpoint('md');
   const labels = data.map((item) => dayjs.utc(item.date).format('YYYY-MM-DD'));
   const unit = getTimeUnitSlowzones(startDateUTC, endDateUTC);
   return (
@@ -100,6 +104,8 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
             display: true,
           },
         },
+        // @ts-expect-error The watermark plugin doesn't have typescript support
+        watermark: watermarkLayout(isMobile),
         plugins: {
           tooltip: {
             intersect: false,

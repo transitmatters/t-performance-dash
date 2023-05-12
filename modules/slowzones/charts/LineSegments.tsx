@@ -15,6 +15,7 @@ import React, { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { YESTERDAY_MIDNIGHT } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
 import type { Direction, LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
@@ -28,10 +29,19 @@ import {
 import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { stationAxisConfig } from '../constants/chartConfig';
-
+import { watermarkLayout } from '../../../common/constants/charts';
 dayjs.extend(utc);
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, TimeScale);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ChartjsPluginWatermark,
+  TimeScale
+);
 
 interface LineSegmentsProps {
   data: SlowZone[];
@@ -129,7 +139,8 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
             ? { ...getDateAxisConfig(startDateUTC, endDateUTC), type: 'time' }
             : stationAxisConfig,
         },
-
+        // @ts-expect-error The watermark plugin doesn't have typescript support
+        watermark: watermarkLayout(isMobile),
         plugins: {
           legend: {
             display: false,
