@@ -17,7 +17,7 @@ const LINE_ITEMS = [
 export const SubwayNavMenu: React.FC<SubwayNavMenuProps> = ({ setSidebarOpen }) => (
   <>
     <LineSelection lineItems={LINE_ITEMS} setSidebarOpen={setSidebarOpen} />
-    <div className="mx-2 flex flex-col gap-y-4">
+    <div className="flex flex-col gap-y-4">
       <hr className="h-1 w-full border-stone-400" />
       <SidebarTabs tabs={TODAY} setSidebarOpen={setSidebarOpen} />
       <SidebarTabs tabs={LINE_PAGES} setSidebarOpen={setSidebarOpen} />

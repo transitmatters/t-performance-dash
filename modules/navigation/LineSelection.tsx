@@ -24,7 +24,7 @@ export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems, setSide
       selectedIndex={lineItems.findIndex((lineItem) => lineItem.key === route.line)}
       onChange={onChange}
     >
-      <Tab.List className=" mx-1 flex flex-col gap-y-1">
+      <Tab.List className="flex flex-col gap-y-1">
         {lineItems.map((lineItem) => {
           return (
             <Tab key={lineItem.key}>
