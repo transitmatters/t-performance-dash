@@ -1,21 +1,19 @@
 import React from 'react';
 import { Tab } from '@headlessui/react';
 import classNames from 'classnames';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { DASHBOARD_TABS } from '../../common/constants/dashboardTabs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useDashboardConfig } from '../../common/state/dashboardConfig';
 
 export const DashboardSelection: React.FC = () => {
   const { tab } = useDelimitatedRoute();
-  const router = useRouter();
   const swapDashboardTabs = useDashboardConfig((state) => state.swapDashboardTabs);
   const dashboardTabs = Object.values(DASHBOARD_TABS);
   return (
     <Tab.Group
       manual
       onChange={(index) => {
-        router.push({ pathname: dashboardTabs[index].path, query: dashboardTabs[index].query });
         swapDashboardTabs(dashboardTabs[index].name);
       }}
       selectedIndex={dashboardTabs.findIndex((currTab) => tab === currTab.name)}
@@ -24,7 +22,8 @@ export const DashboardSelection: React.FC = () => {
         {dashboardTabs.map((tab, index) => (
           <Tab key={tab.name} className="h-full w-full" disabled={tab.disabled}>
             {({ selected }) => (
-              <div
+              <Link
+                href={{ pathname: dashboardTabs[index].path, query: dashboardTabs[index].query }}
                 className={classNames(
                   ' flex h-full items-center justify-center border border-stone-200 py-1 text-sm font-semibold',
                   selected && 'bg-stone-200 text-stone-900',
@@ -36,7 +35,7 @@ export const DashboardSelection: React.FC = () => {
                 )}
               >
                 <p>{tab.name}</p>
-              </div>
+              </Link>
             )}
           </Tab>
         ))}

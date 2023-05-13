@@ -1,6 +1,5 @@
 import type { ParsedUrlQuery } from 'querystring';
 import { capitalize, isEqual, pickBy } from 'lodash';
-import type { NextRouter } from 'next/router';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import type { Line, LinePath, LineShort } from '../types/lines';
@@ -93,7 +92,7 @@ export const useUpdateQuery = () => {
 
       if (!isEqual(router.query, newQuery)) {
         const query = pickBy(newQuery, (attr) => attr !== undefined);
-        router.push({ pathname: router.pathname, query });
+        router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
       }
     },
     [router]
@@ -126,6 +125,7 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
 
 export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): string => {
   const { query, page } = route;
+  if (!page) return ''; // TODO: remove this. Only needed bc this loads on root URL at the moment.
   const currentPage = ALL_PAGES[page];
   const currentPath = currentPage.path;
   const validPage = currentPage.lines.includes('line-bus');
@@ -143,37 +143,41 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   return href;
 };
 
+export const getHref = (
+  dashboardConfig: DashboardConfig,
+  newPage: PageMetadata,
+  currentPage: Page,
+  query: QueryParams,
+  linePath: LinePath
+) => {
+  const pageObject = ALL_PAGES[currentPage];
+  if (pageObject?.section === newPage.section) {
+    return navigateWithinSection(linePath, newPage, query);
+  }
+  return navigateToNewSection(linePath, newPage, query, dashboardConfig);
+};
+
 export const useHandlePageNavigation = () => {
-  const router = useRouter();
-  const { page, query, linePath } = useDelimitatedRoute();
+  const { page, query } = useDelimitatedRoute();
   const pageObject = ALL_PAGES[page];
   const dashboardConfig = useDashboardConfig();
 
   const handlePageNavigation = useCallback(
     (page: PageMetadata) => {
-      if (pageObject?.section === page.section) {
-        navigateWithinSection(router, linePath, page, query);
-        return;
+      if (!(pageObject?.section === page.section)) {
+        saveDashboardConfig(pageObject.section, query, dashboardConfig);
       }
-      saveDashboardConfig(pageObject.section, query, dashboardConfig);
-      navigateToNewSection(router, linePath, page, query, dashboardConfig);
     },
-    [router, query, linePath, pageObject, dashboardConfig]
+    [query, pageObject, dashboardConfig]
   );
   return handlePageNavigation;
 };
 
-const navigateWithinSection = (
-  router: NextRouter,
-  linePath: LinePath,
-  page: PageMetadata,
-  query: QueryParams
-) => {
-  router.push({ pathname: `/${linePath}${page.path}`, query: query });
+const navigateWithinSection = (linePath: LinePath, page: PageMetadata, query: QueryParams) => {
+  return { pathname: `/${linePath}${page.path}`, query: query };
 };
 
 const navigateToNewSection = (
-  router: NextRouter,
   linePath: LinePath,
   page: PageMetadata,
   query: QueryParams,
@@ -182,5 +186,5 @@ const navigateToNewSection = (
   const params = getDashboardConfig(page.section, dashboardConfig);
   const busRouteOnly = query.busRoute ?? undefined;
   const newQuery = busRouteOnly ? { ...params, busRoute: busRouteOnly } : params;
-  router.push({ pathname: `/${linePath}${page.path}`, query: newQuery });
+  return { pathname: `/${linePath}${page.path}`, query: newQuery };
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { Tab } from '@headlessui/react';
 import { getBusRoutes } from '../../common/constants/stations';
 import { getBusRouteSelectionItemHref, useDelimitatedRoute } from '../../common/utils/router';
@@ -11,11 +11,9 @@ interface BusSelectionProps {
 
 export const BusSelection: React.FC<BusSelectionProps> = ({ setSidebarOpen }) => {
   const route = useDelimitatedRoute();
-  const router = useRouter();
   const busRoutes = getBusRoutes();
 
-  const handleChange = (key: string) => {
-    router.push(getBusRouteSelectionItemHref(key, route));
+  const handleChange = () => {
     setSidebarOpen && setSidebarOpen(false);
   };
 
@@ -23,15 +21,16 @@ export const BusSelection: React.FC<BusSelectionProps> = ({ setSidebarOpen }) =>
     <Tab.Group
       manual
       selectedIndex={busRoutes.findIndex((key) => key === route.query.busRoute)}
-      onChange={(index) => handleChange(busRoutes[index])}
+      onChange={handleChange}
     >
       <Tab.List className="relative grid grid-cols-3 gap-2">
         {busRoutes.map((key) => {
           const selected = route.query.busRoute === key;
           return (
             <Tab key={key}>
-              <span
-                onClick={() => handleChange(key)}
+              <Link
+                href={getBusRouteSelectionItemHref(key, route)}
+                onClick={handleChange}
                 key={key}
                 className={classNames(
                   'flex w-full cursor-pointer items-center justify-center rounded-md border border-mbta-bus bg-mbta-bus p-2 text-sm font-medium',
@@ -43,7 +42,7 @@ export const BusSelection: React.FC<BusSelectionProps> = ({ setSidebarOpen }) =>
                 <p title={key} className="overflow-hidden text-ellipsis whitespace-nowrap">
                   {key}
                 </p>
-              </span>
+              </Link>
             </Tab>
           );
         })}
