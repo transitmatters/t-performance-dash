@@ -20,7 +20,6 @@ export const HeadwaysAggregateChart: React.FC<HeadwaysAggregateChartProps> = ({
   fromStation,
 }) => {
   const {
-    lineShort,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
 

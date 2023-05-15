@@ -77,7 +77,6 @@ const departureFromNormalString = (metric: number, benchmark: number) => {
 
 export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   chartId,
-  title,
   data,
   date,
   metricField,

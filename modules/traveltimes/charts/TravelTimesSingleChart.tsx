@@ -23,7 +23,6 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
 }) => {
   const {
     linePath,
-    lineShort,
     query: { startDate },
   } = useDelimitatedRoute();
 

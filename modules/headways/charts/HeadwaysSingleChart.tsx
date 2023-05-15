@@ -14,7 +14,6 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
 }) => {
   const {
     linePath,
-    lineShort,
     query: { startDate },
   } = useDelimitatedRoute();
 

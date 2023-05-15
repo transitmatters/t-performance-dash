@@ -20,7 +20,6 @@ export const DwellsAggregateChart: React.FC<DwellsAggregateChartProps> = ({
   fromStation,
 }) => {
   const {
-    lineShort,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
 

@@ -1,11 +1,6 @@
 import type { Chart } from 'chart.js';
 import type { LineShort } from '../../types/lines';
 
-interface TitleFormat {
-  text: string;
-  color: string;
-}
-
 export const colorsForLine: Record<LineShort, string> = {
   Red: '#da291c',
   Orange: '#ed8b00',
