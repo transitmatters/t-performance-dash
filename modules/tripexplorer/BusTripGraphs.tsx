@@ -5,6 +5,9 @@ import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/type
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { getLocationDetails } from '../../common/utils/stations';
+import type { Line } from '../../common/types/lines';
 
 interface BusTripGraphsProps {
   fromStation: Station;
@@ -12,6 +15,7 @@ interface BusTripGraphsProps {
   parameters: AggregateAPIOptions | SingleDayAPIOptions; // TODO
   aggregate: boolean;
   enabled: boolean;
+  line: Line | undefined;
 }
 
 export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
@@ -20,6 +24,7 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
   parameters,
   aggregate,
   enabled,
+  line,
 }) => {
   const { traveltimes, headways } = useTripExplorerQueries(
     'bus',
@@ -28,12 +33,15 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
     aggregate,
     enabled
   );
+  const location = getLocationDetails(fromStation, toStation);
 
   return (
     <div className="flex flex-col gap-4">
       {aggregate ? (
         <>
           <WidgetDiv>
+            <WidgetTitle title="Travel Times" location={location} line={line} />
+
             <AggregateChartWrapper
               query={traveltimes}
               toStation={toStation}
@@ -42,6 +50,12 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
             />
           </WidgetDiv>
           <WidgetDiv>
+            <WidgetTitle
+              title="Headways"
+              subtitle="Time between buses"
+              location={location}
+              line={line}
+            />
             <AggregateChartWrapper
               query={headways}
               toStation={toStation}
@@ -53,6 +67,7 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
       ) : (
         <>
           <WidgetDiv>
+            <WidgetTitle title="Travel Times" location={location} line={line} />
             <SingleChartWrapper
               query={traveltimes}
               toStation={toStation}
@@ -61,6 +76,12 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
             />
           </WidgetDiv>
           <WidgetDiv>
+            <WidgetTitle
+              title="Headways"
+              subtitle="Time between buses"
+              location={location}
+              line={line}
+            />
             <SingleChartWrapper
               query={headways}
               toStation={toStation}
