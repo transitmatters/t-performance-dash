@@ -7,7 +7,7 @@ import { LocationTitle } from './LocationTitle';
 interface WidgetTitle {
   title: string;
   subtitle?: string;
-  location?: Location; //TODO
+  location?: Location;
   both?: boolean;
   line?: Line;
 }
