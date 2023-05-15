@@ -215,7 +215,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
               ctx.fillText('No data to display', width / 2, height / 2);
               ctx.restore();
             }
-            if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
+            if (showTitle) drawSimpleTitle(`Daily Round Trips`, chart);
           },
         },
         Annotation,

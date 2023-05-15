@@ -22,10 +22,9 @@ import type { SingleDayLineProps } from '../../../common/types/charts';
 import { prettyDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../utils/router';
 import { DownloadButton } from '../general/DownloadButton';
-import { writeError } from '../../utils/chartError';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
-import { drawTitle } from './Title';
+import { writeError } from '../../utils/chartError';
 import { Legend as LegendView } from './Legend';
 
 ChartJS.register(
@@ -171,11 +170,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               legend: {
                 display: false,
               },
-              title: {
-                // empty title to set font and leave room for drawTitle fn
-                display: true,
-                text: '',
-              },
             },
             scales: {
               y: {
@@ -230,7 +224,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 if (date === undefined || date.length === 0 || data.length === 0) {
                   writeError(chart);
                 }
-                drawTitle(title, location, bothStops, chart);
               },
             },
           ]}

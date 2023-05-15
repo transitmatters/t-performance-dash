@@ -19,11 +19,10 @@ import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts'
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import { DownloadButton } from '../general/DownloadButton';
-import { writeError } from '../../utils/chartError';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
+import { writeError } from '../../utils/chartError';
 import { LegendLongTerm } from './Legend';
-import { drawTitle } from './Title';
 
 ChartJS.register(
   CategoryScale,
@@ -50,7 +49,6 @@ const xAxisLabel = (startDate: string, endDate: string, hourly: boolean) => {
 
 export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   chartId,
-  title,
   data,
   location,
   pointField,
@@ -170,11 +168,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
               legend: {
                 display: false,
               },
-              title: {
-                // empty title to set font and leave room for drawTitle fn
-                display: true,
-                text: '',
-              },
               tooltip: {
                 mode: 'index',
                 position: 'nearest',
@@ -193,7 +186,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 if (startDate === undefined || endDate === undefined || data.length === 0) {
                   writeError(chart);
                 }
-                drawTitle(title, location, bothStops, chart);
               },
             },
           ]}
