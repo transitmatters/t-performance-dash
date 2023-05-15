@@ -218,7 +218,6 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             if (showTitle) drawSimpleTitle(`Daily Round Trips`, chart);
           },
         },
-        Annotation,
       ]}
     />
   );
