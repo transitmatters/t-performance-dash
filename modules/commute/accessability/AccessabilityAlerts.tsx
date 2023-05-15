@@ -1,16 +1,14 @@
 import React from 'react';
 import classNames from 'classnames';
-import { useElevatorsAndEscalators } from '../../../common/api/hooks/facilities';
 import { useDelimitatedRoute } from '../../../common/utils/router';
+import { lineColorBackground } from '../../../common/styles/general';
 
 export const AccessabilityAlerts: React.FC = () => {
-  const { lineShort } = useDelimitatedRoute();
-
-  const facilities = useElevatorsAndEscalators(lineShort);
+  const { line } = useDelimitatedRoute();
 
   const divStyle = classNames(
-    'flex flex-col rounded-md py-4 text-white shadow-dataBox w-full xl:w-1/3 gap-y-2 md:max-h-[309px] md:overflow-y-auto'
-    // lineColorBackground[line ?? 'DEFAULT']
+    'flex flex-col rounded-md py-4 text-white shadow-dataBox w-full xl:w-1/3 gap-y-2 md:max-h-[309px] md:overflow-y-auto',
+    lineColorBackground[line ?? 'DEFAULT']
   );
 
   return (
