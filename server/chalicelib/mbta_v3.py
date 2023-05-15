@@ -54,7 +54,7 @@ def delay_alert(attributes, id):
     }
 
 
-def format_response(alerts_data):  # TODO: separate logic for bus to avoid repeat stops.
+def format_alerts_response(alerts_data):  # TODO: separate logic for bus to avoid repeat stops.
     alerts_filtered = []
     for alert in alerts_data:
         attributes = alert["attributes"]
@@ -110,6 +110,9 @@ def get_active(alert_period):
 def format_active_alerts(alert_active_period):
     return list(map(get_active, alert_active_period))
 
+def getAlerts(params = {}):
+    response = getV3('alerts', params)
+    return format_alerts_response(response["data"])
 
 def getV3(command, params={}):
     """Make a GET request against the MBTA v3 API"""
@@ -123,4 +126,4 @@ def getV3(command, params={}):
         print(response.content.decode("utf-8"))
         raise  # TODO: catch this gracefully
     data = json.loads(response.content.decode("utf-8"), parse_float=Decimal, parse_int=Decimal)
-    return format_response(data["data"])
+    return data
