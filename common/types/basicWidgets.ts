@@ -19,7 +19,7 @@ class BaseWidgetValue {
   delta?: number | undefined;
   percentChange?: number | undefined;
 
-  constructor(value: number | undefined, delta: number | undefined) {
+  constructor(value: number | undefined, delta?: number | undefined) {
     this.value = value;
     this.delta = delta;
     this.percentChange =
