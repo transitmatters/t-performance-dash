@@ -202,7 +202,8 @@ def get_ridership():
     )
     return json.dumps(response)
 
+
 @app.route("/api/facilities", cors=cors_config)
-def get_alerts():
+def get_facilities():
     response = mbta_v3.getV3("facilities", app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True, default=str)

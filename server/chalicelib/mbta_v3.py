@@ -53,6 +53,7 @@ def delay_alert(attributes, id):
         "active_period": format_active_alerts(attributes["active_period"]),
     }
 
+
 def accessibility_alert(attributes, id):
     """Format alerts for escalators"""
     stops = set()  # Eliminate duplicates (bus alerts sometimes have entries for multiple routes for one stop.)
@@ -127,9 +128,11 @@ def get_active(alert_period):
 def format_active_alerts(alert_active_period):
     return list(map(get_active, alert_active_period))
 
-def getAlerts(params = {}):
+
+def getAlerts(params={}):
     response = getV3('alerts', params)
     return format_alerts_response(response["data"])
+
 
 def getV3(command, params={}):
     """Make a GET request against the MBTA v3 API"""
