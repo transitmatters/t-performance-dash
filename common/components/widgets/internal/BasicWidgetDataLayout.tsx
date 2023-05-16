@@ -18,7 +18,7 @@ export type BasicWidgetDataLayoutProps = {
 
 export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
   title,
-  analysis: analysis,
+  analysis,
   widgetValue,
   layoutKind = 'total-and-delta',
   sentimentDirection = 'negativeOnIncrease',
