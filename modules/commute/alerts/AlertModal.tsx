@@ -52,7 +52,12 @@ export const AlertModal: React.FC<AlertModalProps> = ({
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
                 <div>
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-stone-100">
+                  <div
+                    className={classNames(
+                      'mx-auto flex h-16 w-16 items-center justify-center rounded-full',
+                      lineColorBackground[line ?? 'DEFAULT']
+                    )}
+                  >
                     <Icon className="h-10 w-10" aria-hidden="true" />
                   </div>
                   <div className="mt-3 text-center sm:mt-5">

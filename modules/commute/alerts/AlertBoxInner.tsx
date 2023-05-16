@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { AlertModal } from './AlertModal';
-import { CurrentTime, UpcomingTime } from './Time';
+import { CurrentTime, SinceTime, UpcomingTime } from './Time';
 
 interface AlertBoxInnerProps {
   header: string;
@@ -12,6 +12,7 @@ interface AlertBoxInnerProps {
   type: UpcomingOrCurrent;
   children: React.ReactNode;
   noShrink?: boolean;
+  showTimeSince?: boolean;
 }
 
 export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
@@ -21,6 +22,7 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
   type,
   noShrink,
   children,
+  showTimeSince,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const isMobile = !useBreakpoint('md');
@@ -65,7 +67,11 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
             )}
           >
             {type === 'current' ? (
-              <CurrentTime times={alert.relevantTimes} />
+              showTimeSince ? (
+                <SinceTime times={alert.relevantTimes} />
+              ) : (
+                <CurrentTime times={alert.relevantTimes} />
+              )
             ) : (
               <UpcomingTime times={alert.relevantTimes} />
             )}

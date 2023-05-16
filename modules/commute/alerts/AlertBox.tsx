@@ -77,9 +77,9 @@ export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, busRoute,
     } else {
       return (
         <div className="flex w-full flex-row-reverse gap-x-2 md:flex-col-reverse md:gap-x-0 md:gap-y-2">
-          {relevantAlerts.map((alert: FormattedAlert) =>
-            getAlertComponent(alert, lineShort, type, busRoute)
-          )}
+          {relevantAlerts
+            .sort((a, b) => (JSON.stringify(a?.stops) < JSON.stringify(b?.stops) ? 1 : -1))
+            .map((alert: FormattedAlert) => getAlertComponent(alert, lineShort, type, busRoute))}
         </div>
       );
     }

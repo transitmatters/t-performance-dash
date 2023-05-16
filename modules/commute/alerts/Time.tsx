@@ -70,3 +70,13 @@ export const UpcomingTime: React.FC<TimeProps> = ({ times }) => {
     </>
   );
 };
+
+export const SinceTime: React.FC<TimeProps> = ({ times }) => {
+  const timeString = dayjs(times[0].start).format('MMM D YYYY');
+  return (
+    <>
+      <FontAwesomeIcon icon={faCalendar} size={'sm'} className={'m-0 mr-1 h-4 w-4'} />
+      Since {timeString}
+    </>
+  );
+};
