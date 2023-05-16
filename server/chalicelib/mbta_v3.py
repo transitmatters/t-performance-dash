@@ -53,6 +53,21 @@ def delay_alert(attributes, id):
         "active_period": format_active_alerts(attributes["active_period"]),
     }
 
+def accessibility_alert(attributes, id):
+    """Format alerts for escalators"""
+    stops = set()  # Eliminate duplicates (bus alerts sometimes have entries for multiple routes for one stop.)
+    for entity in attributes["informed_entity"]:
+        if entity.get("stop") and not entity["stop"].isdigit():  # Only get `place-<name>` stop types - no numbers.
+            stops.add(entity["stop"])
+    return {
+        "id": id,
+        "stops": list(stops),
+        "header": attributes["header"],
+        "description": attributes["description"],
+        "type": attributes["effect"],
+        "active_period": format_active_alerts(attributes["active_period"]),
+    }
+
 
 def format_alerts_response(alerts_data):  # TODO: separate logic for bus to avoid repeat stops.
     alerts_filtered = []
@@ -66,6 +81,8 @@ def format_alerts_response(alerts_data):  # TODO: separate logic for bus to avoi
             alerts_filtered.append(shuttle_alert(attributes, alert["id"]))
         if attributes["effect"] == "DELAY" or attributes["effect"] == "DETOUR":
             alerts_filtered.append(delay_alert(attributes, alert["id"]))
+        if attributes["effect"] == "ESCALATOR_CLOSURE" or attributes["effect"] == "ELEVATOR_CLOSURE":
+            alerts_filtered.append(accessibility_alert(attributes, alert["id"]))
 
     return alerts_filtered
 

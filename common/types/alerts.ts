@@ -20,6 +20,7 @@ export interface FormattedAlert {
   stops: string[];
   routes?: string[];
   header: string;
+  description?: string;
 }
 
 export interface AlertsResponse {

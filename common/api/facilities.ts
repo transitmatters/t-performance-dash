@@ -2,11 +2,8 @@ import { stations } from '../constants/stations';
 import type { FacilitiesResponse } from '../types/facilities';
 import type { LineShort } from '../types/lines';
 import { APP_DATA_BASE_PATH } from '../utils/constants';
-import type { LineMap, Station } from '../types/stations';
-
-const isLineMap = (obj: LineMap | Station[]): obj is LineMap => {
-  return (obj as LineMap).stations !== undefined;
-};
+import type { Station } from '../types/stations';
+import { isLineMap } from '../types/stations';
 
 export const fetchAllElevatorsAndEscalators = async (
   line: LineShort

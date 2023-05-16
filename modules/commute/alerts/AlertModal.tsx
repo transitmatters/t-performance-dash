@@ -10,6 +10,7 @@ interface AlertModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
   header: string;
+  description?: string;
   Icon: React.ElementType;
   type: string;
 }
@@ -18,6 +19,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
   showModal,
   setShowModal,
   header,
+  description,
   Icon,
   type,
 }) => {
@@ -62,6 +64,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">{header}</p>
+                      {description && <p className="mt-3 text-xs text-gray-500">{description}</p>}
                     </div>
                   </div>
                 </div>

@@ -40,6 +40,7 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
           showModal={showModal}
           setShowModal={setShowModal}
           header={header}
+          description={alert.description}
           Icon={Icon}
           type={alert.type}
         />
@@ -50,7 +51,7 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
         <div className="flex w-full flex-col items-center justify-center text-stone-100">
           <div
             className={classNames(
-              'flex w-full flex-row items-center pr-2 text-center text-lg ',
+              'flex w-full flex-row items-center pr-2 text-lg ',
               _noShrink && 'flex-wrap'
             )}
           >

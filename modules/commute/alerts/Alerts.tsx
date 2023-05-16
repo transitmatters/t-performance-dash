@@ -1,19 +1,24 @@
 import React from 'react';
 import classNames from 'classnames';
+import type { UseQueryResult } from '@tanstack/react-query';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { lineColorBackground } from '../../../common/styles/general';
 import { Divider } from '../../../common/components/general/Divider';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
-import { useAlertsData } from '../../../common/api/hooks/alerts';
+import type { AlertsResponse } from '../../../common/types/alerts';
 import { AlertBox } from './AlertBox';
 
-export const Alerts: React.FC = () => {
+interface AlertsProps {
+  title: string;
+  alerts: UseQueryResult<AlertsResponse[]>;
+}
+
+export const Alerts: React.FC<AlertsProps> = ({ title, alerts }) => {
   const {
     line,
     lineShort,
     query: { busRoute },
   } = useDelimitatedRoute();
-  const alerts = useAlertsData(lineShort, busRoute);
 
   const divStyle = classNames(
     'flex flex-col rounded-md py-4 text-white shadow-dataBox w-full xl:w-1/3 gap-y-2 md:max-h-[309px] md:overflow-y-auto',
@@ -32,7 +37,7 @@ export const Alerts: React.FC = () => {
   }
   return (
     <div className={divStyle}>
-      <h3 className="w-full px-4 text-2xl font-semibold md:w-auto">Alerts</h3>
+      <h3 className="w-full px-4 text-2xl font-semibold md:w-auto">{title}</h3>
       <div className="flex w-full flex-row gap-x-4 overflow-x-auto px-4 md:flex-col md:gap-x-0 md:overflow-x-auto">
         <div className="md:w-full">
           <Divider title="Today" line={line} />

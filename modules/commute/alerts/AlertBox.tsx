@@ -10,6 +10,7 @@ import { DelayAlert } from './DelayAlert';
 import { ShuttleAlert } from './ShuttleAlert';
 import { StopClosure } from './StopClosureAlert';
 import { SuspensionAlert } from './SuspensionAlert';
+import { AccessibilityAlert } from './AccessibilityAlert';
 
 interface AlertBoxProps {
   alerts: AlertsResponse[];
@@ -57,6 +58,9 @@ const getAlertComponent = (
   }
   if (alert.type === AlertEffect.STOP_CLOSURE && busRoute) {
     return <StopClosure alert={alert} type={type} key={alert.id} />;
+  }
+  if ([AlertEffect.ELEVATOR_CLOSURE, AlertEffect.ESCALATOR_CLOSURE].includes(alert.type)) {
+    return <AccessibilityAlert alert={alert} type={type} lineShort={lineShort} key={alert.id} />;
   }
 };
 
