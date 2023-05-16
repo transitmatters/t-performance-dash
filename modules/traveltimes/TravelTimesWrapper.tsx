@@ -26,6 +26,13 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
   const lg = !useBreakpoint('lg');
   return (
     <div className="flex flex-col gap-x-2 gap-y-1 pt-2 lg:flex-row">
+      <AggregateChartWrapper
+        query={query}
+        toStation={toStation}
+        fromStation={fromStation}
+        type={'traveltimes'}
+        timeUnit={'by_date'}
+      />
       <DatapointWidgetPair>
         <DataWidget
           title="Average"
@@ -53,14 +60,6 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
           }
         />
       </DatapointWidgetPair>
-
-      <AggregateChartWrapper
-        query={query}
-        toStation={toStation}
-        fromStation={fromStation}
-        type={'traveltimes'}
-        timeUnit={'by_date'}
-      />
     </div>
   );
 };
