@@ -13,34 +13,47 @@ export type BasicWidgetDataLayoutProps = {
   widgetValue: WidgetValueInterface;
   sentimentDirection?: SentimentDirection;
   layoutKind?: LayoutKind;
+  isLarge?: boolean;
 };
 
 export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
   title,
-  analysis,
+  analysis: analysis,
   widgetValue,
   layoutKind = 'total-and-delta',
   sentimentDirection = 'negativeOnIncrease',
+  isLarge = true,
 }) => {
   const getPrimaryValue = () => {
     const useDelta = layoutKind === 'delta-and-percent-change';
     if (useDelta) {
-      return widgetValue.getFormattedDelta();
+      return widgetValue.getFormattedDelta(false);
     }
     return widgetValue.getFormattedValue();
   };
 
   return (
     <>
-      <div className={classNames('relative flex flex-1 bg-white')}>
+      <div className={classNames('relative flex')}>
         {widgetValue.value === undefined && <LoadingSpinner isWidget />}
         <div className={classNames('flex flex-col items-start p-2')}>
-          <p className={classNames('text-base text-gray-500')}>{title}</p>
+          <p className={classNames('text-base text-gray-500', isLarge ? 'text-base' : 'text-sm')}>
+            {title}
+          </p>
           <div className="flex flex-row items-baseline gap-x-1">
-            <p className={classNames('text-3xl font-semibold text-gray-900 ')}>
+            <p
+              className={classNames(
+                'font-semibold text-gray-900',
+                isLarge ? 'text-2xl' : 'text-xl'
+              )}
+            >
               {getPrimaryValue()}
             </p>
-            <p className="text-base text-design-subtitleGrey">{widgetValue.getUnits()}</p>
+            <p
+              className={classNames(isLarge ? 'text-base' : 'text-sm', 'text-design-subtitleGrey')}
+            >
+              {widgetValue.getUnits()}
+            </p>
           </div>
           <div className="mt-1 flex flex-row items-baseline gap-x-1">
             {layoutKind !== 'no-delta' && (

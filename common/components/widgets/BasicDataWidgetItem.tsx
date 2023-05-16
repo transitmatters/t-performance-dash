@@ -5,7 +5,7 @@ import { WidgetDiv } from './WidgetDiv';
 
 export const BasicDataWidgetItem: React.FC<BasicWidgetDataLayoutProps> = ({
   title,
-  analysis,
+  analysis: analysis,
   widgetValue,
   sentimentDirection,
 }) => {

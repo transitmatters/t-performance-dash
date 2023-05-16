@@ -10,8 +10,9 @@ export interface WidgetValueInterface {
 
   getUnits: () => string;
   getFormattedValue: () => string;
-  getFormattedDelta: () => string;
+  getFormattedDelta: (includeUnits?: boolean) => string;
   getFormattedPercentChange: () => string;
+  getDeltaUnits?: () => string;
 }
 
 class BaseWidgetValue {
@@ -30,7 +31,7 @@ class BaseWidgetValue {
 
   getFormattedPercentChange() {
     if (typeof this.percentChange === 'undefined') return '...';
-    const sign = this.percentChange >= 0 ? '+' : '-';
+    const sign = this.percentChange >= 0 ? '+' : '';
     return `${sign}${Math.floor(this.percentChange)}%`;
   }
 }
@@ -41,6 +42,9 @@ export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInter
     if (this.value === undefined) return '...';
     return getTimeUnit(this.value);
   }
+  getDeltaUnits() {
+    return this.delta ? getTimeUnit(this.delta) : '...';
+  }
 
   getFormattedValue() {
     const formattedValue = getFormattedTimeValue(this.value);
@@ -48,18 +52,20 @@ export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInter
     return formattedValue;
   }
 
-  getFormattedDelta() {
+  getFormattedDelta(includeUnits: boolean) {
     if (typeof this.value === 'undefined' || typeof this.delta === 'undefined') return '...';
     const absValue = Math.abs(this.value);
     const absDelta = Math.abs(this.delta);
     const sign = this.delta >= 0 ? '+' : '-';
     switch (true) {
       case absValue < 100:
-        return `${sign}${absDelta.toFixed(0)} sec`;
+        return `${sign}${absDelta.toFixed(0)}${includeUnits ? ' sec' : ''}`;
       case absValue < 3600:
         return `${sign}${dayjs.duration(absDelta, 'seconds').format('m:ss')}`;
       default:
-        return `${sign}${dayjs.duration(absDelta, 'seconds').as('minutes').toFixed(0)} min`;
+        return `${sign}${dayjs.duration(absDelta, 'seconds').as('minutes').toFixed(0)}${
+          includeUnits ? ' min' : ''
+        }`;
     }
   }
 }

@@ -72,7 +72,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
 
   return (
-    <div className="relative flex w-full flex-col pr-2">
+    <div className="relative flex w-full flex-col rounded-md border border-stone-100 bg-white p-2 shadow-sm">
       <div className="flex h-60 w-full flex-row">
         <Line
           id={chartId}
@@ -191,7 +191,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           ]}
         />
       </div>
-      <div className="flex flex-row items-end gap-4 pl-6">
+      <div className="flex flex-row items-end gap-4 pl-6 pr-2">
         {showLegend && <LegendLongTerm />}
         {!isHomescreen && startDate && (
           <DownloadButton

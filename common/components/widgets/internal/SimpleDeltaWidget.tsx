@@ -21,7 +21,7 @@ export const SimpleDeltaWidget: React.FC<BasicWidgetDataLayoutProps> = ({
     query: { startDate, endDate },
   } = useDelimitatedRoute();
   const getDelta = () => {
-    const deltaValue = widgetValue.getFormattedDelta();
+    const deltaValue = widgetValue.getFormattedDelta(true);
     const increase = widgetValue.delta ? widgetValue.delta > 0 : false;
     const positiveSentiment =
       (!increase && sentimentDirection === 'negativeOnIncrease') ||

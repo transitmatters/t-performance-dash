@@ -22,7 +22,7 @@ export const WidgetTitle: React.FC<WidgetTitle> = ({
 }) => {
   const isMobile = !useBreakpoint('md');
   return (
-    <div className="flex w-full flex-col items-baseline justify-between gap-x-4 p-2 text-xl md:flex-row">
+    <div className="flex w-full flex-col items-baseline justify-between gap-x-4 text-xl md:flex-row">
       <div className="flex w-full flex-col md:w-auto ">
         <div className="flex w-full flex-row items-baseline justify-between">
           <h2 className={classNames('font-semibold', 'whitespace-nowrap text-stone-800')}>

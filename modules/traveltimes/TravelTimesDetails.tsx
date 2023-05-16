@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import dayjs from 'dayjs';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
 import {
@@ -14,7 +13,6 @@ import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
-import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import {
   useTravelTimesAggregateData,
   useTravelTimesSingleDayData,
@@ -25,6 +23,7 @@ import { AggregateChartWrapper } from '../../common/components/charts/AggregateC
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { WidgetNoDelta } from '../../common/components/widgets/internal/WidgetNoDelta';
 
 export function TravelTimesDetails() {
   const {
@@ -65,15 +64,12 @@ export function TravelTimesDetails() {
   return (
     <PageWrapper pageTitle={'Travel Times'}>
       <BasicDataWidgetPair>
-        <BasicDataWidgetItem
-          title="Avg. Travel Time"
+        <WidgetNoDelta
+          title="Average"
           widgetValue={
-            new TimeWidgetValue(
-              travelTimeValues ? averageTravelTime(travelTimeValues) : undefined,
-              1
-            )
+            new TimeWidgetValue(travelTimeValues ? averageTravelTime(travelTimeValues) : undefined)
           }
-          analysis={`from last ${dayjs().format('ddd')}.`}
+          subtitle={`over period`}
         />
       </BasicDataWidgetPair>
       <WidgetDiv>

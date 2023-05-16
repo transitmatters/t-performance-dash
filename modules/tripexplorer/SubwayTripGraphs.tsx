@@ -9,6 +9,7 @@ import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { getLocationDetails } from '../../common/utils/stations';
 import type { Line } from '../../common/types/lines';
+import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesWrapper';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -44,12 +45,11 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
         <>
           <WidgetDiv>
             <WidgetTitle title="Travel Times" location={location} line={line} both />
-            <AggregateChartWrapper
+            <TravelTimesAggregateWrapper
               query={traveltimes}
-              toStation={toStation}
+              traveltimes={traveltimes.data?.by_date}
               fromStation={fromStation}
-              type={'traveltimes'}
-              timeUnit={'by_date'}
+              toStation={toStation}
             />
           </WidgetDiv>
           <WidgetDiv>
