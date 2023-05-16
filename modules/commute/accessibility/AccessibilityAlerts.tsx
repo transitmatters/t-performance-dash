@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { lineColorBackground } from '../../../common/styles/general';
 
-export const AccessabilityAlerts: React.FC = () => {
+export const AccessibilityAlerts: React.FC = () => {
   const { line } = useDelimitatedRoute();
 
   const divStyle = classNames(
@@ -13,7 +13,7 @@ export const AccessabilityAlerts: React.FC = () => {
 
   return (
     <div className={divStyle}>
-      <h3 className="w-full px-4 text-2xl font-semibold md:w-auto">Accessability</h3>
+      <h3 className="w-full px-4 text-2xl font-semibold md:w-auto">Accessibility</h3>
     </div>
   );
 };

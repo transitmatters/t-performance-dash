@@ -4,8 +4,8 @@ import { SlowZonesMap } from '../slowzones/map';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { useSlowzoneAllData, useSpeedRestrictionData } from '../../common/api/hooks/slowzones';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
-import { AccessabilityAlerts } from '../commute/accessability/AccessabilityAlerts';
 import { Speed } from '../commute/speed/Speed';
+import { AccessibilityAlerts } from '../commute/accessability/AccessabilityAlerts';
 import { WidgetTitle } from './WidgetTitle';
 
 interface TodayProps {
@@ -23,7 +23,7 @@ export const Today: React.FC<TodayProps> = ({ lineShort }) => {
         <div className="flex flex-col gap-x-4 gap-y-4 xl:flex-row">
           <Alerts />
           {canShowSlowZonesMap && <Speed />}
-          <AccessabilityAlerts />
+          <AccessibilityAlerts />
         </div>
         {canShowSlowZonesMap && allSlow.data && speedRestrictions.data && (
           <WidgetDiv className="h-full">
