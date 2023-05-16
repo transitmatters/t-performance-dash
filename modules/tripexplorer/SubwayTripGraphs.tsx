@@ -29,7 +29,6 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
   line,
 }) => {
   const [peakTime, setPeakTime] = React.useState<'weekday' | 'weekend'>('weekday');
-
   const { traveltimes, headways, dwells } = useTripExplorerQueries(
     'subway',
     parameters,

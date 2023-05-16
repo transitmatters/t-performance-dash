@@ -5,7 +5,7 @@ interface DatapointWidgetPairProps {
 
 export const DatapointWidgetPair: React.FC<DatapointWidgetPairProps> = ({ children }) => {
   return (
-    <div className="flex flex-row items-start justify-around rounded-md border border-stone-100 bg-white px-2 shadow-sm md:flex-col">
+    <div className="flex flex-row items-center justify-around rounded-md px-4 lg:flex-col lg:items-start">
       {children}
     </div>
   );

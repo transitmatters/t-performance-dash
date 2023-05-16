@@ -7,6 +7,8 @@ import { AggregateChartWrapper } from '../../common/components/charts/AggregateC
 import type { AggregateDataPoint, AggregateDataResponse } from '../../common/types/charts';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import type { Station } from '../../common/types/stations';
+import { WidgetDivider } from '../../common/components/widgets/WidgetDivider';
+import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 
 interface TravelTimesAggregateWrapperProps {
   query: UseQueryResult<AggregateDataResponse>;
@@ -21,8 +23,9 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
   toStation,
   fromStation,
 }) => {
+  const lg = !useBreakpoint('lg');
   return (
-    <div className="flex flex-col gap-x-2 gap-y-1 pt-2 md:flex-row md:pt-0">
+    <div className="flex flex-col gap-x-2 gap-y-1 pt-2 md:pt-0 lg:flex-row">
       <DatapointWidgetPair>
         <BasicWidgetDataLayout
           title="Average"
@@ -34,6 +37,7 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
             )
           }
         />
+        <WidgetDivider isVertical={lg} />
 
         <BasicWidgetDataLayout
           title="Delta"
