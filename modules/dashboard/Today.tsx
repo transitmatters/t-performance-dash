@@ -5,7 +5,7 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { useSlowzoneAllData, useSpeedRestrictionData } from '../../common/api/hooks/slowzones';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Speed } from '../commute/speed/Speed';
-import { AccessibilityAlerts } from '../commute/accessability/AccessabilityAlerts';
+import { AccessibilityAlerts } from '../commute/accessibility/AccessibilityAlerts';
 import { WidgetTitle } from './WidgetTitle';
 
 interface TodayProps {
