@@ -73,7 +73,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
 
   return (
     <div className="relative flex w-full flex-col rounded-md border border-stone-100 bg-white p-2 shadow-sm">
-      <div className="flex h-40 w-full flex-row">
+      <div className="flex h-60 w-full flex-row">
         <Line
           id={chartId}
           ref={ref}

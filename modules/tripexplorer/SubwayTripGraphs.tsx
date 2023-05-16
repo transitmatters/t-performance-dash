@@ -9,7 +9,7 @@ import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { getLocationDetails } from '../../common/utils/stations';
 import type { Line } from '../../common/types/lines';
-import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesWrapper';
+import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;

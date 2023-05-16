@@ -25,7 +25,7 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
 }) => {
   const lg = !useBreakpoint('lg');
   return (
-    <div className="flex flex-col gap-x-2 gap-y-1 pt-2 lg:flex-row">
+    <div className="flex flex-col gap-x-2 gap-y-1 pt-2 lg:flex-row-reverse">
       <AggregateChartWrapper
         query={query}
         toStation={toStation}
