@@ -18,14 +18,14 @@ export const DashboardSelection: React.FC = () => {
       }}
       selectedIndex={dashboardTabs.findIndex((currTab) => tab === currTab.name)}
     >
-      <Tab.List className="space-between flex w-full flex-row">
+      <Tab.List className="space-between flex h-10 w-full flex-row md:h-7">
         {dashboardTabs.map((tab, index) => (
-          <Tab key={tab.name} className="w-full" disabled={tab.disabled}>
+          <Tab key={tab.name} className="h-full w-full" disabled={tab.disabled}>
             {({ selected }) => (
               <Link
                 href={{ pathname: dashboardTabs[index].path, query: dashboardTabs[index].query }}
                 className={classNames(
-                  'flex items-center justify-center border border-stone-200 py-1 text-sm font-semibold',
+                  ' flex h-full items-center justify-center border border-stone-200 py-1 text-sm font-semibold',
                   selected && 'bg-stone-200 text-stone-900',
                   index === 0 && 'rounded-l-md',
                   index === dashboardTabs.length - 1 && 'rounded-r-md',
