@@ -4,10 +4,10 @@ export const Legend: React.FC = () => {
   return (
     <div
       className={
-        'grid w-full grid-cols-2 items-baseline gap-1 p-1 text-left text-xs lg:flex lg:flex-row lg:gap-4'
+        'grid w-full grid-cols-2 items-baseline p-1 text-left text-xs lg:flex lg:flex-row lg:gap-4'
       }
     >
-      <div className="col-span-2 flex flex-row items-baseline gap-2">
+      <div className="col-span-2 flex flex-row items-baseline gap-2 pb-1 lg:pb-0">
         <p>
           Compare to (
           <span className="top-[1px] inline-block h-2.5 w-2.5 items-center border-t-2 border-[#bbb] bg-[#ddd]"></span>{' '}
