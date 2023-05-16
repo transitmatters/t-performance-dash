@@ -32,10 +32,12 @@ export const AccessibilityAlert: React.FC<DelayAlertProps> = ({ alert, type, lin
       type={type}
       showTimeSince={true}
     >
-      {alert.type === AlertEffect.ESCALATOR_CLOSURE
-        ? 'Escalator out of service'
-        : 'Elevator out of service'}{' '}
-      at {stops.map((stop) => stop?.stop_name).join(', ')}
+      <span>
+        {alert.type === AlertEffect.ESCALATOR_CLOSURE
+          ? 'Escalator out of service'
+          : 'Elevator out of service'}{' '}
+        at <strong>{stops.map((stop) => stop?.stop_name).join(', ')}</strong>
+      </span>
     </AlertBoxInner>
   );
 };
