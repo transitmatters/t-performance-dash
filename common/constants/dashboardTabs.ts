@@ -12,5 +12,5 @@ export const DASHBOARD_TABS: {
     path: '/bus/trips',
     query: { busRoute: '1', queryType: 'single', startDate: BUS_DEFAULTS.tripConfig.startDate },
   },
-  System: { name: 'System', path: '/', disabled: true },
+  System: { name: 'System', path: '/system' },
 };

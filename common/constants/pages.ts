@@ -29,8 +29,8 @@ export enum PAGES {
   tripDwells = 'tripDwells',
 }
 
-export type Section = 'today' | 'line' | 'overview' | 'trips';
-export type SectionTitle = 'Today' | 'Line' | 'Overview' | 'Trips';
+export type Section = 'today' | 'line' | 'overview' | 'trips' | 'system';
+export type SectionTitle = 'Today' | 'Line' | 'Overview' | 'Trips' | 'System';
 
 export type PageMetadata = {
   key: string;
@@ -186,3 +186,15 @@ export const SUB_PAGES_MAP = {
     dwells: 'tripDwells',
   },
 };
+
+export const SYSTEM_PAGES: PageMetadata[] = [
+  {
+    key: 'slowzones',
+    path: '/slowzones',
+    name: 'Slow Zones',
+    lines: [],
+    icon: faWarning,
+    section: 'system',
+    sectionTitle: 'System',
+  },
+];

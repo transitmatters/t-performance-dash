@@ -34,12 +34,22 @@ const getPage = (pageArray: string[]): string => {
   return pageArray[0];
 };
 
+const getTab = (path: string) => {
+  if (RAIL_LINES.includes(path)) {
+    return 'Subway';
+  } else if (path === 'bus') {
+    return 'Bus';
+  } else {
+    return 'System';
+  }
+};
+
 export const useDelimitatedRoute = (): Route => {
   const router = useRouter();
   const path = router.asPath.split('?');
   const pathItems = path[0].split('/');
   const queryParams = router.query;
-  const tab = RAIL_LINES.includes(pathItems[1]) ? 'Subway' : 'Bus';
+  const tab = getTab(pathItems[1]);
   const page = getPage(pathItems.slice(2)) as Page;
   const newParams = getParams(queryParams);
 
@@ -48,7 +58,7 @@ export const useDelimitatedRoute = (): Route => {
     linePath: pathItems[1] as LinePath, //TODO: Remove as
     lineShort: capitalize(pathItems[1]) as LineShort, //TODO: Remove as
     page: page,
-    tab: tab,
+    tab,
     query: router.isReady ? newParams : {},
   };
 };

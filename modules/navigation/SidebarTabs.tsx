@@ -44,7 +44,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => 
                     : enabled && 'text-stone-300 hover:bg-stone-800 hover:text-white',
                   'group flex select-none items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
                   enabled ? 'cursor-pointer' : 'cursor-default  text-stone-600',
-                  tab.sub && 'ml-4 text-xs'
+                  tab.sub && 'ml-2 text-xs'
                 )}
               >
                 <FontAwesomeIcon
