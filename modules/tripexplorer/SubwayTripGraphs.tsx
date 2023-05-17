@@ -46,7 +46,6 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             <WidgetTitle title="Travel Times" location={location} line={line} both />
             <TravelTimesAggregateWrapper
               query={traveltimes}
-              traveltimes={traveltimes.data?.by_date}
               fromStation={fromStation}
               toStation={toStation}
             />

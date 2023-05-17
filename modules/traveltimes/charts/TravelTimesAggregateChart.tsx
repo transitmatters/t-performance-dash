@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
-import type { AggregateDataResponse, TravelTimesUnit } from '../../../common/types/charts';
+import type { AggregateDataPoint, TravelTimesUnit } from '../../../common/types/charts';
 import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { getLocationDetails } from '../../../common/utils/stations';
 
 interface TravelTimesAggregateChartProps {
-  traveltimes: AggregateDataResponse;
+  traveltimes: AggregateDataPoint[];
   toStation: Station;
   fromStation: Station;
   timeUnit?: TravelTimesUnit;
@@ -20,23 +20,17 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
   toStation,
   fromStation,
   timeUnit,
-  peakTime = true,
 }) => {
   const {
     query: { startDate, endDate },
   } = useDelimitatedRoute();
-
   const timeUnitByDate = timeUnit === 'by_date';
-
-  const traveltimesData = timeUnitByDate
-    ? traveltimes.by_date.filter((datapoint) => datapoint.peak === 'all')
-    : traveltimes.by_time.filter((datapoint) => datapoint.is_peak_day === peakTime);
 
   const chart = useMemo(() => {
     return (
       <AggregateLineChart
         chartId={'travel_times_agg'}
-        data={traveltimesData}
+        data={traveltimes}
         // This is service date when agg by date. dep_time_from_epoch when agg by hour
         pointField={timeUnitByDate ? PointFieldKeys.serviceDate : PointFieldKeys.depTimeFromEpoch}
         timeUnit={timeUnitByDate ? 'day' : 'hour'}
@@ -51,7 +45,7 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
         fname="traveltimes"
       />
     );
-  }, [traveltimesData, timeUnitByDate, startDate, endDate, fromStation, toStation]);
+  }, [traveltimes, timeUnitByDate, startDate, endDate, fromStation, toStation]);
 
   return chart;
 };

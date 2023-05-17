@@ -31,7 +31,7 @@ export const AggregateChartWrapper: React.FC<AggregateChartWrapperProps> = ({
     case 'traveltimes':
       return (
         <TravelTimesAggregateChart
-          traveltimes={query.data}
+          traveltimes={query.data.by_date}
           toStation={toStation}
           fromStation={fromStation}
           timeUnit={timeUnit}

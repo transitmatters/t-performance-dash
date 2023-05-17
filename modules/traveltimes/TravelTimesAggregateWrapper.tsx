@@ -3,35 +3,35 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import { DatapointWidgetPair } from '../../common/components/widgets/DatapointWidgetPair';
 import { DataWidget } from '../../common/components/widgets/internal/DataWidget';
 import { DeltaTimeWidgetValue, TimeWidgetValue } from '../../common/types/basicWidgets';
-import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
-import type { AggregateDataPoint, AggregateDataResponse } from '../../common/types/charts';
+import type { AggregateDataResponse } from '../../common/types/charts';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import type { Station } from '../../common/types/stations';
 import { WidgetDivider } from '../../common/components/widgets/WidgetDivider';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
+import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
 interface TravelTimesAggregateWrapperProps {
   query: UseQueryResult<AggregateDataResponse>;
-  traveltimes: AggregateDataPoint[] | undefined;
   toStation: Station;
   fromStation: Station;
 }
 
 export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperProps> = ({
   query,
-  traveltimes,
   toStation,
   fromStation,
 }) => {
   const lg = !useBreakpoint('lg');
-  const traveltimesData = query.data?.by_date.filter((datapoint) => datapoint.peak === 'all');
+  const dataReady = !query.isError && query.data && toStation && fromStation;
+  if (!dataReady) return <ChartPlaceHolder query={query} />;
+  const traveltimesData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
   return (
     <div className="flex flex-col gap-x-2 gap-y-1 pt-2 lg:flex-row-reverse">
-      <AggregateChartWrapper
-        query={query}
+      <TravelTimesAggregateChart
+        traveltimes={traveltimesData}
         toStation={toStation}
         fromStation={fromStation}
-        type={'traveltimes'}
         timeUnit={'by_date'}
       />
       <DatapointWidgetPair>
@@ -42,7 +42,7 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
           isLarge={!lg}
           widgetValue={
             new TimeWidgetValue(
-              traveltimes ? averageTravelTime(traveltimesData.map((tt) => tt.mean)) : undefined
+              traveltimesData ? averageTravelTime(traveltimesData.map((tt) => tt.mean)) : undefined
             )
           }
         />
