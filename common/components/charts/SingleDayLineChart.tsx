@@ -15,7 +15,6 @@ import 'chartjs-adapter-date-fns';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
-import classNames from 'classnames';
 import type { DataPoint } from '../../types/dataPoints';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { SingleDayLineProps } from '../../../common/types/charts';
@@ -26,6 +25,8 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
 import { Legend as LegendView } from './Legend';
+import { ChartDiv } from './ChartDiv';
+import { ChartBorder } from './ChartBorder';
 
 ChartJS.register(
   CategoryScale,
@@ -93,8 +94,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const { line } = useDelimitatedRoute();
   return (
-    <div className={classNames('relative flex w-full flex-col pr-2')}>
-      <div className="flex h-60 w-full flex-row">
+    <ChartBorder>
+      <ChartDiv>
         <Line
           id={chartId}
           ref={ref}
@@ -227,7 +228,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
             },
           ]}
         />
-      </div>
+      </ChartDiv>
       <div className="flex flex-row items-end gap-4 pl-6 pr-2">
         {showLegend && benchmarkField ? <LegendView /> : <div className="w-full" />}
         {!isHomescreen && date && (
@@ -240,6 +241,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
           />
         )}
       </div>
-    </div>
+    </ChartBorder>
   );
 };
