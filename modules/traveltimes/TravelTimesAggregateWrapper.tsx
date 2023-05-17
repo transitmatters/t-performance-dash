@@ -29,7 +29,7 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
   return (
     <div className="flex flex-col gap-x-2 gap-y-1 pt-2 lg:flex-row-reverse">
       <TravelTimesAggregateChart
-        traveltimes={traveltimesData}
+        traveltimes={query.data}
         toStation={toStation}
         fromStation={fromStation}
         timeUnit={'by_date'}
@@ -40,11 +40,7 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
           layoutKind="no-delta"
           analysis={'over period'}
           isLarge={!lg}
-          widgetValue={
-            new TimeWidgetValue(
-              traveltimesData ? averageTravelTime(traveltimesData.map((tt) => tt.mean)) : undefined
-            )
-          }
+          widgetValue={new TimeWidgetValue(averageTravelTime(traveltimesData.map((tt) => tt.mean)))}
         />
         <WidgetDivider isVertical={false} />
 
@@ -55,8 +51,8 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
           isLarge={!lg}
           widgetValue={
             new DeltaTimeWidgetValue(
-              traveltimesData?.[traveltimesData.length - 1].mean,
-              traveltimesData?.[traveltimesData.length - 1]?.mean - traveltimesData?.[0]?.mean
+              traveltimesData[traveltimesData.length - 1].mean,
+              traveltimesData[traveltimesData.length - 1].mean - traveltimesData[0].mean
             )
           }
         />
