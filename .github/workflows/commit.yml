@@ -1,0 +1,13 @@
+name: commit
+
+on:
+- pull_request_target
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Check if pull request commits are conventional
+        uses: webiny/action-conventional-commits@v1.1.0
