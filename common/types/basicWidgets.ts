@@ -19,7 +19,7 @@ class BaseWidgetValue {
   delta?: number | undefined;
   percentChange?: number | undefined;
 
-  constructor(value: number | undefined, delta: number | undefined) {
+  constructor(value: number | undefined, delta?: number | undefined) {
     this.value = value;
     this.delta = delta;
     this.percentChange =
@@ -30,8 +30,24 @@ class BaseWidgetValue {
 
   getFormattedPercentChange() {
     if (typeof this.percentChange === 'undefined') return '...';
-    const sign = this.percentChange >= 0 ? '+' : '-';
+    const sign = this.percentChange >= 0 ? '+' : '';
     return `${sign}${Math.floor(this.percentChange)}%`;
+  }
+}
+
+export class DeltaTimeWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
+  getUnits() {
+    if (this.delta === undefined) return '...';
+    return getTimeUnit(this.delta);
+  }
+  getFormattedValue() {
+    if (this.delta === undefined) return '...';
+    const formattedValue = getFormattedTimeValue(this.delta);
+    return `${this.delta > 0 ? '+' : '-'}${formattedValue}`;
+  }
+  getFormattedDelta() {
+    new Error('DeltaWidgets should use `getFormattedValue`');
+    return 'invalid';
   }
 }
 
@@ -43,8 +59,8 @@ export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInter
   }
 
   getFormattedValue() {
+    if (this.value === undefined) return '...';
     const formattedValue = getFormattedTimeValue(this.value);
-    if (formattedValue === undefined) return '...';
     return formattedValue;
   }
 
