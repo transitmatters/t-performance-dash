@@ -17,7 +17,7 @@ export const Delta: React.FC<DeltaProps> = ({
   const changingValue = usePercentChange ? widgetValue.percentChange : widgetValue.delta;
   const formattedChangingValue = usePercentChange
     ? widgetValue.getFormattedPercentChange()
-    : widgetValue.getFormattedDelta(true);
+    : widgetValue.getFormattedDelta();
   const increase = changingValue ? changingValue > 0 : false;
   const positiveSentiment =
     (!increase && sentimentDirection === 'negativeOnIncrease') ||

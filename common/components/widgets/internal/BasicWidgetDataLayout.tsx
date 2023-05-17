@@ -24,14 +24,6 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
   sentimentDirection = 'negativeOnIncrease',
   isLarge = true,
 }) => {
-  const getPrimaryValue = () => {
-    const useDelta = layoutKind === 'delta-and-percent-change';
-    if (useDelta) {
-      return widgetValue.getFormattedDelta(false);
-    }
-    return widgetValue.getFormattedValue();
-  };
-
   return (
     <>
       <div className={classNames('relative flex')}>
@@ -47,7 +39,7 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
                 isLarge ? 'text-2xl' : 'text-xl'
               )}
             >
-              {getPrimaryValue()}
+              {widgetValue.getFormattedValue()}
             </p>
             <p
               className={classNames(isLarge ? 'text-base' : 'text-sm', 'text-design-subtitleGrey')}

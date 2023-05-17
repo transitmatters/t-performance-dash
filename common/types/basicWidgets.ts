@@ -10,9 +10,8 @@ export interface WidgetValueInterface {
 
   getUnits: () => string;
   getFormattedValue: () => string;
-  getFormattedDelta: (includeUnits?: boolean) => string;
+  getFormattedDelta: () => string;
   getFormattedPercentChange: () => string;
-  getDeltaUnits?: () => string;
 }
 
 class BaseWidgetValue {
@@ -36,36 +35,47 @@ class BaseWidgetValue {
   }
 }
 
+export class DeltaTimeWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
+  getUnits() {
+    if (this.delta === undefined) return '...';
+    return getTimeUnit(this.delta);
+  }
+  getFormattedValue() {
+    if (this.delta === undefined) return '...';
+    const formattedValue = getFormattedTimeValue(this.delta);
+    return `${this.delta > 0 ? '+' : '-'}${formattedValue}`;
+  }
+  getFormattedDelta() {
+    new Error('DeltaWidgets should use `getFormattedValue`');
+    return 'invalid';
+  }
+}
+
 // This will eventually include the logic of the analysis (past week, since last Weds, etc.)
 export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
     if (this.value === undefined) return '...';
     return getTimeUnit(this.value);
   }
-  getDeltaUnits() {
-    return this.delta ? getTimeUnit(this.delta) : '...';
-  }
 
   getFormattedValue() {
+    if (this.value === undefined) return '...';
     const formattedValue = getFormattedTimeValue(this.value);
-    if (formattedValue === undefined) return '...';
     return formattedValue;
   }
 
-  getFormattedDelta(includeUnits: boolean) {
+  getFormattedDelta() {
     if (typeof this.value === 'undefined' || typeof this.delta === 'undefined') return '...';
     const absValue = Math.abs(this.value);
     const absDelta = Math.abs(this.delta);
     const sign = this.delta >= 0 ? '+' : '-';
     switch (true) {
       case absValue < 100:
-        return `${sign}${absDelta.toFixed(0)}${includeUnits ? ' sec' : ''}`;
+        return `${sign}${absDelta.toFixed(0)} sec`;
       case absValue < 3600:
         return `${sign}${dayjs.duration(absDelta, 'seconds').format('m:ss')}`;
       default:
-        return `${sign}${dayjs.duration(absDelta, 'seconds').as('minutes').toFixed(0)}${
-          includeUnits ? ' min' : ''
-        }`;
+        return `${sign}${dayjs.duration(absDelta, 'seconds').as('minutes').toFixed(0)} min`;
     }
   }
 }

@@ -24,14 +24,6 @@ export const HorizontalDataWidget: React.FC<HorizontalDataWidgetProps> = ({
   sentimentDirection = 'negativeOnIncrease',
   isLarge = true,
 }) => {
-  const getPrimaryValue = () => {
-    const useDelta = layoutKind === 'delta-and-percent-change';
-    if (useDelta) {
-      return widgetValue.getFormattedDelta(false);
-    }
-    return widgetValue.getFormattedValue();
-  };
-
   return (
     <>
       <div className={classNames('relative flex w-full')}>
@@ -48,7 +40,7 @@ export const HorizontalDataWidget: React.FC<HorizontalDataWidgetProps> = ({
                   isLarge ? 'text-2xl' : 'text-xl'
                 )}
               >
-                {getPrimaryValue()}
+                {widgetValue.getFormattedValue()}
               </p>
               <p
                 className={classNames(

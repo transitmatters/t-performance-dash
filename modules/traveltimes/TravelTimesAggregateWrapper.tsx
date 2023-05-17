@@ -2,7 +2,7 @@ import React from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { DatapointWidgetPair } from '../../common/components/widgets/DatapointWidgetPair';
 import { DataWidget } from '../../common/components/widgets/internal/DataWidget';
-import { TimeWidgetValue } from '../../common/types/basicWidgets';
+import { DeltaTimeWidgetValue, TimeWidgetValue } from '../../common/types/basicWidgets';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import type { AggregateDataPoint, AggregateDataResponse } from '../../common/types/charts';
 import { averageTravelTime } from '../../common/utils/traveltimes';
@@ -24,6 +24,7 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
   fromStation,
 }) => {
   const lg = !useBreakpoint('lg');
+  const traveltimesData = query.data?.by_date.filter((datapoint) => datapoint.peak === 'all');
   return (
     <div className="flex flex-col gap-x-2 gap-y-1 pt-2 lg:flex-row-reverse">
       <AggregateChartWrapper
@@ -41,7 +42,7 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
           isLarge={!lg}
           widgetValue={
             new TimeWidgetValue(
-              traveltimes ? averageTravelTime(traveltimes.map((tt) => tt.mean)) : undefined
+              traveltimes ? averageTravelTime(traveltimesData.map((tt) => tt.mean)) : undefined
             )
           }
         />
@@ -53,9 +54,9 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
           layoutKind="delta-and-percent-change"
           isLarge={!lg}
           widgetValue={
-            new TimeWidgetValue(
-              traveltimes?.[traveltimes.length - 1].mean,
-              traveltimes?.[traveltimes.length - 1]?.mean - traveltimes?.[0]?.mean
+            new DeltaTimeWidgetValue(
+              traveltimesData?.[traveltimesData.length - 1].mean,
+              traveltimesData?.[traveltimesData.length - 1]?.mean - traveltimesData?.[0]?.mean
             )
           }
         />
