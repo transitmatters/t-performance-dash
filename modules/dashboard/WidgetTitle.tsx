@@ -45,7 +45,7 @@ export const WidgetTitle: React.FC<WidgetTitle> = ({
         )}
       </div>
       <div className="flex w-full flex-shrink flex-col overflow-hidden md:items-end">
-        {!isMobile && <p className="text-xs italic text-stone-700">{`Date Placeholder`}</p>}
+        {!isMobile && <p className="text-xs italic text-stone-700">{date}</p>}
         {location && line && <LocationTitle location={location} line={line} both={both} />}
       </div>
     </div>
