@@ -1,13 +1,22 @@
 import React from 'react';
-import classNames from 'classnames';
+import { useDelimitatedRoute } from '../../common/utils/router';
+import { getSelectedDates } from '../../common/state/utils/dashboardUtils';
 
 interface WidgetTitle {
   title: string;
 }
 export const WidgetTitle: React.FC<WidgetTitle> = ({ title }) => {
+  const { query } = useDelimitatedRoute();
+  const date = getSelectedDates({
+    startDate: query.startDate,
+    endDate: query.endDate,
+    view: query.view,
+  });
+
   return (
-    <div className="flex w-full flex-row items-center p-2 text-xl">
-      <h3 className={classNames('font-semibold', 'text-gray-800')}>{title}</h3>
+    <div className="flex w-full items-baseline justify-between p-2">
+      <h3 className={'font-semibold text-stone-800'}>{title}</h3>
+      <p className="text-xs italic text-stone-700">{date}</p>
     </div>
   );
 };
