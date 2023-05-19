@@ -106,7 +106,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
               backgroundColor: pattern.draw('diagonal', 'transparent', lineColor, 5),
             },
             {
-              // This null dataset produces the entry in the legend for the baseline annotation. Must be index 2
+              // This null dataset produces the entry in the legend for the baseline annotation.
               label: `Baseline (${PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']})`,
               backgroundColor: CHART_COLORS.ANNOTATIONS,
               data: null,
@@ -159,6 +159,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   yMin: PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'],
                   yMax: PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'],
                   borderColor: CHART_COLORS.ANNOTATIONS,
+                  // corresponds to null dataset index.
                   display: (ctx) => ctx.chart.isDatasetVisible(2),
                   borderWidth: 2,
                 },

@@ -103,7 +103,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
               data: compareToScheduled ? percentOfScheduledData : percentOfBaselineData,
             },
             {
-              // This null dataset produces the entry in the legend for the baseline annotation. Must be index 2
+              // This null dataset produces the entry in the legend for the baseline annotation.
               label: `100%`,
               backgroundColor: CHART_COLORS.ANNOTATIONS,
               data: null,
@@ -160,6 +160,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
                   yMin: 100,
                   yMax: 100,
                   borderColor: CHART_COLORS.ANNOTATIONS,
+                  // corresponds to null dataset index.
                   display: (ctx) => ctx.chart.isDatasetVisible(1),
                   borderWidth: 2,
                 },
