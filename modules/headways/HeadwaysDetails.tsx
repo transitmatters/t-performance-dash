@@ -100,7 +100,11 @@ export function HeadwaysDetails() {
       </WidgetDiv>
       {!aggregate && (
         <WidgetDiv>
-          <WidgetTitle title="Headway Variance" />
+          <WidgetTitle
+            title="Headway Variance"
+            location={getLocationDetails(fromStation, toStation)}
+            line={line}
+          />
 
           <HeadwaysHistogramWrapper
             headways={headways}
