@@ -163,6 +163,16 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({
         ]}
       />
     );
-  }, [dataObject, fromStation, headways.length, line, linePath, lineShort, startDate, toStation]);
+  }, [
+    dataObject,
+    fromStation,
+    headways.length,
+    isMobile,
+    line,
+    linePath,
+    lineShort,
+    startDate,
+    toStation,
+  ]);
   return histogram;
 };

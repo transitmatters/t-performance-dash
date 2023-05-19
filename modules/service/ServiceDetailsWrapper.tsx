@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import { ButtonGroup } from '../../common/components/general/ButtonGroup';
+import { TripsWidgetValue } from '../../common/types/basicWidgets';
 import type { ParamsType } from '../speed/constants/speeds';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
-import { TripsWidgetValue } from '../../common/types/basicWidgets';
 import { getServiceWidgetValues } from './utils/utils';
 import { ServiceGraph } from './ServiceGraph';
 import { PercentageServiceGraph } from './PercentageServiceGraph';
-import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 
 interface ServiceDetailsWrapperProps {
   data: SpeedDataPoint[];
@@ -27,7 +27,7 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
   endDate,
 }) => {
   const { current, delta, average, peak } = getServiceWidgetValues(data, predictedData.counts);
-
+  const [comparison, setComparison] = useState<'Baseline' | 'Scheduled'>('Scheduled');
   return (
     <>
       <WidgetDiv>
@@ -71,7 +71,7 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
         </WidgetDiv>
       </div>
       <WidgetDiv>
-        <WidgetTitle title="Service Delivered" />
+        <WidgetTitle title={`${comparison} Service Delivered`} />
         <div className={classNames('flex h-60 flex-row items-center pr-4')}>
           <PercentageServiceGraph
             config={config}
@@ -79,12 +79,13 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
             startDate={startDate}
             endDate={endDate}
             predictedData={predictedData}
+            comparison={comparison}
           />
         </div>
         <div className={'flex w-full justify-center pt-2'}>
           <ButtonGroup
-            options={Object.entries({ Scheduled: 'Scheduled', Basline: 'Baseline' })}
-            pressFunction={() => {}}
+            options={Object.entries({ Scheduled: 'Scheduled', Baseline: 'Baseline' })}
+            pressFunction={setComparison}
             additionalDivClass="md:w-auto"
             additionalButtonClass="md:w-fit"
           />
