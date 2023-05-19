@@ -5,6 +5,7 @@ import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/type
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
+import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -21,6 +22,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
   aggregate,
   enabled,
 }) => {
+  const [peakTime, setPeakTime] = React.useState<'weekday' | 'weekend'>('weekday');
+
   const { traveltimes, headways, dwells } = useTripExplorerQueries(
     'subway',
     parameters,
@@ -39,6 +42,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               toStation={toStation}
               fromStation={fromStation}
               type={'traveltimes'}
+              timeUnit={'by_date'}
             />
           </WidgetDiv>
           <WidgetDiv>
@@ -56,6 +60,27 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               fromStation={fromStation}
               type={'dwells'}
             />
+          </WidgetDiv>
+          <WidgetDiv className="flex flex-col justify-center">
+            <AggregateChartWrapper
+              query={traveltimes}
+              toStation={toStation}
+              fromStation={fromStation}
+              type={'traveltimes'}
+              timeUnit={'by_time'}
+              peakTime={peakTime === 'weekday' ? true : false}
+            />
+            <div className={'flex w-full justify-center pt-2'}>
+              <ButtonGroup
+                pressFunction={setPeakTime}
+                options={[
+                  ['weekday', 'Weekday'],
+                  ['weekend', 'Weekend/Holiday'],
+                ]}
+                additionalDivClass="md:w-auto"
+                additionalButtonClass="md:w-fit"
+              />
+            </div>
           </WidgetDiv>
         </>
       ) : (

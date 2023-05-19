@@ -1,10 +1,10 @@
-import { useRouter } from 'next/router';
 import React from 'react';
 import classNames from 'classnames';
 import { Tab } from '@headlessui/react';
+import Link from 'next/link';
 import { lineColorBackground, lineColorDarkBackground } from '../../common/styles/general';
 import { getLineSelectionItemHref, useDelimitatedRoute } from '../../common/utils/router';
-import type { Line, LineMetadata } from '../../common/types/lines';
+import type { LineMetadata } from '../../common/types/lines';
 
 interface LineSelectionProps {
   lineItems: LineMetadata[];
@@ -12,10 +12,8 @@ interface LineSelectionProps {
 }
 
 export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems, setSidebarOpen }) => {
-  const router = useRouter();
   const route = useDelimitatedRoute();
-  const onChange = (key: Line) => {
-    router.push(getLineSelectionItemHref(key, route));
+  const onChange = () => {
     setSidebarOpen && setSidebarOpen(false);
   };
 
@@ -24,15 +22,16 @@ export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems, setSide
       vertical
       manual
       selectedIndex={lineItems.findIndex((lineItem) => lineItem.key === route.line)}
-      onChange={(index) => onChange(lineItems[index].key)}
+      onChange={onChange}
     >
-      <Tab.List className=" mx-1 flex flex-col gap-y-1">
+      <Tab.List className="flex flex-col gap-y-1">
         {lineItems.map((lineItem) => {
           return (
             <Tab key={lineItem.key}>
               {({ selected }) => (
-                <div
-                  onClick={() => onChange(lineItem.key)}
+                <Link
+                  href={getLineSelectionItemHref(lineItem.key, route)}
+                  onClick={onChange}
                   key={lineItem.key}
                   className={classNames(
                     'space-between flex w-full cursor-pointer select-none items-center rounded-md bg-opacity-0 py-1 pl-2 text-stone-200  hover:bg-opacity-80',
@@ -54,7 +53,7 @@ export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems, setSide
                   >
                     {lineItem.name}
                   </p>
-                </div>
+                </Link>
               )}
             </Tab>
           );

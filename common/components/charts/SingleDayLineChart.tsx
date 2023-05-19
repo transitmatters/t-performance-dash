@@ -24,6 +24,7 @@ import { useDelimitatedRoute } from '../../utils/router';
 import { DownloadButton } from '../general/DownloadButton';
 import { writeError } from '../../utils/chartError';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { watermarkLayout } from '../../constants/charts';
 import { drawTitle } from './Title';
 import { Legend as LegendView } from './Legend';
 
@@ -144,18 +145,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               },
             },
             // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: {
-              image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
-              x: 10,
-              y: 10,
-              opacity: 0.2,
-              width: isMobile ? 120 : 160,
-              height: isMobile ? 11.25 : 15,
-              alignToChartArea: true,
-              alignX: 'right',
-              alignY: 'top',
-              position: 'back',
-            },
+            watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
                 mode: 'index',

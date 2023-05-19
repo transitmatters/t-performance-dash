@@ -10,7 +10,7 @@ export const switchToSingleDay = (router: NextRouter, dashboardConfig: Dashboard
   router.query.queryType = 'single';
   router.query.startDate = router.query.endDate;
   delete router.query.endDate;
-  router.push(router);
+  router.push(router, undefined, { shallow: true });
   return;
 };
 
@@ -27,7 +27,7 @@ export const switchToRange = (router: NextRouter, dashboardConfig: DashboardConf
 export const returnToPreviousRange = (router: NextRouter, tripConfig: TripsSectionParams) => {
   router.query.endDate = tripConfig.endDate;
   router.query.startDate = tripConfig.startDate;
-  router.push({ pathname: router.pathname, query: router.query });
+  router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
 };
 
 export const createNewRange = (router: NextRouter) => {
@@ -40,5 +40,5 @@ export const createNewRange = (router: NextRouter) => {
     router.query.endDate = TODAY_STRING;
   }
   router.query.queryType = 'range';
-  router.push(router);
+  router.push(router, undefined, { shallow: true });
 };

@@ -1,8 +1,10 @@
 import classNames from 'classnames';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useDelimitatedRoute, useHandlePageNavigation } from '../../common/utils/router';
+import Link from 'next/link';
+import { getHref, useDelimitatedRoute, useHandlePageNavigation } from '../../common/utils/router';
 import type { PageMetadata } from '../../common/constants/pages';
+import { useDashboardConfig } from '../../common/state/dashboardConfig';
 
 interface SidebarTabs {
   tabs: PageMetadata[];
@@ -10,9 +12,9 @@ interface SidebarTabs {
 }
 
 export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => {
-  const { line, page } = useDelimitatedRoute();
-
+  const { line, page, query, linePath } = useDelimitatedRoute();
   const handlePageNavigation = useHandlePageNavigation();
+  const dashboardConfig = useDashboardConfig();
 
   const handleChange = (enabled: boolean, tab: PageMetadata) => {
     if (!enabled) return null;
@@ -26,9 +28,11 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => 
         {tabs.map((tab: PageMetadata) => {
           const enabled = line ? tab.lines.includes(line) : true;
           const selected = page === tab.key;
+          const href = getHref(dashboardConfig, tab, page, query, linePath);
           return (
             <li key={tab.key}>
-              <a
+              <Link
+                href={href}
                 tabIndex={enabled ? 0 : undefined}
                 onKeyUp={(e) => {
                   if (e.key === 'enter' || e.key === ' ') handleChange(enabled, tab);
@@ -40,7 +44,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => 
                     : enabled && 'text-stone-300 hover:bg-stone-800 hover:text-white',
                   'group flex select-none items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
                   enabled ? 'cursor-pointer' : 'cursor-default  text-stone-600',
-                  tab.sub && 'ml-4 text-xs'
+                  tab.sub && 'ml-2 text-xs'
                 )}
               >
                 <FontAwesomeIcon
@@ -54,7 +58,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => 
                   )}
                 />
                 <span className="truncate">{tab.name}</span>
-              </a>
+              </Link>
             </li>
           );
         })}
