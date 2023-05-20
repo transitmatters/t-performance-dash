@@ -9,9 +9,9 @@ export const Legend: React.FC = () => {
     >
       <div className="col-span-2 flex flex-row items-baseline gap-2 pb-1 lg:pb-0">
         <p>
-          Compare to (
-          <span className="top-[1px] inline-block h-2.5 w-2.5 items-center border-t-2 border-[#bbb] bg-[#ddd]"></span>{' '}
-          MBTA benchmark):
+          Compare to{' '}
+          <span className="top-[1px] inline-block h-2.5 w-2.5 items-center border-t-2 border-[#bbb] bg-[#ddd] shadow-sm"></span>{' '}
+          MBTA benchmark:
         </p>
       </div>
       <p>

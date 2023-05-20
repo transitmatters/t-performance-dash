@@ -14,7 +14,6 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
-import pattern from 'patternomaly';
 import Annotation from 'chartjs-plugin-annotation';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
@@ -22,11 +21,10 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
-import { hexWithAlpha } from '../../common/utils/general';
-import type { ParamsType } from '../speed/constants/speeds';
 import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/service';
+import { hexWithAlpha } from '../../common/utils/general';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../common/constants/charts';
+import type { ParamsType } from '../speed/constants/speeds';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 ChartJS.register(
@@ -43,21 +41,23 @@ ChartJS.register(
   ChartjsPluginWatermark
 );
 
-interface ServiceGraphProps {
+interface PercentageServiceGraphProps {
   data: SpeedDataPoint[];
   predictedData: TripCounts;
   config: ParamsType;
   startDate: string;
   endDate: string;
+  comparison: 'Baseline' | 'Scheduled';
   showTitle?: boolean;
 }
 
-export const ServiceGraph: React.FC<ServiceGraphProps> = ({
+export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
   data,
   predictedData,
   config,
   startDate,
   endDate,
+  comparison,
   showTitle = false,
 }) => {
   const { line } = useDelimitatedRoute();
@@ -68,8 +68,18 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
 
   const chart = useMemo(() => {
     const labels = data.map((point) => point.date);
+    const percentOfScheduledData = data.map((datapoint, index) =>
+      datapoint.value ? (100 * datapoint.count) / predictedData.counts[index] : Number.NaN
+    );
+    const percentOfBaselineData = data.map((datapoint) =>
+      datapoint.value
+        ? (100 * datapoint.count) / 2 / PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
+        : Number.NaN
+    );
+
     const lineColor = LINE_COLORS[line ?? 'default'];
     const shuttlingBlocks = getShuttlingBlockAnnotations(data);
+    const compareToScheduled = comparison === 'Scheduled';
     return (
       <Line
         id={'Service'}
@@ -80,9 +90,8 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
           labels,
           datasets: [
             {
-              label: `Actual trips`,
+              label: `% of ${comparison}`,
               borderColor: lineColor,
-              backgroundColor: hexWithAlpha(lineColor, 0.8),
               pointRadius: 8,
               pointBackgroundColor: 'transparent',
               pointBorderWidth: 0,
@@ -90,24 +99,12 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
               fill: true,
               pointHoverRadius: 3,
               pointHoverBackgroundColor: lineColor,
-              data: data.map((datapoint) => (datapoint.value ? datapoint.count / 2 : Number.NaN)),
-            },
-            {
-              label: `MBTA scheduled trips`,
-              stepped: true,
-              fill: true,
-              pointBackgroundColor: 'transparent',
-              pointBorderWidth: 0,
-              borderColor: lineColor,
-              spanGaps: false,
-              data: predictedData.counts.map((count, index) =>
-                data[index]?.value > 0 && count ? count / 2 : Number.NaN
-              ),
-              backgroundColor: pattern.draw('diagonal', 'transparent', lineColor, 5),
+              backgroundColor: hexWithAlpha(lineColor, 0.8),
+              data: compareToScheduled ? percentOfScheduledData : percentOfBaselineData,
             },
             {
               // This null dataset produces the entry in the legend for the baseline annotation.
-              label: `Baseline (${PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']})`,
+              label: `100%`,
               backgroundColor: CHART_COLORS.ANNOTATIONS,
               data: null,
             },
@@ -125,20 +122,23 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
             intersect: false,
           },
           // @ts-expect-error The watermark plugin doesn't have typescript support
-          watermark: watermarkLayout(isMobile),
+          watermark: {
+            image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
+            x: 10,
+            y: 10,
+            opacity: 0.2,
+            width: isMobile ? 120 : 160,
+            height: isMobile ? 11.25 : 15,
+            alignToChartArea: true,
+            alignX: 'right',
+            alignY: 'top',
+            position: 'back',
+          },
           plugins: {
             tooltip: {
               mode: 'index',
               position: 'nearest',
-              callbacks: {
-                ...callbacks,
-                label: (context) => {
-                  return `${context.parsed.y} (${(
-                    (100 * context.parsed.y) /
-                    PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
-                  ).toFixed(1)}% of baseline)`;
-                },
-              },
+              callbacks: callbacks,
             },
             legend: {
               position: 'bottom',
@@ -151,16 +151,17 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
               display: showTitle,
               text: '',
             },
+
             annotation: {
               // Add your annotations here
               annotations: [
                 {
                   type: 'line',
-                  yMin: PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'],
-                  yMax: PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'],
+                  yMin: 100,
+                  yMax: 100,
                   borderColor: CHART_COLORS.ANNOTATIONS,
                   // corresponds to null dataset index.
-                  display: (ctx) => ctx.chart.isDatasetVisible(2),
+                  display: (ctx) => ctx.chart.isDatasetVisible(1),
                   borderWidth: 2,
                 },
                 ...shuttlingBlocks,
@@ -173,10 +174,11 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
               display: true,
               ticks: {
                 color: COLORS.design.subtitleGrey,
+                callback: (value) => `${value}%`,
               },
               title: {
                 display: true,
-                text: 'trips',
+                text: 'Percentage',
                 color: COLORS.design.subtitleGrey,
               },
             },
@@ -235,6 +237,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
   }, [
     data,
     callbacks,
+    comparison,
     endDate,
     isMobile,
     line,
