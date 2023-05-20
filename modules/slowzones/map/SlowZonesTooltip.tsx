@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { getParentStationForStopId } from '../../../common/utils/stations';
 
 import { BasicWidgetDataLayout } from '../../../common/components/widgets/internal/BasicWidgetDataLayout';
-import { TimeWidgetValue } from '../../../common/types/basicWidgets';
+import { DeltaTimeWidgetValue } from '../../../common/types/basicWidgets';
 import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
 import { prettyDate } from '../../../common/utils/date';
 
@@ -97,7 +97,9 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
       return (
         <div className={styles.direction}>
           <BasicWidgetDataLayout
-            widgetValue={new TimeWidgetValue(slowZone.delay + slowZone.baseline, slowZone.delay)}
+            widgetValue={
+              new DeltaTimeWidgetValue(slowZone.delay + slowZone.baseline, slowZone.delay)
+            }
             key={`${slowZone.fr_id}${slowZone.to_id}`}
             title={
               <div className={styles.directionTitle}>

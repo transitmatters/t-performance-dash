@@ -60,8 +60,7 @@ export const getTimeUnit = (value: number) => {
   }
 };
 
-export const getFormattedTimeValue = (value: number | undefined) => {
-  if (value === undefined) return undefined;
+export const getFormattedTimeValue = (value: number) => {
   const absValue = Math.abs(value);
   switch (true) {
     case absValue < 100:
