@@ -49,11 +49,7 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
         fname="traveltimes"
       />
     );
-<<<<<<< HEAD
   }, [traveltimes, timeUnit, startDate, endDate, fromStation, toStation, peakTime]);
-=======
-  }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime]);
->>>>>>> v4/titles
 
   return chart;
 };
