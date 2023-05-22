@@ -28,7 +28,7 @@ export const HorizontalDataWidget: React.FC<HorizontalDataWidgetProps> = ({
     <>
       <div className={classNames('relative flex w-full')}>
         {widgetValue.value === undefined && <LoadingSpinner isWidget />}
-        <div className={classNames('flex w-full flex-row items-center justify-between p-1')}>
+        <div className={classNames('flex w-full flex-row items-center justify-between px-10 py-1')}>
           <p className={classNames('text-base text-gray-500', isLarge ? 'text-base' : 'text-sm')}>
             {title}
           </p>

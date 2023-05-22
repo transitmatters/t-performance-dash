@@ -25,7 +25,7 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
   isLarge = true,
 }) => {
   return (
-    <>
+    <div className="mb-2 rounded-md border border-stone-100 shadow-sm">
       <div className={classNames('relative flex')}>
         {widgetValue.value === undefined && <LoadingSpinner isWidget />}
         <div className={classNames('flex flex-col items-start p-2')}>
@@ -61,6 +61,6 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };

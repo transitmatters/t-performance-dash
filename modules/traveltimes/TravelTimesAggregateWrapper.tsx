@@ -1,12 +1,12 @@
 import React from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
-import { DatapointWidgetPair } from '../../common/components/widgets/DatapointWidgetPair';
+import dayjs from 'dayjs';
+import { WidgetCarousel } from '../../common/components/widgets/WidgetCarousel';
 import { DataWidget } from '../../common/components/widgets/internal/DataWidget';
 import { DeltaTimeWidgetValue, TimeWidgetValue } from '../../common/types/basicWidgets';
 import type { AggregateDataResponse } from '../../common/types/charts';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import type { Station } from '../../common/types/stations';
-import { WidgetDivider } from '../../common/components/widgets/WidgetDivider';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
@@ -26,6 +26,11 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   const traveltimesData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
+  const fastestTrip = traveltimesData.reduce(
+    (currentFastest, datapoint) =>
+      datapoint.min < currentFastest.min ? datapoint : currentFastest,
+    traveltimesData[0]
+  );
   return (
     <div className="flex flex-col gap-x-2 gap-y-1 pt-2 lg:flex-row-reverse">
       <TravelTimesAggregateChart
@@ -34,7 +39,7 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
         fromStation={fromStation}
         timeUnit={'by_date'}
       />
-      <DatapointWidgetPair>
+      <WidgetCarousel>
         <DataWidget
           title="Average"
           layoutKind="no-delta"
@@ -42,8 +47,6 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
           isLarge={!lg}
           widgetValue={new TimeWidgetValue(averageTravelTime(traveltimesData.map((tt) => tt.mean)))}
         />
-        <WidgetDivider isVertical={false} />
-
         <DataWidget
           title="Delta"
           analysis={''}
@@ -56,7 +59,14 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
             )
           }
         />
-      </DatapointWidgetPair>
+        <DataWidget
+          title="Fastest trip"
+          layoutKind="no-delta"
+          analysis={`${dayjs(fastestTrip.service_date).format('MM/DD/YY')}`}
+          isLarge={!lg}
+          widgetValue={new TimeWidgetValue(fastestTrip.min)}
+        />
+      </WidgetCarousel>
     </div>
   );
 };
