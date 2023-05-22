@@ -8,7 +8,7 @@ interface WidgetCarouselProps {
 
 export const WidgetCarousel: React.FC<WidgetCarouselProps> = ({ children }) => {
   return (
-    <div className="flex h-8 w-full justify-start px-1 lg:h-32 lg:w-40">
+    <div className="flex h-8 w-full justify-start lg:h-32 lg:w-40">
       <Carousel
         slide={false}
         theme={{

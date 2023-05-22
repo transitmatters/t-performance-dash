@@ -60,7 +60,7 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
           }
         />
         <DataWidget
-          title="Fastest trip"
+          title="Fastest Trip"
           layoutKind="no-delta"
           analysis={`${dayjs(fastestTrip.service_date).format('MM/DD/YY')}`}
           isLarge={!lg}
