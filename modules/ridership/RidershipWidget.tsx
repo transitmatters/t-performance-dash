@@ -56,7 +56,7 @@ export const RidershipWidget: React.FC = () => {
     <WidgetDiv>
       <HomescreenWidgetTitle title="Ridership & Service Levels" tab="ridership" />
 
-      <div className={classNames('flex w-full flex-row')}>
+      <div className={classNames('flex w-full flex-row gap-2')}>
         <BasicWidgetDataLayout
           title="Pre-COVID Ridership"
           widgetValue={
