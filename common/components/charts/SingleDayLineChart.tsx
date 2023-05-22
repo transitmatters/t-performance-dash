@@ -137,11 +137,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
           options={{
             responsive: true,
             maintainAspectRatio: false,
-            layout: {
-              padding: {
-                top: 25,
-              },
-            },
             // @ts-expect-error The watermark plugin doesn't have typescript support
             watermark: watermarkLayout(isMobile),
             plugins: {

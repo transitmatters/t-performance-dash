@@ -88,7 +88,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
         maintainAspectRatio: false,
         layout: {
           padding: {
-            top: 25,
+            top: showTitle ? 25 : 0,
           },
         },
         interaction: {
