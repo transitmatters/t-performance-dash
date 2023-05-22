@@ -155,7 +155,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
             },
             responsive: true,
             maintainAspectRatio: false,
-
             // Make the tooltip display all 3 datapoints for each x axis entry.
             interaction: {
               mode: 'index',

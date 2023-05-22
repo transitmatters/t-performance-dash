@@ -68,7 +68,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
         responsive: true,
         layout: {
           padding: {
-            top: 25,
+            top: showTitle ? 25 : 0,
           },
         },
         scales: {

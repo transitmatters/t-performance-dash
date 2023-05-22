@@ -89,11 +89,6 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
                   },
                 },
               },
-              layout: {
-                padding: {
-                  top: 25,
-                },
-              },
               // @ts-expect-error The watermark plugin doesn't have typescript support
               watermark: watermarkLayout(isMobile),
               plugins: {

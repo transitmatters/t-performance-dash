@@ -29,6 +29,12 @@ export const WidgetTitle: React.FC<WidgetTitle> = ({
     view: query.view,
   });
   const isMobile = !useBreakpoint('md');
+  const { query } = useDelimitatedRoute();
+  const date = getSelectedDates({
+    startDate: query.startDate,
+    endDate: query.endDate,
+    view: query.view,
+  });
   return (
     <div className="flex w-full flex-col items-baseline justify-between gap-x-4 text-xl md:flex-row">
       <div className="flex w-full flex-col md:w-auto ">
