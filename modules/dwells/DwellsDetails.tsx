@@ -3,7 +3,11 @@ import React from 'react';
 import dayjs from 'dayjs';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
-import { getParentStationForStopId, stopIdsForStations } from '../../common/utils/stations';
+import {
+  getParentStationForStopId,
+  getLocationDetails,
+  stopIdsForStations,
+} from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
@@ -16,9 +20,11 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
 
 export const DwellsDetails: React.FC = () => {
   const {
+    line,
     query: { startDate, endDate, to, from },
   } = useDelimitatedRoute();
 
@@ -63,6 +69,13 @@ export const DwellsDetails: React.FC = () => {
         />
       </BasicDataWidgetPair>
       <WidgetDiv>
+        <WidgetTitle
+          title="Dwells"
+          subtitle="Time between trains"
+          location={getLocationDetails(fromStation, toStation)}
+          line={line}
+          both={false}
+        />
         {aggregate ? (
           <AggregateChartWrapper
             query={dwellsAggregate}

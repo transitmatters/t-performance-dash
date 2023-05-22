@@ -22,6 +22,7 @@ interface TotalSlowTimeProps {
   endDateUTC: dayjs.Dayjs;
   lineShort: LineShort;
   line: TrainLine;
+  showTitle: boolean;
 }
 Chart.register(...registerables, ChartjsPluginWatermark);
 
@@ -31,6 +32,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
   endDateUTC,
   lineShort,
   line,
+  showTitle,
 }) => {
   const ref = useRef();
   const isMobile = !useBreakpoint('md');
@@ -66,7 +68,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
         responsive: true,
         layout: {
           padding: {
-            top: 25,
+            top: showTitle ? 25 : 0,
           },
         },
         scales: {
@@ -112,7 +114,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
           },
           title: {
             // empty title to set font and leave room for drawTitle fn
-            display: true,
+            display: showTitle,
             text: '',
           },
           legend: {
@@ -124,7 +126,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
         {
           id: 'customTitle',
           afterDraw: (chart) => {
-            drawSimpleTitle('Total Slow Time', chart);
+            if (showTitle) drawSimpleTitle(`Total Slow Time`, chart);
           },
         },
       ]}

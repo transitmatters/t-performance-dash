@@ -4,7 +4,11 @@ import React from 'react';
 import dayjs from 'dayjs';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
-import { getParentStationForStopId, stopIdsForStations } from '../../common/utils/stations';
+import {
+  getLocationDetails,
+  getParentStationForStopId,
+  stopIdsForStations,
+} from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { averageTravelTime } from '../../common/utils/traveltimes';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
@@ -20,15 +24,18 @@ import { SingleChartWrapper } from '../../common/components/charts/SingleChartWr
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
 
 export function TravelTimesDetails() {
   const {
+    line,
     query: { startDate, endDate, to, from },
   } = useDelimitatedRoute();
 
   const fromStation = from ? getParentStationForStopId(from) : undefined;
   const toStation = to ? getParentStationForStopId(to) : undefined;
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
+  const location = getLocationDetails(fromStation, toStation);
 
   const aggregate = Boolean(startDate && endDate);
   const enabled = Boolean(fromStopIds && toStopIds && startDate);
@@ -70,6 +77,7 @@ export function TravelTimesDetails() {
         />
       </BasicDataWidgetPair>
       <WidgetDiv>
+        <WidgetTitle title="Travel Times" location={location} line={line} both />
         {aggregate ? (
           <AggregateChartWrapper
             query={travelTimesAggregate}
@@ -89,6 +97,7 @@ export function TravelTimesDetails() {
       </WidgetDiv>
       {aggregate && (
         <WidgetDiv className="flex flex-col justify-center">
+          <WidgetTitle title="Travel Times By Hour" location={location} line={line} both />
           <AggregateChartWrapper
             query={travelTimesAggregate}
             toStation={toStation}

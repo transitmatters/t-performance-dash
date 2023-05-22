@@ -4,7 +4,11 @@ import React from 'react';
 import dayjs from 'dayjs';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
-import { getParentStationForStopId, stopIdsForStations } from '../../common/utils/stations';
+import {
+  getLocationDetails,
+  getParentStationForStopId,
+  stopIdsForStations,
+} from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
 import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
@@ -19,10 +23,12 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { HeadwaysHistogramWrapper } from './charts/HeadwaysHistogramWrapper';
 
 export function HeadwaysDetails() {
   const {
+    line,
     query: { startDate, endDate, to, from },
   } = useDelimitatedRoute();
 
@@ -53,20 +59,29 @@ export function HeadwaysDetails() {
       <BasicDataWidgetPair>
         <BasicDataWidgetItem
           title="Average Headway"
+          layoutKind="no-delta"
           widgetValue={
-            new TimeWidgetValue(headwaysData ? averageHeadway(headwaysData) : undefined, 1)
+            new TimeWidgetValue(headwaysData ? averageHeadway(headwaysData) : undefined, undefined)
           }
           analysis={`from last ${dayjs().format('ddd')}.`}
         />
         <BasicDataWidgetItem
           title="Longest Headway"
+          layoutKind="no-delta"
           widgetValue={
-            new TimeWidgetValue(headwaysData ? longestHeadway(headwaysData) : undefined, 1)
+            new TimeWidgetValue(headwaysData ? longestHeadway(headwaysData) : undefined, undefined)
           }
           analysis={`from last ${dayjs().format('ddd')}.`}
         />
       </BasicDataWidgetPair>
       <WidgetDiv>
+        <WidgetTitle
+          title="Headways"
+          subtitle="Time between trains"
+          location={getLocationDetails(fromStation, toStation)}
+          line={line}
+        />
+
         {aggregate ? (
           <AggregateChartWrapper
             query={headwaysAggregate}
@@ -84,19 +99,19 @@ export function HeadwaysDetails() {
         )}
       </WidgetDiv>
       {!aggregate && (
-        <>
-          <div className="flex w-full flex-row items-center justify-between text-lg">
-            <h3>Headway Variance</h3>
-          </div>
+        <WidgetDiv>
+          <WidgetTitle
+            title="Headway Variance"
+            location={getLocationDetails(fromStation, toStation)}
+            line={line}
+          />
 
-          <WidgetDiv>
-            <HeadwaysHistogramWrapper
-              headways={headways}
-              fromStation={fromStation}
-              toStation={toStation}
-            />
-          </WidgetDiv>
-        </>
+          <HeadwaysHistogramWrapper
+            headways={headways}
+            fromStation={fromStation}
+            toStation={toStation}
+          />
+        </WidgetDiv>
       )}
       <TerminusNotice toStation={toStation} fromStation={fromStation} />
     </PageWrapper>

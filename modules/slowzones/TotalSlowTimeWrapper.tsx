@@ -15,6 +15,7 @@ interface TotalSlowTimeWrapperProps {
   endDateUTC: dayjs.Dayjs;
   line: Line;
   lineShort: LineShort;
+  showTitle?: boolean;
 }
 
 export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
@@ -23,6 +24,7 @@ export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
   endDateUTC,
   line,
   lineShort,
+  showTitle = false,
 }) => {
   const filteredDelayTotals = useFilteredDelayTotals(data, startDateUTC, endDateUTC);
   const delayDelta = getSlowZoneDelayDelta(filteredDelayTotals, lineShort);
@@ -47,6 +49,7 @@ export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
           endDateUTC={endDateUTC}
           line={line}
           lineShort={lineShort}
+          showTitle={showTitle}
         />
       </div>
     </>
