@@ -16,7 +16,7 @@ export const Legend: React.FC = () => {
       </div>
       <p>
         <span className="mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#57945B] bg-[#64b96a]"></span>
-        {'Below 125%'}
+        {'On time'}
       </p>
       <p>
         <span className="mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#D9D31E] bg-[#f5ed00]"></span>

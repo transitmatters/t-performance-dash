@@ -43,11 +43,11 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
   const histogram = useMemo(() => {
     return (
       <ChartBorder>
-        <ChartDiv>
+        <ChartDiv isMobile={isMobile}>
           <Bar
             id={`headways-histogram-${linePath}`}
             ref={ref}
-            height={250}
+            height={isMobile ? 200 : 240}
             redraw={true}
             data={{
               datasets: [

@@ -81,7 +81,13 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             />
           </WidgetDiv>
           <WidgetDiv className="flex flex-col justify-center">
-            <WidgetTitle title="Travel Times By Hour" location={location} line={line} both />
+            <WidgetTitle
+              title="Travel Times"
+              subtitle="By Hour"
+              location={location}
+              line={line}
+              both
+            />
             <AggregateChartWrapper
               query={traveltimes}
               toStation={toStation}

@@ -81,6 +81,15 @@ export const lineColorText: DefaultStyleMap = {
   DEFAULT: `text-stone-800`,
 };
 
+export const lineColorLightText: DefaultStyleMap = {
+  'line-red': `text-mbta-lightRed`,
+  'line-orange': `text-mbta-lightOrange`,
+  'line-green': `text-mbta-lightGreen`,
+  'line-blue': `text-mbta-lightBlue`,
+  'line-bus': `text-mbta-lightBus`,
+  DEFAULT: `text-stone-900`,
+};
+
 export const lineColorRing: DefaultStyleMap = {
   'line-red': `ring-mbta-red`,
   'line-orange': `ring-mbta-orange`,

@@ -51,10 +51,6 @@ export function TravelTimesDetails() {
   const travelTimes = useTravelTimesSingleDayData(parameters, !aggregate && enabled);
   const travelTimesAggregate = useTravelTimesAggregateData(parameters, aggregate && enabled);
 
-  const travelTimeValues = aggregate
-    ? travelTimesAggregate?.data?.by_date?.map((tt) => tt.mean)
-    : travelTimes?.data?.map((tt) => tt.travel_time_sec);
-
   const [peakTime, setPeakTime] = React.useState<'weekday' | 'weekend'>('weekday');
 
   return (
@@ -80,7 +76,13 @@ export function TravelTimesDetails() {
       </WidgetDiv>
       {aggregate && (
         <WidgetDiv className="flex flex-col justify-center">
-          <WidgetTitle title="Travel Times By Hour" location={location} line={line} both />
+          <WidgetTitle
+            title="Travel Times"
+            subtitle="By Hour"
+            location={location}
+            line={line}
+            both
+          />
           <AggregateChartWrapper
             query={travelTimesAggregate}
             toStation={toStation}

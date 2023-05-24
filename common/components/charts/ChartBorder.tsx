@@ -6,7 +6,7 @@ interface ChartBorderProps {
 
 export const ChartBorder: React.FC<ChartBorderProps> = ({ children }) => {
   return (
-    <div className="relative flex w-full flex-col rounded-md border border-stone-100 bg-white p-2 shadow-sm">
+    <div className="relative flex w-full flex-col rounded-md border-stone-100 bg-white lg:border lg:p-2 lg:shadow-sm">
       {children}
     </div>
   );

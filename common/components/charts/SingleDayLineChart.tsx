@@ -95,11 +95,11 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const { line } = useDelimitatedRoute();
   return (
     <ChartBorder>
-      <ChartDiv>
+      <ChartDiv isMobile={isMobile}>
         <Line
           id={chartId}
           ref={ref}
-          height={250}
+          height={isMobile ? 200 : 240}
           redraw={true}
           data={{
             labels,

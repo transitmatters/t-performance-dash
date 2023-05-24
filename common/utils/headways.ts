@@ -31,3 +31,14 @@ export const longestHeadway = (headways: SingleDayDataPoint[] | AggregateDataPoi
     return 0;
   }
 };
+
+export const longestAggregateHeadway = (headways: AggregateDataPoint[]) => {
+  return headways.reduce(
+    (current, datapoint) => (datapoint.min < current.min ? datapoint : current),
+    headways[0]
+  );
+};
+
+export const getHeadwaysAggregateWidgetData = (headways: AggregateDataPoint[]) => {
+  return { average: averageHeadway(headways), max: longestAggregateHeadway(headways) };
+};

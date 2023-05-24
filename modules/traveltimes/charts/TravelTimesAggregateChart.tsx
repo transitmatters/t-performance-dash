@@ -28,6 +28,7 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
 
   const chart = useMemo(() => {
     const timeUnitByDate = timeUnit === 'by_date';
+
     const traveltimesData = timeUnitByDate
       ? traveltimes.by_date.filter((datapoint) => datapoint.peak === 'all')
       : traveltimes.by_time.filter((datapoint) => datapoint.is_peak_day === peakTime);
@@ -49,7 +50,7 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
         fname="traveltimes"
       />
     );
-  }, [traveltimes, timeUnit, startDate, endDate, fromStation, toStation, peakTime]);
+  }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime]);
 
   return chart;
 };

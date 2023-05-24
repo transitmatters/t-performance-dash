@@ -75,11 +75,11 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
 
   return (
     <ChartBorder>
-      <ChartDiv>
+      <ChartDiv isMobile={isMobile}>
         <Line
           id={chartId}
           ref={ref}
-          height={240}
+          height={isMobile ? 200 : 240}
           redraw={true}
           data={{
             labels,
