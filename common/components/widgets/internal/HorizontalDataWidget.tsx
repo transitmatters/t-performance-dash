@@ -17,7 +17,6 @@ export type HorizontalDataWidgetProps = {
 };
 
 export const HorizontalDataWidget: React.FC<HorizontalDataWidgetProps> = ({
-  title,
   analysis: analysis,
   widgetValue,
   layoutKind = 'total-and-delta',
@@ -29,13 +28,10 @@ export const HorizontalDataWidget: React.FC<HorizontalDataWidgetProps> = ({
       {widgetValue.value === undefined && <LoadingSpinner isWidget />}
       <div
         className={classNames(
-          'mx-7 flex w-full flex-row items-baseline justify-between rounded-lg border border-stone-100 px-2 py-1'
+          'flex flex-row items-baseline justify-between rounded-lg border border-stone-100 px-2 py-1'
         )}
       >
-        <p className={classNames('text-base text-gray-500', isLarge ? 'text-base' : 'text-sm')}>
-          {title}
-        </p>
-        <div className="flex w-40 flex-row items-baseline justify-end gap-4">
+        <div className="flex flex-row items-baseline justify-end gap-4">
           <div className="flex flex-row items-baseline gap-x-1">
             <p
               className={classNames(

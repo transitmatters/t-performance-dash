@@ -32,7 +32,7 @@ export const DataWidget: React.FC<DataWidgetProps> = ({
         widgetValue={widgetValue}
         sentimentDirection={sentimentDirection}
         layoutKind={layoutKind}
-        isLarge={isLarge}
+        isLarge={true}
       />
     );
   return (
@@ -42,7 +42,7 @@ export const DataWidget: React.FC<DataWidgetProps> = ({
       widgetValue={widgetValue}
       sentimentDirection={sentimentDirection}
       layoutKind={layoutKind}
-      isLarge={isLarge}
+      isLarge={true}
     />
   );
 };

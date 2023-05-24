@@ -28,26 +28,26 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
   const traveltimesData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
   const { average, fastest, deltaWidgetValue } = getTravelTimesAggregateWidgetData(traveltimesData);
   return (
-    <div className="flex flex-col gap-x-2 gap-y-2 pt-2 lg:flex-row">
+    <div className="flex flex-col gap-x-2 gap-y-2 pt-2 ">
       <WidgetCarousel>
         <DataWidget
-          title="Average"
+          title=""
           layoutKind="no-delta"
-          analysis={'over period'}
+          analysis={'average'}
           isLarge={!lg}
           widgetValue={new TimeWidgetValue(average)}
         />
         <DataWidget
-          title="Delta"
-          analysis={''}
+          title=""
+          analysis={'over period'}
           layoutKind="delta-and-percent-change"
           isLarge={!lg}
           widgetValue={deltaWidgetValue}
         />
         <DataWidget
-          title="Fastest Trip"
+          title=""
           layoutKind="no-delta"
-          analysis={`on ${dayjs(fastest.service_date).format('MM/DD/YY')}`}
+          analysis={`fastest trip (${dayjs(fastest.service_date).format('MM/DD/YY')})`}
           isLarge={!lg}
           widgetValue={new TimeWidgetValue(fastest.min)}
         />

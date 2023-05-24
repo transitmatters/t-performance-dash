@@ -40,7 +40,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
   const location = getLocationDetails(fromStation, toStation);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
       {aggregate ? (
         <>
           <WidgetDiv>

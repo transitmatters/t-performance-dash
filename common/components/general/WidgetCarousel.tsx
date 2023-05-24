@@ -2,9 +2,7 @@ import React, { Children, cloneElement, useCallback, useMemo, useState } from 'r
 import classNames from 'classnames';
 import type { ComponentProps, FC, ReactElement } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleArrowLeft, faCircleArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { lineColorLightText, lineColorText } from '../../styles/general';
-import { useDelimitatedRoute } from '../../utils/router';
+import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 
 export interface WidgetCarouselProps {
   children: React.ReactNode;
@@ -12,7 +10,6 @@ export interface WidgetCarouselProps {
 
 export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children }) => {
   const [activeItem, setActiveItem] = useState(0);
-  const { line } = useDelimitatedRoute();
 
   const items = useMemo(
     () =>
@@ -43,28 +40,9 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children }) => {
     item !== activeItem && (activeItem === 0 ? item === items.length - 1 : item + 1 === activeItem);
 
   return (
-    <div className="relative lg:w-40">
-      <div className="relative h-[38px] w-full overflow-hidden lg:h-[6.5rem] ">
-        {items?.map((item, index) => (
-          <div
-            key={index}
-            className={classNames(
-              'absolute inset-0 transform transition-all duration-700 ease-in-out',
-              {
-                hidden:
-                  index !== activeItem && !isBeforeActiveItem(index) && !isAfterActiveItem(index),
-                '-translate-x-full opacity-0': isBeforeActiveItem(index),
-                'translate-x-full opacity-0': isAfterActiveItem(index),
-              }
-            )}
-          >
-            {item}
-          </div>
-        ))}
-      </div>
-
-      <div className="absolute top-0 flex h-full w-full flex-row justify-between lg:relative lg:h-auto">
-        <button
+    <div className="relative flex flex-row gap-2">
+      <div className="flex items-center">
+        {/* <button
           className="group/button flex cursor-pointer items-center justify-center focus:outline-none lg:px-4"
           onClick={navigateTo(activeItem - 1)}
           type="button"
@@ -76,20 +54,38 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children }) => {
             }`}
             size="lg"
           />
-        </button>
+        </button> */}
         <button
-          className="group/button flex  cursor-pointer items-center justify-center focus:outline-none lg:px-4"
+          className={classNames(
+            'group/button flex cursor-pointer items-center justify-center rounded-md p-1 focus:outline-none'
+          )}
           onClick={navigateTo(activeItem + 1)}
           type="button"
         >
           <FontAwesomeIcon
-            icon={faCircleArrowRight}
-            className={`${lineColorLightText[line ?? 'DEFAULT']} bg-white hover:${
-              lineColorText[line ?? 'DEFAULT']
-            }`}
+            icon={faChevronCircleDown}
             size="lg"
+            className="text-stone-300 hover:text-stone-600"
           />
         </button>
+      </div>
+      <div className="relative h-[2.75rem] w-full overflow-hidden lg:h-[3.25rem] ">
+        {items?.map((item, index) => (
+          <div
+            key={index}
+            className={classNames(
+              'absolute inset-0 transform transition-all duration-700 ease-in-out',
+              {
+                hidden:
+                  index !== activeItem && !isBeforeActiveItem(index) && !isAfterActiveItem(index),
+                '-translate-y-full opacity-0': isBeforeActiveItem(index),
+                'translate-y-full opacity-0': isAfterActiveItem(index),
+              }
+            )}
+          >
+            {item}
+          </div>
+        ))}
       </div>
     </div>
   );

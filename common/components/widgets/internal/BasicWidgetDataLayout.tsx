@@ -25,17 +25,14 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
   isLarge = true,
 }) => {
   return (
-    <div className="rounded-md border border-stone-100 shadow-sm">
+    <div className="">
       <div className={classNames('relative flex')}>
         {widgetValue.value === undefined && <LoadingSpinner isWidget />}
-        <div className={classNames('flex flex-col items-start p-2')}>
-          <p className={classNames('text-base text-gray-500', isLarge ? 'text-base' : 'text-sm')}>
-            {title}
-          </p>
+        <div className={classNames('flex flex-col items-start')}>
           <div className="flex flex-row items-baseline gap-x-1">
             <p
               className={classNames(
-                'font-semibold text-gray-900',
+                'font-semibold leading-tight text-gray-900',
                 isLarge ? 'text-2xl' : 'text-xl'
               )}
             >
@@ -47,7 +44,7 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
               {widgetValue.getUnits()}
             </p>
           </div>
-          <div className="mt-1 flex flex-row items-baseline gap-x-1">
+          <div className="flex flex-row items-baseline gap-x-1 leading-tight">
             {layoutKind !== 'no-delta' && (
               <Delta
                 widgetValue={widgetValue}

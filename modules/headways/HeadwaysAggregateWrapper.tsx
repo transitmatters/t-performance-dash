@@ -9,6 +9,7 @@ import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { getHeadwaysAggregateWidgetData } from '../../common/utils/headways';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
+import { PRETTY_DATE_FORMAT } from '../../common/constants/dates';
 import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
 
 interface HeadwaysAggregateWrapperProps {
@@ -28,19 +29,19 @@ export const HeadwaysAggregateWrapper: React.FC<HeadwaysAggregateWrapperProps> =
   const headwaysData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
   const { average, max } = getHeadwaysAggregateWidgetData(headwaysData);
   return (
-    <div className="flex flex-col gap-x-2 gap-y-1 pt-2 lg:flex-row">
+    <div className="flex flex-col gap-x-2 gap-y-1 pt-2">
       <WidgetCarousel>
         <DataWidget
-          title="Average"
+          title=""
           layoutKind="no-delta"
-          analysis={'over period'}
+          analysis={'average'}
           isLarge={!lg}
           widgetValue={new TimeWidgetValue(average)}
         />
         <DataWidget
-          title="Highest"
+          title=""
           layoutKind="no-delta"
-          analysis={`on ${dayjs(max.service_date).format('MM/DD/YY')}`}
+          analysis={`longest headway (${dayjs(max.service_date).format(PRETTY_DATE_FORMAT)})`}
           isLarge={!lg}
           widgetValue={new TimeWidgetValue(max.max)}
         />
