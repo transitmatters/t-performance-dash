@@ -25,10 +25,7 @@ export default function App({ Component, pageProps }) {
   return (
     <Layout>
       <DashboardLayout>
-        <GCScript
-          siteUrl={'https://transitmatters-dd.goatcounter.com/count'}
-          scriptSrc={'//gc.zgo.at/count.js'}
-        />
+        <GCScript siteUrl={'https://transitmatters-dd.goatcounter.com/count'} />
         <Component {...pageProps} />
       </DashboardLayout>
     </Layout>
