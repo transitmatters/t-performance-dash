@@ -4,7 +4,7 @@ import type { SingleDayDataPoint } from '../../../common/types/charts';
 import { PointFieldKeys, MetricFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { locationDetails } from '../../../common/utils/stations';
+import { getLocationDetails } from '../../../common/utils/stations';
 
 interface DwellsSingleChartProps {
   dwells: SingleDayDataPoint[];
@@ -21,7 +21,6 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
 }) => {
   const {
     linePath,
-    lineShort,
     query: { startDate },
   } = useDelimitatedRoute();
 
@@ -29,18 +28,17 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
     return (
       <SingleDayLineChart
         chartId={`dwells-chart-${linePath}`}
-        title={'Time spent at station (dwells)'}
         data={dwells}
         date={startDate}
         metricField={MetricFieldKeys.dwellTimeSec}
         pointField={PointFieldKeys.arrDt}
-        location={locationDetails(fromStation, toStation, lineShort)}
+        location={getLocationDetails(fromStation, toStation)}
         fname={'dwells'}
         showLegend={false}
         isHomescreen={isHomescreen}
       />
     );
-  }, [dwells, fromStation, linePath, lineShort, startDate, toStation, isHomescreen]);
+  }, [dwells, fromStation, linePath, startDate, toStation, isHomescreen]);
 
   return chart;
 };

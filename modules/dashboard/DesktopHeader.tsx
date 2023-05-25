@@ -13,6 +13,7 @@ export const DesktopHeader: React.FC = () => {
     line,
     page,
     query: { queryType, busRoute },
+    tab,
   } = useDelimitatedRoute();
   const section = page ? ALL_PAGES[page]?.section : undefined;
   const lg = useBreakpoint('lg');
@@ -23,6 +24,7 @@ export const DesktopHeader: React.FC = () => {
     if (busRoute) return `Route ${busRoute}`;
     if (line && !lg) return LINE_OBJECTS[line]?.short;
     if (line) return LINE_OBJECTS[line]?.name;
+    if (tab === 'System') return 'System';
   };
   return (
     <div
@@ -39,7 +41,7 @@ export const DesktopHeader: React.FC = () => {
       >
         <div className="flex shrink-0 flex-row items-baseline pl-3">
           <h3 className="text-xl font-semibold">{getLineName()}</h3>
-          {ALL_PAGES[page]?.sectionTitle && (
+          {ALL_PAGES[page]?.sectionTitle && tab !== 'System' && (
             <>
               <span className="px-1 text-xl">•</span>
               <h2 className="select-none text-xl font-semibold">

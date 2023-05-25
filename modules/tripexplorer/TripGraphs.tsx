@@ -16,6 +16,7 @@ export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }
   const {
     query: { startDate, endDate },
     tab,
+    line,
   } = useDelimitatedRoute();
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
@@ -43,6 +44,7 @@ export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }
         parameters={parameters}
         aggregate={aggregate}
         enabled={enabled}
+        line={line}
       />
     );
   return (
@@ -52,6 +54,7 @@ export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }
       parameters={parameters}
       aggregate={aggregate}
       enabled={enabled}
+      line={line}
     />
   );
 };

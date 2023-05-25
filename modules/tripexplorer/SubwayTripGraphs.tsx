@@ -6,6 +6,9 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { getLocationDetails } from '../../common/utils/stations';
+import type { Line } from '../../common/types/lines';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -13,6 +16,7 @@ interface SubwayTripGraphsProps {
   parameters: SingleDayAPIOptions | AggregateAPIOptions; // TODO
   aggregate: boolean;
   enabled: boolean;
+  line: Line | undefined;
 }
 
 export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
@@ -21,6 +25,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
   parameters,
   aggregate,
   enabled,
+  line,
 }) => {
   const [peakTime, setPeakTime] = React.useState<'weekday' | 'weekend'>('weekday');
 
@@ -31,12 +36,14 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
     aggregate,
     enabled
   );
+  const location = getLocationDetails(fromStation, toStation);
 
   return (
     <div className="flex flex-col gap-4">
       {aggregate ? (
         <>
           <WidgetDiv>
+            <WidgetTitle title="Travel Times" location={location} line={line} both />
             <AggregateChartWrapper
               query={traveltimes}
               toStation={toStation}
@@ -46,6 +53,13 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             />
           </WidgetDiv>
           <WidgetDiv>
+            <WidgetTitle
+              title="Headways"
+              subtitle="Time between trains"
+              location={location}
+              line={line}
+            />
+
             <AggregateChartWrapper
               query={headways}
               toStation={toStation}
@@ -54,6 +68,13 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             />
           </WidgetDiv>
           <WidgetDiv>
+            <WidgetTitle
+              title="Dwells"
+              subtitle="Time spent at station"
+              location={location}
+              line={line}
+            />
+
             <AggregateChartWrapper
               query={dwells}
               toStation={toStation}
@@ -62,6 +83,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             />
           </WidgetDiv>
           <WidgetDiv className="flex flex-col justify-center">
+            <WidgetTitle title="Travel Times By Hour" location={location} line={line} both />
             <AggregateChartWrapper
               query={traveltimes}
               toStation={toStation}
@@ -86,6 +108,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
       ) : (
         <>
           <WidgetDiv>
+            <WidgetTitle title="Travel Times" location={location} line={line} both />
             <SingleChartWrapper
               query={traveltimes}
               toStation={toStation}
@@ -95,6 +118,12 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
           </WidgetDiv>
 
           <WidgetDiv>
+            <WidgetTitle
+              title="Headways"
+              subtitle="Time between trains"
+              location={location}
+              line={line}
+            />
             <SingleChartWrapper
               query={headways}
               toStation={toStation}
@@ -103,6 +132,12 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             />
           </WidgetDiv>
           <WidgetDiv>
+            <WidgetTitle
+              title="Dwells"
+              subtitle="Time spent at station"
+              location={location}
+              line={line}
+            />
             <SingleChartWrapper
               query={dwells}
               toStation={toStation}

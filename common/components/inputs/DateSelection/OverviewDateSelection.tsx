@@ -17,7 +17,7 @@ export const OverviewDateSelection = () => {
     overviewPresetChange({ view: value });
     setDatePreset(value, 'line', true);
     router.query.view = value;
-    router.push({ pathname: router.pathname, query: router.query });
+    router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
   };
 
   return (

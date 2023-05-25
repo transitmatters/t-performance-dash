@@ -104,17 +104,15 @@ export const travelDirection = (from: Station, to: Station): Direction => {
   return from.order < to.order ? 'southbound' : 'northbound';
 };
 
-export const locationDetails = (
+export const getLocationDetails = (
   from: Station | undefined,
-  to: Station | undefined,
-  lineShort: LineShort
+  to: Station | undefined
 ): Location => {
   if (to === undefined || from === undefined) {
     return {
       to: to?.stop_name || 'Loading...',
       from: from?.stop_name || 'Loading...',
       direction: 'southbound',
-      line: lineShort,
     };
   }
 
@@ -122,6 +120,5 @@ export const locationDetails = (
     to: to.stop_name,
     from: from.stop_name,
     direction: travelDirection(from, to),
-    line: lineShort,
   };
 };

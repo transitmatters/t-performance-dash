@@ -52,7 +52,7 @@ export function SlowZonesDetails() {
     <PageWrapper pageTitle={'Slow Zones'}>
       <div className="flex flex-col gap-4">
         <WidgetDiv>
-          <WidgetTitle title="Total delays" />
+          <WidgetTitle title="Total Slow Time" />
           <div className="relative flex flex-col">
             {totalSlowTimeReady ? (
               <TotalSlowTimeWrapper
