@@ -6,7 +6,6 @@ import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import type { AggregateDataResponse } from '../../common/types/charts';
 import { getTravelTimesAggregateWidgetData } from '../../common/utils/traveltimes';
 import type { Station } from '../../common/types/stations';
-import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
@@ -22,7 +21,6 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
   toStation,
   fromStation,
 }) => {
-  const lg = !useBreakpoint('lg');
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   const traveltimesData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
@@ -33,22 +31,19 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
         <DataWidget
           title=""
           layoutKind="no-delta"
-          analysis={'average'}
-          isLarge={!lg}
+          analysis={'Average'}
           widgetValue={new TimeWidgetValue(average)}
         />
         <DataWidget
           title=""
-          analysis={'over period'}
+          analysis={'Over Period'}
           layoutKind="delta-and-percent-change"
-          isLarge={!lg}
           widgetValue={deltaWidgetValue}
         />
         <DataWidget
           title=""
           layoutKind="no-delta"
-          analysis={`fastest trip (${dayjs(fastest.service_date).format('MM/DD/YY')})`}
-          isLarge={!lg}
+          analysis={`Fastest Trip (${dayjs(fastest.service_date).format('MM/DD/YY')})`}
           widgetValue={new TimeWidgetValue(fastest.min)}
         />
       </WidgetCarousel>

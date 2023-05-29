@@ -11,7 +11,6 @@ interface DataWidgetProps {
   widgetValue: WidgetValueInterface;
   sentimentDirection?: SentimentDirection;
   layoutKind?: LayoutKind;
-  isLarge?: boolean;
 }
 
 export const DataWidget: React.FC<DataWidgetProps> = ({
@@ -20,7 +19,6 @@ export const DataWidget: React.FC<DataWidgetProps> = ({
   widgetValue,
   sentimentDirection,
   layoutKind,
-  isLarge,
 }) => {
   const isHorizontal = !useBreakpoint('lg');
 

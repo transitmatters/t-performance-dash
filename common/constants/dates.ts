@@ -12,6 +12,7 @@ const est = 'America/New_York';
 
 export const DATE_FORMAT = 'YYYY-MM-DD';
 export const PRETTY_DATE_FORMAT = 'MMM D, YYYY';
+export const SMALL_DATE_FORMAT = 'M/D/YY';
 export const TODAY = dayjs().tz(est);
 export const TODAY_MIDNIGHT = dayjs().startOf('day');
 export const YESTERDAY_MIDNIGHT = TODAY_MIDNIGHT.subtract(1, 'day');

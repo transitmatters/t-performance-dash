@@ -40,7 +40,7 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children }) => {
     item !== activeItem && (activeItem === 0 ? item === items.length - 1 : item + 1 === activeItem);
 
   return (
-    <div className="relative flex flex-row gap-2">
+    <div className="relative flex flex-row gap-1">
       <div className="flex items-center">
         {/* <button
           className="group/button flex cursor-pointer items-center justify-center focus:outline-none lg:px-4"
@@ -57,7 +57,7 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children }) => {
         </button> */}
         <button
           className={classNames(
-            'group/button flex cursor-pointer items-center justify-center rounded-md p-1 focus:outline-none'
+            'group/button flex cursor-pointer items-center justify-center rounded-md focus:outline-none lg:p-1'
           )}
           onClick={navigateTo(activeItem + 1)}
           type="button"
