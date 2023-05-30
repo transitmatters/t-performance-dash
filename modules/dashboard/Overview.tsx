@@ -5,8 +5,9 @@ import { SpeedWidget } from '../speed/SpeedWidget';
 import { RidershipWidget } from '../ridership/RidershipWidget';
 import { ServiceWidget } from '../service/ServiceWidget';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { LayoutType } from '../../common/layouts/layoutTypes';
 
-export const Overview: React.FC = () => {
+export function Overview() {
   const { tab, line } = useDelimitatedRoute();
   return (
     <PageWrapper pageTitle={'Overview'}>
@@ -20,4 +21,6 @@ export const Overview: React.FC = () => {
       </div>
     </PageWrapper>
   );
-};
+}
+
+Overview.Layout = LayoutType.Dashboard;

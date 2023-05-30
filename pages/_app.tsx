@@ -4,15 +4,16 @@
 import React, { useEffect, useState } from 'react';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import { DashboardLayout } from '../common/layouts/DashboardLayout';
-import { Layout } from '../common/layouts/Layout';
+import { Layout } from '../common/layouts/PrimaryLayout';
 import '../styles/dashboard.css';
 import '../styles/globals.css';
+import { Layouts } from '../common/layouts/Layouts';
 
 config.autoAddCss = false;
 
 export default function App({ Component, pageProps }) {
   const [loaded, setLoaded] = useState(false);
+  const SecondaryLayout = Layouts[Component.Layout] ?? ((page) => page);
 
   // Don't load on the server. This prevents hydration errors between mobile/desktop layouts.
   useEffect(() => {
@@ -22,9 +23,9 @@ export default function App({ Component, pageProps }) {
 
   return (
     <Layout>
-      <DashboardLayout>
+      <SecondaryLayout>
         <Component {...pageProps} />
-      </DashboardLayout>
+      </SecondaryLayout>
     </Layout>
   );
 }

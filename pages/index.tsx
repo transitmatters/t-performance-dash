@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { PageWrapper } from '../common/layouts/PageWrapper';
-
+import { LayoutType } from '../common/layouts/layoutTypes';
 export default function Home() {
   return (
     <PageWrapper>
@@ -29,3 +29,5 @@ export default function Home() {
     </PageWrapper>
   );
 }
+
+Home.Layout = LayoutType.Landing;

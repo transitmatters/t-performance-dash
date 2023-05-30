@@ -21,8 +21,9 @@ import { SingleChartWrapper } from '../../common/components/charts/SingleChartWr
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { LayoutType } from '../../common/layouts/layoutTypes';
 
-export const DwellsDetails: React.FC = () => {
+export function DwellsDetails() {
   const {
     line,
     query: { startDate, endDate, to, from },
@@ -95,4 +96,6 @@ export const DwellsDetails: React.FC = () => {
       <TerminusNotice toStation={toStation} fromStation={fromStation} />
     </PageWrapper>
   );
-};
+}
+
+DwellsDetails.Layout = LayoutType.Dashboard;

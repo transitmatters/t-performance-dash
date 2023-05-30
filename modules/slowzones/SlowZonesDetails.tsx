@@ -16,6 +16,7 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import type { Direction } from '../../common/types/dataPoints';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { LayoutType } from '../../common/layouts/layoutTypes';
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
@@ -113,3 +114,5 @@ export function SlowZonesDetails() {
     </PageWrapper>
   );
 }
+
+SlowZonesDetails.Layout = LayoutType.Dashboard;

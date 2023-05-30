@@ -11,6 +11,7 @@ import { ServiceDayPicker } from '../../common/components/inputs/ServiceDayPicke
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { LayoutType } from '../../common/layouts/layoutTypes';
 import { TphChart } from './charts/TphChart';
 import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
 
@@ -96,3 +97,5 @@ export function RidershipDetails() {
     </PageWrapper>
   );
 }
+
+RidershipDetails.Layout = LayoutType.Dashboard;
