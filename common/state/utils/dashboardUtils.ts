@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import type { OverviewDatePresetKey } from '../../constants/dates';
-import { PRETTY_DATE_FORMAT, RANGE_PRESETS } from '../../constants/dates';
+import { SMALL_DATE_FORMAT, RANGE_PRESETS } from '../../constants/dates';
 import type { Section } from '../../constants/pages';
 import type { QueryParams } from '../../types/router';
 import { getParams } from '../../utils/router';
@@ -43,13 +43,13 @@ export const getSelectedDates = (dateConfig: {
   const endDateDayjs = endDate ? dayjs(endDate) : undefined;
   const viewInput = view ? RANGE_PRESETS[view]?.input : undefined;
   if (viewInput)
-    return `${dayjs(viewInput.startDate).format(PRETTY_DATE_FORMAT)} - ${dayjs(
+    return `${dayjs(viewInput.startDate).format(SMALL_DATE_FORMAT)} - ${dayjs(
       viewInput.endDate
-    ).format(PRETTY_DATE_FORMAT)}`;
+    ).format(SMALL_DATE_FORMAT)}`;
   if (startDateDayjs && endDateDayjs)
-    return `${startDateDayjs.format(PRETTY_DATE_FORMAT)} - ${endDateDayjs.format(
-      PRETTY_DATE_FORMAT
+    return `${startDateDayjs.format(SMALL_DATE_FORMAT)} - ${endDateDayjs.format(
+      SMALL_DATE_FORMAT
     )}`;
-  if (startDateDayjs) return startDateDayjs.format(PRETTY_DATE_FORMAT);
+  if (startDateDayjs) return startDateDayjs.format(SMALL_DATE_FORMAT);
   return undefined;
 };
