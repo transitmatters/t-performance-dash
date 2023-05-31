@@ -69,7 +69,7 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children }) => {
           />
         </button>
       </div>
-      <div className="relative h-[2.75rem] w-full overflow-hidden lg:h-[3.25rem] ">
+      <div className="relative h-8 w-full overflow-hidden lg:h-[3.25rem] ">
         {items?.map((item, index) => (
           <div
             key={index}

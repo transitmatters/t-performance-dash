@@ -39,12 +39,15 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
               {widgetValue.getFormattedValue()}
             </p>
             <p
-              className={classNames(isLarge ? 'text-base' : 'text-sm', 'text-design-subtitleGrey')}
+              className={classNames(
+                isLarge ? 'text-base' : 'text-sm',
+                'leading-tight text-design-subtitleGrey'
+              )}
             >
               {widgetValue.getUnits()}
             </p>
           </div>
-          <div className="flex flex-row items-baseline gap-x-1 leading-tight">
+          <div className="flex flex-row items-baseline gap-x-1 ">
             {layoutKind !== 'no-delta' && (
               <Delta
                 widgetValue={widgetValue}
@@ -52,7 +55,11 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
                 usePercentChange={layoutKind === 'delta-and-percent-change'}
               />
             )}
-            <p className={classNames('truncate text-xs text-design-subtitleGrey sm:text-sm')}>
+            <p
+              className={classNames(
+                'truncate text-xs leading-tight text-design-subtitleGrey sm:text-sm'
+              )}
+            >
               {analysis}
             </p>
           </div>
