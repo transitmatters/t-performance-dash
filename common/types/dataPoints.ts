@@ -113,3 +113,8 @@ export type TripCounts = {
   start_date_service_levels: ServiceLevels;
   end_date_service_levels: ServiceLevels;
 };
+
+export type RidershipCount = {
+  date: string;
+  count: number;
+};

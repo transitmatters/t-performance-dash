@@ -2,9 +2,9 @@ import React from 'react';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { SlowZonesWidget } from '../slowzones/SlowZonesWidget';
 import { SpeedWidget } from '../speed/SpeedWidget';
-import { RidershipWidget } from '../ridership/RidershipWidget';
 import { ServiceWidget } from '../service/ServiceWidget';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { RidershipWidget } from '../ridership/RidershipWidget';
 
 export const Overview: React.FC = () => {
   const { tab, line } = useDelimitatedRoute();
