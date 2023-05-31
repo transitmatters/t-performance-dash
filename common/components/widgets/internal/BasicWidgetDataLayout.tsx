@@ -25,29 +25,29 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
   isLarge = true,
 }) => {
   return (
-    <div className="">
+    <>
       <div className={classNames('relative flex')}>
         {widgetValue.value === undefined && <LoadingSpinner isWidget />}
-        <div className={classNames('flex flex-col items-start')}>
+        <div className={classNames('flex flex-col items-start p-2')}>
+          <p className={classNames('text-base text-gray-500', isLarge ? 'text-base' : 'text-sm')}>
+            {title}
+          </p>
           <div className="flex flex-row items-baseline gap-x-1">
             <p
               className={classNames(
-                'font-semibold leading-tight text-gray-900',
+                'font-semibold text-gray-900',
                 isLarge ? 'text-2xl' : 'text-xl'
               )}
             >
               {widgetValue.getFormattedValue()}
             </p>
             <p
-              className={classNames(
-                isLarge ? 'text-base' : 'text-sm',
-                'leading-tight text-design-subtitleGrey'
-              )}
+              className={classNames(isLarge ? 'text-base' : 'text-sm', 'text-design-subtitleGrey')}
             >
               {widgetValue.getUnits()}
             </p>
           </div>
-          <div className="flex flex-row items-baseline gap-x-1 ">
+          <div className="mt-1 flex flex-row items-baseline gap-x-1">
             {layoutKind !== 'no-delta' && (
               <Delta
                 widgetValue={widgetValue}
@@ -55,16 +55,12 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
                 usePercentChange={layoutKind === 'delta-and-percent-change'}
               />
             )}
-            <p
-              className={classNames(
-                'truncate text-xs leading-tight text-design-subtitleGrey sm:text-sm'
-              )}
-            >
+            <p className={classNames('truncate text-xs text-design-subtitleGrey sm:text-sm')}>
               {analysis}
             </p>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

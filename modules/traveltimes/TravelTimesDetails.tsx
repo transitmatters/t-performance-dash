@@ -76,13 +76,7 @@ export function TravelTimesDetails() {
       </WidgetDiv>
       {aggregate && (
         <WidgetDiv className="flex flex-col justify-center">
-          <WidgetTitle
-            title="Travel Times"
-            subtitle="By Hour"
-            location={location}
-            line={line}
-            both
-          />
+          <WidgetTitle title="Travel Times by Hour" location={location} line={line} both />
           <AggregateChartWrapper
             query={travelTimesAggregate}
             toStation={toStation}

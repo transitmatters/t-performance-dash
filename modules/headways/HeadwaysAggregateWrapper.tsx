@@ -1,7 +1,7 @@
 import React from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { DataWidget } from '../../common/components/widgets/internal/DataWidget';
+import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import type { AggregateDataResponse } from '../../common/types/charts';
 import type { Station } from '../../common/types/stations';
@@ -29,14 +29,12 @@ export const HeadwaysAggregateWrapper: React.FC<HeadwaysAggregateWrapperProps> =
   return (
     <div className="flex flex-col gap-x-2 gap-y-1 pt-2">
       <WidgetCarousel>
-        <DataWidget
-          title=""
+        <WidgetForCarousel
           layoutKind="no-delta"
           analysis={'Average'}
           widgetValue={new TimeWidgetValue(average)}
         />
-        <DataWidget
-          title=""
+        <WidgetForCarousel
           layoutKind="no-delta"
           analysis={`Longest Headway (${dayjs(max.service_date).format(SMALL_DATE_FORMAT)})`}
           widgetValue={new TimeWidgetValue(max.max)}

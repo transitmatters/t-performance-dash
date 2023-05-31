@@ -1,7 +1,7 @@
 import React from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { DataWidget } from '../../common/components/widgets/internal/DataWidget';
+import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import type { AggregateDataResponse } from '../../common/types/charts';
 import { getTravelTimesAggregateWidgetData } from '../../common/utils/traveltimes';
@@ -28,20 +28,17 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
   return (
     <div className="flex flex-col gap-x-2 gap-y-2 pt-2 ">
       <WidgetCarousel>
-        <DataWidget
-          title=""
+        <WidgetForCarousel
           layoutKind="no-delta"
           analysis={'Average'}
           widgetValue={new TimeWidgetValue(average)}
         />
-        <DataWidget
-          title=""
-          analysis={'Over Period'}
+        <WidgetForCarousel
+          analysis={'Change over period'}
           layoutKind="delta-and-percent-change"
           widgetValue={deltaWidgetValue}
         />
-        <DataWidget
-          title=""
+        <WidgetForCarousel
           layoutKind="no-delta"
           analysis={`Fastest Trip (${dayjs(fastest.service_date).format('MM/DD/YY')})`}
           widgetValue={new TimeWidgetValue(fastest.min)}

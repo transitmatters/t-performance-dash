@@ -42,19 +42,6 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children }) => {
   return (
     <div className="relative flex flex-row gap-1">
       <div className="flex items-center">
-        {/* <button
-          className="group/button flex cursor-pointer items-center justify-center focus:outline-none lg:px-4"
-          onClick={navigateTo(activeItem - 1)}
-          type="button"
-        >
-          <FontAwesomeIcon
-            icon={faCircleArrowLeft}
-            className={`${lineColorLightText[line ?? 'DEFAULT']} bg-white  hover:${
-              lineColorText[line ?? 'DEFAULT']
-            }`}
-            size="lg"
-          />
-        </button> */}
         <button
           className={classNames(
             'group/button flex cursor-pointer items-center justify-center rounded-md focus:outline-none lg:p-1'
