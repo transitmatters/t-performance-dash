@@ -10,6 +10,8 @@ import { MetricFieldKeys } from '../../../common/types/charts';
 import type { HeadwayPoint } from '../../../common/types/dataPoints';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
+import { ChartDiv } from '../../../common/components/charts/ChartDiv';
+import { ChartBorder } from '../../../common/components/charts/ChartBorder';
 
 ChartJS.register(BarController, BarElement, LinearScale, ChartjsPluginWatermark, Title, Tooltip);
 
@@ -40,12 +42,12 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
 
   const histogram = useMemo(() => {
     return (
-      <div className={'relative flex w-full flex-col pr-2'}>
-        <div className="flex h-60 w-full flex-row">
+      <ChartBorder>
+        <ChartDiv isMobile={isMobile}>
           <Bar
             id={`headways-histogram-${linePath}`}
             ref={ref}
-            height={250}
+            height={isMobile ? 200 : 240}
             redraw={true}
             data={{
               datasets: [
@@ -115,8 +117,8 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
               },
             }}
           />
-        </div>
-      </div>
+        </ChartDiv>
+      </ChartBorder>
     );
   }, [dataObject, isMobile, line, linePath, lineShort]);
   return histogram;
