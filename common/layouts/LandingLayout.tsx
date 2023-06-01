@@ -13,7 +13,7 @@ export const LandingLayout: React.FC<LandingLayoutProps> = ({ children }) => {
 
   return (
     <div className="flex min-h-full flex-col justify-between bg-stone-100">
-      {isMobile ? <MobileNavHeader isLanding /> : <SideNavBar isLanding />}
+      {isMobile ? <MobileNavHeader /> : <SideNavBar />}
 
       <div className="flex flex-1 flex-col md:pl-64">
         <main className="flex-1">{children}</main>

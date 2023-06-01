@@ -1,13 +1,31 @@
 'use client';
 import React from 'react';
+import Link from 'next/link';
 import { PageWrapper } from '../common/layouts/PageWrapper';
 import { LayoutType } from '../common/layouts/layoutTypes';
 export default function Home() {
   return (
     <PageWrapper>
-      <div className="flex h-full w-full items-center justify-center">
-        <h1 className="text-7xl">Landing Page!</h1>
-      </div>
+      <Link href="/red">
+        <div>
+          <p>Red Line</p>
+        </div>
+      </Link>
+      <Link href="/orange">
+        <div>
+          <p>Orange Line</p>
+        </div>
+      </Link>
+      <Link href="/green">
+        <div>
+          <p>Green Line</p>
+        </div>
+      </Link>
+      <Link href="/blue">
+        <div>
+          <p>Blue Line</p>
+        </div>
+      </Link>
     </PageWrapper>
   );
 }

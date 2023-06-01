@@ -23,4 +23,4 @@ export type QueryParams = {
 
 export type QueryTypeOptions = 'single' | 'range';
 
-export type Tab = 'Bus' | 'Subway' | 'System' | 'Landing';
+export type Tab = 'Bus' | 'Subway' | 'System';
