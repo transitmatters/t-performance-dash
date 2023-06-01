@@ -15,7 +15,7 @@ import { PRODUCTION } from '../common/utils/constants';
 config.autoAddCss = false;
 
 export default function App({ Component, pageProps }) {
-  const isProd = window.location.hostname === PRODUCTION;
+  const isProd = typeof window !== 'undefined' && window.location.hostname === PRODUCTION;
 
   const [loaded, setLoaded] = useState(false);
 
