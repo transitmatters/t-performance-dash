@@ -10,10 +10,13 @@ import { Layout } from '../common/layouts/Layout';
 
 import '../styles/dashboard.css';
 import '../styles/globals.css';
+import { PRODUCTION } from '../common/utils/constants';
 
 config.autoAddCss = false;
 
 export default function App({ Component, pageProps }) {
+  const isProd = window.location.hostname === PRODUCTION;
+
   const [loaded, setLoaded] = useState(false);
 
   // Don't load on the server. This prevents hydration errors between mobile/desktop layouts.
@@ -25,7 +28,7 @@ export default function App({ Component, pageProps }) {
   return (
     <Layout>
       <DashboardLayout>
-        <GCScript siteUrl={'https://transitmatters-dd.goatcounter.com/count'} />
+        {isProd && <GCScript siteUrl={'https://transitmatters-dd.goatcounter.com/count'} />}
         <Component {...pageProps} />
       </DashboardLayout>
     </Layout>
