@@ -35,13 +35,13 @@ const getPage = (pageArray: string[]): string => {
 };
 
 const getTab = (path: string) => {
-  if (RAIL_LINES.includes(path)) {
-    return 'Subway';
-  } else if (path === 'bus') {
-    return 'Bus';
-  } else {
-    return 'System';
-  }
+  if (RAIL_LINES.includes(path)) return 'Subway';
+
+  if (path === 'bus') return 'Bus';
+
+  if (path === 'system') return 'System';
+
+  return 'Landing';
 };
 
 export const useDelimitatedRoute = (): Route => {
