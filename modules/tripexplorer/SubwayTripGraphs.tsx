@@ -11,6 +11,7 @@ import { getLocationDetails } from '../../common/utils/stations';
 import type { Line } from '../../common/types/lines';
 import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
+import { DwellsAggregateWrapper } from '../dwells/DwellsAggregateWrapper';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -73,12 +74,10 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               location={location}
               line={line}
             />
-
-            <AggregateChartWrapper
+            <DwellsAggregateWrapper
               query={dwells}
-              toStation={toStation}
               fromStation={fromStation}
-              type={'dwells'}
+              toStation={toStation}
             />
           </WidgetDiv>
           <WidgetDiv className="flex flex-col justify-center">
