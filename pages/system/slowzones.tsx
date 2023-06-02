@@ -1,5 +1,7 @@
-import React from 'react';
+import { SystemSlowZonesDetails } from '../../modules/slowzones/SystemSlowZonesDetails';
 
-export default function slowzones() {
-  return <div>slowzones</div>;
+export async function getStaticProps() {
+  return { props: {} };
 }
+
+export default SystemSlowZonesDetails;

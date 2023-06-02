@@ -21,6 +21,7 @@ export enum PAGES {
   speed = 'speed',
   service = 'service',
   slowzones = 'slowzones',
+  systemSlowzones = 'systemSlowzones',
   headways = 'headways',
   ridership = 'ridership',
   trips = 'trips',
@@ -134,6 +135,15 @@ export const ALL_PAGES: PageMap = {
     sectionTitle: 'Line',
     sub: true,
   },
+  systemSlowzones: {
+    key: 'systemSlowzones',
+    path: '/slowzones',
+    name: 'Slow Zones',
+    lines: [],
+    icon: faWarning,
+    section: 'system',
+    sectionTitle: 'System',
+  },
   headways: {
     key: 'headways',
     path: '/headways',
@@ -185,16 +195,9 @@ export const SUB_PAGES_MAP = {
     traveltimes: 'tripTraveltimes',
     dwells: 'tripDwells',
   },
+  system: {
+    slowzones: 'systemSlowzones',
+  },
 };
 
-export const SYSTEM_PAGES: PageMetadata[] = [
-  {
-    key: 'slowzones',
-    path: '/slowzones',
-    name: 'Slow Zones',
-    lines: [],
-    icon: faWarning,
-    section: 'system',
-    sectionTitle: 'System',
-  },
-];
+export const SYSTEM_PAGES: PageMetadata[] = [ALL_PAGES.systemSlowzones];

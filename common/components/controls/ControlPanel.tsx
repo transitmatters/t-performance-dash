@@ -9,7 +9,7 @@ import { DateControl } from './DateControl';
 
 interface ControlPanelProps {
   section: Section;
-  line: Line;
+  line?: Line;
   busRoute?: BusRoute;
   queryType?: QueryTypeOptions;
 }
@@ -21,7 +21,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   queryType,
 }) => {
   const getControls = () => {
-    if (section === 'trips' && queryType) {
+    if (section === 'trips' && line && queryType) {
       return (
         <>
           <DateControl section={section} queryType={queryType} />
@@ -29,7 +29,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         </>
       );
     }
-    if (section === 'line' || section === 'overview') {
+    if (section === 'line' || section === 'overview' || section === 'system') {
       return <DateControl section={section} queryType={'range'} />;
     }
   };

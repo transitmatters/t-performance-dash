@@ -27,7 +27,7 @@ const BUS_MIN_DATE = '2018-08-01';
 export const BUS_MAX_DATE = '2023-01-31';
 
 export const FLAT_PICKER_OPTIONS: {
-  [key in Exclude<Tab, 'System'>]: DateTimePickerProps['options'];
+  [key in Tab]: DateTimePickerProps['options'];
 } = {
   Subway: {
     enableTime: false,
@@ -41,6 +41,14 @@ export const FLAT_PICKER_OPTIONS: {
     enableTime: false,
     minDate: BUS_MIN_DATE,
     maxDate: BUS_MAX_DATE,
+    altInput: true,
+    altFormat: 'M j, Y',
+    dateFormat: 'Y-m-d',
+  },
+  System: {
+    enableTime: false,
+    minDate: TRAIN_MIN_DATE,
+    maxDate: TODAY_STRING,
     altInput: true,
     altFormat: 'M j, Y',
     dateFormat: 'Y-m-d',
