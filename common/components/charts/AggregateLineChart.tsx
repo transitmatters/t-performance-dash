@@ -23,6 +23,8 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
 import { LegendLongTerm } from './Legend';
+import { ChartBorder } from './ChartBorder';
+import { ChartDiv } from './ChartDiv';
 
 ChartJS.register(
   CategoryScale,
@@ -72,12 +74,12 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
 
   return (
-    <div className="relative flex w-full flex-col pr-2">
-      <div className="flex h-60 w-full flex-row">
+    <ChartBorder>
+      <ChartDiv isMobile={isMobile}>
         <Line
           id={chartId}
           ref={ref}
-          height={240}
+          height={isMobile ? 200 : 240}
           redraw={true}
           data={{
             labels,
@@ -185,8 +187,8 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
             },
           ]}
         />
-      </div>
-      <div className="flex flex-row items-end gap-4 pl-6">
+      </ChartDiv>
+      <div className="flex flex-row items-end gap-4 pl-6 pr-2">
         {showLegend && <LegendLongTerm />}
         {!isHomescreen && startDate && (
           <DownloadButton
@@ -198,6 +200,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           />
         )}
       </div>
-    </div>
+    </ChartBorder>
   );
 };

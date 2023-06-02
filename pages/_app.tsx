@@ -4,14 +4,19 @@
 import React, { useEffect, useState } from 'react';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import { Layout } from '../common/layouts/PrimaryLayout';
+import { GCScript } from 'next-goatcounter';
 import '../styles/dashboard.css';
 import '../styles/globals.css';
 import { Layouts } from '../common/layouts/Layouts';
+import { Layout } from '../common/layouts/PrimaryLayout';
+
+import { PRODUCTION } from '../common/utils/constants';
 
 config.autoAddCss = false;
 
 export default function App({ Component, pageProps }) {
+  const isProd = typeof window !== 'undefined' && window.location.hostname === PRODUCTION;
+
   const [loaded, setLoaded] = useState(false);
   const SecondaryLayout = Layouts[Component.Layout] ?? ((page) => page);
 
@@ -24,6 +29,7 @@ export default function App({ Component, pageProps }) {
   return (
     <Layout>
       <SecondaryLayout>
+        {isProd && <GCScript siteUrl={'https://transitmatters-dd.goatcounter.com/count'} />}
         <Component {...pageProps} />
       </SecondaryLayout>
     </Layout>

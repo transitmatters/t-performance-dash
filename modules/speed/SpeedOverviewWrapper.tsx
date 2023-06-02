@@ -32,7 +32,7 @@ export const SpeedGraphWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
   } = useDelimitatedRoute();
   return (
     <>
-      <div className={classNames('space-between flex w-full flex-row')}>
+      <div className={classNames('space-between flex w-full flex-row gap-2')}>
         <BasicWidgetDataLayout
           title={config.getWidgetTitle(dataNoNulls[dataNoNulls.length - 1].date)}
           widgetValue={new MPHWidgetValue(current, delta)}

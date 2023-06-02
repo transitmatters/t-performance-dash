@@ -25,7 +25,7 @@ export const HomescreenWidgetTitle: React.FC<HomescreenWidgetTitle> = ({ title, 
     view: query.view,
   });
   return (
-    <div className="flex w-full items-baseline justify-between p-2">
+    <div className="flex w-full items-baseline justify-between">
       <Link onClick={() => handlePageNavigation(ALL_PAGES[tab])} href={href}>
         <div className="flex w-full cursor-pointer flex-row items-center text-xl">
           <h3

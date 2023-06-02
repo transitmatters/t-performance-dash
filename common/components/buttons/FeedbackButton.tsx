@@ -9,7 +9,7 @@ export const FeedbackButton: React.FC = () => {
   return (
     <>
       <Link
-        href="/"
+        href="mailto:labs@transitmatters.org?subject=[Data%20Dashboard%20Feedback]%20-%20"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         className="flex w-full cursor-pointer justify-center gap-x-2 rounded-md bg-stone-100 p-2  md:justify-start"

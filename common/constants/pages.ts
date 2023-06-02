@@ -21,7 +21,6 @@ export enum PAGES {
   speed = 'speed',
   service = 'service',
   slowzones = 'slowzones',
-  headways = 'headways',
   ridership = 'ridership',
   trips = 'trips',
   tripHeadways = 'tripHeadways',
@@ -134,16 +133,6 @@ export const ALL_PAGES: PageMap = {
     sectionTitle: 'Line',
     sub: true,
   },
-  headways: {
-    key: 'headways',
-    path: '/headways',
-    name: 'Headways',
-    lines: [],
-    icon: faArrowsLeftRightToLine,
-    section: 'line',
-    sectionTitle: 'Line',
-    sub: true,
-  },
   ridership: {
     key: 'ridership',
     path: '/ridership',
@@ -174,7 +163,6 @@ export const LINE_PAGES = [
   ALL_PAGES.overview,
   ALL_PAGES.service,
   ALL_PAGES.slowzones,
-  ALL_PAGES.headways,
   ALL_PAGES.speed,
   ALL_PAGES.ridership,
 ];
