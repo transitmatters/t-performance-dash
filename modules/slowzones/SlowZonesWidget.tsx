@@ -35,7 +35,6 @@ export const SlowZonesWidget: React.FC = () => {
             endDateUTC={endDateUTC}
             line={line}
             lineShort={lineShort}
-            showTitle
           />
         ) : (
           <ChartPlaceHolder query={delayTotals} />
