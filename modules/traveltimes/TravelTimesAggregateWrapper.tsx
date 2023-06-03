@@ -8,8 +8,8 @@ import { getTravelTimesAggregateWidgetData } from '../../common/utils/traveltime
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
-import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
 interface TravelTimesAggregateWrapperProps {
   query: UseQueryResult<AggregateDataResponse>;
@@ -27,7 +27,8 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
   const traveltimesData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
   const { average, fastest, deltaWidgetValue } = getTravelTimesAggregateWidgetData(traveltimesData);
   return (
-<CarouselGraphDiv>      <WidgetCarousel>
+    <CarouselGraphDiv>
+      <WidgetCarousel>
         <WidgetForCarousel
           layoutKind="no-delta"
           analysis={'Average'}
@@ -50,6 +51,6 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
         fromStation={fromStation}
         timeUnit={'by_date'}
       />
-    </CarouselGraphDiv>>
+    </CarouselGraphDiv>
   );
 };
