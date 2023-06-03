@@ -18,7 +18,7 @@ interface TotalSlowTimeWrapperProps {
   endDate: string;
 }
 
-export const SpeedGraphWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
+export const SpeedOverviewWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
   data,
   config,
   line,

@@ -6,7 +6,7 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
-import { SpeedGraphWrapper } from './SpeedOverviewWrapper';
+import { SpeedOverviewWrapper } from './SpeedOverviewWrapper';
 import { getSpeedGraphConfig } from './constants/speeds';
 
 export const SpeedWidget: React.FC = () => {
@@ -27,7 +27,7 @@ export const SpeedWidget: React.FC = () => {
     <WidgetDiv>
       <HomescreenWidgetTitle title="Speed" tab="speed" />
       {speedReady ? (
-        <SpeedGraphWrapper
+        <SpeedOverviewWrapper
           data={speeds.data}
           config={config}
           line={line}
