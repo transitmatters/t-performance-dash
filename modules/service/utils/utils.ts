@@ -45,7 +45,7 @@ export const getPercentageData = (
   return { scheduled: scheduled, baseline: baseline };
 };
 
-export const getScheduledAverage = (data: number[]) => {
+export const getAverageWithNaNs = (data: number[]) => {
   const removeNaNs = data.filter((datapoint) => !isNaN(datapoint));
   return removeNaNs.reduce((sum, count) => sum + count, 0) / removeNaNs.length / 100;
 };

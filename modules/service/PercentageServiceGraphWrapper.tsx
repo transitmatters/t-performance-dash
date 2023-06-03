@@ -15,7 +15,7 @@ import {
   getPercentageData,
   getPercentageOfScheduled,
   getPercentageServiceWidgetValues,
-  getScheduledAverage,
+  getAverageWithNaNs,
 } from './utils/utils';
 import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/service';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -43,8 +43,8 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
   const { line } = useDelimitatedRoute();
 
   const { scheduled, baseline } = getPercentageData(data, predictedData, line);
-  const scheduledAverage = getScheduledAverage(scheduled);
-  const baselineAverage = baseline.reduce((sum, count) => sum + count, 0) / baseline.length / 100;
+  const scheduledAverage = getAverageWithNaNs(scheduled);
+  const baselineAverage = getAverageWithNaNs(baseline);
   return (
     <>
       <CarouselGraphDiv>
