@@ -1,14 +1,15 @@
-import React, { SetStateAction } from 'react';
+import React from 'react';
+import type { SetStateAction } from 'react';
 import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
-import { ParamsType } from '../speed/constants/speeds';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { PercentageWidgetValue } from '../../common/types/basicWidgets';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
-import { PercentageServiceGraph } from './PercentageServiceGraph';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
-import { getPercentageData, getAverageWithNaNs } from './utils/utils';
 import { useDelimitatedRoute } from '../../common/utils/router';
+import type { ParamsType } from '../speed/constants/speeds';
+import { PercentageServiceGraph } from './PercentageServiceGraph';
+import { getPercentageData, getAverageWithNaNs } from './utils/utils';
 
 interface PercentageServiceGraphWrapperProps {
   data: SpeedDataPoint[];
@@ -42,7 +43,7 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
           <WidgetForCarousel
             widgetValue={
               new PercentageWidgetValue(
-                comparison == 'Scheduled' ? scheduledAverage : baselineAverage
+                comparison === 'Scheduled' ? scheduledAverage : baselineAverage
               )
             }
             analysis={`Average`}

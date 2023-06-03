@@ -27,9 +27,9 @@ import type { ParamsType } from '../speed/constants/speeds';
 import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/baselines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
-import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
+import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 ChartJS.register(
   CategoryScale,

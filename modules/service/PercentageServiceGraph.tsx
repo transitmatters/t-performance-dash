@@ -19,15 +19,14 @@ import Annotation from 'chartjs-plugin-annotation';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
+import type { SpeedDataPoint } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
-import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/baselines';
 import { hexWithAlpha } from '../../common/utils/general';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import type { ParamsType } from '../speed/constants/speeds';
-import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
+import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 ChartJS.register(
   CategoryScale,

@@ -1,12 +1,12 @@
 import React from 'react';
 import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
-import { ParamsType } from '../speed/constants/speeds';
-import { ServiceGraph } from './ServiceGraph';
+import type { ParamsType } from '../speed/constants/speeds';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { TripsWidgetValue } from '../../common/types/basicWidgets';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import { getServiceWidgetValues } from './utils/utils';
+import { ServiceGraph } from './ServiceGraph';
 interface ServiceGraphWrapperProps {
   data: SpeedDataPoint[];
   predictedData: TripCounts;
