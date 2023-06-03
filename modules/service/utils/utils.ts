@@ -1,4 +1,6 @@
-import type { SpeedDataPoint } from '../../../common/types/dataPoints';
+import { PEAK_SCHEDULED_SERVICE } from '../../../common/constants/service';
+import type { SpeedDataPoint, TripCounts } from '../../../common/types/dataPoints';
+import type { Line } from '../../../common/types/lines';
 
 export const getServiceWidgetValues = (datapoints: SpeedDataPoint[], predictedData: number[]) => {
   const totals = datapoints.reduce(
@@ -22,6 +24,28 @@ export const getServiceWidgetValues = (datapoints: SpeedDataPoint[], predictedDa
     (max, speed) => (speed.count > max.count ? speed : max),
     datapoints[0]
   );
-
   return { current, delta, average, peak, percentDelivered };
+};
+
+export const getPercentageData = (
+  data: SpeedDataPoint[],
+  predictedData: TripCounts,
+  line?: Line
+) => {
+  const scheduled = data.map((datapoint, index) => {
+    return datapoint.value && predictedData.counts[index]
+      ? (100 * datapoint.count) / predictedData.counts[index]
+      : Number.NaN;
+  });
+  const baseline = data.map((datapoint) =>
+    datapoint.value
+      ? (100 * datapoint.count) / 2 / PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
+      : Number.NaN
+  );
+  return { scheduled: scheduled, baseline: baseline };
+};
+
+export const getScheduledAverage = (data: number[]) => {
+  const removeNaNs = data.filter((datapoint) => !isNaN(datapoint));
+  return removeNaNs.reduce((sum, count) => sum + count, 0) / removeNaNs.length / 100;
 };

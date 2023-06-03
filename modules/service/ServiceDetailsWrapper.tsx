@@ -32,15 +32,13 @@ export const ServiceDetailsWrapper: React.FC<ServiceDetailsWrapperProps> = ({
     <>
       <WidgetDiv>
         <WidgetTitle title="Daily Round Trips" />
-        <div className={classNames('flex h-60 flex-row items-center pr-4')}>
-          <ServiceGraph
-            config={config}
-            data={data}
-            startDate={startDate}
-            endDate={endDate}
-            predictedData={predictedData}
-          />
-        </div>
+        <ServiceGraph
+          config={config}
+          data={data}
+          startDate={startDate}
+          endDate={endDate}
+          predictedData={predictedData}
+        />
       </WidgetDiv>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         <WidgetDiv className="w-full">
