@@ -6,7 +6,6 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
-import { SpeedOverviewWrapper } from './SpeedOverviewWrapper';
 import { getSpeedGraphConfig } from './constants/speeds';
 import { SpeedGraphWrapper } from './SpeedGraphWrapper';
 
