@@ -1,6 +1,6 @@
 import type dayjs from 'dayjs';
 import React from 'react';
-import { DeltaZonesWidgetValue, SZWidgetValue } from '../../common/types/basicWidgets';
+import { SZWidgetValue } from '../../common/types/basicWidgets';
 import type { Direction, SlowZoneResponse } from '../../common/types/dataPoints';
 import type { LineShort } from '../../common/types/lines';
 import {
@@ -8,11 +8,9 @@ import {
   useFormatSegments,
   useSlowZoneQuantityDelta,
 } from '../../common/utils/slowZoneUtils';
+import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { todayOrDate } from '../../common/constants/dates';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
-import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
-import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
-import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { LineSegments } from './charts/LineSegments';
 
 interface SlowZonesSegmentsWrapper {
@@ -40,39 +38,30 @@ export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
   );
   const stationPairs = new Set(allSlowGraphData.map((dataPoint) => dataPoint.id));
   return (
-    <div className="pb-4 pl-4">
-      <CarouselGraphDiv>
-        <WidgetCarousel>
-          <WidgetForCarousel
-            widgetValue={new SZWidgetValue(endValue)}
-            layoutKind="no-delta"
-            analysis={`Current (${todayOrDate(endDateUTC)})`}
+    <>
+      <BasicWidgetDataLayout
+        widgetValue={new SZWidgetValue(endValue, zonesDelta)}
+        title={todayOrDate(endDateUTC)}
+        analysis={'over period'}
+      />
+      <div className="w-full overflow-x-auto overflow-y-hidden">
+        <div
+          className="relative ml-2 sm:ml-0"
+          style={
+            isMobile
+              ? { width: stationPairs.size * 64, height: 480 }
+              : { height: stationPairs.size * 40 }
+          }
+        >
+          <LineSegments
+            data={allSlowGraphData}
+            line={lineShort}
+            startDateUTC={startDateUTC}
+            endDateUTC={endDateUTC}
+            direction={direction}
           />
-          <WidgetForCarousel
-            widgetValue={new DeltaZonesWidgetValue(endValue, zonesDelta)}
-            analysis={'Change over period'}
-            layoutKind="no-delta"
-          />
-        </WidgetCarousel>
-        <div className="w-full overflow-x-auto overflow-y-hidden">
-          <div
-            className="relative ml-2 sm:ml-0"
-            style={
-              isMobile
-                ? { width: stationPairs.size * 64, height: 480 }
-                : { height: stationPairs.size * 40 }
-            }
-          >
-            <LineSegments
-              data={allSlowGraphData}
-              line={lineShort}
-              startDateUTC={startDateUTC}
-              endDateUTC={endDateUTC}
-              direction={direction}
-            />
-          </div>
         </div>
-      </CarouselGraphDiv>
-    </div>
+      </div>
+    </>
   );
 };
