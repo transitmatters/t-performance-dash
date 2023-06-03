@@ -14,20 +14,18 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
-import pattern from 'patternomaly';
 import Annotation from 'chartjs-plugin-annotation';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
+import type { RidershipCount } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
-import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/baselines';
+import { PEAK_RIDERSHIP } from '../../common/constants/baselines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
-import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 ChartJS.register(
   CategoryScale,
@@ -43,36 +41,36 @@ ChartJS.register(
   ChartjsPluginWatermark
 );
 
-interface ServiceGraphProps {
-  data: SpeedDataPoint[];
-  predictedData: TripCounts;
+interface RidershipGraphProps {
+  data: RidershipCount[];
   config: ParamsType;
   startDate: string;
   endDate: string;
   showTitle?: boolean;
 }
 
-export const ServiceGraph: React.FC<ServiceGraphProps> = ({
+export const RidershipGraph: React.FC<RidershipGraphProps> = ({
   data,
-  predictedData,
   config,
   startDate,
   endDate,
   showTitle = false,
 }) => {
-  const { line } = useDelimitatedRoute();
+  const {
+    line,
+    query: { busRoute },
+  } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
-
   const isMobile = !useBreakpoint('md');
   const ref = useRef();
 
   const chart = useMemo(() => {
+    const routeIndex = busRoute ? busRoute.replaceAll('/', '') : line;
     const labels = data.map((point) => point.date);
     const lineColor = LINE_COLORS[line ?? 'default'];
-    const shuttlingBlocks = getShuttlingBlockAnnotations(data);
     return (
       <Line
-        id={'Service'}
+        id={'Ridership'}
         height={240}
         ref={ref}
         redraw={true}
@@ -80,7 +78,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
           labels,
           datasets: [
             {
-              label: `Actual trips`,
+              label: `Riders`,
               borderColor: lineColor,
               backgroundColor: hexWithAlpha(lineColor, 0.8),
               pointRadius: 8,
@@ -90,24 +88,12 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
               fill: true,
               pointHoverRadius: 3,
               pointHoverBackgroundColor: lineColor,
-              data: data.map((datapoint) => (datapoint.value ? datapoint.count / 2 : Number.NaN)),
+              data: data.map((datapoint) => datapoint.count),
             },
+
             {
-              label: `MBTA scheduled trips`,
-              stepped: true,
-              fill: true,
-              pointBackgroundColor: 'transparent',
-              pointBorderWidth: 0,
-              borderColor: lineColor,
-              spanGaps: false,
-              data: predictedData.counts.map((count, index) =>
-                data[index]?.value > 0 && count ? count / 2 : Number.NaN
-              ),
-              backgroundColor: pattern.draw('diagonal', 'transparent', lineColor, 5),
-            },
-            {
-              // This null dataset produces the entry in the legend for the baseline annotation.
-              label: `Baseline (${PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']})`,
+              // This null dataset produces the entry in the legend for the peak annotation.
+              label: `peak (${PEAK_RIDERSHIP[routeIndex ?? 'DEFAULT']})`,
               backgroundColor: CHART_COLORS.ANNOTATIONS,
               data: null,
             },
@@ -135,8 +121,8 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                 label: (context) => {
                   return `${context.parsed.y} (${(
                     (100 * context.parsed.y) /
-                    PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
-                  ).toFixed(1)}% of baseline)`;
+                    PEAK_RIDERSHIP[routeIndex ?? 'DEFAULT']
+                  ).toFixed(1)}% of peak)`;
                 },
               },
             },
@@ -156,14 +142,13 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
               annotations: [
                 {
                   type: 'line',
-                  yMin: PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'],
-                  yMax: PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'],
+                  yMin: PEAK_RIDERSHIP[routeIndex ?? 'DEFAULT'],
+                  yMax: PEAK_RIDERSHIP[routeIndex ?? 'DEFAULT'],
                   borderColor: CHART_COLORS.ANNOTATIONS,
                   // corresponds to null dataset index.
-                  display: (ctx) => ctx.chart.isDatasetVisible(2),
+                  display: (ctx) => ctx.chart.isDatasetVisible(1),
                   borderWidth: 2,
                 },
-                ...shuttlingBlocks,
               ],
             },
           },
@@ -233,12 +218,12 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
       />
     );
   }, [
+    busRoute,
     data,
     callbacks,
     endDate,
     isMobile,
     line,
-    predictedData.counts,
     showTitle,
     startDate,
     tooltipFormat,

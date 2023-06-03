@@ -25,3 +25,14 @@ export const longestDwells = (dwells: SingleDayDataPoint[] | AggregateDataPoint[
     .filter((dwell) => dwell !== undefined) as number[];
   return Math.max(...allDwells);
 };
+
+export const getLongestDwell = (dwells: AggregateDataPoint[]) => {
+  return dwells.reduce(
+    (current, datapoint) => (datapoint.max > current.max ? datapoint : current),
+    dwells[0]
+  );
+};
+
+export const getDwellsAggregateWidgetData = (dwells: AggregateDataPoint[]) => {
+  return { average: averageDwells(dwells), max: getLongestDwell(dwells) };
+};

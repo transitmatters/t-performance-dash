@@ -2,10 +2,10 @@ import React from 'react';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { SlowZonesWidget } from '../slowzones/SlowZonesWidget';
 import { SpeedWidget } from '../speed/SpeedWidget';
-import { RidershipWidget } from '../ridership/RidershipWidget';
 import { ServiceWidget } from '../service/ServiceWidget';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
-import { LayoutType } from '../../common/layouts/layoutTypes';
+import { Layout } from '../../common/layouts/layoutTypes';
+import { RidershipWidget } from '../ridership/RidershipWidget';
 
 export function Overview() {
   const { tab, line } = useDelimitatedRoute();
@@ -23,4 +23,4 @@ export function Overview() {
   );
 }
 
-Overview.Layout = LayoutType.Dashboard;
+Overview.Layout = Layout.Dashboard;
