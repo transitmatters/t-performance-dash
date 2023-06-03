@@ -8,6 +8,7 @@ import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { SpeedOverviewWrapper } from './SpeedOverviewWrapper';
 import { getSpeedGraphConfig } from './constants/speeds';
+import { SpeedGraphWrapper } from './SpeedGraphWrapper';
 
 export const SpeedWidget: React.FC = () => {
   const { line, query } = useDelimitatedRoute();
@@ -27,7 +28,7 @@ export const SpeedWidget: React.FC = () => {
     <WidgetDiv>
       <HomescreenWidgetTitle title="Speed" tab="speed" />
       {speedReady ? (
-        <SpeedOverviewWrapper
+        <SpeedGraphWrapper
           data={speeds.data}
           config={config}
           line={line}
