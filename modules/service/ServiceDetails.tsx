@@ -8,7 +8,6 @@ import { useSpeedData } from '../../common/api/hooks/speed';
 import { useTripCounts } from '../../common/api/hooks/service';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
-import { ServiceDetailsWrapper } from './ServiceDetailsWrapper';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';

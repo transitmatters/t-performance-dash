@@ -7,7 +7,7 @@ import { TripsWidgetValue } from '../../common/types/basicWidgets';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import { getServiceWidgetValues } from './utils/utils';
-interface ServiceDetailsWrapperProps {
+interface ServiceGraphWrapperProps {
   data: SpeedDataPoint[];
   predictedData: TripCounts;
   config: ParamsType;
@@ -15,7 +15,7 @@ interface ServiceDetailsWrapperProps {
   endDate: string;
 }
 
-export const ServiceGraphWrapper: React.FC<ServiceDetailsWrapperProps> = ({
+export const ServiceGraphWrapper: React.FC<ServiceGraphWrapperProps> = ({
   data,
   predictedData,
   config,
