@@ -3,28 +3,28 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
-import { getTravelTimesSingleWidgetData } from '../../common/utils/traveltimes';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import type { SingleDayDataPoint } from '../../common/types/charts';
-import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
+import { getHeadwaysSingleWidgetData } from '../../common/utils/headways';
+import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 
-interface TravelTimesSingleWrapperProps {
+interface HeadwaysSingleWrapperProps {
   query: UseQueryResult<SingleDayDataPoint[]>;
   toStation: Station;
   fromStation: Station;
 }
 
-export const TravelTimesSingleWrapper: React.FC<TravelTimesSingleWrapperProps> = ({
+export const HeadwaysSingleWrapper: React.FC<HeadwaysSingleWrapperProps> = ({
   query,
   toStation,
   fromStation,
 }) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
-  const { average, fastest, slowest } = getTravelTimesSingleWidgetData(query.data);
+  const { average, longest, shortest } = getHeadwaysSingleWidgetData(query.data);
   return (
     <CarouselGraphDiv>
       <WidgetCarousel>
@@ -35,20 +35,16 @@ export const TravelTimesSingleWrapper: React.FC<TravelTimesSingleWrapperProps> =
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Fastest Trip (${dayjs(fastest.dep_dt).format('h:mm A')})`}
-          widgetValue={new TimeWidgetValue(fastest.travel_time_sec)}
+          analysis={`Shortest Headway (${dayjs(shortest.current_dep_dt).format('h:mm A')})`}
+          widgetValue={new TimeWidgetValue(shortest.headway_time_sec)}
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Slowest Trip (${dayjs(slowest.dep_dt).format('h:mm A')})`}
-          widgetValue={new TimeWidgetValue(slowest.travel_time_sec)}
+          analysis={`Longest Headway (${dayjs(longest.current_dep_dt).format('h:mm A')})`}
+          widgetValue={new TimeWidgetValue(longest.headway_time_sec)}
         />
       </WidgetCarousel>
-      <TravelTimesSingleChart
-        traveltimes={query.data}
-        toStation={toStation}
-        fromStation={fromStation}
-      />
+      <HeadwaysSingleChart headways={query.data} toStation={toStation} fromStation={fromStation} />
     </CarouselGraphDiv>
   );
 };
