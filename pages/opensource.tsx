@@ -3,6 +3,7 @@ import React from 'react';
 import Head from 'next/head';
 import licenses from '../common/constants/licenses/licenseInfos.json';
 import { Accordion } from '../common/components/accordion/Accordion';
+import { Layout } from '../common/layouts/layoutTypes';
 
 export default function OpenSource() {
   const licensesDisplays = Object.entries(licenses)
@@ -28,3 +29,5 @@ export default function OpenSource() {
     </div>
   );
 }
+
+OpenSource.Layout = Layout.Landing;
