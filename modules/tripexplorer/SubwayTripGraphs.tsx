@@ -9,6 +9,9 @@ import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { getLocationDetails } from '../../common/utils/stations';
 import type { Line } from '../../common/types/lines';
+import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
+import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
+import { DwellsAggregateWrapper } from '../dwells/DwellsAggregateWrapper';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -39,17 +42,15 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
   const location = getLocationDetails(fromStation, toStation);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
       {aggregate ? (
         <>
           <WidgetDiv>
             <WidgetTitle title="Travel Times" location={location} line={line} both />
-            <AggregateChartWrapper
+            <TravelTimesAggregateWrapper
               query={traveltimes}
-              toStation={toStation}
               fromStation={fromStation}
-              type={'traveltimes'}
-              timeUnit={'by_date'}
+              toStation={toStation}
             />
           </WidgetDiv>
           <WidgetDiv>
@@ -60,11 +61,10 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               line={line}
             />
 
-            <AggregateChartWrapper
+            <HeadwaysAggregateWrapper
               query={headways}
-              toStation={toStation}
               fromStation={fromStation}
-              type={'headways'}
+              toStation={toStation}
             />
           </WidgetDiv>
           <WidgetDiv>
@@ -74,16 +74,14 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               location={location}
               line={line}
             />
-
-            <AggregateChartWrapper
+            <DwellsAggregateWrapper
               query={dwells}
-              toStation={toStation}
               fromStation={fromStation}
-              type={'dwells'}
+              toStation={toStation}
             />
           </WidgetDiv>
           <WidgetDiv className="flex flex-col justify-center">
-            <WidgetTitle title="Travel Times By Hour" location={location} line={line} both />
+            <WidgetTitle title="Travel Times by Hour" location={location} line={line} both />
             <AggregateChartWrapper
               query={traveltimes}
               toStation={toStation}

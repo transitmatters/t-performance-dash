@@ -53,3 +53,13 @@ export enum FetchTripCountsParams {
   routeId = 'route_id',
   agg = 'agg',
 }
+
+export type FetchRidershipOptions = {
+  [key in FetchRidershipParams]?: string;
+};
+
+export enum FetchRidershipParams {
+  lineId = 'line_id',
+  startDate = 'start_date',
+  endDate = 'end_date',
+}

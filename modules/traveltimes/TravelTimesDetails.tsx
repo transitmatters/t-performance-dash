@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import dayjs from 'dayjs';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
 import {
@@ -10,11 +9,7 @@ import {
   stopIdsForStations,
 } from '../../common/utils/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { averageTravelTime } from '../../common/utils/traveltimes';
-import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
-import { BasicDataWidgetPair } from '../../common/components/widgets/BasicDataWidgetPair';
-import { BasicDataWidgetItem } from '../../common/components/widgets/BasicDataWidgetItem';
 import {
   useTravelTimesAggregateData,
   useTravelTimesSingleDayData,
@@ -25,6 +20,7 @@ import { AggregateChartWrapper } from '../../common/components/charts/AggregateC
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { Layout } from '../../common/layouts/layoutTypes';
 
 export function TravelTimesDetails() {
   const {
@@ -56,26 +52,10 @@ export function TravelTimesDetails() {
   const travelTimes = useTravelTimesSingleDayData(parameters, !aggregate && enabled);
   const travelTimesAggregate = useTravelTimesAggregateData(parameters, aggregate && enabled);
 
-  const travelTimeValues = aggregate
-    ? travelTimesAggregate?.data?.by_date?.map((tt) => tt.mean)
-    : travelTimes?.data?.map((tt) => tt.travel_time_sec);
-
   const [peakTime, setPeakTime] = React.useState<'weekday' | 'weekend'>('weekday');
 
   return (
     <PageWrapper pageTitle={'Travel Times'}>
-      <BasicDataWidgetPair>
-        <BasicDataWidgetItem
-          title="Avg. Travel Time"
-          widgetValue={
-            new TimeWidgetValue(
-              travelTimeValues ? averageTravelTime(travelTimeValues) : undefined,
-              1
-            )
-          }
-          analysis={`from last ${dayjs().format('ddd')}.`}
-        />
-      </BasicDataWidgetPair>
       <WidgetDiv>
         <WidgetTitle title="Travel Times" location={location} line={line} both />
         {aggregate ? (
@@ -97,7 +77,7 @@ export function TravelTimesDetails() {
       </WidgetDiv>
       {aggregate && (
         <WidgetDiv className="flex flex-col justify-center">
-          <WidgetTitle title="Travel Times By Hour" location={location} line={line} both />
+          <WidgetTitle title="Travel Times by Hour" location={location} line={line} both />
           <AggregateChartWrapper
             query={travelTimesAggregate}
             toStation={toStation}
@@ -123,3 +103,5 @@ export function TravelTimesDetails() {
     </PageWrapper>
   );
 }
+
+TravelTimesDetails.Layout = Layout.Dashboard;

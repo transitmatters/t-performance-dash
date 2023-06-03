@@ -30,16 +30,23 @@ export const WidgetTitle: React.FC<WidgetTitle> = ({
     view: query.view,
   });
   return (
-    <div className="flex w-full flex-col items-baseline justify-between gap-x-4 p-2 text-xl md:flex-row">
+    <div className="flex w-full flex-col items-baseline justify-between gap-x-4 gap-y-1 pb-1 text-xl md:flex-row">
       <div className="flex w-full flex-col md:w-auto ">
         <div className="flex w-full flex-row items-baseline justify-between">
-          <h2 className={classNames('font-semibold', 'whitespace-nowrap text-stone-800')}>
+          <h2
+            className={classNames(
+              'font-semibold',
+              'whitespace-nowrap leading-tight text-stone-800'
+            )}
+          >
             {title}
           </h2>
           {isMobile && <p className="text-xs italic text-stone-700">{date}</p>}
         </div>
         {subtitle && (
-          <h2 className={classNames('whitespace-nowrap text-sm italic text-stone-600')}>
+          <h2
+            className={classNames('whitespace-nowrap text-sm italic leading-tight text-stone-600')}
+          >
             {subtitle}
           </h2>
         )}

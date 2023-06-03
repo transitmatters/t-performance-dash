@@ -7,15 +7,14 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { Layout } from '../../common/layouts/layoutTypes';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 
 interface SystemSlowZonesDetailsProps {
   showTitle?: boolean;
 }
 
-export const SystemSlowZonesDetails: React.FC<SystemSlowZonesDetailsProps> = ({
-  showTitle = false,
-}) => {
+export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDetailsProps) {
   const delayTotals = useSlowzoneDelayTotalData();
   const {
     query: { startDate, endDate },
@@ -51,4 +50,6 @@ export const SystemSlowZonesDetails: React.FC<SystemSlowZonesDetailsProps> = ({
       </div>
     </PageWrapper>
   );
-};
+}
+
+SystemSlowZonesDetails.Layout = Layout.Dashboard;

@@ -2,11 +2,12 @@ import React from 'react';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { SlowZonesWidget } from '../slowzones/SlowZonesWidget';
 import { SpeedWidget } from '../speed/SpeedWidget';
-import { RidershipWidget } from '../ridership/RidershipWidget';
 import { ServiceWidget } from '../service/ServiceWidget';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { Layout } from '../../common/layouts/layoutTypes';
+import { RidershipWidget } from '../ridership/RidershipWidget';
 
-export const Overview: React.FC = () => {
+export function Overview() {
   const { tab, line } = useDelimitatedRoute();
   return (
     <PageWrapper pageTitle={'Overview'}>
@@ -20,4 +21,6 @@ export const Overview: React.FC = () => {
       </div>
     </PageWrapper>
   );
-};
+}
+
+Overview.Layout = Layout.Dashboard;

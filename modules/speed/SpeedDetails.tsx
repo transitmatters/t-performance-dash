@@ -6,6 +6,7 @@ import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useSpeedData } from '../../common/api/hooks/speed';
+import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { getSpeedGraphConfig } from './constants/speeds';
 import { SpeedDetailsWrapper } from './SpeedDetailsWrapper';
@@ -55,3 +56,5 @@ export function SpeedDetails() {
     </PageWrapper>
   );
 }
+
+SpeedDetails.Layout = Layout.Dashboard;

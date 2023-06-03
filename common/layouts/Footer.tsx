@@ -27,9 +27,9 @@ export const Footer: React.FC = () => {
       |{' '}
       <Link
         className={'text-blue-600 hover:text-black dark:text-blue-500'}
-        href="https://transitmatters.org/blog/slowzones"
+        href="https://transitmatters.org/join"
       >
-        Release blog
+        Join TransitMatters
       </Link>{' '}
       |{' '}
       <Link
@@ -47,7 +47,7 @@ export const Footer: React.FC = () => {
         className={'text-blue-600 hover:text-black dark:text-blue-500'}
         href="mailto:labs@transitmatters.org?subject=[Data%20Dashboard%20Feedback]%20-%20"
       >
-        🚀 Send feedback
+        Send feedback
       </Link>
     </footer>
   );
