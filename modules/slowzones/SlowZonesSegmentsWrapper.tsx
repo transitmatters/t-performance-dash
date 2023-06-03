@@ -40,7 +40,7 @@ export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
   );
   const stationPairs = new Set(allSlowGraphData.map((dataPoint) => dataPoint.id));
   return (
-    <div className="pb-4 pl-4">
+    <div className="pb-4 pl-4 sm:pb-0 sm:pl-0">
       <CarouselGraphDiv>
         <WidgetCarousel>
           <WidgetForCarousel
