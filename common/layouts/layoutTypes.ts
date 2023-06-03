@@ -1,6 +1,6 @@
-export enum LayoutType {
+export enum Layout {
   Dashboard = 'Dashboard',
   Landing = 'Landing',
 }
 
-export type LayoutNames = LayoutType;
+export type LayoutNames = Layout;

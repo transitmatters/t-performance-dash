@@ -3,7 +3,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { getParentStationForStopId } from '../../common/utils/stations';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
-import { LayoutType } from '../../common/layouts/layoutTypes';
+import { Layout } from '../../common/layouts/layoutTypes';
 import { TripGraphs } from './TripGraphs';
 
 export const TripExplorer = () => {
@@ -26,4 +26,4 @@ export const TripExplorer = () => {
     </PageWrapper>
   );
 };
-TripExplorer.Layout = LayoutType.Dashboard;
+TripExplorer.Layout = Layout.Dashboard;

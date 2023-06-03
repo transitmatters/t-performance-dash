@@ -24,7 +24,7 @@ import { SingleChartWrapper } from '../../common/components/charts/SingleChartWr
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
-import { LayoutType } from '../../common/layouts/layoutTypes';
+import { Layout } from '../../common/layouts/layoutTypes';
 import { HeadwaysHistogramWrapper } from './charts/HeadwaysHistogramWrapper';
 
 export function HeadwaysDetails() {
@@ -119,4 +119,4 @@ export function HeadwaysDetails() {
   );
 }
 
-HeadwaysDetails.Layout = LayoutType.Dashboard;
+HeadwaysDetails.Layout = Layout.Dashboard;

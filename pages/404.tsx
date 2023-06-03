@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import React from 'react';
-import { LayoutType } from '../common/layouts/layoutTypes';
+import { Layout } from '../common/layouts/layoutTypes';
 
 export default function Page() {
   return (
@@ -13,4 +13,4 @@ export default function Page() {
   );
 }
 
-Page.Layout = LayoutType.Landing;
+Page.Layout = Layout.Landing;
