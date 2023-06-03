@@ -13,6 +13,7 @@ import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregate
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 import { DwellsAggregateWrapper } from '../dwells/DwellsAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
+import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -122,11 +123,10 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               location={location}
               line={line}
             />
-            <SingleChartWrapper
+            <HeadwaysSingleWrapper
               query={headways}
               toStation={toStation}
               fromStation={fromStation}
-              type={'headways'}
             />
           </WidgetDiv>
           <WidgetDiv>
