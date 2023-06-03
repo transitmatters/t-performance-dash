@@ -22,7 +22,7 @@ export const saveDashboardConfig = (
 };
 
 export const getDashboardConfig = (section: Section, dashboardConfig: DashboardConfig) => {
-  if (section === 'trips') {
+  if (section === 'trips' || section === 'system') {
     return dashboardConfig.tripConfig;
   }
   if (section === 'line') {

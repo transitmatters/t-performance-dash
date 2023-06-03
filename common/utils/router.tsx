@@ -50,7 +50,7 @@ export const useDelimitatedRoute = (): Route => {
   const pathItems = path[0].split('/');
   const queryParams = router.query;
   const tab = getTab(pathItems[1]);
-  const page = getPage(pathItems.slice(2)) as Page;
+  const page = getPage(tab !== 'System' ? pathItems.slice(2) : pathItems.slice(1)) as Page;
   const newParams = getParams(queryParams);
 
   return {
