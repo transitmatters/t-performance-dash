@@ -30,6 +30,7 @@ export function SlowZonesDetails() {
   const speedRestrictions = useSpeedRestrictionData();
   const {
     lineShort,
+    linePath,
     line,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
@@ -101,6 +102,7 @@ export function SlowZonesDetails() {
               <SlowZonesSegmentsWrapper
                 data={allSlow.data}
                 lineShort={lineShort}
+                linePath={linePath}
                 endDateUTC={endDateUTC}
                 startDateUTC={startDateUTC}
                 direction={direction}
