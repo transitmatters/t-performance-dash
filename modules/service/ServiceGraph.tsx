@@ -24,7 +24,7 @@ import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
-import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/service';
+import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/baselines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
