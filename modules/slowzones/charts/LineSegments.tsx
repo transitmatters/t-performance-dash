@@ -152,10 +152,8 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
           }
         },
         onHover: (event, elements) => {
-          if (elements.length >= 1) {
-            // @ts-expect-error TS doesn't think target has `style` (rude), but it does
-            event.native?.target.style.cursor = elements[0] ? 'pointer' : 'default';
-          }
+          // @ts-expect-error TS doesn't think target has `style` (rude), but it does
+          event.native?.target.style.cursor = elements?.[0] ? 'pointer' : 'default';
         },
         parsing: isMobile
           ? { xAxisKey: 'id' }
