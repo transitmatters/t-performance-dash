@@ -1,23 +1,13 @@
-import React, { SetStateAction, useState } from 'react';
+import React, { SetStateAction } from 'react';
 import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { ParamsType } from '../speed/constants/speeds';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
-import {
-  PercentageWidgetValue,
-  TimeWidgetValue,
-  TripsWidgetValue,
-} from '../../common/types/basicWidgets';
+import { PercentageWidgetValue } from '../../common/types/basicWidgets';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { PercentageServiceGraph } from './PercentageServiceGraph';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
-import {
-  getPercentageData,
-  getPercentageOfScheduled,
-  getPercentageServiceWidgetValues,
-  getAverageWithNaNs,
-} from './utils/utils';
-import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/service';
+import { getPercentageData, getAverageWithNaNs } from './utils/utils';
 import { useDelimitatedRoute } from '../../common/utils/router';
 
 interface PercentageServiceGraphWrapperProps {
