@@ -20,6 +20,7 @@ import { AggregateChartWrapper } from '../../common/components/charts/AggregateC
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { Layout } from '../../common/layouts/layoutTypes';
 
 export function TravelTimesDetails() {
   const {
@@ -102,3 +103,5 @@ export function TravelTimesDetails() {
     </PageWrapper>
   );
 }
+
+TravelTimesDetails.Layout = Layout.Dashboard;

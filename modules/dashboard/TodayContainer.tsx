@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDelimitatedRoute } from '../../common/utils/router';
+import { Layout } from '../../common/layouts/layoutTypes';
 import { Today } from './Today';
 
 export function TodayContainer() {
@@ -10,3 +11,4 @@ export function TodayContainer() {
   }
   return <Today lineShort={lineShort} />;
 }
+TodayContainer.Layout = Layout.Dashboard;

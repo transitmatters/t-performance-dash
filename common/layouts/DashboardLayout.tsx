@@ -12,7 +12,7 @@ import { MobileNavHeader } from '../../modules/navigation/MobileNavHeader';
 import { Footer } from './Footer';
 
 interface DashboardLayoutProps {
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {

@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import React from 'react';
+import { Layout } from '../common/layouts/layoutTypes';
 
 export default function Page() {
   return (
@@ -11,3 +12,5 @@ export default function Page() {
     </div>
   );
 }
+
+Page.Layout = Layout.Landing;
