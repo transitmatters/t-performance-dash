@@ -2,6 +2,7 @@ import React from 'react';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useRidershipData } from '../../common/api/hooks/ridership';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { Layout } from '../../common/layouts/layoutTypes';
 import { RIDERSHIP_KEYS } from '../../common/types/lines';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
@@ -43,3 +44,5 @@ export function RidershipDetails() {
     </PageWrapper>
   );
 }
+
+RidershipDetails.Layout = Layout.Dashboard;

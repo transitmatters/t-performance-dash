@@ -6,6 +6,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useSpeedData } from '../../common/api/hooks/speed';
 import { useTripCounts } from '../../common/api/hooks/service';
+import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
@@ -14,7 +15,7 @@ import { ServiceGraphWrapper } from './ServiceGraphWrapper';
 import { PercentageServiceGraphWrapper } from './PercentageServiceGraphWrapper';
 dayjs.extend(utc);
 
-export const ServiceDetails: React.FC = () => {
+export function ServiceDetails() {
   const {
     line,
     lineShort,
@@ -92,4 +93,6 @@ export const ServiceDetails: React.FC = () => {
       </div>
     </PageWrapper>
   );
-};
+}
+
+ServiceDetails.Layout = Layout.Dashboard;
