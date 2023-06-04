@@ -85,10 +85,7 @@ export const getParentStationForStopId = (stopId: string) => {
   return parentStationIndex[stopId];
 };
 
-export const stopIdsForStations = (
-  from: Station | undefined,
-  to: Station | undefined
-): { fromStopIds: string[] | undefined; toStopIds: string[] | undefined } => {
+export const stopIdsForStations = (from: Station | undefined, to: Station | undefined) => {
   if (to === undefined || from === undefined) {
     return { fromStopIds: undefined, toStopIds: undefined };
   }
