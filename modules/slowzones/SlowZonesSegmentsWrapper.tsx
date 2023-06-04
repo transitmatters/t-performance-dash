@@ -2,7 +2,7 @@ import type dayjs from 'dayjs';
 import React from 'react';
 import { SZWidgetValue } from '../../common/types/basicWidgets';
 import type { Direction, SlowZoneResponse } from '../../common/types/dataPoints';
-import type { LineShort } from '../../common/types/lines';
+import type { LinePath, LineShort } from '../../common/types/lines';
 import {
   useFilteredAllSlow,
   useFormatSegments,
@@ -16,6 +16,7 @@ import { LineSegments } from './charts/LineSegments';
 interface SlowZonesSegmentsWrapper {
   data: SlowZoneResponse[];
   lineShort: LineShort;
+  linePath: LinePath;
   endDateUTC: dayjs.Dayjs;
   startDateUTC: dayjs.Dayjs;
   direction: Direction;
@@ -24,6 +25,7 @@ interface SlowZonesSegmentsWrapper {
 export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
   data,
   lineShort,
+  linePath,
   endDateUTC,
   startDateUTC,
   direction,
@@ -56,6 +58,7 @@ export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
           <LineSegments
             data={allSlowGraphData}
             line={lineShort}
+            linePath={linePath}
             startDateUTC={startDateUTC}
             endDateUTC={endDateUTC}
             direction={direction}
