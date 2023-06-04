@@ -8,6 +8,7 @@ import { AggregateChartWrapper } from '../../common/components/charts/AggregateC
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { getLocationDetails } from '../../common/utils/stations';
 import type { Line } from '../../common/types/lines';
+import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
 
 interface BusTripGraphsProps {
   fromStation: Station;
@@ -68,11 +69,10 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
         <>
           <WidgetDiv>
             <WidgetTitle title="Travel Times" location={location} line={line} both />
-            <SingleChartWrapper
+            <TravelTimesSingleWrapper
               query={traveltimes}
               toStation={toStation}
               fromStation={fromStation}
-              type={'traveltimes'}
             />
           </WidgetDiv>
           <WidgetDiv>
