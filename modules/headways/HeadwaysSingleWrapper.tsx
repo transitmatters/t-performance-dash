@@ -35,13 +35,13 @@ export const HeadwaysSingleWrapper: React.FC<HeadwaysSingleWrapperProps> = ({
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Shortest Headway (${dayjs(shortest.current_dep_dt).format('h:mm A')})`}
-          widgetValue={new TimeWidgetValue(shortest.headway_time_sec)}
+          analysis={`Shortest Headway (${dayjs(shortest?.current_dep_dt).format('h:mm A')})`}
+          widgetValue={new TimeWidgetValue(shortest?.headway_time_sec)}
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Longest Headway (${dayjs(longest.current_dep_dt).format('h:mm A')})`}
-          widgetValue={new TimeWidgetValue(longest.headway_time_sec)}
+          analysis={`Longest Headway (${dayjs(longest?.current_dep_dt).format('h:mm A')})`}
+          widgetValue={new TimeWidgetValue(longest?.headway_time_sec)}
         />
       </WidgetCarousel>
       <HeadwaysSingleChart headways={query.data} toStation={toStation} fromStation={fromStation} />
