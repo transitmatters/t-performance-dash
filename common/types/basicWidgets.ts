@@ -51,6 +51,20 @@ export class DeltaTimeWidgetValue extends BaseWidgetValue implements WidgetValue
   }
 }
 
+export class DeltaZonesWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
+  getUnits() {
+    return 'Zones';
+  }
+  getFormattedValue() {
+    if (this.delta === undefined) return '...';
+    return `${this.delta > 0 ? '+' : '-'}${Math.abs(this.delta)}`;
+  }
+  getFormattedDelta() {
+    new Error('DeltaWidgets should use `getFormattedValue`');
+    return 'invalid';
+  }
+}
+
 // This will eventually include the logic of the analysis (past week, since last Weds, etc.)
 export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {

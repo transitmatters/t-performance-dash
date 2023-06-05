@@ -90,14 +90,14 @@ export function SlowZonesDetails() {
           </div>
         </WidgetDiv>
         {/* Not Using WidgetDiv here - removed the padding so the chart goes to the edge of the widget on mobile. */}
-        <div className="h-full rounded-lg bg-white p-0 shadow-dataBox sm:p-2">
-          <div className="flex flex-col p-2 sm:p-0 md:flex-row">
+        <div className="h-full rounded-lg bg-white p-0 shadow-dataBox sm:p-4">
+          <div className="flex flex-col p-4 sm:p-0 lg:flex-row">
             <WidgetTitle title={`${DirectionObject[direction]} Segments`} />
-            <div className="p-2">
+            <div className="lg:ml-2">
               <ButtonGroup pressFunction={setDirection} options={Object.entries(DirectionObject)} />
             </div>
           </div>
-          <div className="relative flex flex-col py-2 sm:py-0">
+          <div className="relative flex flex-col">
             {segmentsReady ? (
               <SlowZonesSegmentsWrapper
                 data={allSlow.data}
