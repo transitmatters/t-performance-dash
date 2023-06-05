@@ -7,11 +7,15 @@ import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 export interface WidgetCarouselProps {
   children: React.ReactNode;
   isSingleWidget?: boolean;
+  noData?: boolean;
 }
 
-export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children, isSingleWidget = false }) => {
+export const WidgetCarousel: FC<WidgetCarouselProps> = ({
+  children,
+  isSingleWidget = false,
+  noData = false,
+}) => {
   const [activeItem, setActiveItem] = useState(0);
-
   const items = useMemo(
     () =>
       Children.map(
@@ -39,7 +43,7 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children, isSingleWidg
     item !== activeItem && (activeItem === items.length - 1 ? item === 0 : item - 1 === activeItem);
   const isBeforeActiveItem = (item: number) =>
     item !== activeItem && (activeItem === 0 ? item === items.length - 1 : item + 1 === activeItem);
-
+  if (noData) return null;
   return (
     <div className="relative flex flex-row gap-1">
       <div className="flex items-center">

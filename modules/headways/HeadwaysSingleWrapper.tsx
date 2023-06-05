@@ -10,6 +10,7 @@ import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDi
 import type { SingleDayDataPoint } from '../../common/types/charts';
 import { getHeadwaysSingleWidgetData } from '../../common/utils/headways';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 
 interface HeadwaysSingleWrapperProps {
   query: UseQueryResult<SingleDayDataPoint[]>;
@@ -24,6 +25,7 @@ export const HeadwaysSingleWrapper: React.FC<HeadwaysSingleWrapperProps> = ({
 }) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
+  if (query.data.length < 1) return <NoDataNotice />;
   const { average, longest, shortest } = getHeadwaysSingleWidgetData(query.data);
   return (
     <CarouselGraphDiv>

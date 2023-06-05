@@ -9,6 +9,7 @@ import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
 interface TravelTimesAggregateWrapperProps {
@@ -22,13 +23,14 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
   toStation,
   fromStation,
 }) => {
-  const dataReady = !query.isError && query.data && toStation && fromStation;
+  const dataReady = !query.isError && query.data && toStation && fromStation && query.data;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   const traveltimesData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
+  if (traveltimesData.length < 1) return <NoDataNotice />;
   const { average, fastest, deltaWidgetValue } = getTravelTimesAggregateWidgetData(traveltimesData);
   return (
     <CarouselGraphDiv>
-      <WidgetCarousel>
+      <WidgetCarousel noData={traveltimesData.length > 0}>
         <WidgetForCarousel
           layoutKind="no-delta"
           analysis={'Average'}
@@ -41,8 +43,8 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Fastest Trip (${dayjs(fastest.service_date).format('MM/DD/YY')})`}
-          widgetValue={new TimeWidgetValue(fastest.min)}
+          analysis={`Fastest Trip (${dayjs(fastest?.service_date).format('MM/DD/YY')})`}
+          widgetValue={new TimeWidgetValue(fastest?.min)}
         />
       </WidgetCarousel>
       <TravelTimesAggregateChart

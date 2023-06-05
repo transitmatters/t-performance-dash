@@ -3,33 +3,31 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
-import type { AggregateDataResponse } from '../../common/types/charts';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { getHeadwaysAggregateWidgetData } from '../../common/utils/headways';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
-import { SMALL_DATE_FORMAT } from '../../common/constants/dates';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import type { SingleDayDataPoint } from '../../common/types/charts';
+import { getDwellsSingleWidgetData } from '../../common/utils/dwells';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
-import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
+import { DwellsSingleChart } from './charts/DwellsSingleChart';
 
-interface HeadwaysAggregateWrapperProps {
-  query: UseQueryResult<AggregateDataResponse>;
+interface DwellsSingleWrapperProps {
+  query: UseQueryResult<SingleDayDataPoint[]>;
   toStation: Station;
   fromStation: Station;
 }
 
-export const HeadwaysAggregateWrapper: React.FC<HeadwaysAggregateWrapperProps> = ({
+export const DwellsSingleWrapper: React.FC<DwellsSingleWrapperProps> = ({
   query,
   toStation,
   fromStation,
 }) => {
-  const dataReady = !query.isError && query.data && toStation && fromStation;
+  const dataReady =
+    !query.isError && query.data && toStation && fromStation && query.data.length > 0;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
-  const headwaysData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
-  if (headwaysData.length < 1) return <NoDataNotice />;
-
-  const { average, max } = getHeadwaysAggregateWidgetData(headwaysData);
+  if (query.data.length < 1) return <NoDataNotice />;
+  const { average, longest, shortest } = getDwellsSingleWidgetData(query.data);
   return (
     <CarouselGraphDiv>
       <WidgetCarousel>
@@ -40,15 +38,16 @@ export const HeadwaysAggregateWrapper: React.FC<HeadwaysAggregateWrapperProps> =
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Longest Headway (${dayjs(max.service_date).format(SMALL_DATE_FORMAT)})`}
-          widgetValue={new TimeWidgetValue(max.max)}
+          analysis={`Longest dwell (${dayjs(longest?.dep_dt).format('h:mm A')})`}
+          widgetValue={new TimeWidgetValue(longest?.dwell_time_sec)}
+        />
+        <WidgetForCarousel
+          layoutKind="no-delta"
+          analysis={`Shortest dwell (${dayjs(shortest?.dep_dt).format('h:mm A')})`}
+          widgetValue={new TimeWidgetValue(shortest?.dwell_time_sec)}
         />
       </WidgetCarousel>
-      <HeadwaysAggregateChart
-        headways={query.data}
-        toStation={toStation}
-        fromStation={fromStation}
-      />
+      <DwellsSingleChart dwells={query.data} toStation={toStation} fromStation={fromStation} />
     </CarouselGraphDiv>
   );
 };

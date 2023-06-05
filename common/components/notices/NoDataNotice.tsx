@@ -5,12 +5,12 @@ import React from 'react';
 import { useDelimitatedRoute } from '../../utils/router';
 import { mbtaTextConfig } from '../inputs/styles/tailwind';
 
-interface ErrorNoticeProps {
+interface NoDataNoticeProps {
   isWidget?: boolean;
   inverse?: boolean;
 }
 
-export const ErrorNotice: React.FC<ErrorNoticeProps> = ({ isWidget, inverse }) => {
+export const NoDataNotice: React.FC<NoDataNoticeProps> = ({ isWidget, inverse }) => {
   const { line } = useDelimitatedRoute();
 
   const color = !inverse && line ? mbtaTextConfig[line] : undefined;
@@ -22,7 +22,7 @@ export const ErrorNotice: React.FC<ErrorNoticeProps> = ({ isWidget, inverse }) =
       )}
     >
       <FontAwesomeIcon size={'3x'} icon={faTriangleExclamation} className={color} />
-      <>An error has occurred</>
+      <>No data available</>
     </div>
   );
 };
