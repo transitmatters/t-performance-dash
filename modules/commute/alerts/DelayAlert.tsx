@@ -1,8 +1,9 @@
 import React from 'react';
+import classNames from 'classnames';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLeftRight } from '@fortawesome/free-solid-svg-icons';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
 import type { BusRoute, LineShort } from '../../../common/types/lines';
-import BetweenArrow from '../../../public/Icons/BetweenArrow.svg';
-import DelayIcon from '../../../public/Icons/DelayIcon.svg';
 import { AlertBoxInner } from './AlertBoxInner';
 import { getStations } from './AlertUtils';
 
@@ -21,7 +22,7 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort, busRoute?: 
       <>
         <p className="mr-1 ">Delays</p>
         <p className="font-bold">{min?.stop_name}</p>
-        <BetweenArrow className="mx-2 h-4 w-4" />
+        <FontAwesomeIcon icon={faLeftRight} className={'mx-2 h-4 w-4'} />
         <p className="font-bold">{max?.stop_name}</p>
       </>
     );
@@ -44,7 +45,12 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort, busRoute?: 
 
 export const DelayAlert: React.FC<DelayAlertProps> = ({ alert, lineShort, type, busRoute }) => {
   return (
-    <AlertBoxInner header={alert.header} Icon={DelayIcon} alert={alert} type={type}>
+    <AlertBoxInner
+      header={alert.header}
+      Icon={() => <p className={classNames('m-0.5 pl-2 pr-2 text-4xl')}>🐢</p>}
+      alert={alert}
+      type={type}
+    >
       {getDescription(alert, lineShort, busRoute)}
     </AlertBoxInner>
   );

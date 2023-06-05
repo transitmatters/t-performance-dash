@@ -1,8 +1,9 @@
 import React from 'react';
+import classNames from 'classnames';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLeftRight } from '@fortawesome/free-solid-svg-icons';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
 import type { LineShort } from '../../../common/types/lines';
-import BetweenArrow from '../../../public/Icons/BetweenArrow.svg';
-import DetourIcon from '../../../public/Icons/DetourIcon.svg';
 import { AlertBoxInner } from './AlertBoxInner';
 import { getStations } from './AlertUtils';
 
@@ -21,7 +22,7 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort) => {
       <>
         <p className="mr-1 ">No service</p>
         <p className="font-bold">{min?.stop_name}</p>
-        <BetweenArrow className="mx-2 h-4 w-4" />
+        <FontAwesomeIcon icon={faLeftRight} className={'mx-2 h-4 w-4'} />
         <p className="font-bold">{max?.stop_name}</p>
       </>
     );
@@ -38,7 +39,7 @@ export const SuspensionAlert: React.FC<SuspensionAlertProps> = ({
   return (
     <AlertBoxInner
       header={alert.header}
-      Icon={DetourIcon}
+      Icon={() => <p className={classNames('m-0.5 pl-2 pr-2 text-4xl')}>⛔️</p>}
       alert={alert}
       type={type}
       noShrink={noShrink}

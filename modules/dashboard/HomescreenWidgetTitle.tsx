@@ -1,9 +1,10 @@
 import React from 'react';
 import classNames from 'classnames';
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { mbtaTextConfig } from '../../common/components/inputs/styles/tailwind';
 import { getHref, useDelimitatedRoute, useHandlePageNavigation } from '../../common/utils/router';
-import ExploreArrow from '../../public/Icons/Components/ExploreArrow.svg';
 import { LINE_COLORS } from '../../common/constants/colors';
 import type { Page } from '../../common/constants/pages';
 import { ALL_PAGES } from '../../common/constants/pages';
@@ -36,7 +37,11 @@ export const HomescreenWidgetTitle: React.FC<HomescreenWidgetTitle> = ({ title, 
           >
             {title}
           </h3>
-          <ExploreArrow fill={LINE_COLORS[line ?? 'default']} className="h-4 w-auto pl-2" />
+          <FontAwesomeIcon
+            icon={faChevronRight}
+            style={{ color: LINE_COLORS[line ?? 'default'] }}
+            className="h-4 w-auto pl-2"
+          />
         </div>
       </Link>
       <p className="text-xs italic text-stone-700">{date}</p>
