@@ -8,23 +8,26 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import type { SingleDayDataPoint } from '../../common/types/charts';
-import { getHeadwaysSingleWidgetData } from '../../common/utils/headways';
-import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
+import { getDwellsSingleWidgetData } from '../../common/utils/dwells';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
+import { DwellsSingleChart } from './charts/DwellsSingleChart';
 
-interface HeadwaysSingleWrapperProps {
+interface DwellsSingleWrapperProps {
   query: UseQueryResult<SingleDayDataPoint[]>;
   toStation: Station;
   fromStation: Station;
 }
 
-export const HeadwaysSingleWrapper: React.FC<HeadwaysSingleWrapperProps> = ({
+export const DwellsSingleWrapper: React.FC<DwellsSingleWrapperProps> = ({
   query,
   toStation,
   fromStation,
 }) => {
-  const dataReady = !query.isError && query.data && toStation && fromStation;
+  const dataReady =
+    !query.isError && query.data && toStation && fromStation && query.data.length > 0;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
-  const { average, longest, shortest } = getHeadwaysSingleWidgetData(query.data);
+  if (query.data.length < 1) return <NoDataNotice />;
+  const { average, longest, shortest } = getDwellsSingleWidgetData(query.data);
   return (
     <CarouselGraphDiv>
       <WidgetCarousel>
@@ -35,16 +38,16 @@ export const HeadwaysSingleWrapper: React.FC<HeadwaysSingleWrapperProps> = ({
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Shortest Headway (${dayjs(shortest.current_dep_dt).format('h:mm A')})`}
-          widgetValue={new TimeWidgetValue(shortest.headway_time_sec)}
+          analysis={`Longest dwell (${dayjs(longest?.dep_dt).format('h:mm A')})`}
+          widgetValue={new TimeWidgetValue(longest?.dwell_time_sec)}
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Longest Headway (${dayjs(longest.current_dep_dt).format('h:mm A')})`}
-          widgetValue={new TimeWidgetValue(longest.headway_time_sec)}
+          analysis={`Shortest dwell (${dayjs(shortest?.dep_dt).format('h:mm A')})`}
+          widgetValue={new TimeWidgetValue(shortest?.dwell_time_sec)}
         />
       </WidgetCarousel>
-      <HeadwaysSingleChart headways={query.data} toStation={toStation} fromStation={fromStation} />
+      <DwellsSingleChart dwells={query.data} toStation={toStation} fromStation={fromStation} />
     </CarouselGraphDiv>
   );
 };
