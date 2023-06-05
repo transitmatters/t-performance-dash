@@ -5,9 +5,9 @@ import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { TripsWidgetValue } from '../../common/types/basicWidgets';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { getServiceWidgetValues } from './utils/utils';
 import { ServiceGraph } from './ServiceGraph';
-import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 interface ServiceGraphWrapperProps {
   data: SpeedDataPoint[];
   predictedData: TripCounts;

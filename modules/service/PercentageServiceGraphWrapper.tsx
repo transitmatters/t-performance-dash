@@ -8,9 +8,9 @@ import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import type { ParamsType } from '../speed/constants/speeds';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { PercentageServiceGraph } from './PercentageServiceGraph';
 import { getPercentageData, getAverageWithNaNs } from './utils/utils';
-import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 
 interface PercentageServiceGraphWrapperProps {
   data: SpeedDataPoint[];
