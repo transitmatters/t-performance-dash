@@ -38,13 +38,13 @@ export const DwellsSingleWrapper: React.FC<DwellsSingleWrapperProps> = ({
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Longest dwell (${dayjs(longest?.dep_dt).format('h:mm A')})`}
-          widgetValue={new TimeWidgetValue(longest?.dwell_time_sec)}
+          analysis={`Longest dwell (${dayjs(longest.dep_dt).format('h:mm A')})`}
+          widgetValue={new TimeWidgetValue(longest.dwell_time_sec)}
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Shortest dwell (${dayjs(shortest?.dep_dt).format('h:mm A')})`}
-          widgetValue={new TimeWidgetValue(shortest?.dwell_time_sec)}
+          analysis={`Shortest dwell (${dayjs(shortest.dep_dt).format('h:mm A')})`}
+          widgetValue={new TimeWidgetValue(shortest.dwell_time_sec)}
         />
       </WidgetCarousel>
       <DwellsSingleChart dwells={query.data} toStation={toStation} fromStation={fromStation} />
