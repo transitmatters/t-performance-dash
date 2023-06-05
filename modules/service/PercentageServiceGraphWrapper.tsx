@@ -10,6 +10,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import type { ParamsType } from '../speed/constants/speeds';
 import { PercentageServiceGraph } from './PercentageServiceGraph';
 import { getPercentageData, getAverageWithNaNs } from './utils/utils';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 
 interface PercentageServiceGraphWrapperProps {
   data: SpeedDataPoint[];
@@ -32,6 +33,7 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
 }) => {
   // TODO: Add 1 or 2 widgets to percentage service graph.
   const { line } = useDelimitatedRoute();
+  if (!data.some((datapoint) => datapoint.value !== null)) return <NoDataNotice />;
 
   const { scheduled, baseline } = getPercentageData(data, predictedData, line);
   const scheduledAverage = getAverageWithNaNs(scheduled);

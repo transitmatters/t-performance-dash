@@ -8,6 +8,7 @@ import type { SpeedDataPoint } from '../../common/types/dataPoints';
 import { SpeedGraph } from './SpeedGraph';
 import { getDetailsSpeedWidgetValues } from './utils/utils';
 import type { ParamsType } from './constants/speeds';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 
 interface SpeedGraphWrapperProps {
   data: SpeedDataPoint[];
@@ -25,6 +26,7 @@ export const SpeedGraphWrapper: React.FC<SpeedGraphWrapperProps> = ({
   endDate,
 }) => {
   const dataNoNulls = data.filter((datapoint) => datapoint.value !== null);
+  if (dataNoNulls.length < 1) return <NoDataNotice />;
   const { current, delta, average, peak } = getDetailsSpeedWidgetValues(dataNoNulls, line);
 
   return (
