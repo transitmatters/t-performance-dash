@@ -3,11 +3,11 @@ import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { getLocationDetails } from '../../common/utils/stations';
 import type { Line } from '../../common/types/lines';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
+import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 
@@ -76,15 +76,14 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
           <WidgetDiv>
             <WidgetTitle
               title="Headways"
-              subtitle="Time between buses"
+              subtitle="Time Between Buses"
               location={location}
               line={line}
             />
-            <SingleChartWrapper
+            <HeadwaysSingleWrapper
               query={headways}
               toStation={toStation}
               fromStation={fromStation}
-              type={'headways'}
             />
           </WidgetDiv>
         </>
