@@ -32,6 +32,7 @@ import { stationAxisConfig } from '../constants/chartConfig';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { stopIdsForStations } from '../../../common/utils/stations';
 import { ALL_PAGES } from '../../../common/constants/pages';
+import type { QueryParams } from '../../../common/types/router';
 dayjs.extend(utc);
 
 ChartJS.register(
@@ -136,19 +137,16 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
         onClick: (event, elements) => {
           if (elements.length >= 1) {
             const segment = elements[0].element['$context'].raw as LineSegmentData;
-            const href = {
-              pathname: `/${linePath}${ALL_PAGES.trips.path}`,
-              query: {
-                queryType: 'range',
-                startDate: segment.x[0],
-                endDate: segment.x[1],
-                to: segment.stations.toStopIds?.[0],
-                from: segment.stations.fromStopIds?.[0],
-              },
+            const hrefPathname = `/${linePath}${ALL_PAGES.trips.path}`;
+            const queryParams: QueryParams = {
+              queryType: 'range',
+              startDate: segment.x[0],
+              endDate: segment.x[1],
+              to: segment.stations.toStopIds?.[0],
+              from: segment.stations.fromStopIds?.[0],
             };
-            // @ts-expect-error `to` and `from` in theory can return `undefined` but we shouldn't reach that case
-            const params = new URLSearchParams(href.query);
-            window.open(`${href.pathname}?${params.toString()}`);
+            const params = new URLSearchParams(queryParams);
+            window.open(`${hrefPathname}?${params.toString()}`);
           }
         },
         onHover: (event, elements) => {
