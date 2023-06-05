@@ -5,7 +5,7 @@
   "minimum_compression_size": 1000,
   "lambda_timeout": 30,
   "lambda_memory_size": 512,
-  "layers": ["arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:42"],
+  "layers": ["arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:43"],
   "stages": {
     "production": {
       "api_gateway_stage": "production",
