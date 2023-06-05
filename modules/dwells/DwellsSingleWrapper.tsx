@@ -22,7 +22,8 @@ export const DwellsSingleWrapper: React.FC<DwellsSingleWrapperProps> = ({
   toStation,
   fromStation,
 }) => {
-  const dataReady = !query.isError && query.data && toStation && fromStation;
+  const dataReady =
+    !query.isError && query.data && toStation && fromStation && query.data.length > 0;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   const { average, longest, shortest } = getDwellsSingleWidgetData(query.data);
   return (
@@ -35,13 +36,13 @@ export const DwellsSingleWrapper: React.FC<DwellsSingleWrapperProps> = ({
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Longest dwell (${dayjs(longest.dep_dt).format('h:mm A')})`}
-          widgetValue={new TimeWidgetValue(longest.dwell_time_sec)}
+          analysis={`Longest dwell (${dayjs(longest?.dep_dt).format('h:mm A')})`}
+          widgetValue={new TimeWidgetValue(longest?.dwell_time_sec)}
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Shortest dwell (${dayjs(shortest.dep_dt).format('h:mm A')})`}
-          widgetValue={new TimeWidgetValue(shortest.dwell_time_sec)}
+          analysis={`Shortest dwell (${dayjs(shortest?.dep_dt).format('h:mm A')})`}
+          widgetValue={new TimeWidgetValue(shortest?.dwell_time_sec)}
         />
       </WidgetCarousel>
       <DwellsSingleChart dwells={query.data} toStation={toStation} fromStation={fromStation} />
