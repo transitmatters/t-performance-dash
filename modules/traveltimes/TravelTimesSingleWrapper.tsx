@@ -35,13 +35,13 @@ export const TravelTimesSingleWrapper: React.FC<TravelTimesSingleWrapperProps> =
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Fastest Trip (${dayjs(fastest?.dep_dt).format('H:mm A')})`}
-          widgetValue={new TimeWidgetValue(fastest?.travel_time_sec)}
+          analysis={`Fastest Trip (${dayjs(fastest.dep_dt).format('H:mm A')})`}
+          widgetValue={new TimeWidgetValue(fastest.travel_time_sec)}
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Slowest Trip (${dayjs(slowest?.dep_dt).format('H:mm A')})`}
-          widgetValue={new TimeWidgetValue(slowest?.travel_time_sec)}
+          analysis={`Slowest Trip (${dayjs(slowest.dep_dt).format('H:mm A')})`}
+          widgetValue={new TimeWidgetValue(slowest.travel_time_sec)}
         />
       </WidgetCarousel>
       <TravelTimesSingleChart
