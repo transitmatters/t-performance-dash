@@ -30,7 +30,7 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
   const { average, fastest, deltaWidgetValue } = getTravelTimesAggregateWidgetData(traveltimesData);
   return (
     <CarouselGraphDiv>
-      <WidgetCarousel noData={traveltimesData.length > 0}>
+      <WidgetCarousel>
         <WidgetForCarousel
           layoutKind="no-delta"
           analysis={'Average'}

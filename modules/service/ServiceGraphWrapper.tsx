@@ -23,7 +23,7 @@ export const ServiceGraphWrapper: React.FC<ServiceGraphWrapperProps> = ({
   startDate,
   endDate,
 }) => {
-  if (!data.some((datapoint) => datapoint.value !== null)) return <NoDataNotice />;
+  if (!data.some((datapoint) => datapoint.value !== null)) return <NoDataNotice isLineMetric />;
   const { current, delta, average, peak } = getServiceWidgetValues(data, predictedData.counts);
 
   return (

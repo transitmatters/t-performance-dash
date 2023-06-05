@@ -26,7 +26,7 @@ export const SpeedGraphWrapper: React.FC<SpeedGraphWrapperProps> = ({
   endDate,
 }) => {
   const dataNoNulls = data.filter((datapoint) => datapoint.value !== null);
-  if (dataNoNulls.length < 1) return <NoDataNotice />;
+  if (dataNoNulls.length < 1) return <NoDataNotice isLineMetric />;
   const { current, delta, average, peak } = getDetailsSpeedWidgetValues(dataNoNulls, line);
 
   return (

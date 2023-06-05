@@ -8,9 +8,14 @@ import { mbtaTextConfig } from '../inputs/styles/tailwind';
 interface NoDataNoticeProps {
   isWidget?: boolean;
   inverse?: boolean;
+  isLineMetric?: boolean;
 }
 
-export const NoDataNotice: React.FC<NoDataNoticeProps> = ({ isWidget, inverse }) => {
+export const NoDataNotice: React.FC<NoDataNoticeProps> = ({
+  isWidget,
+  inverse,
+  isLineMetric: isLineWide = false,
+}) => {
   const { line } = useDelimitatedRoute();
 
   const color = !inverse && line ? mbtaTextConfig[line] : undefined;
@@ -22,7 +27,10 @@ export const NoDataNotice: React.FC<NoDataNoticeProps> = ({ isWidget, inverse })
       )}
     >
       <FontAwesomeIcon size={'3x'} icon={faTriangleExclamation} className={color} />
-      <>No data available</>
+      <p className="text-stone-900">No data available.</p>
+      <p className="text-stone-600">
+        {isLineWide ? 'Try another date range.' : 'Try another station or date range.'}
+      </p>
     </div>
   );
 };

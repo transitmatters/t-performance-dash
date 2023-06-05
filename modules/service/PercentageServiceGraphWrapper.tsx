@@ -33,7 +33,7 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
 }) => {
   // TODO: Add 1 or 2 widgets to percentage service graph.
   const { line } = useDelimitatedRoute();
-  if (!data.some((datapoint) => datapoint.value !== null)) return <NoDataNotice />;
+  if (!data.some((datapoint) => datapoint.value !== null)) return <NoDataNotice isLineMetric />;
 
   const { scheduled, baseline } = getPercentageData(data, predictedData, line);
   const scheduledAverage = getAverageWithNaNs(scheduled);
