@@ -18,7 +18,7 @@ export const DesktopHeader: React.FC = () => {
   const section = page ? ALL_PAGES[page]?.section : undefined;
   const lg = useBreakpoint('lg');
 
-  const showControls = section && line && section !== 'today';
+  const showControls = section && (line || tab === 'System') && section !== 'today';
 
   const getLineName = () => {
     if (busRoute) return `Route ${busRoute}`;

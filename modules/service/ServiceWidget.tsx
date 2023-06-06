@@ -8,7 +8,7 @@ import { useTripCounts } from '../../common/api/hooks/service';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
-import { ServiceOverviewWrapper } from './ServiceOverviewWrapper';
+import { ServiceGraphWrapper } from './ServiceGraphWrapper';
 
 export const ServiceWidget: React.FC = () => {
   const { line, query, lineShort } = useDelimitatedRoute();
@@ -34,7 +34,7 @@ export const ServiceWidget: React.FC = () => {
     <WidgetDiv>
       <HomescreenWidgetTitle title="Service" tab="service" />
       {serviceReady ? (
-        <ServiceOverviewWrapper
+        <ServiceGraphWrapper
           data={serviceData.data}
           predictedData={predictedServiceData}
           config={config}

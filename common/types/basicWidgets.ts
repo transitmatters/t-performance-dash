@@ -156,3 +156,20 @@ export class MPHWidgetValue extends BaseWidgetValue implements WidgetValueInterf
     return `${sign}${absDelta.toFixed(1)}`;
   }
 }
+
+export class RidersWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
+  getUnits() {
+    return 'Riders';
+  }
+
+  getFormattedValue() {
+    if (this.value === undefined) return '...';
+    return `${(this.value / 1000).toFixed(1)}k`;
+  }
+
+  // TODO
+  getFormattedDelta() {
+    if (this.delta === undefined) return '...';
+    return `${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta).toString()}`;
+  }
+}

@@ -9,6 +9,7 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import type { SingleDayDataPoint } from '../../common/types/charts';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 
 interface TravelTimesSingleWrapperProps {
@@ -24,6 +25,8 @@ export const TravelTimesSingleWrapper: React.FC<TravelTimesSingleWrapperProps> =
 }) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
+  if (query.data.length < 1) return <NoDataNotice />;
+
   const { average, fastest, slowest } = getTravelTimesSingleWidgetData(query.data);
   return (
     <CarouselGraphDiv>

@@ -11,7 +11,6 @@ export interface WidgetCarouselProps {
 
 export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children, isSingleWidget = false }) => {
   const [activeItem, setActiveItem] = useState(0);
-
   const items = useMemo(
     () =>
       Children.map(
@@ -39,7 +38,6 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children, isSingleWidg
     item !== activeItem && (activeItem === items.length - 1 ? item === 0 : item - 1 === activeItem);
   const isBeforeActiveItem = (item: number) =>
     item !== activeItem && (activeItem === 0 ? item === items.length - 1 : item + 1 === activeItem);
-
   return (
     <div className="relative flex flex-row gap-1">
       <div className="flex items-center">

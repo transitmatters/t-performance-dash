@@ -28,7 +28,7 @@ export const useDatePresetConfig = create<DatePresetConfig>((set) => ({
         PRESET_DEFAULTS.linePreset = query.view ?? 'year';
         return PRESET_DEFAULTS;
       }
-      if (section === 'line') {
+      if (section === 'line' || section === 'system') {
         PRESET_DEFAULTS.linePreset = preset;
         return PRESET_DEFAULTS;
       }

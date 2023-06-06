@@ -5,6 +5,7 @@ import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { TripsWidgetValue } from '../../common/types/basicWidgets';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { getServiceWidgetValues } from './utils/utils';
 import { ServiceGraph } from './ServiceGraph';
 interface ServiceGraphWrapperProps {
@@ -22,6 +23,7 @@ export const ServiceGraphWrapper: React.FC<ServiceGraphWrapperProps> = ({
   startDate,
   endDate,
 }) => {
+  if (!data.some((datapoint) => datapoint.value !== null)) return <NoDataNotice isLineMetric />;
   const { current, delta, average, peak } = getServiceWidgetValues(data, predictedData.counts);
 
   return (
