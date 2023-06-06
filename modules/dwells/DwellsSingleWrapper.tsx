@@ -9,6 +9,7 @@ import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import type { SingleDayDataPoint } from '../../common/types/charts';
 import { getDwellsSingleWidgetData } from '../../common/utils/dwells';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 
 interface DwellsSingleWrapperProps {
@@ -25,6 +26,7 @@ export const DwellsSingleWrapper: React.FC<DwellsSingleWrapperProps> = ({
   const dataReady =
     !query.isError && query.data && toStation && fromStation && query.data.length > 0;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
+  if (query.data.length < 1) return <NoDataNotice />;
   const { average, longest, shortest } = getDwellsSingleWidgetData(query.data);
   return (
     <CarouselGraphDiv>

@@ -6,9 +6,9 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { getLocationDetails } from '../../common/utils/stations';
 import type { Line } from '../../common/types/lines';
+import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
 import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
-import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 
 interface BusTripGraphsProps {

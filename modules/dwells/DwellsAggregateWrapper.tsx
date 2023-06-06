@@ -9,6 +9,7 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { SMALL_DATE_FORMAT } from '../../common/constants/dates';
 import { getDwellsAggregateWidgetData } from '../../common/utils/dwells';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 
 interface DwellsAggregateWrapperProps {
@@ -25,6 +26,8 @@ export const DwellsAggregateWrapper: React.FC<DwellsAggregateWrapperProps> = ({
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   const headwaysData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
+  if (headwaysData.length < 1) return <NoDataNotice />;
+
   const { average, max } = getDwellsAggregateWidgetData(headwaysData);
   return (
     <div className="flex flex-col gap-x-2 gap-y-1 pt-2">
