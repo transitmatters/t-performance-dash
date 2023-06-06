@@ -14,6 +14,8 @@ import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { getTimeUnitSlowzones } from '../../../common/utils/slowZoneUtils';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
+import { ChartBorder } from '../../../common/components/charts/ChartBorder';
+import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 
 interface TotalSlowTimeProps {
   // Data is always all data. We filter it by adjusting the X axis of the graph.
@@ -77,90 +79,93 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
             tension: 0.1,
           },
         ];
-
   return (
-    <Line
-      ref={ref}
-      id={'total_slow_time'}
-      height={240}
-      data={{
-        labels,
-        datasets: datasets,
-      }}
-      options={{
-        maintainAspectRatio: false,
-        elements: {
-          point: {
-            radius: 6,
-            hitRadius: 6,
-            hoverRadius: 6,
-          },
-        },
-        responsive: true,
-        layout: {
-          padding: {
-            top: showTitle ? 25 : 0,
-          },
-        },
-        scales: {
-          y: {
-            display: true,
-            ticks: {
-              color: COLORS.design.subtitleGrey,
-            },
-            title: {
-              display: true,
-              text: 'Minutes',
-              color: COLORS.design.subtitleGrey,
-            },
-          },
-          x: {
-            type: 'time',
-
-            min: startDateUTC?.toISOString(),
-            max: endDateUTC?.toISOString(),
-            ticks: {
-              color: COLORS.design.subtitleGrey,
-            },
-            time: {
-              unit: unit,
-              displayFormats: {
-                month: 'MMM',
+    <ChartBorder>
+      <ChartDiv isMobile={isMobile}>
+        <Line
+          ref={ref}
+          id={'total_slow_time'}
+          height={isMobile ? 200 : 240}
+          data={{
+            labels,
+            datasets: datasets,
+          }}
+          options={{
+            maintainAspectRatio: false,
+            elements: {
+              point: {
+                radius: 6,
+                hitRadius: 6,
+                hoverRadius: 6,
               },
             },
-
-            adapters: {
-              date: {
-                locale: enUS,
+            responsive: true,
+            layout: {
+              padding: {
+                top: showTitle ? 25 : 0,
               },
             },
-            display: true,
-          },
-        },
-        // @ts-expect-error The watermark plugin doesn't have typescript support
-        watermark: watermarkLayout(isMobile),
-        plugins: {
-          tooltip: {
-            intersect: false,
-          },
-          title: {
-            // empty title to set font and leave room for drawTitle fn
-            display: showTitle,
-            text: '',
-          },
-          legend: {
-            display: false,
-          },
-        },
-      }}
-      plugins={[
-        {
-          id: 'customTitle',
-          afterDraw: (chart) => {
-            if (showTitle) drawSimpleTitle(`Total Slow Time`, chart);
-          },
-        },
-      ]}
-    />
+            scales: {
+              y: {
+                display: true,
+                ticks: {
+                  color: COLORS.design.subtitleGrey,
+                },
+                title: {
+                  display: true,
+                  text: 'Minutes',
+                  color: COLORS.design.subtitleGrey,
+                },
+              },
+              x: {
+                type: 'time',
+
+                min: startDateUTC?.toISOString(),
+                max: endDateUTC?.toISOString(),
+                ticks: {
+                  color: COLORS.design.subtitleGrey,
+                },
+                time: {
+                  unit: unit,
+                  displayFormats: {
+                    month: 'MMM',
+                  },
+                },
+
+                adapters: {
+                  date: {
+                    locale: enUS,
+                  },
+                },
+                display: true,
+              },
+            },
+            // @ts-expect-error The watermark plugin doesn't have typescript support
+            watermark: watermarkLayout(isMobile),
+            plugins: {
+              tooltip: {
+                intersect: false,
+              },
+              title: {
+                // empty title to set font and leave room for drawTitle fn
+                display: showTitle,
+                text: '',
+              },
+              legend: {
+                display: false,
+              },
+            },
+          }}
+          plugins={[
+            {
+              id: 'customTitle',
+              afterDraw: (chart) => {
+                if (showTitle) drawSimpleTitle(`Total Slow Time`, chart);
+              },
+            },
+          ]}
+        />
+      </ChartDiv>
+    </ChartBorder>
   );
 };

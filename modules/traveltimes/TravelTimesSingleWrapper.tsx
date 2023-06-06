@@ -3,30 +3,28 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
-import type { AggregateDataResponse } from '../../common/types/charts';
+import { getTravelTimesSingleWidgetData } from '../../common/utils/traveltimes';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { getHeadwaysAggregateWidgetData } from '../../common/utils/headways';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
-import { SMALL_DATE_FORMAT } from '../../common/constants/dates';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
-import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
+import type { SingleDayDataPoint } from '../../common/types/charts';
+import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 
-interface HeadwaysAggregateWrapperProps {
-  query: UseQueryResult<AggregateDataResponse>;
+interface TravelTimesSingleWrapperProps {
+  query: UseQueryResult<SingleDayDataPoint[]>;
   toStation: Station;
   fromStation: Station;
 }
 
-export const HeadwaysAggregateWrapper: React.FC<HeadwaysAggregateWrapperProps> = ({
+export const TravelTimesSingleWrapper: React.FC<TravelTimesSingleWrapperProps> = ({
   query,
   toStation,
   fromStation,
 }) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
-  const headwaysData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
-  const { average, max } = getHeadwaysAggregateWidgetData(headwaysData);
+  const { average, fastest, slowest } = getTravelTimesSingleWidgetData(query.data);
   return (
     <CarouselGraphDiv>
       <WidgetCarousel>
@@ -37,12 +35,17 @@ export const HeadwaysAggregateWrapper: React.FC<HeadwaysAggregateWrapperProps> =
         />
         <WidgetForCarousel
           layoutKind="no-delta"
-          analysis={`Longest Headway (${dayjs(max.service_date).format(SMALL_DATE_FORMAT)})`}
-          widgetValue={new TimeWidgetValue(max.max)}
+          analysis={`Fastest Trip (${dayjs(fastest.dep_dt).format('h:mm A')})`}
+          widgetValue={new TimeWidgetValue(fastest.travel_time_sec)}
+        />
+        <WidgetForCarousel
+          layoutKind="no-delta"
+          analysis={`Slowest Trip (${dayjs(slowest.dep_dt).format('h:mm A')})`}
+          widgetValue={new TimeWidgetValue(slowest.travel_time_sec)}
         />
       </WidgetCarousel>
-      <HeadwaysAggregateChart
-        headways={query.data}
+      <TravelTimesSingleChart
+        traveltimes={query.data}
         toStation={toStation}
         fromStation={fromStation}
       />

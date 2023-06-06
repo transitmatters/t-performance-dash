@@ -6,9 +6,10 @@ import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 
 export interface WidgetCarouselProps {
   children: React.ReactNode;
+  isSingleWidget?: boolean;
 }
 
-export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children }) => {
+export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children, isSingleWidget = false }) => {
   const [activeItem, setActiveItem] = useState(0);
 
   const items = useMemo(
@@ -42,19 +43,21 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children }) => {
   return (
     <div className="relative flex flex-row gap-1">
       <div className="flex items-center">
-        <button
-          className={classNames(
-            'group/button flex cursor-pointer items-center justify-center rounded-md focus:outline-none lg:p-1'
-          )}
-          onClick={navigateTo(activeItem + 1)}
-          type="button"
-        >
-          <FontAwesomeIcon
-            icon={faChevronCircleDown}
-            size="lg"
-            className="text-stone-300 hover:text-stone-600"
-          />
-        </button>
+        {!isSingleWidget && (
+          <button
+            className={classNames(
+              'group/button flex cursor-pointer items-center justify-center rounded-md focus:outline-none lg:p-1'
+            )}
+            onClick={navigateTo(activeItem + 1)}
+            type="button"
+          >
+            <FontAwesomeIcon
+              icon={faChevronCircleDown}
+              size="lg"
+              className="text-stone-300 hover:text-stone-600"
+            />
+          </button>
+        )}
       </div>
       <div className="relative h-8 w-full overflow-hidden lg:h-[3.25rem] ">
         {items?.map((item, index) => (

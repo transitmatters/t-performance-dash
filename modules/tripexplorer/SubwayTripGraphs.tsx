@@ -3,7 +3,6 @@ import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
@@ -12,6 +11,9 @@ import type { Line } from '../../common/types/lines';
 import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 import { DwellsAggregateWrapper } from '../dwells/DwellsAggregateWrapper';
+import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
+import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
+import { DwellsSingleWrapper } from '../dwells/DwellsSingleWrapper';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -107,11 +109,10 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
         <>
           <WidgetDiv>
             <WidgetTitle title="Travel Times" location={location} line={line} both />
-            <SingleChartWrapper
+            <TravelTimesSingleWrapper
               query={traveltimes}
               toStation={toStation}
               fromStation={fromStation}
-              type={'traveltimes'}
             />
           </WidgetDiv>
 
@@ -122,11 +123,10 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               location={location}
               line={line}
             />
-            <SingleChartWrapper
+            <HeadwaysSingleWrapper
               query={headways}
               toStation={toStation}
               fromStation={fromStation}
-              type={'headways'}
             />
           </WidgetDiv>
           <WidgetDiv>
@@ -136,12 +136,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               location={location}
               line={line}
             />
-            <SingleChartWrapper
-              query={dwells}
-              toStation={toStation}
-              fromStation={fromStation}
-              type={'dwells'}
-            />
+            <DwellsSingleWrapper query={dwells} toStation={toStation} fromStation={fromStation} />
           </WidgetDiv>
         </>
       )}

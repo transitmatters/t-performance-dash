@@ -33,6 +33,30 @@ export const getLongestDwell = (dwells: AggregateDataPoint[]) => {
   );
 };
 
+const getLongestDwellSingle = (dwells: SingleDayDataPoint[]) => {
+  return dwells.reduce((current, datapoint) => {
+    if (datapoint.dwell_time_sec && current.dwell_time_sec)
+      return datapoint.dwell_time_sec > current.dwell_time_sec ? datapoint : current;
+    return current;
+  }, dwells[0]);
+};
+
+const getShortestDwellSingle = (dwells: SingleDayDataPoint[]) => {
+  return dwells.reduce((current, datapoint) => {
+    if (datapoint.dwell_time_sec && current.dwell_time_sec)
+      return datapoint.dwell_time_sec < current.dwell_time_sec ? datapoint : current;
+    return current;
+  }, dwells[0]);
+};
+
 export const getDwellsAggregateWidgetData = (dwells: AggregateDataPoint[]) => {
   return { average: averageDwells(dwells), max: getLongestDwell(dwells) };
+};
+
+export const getDwellsSingleWidgetData = (dwells: SingleDayDataPoint[]) => {
+  return {
+    average: averageDwells(dwells),
+    longest: getLongestDwellSingle(dwells),
+    shortest: getShortestDwellSingle(dwells),
+  };
 };
