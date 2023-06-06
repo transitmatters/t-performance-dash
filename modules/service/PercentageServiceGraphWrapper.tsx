@@ -8,6 +8,7 @@ import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import type { ParamsType } from '../speed/constants/speeds';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { PercentageServiceGraph } from './PercentageServiceGraph';
 import { getPercentageData, getAverageWithNaNs } from './utils/utils';
 
@@ -32,6 +33,7 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
 }) => {
   // TODO: Add 1 or 2 widgets to percentage service graph.
   const { line } = useDelimitatedRoute();
+  if (!data.some((datapoint) => datapoint.value !== null)) return <NoDataNotice isLineMetric />;
 
   const { scheduled, baseline } = getPercentageData(data, predictedData, line);
   const scheduledAverage = getAverageWithNaNs(scheduled);

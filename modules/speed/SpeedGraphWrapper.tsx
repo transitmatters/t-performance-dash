@@ -5,6 +5,7 @@ import { WidgetForCarousel } from '../../common/components/widgets/internal/Widg
 import { MPHWidgetValue } from '../../common/types/basicWidgets';
 import type { Line } from '../../common/types/lines';
 import type { SpeedDataPoint } from '../../common/types/dataPoints';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { SpeedGraph } from './SpeedGraph';
 import { getDetailsSpeedWidgetValues } from './utils/utils';
 import type { ParamsType } from './constants/speeds';
@@ -25,6 +26,7 @@ export const SpeedGraphWrapper: React.FC<SpeedGraphWrapperProps> = ({
   endDate,
 }) => {
   const dataNoNulls = data.filter((datapoint) => datapoint.value !== null);
+  if (dataNoNulls.length < 1) return <NoDataNotice isLineMetric />;
   const { current, delta, average, peak } = getDetailsSpeedWidgetValues(dataNoNulls, line);
 
   return (

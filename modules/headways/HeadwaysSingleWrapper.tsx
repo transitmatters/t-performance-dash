@@ -9,6 +9,7 @@ import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import type { SingleDayDataPoint } from '../../common/types/charts';
 import { getHeadwaysSingleWidgetData } from '../../common/utils/headways';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 
 interface HeadwaysSingleWrapperProps {
@@ -24,6 +25,7 @@ export const HeadwaysSingleWrapper: React.FC<HeadwaysSingleWrapperProps> = ({
 }) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
+  if (query.data.length < 1) return <NoDataNotice />;
   const { average, longest, shortest } = getHeadwaysSingleWidgetData(query.data);
   return (
     <CarouselGraphDiv>
