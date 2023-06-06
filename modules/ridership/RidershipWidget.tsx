@@ -7,7 +7,7 @@ import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { useRidershipData } from '../../common/api/hooks/ridership';
 import { RIDERSHIP_KEYS } from '../../common/types/lines';
-import { RidershipOverviewWrapper } from './RidershipOverviewWrapper';
+import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 
 export const RidershipWidget: React.FC = () => {
   const { line, query } = useDelimitatedRoute();
@@ -17,19 +17,20 @@ export const RidershipWidget: React.FC = () => {
   const lineId = query.busRoute
     ? `line-${query.busRoute.replaceAll('/', '')}`
     : RIDERSHIP_KEYS[line ?? ''];
-
+  const lineOrRoute = query.busRoute ? `line-${query.busRoute.replaceAll('/', '')}` : line;
   const ridership = useRidershipData({
     line_id: lineId,
     start_date: startDate,
     end_date: endDate,
   });
-  const serviceReady = !ridership.isError && lineId;
+  const serviceReady = !ridership.isError && lineId && lineOrRoute;
 
   return (
     <WidgetDiv>
       <HomescreenWidgetTitle title="Ridership" tab="ridership" />
       {ridership.data && serviceReady ? (
-        <RidershipOverviewWrapper
+        <RidershipGraphWrapper
+          lineOrRoute={lineOrRoute}
           data={ridership.data}
           config={config}
           startDate={startDate}

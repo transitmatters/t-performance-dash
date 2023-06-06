@@ -5,8 +5,10 @@ import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { RIDERSHIP_KEYS } from '../../common/types/lines';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
+import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
-import { RidershipDetailsWrapper } from './RidershipDetailsWrapper';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 
 export function RidershipDetails() {
   const {
@@ -15,6 +17,7 @@ export function RidershipDetails() {
   } = useDelimitatedRoute();
   const config = SPEED_RANGE_PARAM_MAP.week;
   const lineId = busRoute ? `line-${busRoute.replaceAll('/', '')}` : RIDERSHIP_KEYS[line ?? ''];
+  const lineOrRoute = busRoute ? `line-${busRoute.replaceAll('/', '')}` : line;
   const enabled = Boolean(startDate && endDate && lineId);
 
   const ridership = useRidershipData(
@@ -25,22 +28,27 @@ export function RidershipDetails() {
     },
     enabled
   );
-  const ridershipDataReady = !ridership.isError && startDate && endDate;
+  const ridershipDataReady = !ridership.isError && startDate && endDate && lineOrRoute;
 
   return (
     <PageWrapper pageTitle={'Ridership'}>
-      {ridership.data && ridershipDataReady ? (
-        <RidershipDetailsWrapper
-          data={ridership.data}
-          config={config}
-          startDate={startDate}
-          endDate={endDate}
-        />
-      ) : (
-        <div className="relative flex h-full">
-          <ChartPlaceHolder query={ridership} />
-        </div>
-      )}
+      <WidgetDiv>
+        <WidgetTitle title="Ridership" />
+
+        {ridership.data && ridershipDataReady ? (
+          <RidershipGraphWrapper
+            data={ridership.data}
+            config={config}
+            startDate={startDate}
+            endDate={endDate}
+            lineOrRoute={lineOrRoute}
+          />
+        ) : (
+          <div className="relative flex h-full">
+            <ChartPlaceHolder query={ridership} />
+          </div>
+        )}
+      </WidgetDiv>
     </PageWrapper>
   );
 }
