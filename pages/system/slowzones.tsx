@@ -1,8 +1,7 @@
-import React from 'react';
-import { Layout } from '../../common/layouts/layoutTypes';
+import { SystemSlowZonesDetails } from '../../modules/slowzones/SystemSlowZonesDetails';
 
-export default function slowzones() {
-  return <div>slowzones</div>;
+export async function getStaticProps() {
+  return { props: {} };
 }
 
-slowzones.Layout = Layout.Dashboard;
+export default SystemSlowZonesDetails;

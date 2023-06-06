@@ -22,15 +22,11 @@ export const saveDashboardConfig = (
 };
 
 export const getDashboardConfig = (section: Section, dashboardConfig: DashboardConfig) => {
-  if (section === 'trips') {
-    return dashboardConfig.tripConfig;
-  }
-  if (section === 'line') {
-    return dashboardConfig.lineConfig;
-  }
-  if (section === 'overview') {
-    return dashboardConfig.overviewPreset;
-  }
+  if (section === 'trips') return dashboardConfig.tripConfig;
+  if (section === 'system') return dashboardConfig.systemConfig;
+  if (section === 'line') return dashboardConfig.lineConfig;
+  if (section === 'overview') return dashboardConfig.overviewPreset;
+  return {};
 };
 
 export const getSelectedDates = (dateConfig: {

@@ -16,11 +16,13 @@ import type { Line } from '../types/lines';
 export type Page = keyof typeof PAGES;
 
 export enum PAGES {
+  landing = 'landing',
   today = 'today',
   overview = 'overview',
   speed = 'speed',
   service = 'service',
   slowzones = 'slowzones',
+  systemSlowzones = 'systemSlowzones',
   ridership = 'ridership',
   trips = 'trips',
   tripHeadways = 'tripHeadways',
@@ -28,7 +30,7 @@ export enum PAGES {
   tripDwells = 'tripDwells',
 }
 
-export type Section = 'today' | 'line' | 'overview' | 'trips' | 'system';
+export type Section = 'landing' | 'today' | 'line' | 'overview' | 'trips' | 'system';
 export type SectionTitle = 'Today' | 'Line' | 'Overview' | 'Trips' | 'System';
 
 export type PageMetadata = {
@@ -48,6 +50,14 @@ export type PageMap = {
 };
 
 export const ALL_PAGES: PageMap = {
+  landing: {
+    key: 'landing',
+    path: '/',
+    name: 'Home',
+    lines: [],
+    icon: faHouse,
+    section: 'landing',
+  },
   today: {
     key: 'today',
     path: '/',
@@ -133,6 +143,15 @@ export const ALL_PAGES: PageMap = {
     sectionTitle: 'Line',
     sub: true,
   },
+  systemSlowzones: {
+    key: 'systemSlowzones',
+    path: '/slowzones',
+    name: 'Slow Zones',
+    lines: [],
+    icon: faWarning,
+    section: 'system',
+    sectionTitle: 'System',
+  },
   ridership: {
     key: 'ridership',
     path: '/ridership',
@@ -173,16 +192,17 @@ export const SUB_PAGES_MAP = {
     traveltimes: 'tripTraveltimes',
     dwells: 'tripDwells',
   },
+  system: {
+    slowzones: 'systemSlowzones',
+  },
 };
 
-export const SYSTEM_PAGES: PageMetadata[] = [
-  {
-    key: 'slowzones',
-    path: '/slowzones',
-    name: 'Slow Zones',
-    lines: [],
-    icon: faWarning,
-    section: 'system',
-    sectionTitle: 'System',
+export const SYSTEM_PAGES_MAP = {
+  system: {
+    slowzones: 'systemSlowzones',
   },
-];
+};
+
+export const LANDING_PAGE = [ALL_PAGES.landing];
+
+export const SYSTEM_SLOWZONES_PAGE = [ALL_PAGES.systemSlowzones];
