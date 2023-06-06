@@ -8,6 +8,7 @@ export const convertToChartJSDataSet = (data: SpeedDataPoint[]) => {
   return {
     label: `% of baseline`,
     borderColor: LINE_COLORS[line ?? 'default'],
+    borderWidth: 6,
     pointBackgroundColor: 'transparent',
     pointBorderWidth: 0,
     tension: 0.5,
@@ -18,7 +19,7 @@ export const convertToChartJSDataSet = (data: SpeedDataPoint[]) => {
       datapoint.value
         ? (
             100 *
-            (1000 / datapoint.value / (1000 / PEAK_COMPLETE_TRIP_TIMES[line ?? 'DEFAULT'].value))
+            (1 / datapoint.value / (1 / PEAK_COMPLETE_TRIP_TIMES[line ?? 'DEFAULT'].value))
           ).toFixed(1)
         : Number.NaN
     ),

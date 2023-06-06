@@ -16,11 +16,7 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
-import {
-  ONE_YEAR_AGO_STRING,
-  THREE_MONTHS_AGO_STRING,
-  TODAY_STRING,
-} from '../../../common/constants/dates';
+import { ONE_YEAR_AGO_STRING, TODAY_STRING } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
 import type { SpeedDataPoint } from '../../../common/types/dataPoints';
 import { SPEED_RANGE_PARAM_MAP } from '../../speed/constants/speeds';
@@ -42,7 +38,7 @@ interface OverallSpeedChartProps {
   speedData: SpeedDataPoint[][];
 }
 export const OverallSpeedChart: React.FC<OverallSpeedChartProps> = ({ speedData }) => {
-  const labels = speedData[0].map((point) => point.date); // TODO: Grab any data set which is not empty.
+  const labels = speedData[0].map((point) => point.date);
   const datasets = speedData.map((data) => convertToChartJSDataSet(data));
   const { tooltipFormat, unit, callbacks } = SPEED_RANGE_PARAM_MAP.week;
 
