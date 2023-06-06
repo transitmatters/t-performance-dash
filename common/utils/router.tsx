@@ -4,11 +4,11 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
-import type { QueryParams, Route } from '../types/router';
+import type { QueryParams, Route, Tab } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
+import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
 import type { DashboardConfig } from '../state/dashboardConfig';
 import { useDashboardConfig } from '../state/dashboardConfig';
-import { SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
 import { getDashboardConfig, saveDashboardConfig } from '../state/utils/dashboardUtils';
 
@@ -26,7 +26,13 @@ export const getParams = (params: ParsedUrlQuery | QueryParams) => {
   );
 };
 
-const getPage = (pageArray: string[]): string => {
+const getPage = (pathItems: string[], tab: Tab): string => {
+  if (tab === 'System') {
+    const pageArray = pathItems.slice(1);
+    if (pageArray[0] === '' || pageArray[1] === '') return 'landing';
+    return SYSTEM_PAGES_MAP['system'][pageArray[1]];
+  }
+  const pageArray = pathItems.slice(2);
   if (pageArray[0] === '') return 'today';
   if (pageArray[1]) {
     return SUB_PAGES_MAP[pageArray[0]][pageArray[1]];
@@ -49,8 +55,8 @@ export const useDelimitatedRoute = (): Route => {
   const path = router.asPath.split('?');
   const pathItems = path[0].split('/');
   const queryParams = router.query;
-  const tab = getTab(pathItems[1]);
-  const page = getPage(tab !== 'System' ? pathItems.slice(2) : pathItems.slice(1)) as Page;
+  const tab = getTab(pathItems[1] ?? 'System');
+  const page = getPage(pathItems, tab) as Page;
   const newParams = getParams(queryParams);
 
   return {
@@ -196,5 +202,8 @@ const navigateToNewSection = (
   const params = getDashboardConfig(page.section, dashboardConfig);
   const busRouteOnly = query.busRoute ?? undefined;
   const newQuery = busRouteOnly ? { ...params, busRoute: busRouteOnly } : params;
-  return { pathname: `/${linePath}${page.path}`, query: newQuery };
+  return {
+    pathname: `/${page.section === 'system' ? 'system' : linePath}${page.path}`,
+    query: newQuery,
+  };
 };
