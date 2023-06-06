@@ -6,6 +6,7 @@ import { Layout } from '../../common/layouts/layoutTypes';
 import HeroSVG from '../../public/hero.svg';
 import LandingTitleSVG from '../../public/landingTitle.svg';
 import { useViewport } from '../../common/hooks/useViewport';
+import { LandingCharts } from './LandingCharts';
 
 export function Landing() {
   const { viewportHeight, viewportWidth } = useViewport();
@@ -47,7 +48,7 @@ export function Landing() {
         </button>
       </div>
       <div className="h-screen bg-tm-lightGrey" id="charts">
-        <p className="text-white">System Charts will be here.</p>
+        <LandingCharts />
       </div>
     </PageWrapper>
   );

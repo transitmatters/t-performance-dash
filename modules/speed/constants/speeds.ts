@@ -2,9 +2,11 @@ import type { TooltipCallbacks, TooltipItem, TooltipModel } from 'chart.js';
 import type { _DeepPartialObject } from 'chart.js/dist/types/utils';
 import dayjs from 'dayjs';
 import { todayOrDate } from '../../../common/constants/dates';
+import { PEAK_COMPLETE_TRIP_TIMES } from '../../../common/constants/baselines';
 
+export type AggType = 'daily' | 'weekly' | 'monthly';
 export type ParamsType = {
-  agg: 'daily' | 'weekly' | 'monthly';
+  agg: AggType;
   tooltipFormat: 'MMM d, yyyy' | 'MMM yyyy';
   unit: 'day' | 'month' | 'year';
   getWidgetTitle: (date?: string) => string;
@@ -76,8 +78,10 @@ export const CORE_TRACK_LENGTHS = {
 };
 
 export const PEAK_MPH = {
-  'line-red': CORE_TRACK_LENGTHS['line-red'] / (MINIMUMS['line-red'].value / 3600),
-  'line-orange': CORE_TRACK_LENGTHS['line-orange'] / (MINIMUMS['line-orange'].value / 3600),
-  'line-blue': CORE_TRACK_LENGTHS['line-blue'] / (MINIMUMS['line-blue'].value / 3600),
+  'line-red': CORE_TRACK_LENGTHS['line-red'] / (PEAK_COMPLETE_TRIP_TIMES['line-red'].value / 3600),
+  'line-orange':
+    CORE_TRACK_LENGTHS['line-orange'] / (PEAK_COMPLETE_TRIP_TIMES['line-orange'].value / 3600),
+  'line-blue':
+    CORE_TRACK_LENGTHS['line-blue'] / (PEAK_COMPLETE_TRIP_TIMES['line-blue'].value / 3600),
   DEFAULT: 1,
 };

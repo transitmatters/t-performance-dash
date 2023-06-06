@@ -30,3 +30,10 @@ export const PEAK_RIDERSHIP = {
   '114116117': 15000,
   DEFAULT: 0,
 };
+
+export const PEAK_COMPLETE_TRIP_TIMES = {
+  'line-red': { date: 'May 2020', value: 8374.5 },
+  'line-blue': { date: 'May 2020', value: 1860.5 },
+  'line-orange': { date: 'May 2020', value: 3776.75 },
+  DEFAULT: { date: '', value: 1 },
+};

@@ -9,13 +9,13 @@ import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { CompWidget } from '../../../common/components/widgets/internal/CompWidget';
 import { DATE_FORMAT, OVERVIEW_OPTIONS } from '../../../common/constants/dates';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
-import { MINIMUMS } from '../../speed/constants/speeds';
 import { AlertEffect } from '../../../common/types/alerts';
 import { ShuttleAlert } from '../alerts/ShuttleAlert';
 import { getRelevantAlerts } from '../alerts/AlertBox';
 import { randomUpsetEmoji } from '../../../common/utils/emoji';
 import { SuspensionAlert } from '../alerts/SuspensionAlert';
 import { useAlertsData } from '../../../common/api/hooks/alerts';
+import { PEAK_COMPLETE_TRIP_TIMES } from '../../../common/constants/baselines';
 import { calculateCommuteSpeedWidgetValues } from './utils/utils';
 
 export const Speed: React.FC = () => {
@@ -117,7 +117,7 @@ export const Speed: React.FC = () => {
                 value={peakComp}
                 text={
                   <p>
-                    Than <b>system peak</b> ({MINIMUMS[line ?? 'DEFAULT'].date})
+                    Than <b>system peak</b> ({PEAK_COMPLETE_TRIP_TIMES[line ?? 'DEFAULT'].date})
                   </p>
                 }
               />
