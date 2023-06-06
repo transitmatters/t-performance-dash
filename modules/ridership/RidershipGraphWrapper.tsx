@@ -1,12 +1,8 @@
 import React from 'react';
-import type { RidershipCount, SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
+import type { RidershipCount } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
-import {
-  PercentageWidgetValue,
-  RidersWidgetValue,
-  TripsWidgetValue,
-} from '../../common/types/basicWidgets';
+import { PercentageWidgetValue, RidersWidgetValue } from '../../common/types/basicWidgets';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import { getRidershipWidgetValues } from './utils/utils';

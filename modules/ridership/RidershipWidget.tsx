@@ -7,7 +7,6 @@ import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { useRidershipData } from '../../common/api/hooks/ridership';
 import { RIDERSHIP_KEYS } from '../../common/types/lines';
-import { RidershipOverviewWrapper } from './RidershipOverviewWrapper';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 
 export const RidershipWidget: React.FC = () => {
