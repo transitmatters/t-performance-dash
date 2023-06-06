@@ -5,33 +5,35 @@ import { BUS_DEFAULTS, SUBWAY_DEFAULTS } from './defaults/dashboardDefaults';
 import type {
   LineSectionParams,
   OverviewPresetParams,
+  SystemSectionParams,
   TripsSectionParams,
 } from './types/dashboardConfigTypes';
 
 export interface DashboardConfig {
   lineConfig: LineSectionParams;
   tripConfig: TripsSectionParams;
+  systemConfig: SystemSectionParams;
   overviewPreset: OverviewPresetParams;
   swapDashboardTabs: (newTab: Tab) => void;
   setLineConfig: (lineConfig: LineSectionParams) => void;
   setTripConfig: (tripConfig: TripsSectionParams) => void;
+  setSystemConfig: (systemConfig: SystemSectionParams) => void;
   overviewPresetChange: (overviewConfig: OverviewPresetParams) => void;
 }
 
 export const useDashboardConfig = create<DashboardConfig>((set) => ({
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
   tripConfig: { startDate: TODAY_STRING, queryType: 'single' },
+  systemConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
   overviewPreset: { view: 'year' },
   setLineConfig: (lineParams) => set(() => ({ lineConfig: lineParams })),
   setTripConfig: (tripParams) => set(() => ({ tripConfig: tripParams })),
+  setSystemConfig: (systemParams) => set(() => ({ systemConfig: systemParams })),
   swapDashboardTabs: (newTab) =>
     set(() => {
-      if (newTab === 'Subway') {
-        return SUBWAY_DEFAULTS;
-      }
-      if (newTab === 'Bus') {
-        return BUS_DEFAULTS;
-      }
+      if (newTab === 'Subway') return SUBWAY_DEFAULTS;
+      if (newTab === 'Bus') return BUS_DEFAULTS;
+      if (newTab === 'System') return BUS_DEFAULTS;
       return {};
     }),
   overviewPresetChange: (overviewConfig) =>
