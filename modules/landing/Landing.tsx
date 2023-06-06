@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { isMobile } from 'react-device-detect';
 import classNames from 'classnames';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
@@ -9,7 +9,6 @@ import { useViewport } from '../../common/hooks/useViewport';
 
 export function Landing() {
   const { viewportHeight, viewportWidth } = useViewport();
-  const [initialViewportHeight] = useState(viewportHeight);
 
   const imageHeight = useMemo(() => {
     const smallerDimension = viewportHeight
@@ -19,7 +18,7 @@ export function Landing() {
       return smallerDimension! * 0.4;
     }
     return smallerDimension! * 0.45;
-  }, [initialViewportHeight, viewportHeight, isMobile, viewportWidth]);
+  }, [viewportHeight, viewportWidth]);
 
   const handleScrollToDetails = useCallback(() => {
     document.getElementById('charts')?.scrollIntoView({ behavior: 'smooth' });
