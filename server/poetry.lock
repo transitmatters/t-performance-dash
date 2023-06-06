@@ -59,14 +59,14 @@ wcwidth = ">=0.1.4"
 
 [[package]]
 name = "boto3"
-version = "1.26.146"
+version = "1.26.147"
 description = "The AWS SDK for Python"
 category = "main"
 optional = false
 python-versions = ">= 3.7"
 
 [package.dependencies]
-botocore = ">=1.29.146,<1.30.0"
+botocore = ">=1.29.147,<1.30.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.6.0,<0.7.0"
 
@@ -75,7 +75,7 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.29.146"
+version = "1.29.147"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -132,7 +132,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "chalice"
-version = "1.28.0"
+version = "1.29.0"
 description = "Microframework"
 category = "dev"
 optional = false
@@ -150,7 +150,7 @@ typing-extensions = ">=4.0.0,<5.0.0"
 [package.extras]
 cdk = ["aws-cdk.aws-iam (>=1.85.0,<2.0)", "aws-cdk.aws-s3-assets (>=1.85.0,<2.0)", "aws-cdk.cloudformation-include (>=1.85.0,<2.0)", "aws-cdk.core (>=1.85.0,<2.0)"]
 cdkv2 = ["aws-cdk-lib (>2.0,<3.0)"]
-event-file-poller = ["watchdog (==0.9.0)"]
+event-file-poller = ["watchdog (==2.3.1)"]
 
 [[package]]
 name = "charset-normalizer"
@@ -671,7 +671,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-co
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9, <3.11"
-content-hash = "665930d5ccf13708a00b2f55e0759a21188a4698206c4ae6841e806617ddabbd"
+content-hash = "af00933a2e779bfc9e0d61690f6ba580b3dea18a383a8134f037a016fe738b1b"
 
 [metadata.files]
 ansicon = [
@@ -714,12 +714,12 @@ blessed = [
     {file = "blessed-1.20.0.tar.gz", hash = "sha256:2cdd67f8746e048f00df47a2880f4d6acbcdb399031b604e34ba8f71d5787680"},
 ]
 boto3 = [
-    {file = "boto3-1.26.146-py3-none-any.whl", hash = "sha256:a03e42dfa09c785cd223422d59c06e8babf667983b513a9a172b73c106f3b37e"},
-    {file = "boto3-1.26.146.tar.gz", hash = "sha256:3d7f1b43d2e5a10ee29d4940e714d72a2f6f1a6f6ba856c82ba9328d83062605"},
+    {file = "boto3-1.26.147-py3-none-any.whl", hash = "sha256:45ed158defbf554d051c4f3eae9a1ca3c1039dd29a528e884f47a06ad0ac17a1"},
+    {file = "boto3-1.26.147.tar.gz", hash = "sha256:ccfbdb6e9ebdf943e222c88c9a8f161a8a607f3dbdbf3b1b0eed25c1d8cb215e"},
 ]
 botocore = [
-    {file = "botocore-1.29.146-py3-none-any.whl", hash = "sha256:ac57003292f18206ee942eafc381ecd9a3420a3844d6b7e1c1b0f4b88b28263b"},
-    {file = "botocore-1.29.146.tar.gz", hash = "sha256:77f7793cb36074eb84d606a23ad6e1d57c20f7a2eeab7d9136d3e63c584e0504"},
+    {file = "botocore-1.29.147-py3-none-any.whl", hash = "sha256:67a7ce69fc6d44a881b01964a76edb00b4e87723a8cc596339d306d8eb321fec"},
+    {file = "botocore-1.29.147.tar.gz", hash = "sha256:f7433bcce5ef7baad2fdd29f97c9fdcf8de4ec1cf577ae308901caf778ed48c2"},
 ]
 bytecode = [
     {file = "bytecode-0.14.2-py3-none-any.whl", hash = "sha256:e368a2b9bbd7c986133c951250db94fb32f774cfc49752a9db9073bcf9899762"},
@@ -734,8 +734,8 @@ certifi = [
     {file = "certifi-2023.5.7.tar.gz", hash = "sha256:0f0d56dc5a6ad56fd4ba36484d6cc34451e1c6548c61daad8c320169f91eddc7"},
 ]
 chalice = [
-    {file = "chalice-1.28.0-py3-none-any.whl", hash = "sha256:57ed833c72b75af0a276fd030daf240e0e31882a5e11a91547160c07f3dd29ab"},
-    {file = "chalice-1.28.0.tar.gz", hash = "sha256:f57bae2460578f6a74c7769ca4f30f6c16ce327910f13fc4fe90fd4fa59b0db4"},
+    {file = "chalice-1.29.0-py3-none-any.whl", hash = "sha256:0375d93303a04c4885a05a76805370d604786acda59da80f16731312501e0114"},
+    {file = "chalice-1.29.0.tar.gz", hash = "sha256:f07aad9a2d4e5b06ef279cf668a48ec455b131168000b91efe7d841425599035"},
 ]
 charset-normalizer = [
     {file = "charset-normalizer-3.1.0.tar.gz", hash = "sha256:34e0a2f9c370eb95597aae63bf85eb5e96826d81e3dcf88b8886012906f509b5"},
