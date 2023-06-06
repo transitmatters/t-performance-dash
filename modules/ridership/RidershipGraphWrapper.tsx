@@ -7,6 +7,7 @@ import { WidgetForCarousel } from '../../common/components/widgets/internal/Widg
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import { getRidershipWidgetValues } from './utils/utils';
 import { RidershipGraph } from './RidershipGraph';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 interface RidershipGraphWrapperProps {
   data: RidershipCount[];
   lineOrRoute: string;
@@ -22,6 +23,7 @@ export const RidershipGraphWrapper: React.FC<RidershipGraphWrapperProps> = ({
   startDate,
   endDate,
 }) => {
+  if (!data.some((datapoint) => datapoint.count !== null)) return <NoDataNotice isLineMetric />;
   const { average, percentage } = getRidershipWidgetValues(data, lineOrRoute);
 
   return (
