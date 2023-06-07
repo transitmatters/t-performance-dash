@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Line } from 'react-chartjs-2';
 
 import {
@@ -21,6 +21,7 @@ import { COLORS } from '../../../common/constants/colors';
 import type { SpeedDataPoint } from '../../../common/types/dataPoints';
 import { SPEED_RANGE_PARAM_MAP } from '../../speed/constants/speeds';
 import { convertToSpeedDataset } from '../utils';
+import { LandingChartDiv } from '../LandingChartDiv';
 
 ChartJS.register(
   CategoryScale,
@@ -38,81 +39,84 @@ interface OverallSpeedChartProps {
   speedData: SpeedDataPoint[][];
 }
 export const OverallSpeedChart: React.FC<OverallSpeedChartProps> = ({ speedData }) => {
-  const labels = speedData[0].map((point) => point.date);
-  const datasets = speedData.map((data) => convertToSpeedDataset(data));
-  const { tooltipFormat, unit, callbacks } = SPEED_RANGE_PARAM_MAP.week;
+  const chart = useMemo(() => {
+    const labels = speedData[0].map((point) => point.date);
+    const datasets = speedData.map((data) => convertToSpeedDataset(data));
+    const { tooltipFormat, unit, callbacks } = SPEED_RANGE_PARAM_MAP.week;
 
-  return (
-    <div className="h-[300px] w-full max-w-xl rounded-md bg-gray-500 px-4 py-2">
-      <Line
-        id={'system-speed'}
-        height={240}
-        redraw={true}
-        data={{
-          labels,
-          datasets: datasets,
-        }}
-        options={{
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: {
-            intersect: false,
-          },
-          plugins: {
-            tooltip: {
-              position: 'nearest',
-              callbacks: {
-                label: (value) => `${value.formattedValue}% of baseline`,
-                ...callbacks,
-              },
+    return (
+      <LandingChartDiv>
+        <Line
+          id={'system-speed'}
+          height={240}
+          redraw={true}
+          data={{
+            labels,
+            datasets: datasets,
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+              intersect: false,
             },
-            legend: {
-              display: false,
-            },
-          },
-          scales: {
-            y: {
-              suggestedMax: 100,
-              display: true,
-              grid: { display: false },
-
-              ticks: {
-                color: COLORS.design.darkGrey,
-                callback: (value) => `${value}%`,
-              },
-              title: {
-                display: true,
-                text: 'Percentage of baseline',
-                color: COLORS.design.darkGrey,
-              },
-            },
-            x: {
-              min: THREE_MONTHS_AGO_STRING,
-              max: TODAY_STRING,
-              type: 'time',
-              grid: { display: false },
-
-              time: {
-                unit: unit,
-                tooltipFormat: tooltipFormat,
-              },
-              ticks: {
-                color: COLORS.design.darkGrey,
-              },
-              adapters: {
-                date: {
-                  locale: enUS,
+            plugins: {
+              tooltip: {
+                position: 'nearest',
+                callbacks: {
+                  label: (value) => `${value.formattedValue}% of baseline`,
+                  ...callbacks,
                 },
               },
-              display: true,
-              title: {
+              legend: {
                 display: false,
-                text: ``,
               },
             },
-          },
-        }}
-      />
-    </div>
-  );
+            scales: {
+              y: {
+                suggestedMax: 100,
+                display: true,
+                grid: { display: false },
+
+                ticks: {
+                  color: COLORS.design.lightGrey,
+                  callback: (value) => `${value}%`,
+                },
+                title: {
+                  display: true,
+                  text: 'Percentage of baseline',
+                  color: COLORS.design.lightGrey,
+                },
+              },
+              x: {
+                min: THREE_MONTHS_AGO_STRING,
+                max: TODAY_STRING,
+                type: 'time',
+                grid: { display: false },
+
+                time: {
+                  unit: unit,
+                  tooltipFormat: tooltipFormat,
+                },
+                ticks: {
+                  color: COLORS.design.lightGrey,
+                },
+                adapters: {
+                  date: {
+                    locale: enUS,
+                  },
+                },
+                display: true,
+                title: {
+                  display: false,
+                  text: ``,
+                },
+              },
+            },
+          }}
+        />
+      </LandingChartDiv>
+    );
+  }, [speedData]);
+  return chart;
 };
