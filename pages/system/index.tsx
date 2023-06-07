@@ -1,9 +1,3 @@
-import React from 'react';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
-import { Layout } from '../../common/layouts/layoutTypes';
+import { Landing } from '../../modules/landing/Landing';
 
-export default function System() {
-  return <PageWrapper>test</PageWrapper>;
-}
-
-System.Layout = Layout.Dashboard;
+export default Landing;

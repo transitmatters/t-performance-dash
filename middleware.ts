@@ -64,8 +64,13 @@ export function middleware(request: NextRequest) {
     const url = new URL(`/bus/trips?${queryParams.toString()}`, request.url);
     return NextResponse.redirect(url);
   }
+
+  if (request.nextUrl.pathname.startsWith('/slowzones')) {
+    const url = new URL(`/system/slowzones?${search.toString()}`, request.url);
+    return NextResponse.redirect(url);
+  }
 }
 
 export const config = {
-  matcher: ['/rapidtransit/:path*', '/bus'],
+  matcher: ['/rapidtransit/:path*', '/bus', '/slowzones'],
 };

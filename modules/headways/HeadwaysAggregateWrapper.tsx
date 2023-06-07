@@ -10,6 +10,7 @@ import { getHeadwaysAggregateWidgetData } from '../../common/utils/headways';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { SMALL_DATE_FORMAT } from '../../common/constants/dates';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
 
 interface HeadwaysAggregateWrapperProps {
@@ -26,6 +27,8 @@ export const HeadwaysAggregateWrapper: React.FC<HeadwaysAggregateWrapperProps> =
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   const headwaysData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
+  if (headwaysData.length < 1) return <NoDataNotice />;
+
   const { average, max } = getHeadwaysAggregateWidgetData(headwaysData);
   return (
     <CarouselGraphDiv>

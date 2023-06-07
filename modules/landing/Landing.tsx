@@ -54,4 +54,4 @@ export function Landing() {
   );
 }
 
-Landing.Layout = Layout.Dashboard;
+Landing.Layout = Layout.Landing;
