@@ -47,7 +47,7 @@ export function Landing() {
           Let's Go
         </button>
       </div>
-      <div className="h-full bg-tm-lightGrey py-20" id="charts">
+      <div className="h-full bg-tm-lightGrey pb-20 pt-12 md:py-20" id="charts">
         <LandingCharts />
       </div>
     </PageWrapper>
