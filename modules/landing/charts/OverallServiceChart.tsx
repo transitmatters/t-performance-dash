@@ -35,11 +35,11 @@ ChartJS.register(
 );
 
 interface OverallServiceChartProps {
-  speedData: SpeedDataPoint[][];
+  serviceData: SpeedDataPoint[][];
 }
-export const OverallServiceChart: React.FC<OverallServiceChartProps> = ({ speedData }) => {
-  const labels = speedData[0].map((point) => point.date);
-  const datasets = speedData.map((data) => convertToServiceDataset(data));
+export const OverallServiceChart: React.FC<OverallServiceChartProps> = ({ serviceData }) => {
+  const labels = serviceData[0].map((point) => point.date);
+  const datasets = serviceData.map((data) => convertToServiceDataset(data));
   const { tooltipFormat, unit, callbacks } = SPEED_RANGE_PARAM_MAP.week;
 
   return (

@@ -4,11 +4,11 @@ import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlace
 import { OverallServiceChart } from './OverallServiceChart';
 
 export const OverallServiceChartWrapper: React.FC = () => {
-  const speedData = useSpeedDataLanding();
-  const speedDataReady = speedData.some((query) => !query.isError && query.data);
-  if (!speedDataReady) return <ChartPlaceHolder query={speedData[0]} />;
-  const speedDataFiltered = speedData
+  const serviceData = useSpeedDataLanding();
+  const serviceDataReady = serviceData.some((query) => !query.isError && query.data);
+  if (!serviceDataReady) return <ChartPlaceHolder query={serviceData[0]} />;
+  const serviceDataFiltered = serviceData
     .map((query) => query.data)
     .filter((e): e is Exclude<typeof e, undefined> => e !== undefined);
-  return <OverallServiceChart speedData={speedDataFiltered} />;
+  return <OverallServiceChart serviceData={serviceDataFiltered} />;
 };

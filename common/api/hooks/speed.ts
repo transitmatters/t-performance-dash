@@ -12,6 +12,9 @@ export const useSpeedData = (params: FetchSpeedsOptions, enabled?: boolean) => {
   });
 };
 
+/*
+ * useSpeedDataLanding queries the Speed data tables which include full-line trip times (value) and number of trips (count)
+ */
 export const useSpeedDataLanding = () => {
   return useQueries({
     queries: HEAVY_RAIL_LINES.map((line) => {
