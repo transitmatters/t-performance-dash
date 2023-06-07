@@ -22,6 +22,8 @@ export const ONE_WEEK_AGO = TODAY.subtract(7, 'days');
 export const ONE_WEEK_AGO_STRING = ONE_WEEK_AGO.format(DATE_FORMAT);
 export const ONE_YEAR_AGO = TODAY.subtract(1, 'year');
 export const ONE_YEAR_AGO_STRING = ONE_YEAR_AGO.format(DATE_FORMAT);
+export const THREE_MONTHS_AGO = TODAY.subtract(90, 'days');
+export const THREE_MONTHS_AGO_STRING = TODAY.subtract(90, 'days').format(DATE_FORMAT);
 
 const OVERVIEW_TRAIN_MIN_DATE = '2016-02-01';
 const TRAIN_MIN_DATE = '2016-01-15';

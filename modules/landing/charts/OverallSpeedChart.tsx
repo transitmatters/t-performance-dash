@@ -16,11 +16,11 @@ import {
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
-import { ONE_YEAR_AGO_STRING, TODAY_STRING } from '../../../common/constants/dates';
+import { THREE_MONTHS_AGO_STRING, TODAY_STRING } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
 import type { SpeedDataPoint } from '../../../common/types/dataPoints';
 import { SPEED_RANGE_PARAM_MAP } from '../../speed/constants/speeds';
-import { convertToChartJSDataSet } from '../utils';
+import { convertToSpeedDataset } from '../utils';
 
 ChartJS.register(
   CategoryScale,
@@ -39,11 +39,11 @@ interface OverallSpeedChartProps {
 }
 export const OverallSpeedChart: React.FC<OverallSpeedChartProps> = ({ speedData }) => {
   const labels = speedData[0].map((point) => point.date);
-  const datasets = speedData.map((data) => convertToChartJSDataSet(data));
+  const datasets = speedData.map((data) => convertToSpeedDataset(data));
   const { tooltipFormat, unit, callbacks } = SPEED_RANGE_PARAM_MAP.week;
 
   return (
-    <div className="h-[300px] w-full px-16">
+    <div className="h-[300px] w-full max-w-2xl px-16">
       <Line
         id={'system-speed'}
         height={240}
@@ -73,7 +73,6 @@ export const OverallSpeedChart: React.FC<OverallSpeedChartProps> = ({ speedData 
           },
           scales: {
             y: {
-              suggestedMin: 0,
               suggestedMax: 100,
               display: true,
               grid: { display: false },
@@ -89,7 +88,7 @@ export const OverallSpeedChart: React.FC<OverallSpeedChartProps> = ({ speedData 
               },
             },
             x: {
-              min: ONE_YEAR_AGO_STRING,
+              min: THREE_MONTHS_AGO_STRING,
               max: TODAY_STRING,
               type: 'time',
               grid: { display: false },
