@@ -137,7 +137,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                   stepSize: 1,
                   tooltipFormat: timeFormat,
                 },
-                // @ts-expect-error The typing expectations are wrong
                 type: 'time',
                 adapters: {
                   date: {
