@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 
-import TmLogoSvg from '../../public/tm-logo-big.svg';
 import { DonateButton } from '../../common/components/buttons/DonateButton';
 import { FeedbackButton } from '../../common/components/buttons/FeedbackButton';
 import { SideNavigation } from './SideNavigation';
@@ -34,7 +34,14 @@ export const MobileNavHeader = () => {
 
         <div className="flex flex-1 flex-col">
           <div className="top-0 z-10 flex flex-row items-center justify-between bg-tm-grey p-2">
-            <TmLogoSvg className="mr-4 h-7 w-auto text-black" alt="TransitMatters Logo" />
+            <div className="mr-40 w-auto text-black">
+              <Image
+                src={'/Logo_wordmark_dark.png'}
+                alt="TransitMatters Logo"
+                width={3204}
+                height={301}
+              />
+            </div>
             <button
               type="button"
               className="inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-400"
