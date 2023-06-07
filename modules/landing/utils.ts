@@ -1,6 +1,10 @@
-import { PEAK_COMPLETE_TRIP_TIMES, PEAK_SCHEDULED_SERVICE } from '../../common/constants/baselines';
+import {
+  PEAK_COMPLETE_TRIP_TIMES,
+  PEAK_RIDERSHIP,
+  PEAK_SCHEDULED_SERVICE,
+} from '../../common/constants/baselines';
 import { LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedDataPoint } from '../../common/types/dataPoints';
+import type { RidershipCount, SpeedDataPoint } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 
 const getDatasetOptions = (line: Line) => {
@@ -42,6 +46,18 @@ export const convertToServiceDataset = (data: SpeedDataPoint[]) => {
     label: `% of baseline`,
     data: data.map((datapoint) =>
       datapoint.value ? (100 * (datapoint.count / 2)) / PEAK_SCHEDULED_SERVICE[line] : Number.NaN
+    ),
+  };
+};
+
+export const convertToRidershipDataset = (data: RidershipCount[], line: Line) => {
+  const datasetOptions = getDatasetOptions(line);
+
+  return {
+    ...datasetOptions,
+    label: `% of baseline`,
+    data: data.map((datapoint) =>
+      datapoint.count ? 100 * (datapoint.count / PEAK_RIDERSHIP[line]) : Number.NaN
     ),
   };
 };
