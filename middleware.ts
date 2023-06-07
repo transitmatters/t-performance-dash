@@ -53,6 +53,11 @@ export function middleware(request: NextRequest) {
   const { search } = request.nextUrl;
   const resultParams = configToQueryParams(search);
 
+  if (request.nextUrl.pathname.startsWith('/slowzones')) {
+    const url = new URL(`/system/slowzones?${search.toString()}`, request.url);
+    return NextResponse.redirect(url);
+  }
+
   if (resultParams && request.nextUrl.pathname.startsWith('/rapidtransit')) {
     const { line, queryParams } = resultParams;
     const url = new URL(`/${line}/trips?${queryParams.toString()}`, request.url);
@@ -62,11 +67,6 @@ export function middleware(request: NextRequest) {
   if (resultParams && request.nextUrl.pathname.startsWith('/bus')) {
     const { queryParams } = resultParams;
     const url = new URL(`/bus/trips?${queryParams.toString()}`, request.url);
-    return NextResponse.redirect(url);
-  }
-
-  if (request.nextUrl.pathname.startsWith('/slowzones')) {
-    const url = new URL(`/system/slowzones?${search.toString()}`, request.url);
     return NextResponse.redirect(url);
   }
 }
