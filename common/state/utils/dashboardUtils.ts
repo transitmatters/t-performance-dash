@@ -4,7 +4,7 @@ import { SMALL_DATE_FORMAT, RANGE_PRESETS } from '../../constants/dates';
 import type { DateConfigOptions } from '../../constants/pages';
 import type { QueryParams } from '../../types/router';
 import { getDateParams } from '../../utils/router';
-import type { DateConfig } from '../dashboardConfig';
+import type { DateConfig } from '../dateConfig';
 
 export const saveDateConfig = (
   section: DateConfigOptions,

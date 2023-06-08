@@ -8,7 +8,7 @@ import { getHref, useDelimitatedRoute, useHandlePageNavigation } from '../../com
 import { LINE_COLORS } from '../../common/constants/colors';
 import type { Page } from '../../common/constants/pages';
 import { ALL_PAGES } from '../../common/constants/pages';
-import { useDateConfig } from '../../common/state/dashboardConfig';
+import { useDateConfig } from '../../common/state/dateConfig';
 import { getSelectedDates } from '../../common/state/utils/dashboardUtils';
 
 interface HomescreenWidgetTitle {

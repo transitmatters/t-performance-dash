@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { getHref, useDelimitatedRoute, useHandlePageNavigation } from '../../common/utils/router';
 import type { PageMetadata } from '../../common/constants/pages';
-import { useDateConfig } from '../../common/state/dashboardConfig';
+import { useDateConfig } from '../../common/state/dateConfig';
 
 interface SidebarTabs {
   tabs: PageMetadata[];

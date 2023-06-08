@@ -8,8 +8,8 @@ import type { QueryParams, Route, Tab } from '../types/router';
 import { DateParams } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
 import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
-import type { DateConfig } from '../state/dashboardConfig';
-import { useDateConfig } from '../state/dashboardConfig';
+import type { DateConfig } from '../state/dateConfig';
+import { useDateConfig } from '../state/dateConfig';
 import { LINE_OBJECTS } from '../constants/lines';
 import { getDateConfig, saveDateConfig } from '../state/utils/dashboardUtils';
 

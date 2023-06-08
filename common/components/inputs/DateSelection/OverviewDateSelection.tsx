@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { ButtonGroup } from '../../general/ButtonGroup';
-import { useDateConfig } from '../../../state/dashboardConfig';
+import { useDateConfig } from '../../../state/dateConfig';
 import { useDatePresetConfig } from '../../../state/datePresetConfig';
 import type { OverviewDatePresetKey } from '../../../constants/dates';
 import { OverviewRangeTypes } from '../../../constants/dates';
