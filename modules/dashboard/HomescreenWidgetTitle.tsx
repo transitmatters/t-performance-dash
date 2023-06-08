@@ -4,11 +4,14 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { mbtaTextConfig } from '../../common/components/inputs/styles/tailwind';
-import { getHref, useDelimitatedRoute, useHandlePageNavigation } from '../../common/utils/router';
+import {
+  useDelimitatedRoute,
+  useGenerateHref,
+  useHandlePageConfig,
+} from '../../common/utils/router';
 import { LINE_COLORS } from '../../common/constants/colors';
 import type { Page } from '../../common/constants/pages';
 import { ALL_PAGES } from '../../common/constants/pages';
-import { useDateConfig } from '../../common/state/dateConfig';
 import { getSelectedDates } from '../../common/state/utils/dashboardUtils';
 
 interface HomescreenWidgetTitle {
@@ -17,9 +20,9 @@ interface HomescreenWidgetTitle {
 }
 export const HomescreenWidgetTitle: React.FC<HomescreenWidgetTitle> = ({ title, tab }) => {
   const { line, page, query, linePath } = useDelimitatedRoute();
-  const handlePageNavigation = useHandlePageNavigation();
-  const dashboardConfig = useDateConfig();
-  const href = getHref(dashboardConfig, ALL_PAGES[tab], page, query, linePath);
+  const handlePageConfig = useHandlePageConfig();
+  const generateHref = useGenerateHref();
+  const href = generateHref(ALL_PAGES[tab], page, query, linePath);
   const date = getSelectedDates({
     startDate: query.startDate,
     endDate: query.endDate,
@@ -27,7 +30,7 @@ export const HomescreenWidgetTitle: React.FC<HomescreenWidgetTitle> = ({ title, 
   });
   return (
     <div className="flex w-full items-baseline justify-between">
-      <Link onClick={() => handlePageNavigation(ALL_PAGES[tab])} href={href}>
+      <Link onClick={() => handlePageConfig(ALL_PAGES[tab])} href={href}>
         <div className="flex w-full cursor-pointer flex-row items-center text-xl">
           <h3
             className={classNames(

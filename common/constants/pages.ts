@@ -43,6 +43,7 @@ export type PageMetadata = {
   lines: Line[];
   icon: IconDefinition;
   dateConfig: DateConfigOptions;
+  hasStationConfig?: boolean;
   sectionTitle?: SectionTitle;
   sub?: boolean;
   title?: string;
@@ -77,6 +78,7 @@ export const ALL_PAGES: PageMap = {
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
     icon: faMapLocationDot,
     dateConfig: 'singleTrips',
+    hasStationConfig: true,
   },
   multiTrips: {
     key: 'multiTrips',
@@ -86,6 +88,7 @@ export const ALL_PAGES: PageMap = {
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
     icon: faCalendar,
     dateConfig: 'multiTrips',
+    hasStationConfig: true,
   },
   overview: {
     key: 'overview',

@@ -5,13 +5,15 @@ import { useCallback } from 'react';
 import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route, Tab } from '../types/router';
-import { DateParams } from '../types/router';
+import { DATE_PARAMS } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
 import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
 import type { DateConfig } from '../state/dateConfig';
 import { useDateConfig } from '../state/dateConfig';
 import { LINE_OBJECTS } from '../constants/lines';
 import { getDateConfig, saveDateConfig } from '../state/utils/dashboardUtils';
+import type { StationConfig } from '../state/stationConfig';
+import { useStationConfig } from '../state/stationConfig';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'line-red',
@@ -29,7 +31,7 @@ export const getParams = (params: ParsedUrlQuery | QueryParams) => {
 
 export const getDateParams = (params: ParsedUrlQuery | QueryParams) => {
   return Object.fromEntries(
-    Object.entries(params).filter(([key, value]) => key in DateParams && value)
+    Object.entries(params).filter(([key, value]) => DATE_PARAMS.includes(key) && value)
   );
 };
 
@@ -152,7 +154,6 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
 
 export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): string => {
   const { query, page } = route;
-  if (!page) return ''; // TODO: remove this. Only needed bc this loads on root URL at the moment.
   const currentPage = ALL_PAGES[page];
   const currentPath = currentPage.path;
   const validPage = currentPage.lines.includes('line-bus');
@@ -170,51 +171,99 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   return href;
 };
 
-export const getHref = (
-  dashboardConfig: DateConfig,
-  newPage: PageMetadata,
-  currentPage: Page,
-  query: QueryParams,
-  linePath: LinePath
-) => {
-  const pageObject = ALL_PAGES[currentPage];
-  if (pageObject?.dateConfig === newPage.dateConfig) {
-    return navigateWithinSection(linePath, newPage, query);
-  }
-  return navigateToNewSection(linePath, newPage, query, dashboardConfig);
-};
-
-export const useHandlePageNavigation = () => {
-  const { page, query } = useDelimitatedRoute();
-  const pageObject = ALL_PAGES[page];
-  const dashboardConfig = useDateConfig();
-
-  const handlePageNavigation = useCallback(
-    (page: PageMetadata) => {
-      if (!(pageObject?.dateConfig === page.dateConfig)) {
-        saveDateConfig(pageObject.dateConfig, query, dashboardConfig);
-      }
+export const useGenerateHref = () => {
+  const dateConfig = useDateConfig();
+  const stationConfig = useStationConfig();
+  const generateHref = useCallback(
+    (newPage: PageMetadata, currentPageName: Page, query: QueryParams, linePath: LinePath) => {
+      const currentPage = ALL_PAGES[currentPageName];
+      const newQuery = getQueryParams(currentPage, newPage, query, dateConfig, stationConfig);
+      const newPathName = getPathName(newPage, linePath);
+      return {
+        pathname: newPathName,
+        query: newQuery,
+      };
     },
-    [query, pageObject, dashboardConfig]
+    [dateConfig, stationConfig]
   );
-  return handlePageNavigation;
+  return generateHref;
 };
 
-const navigateWithinSection = (linePath: LinePath, page: PageMetadata, query: QueryParams) => {
-  return { pathname: `/${linePath}${page.path}`, query: query };
+export const useHandlePageConfig = () => {
+  const { page, query } = useDelimitatedRoute();
+  const currentPage = ALL_PAGES[page];
+  const dateConfig = useDateConfig();
+  const stationConfig = useStationConfig();
+
+  const handlePageConfig = useCallback(
+    (newPage: PageMetadata) => {
+      savePageConfigIfNecessary(currentPage, newPage, query, dateConfig, stationConfig);
+    },
+    [query, currentPage, dateConfig, stationConfig]
+  );
+  return handlePageConfig;
 };
 
-const navigateToNewSection = (
-  linePath: LinePath,
-  page: PageMetadata,
+const getDateQueryParams = (
+  currentPage: PageMetadata,
+  newPage: PageMetadata,
   query: QueryParams,
-  dashboardConfig: DateConfig
+  dateConfig: DateConfig
 ) => {
-  const params = getDateConfig(page.dateConfig, dashboardConfig);
-  const busRouteOnly = query.busRoute ?? undefined;
-  const newQuery = busRouteOnly ? { ...params, busRoute: busRouteOnly } : params;
+  if (currentPage.dateConfig === newPage.dateConfig) {
+    return Object.fromEntries(Object.entries(query).filter(([key]) => DATE_PARAMS.includes(key)));
+  }
+  if (currentPage.dateConfig !== newPage.dateConfig) {
+    return getDateConfig(newPage.dateConfig, dateConfig);
+  }
+};
+
+const getBusRouteQueryParam = (query: QueryParams) => {
+  if (query.busRoute) return { busRoute: query.busRoute };
+};
+
+const getStationQueryParams = (
+  currentPage: PageMetadata,
+  newPage: PageMetadata,
+  query: QueryParams,
+  stationConfig: StationConfig
+) => {
+  if (!newPage.hasStationConfig) return null;
+  if (currentPage.hasStationConfig && query.from && query.to)
+    return { from: query.from, to: query.to };
+  if (newPage.hasStationConfig && stationConfig.from && stationConfig.to)
+    return { from: stationConfig.from, to: stationConfig.to };
+};
+
+const getQueryParams = (
+  currentPage: PageMetadata,
+  newPage: PageMetadata,
+  query: QueryParams,
+  dateConfig: DateConfig,
+  stationConfig: StationConfig
+) => {
   return {
-    pathname: `/${page.dateConfig === 'system' ? 'system' : linePath}${page.path}`,
-    query: newQuery,
+    ...getStationQueryParams(currentPage, newPage, query, stationConfig),
+    ...getDateQueryParams(currentPage, newPage, query, dateConfig),
+    ...getBusRouteQueryParam(query),
   };
+};
+
+const getPathName = (newPage: PageMetadata, linePath: LinePath) => {
+  return `/${newPage.dateConfig === 'system' ? 'system' : linePath}${newPage.path}`;
+};
+
+export const savePageConfigIfNecessary = (
+  currentPage: PageMetadata,
+  newPage: PageMetadata,
+  query: QueryParams,
+  dateConfig: DateConfig,
+  stationConfig: StationConfig
+) => {
+  if (!(currentPage.dateConfig === newPage.dateConfig)) {
+    saveDateConfig(currentPage.dateConfig, query, dateConfig);
+  }
+  if (!(currentPage.hasStationConfig === newPage.hasStationConfig)) {
+    stationConfig.setStationConfig({ from: query.from, to: query.to });
+  }
 };
