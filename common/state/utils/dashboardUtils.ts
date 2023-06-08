@@ -1,36 +1,35 @@
 import dayjs from 'dayjs';
 import type { OverviewDatePresetKey } from '../../constants/dates';
 import { SMALL_DATE_FORMAT, RANGE_PRESETS } from '../../constants/dates';
-import type { Section } from '../../constants/pages';
+import type { DateConfigOptions } from '../../constants/pages';
 import type { QueryParams } from '../../types/router';
-import { getParams } from '../../utils/router';
-import type { DashboardConfig } from '../dashboardConfig';
+import { getDateParams } from '../../utils/router';
+import type { DateConfig } from '../dashboardConfig';
 
-export const saveDashboardConfig = (
-  section: Section,
+export const saveDateConfig = (
+  section: DateConfigOptions,
   query: QueryParams,
-  dashboardConfig: DashboardConfig
+  dateConfig: DateConfig
 ) => {
+  const params = getDateParams(query);
+
   if (section === 'singleTrips') {
-    // TODO: filter out invalid keys.
-    const params = getParams(query);
-    if (params.date) dashboardConfig.setSingleTripConfig(params);
+    if (params.date) dateConfig.setSingleTripConfig(params);
   }
   if (section === 'multiTrips') {
-    const params = getParams(query);
-    if (params.startDate) dashboardConfig.setMultiTripConfig(params);
+    if (params.startDate) dateConfig.setMultiTripConfig(params);
   }
   if (section === 'line') {
-    dashboardConfig.setLineConfig({ startDate: query.startDate, endDate: query.endDate });
+    dateConfig.setLineConfig(params);
   }
 };
 
-export const getDashboardConfig = (section: Section, dashboardConfig: DashboardConfig) => {
-  if (section === 'singleTrips') return dashboardConfig.singleTripConfig;
-  if (section === 'multiTrips') return dashboardConfig.multiTripConfig;
-  if (section === 'system') return dashboardConfig.systemConfig;
-  if (section === 'line') return dashboardConfig.lineConfig;
-  if (section === 'overview') return dashboardConfig.overviewPreset;
+export const getDateConfig = (section: DateConfigOptions, dateConfig: DateConfig) => {
+  if (section === 'singleTrips') return dateConfig.singleTripConfig;
+  if (section === 'multiTrips') return dateConfig.multiTripConfig;
+  if (section === 'system') return dateConfig.systemConfig;
+  if (section === 'line') return dateConfig.lineConfig;
+  if (section === 'overview') return dateConfig.overviewPreset;
   return {};
 };
 

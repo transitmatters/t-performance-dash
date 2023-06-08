@@ -5,12 +5,11 @@ export interface DateSelectionInput {
   selection: number | undefined;
 }
 
-export interface DateSelectionDefaultOptions {
+export interface DateSelectionDefaultOptions<T> {
   key: DatePresetKey;
   name: string;
-  input: DateParams | SingleDateParams;
+  input: T;
 }
-
 export interface DateParams {
   startDate?: string;
   endDate?: string;

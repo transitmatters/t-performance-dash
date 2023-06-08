@@ -5,9 +5,8 @@ import {
   OVERVIEW_OPTIONS,
   TODAY_STRING,
 } from '../../constants/dates';
-import type { FullDashboardConfig } from '../types/dashboardConfigTypes';
 
-export const SUBWAY_DEFAULTS: Partial<FullDashboardConfig> = {
+export const SUBWAY_DEFAULTS = {
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
   multiTripConfig: {
     startDate: ONE_WEEK_AGO_STRING,
@@ -19,7 +18,7 @@ export const SUBWAY_DEFAULTS: Partial<FullDashboardConfig> = {
   overviewPreset: { view: 'year' },
 };
 
-export const BUS_DEFAULTS: Partial<FullDashboardConfig> = {
+export const BUS_DEFAULTS = {
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
   multiTripConfig: {
     startDate: BUS_MAX_DATE,
@@ -30,6 +29,6 @@ export const BUS_DEFAULTS: Partial<FullDashboardConfig> = {
   },
 };
 
-export const SYSTEM_DEFAULTS: Partial<FullDashboardConfig> = {
+export const SYSTEM_DEFAULTS = {
   systemConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
 };

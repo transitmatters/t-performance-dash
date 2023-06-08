@@ -14,7 +14,7 @@ export const DesktopHeader: React.FC = () => {
     query: { busRoute },
     tab,
   } = useDelimitatedRoute();
-  const section = page ? ALL_PAGES[page]?.section : undefined;
+  const section = page ? ALL_PAGES[page]?.dateConfig : undefined;
   const lg = useBreakpoint('lg');
 
   const showControls = section && (line || tab === 'System') && section !== 'today';

@@ -8,7 +8,7 @@ import { getHref, useDelimitatedRoute, useHandlePageNavigation } from '../../com
 import { LINE_COLORS } from '../../common/constants/colors';
 import type { Page } from '../../common/constants/pages';
 import { ALL_PAGES } from '../../common/constants/pages';
-import { useDashboardConfig } from '../../common/state/dashboardConfig';
+import { useDateConfig } from '../../common/state/dashboardConfig';
 import { getSelectedDates } from '../../common/state/utils/dashboardUtils';
 
 interface HomescreenWidgetTitle {
@@ -18,7 +18,7 @@ interface HomescreenWidgetTitle {
 export const HomescreenWidgetTitle: React.FC<HomescreenWidgetTitle> = ({ title, tab }) => {
   const { line, page, query, linePath } = useDelimitatedRoute();
   const handlePageNavigation = useHandlePageNavigation();
-  const dashboardConfig = useDashboardConfig();
+  const dashboardConfig = useDateConfig();
   const href = getHref(dashboardConfig, ALL_PAGES[tab], page, query, linePath);
   const date = getSelectedDates({
     startDate: query.startDate,

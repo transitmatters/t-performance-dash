@@ -1,5 +1,10 @@
 import { create } from 'zustand';
-import { ONE_WEEK_AGO_STRING, OVERVIEW_OPTIONS, TODAY_STRING } from '../constants/dates';
+import {
+  ONE_WEEK_AGO_STRING,
+  ONE_YEAR_AGO_STRING,
+  OVERVIEW_OPTIONS,
+  TODAY_STRING,
+} from '../constants/dates';
 import type { Tab } from '../constants/dashboardTabs';
 import { BUS_DEFAULTS, SUBWAY_DEFAULTS, SYSTEM_DEFAULTS } from './defaults/dashboardDefaults';
 import type {
@@ -7,12 +12,14 @@ import type {
   MultiTripsSectionParams,
   OverviewPresetParams,
   SingleTripsSectionParams,
+  SystemSectionParams,
 } from './types/dashboardConfigTypes';
 
-export interface DashboardConfig {
+export interface DateConfig {
   lineConfig: LineSectionParams;
   singleTripConfig: SingleTripsSectionParams;
   multiTripConfig: MultiTripsSectionParams;
+  systemConfig: SystemSectionParams;
   overviewPreset: OverviewPresetParams;
   swapDashboardTabs: (newTab: Tab) => void;
   setLineConfig: (lineConfig: LineSectionParams) => void;
@@ -21,7 +28,7 @@ export interface DashboardConfig {
   overviewPresetChange: (overviewConfig: OverviewPresetParams) => void;
 }
 
-export const useDashboardConfig = create<DashboardConfig>((set) => ({
+export const useDateConfig = create<DateConfig>((set) => ({
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
   multiTripConfig: {
     startDate: ONE_WEEK_AGO_STRING,
@@ -29,6 +36,10 @@ export const useDashboardConfig = create<DashboardConfig>((set) => ({
   },
   singleTripConfig: {
     date: TODAY_STRING,
+  },
+  systemConfig: {
+    startDate: ONE_YEAR_AGO_STRING,
+    endDate: TODAY_STRING,
   },
   overviewPreset: { view: 'year' },
   setLineConfig: (lineParams) => set(() => ({ lineConfig: lineParams })),

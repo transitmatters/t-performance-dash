@@ -5,12 +5,13 @@ import { useCallback } from 'react';
 import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route, Tab } from '../types/router';
+import { DateParams } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
 import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
-import type { DashboardConfig } from '../state/dashboardConfig';
-import { useDashboardConfig } from '../state/dashboardConfig';
+import type { DateConfig } from '../state/dashboardConfig';
+import { useDateConfig } from '../state/dashboardConfig';
 import { LINE_OBJECTS } from '../constants/lines';
-import { getDashboardConfig, saveDashboardConfig } from '../state/utils/dashboardUtils';
+import { getDateConfig, saveDateConfig } from '../state/utils/dashboardUtils';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'line-red',
@@ -23,6 +24,12 @@ const linePathToKeyMap: Record<string, Line> = {
 export const getParams = (params: ParsedUrlQuery | QueryParams) => {
   return Object.fromEntries(
     Object.entries(params).filter(([key, value]) => key !== 'line' && value)
+  );
+};
+
+export const getDateParams = (params: ParsedUrlQuery | QueryParams) => {
+  return Object.fromEntries(
+    Object.entries(params).filter(([key, value]) => key in DateParams && value)
   );
 };
 
@@ -164,14 +171,14 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
 };
 
 export const getHref = (
-  dashboardConfig: DashboardConfig,
+  dashboardConfig: DateConfig,
   newPage: PageMetadata,
   currentPage: Page,
   query: QueryParams,
   linePath: LinePath
 ) => {
   const pageObject = ALL_PAGES[currentPage];
-  if (pageObject?.section === newPage.section) {
+  if (pageObject?.dateConfig === newPage.dateConfig) {
     return navigateWithinSection(linePath, newPage, query);
   }
   return navigateToNewSection(linePath, newPage, query, dashboardConfig);
@@ -180,12 +187,12 @@ export const getHref = (
 export const useHandlePageNavigation = () => {
   const { page, query } = useDelimitatedRoute();
   const pageObject = ALL_PAGES[page];
-  const dashboardConfig = useDashboardConfig();
+  const dashboardConfig = useDateConfig();
 
   const handlePageNavigation = useCallback(
     (page: PageMetadata) => {
-      if (!(pageObject?.section === page.section)) {
-        saveDashboardConfig(pageObject.section, query, dashboardConfig);
+      if (!(pageObject?.dateConfig === page.dateConfig)) {
+        saveDateConfig(pageObject.dateConfig, query, dashboardConfig);
       }
     },
     [query, pageObject, dashboardConfig]
@@ -201,13 +208,13 @@ const navigateToNewSection = (
   linePath: LinePath,
   page: PageMetadata,
   query: QueryParams,
-  dashboardConfig: DashboardConfig
+  dashboardConfig: DateConfig
 ) => {
-  const params = getDashboardConfig(page.section, dashboardConfig);
+  const params = getDateConfig(page.dateConfig, dashboardConfig);
   const busRouteOnly = query.busRoute ?? undefined;
   const newQuery = busRouteOnly ? { ...params, busRoute: busRouteOnly } : params;
   return {
-    pathname: `/${page.section === 'system' ? 'system' : linePath}${page.path}`,
+    pathname: `/${page.dateConfig === 'system' ? 'system' : linePath}${page.path}`,
     query: newQuery,
   };
 };

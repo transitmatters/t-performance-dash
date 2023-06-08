@@ -8,14 +8,10 @@ export type LineSectionParams = Partial<{
 export type MultiTripsSectionParams = Partial<{
   startDate: string;
   endDate: string;
-  from: string;
-  to: string;
 }>;
 
 export type SingleTripsSectionParams = Partial<{
   date: string;
-  from: string;
-  to: string;
 }>;
 
 export type SystemSectionParams = Partial<{

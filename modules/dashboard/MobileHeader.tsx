@@ -13,7 +13,7 @@ export const MobileHeader: React.FC = () => {
     page,
     query: { busRoute, startDate, endDate, view },
   } = useDelimitatedRoute();
-  const section = page ? ALL_PAGES[page]?.section : undefined;
+  const section = page ? ALL_PAGES[page]?.dateConfig : undefined;
 
   return (
     <div

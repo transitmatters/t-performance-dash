@@ -18,8 +18,8 @@ interface DashboardLayoutProps {
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const isMobile = !useBreakpoint('md');
   const { line, page, query } = useDelimitatedRoute();
-  const { busRoute, queryType } = query;
-  const section = page ? ALL_PAGES[page]?.section : undefined;
+  const { busRoute } = query;
+  const section = page ? ALL_PAGES[page]?.dateConfig : undefined;
   const showControlParams = section && line && section !== 'today';
   usePresetsOnFirstLoad(section, query);
 
@@ -37,12 +37,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           </div>
         </main>
         {isMobile && showControlParams && (
-          <MobileControlPanel
-            section={section}
-            line={line}
-            queryType={queryType}
-            busRoute={busRoute}
-          />
+          <MobileControlPanel section={section} line={line} busRoute={busRoute} />
         )}
       </div>
       <Footer />

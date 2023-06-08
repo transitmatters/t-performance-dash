@@ -11,6 +11,8 @@ export interface Route {
   tab: Tab;
 }
 
+export const DateParams = ['startDate', 'endDate', 'date'];
+
 export type QueryParams = {
   startDate?: string;
   endDate?: string;

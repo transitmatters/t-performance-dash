@@ -4,11 +4,11 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { DASHBOARD_TABS } from '../../common/constants/dashboardTabs';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { useDashboardConfig } from '../../common/state/dashboardConfig';
+import { useDateConfig } from '../../common/state/dashboardConfig';
 
 export const DashboardSelection: React.FC = () => {
   const { tab } = useDelimitatedRoute();
-  const swapDashboardTabs = useDashboardConfig((state) => state.swapDashboardTabs);
+  const swapDashboardTabs = useDateConfig((state) => state.swapDashboardTabs);
   const dashboardTabs = Object.values(DASHBOARD_TABS);
   return (
     <Tab.Group

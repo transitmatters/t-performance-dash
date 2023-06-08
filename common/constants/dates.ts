@@ -3,7 +3,11 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import type { DateTimePickerProps } from 'react-flatpickr';
-import type { DateSelectionDefaultOptions } from '../components/inputs/DateSelection/types/DateSelectionTypes';
+import type {
+  DateParams,
+  DateSelectionDefaultOptions,
+  SingleDateParams,
+} from '../components/inputs/DateSelection/types/DateSelectionTypes';
 import type { Tab } from './dashboardTabs';
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -60,7 +64,9 @@ export const FLAT_PICKER_OPTIONS: {
   },
 };
 
-export const SINGLE_PRESETS: { [key in DatePresetKey]?: DateSelectionDefaultOptions } = {
+export const SINGLE_PRESETS: {
+  [key in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams>;
+} = {
   today: { key: 'today', name: 'Today', input: { date: TODAY_STRING } },
   yesterday: {
     key: 'yesterday',
@@ -91,7 +97,7 @@ export const SINGLE_PRESETS: { [key in DatePresetKey]?: DateSelectionDefaultOpti
 };
 
 // TODO Different presets for buses
-export const RANGE_PRESETS: { [key in DatePresetKey]?: DateSelectionDefaultOptions } = {
+export const RANGE_PRESETS: { [key in DatePresetKey]?: DateSelectionDefaultOptions<DateParams> } = {
   week: {
     key: 'week',
     name: 'Past week',
@@ -212,10 +218,7 @@ export const RANGE_DATE_KEYS = Object.fromEntries(
   ])
 );
 export const SINGLE_DATE_KEYS = Object.fromEntries(
-  Object.values(SINGLE_PRESETS).map((singlePreset) => [
-    singlePreset.input.startDate,
-    singlePreset.key,
-  ])
+  Object.values(SINGLE_PRESETS).map((singlePreset) => [singlePreset.input.date, singlePreset.key])
 );
 
 export const todayOrDate = (date: dayjs.Dayjs) => {
