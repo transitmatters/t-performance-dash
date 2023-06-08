@@ -5,7 +5,6 @@ import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ALL_PAGES } from '../../common/constants/pages';
 import { lineColorBackground } from '../../common/styles/general';
-import { RangeTabs } from '../navigation/RangeTabs';
 import { OverviewRangeTypes } from '../../common/constants/dates';
 
 export const MobileHeader: React.FC = () => {
@@ -26,7 +25,9 @@ export const MobileHeader: React.FC = () => {
       <div
         className={classNames(
           'flex shrink-0 flex-col pt-2',
-          section === 'trips' ? 'justify-between' : 'justify-center'
+          section === 'singleTrips' || section === 'multiTrips'
+            ? 'justify-between'
+            : 'justify-center'
         )}
       >
         <div className="flex shrink-0 flex-row items-baseline pl-2">
@@ -46,7 +47,6 @@ export const MobileHeader: React.FC = () => {
             <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
           </h2>
         </div>
-        {ALL_PAGES[page]?.section === 'trips' && <RangeTabs />}
       </div>
       <div className="absolute bottom-0 right-0 flex items-baseline pb-1 pr-2 text-stone-200">
         <p className=" text-xs italic">

@@ -1,11 +1,9 @@
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import {
-  faMapLocation,
-  faHourglass,
-  faClock,
+  faMapLocationDot,
+  faCalendar,
   faHouse,
   faUsers,
-  faArrowsLeftRightToLine,
   faWarning,
   faClockFour,
   faGaugeHigh,
@@ -24,13 +22,18 @@ export enum PAGES {
   slowzones = 'slowzones',
   systemSlowzones = 'systemSlowzones',
   ridership = 'ridership',
-  trips = 'trips',
-  tripHeadways = 'tripHeadways',
-  tripTraveltimes = 'tripTraveltimes',
-  tripDwells = 'tripDwells',
+  singleTrips = 'singleTrips',
+  multiTrips = 'multiTrips',
 }
 
-export type Section = 'landing' | 'today' | 'line' | 'overview' | 'trips' | 'system';
+export type Section =
+  | 'landing'
+  | 'today'
+  | 'line'
+  | 'overview'
+  | 'singleTrips'
+  | 'system'
+  | 'multiTrips';
 export type SectionTitle = 'Today' | 'Line' | 'Overview' | 'Trips' | 'System';
 
 export type PageMetadata = {
@@ -66,44 +69,23 @@ export const ALL_PAGES: PageMap = {
     icon: faHouse,
     section: 'today',
   },
-  trips: {
-    key: 'trips',
-    path: '/trips',
+  singleTrips: {
+    key: 'singleTrips',
+    path: '/trips/single',
     name: 'Trips',
     title: 'Trips',
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
-    icon: faMapLocation,
-    section: 'trips',
+    icon: faMapLocationDot,
+    section: 'singleTrips',
   },
-  tripHeadways: {
-    key: 'tripHeadways',
-    path: '/trips/headways',
-    name: 'Headways',
+  multiTrips: {
+    key: 'multiTrips',
+    path: '/trips/multi',
+    name: 'Multi Day Trips',
+    title: 'Multi Day Trips',
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
-    icon: faArrowsLeftRightToLine,
-    section: 'trips',
-    sectionTitle: 'Trips',
-    sub: true,
-  },
-  tripTraveltimes: {
-    key: 'tripTraveltimes',
-    path: '/trips/traveltimes',
-    name: 'Travel Times',
-    lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
-    icon: faClock,
-    section: 'trips',
-    sectionTitle: 'Trips',
-    sub: true,
-  },
-  tripDwells: {
-    key: 'tripDwells',
-    path: '/trips/dwells',
-    name: 'Dwells',
-    lines: ['line-red', 'line-blue', 'line-green', 'line-orange'],
-    icon: faHourglass,
-    section: 'trips',
-    sectionTitle: 'Trips',
-    sub: true,
+    icon: faCalendar,
+    section: 'multiTrips',
   },
   overview: {
     key: 'overview',
@@ -165,18 +147,11 @@ export const ALL_PAGES: PageMap = {
 };
 
 /* Groups of pages for tab sections */
-export const TRIP_PAGES = [
-  ALL_PAGES.trips,
-  ALL_PAGES.tripTraveltimes,
-  ALL_PAGES.tripHeadways,
-  ALL_PAGES.tripDwells,
-];
+export const TRIP_PAGES = [ALL_PAGES.singleTrips, ALL_PAGES.multiTrips];
 
 export const TODAY = [ALL_PAGES.today];
 
 export const BUS_OVERVIEW = [ALL_PAGES.ridership];
-
-export const BUS_PAGES = [ALL_PAGES.trips, ALL_PAGES.tripTraveltimes, ALL_PAGES.tripHeadways];
 
 export const LINE_PAGES = [
   ALL_PAGES.overview,
@@ -188,9 +163,8 @@ export const LINE_PAGES = [
 
 export const SUB_PAGES_MAP = {
   trips: {
-    headways: 'tripHeadways',
-    traveltimes: 'tripTraveltimes',
-    dwells: 'tripDwells',
+    single: 'singleTrips',
+    multi: 'multiTrips',
   },
   system: {
     slowzones: 'systemSlowzones',

@@ -19,7 +19,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   queryType,
 }) => {
   const getControls = () => {
-    if (section === 'trips' && queryType) {
+    if ((section === 'singleTrips' || section === 'multiTrips') && queryType) {
       return (
         <>
           <div className="p-1 pb-0">

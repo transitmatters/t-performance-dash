@@ -8,10 +8,14 @@ export interface DateSelectionInput {
 export interface DateSelectionDefaultOptions {
   key: DatePresetKey;
   name: string;
-  input: DateParams;
+  input: DateParams | SingleDateParams;
 }
 
 export interface DateParams {
   startDate?: string;
   endDate?: string;
+}
+
+export interface SingleDateParams {
+  date?: string;
 }

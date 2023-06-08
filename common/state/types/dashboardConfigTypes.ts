@@ -1,15 +1,19 @@
 import type { OverviewDatePresetKey } from '../../constants/dates';
-import type { QueryTypeOptions } from '../../types/router';
 
 export type LineSectionParams = Partial<{
   startDate: string;
   endDate: string;
 }>;
 
-export type TripsSectionParams = Partial<{
+export type MultiTripsSectionParams = Partial<{
   startDate: string;
   endDate: string;
-  queryType: QueryTypeOptions;
+  from: string;
+  to: string;
+}>;
+
+export type SingleTripsSectionParams = Partial<{
+  date: string;
   from: string;
   to: string;
 }>;
@@ -25,7 +29,8 @@ export type OverviewPresetParams = {
 
 export interface FullDashboardConfig {
   lineConfig: LineSectionParams;
-  tripConfig: TripsSectionParams;
+  singleTripConfig: SingleTripsSectionParams;
+  multiTripConfig: MultiTripsSectionParams;
   systemConfig: SystemSectionParams;
   overviewPreset?: OverviewPresetParams;
 }

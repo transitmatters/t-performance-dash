@@ -10,7 +10,7 @@ export const DASHBOARD_TABS: {
   Subway: { name: 'Subway', path: '/red' },
   Bus: {
     name: 'Bus',
-    path: '/bus/trips',
-    query: { busRoute: '1', queryType: 'single', startDate: BUS_DEFAULTS.tripConfig.startDate },
+    path: '/bus/trips/single',
+    query: { busRoute: '1', date: BUS_DEFAULTS.singleTripConfig.date },
   },
 };

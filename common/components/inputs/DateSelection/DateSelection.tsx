@@ -27,7 +27,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
   const [range, setRange] = useState<boolean>(false);
   const { section } = ALL_PAGES[page];
   const setDatePreset = useDatePresetConfig((state) => state.setDatePreset);
-  const datePreset = useSelectedPreset(range);
+  const datePreset = useSelectedPreset();
   const updateQueryParams = useUpdateQuery();
   const presets = range ? RANGE_PRESETS : SINGLE_PRESETS;
   const presetDateArray = Object.values(presets);

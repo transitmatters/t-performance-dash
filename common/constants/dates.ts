@@ -27,6 +27,9 @@ const OVERVIEW_TRAIN_MIN_DATE = '2016-02-01';
 const TRAIN_MIN_DATE = '2016-01-15';
 const BUS_MIN_DATE = '2018-08-01';
 export const BUS_MAX_DATE = '2023-01-31';
+export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
+  .subtract(7, 'days')
+  .format(DATE_FORMAT);
 
 export const FLAT_PICKER_OPTIONS: {
   [key in Tab]: DateTimePickerProps['options'];
@@ -58,31 +61,31 @@ export const FLAT_PICKER_OPTIONS: {
 };
 
 export const SINGLE_PRESETS: { [key in DatePresetKey]?: DateSelectionDefaultOptions } = {
-  today: { key: 'today', name: 'Today', input: { startDate: TODAY_STRING } },
+  today: { key: 'today', name: 'Today', input: { date: TODAY_STRING } },
   yesterday: {
     key: 'yesterday',
     name: 'Yesterday',
-    input: { startDate: TODAY.subtract(1, 'day').format(DATE_FORMAT) },
+    input: { date: TODAY.subtract(1, 'day').format(DATE_FORMAT) },
   },
   week: {
     key: 'week',
     name: `Last ${TODAY.subtract(7, 'days').format('dddd')}`,
     input: {
-      startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
+      date: TODAY.subtract(7, 'days').format(DATE_FORMAT),
     },
   },
   month: {
     key: 'month',
     name: `30 days ago`,
     input: {
-      startDate: TODAY.subtract(30, 'days').format(DATE_FORMAT),
+      date: TODAY.subtract(30, 'days').format(DATE_FORMAT),
     },
   },
   year: {
     key: 'year',
     name: `One year ago`,
     input: {
-      startDate: ONE_YEAR_AGO_STRING,
+      date: ONE_YEAR_AGO_STRING,
     },
   },
 };

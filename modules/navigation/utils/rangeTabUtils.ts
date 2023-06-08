@@ -6,7 +6,7 @@ import type { DashboardConfig } from '../../../common/state/dashboardConfig';
 import type { TripsSectionParams } from '../../../common/state/types/dashboardConfigTypes';
 
 export const switchToSingleDay = (router: NextRouter, dashboardConfig: DashboardConfig) => {
-  saveDashboardConfig('trips', router.query, dashboardConfig);
+  saveDashboardConfig('multiTrips', router.query, dashboardConfig);
   router.query.queryType = 'single';
   router.query.startDate = router.query.endDate;
   delete router.query.endDate;

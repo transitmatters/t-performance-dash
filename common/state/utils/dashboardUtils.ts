@@ -11,10 +11,14 @@ export const saveDashboardConfig = (
   query: QueryParams,
   dashboardConfig: DashboardConfig
 ) => {
-  if (section === 'trips') {
+  if (section === 'singleTrips') {
     // TODO: filter out invalid keys.
     const params = getParams(query);
-    if (params.startDate) dashboardConfig.setTripConfig(params);
+    if (params.date) dashboardConfig.setSingleTripConfig(params);
+  }
+  if (section === 'multiTrips') {
+    const params = getParams(query);
+    if (params.startDate) dashboardConfig.setMultiTripConfig(params);
   }
   if (section === 'line') {
     dashboardConfig.setLineConfig({ startDate: query.startDate, endDate: query.endDate });
@@ -22,7 +26,8 @@ export const saveDashboardConfig = (
 };
 
 export const getDashboardConfig = (section: Section, dashboardConfig: DashboardConfig) => {
-  if (section === 'trips') return dashboardConfig.tripConfig;
+  if (section === 'singleTrips') return dashboardConfig.singleTripConfig;
+  if (section === 'multiTrips') return dashboardConfig.multiTripConfig;
   if (section === 'system') return dashboardConfig.systemConfig;
   if (section === 'line') return dashboardConfig.lineConfig;
   if (section === 'overview') return dashboardConfig.overviewPreset;

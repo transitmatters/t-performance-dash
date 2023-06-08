@@ -14,7 +14,7 @@ export interface Route {
 export type QueryParams = {
   startDate?: string;
   endDate?: string;
-  queryType?: QueryTypeOptions;
+  date?: string;
   busRoute?: BusRoute;
   view?: OverviewDatePresetKey;
   to?: string;

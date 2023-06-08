@@ -4,12 +4,12 @@ import type { QueryParams } from '../../types/router';
 import { useDelimitatedRoute } from '../../utils/router';
 import { useDatePresetConfig } from '../datePresetConfig';
 
-export const useSelectedPreset = (range: boolean) => {
+export const useSelectedPreset = () => {
   const datePresetConfig = useDatePresetConfig();
   const { page } = useDelimitatedRoute();
   if (ALL_PAGES[page].section === 'line') return datePresetConfig.linePreset;
-  if (ALL_PAGES[page].section === 'trips' && range) return datePresetConfig.rangeTripPreset;
-  if (ALL_PAGES[page].section === 'trips' && !range) return datePresetConfig.singleTripPreset;
+  if (ALL_PAGES[page].section === 'multiTrips') return datePresetConfig.rangeTripPreset;
+  if (ALL_PAGES[page].section === 'singleTrips') return datePresetConfig.singleTripPreset;
   return undefined;
 };
 

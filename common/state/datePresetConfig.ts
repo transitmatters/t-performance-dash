@@ -32,19 +32,22 @@ export const useDatePresetConfig = create<DatePresetConfig>((set) => ({
         PRESET_DEFAULTS.linePreset = preset;
         return PRESET_DEFAULTS;
       }
-      if (section === 'trips') {
-        if (query.queryType === 'range') PRESET_DEFAULTS.rangeTripPreset = preset;
-        else PRESET_DEFAULTS.singleTripPreset = preset;
+      if (section === 'multiTrips') {
+        PRESET_DEFAULTS.rangeTripPreset = preset;
+        return PRESET_DEFAULTS;
+      }
+      if (section === 'singleTrips') {
+        PRESET_DEFAULTS.singleTripPreset = preset;
         return PRESET_DEFAULTS;
       }
       return PRESET_DEFAULTS;
     }),
 
-  setDatePreset: (newPreset, section, range) =>
+  setDatePreset: (newPreset, section) =>
     set(() => {
       if (section === 'line' || section === 'overview') return { linePreset: newPreset };
-      if (section === 'trips' && range) return { rangeTripPreset: newPreset };
-      if (section === 'trips' && !range) return { singleTripPreset: newPreset };
+      if (section === 'multiTrips') return { rangeTripPreset: newPreset };
+      if (section === 'singleTrips') return { singleTripPreset: newPreset };
 
       return {};
     }),

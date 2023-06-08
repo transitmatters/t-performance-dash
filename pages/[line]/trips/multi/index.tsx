@@ -1,5 +1,5 @@
-import { ALL_LINE_PATHS, BUS_PATH } from '../../../common/types/lines';
-import { TripExplorer } from '../../../modules/tripexplorer/TripExplorer';
+import { ALL_LINE_PATHS, BUS_PATH } from '../../../../common/types/lines';
+import { TripExplorer } from '../../../../modules/tripexplorer/TripExplorer';
 
 export async function getStaticProps() {
   return { props: {} };
