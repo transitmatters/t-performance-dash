@@ -5,16 +5,22 @@ import Link from 'next/link';
 import { DASHBOARD_TABS } from '../../common/constants/dashboardTabs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useDateConfig } from '../../common/state/dateConfig';
+import { useStationConfig } from '../../common/state/stationConfig';
 
 export const DashboardSelection: React.FC = () => {
   const { tab } = useDelimitatedRoute();
+  const setStationConfig = useStationConfig((state) => state.setStationConfig);
   const swapDashboardTabs = useDateConfig((state) => state.swapDashboardTabs);
   const dashboardTabs = Object.values(DASHBOARD_TABS);
+  const handleChange = (name) => {
+    setStationConfig({ from: undefined, to: undefined });
+    swapDashboardTabs(name);
+  };
   return (
     <Tab.Group
       manual
       onChange={(index) => {
-        swapDashboardTabs(dashboardTabs[index].name);
+        handleChange(dashboardTabs[index].name);
       }}
       selectedIndex={dashboardTabs.findIndex((currTab) => tab === currTab.name)}
     >
@@ -24,6 +30,7 @@ export const DashboardSelection: React.FC = () => {
             {({ selected }) => (
               <Link
                 href={{ pathname: dashboardTabs[index].path, query: dashboardTabs[index].query }}
+                onClick={() => handleChange(tab.name)}
                 className={classNames(
                   ' flex h-full items-center justify-center border border-stone-200 py-1 text-sm font-semibold',
                   selected && 'bg-stone-200 text-stone-900',

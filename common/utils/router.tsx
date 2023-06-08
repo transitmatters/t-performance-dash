@@ -189,6 +189,7 @@ export const useGenerateHref = () => {
   return generateHref;
 };
 
+// TODO: We should probably use this anywhere we have links to consolidate the logic. i.e. components like <LineSelection>
 export const useHandlePageConfig = () => {
   const { page, query } = useDelimitatedRoute();
   const currentPage = ALL_PAGES[page];

@@ -47,6 +47,7 @@ export const useDateConfig = create<DateConfig>((set) => ({
   setMultiTripConfig: (tripParams) => set(() => ({ multiTripConfig: tripParams })),
   swapDashboardTabs: (newTab) =>
     set(() => {
+      console.log(newTab);
       if (newTab === 'Subway') return SUBWAY_DEFAULTS;
       if (newTab === 'Bus') return BUS_DEFAULTS;
       if (newTab === 'System') return SYSTEM_DEFAULTS;

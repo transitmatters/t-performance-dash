@@ -21,11 +21,11 @@ export const SUBWAY_DEFAULTS = {
 export const BUS_DEFAULTS = {
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
   multiTripConfig: {
-    startDate: BUS_MAX_DATE,
-    endDate: BUS_MAX_DATE_MINUS_ONE_WEEK,
+    startDate: BUS_MAX_DATE_MINUS_ONE_WEEK,
+    endDate: BUS_MAX_DATE,
   },
   singleTripConfig: {
-    date: TODAY_STRING,
+    date: BUS_MAX_DATE,
   },
 };
 
