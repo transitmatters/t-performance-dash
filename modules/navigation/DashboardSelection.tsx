@@ -5,15 +5,15 @@ import Link from 'next/link';
 import { DASHBOARD_TABS } from '../../common/constants/dashboardTabs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useDateStore } from '../../common/state/dateStore';
-import { useStationConfig } from '../../common/state/stationConfig';
+import { useStationStore } from '../../common/state/stationStore';
 
 export const DashboardSelection: React.FC = () => {
   const { tab } = useDelimitatedRoute();
-  const setStationConfig = useStationConfig((state) => state.setStationConfig);
+  const setStationStore = useStationStore((state) => state.setStationStore);
   const swapDashboardTabs = useDateStore((state) => state.swapDashboardTabs);
   const dashboardTabs = Object.values(DASHBOARD_TABS);
   const handleChange = (name) => {
-    setStationConfig({ from: undefined, to: undefined });
+    setStationStore({ from: undefined, to: undefined });
     swapDashboardTabs(name);
   };
   return (

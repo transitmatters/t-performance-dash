@@ -10,8 +10,8 @@ import type { PageMetadata, Page } from '../constants/pages';
 import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
 import { saveDateStoreSection, getDateStoreSection } from '../state/utils/dateStoreUtils';
-import type { StationConfig } from '../state/stationConfig';
-import { useStationConfig } from '../state/stationConfig';
+import type { StationStore } from '../state/stationStore';
+import { useStationStore } from '../state/stationStore';
 import { useDateStore } from '../state/dateStore';
 import type { DateStore } from '../state/dateStore';
 
@@ -173,18 +173,18 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
 
 export const useGenerateHref = () => {
   const dateStore = useDateStore();
-  const stationConfig = useStationConfig();
+  const stationStore = useStationStore();
   const generateHref = useCallback(
     (newPage: PageMetadata, currentPageName: Page, query: QueryParams, linePath: LinePath) => {
       const currentPage = ALL_PAGES[currentPageName];
-      const newQuery = getQueryParams(currentPage, newPage, query, dateStore, stationConfig);
+      const newQuery = getQueryParams(currentPage, newPage, query, dateStore, stationStore);
       const newPathName = getPathName(newPage, linePath);
       return {
         pathname: newPathName,
         query: newQuery,
       };
     },
-    [dateStore, stationConfig]
+    [dateStore, stationStore]
   );
   return generateHref;
 };
@@ -194,13 +194,13 @@ export const useHandleConfigStore = () => {
   const { page, query } = useDelimitatedRoute();
   const currentPage = ALL_PAGES[page];
   const dateStore = useDateStore();
-  const stationConfig = useStationConfig();
+  const stationStore = useStationStore();
 
   const handlePageConfig = useCallback(
     (newPage: PageMetadata) => {
-      savePageConfigIfNecessary(currentPage, newPage, query, dateStore, stationConfig);
+      savePageConfigIfNecessary(currentPage, newPage, query, dateStore, stationStore);
     },
-    [query, currentPage, dateStore, stationConfig]
+    [query, currentPage, dateStore, stationStore]
   );
   return handlePageConfig;
 };
@@ -227,13 +227,13 @@ const getStationQueryParams = (
   currentPage: PageMetadata,
   newPage: PageMetadata,
   query: QueryParams,
-  stationConfig: StationConfig
+  stationStore: StationStore
 ) => {
-  if (!newPage.hasStationConfig) return null;
-  if (currentPage.hasStationConfig && query.from && query.to)
+  if (!newPage.hasStationStore) return null;
+  if (currentPage.hasStationStore && query.from && query.to)
     return { from: query.from, to: query.to };
-  if (newPage.hasStationConfig && stationConfig.from && stationConfig.to)
-    return { from: stationConfig.from, to: stationConfig.to };
+  if (newPage.hasStationStore && stationStore.from && stationStore.to)
+    return { from: stationStore.from, to: stationStore.to };
 };
 
 const getQueryParams = (
@@ -241,10 +241,10 @@ const getQueryParams = (
   newPage: PageMetadata,
   query: QueryParams,
   dateStore: DateStore,
-  stationConfig: StationConfig
+  stationStore: StationStore
 ) => {
   return {
-    ...getStationQueryParams(currentPage, newPage, query, stationConfig),
+    ...getStationQueryParams(currentPage, newPage, query, stationStore),
     ...getDateQueryParams(currentPage, newPage, query, dateStore),
     ...getBusRouteQueryParam(query),
   };
@@ -259,12 +259,12 @@ export const savePageConfigIfNecessary = (
   newPage: PageMetadata,
   query: QueryParams,
   dateStore: DateStore,
-  stationConfig: StationConfig
+  stationStore: StationStore
 ) => {
   if (!(currentPage.dateStoreSection === newPage.dateStoreSection)) {
     saveDateStoreSection(currentPage.dateStoreSection, query, dateStore);
   }
-  if (!(currentPage.hasStationConfig === newPage.hasStationConfig)) {
-    stationConfig.setStationConfig({ from: query.from, to: query.to });
+  if (!(currentPage.hasStationStore === newPage.hasStationStore)) {
+    stationStore.setStationStore({ from: query.from, to: query.to });
   }
 };
