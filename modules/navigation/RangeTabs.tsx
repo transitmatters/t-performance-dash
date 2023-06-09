@@ -3,7 +3,7 @@ import React from 'react';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { useDateStore } from '../../common/state/dateConfig';
+import { useDateStore } from '../../common/state/dateStore';
 import { switchToRange, switchToSingleDay } from './utils/rangeTabUtils';
 
 export const RangeTabs = () => {

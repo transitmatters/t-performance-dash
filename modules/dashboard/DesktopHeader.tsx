@@ -15,10 +15,11 @@ export const DesktopHeader: React.FC = () => {
     query: { queryType, busRoute },
     tab,
   } = useDelimitatedRoute();
-  const section = page ? ALL_PAGES[page]?.dateConfigSection : undefined;
+  const dateStoreSection = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
   const lg = useBreakpoint('lg');
 
-  const showControls = section && (line || tab === 'System') && section !== 'today';
+  const showControls =
+    dateStoreSection && (line || tab === 'System') && dateStoreSection !== 'today';
 
   const getLineName = () => {
     if (busRoute) return `Route ${busRoute}`;
@@ -36,7 +37,7 @@ export const DesktopHeader: React.FC = () => {
       <div
         className={classNames(
           'flex shrink-0 flex-col pt-2',
-          section === 'trips' ? 'justify-end gap-y-3' : 'h-14 justify-center'
+          dateStoreSection === 'trips' ? 'justify-end gap-y-3' : 'h-14 justify-center'
         )}
       >
         <div className="flex shrink-0 flex-row items-baseline pl-3">
@@ -54,11 +55,11 @@ export const DesktopHeader: React.FC = () => {
             <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
           </h2>
         </div>
-        {ALL_PAGES[page]?.dateConfigSection === 'trips' && <RangeTabs />}
+        {ALL_PAGES[page]?.dateStoreSection === 'trips' && <RangeTabs />}
       </div>
       {showControls && (
         <ControlPanel
-          dateConfigSection={section}
+          dateStoreSection={dateStoreSection}
           line={line}
           queryType={queryType}
           busRoute={busRoute}

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { DASHBOARD_TABS } from '../../common/constants/dashboardTabs';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { useDateStore } from '../../common/state/dateConfig';
+import { useDateStore } from '../../common/state/dateStore';
 
 export const DashboardSelection: React.FC = () => {
   const { tab } = useDelimitatedRoute();

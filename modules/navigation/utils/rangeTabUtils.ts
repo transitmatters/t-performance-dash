@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import type { NextRouter } from 'next/router';
 import { DATE_FORMAT, ONE_WEEK_AGO_STRING, TODAY_STRING } from '../../../common/constants/dates';
 import { saveDateConfig } from '../../../common/state/utils/dateConfigUtils';
-import type { DateStore } from '../../../common/state/dateConfig';
+import type { DateStore } from '../../../common/state/dateStore';
 import type { TripsSectionParams } from '../../../common/state/types/dateConfigTypes';
 
 export const switchToSingleDay = (router: NextRouter, dateStore: DateStore) => {

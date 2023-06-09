@@ -25,7 +25,7 @@ interface DateSelectionProps {
 export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) => {
   const { line, page } = useDelimitatedRoute();
   const [range, setRange] = useState<boolean>(false);
-  const { dateConfigSection: section } = ALL_PAGES[page];
+  const { dateStoreSection } = ALL_PAGES[page];
   const setDatePreset = useDatePresetConfig((state) => state.setDatePreset);
   const datePreset = useSelectedPreset(range);
   const updateQueryParams = useUpdateQuery();
@@ -35,7 +35,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
   const handleSelection = (datePresetKey: DatePresetKey) => {
     const selectedPreset = presets[datePresetKey];
     if (selectedPreset?.input) updateQueryParams(selectedPreset.input, range);
-    setDatePreset(datePresetKey, section, range);
+    setDatePreset(datePresetKey, dateStoreSection, range);
   };
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
   }, [type]);
 
   const clearPreset = () => {
-    setDatePreset('custom', section, range);
+    setDatePreset('custom', dateStoreSection, range);
   };
 
   return (

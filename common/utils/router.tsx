@@ -8,8 +8,8 @@ import type { QueryParams, Route, Tab } from '../types/router';
 import { DATE_PARAMS } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
 import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
-import type { DateStore } from '../state/dateConfig';
-import { useDateStore } from '../state/dateConfig';
+import type { DateStore } from '../state/dateStore';
+import { useDateStore } from '../state/dateStore';
 import { LINE_OBJECTS } from '../constants/lines';
 import { getDateConfig, saveDateConfig } from '../state/utils/dateConfigUtils';
 
@@ -174,7 +174,7 @@ export const getHref = (
   linePath: LinePath
 ) => {
   const pageObject = ALL_PAGES[currentPage];
-  if (pageObject?.dateConfigSection === newPage.dateConfigSection) {
+  if (pageObject?.dateStoreSection === newPage.dateStoreSection) {
     return navigateWithinSection(linePath, newPage, query);
   }
   return navigateToNewSection(linePath, newPage, query, dateStore);
@@ -187,8 +187,8 @@ export const useHandlePageNavigation = () => {
 
   const handlePageNavigation = useCallback(
     (page: PageMetadata) => {
-      if (!(pageObject?.dateConfigSection === page.dateConfigSection)) {
-        saveDateConfig(pageObject.dateConfigSection, query, dateStore);
+      if (!(pageObject?.dateStoreSection === page.dateStoreSection)) {
+        saveDateConfig(pageObject.dateStoreSection, query, dateStore);
       }
     },
     [query, pageObject, dateStore]
@@ -206,11 +206,11 @@ const navigateToNewSection = (
   query: QueryParams,
   dateStore: DateStore
 ) => {
-  const params = getDateConfig(page.dateConfigSection, dateStore);
+  const params = getDateConfig(page.dateStoreSection, dateStore);
   const busRouteOnly = query.busRoute ?? undefined;
   const newQuery = busRouteOnly ? { ...params, busRoute: busRouteOnly } : params;
   return {
-    pathname: `/${page.dateConfigSection === 'system' ? 'system' : linePath}${page.path}`,
+    pathname: `/${page.dateStoreSection === 'system' ? 'system' : linePath}${page.path}`,
     query: newQuery,
   };
 };
