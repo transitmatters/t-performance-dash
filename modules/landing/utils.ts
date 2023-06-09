@@ -60,7 +60,9 @@ export const convertToRidershipDataset = (data: RidershipCount[], line: Line) =>
     ...datasetOptions,
     label: `% of baseline`,
     data: data.map((datapoint) =>
-      datapoint.count ? 100 * (datapoint.count / PEAK_RIDERSHIP[line]) : Number.NaN
+      datapoint.count
+        ? Math.round(10 * 100 * (datapoint.count / PEAK_RIDERSHIP[line])) / 10
+        : Number.NaN
     ),
   };
 };
