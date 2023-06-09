@@ -7,9 +7,9 @@ import type {
   OverviewPresetParams,
   SystemSectionParams,
   TripsSectionParams,
-} from './types/dashboardConfigTypes';
+} from './types/dateConfigTypes';
 
-export interface DashboardConfig {
+export interface DateConfig {
   lineConfig: LineSectionParams;
   tripConfig: TripsSectionParams;
   systemConfig: SystemSectionParams;
@@ -21,7 +21,7 @@ export interface DashboardConfig {
   overviewPresetChange: (overviewConfig: OverviewPresetParams) => void;
 }
 
-export const useDashboardConfig = create<DashboardConfig>((set) => ({
+export const useDateConfig = create<DateConfig>((set) => ({
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
   tripConfig: { startDate: TODAY_STRING, queryType: 'single' },
   systemConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },

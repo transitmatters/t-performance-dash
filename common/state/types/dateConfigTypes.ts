@@ -10,8 +10,6 @@ export type TripsSectionParams = Partial<{
   startDate: string;
   endDate: string;
   queryType: QueryTypeOptions;
-  from: string;
-  to: string;
 }>;
 
 export type SystemSectionParams = Partial<{
@@ -23,7 +21,7 @@ export type OverviewPresetParams = {
   view: OverviewDatePresetKey;
 };
 
-export interface FullDashboardConfig {
+export interface FullDateConfig {
   lineConfig: LineSectionParams;
   tripConfig: TripsSectionParams;
   systemConfig: SystemSectionParams;

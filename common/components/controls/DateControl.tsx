@@ -1,11 +1,11 @@
 import React from 'react';
 import { DateSelection } from '../inputs/DateSelection/DateSelection';
 import { OverviewDateSelection } from '../inputs/DateSelection/OverviewDateSelection';
-import type { Section } from '../../constants/pages';
+import type { DateConfigOptions } from '../../constants/pages';
 import type { QueryTypeOptions } from '../../types/router';
 
 interface DateControlProps {
-  section: Section;
+  section: DateConfigOptions;
   queryType: QueryTypeOptions;
 }
 

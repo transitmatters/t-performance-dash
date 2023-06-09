@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { DatePresetKey } from '../constants/dates';
-import type { Section } from '../constants/pages';
+import type { DateConfigOptions } from '../constants/pages';
 import type { QueryParams } from '../types/router';
 import { PRESET_DEFAULTS } from './defaults/datePresetDefaults';
 import { checkForPreset } from './utils/datePresetUtils';
@@ -9,10 +9,10 @@ export interface DatePresetConfig {
   linePreset: DatePresetKey | undefined | 'custom';
   singleTripPreset: DatePresetKey | undefined | 'custom';
   rangeTripPreset: DatePresetKey | undefined | 'custom';
-  setDefaults: (section: Section | undefined, query: QueryParams) => void;
+  setDefaults: (section: DateConfigOptions | undefined, query: QueryParams) => void;
   setDatePreset: (
     newPreset: DatePresetKey | undefined | 'custom',
-    section: Section,
+    section: DateConfigOptions,
     range: boolean
   ) => void;
 }

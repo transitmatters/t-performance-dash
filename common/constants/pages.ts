@@ -30,7 +30,7 @@ export enum PAGES {
   tripDwells = 'tripDwells',
 }
 
-export type Section = 'landing' | 'today' | 'line' | 'overview' | 'trips' | 'system';
+export type DateConfigOptions = 'landing' | 'today' | 'line' | 'overview' | 'trips' | 'system';
 export type SectionTitle = 'Today' | 'Line' | 'Overview' | 'Trips' | 'System';
 
 export type PageMetadata = {
@@ -39,7 +39,7 @@ export type PageMetadata = {
   name: string;
   lines: Line[];
   icon: IconDefinition;
-  section: Section;
+  section: DateConfigOptions;
   sectionTitle?: SectionTitle;
   sub?: boolean;
   title?: string;

@@ -1,12 +1,12 @@
 import React from 'react';
 import type { BusRoute, Line } from '../../types/lines';
-import type { Section } from '../../constants/pages';
+import type { DateConfigOptions } from '../../constants/pages';
 import type { QueryTypeOptions } from '../../types/router';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
 
 interface MobileControlPanelProps {
-  section: Section;
+  section: DateConfigOptions;
   line: Line;
   busRoute: BusRoute | undefined;
   queryType?: QueryTypeOptions;
