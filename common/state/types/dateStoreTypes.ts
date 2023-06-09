@@ -23,7 +23,7 @@ export type OverviewPresetParams = {
   view: OverviewDatePresetKey;
 };
 
-export interface FullDashboardConfig {
+export interface DateStoreConfiguration {
   lineConfig: LineSectionParams;
   singleTripConfig: SingleTripsSectionParams;
   multiTripConfig: MultiTripsSectionParams;

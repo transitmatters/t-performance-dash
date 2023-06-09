@@ -7,12 +7,12 @@ import { mbtaTextConfig } from '../../common/components/inputs/styles/tailwind';
 import {
   useDelimitatedRoute,
   useGenerateHref,
-  useHandlePageConfig,
+  useHandleConfigStore,
 } from '../../common/utils/router';
 import { LINE_COLORS } from '../../common/constants/colors';
 import type { Page } from '../../common/constants/pages';
 import { ALL_PAGES } from '../../common/constants/pages';
-import { getSelectedDates } from '../../common/state/utils/dashboardUtils';
+import { getSelectedDates } from '../../common/state/utils/dateStoreUtils';
 
 interface HomescreenWidgetTitle {
   title: string;
@@ -20,7 +20,7 @@ interface HomescreenWidgetTitle {
 }
 export const HomescreenWidgetTitle: React.FC<HomescreenWidgetTitle> = ({ title, tab }) => {
   const { line, page, query, linePath } = useDelimitatedRoute();
-  const handlePageConfig = useHandlePageConfig();
+  const handlePageConfig = useHandleConfigStore();
   const generateHref = useGenerateHref();
   const href = generateHref(ALL_PAGES[tab], page, query, linePath);
   const date = getSelectedDates({

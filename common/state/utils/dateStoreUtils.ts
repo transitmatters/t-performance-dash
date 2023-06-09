@@ -1,35 +1,35 @@
 import dayjs from 'dayjs';
 import type { OverviewDatePresetKey } from '../../constants/dates';
 import { SMALL_DATE_FORMAT, RANGE_PRESETS } from '../../constants/dates';
-import type { DateConfigOptions } from '../../constants/pages';
+import type { DateStoreSection } from '../../constants/pages';
 import type { QueryParams } from '../../types/router';
 import { getDateParams } from '../../utils/router';
-import type { DateConfig } from '../dateConfig';
+import type { DateStore } from '../dateStore';
 
-export const saveDateConfig = (
-  section: DateConfigOptions,
+export const saveDateStoreSection = (
+  dateStoreSection: DateStoreSection,
   query: QueryParams,
-  dateConfig: DateConfig
+  dateStore: DateStore
 ) => {
   const params = getDateParams(query);
 
-  if (section === 'singleTrips') {
-    if (params.date) dateConfig.setSingleTripConfig(params);
+  if (dateStoreSection === 'singleTrips') {
+    if (params.date) dateStore.setSingleTripConfig(params);
   }
-  if (section === 'multiTrips') {
-    if (params.startDate) dateConfig.setMultiTripConfig(params);
+  if (dateStoreSection === 'multiTrips') {
+    if (params.startDate) dateStore.setMultiTripConfig(params);
   }
-  if (section === 'line') {
-    dateConfig.setLineConfig(params);
+  if (dateStoreSection === 'line') {
+    dateStore.setLineConfig(params);
   }
 };
 
-export const getDateConfig = (section: DateConfigOptions, dateConfig: DateConfig) => {
-  if (section === 'singleTrips') return dateConfig.singleTripConfig;
-  if (section === 'multiTrips') return dateConfig.multiTripConfig;
-  if (section === 'system') return dateConfig.systemConfig;
-  if (section === 'line') return dateConfig.lineConfig;
-  if (section === 'overview') return dateConfig.overviewPreset;
+export const getDateStoreSection = (dateStoreSection: DateStoreSection, dateStore: DateStore) => {
+  if (dateStoreSection === 'singleTrips') return dateStore.singleTripConfig;
+  if (dateStoreSection === 'multiTrips') return dateStore.multiTripConfig;
+  if (dateStoreSection === 'system') return dateStore.systemConfig;
+  if (dateStoreSection === 'line') return dateStore.lineConfig;
+  if (dateStoreSection === 'overview') return dateStore.overviewPreset;
   return {};
 };
 

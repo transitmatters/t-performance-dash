@@ -7,9 +7,9 @@ import { useDatePresetConfig } from '../datePresetConfig';
 export const useSelectedPreset = () => {
   const datePresetConfig = useDatePresetConfig();
   const { page } = useDelimitatedRoute();
-  if (ALL_PAGES[page].dateConfig === 'line') return datePresetConfig.linePreset;
-  if (ALL_PAGES[page].dateConfig === 'multiTrips') return datePresetConfig.rangeTripPreset;
-  if (ALL_PAGES[page].dateConfig === 'singleTrips') return datePresetConfig.singleTripPreset;
+  if (ALL_PAGES[page].dateStoreSection === 'line') return datePresetConfig.linePreset;
+  if (ALL_PAGES[page].dateStoreSection === 'multiTrips') return datePresetConfig.rangeTripPreset;
+  if (ALL_PAGES[page].dateStoreSection === 'singleTrips') return datePresetConfig.singleTripPreset;
   return undefined;
 };
 

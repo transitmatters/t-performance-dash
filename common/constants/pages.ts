@@ -26,14 +26,14 @@ export enum PAGES {
   multiTrips = 'multiTrips',
 }
 
-export type DateConfigOptions =
+export type DateStoreSection =
   | 'landing'
   | 'today'
   | 'line'
   | 'overview'
   | 'singleTrips'
-  | 'system'
-  | 'multiTrips';
+  | 'multiTrips'
+  | 'system';
 export type SectionTitle = 'Today' | 'Line' | 'Overview' | 'Trips' | 'System';
 
 export type PageMetadata = {
@@ -42,8 +42,8 @@ export type PageMetadata = {
   name: string;
   lines: Line[];
   icon: IconDefinition;
-  dateConfig: DateConfigOptions;
   hasStationConfig?: boolean;
+  dateStoreSection: DateStoreSection;
   sectionTitle?: SectionTitle;
   sub?: boolean;
   title?: string;
@@ -60,7 +60,7 @@ export const ALL_PAGES: PageMap = {
     name: 'Home',
     lines: [],
     icon: faHouse,
-    dateConfig: 'landing',
+    dateStoreSection: 'landing',
   },
   today: {
     key: 'today',
@@ -68,7 +68,7 @@ export const ALL_PAGES: PageMap = {
     name: 'Today',
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange'],
     icon: faHouse,
-    dateConfig: 'today',
+    dateStoreSection: 'today',
   },
   singleTrips: {
     key: 'singleTrips',
@@ -77,8 +77,8 @@ export const ALL_PAGES: PageMap = {
     title: 'Trips',
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
     icon: faMapLocationDot,
-    dateConfig: 'singleTrips',
     hasStationConfig: true,
+    dateStoreSection: 'singleTrips',
   },
   multiTrips: {
     key: 'multiTrips',
@@ -87,15 +87,15 @@ export const ALL_PAGES: PageMap = {
     title: 'Multi Day Trips',
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
     icon: faCalendar,
-    dateConfig: 'multiTrips',
+    dateStoreSection: 'multiTrips',
     hasStationConfig: true,
   },
   overview: {
     key: 'overview',
-    path: '/overview',
-    name: 'Line',
+    path: '/',
+    name: 'Line Overview',
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange'],
-    dateConfig: 'overview',
+    dateStoreSection: 'overview',
     icon: faTableColumns,
   },
   speed: {
@@ -104,7 +104,7 @@ export const ALL_PAGES: PageMap = {
     name: 'Speed',
     lines: ['line-red', 'line-orange', 'line-blue'],
     icon: faGaugeHigh,
-    dateConfig: 'line',
+    dateStoreSection: 'line',
     sectionTitle: 'Line',
     sub: true,
   },
@@ -113,7 +113,7 @@ export const ALL_PAGES: PageMap = {
     path: '/service',
     name: 'Service',
     lines: ['line-red', 'line-orange', 'line-blue'],
-    dateConfig: 'line',
+    dateStoreSection: 'line',
     sectionTitle: 'Line',
     icon: faClockFour,
     sub: true,
@@ -124,7 +124,7 @@ export const ALL_PAGES: PageMap = {
     name: 'Slow Zones',
     lines: ['line-red', 'line-blue', 'line-orange'],
     icon: faWarning,
-    dateConfig: 'line',
+    dateStoreSection: 'line',
     sectionTitle: 'Line',
     sub: true,
   },
@@ -134,7 +134,7 @@ export const ALL_PAGES: PageMap = {
     name: 'Slow Zones',
     lines: [],
     icon: faWarning,
-    dateConfig: 'system',
+    dateStoreSection: 'system',
     sectionTitle: 'System',
   },
   ridership: {
@@ -143,7 +143,7 @@ export const ALL_PAGES: PageMap = {
     name: 'Ridership',
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
     icon: faUsers,
-    dateConfig: 'line',
+    dateStoreSection: 'line',
     sectionTitle: 'Line',
     sub: true,
   },

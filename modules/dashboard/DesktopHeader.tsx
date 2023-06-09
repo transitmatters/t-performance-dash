@@ -14,10 +14,11 @@ export const DesktopHeader: React.FC = () => {
     query: { busRoute },
     tab,
   } = useDelimitatedRoute();
-  const section = page ? ALL_PAGES[page]?.dateConfig : undefined;
+  const dateStoreSection = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
   const lg = useBreakpoint('lg');
 
-  const showControls = section && (line || tab === 'System') && section !== 'today';
+  const showControls =
+    dateStoreSection && (line || tab === 'System') && dateStoreSection !== 'today';
 
   const getLineName = () => {
     if (busRoute) return `Route ${busRoute}`;
@@ -49,7 +50,9 @@ export const DesktopHeader: React.FC = () => {
           </h2>
         </div>
       </div>
-      {showControls && <ControlPanel section={section} line={line} busRoute={busRoute} />}
+      {showControls && (
+        <ControlPanel dateStoreSection={dateStoreSection} line={line} busRoute={busRoute} />
+      )}
     </div>
   );
 };

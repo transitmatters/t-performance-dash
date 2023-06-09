@@ -5,7 +5,7 @@ import Link from 'next/link';
 import {
   useDelimitatedRoute,
   useGenerateHref,
-  useHandlePageConfig,
+  useHandleConfigStore,
 } from '../../common/utils/router';
 import type { PageMetadata } from '../../common/constants/pages';
 
@@ -16,7 +16,7 @@ interface SidebarTabs {
 
 export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => {
   const { line, page, query, linePath } = useDelimitatedRoute();
-  const handlePageConfig = useHandlePageConfig();
+  const handlePageConfig = useHandleConfigStore();
   const generateHref = useGenerateHref();
 
   const handleChange = (enabled: boolean, tab: PageMetadata) => {

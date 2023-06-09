@@ -13,7 +13,7 @@ export const MobileHeader: React.FC = () => {
     page,
     query: { busRoute, startDate, endDate, view },
   } = useDelimitatedRoute();
-  const section = page ? ALL_PAGES[page]?.dateConfig : undefined;
+  const dateStoreSection = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
 
   return (
     <div
@@ -25,7 +25,8 @@ export const MobileHeader: React.FC = () => {
       <div
         className={classNames(
           'flex shrink-0 flex-col pt-2',
-          section === 'singleTrips' || section === 'multiTrips'
+          //TODO: This might not be needed.
+          dateStoreSection === 'singleTrips' || dateStoreSection === 'multiTrips'
             ? 'justify-between'
             : 'justify-center'
         )}

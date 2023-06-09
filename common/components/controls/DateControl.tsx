@@ -1,22 +1,22 @@
 import React from 'react';
 import { DateSelection } from '../inputs/DateSelection/DateSelection';
 import { OverviewDateSelection } from '../inputs/DateSelection/OverviewDateSelection';
-import type { DateConfigOptions } from '../../constants/pages';
+import type { DateStoreSection } from '../../constants/pages';
 import type { QueryTypeOptions } from '../../types/router';
 
 interface DateControlProps {
-  section: DateConfigOptions;
+  dateStoreSection: DateStoreSection;
   queryType: QueryTypeOptions;
 }
 
-export const DateControl: React.FC<DateControlProps> = ({ section, queryType }) => {
+export const DateControl: React.FC<DateControlProps> = ({ dateStoreSection, queryType }) => {
   if (
-    section === 'singleTrips' ||
-    section === 'line' ||
-    section === 'system' ||
-    section === 'multiTrips'
+    dateStoreSection === 'singleTrips' ||
+    dateStoreSection === 'line' ||
+    dateStoreSection === 'system' ||
+    dateStoreSection === 'multiTrips'
   )
     return <DateSelection type={queryType ?? 'range'} />;
-  if (section === 'overview') return <OverviewDateSelection />;
+  if (dateStoreSection === 'overview') return <OverviewDateSelection />;
   return null;
 };

@@ -6,16 +6,16 @@ import {
   TODAY_STRING,
 } from '../constants/dates';
 import type { Tab } from '../constants/dashboardTabs';
-import { BUS_DEFAULTS, SUBWAY_DEFAULTS, SYSTEM_DEFAULTS } from './defaults/dashboardDefaults';
+import { BUS_DEFAULTS, SUBWAY_DEFAULTS, SYSTEM_DEFAULTS } from './defaults/dateDefaults';
 import type {
   LineSectionParams,
   MultiTripsSectionParams,
   OverviewPresetParams,
   SingleTripsSectionParams,
   SystemSectionParams,
-} from './types/dashboardConfigTypes';
+} from './types/dateStoreTypes';
 
-export interface DateConfig {
+export interface DateStore {
   lineConfig: LineSectionParams;
   singleTripConfig: SingleTripsSectionParams;
   multiTripConfig: MultiTripsSectionParams;
@@ -28,7 +28,7 @@ export interface DateConfig {
   overviewPresetChange: (overviewConfig: OverviewPresetParams) => void;
 }
 
-export const useDateConfig = create<DateConfig>((set) => ({
+export const useDateStore = create<DateStore>((set) => ({
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
   multiTripConfig: {
     startDate: ONE_WEEK_AGO_STRING,
@@ -47,7 +47,6 @@ export const useDateConfig = create<DateConfig>((set) => ({
   setMultiTripConfig: (tripParams) => set(() => ({ multiTripConfig: tripParams })),
   swapDashboardTabs: (newTab) =>
     set(() => {
-      console.log(newTab);
       if (newTab === 'Subway') return SUBWAY_DEFAULTS;
       if (newTab === 'Bus') return BUS_DEFAULTS;
       if (newTab === 'System') return SYSTEM_DEFAULTS;

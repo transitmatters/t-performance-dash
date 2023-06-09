@@ -8,12 +8,12 @@ import type { QueryParams, Route, Tab } from '../types/router';
 import { DATE_PARAMS } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
 import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
-import type { DateConfig } from '../state/dateConfig';
-import { useDateConfig } from '../state/dateConfig';
 import { LINE_OBJECTS } from '../constants/lines';
-import { getDateConfig, saveDateConfig } from '../state/utils/dashboardUtils';
+import { saveDateStoreSection, getDateStoreSection } from '../state/utils/dateStoreUtils';
 import type { StationConfig } from '../state/stationConfig';
 import { useStationConfig } from '../state/stationConfig';
+import { useDateStore } from '../state/dateStore';
+import type { DateStore } from '../state/dateStore';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'line-red',
@@ -42,7 +42,7 @@ const getPage = (pathItems: string[], tab: Tab): string => {
     return SYSTEM_PAGES_MAP['system'][pageArray[1]];
   }
   const pageArray = pathItems.slice(2);
-  if (pageArray[0] === '') return 'today';
+  if (pageArray[0] === '') return 'overview';
   if (pageArray[1]) {
     return SUB_PAGES_MAP[pageArray[0]][pageArray[1]];
   }
@@ -172,35 +172,35 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
 };
 
 export const useGenerateHref = () => {
-  const dateConfig = useDateConfig();
+  const dateStore = useDateStore();
   const stationConfig = useStationConfig();
   const generateHref = useCallback(
     (newPage: PageMetadata, currentPageName: Page, query: QueryParams, linePath: LinePath) => {
       const currentPage = ALL_PAGES[currentPageName];
-      const newQuery = getQueryParams(currentPage, newPage, query, dateConfig, stationConfig);
+      const newQuery = getQueryParams(currentPage, newPage, query, dateStore, stationConfig);
       const newPathName = getPathName(newPage, linePath);
       return {
         pathname: newPathName,
         query: newQuery,
       };
     },
-    [dateConfig, stationConfig]
+    [dateStore, stationConfig]
   );
   return generateHref;
 };
 
 // TODO: We should probably use this anywhere we have links to consolidate the logic. i.e. components like <LineSelection>
-export const useHandlePageConfig = () => {
+export const useHandleConfigStore = () => {
   const { page, query } = useDelimitatedRoute();
   const currentPage = ALL_PAGES[page];
-  const dateConfig = useDateConfig();
+  const dateStore = useDateStore();
   const stationConfig = useStationConfig();
 
   const handlePageConfig = useCallback(
     (newPage: PageMetadata) => {
-      savePageConfigIfNecessary(currentPage, newPage, query, dateConfig, stationConfig);
+      savePageConfigIfNecessary(currentPage, newPage, query, dateStore, stationConfig);
     },
-    [query, currentPage, dateConfig, stationConfig]
+    [query, currentPage, dateStore, stationConfig]
   );
   return handlePageConfig;
 };
@@ -209,13 +209,13 @@ const getDateQueryParams = (
   currentPage: PageMetadata,
   newPage: PageMetadata,
   query: QueryParams,
-  dateConfig: DateConfig
+  dateStore: DateStore
 ) => {
-  if (currentPage.dateConfig === newPage.dateConfig) {
+  if (currentPage.dateStoreSection === newPage.dateStoreSection) {
     return Object.fromEntries(Object.entries(query).filter(([key]) => DATE_PARAMS.includes(key)));
   }
-  if (currentPage.dateConfig !== newPage.dateConfig) {
-    return getDateConfig(newPage.dateConfig, dateConfig);
+  if (currentPage.dateStoreSection !== newPage.dateStoreSection) {
+    return getDateStoreSection(newPage.dateStoreSection, dateStore);
   }
 };
 
@@ -240,29 +240,29 @@ const getQueryParams = (
   currentPage: PageMetadata,
   newPage: PageMetadata,
   query: QueryParams,
-  dateConfig: DateConfig,
+  dateStore: DateStore,
   stationConfig: StationConfig
 ) => {
   return {
     ...getStationQueryParams(currentPage, newPage, query, stationConfig),
-    ...getDateQueryParams(currentPage, newPage, query, dateConfig),
+    ...getDateQueryParams(currentPage, newPage, query, dateStore),
     ...getBusRouteQueryParam(query),
   };
 };
 
 const getPathName = (newPage: PageMetadata, linePath: LinePath) => {
-  return `/${newPage.dateConfig === 'system' ? 'system' : linePath}${newPage.path}`;
+  return `/${newPage.dateStoreSection === 'system' ? 'system' : linePath}${newPage.path}`;
 };
 
 export const savePageConfigIfNecessary = (
   currentPage: PageMetadata,
   newPage: PageMetadata,
   query: QueryParams,
-  dateConfig: DateConfig,
+  dateStore: DateStore,
   stationConfig: StationConfig
 ) => {
-  if (!(currentPage.dateConfig === newPage.dateConfig)) {
-    saveDateConfig(currentPage.dateConfig, query, dateConfig);
+  if (!(currentPage.dateStoreSection === newPage.dateStoreSection)) {
+    saveDateStoreSection(currentPage.dateStoreSection, query, dateStore);
   }
   if (!(currentPage.hasStationConfig === newPage.hasStationConfig)) {
     stationConfig.setStationConfig({ from: query.from, to: query.to });
