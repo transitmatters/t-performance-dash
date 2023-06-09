@@ -45,6 +45,7 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
       <Line
         id={id}
         height={240}
+        redraw={true}
         data={{
           labels,
           datasets: datasets,
