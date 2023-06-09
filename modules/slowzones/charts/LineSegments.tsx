@@ -137,9 +137,8 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
         onClick: (event, elements) => {
           if (elements.length >= 1) {
             const segment = elements[0].element['$context'].raw as LineSegmentData;
-            const hrefPathname = `/${linePath}${ALL_PAGES.trips.path}`;
+            const hrefPathname = `/${linePath}${ALL_PAGES.multiTrips.path}`;
             const queryParams: QueryParams = {
-              queryType: 'range',
               startDate: segment.x[0],
               endDate: segment.x[1],
               to: segment.stations.toStopIds?.[0],

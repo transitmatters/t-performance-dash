@@ -14,7 +14,7 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
 }) => {
   const {
     linePath,
-    query: { startDate },
+    query: { date },
   } = useDelimitatedRoute();
 
   const anyHeadwayBenchmarks = headways.some(
@@ -26,7 +26,7 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
       <SingleDayLineChart
         chartId={`headways-chart-${linePath}`}
         data={headways}
-        date={startDate}
+        date={date}
         metricField={MetricFieldKeys.headwayTimeSec}
         pointField={PointFieldKeys.currentDepDt}
         benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
@@ -39,7 +39,7 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
   }, [
     linePath,
     headways,
-    startDate,
+    date,
     fromStation,
     toStation,
     showLegend,

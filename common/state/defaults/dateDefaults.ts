@@ -1,23 +1,34 @@
-import { BUS_MAX_DATE, OVERVIEW_OPTIONS, TODAY_STRING } from '../../constants/dates';
-import type { DateStoreConfiguration } from '../types/dateStoreTypes';
+import {
+  BUS_MAX_DATE,
+  BUS_MAX_DATE_MINUS_ONE_WEEK,
+  ONE_WEEK_AGO_STRING,
+  OVERVIEW_OPTIONS,
+  TODAY_STRING,
+} from '../../constants/dates';
 
-export const SUBWAY_DEFAULTS: DateStoreConfiguration = {
+export const SUBWAY_DEFAULTS = {
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
-  tripConfig: { startDate: TODAY_STRING, queryType: 'single' },
-  systemConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
+  multiTripConfig: {
+    startDate: ONE_WEEK_AGO_STRING,
+    endDate: TODAY_STRING,
+  },
+  singleTripConfig: {
+    date: TODAY_STRING,
+  },
   overviewPreset: { view: 'year' },
 };
 
-export const BUS_DEFAULTS: DateStoreConfiguration = {
+export const BUS_DEFAULTS = {
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
-  tripConfig: { startDate: BUS_MAX_DATE, queryType: 'single' },
-  systemConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
-  overviewPreset: undefined,
+  multiTripConfig: {
+    startDate: BUS_MAX_DATE_MINUS_ONE_WEEK,
+    endDate: BUS_MAX_DATE,
+  },
+  singleTripConfig: {
+    date: BUS_MAX_DATE,
+  },
 };
 
-export const SYSTEM_DEFAULTS: DateStoreConfiguration = {
-  lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
-  tripConfig: { startDate: BUS_MAX_DATE, queryType: 'single' },
+export const SYSTEM_DEFAULTS = {
   systemConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
-  overviewPreset: undefined,
 };
