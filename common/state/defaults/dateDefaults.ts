@@ -1,5 +1,5 @@
 import { BUS_MAX_DATE, OVERVIEW_OPTIONS, TODAY_STRING } from '../../constants/dates';
-import type { DateStoreConfiguration } from '../types/dateConfigTypes';
+import type { DateStoreConfiguration } from '../types/dateStoreTypes';
 
 export const SUBWAY_DEFAULTS: DateStoreConfiguration = {
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },

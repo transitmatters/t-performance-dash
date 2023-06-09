@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
 import type { NextRouter } from 'next/router';
 import { DATE_FORMAT, ONE_WEEK_AGO_STRING, TODAY_STRING } from '../../../common/constants/dates';
-import { saveDateConfig } from '../../../common/state/utils/dateConfigUtils';
+import { saveDateStoreSection } from '../../../common/state/utils/dateStoreUtils';
 import type { DateStore } from '../../../common/state/dateStore';
-import type { TripsSectionParams } from '../../../common/state/types/dateConfigTypes';
+import type { TripsSectionParams } from '../../../common/state/types/dateStoreTypes';
 
 export const switchToSingleDay = (router: NextRouter, dateStore: DateStore) => {
-  saveDateConfig('trips', router.query, dateStore);
+  saveDateStoreSection('trips', router.query, dateStore);
   router.query.queryType = 'single';
   router.query.startDate = router.query.endDate;
   delete router.query.endDate;

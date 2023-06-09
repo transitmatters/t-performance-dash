@@ -4,7 +4,7 @@ import type { Location } from '../../common/types/charts';
 import type { Line } from '../../common/types/lines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { getSelectedDates } from '../../common/state/utils/dateConfigUtils';
+import { getSelectedDates } from '../../common/state/utils/dateStoreUtils';
 import { LocationTitle } from './LocationTitle';
 
 interface WidgetTitle {

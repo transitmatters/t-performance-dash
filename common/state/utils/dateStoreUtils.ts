@@ -6,7 +6,7 @@ import type { QueryParams } from '../../types/router';
 import { getDateParams } from '../../utils/router';
 import type { DateStore } from '../dateStore';
 
-export const saveDateConfig = (
+export const saveDateStoreSection = (
   dateStoreSection: DateStoreSection,
   query: QueryParams,
   dateStore: DateStore
@@ -21,7 +21,7 @@ export const saveDateConfig = (
   }
 };
 
-export const getDateConfig = (dateStoreSection: DateStoreSection, dateStore: DateStore) => {
+export const getDateStoreSection = (dateStoreSection: DateStoreSection, dateStore: DateStore) => {
   if (dateStoreSection === 'trips') return dateStore.tripConfig;
   if (dateStoreSection === 'system') return dateStore.systemConfig;
   if (dateStoreSection === 'line') return dateStore.lineConfig;

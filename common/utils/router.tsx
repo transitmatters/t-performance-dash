@@ -11,7 +11,7 @@ import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
 import type { DateStore } from '../state/dateStore';
 import { useDateStore } from '../state/dateStore';
 import { LINE_OBJECTS } from '../constants/lines';
-import { getDateConfig, saveDateConfig } from '../state/utils/dateConfigUtils';
+import { getDateStoreSection, saveDateStoreSection } from '../state/utils/dateStoreUtils';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'line-red',
@@ -188,7 +188,7 @@ export const useHandlePageNavigation = () => {
   const handlePageNavigation = useCallback(
     (page: PageMetadata) => {
       if (!(pageObject?.dateStoreSection === page.dateStoreSection)) {
-        saveDateConfig(pageObject.dateStoreSection, query, dateStore);
+        saveDateStoreSection(pageObject.dateStoreSection, query, dateStore);
       }
     },
     [query, pageObject, dateStore]
@@ -206,7 +206,7 @@ const navigateToNewSection = (
   query: QueryParams,
   dateStore: DateStore
 ) => {
-  const params = getDateConfig(page.dateStoreSection, dateStore);
+  const params = getDateStoreSection(page.dateStoreSection, dateStore);
   const busRouteOnly = query.busRoute ?? undefined;
   const newQuery = busRouteOnly ? { ...params, busRoute: busRouteOnly } : params;
   return {

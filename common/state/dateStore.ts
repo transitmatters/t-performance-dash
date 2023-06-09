@@ -7,7 +7,7 @@ import type {
   OverviewPresetParams,
   SystemSectionParams,
   TripsSectionParams,
-} from './types/dateConfigTypes';
+} from './types/dateStoreTypes';
 
 export interface DateStore {
   lineConfig: LineSectionParams;

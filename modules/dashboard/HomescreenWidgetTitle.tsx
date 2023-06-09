@@ -9,7 +9,7 @@ import { LINE_COLORS } from '../../common/constants/colors';
 import type { Page } from '../../common/constants/pages';
 import { ALL_PAGES } from '../../common/constants/pages';
 import { useDateStore } from '../../common/state/dateStore';
-import { getSelectedDates } from '../../common/state/utils/dateConfigUtils';
+import { getSelectedDates } from '../../common/state/utils/dateStoreUtils';
 
 interface HomescreenWidgetTitle {
   title: string;
