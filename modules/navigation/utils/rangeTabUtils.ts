@@ -2,11 +2,11 @@ import dayjs from 'dayjs';
 import type { NextRouter } from 'next/router';
 import { DATE_FORMAT, ONE_WEEK_AGO_STRING, TODAY_STRING } from '../../../common/constants/dates';
 import { saveDateConfig } from '../../../common/state/utils/dateConfigUtils';
-import type { DateConfig } from '../../../common/state/dateConfig';
+import type { DateStore } from '../../../common/state/dateConfig';
 import type { TripsSectionParams } from '../../../common/state/types/dateConfigTypes';
 
-export const switchToSingleDay = (router: NextRouter, dateConfig: DateConfig) => {
-  saveDateConfig('trips', router.query, dateConfig);
+export const switchToSingleDay = (router: NextRouter, dateStore: DateStore) => {
+  saveDateConfig('trips', router.query, dateStore);
   router.query.queryType = 'single';
   router.query.startDate = router.query.endDate;
   delete router.query.endDate;
@@ -14,9 +14,9 @@ export const switchToSingleDay = (router: NextRouter, dateConfig: DateConfig) =>
   return;
 };
 
-export const switchToRange = (router: NextRouter, dateConfig: DateConfig) => {
+export const switchToRange = (router: NextRouter, dateStore: DateStore) => {
   router.query.queryType = 'range';
-  const { tripConfig } = dateConfig;
+  const { tripConfig } = dateStore;
 
   if (tripConfig.endDate) {
     return returnToPreviousRange(router, tripConfig);

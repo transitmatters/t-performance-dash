@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { getHref, useDelimitatedRoute, useHandlePageNavigation } from '../../common/utils/router';
 import type { PageMetadata } from '../../common/constants/pages';
-import { useDateConfig } from '../../common/state/dateConfig';
+import { useDateStore } from '../../common/state/dateConfig';
 
 interface SidebarTabs {
   tabs: PageMetadata[];
@@ -14,7 +14,7 @@ interface SidebarTabs {
 export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => {
   const { line, page, query, linePath } = useDelimitatedRoute();
   const handlePageNavigation = useHandlePageNavigation();
-  const dateConfig = useDateConfig();
+  const dateStore = useDateStore();
 
   const handleChange = (enabled: boolean, tab: PageMetadata) => {
     if (!enabled) return null;
@@ -28,7 +28,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => 
         {tabs.map((tab: PageMetadata) => {
           const enabled = line ? tab.lines.includes(line) : true;
           const selected = page === tab.key;
-          const href = getHref(dateConfig, tab, page, query, linePath);
+          const href = getHref(dateStore, tab, page, query, linePath);
           return (
             <li key={tab.key}>
               <Link

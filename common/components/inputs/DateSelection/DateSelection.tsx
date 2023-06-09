@@ -25,7 +25,7 @@ interface DateSelectionProps {
 export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) => {
   const { line, page } = useDelimitatedRoute();
   const [range, setRange] = useState<boolean>(false);
-  const { section } = ALL_PAGES[page];
+  const { dateConfigSection: section } = ALL_PAGES[page];
   const setDatePreset = useDatePresetConfig((state) => state.setDatePreset);
   const datePreset = useSelectedPreset(range);
   const updateQueryParams = useUpdateQuery();

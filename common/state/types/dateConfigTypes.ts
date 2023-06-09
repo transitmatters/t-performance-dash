@@ -21,7 +21,7 @@ export type OverviewPresetParams = {
   view: OverviewDatePresetKey;
 };
 
-export interface FullDateConfig {
+export interface DateStoreConfiguration {
   lineConfig: LineSectionParams;
   tripConfig: TripsSectionParams;
   systemConfig: SystemSectionParams;

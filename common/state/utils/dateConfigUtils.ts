@@ -1,31 +1,31 @@
 import dayjs from 'dayjs';
 import type { OverviewDatePresetKey } from '../../constants/dates';
 import { SMALL_DATE_FORMAT, RANGE_PRESETS } from '../../constants/dates';
-import type { DateConfigOptions } from '../../constants/pages';
+import type { DateConfigSection } from '../../constants/pages';
 import type { QueryParams } from '../../types/router';
 import { getDateParams } from '../../utils/router';
-import type { DateConfig } from '../dateConfig';
+import type { DateStore } from '../dateConfig';
 
 export const saveDateConfig = (
-  section: DateConfigOptions,
+  dateConfigSection: DateConfigSection,
   query: QueryParams,
-  dateConfig: DateConfig
+  dateStore: DateStore
 ) => {
   const params = getDateParams(query);
 
-  if (section === 'trips') {
-    if (params.startDate) dateConfig.setTripConfig(params);
+  if (dateConfigSection === 'trips') {
+    if (params.startDate) dateStore.setTripConfig(params);
   }
-  if (section === 'line') {
-    dateConfig.setLineConfig(params);
+  if (dateConfigSection === 'line') {
+    dateStore.setLineConfig(params);
   }
 };
 
-export const getDateConfig = (section: DateConfigOptions, dateConfig: DateConfig) => {
-  if (section === 'trips') return dateConfig.tripConfig;
-  if (section === 'system') return dateConfig.systemConfig;
-  if (section === 'line') return dateConfig.lineConfig;
-  if (section === 'overview') return dateConfig.overviewPreset;
+export const getDateConfig = (dateConfigSection: DateConfigSection, dateStore: DateStore) => {
+  if (dateConfigSection === 'trips') return dateStore.tripConfig;
+  if (dateConfigSection === 'system') return dateStore.systemConfig;
+  if (dateConfigSection === 'line') return dateStore.lineConfig;
+  if (dateConfigSection === 'overview') return dateStore.overviewPreset;
   return {};
 };
 

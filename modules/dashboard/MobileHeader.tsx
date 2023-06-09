@@ -14,7 +14,7 @@ export const MobileHeader: React.FC = () => {
     page,
     query: { busRoute, startDate, endDate, view },
   } = useDelimitatedRoute();
-  const section = page ? ALL_PAGES[page]?.section : undefined;
+  const section = page ? ALL_PAGES[page]?.dateConfigSection : undefined;
 
   return (
     <div
@@ -46,7 +46,7 @@ export const MobileHeader: React.FC = () => {
             <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
           </h2>
         </div>
-        {ALL_PAGES[page]?.section === 'trips' && <RangeTabs />}
+        {ALL_PAGES[page]?.dateConfigSection === 'trips' && <RangeTabs />}
       </div>
       <div className="absolute bottom-0 right-0 flex items-baseline pb-1 pr-2 text-stone-200">
         <p className=" text-xs italic">

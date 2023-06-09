@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../constants/dates';
 import type { Tab } from '../constants/dashboardTabs';
-import { BUS_DEFAULTS, SUBWAY_DEFAULTS } from './defaults/dashboardDefaults';
+import { BUS_DEFAULTS, SUBWAY_DEFAULTS } from './defaults/dateDefaults';
 import type {
   LineSectionParams,
   OverviewPresetParams,
@@ -9,7 +9,7 @@ import type {
   TripsSectionParams,
 } from './types/dateConfigTypes';
 
-export interface DateConfig {
+export interface DateStore {
   lineConfig: LineSectionParams;
   tripConfig: TripsSectionParams;
   systemConfig: SystemSectionParams;
@@ -21,7 +21,7 @@ export interface DateConfig {
   overviewPresetChange: (overviewConfig: OverviewPresetParams) => void;
 }
 
-export const useDateConfig = create<DateConfig>((set) => ({
+export const useDateStore = create<DateStore>((set) => ({
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
   tripConfig: { startDate: TODAY_STRING, queryType: 'single' },
   systemConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },

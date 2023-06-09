@@ -3,23 +3,23 @@ import React from 'react';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { useDateConfig } from '../../common/state/dateConfig';
+import { useDateStore } from '../../common/state/dateConfig';
 import { switchToRange, switchToSingleDay } from './utils/rangeTabUtils';
 
 export const RangeTabs = () => {
   const route = useDelimitatedRoute();
   const { query, line } = route;
   const router = useRouter();
-  const dateConfig = useDateConfig();
+  const dateStore = useDateStore();
   const selected = query.queryType === 'single' ? 1 : 0;
   const rangeOptions = ['Multi Day', 'Single Day'];
 
   const handleChange = (index: number) => {
     if (index) {
-      switchToSingleDay(router, dateConfig);
+      switchToSingleDay(router, dateStore);
       return;
     }
-    switchToRange(router, dateConfig);
+    switchToRange(router, dateStore);
   };
 
   return (

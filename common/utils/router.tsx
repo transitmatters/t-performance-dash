@@ -8,8 +8,8 @@ import type { QueryParams, Route, Tab } from '../types/router';
 import { DATE_PARAMS } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
 import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
-import type { DateConfig } from '../state/dateConfig';
-import { useDateConfig } from '../state/dateConfig';
+import type { DateStore } from '../state/dateConfig';
+import { useDateStore } from '../state/dateConfig';
 import { LINE_OBJECTS } from '../constants/lines';
 import { getDateConfig, saveDateConfig } from '../state/utils/dateConfigUtils';
 
@@ -167,31 +167,31 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
 };
 
 export const getHref = (
-  dateConfig: DateConfig,
+  dateStore: DateStore,
   newPage: PageMetadata,
   currentPage: Page,
   query: QueryParams,
   linePath: LinePath
 ) => {
   const pageObject = ALL_PAGES[currentPage];
-  if (pageObject?.section === newPage.section) {
+  if (pageObject?.dateConfigSection === newPage.dateConfigSection) {
     return navigateWithinSection(linePath, newPage, query);
   }
-  return navigateToNewSection(linePath, newPage, query, dateConfig);
+  return navigateToNewSection(linePath, newPage, query, dateStore);
 };
 
 export const useHandlePageNavigation = () => {
   const { page, query } = useDelimitatedRoute();
   const pageObject = ALL_PAGES[page];
-  const dateConfig = useDateConfig();
+  const dateStore = useDateStore();
 
   const handlePageNavigation = useCallback(
     (page: PageMetadata) => {
-      if (!(pageObject?.section === page.section)) {
-        saveDateConfig(pageObject.section, query, dateConfig);
+      if (!(pageObject?.dateConfigSection === page.dateConfigSection)) {
+        saveDateConfig(pageObject.dateConfigSection, query, dateStore);
       }
     },
-    [query, pageObject, dateConfig]
+    [query, pageObject, dateStore]
   );
   return handlePageNavigation;
 };
@@ -204,13 +204,13 @@ const navigateToNewSection = (
   linePath: LinePath,
   page: PageMetadata,
   query: QueryParams,
-  dateConfig: DateConfig
+  dateStore: DateStore
 ) => {
-  const params = getDateConfig(page.section, dateConfig);
+  const params = getDateConfig(page.dateConfigSection, dateStore);
   const busRouteOnly = query.busRoute ?? undefined;
   const newQuery = busRouteOnly ? { ...params, busRoute: busRouteOnly } : params;
   return {
-    pathname: `/${page.section === 'system' ? 'system' : linePath}${page.path}`,
+    pathname: `/${page.dateConfigSection === 'system' ? 'system' : linePath}${page.path}`,
     query: newQuery,
   };
 };
