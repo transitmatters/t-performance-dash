@@ -13,6 +13,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  ChartDataset,
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
@@ -33,8 +34,8 @@ ChartJS.register(
 );
 
 interface LandingPageChartsProps {
-  datasets: any;
-  labels: any;
+  datasets: ChartDataset<'line'>[];
+  labels: string[];
   id: string;
 }
 
