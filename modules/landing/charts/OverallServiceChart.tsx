@@ -1,6 +1,7 @@
 import React from 'react';
 import type { SpeedDataPoint } from '../../../common/types/dataPoints';
 import { convertToServiceDataset } from '../utils';
+import { LandingChartDiv } from '../LandingChartDiv';
 import { LandingPageChart } from './LandingPageChart';
 
 interface OverallServiceChartProps {
@@ -11,8 +12,8 @@ export const OverallServiceChart: React.FC<OverallServiceChartProps> = ({ servic
   const datasets = serviceData.map((data) => convertToServiceDataset(data));
 
   return (
-    <div className="h-[300px] w-full max-w-2xl px-16">
+    <LandingChartDiv>
       <LandingPageChart datasets={datasets} labels={labels} id="system-service" />
-    </div>
+    </LandingChartDiv>
   );
 };
