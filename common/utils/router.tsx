@@ -5,12 +5,13 @@ import { useCallback } from 'react';
 import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route, Tab } from '../types/router';
+import { DATE_PARAMS } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
 import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
-import type { DashboardConfig } from '../state/dashboardConfig';
-import { useDashboardConfig } from '../state/dashboardConfig';
+import type { DateStore } from '../state/dateStore';
+import { useDateStore } from '../state/dateStore';
 import { LINE_OBJECTS } from '../constants/lines';
-import { getDashboardConfig, saveDashboardConfig } from '../state/utils/dashboardUtils';
+import { getDateStoreSection, saveDateStoreSection } from '../state/utils/dateStoreUtils';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'line-red',
@@ -23,6 +24,12 @@ const linePathToKeyMap: Record<string, Line> = {
 export const getParams = (params: ParsedUrlQuery | QueryParams) => {
   return Object.fromEntries(
     Object.entries(params).filter(([key, value]) => key !== 'line' && value)
+  );
+};
+
+export const getDateParams = (params: ParsedUrlQuery | QueryParams) => {
+  return Object.fromEntries(
+    Object.entries(params).filter(([key, value]) => DATE_PARAMS.includes(key) && value)
   );
 };
 
@@ -160,31 +167,31 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
 };
 
 export const getHref = (
-  dashboardConfig: DashboardConfig,
+  dateStore: DateStore,
   newPage: PageMetadata,
   currentPage: Page,
   query: QueryParams,
   linePath: LinePath
 ) => {
   const pageObject = ALL_PAGES[currentPage];
-  if (pageObject?.section === newPage.section) {
+  if (pageObject?.dateStoreSection === newPage.dateStoreSection) {
     return navigateWithinSection(linePath, newPage, query);
   }
-  return navigateToNewSection(linePath, newPage, query, dashboardConfig);
+  return navigateToNewSection(linePath, newPage, query, dateStore);
 };
 
 export const useHandlePageNavigation = () => {
   const { page, query } = useDelimitatedRoute();
   const pageObject = ALL_PAGES[page];
-  const dashboardConfig = useDashboardConfig();
+  const dateStore = useDateStore();
 
   const handlePageNavigation = useCallback(
     (page: PageMetadata) => {
-      if (!(pageObject?.section === page.section)) {
-        saveDashboardConfig(pageObject.section, query, dashboardConfig);
+      if (!(pageObject?.dateStoreSection === page.dateStoreSection)) {
+        saveDateStoreSection(pageObject.dateStoreSection, query, dateStore);
       }
     },
-    [query, pageObject, dashboardConfig]
+    [query, pageObject, dateStore]
   );
   return handlePageNavigation;
 };
@@ -197,13 +204,13 @@ const navigateToNewSection = (
   linePath: LinePath,
   page: PageMetadata,
   query: QueryParams,
-  dashboardConfig: DashboardConfig
+  dateStore: DateStore
 ) => {
-  const params = getDashboardConfig(page.section, dashboardConfig);
+  const params = getDateStoreSection(page.dateStoreSection, dateStore);
   const busRouteOnly = query.busRoute ?? undefined;
   const newQuery = busRouteOnly ? { ...params, busRoute: busRouteOnly } : params;
   return {
-    pathname: `/${page.section === 'system' ? 'system' : linePath}${page.path}`,
+    pathname: `/${page.dateStoreSection === 'system' ? 'system' : linePath}${page.path}`,
     query: newQuery,
   };
 };

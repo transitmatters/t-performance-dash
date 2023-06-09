@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
 import type { NextRouter } from 'next/router';
 import { DATE_FORMAT, ONE_WEEK_AGO_STRING, TODAY_STRING } from '../../../common/constants/dates';
-import { saveDashboardConfig } from '../../../common/state/utils/dashboardUtils';
-import type { DashboardConfig } from '../../../common/state/dashboardConfig';
-import type { TripsSectionParams } from '../../../common/state/types/dashboardConfigTypes';
+import { saveDateStoreSection } from '../../../common/state/utils/dateStoreUtils';
+import type { DateStore } from '../../../common/state/dateStore';
+import type { TripsSectionParams } from '../../../common/state/types/dateStoreTypes';
 
-export const switchToSingleDay = (router: NextRouter, dashboardConfig: DashboardConfig) => {
-  saveDashboardConfig('trips', router.query, dashboardConfig);
+export const switchToSingleDay = (router: NextRouter, dateStore: DateStore) => {
+  saveDateStoreSection('trips', router.query, dateStore);
   router.query.queryType = 'single';
   router.query.startDate = router.query.endDate;
   delete router.query.endDate;
@@ -14,9 +14,9 @@ export const switchToSingleDay = (router: NextRouter, dashboardConfig: Dashboard
   return;
 };
 
-export const switchToRange = (router: NextRouter, dashboardConfig: DashboardConfig) => {
+export const switchToRange = (router: NextRouter, dateStore: DateStore) => {
   router.query.queryType = 'range';
-  const { tripConfig } = dashboardConfig;
+  const { tripConfig } = dateStore;
 
   if (tripConfig.endDate) {
     return returnToPreviousRange(router, tripConfig);

@@ -1,29 +1,29 @@
 import React from 'react';
 import type { BusRoute, Line } from '../../types/lines';
-import type { Section } from '../../constants/pages';
+import type { DateStoreSection } from '../../constants/pages';
 import type { QueryTypeOptions } from '../../types/router';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
 
 interface MobileControlPanelProps {
-  section: Section;
+  dateStoreSection: DateStoreSection;
   line: Line;
   busRoute: BusRoute | undefined;
   queryType?: QueryTypeOptions;
 }
 
 export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
-  section,
+  dateStoreSection,
   line,
   busRoute,
   queryType,
 }) => {
   const getControls = () => {
-    if (section === 'trips' && queryType) {
+    if (dateStoreSection === 'trips' && queryType) {
       return (
         <>
           <div className="p-1 pb-0">
-            <DateControl section={section} queryType={queryType} />
+            <DateControl dateStoreSection={dateStoreSection} queryType={queryType} />
           </div>
           <div className="flex flex-row items-center justify-center bg-tm-grey">
             <StationSelectorWidget line={line} busRoute={busRoute} />
@@ -31,10 +31,10 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
         </>
       );
     }
-    if (section === 'line' || section === 'overview') {
+    if (dateStoreSection === 'line' || dateStoreSection === 'overview') {
       return (
         <div className="p-1">
-          <DateControl section={section} queryType={'range'} />
+          <DateControl dateStoreSection={dateStoreSection} queryType={'range'} />
         </div>
       );
     }
