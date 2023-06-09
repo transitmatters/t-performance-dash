@@ -28,10 +28,11 @@ export const convertToSpeedDataset = (data: SpeedDataPoint[]) => {
     label: `% of baseline`,
     data: data.map((datapoint) =>
       datapoint.value
-        ? (
-            100 *
-            (1 / datapoint.value / (1 / PEAK_COMPLETE_TRIP_TIMES[line ?? 'DEFAULT'].value))
-          ).toFixed(1)
+        ? Math.round(
+            10 *
+              (100 *
+                (1 / datapoint.value / (1 / PEAK_COMPLETE_TRIP_TIMES[line ?? 'DEFAULT'].value)))
+          ) / 10
         : Number.NaN
     ),
   };
@@ -45,7 +46,9 @@ export const convertToServiceDataset = (data: SpeedDataPoint[]) => {
     ...datasetOptions,
     label: `% of baseline`,
     data: data.map((datapoint) =>
-      datapoint.value ? (100 * (datapoint.count / 2)) / PEAK_SCHEDULED_SERVICE[line] : Number.NaN
+      datapoint.value
+        ? Math.round((10 * (100 * (datapoint.count / 2))) / PEAK_SCHEDULED_SERVICE[line]) / 10
+        : Number.NaN
     ),
   };
 };
