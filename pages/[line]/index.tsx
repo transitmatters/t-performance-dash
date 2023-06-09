@@ -1,5 +1,5 @@
 import { ALL_LINE_PATHS } from '../../common/types/lines';
-import { TodayContainer } from '../../modules/dashboard/TodayContainer';
+import { Overview } from '../../modules/dashboard/Overview';
 
 export async function getStaticProps() {
   return { props: {} };
@@ -12,4 +12,4 @@ export async function getStaticPaths() {
   };
 }
 
-export default TodayContainer;
+export default Overview;

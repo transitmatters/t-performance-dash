@@ -33,7 +33,7 @@ const getPage = (pathItems: string[], tab: Tab): string => {
     return SYSTEM_PAGES_MAP['system'][pageArray[1]];
   }
   const pageArray = pathItems.slice(2);
-  if (pageArray[0] === '') return 'today';
+  if (pageArray[0] === '') return 'overview';
   if (pageArray[1]) {
     return SUB_PAGES_MAP[pageArray[0]][pageArray[1]];
   }
