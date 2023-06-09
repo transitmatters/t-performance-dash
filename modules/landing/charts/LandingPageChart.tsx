@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 import { Line } from 'react-chartjs-2';
-
+import type { ChartDataset } from 'chart.js';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,7 +13,6 @@ import {
   Title,
   Tooltip,
   Legend,
-  ChartDataset,
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
@@ -40,9 +39,8 @@ interface LandingPageChartsProps {
 }
 
 export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, labels, id }) => {
-  const { tooltipFormat, unit, callbacks } = SPEED_RANGE_PARAM_MAP.week;
-
   const chart = useMemo(() => {
+    const { tooltipFormat, unit, callbacks } = SPEED_RANGE_PARAM_MAP.week;
     return (
       <Line
         id={id}
@@ -114,6 +112,6 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
         }}
       />
     );
-  }, [datasets, labels]);
+  }, [datasets, labels, id]);
   return chart;
 };
