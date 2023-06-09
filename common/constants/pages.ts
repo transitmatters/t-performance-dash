@@ -107,8 +107,8 @@ export const ALL_PAGES: PageMap = {
   },
   overview: {
     key: 'overview',
-    path: '/overview',
-    name: 'Line',
+    path: '/',
+    name: 'Line Overview',
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange'],
     section: 'overview',
     icon: faTableColumns,

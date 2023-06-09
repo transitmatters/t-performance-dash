@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import TmLogoSvg from '../../public/tm-logo-big.svg';
 import { DonateButton } from '../../common/components/buttons/DonateButton';
@@ -10,7 +10,7 @@ export const SideNavBar = () => {
     <>
       <div className="bg-tm-grey text-gray-300">
         <div className="fixed inset-y-0 flex w-64 flex-col overflow-y-hidden bg-tm-grey">
-          <div className="sticky flex flex-shrink-0 px-6 pb-2 pt-5">
+          <div className="sticky flex flex-shrink-0 px-6 pb-2 pt-6">
             <TmLogoSvg alt="TransitMatters Logo" />
           </div>
           <div className="relative flex flex-grow flex-col overflow-y-auto pb-4">
