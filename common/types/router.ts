@@ -27,5 +27,3 @@ export type QueryParams = {
 export type QueryTypeOptions = 'single' | 'range';
 
 export type Tab = 'Bus' | 'Subway' | 'System';
-
-export const DATE_PARAMS = ['startDate', 'endDate', 'date', 'queryType']; // TODO: Remove queryType from this array when stationConfig changes added.
