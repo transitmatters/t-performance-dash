@@ -31,7 +31,11 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
         </>
       );
     }
-    if (dateStoreSection === 'line' || dateStoreSection === 'overview') {
+    if (
+      dateStoreSection === 'line' ||
+      dateStoreSection === 'overview' ||
+      dateStoreSection === 'system'
+    ) {
       return (
         <div className="p-1">
           <DateControl dateStoreSection={dateStoreSection} queryType={'range'} />
