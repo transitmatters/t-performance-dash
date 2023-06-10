@@ -7,8 +7,8 @@ import { DateControl } from './DateControl';
 
 interface MobileControlPanelProps {
   dateStoreSection: DateStoreSection;
-  line: Line;
-  busRoute: BusRoute | undefined;
+  line?: Line;
+  busRoute?: BusRoute;
   queryType?: QueryTypeOptions;
 }
 
@@ -19,7 +19,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   queryType,
 }) => {
   const getControls = () => {
-    if (dateStoreSection === 'trips' && queryType) {
+    if (dateStoreSection === 'trips' && queryType && line) {
       return (
         <>
           <div className="p-1 pb-0">
