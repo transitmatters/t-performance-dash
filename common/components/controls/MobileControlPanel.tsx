@@ -7,9 +7,9 @@ import { DateControl } from './DateControl';
 
 interface MobileControlPanelProps {
   dateStoreSection: DateStoreSection;
-  line?: Line;
-  busRoute?: BusRoute;
-  queryType?: QueryTypeOptions;
+  busRoute: BusRoute | undefined;
+  line: Line | undefined;
+  queryType: QueryTypeOptions | undefined;
 }
 
 export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
