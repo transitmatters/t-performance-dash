@@ -9,9 +9,9 @@ import { DateControl } from './DateControl';
 
 interface ControlPanelProps {
   dateStoreSection: DateStoreSection;
-  line?: Line;
-  busRoute?: BusRoute;
-  queryType?: QueryTypeOptions;
+  busRoute: BusRoute | undefined;
+  line: Line | undefined;
+  queryType: QueryTypeOptions | undefined;
 }
 
 export const ControlPanel: React.FC<ControlPanelProps> = ({

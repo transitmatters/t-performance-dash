@@ -7,9 +7,9 @@ import { DateControl } from './DateControl';
 
 interface MobileControlPanelProps {
   dateStoreSection: DateStoreSection;
-  line: Line;
   busRoute: BusRoute | undefined;
-  queryType?: QueryTypeOptions;
+  line: Line | undefined;
+  queryType: QueryTypeOptions | undefined;
 }
 
 export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
@@ -19,7 +19,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   queryType,
 }) => {
   const getControls = () => {
-    if (dateStoreSection === 'trips' && queryType) {
+    if (dateStoreSection === 'trips' && queryType && line) {
       return (
         <>
           <div className="p-1 pb-0">
@@ -31,7 +31,11 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
         </>
       );
     }
-    if (dateStoreSection === 'line' || dateStoreSection === 'overview') {
+    if (
+      dateStoreSection === 'line' ||
+      dateStoreSection === 'overview' ||
+      dateStoreSection === 'system'
+    ) {
       return (
         <div className="p-1">
           <DateControl dateStoreSection={dateStoreSection} queryType={'range'} />
