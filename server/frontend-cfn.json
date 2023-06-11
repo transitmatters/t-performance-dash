@@ -3,7 +3,7 @@
     "TMFrontendHostname": {
       "Type": "String",
       "Default": "dashboard-beta.labs.transitmatters.org",
-      "AllowedValues": ["dashboard-beta.labs.transitmatters.org", "dashboard.transitmatters.org"],
+      "AllowedValues": ["dashboard-beta.labs.transitmatters.org", "dashboard-v3.labs.transitmatters.org"],
       "Description": "The frontend hostname for the data dashboard."
     },
     "TMFrontendZone": {

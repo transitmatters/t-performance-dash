@@ -133,7 +133,7 @@ class App extends React.Component {
       this.state.error_message = this.checkForErrors(this.state.configuration);
     }
 
-    if (window.location.hostname !== 'dashboard.transitmatters.org') {
+    if (window.location.hostname !== 'dashboard-v3.labs.transitmatters.org') {
       showBetaTag();
     }
 

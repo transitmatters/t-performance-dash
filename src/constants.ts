@@ -3,7 +3,7 @@ import { MbtaMajorEvent } from './slowzones/types';
 
 import stations_json from './stations.json';
 
-export const PRODUCTION = 'dashboard.transitmatters.org';
+export const PRODUCTION = 'dashboard-v3.labs.transitmatters.org';
 const FRONTEND_TO_BACKEND_MAP = new Map([
   [PRODUCTION, 'https://dashboard-api2.transitmatters.org'],
   ['dashboard-beta.labs.transitmatters.org', 'https://dashboard-api-beta.labs.transitmatters.org'],

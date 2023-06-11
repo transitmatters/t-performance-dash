@@ -28,16 +28,16 @@ done
 # Setup environment stuff
 # By default deploy to beta, otherwise deploys to production
 
-$PRODUCTION && ENV_SUFFIX=""                                    || ENV_SUFFIX="-beta"
+$PRODUCTION && ENV_SUFFIX="-v3"                                 || ENV_SUFFIX="-v3-beta"
 $PRODUCTION && CHALICE_STAGE="production"                       || CHALICE_STAGE="beta"
 
-$PRODUCTION && FRONTEND_ZONE="dashboard.transitmatters.org"     || FRONTEND_ZONE="labs.transitmatters.org"
-$PRODUCTION && FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN"        || FRONTEND_CERT_ARN="$TM_LABS_WILDCARD_CERT_ARN"
-$PRODUCTION && FRONTEND_DOMAIN_PREFIX=""                        || FRONTEND_DOMAIN_PREFIX="dashboard-beta."
+$PRODUCTION && FRONTEND_ZONE="labs.transitmatters.org"          || FRONTEND_ZONE="labs.transitmatters.org"
+$PRODUCTION && FRONTEND_CERT_ARN="$TM_LABS_WILDCARD_CERT_ARN"   || FRONTEND_CERT_ARN="$TM_LABS_WILDCARD_CERT_ARN"
+$PRODUCTION && FRONTEND_DOMAIN_PREFIX="dashboard-v3."           || FRONTEND_DOMAIN_PREFIX="dashboard-v3-beta."
 
-$PRODUCTION && BACKEND_ZONE="dashboard-api2.transitmatters.org" || BACKEND_ZONE="labs.transitmatters.org"
-$PRODUCTION && BACKEND_CERT_ARN="$TM_BACKEND_CERT_ARN"          || BACKEND_CERT_ARN="$TM_LABS_WILDCARD_CERT_ARN"
-$PRODUCTION && BACKEND_DOMAIN_PREFIX=""                         || BACKEND_DOMAIN_PREFIX="dashboard-api-beta."
+$PRODUCTION && BACKEND_ZONE="labs.transitmatters.org"           || BACKEND_ZONE="labs.transitmatters.org"
+$PRODUCTION && BACKEND_CERT_ARN="$TM_LABS_WILDCARD_CERT_ARN"    || BACKEND_CERT_ARN="$TM_LABS_WILDCARD_CERT_ARN"
+$PRODUCTION && BACKEND_DOMAIN_PREFIX="dashboard-v3-api."        || BACKEND_DOMAIN_PREFIX="dashboard-v3-api-beta."
 
 
 # Fetch repository tags
