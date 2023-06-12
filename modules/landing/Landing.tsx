@@ -1,9 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
 import { isMobile } from 'react-device-detect';
+import Lottie from 'react-lottie-player';
+
 import classNames from 'classnames';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Layout } from '../../common/layouts/layoutTypes';
-import HeroSVG from '../../public/hero.svg';
+import HeroLottie from '../../public/Animations/hero.lottie.json';
 import LandingTitleSVG from '../../public/landingTitle.svg';
 import { useViewport } from '../../common/hooks/useViewport';
 import { LandingCharts } from './LandingCharts';
@@ -35,7 +37,7 @@ export function Landing() {
       >
         <div className="flex w-full flex-col items-center gap-8 sm:w-[320px] md:w-[400px] lg:w-[560px]">
           <LandingTitleSVG style={{ height: imageHeight * 0.4 }} />
-          <HeroSVG style={{ height: imageHeight }} />
+          <Lottie loop animationData={HeroLottie} play style={{ height: imageHeight }} />
         </div>
         <h2 className="w-full px-8 text-center text-lg text-white">
           This is a subtitle. And this is additional subtitle text that will say some more stuff.
