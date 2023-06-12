@@ -1,5 +1,6 @@
 import React from 'react';
 import type { RidershipCount } from '../../../common/types/dataPoints';
+import { RidershipBaseline } from '../../../copy/landingCopy';
 import type { Line as LineType } from '../../../common/types/lines';
 import { convertToRidershipDataset } from '../utils';
 import { LandingChartDiv } from '../LandingChartDiv';
@@ -14,6 +15,7 @@ export const OverallRidershipChart: React.FC<OverallRidershipChartProps> = ({ ri
 
   return (
     <LandingChartDiv>
+      {RidershipBaseline}
       <LandingPageChart datasets={datasets} labels={labels} id="system-ridership" />
     </LandingChartDiv>
   );
