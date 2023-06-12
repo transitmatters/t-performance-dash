@@ -57,7 +57,6 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
           },
           plugins: {
             tooltip: {
-              mode: 'index',
               position: 'nearest',
               callbacks: {
                 label: (value) => `${value.formattedValue}% of baseline`,
