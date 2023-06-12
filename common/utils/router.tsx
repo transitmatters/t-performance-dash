@@ -174,7 +174,7 @@ export const getHref = (
   linePath: LinePath
 ) => {
   const pageObject = ALL_PAGES[currentPage];
-  if (pageObject && pageObject?.dateStoreSection === newPage.dateStoreSection) {
+  if (pageObject && pageObject.dateStoreSection === newPage.dateStoreSection) {
     return navigateWithinSection(linePath, newPage, query);
   }
   return navigateToNewSection(linePath, newPage, query, dateStore);
