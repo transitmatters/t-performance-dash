@@ -97,7 +97,7 @@
         "AccessControl": "PublicRead",
         "WebsiteConfiguration": {
           "IndexDocument": "index.html",
-          "ErrorDocument": "index.html"
+          "ErrorDocument": "404.html"
         }
       }
     },
@@ -153,7 +153,7 @@
           "CustomErrorResponses": [
             {
               "ErrorCode": "404",
-              "ResponsePagePath": "/index.html",
+              "ResponsePagePath": "/404.html",
               "ResponseCode": "200",
               "ErrorCachingMinTTL": "86400"
             }
