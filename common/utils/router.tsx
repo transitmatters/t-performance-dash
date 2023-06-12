@@ -42,7 +42,7 @@ const getPage = (pathItems: string[], tab: Tab): string => {
   const pageArray = pathItems.slice(2);
   if (pageArray[0] === '') return 'overview';
   if (pageArray[1]) {
-    return SUB_PAGES_MAP[pageArray[0]][pageArray[1]];
+    return SUB_PAGES_MAP[pageArray[0]]?.[pageArray[1]];
   }
   return pageArray[0];
 };
@@ -128,6 +128,7 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
   const { page, line, query } = route;
   const { path, key } = LINE_OBJECTS[newLine];
   const currentPage = ALL_PAGES[page];
+  if (!currentPage) return `/${path}`;
   const currentPath = currentPage.path;
   let href = `/${path}`;
   // Go to homepage if current line is selected or the selected page is not valid for the given line.
@@ -174,7 +175,7 @@ export const getHref = (
   linePath: LinePath
 ) => {
   const pageObject = ALL_PAGES[currentPage];
-  if (pageObject?.dateStoreSection === newPage.dateStoreSection) {
+  if (pageObject && pageObject?.dateStoreSection === newPage.dateStoreSection) {
     return navigateWithinSection(linePath, newPage, query);
   }
   return navigateToNewSection(linePath, newPage, query, dateStore);
@@ -187,7 +188,7 @@ export const useHandlePageNavigation = () => {
 
   const handlePageNavigation = useCallback(
     (page: PageMetadata) => {
-      if (!(pageObject?.dateStoreSection === page.dateStoreSection)) {
+      if (pageObject && !(pageObject?.dateStoreSection === page.dateStoreSection)) {
         saveDateStoreSection(pageObject.dateStoreSection, query, dateStore);
       }
     },
