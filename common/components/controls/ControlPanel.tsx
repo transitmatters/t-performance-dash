@@ -2,35 +2,39 @@ import React from 'react';
 import classNames from 'classnames';
 import { lineColorBorder } from '../../styles/general';
 import type { BusRoute, Line } from '../../types/lines';
-import type { Section } from '../../constants/pages';
+import type { DateStoreSection } from '../../constants/pages';
 import type { QueryTypeOptions } from '../../types/router';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
 
 interface ControlPanelProps {
-  section: Section;
-  line?: Line;
-  busRoute?: BusRoute;
-  queryType?: QueryTypeOptions;
+  dateStoreSection: DateStoreSection;
+  busRoute: BusRoute | undefined;
+  line: Line | undefined;
+  queryType: QueryTypeOptions | undefined;
 }
 
 export const ControlPanel: React.FC<ControlPanelProps> = ({
-  section,
+  dateStoreSection,
   line,
   busRoute,
   queryType,
 }) => {
   const getControls = () => {
-    if (section === 'trips' && line && queryType) {
+    if (dateStoreSection === 'trips' && line && queryType) {
       return (
         <>
-          <DateControl section={section} queryType={queryType} />
+          <DateControl dateStoreSection={dateStoreSection} queryType={queryType} />
           <StationSelectorWidget line={line} busRoute={busRoute} />
         </>
       );
     }
-    if (section === 'line' || section === 'overview' || section === 'system') {
-      return <DateControl section={section} queryType={'range'} />;
+    if (
+      dateStoreSection === 'line' ||
+      dateStoreSection === 'overview' ||
+      dateStoreSection === 'system'
+    ) {
+      return <DateControl dateStoreSection={dateStoreSection} queryType={'range'} />;
     }
   };
 

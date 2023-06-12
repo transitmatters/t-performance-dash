@@ -1,31 +1,31 @@
 import dayjs from 'dayjs';
 import type { OverviewDatePresetKey } from '../../constants/dates';
 import { SMALL_DATE_FORMAT, RANGE_PRESETS } from '../../constants/dates';
-import type { Section } from '../../constants/pages';
+import type { DateStoreSection } from '../../constants/pages';
 import type { QueryParams } from '../../types/router';
-import { getParams } from '../../utils/router';
-import type { DashboardConfig } from '../dashboardConfig';
+import { getDateParams } from '../../utils/router';
+import type { DateStore } from '../dateStore';
 
-export const saveDashboardConfig = (
-  section: Section,
+export const saveDateStoreSection = (
+  dateStoreSection: DateStoreSection,
   query: QueryParams,
-  dashboardConfig: DashboardConfig
+  dateStore: DateStore
 ) => {
-  if (section === 'trips') {
-    // TODO: filter out invalid keys.
-    const params = getParams(query);
-    if (params.startDate) dashboardConfig.setTripConfig(params);
+  const params = getDateParams(query);
+
+  if (dateStoreSection === 'trips') {
+    if (params.startDate) dateStore.setTripConfig(params);
   }
-  if (section === 'line') {
-    dashboardConfig.setLineConfig({ startDate: query.startDate, endDate: query.endDate });
+  if (dateStoreSection === 'line') {
+    dateStore.setLineConfig(params);
   }
 };
 
-export const getDashboardConfig = (section: Section, dashboardConfig: DashboardConfig) => {
-  if (section === 'trips') return dashboardConfig.tripConfig;
-  if (section === 'system') return dashboardConfig.systemConfig;
-  if (section === 'line') return dashboardConfig.lineConfig;
-  if (section === 'overview') return dashboardConfig.overviewPreset;
+export const getDateStoreSection = (dateStoreSection: DateStoreSection, dateStore: DateStore) => {
+  if (dateStoreSection === 'trips') return dateStore.tripConfig;
+  if (dateStoreSection === 'system') return dateStore.systemConfig;
+  if (dateStoreSection === 'line') return dateStore.lineConfig;
+  if (dateStoreSection === 'overview') return dateStore.overviewPreset;
   return {};
 };
 

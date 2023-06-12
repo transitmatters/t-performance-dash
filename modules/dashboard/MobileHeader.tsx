@@ -12,10 +12,16 @@ export const MobileHeader: React.FC = () => {
   const {
     line,
     page,
+    tab,
     query: { busRoute, startDate, endDate, view },
   } = useDelimitatedRoute();
-  const section = page ? ALL_PAGES[page]?.section : undefined;
+  const section = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
 
+  const getLineName = () => {
+    if (busRoute) return `Route ${busRoute}`;
+    if (line) return LINE_OBJECTS[line]?.short;
+    if (tab === 'System') return 'System';
+  };
   return (
     <div
       className={classNames(
@@ -30,10 +36,8 @@ export const MobileHeader: React.FC = () => {
         )}
       >
         <div className="flex shrink-0 flex-row items-baseline pl-2">
-          <h3 className="text-lg font-semibold">
-            {busRoute ? `Route ${busRoute}` : line && LINE_OBJECTS[line]?.short}
-          </h3>
-          {ALL_PAGES[page]?.sectionTitle && (
+          <h3 className="text-lg font-semibold">{getLineName()}</h3>
+          {ALL_PAGES[page]?.sectionTitle && tab !== 'System' && (
             <>
               <span className="px-1 text-lg">•</span>
               <h2 className="select-none text-lg font-semibold">
@@ -46,7 +50,7 @@ export const MobileHeader: React.FC = () => {
             <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
           </h2>
         </div>
-        {ALL_PAGES[page]?.section === 'trips' && <RangeTabs />}
+        {ALL_PAGES[page]?.dateStoreSection === 'trips' && <RangeTabs />}
       </div>
       <div className="absolute bottom-0 right-0 flex items-baseline pb-1 pr-2 text-stone-200">
         <p className=" text-xs italic">

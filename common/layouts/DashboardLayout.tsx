@@ -17,11 +17,12 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const isMobile = !useBreakpoint('md');
-  const { line, page, query } = useDelimitatedRoute();
+  const { line, page, query, tab } = useDelimitatedRoute();
   const { busRoute, queryType } = query;
-  const section = page ? ALL_PAGES[page]?.section : undefined;
-  const showControlParams = section && line && section !== 'today';
-  usePresetsOnFirstLoad(section, query);
+  const dateStoreSection = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
+  const showControlParams =
+    dateStoreSection && (line || tab === 'System') && dateStoreSection !== 'today';
+  usePresetsOnFirstLoad(dateStoreSection, query);
 
   return (
     <div className="flex min-h-full flex-col justify-between bg-stone-100">
@@ -38,7 +39,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
         </main>
         {isMobile && showControlParams && (
           <MobileControlPanel
-            section={section}
+            dateStoreSection={dateStoreSection}
             line={line}
             queryType={queryType}
             busRoute={busRoute}
