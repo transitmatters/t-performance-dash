@@ -1,6 +1,7 @@
 import React from 'react';
 import type { SpeedDataPoint } from '../../../common/types/dataPoints';
 import { convertToSpeedDataset } from '../utils';
+import { LandingChartDiv } from '../LandingChartDiv';
 import { LandingPageChart } from './LandingPageChart';
 
 interface OverallSpeedChartProps {
@@ -11,8 +12,8 @@ export const OverallSpeedChart: React.FC<OverallSpeedChartProps> = ({ speedData 
   const datasets = speedData.map((data) => convertToSpeedDataset(data));
 
   return (
-    <div className="h-[300px] w-full max-w-2xl px-16">
+    <LandingChartDiv>
       <LandingPageChart datasets={datasets} labels={labels} id="system-speed" />
-    </div>
+    </LandingChartDiv>
   );
 };
