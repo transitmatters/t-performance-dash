@@ -8,8 +8,8 @@ import { DateControl } from './DateControl';
 
 interface ControlPanelProps {
   dateStoreSection: DateStoreSection;
-  line?: Line;
-  busRoute?: BusRoute;
+  busRoute: BusRoute | undefined;
+  line: Line | undefined;
 }
 
 export const ControlPanel: React.FC<ControlPanelProps> = ({ dateStoreSection, line, busRoute }) => {
