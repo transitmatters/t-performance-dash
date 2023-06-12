@@ -37,7 +37,12 @@ export function Landing() {
       >
         <div className="flex w-full flex-col items-center gap-8 sm:w-[320px] md:w-[400px] lg:w-[560px]">
           <LandingTitleSVG style={{ height: imageHeight * 0.4 }} />
-          <Lottie loop animationData={HeroLottie} play style={{ height: imageHeight }} />
+          <Lottie
+            loop
+            animationData={HeroLottie}
+            play
+            style={{ height: `${isMobile ? imageHeight * 2 : imageHeight}` }}
+          />
         </div>
         <h2 className="w-full px-8 text-center text-lg text-white">
           This is a subtitle. And this is additional subtitle text that will say some more stuff.
