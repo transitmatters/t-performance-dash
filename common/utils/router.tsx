@@ -149,8 +149,7 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
 
 export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): string => {
   const { query, page } = route;
-  if (!page) return ''; // TODO: remove this. Only needed bc this loads on root URL at the moment.
-  const currentPage = ALL_PAGES[page];
+  const currentPage = ALL_PAGES[page] ?? ALL_PAGES['trips'];
   const currentPath = currentPage.path;
   const validPage = currentPage.lines.includes('line-bus');
   if (newRoute === route.query.busRoute || !validPage) {
