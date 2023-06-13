@@ -23,7 +23,7 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
 }) => {
   const {
     linePath,
-    query: { startDate },
+    query: { date },
   } = useDelimitatedRoute();
 
   const anyTravelBenchmarks =
@@ -35,7 +35,7 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
       <SingleDayLineChart
         chartId={`traveltimes-chart-${linePath}`}
         data={traveltimes}
-        date={startDate}
+        date={date}
         metricField={MetricFieldKeys.travelTimeSec}
         pointField={PointFieldKeys.depDt}
         benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
@@ -49,7 +49,7 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
   }, [
     linePath,
     traveltimes,
-    startDate,
+    date,
     fromStation,
     toStation,
     showLegend,

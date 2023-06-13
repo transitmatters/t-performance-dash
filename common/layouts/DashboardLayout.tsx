@@ -18,7 +18,7 @@ interface DashboardLayoutProps {
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const isMobile = !useBreakpoint('md');
   const { line, page, query, tab } = useDelimitatedRoute();
-  const { busRoute, queryType } = query;
+  const { busRoute } = query;
   const dateStoreSection = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
   const showControlParams =
     dateStoreSection && (line || tab === 'System') && dateStoreSection !== 'today';
@@ -38,12 +38,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           </div>
         </main>
         {isMobile && showControlParams && (
-          <MobileControlPanel
-            dateStoreSection={dateStoreSection}
-            line={line}
-            queryType={queryType}
-            busRoute={busRoute}
-          />
+          <MobileControlPanel dateStoreSection={dateStoreSection} line={line} busRoute={busRoute} />
         )}
       </div>
       <Footer />

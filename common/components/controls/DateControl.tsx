@@ -10,7 +10,12 @@ interface DateControlProps {
 }
 
 export const DateControl: React.FC<DateControlProps> = ({ dateStoreSection, queryType }) => {
-  if (dateStoreSection === 'trips' || dateStoreSection === 'line' || dateStoreSection === 'system')
+  if (
+    dateStoreSection === 'singleTrips' ||
+    dateStoreSection === 'line' ||
+    dateStoreSection === 'system' ||
+    dateStoreSection === 'multiTrips'
+  )
     return <DateSelection type={queryType ?? 'range'} />;
   if (dateStoreSection === 'overview') return <OverviewDateSelection />;
   return null;
