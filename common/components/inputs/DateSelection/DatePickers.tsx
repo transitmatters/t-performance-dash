@@ -10,6 +10,8 @@ import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { FLAT_PICKER_OPTIONS, TODAY_STRING, RANGE_PRESETS } from '../../../constants/dates';
 import { buttonHighlightFocus } from '../../../styles/general';
 import type { Line } from '../../../types/lines';
+import { ALL_PAGES } from '../../../constants/pages';
+import { getDefaultDates } from '../../../state/defaults/dateDefaults';
 import { RangeButton } from './RangeButton';
 
 interface DatePickerProps {
@@ -30,7 +32,7 @@ export const updateColor = (line: Line | undefined) => {
 
 export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, clearPreset }) => {
   const updateQueryParams = useUpdateQuery();
-  const { query, line, tab } = useDelimitatedRoute();
+  const { query, line, tab, page } = useDelimitatedRoute();
   const { startDate, endDate } = query;
   const endDateObject = dayjs(endDate);
   const startDateObject = dayjs(startDate);
@@ -80,6 +82,13 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
   React.useEffect(() => {
     updateColor(line);
   });
+  React.useEffect(() => {
+    if (tab && page && !startDate && !endDate) {
+      const pageObject = ALL_PAGES[page];
+      const defaultDateParams = getDefaultDates(pageObject.dateStoreSection, tab);
+      if (defaultDateParams) updateQueryParams(defaultDateParams, true);
+    }
+  }, [tab, page, startDate, endDate, updateQueryParams]);
 
   return (
     <div className="-ml-[1px] flex h-10 flex-row justify-center self-stretch rounded-r-md bg-white md:h-7">
