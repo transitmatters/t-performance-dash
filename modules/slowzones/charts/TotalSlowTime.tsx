@@ -1,5 +1,16 @@
 import React, { useRef } from 'react';
-import { Chart, registerables } from 'chart.js';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  TimeScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { Line } from 'react-chartjs-2';
@@ -26,7 +37,18 @@ interface TotalSlowTimeProps {
   line?: TrainLine;
   showTitle: boolean;
 }
-Chart.register(...registerables, ChartjsPluginWatermark);
+ChartJS.register(
+  CategoryScale,
+  TimeScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  ChartjsPluginWatermark,
+  Filler,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
   data,
