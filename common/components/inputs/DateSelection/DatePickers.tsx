@@ -85,7 +85,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
 
   React.useEffect(() => {
     updateColor(line);
-  });
+  }, [line]);
 
   return (
     <div className="-ml-[1px] flex h-10 flex-row justify-center self-stretch rounded-r-md bg-white md:h-7">
