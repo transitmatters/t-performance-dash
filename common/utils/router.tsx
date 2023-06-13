@@ -42,7 +42,7 @@ const getPage = (pathItems: string[], tab: Tab): string => {
   const pageArray = pathItems.slice(2);
   if (pageArray[0] === '') return 'overview';
   if (pageArray[1]) {
-    return SUB_PAGES_MAP[pageArray[0]][pageArray[1]];
+    return SUB_PAGES_MAP[pageArray[0]]?.[pageArray[1]];
   }
   return pageArray[0];
 };
@@ -132,6 +132,7 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
   const { page, line, query } = route;
   const { path, key } = LINE_OBJECTS[newLine];
   const currentPage = ALL_PAGES[page];
+  if (!currentPage) return `/${path}`;
   const currentPath = currentPage.path;
   let href = `/${path}`;
   // Go to homepage if current line is selected or the selected page is not valid for the given line.
@@ -152,11 +153,11 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
 
 export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): string => {
   const { query, page } = route;
-  const currentPage = ALL_PAGES[page];
+  const currentPage = ALL_PAGES[page] ?? ALL_PAGES['singleTrips'];
   const currentPath = currentPage.path;
   const validPage = currentPage.lines.includes('line-bus');
   if (newRoute === route.query.busRoute || !validPage) {
-    return `/bus/trips?busRoute=${newRoute}`;
+    return `/bus/trips/single?busRoute=${newRoute}`;
   }
   delete query.from;
   delete query.to;
@@ -194,7 +195,7 @@ export const useHandleConfigStore = () => {
 
   const handlePageConfig = useCallback(
     (newPage: PageMetadata) => {
-      savePageConfigIfNecessary(currentPage, newPage, query, dateStore);
+      if (currentPage) savePageConfigIfNecessary(currentPage, newPage, query, dateStore);
     },
     [query, currentPage, dateStore]
   );
@@ -202,11 +203,14 @@ export const useHandleConfigStore = () => {
 };
 
 const getDateQueryParams = (
-  currentPage: PageMetadata,
+  currentPage: PageMetadata | undefined,
   newPage: PageMetadata,
   query: QueryParams,
   dateStore: DateStore
 ) => {
+  if (!currentPage) {
+    return getDateStoreSection(newPage.dateStoreSection, dateStore);
+  }
   if (currentPage.dateStoreSection === newPage.dateStoreSection) {
     return Object.fromEntries(Object.entries(query).filter(([key]) => DATE_PARAMS.includes(key)));
   }

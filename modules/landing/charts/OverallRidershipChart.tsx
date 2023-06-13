@@ -2,6 +2,7 @@ import React from 'react';
 import type { RidershipCount } from '../../../common/types/dataPoints';
 import type { Line as LineType } from '../../../common/types/lines';
 import { convertToRidershipDataset } from '../utils';
+import { LandingChartDiv } from '../LandingChartDiv';
 import { LandingPageChart } from './LandingPageChart';
 
 interface OverallRidershipChartProps {
@@ -12,8 +13,8 @@ export const OverallRidershipChart: React.FC<OverallRidershipChartProps> = ({ ri
   const datasets = ridershipData.map((item) => convertToRidershipDataset(item.data, item.line));
 
   return (
-    <div className="h-[300px] w-full max-w-xl px-16">
+    <LandingChartDiv>
       <LandingPageChart datasets={datasets} labels={labels} id="system-ridership" />
-    </div>
+    </LandingChartDiv>
   );
 };
