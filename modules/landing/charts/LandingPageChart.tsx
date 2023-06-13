@@ -45,6 +45,7 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
       <Line
         id={id}
         height={240}
+        redraw={true}
         data={{
           labels,
           datasets: datasets,
@@ -57,7 +58,6 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
           },
           plugins: {
             tooltip: {
-              mode: 'index',
               position: 'nearest',
               callbacks: {
                 label: (value) => `${value.formattedValue}% of baseline`,

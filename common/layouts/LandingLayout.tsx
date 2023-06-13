@@ -12,7 +12,7 @@ export const LandingLayout: React.FC<LandingLayoutProps> = ({ children }) => {
   const isMobile = !useBreakpoint('md');
 
   return (
-    <div className="flex min-h-full flex-col justify-between bg-stone-100">
+    <div className="flex min-h-full flex-col justify-between bg-tm-lightGrey">
       {isMobile ? <MobileNavHeader /> : <SideNavBar />}
 
       <div className="flex flex-1 flex-col md:pl-64">

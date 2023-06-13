@@ -44,7 +44,7 @@ const getPage = (pathItems: string[], tab: Tab): string => {
   const pageArray = pathItems.slice(2);
   if (pageArray[0] === '') return 'overview';
   if (pageArray[1]) {
-    return SUB_PAGES_MAP[pageArray[0]][pageArray[1]];
+    return SUB_PAGES_MAP[pageArray[0]]?.[pageArray[1]];
   }
   return pageArray[0];
 };
@@ -134,6 +134,7 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
   const { page, line, query } = route;
   const { path, key } = LINE_OBJECTS[newLine];
   const currentPage = ALL_PAGES[page];
+  if (!currentPage) return `/${path}`;
   const currentPath = currentPage.path;
   let href = `/${path}`;
   // Go to homepage if current line is selected or the selected page is not valid for the given line.
@@ -154,11 +155,11 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
 
 export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): string => {
   const { query, page } = route;
-  const currentPage = ALL_PAGES[page];
+  const currentPage = ALL_PAGES[page] ?? ALL_PAGES['singleTrips'];
   const currentPath = currentPage.path;
   const validPage = currentPage.lines.includes('line-bus');
   if (newRoute === route.query.busRoute || !validPage) {
-    return `/bus/trips?busRoute=${newRoute}`;
+    return `/bus/trips/single?busRoute=${newRoute}`;
   }
   delete query.from;
   delete query.to;
@@ -174,9 +175,15 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
 export const useGenerateHref = () => {
   const dateStore = useDateStore();
   const stationStore = useStationStore();
+
   const generateHref = useCallback(
-    (newPage: PageMetadata, currentPageName: Page, query: QueryParams, linePath: LinePath) => {
-      const currentPage = ALL_PAGES[currentPageName];
+    (
+      newPage: PageMetadata,
+      currentPageName: Page | string,
+      query: QueryParams,
+      linePath: LinePath
+    ) => {
+      const currentPage = ALL_PAGES[currentPageName] ?? undefined;
       const newQuery = getQueryParams(currentPage, newPage, query, dateStore, stationStore);
       const newPathName = getPathName(newPage, linePath);
       return {
@@ -198,7 +205,8 @@ export const useHandleConfigStore = () => {
 
   const handlePageConfig = useCallback(
     (newPage: PageMetadata) => {
-      savePageConfigIfNecessary(currentPage, newPage, query, dateStore, stationStore);
+      if (currentPage)
+        savePageConfigIfNecessary(currentPage, newPage, query, dateStore, stationStore);
     },
     [query, currentPage, dateStore, stationStore]
   );
@@ -206,11 +214,14 @@ export const useHandleConfigStore = () => {
 };
 
 const getDateQueryParams = (
-  currentPage: PageMetadata,
+  currentPage: PageMetadata | undefined,
   newPage: PageMetadata,
   query: QueryParams,
   dateStore: DateStore
 ) => {
+  if (!currentPage) {
+    return getDateStoreSection(newPage.dateStoreSection, dateStore);
+  }
   if (currentPage.dateStoreSection === newPage.dateStoreSection) {
     return Object.fromEntries(Object.entries(query).filter(([key]) => DATE_PARAMS.includes(key)));
   }
@@ -224,20 +235,20 @@ const getBusRouteQueryParam = (query: QueryParams) => {
 };
 
 const getStationQueryParams = (
-  currentPage: PageMetadata,
+  currentPage: PageMetadata | undefined,
   newPage: PageMetadata,
   query: QueryParams,
   stationStore: StationStore
 ) => {
   if (!newPage.hasStationStore) return null;
-  if (currentPage.hasStationStore && query.from && query.to)
+  if (currentPage && currentPage.hasStationStore && query.from && query.to)
     return { from: query.from, to: query.to };
   if (newPage.hasStationStore && stationStore.from && stationStore.to)
     return { from: stationStore.from, to: stationStore.to };
 };
 
 const getQueryParams = (
-  currentPage: PageMetadata,
+  currentPage: PageMetadata | undefined,
   newPage: PageMetadata,
   query: QueryParams,
   dateStore: DateStore,

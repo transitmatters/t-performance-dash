@@ -17,10 +17,11 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const isMobile = !useBreakpoint('md');
-  const { line, page, query } = useDelimitatedRoute();
+  const { line, page, query, tab } = useDelimitatedRoute();
   const { busRoute } = query;
   const dateStoreSection = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
-  const showControlParams = dateStoreSection && line && dateStoreSection !== 'today';
+  const showControlParams =
+    dateStoreSection && (line || tab === 'System') && dateStoreSection !== 'today';
   usePresetsOnFirstLoad(dateStoreSection, query);
 
   return (
