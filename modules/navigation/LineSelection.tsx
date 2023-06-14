@@ -2,11 +2,11 @@ import React from 'react';
 import classNames from 'classnames';
 import { Tab } from '@headlessui/react';
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrainSubway, faTrainTram } from '@fortawesome/free-solid-svg-icons';
 import { lineColorBackground, lineColorBorder } from '../../common/styles/general';
 import { getLineSelectionItemHref, useDelimitatedRoute } from '../../common/utils/router';
 import { HEAVY_RAIL_LINES, type LineMetadata } from '../../common/types/lines';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrainSubway, faTrainTram } from '@fortawesome/free-solid-svg-icons';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 
 interface LineSelectionProps {
