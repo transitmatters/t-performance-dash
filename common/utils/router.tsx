@@ -87,7 +87,6 @@ export const useUpdateQuery = () => {
       if (!router.isReady) return;
 
       const { startDate, endDate, to, from, date } = newQueryParams;
-
       const newTempQuery: Partial<QueryParams> = {};
 
       if (date) {

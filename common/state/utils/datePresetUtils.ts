@@ -14,7 +14,7 @@ export const useSelectedPreset = () => {
 };
 
 export const checkForPreset = (query: QueryParams) => {
-  const potentialKey = `${query.startDate}${query.endDate ?? ''}`;
+  const potentialKey = `${query.startDate ?? query.date}${query.endDate ?? ''}`;
   if (query.date && SINGLE_DATE_KEYS[potentialKey]) {
     return SINGLE_DATE_KEYS[potentialKey];
   }

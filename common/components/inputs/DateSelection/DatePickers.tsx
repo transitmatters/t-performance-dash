@@ -90,7 +90,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
   }, [line]);
 
   React.useEffect(() => {
-    if (tab && page && !startDate && !endDate) {
+    if (tab && page && !date && !startDate && !endDate) {
       const pageObject = ALL_PAGES[page];
       const defaultDateParams = getDefaultDates(pageObject.dateStoreSection, tab);
       if (defaultDateParams) updateQueryParams(defaultDateParams, true);
