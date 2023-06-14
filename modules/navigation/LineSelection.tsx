@@ -27,14 +27,15 @@ export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems, setSide
       selectedIndex={lineItems.findIndex((lineItem) => lineItem.key === route.line)}
       onChange={onChange}
     >
-      <Tab.List className="flex w-full flex-row justify-around">
+      <Tab.List
+        className={classNames(
+          'w-full justify-around gap-2',
+          isMobile ? 'flex flex-row' : 'grid grid-cols-2'
+        )}
+      >
         {lineItems.map((lineItem) => {
           return (
-            <Tab
-              key={lineItem.key}
-              aria-label={lineItem.name}
-              className={isMobile ? 'w-full px-1' : ''}
-            >
+            <Tab key={lineItem.key} aria-label={lineItem.name} className={'w-full'}>
               {({ selected }) => (
                 <Link
                   href={getLineSelectionItemHref(lineItem.key, route)}
@@ -42,18 +43,20 @@ export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems, setSide
                   onClick={onChange}
                   key={lineItem.key}
                   className={classNames(
-                    'flex h-11 w-11 cursor-pointer select-none items-center justify-center rounded-full bg-opacity-0 text-stone-200  hover:bg-opacity-80',
+                    'flex cursor-pointer select-none items-center  gap-y-1 rounded-md border-2 bg-opacity-0 py-1 text-stone-200 hover:bg-opacity-80',
+                    isMobile ? 'flex-col justify-center' : 'flex-row justify-start gap-2 pl-2',
+                    lineColorBorder[lineItem.key],
                     lineColorBackground[lineItem.key ?? 'DEFAULT'],
-                    selected
-                      ? 'bg-opacity-100'
-                      : `border-2 bg-opacity-10 ${lineColorBorder[lineItem.key]}`,
-                    isMobile ? 'w-full rounded-md' : 'w-11 rounded-full'
+                    selected ? 'bg-opacity-100' : `bg-opacity-10`
                   )}
                 >
                   <FontAwesomeIcon
-                    className="h-6 w-6"
+                    className="h-5 w-5"
                     icon={HEAVY_RAIL_LINES.includes(lineItem.key) ? faTrainSubway : faTrainTram}
                   />
+                  <p className={classNames('text-center text-sm text-stone-100')}>
+                    {lineItem.short}
+                  </p>
                 </Link>
               )}
             </Tab>
