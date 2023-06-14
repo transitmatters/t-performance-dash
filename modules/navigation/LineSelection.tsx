@@ -2,9 +2,12 @@ import React from 'react';
 import classNames from 'classnames';
 import { Tab } from '@headlessui/react';
 import Link from 'next/link';
-import { lineColorBackground, lineColorDarkBackground } from '../../common/styles/general';
+import { lineColorBackground, lineColorBorder } from '../../common/styles/general';
 import { getLineSelectionItemHref, useDelimitatedRoute } from '../../common/utils/router';
-import type { LineMetadata } from '../../common/types/lines';
+import { HEAVY_RAIL_LINES, type LineMetadata } from '../../common/types/lines';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrainSubway, faTrainTram } from '@fortawesome/free-solid-svg-icons';
+import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 
 interface LineSelectionProps {
   lineItems: LineMetadata[];
@@ -16,43 +19,41 @@ export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems, setSide
   const onChange = () => {
     setSidebarOpen && setSidebarOpen(false);
   };
+  const isMobile = !useBreakpoint('md');
 
   return (
     <Tab.Group
-      vertical
       manual
       selectedIndex={lineItems.findIndex((lineItem) => lineItem.key === route.line)}
       onChange={onChange}
     >
-      <Tab.List className="flex flex-col gap-y-1">
+      <Tab.List className="flex w-full flex-row justify-around">
         {lineItems.map((lineItem) => {
           return (
-            <Tab key={lineItem.key}>
+            <Tab
+              key={lineItem.key}
+              aria-label={lineItem.name}
+              className={isMobile ? 'w-full px-1' : ''}
+            >
               {({ selected }) => (
                 <Link
                   href={getLineSelectionItemHref(lineItem.key, route)}
+                  aria-label={lineItem.name}
                   onClick={onChange}
                   key={lineItem.key}
                   className={classNames(
-                    'space-between flex w-full cursor-pointer select-none items-center rounded-md bg-opacity-0 py-1 pl-2 text-stone-200  hover:bg-opacity-80',
+                    'flex h-11 w-11 cursor-pointer select-none items-center justify-center rounded-full bg-opacity-0 text-stone-200  hover:bg-opacity-80',
                     lineColorBackground[lineItem.key ?? 'DEFAULT'],
-                    selected && 'bg-opacity-100 text-white text-opacity-95'
+                    selected
+                      ? 'bg-opacity-100'
+                      : `border-2 bg-opacity-10 ${lineColorBorder[lineItem.key]}`,
+                    isMobile ? 'w-full rounded-md' : 'w-11 rounded-full'
                   )}
                 >
-                  <div
-                    className={classNames(
-                      'mr-2 h-4 w-4 rounded-full ',
-                      lineColorDarkBackground[lineItem.key ?? 'DEFAULT']
-                    )}
-                  ></div>
-                  <p
-                    className={classNames(
-                      'text-sm font-semibold',
-                      selected ? 'text-stone-200' : 'text-white text-opacity-95'
-                    )}
-                  >
-                    {lineItem.name}
-                  </p>
+                  <FontAwesomeIcon
+                    className="h-6 w-6"
+                    icon={HEAVY_RAIL_LINES.includes(lineItem.key) ? faTrainSubway : faTrainTram}
+                  />
                 </Link>
               )}
             </Tab>
