@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { lineColorBackground, lineColorDarkBackground } from '../../common/styles/general';
 import { getLineSelectionItemHref, useDelimitatedRoute } from '../../common/utils/router';
 import type { LineMetadata } from '../../common/types/lines';
+import { useStationStore } from '../../common/state/stationStore';
 
 interface LineSelectionProps {
   lineItems: LineMetadata[];
@@ -13,8 +14,10 @@ interface LineSelectionProps {
 
 export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems, setSidebarOpen }) => {
   const route = useDelimitatedRoute();
+  const setStationStore = useStationStore((state) => state.setStationStore);
   const onChange = () => {
     setSidebarOpen && setSidebarOpen(false);
+    setStationStore({ from: undefined, to: undefined });
   };
 
   return (
