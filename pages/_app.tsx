@@ -11,6 +11,7 @@ import { Layouts } from '../common/layouts/Layouts';
 import { Layout } from '../common/layouts/PrimaryLayout';
 
 import { PRODUCTION } from '../common/utils/constants';
+import { NavLayout } from '../common/layouts/NavLayout';
 
 config.autoAddCss = false;
 
@@ -28,10 +29,12 @@ export default function App({ Component, pageProps }) {
 
   return (
     <Layout>
-      <SecondaryLayout>
-        {isProd && <GCScript siteUrl={'https://transitmatters-dd.goatcounter.com/count'} />}
-        <Component {...pageProps} />
-      </SecondaryLayout>
+      <NavLayout>
+        <SecondaryLayout>
+          {isProd && <GCScript siteUrl={'https://transitmatters-dd.goatcounter.com/count'} />}
+          <Component {...pageProps} />
+        </SecondaryLayout>
+      </NavLayout>
     </Layout>
   );
 }

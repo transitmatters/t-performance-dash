@@ -41,8 +41,8 @@ export const MobileNavHeader = () => {
                   <SideNavigation setSidebarOpen={setSidebarOpen} />
                 </div>
               </div>
-              <div className="fixed bottom-[10.5rem] h-5 w-full bg-gradient-to-t from-tm-grey to-transparent"></div>
-              <div className="flex flex-col gap-2 px-4 py-2 text-sm">
+              <div className="fixed bottom-[9.5rem] h-5 w-full bg-gradient-to-t from-tm-grey to-transparent"></div>
+              <div className="flex flex-col gap-1 px-4 py-2 text-sm">
                 <Link
                   href="https://transitmatters.org/transitmatters-labs"
                   className="text-white hover:text-blue-500"
