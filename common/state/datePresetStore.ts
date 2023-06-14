@@ -6,10 +6,11 @@ import { PRESET_DEFAULTS } from './defaults/datePresetDefaults';
 import { checkForPreset } from './utils/datePresetUtils';
 
 // TODO: Rename this `DatePresetStore`
-export interface DatePresetConfig {
+export interface DatePresetStore {
   linePreset: DatePresetKey | undefined | 'custom';
   singleTripPreset: DatePresetKey | undefined | 'custom';
   rangeTripPreset: DatePresetKey | undefined | 'custom';
+  systemPreset: DatePresetKey | undefined | 'custom';
   setDefaults: (dateStoreSection: DateStoreSection | undefined, query: QueryParams) => void;
   setDatePreset: (
     newPreset: DatePresetKey | undefined | 'custom',
@@ -18,10 +19,11 @@ export interface DatePresetConfig {
   ) => void;
 }
 
-export const useDatePresetConfig = create<DatePresetConfig>((set) => ({
+export const useDatePresetStore = create<DatePresetStore>((set) => ({
   linePreset: undefined,
   singleTripPreset: undefined,
   rangeTripPreset: undefined,
+  systemPreset: undefined,
   setDefaults: (dateStoreSection, query) =>
     set(() => {
       const preset = checkForPreset(query);
@@ -29,7 +31,7 @@ export const useDatePresetConfig = create<DatePresetConfig>((set) => ({
         PRESET_DEFAULTS.linePreset = query.view ?? 'year';
         return PRESET_DEFAULTS;
       }
-      if (dateStoreSection === 'line' || dateStoreSection === 'system') {
+      if (dateStoreSection === 'line') {
         PRESET_DEFAULTS.linePreset = preset;
         return PRESET_DEFAULTS;
       }
@@ -41,6 +43,10 @@ export const useDatePresetConfig = create<DatePresetConfig>((set) => ({
         PRESET_DEFAULTS.singleTripPreset = preset;
         return PRESET_DEFAULTS;
       }
+      if (dateStoreSection === 'system') {
+        PRESET_DEFAULTS.systemPreset = preset;
+        return PRESET_DEFAULTS;
+      }
       return PRESET_DEFAULTS;
     }),
 
@@ -50,6 +56,7 @@ export const useDatePresetConfig = create<DatePresetConfig>((set) => ({
         return { linePreset: newPreset };
       if (dateStoreSection === 'multiTrips') return { rangeTripPreset: newPreset };
       if (dateStoreSection === 'singleTrips') return { singleTripPreset: newPreset };
+      if (dateStoreSection === 'system') return { systemPreset: newPreset };
 
       return {};
     }),

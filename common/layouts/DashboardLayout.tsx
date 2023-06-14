@@ -22,7 +22,6 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   const dateStoreSection = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
   const showControlParams =
     dateStoreSection && (line || tab === 'System') && dateStoreSection !== 'today';
-  usePresetsOnFirstLoad(dateStoreSection, query);
 
   return (
     <div className="flex min-h-full flex-col justify-between bg-stone-100">
