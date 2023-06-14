@@ -41,7 +41,9 @@ export function Landing() {
             loop
             animationData={HeroLottie}
             play
-            style={{ height: `${isMobile ? imageHeight * 2 : imageHeight}` }}
+            style={{
+              height: `${isMobile ? imageHeight * 2 : imageHeight}px`,
+            }}
           />
         </div>
         <h2 className="w-full px-8 text-center text-lg text-white">

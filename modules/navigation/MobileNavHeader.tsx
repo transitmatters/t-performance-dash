@@ -22,7 +22,7 @@ export const MobileNavHeader = () => {
               <div className="top-0 z-10 flex flex-row items-center justify-between bg-tm-grey p-2">
                 <Link
                   href="/"
-                  className="h-5 w-auto focus:outline-none"
+                  className="h-5 w-auto overflow-hidden focus:outline-none"
                   onClick={() => setSidebarOpen(false)}
                 >
                   <TmLogoSvg className="mr-4 h-5 w-auto text-black" alt="TransitMatters Logo" />
