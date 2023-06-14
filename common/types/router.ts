@@ -12,6 +12,7 @@ export interface Route {
 }
 
 export const DATE_PARAMS = ['startDate', 'endDate', 'date'];
+export const STATION_PARAMS = ['from', 'to'];
 
 export type QueryParams = {
   startDate?: string;
