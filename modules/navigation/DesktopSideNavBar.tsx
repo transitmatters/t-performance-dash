@@ -16,7 +16,7 @@ export const SideNavBar = () => {
           <div className="relative flex flex-grow flex-col overflow-y-auto pb-4">
             <div className="fixed h-5 w-64 bg-gradient-to-b from-tm-grey to-transparent"></div>
             <SideNavigation />
-            <div className="fixed bottom-40 h-5 w-64 bg-gradient-to-t from-tm-grey to-transparent"></div>
+            <div className="fixed bottom-36 h-5 w-64 bg-gradient-to-t from-tm-grey to-transparent"></div>
           </div>
           <div className="flex flex-col gap-1 px-4 py-2 text-sm">
             <Link

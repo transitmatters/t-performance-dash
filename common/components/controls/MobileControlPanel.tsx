@@ -1,10 +1,10 @@
 import React from 'react';
+import classNames from 'classnames';
 import type { BusRoute, Line } from '../../types/lines';
 import type { DateStoreSection } from '../../constants/pages';
+import { lineColorBackground } from '../../styles/general';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
-import classNames from 'classnames';
-import { lineColorBackground } from '../../styles/general';
 
 interface MobileControlPanelProps {
   dateStoreSection: DateStoreSection;
