@@ -18,7 +18,7 @@ export const SideNavBar = () => {
             <SideNavigation />
             <div className="fixed bottom-36 h-5 w-64 bg-gradient-to-t from-tm-grey to-transparent"></div>
           </div>
-          <div className="flex flex-col gap-1 px-4 py-2 text-sm">
+          <div className="flex flex-col gap-1 px-6 py-2 text-sm">
             <Link
               href="https://transitmatters.org/transitmatters-labs"
               className="text-white hover:text-blue-500"
