@@ -1,12 +1,6 @@
 import { create } from 'zustand';
-import {
-  ONE_WEEK_AGO_STRING,
-  ONE_YEAR_AGO_STRING,
-  OVERVIEW_OPTIONS,
-  TODAY_STRING,
-} from '../constants/dates';
+import { OVERVIEW_OPTIONS, TODAY_STRING } from '../constants/dates';
 import type { Tab } from '../constants/dashboardTabs';
-import { BUS_DEFAULTS, SUBWAY_DEFAULTS, SYSTEM_DEFAULTS } from './defaults/dateDefaults';
 import type {
   LineSectionParams,
   MultiTripsSectionParams,

@@ -8,7 +8,7 @@ import {
   OVERVIEW_OPTIONS,
   TODAY_STRING,
 } from '../../constants/dates';
-import { WithOptional } from '../../types/general';
+import type { WithOptional } from '../../types/general';
 
 export const SUBWAY_DEFAULTS: Partial<DateStoreConfiguration> = {
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
