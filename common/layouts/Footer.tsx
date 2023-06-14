@@ -1,13 +1,23 @@
 import Link from 'next/link';
 import React from 'react';
 
+import classNames from 'classnames';
 import packageJson from '../../package.json';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  isLanding?: boolean;
+}
+
+export const Footer: React.FC<FooterProps> = ({ isLanding = false }) => {
   const { version } = packageJson;
 
   return (
-    <footer className="pb-safe mb-24 mt-5 text-center text-sm md:mb-0 md:pb-2 md:pl-64">
+    <footer
+      className={classNames(
+        'pb-safe mb-24 mt-5 text-center text-sm md:mb-0 md:pb-2 md:pl-64',
+        isLanding && 'z-10'
+      )}
+    >
       Version:{' '}
       <Link
         href={`https://github.com/transitmatters/t-performance-dash/releases/tag/${version.substring(
