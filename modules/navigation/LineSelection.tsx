@@ -8,6 +8,7 @@ import { lineColorBackground, lineColorBorder } from '../../common/styles/genera
 import { getLineSelectionItemHref, useDelimitatedRoute } from '../../common/utils/router';
 import { HEAVY_RAIL_LINES, type LineMetadata } from '../../common/types/lines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import { useStationStore } from '../../common/state/stationStore';
 
 interface LineSelectionProps {
   lineItems: LineMetadata[];
@@ -16,8 +17,10 @@ interface LineSelectionProps {
 
 export const LineSelection: React.FC<LineSelectionProps> = ({ lineItems, setSidebarOpen }) => {
   const route = useDelimitatedRoute();
+  const setStationStore = useStationStore((state) => state.setStationStore);
   const onChange = () => {
     setSidebarOpen && setSidebarOpen(false);
+    setStationStore({ from: undefined, to: undefined });
   };
   const isMobile = !useBreakpoint('md');
 

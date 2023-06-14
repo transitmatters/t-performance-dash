@@ -19,7 +19,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
 }) => {
   const singleDate = dateStoreSection === 'singleTrips';
   const getControls = () => {
-    if ((dateStoreSection === 'singleTrips' || dateStoreSection === 'multiTrips') && line) {
+    if (line && (dateStoreSection === 'singleTrips' || dateStoreSection === 'multiTrips')) {
       return (
         <>
           <div className="p-1 pb-0">

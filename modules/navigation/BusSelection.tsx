@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Tab } from '@headlessui/react';
 import { getBusRoutes } from '../../common/constants/stations';
 import { getBusRouteSelectionItemHref, useDelimitatedRoute } from '../../common/utils/router';
+import { useStationStore } from '../../common/state/stationStore';
 
 interface BusSelectionProps {
   setSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -12,9 +13,11 @@ interface BusSelectionProps {
 export const BusSelection: React.FC<BusSelectionProps> = ({ setSidebarOpen }) => {
   const route = useDelimitatedRoute();
   const busRoutes = getBusRoutes();
+  const setStationStore = useStationStore((state) => state.setStationStore);
 
   const handleChange = () => {
     setSidebarOpen && setSidebarOpen(false);
+    setStationStore({ from: undefined, to: undefined });
   };
 
   return (

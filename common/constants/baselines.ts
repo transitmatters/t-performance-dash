@@ -13,7 +13,7 @@ export const PEAK_RIDERSHIP = {
   'line-red': 213703,
   'line-orange': 169578,
   'line-blue': 60129,
-  'line-green': 0,
+  'line-green': 87148,
   '1': 15000,
   '15': 15000,
   '22': 15000,

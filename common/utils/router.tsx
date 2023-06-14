@@ -10,6 +10,8 @@ import type { PageMetadata, Page } from '../constants/pages';
 import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
 import { saveDateStoreSection, getDateStoreSection } from '../state/utils/dateStoreUtils';
+import type { StationStore } from '../state/stationStore';
+import { useStationStore } from '../state/stationStore';
 import { useDateStore } from '../state/dateStore';
 import type { DateStore } from '../state/dateStore';
 
@@ -85,7 +87,6 @@ export const useUpdateQuery = () => {
       if (!router.isReady) return;
 
       const { startDate, endDate, to, from, date } = newQueryParams;
-
       const newTempQuery: Partial<QueryParams> = {};
 
       if (date) {
@@ -172,17 +173,24 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
 
 export const useGenerateHref = () => {
   const dateStore = useDateStore();
+  const stationStore = useStationStore();
+
   const generateHref = useCallback(
-    (newPage: PageMetadata, currentPageName: Page, query: QueryParams, linePath: LinePath) => {
-      const currentPage = ALL_PAGES[currentPageName];
-      const newQuery = getQueryParams(currentPage, newPage, query, dateStore);
+    (
+      newPage: PageMetadata,
+      currentPageName: Page | string,
+      query: QueryParams,
+      linePath: LinePath
+    ) => {
+      const currentPage = ALL_PAGES[currentPageName] ?? undefined;
+      const newQuery = getQueryParams(currentPage, newPage, query, dateStore, stationStore);
       const newPathName = getPathName(newPage, linePath);
       return {
         pathname: newPathName,
         query: newQuery,
       };
     },
-    [dateStore]
+    [dateStore, stationStore]
   );
   return generateHref;
 };
@@ -192,12 +200,14 @@ export const useHandleConfigStore = () => {
   const { page, query } = useDelimitatedRoute();
   const currentPage = ALL_PAGES[page];
   const dateStore = useDateStore();
+  const stationStore = useStationStore();
 
   const handlePageConfig = useCallback(
     (newPage: PageMetadata) => {
-      if (currentPage) savePageConfigIfNecessary(currentPage, newPage, query, dateStore);
+      if (currentPage)
+        savePageConfigIfNecessary(currentPage, newPage, query, dateStore, stationStore);
     },
-    [query, currentPage, dateStore]
+    [query, currentPage, dateStore, stationStore]
   );
   return handlePageConfig;
 };
@@ -223,13 +233,28 @@ const getBusRouteQueryParam = (query: QueryParams) => {
   if (query.busRoute) return { busRoute: query.busRoute };
 };
 
-const getQueryParams = (
-  currentPage: PageMetadata,
+const getStationQueryParams = (
+  currentPage: PageMetadata | undefined,
   newPage: PageMetadata,
   query: QueryParams,
-  dateStore: DateStore
+  stationStore: StationStore
+) => {
+  if (!newPage.hasStationStore) return null;
+  if (currentPage && currentPage.hasStationStore && query.from && query.to)
+    return { from: query.from, to: query.to };
+  if (newPage.hasStationStore && stationStore.from && stationStore.to)
+    return { from: stationStore.from, to: stationStore.to };
+};
+
+const getQueryParams = (
+  currentPage: PageMetadata | undefined,
+  newPage: PageMetadata,
+  query: QueryParams,
+  dateStore: DateStore,
+  stationStore: StationStore
 ) => {
   return {
+    ...getStationQueryParams(currentPage, newPage, query, stationStore),
     ...getDateQueryParams(currentPage, newPage, query, dateStore),
     ...getBusRouteQueryParam(query),
   };
@@ -243,9 +268,13 @@ export const savePageConfigIfNecessary = (
   currentPage: PageMetadata,
   newPage: PageMetadata,
   query: QueryParams,
-  dateStore: DateStore
+  dateStore: DateStore,
+  stationStore: StationStore
 ) => {
   if (!(currentPage.dateStoreSection === newPage.dateStoreSection)) {
     saveDateStoreSection(currentPage.dateStoreSection, query, dateStore);
+  }
+  if (!(currentPage.hasStationStore === newPage.hasStationStore)) {
+    stationStore.setStationStore({ from: query.from, to: query.to });
   }
 };

@@ -88,7 +88,6 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                   pointRadius: 8,
                   pointBackgroundColor: 'transparent',
                   pointBorderWidth: 0,
-                  stepped: true,
                   fill: true,
                   pointHoverRadius: 3,
                   pointHoverBackgroundColor: lineColor,
