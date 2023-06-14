@@ -6,7 +6,6 @@ import { MobileHeader } from '../../modules/dashboard/MobileHeader';
 import { DesktopHeader } from '../../modules/dashboard/DesktopHeader';
 import { useDelimitatedRoute } from '../utils/router';
 import { ALL_PAGES } from '../constants/pages';
-import { usePresetsOnFirstLoad } from '../utils/firstLoad';
 import { MobileControlPanel } from '../components/controls/MobileControlPanel';
 import { MobileNavHeader } from '../../modules/navigation/MobileNavHeader';
 import { Footer } from './Footer';
