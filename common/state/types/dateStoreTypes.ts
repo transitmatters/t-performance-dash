@@ -19,9 +19,9 @@ export type SystemSectionParams = Partial<{
   endDate: string;
 }>;
 
-export type OverviewPresetParams = {
+export type OverviewPresetParams = Partial<{
   view: OverviewDatePresetKey;
-};
+}>;
 
 export interface DateStoreConfiguration {
   lineConfig: LineSectionParams;
