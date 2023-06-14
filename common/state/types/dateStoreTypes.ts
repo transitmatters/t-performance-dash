@@ -1,15 +1,17 @@
 import type { OverviewDatePresetKey } from '../../constants/dates';
-import type { QueryTypeOptions } from '../../types/router';
 
 export type LineSectionParams = Partial<{
   startDate: string;
   endDate: string;
 }>;
 
-export type TripsSectionParams = Partial<{
+export type MultiTripsSectionParams = Partial<{
   startDate: string;
   endDate: string;
-  queryType: QueryTypeOptions;
+}>;
+
+export type SingleTripsSectionParams = Partial<{
+  date: string;
 }>;
 
 export type SystemSectionParams = Partial<{
@@ -23,7 +25,8 @@ export type OverviewPresetParams = {
 
 export interface DateStoreConfiguration {
   lineConfig: LineSectionParams;
-  tripConfig: TripsSectionParams;
+  singleTripConfig: SingleTripsSectionParams;
+  multiTripConfig: MultiTripsSectionParams;
   systemConfig: SystemSectionParams;
   overviewPreset?: OverviewPresetParams;
 }

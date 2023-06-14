@@ -21,7 +21,7 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
 }) => {
   const {
     linePath,
-    query: { startDate },
+    query: { date },
   } = useDelimitatedRoute();
 
   const chart = useMemo(() => {
@@ -29,7 +29,7 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
       <SingleDayLineChart
         chartId={`dwells-chart-${linePath}`}
         data={dwells}
-        date={startDate}
+        date={date}
         metricField={MetricFieldKeys.dwellTimeSec}
         pointField={PointFieldKeys.arrDt}
         location={getLocationDetails(fromStation, toStation)}
@@ -38,7 +38,7 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
         isHomescreen={isHomescreen}
       />
     );
-  }, [dwells, fromStation, linePath, startDate, toStation, isHomescreen]);
+  }, [dwells, fromStation, linePath, date, toStation, isHomescreen]);
 
   return chart;
 };

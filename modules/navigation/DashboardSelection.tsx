@@ -10,11 +10,14 @@ export const DashboardSelection: React.FC = () => {
   const { tab } = useDelimitatedRoute();
   const swapDashboardTabs = useDateStore((state) => state.swapDashboardTabs);
   const dashboardTabs = Object.values(DASHBOARD_TABS);
+  const handleChange = (name) => {
+    swapDashboardTabs(name);
+  };
   return (
     <Tab.Group
       manual
       onChange={(index) => {
-        swapDashboardTabs(dashboardTabs[index].name);
+        handleChange(dashboardTabs[index].name);
       }}
       selectedIndex={dashboardTabs.findIndex((currTab) => tab === currTab.name)}
     >
@@ -24,6 +27,7 @@ export const DashboardSelection: React.FC = () => {
             {({ selected }) => (
               <Link
                 href={{ pathname: dashboardTabs[index].path, query: dashboardTabs[index].query }}
+                onClick={() => handleChange(tab.name)}
                 className={classNames(
                   ' flex h-full items-center justify-center border border-stone-200 py-1 text-sm font-semibold',
                   selected && 'bg-stone-200 text-stone-900',

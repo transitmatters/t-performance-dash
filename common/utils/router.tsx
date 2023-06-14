@@ -8,10 +8,10 @@ import type { QueryParams, Route, Tab } from '../types/router';
 import { DATE_PARAMS } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
 import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
-import type { DateStore } from '../state/dateStore';
-import { useDateStore } from '../state/dateStore';
 import { LINE_OBJECTS } from '../constants/lines';
-import { getDateStoreSection, saveDateStoreSection } from '../state/utils/dateStoreUtils';
+import { saveDateStoreSection, getDateStoreSection } from '../state/utils/dateStoreUtils';
+import { useDateStore } from '../state/dateStore';
+import type { DateStore } from '../state/dateStore';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'line-red',
@@ -84,9 +84,13 @@ export const useUpdateQuery = () => {
       if (!newQueryParams) return;
       if (!router.isReady) return;
 
-      const { startDate, endDate, to, from } = newQueryParams;
+      const { startDate, endDate, to, from, date } = newQueryParams;
 
       const newTempQuery: Partial<QueryParams> = {};
+
+      if (date) {
+        newTempQuery.date = date;
+      }
 
       if (startDate) {
         if (startDate && typeof startDate === 'string') {
@@ -149,11 +153,11 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
 
 export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): string => {
   const { query, page } = route;
-  const currentPage = ALL_PAGES[page] ?? ALL_PAGES['trips'];
+  const currentPage = ALL_PAGES[page] ?? ALL_PAGES['singleTrips'];
   const currentPath = currentPage.path;
   const validPage = currentPage.lines.includes('line-bus');
   if (newRoute === route.query.busRoute || !validPage) {
-    return `/bus/trips?busRoute=${newRoute}`;
+    return `/bus/trips/single?busRoute=${newRoute}`;
   }
   delete query.from;
   delete query.to;
@@ -166,51 +170,82 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   return href;
 };
 
-export const getHref = (
-  dateStore: DateStore,
-  newPage: PageMetadata,
-  currentPage: Page,
-  query: QueryParams,
-  linePath: LinePath
-) => {
-  const pageObject = ALL_PAGES[currentPage];
-  if (pageObject && pageObject.dateStoreSection === newPage.dateStoreSection) {
-    return navigateWithinSection(linePath, newPage, query);
-  }
-  return navigateToNewSection(linePath, newPage, query, dateStore);
+export const useGenerateHref = () => {
+  const dateStore = useDateStore();
+  const generateHref = useCallback(
+    (newPage: PageMetadata, currentPageName: Page, query: QueryParams, linePath: LinePath) => {
+      const currentPage = ALL_PAGES[currentPageName];
+      const newQuery = getQueryParams(currentPage, newPage, query, dateStore);
+      const newPathName = getPathName(newPage, linePath);
+      return {
+        pathname: newPathName,
+        query: newQuery,
+      };
+    },
+    [dateStore]
+  );
+  return generateHref;
 };
 
-export const useHandlePageNavigation = () => {
+// TODO: We should probably use this anywhere we have links to consolidate the logic. i.e. components like <LineSelection>
+export const useHandleConfigStore = () => {
   const { page, query } = useDelimitatedRoute();
-  const pageObject = ALL_PAGES[page];
+  const currentPage = ALL_PAGES[page];
   const dateStore = useDateStore();
 
-  const handlePageNavigation = useCallback(
-    (page: PageMetadata) => {
-      if (pageObject && !(pageObject?.dateStoreSection === page.dateStoreSection)) {
-        saveDateStoreSection(pageObject.dateStoreSection, query, dateStore);
-      }
+  const handlePageConfig = useCallback(
+    (newPage: PageMetadata) => {
+      if (currentPage) savePageConfigIfNecessary(currentPage, newPage, query, dateStore);
     },
-    [query, pageObject, dateStore]
+    [query, currentPage, dateStore]
   );
-  return handlePageNavigation;
+  return handlePageConfig;
 };
 
-const navigateWithinSection = (linePath: LinePath, page: PageMetadata, query: QueryParams) => {
-  return { pathname: `/${linePath}${page.path}`, query: query };
-};
-
-const navigateToNewSection = (
-  linePath: LinePath,
-  page: PageMetadata,
+const getDateQueryParams = (
+  currentPage: PageMetadata | undefined,
+  newPage: PageMetadata,
   query: QueryParams,
   dateStore: DateStore
 ) => {
-  const params = getDateStoreSection(page.dateStoreSection, dateStore);
-  const busRouteOnly = query.busRoute ?? undefined;
-  const newQuery = busRouteOnly ? { ...params, busRoute: busRouteOnly } : params;
+  if (!currentPage) {
+    return getDateStoreSection(newPage.dateStoreSection, dateStore);
+  }
+  if (currentPage.dateStoreSection === newPage.dateStoreSection) {
+    return Object.fromEntries(Object.entries(query).filter(([key]) => DATE_PARAMS.includes(key)));
+  }
+  if (currentPage.dateStoreSection !== newPage.dateStoreSection) {
+    return getDateStoreSection(newPage.dateStoreSection, dateStore);
+  }
+};
+
+const getBusRouteQueryParam = (query: QueryParams) => {
+  if (query.busRoute) return { busRoute: query.busRoute };
+};
+
+const getQueryParams = (
+  currentPage: PageMetadata,
+  newPage: PageMetadata,
+  query: QueryParams,
+  dateStore: DateStore
+) => {
   return {
-    pathname: `/${page.dateStoreSection === 'system' ? 'system' : linePath}${page.path}`,
-    query: newQuery,
+    ...getDateQueryParams(currentPage, newPage, query, dateStore),
+    ...getBusRouteQueryParam(query),
   };
+};
+
+const getPathName = (newPage: PageMetadata, linePath: LinePath) => {
+  return `/${newPage.dateStoreSection === 'system' ? 'system' : linePath}${newPage.path}`;
+};
+
+export const savePageConfigIfNecessary = (
+  currentPage: PageMetadata,
+  newPage: PageMetadata,
+  query: QueryParams,
+  dateStore: DateStore
+) => {
+  if (!(currentPage.dateStoreSection === newPage.dateStoreSection)) {
+    saveDateStoreSection(currentPage.dateStoreSection, query, dateStore);
+  }
 };

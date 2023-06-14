@@ -1,7 +1,6 @@
 import React from 'react';
 import type { BusRoute, Line } from '../../types/lines';
 import type { DateStoreSection } from '../../constants/pages';
-import type { QueryTypeOptions } from '../../types/router';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
 
@@ -9,21 +8,23 @@ interface MobileControlPanelProps {
   dateStoreSection: DateStoreSection;
   busRoute: BusRoute | undefined;
   line: Line | undefined;
-  queryType: QueryTypeOptions | undefined;
 }
 
 export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   dateStoreSection,
   line,
   busRoute,
-  queryType,
 }) => {
+  const singleDate = dateStoreSection === 'singleTrips';
   const getControls = () => {
-    if (dateStoreSection === 'trips' && queryType && line) {
+    if ((dateStoreSection === 'singleTrips' || dateStoreSection === 'multiTrips') && line) {
       return (
         <>
           <div className="p-1 pb-0">
-            <DateControl dateStoreSection={dateStoreSection} queryType={queryType} />
+            <DateControl
+              dateStoreSection={dateStoreSection}
+              queryType={singleDate ? 'single' : 'range'}
+            />
           </div>
           <div className="flex flex-row items-center justify-center bg-tm-grey">
             <StationSelectorWidget line={line} busRoute={busRoute} />
