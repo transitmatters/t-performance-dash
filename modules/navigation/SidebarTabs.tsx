@@ -27,7 +27,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => 
 
   return (
     <div className="rounded-md bg-white bg-opacity-5 p-1">
-      <ul role="list" className={`space-y-1`}>
+      <ul role="list">
         {tabs.map((tab: PageMetadata) => {
           const enabled = line ? tab.lines.includes(line) : true;
           const selected = page === tab.key;
