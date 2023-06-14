@@ -34,6 +34,7 @@ module.exports = {
     'import/no-self-import': 'error',
     'import/no-default-export': 'warn',
     'import/order': 'error',
+    'import/no-unused-modules': ['warn', { unusedExports: true }],
     'prettier/prettier': 'error',
     'react/prop-types': 'warn',
     'react/jsx-no-target-blank': 'warn',
@@ -70,9 +71,10 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['pages/**/*.tsx'],
+      files: ['**/*.stories.tsx', 'pages/**/*.tsx', 'middleware.ts'],
       rules: {
         'import/no-default-export': 'off',
+        'import/no-unused-modules': ['off', { unusedExports: false }],
       },
     },
   ],
