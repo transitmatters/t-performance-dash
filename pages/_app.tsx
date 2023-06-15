@@ -27,6 +27,7 @@ import { Layouts } from '../common/layouts/Layouts';
 import { Layout } from '../common/layouts/PrimaryLayout';
 
 import { PRODUCTION } from '../common/utils/constants';
+import { NavLayout } from '../common/layouts/NavLayout';
 import { LoadPresetsLayout } from '../common/layouts/LoadPresetsLayout';
 
 config.autoAddCss = false;
@@ -62,10 +63,12 @@ export default function App({ Component, pageProps }) {
   return (
     <Layout>
       <LoadPresetsLayout>
-        <SecondaryLayout>
-          {isProd && <GCScript siteUrl={'https://transitmatters-dd.goatcounter.com/count'} />}
-          <Component {...pageProps} />
-        </SecondaryLayout>
+        <NavLayout>
+          <SecondaryLayout>
+            {isProd && <GCScript siteUrl={'https://transitmatters-dd.goatcounter.com/count'} />}
+            <Component {...pageProps} />
+          </SecondaryLayout>
+        </NavLayout>
       </LoadPresetsLayout>
     </Layout>
   );
