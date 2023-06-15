@@ -21,7 +21,7 @@ export const MobileNavHeader = () => {
               <div className="top-0 z-10 flex flex-row items-center justify-between bg-tm-grey p-2">
                 <Link
                   href="/"
-                  className="h-5 w-auto focus:outline-none"
+                  className="h-5 w-auto overflow-hidden focus:outline-none"
                   onClick={() => setSidebarOpen(false)}
                 >
                   <TmLogoSvg className="mr-4 h-5 w-auto text-black" alt="TransitMatters Logo" />
@@ -41,7 +41,7 @@ export const MobileNavHeader = () => {
                   <SideNavigation setSidebarOpen={setSidebarOpen} />
                 </div>
               </div>
-              <div className="fixed bottom-[10.5rem] h-3 w-full bg-gradient-to-t from-tm-grey to-transparent"></div>
+              <div className="fixed bottom-[10.25rem] h-3 w-full bg-gradient-to-t from-tm-grey to-transparent"></div>
               <div className="flex flex-col gap-1 px-6 py-2 ">
                 <Link
                   href="https://transitmatters.org/transitmatters-labs"
@@ -81,7 +81,7 @@ export const MobileNavHeader = () => {
 
         <div className="flex flex-1 flex-col">
           <div className="top-0 z-10 flex flex-row items-center justify-between bg-tm-grey p-2">
-            <Link href="/" className="h-5 w-auto">
+            <Link href="/" className="h-5 w-auto overflow-hidden">
               <TmLogoSvg className="mr-4 h-5 w-auto text-black" alt="TransitMatters Logo" />
             </Link>
 
