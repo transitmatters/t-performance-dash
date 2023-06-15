@@ -10,7 +10,7 @@ export const BusDataNotice: React.FC = () => {
     return (
       <div className={'flex items-center'}>
         <FontAwesomeIcon icon={faMagnifyingGlassChart} size={'lg'} />
-        <div className={'m-3 text-sm italic text-white'}>
+        <div className={'m-3 text-sm italic'}>
           <p>
             Due to data collection issues, bus data is not guaranteed to be complete for any stop or
             date.

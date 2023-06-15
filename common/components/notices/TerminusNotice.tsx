@@ -12,9 +12,9 @@ export const TerminusNotice: React.FC<TerminusNoticeProps> = ({ toStation, fromS
   const isTerminus = toStation?.terminus || fromStation?.terminus;
   if (isTerminus) {
     return (
-      <div className={'flex items-center text-white'}>
+      <div className={'flex items-center'}>
         <FontAwesomeIcon icon={faMagnifyingGlassChart} size={'lg'} />
-        <div className={'m-3 text-sm italic text-white'}>
+        <div className={'m-3 text-sm italic'}>
           <p>
             Due to data collection issues at terminus stations, data is not guaranteed to be
             complete.
