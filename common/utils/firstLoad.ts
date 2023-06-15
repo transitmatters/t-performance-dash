@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useDatePresetConfig } from '../state/datePresetConfig';
+import { useDatePresetStore } from '../state/datePresetStore';
 
 export const usePresetsOnFirstLoad = (section, query) => {
-  const setDefaults = useDatePresetConfig((state) => state.setDefaults);
+  const setDefaults = useDatePresetStore((state) => state.setDefaults);
   const [firstLoad, setFirstLoad] = useState(true);
   const router = useRouter();
 
