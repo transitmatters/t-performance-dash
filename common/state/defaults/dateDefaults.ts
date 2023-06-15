@@ -7,6 +7,8 @@ import {
   ONE_WEEK_AGO_STRING,
   OVERVIEW_OPTIONS,
   TODAY_STRING,
+  YESTERDAY_STRING,
+  TODAY_SERVICE_STARTED,
 } from '../../constants/dates';
 import type { WithOptional } from '../../types/general';
 
@@ -17,7 +19,7 @@ export const SUBWAY_DEFAULTS: Partial<DateStoreConfiguration> = {
     endDate: TODAY_STRING,
   },
   singleTripConfig: {
-    date: TODAY_STRING,
+    date: TODAY_SERVICE_STARTED ? TODAY_STRING : YESTERDAY_STRING,
   },
   overviewPreset: { view: 'year' },
 };
