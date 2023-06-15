@@ -31,7 +31,7 @@ const getDirection = (to: Station, from: Station) => {
 };
 
 // Data formatting & cleanup
-export const formatSlowZones = (data: SlowZoneResponse[]): SlowZone[] =>
+const formatSlowZones = (data: SlowZoneResponse[]): SlowZone[] =>
   data.map((sz) => {
     // This will never be undefined unless there is a new station that we don't have in our const file
     const from = getParentStationForStopId(sz.fr_id) as Station;
@@ -57,7 +57,7 @@ export const getStationPairName = (from: Station, to: Station, short?: boolean):
   return `${from.stop_name}-${to.stop_name}`;
 };
 
-export const groupByRoute = (data: SlowZone[]) =>
+const groupByRoute = (data: SlowZone[]) =>
   data.reduce((series: Record<string, SlowZone[]>, sz: SlowZone) => {
     const key = sz.id;
     const s = (series[key] || []).concat(sz);
@@ -65,7 +65,7 @@ export const groupByRoute = (data: SlowZone[]) =>
     return series;
   }, {});
 
-export const groupByLine = (data: SlowZone[]) =>
+const groupByLine = (data: SlowZone[]) =>
   data.reduce((series: Record<string, SlowZone[]>, sz) => {
     const key = sz.color;
     const s = (series[key] || []).concat(sz);

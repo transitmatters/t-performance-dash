@@ -5,8 +5,7 @@ import type { QueryParams } from '../types/router';
 import { PRESET_DEFAULTS } from './defaults/datePresetDefaults';
 import { checkForPreset } from './utils/datePresetUtils';
 
-// TODO: Rename this `DatePresetStore`
-export interface DatePresetConfig {
+interface DatePresetStore {
   linePreset: DatePresetKey | undefined | 'custom';
   singleTripPreset: DatePresetKey | undefined | 'custom';
   rangeTripPreset: DatePresetKey | undefined | 'custom';
@@ -18,7 +17,7 @@ export interface DatePresetConfig {
   ) => void;
 }
 
-export const useDatePresetConfig = create<DatePresetConfig>((set) => ({
+export const useDatePresetConfig = create<DatePresetStore>((set) => ({
   linePreset: undefined,
   singleTripPreset: undefined,
   rangeTripPreset: undefined,

@@ -4,7 +4,7 @@ import type { ComponentProps, FC, ReactElement } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 
-export interface WidgetCarouselProps {
+interface WidgetCarouselProps {
   children: React.ReactNode;
   isSingleWidget?: boolean;
 }
