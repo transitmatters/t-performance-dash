@@ -4,6 +4,7 @@ import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
@@ -34,6 +35,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
 }) => {
   const {
     line,
+    linePath,
     query: { busRoute },
   } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
@@ -48,7 +50,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
       <ChartBorder>
         <ChartDiv isMobile={isMobile}>
           <Line
-            id={'Ridership'}
+            id={`ridership-${linePath}`}
             height={isMobile ? 200 : 240}
             ref={ref}
             redraw={true}
@@ -191,6 +193,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                 },
               },
               Annotation,
+              ChartjsPluginWatermark,
             ]}
           />
         </ChartDiv>
@@ -198,15 +201,16 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
     );
   }, [
     busRoute,
-    data,
-    callbacks,
-    endDate,
-    isMobile,
     line,
+    data,
+    isMobile,
+    linePath,
     showTitle,
+    callbacks,
     startDate,
-    tooltipFormat,
+    endDate,
     unit,
+    tooltipFormat,
   ]);
   return chart;
 };

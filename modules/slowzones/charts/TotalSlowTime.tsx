@@ -5,9 +5,11 @@ import { enUS } from 'date-fns/locale';
 import { Line } from 'react-chartjs-2';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
 import type { LineShort, Line as TrainLine } from '../../../common/types/lines';
+
 dayjs.extend(utc);
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { getTimeUnitSlowzones } from '../../../common/utils/slowZoneUtils';
@@ -82,7 +84,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
       <ChartDiv isMobile={isMobile}>
         <Line
           ref={ref}
-          id={'total_slow_time'}
+          id={`total-slow-time${line !== undefined ? `-${lineShort}` : ''}`}
           height={isMobile ? 200 : 240}
           data={{
             labels,
@@ -161,6 +163,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
                 if (showTitle) drawSimpleTitle(`Total Slow Time`, chart);
               },
             },
+            ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>

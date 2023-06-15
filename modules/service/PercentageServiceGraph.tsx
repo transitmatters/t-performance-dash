@@ -4,6 +4,7 @@ import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
@@ -35,7 +36,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
   comparison,
   showTitle = false,
 }) => {
-  const { line } = useDelimitatedRoute();
+  const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
 
   const isMobile = !useBreakpoint('md');
@@ -50,7 +51,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
       <ChartBorder>
         <ChartDiv isMobile={isMobile}>
           <Line
-            id={'Service'}
+            id={`service-percentage-${linePath}`}
             height={isMobile ? 200 : 240}
             ref={ref}
             redraw={true}
@@ -119,7 +120,6 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
                   display: showTitle,
                   text: '',
                 },
-
                 annotation: {
                   // Add your annotations here
                   annotations: [
@@ -199,6 +199,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
                 },
               },
               Annotation,
+              ChartjsPluginWatermark,
             ]}
           />
         </ChartDiv>
@@ -206,17 +207,18 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
     );
   }, [
     data,
+    line,
+    comparison,
+    isMobile,
+    linePath,
     calculatedData.scheduled,
     calculatedData.baseline,
-    callbacks,
-    comparison,
-    endDate,
-    isMobile,
-    line,
     showTitle,
+    callbacks,
     startDate,
-    tooltipFormat,
+    endDate,
     unit,
+    tooltipFormat,
   ]);
   return chart;
 };

@@ -4,6 +4,7 @@ import type { Chart as ChartJS } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../../common/constants/colors';
@@ -160,6 +161,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 }
               },
             },
+            ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>

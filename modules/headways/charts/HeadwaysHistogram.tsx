@@ -1,6 +1,7 @@
 import { Bar } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 import React, { useMemo, useRef } from 'react';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { HeadwaysChartProps } from '../../../common/types/charts';
@@ -112,6 +113,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
                 intersect: false,
               },
             }}
+            plugins={[ChartjsPluginWatermark]}
           />
         </ChartDiv>
       </ChartBorder>

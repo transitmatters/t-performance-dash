@@ -4,6 +4,7 @@ import { Bar } from 'react-chartjs-2';
 import React, { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { YESTERDAY_MIDNIGHT } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
@@ -80,7 +81,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
   return (
     <Bar
       ref={ref}
-      id={'timeline-slow-zones'}
+      id={`timeline-slow-zones-${linePath}`}
       data={{
         labels: routes,
         datasets: [
@@ -100,7 +101,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
           },
         ],
       }}
-      plugins={[ChartDataLabels]}
+      plugins={[ChartDataLabels, ChartjsPluginWatermark]}
       options={{
         maintainAspectRatio: false,
         responsive: true,

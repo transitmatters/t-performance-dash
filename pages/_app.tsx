@@ -18,7 +18,6 @@ import {
   LineController,
 } from 'chart.js';
 import Annotation from 'chartjs-plugin-annotation';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { GCScript } from 'next-goatcounter';
@@ -44,8 +43,7 @@ ChartJS.register(
   Filler,
   Title,
   Tooltip,
-  Legend,
-  ChartjsPluginWatermark
+  Legend
 );
 
 export default function App({ Component, pageProps }) {

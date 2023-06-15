@@ -3,6 +3,7 @@ import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { DataPoint } from '../../types/dataPoints';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { SingleDayLineProps } from '../../../common/types/charts';
@@ -196,6 +197,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 }
               },
             },
+            ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>
