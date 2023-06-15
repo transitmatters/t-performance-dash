@@ -11,10 +11,13 @@ export interface Route {
   tab: Tab;
 }
 
+export const DATE_PARAMS = ['startDate', 'endDate', 'date'];
+export const STATION_PARAMS = ['from', 'to'];
+
 export type QueryParams = {
   startDate?: string;
   endDate?: string;
-  queryType?: QueryTypeOptions;
+  date?: string;
   busRoute?: BusRoute;
   view?: OverviewDatePresetKey;
   to?: string;
@@ -24,5 +27,3 @@ export type QueryParams = {
 export type QueryTypeOptions = 'single' | 'range';
 
 export type Tab = 'Bus' | 'Subway' | 'System';
-
-export const DATE_PARAMS = ['startDate', 'endDate', 'date', 'queryType']; // TODO: Remove queryType from this array when stationConfig changes added.

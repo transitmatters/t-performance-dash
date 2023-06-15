@@ -13,8 +13,11 @@ export const saveDateStoreSection = (
 ) => {
   const params = getDateParams(query);
 
-  if (dateStoreSection === 'trips') {
-    if (params.startDate) dateStore.setTripConfig(params);
+  if (dateStoreSection === 'singleTrips') {
+    if (params.date) dateStore.setSingleTripConfig(params);
+  }
+  if (dateStoreSection === 'multiTrips') {
+    if (params.startDate) dateStore.setMultiTripConfig(params);
   }
   if (dateStoreSection === 'line') {
     dateStore.setLineConfig(params);
@@ -22,7 +25,8 @@ export const saveDateStoreSection = (
 };
 
 export const getDateStoreSection = (dateStoreSection: DateStoreSection, dateStore: DateStore) => {
-  if (dateStoreSection === 'trips') return dateStore.tripConfig;
+  if (dateStoreSection === 'singleTrips') return dateStore.singleTripConfig;
+  if (dateStoreSection === 'multiTrips') return dateStore.multiTripConfig;
   if (dateStoreSection === 'system') return dateStore.systemConfig;
   if (dateStoreSection === 'line') return dateStore.lineConfig;
   if (dateStoreSection === 'overview') return dateStore.overviewPreset;

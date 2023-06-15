@@ -1,21 +1,11 @@
-import {
-  BarElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  TimeScale,
-  Title,
-  Tooltip,
-} from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar } from 'react-chartjs-2';
 import React, { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+
 import { YESTERDAY_MIDNIGHT } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
 import type { Direction, LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
@@ -34,17 +24,6 @@ import { stopIdsForStations } from '../../../common/utils/stations';
 import { ALL_PAGES } from '../../../common/constants/pages';
 import type { QueryParams } from '../../../common/types/router';
 dayjs.extend(utc);
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ChartjsPluginWatermark,
-  TimeScale
-);
 
 interface LineSegmentsProps {
   data: SlowZone[];
@@ -102,7 +81,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
   return (
     <Bar
       ref={ref}
-      id={'timeline-slow-zones'}
+      id={`timeline-slow-zones-${linePath}`}
       data={{
         labels: routes,
         datasets: [
@@ -122,7 +101,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
           },
         ],
       }}
-      plugins={[ChartDataLabels]}
+      plugins={[ChartDataLabels, ChartjsPluginWatermark]}
       options={{
         maintainAspectRatio: false,
         responsive: true,
@@ -137,9 +116,8 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
         onClick: (event, elements) => {
           if (elements.length >= 1) {
             const segment = elements[0].element['$context'].raw as LineSegmentData;
-            const hrefPathname = `/${linePath}${ALL_PAGES.trips.path}`;
+            const hrefPathname = `/${linePath}${ALL_PAGES.multiTrips.path}`;
             const queryParams: QueryParams = {
-              queryType: 'range',
               startDate: segment.x[0],
               endDate: segment.x[1],
               to: segment.stations.toStopIds?.[0],

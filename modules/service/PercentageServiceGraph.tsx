@@ -1,22 +1,11 @@
 import React, { useMemo, useRef } from 'react';
 import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  TimeScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
-
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { SpeedDataPoint } from '../../common/types/dataPoints';
@@ -27,20 +16,6 @@ import type { ParamsType } from '../speed/constants/speeds';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
-
-ChartJS.register(
-  CategoryScale,
-  TimeScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Annotation,
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-  ChartjsPluginWatermark
-);
 
 interface PercentageServiceGraphProps {
   data: SpeedDataPoint[];
@@ -61,7 +36,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
   comparison,
   showTitle = false,
 }) => {
-  const { line } = useDelimitatedRoute();
+  const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
 
   const isMobile = !useBreakpoint('md');
@@ -76,7 +51,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
       <ChartBorder>
         <ChartDiv isMobile={isMobile}>
           <Line
-            id={'Service'}
+            id={`service-percentage-${linePath}`}
             height={isMobile ? 200 : 240}
             ref={ref}
             redraw={true}
@@ -145,7 +120,6 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
                   display: showTitle,
                   text: '',
                 },
-
                 annotation: {
                   // Add your annotations here
                   annotations: [
@@ -225,6 +199,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
                 },
               },
               Annotation,
+              ChartjsPluginWatermark,
             ]}
           />
         </ChartDiv>
@@ -232,17 +207,18 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
     );
   }, [
     data,
+    line,
+    comparison,
+    isMobile,
+    linePath,
     calculatedData.scheduled,
     calculatedData.baseline,
-    callbacks,
-    comparison,
-    endDate,
-    isMobile,
-    line,
     showTitle,
+    callbacks,
     startDate,
-    tooltipFormat,
+    endDate,
     unit,
+    tooltipFormat,
   ]);
   return chart;
 };

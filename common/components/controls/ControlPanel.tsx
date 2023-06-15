@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { lineColorBorder } from '../../styles/general';
 import type { BusRoute, Line } from '../../types/lines';
 import type { DateStoreSection } from '../../constants/pages';
-import type { QueryTypeOptions } from '../../types/router';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
 
@@ -11,20 +10,17 @@ interface ControlPanelProps {
   dateStoreSection: DateStoreSection;
   busRoute: BusRoute | undefined;
   line: Line | undefined;
-  queryType: QueryTypeOptions | undefined;
 }
 
-export const ControlPanel: React.FC<ControlPanelProps> = ({
-  dateStoreSection,
-  line,
-  busRoute,
-  queryType,
-}) => {
+export const ControlPanel: React.FC<ControlPanelProps> = ({ dateStoreSection, line, busRoute }) => {
   const getControls = () => {
-    if (dateStoreSection === 'trips' && line && queryType) {
+    if ((dateStoreSection === 'singleTrips' || dateStoreSection === 'multiTrips') && line) {
       return (
         <>
-          <DateControl dateStoreSection={dateStoreSection} queryType={queryType} />
+          <DateControl
+            dateStoreSection={dateStoreSection}
+            queryType={dateStoreSection === 'singleTrips' ? 'single' : 'range'}
+          />
           <StationSelectorWidget line={line} busRoute={busRoute} />
         </>
       );

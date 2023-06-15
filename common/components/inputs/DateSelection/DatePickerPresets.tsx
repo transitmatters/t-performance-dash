@@ -1,11 +1,15 @@
 import React from 'react';
 import classNames from 'classnames';
 import type { DatePresetKey } from '../../../constants/dates';
-import type { DateSelectionDefaultOptions } from './types/DateSelectionTypes';
+import type {
+  DateParams,
+  DateSelectionDefaultOptions,
+  SingleDateParams,
+} from './types/DateSelectionTypes';
 
 interface DatePickerPresetsProps {
   preset: DatePresetKey | 'custom' | undefined;
-  selectedOptions: DateSelectionDefaultOptions[];
+  selectedOptions: DateSelectionDefaultOptions<DateParams | SingleDateParams>[];
   handleSelection: (preset: DatePresetKey) => void;
   close: () => void;
 }
