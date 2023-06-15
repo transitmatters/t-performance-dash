@@ -1,22 +1,10 @@
 import React, { useRef } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  TimeScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { Line } from 'react-chartjs-2';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
 import type { LineShort, Line as TrainLine } from '../../../common/types/lines';
@@ -37,18 +25,6 @@ interface TotalSlowTimeProps {
   line?: TrainLine;
   showTitle: boolean;
 }
-ChartJS.register(
-  CategoryScale,
-  TimeScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ChartjsPluginWatermark,
-  Filler,
-  Title,
-  Tooltip,
-  Legend
-);
 
 export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
   data,

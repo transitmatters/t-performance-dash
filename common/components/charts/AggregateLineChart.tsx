@@ -1,18 +1,7 @@
 import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  TimeScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+import type { Chart as ChartJS } from 'chart.js';
+
 import 'chartjs-adapter-date-fns';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
 import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
@@ -25,19 +14,6 @@ import { writeError } from '../../utils/chartError';
 import { LegendLongTerm } from './Legend';
 import { ChartBorder } from './ChartBorder';
 import { ChartDiv } from './ChartDiv';
-
-ChartJS.register(
-  CategoryScale,
-  TimeScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ChartjsPluginWatermark,
-  Filler,
-  Title,
-  Tooltip,
-  Legend
-);
 
 const xAxisLabel = (startDate: string, endDate: string, hourly: boolean) => {
   if (hourly) {

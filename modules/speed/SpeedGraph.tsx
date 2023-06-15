@@ -1,17 +1,6 @@
 import React, { useRef } from 'react';
 import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  TimeScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
@@ -25,18 +14,6 @@ import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { CORE_TRACK_LENGTHS, PEAK_MPH } from './constants/speeds';
 import type { ParamsType } from './constants/speeds';
-
-ChartJS.register(
-  CategoryScale,
-  TimeScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend
-);
 
 interface SpeedGraphProps {
   data: SpeedDataPoint[];

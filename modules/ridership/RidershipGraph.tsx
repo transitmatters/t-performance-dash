@@ -1,22 +1,10 @@
 import React, { useMemo, useRef } from 'react';
 import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  TimeScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
 
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { RidershipCount } from '../../common/types/dataPoints';
@@ -28,20 +16,6 @@ import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
-
-ChartJS.register(
-  CategoryScale,
-  TimeScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Annotation,
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-  ChartjsPluginWatermark
-);
 
 interface RidershipGraphProps {
   data: RidershipCount[];
