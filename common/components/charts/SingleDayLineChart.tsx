@@ -1,20 +1,9 @@
 import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  TimeScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+
 import 'chartjs-adapter-date-fns';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { DataPoint } from '../../types/dataPoints';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { SingleDayLineProps } from '../../../common/types/charts';
@@ -27,19 +16,6 @@ import { writeError } from '../../utils/chartError';
 import { Legend as LegendView } from './Legend';
 import { ChartDiv } from './ChartDiv';
 import { ChartBorder } from './ChartBorder';
-
-ChartJS.register(
-  CategoryScale,
-  TimeScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ChartjsPluginWatermark,
-  Filler,
-  Title,
-  Tooltip,
-  Legend
-);
 
 const pointColors = (data: DataPoint[], metric_field: string, benchmark_field?: string) => {
   return data.map((point: DataPoint) => {
@@ -221,6 +197,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 }
               },
             },
+            ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>
