@@ -1,4 +1,5 @@
 import type { DatePresetKey } from '../../constants/dates';
+import { TODAY_SERVICE_STARTED } from '../../constants/dates';
 
 export const PRESET_DEFAULTS: {
   linePreset: DatePresetKey | 'custom';
@@ -8,6 +9,6 @@ export const PRESET_DEFAULTS: {
 } = {
   linePreset: 'year',
   systemPreset: 'year',
-  singleTripPreset: 'today',
+  singleTripPreset: TODAY_SERVICE_STARTED ? 'today' : 'yesterday',
   rangeTripPreset: 'week',
 };
