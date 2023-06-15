@@ -97,7 +97,7 @@ export const stopIdsForStations = (from: Station | undefined, to: Station | unde
   };
 };
 
-export const travelDirection = (from: Station, to: Station): Direction => {
+const travelDirection = (from: Station, to: Station): Direction => {
   return from.order < to.order ? 'southbound' : 'northbound';
 };
 

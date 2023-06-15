@@ -21,7 +21,7 @@ interface DatePickerProps {
   clearPreset: () => void;
 }
 
-export const updateColor = (line: Line | undefined) => {
+const updateColor = (line: Line | undefined) => {
   const selectedDates = document.querySelectorAll('.flatpickr-day.selected');
   selectedDates.forEach((selectedDate) => {
     if (line) {
