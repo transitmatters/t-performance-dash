@@ -1,9 +1,9 @@
 import React from 'react';
-import Link from 'next/link';
 import type { LandingCharts } from '../modules/landing/types';
-import { SYSTEM_DEFAULTS } from '../common/state/defaults/dateDefaults';
 const DESCRIPTION_STYLE = 'text-gray-100 text-lg';
 const BASELINE_STYLE = 'text-gray-100 italic text-xs text-center';
+
+//  copy from: https://docs.google.com/document/d/1kpJqbsNrJpW8gqfeuIjd2KplDacQyorAKE2w5wB6HUY/edit
 
 export const SpeedBaseline = (
   <p className={BASELINE_STYLE}>
@@ -29,15 +29,8 @@ export const SpeedDescription = (
     How quickly can riders move through Boston?
     <br />
     <span className="text-sm text-gray-200">
-      Speed is the rate at which trains move. It's calculated across the entire line and includes
-      time spent stopped. Speed is heavily influenced by{' '}
-      <Link
-        className="text-blue-500"
-        href={{ pathname: '/system/slowzones', query: SYSTEM_DEFAULTS.systemConfig }}
-      >
-        slow zones
-      </Link>
-      .
+      Speed for a line is the median time to go from the first station to the last divided by the
+      distance between those stations. It includes time spent at stops, also known as dwell times.
     </span>
   </p>
 );
@@ -47,8 +40,8 @@ export const ServiceDescription = (
     How long must riders wait for trains and buses?
     <span className="text-sm text-gray-200">
       <br />
-      Service is measured in daily vehicle trips, or the number of times a train or bus makes a
-      complete round trip. More service means shorter wait times for riders.
+      We measure service by daily vehicle trips—the number of times a train or bus makes a complete
+      round trip. More service means shorter wait times for riders.
     </span>
   </p>
 );
@@ -58,8 +51,8 @@ export const RidershipDescription = (
     How many riders are using the system?
     <br />
     <span className="text-sm text-gray-200">
-      Ridership is measured in one-way trips (every time a rider pays a fare), and published weekly
-      by the MBTA.
+      We measure ridership with fare validation data published weekly by the MBTA. Our charts
+      include only weekday data.
     </span>
   </p>
 );
