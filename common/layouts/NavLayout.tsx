@@ -11,7 +11,7 @@ export const NavLayout: React.FC<NavLayoutProps> = ({ children }) => {
   const isMobile = !useBreakpoint('md');
 
   return (
-    <div className="flex min-h-full flex-col justify-between bg-tm-lightGrey">
+    <div className="flex min-h-full flex-col justify-between bg-stone-100">
       {isMobile ? <MobileNavHeader /> : <SideNavBar />}
       {children}
     </div>

@@ -32,7 +32,7 @@ export function Landing() {
       <div
         className={classNames(
           isMobile && 'pb-32',
-          'flex h-screen w-full flex-col items-center justify-center gap-4 bg-tm-lightGrey'
+          'flex h-screen w-full flex-col items-center justify-center gap-4 bg-stone-100'
         )}
       >
         <div className="flex w-full flex-col items-center gap-8 sm:w-[320px] md:w-[400px] lg:w-[560px]">
@@ -44,17 +44,17 @@ export function Landing() {
             style={{ height: `${isMobile ? imageHeight * 2 : imageHeight}` }}
           />
         </div>
-        <h2 className="w-full px-8 text-center text-lg text-white">
+        <h2 className="w-full px-8 text-center text-lg text-stone-900">
           This is a subtitle. And this is additional subtitle text that will say some more stuff.
         </h2>
         <button
-          className="rounded-md border border-stone-100 px-8 text-xl italic text-white"
+          className="rounded-md border border-stone-900 px-8 text-xl italic text-stone-900"
           onClick={handleScrollToDetails}
         >
           Let's Go
         </button>
       </div>
-      <div className="h-full bg-tm-lightGrey pb-20 pt-12 md:py-20" id="charts">
+      <div className="h-full bg-stone-100 pb-20 pt-12 md:py-20" id="charts">
         <LandingCharts />
       </div>
     </PageWrapper>
