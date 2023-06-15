@@ -1,20 +1,10 @@
 import React, { useRef } from 'react';
 import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  TimeScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { SpeedDataPoint } from '../../common/types/dataPoints';
@@ -25,18 +15,6 @@ import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { CORE_TRACK_LENGTHS, PEAK_MPH } from './constants/speeds';
 import type { ParamsType } from './constants/speeds';
-
-ChartJS.register(
-  CategoryScale,
-  TimeScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend
-);
 
 interface SpeedGraphProps {
   data: SpeedDataPoint[];
@@ -53,7 +31,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
   endDate,
   showTitle = false,
 }) => {
-  const { line } = useDelimitatedRoute();
+  const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef();
   const isMobile = !useBreakpoint('md');
@@ -62,7 +40,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
     <ChartBorder>
       <ChartDiv isMobile={isMobile}>
         <Line
-          id={'Speed'}
+          id={`speed-${linePath}`}
           height={isMobile ? 240 : 200}
           ref={ref}
           redraw={true}
@@ -177,6 +155,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 if (showTitle) drawSimpleTitle(`Median Speed`, chart);
               },
             },
+            ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>

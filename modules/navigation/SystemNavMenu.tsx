@@ -7,8 +7,7 @@ interface SystemNavMenuProps {
 }
 export const SystemNavMenu = ({ setSidebarOpen }: SystemNavMenuProps) => {
   return (
-    <div className="flex flex-col gap-y-4">
-      <hr className="h-1 w-full border-stone-400" />
+    <div className="flex flex-col gap-y-2 px-1">
       <SidebarTabs tabs={LANDING_PAGE} setSidebarOpen={setSidebarOpen} />
       <SidebarTabs tabs={SYSTEM_SLOWZONES_PAGE} setSidebarOpen={setSidebarOpen} />
     </div>

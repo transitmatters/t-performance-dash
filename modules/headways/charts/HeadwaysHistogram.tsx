@@ -1,5 +1,4 @@
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, BarController, BarElement, LinearScale, Title, Tooltip } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import React, { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
@@ -12,8 +11,6 @@ import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { ChartBorder } from '../../../common/components/charts/ChartBorder';
-
-ChartJS.register(BarController, BarElement, LinearScale, ChartjsPluginWatermark, Title, Tooltip);
 
 export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) => {
   const { line, linePath, lineShort } = useDelimitatedRoute();
@@ -116,6 +113,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
                 intersect: false,
               },
             }}
+            plugins={[ChartjsPluginWatermark]}
           />
         </ChartDiv>
       </ChartBorder>
