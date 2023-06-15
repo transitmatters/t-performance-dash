@@ -9,7 +9,6 @@ import { ALL_PAGES } from '../constants/pages';
 import { usePresetsOnFirstLoad } from '../utils/firstLoad';
 import { MobileControlPanel } from '../components/controls/MobileControlPanel';
 import { MobileNavHeader } from '../../modules/navigation/MobileNavHeader';
-import { Footer } from './Footer';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -41,7 +40,6 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           <MobileControlPanel dateStoreSection={dateStoreSection} line={line} busRoute={busRoute} />
         )}
       </div>
-      <Footer />
     </div>
   );
 };

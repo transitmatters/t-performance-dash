@@ -3,7 +3,6 @@ import Link from 'next/link';
 
 import TmLogoSvg from '../../public/tm-logo-big.svg';
 import { DonateButton } from '../../common/components/buttons/DonateButton';
-import { FeedbackButton } from '../../common/components/buttons/FeedbackButton';
 import { SideNavigation } from './SideNavigation';
 
 export const SideNavBar = () => {
@@ -17,10 +16,36 @@ export const SideNavBar = () => {
           <div className="relative flex flex-grow flex-col overflow-y-auto pb-4">
             <div className="fixed h-5 w-64 bg-gradient-to-b from-tm-grey to-transparent"></div>
             <SideNavigation />
-            <div className="fixed bottom-24 h-5 w-64 bg-gradient-to-t from-tm-grey to-transparent"></div>
+            <div className="fixed bottom-40 h-5 w-64 bg-gradient-to-t from-tm-grey to-transparent"></div>
           </div>
-          <div className="flex flex-col gap-2 px-4 py-2">
-            <FeedbackButton />
+          <div className="flex flex-col gap-2 px-4 py-2 text-sm">
+            <Link
+              href="https://transitmatters.org/transitmatters-labs"
+              className="text-white hover:text-blue-500"
+            >
+              About
+            </Link>
+            <Link href="https://transitmatters.org/join" className="text-white hover:text-blue-500">
+              Join Us
+            </Link>
+            <Link
+              href="https://forms.gle/SKYtxgKSyCrYxM1v7"
+              className="text-white hover:text-blue-500"
+            >
+              Feedback
+            </Link>
+            <p>
+              <Link
+                href="https://github.com/transitmatters/t-performance-dash"
+                className="text-white hover:text-blue-500"
+              >
+                Source Code
+              </Link>{' '}
+              /{' '}
+              <Link href="/opensource" className="text-white hover:text-blue-500">
+                Attributions
+              </Link>
+            </p>
             <DonateButton />
           </div>
         </div>
