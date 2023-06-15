@@ -2,35 +2,12 @@ import React, { useMemo } from 'react';
 
 import { Line } from 'react-chartjs-2';
 import type { ChartDataset } from 'chart.js';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  TimeScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { COLORS } from '../../../common/constants/colors';
 import { THREE_MONTHS_AGO_STRING, TODAY_STRING } from '../../../common/constants/dates';
 import { SPEED_RANGE_PARAM_MAP } from '../../speed/constants/speeds';
-
-ChartJS.register(
-  CategoryScale,
-  TimeScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend
-);
 
 interface LandingPageChartsProps {
   datasets: ChartDataset<'line'>[];

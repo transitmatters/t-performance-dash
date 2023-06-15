@@ -6,10 +6,8 @@ import { MobileHeader } from '../../modules/dashboard/MobileHeader';
 import { DesktopHeader } from '../../modules/dashboard/DesktopHeader';
 import { useDelimitatedRoute } from '../utils/router';
 import { ALL_PAGES } from '../constants/pages';
-import { usePresetsOnFirstLoad } from '../utils/firstLoad';
 import { MobileControlPanel } from '../components/controls/MobileControlPanel';
 import { MobileNavHeader } from '../../modules/navigation/MobileNavHeader';
-import { Footer } from './Footer';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -22,7 +20,6 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   const dateStoreSection = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
   const showControlParams =
     dateStoreSection && (line || tab === 'System') && dateStoreSection !== 'today';
-  usePresetsOnFirstLoad(dateStoreSection, query);
 
   return (
     <div className="flex min-h-full flex-col justify-between bg-stone-100">
@@ -41,7 +38,6 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           <MobileControlPanel dateStoreSection={dateStoreSection} line={line} busRoute={busRoute} />
         )}
       </div>
-      <Footer />
     </div>
   );
 };

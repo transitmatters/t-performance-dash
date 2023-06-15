@@ -11,7 +11,7 @@ import {
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import type { DatePresetKey } from '../../../constants/dates';
 import { RANGE_PRESETS, SINGLE_PRESETS } from '../../../constants/dates';
-import { useDatePresetConfig } from '../../../state/datePresetConfig';
+import { useDatePresetStore } from '../../../state/datePresetStore';
 import { useSelectedPreset } from '../../../state/utils/datePresetUtils';
 import { ALL_PAGES } from '../../../constants/pages';
 import { DatePickers } from './DatePickers';
@@ -26,7 +26,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
   const { line, page } = useDelimitatedRoute();
   const [range, setRange] = useState<boolean>(false);
   const { dateStoreSection } = ALL_PAGES[page];
-  const setDatePreset = useDatePresetConfig((state) => state.setDatePreset);
+  const setDatePreset = useDatePresetStore((state) => state.setDatePreset);
   const datePreset = useSelectedPreset();
   const updateQueryParams = useUpdateQuery();
   const presets = range ? RANGE_PRESETS : SINGLE_PRESETS;

@@ -2,13 +2,13 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { ButtonGroup } from '../../general/ButtonGroup';
 import { useDateStore } from '../../../state/dateStore';
-import { useDatePresetConfig } from '../../../state/datePresetConfig';
+import { useDatePresetStore } from '../../../state/datePresetStore';
 import type { OverviewDatePresetKey } from '../../../constants/dates';
 import { OverviewRangeTypes } from '../../../constants/dates';
 
 export const OverviewDateSelection = () => {
   const router = useRouter();
-  const setDatePreset = useDatePresetConfig((state) => state.setDatePreset);
+  const setDatePreset = useDatePresetStore((state) => state.setDatePreset);
   const selectedView = router.query.view ?? 'year';
   const selectedIndex = Object.keys(OverviewRangeTypes).findIndex((view) => view === selectedView);
 

@@ -1,6 +1,7 @@
 name: deploy
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -12,7 +13,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['18']
-        python-version: ['3.9']
+        python-version: ['3.10']
     env:
       AWS_PROFILE: transitmatters
       AWS_DEFAULT_REGION: us-east-1
