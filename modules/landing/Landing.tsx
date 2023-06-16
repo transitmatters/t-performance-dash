@@ -9,6 +9,7 @@ import HeroLottie from '../../public/Animations/hero.lottie.json';
 import LandingTitleSVG from '../../public/landingTitle.svg';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { LandingCharts } from './LandingCharts';
+import { LineSelectionLanding } from './LineSelectionLanding';
 
 export function Landing() {
   const md = useBreakpoint('md');
@@ -26,8 +27,8 @@ export function Landing() {
       >
         <div className="relative z-10 flex w-5/6 flex-col items-center gap-y-4 rounded-lg bg-stone-900 bg-opacity-60 px-4 py-8 backdrop-blur-sm md:p-8 md:py-12 lg:w-3/4 xl:w-1/2">
           <LandingTitleSVG className="w-3/4 " />
-          <h2 className="w-3/4 text-center text-lg font-semibold text-white lg:px-8">
-            This is a subtitle. And this is additional subtitle text that will say some more stuff.
+          <h2 className="w-3/4 text-center text-lg text-white lg:px-8">
+            A tool to analyze data from the MBTA, in advocacy for better public transit.
           </h2>
           <button
             className="rounded-md border-2 border-stone-100 px-8 py-2 text-xl font-bold italic text-stone-100 hover:bg-stone-100 hover:text-stone-700"
@@ -42,6 +43,13 @@ export function Landing() {
         id="charts"
       >
         <LandingCharts />
+        <LineSelectionLanding />
+      </div>
+      <div
+        className="fixed left-1/2 top-1/2  z-0 -translate-x-1/2 -translate-y-1/2"
+        style={{ height: md ? '110vh' : '140vw', width: md ? '110vh' : '140vw' }}
+      >
+        <Lottie loop animationData={HeroLottie} play style={{}} />
       </div>
       <div
         className="fixed left-1/2 top-1/2  z-0 -translate-x-1/2 -translate-y-1/2"

@@ -32,7 +32,7 @@ export const DashboardSelection: React.FC = () => {
                 href={{ pathname: dashboardTabs[index].path, query: dashboardTabs[index].query }}
                 onClick={() => handleChange(tab.name)}
                 className={classNames(
-                  ' flex h-full items-center justify-center border border-stone-200 py-1 text-sm font-semibold',
+                  ' flex h-full items-center justify-center border border-stone-200 py-1 text-sm ',
                   selected && 'bg-stone-200 text-stone-900',
                   index === 0 && 'rounded-l-md',
                   index === dashboardTabs.length - 1 && 'rounded-r-md',

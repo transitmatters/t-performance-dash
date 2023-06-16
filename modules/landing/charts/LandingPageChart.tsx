@@ -19,75 +19,76 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
   const chart = useMemo(() => {
     const { tooltipFormat, unit, callbacks } = SPEED_RANGE_PARAM_MAP.week;
     return (
-      <Line
-        id={id}
-        height={240}
-        redraw={true}
-        data={{
-          labels,
-          datasets: datasets,
-        }}
-        options={{
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: {
-            intersect: false,
-          },
-          plugins: {
-            tooltip: {
-              position: 'nearest',
-              callbacks: {
-                label: (value) => `${value.formattedValue}% of baseline`,
-                ...callbacks,
-              },
+      <div className="h-[240px]">
+        <Line
+          id={id}
+          redraw={true}
+          data={{
+            labels,
+            datasets: datasets,
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+              intersect: false,
             },
-            legend: {
-              display: false,
-            },
-          },
-          scales: {
-            y: {
-              suggestedMax: 100,
-              display: true,
-              grid: { display: false },
-
-              ticks: {
-                color: COLORS.design.darkGrey,
-                callback: (value) => `${value}%`,
-              },
-              title: {
-                display: true,
-                text: 'Percentage of baseline',
-                color: COLORS.design.darkGrey,
-              },
-            },
-            x: {
-              min: THREE_MONTHS_AGO_STRING,
-              max: TODAY_STRING,
-              type: 'time',
-              grid: { display: false },
-
-              time: {
-                unit: unit,
-                tooltipFormat: tooltipFormat,
-              },
-              ticks: {
-                color: COLORS.design.darkGrey,
-              },
-              adapters: {
-                date: {
-                  locale: enUS,
+            plugins: {
+              tooltip: {
+                position: 'nearest',
+                callbacks: {
+                  label: (value) => `${value.formattedValue}% of baseline`,
+                  ...callbacks,
                 },
               },
-              display: true,
-              title: {
+              legend: {
                 display: false,
-                text: ``,
               },
             },
-          },
-        }}
-      />
+            scales: {
+              y: {
+                suggestedMax: 100,
+                display: true,
+                grid: { display: false },
+
+                ticks: {
+                  color: COLORS.design.darkGrey,
+                  callback: (value) => `${value}%`,
+                },
+                title: {
+                  display: true,
+                  text: 'Percentage of baseline',
+                  color: COLORS.design.darkGrey,
+                },
+              },
+              x: {
+                min: THREE_MONTHS_AGO_STRING,
+                max: TODAY_STRING,
+                type: 'time',
+                grid: { display: false },
+
+                time: {
+                  unit: unit,
+                  tooltipFormat: tooltipFormat,
+                },
+                ticks: {
+                  color: COLORS.design.darkGrey,
+                },
+                adapters: {
+                  date: {
+                    locale: enUS,
+                  },
+                },
+                display: true,
+                title: {
+                  display: false,
+                  text: ``,
+                },
+              },
+            },
+          }}
+        />
+      </div>
     );
   }, [datasets, labels, id]);
   return chart;
