@@ -36,7 +36,7 @@ export const BusSelection: React.FC<BusSelectionProps> = ({ setSidebarOpen }) =>
                 onClick={handleChange}
                 key={key}
                 className={classNames(
-                  'flex w-full cursor-pointer items-center justify-center rounded-md border border-mbta-bus bg-mbta-bus p-2 text-sm font-medium',
+                  'flex w-full cursor-pointer items-center justify-center rounded-md border border-mbta-bus bg-mbta-bus px-2 py-1 text-sm font-medium',
                   selected
                     ? 'bg-opacity-90 text-white'
                     : 'fovus:bg-opacity-70 border-opacity-0 bg-opacity-50 hover:border-opacity-100 hover:bg-opacity-70 hover:text-white focus:border-opacity-100 focus:text-white'

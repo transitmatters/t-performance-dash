@@ -27,7 +27,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => 
 
   return (
     <div className="rounded-md bg-white bg-opacity-5 p-1">
-      <ul role="list" className={`space-y-1`}>
+      <ul role="list" className="space-y-1">
         {tabs.map((tab: PageMetadata) => {
           const enabled = line ? tab.lines.includes(line) : true;
           const selected = page === tab.key;
@@ -45,9 +45,9 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => 
                   selected
                     ? 'bg-stone-900 text-white'
                     : enabled && 'text-stone-300 hover:bg-stone-800 hover:text-white',
-                  'group flex select-none items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                  'group flex select-none items-center gap-x-3 rounded-md px-2 text-sm font-semibold leading-6',
                   enabled ? 'cursor-pointer' : 'cursor-default  text-stone-600',
-                  tab.sub && 'ml-2 text-xs'
+                  tab.sub ? 'ml-2 py-1 text-xs' : 'py-2'
                 )}
               >
                 <FontAwesomeIcon

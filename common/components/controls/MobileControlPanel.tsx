@@ -1,6 +1,8 @@
 import React from 'react';
+import classNames from 'classnames';
 import type { BusRoute, Line } from '../../types/lines';
 import type { DateStoreSection } from '../../constants/pages';
+import { lineColorBackground } from '../../styles/general';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
 
@@ -26,7 +28,12 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
               queryType={singleDate ? 'single' : 'range'}
             />
           </div>
-          <div className="flex flex-row items-center justify-center bg-tm-grey">
+          <div
+            className={classNames(
+              'flex flex-row items-center justify-center ',
+              lineColorBackground[line ?? 'DEFAULT']
+            )}
+          >
             <StationSelectorWidget line={line} busRoute={busRoute} />
           </div>
         </>
@@ -46,7 +53,12 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   };
 
   return (
-    <div className={'pb-safe fixed bottom-0 z-20 flex w-full flex-col justify-center bg-tm-grey'}>
+    <div
+      className={classNames(
+        'pb-safe fixed bottom-0 z-20 flex w-full flex-col justify-center',
+        lineColorBackground[line ?? 'DEFAULT']
+      )}
+    >
       {getControls()}
     </div>
   );

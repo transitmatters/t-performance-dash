@@ -52,13 +52,13 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
               grid: { display: false },
 
               ticks: {
-                color: COLORS.design.lightGrey,
+                color: COLORS.design.darkGrey,
                 callback: (value) => `${value}%`,
               },
               title: {
                 display: true,
                 text: 'Percentage of baseline',
-                color: COLORS.design.lightGrey,
+                color: COLORS.design.darkGrey,
               },
             },
             x: {
@@ -72,7 +72,7 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
                 tooltipFormat: tooltipFormat,
               },
               ticks: {
-                color: COLORS.design.lightGrey,
+                color: COLORS.design.darkGrey,
               },
               adapters: {
                 date: {
