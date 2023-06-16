@@ -4,6 +4,7 @@ import { getParentStationForStopId } from '../../common/utils/stations';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Layout } from '../../common/layouts/layoutTypes';
+import { SameDayNotice } from '../../common/components/notices/SameDayNotice';
 import { TripGraphs } from './TripGraphs';
 
 export const TripExplorer = () => {
@@ -21,6 +22,7 @@ export const TripExplorer = () => {
     <PageWrapper pageTitle={'Trips'}>
       <div className="flex flex-col gap-4">
         <TripGraphs fromStation={fromStation} toStation={toStation} />
+        <SameDayNotice />
         <TerminusNotice toStation={toStation} fromStation={fromStation} />
       </div>
     </PageWrapper>
