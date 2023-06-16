@@ -5,6 +5,7 @@ import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { SameDayNotice } from '../../common/components/notices/SameDayNotice';
+import { AlertBar } from '../../common/components/alerts/AlertBar';
 import { TripGraphs } from './TripGraphs';
 
 export const TripExplorer = () => {
@@ -21,6 +22,7 @@ export const TripExplorer = () => {
   return (
     <PageWrapper pageTitle={'Trips'}>
       <div className="flex flex-col gap-4">
+        <AlertBar />
         <TripGraphs fromStation={fromStation} toStation={toStation} />
         <SameDayNotice />
         <TerminusNotice toStation={toStation} fromStation={fromStation} />

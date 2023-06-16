@@ -1,4 +1,4 @@
-import type { AlertsResponse } from '../types/alerts';
+import type { AlertsResponse, OldAlert } from '../types/alerts';
 import type { LineShort } from '../types/lines';
 import { APP_DATA_BASE_PATH } from '../utils/constants';
 
@@ -41,6 +41,28 @@ const fetchAlertsForBus = async (busRoute: string): Promise<AlertsResponse[]> =>
   const options = { ...alertsAPIConfig };
   options['route_type'] = '3';
   options['route'] = busRoute;
+  Object.entries(options).forEach(([key, value]) => {
+    url.searchParams.append(key, value.toString());
+  });
+  const response = await fetch(url.toString());
+  if (!response.ok) {
+    throw new Error('Failed to fetch alerts');
+  }
+  return await response.json();
+};
+
+export const fetchHistoricalAlerts = async (
+  date: string | undefined,
+  route: LineShort,
+  busRoute?: string
+): Promise<OldAlert[]> => {
+  const url = new URL(`${APP_DATA_BASE_PATH}/api/alerts/${date}`, window.location.origin);
+  const options = { route: '' };
+  if (route === 'Bus' && busRoute) {
+    options['route'] = busRoute;
+  } else {
+    options['route'] = route;
+  }
   Object.entries(options).forEach(([key, value]) => {
     url.searchParams.append(key, value.toString());
   });

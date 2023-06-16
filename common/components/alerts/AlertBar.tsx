@@ -2,14 +2,15 @@ import type { ReactElement } from 'react';
 import React from 'react';
 import classNames from 'classnames';
 import Tippy from '@tippyjs/react';
-import type { OldAlert } from '../../types/alerts';
 import { LegendAlerts } from './LegendAlerts';
 import { findMatch } from './AlertFilter';
 import 'tippy.js/dist/tippy.css'; // optional
+import { useDelimitatedRoute } from '../../utils/router';
+import { useHistoricalAlertsData } from '../../api/hooks/alerts';
 
-function chartTimeframe(start_date: string) {
+function chartTimeframe(date: string) {
   // Set alert-bar interval to be 5:30am today to 1am tomorrow.
-  const today = `${start_date}T00:00:00`;
+  const today = `${date}T00:00:00`;
 
   const low = new Date(today);
   low.setHours(5, 30);
@@ -50,20 +51,22 @@ const BoxSection: React.FC<BoxSectionProps> = ({ title, width, left, border }) =
   );
 };
 interface AlertBarProps {
-  alerts: OldAlert[];
-  today: string;
-  isLoading: boolean;
   isHidden?: boolean;
 }
 
-export const AlertBar: React.FC<AlertBarProps> = ({
-  alerts,
-  today,
-  isLoading,
-  isHidden = false,
-}) => {
+export const AlertBar: React.FC<AlertBarProps> = ({ isHidden = false }) => {
+  const {
+    lineShort,
+    query: { date, busRoute },
+  } = useDelimitatedRoute();
+  const { data: alerts, isLoading } = useHistoricalAlertsData(date, lineShort, busRoute);
+
   const renderBoxes = () => {
     if (isLoading) {
+      return null;
+    }
+
+    if (date === undefined) {
       return null;
     }
 
@@ -72,7 +75,7 @@ export const AlertBar: React.FC<AlertBarProps> = ({
     }
     const recognized_alerts = alerts?.filter(findMatch);
 
-    const [start, end] = chartTimeframe(today);
+    const [start, end] = chartTimeframe(date);
     const duration = end.getTime() - start.getTime();
 
     const boxes: ReactElement[] = [];

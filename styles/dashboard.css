@@ -91,7 +91,6 @@
     background: white;
     box-shadow: var(--global-shadow);
     background-color: #eee;
-    z-index: -1;
     position: relative;
     transition: 200ms all cubic-bezier(0.645, 0.045, 0.355, 1);
 }
