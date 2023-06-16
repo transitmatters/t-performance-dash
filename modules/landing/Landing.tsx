@@ -9,6 +9,7 @@ import HeroLottie from '../../public/Animations/hero.lottie.json';
 import LandingTitleSVG from '../../public/landingTitle.svg';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { LandingCharts } from './LandingCharts';
+import { LineSelectionLanding } from './LineSelectionLanding';
 
 export function Landing() {
   const md = useBreakpoint('md');
@@ -42,6 +43,7 @@ export function Landing() {
         id="charts"
       >
         <LandingCharts />
+        <LineSelectionLanding />
       </div>
       <div
         className="fixed left-1/2 top-1/2  z-0 -translate-x-1/2 -translate-y-1/2"
