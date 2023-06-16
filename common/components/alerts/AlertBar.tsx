@@ -2,11 +2,11 @@ import type { ReactElement } from 'react';
 import React from 'react';
 import classNames from 'classnames';
 import Tippy from '@tippyjs/react';
+import { useDelimitatedRoute } from '../../utils/router';
+import { useHistoricalAlertsData } from '../../api/hooks/alerts';
 import { LegendAlerts } from './LegendAlerts';
 import { findMatch } from './AlertFilter';
 import 'tippy.js/dist/tippy.css'; // optional
-import { useDelimitatedRoute } from '../../utils/router';
-import { useHistoricalAlertsData } from '../../api/hooks/alerts';
 
 function chartTimeframe(date: string) {
   // Set alert-bar interval to be 5:30am today to 1am tomorrow.
