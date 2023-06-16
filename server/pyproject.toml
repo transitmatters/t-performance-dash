@@ -1,23 +1,22 @@
 [tool.poetry]
 name = "t-performance-dash"
-version = "3.3.0"
+version = "3.3.1"
 description = "TransitMatters performance visualizer for the MBTA"
 authors = ["TransitMatters Labs Team"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "~3.9"
+python = "^3.9, <3.11"
 json-api-doc = "0.15.0"
 requests = "2.31.0"
 pytz = "2021.3"
-boto3 = "1.20.54"
+boto3 = "1.26.153"
 numpy = "1.22.4"
 pandas = "1.4.4"
 
 [tool.poetry.dev-dependencies]
-chalice = "1.28.0"
-flake8 = "4.0.1"
-
+chalice = "1.29.0"
+flake8 = "6.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
