@@ -1,13 +1,4 @@
 import type { Chart } from 'chart.js';
-import type { LineShort } from '../../types/lines';
-
-export const colorsForLine: Record<LineShort, string> = {
-  Red: '#da291c',
-  Orange: '#ed8b00',
-  Blue: '#003da5',
-  Green: '#00834d',
-  Bus: '#ffc72c',
-};
 
 const titleColor = 'gray';
 
