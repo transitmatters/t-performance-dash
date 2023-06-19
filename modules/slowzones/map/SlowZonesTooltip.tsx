@@ -67,7 +67,7 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
       const totalFeet = speedRestrictions.reduce((sum, sr) => sum + sr.trackFeet, 0);
       const [oldest] = speedRestrictions
         .filter((sr) => sr.reported)
-        .map((sr) => new Date(sr.reported).toISOString())
+        .map((sr) => sr.reported)
         .sort();
       const oldestString = prettyDate(oldest, false);
       return (

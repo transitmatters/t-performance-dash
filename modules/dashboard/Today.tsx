@@ -5,6 +5,7 @@ import { SlowZonesMap } from '../slowzones/map';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { useSlowzoneAllData, useSpeedRestrictionData } from '../../common/api/hooks/slowzones';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import type { Line } from '../../common/types/lines';
 import { WidgetTitle } from './WidgetTitle';
 
 interface TodayProps {
@@ -13,7 +14,10 @@ interface TodayProps {
 
 export const Today: React.FC<TodayProps> = ({ lineShort }) => {
   const allSlow = useSlowzoneAllData();
-  const speedRestrictions = useSpeedRestrictionData();
+  const speedRestrictions = useSpeedRestrictionData({
+    lineId: `line-${lineShort.toLowerCase()}` as Line,
+    date: new Date().toISOString().split('T')[0],
+  });
   const canShowSlowZonesMap = lineShort !== 'Green';
 
   return (

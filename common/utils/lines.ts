@@ -1,7 +1,13 @@
-import { LINE_OBJECTS } from '../constants/lines';
-import type { LineShort } from '../types/lines';
+import type { GtfsColorLineId, Line, LineShort } from '../types/lines';
+import { RAIL_LINES } from '../types/lines';
 
-export const shortToLine = (name: LineShort): Exclude<LineShort, 'Bus'> => {
-  const found = Object.entries(LINE_OBJECTS).find(([, line]) => line.short === name);
-  return found?.[0] as Exclude<LineShort, 'Bus'>;
+export const getGtfsRailLineId = (name: Line | LineShort): GtfsColorLineId => {
+  const normalizedColorPart = (
+    name.includes('line-') ? name.replace('line-', '') : name
+  ).toLowerCase();
+  if (!RAIL_LINES.includes(normalizedColorPart)) {
+    throw new Error('Not a valid rail line ID');
+  }
+  const capped = normalizedColorPart.slice(0, 1).toUpperCase() + normalizedColorPart.slice(1);
+  return `line-${capped}`;
 };

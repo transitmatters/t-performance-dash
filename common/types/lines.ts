@@ -33,6 +33,9 @@ export const RIDERSHIP_KEYS = {
   'line-green': 'line-Green',
 };
 
+export const GTFS_COLOR_LINE_IDS = ['line-Red', 'line-Orange', 'line-Blue', 'line-Green'] as const;
+export type GtfsColorLineId = (typeof GTFS_COLOR_LINE_IDS)[number];
+
 export const HEAVY_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue'];
 export const RAIL_LINES = ['red', 'orange', 'green', 'blue'];
 export const BUS_ROUTES = [
