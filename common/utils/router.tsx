@@ -23,7 +23,7 @@ const linePathToKeyMap: Record<string, Line> = {
   bus: 'line-bus',
 };
 
-export const getParams = (params: ParsedUrlQuery | QueryParams) => {
+const getParams = (params: ParsedUrlQuery | QueryParams) => {
   return Object.fromEntries(
     Object.entries(params).filter(([key, value]) => key !== 'line' && value)
   );
@@ -264,7 +264,7 @@ const getPathName = (newPage: PageMetadata, linePath: LinePath) => {
   return `/${newPage.dateStoreSection === 'system' ? 'system' : linePath}${newPage.path}`;
 };
 
-export const savePageConfigIfNecessary = (
+const savePageConfigIfNecessary = (
   currentPage: PageMetadata,
   newPage: PageMetadata,
   query: QueryParams,
