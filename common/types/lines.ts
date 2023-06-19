@@ -26,6 +26,14 @@ export type LineMetadata = {
 };
 export type LineObject = { [key in Line]: LineMetadata };
 
+export const RIDERSHIP_KEYS = {
+  'line-red': 'line-Red',
+  'line-orange': 'line-Orange',
+  'line-blue': 'line-Blue',
+  'line-green': 'line-Green',
+};
+
+export const HEAVY_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue'];
 export const RAIL_LINES = ['red', 'orange', 'green', 'blue'];
 export const BUS_ROUTES = [
   '1',

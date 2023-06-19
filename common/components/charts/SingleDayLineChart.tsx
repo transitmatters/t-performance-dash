@@ -1,45 +1,21 @@
 import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  TimeScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+
 import 'chartjs-adapter-date-fns';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
-import classNames from 'classnames';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { DataPoint } from '../../types/dataPoints';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { SingleDayLineProps } from '../../../common/types/charts';
 import { prettyDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../utils/router';
 import { DownloadButton } from '../general/DownloadButton';
-import { writeError } from '../../utils/chartError';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
-import { drawTitle } from './Title';
+import { writeError } from '../../utils/chartError';
 import { Legend as LegendView } from './Legend';
-
-ChartJS.register(
-  CategoryScale,
-  TimeScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ChartjsPluginWatermark,
-  Filler,
-  Title,
-  Tooltip,
-  Legend
-);
+import { ChartDiv } from './ChartDiv';
+import { ChartBorder } from './ChartBorder';
 
 const pointColors = (data: DataPoint[], metric_field: string, benchmark_field?: string) => {
   return data.map((point: DataPoint) => {
@@ -78,7 +54,6 @@ const departureFromNormalString = (metric: number, benchmark: number) => {
 
 export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   chartId,
-  title,
   data,
   date,
   metricField,
@@ -95,12 +70,12 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const { line } = useDelimitatedRoute();
   return (
-    <div className={classNames('relative flex w-full flex-col pr-2')}>
-      <div className="flex h-60 w-full flex-row">
+    <ChartBorder>
+      <ChartDiv isMobile={isMobile}>
         <Line
           id={chartId}
           ref={ref}
-          height={250}
+          height={isMobile ? 200 : 240}
           redraw={true}
           data={{
             labels,
@@ -139,11 +114,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
           options={{
             responsive: true,
             maintainAspectRatio: false,
-            layout: {
-              padding: {
-                top: 25,
-              },
-            },
             // @ts-expect-error The watermark plugin doesn't have typescript support
             watermark: watermarkLayout(isMobile),
             plugins: {
@@ -170,11 +140,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               },
               legend: {
                 display: false,
-              },
-              title: {
-                // empty title to set font and leave room for drawTitle fn
-                display: true,
-                text: '',
               },
             },
             scales: {
@@ -230,12 +195,12 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 if (date === undefined || date.length === 0 || data.length === 0) {
                   writeError(chart);
                 }
-                drawTitle(title, location, bothStops, chart);
               },
             },
+            ChartjsPluginWatermark,
           ]}
         />
-      </div>
+      </ChartDiv>
       <div className="flex flex-row items-end gap-4 pl-6 pr-2">
         {showLegend && benchmarkField ? <LegendView /> : <div className="w-full" />}
         {!isHomescreen && date && (
@@ -248,6 +213,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
           />
         )}
       </div>
-    </div>
+    </ChartBorder>
   );
 };

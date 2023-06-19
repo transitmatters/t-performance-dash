@@ -22,7 +22,7 @@ export const ErrorNotice: React.FC<ErrorNoticeProps> = ({ isWidget, inverse }) =
       )}
     >
       <FontAwesomeIcon size={'3x'} icon={faTriangleExclamation} className={color} />
-      <>Uh oh... error</>
+      <>An error has occurred</>
     </div>
   );
 };

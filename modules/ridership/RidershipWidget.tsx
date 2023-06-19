@@ -1,91 +1,44 @@
-import classNames from 'classnames';
-import React, { useMemo, useState } from 'react';
-import { useRidershipData } from '../../common/api/hooks/ridership';
-import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
-import { LINE_COLORS } from '../../common/constants/colors';
-import { PercentageWidgetValue, TripsWidgetValue } from '../../common/types/basicWidgets';
-import type { ServiceDay } from '../../common/types/ridership';
-import { getHighestTphValue, normalizeToPercent } from '../../common/utils/ridership';
+import React from 'react';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
-import { ServiceDayPicker } from '../../common/components/inputs/ServiceDayPicker';
+import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { ServiceRidershipChart } from './charts/ServiceRidershipChart';
-import { TphChart } from './charts/TphChart';
+import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
+import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
+import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
+import { useRidershipData } from '../../common/api/hooks/ridership';
+import { RIDERSHIP_KEYS } from '../../common/types/lines';
+import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 
 export const RidershipWidget: React.FC = () => {
-  const allRidership = useRidershipData();
-
-  const { line, lineShort, query } = useDelimitatedRoute();
-  const routeOrLine = line === 'line-bus' ? query.busRoute : lineShort;
-
-  // Get the proper line- index, replace slashes for 114/116/117 route
-  const lineData = allRidership.data?.lineData[`line-${routeOrLine?.replace(/\//g, '')}`];
-
-  const color = LINE_COLORS[line ?? 'default'];
-  const [serviceDay, setServiceDay] = useState<ServiceDay>('weekday');
-  const highestTph = useMemo(() => (lineData ? getHighestTphValue(lineData) : 0), [lineData]);
-  const startDate = useMemo(
-    () => new Date(lineData?.startDate ?? '2020-02-23'),
-    [lineData?.startDate]
-  );
-  const ridershipPercentage = normalizeToPercent(lineData?.ridershipHistory ?? []);
-  const serviceHistory = lineData?.serviceHistory ?? [];
-
-  // Only re-render chart when necesarry
-  const serviceRidershipChart = useMemo(() => {
-    return <ServiceRidershipChart lineData={lineData} startDate={startDate} color={color} />;
-  }, [color, lineData, startDate]);
-
-  // Only re-render chart when necesarry
-  const serviceLevelChart = useMemo(() => {
-    return (
-      <>
-        <TphChart
-          lineData={lineData}
-          serviceDay={serviceDay}
-          color={color}
-          highestTph={highestTph}
-        />
-        <ServiceDayPicker setServiceDay={setServiceDay} />
-      </>
-    );
-  }, [color, highestTph, lineData, serviceDay]);
+  const { line, query } = useDelimitatedRoute();
+  const { startDate } = OVERVIEW_OPTIONS[query.view ?? 'year'];
+  const endDate = TODAY_STRING;
+  const config = SPEED_RANGE_PARAM_MAP.week;
+  const lineId = query.busRoute
+    ? `line-${query.busRoute.replaceAll('/', '')}`
+    : RIDERSHIP_KEYS[line ?? ''];
+  const lineOrRoute = query.busRoute ? `line-${query.busRoute.replaceAll('/', '')}` : line;
+  const ridership = useRidershipData({
+    line_id: lineId,
+    start_date: startDate,
+    end_date: endDate,
+  });
+  const serviceReady = !ridership.isError && lineId && lineOrRoute;
 
   return (
     <WidgetDiv>
-      <HomescreenWidgetTitle title="Ridership & Service Levels" tab="ridership" />
-
-      <div className={classNames('flex w-full flex-row')}>
-        <BasicWidgetDataLayout
-          title="Pre-COVID Ridership"
-          widgetValue={
-            new PercentageWidgetValue(
-              ridershipPercentage[ridershipPercentage.length - 1],
-              ridershipPercentage[ridershipPercentage.length - 1] -
-                ridershipPercentage[ridershipPercentage.length - 31]
-            )
-          }
-          analysis={`from last month.`}
-          sentimentDirection={'positiveOnIncrease'}
+      <HomescreenWidgetTitle title="Weekday Ridership" tab="ridership" />
+      {ridership.data && serviceReady ? (
+        <RidershipGraphWrapper
+          lineOrRoute={lineOrRoute}
+          data={ridership.data}
+          config={config}
+          startDate={startDate}
+          endDate={endDate}
         />
-        <BasicWidgetDataLayout
-          title="Service Levels"
-          widgetValue={
-            new TripsWidgetValue(
-              serviceHistory?.[serviceHistory.length - 1],
-              serviceHistory?.[serviceHistory.length - 1] -
-                serviceHistory?.[serviceHistory.length - 365]
-            )
-          }
-          analysis={`since last year.`}
-          sentimentDirection={'positiveOnIncrease'}
-        />
-      </div>
-      <div className="flex flex-col gap-8">
-        <div className={classNames('h-50 pr-4')}>{serviceRidershipChart}</div>
-        <div className={classNames('h-50 flex flex-col pr-3')}>{serviceLevelChart}</div>
-      </div>
+      ) : (
+        <ChartPlaceHolder query={ridership} />
+      )}
     </WidgetDiv>
   );
 };

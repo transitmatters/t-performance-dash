@@ -2,9 +2,12 @@ import classNames from 'classnames';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
-import { getHref, useDelimitatedRoute, useHandlePageNavigation } from '../../common/utils/router';
+import {
+  useDelimitatedRoute,
+  useGenerateHref,
+  useHandleConfigStore,
+} from '../../common/utils/router';
 import type { PageMetadata } from '../../common/constants/pages';
-import { useDashboardConfig } from '../../common/state/dashboardConfig';
 
 interface SidebarTabs {
   tabs: PageMetadata[];
@@ -13,22 +16,22 @@ interface SidebarTabs {
 
 export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => {
   const { line, page, query, linePath } = useDelimitatedRoute();
-  const handlePageNavigation = useHandlePageNavigation();
-  const dashboardConfig = useDashboardConfig();
+  const handlePageConfig = useHandleConfigStore();
+  const generateHref = useGenerateHref();
 
   const handleChange = (enabled: boolean, tab: PageMetadata) => {
     if (!enabled) return null;
-    handlePageNavigation(tab);
+    handlePageConfig(tab);
     setSidebarOpen && setSidebarOpen(false);
   };
 
   return (
     <div className="rounded-md bg-white bg-opacity-5 p-1">
-      <ul role="list" className={`space-y-1`}>
+      <ul role="list" className="space-y-1">
         {tabs.map((tab: PageMetadata) => {
           const enabled = line ? tab.lines.includes(line) : true;
           const selected = page === tab.key;
-          const href = getHref(dashboardConfig, tab, page, query, linePath);
+          const href = generateHref(tab, page, query, linePath);
           return (
             <li key={tab.key}>
               <Link
@@ -42,9 +45,9 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => 
                   selected
                     ? 'bg-stone-900 text-white'
                     : enabled && 'text-stone-300 hover:bg-stone-800 hover:text-white',
-                  'group flex select-none items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                  'group flex select-none items-center gap-x-3 rounded-md px-2 text-sm font-semibold leading-6',
                   enabled ? 'cursor-pointer' : 'cursor-default  text-stone-600',
-                  tab.sub && 'ml-4 text-xs'
+                  tab.sub ? 'ml-2 py-1 text-xs' : 'py-2'
                 )}
               >
                 <FontAwesomeIcon

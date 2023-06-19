@@ -6,23 +6,25 @@ import { ALL_PAGES } from '../../common/constants/pages';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ControlPanel } from '../../common/components/controls/ControlPanel';
 import { lineColorBackground } from '../../common/styles/general';
-import { RangeTabs } from '../navigation/RangeTabs';
 
 export const DesktopHeader: React.FC = () => {
   const {
     line,
     page,
-    query: { queryType, busRoute },
+    query: { busRoute },
+    tab,
   } = useDelimitatedRoute();
-  const section = page ? ALL_PAGES[page]?.section : undefined;
+  const dateStoreSection = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
   const lg = useBreakpoint('lg');
 
-  const showControls = section && line && section !== 'today';
+  const showControls =
+    dateStoreSection && (line || tab === 'System') && dateStoreSection !== 'today';
 
   const getLineName = () => {
     if (busRoute) return `Route ${busRoute}`;
     if (line && !lg) return LINE_OBJECTS[line]?.short;
     if (line) return LINE_OBJECTS[line]?.name;
+    if (tab === 'System') return 'System';
   };
   return (
     <div
@@ -31,15 +33,10 @@ export const DesktopHeader: React.FC = () => {
         lineColorBackground[line ?? 'DEFAULT']
       )}
     >
-      <div
-        className={classNames(
-          'flex shrink-0 flex-col pt-2',
-          section === 'trips' ? 'justify-end gap-y-3' : 'h-14 justify-center'
-        )}
-      >
+      <div className={classNames('flex h-14 shrink-0 flex-col justify-center pt-2')}>
         <div className="flex shrink-0 flex-row items-baseline pl-3">
           <h3 className="text-xl font-semibold">{getLineName()}</h3>
-          {ALL_PAGES[page]?.sectionTitle && (
+          {ALL_PAGES[page]?.sectionTitle && tab !== 'System' && (
             <>
               <span className="px-1 text-xl">•</span>
               <h2 className="select-none text-xl font-semibold">
@@ -52,10 +49,9 @@ export const DesktopHeader: React.FC = () => {
             <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
           </h2>
         </div>
-        {ALL_PAGES[page]?.section === 'trips' && <RangeTabs />}
       </div>
       {showControls && (
-        <ControlPanel section={section} line={line} queryType={queryType} busRoute={busRoute} />
+        <ControlPanel dateStoreSection={dateStoreSection} line={line} busRoute={busRoute} />
       )}
     </div>
   );

@@ -1,3 +1,6 @@
+import type { AggType } from '../../modules/speed/constants/speeds';
+import type { Line } from './lines';
+
 export enum QueryNameKeys {
   traveltimes = 'traveltimes',
   headways = 'headways',
@@ -33,7 +36,10 @@ export type AggregateAPIOptions = { [key in AggregateAPIParams]?: string[] | str
 export type PartialAggregateAPIOptions = Partial<AggregateAPIOptions>;
 
 export type FetchSpeedsOptions = {
-  [key in FetchSpeedsParams]?: string;
+  agg: AggType;
+  start_date?: string;
+  end_date?: string;
+  line?: Line;
 };
 
 export enum FetchSpeedsParams {
@@ -52,4 +58,14 @@ export enum FetchTripCountsParams {
   endDate = 'end_date',
   routeId = 'route_id',
   agg = 'agg',
+}
+
+export type FetchRidershipOptions = {
+  [key in FetchRidershipParams]?: string;
+};
+
+export enum FetchRidershipParams {
+  lineId = 'line_id',
+  startDate = 'start_date',
+  endDate = 'end_date',
 }

@@ -81,6 +81,9 @@ export type LineSegmentData = {
   y: string[];
   id: string;
   delay: number;
+  stations:
+    | { fromStopIds: string[]; toStopIds: string[] }
+    | { fromStopIds: undefined; toStopIds: undefined };
 };
 
 export type SpeedRestriction = {
@@ -112,4 +115,9 @@ export type TripCounts = {
   end_date: string;
   start_date_service_levels: ServiceLevels;
   end_date_service_levels: ServiceLevels;
+};
+
+export type RidershipCount = {
+  date: string;
+  count: number;
 };

@@ -1,25 +1,15 @@
-import {
-  BarElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  TimeScale,
-  Title,
-  Tooltip,
-} from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar } from 'react-chartjs-2';
 import React, { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+
 import { YESTERDAY_MIDNIGHT } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
 import type { Direction, LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
-import type { LineShort } from '../../../common/types/lines';
+import type { LinePath, LineShort } from '../../../common/types/lines';
 import {
   getRoutes,
   getSlowZoneOpacity,
@@ -30,22 +20,15 @@ import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { stationAxisConfig } from '../constants/chartConfig';
 import { watermarkLayout } from '../../../common/constants/charts';
+import { stopIdsForStations } from '../../../common/utils/stations';
+import { ALL_PAGES } from '../../../common/constants/pages';
+import type { QueryParams } from '../../../common/types/router';
 dayjs.extend(utc);
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ChartjsPluginWatermark,
-  TimeScale
-);
 
 interface LineSegmentsProps {
   data: SlowZone[];
   line: LineShort;
+  linePath: LinePath;
   startDateUTC: dayjs.Dayjs;
   endDateUTC: dayjs.Dayjs;
   direction: Direction;
@@ -54,6 +37,7 @@ interface LineSegmentsProps {
 export const LineSegments: React.FC<LineSegmentsProps> = ({
   data,
   line,
+  linePath,
   startDateUTC,
   endDateUTC,
   direction,
@@ -90,13 +74,14 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
       y: szTimePeriod,
       id: getStationPairName(sz.from, sz.to, useShortStationNames),
       delay: sz.delay,
+      stations: stopIdsForStations(sz.from, sz.to),
     };
   });
 
   return (
     <Bar
       ref={ref}
-      id={'timeline-slow-zones'}
+      id={`timeline-slow-zones-${linePath}`}
       data={{
         labels: routes,
         datasets: [
@@ -116,7 +101,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
           },
         ],
       }}
-      plugins={[ChartDataLabels]}
+      plugins={[ChartDataLabels, ChartjsPluginWatermark]}
       options={{
         maintainAspectRatio: false,
         responsive: true,
@@ -124,7 +109,28 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
         layout: {
           padding: {},
         },
-
+        interaction: {
+          intersect: true,
+          mode: 'index',
+        },
+        onClick: (event, elements) => {
+          if (elements.length >= 1) {
+            const segment = elements[0].element['$context'].raw as LineSegmentData;
+            const hrefPathname = `/${linePath}${ALL_PAGES.multiTrips.path}`;
+            const queryParams: QueryParams = {
+              startDate: segment.x[0],
+              endDate: segment.x[1],
+              to: segment.stations.toStopIds?.[0],
+              from: segment.stations.fromStopIds?.[0],
+            };
+            const params = new URLSearchParams(queryParams);
+            window.open(`${hrefPathname}?${params.toString()}`);
+          }
+        },
+        onHover: (event, elements) => {
+          // @ts-expect-error TS doesn't think target has `style` (rude), but it does
+          event.native?.target.style.cursor = elements?.[0] ? 'pointer' : 'default';
+        },
         parsing: isMobile
           ? { xAxisKey: 'id' }
           : {

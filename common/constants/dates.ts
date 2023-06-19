@@ -3,7 +3,11 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import type { DateTimePickerProps } from 'react-flatpickr';
-import type { DateSelectionDefaultOptions } from '../components/inputs/DateSelection/types/DateSelectionTypes';
+import type {
+  DateParams,
+  DateSelectionDefaultOptions,
+  SingleDateParams,
+} from '../components/inputs/DateSelection/types/DateSelectionTypes';
 import type { Tab } from './dashboardTabs';
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -12,21 +16,31 @@ const est = 'America/New_York';
 
 export const DATE_FORMAT = 'YYYY-MM-DD';
 export const PRETTY_DATE_FORMAT = 'MMM D, YYYY';
+export const SMALL_DATE_FORMAT = 'M/D/YY';
 export const TODAY = dayjs().tz(est);
 export const TODAY_MIDNIGHT = dayjs().startOf('day');
 export const YESTERDAY_MIDNIGHT = TODAY_MIDNIGHT.subtract(1, 'day');
 export const TODAY_STRING = TODAY.format(DATE_FORMAT);
+export const YESTERDAY_STRING = TODAY.subtract(1, 'day').format(DATE_FORMAT);
+export const TODAY_SERVICE_STARTED = TODAY.hour() >= 6;
 export const RANGE_OPTIONS = ['Single Day', 'Range'];
 export const ONE_WEEK_AGO = TODAY.subtract(7, 'days');
 export const ONE_WEEK_AGO_STRING = ONE_WEEK_AGO.format(DATE_FORMAT);
+export const ONE_YEAR_AGO = TODAY.subtract(1, 'year');
+export const ONE_YEAR_AGO_STRING = ONE_YEAR_AGO.format(DATE_FORMAT);
+export const THREE_MONTHS_AGO = TODAY.subtract(90, 'days');
+export const THREE_MONTHS_AGO_STRING = TODAY.subtract(90, 'days').format(DATE_FORMAT);
 
 const OVERVIEW_TRAIN_MIN_DATE = '2016-02-01';
 const TRAIN_MIN_DATE = '2016-01-15';
 const BUS_MIN_DATE = '2018-08-01';
 export const BUS_MAX_DATE = '2023-01-31';
+export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
+  .subtract(7, 'days')
+  .format(DATE_FORMAT);
 
 export const FLAT_PICKER_OPTIONS: {
-  [key in Exclude<Tab, 'System'>]: DateTimePickerProps['options'];
+  [key in Tab]: DateTimePickerProps['options'];
 } = {
   Subway: {
     enableTime: false,
@@ -44,40 +58,50 @@ export const FLAT_PICKER_OPTIONS: {
     altFormat: 'M j, Y',
     dateFormat: 'Y-m-d',
   },
+  System: {
+    enableTime: false,
+    minDate: TRAIN_MIN_DATE,
+    maxDate: TODAY_STRING,
+    altInput: true,
+    altFormat: 'M j, Y',
+    dateFormat: 'Y-m-d',
+  },
 };
 
-export const SINGLE_PRESETS: { [key in DatePresetKey]?: DateSelectionDefaultOptions } = {
-  today: { key: 'today', name: 'Today', input: { startDate: TODAY_STRING } },
+export const SINGLE_PRESETS: {
+  [key in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams>;
+} = {
+  today: { key: 'today', name: 'Today', input: { date: TODAY_STRING } },
   yesterday: {
     key: 'yesterday',
     name: 'Yesterday',
-    input: { startDate: TODAY.subtract(1, 'day').format(DATE_FORMAT) },
+    input: { date: TODAY.subtract(1, 'day').format(DATE_FORMAT) },
   },
   week: {
     key: 'week',
     name: `Last ${TODAY.subtract(7, 'days').format('dddd')}`,
     input: {
-      startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
+      date: TODAY.subtract(7, 'days').format(DATE_FORMAT),
     },
   },
   month: {
     key: 'month',
     name: `30 days ago`,
     input: {
-      startDate: TODAY.subtract(30, 'days').format(DATE_FORMAT),
+      date: TODAY.subtract(30, 'days').format(DATE_FORMAT),
     },
   },
   year: {
     key: 'year',
     name: `One year ago`,
     input: {
-      startDate: TODAY.subtract(1, 'year').format(DATE_FORMAT),
+      date: ONE_YEAR_AGO_STRING,
     },
   },
 };
 
 // TODO Different presets for buses
-export const RANGE_PRESETS: { [key in DatePresetKey]?: DateSelectionDefaultOptions } = {
+export const RANGE_PRESETS: { [key in DatePresetKey]?: DateSelectionDefaultOptions<DateParams> } = {
   week: {
     key: 'week',
     name: 'Past week',
@@ -117,7 +141,7 @@ export const RANGE_PRESETS: { [key in DatePresetKey]?: DateSelectionDefaultOptio
     key: 'year',
     name: 'Past year',
     input: {
-      startDate: TODAY.subtract(1, 'year').format(DATE_FORMAT),
+      startDate: ONE_YEAR_AGO_STRING,
       endDate: TODAY_STRING,
     },
   },
@@ -198,10 +222,7 @@ export const RANGE_DATE_KEYS = Object.fromEntries(
   ])
 );
 export const SINGLE_DATE_KEYS = Object.fromEntries(
-  Object.values(SINGLE_PRESETS).map((singlePreset) => [
-    singlePreset.input.startDate,
-    singlePreset.key,
-  ])
+  Object.values(SINGLE_PRESETS).map((singlePreset) => [singlePreset.input.date, singlePreset.key])
 );
 
 export const todayOrDate = (date: dayjs.Dayjs) => {

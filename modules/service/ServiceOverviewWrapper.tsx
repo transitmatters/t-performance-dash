@@ -26,12 +26,12 @@ export const ServiceOverviewWrapper: React.FC<ServiceOverviewWrapperProps> = ({
 
   return (
     <>
-      <div className={classNames('space-between flex w-full flex-row')}>
+      <div className={classNames('space-between flex w-full flex-row gap-2')}>
         <BasicWidgetDataLayout
-          title={`Scheduled Service Delivered`}
+          title={`Service Delivered`}
           widgetValue={new PercentageWidgetValue(percentDelivered, undefined)}
           layoutKind="no-delta"
-          analysis="over period"
+          analysis="of scheduled"
           sentimentDirection={'positiveOnIncrease'}
         />
         <BasicWidgetDataLayout

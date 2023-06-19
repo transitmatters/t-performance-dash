@@ -14,12 +14,13 @@ interface TripGraphsProps {
 
 export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }) => {
   const {
-    query: { startDate, endDate },
+    query: { startDate, endDate, date },
     tab,
+    line,
   } = useDelimitatedRoute();
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
-  const enabled = Boolean(startDate && fromStopIds && toStopIds);
+  const enabled = Boolean((date || startDate) && fromStopIds && toStopIds);
   const aggregate = Boolean(startDate && endDate);
   const parameters: SingleDayAPIOptions | AggregateAPIOptions = aggregate
     ? {
@@ -33,7 +34,7 @@ export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }
         [SingleDayAPIParams.stop]: fromStopIds,
         [SingleDayAPIParams.fromStop]: fromStopIds,
         [SingleDayAPIParams.toStop]: toStopIds,
-        [SingleDayAPIParams.date]: startDate,
+        [SingleDayAPIParams.date]: date,
       };
   if (tab === 'Bus')
     return (
@@ -43,6 +44,7 @@ export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }
         parameters={parameters}
         aggregate={aggregate}
         enabled={enabled}
+        line={line}
       />
     );
   return (
@@ -52,6 +54,7 @@ export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }
       parameters={parameters}
       aggregate={aggregate}
       enabled={enabled}
+      line={line}
     />
   );
 };

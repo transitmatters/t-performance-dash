@@ -1,4 +1,4 @@
-export const PRODUCTION = 'dashboard-v4.transitmatters.org';
+export const PRODUCTION = 'dashboard.transitmatters.org';
 export const BETA = 'dashboard-v4-beta.labs.transitmatters.org';
 const FRONTEND_TO_BACKEND_MAP = {
   [PRODUCTION]: 'https://dashboard-v4-api.transitmatters.org',

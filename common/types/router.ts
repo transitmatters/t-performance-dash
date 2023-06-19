@@ -11,10 +11,13 @@ export interface Route {
   tab: Tab;
 }
 
+export const DATE_PARAMS = ['startDate', 'endDate', 'date'];
+export const STATION_PARAMS = ['from', 'to'];
+
 export type QueryParams = {
   startDate?: string;
   endDate?: string;
-  queryType?: QueryTypeOptions;
+  date?: string;
   busRoute?: BusRoute;
   view?: OverviewDatePresetKey;
   to?: string;

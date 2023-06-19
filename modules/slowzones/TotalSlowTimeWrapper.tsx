@@ -5,8 +5,10 @@ import type { DayDelayTotals } from '../../common/types/dataPoints';
 import type { LineShort, Line } from '../../common/types/lines';
 import { getSlowZoneDelayDelta, useFilteredDelayTotals } from '../../common/utils/slowZoneUtils';
 
-import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { todayOrDate } from '../../common/constants/dates';
+import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
+import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 
 interface TotalSlowTimeWrapperProps {
@@ -15,6 +17,7 @@ interface TotalSlowTimeWrapperProps {
   endDateUTC: dayjs.Dayjs;
   line: Line;
   lineShort: LineShort;
+  showTitle?: boolean;
 }
 
 export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
@@ -23,32 +26,34 @@ export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
   endDateUTC,
   line,
   lineShort,
+  showTitle = false,
 }) => {
   const filteredDelayTotals = useFilteredDelayTotals(data, startDateUTC, endDateUTC);
   const delayDelta = getSlowZoneDelayDelta(filteredDelayTotals, lineShort);
 
   return (
-    <>
-      <BasicWidgetDataLayout
-        widgetValue={
-          new TimeWidgetValue(
-            filteredDelayTotals[filteredDelayTotals.length - 1]?.[lineShort],
-            delayDelta
-          )
-        }
-        title={todayOrDate(endDateUTC)}
-        analysis={'over period'}
-      />
-      <div className="relative flex h-60">
-        <TotalSlowTime
-          // Pass all data and not filtered because we can filter using the X axis of the graph.
-          data={data}
-          startDateUTC={startDateUTC}
-          endDateUTC={endDateUTC}
-          line={line}
-          lineShort={lineShort}
+    <CarouselGraphDiv>
+      <WidgetCarousel isSingleWidget>
+        <WidgetForCarousel
+          widgetValue={
+            new TimeWidgetValue(
+              filteredDelayTotals[filteredDelayTotals.length - 1]?.[lineShort],
+              delayDelta
+            )
+          }
+          layoutKind="no-delta"
+          analysis={`Current (${todayOrDate(endDateUTC)})`}
         />
-      </div>
-    </>
+      </WidgetCarousel>
+      <TotalSlowTime
+        // Pass all data and not filtered because we can filter using the X axis of the graph.
+        data={data}
+        startDateUTC={startDateUTC}
+        endDateUTC={endDateUTC}
+        line={line}
+        lineShort={lineShort}
+        showTitle={showTitle}
+      />
+    </CarouselGraphDiv>
   );
 };
