@@ -120,7 +120,7 @@ export const useUpdateQuery = () => {
 
       if (!isEqual(router.query, newQuery)) {
         const query = pickBy(newQuery, (attr) => attr !== undefined);
-        router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
+        router.replace({ pathname: router.pathname, query }, undefined, { shallow: true });
       }
     },
     [router]
