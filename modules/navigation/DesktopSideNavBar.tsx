@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-import TmLogoSvg from '../../public/tm-logo-big.svg';
+import Image from 'next/image';
 import { DonateButton } from '../../common/components/buttons/DonateButton';
 import { SideNavigation } from './SideNavigation';
 
@@ -11,7 +11,7 @@ export const SideNavBar = () => {
       <div className="bg-tm-grey text-gray-300">
         <div className="fixed inset-y-0 flex w-64 flex-col overflow-y-hidden bg-tm-grey">
           <Link href="/" className="sticky flex flex-shrink-0 px-6 pb-2 pt-6">
-            <TmLogoSvg alt="TransitMatters Logo" />
+            <Image src={'/TMLogo.png'} alt="TransitMatters Logo" width={3204} height={301} />
           </Link>
           <div className="relative flex flex-grow flex-col overflow-y-auto pb-4">
             <div className="fixed h-5 w-64 bg-gradient-to-b from-tm-grey to-transparent"></div>
