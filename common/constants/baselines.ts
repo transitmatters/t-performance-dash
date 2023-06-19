@@ -3,7 +3,7 @@ export const PEAK_SCHEDULED_SERVICE = {
   'line-red': 223,
   'line-orange': 161,
   'line-blue': 186,
-  'line-green': 0,
+  'line-green': 506,
   'line-bus': 0,
   DEFAULT: 0,
 };
@@ -35,5 +35,6 @@ export const PEAK_COMPLETE_TRIP_TIMES = {
   'line-red': { date: 'May 2020', value: 8374.5 },
   'line-blue': { date: 'May 2020', value: 1860.5 },
   'line-orange': { date: 'May 2020', value: 3776.75 },
+  'line-green': { date: 'May 2020', value: 21782 },
   DEFAULT: { date: '', value: 1 },
 };
