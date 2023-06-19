@@ -23,7 +23,7 @@ Steps to reproduce the behavior:
 **Screenshots**
 <!-- If applicable, add screenshots to help explain your problem. -->
 
-**Desktop (please complete the following information):**
+**Device Info (please complete the following information):**
  - Device: [e.g. iPhone 6, Laptop]
  - OS: [e.g. iOS, Windows]
  - Browser [e.g. chrome, safari]
