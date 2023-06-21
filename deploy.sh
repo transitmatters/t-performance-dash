@@ -37,7 +37,7 @@ $PRODUCTION && FRONTEND_DOMAIN_PREFIX=""                        || FRONTEND_DOMA
 
 BACKEND_ZONE="labs.transitmatters.org"
 BACKEND_CERT_ARN="$TM_LABS_WILDCARD_CERT_ARN"
-$PRODUCTION && BACKEND_DOMAIN_PREFIX="dashboard-api"            || BACKEND_DOMAIN_PREFIX="dashboard-api-beta."
+$PRODUCTION && BACKEND_DOMAIN_PREFIX="dashboard-api."            || BACKEND_DOMAIN_PREFIX="dashboard-api-beta."
 
 
 # Fetch repository tags
