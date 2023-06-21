@@ -19,8 +19,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       TM_FRONTEND_CERT_ARN: ${{ secrets.TM_FRONTEND_CERT_ARN }}
       TM_FRONTEND_CERT_ARN_BETA: ${{ secrets.TM_FRONTEND_CERT_ARN_BETA }}
-      TM_BACKEND_CERT_ARN: ${{ secrets.TM_BACKEND_CERT_ARN }}
-      TM_BACKEND_CERT_ARN_BETA: ${{ secrets.TM_BACKEND_CERT_ARN_BETA }}
+      TM_LABS_WILDCARD_CERT_ARN: ${{ secrets.TM_LABS_WILDCARD_CERT_ARN }}
       MBTA_V2_API_KEY: ${{ secrets.MBTA_V2_API_KEY }}
     steps:
       - name: Checkout repo
