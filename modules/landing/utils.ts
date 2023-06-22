@@ -1,3 +1,4 @@
+import { ChartDataset } from 'chart.js';
 import {
   PEAK_COMPLETE_TRIP_TIMES,
   PEAK_RIDERSHIP,
@@ -7,13 +8,14 @@ import { LINE_COLORS } from '../../common/constants/colors';
 import type { RidershipCount, SpeedDataPoint } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 
-const getDatasetOptions = (line: Line) => {
+const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
   return {
+    pointRadius:4,
     borderColor: LINE_COLORS[line ?? 'default'],
-    borderWidth: 6,
-    pointBackgroundColor: 'transparent',
+    borderWidth: 4,
+    pointBackgroundColor: LINE_COLORS[line ?? 'default'],
     pointBorderWidth: 0,
-    tension: 0.5,
+    tension: 0,
     pointHoverRadius: 8,
     spanGaps: false,
     pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
