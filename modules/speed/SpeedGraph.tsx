@@ -50,10 +50,11 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
               {
                 label: `MPH`,
                 borderColor: LINE_COLORS[line ?? 'default'],
-                pointRadius: 0,
+                pointRadius: 8,
+                pointBackgroundColor: 'transparent',
                 pointBorderWidth: 0,
                 stepped: true,
-                pointHoverRadius: 6,
+                pointHoverRadius: 3,
                 spanGaps: false,
                 pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
                 data: data.map((datapoint) =>

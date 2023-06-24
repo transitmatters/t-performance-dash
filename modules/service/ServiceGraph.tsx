@@ -61,11 +61,12 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   label: `Actual trips`,
                   borderColor: lineColor,
                   backgroundColor: hexWithAlpha(lineColor, 0.8),
-                  pointRadius: 0,
+                  pointRadius: 8,
+                  pointBackgroundColor: 'transparent',
                   pointBorderWidth: 0,
                   stepped: true,
                   fill: true,
-                  pointHoverRadius: 6,
+                  pointHoverRadius: 3,
                   pointHoverBackgroundColor: lineColor,
                   data: data.map((datapoint) =>
                     datapoint.value ? datapoint.count / 2 : Number.NaN
@@ -75,10 +76,8 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   label: `MBTA scheduled trips`,
                   stepped: true,
                   fill: true,
+                  pointBackgroundColor: 'transparent',
                   pointBorderWidth: 0,
-                  pointRadius: 0,
-                  pointHoverRadius: 6,
-
                   borderColor: lineColor,
                   spanGaps: false,
                   data: predictedData.counts.map((count, index) =>
