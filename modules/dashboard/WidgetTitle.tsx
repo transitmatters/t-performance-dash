@@ -25,7 +25,7 @@ export const WidgetTitle: React.FC<WidgetTitle> = ({
   const isMobile = !useBreakpoint('md');
   const { query } = useDelimitatedRoute();
   const date = getSelectedDates({
-    startDate: query.startDate,
+    startDate: query.startDate ? query.startDate : query.date,
     endDate: query.endDate,
     view: query.view,
   });
