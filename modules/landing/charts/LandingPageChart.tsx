@@ -40,7 +40,10 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
               tooltip: {
                 position: 'nearest',
                 callbacks: {
-                  label: (value) => `${value.formattedValue}% of baseline (${LINE_OBJECTS[HEAVY_RAIL_LINES[value.datasetIndex]].name})`,
+                  label: (value) =>
+                    `${value.formattedValue}% of baseline (${
+                      LINE_OBJECTS[HEAVY_RAIL_LINES[value.datasetIndex]].name
+                    })`,
                   ...callbacks,
                 },
               },

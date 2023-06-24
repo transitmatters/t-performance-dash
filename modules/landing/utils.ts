@@ -1,4 +1,4 @@
-import { ChartDataset } from 'chart.js';
+import type { ChartDataset } from 'chart.js';
 import {
   PEAK_COMPLETE_TRIP_TIMES,
   PEAK_RIDERSHIP,
@@ -10,7 +10,7 @@ import type { Line } from '../../common/types/lines';
 
 const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
   return {
-    pointRadius:4,
+    pointRadius: 4,
     borderColor: LINE_COLORS[line ?? 'default'],
     borderWidth: 4,
     pointBackgroundColor: LINE_COLORS[line ?? 'default'],
