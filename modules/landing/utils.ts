@@ -11,10 +11,9 @@ const getDatasetOptions = (line: Line) => {
   return {
     borderColor: LINE_COLORS[line ?? 'default'],
     borderWidth: 6,
-    pointBackgroundColor: 'transparent',
     pointBorderWidth: 0,
     tension: 0.5,
-    pointHoverRadius: 8,
+    pointHoverRadius: 6,
     spanGaps: false,
     pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
   };
