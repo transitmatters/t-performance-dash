@@ -33,7 +33,7 @@ export function RidershipDetails() {
   return (
     <PageWrapper pageTitle={'Ridership'}>
       <WidgetDiv>
-        <WidgetTitle title="Weekday Ridership" />
+        <WidgetTitle title="Weekday ridership" />
 
         {ridership.data && ridershipDataReady ? (
           <RidershipGraphWrapper

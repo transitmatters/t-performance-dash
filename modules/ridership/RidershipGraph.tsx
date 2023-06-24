@@ -140,7 +140,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                   },
                   title: {
                     display: true,
-                    text: 'trips',
+                    text: 'Trips',
                     color: COLORS.design.subtitleGrey,
                   },
                 },

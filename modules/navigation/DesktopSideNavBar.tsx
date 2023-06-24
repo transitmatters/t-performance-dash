@@ -26,7 +26,7 @@ export const SideNavBar = () => {
               About
             </Link>
             <Link href="https://transitmatters.org/join" className="text-white hover:text-blue-500">
-              Join Us
+              Join us
             </Link>
             <Link
               href="https://forms.gle/SKYtxgKSyCrYxM1v7"
@@ -39,11 +39,11 @@ export const SideNavBar = () => {
                 href="https://github.com/transitmatters/t-performance-dash"
                 className="text-white hover:text-blue-500"
               >
-                Source Code
+                Source code
               </Link>{' '}
               /{' '}
               <Link href="/opensource" className="text-white hover:text-blue-500">
-                Attributions
+                attributions
               </Link>
             </p>
             <DonateButton />
