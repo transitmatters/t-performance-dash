@@ -103,7 +103,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'mph',
+                  text: 'Miles per hour (mph)',
                   color: COLORS.design.subtitleGrey,
                 },
               },

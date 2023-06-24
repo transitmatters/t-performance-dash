@@ -42,7 +42,7 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
       {aggregate ? (
         <>
           <WidgetDiv>
-            <WidgetTitle title="Travel Times" location={location} line={line} both />
+            <WidgetTitle title="Travel times" location={location} line={line} both />
             <TravelTimesAggregateWrapper
               query={traveltimes}
               fromStation={fromStation}
@@ -66,7 +66,7 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
       ) : (
         <>
           <WidgetDiv>
-            <WidgetTitle title="Travel Times" location={location} line={line} both />
+            <WidgetTitle title="Travel times" location={location} line={line} both />
             <TravelTimesSingleWrapper
               query={traveltimes}
               toStation={toStation}
@@ -76,7 +76,7 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
           <WidgetDiv>
             <WidgetTitle
               title="Headways"
-              subtitle="Time Between Buses"
+              subtitle="Time between buses"
               location={location}
               line={line}
             />

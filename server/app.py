@@ -66,7 +66,10 @@ def healthcheck():
             if not check_bool:
                 failed_checks[check] = "Check failed :("
         except Exception as e:
-            failed_checks[check] = f"Check threw an exception: {e}"
+            e_str = str(e)
+            for secret in secrets.HEALTHCHECK_HIDE_SECRETS:
+                e_str.replace(secret, "HIDDEN")
+            failed_checks[check] = f"Check threw an exception: {e_str}"
 
     if len(failed_checks) == 0:
         return Response(body={"status": "pass"}, status_code=200)

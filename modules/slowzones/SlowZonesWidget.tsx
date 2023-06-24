@@ -27,7 +27,7 @@ export const SlowZonesWidget: React.FC = () => {
   return (
     <>
       <WidgetDiv className="relative">
-        <HomescreenWidgetTitle title="Slow Zones" tab="slowzones" />
+        <HomescreenWidgetTitle title="Slow zones" tab="slowzones" />
         {totalSlowTimeReady ? (
           <TotalSlowTimeWrapper
             data={delayTotals.data}

@@ -55,9 +55,9 @@ export function TravelTimesDetails() {
   const [peakTime, setPeakTime] = React.useState<'weekday' | 'weekend'>('weekday');
 
   return (
-    <PageWrapper pageTitle={'Travel Times'}>
+    <PageWrapper pageTitle={'Travel times'}>
       <WidgetDiv>
-        <WidgetTitle title="Travel Times" location={location} line={line} both />
+        <WidgetTitle title="Travel times" location={location} line={line} both />
         {aggregate ? (
           <AggregateChartWrapper
             query={travelTimesAggregate}
@@ -77,7 +77,7 @@ export function TravelTimesDetails() {
       </WidgetDiv>
       {aggregate && (
         <WidgetDiv className="flex flex-col justify-center">
-          <WidgetTitle title="Travel Times by Hour" location={location} line={line} both />
+          <WidgetTitle title="Travel times by hour" location={location} line={line} both />
           <AggregateChartWrapper
             query={travelTimesAggregate}
             toStation={toStation}
@@ -91,7 +91,7 @@ export function TravelTimesDetails() {
               pressFunction={setPeakTime}
               options={[
                 ['weekday', 'Weekday'],
-                ['weekend', 'Weekend/Holiday'],
+                ['weekend', 'Weekend/holiday'],
               ]}
               additionalDivClass="md:w-auto"
               additionalButtonClass="md:w-fit"
