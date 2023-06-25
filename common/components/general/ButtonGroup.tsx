@@ -56,7 +56,7 @@ export const ButtonGroup: <T extends string, K extends string>(
                         } bg-white text-stone-900 hover:bg-opacity-70 hover:text-white`
                   )}
                 >
-                  {option[1]}
+                  <p className="leading-none">{option[1]}</p>
                 </button>
               )}
             </Tab>

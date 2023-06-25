@@ -16,7 +16,7 @@ const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
     pointBackgroundColor: LINE_COLORS[line ?? 'default'],
     pointBorderWidth: 0,
     tension: 0,
-    pointHoverRadius: 8,
+    pointHoverRadius: 6,
     spanGaps: false,
     pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
   };
