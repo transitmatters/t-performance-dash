@@ -25,7 +25,7 @@ export const OverviewDateSelection = () => {
       selectedIndex={selectedIndex}
       pressFunction={handlePresetSelection}
       options={Object.entries(OverviewRangeTypes)}
-      additionalButtonClass="w-fit text-xs sm:text-base"
+      additionalButtonClass="w-fit text-xs sm:text-base md:text-xs lg:text-sm"
       additionalDivClass="md:max-w-md h-10 md:h-7"
       isOverview
     />
