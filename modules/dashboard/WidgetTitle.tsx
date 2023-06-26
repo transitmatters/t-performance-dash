@@ -30,7 +30,7 @@ export const WidgetTitle: React.FC<WidgetTitle> = ({
     view: query.view,
   });
   return (
-    <div className="flex w-full flex-col items-baseline justify-between gap-x-4 gap-y-1 pb-1 text-xl md:flex-row">
+    <div className="flex w-full flex-col items-baseline justify-between gap-x-4 gap-y-1 pb-1 text-base md:flex-row md:text-xl">
       <div className="flex w-full flex-col md:w-auto ">
         <div className="flex w-full flex-row items-baseline justify-between">
           <h2
