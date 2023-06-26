@@ -56,7 +56,7 @@ export function ServiceDetails() {
       <div className="flex flex-col">
         <div className="relative flex flex-col gap-4">
           <WidgetDiv>
-            <WidgetTitle title="Daily Round Trips" />
+            <WidgetTitle title="Daily round trips" />
             {serviceDataReady ? (
               <ServiceGraphWrapper
                 data={serviceData.data}
@@ -72,7 +72,7 @@ export function ServiceDetails() {
             )}
           </WidgetDiv>
           <WidgetDiv>
-            <WidgetTitle title={`Service Delivered`} subtitle={`Compared to ${comparison}`} />
+            <WidgetTitle title={`Service delivered`} subtitle={`Compared to ${comparison}`} />
             {serviceDataReady ? (
               <PercentageServiceGraphWrapper
                 data={serviceData.data}

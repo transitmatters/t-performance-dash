@@ -54,7 +54,7 @@ export function SlowZonesDetails() {
     <PageWrapper pageTitle={'Slow zones'}>
       <div className="flex flex-col gap-4">
         <WidgetDiv>
-          <WidgetTitle title="Total Slow Time" />
+          <WidgetTitle title="Total slow time" />
           <div className="relative flex flex-col">
             {totalSlowTimeReady ? (
               <TotalSlowTimeWrapper
@@ -72,7 +72,7 @@ export function SlowZonesDetails() {
           </div>
         </WidgetDiv>
         <WidgetDiv>
-          <WidgetTitle title="Line Map" />
+          <WidgetTitle title="Line map" />
           <div className="relative flex flex-col">
             {allSlow.data && speedRestrictions.data && canShowSlowZonesMap ? (
               <SlowZonesMap

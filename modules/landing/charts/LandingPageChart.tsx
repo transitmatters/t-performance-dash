@@ -8,6 +8,8 @@ import { enUS } from 'date-fns/locale';
 import { COLORS } from '../../../common/constants/colors';
 import { THREE_MONTHS_AGO_STRING, TODAY_STRING } from '../../../common/constants/dates';
 import { SPEED_RANGE_PARAM_MAP } from '../../speed/constants/speeds';
+import { HEAVY_RAIL_LINES } from '../../../common/types/lines';
+import { LINE_OBJECTS } from '../../../common/constants/lines';
 
 interface LandingPageChartsProps {
   datasets: ChartDataset<'line'>[];
@@ -32,12 +34,16 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
             maintainAspectRatio: false,
             interaction: {
               intersect: false,
+              mode: 'index',
             },
             plugins: {
               tooltip: {
                 position: 'nearest',
                 callbacks: {
-                  label: (value) => `${value.formattedValue}% of baseline`,
+                  label: (value) =>
+                    `${value.formattedValue}% of baseline (${
+                      LINE_OBJECTS[HEAVY_RAIL_LINES[value.datasetIndex]].name
+                    })`,
                   ...callbacks,
                 },
               },
