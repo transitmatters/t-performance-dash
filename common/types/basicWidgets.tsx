@@ -55,7 +55,7 @@ export class DeltaTimeWidgetValue extends BaseWidgetValue implements WidgetValue
 
 export class DeltaZonesWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'Zones';
+    return 'zones';
   }
   getFormattedValue() {
     if (this.delta === undefined) return '...';
@@ -102,7 +102,7 @@ export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInter
 
 export class SZWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'Zones';
+    return 'zones';
   }
   getFormattedValue() {
     if (typeof this.value === 'undefined') return '...';

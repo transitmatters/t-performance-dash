@@ -92,7 +92,7 @@ export function SlowZonesDetails() {
         {/* Not Using WidgetDiv here - removed the padding so the chart goes to the edge of the widget on mobile. */}
         <div className="h-full rounded-lg bg-white p-0 shadow-dataBox sm:p-4">
           <div className="flex flex-col p-4 sm:p-0 lg:flex-row">
-            <WidgetTitle title={`${DirectionObject[direction]} Segments`} />
+            <WidgetTitle title={`${DirectionObject[direction]} segments`} />
             <div className="lg:ml-2">
               <ButtonGroup pressFunction={setDirection} options={Object.entries(DirectionObject)} />
             </div>
