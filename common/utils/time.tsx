@@ -1,4 +1,7 @@
+import React from 'react';
 import dayjs from 'dayjs';
+import { WidgetText } from '../components/widgets/internal/WidgetText';
+import { UnitText } from '../components/widgets/internal/UnitText';
 
 type StringifyTimeOptions = {
   truncateLeadingHoursZeros?: boolean;
@@ -62,12 +65,30 @@ export const getTimeUnit = (value: number) => {
 
 export const getFormattedTimeValue = (value: number) => {
   const absValue = Math.abs(value);
+  const duration = dayjs.duration(absValue, 'seconds');
   switch (true) {
     case absValue < 100:
-      return absValue.toFixed(0);
+      return (
+        <p>
+          <WidgetText text={absValue.toFixed(0)} />
+          <UnitText text={'s'} />
+        </p>
+      );
     case absValue < 3600:
-      return dayjs.duration(absValue, 'seconds').format('m:ss');
+      return (
+        <p>
+          <WidgetText text={duration.format('m')} />
+          <UnitText text={'m'} /> <WidgetText text={duration.format('s')} />
+          <UnitText text={'s'} />
+        </p>
+      );
     default:
-      return dayjs.duration(absValue, 'seconds').format('H:mm');
+      return (
+        <p>
+          <WidgetText text={duration.format('H')} />
+          <UnitText text={'h'} /> <WidgetText text={duration.format('m')} />
+          <UnitText text={'m'} />
+        </p>
+      );
   }
 };

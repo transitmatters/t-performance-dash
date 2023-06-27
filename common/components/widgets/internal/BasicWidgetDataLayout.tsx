@@ -13,7 +13,6 @@ export type BasicWidgetDataLayoutProps = {
   widgetValue: WidgetValueInterface;
   sentimentDirection?: SentimentDirection;
   layoutKind?: LayoutKind;
-  isLarge?: boolean;
 };
 
 export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
@@ -22,30 +21,15 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
   widgetValue,
   layoutKind = 'total-and-delta',
   sentimentDirection = 'negativeOnIncrease',
-  isLarge = true,
 }) => {
   return (
     <>
       <div className={classNames('relative flex')}>
         {widgetValue.value === undefined && <LoadingSpinner isWidget />}
         <div className={classNames('flex flex-col items-start p-2')}>
-          <p className={classNames('text-base text-gray-500', isLarge ? 'text-base' : 'text-sm')}>
-            {title}
-          </p>
+          <p className={classNames('text-base text-gray-500', 'text-base')}>{title}</p>
           <div className="flex flex-row items-baseline gap-x-1">
-            <p
-              className={classNames(
-                'font-semibold text-gray-900',
-                isLarge ? 'text-2xl' : 'text-xl'
-              )}
-            >
-              {widgetValue.getFormattedValue()}
-            </p>
-            <p
-              className={classNames(isLarge ? 'text-base' : 'text-sm', 'text-design-subtitleGrey')}
-            >
-              {widgetValue.getUnits()}
-            </p>
+            {widgetValue.getFormattedValue()}
           </div>
           <div className="mt-1 flex flex-row items-baseline gap-x-1">
             {layoutKind !== 'no-delta' && (
