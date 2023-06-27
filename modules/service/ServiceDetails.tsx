@@ -72,7 +72,7 @@ export function ServiceDetails() {
             )}
           </WidgetDiv>
           <WidgetDiv>
-            <WidgetTitle title={`Service delivered (% of ${comparison})`} />
+            <WidgetTitle title={`Service delivered`} subtitle={`Compared to ${comparison}`} />
             {serviceDataReady ? (
               <PercentageServiceGraphWrapper
                 data={serviceData.data}
