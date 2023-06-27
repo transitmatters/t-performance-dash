@@ -126,7 +126,7 @@ export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValu
 
 export class TripsWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'Daily trips';
+    return 'Trips';
   }
 
   getFormattedValue() {

@@ -114,7 +114,9 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   callbacks: {
                     ...callbacks,
                     label: (context) => {
-                      return `${context.parsed.y} (${(
+                      return `${context.datasetIndex === 0 ? 'Actual:' : 'Scheduled:'} ${
+                        context.parsed.y
+                      } (${(
                         (100 * context.parsed.y) /
                         PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
                       ).toFixed(1)}% of baseline)`;
