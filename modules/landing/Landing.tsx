@@ -47,13 +47,7 @@ export function Landing() {
       </div>
       <div
         className="fixed left-1/2 top-1/2  z-0 -translate-x-1/2 -translate-y-1/2"
-        style={{ height: md ? '110vh' : '140vw', width: md ? '110vh' : '140vw' }}
-      >
-        <Lottie loop animationData={HeroLottie} play style={{}} />
-      </div>
-      <div
-        className="fixed left-1/2 top-1/2  z-0 -translate-x-1/2 -translate-y-1/2"
-        style={{ height: md ? '110vh' : '140vw', width: md ? '110vh' : '140vw' }}
+        style={{ height: md ? '100vh' : '140vw', width: md ? '100vh' : '140vw' }}
       >
         <Lottie loop animationData={HeroLottie} play style={{}} />
       </div>
