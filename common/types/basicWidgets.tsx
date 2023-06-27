@@ -61,7 +61,7 @@ export class DeltaZonesWidgetValue extends BaseWidgetValue implements WidgetValu
     if (this.delta === undefined) return '...';
     return (
       <p>
-        <WidgetText text={`${this.delta > 0 ? '+' : '-'}${Math.abs(this.delta)}`} />{' '}
+        <WidgetText text={`${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta)}`} />{' '}
         <UnitText text={this.getUnits()} />
       </p>
     );
