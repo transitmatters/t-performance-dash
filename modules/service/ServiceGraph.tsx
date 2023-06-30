@@ -61,12 +61,11 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   label: `Actual trips`,
                   borderColor: lineColor,
                   backgroundColor: hexWithAlpha(lineColor, 0.8),
-                  pointRadius: 8,
-                  pointBackgroundColor: 'transparent',
+                  pointRadius: 0,
                   pointBorderWidth: 0,
                   stepped: true,
                   fill: true,
-                  pointHoverRadius: 3,
+                  pointHoverRadius: 6,
                   pointHoverBackgroundColor: lineColor,
                   data: data.map((datapoint) =>
                     datapoint.value ? datapoint.count / 2 : Number.NaN
@@ -76,8 +75,10 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   label: `MBTA scheduled trips`,
                   stepped: true,
                   fill: true,
-                  pointBackgroundColor: 'transparent',
                   pointBorderWidth: 0,
+                  pointRadius: 0,
+                  pointHoverRadius: 6,
+
                   borderColor: lineColor,
                   spanGaps: false,
                   data: predictedData.counts.map((count, index) =>
@@ -113,7 +114,9 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   callbacks: {
                     ...callbacks,
                     label: (context) => {
-                      return `${context.parsed.y} (${(
+                      return `${context.datasetIndex === 0 ? 'Actual:' : 'Scheduled:'} ${
+                        context.parsed.y
+                      } (${(
                         (100 * context.parsed.y) /
                         PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
                       ).toFixed(1)}% of baseline)`;
@@ -156,7 +159,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   },
                   title: {
                     display: true,
-                    text: 'trips',
+                    text: 'Trips',
                     color: COLORS.design.subtitleGrey,
                   },
                 },

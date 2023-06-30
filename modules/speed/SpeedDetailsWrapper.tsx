@@ -24,7 +24,7 @@ export const SpeedDetailsWrapper: React.FC<SpeedDetailsWrapperProps> = ({
   return (
     <>
       <WidgetDiv>
-        <WidgetTitle title="Median Speed" />
+        <WidgetTitle title="Median speed" />
         <SpeedGraphWrapper
           data={data}
           config={config}

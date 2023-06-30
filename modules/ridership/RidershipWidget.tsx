@@ -27,7 +27,7 @@ export const RidershipWidget: React.FC = () => {
 
   return (
     <WidgetDiv>
-      <HomescreenWidgetTitle title="Weekday Ridership" tab="ridership" />
+      <HomescreenWidgetTitle title="Weekday ridership" tab="ridership" />
       {ridership.data && serviceReady ? (
         <RidershipGraphWrapper
           lineOrRoute={lineOrRoute}

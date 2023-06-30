@@ -50,11 +50,10 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
               {
                 label: `MPH`,
                 borderColor: LINE_COLORS[line ?? 'default'],
-                pointRadius: 8,
-                pointBackgroundColor: 'transparent',
+                pointRadius: 0,
                 pointBorderWidth: 0,
                 stepped: true,
-                pointHoverRadius: 3,
+                pointHoverRadius: 6,
                 spanGaps: false,
                 pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
                 data: data.map((datapoint) =>
@@ -103,7 +102,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'mph',
+                  text: 'Miles per hour (mph)',
                   color: COLORS.design.subtitleGrey,
                 },
               },

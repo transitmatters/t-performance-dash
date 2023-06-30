@@ -160,7 +160,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
             {
               id: 'customTitle',
               afterDraw: (chart) => {
-                if (showTitle) drawSimpleTitle(`Total Slow Time`, chart);
+                if (showTitle) drawSimpleTitle(`Total slow time`, chart);
               },
             },
             ChartjsPluginWatermark,
