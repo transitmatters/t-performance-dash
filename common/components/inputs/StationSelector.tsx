@@ -64,7 +64,7 @@ export const StationSelector: React.FC<StationSelector> = ({
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Listbox.Options className="md:max-w-screen fixed bottom-16 left-0 right-0 top-auto m-auto max-h-96 max-w-xs overflow-auto rounded-md  border border-stone-200 bg-white  shadow-lg  ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-auto md:right-auto md:top-auto md:mt-1 md:max-h-96 md:-translate-x-1/2 md:border-none">
+            <Listbox.Options className="md:max-w-screen fixed bottom-16 left-0 right-0 top-auto m-auto max-h-[75vh] max-w-xs overflow-auto rounded-md  border border-stone-200 bg-white  shadow-lg  ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-auto md:right-auto md:top-auto md:mt-1 md:max-h-[66vh] md:-translate-x-1/2 md:border-none">
               <div className="py-1">
                 {stationOptions?.map((station, stationIndex) => (
                   <Listbox.Option
@@ -76,17 +76,19 @@ export const StationSelector: React.FC<StationSelector> = ({
                     }
                     className={({ active, selected, disabled }) =>
                       classNames(
-                        'relative select-none items-center px-4 py-2',
+                        'relative select-none items-center px-4 py-1',
                         active ? lineColorLightBackground[line ?? 'DEFAULT'] : 'text-gray-900',
                         selected
-                          ? `bg-opacity-20 font-semibold ${lineColorBackground[line ?? 'DEFAULT']}`
+                          ? `bg-opacity-20 text-sm font-semibold ${
+                              lineColorBackground[line ?? 'DEFAULT']
+                            }`
                           : 'font-normal',
                         disabled ? 'cursor-default bg-stone-200 text-stone-600' : 'cursor-pointer'
                       )
                     }
                     value={station}
                   >
-                    <div className="flex items-baseline justify-between gap-x-1 truncate">
+                    <div className="flex items-center justify-between gap-x-1 truncate">
                       {station.stop_name}
                       <div className="flex flex-row gap-x-1 pl-4">
                         {station.enclosed_bike_parking ? (
