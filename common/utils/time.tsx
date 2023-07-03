@@ -63,7 +63,7 @@ export const getFormattedTimeString = (value: number, unit: DurationUnitType = '
     const duration = dayjs.duration(absValue, unit);
     switch (true) {
       case absValue < 1:
-        return `${duration.format('s').padStart(2, '0')}s`;
+        return `${duration.format('s')}s`;
       case absValue < 60:
         return `${duration.format('m')}m ${duration.format('s').padStart(2, '0')}s`;
       default:
