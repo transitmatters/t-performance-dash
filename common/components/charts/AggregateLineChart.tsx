@@ -12,6 +12,7 @@ import { DownloadButton } from '../general/DownloadButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
+import { getFormattedTimeString } from '../../utils/time';
 import { LegendLongTerm } from './Legend';
 import { ChartBorder } from './ChartBorder';
 import { ChartDiv } from './ChartDiv';
@@ -146,7 +147,10 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 position: 'nearest',
                 callbacks: {
                   label: (tooltipItem) => {
-                    return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y} minutes`;
+                    return `${tooltipItem.dataset.label}: ${getFormattedTimeString(
+                      tooltipItem.parsed.y,
+                      'minutes'
+                    )}`;
                   },
                 },
               },

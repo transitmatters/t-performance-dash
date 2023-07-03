@@ -13,6 +13,7 @@ import { DownloadButton } from '../general/DownloadButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
+import { getFormattedTimeString } from '../../utils/time';
 import { Legend as LegendView } from './Legend';
 import { ChartDiv } from './ChartDiv';
 import { ChartBorder } from './ChartBorder';
@@ -128,7 +129,10 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                     ) {
                       return '';
                     }
-                    return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y} minutes`;
+                    return `${tooltipItem.dataset.label}: ${getFormattedTimeString(
+                      tooltipItem.parsed.y,
+                      'minutes'
+                    )}`;
                   },
                   afterBody: (tooltipItems) => {
                     return departureFromNormalString(
