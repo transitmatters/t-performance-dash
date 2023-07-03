@@ -32,6 +32,7 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
       style={{
         flexDirection: isHorizontal && direction === '0' ? 'row-reverse' : 'row',
         fontWeight: fractionOverBaseline >= 0.5 ? 'bold' : 'normal',
+        whiteSpace: 'nowrap',
       }}
       className={styles.slowZoneLabel}
     >
