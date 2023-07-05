@@ -82,8 +82,8 @@ export type LineSegmentData = {
   id: string;
   delay: number;
   stations:
-  | { fromStopIds: string[]; toStopIds: string[] }
-  | { fromStopIds: undefined; toStopIds: undefined };
+    | { fromStopIds: string[]; toStopIds: string[] }
+    | { fromStopIds: undefined; toStopIds: undefined };
 };
 
 export type SpeedRestriction = {

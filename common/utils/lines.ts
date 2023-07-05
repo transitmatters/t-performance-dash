@@ -9,5 +9,5 @@ export const getGtfsRailLineId = (name: Line | LineShort): GtfsColorLineId => {
     throw new Error('Not a valid rail line ID');
   }
   const capped = normalizedColorPart.slice(0, 1).toUpperCase() + normalizedColorPart.slice(1);
-  return `line-${capped}`;
+  return `line-${capped}` as GtfsColorLineId;
 };
