@@ -1,5 +1,5 @@
 import React from 'react';
-import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
+import type { SpeedByLine, SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { TripsWidgetValue } from '../../common/types/basicWidgets';
@@ -7,9 +7,9 @@ import { WidgetForCarousel } from '../../common/components/widgets/internal/Widg
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { getServiceWidgetValues } from './utils/utils';
-import { ServiceGraph } from './ServiceGraph';
+import { ServiceHoursGraph } from './ServiceHoursGraph';
 interface ServiceGraphWrapperProps {
-  data: SpeedDataPoint[];
+  data: SpeedByLine[];
   predictedData: TripCounts;
   config: ParamsType;
   startDate: string;
@@ -23,7 +23,7 @@ export const ServiceGraphWrapper: React.FC<ServiceGraphWrapperProps> = ({
   startDate,
   endDate,
 }) => {
-  if (!data.some((datapoint) => datapoint.value !== null)) return <NoDataNotice isLineMetric />;
+  if (!data.some((datapoint) => datapoint.miles_covered)) return <NoDataNotice isLineMetric />;
   const { average, peak } = getServiceWidgetValues(data, predictedData.counts);
 
   return (
@@ -39,10 +39,10 @@ export const ServiceGraphWrapper: React.FC<ServiceGraphWrapperProps> = ({
           layoutKind="no-delta"
           sentimentDirection={'positiveOnIncrease'}
           analysis={`Peak - ${config.getWidgetTitle(peak.date)}`}
-          widgetValue={new TripsWidgetValue(peak ? peak.count / 2 : undefined)}
+          widgetValue={new TripsWidgetValue(peak ? peak.count : undefined)}
         />
       </WidgetCarousel>
-      <ServiceGraph
+      <ServiceHoursGraph
         config={config}
         data={data}
         startDate={startDate}

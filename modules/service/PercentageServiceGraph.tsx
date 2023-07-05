@@ -8,7 +8,7 @@ import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedDataPoint } from '../../common/types/dataPoints';
+import type { SpeedByLine, SpeedDataPoint } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
@@ -16,9 +16,10 @@ import type { ParamsType } from '../speed/constants/speeds';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
+import { round } from 'lodash';
 
 interface PercentageServiceGraphProps {
-  data: SpeedDataPoint[];
+  data: SpeedByLine[];
   calculatedData: { scheduled: number[]; baseline: number[] };
   config: ParamsType;
   startDate: string;
@@ -106,7 +107,12 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
                 tooltip: {
                   mode: 'index',
                   position: 'nearest',
-                  callbacks: callbacks,
+                  callbacks: {
+                    ...callbacks,
+                    label: (context) => {
+                      return `${round(context.parsed.y, 1)}% of ${comparison}`;
+                    },
+                  },
                 },
                 legend: {
                   position: 'bottom',

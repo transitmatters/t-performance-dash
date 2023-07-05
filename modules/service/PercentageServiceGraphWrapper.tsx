@@ -1,6 +1,6 @@
 import React from 'react';
 import type { SetStateAction } from 'react';
-import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
+import type { SpeedByLine, SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { PercentageWidgetValue } from '../../common/types/basicWidgets';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
@@ -13,7 +13,7 @@ import { PercentageServiceGraph } from './PercentageServiceGraph';
 import { getPercentageData, getAverageWithNaNs } from './utils/utils';
 
 interface PercentageServiceGraphWrapperProps {
-  data: SpeedDataPoint[];
+  data: SpeedByLine[];
   predictedData: TripCounts;
   config: ParamsType;
   startDate: string;
@@ -33,7 +33,7 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
 }) => {
   // TODO: Add 1 or 2 widgets to percentage service graph.
   const { line } = useDelimitatedRoute();
-  if (!data.some((datapoint) => datapoint.value !== null)) return <NoDataNotice isLineMetric />;
+  if (!data.some((datapoint) => datapoint.miles_covered)) return <NoDataNotice isLineMetric />;
 
   const { scheduled, baseline } = getPercentageData(data, predictedData, line);
   const scheduledAverage = getAverageWithNaNs(scheduled);

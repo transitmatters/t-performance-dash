@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
+import type { SpeedByLine, SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { PercentageWidgetValue, TripsWidgetValue } from '../../common/types/basicWidgets';
 import type { ParamsType } from '../speed/constants/speeds';
@@ -8,7 +8,7 @@ import { ServiceGraph } from './ServiceGraph';
 import { getServiceWidgetValues } from './utils/utils';
 
 interface ServiceOverviewWrapperProps {
-  data: SpeedDataPoint[];
+  data: SpeedByLine[];
   predictedData: TripCounts;
   config: ParamsType;
   startDate: string;

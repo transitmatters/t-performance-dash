@@ -7,7 +7,7 @@ import { enUS } from 'date-fns/locale';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedDataPoint } from '../../common/types/dataPoints';
+import type { SpeedByLine, SpeedDataPoint } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
@@ -17,7 +17,7 @@ import { CORE_TRACK_LENGTHS, PEAK_MPH } from './constants/speeds';
 import type { ParamsType } from './constants/speeds';
 
 interface SpeedGraphProps {
-  data: SpeedDataPoint[];
+  data: SpeedByLine[];
   config: ParamsType;
   startDate: string;
   endDate: string;
@@ -57,9 +57,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 spanGaps: false,
                 pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
                 data: data.map((datapoint) =>
-                  datapoint.value
-                    ? (CORE_TRACK_LENGTHS[line ?? 'DEFAULT'] / (datapoint.value / 3600)).toFixed(1)
-                    : Number.NaN
+                  (datapoint.miles_covered / (datapoint.total_time / 3600)).toFixed(1)
                 ),
               },
             ],

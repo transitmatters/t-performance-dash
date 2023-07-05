@@ -1,8 +1,8 @@
 import { PEAK_SCHEDULED_SERVICE } from '../../../common/constants/baselines';
-import type { SpeedDataPoint, TripCounts } from '../../../common/types/dataPoints';
+import type { SpeedByLine, SpeedDataPoint, TripCounts } from '../../../common/types/dataPoints';
 import type { Line } from '../../../common/types/lines';
 
-export const getServiceWidgetValues = (datapoints: SpeedDataPoint[], predictedData: number[]) => {
+export const getServiceWidgetValues = (datapoints: SpeedByLine[], predictedData: number[]) => {
   const totals = datapoints.reduce(
     (totals, datapoint, index) => {
       if (datapoint.count && predictedData[index]) {
@@ -16,10 +16,10 @@ export const getServiceWidgetValues = (datapoints: SpeedDataPoint[], predictedDa
     { actual: 0, scheduled: 0 }
   );
   const percentDelivered = totals.actual / totals.scheduled;
-  const datapointsCount = datapoints.filter((datapoint) => datapoint.value !== null).length;
-  const current = datapoints[datapoints.length - 1].count / 2;
-  const delta = current - datapoints[0].count / 2;
-  const average = datapoints.reduce((sum, speed) => sum + speed.count, 0) / datapointsCount / 2;
+  const datapointsCount = datapoints.filter((datapoint) => datapoint.miles_covered).length;
+  const current = datapoints[datapoints.length - 1].count;
+  const delta = current - datapoints[0].count;
+  const average = datapoints.reduce((sum, speed) => sum + speed.count, 0) / datapointsCount;
   const peak = datapoints.reduce(
     (max, speed) => (speed.count > max.count ? speed : max),
     datapoints[0]
@@ -27,19 +27,15 @@ export const getServiceWidgetValues = (datapoints: SpeedDataPoint[], predictedDa
   return { current, delta, average, peak, percentDelivered };
 };
 
-export const getPercentageData = (
-  data: SpeedDataPoint[],
-  predictedData: TripCounts,
-  line?: Line
-) => {
+export const getPercentageData = (data: SpeedByLine[], predictedData: TripCounts, line?: Line) => {
   const scheduled = data.map((datapoint, index) => {
-    return datapoint.value && predictedData.counts[index]
-      ? (100 * datapoint.count) / predictedData.counts[index]
+    return datapoint.miles_covered && predictedData.counts[index]
+      ? (100 * datapoint.count) / (predictedData.counts[index] / 2)
       : Number.NaN;
   });
   const baseline = data.map((datapoint) =>
-    datapoint.value
-      ? (100 * datapoint.count) / 2 / PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
+    datapoint.miles_covered
+      ? (100 * datapoint.count) / PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
       : Number.NaN
   );
   return { scheduled: scheduled, baseline: baseline };

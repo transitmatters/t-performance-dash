@@ -3,9 +3,17 @@ export const PEAK_SCHEDULED_SERVICE = {
   'line-red': 223,
   'line-orange': 161,
   'line-blue': 186,
-  'line-green': 506,
+  'line-green': 499,
   'line-bus': 0,
   DEFAULT: 0,
+};
+
+export const PEAK_SPEED = {
+  'line-red': 21.4,
+  'line-orange': 18,
+  'line-blue': 20.5,
+  'line-green': 12.6,
+  'line-bus': 0,
 };
 
 // These are manually chosen based off the peak value. Need to be updated when all data is generated.

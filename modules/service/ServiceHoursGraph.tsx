@@ -8,18 +8,18 @@ import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedByLine, TripCounts } from '../../common/types/dataPoints';
+import type { SpeedByLine, SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
-import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/baselines';
+import { PEAK_SCHEDULED_SERVICE, PEAK_SERVICE_HOURS } from '../../common/constants/baselines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
-interface ServiceGraphProps {
+interface ServiceHoursGraphProps {
   data: SpeedByLine[];
   predictedData: TripCounts;
   config: ParamsType;
@@ -28,7 +28,7 @@ interface ServiceGraphProps {
   showTitle?: boolean;
 }
 
-export const ServiceGraph: React.FC<ServiceGraphProps> = ({
+export const ServiceHoursGraph: React.FC<ServiceHoursGraphProps> = ({
   data,
   predictedData,
   config,

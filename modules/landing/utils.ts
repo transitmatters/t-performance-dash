@@ -3,10 +3,18 @@ import {
   PEAK_COMPLETE_TRIP_TIMES,
   PEAK_RIDERSHIP,
   PEAK_SCHEDULED_SERVICE,
+  PEAK_SPEED,
 } from '../../common/constants/baselines';
 import { LINE_COLORS } from '../../common/constants/colors';
-import type { RidershipCount, SpeedDataPoint } from '../../common/types/dataPoints';
+import type {
+  DailyTrip,
+  RidershipCount,
+  SpeedByLine,
+  SpeedDataPoint,
+} from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
+import { PEAK_MPH } from '../speed/constants/speeds';
+import { round } from 'lodash';
 
 const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
   return {
@@ -22,25 +30,24 @@ const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
   };
 };
 
-export const convertToSpeedDataset = (data: SpeedDataPoint[]) => {
+export const convertToSpeedDataset = (data: SpeedByLine[]) => {
   const { line } = data[0];
   const datasetOptions = getDatasetOptions(line);
   return {
     ...datasetOptions,
     label: `% of baseline`,
     data: data.map((datapoint) =>
-      datapoint.value
-        ? Math.round(
-            10 *
-              (100 *
-                (1 / datapoint.value / (1 / PEAK_COMPLETE_TRIP_TIMES[line ?? 'DEFAULT'].value)))
-          ) / 10
+      datapoint.miles_covered
+        ? round(
+            (100 * datapoint.miles_covered) / (datapoint.total_time / 3600) / PEAK_SPEED[line],
+            1
+          )
         : Number.NaN
     ),
   };
 };
 
-export const convertToServiceDataset = (data: SpeedDataPoint[]) => {
+export const convertToServiceDataset = (data: SpeedByLine[]) => {
   const { line } = data[0];
   const datasetOptions = getDatasetOptions(line);
 
@@ -48,8 +55,8 @@ export const convertToServiceDataset = (data: SpeedDataPoint[]) => {
     ...datasetOptions,
     label: `% of baseline`,
     data: data.map((datapoint) =>
-      datapoint.value
-        ? Math.round((10 * (100 * (datapoint.count / 2))) / PEAK_SCHEDULED_SERVICE[line]) / 10
+      datapoint.miles_covered
+        ? round((100 * datapoint.count) / PEAK_SCHEDULED_SERVICE[line], 1)
         : Number.NaN
     ),
   };

@@ -7,6 +7,7 @@ export const LINE_OBJECTS: LineObject = {
     short: 'Red',
     path: 'red',
     key: 'line-red',
+    routes: ['line-red-a', 'line-red-b'],
     color: COLORS.mbta.red,
   },
   'line-orange': {
@@ -14,6 +15,7 @@ export const LINE_OBJECTS: LineObject = {
     short: 'Orange',
     path: 'orange',
     key: 'line-orange',
+    routes: ['line-orange'],
     color: COLORS.mbta.orange,
   },
   'line-green': {
@@ -21,6 +23,7 @@ export const LINE_OBJECTS: LineObject = {
     short: 'Green',
     path: 'green',
     key: 'line-green',
+    routes: ['line-green-b', 'line-green-c', 'line-green-d', 'line-green-e'],
     color: COLORS.mbta.green,
   },
   'line-blue': {
@@ -28,6 +31,7 @@ export const LINE_OBJECTS: LineObject = {
     short: 'Blue',
     path: 'blue',
     key: 'line-blue',
+    routes: ['line-blue'],
     color: COLORS.mbta.blue,
   },
   'line-bus': {

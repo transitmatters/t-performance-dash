@@ -13,6 +13,7 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';
 import { PercentageServiceGraphWrapper } from './PercentageServiceGraphWrapper';
+import { useActualTripsDataByLine } from '../../common/api/hooks/dailytrips';
 dayjs.extend(utc);
 
 export function ServiceDetails() {
@@ -24,7 +25,7 @@ export function ServiceDetails() {
   const [comparison, setComparison] = useState<'Baseline' | 'Scheduled'>('Scheduled');
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const enabled = Boolean(startDate && endDate && line && config.agg);
-  const serviceData = useSpeedData(
+  const tripsData = useActualTripsDataByLine(
     {
       start_date: startDate,
       end_date: endDate,
@@ -44,8 +45,7 @@ export function ServiceDetails() {
     enabled
   ).data;
 
-  const serviceDataReady =
-    !serviceData.isError && serviceData.data && line && config && predictedData;
+  const serviceDataReady = !tripsData.isError && tripsData.data && line && config && predictedData;
 
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
@@ -59,7 +59,7 @@ export function ServiceDetails() {
             <WidgetTitle title="Daily round trips" />
             {serviceDataReady ? (
               <ServiceGraphWrapper
-                data={serviceData.data}
+                data={tripsData.data}
                 predictedData={predictedData}
                 config={config}
                 startDate={startDate}
@@ -67,7 +67,7 @@ export function ServiceDetails() {
               />
             ) : (
               <div className="relative flex h-full">
-                <ChartPlaceHolder query={serviceData} />
+                <ChartPlaceHolder query={tripsData} />
               </div>
             )}
           </WidgetDiv>
@@ -75,7 +75,7 @@ export function ServiceDetails() {
             <WidgetTitle title={`Service delivered`} subtitle={`Compared to ${comparison}`} />
             {serviceDataReady ? (
               <PercentageServiceGraphWrapper
-                data={serviceData.data}
+                data={tripsData.data}
                 predictedData={predictedData}
                 config={config}
                 startDate={startDate}
@@ -85,7 +85,7 @@ export function ServiceDetails() {
               />
             ) : (
               <div className="relative flex h-full">
-                <ChartPlaceHolder query={serviceData} />
+                <ChartPlaceHolder query={tripsData} />
               </div>
             )}
           </WidgetDiv>

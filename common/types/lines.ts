@@ -1,4 +1,13 @@
 export type Line = 'line-red' | 'line-orange' | 'line-green' | 'line-blue' | 'line-bus';
+export type Route =
+  | 'line-red-a'
+  | 'line-red-b'
+  | 'line-orange'
+  | 'line-green-b'
+  | 'line-green-c'
+  | 'line-green-d'
+  | 'line-green-e'
+  | 'line-blue';
 export type LineShort = 'Red' | 'Orange' | 'Green' | 'Blue' | 'Bus';
 export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus';
 export type BusRoute =
@@ -23,6 +32,7 @@ export type LineMetadata = {
   short: LineShort;
   path: LinePath;
   key: Line;
+  routes?: Route[];
 };
 export type LineObject = { [key in Line]: LineMetadata };
 
@@ -34,7 +44,18 @@ export const RIDERSHIP_KEYS = {
 };
 
 export const HEAVY_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue'];
-export const LANDING_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue','line-green'];
+export const LANDING_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue', 'line-green'];
+export const LANDING_ROUTES: Route[] = [
+  'line-red-a',
+  'line-red-b',
+  'line-orange',
+  'line-blue',
+  'line-green-b',
+  'line-green-c',
+  'line-green-d',
+  'line-green-e',
+];
+
 export const RAIL_LINES = ['red', 'orange', 'green', 'blue'];
 export const BUS_ROUTES = [
   '1',
