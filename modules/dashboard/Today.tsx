@@ -29,7 +29,7 @@ export const Today: React.FC<TodayProps> = ({ lineShort }) => {
         </div>
         {canShowSlowZonesMap && allSlow.data && speedRestrictions.data && (
           <WidgetDiv className="h-full">
-            <WidgetTitle title="Slow Zones" />
+            <WidgetTitle title="Slow zones" />
             <SlowZonesMap
               key={lineShort}
               slowZones={allSlow.data}

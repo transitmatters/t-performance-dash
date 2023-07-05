@@ -48,7 +48,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
       {aggregate ? (
         <>
           <WidgetDiv>
-            <WidgetTitle title="Travel Times" location={location} line={line} both />
+            <WidgetTitle title="Travel times" location={location} line={line} both />
             <TravelTimesAggregateWrapper
               query={traveltimes}
               fromStation={fromStation}
@@ -83,7 +83,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             />
           </WidgetDiv>
           <WidgetDiv className="flex flex-col justify-center">
-            <WidgetTitle title="Travel Times by Hour" location={location} line={line} both />
+            <WidgetTitle title="Travel times by hour" location={location} line={line} both />
             <AggregateChartWrapper
               query={traveltimes}
               toStation={toStation}
@@ -97,7 +97,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
                 pressFunction={setPeakTime}
                 options={[
                   ['weekday', 'Weekday'],
-                  ['weekend', 'Weekend/Holiday'],
+                  ['weekend', 'Weekend/holiday'],
                 ]}
                 additionalDivClass="md:w-auto"
                 additionalButtonClass="md:w-fit"
@@ -108,7 +108,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
       ) : (
         <>
           <WidgetDiv>
-            <WidgetTitle title="Travel Times" location={location} line={line} both />
+            <WidgetTitle title="Travel times" location={location} line={line} both />
             <TravelTimesSingleWrapper
               query={traveltimes}
               toStation={toStation}

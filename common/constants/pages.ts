@@ -83,8 +83,8 @@ export const ALL_PAGES: PageMap = {
   multiTrips: {
     key: 'multiTrips',
     path: '/trips/multi',
-    name: 'Multi Day Trips',
-    title: 'Multi Day Trips',
+    name: 'Multi-day trips',
+    title: 'Multi-day trips',
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
     icon: faCalendar,
     dateStoreSection: 'multiTrips',
@@ -93,7 +93,7 @@ export const ALL_PAGES: PageMap = {
   overview: {
     key: 'overview',
     path: '/',
-    name: 'Line Overview',
+    name: 'Line overview',
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange'],
     dateStoreSection: 'overview',
     icon: faTableColumns,
@@ -121,7 +121,7 @@ export const ALL_PAGES: PageMap = {
   slowzones: {
     key: 'slowzones',
     path: '/slowzones',
-    name: 'Slow Zones',
+    name: 'Slow zones',
     lines: ['line-red', 'line-blue', 'line-orange'],
     icon: faWarning,
     dateStoreSection: 'line',
@@ -131,7 +131,7 @@ export const ALL_PAGES: PageMap = {
   systemSlowzones: {
     key: 'systemSlowzones',
     path: '/slowzones',
-    name: 'Slow Zones',
+    name: 'Slow zones',
     lines: [],
     icon: faWarning,
     dateStoreSection: 'system',

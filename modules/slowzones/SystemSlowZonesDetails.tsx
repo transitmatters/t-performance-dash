@@ -26,10 +26,10 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
   const totalSlowTimeReady = !delayTotals.isError && delayTotals.data && startDateUTC && endDateUTC;
 
   return (
-    <PageWrapper pageTitle={'Slow Zones'}>
+    <PageWrapper pageTitle={'Slow zones'}>
       <div className="flex flex-col gap-4">
         <WidgetDiv>
-          <WidgetTitle title="Total Slow Time" />
+          <WidgetTitle title="Total slow time" />
           <div className="relative flex flex-col">
             {totalSlowTimeReady ? (
               <div className="relative flex h-60">

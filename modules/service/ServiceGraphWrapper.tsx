@@ -24,19 +24,13 @@ export const ServiceGraphWrapper: React.FC<ServiceGraphWrapperProps> = ({
   endDate,
 }) => {
   if (!data.some((datapoint) => datapoint.value !== null)) return <NoDataNotice isLineMetric />;
-  const { current, delta, average, peak } = getServiceWidgetValues(data, predictedData.counts);
+  const { average, peak } = getServiceWidgetValues(data, predictedData.counts);
 
   return (
     <CarouselGraphDiv>
       <WidgetCarousel>
         <WidgetForCarousel
-          widgetValue={new TripsWidgetValue(current, delta)}
-          sentimentDirection={'positiveOnIncrease'}
-          analysis={`Current (actual) - ${config.getWidgetTitle(data[data.length - 1].date)}`}
-          layoutKind="no-delta"
-        />
-        <WidgetForCarousel
-          analysis={'Average (actual)'}
+          analysis={'Average'}
           sentimentDirection={'positiveOnIncrease'}
           layoutKind="no-delta"
           widgetValue={new TripsWidgetValue(average)}
@@ -44,7 +38,7 @@ export const ServiceGraphWrapper: React.FC<ServiceGraphWrapperProps> = ({
         <WidgetForCarousel
           layoutKind="no-delta"
           sentimentDirection={'positiveOnIncrease'}
-          analysis={`Peak (actual) - ${config.getWidgetTitle(peak.date)}`}
+          analysis={`Peak - ${config.getWidgetTitle(peak.date)}`}
           widgetValue={new TripsWidgetValue(peak ? peak.count / 2 : undefined)}
         />
       </WidgetCarousel>
