@@ -2,8 +2,8 @@ import React, { useMemo } from 'react';
 
 import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 import type { LineMetadata } from '../../../common/types/lines';
-import { stringifyTime } from '../../../common/utils/time';
 
+import { getFormattedTimeString } from '../../../common/utils/time';
 import type { SlowZoneDirection, SlowZonesSegment } from './segment';
 import { DIRECTIONS } from './segment';
 
@@ -23,15 +23,7 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
   color,
   slowZone: { delay, baseline },
 }) => {
-  const delayString = useMemo(
-    () =>
-      stringifyTime(delay, {
-        showHours: false,
-        showSeconds: true,
-        truncateLeadingMinutesZeros: true,
-      }),
-    [delay]
-  );
+  const delayString = useMemo(() => getFormattedTimeString(delay), [delay]);
 
   const fractionOverBaseline = -1 + (delay + baseline) / baseline;
 
@@ -40,6 +32,7 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
       style={{
         flexDirection: isHorizontal && direction === '0' ? 'row-reverse' : 'row',
         fontWeight: fractionOverBaseline >= 0.5 ? 'bold' : 'normal',
+        whiteSpace: 'nowrap',
       }}
       className={styles.slowZoneLabel}
     >
