@@ -1,20 +1,13 @@
 import type { ChartDataset } from 'chart.js';
+import { round } from 'lodash';
 import {
-  PEAK_COMPLETE_TRIP_TIMES,
   PEAK_RIDERSHIP,
   PEAK_SCHEDULED_SERVICE,
   PEAK_SPEED,
 } from '../../common/constants/baselines';
 import { LINE_COLORS } from '../../common/constants/colors';
-import type {
-  DailyTrip,
-  RidershipCount,
-  SpeedByLine,
-  SpeedDataPoint,
-} from '../../common/types/dataPoints';
+import type { RidershipCount, SpeedByLine } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
-import { PEAK_MPH } from '../speed/constants/speeds';
-import { round } from 'lodash';
 
 const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
   return {
@@ -35,7 +28,7 @@ export const convertToSpeedDataset = (data: SpeedByLine[]) => {
   const datasetOptions = getDatasetOptions(line);
   return {
     ...datasetOptions,
-    label: `% of baseline`,
+    label: `% of peak`,
     data: data.map((datapoint) =>
       datapoint.miles_covered
         ? round(
@@ -53,7 +46,7 @@ export const convertToServiceDataset = (data: SpeedByLine[]) => {
 
   return {
     ...datasetOptions,
-    label: `% of baseline`,
+    label: `% of peak`,
     data: data.map((datapoint) =>
       datapoint.miles_covered
         ? round((100 * datapoint.count) / PEAK_SCHEDULED_SERVICE[line], 1)
@@ -67,7 +60,7 @@ export const convertToRidershipDataset = (data: RidershipCount[], line: Line) =>
 
   return {
     ...datasetOptions,
-    label: `% of baseline`,
+    label: `% of peak`,
     data: data.map((datapoint) =>
       datapoint.count
         ? Math.round(10 * 100 * (datapoint.count / PEAK_RIDERSHIP[line])) / 10

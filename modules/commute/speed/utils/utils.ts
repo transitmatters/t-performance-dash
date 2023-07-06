@@ -1,7 +1,5 @@
-import { UseQueryResult } from '@tanstack/react-query';
-import type { DailyTrip, SpeedDataPoint } from '../../../../common/types/dataPoints';
+import type { SpeedDataPoint } from '../../../../common/types/dataPoints';
 import { CORE_TRACK_LENGTHS, PEAK_MPH } from '../../../speed/constants/speeds';
-import { Line } from '../../../../common/types/lines';
 
 export const calculateCommuteSpeedWidgetValues = (
   weeklyData: SpeedDataPoint[],

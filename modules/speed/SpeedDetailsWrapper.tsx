@@ -1,5 +1,5 @@
 import React from 'react';
-import type { SpeedByLine, SpeedDataPoint } from '../../common/types/dataPoints';
+import type { SpeedByLine } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../dashboard/WidgetTitle';

@@ -1,8 +1,8 @@
 import React from 'react';
-import type { SpeedByLine, SpeedDataPoint } from '../../../common/types/dataPoints';
-import { convertToServiceDataset } from '../utils';
-import { LandingChartDiv } from '../LandingChartDiv';
+import type { SpeedByLine } from '../../../common/types/dataPoints';
 import { ServiceBaseline } from '../../../copy/landingCopy';
+import { LandingChartDiv } from '../LandingChartDiv';
+import { convertToServiceDataset } from '../utils';
 import { LandingPageChart } from './LandingPageChart';
 
 interface OverallServiceChartProps {

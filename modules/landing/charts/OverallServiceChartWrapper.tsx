@@ -1,8 +1,7 @@
 import React from 'react';
-import { useSpeedDataLanding } from '../../../common/api/hooks/speed';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
-import { OverallServiceChart } from './OverallServiceChart';
 import { useDailyTripsDataLanding } from '../../../common/api/hooks/dailytrips';
+import { OverallServiceChart } from './OverallServiceChart';
 
 export const OverallServiceChartWrapper: React.FC = () => {
   const serviceData = useDailyTripsDataLanding();

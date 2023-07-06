@@ -3,7 +3,7 @@ import { fetchSpeeds } from '../speed';
 import type { FetchSpeedsOptions } from '../../types/api';
 import { FIVE_MINUTES, ONE_HOUR } from '../../constants/time';
 import { THREE_MONTHS_AGO_STRING, TODAY_STRING } from '../../constants/dates';
-import { HEAVY_RAIL_LINES, LANDING_RAIL_LINES } from '../../types/lines';
+import { LANDING_RAIL_LINES } from '../../types/lines';
 
 export const useSpeedData = (params: FetchSpeedsOptions, enabled?: boolean) => {
   return useQuery(['speed', params], () => fetchSpeeds(params), {

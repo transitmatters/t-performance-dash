@@ -89,7 +89,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                 },
                 {
                   // This null dataset produces the entry in the legend for the baseline annotation.
-                  label: `Baseline (${peak})`,
+                  label: `Peak (${peak})`,
                   backgroundColor: CHART_COLORS.ANNOTATIONS,
                   data: null,
                 },
@@ -117,7 +117,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                     label: (context) => {
                       return `${context.datasetIndex === 0 ? 'Actual:' : 'Scheduled:'} ${
                         context.parsed.y
-                      } (${((100 * context.parsed.y) / peak).toFixed(1)}% of baseline)`;
+                      } (${((100 * context.parsed.y) / peak).toFixed(1)}% of peak)`;
                     },
                   },
                 },

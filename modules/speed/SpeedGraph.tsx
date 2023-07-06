@@ -6,14 +6,16 @@ import { enUS } from 'date-fns/locale';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedByLine, SpeedDataPoint } from '../../common/types/dataPoints';
+import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
+import type { SpeedByLine } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
-import { CORE_TRACK_LENGTHS, PEAK_MPH } from './constants/speeds';
+import { PEAK_SPEED } from '../../common/constants/baselines';
+import { getShuttlingBlockAnnotations } from '../service/utils/graphUtils';
+import { PEAK_MPH } from './constants/speeds';
 import type { ParamsType } from './constants/speeds';
 
 interface SpeedGraphProps {
@@ -33,9 +35,12 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
 }) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
+  const peak = PEAK_SPEED[line ?? 'DEFAULT'];
   const ref = useRef();
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
+  const shuttlingBlocks = getShuttlingBlockAnnotations(data);
+
   return (
     <ChartBorder>
       <ChartDiv isMobile={isMobile}>
@@ -56,9 +61,16 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 pointHoverRadius: 6,
                 spanGaps: false,
                 pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
+                pointBackgroundColor: LINE_COLORS[line ?? 'default'],
                 data: data.map((datapoint) =>
                   (datapoint.miles_covered / (datapoint.total_time / 3600)).toFixed(1)
                 ),
+              },
+              {
+                // This null dataset produces the entry in the legend for the baseline annotation.
+                label: `Peak (${peak})`,
+                backgroundColor: CHART_COLORS.ANNOTATIONS,
+                data: null,
               },
             ],
           }}
@@ -79,15 +91,40 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
               tooltip: {
                 mode: 'index',
                 position: 'nearest',
-                callbacks: callbacks,
+                callbacks: {
+                  ...callbacks,
+                  label: (context) => {
+                    return `${context.parsed.y} (${((100 * context.parsed.y) / peak).toFixed(
+                      1
+                    )}% of peak)`;
+                  },
+                },
               },
               legend: {
-                display: false,
+                position: 'bottom',
+                labels: {
+                  boxWidth: 15,
+                },
               },
               title: {
                 // empty title to set font and leave room for drawTitle fn
                 display: showTitle,
                 text: '',
+              },
+              annotation: {
+                // Add your annotations here
+                annotations: [
+                  {
+                    type: 'line',
+                    yMin: peak,
+                    yMax: peak,
+                    borderColor: CHART_COLORS.ANNOTATIONS,
+                    // corresponds to null dataset index.
+                    display: (ctx) => ctx.chart.isDatasetVisible(1),
+                    borderWidth: 2,
+                  },
+                  ...shuttlingBlocks,
+                ],
               },
             },
             scales: {

@@ -27,9 +27,7 @@ export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
       </div>
       <div className="flex flex-row items-baseline gap-2 md:flex-col md:items-center">
         <h3 className="text-center text-3xl font-thin md:text-xl">{LINE_OBJECTS[line].name}</h3>
-        {(line === 'line-green' || line === 'line-bus') && (
-          <p className="text-center font-bold">(WIP)</p>
-        )}
+        {line === 'line-bus' && <p className="text-center font-bold">(WIP)</p>}
       </div>
     </Link>
   );

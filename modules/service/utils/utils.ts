@@ -1,5 +1,5 @@
 import { PEAK_SCHEDULED_SERVICE } from '../../../common/constants/baselines';
-import type { SpeedByLine, SpeedDataPoint, TripCounts } from '../../../common/types/dataPoints';
+import type { SpeedByLine, TripCounts } from '../../../common/types/dataPoints';
 import type { Line } from '../../../common/types/lines';
 
 export const getServiceWidgetValues = (datapoints: SpeedByLine[], predictedData: number[]) => {

@@ -7,9 +7,9 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { useActualTripsDataByLine } from '../../common/api/hooks/dailytrips';
 import { getSpeedGraphConfig } from './constants/speeds';
 import { SpeedDetailsWrapper } from './SpeedDetailsWrapper';
-import { useActualTripsDataByLine } from '../../common/api/hooks/dailytrips';
 dayjs.extend(utc);
 
 export function SpeedDetails() {

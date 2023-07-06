@@ -1,5 +1,5 @@
 import React from 'react';
-import type { SpeedByLine, SpeedDataPoint } from '../../../common/types/dataPoints';
+import type { SpeedByLine } from '../../../common/types/dataPoints';
 import { convertToSpeedDataset } from '../utils';
 import { LandingChartDiv } from '../LandingChartDiv';
 import { SpeedBaseline } from '../../../copy/landingCopy';

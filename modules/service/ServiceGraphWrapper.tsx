@@ -1,5 +1,5 @@
 import React from 'react';
-import type { SpeedByLine, SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
+import type { SpeedByLine, TripCounts } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { TripsWidgetValue } from '../../common/types/basicWidgets';

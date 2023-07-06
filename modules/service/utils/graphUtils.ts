@@ -1,6 +1,6 @@
 import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
 import { CHART_COLORS } from '../../../common/constants/colors';
-import type { SpeedByLine, SpeedDataPoint } from '../../../common/types/dataPoints';
+import type { SpeedByLine } from '../../../common/types/dataPoints';
 
 const shuttlingAnnotationBlockStyle = {
   backgroundColor: CHART_COLORS.BLOCKS,

@@ -1,8 +1,7 @@
 import React from 'react';
-import { useSpeedDataLanding } from '../../../common/api/hooks/speed';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
-import { OverallSpeedChart } from './OverallSpeedChart';
 import { useDailyTripsDataLanding } from '../../../common/api/hooks/dailytrips';
+import { OverallSpeedChart } from './OverallSpeedChart';
 
 export const OverallSpeedChartWrapper: React.FC = () => {
   const dailyTripsData = useDailyTripsDataLanding();

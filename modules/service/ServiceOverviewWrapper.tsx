@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import type { SpeedByLine, SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
+import type { SpeedByLine, TripCounts } from '../../common/types/dataPoints';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { PercentageWidgetValue, TripsWidgetValue } from '../../common/types/basicWidgets';
 import type { ParamsType } from '../speed/constants/speeds';

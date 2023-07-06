@@ -1,6 +1,6 @@
 import React from 'react';
 import type { SetStateAction } from 'react';
-import type { SpeedByLine, SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
+import type { SpeedByLine, TripCounts } from '../../common/types/dataPoints';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { PercentageWidgetValue } from '../../common/types/basicWidgets';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';

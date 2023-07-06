@@ -1,6 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import { Line } from 'react-chartjs-2';
 
+import { round } from 'lodash';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
@@ -8,7 +9,7 @@ import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedByLine, SpeedDataPoint } from '../../common/types/dataPoints';
+import type { SpeedByLine } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
@@ -16,7 +17,6 @@ import type { ParamsType } from '../speed/constants/speeds';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
-import { round } from 'lodash';
 
 interface PercentageServiceGraphProps {
   data: SpeedByLine[];

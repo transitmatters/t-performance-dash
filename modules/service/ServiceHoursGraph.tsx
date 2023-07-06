@@ -8,11 +8,11 @@ import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedByLine, SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
+import type { SpeedByLine, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
-import { PEAK_SCHEDULED_SERVICE, PEAK_SERVICE_HOURS } from '../../common/constants/baselines';
+import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/baselines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
@@ -89,7 +89,7 @@ export const ServiceHoursGraph: React.FC<ServiceHoursGraphProps> = ({
                 },
                 {
                   // This null dataset produces the entry in the legend for the baseline annotation.
-                  label: `Baseline (${peak})`,
+                  label: `Peak (${peak})`,
                   backgroundColor: CHART_COLORS.ANNOTATIONS,
                   data: null,
                 },
@@ -117,7 +117,7 @@ export const ServiceHoursGraph: React.FC<ServiceHoursGraphProps> = ({
                     label: (context) => {
                       return `${context.datasetIndex === 0 ? 'Actual:' : 'Scheduled:'} ${
                         context.parsed.y
-                      } (${((100 * context.parsed.y) / peak).toFixed(1)}% of baseline)`;
+                      } (${((100 * context.parsed.y) / peak).toFixed(1)}% of peak)`;
                     },
                   },
                 },
@@ -224,6 +224,7 @@ export const ServiceHoursGraph: React.FC<ServiceHoursGraphProps> = ({
     predictedData.counts,
     showTitle,
     callbacks,
+    peak,
     startDate,
     endDate,
     unit,

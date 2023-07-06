@@ -1,5 +1,4 @@
-import { parseMutationArgs, useQueries, useQuery } from '@tanstack/react-query';
-import { fetchSpeeds } from '../speed';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import type {
   FetchActualTripsByLineOptions,
   FetchActualTripsByRouteOptions,
@@ -7,13 +6,13 @@ import type {
 } from '../../types/api';
 import { FIVE_MINUTES, ONE_HOUR } from '../../constants/time';
 import { THREE_MONTHS_AGO_STRING, TODAY_STRING } from '../../constants/dates';
-import { LANDING_RAIL_LINES, LANDING_ROUTES } from '../../types/lines';
-import { fetchActualTripsByLine, fetchActualTripsByRoute } from '../dailytrips';
+import { LANDING_RAIL_LINES } from '../../types/lines';
 import { LINE_OBJECTS } from '../../constants/lines';
+import { fetchActualTripsByLine, fetchActualTripsByRoute } from '../dailytrips';
 
 export const useSpeedDataByLine = (params: FetchSpeedByLineOptions, enabled?: boolean) => {
-  const routesArray = params.line && LINE_OBJECTS[params.line].routes;
-  if (!routesArray) return null;
+  let routesArray = params.line && LINE_OBJECTS[params.line].routes;
+  if (!routesArray) routesArray = [];
   return useQueries({
     queries: routesArray.map((route) => {
       const parameters: FetchActualTripsByLineOptions = {

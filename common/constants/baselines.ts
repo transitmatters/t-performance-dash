@@ -3,7 +3,7 @@ export const PEAK_SCHEDULED_SERVICE = {
   'line-red': 223,
   'line-orange': 161,
   'line-blue': 186,
-  'line-green': 499,
+  'line-green': 506,
   'line-bus': 0,
   DEFAULT: 0,
 };
