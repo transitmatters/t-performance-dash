@@ -45,7 +45,7 @@ export const getFormattedTimeValue = (value: number) => {
   }
 };
 
-export const getFormattedTimeString = (value: number, unit: 'minutes' | 'seconds') => {
+export const getFormattedTimeString = (value: number, unit: 'minutes' | 'seconds' = 'seconds') => {
   const secondsValue = unit === 'seconds' ? value : value * 60;
   const absValue = Math.round(Math.abs(secondsValue));
   const duration = dayjs.duration(absValue, 'seconds');
