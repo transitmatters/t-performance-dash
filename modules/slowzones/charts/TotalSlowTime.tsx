@@ -17,6 +17,7 @@ import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartBorder } from '../../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
+import { getFormattedTimeString } from '../../../common/utils/time';
 
 interface TotalSlowTimeProps {
   // Data is always all data. We filter it by adjusting the X axis of the graph.
@@ -145,6 +146,16 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
             plugins: {
               tooltip: {
                 intersect: false,
+                mode: 'index',
+                position: 'nearest',
+                callbacks: {
+                  label: (tooltipItem) => {
+                    return `${tooltipItem.dataset.label}: ${getFormattedTimeString(
+                      tooltipItem.parsed.y,
+                      'minutes'
+                    )}`;
+                  },
+                },
               },
               title: {
                 // empty title to set font and leave room for drawTitle fn
