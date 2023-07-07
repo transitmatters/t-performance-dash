@@ -5,15 +5,14 @@ import { LoadingSpinner } from '../../graphics/LoadingSpinner';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { Delta } from './Delta';
 
-export type LayoutKind = 'total-and-delta' | 'delta-and-percent-change' | 'no-delta';
-export type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';
+type LayoutKind = 'total-and-delta' | 'delta-and-percent-change' | 'no-delta';
+type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';
 
-export type WidgetForCarouselProps = {
+type WidgetForCarouselProps = {
   analysis: React.ReactNode;
   widgetValue: WidgetValueInterface;
   sentimentDirection?: SentimentDirection;
   layoutKind?: LayoutKind;
-  isLarge?: boolean;
 };
 
 export const WidgetForCarousel: React.FC<WidgetForCarouselProps> = ({
@@ -21,7 +20,6 @@ export const WidgetForCarousel: React.FC<WidgetForCarouselProps> = ({
   widgetValue,
   layoutKind = 'total-and-delta',
   sentimentDirection = 'negativeOnIncrease',
-  isLarge = true,
 }) => {
   const isHorizontal = !useBreakpoint('lg');
 
@@ -32,22 +30,7 @@ export const WidgetForCarousel: React.FC<WidgetForCarouselProps> = ({
         <div className={classNames('flex flex-row items-baseline justify-between rounded-lg px-2')}>
           <div className="flex flex-row items-baseline justify-end gap-4">
             <div className="flex flex-row items-baseline gap-x-1">
-              <p
-                className={classNames(
-                  'font-semibold text-gray-900',
-                  isLarge ? 'text-2xl' : 'text-xl'
-                )}
-              >
-                {widgetValue.getFormattedValue()}
-              </p>
-              <p
-                className={classNames(
-                  isLarge ? 'text-base' : 'text-sm',
-                  'text-design-subtitleGrey'
-                )}
-              >
-                {widgetValue.getUnits()}
-              </p>
+              {widgetValue.getFormattedValue()}
             </div>
             <div className="mt-1 flex flex-row items-baseline gap-x-1">
               {layoutKind !== 'no-delta' && (
@@ -71,22 +54,7 @@ export const WidgetForCarousel: React.FC<WidgetForCarouselProps> = ({
         {widgetValue.value === undefined && <LoadingSpinner isWidget />}
         <div className={classNames('flex flex-col items-start')}>
           <div className="flex flex-row items-baseline gap-x-1">
-            <p
-              className={classNames(
-                'font-semibold leading-tight text-gray-900',
-                isLarge ? 'text-2xl' : 'text-xl'
-              )}
-            >
-              {widgetValue.getFormattedValue()}
-            </p>
-            <p
-              className={classNames(
-                isLarge ? 'text-base' : 'text-sm',
-                'leading-tight text-design-subtitleGrey'
-              )}
-            >
-              {widgetValue.getUnits()}
-            </p>
+            {widgetValue.getFormattedValue()}
           </div>
           <div className="flex flex-row items-baseline gap-x-1 ">
             {layoutKind !== 'no-delta' && (
