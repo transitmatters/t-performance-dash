@@ -170,19 +170,9 @@ def get_alerts():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/api/speed", cors=cors_config)
-def get_speed():
-    response = speed.speeds_by_route(app.current_request.query_params)
-    return json.dumps(response, indent=4, sort_keys=True)
-
-@app.route("/api/dailytrips", cors=cors_config)
-def get_dailytrips():
-    response = speed.speeds_by_route(app.current_request.query_params)
-    return json.dumps(response, indent=4, sort_keys=True)
-
 @app.route("/api/tripsbyline", cors=cors_config)
 def get_trips_by_line():
-    response = speed.actual_trips_by_line(app.current_request.query_params)
+    response = speed.trip_metrics_by_line(app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True)
 
 
