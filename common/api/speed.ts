@@ -7,8 +7,6 @@ export const fetchSpeeds = async (params: FetchSpeedsOptions): Promise<SpeedData
   if (!params[FetchSpeedsParams.line]) return [];
   const url = new URL(`${APP_DATA_BASE_PATH}/api/speed`, window.location.origin);
   Object.keys(params).forEach((paramKey) => {
-    if (params[FetchSpeedsParams.line] === 'line-green')
-      url.searchParams.append(paramKey, 'line-green-glx');
     url.searchParams.append(paramKey, params[paramKey]);
   });
   const response = await fetch(url.toString());

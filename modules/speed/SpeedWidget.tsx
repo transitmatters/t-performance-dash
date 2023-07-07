@@ -25,7 +25,6 @@ export const SpeedWidget: React.FC = () => {
     enabled
   );
   const speedReady = speeds && line && config && !speeds.isError && speeds.data;
-  console.log(speeds, line, config, speeds.data);
 
   return (
     <WidgetDiv>
