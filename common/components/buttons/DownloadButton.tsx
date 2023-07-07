@@ -67,6 +67,7 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
       <CSVLink
         className={'csv-link'}
         data={data}
+        title={'Download data as CSV'}
         filename={filename(datasetName, location, bothStops, startDate, endDate)}
       >
         <FontAwesomeIcon icon={faFileArrowDown} className="text-stone-600" />
