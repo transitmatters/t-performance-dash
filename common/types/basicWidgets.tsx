@@ -1,6 +1,9 @@
+import React from 'react';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { getFormattedTimeValue, getTimeUnit } from '../utils/time';
+import { WidgetText } from '../components/widgets/internal/WidgetText';
+import { UnitText } from '../components/widgets/internal/UnitText';
 dayjs.extend(duration);
 
 export interface WidgetValueInterface {
@@ -9,7 +12,7 @@ export interface WidgetValueInterface {
   readonly percentChange?: number;
 
   getUnits: () => string;
-  getFormattedValue: () => string;
+  getFormattedValue: () => React.ReactNode;
   getFormattedDelta: () => string;
   getFormattedPercentChange: () => string;
 }
@@ -42,8 +45,7 @@ export class DeltaTimeWidgetValue extends BaseWidgetValue implements WidgetValue
   }
   getFormattedValue() {
     if (this.delta === undefined) return '...';
-    const formattedValue = getFormattedTimeValue(this.delta);
-    return `${this.delta > 0 ? '+' : '-'}${formattedValue}`;
+    return getFormattedTimeValue(this.delta);
   }
   getFormattedDelta() {
     new Error('DeltaWidgets should use `getFormattedValue`');
@@ -53,11 +55,16 @@ export class DeltaTimeWidgetValue extends BaseWidgetValue implements WidgetValue
 
 export class DeltaZonesWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'Zones';
+    return 'zones';
   }
   getFormattedValue() {
     if (this.delta === undefined) return '...';
-    return `${this.delta > 0 ? '+' : '-'}${Math.abs(this.delta)}`;
+    return (
+      <p>
+        <WidgetText text={`${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta)}`} />{' '}
+        <UnitText text={this.getUnits()} />
+      </p>
+    );
   }
   getFormattedDelta() {
     new Error('DeltaWidgets should use `getFormattedValue`');
@@ -74,8 +81,7 @@ export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInter
 
   getFormattedValue() {
     if (this.value === undefined) return '...';
-    const formattedValue = getFormattedTimeValue(this.value);
-    return formattedValue;
+    return getFormattedTimeValue(this.value);
   }
 
   getFormattedDelta() {
@@ -96,11 +102,16 @@ export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInter
 
 export class SZWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'Zones';
+    return 'zones';
   }
   getFormattedValue() {
     if (typeof this.value === 'undefined') return '...';
-    return Math.abs(this.value).toString();
+    return (
+      <p className="">
+        <WidgetText text={`${Math.abs(this.value).toString()}`} />{' '}
+        <UnitText text={this.getUnits()} />
+      </p>
+    );
   }
   getFormattedDelta() {
     if (typeof this.delta === 'undefined') return '...';
@@ -115,7 +126,12 @@ export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValu
 
   getFormattedValue() {
     if (this.value === undefined) return '...';
-    return Math.round(100 * this.value).toString();
+    return (
+      <p>
+        <WidgetText text={`${Math.round(100 * this.value).toString()}`} />{' '}
+        <UnitText text={this.getUnits()} />
+      </p>
+    );
   }
 
   getFormattedDelta() {
@@ -126,12 +142,16 @@ export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValu
 
 export class TripsWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'Daily trips';
+    return 'Trips';
   }
 
   getFormattedValue() {
     if (this.value === undefined) return '...';
-    return Math.abs(this.value).toFixed(0);
+    return (
+      <p>
+        <WidgetText text={Math.abs(this.value).toFixed(0)} /> <UnitText text={this.getUnits()} />
+      </p>
+    );
   }
 
   getFormattedDelta() {
@@ -147,7 +167,11 @@ export class MPHWidgetValue extends BaseWidgetValue implements WidgetValueInterf
 
   getFormattedValue() {
     if (typeof this.value === 'undefined') return '...';
-    return this.value.toFixed(1);
+    return (
+      <p>
+        <WidgetText text={this.value.toFixed(1)} /> <UnitText text={this.getUnits()} />
+      </p>
+    );
   }
   getFormattedDelta() {
     if (typeof this.value === 'undefined' || typeof this.delta === 'undefined') return '...';
@@ -164,7 +188,12 @@ export class RidersWidgetValue extends BaseWidgetValue implements WidgetValueInt
 
   getFormattedValue() {
     if (this.value === undefined) return '...';
-    return `${(this.value / 1000).toFixed(1)}k`;
+    return (
+      <p>
+        <WidgetText text={`${(this.value / 1000).toFixed(1)}k`} />{' '}
+        <UnitText text={this.getUnits()} />
+      </p>
+    );
   }
 
   // TODO

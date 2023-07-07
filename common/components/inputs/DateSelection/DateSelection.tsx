@@ -23,13 +23,13 @@ interface DateSelectionProps {
 }
 
 export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) => {
-  const { line, page } = useDelimitatedRoute();
+  const { line, page, tab } = useDelimitatedRoute();
   const [range, setRange] = useState<boolean>(false);
   const { dateStoreSection } = ALL_PAGES[page];
   const setDatePreset = useDatePresetStore((state) => state.setDatePreset);
   const datePreset = useSelectedPreset();
   const updateQueryParams = useUpdateQuery();
-  const presets = range ? RANGE_PRESETS : SINGLE_PRESETS;
+  const presets = range ? RANGE_PRESETS[tab] : SINGLE_PRESETS[tab];
   const presetDateArray = Object.values(presets);
 
   const handleSelection = (datePresetKey: DatePresetKey) => {

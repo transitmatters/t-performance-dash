@@ -23,7 +23,7 @@ const linePathToKeyMap: Record<string, Line> = {
   bus: 'line-bus',
 };
 
-export const getParams = (params: ParsedUrlQuery | QueryParams) => {
+const getParams = (params: ParsedUrlQuery | QueryParams) => {
   return Object.fromEntries(
     Object.entries(params).filter(([key, value]) => key !== 'line' && value)
   );
@@ -38,8 +38,13 @@ export const getDateParams = (params: ParsedUrlQuery | QueryParams) => {
 const getPage = (pathItems: string[], tab: Tab): string => {
   if (tab === 'System') {
     const pageArray = pathItems.slice(1);
+    if (pageArray[0] === 'rapidtransit' || pageArray[0] === 'slowzones') return 'v3Redirect';
     if (pageArray[0] === '' || pageArray[1] === '') return 'landing';
     return SYSTEM_PAGES_MAP['system'][pageArray[1]];
+  }
+  if (tab === 'Bus') {
+    const pageArray = pathItems.slice(1);
+    if (pageArray[0] === 'bus' && pageArray[1] === '') return 'v3Redirect';
   }
   const pageArray = pathItems.slice(2);
   if (pageArray[0] === '') return 'overview';
@@ -120,7 +125,7 @@ export const useUpdateQuery = () => {
 
       if (!isEqual(router.query, newQuery)) {
         const query = pickBy(newQuery, (attr) => attr !== undefined);
-        router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
+        router.replace({ pathname: router.pathname, query }, undefined, { shallow: true });
       }
     },
     [router]
@@ -264,7 +269,7 @@ const getPathName = (newPage: PageMetadata, linePath: LinePath) => {
   return `/${newPage.dateStoreSection === 'system' ? 'system' : linePath}${newPage.path}`;
 };
 
-export const savePageConfigIfNecessary = (
+const savePageConfigIfNecessary = (
   currentPage: PageMetadata,
   newPage: PageMetadata,
   query: QueryParams,
