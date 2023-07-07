@@ -46,6 +46,7 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children, isSingleWidg
             className={classNames(
               'group/button flex cursor-pointer items-center justify-center rounded-md focus:outline-none lg:p-1'
             )}
+            title={'Next Statistic'}
             onClick={navigateTo(activeItem + 1)}
             type="button"
           >

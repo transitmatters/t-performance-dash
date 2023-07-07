@@ -11,7 +11,7 @@ export const BusNavMenu: React.FC<BusNavMenuProps> = ({ setSidebarOpen }) => {
   return (
     <>
       <BusSelection setSidebarOpen={setSidebarOpen} />
-      <div className="flex flex-col gap-y-3 px-1">
+      <div className="flex flex-col gap-y-3 px-1" role={'navigation'}>
         <SidebarTabs tabs={BUS_OVERVIEW} setSidebarOpen={setSidebarOpen} />
         <SidebarTabs tabs={TRIP_PAGES} setSidebarOpen={setSidebarOpen} />
       </div>
