@@ -4,12 +4,12 @@ import type { AggregateDataPoint, SingleDayDataPoint } from '../types/charts';
 const averageTravelTime = (traveltimes: (number | undefined)[]) => {
   if (traveltimes && traveltimes.length >= 1) {
     const totalSum = traveltimes.reduce((a, b) => {
-      if (a && b) {
+      if (a !== undefined && b !== undefined) {
         return a + b;
       } else {
         return 0;
       }
-    });
+    }, 0);
     return (totalSum || 0) / traveltimes.length;
   } else {
     return 0;
