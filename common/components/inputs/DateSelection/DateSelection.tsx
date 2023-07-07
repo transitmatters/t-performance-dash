@@ -34,7 +34,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
 
   const handleSelection = (datePresetKey: DatePresetKey) => {
     const selectedPreset = presets[datePresetKey];
-    if (selectedPreset?.input) updateQueryParams(selectedPreset.input, range);
+    if (selectedPreset?.input) updateQueryParams(selectedPreset.input, range, false);
     setDatePreset(datePresetKey, dateStoreSection, range);
   };
 

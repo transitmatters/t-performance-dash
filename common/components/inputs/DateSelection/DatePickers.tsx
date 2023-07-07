@@ -40,12 +40,12 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
 
   const handleRangeToggle = () => {
     if (range) {
-      updateQueryParams({ startDate: startDate }, !range);
+      updateQueryParams({ startDate: startDate }, !range, false);
     } else if (startDate === TODAY_STRING) {
       // If start date is today -> set range to past week. This prevents bugs with startDate === endDate
-      updateQueryParams(RANGE_PRESETS[0].input, !range);
+      updateQueryParams(RANGE_PRESETS[0].input, !range, false);
     } else {
-      updateQueryParams({ startDate: startDate }, !range);
+      updateQueryParams({ startDate: startDate }, !range, false);
     }
     setRange(!range);
   };
@@ -58,9 +58,9 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
     }
     if (updatedDate.isBefore(startDateObject)) {
       // Swap start and end if new end < startDate
-      updateQueryParams({ startDate: newDate, endDate: startDate }, range);
+      updateQueryParams({ startDate: newDate, endDate: startDate }, range, false);
     } else {
-      updateQueryParams({ startDate: startDate, endDate: newDate }, range);
+      updateQueryParams({ startDate: startDate, endDate: newDate }, range, false);
     }
     clearPreset();
   };
@@ -73,15 +73,15 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
     }
     if (updatedDate.isAfter(endDateObject)) {
       // Swap start and end if new start > endDate
-      updateQueryParams({ startDate: endDate, endDate: newDate }, range);
+      updateQueryParams({ startDate: endDate, endDate: newDate }, range, false);
     } else {
-      updateQueryParams({ startDate: newDate, endDate: endDate }, range);
+      updateQueryParams({ startDate: newDate, endDate: endDate }, range, false);
     }
     clearPreset();
   };
 
   const handleDateChange = (newDate: string) => {
-    updateQueryParams({ date: newDate }, false);
+    updateQueryParams({ date: newDate }, false, false);
     clearPreset();
   };
 
