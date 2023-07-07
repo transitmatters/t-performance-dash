@@ -9,7 +9,7 @@ import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/col
 import type { SingleDayLineProps } from '../../../common/types/charts';
 import { prettyDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../utils/router';
-import { DownloadButton } from '../general/DownloadButton';
+import { DownloadButton } from '../buttons/DownloadButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';

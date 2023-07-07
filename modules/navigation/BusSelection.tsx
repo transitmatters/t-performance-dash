@@ -23,6 +23,7 @@ export const BusSelection: React.FC<BusSelectionProps> = ({ setSidebarOpen }) =>
   return (
     <Tab.Group
       manual
+      aria-label={'Bus Routes'}
       selectedIndex={busRoutes.findIndex((key) => key === route.query.busRoute)}
       onChange={handleChange}
     >
@@ -30,11 +31,12 @@ export const BusSelection: React.FC<BusSelectionProps> = ({ setSidebarOpen }) =>
         {busRoutes.map((key) => {
           const selected = route.query.busRoute === key;
           return (
-            <Tab key={key}>
+            <Tab key={key} aria-label={key}>
               <Link
                 href={getBusRouteSelectionItemHref(key, route)}
                 onClick={handleChange}
                 key={key}
+                aria-label={key}
                 className={classNames(
                   'flex w-full cursor-pointer items-center justify-center rounded-md border border-mbta-bus bg-mbta-bus px-2 py-1 text-sm font-medium',
                   selected
