@@ -45,16 +45,6 @@ export const RIDERSHIP_KEYS = {
 
 export const HEAVY_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue'];
 export const LANDING_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue', 'line-green'];
-export const LANDING_ROUTES: Route[] = [
-  'line-red-a',
-  'line-red-b',
-  'line-orange',
-  'line-blue',
-  'line-green-b',
-  'line-green-c',
-  'line-green-d',
-  'line-green-e',
-];
 
 export const RAIL_LINES = ['red', 'orange', 'green', 'blue'];
 export const BUS_ROUTES = [
