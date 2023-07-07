@@ -1,5 +1,4 @@
 import type { SpeedByLine } from '../../../common/types/dataPoints';
-import type { Line } from '../../../common/types/lines';
 
 const calcValues = (speeds: SpeedByLine[], isOverview = false) => {
   const mphs = speeds.map((speed) => {
@@ -12,6 +11,8 @@ const calcValues = (speeds: SpeedByLine[], isOverview = false) => {
   const peak = {
     ...mphs.reduce((max, mph) => (mph.mph > max.mph ? mph : max), mphs[0]),
   };
+
+  // TODO: This is unused.
   const delta = isOverview ? current - peak.mph : current - mphs[0].mph;
 
   return {
@@ -22,9 +23,6 @@ const calcValues = (speeds: SpeedByLine[], isOverview = false) => {
   };
 };
 
-export const getOverviewSpeedWidgetValues = (datapoints: SpeedByLine[], line: Line) => {
-  return calcValues(datapoints, true);
-};
-export const getDetailsSpeedWidgetValues = (datapoints: SpeedByLine[], line: Line) => {
+export const getDetailsSpeedWidgetValues = (datapoints: SpeedByLine[]) => {
   return calcValues(datapoints);
 };

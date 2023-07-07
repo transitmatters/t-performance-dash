@@ -1,14 +1,10 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
-import type {
-  FetchActualTripsByLineOptions,
-  FetchActualTripsByRouteOptions,
-  FetchSpeedByLineOptions,
-} from '../../types/api';
+import type { FetchActualTripsByLineOptions, FetchSpeedByLineOptions } from '../../types/api';
 import { FIVE_MINUTES, ONE_HOUR } from '../../constants/time';
 import { THREE_MONTHS_AGO_STRING, TODAY_STRING } from '../../constants/dates';
 import { LANDING_RAIL_LINES } from '../../types/lines';
 import { LINE_OBJECTS } from '../../constants/lines';
-import { fetchActualTripsByLine, fetchActualTripsByRoute } from '../dailytrips';
+import { fetchActualTripsByLine } from '../tripmetrics';
 
 export const useSpeedDataByLine = (params: FetchSpeedByLineOptions, enabled?: boolean) => {
   let routesArray = params.line && LINE_OBJECTS[params.line].routes;
@@ -23,7 +19,7 @@ export const useSpeedDataByLine = (params: FetchSpeedByLineOptions, enabled?: bo
       };
       return {
         queryKey: [`${route}-speed`],
-        queryFn: () => fetchActualTripsByRoute(parameters),
+        queryFn: () => fetchActualTripsByLine(parameters),
         staleTime: ONE_HOUR,
         enabled: enabled,
       };
@@ -41,17 +37,7 @@ export const useActualTripsDataByLine = (
   });
 };
 
-export const useActualTripsDataByRoute = (
-  params: FetchActualTripsByRouteOptions,
-  enabled?: boolean
-) => {
-  return useQuery(['actualTrips', params], () => fetchActualTripsByRoute(params), {
-    enabled: enabled,
-    staleTime: FIVE_MINUTES,
-  });
-};
-
-export const useDailyTripsDataLanding = () => {
+export const useTripMetricsForLanding = () => {
   return useQueries({
     queries: LANDING_RAIL_LINES.map((line) => {
       const params: FetchActualTripsByLineOptions = {

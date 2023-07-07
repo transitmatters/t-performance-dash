@@ -27,7 +27,7 @@ export const SpeedGraphWrapper: React.FC<SpeedGraphWrapperProps> = ({
 }) => {
   const dataNoNulls = data.filter((datapoint) => datapoint.miles_covered > 0);
   if (dataNoNulls.length < 1) return <NoDataNotice isLineMetric />;
-  const { current, delta, average, peak } = getDetailsSpeedWidgetValues(dataNoNulls, line);
+  const { current, delta, average, peak } = getDetailsSpeedWidgetValues(dataNoNulls);
   return (
     <CarouselGraphDiv>
       <WidgetCarousel>

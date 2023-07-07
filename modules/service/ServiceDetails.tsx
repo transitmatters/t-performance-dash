@@ -9,7 +9,7 @@ import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { useActualTripsDataByLine } from '../../common/api/hooks/dailytrips';
+import { useActualTripsDataByLine } from '../../common/api/hooks/tripmetrics';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';
 import { PercentageServiceGraphWrapper } from './PercentageServiceGraphWrapper';

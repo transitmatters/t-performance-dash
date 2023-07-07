@@ -83,7 +83,7 @@ export interface SpeedByLine {
   count: number;
 }
 
-export interface DailyTrip {
+export interface TripMetricsByRoute {
   route: Route;
   line: Line;
   date: string;

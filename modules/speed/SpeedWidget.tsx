@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { useActualTripsDataByLine } from '../../common/api/hooks/dailytrips';
+import { useActualTripsDataByLine } from '../../common/api/hooks/tripmetrics';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { getSpeedGraphConfig } from './constants/speeds';
