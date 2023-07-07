@@ -6,7 +6,7 @@ import {
   PEAK_SPEED,
 } from '../../common/constants/baselines';
 import { LINE_COLORS } from '../../common/constants/colors';
-import type { RidershipCount, SpeedByLine } from '../../common/types/dataPoints';
+import type { RidershipCount, DeliveredTripMetrics } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 
 const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
@@ -23,7 +23,7 @@ const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
   };
 };
 
-export const convertToSpeedDataset = (data: SpeedByLine[]) => {
+export const convertToSpeedDataset = (data: DeliveredTripMetrics[]) => {
   const { line } = data[0];
   const datasetOptions = getDatasetOptions(line);
   return {
@@ -40,7 +40,7 @@ export const convertToSpeedDataset = (data: SpeedByLine[]) => {
   };
 };
 
-export const convertToServiceDataset = (data: SpeedByLine[]) => {
+export const convertToServiceDataset = (data: DeliveredTripMetrics[]) => {
   const { line } = data[0];
   const datasetOptions = getDatasetOptions(line);
 

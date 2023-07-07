@@ -1,8 +1,11 @@
 import { PEAK_SCHEDULED_SERVICE } from '../../../common/constants/baselines';
-import type { SpeedByLine, TripCounts } from '../../../common/types/dataPoints';
+import type { DeliveredTripMetrics, TripCounts } from '../../../common/types/dataPoints';
 import type { Line } from '../../../common/types/lines';
 
-export const getServiceWidgetValues = (datapoints: SpeedByLine[], predictedData: number[]) => {
+export const getServiceWidgetValues = (
+  datapoints: DeliveredTripMetrics[],
+  predictedData: number[]
+) => {
   const totals = datapoints.reduce(
     (totals, datapoint, index) => {
       if (datapoint.count && predictedData[index]) {
@@ -27,7 +30,11 @@ export const getServiceWidgetValues = (datapoints: SpeedByLine[], predictedData:
   return { current, delta, average, peak, percentDelivered };
 };
 
-export const getPercentageData = (data: SpeedByLine[], predictedData: TripCounts, line?: Line) => {
+export const getPercentageData = (
+  data: DeliveredTripMetrics[],
+  predictedData: TripCounts,
+  line?: Line
+) => {
   const scheduled = data.map((datapoint, index) => {
     return datapoint.miles_covered && predictedData.counts[index]
       ? (100 * datapoint.count) / (predictedData.counts[index] / 2)

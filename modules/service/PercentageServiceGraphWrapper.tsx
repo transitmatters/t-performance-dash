@@ -1,6 +1,6 @@
 import React from 'react';
 import type { SetStateAction } from 'react';
-import type { SpeedByLine, TripCounts } from '../../common/types/dataPoints';
+import type { DeliveredTripMetrics, TripCounts } from '../../common/types/dataPoints';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { PercentageWidgetValue } from '../../common/types/basicWidgets';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
@@ -13,7 +13,7 @@ import { PercentageServiceGraph } from './PercentageServiceGraph';
 import { getPercentageData, getAverageWithNaNs } from './utils/utils';
 
 interface PercentageServiceGraphWrapperProps {
-  data: SpeedByLine[];
+  data: DeliveredTripMetrics[];
   predictedData: TripCounts;
   config: ParamsType;
   startDate: string;

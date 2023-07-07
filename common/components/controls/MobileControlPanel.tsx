@@ -22,7 +22,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
     if (line && (dateStoreSection === 'singleTrips' || dateStoreSection === 'multiTrips')) {
       return (
         <>
-          <div className="p-1 pb-0">
+          <div className="px-2 py-1 pb-0">
             <DateControl
               dateStoreSection={dateStoreSection}
               queryType={singleDate ? 'single' : 'range'}
@@ -45,7 +45,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
       dateStoreSection === 'system'
     ) {
       return (
-        <div className="p-1">
+        <div className="px-2 py-1">
           <DateControl dateStoreSection={dateStoreSection} queryType={'range'} />
         </div>
       );

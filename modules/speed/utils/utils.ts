@@ -1,6 +1,6 @@
-import type { SpeedByLine } from '../../../common/types/dataPoints';
+import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
 
-const calcValues = (speeds: SpeedByLine[], isOverview = false) => {
+const calcValues = (speeds: DeliveredTripMetrics[], isOverview = false) => {
   const mphs = speeds.map((speed) => {
     return { mph: speed.miles_covered / (speed.total_time / 3600), date: speed.date };
   });
@@ -23,6 +23,6 @@ const calcValues = (speeds: SpeedByLine[], isOverview = false) => {
   };
 };
 
-export const getDetailsSpeedWidgetValues = (datapoints: SpeedByLine[]) => {
+export const getDetailsSpeedWidgetValues = (datapoints: DeliveredTripMetrics[]) => {
   return calcValues(datapoints);
 };

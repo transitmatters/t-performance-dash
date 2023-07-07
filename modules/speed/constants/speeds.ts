@@ -66,7 +66,6 @@ export const CORE_TRACK_LENGTHS = {
   'line-red': 14.82 + 14.82 + 10.13 + 10.13, // <Quincy Adams -> Davis> + <reverse> + <Shawmut -> Davis> + <reverse>
   'line-orange': 9.64 + 9.58, // <Malden Station -> Green Street> + <reverse>
   'line-blue': 5.38 + 5.37, //<Gov. Center -> Revere> + <reverse>
-  'line-green': 30, //<Gov. Center -> Revere> + <reverse>
   DEFAULT: 1,
 };
 

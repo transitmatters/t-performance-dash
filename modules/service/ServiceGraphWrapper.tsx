@@ -1,5 +1,5 @@
 import React from 'react';
-import type { SpeedByLine, TripCounts } from '../../common/types/dataPoints';
+import type { DeliveredTripMetrics, TripCounts } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { TripsWidgetValue } from '../../common/types/basicWidgets';
@@ -7,9 +7,9 @@ import { WidgetForCarousel } from '../../common/components/widgets/internal/Widg
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { getServiceWidgetValues } from './utils/utils';
-import { ServiceHoursGraph } from './ServiceHoursGraph';
+import { ServiceGraph } from './ServiceGraph';
 interface ServiceGraphWrapperProps {
-  data: SpeedByLine[];
+  data: DeliveredTripMetrics[];
   predictedData: TripCounts;
   config: ParamsType;
   startDate: string;
@@ -42,7 +42,7 @@ export const ServiceGraphWrapper: React.FC<ServiceGraphWrapperProps> = ({
           widgetValue={new TripsWidgetValue(peak ? peak.count : undefined)}
         />
       </WidgetCarousel>
-      <ServiceHoursGraph
+      <ServiceGraph
         config={config}
         data={data}
         startDate={startDate}

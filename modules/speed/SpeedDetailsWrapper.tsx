@@ -1,5 +1,5 @@
 import React from 'react';
-import type { SpeedByLine } from '../../common/types/dataPoints';
+import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
@@ -7,7 +7,7 @@ import type { ParamsType } from './constants/speeds';
 import { SpeedGraphWrapper } from './SpeedGraphWrapper';
 
 interface SpeedDetailsWrapperProps {
-  data: SpeedByLine[];
+  data: DeliveredTripMetrics[];
   config: ParamsType;
   line: Line;
   startDate: string;

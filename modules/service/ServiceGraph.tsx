@@ -8,7 +8,6 @@ import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedByLine, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
@@ -17,10 +16,11 @@ import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
+import type { DeliveredTripMetrics, TripCounts } from '../../common/types/dataPoints';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 interface ServiceGraphProps {
-  data: SpeedByLine[];
+  data: DeliveredTripMetrics[];
   predictedData: TripCounts;
   config: ParamsType;
   startDate: string;
@@ -224,6 +224,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
     predictedData.counts,
     showTitle,
     callbacks,
+    peak,
     startDate,
     endDate,
     unit,

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { useActualTripsDataByLine } from '../../common/api/hooks/tripmetrics';
+import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { getSpeedGraphConfig } from './constants/speeds';
@@ -15,7 +15,7 @@ export const SpeedWidget: React.FC = () => {
   const endDate = TODAY_STRING;
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const enabled = Boolean(startDate && endDate && line && config.agg);
-  const speeds = useActualTripsDataByLine(
+  const speeds = useDeliveredTripMetrics(
     {
       start_date: startDate,
       end_date: endDate,
@@ -25,6 +25,7 @@ export const SpeedWidget: React.FC = () => {
     enabled
   );
   const speedReady = speeds && line && config && !speeds.isError && speeds.data;
+  console.log(speeds, line, config, speeds.data);
 
   return (
     <WidgetDiv>

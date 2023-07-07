@@ -5,7 +5,7 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { useTripCounts } from '../../common/api/hooks/service';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
-import { useActualTripsDataByLine } from '../../common/api/hooks/tripmetrics';
+import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';
@@ -16,7 +16,7 @@ export const ServiceWidget: React.FC = () => {
   const endDate = TODAY_STRING;
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const enabled = Boolean(startDate && endDate && line && config.agg);
-  const tripsData = useActualTripsDataByLine(
+  const tripsData = useDeliveredTripMetrics(
     {
       start_date: startDate,
       end_date: endDate,

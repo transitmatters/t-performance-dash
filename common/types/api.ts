@@ -42,35 +42,14 @@ export type FetchSpeedsOptions = {
   line?: Line;
 };
 
-export type FetchActualTripsByLineOptions = {
+export type FetchDeliveredTripMetricsOptions = {
   agg: AggType;
   start_date?: string;
   end_date?: string;
   line?: Line;
 };
 
-export type FetchActualTripsByRouteOptions = {
-  agg: AggType;
-  start_date?: string;
-  end_date?: string;
-  line?: Line;
-};
-
-export type FetchSpeedByLineOptions = {
-  agg: AggType;
-  start_date?: string;
-  end_date?: string;
-  line?: Line;
-};
-
-export enum FetchActualTripsByRouteParams {
-  startDate = 'start_date',
-  endDate = 'end_date',
-  agg = 'agg',
-  route = 'route',
-}
-
-export enum FetchActualTripsByLineParams {
+export enum FetchDeliveredTripMetricsParams {
   startDate = 'start_date',
   endDate = 'end_date',
   agg = 'agg',

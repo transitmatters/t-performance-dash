@@ -9,7 +9,7 @@ import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { useActualTripsDataByLine } from '../../common/api/hooks/tripmetrics';
+import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';
 import { PercentageServiceGraphWrapper } from './PercentageServiceGraphWrapper';
@@ -24,7 +24,7 @@ export function ServiceDetails() {
   const [comparison, setComparison] = useState<'Baseline' | 'Scheduled'>('Scheduled');
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const enabled = Boolean(startDate && endDate && line && config.agg);
-  const tripsData = useActualTripsDataByLine(
+  const tripsData = useDeliveredTripMetrics(
     {
       start_date: startDate,
       end_date: endDate,

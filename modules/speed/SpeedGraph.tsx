@@ -7,7 +7,7 @@ import { enUS } from 'date-fns/locale';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedByLine } from '../../common/types/dataPoints';
+import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
@@ -19,7 +19,7 @@ import { PEAK_MPH } from './constants/speeds';
 import type { ParamsType } from './constants/speeds';
 
 interface SpeedGraphProps {
-  data: SpeedByLine[];
+  data: DeliveredTripMetrics[];
   config: ParamsType;
   startDate: string;
   endDate: string;

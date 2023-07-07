@@ -1,6 +1,6 @@
 import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
 import { CHART_COLORS } from '../../../common/constants/colors';
-import type { SpeedByLine } from '../../../common/types/dataPoints';
+import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
 
 const shuttlingAnnotationBlockStyle = {
   backgroundColor: CHART_COLORS.BLOCKS,
@@ -19,7 +19,7 @@ const shuttlingAnnotationBlockStyle = {
  * We use datapoint.value as the determination as to whether there is data. It is set to null when shuttling occurs throughout a day.
  */
 export const getShuttlingBlockAnnotations = (
-  data: SpeedByLine[]
+  data: DeliveredTripMetrics[]
 ): AnnotationOptions<keyof AnnotationTypeRegistry>[] => {
   let xMin: string | undefined;
   let xMax: string | undefined;

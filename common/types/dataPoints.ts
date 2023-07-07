@@ -1,4 +1,4 @@
-import type { Line, LineShort, Route } from './lines';
+import type { Line, LineShort } from './lines';
 import type { Station } from './stations';
 
 export interface DataPoint {
@@ -75,24 +75,12 @@ export interface SpeedDataPoint {
   value: number;
 }
 
-export interface SpeedByLine {
+export interface DeliveredTripMetrics {
   line: Line;
   date: string;
   miles_covered: number;
   total_time: number;
   count: number;
-}
-
-export interface TripMetricsByRoute {
-  route: Route;
-  line: Line;
-  date: string;
-  count: number;
-  mean: number;
-  median: number;
-  miles_covered: number;
-  total_time: number;
-  track_mileage: number;
 }
 
 export type LineSegmentData = {
