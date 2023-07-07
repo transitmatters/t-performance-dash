@@ -132,7 +132,6 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
                     month: 'MMM',
                   },
                 },
-
                 adapters: {
                   date: {
                     locale: enUS,
@@ -149,8 +148,11 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
                 mode: 'index',
                 position: 'nearest',
                 callbacks: {
+                  title: (tooltipItems) => {
+                    return `${tooltipItems[0].label.split(',').slice(0, 2).join(',')}`;
+                  },
                   label: (tooltipItem) => {
-                    return `${tooltipItem.dataset.label}: ${getFormattedTimeString(
+                    return `${tooltipItem.dataset.label} Total Slow Time: ${getFormattedTimeString(
                       tooltipItem.parsed.y,
                       'minutes'
                     )}`;
