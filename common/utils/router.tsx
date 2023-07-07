@@ -38,8 +38,13 @@ export const getDateParams = (params: ParsedUrlQuery | QueryParams) => {
 const getPage = (pathItems: string[], tab: Tab): string => {
   if (tab === 'System') {
     const pageArray = pathItems.slice(1);
+    if (pageArray[0] === 'rapidtransit' || pageArray[0] === 'slowzones') return 'v3Redirect';
     if (pageArray[0] === '' || pageArray[1] === '') return 'landing';
     return SYSTEM_PAGES_MAP['system'][pageArray[1]];
+  }
+  if (tab === 'Bus') {
+    const pageArray = pathItems.slice(1);
+    if (pageArray[0] === 'bus' && pageArray[1] === '') return 'v3Redirect';
   }
   const pageArray = pathItems.slice(2);
   if (pageArray[0] === '') return 'overview';

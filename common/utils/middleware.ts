@@ -75,10 +75,12 @@ export const useRewriteV3Route = () => {
   }
 
   // handle v3 bus route
-  if (resultParams && router.asPath.startsWith('/bus')) {
-    const { queryParams, tripSection } = resultParams;
-    return router.push(`/bus/trips/${tripSection}?${queryParams.toString()}`);
-  } else if (router.asPath.startsWith('/bus')) {
-    router.push('/bus/trips/single?busRoute=1');
+  if (search.toString()) {
+    if (resultParams && router.asPath.startsWith('/bus')) {
+      const { queryParams, tripSection } = resultParams;
+      return router.push(`/bus/trips/${tripSection}?${queryParams.toString()}`);
+    } else if (router.asPath.startsWith('/bus')) {
+      router.push('/bus/trips/single?busRoute=1');
+    }
   }
 };
