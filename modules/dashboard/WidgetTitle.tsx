@@ -43,7 +43,7 @@ export const WidgetTitle: React.FC<WidgetTitle> = ({
           </h2>
           {isMobile && <p className="text-xs italic text-stone-700">{date}</p>}
         </div>
-        {subtitle && !isMobile && (
+        {subtitle && (
           <h2
             className={classNames('whitespace-nowrap text-sm italic leading-tight text-stone-600')}
           >
