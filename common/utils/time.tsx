@@ -1,7 +1,10 @@
 import React from 'react';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+
 import { WidgetText } from '../components/widgets/internal/WidgetText';
 import { UnitText } from '../components/widgets/internal/UnitText';
+dayjs.extend(duration);
 
 export const getTimeUnit = (value: number) => {
   const secondsAbs = Math.abs(value);
