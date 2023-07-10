@@ -4,12 +4,12 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { useSpeedData } from '../../common/api/hooks/speed';
 import { useTripCounts } from '../../common/api/hooks/service';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';
 import { PercentageServiceGraphWrapper } from './PercentageServiceGraphWrapper';
@@ -24,7 +24,7 @@ export function ServiceDetails() {
   const [comparison, setComparison] = useState<'Baseline' | 'Scheduled'>('Scheduled');
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const enabled = Boolean(startDate && endDate && line && config.agg);
-  const serviceData = useSpeedData(
+  const tripsData = useDeliveredTripMetrics(
     {
       start_date: startDate,
       end_date: endDate,
@@ -44,8 +44,7 @@ export function ServiceDetails() {
     enabled
   ).data;
 
-  const serviceDataReady =
-    !serviceData.isError && serviceData.data && line && config && predictedData;
+  const serviceDataReady = !tripsData.isError && tripsData.data && line && config && predictedData;
 
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
@@ -59,7 +58,7 @@ export function ServiceDetails() {
             <WidgetTitle title="Daily round trips" />
             {serviceDataReady ? (
               <ServiceGraphWrapper
-                data={serviceData.data}
+                data={tripsData.data}
                 predictedData={predictedData}
                 config={config}
                 startDate={startDate}
@@ -67,7 +66,7 @@ export function ServiceDetails() {
               />
             ) : (
               <div className="relative flex h-full">
-                <ChartPlaceHolder query={serviceData} />
+                <ChartPlaceHolder query={tripsData} />
               </div>
             )}
           </WidgetDiv>
@@ -75,7 +74,7 @@ export function ServiceDetails() {
             <WidgetTitle title={`Service delivered`} subtitle={`Compared to ${comparison}`} />
             {serviceDataReady ? (
               <PercentageServiceGraphWrapper
-                data={serviceData.data}
+                data={tripsData.data}
                 predictedData={predictedData}
                 config={config}
                 startDate={startDate}
@@ -85,7 +84,7 @@ export function ServiceDetails() {
               />
             ) : (
               <div className="relative flex h-full">
-                <ChartPlaceHolder query={serviceData} />
+                <ChartPlaceHolder query={tripsData} />
               </div>
             )}
           </WidgetDiv>
