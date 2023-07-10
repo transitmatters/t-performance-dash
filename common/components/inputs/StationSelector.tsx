@@ -34,7 +34,12 @@ export const StationSelector: React.FC<StationSelector> = ({
   } = useDelimitatedRoute();
   const mdBreakpoint = useBreakpoint('md');
   const station = type === 'from' ? fromStation : toStation;
-  const stationOptions = optionsForField(type, lineShort, fromStation, toStation, busRoute);
+  const stationOptions = optionsForField(type, lineShort, fromStation, busRoute);
+  const branchLabelWidth = {
+    'line-red': 'w-8',
+    'line-green': 'w-12',
+    DEFAULT: 'w-0',
+  };
   return (
     <Listbox value={station} onChange={setStation}>
       {({ open }) => (
@@ -76,12 +81,10 @@ export const StationSelector: React.FC<StationSelector> = ({
                     }
                     className={({ active, selected, disabled }) =>
                       classNames(
-                        'relative select-none items-center px-4 py-2 lg:py-1',
+                        'relative select-none items-center px-4 py-2 lg:py-1 lg:text-sm',
                         active ? lineColorLightBackground[line ?? 'DEFAULT'] : 'text-gray-900',
                         selected
-                          ? `bg-opacity-20 text-sm font-semibold ${
-                              lineColorBackground[line ?? 'DEFAULT']
-                            }`
+                          ? `bg-opacity-20 font-semibold ${lineColorBackground[line ?? 'DEFAULT']}`
                           : 'font-normal',
                         disabled ? 'cursor-default bg-stone-200 text-stone-600' : 'cursor-pointer'
                       )
@@ -89,7 +92,19 @@ export const StationSelector: React.FC<StationSelector> = ({
                     value={station}
                   >
                     <div className="flex items-center justify-between gap-x-1 truncate">
-                      {station.stop_name}
+                      <div className="flex flex-row items-baseline justify-start">
+                        <div
+                          className={classNames(
+                            'flex flex-row gap-[1px] text-xs text-stone-500',
+                            branchLabelWidth[line ?? 'DEFAULT'] ?? ''
+                          )}
+                        >
+                          {station.branches?.map((branch) => (
+                            <p>{branch}</p>
+                          ))}
+                        </div>
+                        {station.stop_name}
+                      </div>
                       <div className="flex flex-row gap-x-1 pl-4">
                         {station.enclosed_bike_parking ? (
                           <FontAwesomeIcon
