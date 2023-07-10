@@ -8,7 +8,6 @@ import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
 import {
   getParentStationForStopId,
   getStationForInvalidFromSelection,
-  optionsForField,
   optionsStation,
   stopIdsForStations,
 } from '../../utils/stations';
