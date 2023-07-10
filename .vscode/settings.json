@@ -9,5 +9,5 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "editor.formatOnSave": true,
   "python.analysis.typeCheckingMode": "off",
-  "python.formatting.provider": "autopep8"
+  "python.formatting.provider": "black"
 }
