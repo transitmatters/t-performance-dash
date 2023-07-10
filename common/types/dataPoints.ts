@@ -92,6 +92,7 @@ export type LineSegmentData = {
   stations:
     | { fromStopIds: string[]; toStopIds: string[] }
     | { fromStopIds: undefined; toStopIds: undefined };
+  color: string;
 };
 
 export type SpeedRestriction = {
