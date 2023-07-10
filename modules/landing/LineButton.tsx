@@ -11,6 +11,7 @@ interface LineButtonProps {
 
 export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
   const lineObject = LINE_OBJECTS[line];
+
   return (
     <Link
       href={`/${lineObject.path}`}
@@ -20,7 +21,7 @@ export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
         className={classNames(
           lineColorBorder[line],
           lineColorBackground[line],
-          'flex h-32 w-32 cursor-pointer items-center justify-center rounded-full border-2 bg-opacity-50 group-hover:bg-opacity-100'
+          'flex h-24 w-24 cursor-pointer items-center justify-center rounded-full border-2 bg-opacity-50 group-hover:bg-opacity-100 lg:h-32 lg:w-32'
         )}
       >
         {children}
