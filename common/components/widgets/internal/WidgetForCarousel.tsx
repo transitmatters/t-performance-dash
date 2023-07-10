@@ -5,10 +5,10 @@ import { LoadingSpinner } from '../../graphics/LoadingSpinner';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { Delta } from './Delta';
 
-export type LayoutKind = 'total-and-delta' | 'delta-and-percent-change' | 'no-delta';
-export type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';
+type LayoutKind = 'total-and-delta' | 'delta-and-percent-change' | 'no-delta';
+type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';
 
-export type WidgetForCarouselProps = {
+type WidgetForCarouselProps = {
   analysis: React.ReactNode;
   widgetValue: WidgetValueInterface;
   sentimentDirection?: SentimentDirection;

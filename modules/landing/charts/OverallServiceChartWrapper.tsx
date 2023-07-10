@@ -1,10 +1,10 @@
 import React from 'react';
-import { useSpeedDataLanding } from '../../../common/api/hooks/speed';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
+import { useTripMetricsForLanding } from '../../../common/api/hooks/tripmetrics';
 import { OverallServiceChart } from './OverallServiceChart';
 
 export const OverallServiceChartWrapper: React.FC = () => {
-  const serviceData = useSpeedDataLanding();
+  const serviceData = useTripMetricsForLanding();
   const serviceDataReady = serviceData.some((query) => !query.isError && query.data);
   if (!serviceDataReady) return <ChartPlaceHolder query={serviceData[0]} />;
   const serviceDataFiltered = serviceData

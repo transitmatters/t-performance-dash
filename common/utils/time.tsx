@@ -1,55 +1,10 @@
 import React from 'react';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+
 import { WidgetText } from '../components/widgets/internal/WidgetText';
 import { UnitText } from '../components/widgets/internal/UnitText';
-
-type StringifyTimeOptions = {
-  truncateLeadingHoursZeros?: boolean;
-  truncateLeadingMinutesZeros?: boolean;
-  showSeconds?: boolean;
-  showHours?: boolean;
-  use12Hour?: boolean;
-};
-
-export const stringifyTime = (totalSeconds: number, options: StringifyTimeOptions = {}): string => {
-  const {
-    truncateLeadingHoursZeros = true,
-    truncateLeadingMinutesZeros = false,
-    showSeconds = false,
-    showHours = true,
-    use12Hour = false,
-  } = options;
-  let seconds = Math.round(totalSeconds),
-    minutes = 0,
-    hours = 0;
-  const minutesToAdd = Math.floor(seconds / 60);
-  seconds = seconds % 60;
-  minutes = minutes += minutesToAdd;
-  const hoursToAdd = Math.floor(minutes / 60);
-  minutes = minutes % 60;
-  hours += hoursToAdd;
-  const isPM = hours >= 12 && hours < 24;
-  hours = (use12Hour && hours > 12 ? hours - 12 : hours) % 24;
-  // We never reassign to secondString but it's nice to destructure this way
-  // eslint-disable-next-line prefer-const
-  let [hoursString, minutesString, secondsString] = [hours, minutes, seconds].map((num) =>
-    num.toString().padStart(2, '0')
-  );
-  if (truncateLeadingHoursZeros && hoursString.startsWith('0')) {
-    hoursString = hoursString.slice(1);
-  }
-  if (truncateLeadingMinutesZeros && minutesString.startsWith('0')) {
-    minutesString = minutesString.slice(1);
-  }
-  const timeString = [hoursString, minutesString, secondsString]
-    .slice(showHours ? 0 : 1)
-    .slice(0, showSeconds ? 3 : 2)
-    .join(':');
-  if (use12Hour) {
-    return `${timeString} ${isPM ? 'PM' : 'AM'}`;
-  }
-  return timeString;
-};
+dayjs.extend(duration);
 
 export const getTimeUnit = (value: number) => {
   const secondsAbs = Math.abs(value);
@@ -64,7 +19,7 @@ export const getTimeUnit = (value: number) => {
 };
 
 export const getFormattedTimeValue = (value: number) => {
-  const absValue = Math.abs(value);
+  const absValue = Math.round(Math.abs(value));
   const duration = dayjs.duration(absValue, 'seconds');
   switch (true) {
     case absValue < 100:
@@ -78,7 +33,7 @@ export const getFormattedTimeValue = (value: number) => {
       return (
         <p>
           <WidgetText text={duration.format('m')} />
-          <UnitText text={'m'} /> <WidgetText text={duration.format('s')} />
+          <UnitText text={'m'} /> <WidgetText text={duration.format('s').padStart(2, '0')} />
           <UnitText text={'s'} />
         </p>
       );
@@ -86,9 +41,23 @@ export const getFormattedTimeValue = (value: number) => {
       return (
         <p>
           <WidgetText text={duration.format('H')} />
-          <UnitText text={'h'} /> <WidgetText text={duration.format('m')} />
+          <UnitText text={'h'} /> <WidgetText text={duration.format('m').padStart(2, '0')} />
           <UnitText text={'m'} />
         </p>
       );
+  }
+};
+
+export const getFormattedTimeString = (value: number, unit: 'minutes' | 'seconds' = 'seconds') => {
+  const secondsValue = unit === 'seconds' ? value : value * 60;
+  const absValue = Math.round(Math.abs(secondsValue));
+  const duration = dayjs.duration(absValue, 'seconds');
+  switch (true) {
+    case absValue < 100:
+      return `${absValue}s`;
+    case absValue < 3600:
+      return `${duration.format('m')}m ${duration.format('s').padStart(2, '0')}s`;
+    default:
+      return `${duration.format('H')}h ${duration.format('m').padStart(2, '0')}m`;
   }
 };

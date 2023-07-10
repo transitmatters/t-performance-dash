@@ -8,10 +8,11 @@ import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../../common/constants/colors';
-import { DownloadButton } from '../general/DownloadButton';
+import { DownloadButton } from '../buttons/DownloadButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
+import { getFormattedTimeString } from '../../utils/time';
 import { LegendLongTerm } from './Legend';
 import { ChartBorder } from './ChartBorder';
 import { ChartDiv } from './ChartDiv';
@@ -146,7 +147,10 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 position: 'nearest',
                 callbacks: {
                   label: (tooltipItem) => {
-                    return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y} minutes`;
+                    return `${tooltipItem.dataset.label}: ${getFormattedTimeString(
+                      tooltipItem.parsed.y,
+                      'minutes'
+                    )}`;
                   },
                 },
               },

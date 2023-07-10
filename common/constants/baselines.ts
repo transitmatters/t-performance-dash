@@ -3,9 +3,17 @@ export const PEAK_SCHEDULED_SERVICE = {
   'line-red': 223,
   'line-orange': 161,
   'line-blue': 186,
-  'line-green': 0,
+  'line-green': 506,
   'line-bus': 0,
   DEFAULT: 0,
+};
+
+export const PEAK_SPEED = {
+  'line-red': 21.4,
+  'line-orange': 18,
+  'line-blue': 20.5,
+  'line-green': 12.6,
+  'line-bus': 0,
 };
 
 // These are manually chosen based off the peak value. Need to be updated when all data is generated.
@@ -35,5 +43,6 @@ export const PEAK_COMPLETE_TRIP_TIMES = {
   'line-red': { date: 'May 2020', value: 8374.5 },
   'line-blue': { date: 'May 2020', value: 1860.5 },
   'line-orange': { date: 'May 2020', value: 3776.75 },
+  'line-green': { date: 'May 2020', value: 21782 },
   DEFAULT: { date: '', value: 1 },
 };

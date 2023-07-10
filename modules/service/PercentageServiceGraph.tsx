@@ -1,6 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import { Line } from 'react-chartjs-2';
 
+import { round } from 'lodash';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
@@ -8,7 +9,7 @@ import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedDataPoint } from '../../common/types/dataPoints';
+import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
@@ -18,7 +19,7 @@ import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 interface PercentageServiceGraphProps {
-  data: SpeedDataPoint[];
+  data: DeliveredTripMetrics[];
   calculatedData: { scheduled: number[]; baseline: number[] };
   config: ParamsType;
   startDate: string;
@@ -106,7 +107,12 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
                 tooltip: {
                   mode: 'index',
                   position: 'nearest',
-                  callbacks: callbacks,
+                  callbacks: {
+                    ...callbacks,
+                    label: (context) => {
+                      return `${round(context.parsed.y, 1)}% of ${comparison}`;
+                    },
+                  },
                 },
                 legend: {
                   position: 'bottom',
