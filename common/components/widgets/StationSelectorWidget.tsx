@@ -37,18 +37,26 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
   const updateStations = (action: 'to' | 'from' | 'swap', stationId?: Station) => {
     switch (action) {
       case 'to':
-        updateQueryParams({
-          to: stopIdsForStations(fromStation, stationId).toStopIds?.[0],
-        });
+        updateQueryParams(
+          {
+            to: stopIdsForStations(fromStation, stationId).toStopIds?.[0],
+          },
+          undefined,
+          false
+        );
         break;
       case 'from':
-        updateQueryParams({
-          from: stopIdsForStations(stationId, toStation).fromStopIds?.[0],
-        });
+        updateQueryParams(
+          {
+            from: stopIdsForStations(stationId, toStation).fromStopIds?.[0],
+          },
+          undefined,
+          false
+        );
         break;
       case 'swap': {
         const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
-        updateQueryParams({ from: toStopIds?.[0], to: fromStopIds?.[0] });
+        updateQueryParams({ from: toStopIds?.[0], to: fromStopIds?.[0] }, undefined, false);
         break;
       }
     }
