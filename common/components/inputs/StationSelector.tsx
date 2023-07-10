@@ -100,7 +100,7 @@ export const StationSelector: React.FC<StationSelector> = ({
                           )}
                         >
                           {station.branches?.map((branch) => (
-                            <p>{branch}</p>
+                            <p key={branch}>{branch}</p>
                           ))}
                         </div>
                         {station.stop_name}
