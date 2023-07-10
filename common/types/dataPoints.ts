@@ -75,6 +75,14 @@ export interface SpeedDataPoint {
   value: number;
 }
 
+export interface DeliveredTripMetrics {
+  line: Line;
+  date: string;
+  miles_covered: number;
+  total_time: number;
+  count: number;
+}
+
 export type LineSegmentData = {
   duration: number;
   x: string[];
