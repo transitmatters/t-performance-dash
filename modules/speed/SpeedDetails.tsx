@@ -5,9 +5,9 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { useSpeedData } from '../../common/api/hooks/speed';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { getSpeedGraphConfig } from './constants/speeds';
 import { SpeedDetailsWrapper } from './SpeedDetailsWrapper';
 dayjs.extend(utc);
@@ -19,7 +19,7 @@ export function SpeedDetails() {
   } = useDelimitatedRoute();
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const enabled = Boolean(startDate && endDate && line && config.agg);
-  const speeds = useSpeedData(
+  const speeds = useDeliveredTripMetrics(
     {
       start_date: startDate,
       end_date: endDate,
@@ -28,8 +28,7 @@ export function SpeedDetails() {
     },
     enabled
   );
-  const speedReady = !speeds.isError && speeds.data && line && config;
-
+  const speedReady = speeds && line && config && !speeds.isError && speeds.data;
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
   }

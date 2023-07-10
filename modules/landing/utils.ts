@@ -1,11 +1,12 @@
 import type { ChartDataset } from 'chart.js';
+import { round } from 'lodash';
 import {
-  PEAK_COMPLETE_TRIP_TIMES,
   PEAK_RIDERSHIP,
   PEAK_SCHEDULED_SERVICE,
+  PEAK_SPEED,
 } from '../../common/constants/baselines';
 import { LINE_COLORS } from '../../common/constants/colors';
-import type { RidershipCount, SpeedDataPoint } from '../../common/types/dataPoints';
+import type { RidershipCount, DeliveredTripMetrics } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 
 const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
@@ -17,39 +18,38 @@ const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
     pointBorderWidth: 0,
     tension: 0,
     pointHoverRadius: 6,
-    spanGaps: false,
+    spanGaps: true,
     pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
   };
 };
 
-export const convertToSpeedDataset = (data: SpeedDataPoint[]) => {
+export const convertToSpeedDataset = (data: DeliveredTripMetrics[]) => {
   const { line } = data[0];
   const datasetOptions = getDatasetOptions(line);
   return {
     ...datasetOptions,
-    label: `% of baseline`,
+    label: `% of peak`,
     data: data.map((datapoint) =>
-      datapoint.value
-        ? Math.round(
-            10 *
-              (100 *
-                (1 / datapoint.value / (1 / PEAK_COMPLETE_TRIP_TIMES[line ?? 'DEFAULT'].value)))
-          ) / 10
+      datapoint.miles_covered
+        ? round(
+            (100 * datapoint.miles_covered) / (datapoint.total_time / 3600) / PEAK_SPEED[line],
+            1
+          )
         : Number.NaN
     ),
   };
 };
 
-export const convertToServiceDataset = (data: SpeedDataPoint[]) => {
+export const convertToServiceDataset = (data: DeliveredTripMetrics[]) => {
   const { line } = data[0];
   const datasetOptions = getDatasetOptions(line);
 
   return {
     ...datasetOptions,
-    label: `% of baseline`,
+    label: `% of peak`,
     data: data.map((datapoint) =>
-      datapoint.value
-        ? Math.round((10 * (100 * (datapoint.count / 2))) / PEAK_SCHEDULED_SERVICE[line]) / 10
+      datapoint.miles_covered
+        ? round((100 * datapoint.count) / PEAK_SCHEDULED_SERVICE[line], 1)
         : Number.NaN
     ),
   };
@@ -60,7 +60,7 @@ export const convertToRidershipDataset = (data: RidershipCount[], line: Line) =>
 
   return {
     ...datasetOptions,
-    label: `% of baseline`,
+    label: `% of peak`,
     data: data.map((datapoint) =>
       datapoint.count
         ? Math.round(10 * 100 * (datapoint.count / PEAK_RIDERSHIP[line])) / 10
