@@ -11,14 +11,6 @@ AGG_TO_CONFIG_MAP = {
     "monthly": {"table_name": "DeliveredTripMetricsMonthly", "delta": 30 * 150},
 }
 
-# Delete this once GL speeds are done.
-OLD_AGG_TO_CONFIG_MAP = {
-    "daily": {"table_name": "DailySpeed", "delta": 150},
-    "weekly": {"table_name": "WeeklySpeed", "delta": 7 * 150},
-    "monthly": {"table_name": "MonthlySpeed", "delta": 30 * 150},
-}
-
-
 DATE_FORMAT_BACKEND = "%Y-%m-%d"
 
 
@@ -65,20 +57,3 @@ def is_invalid_range(start_date, end_date, max_delta):
     start_datetime = datetime.strptime(start_date, DATE_FORMAT_BACKEND)
     end_datetime = datetime.strptime(end_date, DATE_FORMAT_BACKEND)
     return start_datetime + timedelta(days=max_delta) < end_datetime
-
-
-def get_speeds(params):
-    try:
-        start_date = params["start_date"]
-        end_date = params["end_date"]
-        config = OLD_AGG_TO_CONFIG_MAP[params["agg"]]
-        line = params["line"]
-        if line not in ["line-red", "line-blue", "line-green", "line-orange"]:
-            raise BadRequestError("Invalid Line key.")
-    except KeyError:
-        raise BadRequestError("Missing or invalid parameters.")
-    start_datetime = datetime.strptime(start_date, DATE_FORMAT_BACKEND)
-    end_datetime = datetime.strptime(end_date, DATE_FORMAT_BACKEND)
-    if start_datetime + timedelta(days=config["delta"]) < end_datetime:
-        raise ForbiddenError("Date range too long. The maximum number of requested values is 150.")
-    return dynamo.old_query_speed_tables(config["table_name"], line, start_date, end_date)
