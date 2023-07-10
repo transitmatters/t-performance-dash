@@ -76,7 +76,7 @@ export const StationSelector: React.FC<StationSelector> = ({
                     }
                     className={({ active, selected, disabled }) =>
                       classNames(
-                        'relative select-none items-center px-4 py-1',
+                        'relative select-none items-center px-4 py-2 lg:py-1',
                         active ? lineColorLightBackground[line ?? 'DEFAULT'] : 'text-gray-900',
                         selected
                           ? `bg-opacity-20 text-sm font-semibold ${
