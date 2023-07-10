@@ -67,7 +67,6 @@ export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
           >
             <LineSegments
               data={allSlowGraphData}
-              line={lineShort}
               linePath={linePath}
               startDateUTC={startDateUTC}
               endDateUTC={endDateUTC}

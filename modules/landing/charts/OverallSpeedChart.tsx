@@ -1,12 +1,12 @@
 import React from 'react';
-import type { SpeedDataPoint } from '../../../common/types/dataPoints';
+import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
 import { convertToSpeedDataset } from '../utils';
 import { LandingChartDiv } from '../LandingChartDiv';
 import { SpeedBaseline } from '../../../copy/landingCopy';
 import { LandingPageChart } from './LandingPageChart';
 
 interface OverallSpeedChartProps {
-  speedData: SpeedDataPoint[][];
+  speedData: DeliveredTripMetrics[][];
 }
 export const OverallSpeedChart: React.FC<OverallSpeedChartProps> = ({ speedData }) => {
   const labels = speedData[0].map((point) => point.date);
