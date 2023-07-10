@@ -42,6 +42,20 @@ export type FetchSpeedsOptions = {
   line?: Line;
 };
 
+export type FetchDeliveredTripMetricsOptions = {
+  agg: AggType;
+  start_date?: string;
+  end_date?: string;
+  line?: Line;
+};
+
+export enum FetchDeliveredTripMetricsParams {
+  startDate = 'start_date',
+  endDate = 'end_date',
+  agg = 'agg',
+  line = 'line',
+}
+
 export enum FetchSpeedsParams {
   startDate = 'start_date',
   endDate = 'end_date',
