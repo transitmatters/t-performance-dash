@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import type { Line } from '../../common/types/lines';
 import { lineColorBackground, lineColorBorder } from '../../common/styles/general';
 import { LINE_OBJECTS } from '../../common/constants/lines';
+import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 interface LineButtonProps {
   children: React.ReactNode;
   line: Line;
@@ -11,6 +12,8 @@ interface LineButtonProps {
 
 export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
   const lineObject = LINE_OBJECTS[line];
+  const lgBreakpoint = useBreakpoint('lg');
+
   return (
     <Link
       href={`/${lineObject.path}`}
@@ -20,7 +23,8 @@ export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
         className={classNames(
           lineColorBorder[line],
           lineColorBackground[line],
-          'flex h-32 w-32 cursor-pointer items-center justify-center rounded-full border-2 bg-opacity-50 group-hover:bg-opacity-100'
+          lgBreakpoint ? 'h-32 w-32' : 'h-24 w-24',
+          'flex cursor-pointer items-center justify-center rounded-full border-2 bg-opacity-50 group-hover:bg-opacity-100'
         )}
       >
         {children}
