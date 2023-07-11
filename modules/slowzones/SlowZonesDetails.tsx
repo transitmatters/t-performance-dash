@@ -21,6 +21,7 @@ import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
 import { DirectionObject } from './constants/constants';
+import { SlowZonesWidgetTitle } from './SlowZonesWidgetTitle';
 dayjs.extend(utc);
 
 export function SlowZonesDetails() {
@@ -72,7 +73,7 @@ export function SlowZonesDetails() {
           </div>
         </WidgetDiv>
         <WidgetDiv>
-          <WidgetTitle title="Line map" />
+          <SlowZonesWidgetTitle line={line} />
           <div className="relative flex flex-col">
             {allSlow.data && speedRestrictions.data && canShowSlowZonesMap ? (
               <SlowZonesMap
