@@ -27,7 +27,7 @@ module.exports = {
     ecmaVersion: 2021,
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'import', 'unused-imports', 'prettier'],
+  plugins: ['react', 'react-hooks', '@typescript-eslint', 'import', 'unused-imports', 'prettier'],
   rules: {
     'import/named': 'warn',
     'import/no-unresolved': 'warn',
