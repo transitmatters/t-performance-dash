@@ -14,9 +14,12 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
 import { getFormattedTimeString } from '../../utils/time';
-import { Legend as LegendView } from './Legend';
+import { LegendMobile, LegendSingleDay, LegendMobile as LegendView } from './Legend';
 import { ChartDiv } from './ChartDiv';
 import { ChartBorder } from './ChartBorder';
+import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
+import { getAlertAnnotations } from '../../../modules/service/utils/graphUtils';
+import { AlertsDisclaimer } from '../general/AlertsDisclaimer';
 
 const pointColors = (data: DataPoint[], metric_field: string, benchmark_field?: string) => {
   return data.map((point: DataPoint) => {
@@ -67,6 +70,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   showLegend = true,
 }) => {
   const ref = useRef();
+  const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);
+  const alertAnnotations = date && alerts ? getAlertAnnotations(alerts, date) : [];
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const { line } = useDelimitatedRoute();
@@ -145,6 +150,10 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               legend: {
                 display: false,
               },
+              annotation: {
+                // Add your annotations here
+                annotations: alertAnnotations,
+              },
             },
             scales: {
               y: {
@@ -205,17 +214,20 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
           ]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end gap-4 pl-6 pr-2">
-        {showLegend && benchmarkField ? <LegendView /> : <div className="w-full" />}
-        {!isHomescreen && date && (
-          <DownloadButton
-            data={data}
-            datasetName={fname}
-            location={location}
-            bothStops={bothStops}
-            startDate={date}
-          />
-        )}
+      <div className="flex flex-col">
+        {alerts && <AlertsDisclaimer alerts={alerts} />}
+        <div className="flex flex-row items-end gap-4 ">
+          {showLegend && benchmarkField ? <LegendSingleDay /> : <div className="w-full" />}
+          {!isHomescreen && date && (
+            <DownloadButton
+              data={data}
+              datasetName={fname}
+              location={location}
+              bothStops={bothStops}
+              startDate={date}
+            />
+          )}
+        </div>
       </div>
     </ChartBorder>
   );

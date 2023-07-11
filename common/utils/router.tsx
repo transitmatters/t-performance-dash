@@ -14,6 +14,7 @@ import type { StationStore } from '../state/stationStore';
 import { useStationStore } from '../state/stationStore';
 import { useDateStore } from '../state/dateStore';
 import type { DateStore } from '../state/dateStore';
+import { useAlertStore } from '../../modules/tripexplorer/AlertStore';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'line-red',
