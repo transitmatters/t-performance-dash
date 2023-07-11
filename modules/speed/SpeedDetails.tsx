@@ -41,7 +41,6 @@ export function SpeedDetails() {
             <SpeedDetailsWrapper
               data={speeds.data}
               config={config}
-              line={line}
               startDate={startDate}
               endDate={endDate}
             />
