@@ -1,10 +1,8 @@
 import { create } from 'zustand';
-import { AlertForModal } from '../../common/types/alerts';
+import type { AlertForModal } from '../../common/types/alerts';
 
-export interface AlertStore {
+interface AlertStore {
   alerts: AlertForModal[] | undefined;
-  bears: number;
-  increasePopulation: any;
   setAlerts: (alerts: AlertForModal[] | undefined) => void;
   changeAlertApplied: (alerts: AlertForModal[] | undefined, index: number) => void;
   getAppliedAlerts: () => AlertForModal[] | undefined;
@@ -12,11 +10,8 @@ export interface AlertStore {
 
 export const useAlertStore = create<AlertStore>((set, get) => ({
   alerts: [],
-  bears: 0,
-  increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
   setAlerts: (alerts) => set(() => ({ alerts: alerts })),
   changeAlertApplied: (alerts, index) => {
-    // const alerts = get().alerts;
     if (!alerts)
       return set(() => ({
         alerts: undefined,

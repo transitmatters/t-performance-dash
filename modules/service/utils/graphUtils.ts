@@ -1,10 +1,9 @@
 import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
+import dayjs from 'dayjs';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { SpeedDataPoint } from '../../../common/types/dataPoints';
-import { AlertForModal } from '../../../common/types/alerts';
+import type { AlertForModal } from '../../../common/types/alerts';
 import { hexWithAlpha } from '../../../common/utils/general';
-import dayjs from 'dayjs';
-import { dateStrToESTDayJs, getESTDayjs } from '../../../common/constants/dates';
 
 const shuttlingAnnotationBlockStyle = {
   backgroundColor: CHART_COLORS.BLOCKS,

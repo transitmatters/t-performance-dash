@@ -9,7 +9,7 @@ import type {
   SingleDateParams,
 } from '../components/inputs/DateSelection/types/DateSelectionTypes';
 import type { Tab } from './dashboardTabs';
-import { daysToWeeks } from 'date-fns';
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 

@@ -6,7 +6,9 @@ import React, { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { DataPoint } from '../../types/dataPoints';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
 import type { SingleDayLineProps } from '../../../common/types/charts';
+import { getAlertAnnotations } from '../../../modules/service/utils/graphUtils';
 import { prettyDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../utils/router';
 import { DownloadButton } from '../general/DownloadButton';
@@ -14,12 +16,10 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
 import { getFormattedTimeString } from '../../utils/time';
-import { LegendMobile, LegendSingleDay, LegendMobile as LegendView } from './Legend';
+import { AlertsDisclaimer } from '../general/AlertsDisclaimer';
+import { LegendSingleDay } from './Legend';
 import { ChartDiv } from './ChartDiv';
 import { ChartBorder } from './ChartBorder';
-import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
-import { getAlertAnnotations } from '../../../modules/service/utils/graphUtils';
-import { AlertsDisclaimer } from '../general/AlertsDisclaimer';
 
 const pointColors = (data: DataPoint[], metric_field: string, benchmark_field?: string) => {
   return data.map((point: DataPoint) => {

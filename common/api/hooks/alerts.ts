@@ -1,8 +1,9 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import type { UseQueryResult } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { fetchAlerts, fetchHistoricalAlerts } from '../alerts';
 import type { LineShort } from '../../types/lines';
 import { FIVE_MINUTES, ONE_MINUTE } from '../../constants/time';
-import { AlertsResponse } from '../../types/alerts';
+import type { AlertsResponse } from '../../types/alerts';
 
 export const useHistoricalAlertsData = (
   date: string | undefined,

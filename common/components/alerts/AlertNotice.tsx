@@ -1,8 +1,5 @@
-import React, { SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import { PastAlertModal } from './PastAlertModal';
-import { AlertForModal, OldAlert } from '../../types/alerts';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWarning } from '@fortawesome/free-solid-svg-icons';
 
 export const AlertNotice: React.FC = () => {
   const [alertsOpen, setAlertsOpen] = useState(false);

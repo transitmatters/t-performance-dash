@@ -1,16 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useDelimitatedRoute } from '../../common/utils/router';
-import { getParentStationForStopId } from '../../common/utils/stations';
+import React, { useEffect } from 'react';
+import { useHistoricalAlertsData } from '../../common/api/hooks/alerts';
+import { findMatch } from '../../common/components/alerts/AlertFilter';
+import { AlertNotice } from '../../common/components/alerts/AlertNotice';
+import { SameDayNotice } from '../../common/components/notices/SameDayNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Layout } from '../../common/layouts/layoutTypes';
-import { SameDayNotice } from '../../common/components/notices/SameDayNotice';
-import { AlertBar } from '../../common/components/alerts/AlertBar';
-import { TripGraphs } from './TripGraphs';
-import { AlertNotice } from '../../common/components/alerts/AlertNotice';
-import { useHistoricalAlertsData } from '../../common/api/hooks/alerts';
-import { findMatch } from '../../common/components/alerts/AlertFilter';
+import { useDelimitatedRoute } from '../../common/utils/router';
+import { getParentStationForStopId } from '../../common/utils/stations';
 import { useAlertStore } from './AlertStore';
+import { TripGraphs } from './TripGraphs';
 
 export const TripExplorer = () => {
   const {
@@ -27,7 +26,7 @@ export const TripExplorer = () => {
   const setAlerts = useAlertStore((store) => store.setAlerts);
   useEffect(() => {
     setAlerts(alertsForModal);
-  }, [alertsForModal]);
+  }, [alertsForModal, setAlerts]);
 
   if (!(fromStation && toStation)) {
     return null;
@@ -35,7 +34,7 @@ export const TripExplorer = () => {
   return (
     <PageWrapper pageTitle={'Trips'}>
       <div className="flex flex-col gap-4">
-        {alertsForModal?.length > 0 ? <AlertNotice /> : null}
+        {alertsForModal?.length ? <AlertNotice /> : null}
         <TripGraphs fromStation={fromStation} toStation={toStation} />
         <SameDayNotice />
         <TerminusNotice toStation={toStation} fromStation={fromStation} />

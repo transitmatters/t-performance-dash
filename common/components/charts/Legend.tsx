@@ -10,7 +10,7 @@ export const LegendSingleDay: React.FC = () => {
   return <LegendDesktop />;
 };
 
-export const LegendMobile: React.FC = () => {
+const LegendMobile: React.FC = () => {
   return (
     <Disclosure>
       {({ open }) => (
@@ -37,7 +37,7 @@ export const LegendMobile: React.FC = () => {
   );
 };
 
-export const LegendDesktop: React.FC = () => {
+const LegendDesktop: React.FC = () => {
   return (
     <div
       className={

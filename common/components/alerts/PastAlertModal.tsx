@@ -1,12 +1,8 @@
-import React, { Fragment, SetStateAction, useState } from 'react';
+import React, { Fragment } from 'react';
+import type { SetStateAction } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { AlertForModal } from '../../types/alerts';
-import dayjs from 'dayjs';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWarning } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
 import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
-import { Button } from '../inputs/Button';
 import { getDateString } from '../../../modules/commute/alerts/AlertUtils';
 
 interface PastAlertModalProps {
@@ -51,6 +47,7 @@ export const PastAlertModal: React.FC<PastAlertModalProps> = ({ alertsOpen, setA
                   <div className="flex max-h-[50vh] flex-col gap-4 overflow-y-auto md:max-h-[66vh]">
                     {alertStore.alerts?.map((alert, index) => (
                       <div
+                        key={index}
                         className={classNames(
                           alert.applied ? 'bg-yellow-200' : 'bg-yellow-100 ',
                           'flex cursor-pointer flex-col rounded-md border border-yellow-200 bg-yellow-100 p-2 shadow-sm hover:bg-yellow-200 '
