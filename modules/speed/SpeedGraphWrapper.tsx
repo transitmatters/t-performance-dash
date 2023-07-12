@@ -3,32 +3,28 @@ import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDi
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { MPHWidgetValue } from '../../common/types/basicWidgets';
-import type { Line } from '../../common/types/lines';
-import type { SpeedDataPoint } from '../../common/types/dataPoints';
+import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { SpeedGraph } from './SpeedGraph';
 import { getDetailsSpeedWidgetValues } from './utils/utils';
 import type { ParamsType } from './constants/speeds';
 
 interface SpeedGraphWrapperProps {
-  data: SpeedDataPoint[];
+  data: DeliveredTripMetrics[];
   config: ParamsType;
-  line: Line;
   startDate: string;
   endDate: string;
 }
 
 export const SpeedGraphWrapper: React.FC<SpeedGraphWrapperProps> = ({
   data,
-  line,
   config,
   startDate,
   endDate,
 }) => {
-  const dataNoNulls = data.filter((datapoint) => datapoint.value !== null);
+  const dataNoNulls = data.filter((datapoint) => datapoint.miles_covered);
   if (dataNoNulls.length < 1) return <NoDataNotice isLineMetric />;
-  const { current, delta, average, peak } = getDetailsSpeedWidgetValues(dataNoNulls, line);
-
+  const { current, delta, average, peak } = getDetailsSpeedWidgetValues(dataNoNulls);
   return (
     <CarouselGraphDiv>
       <WidgetCarousel>
@@ -45,7 +41,7 @@ export const SpeedGraphWrapper: React.FC<SpeedGraphWrapperProps> = ({
           sentimentDirection={'positiveOnIncrease'}
         />
         <WidgetForCarousel
-          widgetValue={new MPHWidgetValue(peak.value, undefined)}
+          widgetValue={new MPHWidgetValue(peak.mph, undefined)}
           analysis={`Peak (${config.getWidgetTitle(peak.date)})`}
           sentimentDirection={'positiveOnIncrease'}
           layoutKind="no-delta"

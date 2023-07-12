@@ -18,7 +18,7 @@
     "TMBackendZone": {
       "Type": "String",
       "Default": "labs.transitmatters.org",
-      "AllowedPattern": "^dashboard-api2\\.transitmatters\\.org$|^labs\\.transitmatters\\.org$",
+      "AllowedPattern": "^labs\\.transitmatters\\.org$",
       "Description": "The backend's DNS zone file name. Most likely dashboard.transitmatters.org or labs.transitmatters.org."
     },
     "TMFrontendCertArn": {
@@ -27,8 +27,8 @@
     },
     "TMBackendHostname": {
       "Type": "String",
-      "Default": "dashboard-api.labs.transitmatters.org",
-      "AllowedPattern": "^dashboard-api2\\.transitmatters\\.org$|^.*\\.labs\\.transitmatters\\.org$",
+      "Default": "dashboard-api-beta.labs.transitmatters.org",
+      "AllowedPattern": "^.*\\.labs\\.transitmatters\\.org$",
       "Description": "The backend hostname for the data dashboard."
     },
     "TMBackendCertArn": {

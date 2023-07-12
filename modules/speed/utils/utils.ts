@@ -1,19 +1,19 @@
-import type { SpeedDataPoint } from '../../../common/types/dataPoints';
-import type { Line } from '../../../common/types/lines';
-import { CORE_TRACK_LENGTHS } from '../constants/speeds';
+import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
 
-const calcValues = (speeds: SpeedDataPoint[], trackDistance: number, isOverview = false) => {
-  const current = trackDistance / (speeds[speeds.length - 1].value / 3600);
+const calcValues = (speeds: DeliveredTripMetrics[], isOverview = false) => {
+  const mphs = speeds.map((speed) => {
+    return { mph: speed.miles_covered / (speed.total_time / 3600), date: speed.date };
+  });
+  const current = mphs[mphs.length - 1].mph;
   const average =
-    trackDistance /
-    (speeds.reduce((currentSum, speed) => currentSum + speed.value, 0) / speeds.length / 3600);
-  const peakEntry = {
-    ...speeds.reduce((max, speed) => (speed.value < max.value ? speed : max), speeds[0]),
+    mphs.reduce((currentSum, mph) => (!isNaN(mph.mph) ? currentSum + mph.mph : currentSum), 0) /
+    mphs.length;
+  const peak = {
+    ...mphs.reduce((max, mph) => (mph.mph > max.mph ? mph : max), mphs[0]),
   };
-  const peak = { ...peakEntry, value: trackDistance / (peakEntry.value / 3600) };
-  const delta = isOverview
-    ? current - peak.value
-    : current - trackDistance / (speeds[0].value / 3600);
+
+  // TODO: This is unused.
+  const delta = isOverview ? current - peak.mph : current - mphs[0].mph;
 
   return {
     current,
@@ -23,11 +23,6 @@ const calcValues = (speeds: SpeedDataPoint[], trackDistance: number, isOverview 
   };
 };
 
-export const getOverviewSpeedWidgetValues = (datapoints: SpeedDataPoint[], line: Line) => {
-  const trackDistance = CORE_TRACK_LENGTHS[line];
-  return calcValues(datapoints, trackDistance, true);
-};
-export const getDetailsSpeedWidgetValues = (datapoints: SpeedDataPoint[], line: Line) => {
-  const trackDistance = CORE_TRACK_LENGTHS[line];
-  return calcValues(datapoints, trackDistance);
+export const getDetailsSpeedWidgetValues = (datapoints: DeliveredTripMetrics[]) => {
+  return calcValues(datapoints);
 };

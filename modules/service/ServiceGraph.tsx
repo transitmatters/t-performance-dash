@@ -8,7 +8,6 @@ import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
@@ -17,10 +16,11 @@ import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
+import type { DeliveredTripMetrics, TripCounts } from '../../common/types/dataPoints';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 interface ServiceGraphProps {
-  data: SpeedDataPoint[];
+  data: DeliveredTripMetrics[];
   predictedData: TripCounts;
   config: ParamsType;
   startDate: string;
@@ -37,6 +37,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
   showTitle = false,
 }) => {
   const { line, linePath } = useDelimitatedRoute();
+  const peak = PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'];
   const { tooltipFormat, unit, callbacks } = config;
 
   const isMobile = !useBreakpoint('md');
@@ -58,7 +59,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
               labels,
               datasets: [
                 {
-                  label: `Actual trips`,
+                  label: `Daily round trips`,
                   borderColor: lineColor,
                   backgroundColor: hexWithAlpha(lineColor, 0.8),
                   pointRadius: 0,
@@ -68,7 +69,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   pointHoverRadius: 6,
                   pointHoverBackgroundColor: lineColor,
                   data: data.map((datapoint) =>
-                    datapoint.value ? datapoint.count / 2 : Number.NaN
+                    datapoint.miles_covered ? Math.round(datapoint.count) : Number.NaN
                   ),
                 },
                 {
@@ -82,13 +83,13 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   borderColor: lineColor,
                   spanGaps: false,
                   data: predictedData.counts.map((count, index) =>
-                    data[index]?.value > 0 && count ? count / 2 : Number.NaN
+                    data[index]?.miles_covered > 0 && count ? count / 2 : Number.NaN
                   ),
                   backgroundColor: pattern.draw('diagonal', 'transparent', lineColor, 5),
                 },
                 {
                   // This null dataset produces the entry in the legend for the baseline annotation.
-                  label: `Baseline (${PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']})`,
+                  label: `Peak (${peak})`,
                   backgroundColor: CHART_COLORS.ANNOTATIONS,
                   data: null,
                 },
@@ -116,10 +117,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                     label: (context) => {
                       return `${context.datasetIndex === 0 ? 'Actual:' : 'Scheduled:'} ${
                         context.parsed.y
-                      } (${(
-                        (100 * context.parsed.y) /
-                        PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
-                      ).toFixed(1)}% of baseline)`;
+                      } (${((100 * context.parsed.y) / peak).toFixed(1)}% of peak)`;
                     },
                   },
                 },
@@ -139,8 +137,8 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   annotations: [
                     {
                       type: 'line',
-                      yMin: PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'],
-                      yMax: PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'],
+                      yMin: peak,
+                      yMax: peak,
                       borderColor: CHART_COLORS.ANNOTATIONS,
                       // corresponds to null dataset index.
                       display: (ctx) => ctx.chart.isDatasetVisible(2),
@@ -159,7 +157,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   },
                   title: {
                     display: true,
-                    text: 'Trips',
+                    text: 'hours',
                     color: COLORS.design.subtitleGrey,
                   },
                 },
@@ -208,7 +206,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                     ctx.fillText('No data to display', width / 2, height / 2);
                     ctx.restore();
                   }
-                  if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
+                  if (showTitle) drawSimpleTitle(`Daily Service Hours`, chart);
                 },
               },
               Annotation,
@@ -226,6 +224,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
     predictedData.counts,
     showTitle,
     callbacks,
+    peak,
     startDate,
     endDate,
     unit,

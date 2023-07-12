@@ -10,7 +10,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ isWidget }) => {
   const { line } = useDelimitatedRoute();
   return (
     <div
-      role="status"
+      role={'status'}
       className={`absolute bottom-0 left-0 right-0 top-0 flex h-auto w-auto items-center justify-center rounded-md ${
         isWidget && 'bg-white bg-opacity-90'
       }`}
