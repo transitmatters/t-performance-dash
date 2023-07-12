@@ -102,7 +102,7 @@ def get_scheduled_service(
         if current_day_iso in scheduled_service_by_day:
             scheduled_service_count = scheduled_service_by_day[current_day_iso]["count"]
         else:
-            scheduled_service_count = 0
+            scheduled_service_count = None
         scheduled_service_arr.append(scheduled_service_count)
     counts = []
     if agg == 'daily':
