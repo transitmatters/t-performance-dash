@@ -18,7 +18,7 @@ import { getShuttlingBlockAnnotations } from '../service/utils/graphUtils';
 import { PEAK_MPH } from './constants/speeds';
 import type { ParamsType } from './constants/speeds';
 
-interface SpeedGraphProps {
+interface TripTimeIncreaseChartProps {
   data: DeliveredTripMetrics[];
   config: ParamsType;
   startDate: string;
@@ -26,7 +26,7 @@ interface SpeedGraphProps {
   showTitle?: boolean;
 }
 
-export const SpeedGraph: React.FC<SpeedGraphProps> = ({
+export const DelaysChart: React.FC<TripTimeIncreaseChartProps> = ({
   data,
   config,
   startDate,
@@ -53,7 +53,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
             labels,
             datasets: [
               {
-                label: `MPH`,
+                label: `Trip time`,
                 borderColor: LINE_COLORS[line ?? 'default'],
                 pointRadius: 0,
                 pointBorderWidth: 0,
@@ -62,9 +62,10 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 spanGaps: false,
                 pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
                 pointBackgroundColor: LINE_COLORS[line ?? 'default'],
-                data: data.map((datapoint) =>
-                  (datapoint.miles_covered / (datapoint.total_time / 3600)).toFixed(1)
-                ),
+                data: data.map((datapoint) => {
+                  const mph = datapoint.miles_covered / (datapoint.total_time / 3600);
+                  return (100 * ((PEAK_MPH[line ?? 'DEFAULT'] - mph) / mph)).toFixed(1);
+                }),
               },
               {
                 // This null dataset produces the entry in the legend for the baseline annotation.
@@ -94,15 +95,9 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 callbacks: {
                   ...callbacks,
                   label: (context) => {
-                    const label = `${context.parsed.y} mph (${(
-                      (100 * context.parsed.y) /
-                      peak
-                    ).toFixed(1)}% of peak)`;
-                    const compTripTime = `Trips are ${(
-                      100 *
-                      ((PEAK_SPEED[line ?? 'DEFAULT'] - context.parsed.y) / context.parsed.y)
-                    ).toFixed(1)}% longer`;
-                    return [label, compTripTime];
+                    return `Trips are ${context.parsed.y}% ${
+                      context.parsed.y >= 0 ? 'longer' : 'shorter'
+                    }`;
                   },
                 },
               },
@@ -119,18 +114,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
               },
               annotation: {
                 // Add your annotations here
-                annotations: [
-                  {
-                    type: 'line',
-                    yMin: peak,
-                    yMax: peak,
-                    borderColor: CHART_COLORS.ANNOTATIONS,
-                    // corresponds to null dataset index.
-                    display: (ctx) => ctx.chart.isDatasetVisible(1),
-                    borderWidth: 2,
-                  },
-                  ...shuttlingBlocks,
-                ],
+                annotations: [...shuttlingBlocks],
               },
             },
             scales: {
@@ -192,7 +176,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                   ctx.fillText('No data to display', width / 2, height / 2);
                   ctx.restore();
                 }
-                if (showTitle) drawSimpleTitle(`Speed`, chart);
+                if (showTitle) drawSimpleTitle(`Median Speed`, chart);
               },
             },
             ChartjsPluginWatermark,
