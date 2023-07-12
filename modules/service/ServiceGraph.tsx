@@ -157,7 +157,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   },
                   title: {
                     display: true,
-                    text: 'hours',
+                    text: 'trips',
                     color: COLORS.design.subtitleGrey,
                   },
                 },
@@ -206,7 +206,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                     ctx.fillText('No data to display', width / 2, height / 2);
                     ctx.restore();
                   }
-                  if (showTitle) drawSimpleTitle(`Daily Service Hours`, chart);
+                  if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
                 },
               },
               Annotation,
