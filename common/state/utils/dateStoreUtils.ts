@@ -53,6 +53,10 @@ export const getSelectedDates = (dateConfig: {
   return undefined;
 };
 
-export const formatDate = (date: string) => {
-  return date === TODAY_STRING ? 'Today' : dayjs(date).format(SMALL_DATE_FORMAT);
+const formatDate = (date: string) => {
+  return dayjs(date).format(SMALL_DATE_FORMAT);
+};
+
+export const formatDateTodayCheck = (date: string) => {
+  return date === TODAY_STRING ? 'Today' : formatDate(date);
 };

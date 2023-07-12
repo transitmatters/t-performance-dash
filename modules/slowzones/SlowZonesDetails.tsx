@@ -73,7 +73,7 @@ export function SlowZonesDetails() {
           </div>
         </WidgetDiv>
         <WidgetDiv>
-          <SlowZonesWidgetTitle line={line} />
+          <SlowZonesWidgetTitle />
           <div className="relative flex flex-col">
             {allSlow.data && speedRestrictions.data && canShowSlowZonesMap ? (
               <SlowZonesMap
