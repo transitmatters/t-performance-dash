@@ -6,7 +6,9 @@ import React, { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { DataPoint } from '../../types/dataPoints';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
 import type { SingleDayLineProps } from '../../../common/types/charts';
+import { getAlertAnnotations } from '../../../modules/service/utils/graphUtils';
 import { prettyDate } from '../../utils/date';
 import { useDelimitatedRoute } from '../../utils/router';
 import { DownloadButton } from '../buttons/DownloadButton';
@@ -14,7 +16,8 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
 import { getFormattedTimeString } from '../../utils/time';
-import { Legend as LegendView } from './Legend';
+import { AlertsDisclaimer } from '../general/AlertsDisclaimer';
+import { LegendSingleDay } from './Legend';
 import { ChartDiv } from './ChartDiv';
 import { ChartBorder } from './ChartBorder';
 
@@ -67,6 +70,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   showLegend = true,
 }) => {
   const ref = useRef();
+  const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);
+  const alertAnnotations = date && alerts ? getAlertAnnotations(alerts, date) : [];
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const { line } = useDelimitatedRoute();
@@ -145,6 +150,10 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               legend: {
                 display: false,
               },
+              annotation: {
+                // Add your annotations here
+                annotations: alertAnnotations,
+              },
             },
             scales: {
               y: {
@@ -205,17 +214,20 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
           ]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end gap-4 pl-6 pr-2">
-        {showLegend && benchmarkField ? <LegendView /> : <div className="w-full" />}
-        {!isHomescreen && date && (
-          <DownloadButton
-            data={data}
-            datasetName={fname}
-            location={location}
-            bothStops={bothStops}
-            startDate={date}
-          />
-        )}
+      <div className="flex flex-col">
+        {alerts && <AlertsDisclaimer alerts={alerts} />}
+        <div className="flex flex-row items-end gap-4 ">
+          {showLegend && benchmarkField ? <LegendSingleDay /> : <div className="w-full" />}
+          {!isHomescreen && date && (
+            <DownloadButton
+              data={data}
+              datasetName={fname}
+              location={location}
+              bothStops={bothStops}
+              startDate={date}
+            />
+          )}
+        </div>
       </div>
     </ChartBorder>
   );

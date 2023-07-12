@@ -51,14 +51,12 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
           <WidgetTitle title="Total slow time" />
           <div className="relative flex flex-col">
             {totalSlowTimeReady ? (
-              <div className="relative flex h-60">
-                <TotalSlowTime
-                  data={delayTotals.data}
-                  startDateUTC={startDateUTC}
-                  endDateUTC={endDateUTC}
-                  showTitle={showTitle}
-                />
-              </div>
+              <TotalSlowTime
+                data={delayTotals.data}
+                startDateUTC={startDateUTC}
+                endDateUTC={endDateUTC}
+                showTitle={showTitle}
+              />
             ) : (
               <div className="relative flex h-full">
                 <ChartPlaceHolder query={delayTotals} />

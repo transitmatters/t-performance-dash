@@ -33,7 +33,6 @@ export const SpeedWidget: React.FC = () => {
         <SpeedGraphWrapper
           data={speeds.data}
           config={config}
-          line={line}
           startDate={startDate}
           endDate={endDate}
         />

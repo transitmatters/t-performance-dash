@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { stations } from '../../../common/constants/stations';
 import type { BusRoute, LineShort } from '../../../common/types/lines';
 import type { Station } from '../../../common/types/stations';
@@ -28,4 +29,13 @@ export const getStations = (stops: string[], routeOrLine: LineShort | BusRoute) 
   });
 
   return getEndStations(stop_objects);
+};
+
+export const getDateString = (validFrom: string, validTo: string) => {
+  const validFromDay = dayjs(validFrom);
+  const validToDay = dayjs(validTo);
+  if (validToDay.diff(validFromDay, 'hour') > 24) {
+    return 'All day ';
+  }
+  return `${validFromDay.format('h:mm a')} - ${validToDay.format('h:mm a')} `;
 };

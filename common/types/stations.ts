@@ -1,4 +1,4 @@
-export interface Direction {
+interface Direction {
   0: string;
   1: string;
 }

@@ -1,5 +1,5 @@
 import type { SelectOption } from '../../common/types/inputs';
-import type { LineShort } from '../../common/types/lines';
+import type { Line, LineShort } from '../../common/types/lines';
 import type { Station } from '../../common/types/stations';
 import type { Location } from '../types/charts';
 import type { Direction } from '../types/dataPoints';
@@ -9,7 +9,6 @@ export const optionsForField = (
   type: 'from' | 'to',
   line: LineShort,
   fromStation: Station | null,
-  toStation: Station | null,
   busRoute?: string
 ) => {
   if (type === 'from') {
@@ -83,6 +82,12 @@ export const getStationById = (stationStopId: string) => {
 
 export const getParentStationForStopId = (stopId: string) => {
   return parentStationIndex[stopId];
+};
+
+export const getStationForInvalidFromSelection = (line: Line): Station => {
+  if (line === 'line-green') return getParentStationForStopId('70202'); // Gov. Center
+  if (line === 'line-red') return getParentStationForStopId('70076'); // Park St.
+  throw new Error('There should be no other lines with invalid from station selections.');
 };
 
 export const stopIdsForStations = (from: Station | undefined, to: Station | undefined) => {

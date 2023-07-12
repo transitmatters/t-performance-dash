@@ -119,7 +119,7 @@ export type ServiceLevels = {
   };
 };
 
-export type TripCounts = {
+export type ScheduledService = {
   counts: number[];
   start_date: string;
   end_date: string;

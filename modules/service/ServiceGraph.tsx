@@ -16,12 +16,12 @@ import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
-import type { DeliveredTripMetrics, TripCounts } from '../../common/types/dataPoints';
+import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 interface ServiceGraphProps {
   data: DeliveredTripMetrics[];
-  predictedData: TripCounts;
+  predictedData: ScheduledService;
   config: ParamsType;
   startDate: string;
   endDate: string;
@@ -157,7 +157,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   },
                   title: {
                     display: true,
-                    text: 'hours',
+                    text: 'trips',
                     color: COLORS.design.subtitleGrey,
                   },
                 },
@@ -206,7 +206,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                     ctx.fillText('No data to display', width / 2, height / 2);
                     ctx.restore();
                   }
-                  if (showTitle) drawSimpleTitle(`Daily Service Hours`, chart);
+                  if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
                 },
               },
               Annotation,

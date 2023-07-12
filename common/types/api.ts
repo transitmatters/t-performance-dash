@@ -63,11 +63,11 @@ export enum FetchSpeedsParams {
   line = 'line',
 }
 
-export type FetchTripCountsOptions = {
-  [key in FetchTripCountsParams]?: string;
+export type FetchScheduledServiceOptions = {
+  [key in FetchScheduledServiceParams]?: string;
 };
 
-export enum FetchTripCountsParams {
+export enum FetchScheduledServiceParams {
   startDate = 'start_date',
   endDate = 'end_date',
   routeId = 'route_id',

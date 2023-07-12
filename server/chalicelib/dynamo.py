@@ -9,12 +9,6 @@ import concurrent.futures
 dynamodb = boto3.resource("dynamodb")
 
 
-def old_query_speed_tables(table_name, line, start_date, end_date):
-    table = dynamodb.Table(table_name)
-    response = table.query(KeyConditionExpression=Key("line").eq(line) & Key("date").between(start_date, end_date))
-    return ddb_json.loads(response["Items"])
-
-
 def query_daily_trips_on_route(table_name, route, start_date, end_date):
     table = dynamodb.Table(table_name)
     response = table.query(KeyConditionExpression=Key("route").eq(route) & Key("date").between(start_date, end_date))
@@ -32,14 +26,8 @@ def query_daily_trips_on_line(table_name, line, start_date, end_date):
     return results
 
 
-def query_speed_tables(table_name, line, start_date, end_date):
-    table = dynamodb.Table(table_name)
-    response = table.query(KeyConditionExpression=Key("line").eq(line) & Key("date").between(start_date, end_date))
-    return ddb_json.loads(response["Items"])
-
-
-def query_trip_counts(start_date: date, end_date: date, route_id: str = None):
-    table = dynamodb.Table("TripCounts")
+def query_scheduled_service(start_date: date, end_date: date, route_id: str = None):
+    table = dynamodb.Table("ScheduledServiceDaily")
     line_condition = Key("routeId").eq(route_id)
     date_condition = Key("date").between(start_date.isoformat(), end_date.isoformat())
     condition = line_condition & date_condition

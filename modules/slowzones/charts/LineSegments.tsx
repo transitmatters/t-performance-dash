@@ -133,7 +133,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
               from: stations.fromStopIds?.[0],
             };
             const params = new URLSearchParams(queryParams);
-            window.open(`${hrefPathname}?${params.toString()}`);
+            window.open(`${hrefPathname}?${params.toString()}`, '_blank', 'noreferrer');
           }
         },
         onHover: (event, elements) => {

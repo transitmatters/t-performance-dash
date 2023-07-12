@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { useTripCounts } from '../../common/api/hooks/service';
+import { useScheduledService } from '../../common/api/hooks/service';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
@@ -34,7 +34,7 @@ export function ServiceDetails() {
     enabled
   );
 
-  const predictedData = useTripCounts(
+  const predictedData = useScheduledService(
     {
       start_date: startDate,
       end_date: endDate,

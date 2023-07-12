@@ -179,26 +179,20 @@ def get_alerts():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/api/speed", cors=cors_config)
-def get_speed():
-    response = speed.get_speeds(app.current_request.query_params)
-    return json.dumps(response, indent=4, sort_keys=True)
-
-
 @app.route("/api/tripmetrics", cors=cors_config)
 def get_trips_by_line():
     response = speed.trip_metrics_by_line(app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True)
 
 
-@app.route("/api/tripcounts", cors=cors_config)
-def get_trip_counts():
+@app.route("/api/scheduledservice", cors=cors_config)
+def get_scheduled_service():
     query = app.current_request.query_params
     start_date = parse_user_date(query["start_date"])
     end_date = parse_user_date(query["end_date"])
     route_id = query.get("route_id")
     agg = query["agg"]
-    response = service_levels.get_trip_counts(
+    response = service_levels.get_scheduled_service(
         start_date=start_date,
         end_date=end_date,
         route_id=route_id,
