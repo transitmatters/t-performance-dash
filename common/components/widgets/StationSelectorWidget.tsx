@@ -47,23 +47,27 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
         );
         break;
       case 'from': {
-        if (newStation?.branches?.some((branch) => toStation?.branches?.includes(branch))) {
+        if (
+          newStation &&
+          newStation.branches &&
+          !newStation?.branches?.some((branch) => toStation?.branches?.includes(branch))
+        ) {
+          // If `from` station is on a separate branch, set the `to` station to gov center for GL and Park for RL.
+          const newToStation = getStationForInvalidFromSelection(line);
+          const stationIds = stopIdsForStations(newStation, newToStation);
           updateQueryParams(
             {
-              from: stopIdsForStations(newStation, toStation).fromStopIds?.[0],
+              from: stationIds?.fromStopIds?.[0],
+              to: stationIds?.toStopIds?.[0],
             },
             undefined,
             false
           );
           break;
         }
-        // If `from` station is on a separate branch, set the `to` station to gov center for GL and Park for RL.
-        const newToStation = getStationForInvalidFromSelection(line);
-        const stationIds = stopIdsForStations(newStation, newToStation);
         updateQueryParams(
           {
-            from: stationIds?.fromStopIds?.[0],
-            to: stationIds?.toStopIds?.[0],
+            from: stopIdsForStations(newStation, toStation).fromStopIds?.[0],
           },
           undefined,
           false
