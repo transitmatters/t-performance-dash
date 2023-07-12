@@ -40,10 +40,15 @@ export const PastAlertModal: React.FC<PastAlertModalProps> = ({ alertsOpen, setA
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md sm:p-6">
                 <div className="flex flex-col items-center gap-2">
-                  <p style={{ fontFamily: 'Helvetica Neue' }} className="text-5xl text-yellow-300 ">
-                    ⚠️
-                  </p>
-
+                  <div className="flex flex-col items-center text-lg">
+                    <p
+                      style={{ fontFamily: 'Helvetica Neue' }}
+                      className="text-5xl text-yellow-300 "
+                    >
+                      ⚠️
+                    </p>
+                    <p>Alerts</p>
+                  </div>
                   <div className="flex max-h-[50vh] flex-col gap-4 overflow-y-auto md:max-h-[66vh]">
                     {alertStore.alerts?.map((alert, index) => (
                       <div
