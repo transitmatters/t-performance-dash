@@ -1,5 +1,5 @@
 import { PEAK_SCHEDULED_SERVICE } from '../../../common/constants/baselines';
-import type { DeliveredTripMetrics, TripCounts } from '../../../common/types/dataPoints';
+import type { DeliveredTripMetrics, ScheduledService } from '../../../common/types/dataPoints';
 import type { Line } from '../../../common/types/lines';
 
 export const getServiceWidgetValues = (
@@ -32,7 +32,7 @@ export const getServiceWidgetValues = (
 
 export const getPercentageData = (
   data: DeliveredTripMetrics[],
-  predictedData: TripCounts,
+  predictedData: ScheduledService,
   line?: Line
 ) => {
   const scheduled = data.map((datapoint, index) => {

@@ -16,12 +16,12 @@ import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
-import type { DeliveredTripMetrics, TripCounts } from '../../common/types/dataPoints';
+import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 interface ServiceGraphProps {
   data: DeliveredTripMetrics[];
-  predictedData: TripCounts;
+  predictedData: ScheduledService;
   config: ParamsType;
   startDate: string;
   endDate: string;
