@@ -5,12 +5,12 @@ import { AlertNotice } from '../../common/components/alerts/AlertNotice';
 import { SameDayNotice } from '../../common/components/notices/SameDayNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getParentStationForStopId } from '../../common/utils/stations';
 import { useAlertStore } from './AlertStore';
 import { TripGraphs } from './TripGraphs';
-import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 
 export const TripExplorer = () => {
   const {

@@ -7,10 +7,10 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { getSpeedGraphConfig } from './constants/speeds';
 import { SpeedDetailsWrapper } from './SpeedDetailsWrapper';
-import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 dayjs.extend(utc);
 
 export function SpeedDetails() {

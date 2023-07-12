@@ -16,13 +16,13 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import type { Direction } from '../../common/types/dataPoints';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
 import { DirectionObject } from './constants/constants';
 import { SlowZonesWidgetTitle } from './SlowZonesWidgetTitle';
-import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 dayjs.extend(utc);
 
 export function SlowZonesDetails() {

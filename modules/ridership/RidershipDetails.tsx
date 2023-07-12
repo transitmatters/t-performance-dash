@@ -5,11 +5,11 @@ import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { RIDERSHIP_KEYS } from '../../common/types/lines';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
+import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
-import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 
 export function RidershipDetails() {
   const {
