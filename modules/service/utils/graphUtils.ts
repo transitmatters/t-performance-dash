@@ -1,6 +1,9 @@
 import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
+import dayjs from 'dayjs';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { SpeedDataPoint } from '../../../common/types/dataPoints';
+import type { AlertForModal } from '../../../common/types/alerts';
+import { hexWithAlpha } from '../../../common/utils/general';
 
 const shuttlingAnnotationBlockStyle = {
   backgroundColor: CHART_COLORS.BLOCKS,
@@ -11,6 +14,11 @@ const shuttlingAnnotationBlockStyle = {
     color: 'white',
     display: true,
   },
+};
+
+const alertAnnotationBlockStyle = {
+  backgroundColor: hexWithAlpha('#fef08a', 0.5),
+  borderColor: 'transparent',
 };
 
 /*
@@ -40,6 +48,26 @@ export const getShuttlingBlockAnnotations = (
       });
       insideShuttlingBlock = false;
     }
+  });
+  return dateBlocks;
+};
+
+export const getAlertAnnotations = (alerts: AlertForModal[], date: string) => {
+  const dateBlocks: AnnotationOptions<keyof AnnotationTypeRegistry>[] = [];
+  const ESTDate = dayjs(date);
+  alerts.forEach((alert) => {
+    const from = dayjs(alert.valid_from).isBefore(ESTDate.set('hour', 5).set('minute', 30))
+      ? ESTDate.set('hour', 5).set('minute', 30).format('YYYY-MM-DDTHH:mm:ss')
+      : alert.valid_from;
+    const to = dayjs(alert.valid_to).isAfter(ESTDate.add(1, 'day').set('hour', 1).set('minute', 0))
+      ? ESTDate.add(1, 'day').set('hour', 1).set('minute', 0).format('YYYY-MM-DDTHH:mm:ss')
+      : alert.valid_to;
+    dateBlocks.push({
+      type: 'box',
+      xMin: alert ? from : undefined,
+      xMax: alert ? to : undefined,
+      ...alertAnnotationBlockStyle,
+    });
   });
   return dateBlocks;
 };

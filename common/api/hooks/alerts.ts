@@ -1,7 +1,9 @@
+import type { UseQueryResult } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAlerts, fetchHistoricalAlerts } from '../alerts';
 import type { LineShort } from '../../types/lines';
 import { FIVE_MINUTES, ONE_MINUTE } from '../../constants/time';
+import type { AlertsResponse } from '../../types/alerts';
 
 export const useHistoricalAlertsData = (
   date: string | undefined,
@@ -18,7 +20,10 @@ export const useHistoricalAlertsData = (
   );
 };
 
-export const useAlertsData = (route: LineShort, busRoute?: string) => {
+export const useAlertsData = (
+  route: LineShort,
+  busRoute?: string
+): UseQueryResult<AlertsResponse[]> => {
   return useQuery(['alerts', route, busRoute], () => fetchAlerts(route, busRoute), {
     staleTime: ONE_MINUTE,
   });
