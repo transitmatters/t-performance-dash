@@ -8,6 +8,7 @@ import type { SlowZonesLineName } from '../types';
 
 import type { SegmentLabel } from '../../../common/components/maps/LineMap';
 import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
+import { useDelimitatedRoute } from '../../../common/utils/router';
 import { segmentSlowZones } from './segment';
 import { SlowSegmentLabel } from './SlowSegmentLabel';
 import { SlowZonesTooltip } from './SlowZonesTooltip';
@@ -69,16 +70,19 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
     return createDefaultDiagramForLine(lineName, { pxPerStation: 15 });
   }, [lineName]);
 
+  const { query } = useDelimitatedRoute();
+  const { endDate } = query;
+
   const { segments } = useMemo(
     () =>
       segmentSlowZones({
         slowZones,
         speedRestrictions,
         lineName: line.short,
-        date: new Date(),
+        date: endDate ? new Date(endDate) : new Date(),
         diagram,
       }),
-    [slowZones, speedRestrictions, line, diagram]
+    [slowZones, speedRestrictions, line, diagram, endDate]
   );
 
   const getSegmentsForSlowZones = ({ isHorizontal }: { isHorizontal: boolean }) => {
