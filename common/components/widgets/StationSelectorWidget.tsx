@@ -7,6 +7,7 @@ import { StationSelector } from '../inputs/StationSelector';
 import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
 import {
   getParentStationForStopId,
+  getStationForInvalidFromSelection,
   optionsStation,
   stopIdsForStations,
 } from '../../utils/stations';
@@ -34,26 +35,41 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
     updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });
   }, [fromStation, toStation, updateQueryParams]);
 
-  const updateStations = (action: 'to' | 'from' | 'swap', stationId?: Station) => {
+  const updateStations = (action: 'to' | 'from' | 'swap', newStation?: Station) => {
     switch (action) {
       case 'to':
         updateQueryParams(
           {
-            to: stopIdsForStations(fromStation, stationId).toStopIds?.[0],
+            to: stopIdsForStations(fromStation, newStation).toStopIds?.[0],
           },
           undefined,
           false
         );
         break;
-      case 'from':
+      case 'from': {
+        if (newStation?.branches?.some((branch) => toStation?.branches?.includes(branch))) {
+          updateQueryParams(
+            {
+              from: stopIdsForStations(newStation, toStation).fromStopIds?.[0],
+            },
+            undefined,
+            false
+          );
+          break;
+        }
+        // If `from` station is on a separate branch, set the `to` station to gov center for GL and Park for RL.
+        const newToStation = getStationForInvalidFromSelection(line);
+        const stationIds = stopIdsForStations(newStation, newToStation);
         updateQueryParams(
           {
-            from: stopIdsForStations(stationId, toStation).fromStopIds?.[0],
+            from: stationIds?.fromStopIds?.[0],
+            to: stationIds?.toStopIds?.[0],
           },
           undefined,
           false
         );
         break;
+      }
       case 'swap': {
         const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
         updateQueryParams({ from: toStopIds?.[0], to: fromStopIds?.[0] }, undefined, false);
@@ -75,7 +91,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
         type={'from'}
         fromStation={fromStation}
         toStation={toStation}
-        setStation={(stationId) => updateStations('from', stationId)}
+        setStation={(newStation) => updateStations('from', newStation)}
       />
       <div className="flex h-4 w-4 items-center justify-center">
         <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4 text-white" />
@@ -84,7 +100,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ li
         type={'to'}
         fromStation={fromStation}
         toStation={toStation}
-        setStation={(stationId) => updateStations('to', stationId)}
+        setStation={(newStation) => updateStations('to', newStation)}
       />
       <Button
         onClick={() => updateStations('swap')}
