@@ -1,8 +1,5 @@
 import React from 'react';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
-import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
-import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
-import { MPHWidgetValue } from '../../common/types/basicWidgets';
 import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { getDetailsSpeedWidgetValues } from './utils/utils';

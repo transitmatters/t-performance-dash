@@ -13,9 +13,8 @@ import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
-import { PEAK_SPEED } from '../../common/constants/baselines';
+import { PEAK_MPH } from '../../common/constants/baselines';
 import { getShuttlingBlockAnnotations } from '../service/utils/graphUtils';
-import { PEAK_MPH } from './constants/speeds';
 import type { ParamsType } from './constants/speeds';
 
 interface SpeedGraphProps {
@@ -35,7 +34,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
 }) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
-  const peak = PEAK_SPEED[line ?? 'DEFAULT'];
+  const peak = PEAK_MPH[line ?? 'DEFAULT'];
   const ref = useRef();
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
@@ -94,15 +93,9 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 callbacks: {
                   ...callbacks,
                   label: (context) => {
-                    const label = `${context.parsed.y} mph (${(
-                      (100 * context.parsed.y) /
-                      peak
-                    ).toFixed(1)}% of peak)`;
-                    const compTripTime = `Trips are ${(
-                      100 *
-                      ((PEAK_SPEED[line ?? 'DEFAULT'] - context.parsed.y) / context.parsed.y)
-                    ).toFixed(1)}% longer`;
-                    return [label, compTripTime];
+                    return `${context.parsed.y} mph (${((100 * context.parsed.y) / peak).toFixed(
+                      1
+                    )}% of peak)`;
                   },
                 },
               },

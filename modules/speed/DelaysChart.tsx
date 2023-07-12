@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { round } from 'lodash';
 import { Line } from 'react-chartjs-2';
 
 import 'chartjs-adapter-date-fns';
@@ -6,16 +7,15 @@ import { enUS } from 'date-fns/locale';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
+import { COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
-import { PEAK_SPEED } from '../../common/constants/baselines';
+import { PEAK_MPH } from '../../common/constants/baselines';
 import { getShuttlingBlockAnnotations } from '../service/utils/graphUtils';
-import { PEAK_MPH } from './constants/speeds';
 import type { ParamsType } from './constants/speeds';
 
 interface TripTimeIncreaseChartProps {
@@ -35,7 +35,7 @@ export const DelaysChart: React.FC<TripTimeIncreaseChartProps> = ({
 }) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
-  const peak = PEAK_SPEED[line ?? 'DEFAULT'];
+  const peak = PEAK_MPH[line ?? 'DEFAULT'];
   const ref = useRef();
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
@@ -53,7 +53,7 @@ export const DelaysChart: React.FC<TripTimeIncreaseChartProps> = ({
             labels,
             datasets: [
               {
-                label: `Trip time`,
+                label: `Delay`,
                 borderColor: LINE_COLORS[line ?? 'default'],
                 pointRadius: 0,
                 pointBorderWidth: 0,
@@ -63,15 +63,9 @@ export const DelaysChart: React.FC<TripTimeIncreaseChartProps> = ({
                 pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
                 pointBackgroundColor: LINE_COLORS[line ?? 'default'],
                 data: data.map((datapoint) => {
-                  const mph = datapoint.miles_covered / (datapoint.total_time / 3600);
+                  const mph = round(datapoint.miles_covered / (datapoint.total_time / 3600), 1);
                   return (100 * ((PEAK_MPH[line ?? 'DEFAULT'] - mph) / mph)).toFixed(1);
                 }),
-              },
-              {
-                // This null dataset produces the entry in the legend for the baseline annotation.
-                label: `Peak (${peak})`,
-                backgroundColor: CHART_COLORS.ANNOTATIONS,
-                data: null,
               },
             ],
           }}
@@ -97,7 +91,7 @@ export const DelaysChart: React.FC<TripTimeIncreaseChartProps> = ({
                   label: (context) => {
                     return `Trips are ${context.parsed.y}% ${
                       context.parsed.y >= 0 ? 'longer' : 'shorter'
-                    }`;
+                    } than peak`;
                   },
                 },
               },
@@ -127,7 +121,7 @@ export const DelaysChart: React.FC<TripTimeIncreaseChartProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Miles per hour (mph)',
+                  text: '% delay',
                   color: COLORS.design.subtitleGrey,
                 },
               },
