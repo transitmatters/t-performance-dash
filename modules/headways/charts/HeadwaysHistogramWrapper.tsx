@@ -6,19 +6,19 @@ import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlace
 import { HeadwaysHistogram } from './HeadwaysHistogram';
 
 interface HeadwaysHistogramWrapperProps {
-  headways: UseQueryResult<SingleDayDataPoint[]>;
+  query: UseQueryResult<SingleDayDataPoint[]>;
   toStation: Station | undefined;
   fromStation: Station | undefined;
 }
 
 export const HeadwaysHistogramWrapper: React.FC<HeadwaysHistogramWrapperProps> = ({
-  headways,
+  query,
   toStation,
   fromStation,
 }) => {
-  const dataReady = headways.data && toStation && fromStation;
-  if (!dataReady) return <ChartPlaceHolder query={headways} />;
+  const dataReady = query.data && toStation && fromStation;
+  if (!dataReady) return <ChartPlaceHolder query={query} />;
   return (
-    <HeadwaysHistogram headways={headways.data} fromStation={fromStation} toStation={toStation} />
+    <HeadwaysHistogram headways={query.data} fromStation={fromStation} toStation={toStation} />
   );
 };
