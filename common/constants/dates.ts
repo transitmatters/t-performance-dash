@@ -9,6 +9,7 @@ import type {
   SingleDateParams,
 } from '../components/inputs/DateSelection/types/DateSelectionTypes';
 import type { Tab } from './dashboardTabs';
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -39,6 +40,10 @@ const BUS_MAX_DAY = dayjs(BUS_MAX_DATE);
 export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
   .subtract(7, 'days')
   .format(DATE_FORMAT);
+
+export const getESTDayjs = (date: string) => {
+  return dayjs(date).tz(est);
+};
 
 export const FLAT_PICKER_OPTIONS: {
   [key in Tab]: DateTimePickerProps['options'];
