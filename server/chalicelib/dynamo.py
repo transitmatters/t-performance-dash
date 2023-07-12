@@ -26,8 +26,8 @@ def query_daily_trips_on_line(table_name, line, start_date, end_date):
     return results
 
 
-def query_trip_counts(start_date: date, end_date: date, route_id: str = None):
-    table = dynamodb.Table("TripCounts")
+def query_scheduled_service(start_date: date, end_date: date, route_id: str = None):
+    table = dynamodb.Table("ScheduledServiceDaily")
     line_condition = Key("routeId").eq(route_id)
     date_condition = Key("date").between(start_date.isoformat(), end_date.isoformat())
     condition = line_condition & date_condition

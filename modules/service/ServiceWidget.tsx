@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { useTripCounts } from '../../common/api/hooks/service';
+import { useScheduledService } from '../../common/api/hooks/service';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
@@ -25,7 +25,7 @@ export const ServiceWidget: React.FC = () => {
     },
     enabled
   );
-  const predictedServiceData = useTripCounts({
+  const predictedServiceData = useScheduledService({
     start_date: startDate,
     end_date: endDate,
     route_id: lineShort,

@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import type { DeliveredTripMetrics, TripCounts } from '../../common/types/dataPoints';
+import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { PercentageWidgetValue, TripsWidgetValue } from '../../common/types/basicWidgets';
 import type { ParamsType } from '../speed/constants/speeds';
@@ -9,7 +9,7 @@ import { getServiceWidgetValues } from './utils/utils';
 
 interface ServiceOverviewWrapperProps {
   data: DeliveredTripMetrics[];
-  predictedData: TripCounts;
+  predictedData: ScheduledService;
   config: ParamsType;
   startDate: string;
   endDate: string;

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { DeliveredTripMetrics, TripCounts } from '../../common/types/dataPoints';
+import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { TripsWidgetValue } from '../../common/types/basicWidgets';
@@ -10,7 +10,7 @@ import { getServiceWidgetValues } from './utils/utils';
 import { ServiceGraph } from './ServiceGraph';
 interface ServiceGraphWrapperProps {
   data: DeliveredTripMetrics[];
-  predictedData: TripCounts;
+  predictedData: ScheduledService;
   config: ParamsType;
   startDate: string;
   endDate: string;
