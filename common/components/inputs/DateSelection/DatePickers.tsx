@@ -95,7 +95,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
       const defaultDateParams = getDefaultDates(pageObject.dateStoreSection, tab);
       if (defaultDateParams) updateQueryParams(defaultDateParams, true);
     }
-  }, [tab, page, startDate, endDate, updateQueryParams]);
+  }, [tab, page, startDate, endDate, updateQueryParams, date]);
 
   return (
     <div className="-ml-[1px] flex h-10 flex-row justify-center self-stretch rounded-r-md bg-white md:h-7">

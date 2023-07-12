@@ -15,6 +15,9 @@ module.exports = {
     },
   ],
   darkMode: 'class',
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     screens: {
       sm: '640px',

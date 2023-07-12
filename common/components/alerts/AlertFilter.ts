@@ -20,7 +20,7 @@ const anti = [
  * Given an alert object, findMatch returns a boolean with whether or not the alert is a known format
  * like "Reduced speeds" or "Up to 15 minutes"
  */
-export const findMatch = (alert: OldAlert) => {
+export const findMatch = (alert: OldAlert): boolean => {
   const { text } = alert;
 
   if (anti.some((exp) => text.match(exp))) {
