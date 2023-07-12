@@ -10,6 +10,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { getParentStationForStopId } from '../../common/utils/stations';
 import { useAlertStore } from './AlertStore';
 import { TripGraphs } from './TripGraphs';
+import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 
 export const TripExplorer = () => {
   const {
@@ -33,12 +34,12 @@ export const TripExplorer = () => {
   }
   return (
     <PageWrapper pageTitle={'Trips'}>
-      <div className="flex flex-col gap-4">
+      <ChartPageDiv>
         {alertsForModal?.length ? <AlertNotice /> : null}
         <TripGraphs fromStation={fromStation} toStation={toStation} />
         <SameDayNotice />
         <TerminusNotice toStation={toStation} fromStation={fromStation} />
-      </div>
+      </ChartPageDiv>
     </PageWrapper>
   );
 };

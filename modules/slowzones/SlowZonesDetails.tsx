@@ -22,6 +22,7 @@ import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
 import { DirectionObject } from './constants/constants';
 import { SlowZonesWidgetTitle } from './SlowZonesWidgetTitle';
+import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 dayjs.extend(utc);
 
 export function SlowZonesDetails() {
@@ -53,7 +54,7 @@ export function SlowZonesDetails() {
 
   return (
     <PageWrapper pageTitle={'Slow zones'}>
-      <div className="flex flex-col gap-4">
+      <ChartPageDiv>
         <WidgetDiv>
           <WidgetTitle title="Total slow time" />
           <div className="relative flex flex-col">
@@ -113,7 +114,7 @@ export function SlowZonesDetails() {
             )}
           </div>
         </div>
-      </div>
+      </ChartPageDiv>
     </PageWrapper>
   );
 }

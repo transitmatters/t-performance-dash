@@ -9,6 +9,7 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
+import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 
 export function RidershipDetails() {
   const {
@@ -32,23 +33,25 @@ export function RidershipDetails() {
 
   return (
     <PageWrapper pageTitle={'Ridership'}>
-      <WidgetDiv>
-        <WidgetTitle title="Weekday ridership" />
+      <ChartPageDiv>
+        <WidgetDiv>
+          <WidgetTitle title="Weekday ridership" />
 
-        {ridership.data && ridershipDataReady ? (
-          <RidershipGraphWrapper
-            data={ridership.data}
-            config={config}
-            startDate={startDate}
-            endDate={endDate}
-            lineOrRoute={lineOrRoute}
-          />
-        ) : (
-          <div className="relative flex h-full">
-            <ChartPlaceHolder query={ridership} />
-          </div>
-        )}
-      </WidgetDiv>
+          {ridership.data && ridershipDataReady ? (
+            <RidershipGraphWrapper
+              data={ridership.data}
+              config={config}
+              startDate={startDate}
+              endDate={endDate}
+              lineOrRoute={lineOrRoute}
+            />
+          ) : (
+            <div className="relative flex h-full">
+              <ChartPlaceHolder query={ridership} />
+            </div>
+          )}
+        </WidgetDiv>
+      </ChartPageDiv>
     </PageWrapper>
   );
 }

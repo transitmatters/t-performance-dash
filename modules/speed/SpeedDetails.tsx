@@ -10,6 +10,7 @@ import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { getSpeedGraphConfig } from './constants/speeds';
 import { SpeedDetailsWrapper } from './SpeedDetailsWrapper';
+import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 dayjs.extend(utc);
 
 export function SpeedDetails() {
@@ -35,22 +36,20 @@ export function SpeedDetails() {
 
   return (
     <PageWrapper pageTitle={'Speed'}>
-      <div className="flex flex-col">
-        <div className="relative flex flex-col gap-4">
-          {speedReady ? (
-            <SpeedDetailsWrapper
-              data={speeds.data}
-              config={config}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          ) : (
-            <div className="relative flex h-full">
-              <ChartPlaceHolder query={speeds} />
-            </div>
-          )}
-        </div>
-      </div>
+      <ChartPageDiv>
+        {speedReady ? (
+          <SpeedDetailsWrapper
+            data={speeds.data}
+            config={config}
+            startDate={startDate}
+            endDate={endDate}
+          />
+        ) : (
+          <div className="relative flex h-full">
+            <ChartPlaceHolder query={speeds} />
+          </div>
+        )}
+      </ChartPageDiv>
     </PageWrapper>
   );
 }
