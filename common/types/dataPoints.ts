@@ -100,13 +100,14 @@ export type SpeedRestriction = {
   line: Exclude<LineShort, 'Bus'>;
   description: string;
   reason: string;
-  status: string;
   fromStopId: null | string;
   toStopId: null | string;
   reported: string;
-  cleared: string;
   speedMph: number;
   trackFeet: number;
+  currentAsOf: Date;
+  lineId: Line;
+  validAsOf: Date;
 };
 
 export type DayKind = 'weekday' | 'saturday' | 'sunday';

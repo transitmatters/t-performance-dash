@@ -11,6 +11,7 @@ from chalicelib import (
     secrets,
     mbta_v3,
     speed,
+    speed_restrictions,
     service_levels,
     ridership,
 )
@@ -47,7 +48,9 @@ def healthcheck():
         "API Key Present": (lambda: len(secrets.MBTA_V2_API_KEY) > 0),
         "S3 Headway Fetching": (
             lambda: "2020-11-07 10:33:40"
-            in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))
+            in json.dumps(
+                data_funcs.headways(date(year=2020, month=11, day=7), ["70061"])
+            )
         ),
         "Performance API Check": (
             lambda: MbtaPerformanceAPI.get_api_data(
@@ -109,7 +112,9 @@ def traveltime_route(user_date):
 @app.route("/api/alerts/{user_date}", cors=cors_config)
 def alerts_route(user_date):
     date = parse_user_date(user_date)
-    return json.dumps(data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params)))
+    return json.dumps(
+        data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params))
+    )
 
 
 @app.route("/api/aggregate/traveltimes", cors=cors_config)
@@ -158,7 +163,11 @@ def dwells_aggregate_route():
 def get_git_id():
     # Only do this on localhost
     if TM_FRONTEND_HOST == "localhost":
-        git_id = str(subprocess.check_output(["git", "describe", "--always", "--dirty", "--abbrev=10"]))[2:-3]
+        git_id = str(
+            subprocess.check_output(
+                ["git", "describe", "--always", "--dirty", "--abbrev=10"]
+            )
+        )[2:-3]
         return json.dumps({"git_id": git_id})
     else:
         raise ConflictError("Cannot get git id from serverless host")
@@ -202,5 +211,17 @@ def get_ridership():
         start_date=start_date,
         end_date=end_date,
         line_id=line_id,
+    )
+    return json.dumps(response)
+
+
+@app.route("/api/speed_restrictions", cors=cors_config)
+def get_speed_restrictions():
+    query = app.current_request.query_params
+    on_date = query["date"]
+    line_id = query["line_id"]
+    response = speed_restrictions.query_speed_restrictions(
+        line_id=line_id,
+        on_date=on_date,
     )
     return json.dumps(response)
