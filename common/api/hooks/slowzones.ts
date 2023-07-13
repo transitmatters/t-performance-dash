@@ -13,7 +13,7 @@ export const useSlowzoneDelayTotalData = () => {
 
 export const useSpeedRestrictionData = (options: FetchSpeedRestrictionsOptions) => {
   return useQuery(['speedRestrictions', options], () => fetchSpeedRestrictions(options), {
-    enabled: true,
+    enabled: options.date !== undefined,
     staleTime: ONE_HOUR,
   });
 };
