@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { round } from 'lodash';
 import { Line } from 'react-chartjs-2';
 
 import 'chartjs-adapter-date-fns';
@@ -6,7 +7,7 @@ import { enUS } from 'date-fns/locale';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
+import { COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
@@ -17,7 +18,7 @@ import { PEAK_MPH } from '../../common/constants/baselines';
 import { getShuttlingBlockAnnotations } from '../service/utils/graphUtils';
 import type { ParamsType } from './constants/speeds';
 
-interface SpeedGraphProps {
+interface TripTimeIncreaseChartProps {
   data: DeliveredTripMetrics[];
   config: ParamsType;
   startDate: string;
@@ -25,7 +26,7 @@ interface SpeedGraphProps {
   showTitle?: boolean;
 }
 
-export const SpeedGraph: React.FC<SpeedGraphProps> = ({
+export const DelaysChart: React.FC<TripTimeIncreaseChartProps> = ({
   data,
   config,
   startDate,
@@ -52,7 +53,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
             labels,
             datasets: [
               {
-                label: `MPH`,
+                label: `Delay`,
                 borderColor: LINE_COLORS[line ?? 'default'],
                 pointRadius: 0,
                 pointBorderWidth: 0,
@@ -61,15 +62,10 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 spanGaps: false,
                 pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
                 pointBackgroundColor: LINE_COLORS[line ?? 'default'],
-                data: data.map((datapoint) =>
-                  (datapoint.miles_covered / (datapoint.total_time / 3600)).toFixed(1)
-                ),
-              },
-              {
-                // This null dataset produces the entry in the legend for the baseline annotation.
-                label: `Peak (${peak})`,
-                backgroundColor: CHART_COLORS.ANNOTATIONS,
-                data: null,
+                data: data.map((datapoint) => {
+                  const mph = round(datapoint.miles_covered / (datapoint.total_time / 3600), 1);
+                  return (100 * ((PEAK_MPH[line ?? 'DEFAULT'] - mph) / mph)).toFixed(1);
+                }),
               },
             ],
           }}
@@ -93,9 +89,9 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 callbacks: {
                   ...callbacks,
                   label: (context) => {
-                    return `${context.parsed.y} mph (${((100 * context.parsed.y) / peak).toFixed(
-                      1
-                    )}% of peak)`;
+                    return `Trips are ${context.parsed.y}% ${
+                      context.parsed.y >= 0 ? 'longer' : 'shorter'
+                    } than peak`;
                   },
                 },
               },
@@ -112,18 +108,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
               },
               annotation: {
                 // Add your annotations here
-                annotations: [
-                  {
-                    type: 'line',
-                    yMin: peak,
-                    yMax: peak,
-                    borderColor: CHART_COLORS.ANNOTATIONS,
-                    // corresponds to null dataset index.
-                    display: (ctx) => ctx.chart.isDatasetVisible(1),
-                    borderWidth: 2,
-                  },
-                  ...shuttlingBlocks,
-                ],
+                annotations: [...shuttlingBlocks],
               },
             },
             scales: {
@@ -136,7 +121,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Miles per hour (mph)',
+                  text: '% delay',
                   color: COLORS.design.subtitleGrey,
                 },
               },
@@ -185,7 +170,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                   ctx.fillText('No data to display', width / 2, height / 2);
                   ctx.restore();
                 }
-                if (showTitle) drawSimpleTitle(`Speed`, chart);
+                if (showTitle) drawSimpleTitle(`Median Speed`, chart);
               },
             },
             ChartjsPluginWatermark,

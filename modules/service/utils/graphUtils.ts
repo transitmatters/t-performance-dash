@@ -9,9 +9,9 @@ const shuttlingAnnotationBlockStyle = {
   backgroundColor: CHART_COLORS.BLOCKS,
   borderWidth: 0,
   label: {
-    content: 'No data',
+    content: 'Service Disruption',
     rotation: -90,
-    color: 'white',
+    color: '#505050',
     display: true,
   },
 };

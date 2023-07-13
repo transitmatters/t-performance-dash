@@ -1,5 +1,6 @@
+import { PEAK_MPH } from '../../../../common/constants/baselines';
 import type { SpeedDataPoint } from '../../../../common/types/dataPoints';
-import { CORE_TRACK_LENGTHS, PEAK_MPH } from '../../../speed/constants/speeds';
+import { CORE_TRACK_LENGTHS } from '../../../speed/constants/speeds';
 
 export const calculateCommuteSpeedWidgetValues = (
   weeklyData: SpeedDataPoint[],

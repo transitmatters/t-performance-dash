@@ -8,7 +8,7 @@ export const PEAK_SCHEDULED_SERVICE = {
   DEFAULT: 0,
 };
 
-export const PEAK_SPEED = {
+export const PEAK_MPH = {
   'line-red': 21.4,
   'line-orange': 18,
   'line-blue': 20.5,

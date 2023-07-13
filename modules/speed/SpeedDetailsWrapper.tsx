@@ -4,6 +4,7 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import type { ParamsType } from './constants/speeds';
 import { SpeedGraphWrapper } from './SpeedGraphWrapper';
+import { DelaysChartWrapper } from './DelaysChartWrapper';
 
 interface SpeedDetailsWrapperProps {
   data: DeliveredTripMetrics[];
@@ -21,8 +22,12 @@ export const SpeedDetailsWrapper: React.FC<SpeedDetailsWrapperProps> = ({
   return (
     <>
       <WidgetDiv>
-        <WidgetTitle title="Median speed" />
+        <WidgetTitle title="Speed" />
         <SpeedGraphWrapper data={data} config={config} startDate={startDate} endDate={endDate} />
+      </WidgetDiv>
+      <WidgetDiv>
+        <WidgetTitle title="Trip delays" />
+        <DelaysChartWrapper data={data} config={config} startDate={startDate} endDate={endDate} />
       </WidgetDiv>
     </>
   );

@@ -1,10 +1,6 @@
 import type { ChartDataset } from 'chart.js';
 import { round } from 'lodash';
-import {
-  PEAK_RIDERSHIP,
-  PEAK_SCHEDULED_SERVICE,
-  PEAK_SPEED,
-} from '../../common/constants/baselines';
+import { PEAK_RIDERSHIP, PEAK_SCHEDULED_SERVICE, PEAK_MPH } from '../../common/constants/baselines';
 import { LINE_COLORS } from '../../common/constants/colors';
 import type { RidershipCount, DeliveredTripMetrics } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
@@ -31,10 +27,7 @@ export const convertToSpeedDataset = (data: DeliveredTripMetrics[]) => {
     label: `% of peak`,
     data: data.map((datapoint) =>
       datapoint.miles_covered
-        ? round(
-            (100 * datapoint.miles_covered) / (datapoint.total_time / 3600) / PEAK_SPEED[line],
-            1
-          )
+        ? round((100 * datapoint.miles_covered) / (datapoint.total_time / 3600) / PEAK_MPH[line], 1)
         : Number.NaN
     ),
   };
