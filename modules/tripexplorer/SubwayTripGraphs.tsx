@@ -14,6 +14,7 @@ import { DwellsAggregateWrapper } from '../dwells/DwellsAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
 import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { DwellsSingleWrapper } from '../dwells/DwellsSingleWrapper';
+import { HeadwaysHistogramWrapper } from '../headways/charts/HeadwaysHistogramWrapper';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -149,6 +150,19 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               line={line}
             />
             <DwellsSingleWrapper query={dwells} toStation={toStation} fromStation={fromStation} />
+          </WidgetDiv>
+          <WidgetDiv>
+            <WidgetTitle
+              title="Headway distribution"
+              subtitle="Time between trains"
+              location={location}
+              line={line}
+            />
+            <HeadwaysHistogramWrapper
+              query={headways}
+              toStation={toStation}
+              fromStation={fromStation}
+            />
           </WidgetDiv>
         </>
       )}

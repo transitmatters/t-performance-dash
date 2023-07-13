@@ -108,7 +108,7 @@ export function HeadwaysDetails() {
           />
 
           <HeadwaysHistogramWrapper
-            headways={headways}
+            query={headways}
             fromStation={fromStation}
             toStation={toStation}
           />
