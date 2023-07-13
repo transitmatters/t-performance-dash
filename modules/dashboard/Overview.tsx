@@ -8,7 +8,6 @@ import { Layout } from '../../common/layouts/layoutTypes';
 import { RidershipWidget } from '../ridership/RidershipWidget';
 import { HEAVY_RAIL_LINES } from '../../common/types/lines';
 import { useRewriteV3Route } from '../../common/utils/middleware';
-import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 
 export function Overview() {
   const { tab, line } = useDelimitatedRoute();
