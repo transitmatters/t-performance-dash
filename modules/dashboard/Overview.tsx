@@ -18,12 +18,12 @@ export function Overview() {
   const isHeavyRailLine = line ? HEAVY_RAIL_LINES.includes(line) : false;
   return (
     <PageWrapper pageTitle={'Overview'}>
-      <ChartPageDiv>
+      <div className="grid w-full grid-cols-1 gap-4 md:gap-8 xl:grid-cols-2">
         {tab === 'Subway' && <SpeedWidget />}
         {tab === 'Subway' && <ServiceWidget />}
         <RidershipWidget />
         {tab === 'Subway' && isHeavyRailLine && <SlowZonesWidget />}
-      </ChartPageDiv>
+      </div>
     </PageWrapper>
   );
 }
