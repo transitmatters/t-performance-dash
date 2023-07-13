@@ -26,16 +26,18 @@ import { SlowZonesWidgetTitle } from './SlowZonesWidgetTitle';
 dayjs.extend(utc);
 
 export function SlowZonesDetails() {
-  const delayTotals = useSlowzoneDelayTotalData();
   const [direction, setDirection] = useState<Direction>('northbound');
-  const allSlow = useSlowzoneAllData();
-  const speedRestrictions = useSpeedRestrictionData();
+
   const {
     lineShort,
     linePath,
     line,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
+
+  const delayTotals = useSlowzoneDelayTotalData();
+  const allSlow = useSlowzoneAllData();
+  const speedRestrictions = useSpeedRestrictionData({ lineId: line!, date: endDate! });
 
   const startDateUTC = startDate ? dayjs.utc(startDate).startOf('day') : undefined;
   const endDateUTC = endDate ? dayjs.utc(endDate).startOf('day') : undefined;

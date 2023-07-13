@@ -153,8 +153,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="Headway histogram"
-              subtitle="Time spent at station"
+              title="Headway distribution"
+              subtitle="Time between trains"
               location={location}
               line={line}
             />

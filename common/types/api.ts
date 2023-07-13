@@ -83,3 +83,14 @@ export enum FetchRidershipParams {
   startDate = 'start_date',
   endDate = 'end_date',
 }
+
+export type FetchSpeedRestrictionsOptions = {
+  lineId: Line;
+  date: string;
+};
+
+export type FetchSpeedRestrictionsResponse = {
+  available: boolean;
+  date: string;
+  zones: Record<string, any>[];
+};

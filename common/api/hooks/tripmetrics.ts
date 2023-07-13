@@ -1,7 +1,7 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
 import type { FetchDeliveredTripMetricsOptions } from '../../types/api';
 import { FIVE_MINUTES, ONE_HOUR } from '../../constants/time';
-import { THREE_MONTHS_AGO_STRING, TODAY_STRING } from '../../constants/dates';
+import { ONE_WEEK_AGO_STRING, THREE_MONTHS_AGO_STRING } from '../../constants/dates';
 import { LANDING_RAIL_LINES } from '../../types/lines';
 import { fetchActualTripsByLine } from '../tripmetrics';
 
@@ -21,7 +21,7 @@ export const useTripMetricsForLanding = () => {
       const params: FetchDeliveredTripMetricsOptions = {
         line: line,
         start_date: THREE_MONTHS_AGO_STRING,
-        end_date: TODAY_STRING,
+        end_date: ONE_WEEK_AGO_STRING,
         agg: 'weekly',
       };
       return {
