@@ -186,7 +186,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                   ctx.fillText('No data to display', width / 2, height / 2);
                   ctx.restore();
                 }
-                if (showTitle) drawSimpleTitle(`Median Speed`, chart);
+                if (showTitle) drawSimpleTitle(`Speed`, chart);
               },
             },
             ChartjsPluginWatermark,
