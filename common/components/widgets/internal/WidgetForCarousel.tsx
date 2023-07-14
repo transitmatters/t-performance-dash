@@ -21,7 +21,7 @@ export const WidgetForCarousel: React.FC<WidgetForCarouselProps> = ({
   layoutKind = 'total-and-delta',
   sentimentDirection = 'negativeOnIncrease',
 }) => {
-  const isHorizontal = !useBreakpoint('lg');
+  const isHorizontal = false;
 
   if (isHorizontal)
     return (

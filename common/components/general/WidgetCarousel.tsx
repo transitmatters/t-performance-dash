@@ -2,7 +2,7 @@ import React, { Children, cloneElement, useCallback, useMemo, useState } from 'r
 import classNames from 'classnames';
 import type { ComponentProps, FC, ReactElement } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronCircleLeft, faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
 
 interface WidgetCarouselProps {
   children: React.ReactNode;
@@ -39,7 +39,7 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children, isSingleWidg
   const isBeforeActiveItem = (item: number) =>
     item !== activeItem && (activeItem === 0 ? item === items.length - 1 : item + 1 === activeItem);
   return (
-    <div className="relative flex flex-row gap-1">
+    <div className="relative flex flex-row gap-2">
       <div className="flex items-center">
         {!isSingleWidget && (
           <button
@@ -51,14 +51,14 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children, isSingleWidg
             type="button"
           >
             <FontAwesomeIcon
-              icon={faChevronCircleDown}
+              icon={faChevronCircleLeft}
               size="lg"
               className="text-stone-300 hover:text-stone-600"
             />
           </button>
         )}
       </div>
-      <div className="relative h-8 w-full overflow-hidden lg:h-[3.25rem] ">
+      <div className="relative h-[3.25rem] w-full overflow-hidden ">
         {items?.map((item, index) => (
           <div
             key={index}
@@ -67,8 +67,8 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children, isSingleWidg
               {
                 hidden:
                   index !== activeItem && !isBeforeActiveItem(index) && !isAfterActiveItem(index),
-                '-translate-y-full opacity-0': isBeforeActiveItem(index),
-                'translate-y-full opacity-0': isAfterActiveItem(index),
+                '-translate-x-1/3 opacity-0': isBeforeActiveItem(index),
+                'translate-x-1/3 opacity-0': isAfterActiveItem(index),
               }
             )}
           >
