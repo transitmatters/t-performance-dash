@@ -1,6 +1,6 @@
 import type { RidershipCount } from '../../../common/types/dataPoints';
 import { PEAK_RIDERSHIP } from '../../../common/constants/baselines';
-import { BusRoute, Line } from '../../../common/types/lines';
+import type { BusRoute, Line } from '../../../common/types/lines';
 
 export const getRidershipWidgetValues = (
   ridership: RidershipCount[],
@@ -8,7 +8,6 @@ export const getRidershipWidgetValues = (
   busRoute?: BusRoute
 ) => {
   const routeIndex = busRoute ? busRoute.replaceAll('/', '') : line;
-  console.log(routeIndex, busRoute, line);
   const average = ridership.reduce((sum, current) => sum + current.count, 0) / ridership.length;
 
   const percentage =

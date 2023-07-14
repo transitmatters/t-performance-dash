@@ -5,10 +5,10 @@ import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { PercentageWidgetValue, RidersWidgetValue } from '../../common/types/basicWidgets';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import type { BusRoute, Line } from '../../common/types/lines';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { getRidershipWidgetValues } from './utils/utils';
 import { RidershipGraph } from './RidershipGraph';
-import { BusRoute, Line } from '../../common/types/lines';
 interface RidershipGraphWrapperProps {
   data: RidershipCount[];
   line: Line;
