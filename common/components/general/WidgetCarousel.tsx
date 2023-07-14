@@ -2,7 +2,7 @@ import React, { Children, cloneElement, useCallback, useMemo, useState } from 'r
 import classNames from 'classnames';
 import type { ComponentProps, FC, ReactElement } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronCircleLeft, faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons';
 
 interface WidgetCarouselProps {
   children: React.ReactNode;
