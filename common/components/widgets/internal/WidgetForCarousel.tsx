@@ -2,7 +2,6 @@ import React from 'react';
 import classNames from 'classnames';
 import type { WidgetValueInterface } from '../../../types/basicWidgets';
 import { LoadingSpinner } from '../../graphics/LoadingSpinner';
-import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { Delta } from './Delta';
 
 type LayoutKind = 'total-and-delta' | 'delta-and-percent-change' | 'no-delta';
