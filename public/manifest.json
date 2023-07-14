@@ -4,12 +4,12 @@
   "description": "Explore MBTA subway and bus performance data with the TransitMatters Data Dashboard.",
   "icons": [
     {
-      "src": "favicon.png",
-      "sizes": "100x100",
+      "src": "favicon_128.png",
+      "sizes": "128x128",
       "type": "image/png"
     },
     {
-      "src": "logo.png",
+      "src": "favicon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
