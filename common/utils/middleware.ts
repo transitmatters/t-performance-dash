@@ -65,22 +65,22 @@ export const useRewriteV3Route = () => {
 
   // handle v3 slowzones route
   if (router.asPath.startsWith('/slowzones')) {
-    return router.push(`/system/slowzones?${search.toString()}`);
+    return router.push(`/system/slowzones/?${search.toString()}`);
   }
 
   // handle v3 rapid transit route
   if (resultParams && router.asPath.startsWith('/rapidtransit')) {
     const { line, queryParams, tripSection } = resultParams;
-    return router.push(`/${line}/trips/${tripSection}?${queryParams.toString()}`);
+    return router.push(`/${line}/trips/${tripSection}/?${queryParams.toString()}`);
   }
 
   // handle v3 bus route
   if (search.toString()) {
     if (resultParams && router.asPath.startsWith('/bus')) {
       const { queryParams, tripSection } = resultParams;
-      return router.push(`/bus/trips/${tripSection}?${queryParams.toString()}`);
+      return router.push(`/bus/trips/${tripSection}/?${queryParams.toString()}`);
     } else if (router.asPath.startsWith('/bus')) {
-      router.push('/bus/trips/single?busRoute=1');
+      router.push('/bus/trips/single/?busRoute=1');
     }
   }
 };
