@@ -24,14 +24,15 @@ export const RidershipWidget: React.FC = () => {
     start_date: startDate,
     end_date: endDate,
   });
-  const serviceReady = !ridership.isError && lineId && lineOrRoute;
+  const serviceReady = !ridership.isError && lineId && line && lineOrRoute;
 
   return (
     <WidgetDiv>
       <HomescreenWidgetTitle title="Weekday ridership" tab="ridership" />
       {ridership.data && serviceReady ? (
         <RidershipGraphWrapper
-          lineOrRoute={lineOrRoute}
+          line={line}
+          busRoute={query.busRoute}
           data={ridership.data}
           config={config}
           startDate={startDate}
