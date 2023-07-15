@@ -29,7 +29,7 @@ export const SmallDelta: React.FC<SmallDeltaProps> = ({ analysis, widgetValue })
             <span className="pr-1 font-bold text-gray-900">
               {widgetValue.value < 0 ? '-' : '+'}
             </span>
-            {widgetValue.getFormattedValue(false)}
+            {widgetValue.getFormattedValue()}
           </p>
         </div>
       )}
