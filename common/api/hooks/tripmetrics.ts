@@ -1,9 +1,7 @@
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import type { FetchDeliveredTripMetricsOptions } from '../../types/api';
-import { FIVE_MINUTES, ONE_HOUR } from '../../constants/time';
-import { ONE_WEEK_AGO_STRING, THREE_MONTHS_AGO_STRING } from '../../constants/dates';
-import { LANDING_RAIL_LINES } from '../../types/lines';
-import { fetchActualTripsByLine } from '../tripmetrics';
+import { FIVE_MINUTES } from '../../constants/time';
+import { fetchActualTripsByLine, fetchLandingTripMetrics } from '../tripmetrics';
 
 export const useDeliveredTripMetrics = (
   params: FetchDeliveredTripMetricsOptions,
@@ -16,19 +14,5 @@ export const useDeliveredTripMetrics = (
 };
 
 export const useTripMetricsForLanding = () => {
-  return useQueries({
-    queries: LANDING_RAIL_LINES.map((line) => {
-      const params: FetchDeliveredTripMetricsOptions = {
-        line: line,
-        start_date: THREE_MONTHS_AGO_STRING,
-        end_date: ONE_WEEK_AGO_STRING,
-        agg: 'weekly',
-      };
-      return {
-        queryKey: [`${line}-speed`],
-        queryFn: () => fetchActualTripsByLine(params),
-        staleTime: ONE_HOUR,
-      };
-    }),
-  });
+  return useQuery(['landingTrips'], () => fetchLandingTripMetrics());
 };
