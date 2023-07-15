@@ -10,9 +10,7 @@ type SmallDataProps = {
 export const SmallData: React.FC<SmallDataProps> = ({ analysis, widgetValue }) => {
   return (
     <div className=" flex flex-row items-end justify-between">
-      <p
-        className={classNames('truncate text-xs leading-tight text-design-subtitleGrey sm:text-sm')}
-      >
+      <p className={classNames('truncate text-sm leading-tight text-design-subtitleGrey ')}>
         {analysis}
       </p>
       <div className="flex flex-row items-baseline gap-x-1">{widgetValue.getFormattedValue()}</div>
