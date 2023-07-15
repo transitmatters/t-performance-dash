@@ -2,15 +2,8 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Disclosure } from '@headlessui/react';
 import React from 'react';
-import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 export const LegendSingleDay: React.FC = () => {
-  const isMobile = !useBreakpoint('md');
-  if (isMobile) return <LegendMobile />;
-  return <LegendDesktop />;
-};
-
-const LegendMobile: React.FC = () => {
   return (
     <Disclosure>
       {({ open }) => (
@@ -34,18 +27,6 @@ const LegendMobile: React.FC = () => {
         </div>
       )}
     </Disclosure>
-  );
-};
-
-const LegendDesktop: React.FC = () => {
-  return (
-    <div
-      className={
-        'grid w-full grid-cols-2 items-baseline p-1 text-left text-xs lg:flex lg:flex-row lg:gap-4'
-      }
-    >
-      <LegendSingle />
-    </div>
   );
 };
 

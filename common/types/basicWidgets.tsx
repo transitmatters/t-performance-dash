@@ -12,7 +12,7 @@ export interface WidgetValueInterface {
   readonly percentChange?: number;
 
   getUnits: () => string;
-  getFormattedValue: () => React.ReactNode;
+  getFormattedValue: (light?: boolean) => React.ReactNode;
   getFormattedDelta: () => string;
   getFormattedPercentChange: () => string;
 }
@@ -43,9 +43,9 @@ export class DeltaTimeWidgetValue extends BaseWidgetValue implements WidgetValue
     if (this.delta === undefined) return '...';
     return getTimeUnit(this.delta);
   }
-  getFormattedValue() {
+  getFormattedValue(light) {
     if (this.delta === undefined) return '...';
-    return getFormattedTimeValue(this.delta);
+    return getFormattedTimeValue(this.delta, light);
   }
   getFormattedDelta() {
     new Error('DeltaWidgets should use `getFormattedValue`');
@@ -57,12 +57,12 @@ export class DeltaZonesWidgetValue extends BaseWidgetValue implements WidgetValu
   getUnits() {
     return 'zones';
   }
-  getFormattedValue() {
+  getFormattedValue(light) {
     if (this.delta === undefined) return '...';
     return (
       <p>
-        <WidgetText text={`${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta)}`} />{' '}
-        <UnitText text={this.getUnits()} />
+        <WidgetText light={light} text={`${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta)}`} />{' '}
+        <UnitText light={light} text={this.getUnits()} />
       </p>
     );
   }
@@ -79,9 +79,9 @@ export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInter
     return getTimeUnit(this.value);
   }
 
-  getFormattedValue() {
+  getFormattedValue(light?: boolean) {
     if (this.value === undefined) return '...';
-    return getFormattedTimeValue(this.value);
+    return getFormattedTimeValue(this.value, light);
   }
 
   getFormattedDelta() {
@@ -104,12 +104,12 @@ export class SZWidgetValue extends BaseWidgetValue implements WidgetValueInterfa
   getUnits() {
     return 'zones';
   }
-  getFormattedValue() {
+  getFormattedValue(light) {
     if (typeof this.value === 'undefined') return '...';
     return (
       <p className="">
-        <WidgetText text={`${Math.abs(this.value).toString()}`} />{' '}
-        <UnitText text={this.getUnits()} />
+        <WidgetText light={light} text={`${Math.abs(this.value).toString()}`} />{' '}
+        <UnitText light={light} text={this.getUnits()} />
       </p>
     );
   }
@@ -124,12 +124,12 @@ export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValu
     return '%';
   }
 
-  getFormattedValue() {
+  getFormattedValue(light) {
     if (this.value === undefined) return '...';
     return (
       <p>
-        <WidgetText text={`${Math.round(100 * this.value).toString()}`} />{' '}
-        <UnitText text={this.getUnits()} />
+        <WidgetText light={light} text={`${Math.round(100 * this.value).toString()}`} />{' '}
+        <UnitText light={light} text={this.getUnits()} />
       </p>
     );
   }
@@ -145,11 +145,12 @@ export class TripsWidgetValue extends BaseWidgetValue implements WidgetValueInte
     return 'Trips';
   }
 
-  getFormattedValue() {
+  getFormattedValue(light) {
     if (this.value === undefined) return '...';
     return (
       <p>
-        <WidgetText text={Math.abs(this.value).toFixed(0)} /> <UnitText text={this.getUnits()} />
+        <WidgetText light={light} text={Math.abs(this.value).toFixed(0)} />{' '}
+        <UnitText light={light} text={this.getUnits()} />
       </p>
     );
   }
@@ -165,11 +166,12 @@ export class MPHWidgetValue extends BaseWidgetValue implements WidgetValueInterf
     return 'MPH';
   }
 
-  getFormattedValue() {
+  getFormattedValue(light) {
     if (typeof this.value === 'undefined') return '...';
     return (
       <p>
-        <WidgetText text={this.value.toFixed(1)} /> <UnitText text={this.getUnits()} />
+        <WidgetText light={light} text={this.value.toFixed(1)} />{' '}
+        <UnitText light={light} text={this.getUnits()} />
       </p>
     );
   }
@@ -186,12 +188,12 @@ export class RidersWidgetValue extends BaseWidgetValue implements WidgetValueInt
     return 'Riders';
   }
 
-  getFormattedValue() {
+  getFormattedValue(light) {
     if (this.value === undefined) return '...';
     return (
       <p>
-        <WidgetText text={`${(this.value / 1000).toFixed(1)}k`} />{' '}
-        <UnitText text={this.getUnits()} />
+        <WidgetText light={light} text={`${(this.value / 1000).toFixed(1)}k`} />{' '}
+        <UnitText light={light} text={this.getUnits()} />
       </p>
     );
   }
