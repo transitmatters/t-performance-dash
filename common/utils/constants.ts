@@ -2,7 +2,7 @@ export const PRODUCTION = 'dashboard.transitmatters.org';
 export const BETA = 'dashboard-beta.labs.transitmatters.org';
 const FRONTEND_TO_BACKEND_MAP = {
   [PRODUCTION]: 'https://dashboard-api.labs.transitmatters.org',
-  [BETA]: 'https://dashboard-beta-api.labs.transitmatters.org',
+  [BETA]: 'https://dashboard-api-beta.labs.transitmatters.org',
 };
 
 let domain = '';
