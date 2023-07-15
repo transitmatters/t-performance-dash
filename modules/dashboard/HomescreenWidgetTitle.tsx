@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { mbtaTextConfig } from '../../common/components/inputs/styles/tailwind';
 import {
   useDelimitatedRoute,
   useGenerateHref,
@@ -13,6 +12,7 @@ import { LINE_COLORS } from '../../common/constants/colors';
 import type { Page } from '../../common/constants/pages';
 import { ALL_PAGES } from '../../common/constants/pages';
 import { getSelectedDates } from '../../common/state/utils/dateStoreUtils';
+import { mbtaTextConfig } from '../../common/styles/general';
 
 interface HomescreenWidgetTitle {
   title: string;

@@ -78,6 +78,14 @@ module.exports = {
         'import/no-unused-modules': ['off', { unusedExports: false }],
       },
     },
+    // Temporarily don't enforce some rules on types and constants
+    {
+      files: ['common/styles/*.ts', 'common/constants/**/*.ts', 'common/types/**/*.ts'],
+      rules: {
+        '@typescript-eslint/no-non-null-assertion': 'error',
+        'import/no-unused-modules': ['off', { unusedExports: false }],
+      },
+    },
   ],
   ignorePatterns: ['node_modules/**/*', 'build/**/*', 'out/**/*'],
 };

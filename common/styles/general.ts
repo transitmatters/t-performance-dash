@@ -18,6 +18,15 @@ export const lineColorLightBorder = {
   DEFAULT: `border-stone-900`,
 };
 
+export const mbtaTextConfig: DefaultStyleMap = {
+  'line-red': `text-mbta-red`,
+  'line-orange': `text-mbta-orange`,
+  'line-green': `text-mbta-green`,
+  'line-blue': `text-mbta-blue`,
+  'line-bus': `text-mbta-bus`,
+  DEFAULT: `text-black`,
+};
+
 export const lineColorLightBackground: DefaultStyleMap = {
   'line-red': `bg-mbta-lightRed`,
   'line-orange': `bg-mbta-lightOrange`,
