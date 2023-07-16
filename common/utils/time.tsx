@@ -18,31 +18,33 @@ export const getTimeUnit = (value: number) => {
   }
 };
 
-export const getFormattedTimeValue = (value: number) => {
+export const getFormattedTimeValue = (value: number, isLarge?: boolean) => {
   const absValue = Math.round(Math.abs(value));
   const duration = dayjs.duration(absValue, 'seconds');
   switch (true) {
     case absValue < 100:
       return (
         <p>
-          <WidgetText text={absValue.toFixed(0)} />
-          <UnitText text={'s'} />
+          <WidgetText isLarge={isLarge} text={absValue.toFixed(0)} />
+          <UnitText isLarge={isLarge} text={'s'} />
         </p>
       );
     case absValue < 3600:
       return (
         <p>
-          <WidgetText text={duration.format('m')} />
-          <UnitText text={'m'} /> <WidgetText text={duration.format('s').padStart(2, '0')} />
-          <UnitText text={'s'} />
+          <WidgetText isLarge={isLarge} text={duration.format('m')} />
+          <UnitText isLarge={isLarge} text={'m'} />{' '}
+          <WidgetText isLarge={isLarge} text={duration.format('s').padStart(2, '0')} />
+          <UnitText isLarge={isLarge} text={'s'} />
         </p>
       );
     default:
       return (
         <p>
-          <WidgetText text={duration.format('H')} />
-          <UnitText text={'h'} /> <WidgetText text={duration.format('m').padStart(2, '0')} />
-          <UnitText text={'m'} />
+          <WidgetText isLarge={isLarge} text={duration.format('H')} />
+          <UnitText isLarge={isLarge} text={'h'} />{' '}
+          <WidgetText text={duration.format('m').padStart(2, '0')} />
+          <UnitText isLarge={isLarge} text={'m'} />
         </p>
       );
   }

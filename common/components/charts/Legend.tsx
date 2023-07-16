@@ -2,31 +2,21 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Disclosure } from '@headlessui/react';
 import React from 'react';
-import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 export const LegendSingleDay: React.FC = () => {
-  const isMobile = !useBreakpoint('md');
-  if (isMobile) return <LegendMobile />;
-  return <LegendDesktop />;
-};
-
-const LegendMobile: React.FC = () => {
   return (
     <Disclosure>
       {({ open }) => (
-        <div className="flex w-full flex-col rounded-md border border-stone-100 shadow-sm">
+        <div className="flex w-full flex-col rounded-md border border-stone-100 text-stone-700 shadow-sm">
           <Disclosure.Button className="">
             <div className="flex flex-row items-center justify-between px-4 py-1">
-              <p className="text-xs italic text-stone-700">Legend</p>
-              <FontAwesomeIcon
-                icon={open ? faChevronUp : faChevronDown}
-                className="text-stone-700"
-              />
+              <p className="text-xs italic ">Legend</p>
+              <FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} className="" />
             </div>
           </Disclosure.Button>
           <Disclosure.Panel
             className={
-              'grid w-full grid-cols-2 items-baseline p-1 text-left text-xs lg:flex lg:flex-row lg:gap-4'
+              'grid w-full grid-cols-2 items-baseline p-1 px-4 text-left text-xs lg:flex lg:flex-row lg:gap-4'
             }
           >
             <LegendSingle />
@@ -37,22 +27,10 @@ const LegendMobile: React.FC = () => {
   );
 };
 
-const LegendDesktop: React.FC = () => {
-  return (
-    <div
-      className={
-        'grid w-full grid-cols-2 items-baseline p-1 text-left text-xs lg:flex lg:flex-row lg:gap-4'
-      }
-    >
-      <LegendSingle />
-    </div>
-  );
-};
-
 const LegendSingle: React.FC = () => {
   return (
     <>
-      <div className="col-span-2 flex flex-row items-baseline gap-2 pb-1 lg:pb-0">
+      <div className="col-span-2 flex flex-row items-baseline gap-2 pb-1 italic lg:pb-0">
         <p>
           Compare to{' '}
           <span className="top-[1px] inline-block h-2.5 w-2.5 items-center border-t-2 border-[#bbb] bg-[#ddd] shadow-sm"></span>{' '}

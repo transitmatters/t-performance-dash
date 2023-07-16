@@ -29,7 +29,7 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
         <div className={classNames('flex flex-col items-start p-2')}>
           <p className={classNames('text-base text-gray-500', 'text-base')}>{title}</p>
           <div className="flex flex-row items-baseline gap-x-1">
-            {widgetValue.getFormattedValue()}
+            {widgetValue.getFormattedValue(true)}
           </div>
           <div className="mt-1 flex flex-row items-baseline gap-x-1">
             {layoutKind !== 'no-delta' && (
