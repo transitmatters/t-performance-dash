@@ -105,8 +105,8 @@ export type SpeedRestriction = {
   reported: string;
   speedMph: number;
   trackFeet: number;
-  currentAsOf: Date;
   lineId: Line;
+  currentAsOf: Date;
   validAsOf: Date;
 };
 

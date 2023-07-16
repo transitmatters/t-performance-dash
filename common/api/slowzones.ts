@@ -3,7 +3,7 @@ import type {
   SlowZoneResponse,
   SpeedRestriction,
 } from '../../common/types/dataPoints';
-import type { FetchSpeedRestrictionsOptions } from '../types/api';
+import type { FetchSpeedRestrictionsOptions, FetchSpeedRestrictionsResponse } from '../types/api';
 import { APP_DATA_BASE_PATH } from '../utils/constants';
 import { getGtfsRailLineId } from '../utils/lines';
 
@@ -28,9 +28,17 @@ export const fetchSpeedRestrictions = async (
   );
   const today = new Date();
   const response = await fetch(speedRestrictionsUrl.toString());
-  const { available, date: resolvedDate, zones } = await response.json();
+  const {
+    available,
+    date: resolvedDate,
+    zones,
+  }: FetchSpeedRestrictionsResponse = await response.json();
   if (available) {
-    return zones.map((zone) => ({ ...zone, currentAsOf: resolvedDate, validAsOf: today }));
+    return zones.map((zone) => ({
+      ...zone,
+      currentAsOf: new Date(resolvedDate),
+      validAsOf: today,
+    }));
   }
   return [];
 };

@@ -1,4 +1,5 @@
 import type { AggType } from '../../modules/speed/constants/speeds';
+import type { SpeedRestriction } from './dataPoints';
 import type { Line } from './lines';
 
 export enum QueryNameKeys {
@@ -92,5 +93,5 @@ export type FetchSpeedRestrictionsOptions = {
 export type FetchSpeedRestrictionsResponse = {
   available: boolean;
   date: string;
-  zones: Record<string, any>[];
+  zones: SpeedRestriction[];
 };

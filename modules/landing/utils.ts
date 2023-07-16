@@ -23,48 +23,54 @@ const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
   };
 };
 
-export const convertToSpeedDataset = (data: DeliveredTripMetrics[]) => {
-  const { line } = data[0];
-  const datasetOptions = getDatasetOptions(line);
-  return {
-    ...datasetOptions,
-    label: `% of peak`,
-    data: data.map((datapoint) =>
-      datapoint.miles_covered
-        ? round(
-            (100 * datapoint.miles_covered) / (datapoint.total_time / 3600) / PEAK_SPEED[line],
-            1
-          )
-        : Number.NaN
-    ),
-  };
+export const convertToSpeedDataset = (data: { [key in Line]?: DeliveredTripMetrics[] }) => {
+  return Object.keys(data).map((line: Line) => {
+    const datasetOptions = getDatasetOptions(line);
+    return {
+      ...datasetOptions,
+      label: `% of peak`,
+      data:
+        data[line]?.map((datapoint) =>
+          datapoint.miles_covered
+            ? round(
+                (100 * datapoint.miles_covered) / (datapoint.total_time / 3600) / PEAK_SPEED[line],
+                1
+              )
+            : Number.NaN
+        ) ?? [],
+    };
+  });
 };
 
-export const convertToServiceDataset = (data: DeliveredTripMetrics[]) => {
-  const { line } = data[0];
-  const datasetOptions = getDatasetOptions(line);
-
-  return {
-    ...datasetOptions,
-    label: `% of peak`,
-    data: data.map((datapoint) =>
-      datapoint.miles_covered
-        ? round((100 * datapoint.count) / PEAK_SCHEDULED_SERVICE[line], 1)
-        : Number.NaN
-    ),
-  };
+export const convertToServiceDataset = (data: { [key in Line]?: DeliveredTripMetrics[] }) => {
+  return Object.keys(data).map((line: Line) => {
+    const datasetOptions = getDatasetOptions(line);
+    return {
+      ...datasetOptions,
+      label: `% of peak`,
+      data:
+        data[line]?.map((datapoint) =>
+          datapoint.miles_covered
+            ? round((100 * datapoint.count) / PEAK_SCHEDULED_SERVICE[line], 1)
+            : Number.NaN
+        ) ?? [],
+    };
+  });
 };
 
-export const convertToRidershipDataset = (data: RidershipCount[], line: Line) => {
-  const datasetOptions = getDatasetOptions(line);
-
-  return {
-    ...datasetOptions,
-    label: `% of peak`,
-    data: data.map((datapoint) =>
-      datapoint.count
-        ? Math.round(10 * 100 * (datapoint.count / PEAK_RIDERSHIP[line])) / 10
-        : Number.NaN
-    ),
-  };
+export const convertToRidershipDataset = (data: { [key in Line]: RidershipCount[] }) => {
+  return (
+    Object.keys(data).map((line: Line) => {
+      const datasetOptions = getDatasetOptions(line);
+      return {
+        ...datasetOptions,
+        label: `% of peak`,
+        data: data[line]?.map((datapoint) =>
+          datapoint.count
+            ? Math.round(10 * 100 * (datapoint.count / PEAK_RIDERSHIP[line])) / 10
+            : Number.NaN
+        ),
+      };
+    }) ?? []
+  );
 };

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import React from 'react';
 import { useDelimitatedRoute } from '../../utils/router';
-import { mbtaTextConfig } from '../inputs/styles/tailwind';
+import { mbtaTextConfig } from '../../styles/general';
 
 interface ErrorNoticeProps {
   isWidget?: boolean;

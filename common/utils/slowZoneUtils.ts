@@ -57,14 +57,6 @@ export const getStationPairName = (from: Station, to: Station, short?: boolean):
   return `${from.stop_name}-${to.stop_name}`;
 };
 
-const groupByRoute = (data: SlowZone[]) =>
-  data.reduce((series: Record<string, SlowZone[]>, sz: SlowZone) => {
-    const key = sz.id;
-    const s = (series[key] || []).concat(sz);
-    series[key] = s;
-    return series;
-  }, {});
-
 const groupByLine = (data: SlowZone[]) =>
   data.reduce((series: Record<string, SlowZone[]>, sz) => {
     const key = sz.color;

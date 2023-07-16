@@ -1,17 +1,17 @@
 import React from 'react';
 import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
-import { convertToSpeedDataset } from '../utils';
-import { LandingChartDiv } from '../LandingChartDiv';
 import { SpeedBaseline } from '../../../copy/landingCopy';
+import type { Line } from '../../../common/types/lines';
+import { LandingChartDiv } from '../LandingChartDiv';
+import { convertToSpeedDataset } from '../utils';
 import { LandingPageChart } from './LandingPageChart';
 
 interface OverallSpeedChartProps {
-  speedData: DeliveredTripMetrics[][];
+  speedData: { [key in Line]?: DeliveredTripMetrics[] };
 }
 export const OverallSpeedChart: React.FC<OverallSpeedChartProps> = ({ speedData }) => {
-  const labels = speedData[0].map((point) => point.date);
-  const datasets = speedData.map((data) => convertToSpeedDataset(data));
-
+  const labels = Object.values(speedData)[0].map((point) => point.date);
+  const datasets = convertToSpeedDataset(speedData);
   return (
     <LandingChartDiv>
       {SpeedBaseline}

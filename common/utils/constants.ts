@@ -1,8 +1,8 @@
 export const PRODUCTION = 'dashboard.transitmatters.org';
-export const BETA = 'dashboard-v4-beta.labs.transitmatters.org';
+export const BETA = 'dashboard-beta.labs.transitmatters.org';
 const FRONTEND_TO_BACKEND_MAP = {
-  [PRODUCTION]: 'https://dashboard-v4-api.transitmatters.org',
-  [BETA]: 'https://dashboard-v4-beta-api.labs.transitmatters.org',
+  [PRODUCTION]: 'https://dashboard-api.labs.transitmatters.org',
+  [BETA]: 'https://dashboard-api-beta.labs.transitmatters.org',
 };
 
 let domain = '';
