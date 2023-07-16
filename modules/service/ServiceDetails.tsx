@@ -9,6 +9,7 @@ import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';
@@ -52,44 +53,42 @@ export function ServiceDetails() {
 
   return (
     <PageWrapper pageTitle={'Service'}>
-      <div className="flex flex-col">
-        <div className="relative flex flex-col gap-4">
-          <WidgetDiv>
-            <WidgetTitle title="Daily round trips" />
-            {serviceDataReady ? (
-              <ServiceGraphWrapper
-                data={tripsData.data}
-                predictedData={predictedData}
-                config={config}
-                startDate={startDate}
-                endDate={endDate}
-              />
-            ) : (
-              <div className="relative flex h-full">
-                <ChartPlaceHolder query={tripsData} />
-              </div>
-            )}
-          </WidgetDiv>
-          <WidgetDiv>
-            <WidgetTitle title={`Service delivered`} subtitle={`Compared to ${comparison}`} />
-            {serviceDataReady ? (
-              <PercentageServiceGraphWrapper
-                data={tripsData.data}
-                predictedData={predictedData}
-                config={config}
-                startDate={startDate}
-                endDate={endDate}
-                comparison={comparison}
-                setComparison={setComparison}
-              />
-            ) : (
-              <div className="relative flex h-full">
-                <ChartPlaceHolder query={tripsData} />
-              </div>
-            )}
-          </WidgetDiv>
-        </div>
-      </div>
+      <ChartPageDiv>
+        <WidgetDiv>
+          <WidgetTitle title="Daily round trips" />
+          {serviceDataReady ? (
+            <ServiceGraphWrapper
+              data={tripsData.data}
+              predictedData={predictedData}
+              config={config}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          ) : (
+            <div className="relative flex h-full">
+              <ChartPlaceHolder query={tripsData} />
+            </div>
+          )}
+        </WidgetDiv>
+        <WidgetDiv>
+          <WidgetTitle title={`Service delivered`} subtitle={`Compared to ${comparison}`} />
+          {serviceDataReady ? (
+            <PercentageServiceGraphWrapper
+              data={tripsData.data}
+              predictedData={predictedData}
+              config={config}
+              startDate={startDate}
+              endDate={endDate}
+              comparison={comparison}
+              setComparison={setComparison}
+            />
+          ) : (
+            <div className="relative flex h-full">
+              <ChartPlaceHolder query={tripsData} />
+            </div>
+          )}
+        </WidgetDiv>
+      </ChartPageDiv>{' '}
     </PageWrapper>
   );
 }

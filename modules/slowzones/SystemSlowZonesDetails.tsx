@@ -11,6 +11,7 @@ import { Layout } from '../../common/layouts/layoutTypes';
 import { filterAllSlow, formatSegments } from '../../common/utils/slowZoneUtils';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
+import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import type { Direction } from '../../common/types/dataPoints';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 import { LineSegments } from './charts/LineSegments';
@@ -46,7 +47,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
 
   return (
     <PageWrapper pageTitle={'Slow zones'}>
-      <div className="flex flex-col gap-4">
+      <ChartPageDiv>
         <WidgetDiv>
           <WidgetTitle title="Total slow time" />
           <div className="relative flex flex-col">
@@ -100,7 +101,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
             </div>
           </div>
         </div>
-      </div>
+      </ChartPageDiv>
     </PageWrapper>
   );
 }

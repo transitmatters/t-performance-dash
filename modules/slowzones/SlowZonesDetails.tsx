@@ -16,6 +16,7 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import type { Direction } from '../../common/types/dataPoints';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
@@ -55,7 +56,7 @@ export function SlowZonesDetails() {
 
   return (
     <PageWrapper pageTitle={'Slow zones'}>
-      <div className="flex flex-col gap-4">
+      <ChartPageDiv>
         <WidgetDiv>
           <WidgetTitle title="Total slow time" />
           <div className="relative flex flex-col">
@@ -115,7 +116,7 @@ export function SlowZonesDetails() {
             )}
           </div>
         </div>
-      </div>
+      </ChartPageDiv>
     </PageWrapper>
   );
 }
