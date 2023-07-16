@@ -1,4 +1,5 @@
-*         @austinjpaul @mathcolo @friendchris @skaplan-dev @devinmatte @PatrickCleary
-/.github/ @austinjpaul @mathcolo @friendchris @skaplan-dev @devinmatte @PatrickCleary @nathan-weinberg
-.flake8   @austinjpaul @mathcolo @friendchris @skaplan-dev @devinmatte @PatrickCleary @nathan-weinberg
-deploy.sh @austinjpaul @mathcolo @friendchris @skaplan-dev @devinmatte @PatrickCleary @nathan-weinberg
+*         @mathcolo @friendchris @skaplan-dev @devinmatte @PatrickCleary
+/.github/ @mathcolo @friendchris @skaplan-dev @devinmatte @PatrickCleary @nathan-weinberg
+.flake8   @mathcolo @friendchris @skaplan-dev @devinmatte @PatrickCleary @nathan-weinberg
+deploy.sh @mathcolo @friendchris @skaplan-dev @devinmatte @PatrickCleary @nathan-weinberg
+/server/  @mathcolo @friendchris @skaplan-dev @devinmatte @PatrickCleary @austinjpaul
