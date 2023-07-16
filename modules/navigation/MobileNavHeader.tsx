@@ -23,8 +23,15 @@ export const MobileNavHeader = () => {
                   <SideNavigation setSidebarOpen={setSidebarOpen} />
                 </div>
               </div>
-              <div className="fixed bottom-[10.25rem] h-3 w-full bg-gradient-to-t from-tm-grey to-transparent"></div>
-              <div className="flex flex-col gap-1 px-6 py-2 ">
+              <div className="fixed bottom-[12rem] h-3 w-full bg-gradient-to-t from-tm-grey to-transparent"></div>
+              <div className="flex flex-col gap-1 px-6 pb-2 pt-1 ">
+                <Link
+                  href="/metrics"
+                  className="text-white hover:text-blue-500"
+                  onClick={() => setSidebarOpen(false)}
+                >
+                  Metrics
+                </Link>
                 <Link
                   href="https://transitmatters.org/transitmatters-labs"
                   className="text-white hover:text-blue-500"
