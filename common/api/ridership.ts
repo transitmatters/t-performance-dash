@@ -1,6 +1,7 @@
 import { FetchRidershipParams } from '../types/api';
 import type { FetchRidershipOptions } from '../types/api';
 import type { RidershipCount } from '../types/dataPoints';
+import { type Line } from '../types/lines';
 import { APP_DATA_BASE_PATH } from '../utils/constants';
 
 export const fetchRidership = async (
@@ -13,6 +14,10 @@ export const fetchRidership = async (
   });
   const response = await fetch(url.toString());
   if (!response.ok) throw new Error('Failed to fetch ridership counts');
-
   return await response.json();
+};
+
+export const fetchLandingRidership = async (): Promise<{ [key in Line]: RidershipCount[] }> => {
+  const ridership_url = new URL(`/static/landing/ridership.json`, window.location.origin);
+  return fetch(ridership_url.toString()).then((resp) => resp.json());
 };
