@@ -79,6 +79,7 @@
     },
     "APIHandler": {
       "Properties": {
+        "Handler": "datadog_lambda.handler.handler",
         "Environment": {
           "Variables": {
             "MBTA_V2_API_KEY": { "Ref": "MbtaV2ApiKey" },

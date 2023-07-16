@@ -3,47 +3,67 @@ import React, { useMemo } from 'react';
 import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 import type { LineMetadata } from '../../../common/types/lines';
 
-import { getFormattedTimeString } from '../../../common/utils/time';
-import type { SlowZoneDirection, SlowZonesSegment } from './segment';
+import { getClockFormattedTimeString } from '../../../common/utils/time';
+import type { ByDirection, SlowZoneDirection, SlowZonesSegment } from './segment';
 import { DIRECTIONS } from './segment';
 
 import styles from './SlowSegmentLabel.module.css';
-import { DirectionIndicator } from './DirectionIndicator';
 
 interface SlowZoneLabelProps {
   direction: SlowZoneDirection;
   slowZone: SlowZoneResponse;
   color: string;
+  offset: number;
   isHorizontal: boolean;
+  containingWidth: number;
 }
+
+const LABEL_INNER_PADDING = 2;
+const LABEL_HEIGHT = 4;
+const FONT_SIZE = 3;
 
 const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
   direction,
-  isHorizontal,
   color,
+  containingWidth,
+  offset,
+  isHorizontal,
   slowZone: { delay, baseline },
 }) => {
-  const delayString = useMemo(() => getFormattedTimeString(delay), [delay]);
-
+  const delayString = useMemo(
+    () =>
+      getClockFormattedTimeString(delay, {
+        showHours: false,
+        showSeconds: true,
+        truncateLeadingZeros: true,
+      }),
+    [delay]
+  );
+  const indicatorBeforeText = direction === '1';
+  const indicatorSolidArrow = indicatorBeforeText
+    ? isHorizontal
+      ? '❮'
+      : '▲'
+    : isHorizontal
+    ? '❯'
+    : '▼';
   const fractionOverBaseline = -1 + (delay + baseline) / baseline;
+  const isBold = fractionOverBaseline >= 0.5;
+
+  const indicator = (
+    <tspan fontSize={FONT_SIZE * 1.25} fill={color}>
+      {indicatorSolidArrow}
+    </tspan>
+  );
+
+  const delayText = <tspan fontWeight={isBold ? 'bold' : undefined}>{delayString}</tspan>;
 
   return (
-    <div
-      style={{
-        flexDirection: isHorizontal && direction === '0' ? 'row-reverse' : 'row',
-        fontWeight: fractionOverBaseline >= 0.5 ? 'bold' : 'normal',
-        whiteSpace: 'nowrap',
-      }}
-      className={styles.slowZoneLabel}
-    >
-      <DirectionIndicator
-        direction={direction}
-        color={color}
-        isHorizontal={isHorizontal}
-        size={2}
-      />
-      +{delayString}
-    </div>
+    <text y={offset} x={containingWidth / 2} textAnchor="middle" fontSize={LABEL_HEIGHT}>
+      {indicatorBeforeText ? <>{indicator} </> : null}
+      {delayText}
+      {!indicatorBeforeText ? <> {indicator}</> : null}
+    </text>
   );
 };
 
@@ -51,16 +71,48 @@ interface SlowSegmentLabelProps {
   segment: SlowZonesSegment;
   line: LineMetadata;
   isHorizontal: boolean;
+  width: number;
+  height: number;
 }
+
+const getDirectionLabelOffsets = (slowZones: ByDirection<SlowZoneResponse[]>, height: number) => {
+  const hasZero = slowZones['0'].length > 0;
+  const hasOne = slowZones['1'].length > 0;
+  const isBidi = hasZero && hasOne;
+  const midline = height / 2;
+  if (isBidi) {
+    const bidiOffset = LABEL_INNER_PADDING + LABEL_HEIGHT;
+    return {
+      '0': midline + bidiOffset / 2,
+      '1': midline - bidiOffset / 2,
+    };
+  }
+  if (hasZero) {
+    return {
+      '0': midline,
+    };
+  }
+  if (hasOne) {
+    return {
+      '1': midline,
+    };
+  }
+  return {};
+};
 
 export const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
   const {
     isHorizontal,
     segment: { slowZones },
     line,
+    width,
+    height,
   } = props;
+
+  const offsets = getDirectionLabelOffsets(slowZones, height);
+
   return (
-    <div className={styles.slowSegmentLabel}>
+    <g className={styles.slowSegmentLabel}>
       {DIRECTIONS.map((direction) => {
         const [zone] = slowZones[direction];
         if (!zone) {
@@ -73,9 +125,11 @@ export const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
             slowZone={zone}
             color={line.color}
             isHorizontal={isHorizontal}
+            offset={offsets[direction]!}
+            containingWidth={width}
           />
         );
       })}
-    </div>
+    </g>
   );
 };

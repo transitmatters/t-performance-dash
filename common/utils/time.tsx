@@ -63,3 +63,49 @@ export const getFormattedTimeString = (value: number, unit: 'minutes' | 'seconds
       return `${duration.format('H')}h ${duration.format('m').padStart(2, '0')}m`;
   }
 };
+
+interface GetClockFormattedTimeStringOptions {
+  truncateLeadingZeros?: boolean;
+  showSeconds?: boolean;
+  showHours?: boolean;
+  use12Hour?: boolean;
+}
+
+export const getClockFormattedTimeString = (
+  time: number,
+  options: GetClockFormattedTimeStringOptions = {}
+): string => {
+  time = Math.round(time);
+  const {
+    truncateLeadingZeros = true,
+    showSeconds = false,
+    showHours = true,
+    use12Hour = false,
+  } = options;
+  let seconds = time,
+    minutes = 0,
+    hours = 0;
+  const minutesToAdd = Math.floor(seconds / 60);
+  seconds = seconds % 60;
+  minutes = minutes += minutesToAdd;
+  const hoursToAdd = Math.floor(minutes / 60);
+  minutes = minutes % 60;
+  hours += hoursToAdd;
+  const isPM = hours >= 12 && hours < 24;
+  hours = (use12Hour && hours > 12 ? hours - 12 : hours) % 24;
+  // eslint-disable-next-line prefer-const
+  let [hoursString, minutesString, secondsString] = [hours, minutes, seconds].map((num) =>
+    num.toString().padStart(2, '0')
+  );
+  let timeString = [hoursString, minutesString, secondsString]
+    .slice(showHours ? 0 : 1)
+    .slice(0, showSeconds ? 3 : 2)
+    .join(':');
+  if (truncateLeadingZeros && timeString.startsWith('0')) {
+    timeString = timeString.slice(1);
+  }
+  if (use12Hour) {
+    return `${timeString} ${isPM ? 'PM' : 'AM'}`;
+  }
+  return timeString;
+};
