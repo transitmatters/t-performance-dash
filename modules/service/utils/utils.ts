@@ -40,12 +40,12 @@ export const getPercentageData = (
       ? (100 * datapoint.count) / (predictedData.counts[index] / 2)
       : Number.NaN;
   });
-  const baseline = data.map((datapoint) =>
+  const peak = data.map((datapoint) =>
     datapoint.miles_covered
       ? (100 * datapoint.count) / PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
       : Number.NaN
   );
-  return { scheduled: scheduled, baseline: baseline };
+  return { scheduled: scheduled, peak };
 };
 
 export const getAverageWithNaNs = (data: number[]) => {

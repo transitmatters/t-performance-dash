@@ -20,11 +20,11 @@ import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 interface PercentageServiceGraphProps {
   data: DeliveredTripMetrics[];
-  calculatedData: { scheduled: number[]; baseline: number[] };
+  calculatedData: { scheduled: number[]; peak: number[] };
   config: ParamsType;
   startDate: string;
   endDate: string;
-  comparison: 'Baseline' | 'Scheduled';
+  comparison: 'Peak' | 'Scheduled';
   showTitle?: boolean;
 }
 
@@ -69,7 +69,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
                   fill: true,
                   pointHoverBackgroundColor: lineColor,
                   backgroundColor: hexWithAlpha(lineColor, 0.8),
-                  data: compareToScheduled ? calculatedData.scheduled : calculatedData.baseline,
+                  data: compareToScheduled ? calculatedData.scheduled : calculatedData.peak,
                 },
                 {
                   // This null dataset produces the entry in the legend for the baseline annotation.
@@ -217,7 +217,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
     isMobile,
     linePath,
     calculatedData.scheduled,
-    calculatedData.baseline,
+    calculatedData.peak,
     showTitle,
     callbacks,
     startDate,

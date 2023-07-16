@@ -113,7 +113,7 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
               </div>
             }
             layoutKind="delta-and-percent-change"
-            analysis="compared to baseline"
+            analysis="compared to peak"
           />
           {renderSpeedRestrictions(speedRestrictionsForDirection)}
         </div>

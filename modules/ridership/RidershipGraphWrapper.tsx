@@ -39,7 +39,7 @@ export const RidershipGraphWrapper: React.FC<RidershipGraphWrapperProps> = ({
           layoutKind="no-delta"
         />
         <WidgetForCarousel
-          analysis={'of baseline'}
+          analysis={'of peak'}
           sentimentDirection={'positiveOnIncrease'}
           layoutKind="no-delta"
           widgetValue={new PercentageWidgetValue(percentage)}

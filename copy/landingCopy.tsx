@@ -7,19 +7,19 @@ const BASELINE_STYLE = 'text-stone-900 italic text-xs text-center';
 
 export const SpeedBaseline = (
   <p className={BASELINE_STYLE}>
-    Baseline speed is the calendar month with the highest average daily speed per line.
+    Peak speed is the calendar month with the highest average daily speed per line.
   </p>
 );
 
 export const ServiceBaseline = (
   <p className={BASELINE_STYLE}>
-    Baseline service is the calendar month with the highest average daily service per line.
+    Peak service is the calendar month with the highest average daily service per line.
   </p>
 );
 
 export const RidershipBaseline = (
   <p className={BASELINE_STYLE}>
-    Baseline ridership is the four-week period with the highest average <b>weekly</b> ridership per
+    Peak ridership is the four-week period with the highest average <b>weekday</b> ridership per
     line.
   </p>
 );
