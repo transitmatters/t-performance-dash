@@ -29,7 +29,7 @@ export function RidershipDetails() {
     },
     enabled
   );
-  const ridershipDataReady = !ridership.isError && startDate && endDate && lineOrRoute;
+  const ridershipDataReady = !ridership.isError && startDate && endDate && lineOrRoute && line;
 
   return (
     <PageWrapper pageTitle={'Ridership'}>
@@ -43,7 +43,8 @@ export function RidershipDetails() {
               config={config}
               startDate={startDate}
               endDate={endDate}
-              lineOrRoute={lineOrRoute}
+              line={line}
+              busRoute={busRoute}
             />
           ) : (
             <div className="relative flex h-full">

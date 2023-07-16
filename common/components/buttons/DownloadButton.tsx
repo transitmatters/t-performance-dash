@@ -60,17 +60,17 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
 }) => {
   const { line } = useDelimitatedRoute();
   return (
-    <div
-      className={classNames('flex', line && lineColorTextHover[line])}
-      title="Download data as CSV"
-    >
+    <div className={classNames('flex')} title="Download data as CSV">
       <CSVLink
         className={'csv-link'}
         data={data}
         title={'Download data as CSV'}
         filename={filename(datasetName, location, bothStops, startDate, endDate)}
       >
-        <FontAwesomeIcon icon={faFileArrowDown} className="text-stone-600" />
+        <FontAwesomeIcon
+          icon={faFileArrowDown}
+          className={classNames('text-stone-600', line && lineColorTextHover[line])}
+        />
       </CSVLink>
     </div>
   );

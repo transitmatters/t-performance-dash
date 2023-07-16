@@ -1,4 +1,3 @@
-import type { SelectOption } from '../../common/types/inputs';
 import type { Line, LineShort } from '../../common/types/lines';
 import type { Station } from '../../common/types/stations';
 import type { Location } from '../types/charts';
@@ -38,16 +37,6 @@ export const optionsStation = (line: LineShort, busRoute?: string): Station[] | 
   }
 
   return stations[line].stations.sort((a, b) => a.order - b.order);
-};
-
-export const swapStations = (
-  fromStation: SelectOption<Station> | null,
-  toStation: SelectOption<Station> | null,
-  setFromStation: (fromStation: SelectOption<Station> | null) => void,
-  setToStation: (toStation: SelectOption<Station> | null) => void
-) => {
-  setFromStation(toStation);
-  setToStation(fromStation);
 };
 
 const createStationIndex = () => {

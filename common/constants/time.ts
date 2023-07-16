@@ -11,3 +11,4 @@ export const TWO_HOURS = 2 * ONE_HOUR;
 export const THREE_HOURS = 3 * ONE_HOUR;
 export const FOUR_HOURS = 4 * ONE_HOUR;
 export const TWELVE_HOURS = 12 * ONE_HOUR;
+export const ONE_DAY = 24 * ONE_HOUR;

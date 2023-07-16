@@ -65,8 +65,8 @@ export const useDiagramCoordinates = (options: Options) => {
         const scaleBasis = getScaleBasis({ width: viewportWidth, height: viewportHeight });
         setSvgProps({
           viewBox: `${x} ${y} ${width} ${height}`,
-          width: width * scaleBasis,
-          height: height * scaleBasis,
+          width: Math.round(width * scaleBasis),
+          height: Math.round(height * scaleBasis),
         });
       }
     }
