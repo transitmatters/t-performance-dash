@@ -18,27 +18,23 @@ const getAverage = (data: (number | undefined)[]) => {
 };
 
 const getPeaks = (data: (number | undefined)[]) => {
-  const first = data[0];
-  const last = data[data.length - 1];
   data.sort();
   return {
     min: data[0],
     max: data[data.length - 1],
     median: data[Math.round(data.length / 2)],
-    first: first,
-    last: last,
   };
 };
 
 const getAggDataPointsOfInterest = (aggData: AggregateDataPoint[]) => {
   const medianData = aggData.map((tt) => tt['50%']);
-  const { min, max, median, first, last } = getPeaks(medianData);
+  const { min, max, median } = getPeaks(medianData);
   const average = getAverage(medianData);
-  return { average, min, max, median, first, last };
+  return { average, min, max, median };
 };
 
 export const getAggDataWidgets = (aggData: AggregateDataPoint[]) => {
-  const { average, min, max, median, first, last } = getAggDataPointsOfInterest(aggData);
+  const { average, min, max, median } = getAggDataPointsOfInterest(aggData);
   return [
     { text: 'Avg', widgetValue: new TimeWidgetValue(average), type: 'data' },
     { text: 'Median', widgetValue: new TimeWidgetValue(median), type: 'data' },
