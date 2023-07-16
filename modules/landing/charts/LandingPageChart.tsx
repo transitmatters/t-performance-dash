@@ -63,7 +63,7 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
                 },
                 title: {
                   display: true,
-                  text: 'Percentage of baseline',
+                  text: 'Percentage of peak',
                   color: COLORS.design.darkGrey,
                 },
               },

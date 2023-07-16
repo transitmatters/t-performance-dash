@@ -11,7 +11,7 @@ export type LineKind =
   | 'boat';
 
 export type ServiceDay = 'weekday' | 'saturday' | 'sunday';
-export type ServiceRegime = 'baseline' | 'current';
+export type ServiceRegime = 'peak' | 'current';
 
 export type TripsPerHour = readonly number[] & { length: 24 };
 

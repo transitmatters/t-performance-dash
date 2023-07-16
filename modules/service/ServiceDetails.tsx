@@ -21,7 +21,7 @@ export function ServiceDetails() {
     lineShort,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
-  const [comparison, setComparison] = useState<'Baseline' | 'Scheduled'>('Scheduled');
+  const [comparison, setComparison] = useState<'Peak' | 'Scheduled'>('Scheduled');
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const enabled = Boolean(startDate && endDate && line && config.agg);
   const tripsData = useDeliveredTripMetrics(

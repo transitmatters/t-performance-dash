@@ -18,8 +18,8 @@ interface PercentageServiceGraphWrapperProps {
   config: ParamsType;
   startDate: string;
   endDate: string;
-  comparison: 'Scheduled' | 'Baseline';
-  setComparison: React.Dispatch<SetStateAction<'Scheduled' | 'Baseline'>>;
+  comparison: 'Scheduled' | 'Peak';
+  setComparison: React.Dispatch<SetStateAction<'Scheduled' | 'Peak'>>;
 }
 
 export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapperProps> = ({
@@ -35,18 +35,16 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
   const { line } = useDelimitatedRoute();
   if (!data.some((datapoint) => datapoint.miles_covered)) return <NoDataNotice isLineMetric />;
 
-  const { scheduled, baseline } = getPercentageData(data, predictedData, line);
+  const { scheduled, peak } = getPercentageData(data, predictedData, line);
   const scheduledAverage = getAverageWithNaNs(scheduled);
-  const baselineAverage = getAverageWithNaNs(baseline);
+  const peakAverage = getAverageWithNaNs(peak);
   return (
     <>
       <CarouselGraphDiv>
         <WidgetCarousel isSingleWidget>
           <WidgetForCarousel
             widgetValue={
-              new PercentageWidgetValue(
-                comparison === 'Scheduled' ? scheduledAverage : baselineAverage
-              )
+              new PercentageWidgetValue(comparison === 'Scheduled' ? scheduledAverage : peakAverage)
             }
             analysis={`Average`}
             layoutKind="no-delta"
@@ -56,7 +54,7 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
         <PercentageServiceGraph
           config={config}
           data={data}
-          calculatedData={{ scheduled: scheduled, baseline: baseline }}
+          calculatedData={{ scheduled: scheduled, peak: peak }}
           startDate={startDate}
           endDate={endDate}
           comparison={comparison}
@@ -64,7 +62,7 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
       </CarouselGraphDiv>
       <div className={'flex w-full justify-center pt-2'}>
         <ButtonGroup
-          options={Object.entries({ Scheduled: 'Scheduled', Baseline: 'Baseline' })}
+          options={Object.entries({ Scheduled: 'Scheduled', Peak: 'Peak' })}
           pressFunction={setComparison}
           additionalDivClass="md:w-auto"
           additionalButtonClass="md:w-fit"
