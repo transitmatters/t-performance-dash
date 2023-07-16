@@ -26,7 +26,7 @@ const redLineSegments: SegmentRenderOptions[] = [
       {
         mapSide: '0',
         boundingSize: 40,
-        content: (
+        content: () => (
           <div style={{ fontSize: 4 }}>
             Greetings amigos thank you for inviting me into your SVG
           </div>
@@ -35,7 +35,7 @@ const redLineSegments: SegmentRenderOptions[] = [
       {
         mapSide: '1',
         boundingSize: 40,
-        content: (
+        content: () => (
           <div style={{ fontSize: 4 }}>And on this side too! I also like being on this side!</div>
         ),
       },

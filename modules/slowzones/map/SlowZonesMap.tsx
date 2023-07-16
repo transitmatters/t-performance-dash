@@ -94,7 +94,14 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
             mapSide: '0' as const,
             boundingSize: isHorizontal ? 15 : 20,
             ...getSegmentLabelOverrides(segment.segmentLocation, isHorizontal),
-            content: <SlowSegmentLabel isHorizontal={isHorizontal} segment={segment} line={line} />,
+            content: (size) => (
+              <SlowSegmentLabel
+                isHorizontal={isHorizontal}
+                segment={segment}
+                line={line}
+                {...size}
+              />
+            ),
           },
         ],
         strokes: Object.entries(segment.slowZones).map(([direction, zones]) => {
