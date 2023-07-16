@@ -30,7 +30,7 @@ export const WidgetForCarousel: React.FC<WidgetForCarouselProps> = ({
         <div className={classNames('flex flex-row items-baseline justify-between rounded-lg px-2')}>
           <div className="flex flex-row items-baseline justify-end gap-4">
             <div className="flex flex-row items-baseline gap-x-1">
-              {widgetValue.getFormattedValue()}
+              {widgetValue.getFormattedValue(true)}
             </div>
             <div className="mt-1 flex flex-row items-baseline gap-x-1">
               {layoutKind !== 'no-delta' && (
@@ -54,7 +54,7 @@ export const WidgetForCarousel: React.FC<WidgetForCarouselProps> = ({
         {widgetValue.value === undefined && <LoadingSpinner isWidget />}
         <div className={classNames('flex flex-col items-start')}>
           <div className="flex flex-row items-baseline gap-x-1">
-            {widgetValue.getFormattedValue()}
+            {widgetValue.getFormattedValue(true)}
           </div>
           <div className="flex flex-row items-baseline gap-x-1 ">
             {layoutKind !== 'no-delta' && (

@@ -22,8 +22,8 @@ const getPeaks = (data: (number | undefined)[]) => {
   const last = data[data.length - 1];
   data.sort();
   return {
-    low: data[0],
-    high: data[data.length - 1],
+    min: data[0],
+    max: data[data.length - 1],
     median: data[Math.round(data.length / 2)],
     first: first,
     last: last,
@@ -32,40 +32,18 @@ const getPeaks = (data: (number | undefined)[]) => {
 
 const getAggDataPointsOfInterest = (aggData: AggregateDataPoint[]) => {
   const medianData = aggData.map((tt) => tt['50%']);
-  const { low, high, median, first, last } = getPeaks(medianData);
+  const { min, max, median, first, last } = getPeaks(medianData);
   const average = getAverage(medianData);
-  return { average, low, high, median, first, last };
+  return { average, min, max, median, first, last };
 };
 
 export const getAggDataWidgets = (aggData: AggregateDataPoint[]) => {
-  const { average, low, high, median, first, last } = getAggDataPointsOfInterest(aggData);
+  const { average, min, max, median, first, last } = getAggDataPointsOfInterest(aggData);
   return [
     { text: 'Avg', widgetValue: new TimeWidgetValue(average), type: 'data' },
-    {
-      text: 'From start',
-      widgetValue: new TimeWidgetValue(
-        last !== undefined && first !== undefined ? last - first : undefined
-      ),
-      type: 'delta',
-    },
-
-    { text: 'Low', widgetValue: new TimeWidgetValue(low), type: 'data' },
-    {
-      text: 'From Low',
-      widgetValue: new TimeWidgetValue(
-        last !== undefined && low !== undefined ? last - low : undefined
-      ),
-      type: 'delta',
-    },
-
-    { text: 'High', widgetValue: new TimeWidgetValue(high), type: 'data' },
-    {
-      text: 'From High',
-      widgetValue: new TimeWidgetValue(
-        last !== undefined && high !== undefined ? last - high : undefined
-      ),
-      type: 'delta',
-    },
+    { text: 'Median', widgetValue: new TimeWidgetValue(median), type: 'data' },
+    { text: 'Min', widgetValue: new TimeWidgetValue(min), type: 'data' },
+    { text: 'Max', widgetValue: new TimeWidgetValue(max), type: 'data' },
   ];
 };
 
@@ -84,20 +62,20 @@ const getSingleDayPointsOfInterest = (
   type: 'traveltimes' | 'dwells' | 'headways'
 ) => {
   const _data = getSingleDayNumberArray(data, type);
-  const { high, low, median } = getPeaks(_data);
+  const { max, min, median } = getPeaks(_data);
   const average = getAverage(_data);
-  return { high, low, median, average };
+  return { max, min, median, average };
 };
 
 export const getSingleDayWidgets = (
   data: SingleDayDataPoint[],
   type: 'traveltimes' | 'dwells' | 'headways'
 ) => {
-  const { high, low, median, average } = getSingleDayPointsOfInterest(data, type);
+  const { max, min, median, average } = getSingleDayPointsOfInterest(data, type);
   return [
     { text: 'Avg', widgetValue: new TimeWidgetValue(average), type: 'data' },
     { text: 'Median', widgetValue: new TimeWidgetValue(median), type: 'data' },
-    { text: 'Low', widgetValue: new TimeWidgetValue(low), type: 'data' },
-    { text: 'High', widgetValue: new TimeWidgetValue(high), type: 'data' },
+    { text: 'Min', widgetValue: new TimeWidgetValue(max), type: 'data' },
+    { text: 'Max', widgetValue: new TimeWidgetValue(min), type: 'data' },
   ];
 };

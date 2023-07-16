@@ -37,7 +37,7 @@ const getWidgets = (widgetObject: MiniWidgetObject[]) => {
 
 export const MiniWidgetCreator: React.FC<MiniWidgetCreatorProps> = ({ widgetObjects }) => {
   return (
-    <div className="flex w-full flex-row gap-y-4 overflow-x-auto py-2">
+    <div className="flex w-full flex-row gap-y-4 overflow-x-auto py-1 md:py-2">
       {getWidgets(widgetObjects)}
     </div>
   );

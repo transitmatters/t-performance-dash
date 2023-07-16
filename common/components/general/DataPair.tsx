@@ -11,7 +11,7 @@ export const DataPair: React.FC<DataPairProps> = ({ children, last }) => {
     <div
       className={classNames(
         last ? 'border-0' : 'border-r',
-        'flex h-full min-w-[12rem] max-w-[18rem] flex-col gap-2 px-2 md:min-w-[12rem]'
+        'flex h-full min-w-[9.5rem] flex-col gap-1 px-2 md:min-w-[12rem]'
       )}
     >
       {children}
