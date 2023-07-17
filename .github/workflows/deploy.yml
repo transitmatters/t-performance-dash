@@ -59,4 +59,4 @@ jobs:
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           npm ci
-          bash deploy.sh -c
+          bash deploy.sh -p -c

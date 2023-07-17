@@ -25,14 +25,6 @@ while getopts "pc" opt; do
   esac
 done
 
-# 2023-01-17 Preston added this to disable production deployment
-# Remove this when ready :-)
-if [ "$PRODUCTION" = true ]
-then
-  echo "Production deploy not yet enabled" >&2
-  exit 1
-fi
-
 # Setup environment stuff
 # By default deploy to beta, otherwise deploys to production
 
