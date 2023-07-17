@@ -6,7 +6,7 @@ import { LineMap, createDefaultDiagramForLine } from '../../../common/components
 import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
 import type { SlowZonesLineName } from '../types';
 
-import type { SegmentLabel } from '../../../common/components/maps/LineMap';
+import type { SegmentLabel, TooltipSide } from '../../../common/components/maps/LineMap';
 import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { segmentSlowZones } from './segment';
@@ -120,11 +120,11 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
 
   const renderSlowZonesTooltip = (options: {
     segmentLocation: SegmentLocation<true>;
-    isHorizontal: boolean;
+    side: TooltipSide;
   }) => {
     const {
       segmentLocation: { fromStationId, toStationId },
-      isHorizontal,
+      side,
     } = options;
     const slowSegment = segments.find(
       (seg) =>
@@ -132,9 +132,7 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
         seg.segmentLocation.toStationId === toStationId
     );
     if (slowSegment) {
-      return (
-        <SlowZonesTooltip isHorizontal={isHorizontal} segment={slowSegment} color={line.color} />
-      );
+      return <SlowZonesTooltip side={side} segment={slowSegment} color={line.color} />;
     }
 
     return null;

@@ -5,6 +5,7 @@ import { getParentStationForStopId } from '../../../common/utils/stations';
 
 import { BasicWidgetDataLayout } from '../../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { DeltaTimeWidgetValue } from '../../../common/types/basicWidgets';
+import type { TooltipSide } from '../../../common/components/maps/LineMap';
 import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
 import { prettyDate } from '../../../common/utils/date';
 
@@ -16,8 +17,8 @@ import styles from './SlowZonesTooltip.module.css';
 
 interface SlowZonesTooltipProps {
   segment: SlowZonesSegment;
-  isHorizontal: boolean;
   color: string;
+  side: TooltipSide;
 }
 
 const getOrderedStationNames = (slowZones: ByDirection<SlowZoneResponse[]>) => {
@@ -44,10 +45,12 @@ const getOrderedStationNames = (slowZones: ByDirection<SlowZoneResponse[]>) => {
 
 export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
   const {
-    isHorizontal,
+    side,
     color,
     segment: { slowZones, speedRestrictions },
   } = props;
+
+  const isHorizontal = side === 'top';
 
   const { fromStationName, toStationName } = useMemo(
     () => getOrderedStationNames(slowZones)!,
@@ -125,9 +128,18 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
   return (
     <div
       style={{ '--tooltip-accent-color': color } as React.CSSProperties}
-      className={classNames(styles.slowZonesTooltip, isHorizontal && styles.horizontal)}
+      className={classNames(
+        styles.slowZonesTooltip,
+        isHorizontal && styles.horizontal,
+        side === 'left' && styles.reverseVertical
+      )}
     >
-      <div className={isHorizontal ? styles.triangleHorizontal : styles.triangle}></div>
+      <div
+        className={classNames(
+          isHorizontal ? styles.triangleHorizontal : styles.triangle,
+          side === 'left' && styles.triangleReverse
+        )}
+      ></div>
       <div className={classNames(styles.content, 'shadow-dataBox')}>
         <div className={classNames(styles.title)}>
           {fromStationName} — {toStationName}

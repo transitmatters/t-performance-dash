@@ -9,6 +9,12 @@
   position: absolute;
 }
 
+@media screen and (min-width: 770px) {
+  .tooltipContainer {
+    z-index: 1;
+  }
+}
+
 .inner {
   overflow-x: scroll;
 }
