@@ -48,16 +48,9 @@ else
     git fetch --tags
 fi
 
-# If production, identify build with latest git tag
-# If beta, identify build with dirty hash
-
-if $PRODUCTION; then
-    GIT_ID=`git describe --tags`
-    echo "Deploying git tag $GIT_ID to production site"
-else
-    GIT_ID=`git describe --always`
-    echo "Deploying git commit id $GIT_ID to beta site"
-fi
+# Identify the version and commit of the current deploy
+GIT_ID=`git describe --always`
+echo "Deploying git commit id $GIT_ID to beta site"
 
 BACKEND_BUCKET=datadashboard-backend$ENV_SUFFIX
 FRONTEND_HOSTNAME=$FRONTEND_DOMAIN_PREFIX$FRONTEND_ZONE # Must match in .chalice/config.json!
