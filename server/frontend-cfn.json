@@ -136,7 +136,7 @@
       "Properties": {
         "DefinitionBody": {
           "info": {
-            "title": { "Ref": "TMFrontendHostname" }
+            "title": { "Ref": "TMBackendHostname" }
           }
         }
       }
