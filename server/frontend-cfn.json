@@ -51,7 +51,7 @@
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
         "Name": { "Ref": "TMFrontendHostname" },
-        "HostedZoneName": "labs.transitmatters.org.",
+        "HostedZoneName": { "Fn::Sub": "${TMFrontendZone}." },
         "AliasTarget": {
           "HostedZoneId": "Z2FDTNDATAQYW2",
           "DNSName": {
