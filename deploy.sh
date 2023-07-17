@@ -25,6 +25,12 @@ while getopts "pc" opt; do
   esac
 done
 
+# Ensure required secrets are set
+if [[ -z "$MBTA_V2_API_KEY" || -z "$DD_API_KEY"  ]]; then
+    echo "Must provide MBTA_V2_API_KEY and DD_API_KEY in environment to deploy" 1>&2
+    exit 1
+fi
+
 # Setup environment stuff
 # By default deploy to beta, otherwise deploys to production
 
