@@ -132,6 +132,15 @@
         "Stage": { "Ref": "RestAPI.Stage" }
       }
     },
+    "RestAPI": {
+      "Properties": {
+        "DefinitionBody": {
+          "info": {
+            "title": { "Ref": "TMBackendHostname" }
+          }
+        }
+      }
+    },
     "FrontendCloudFront": {
       "Type": "AWS::CloudFront::Distribution",
       "Properties": {
