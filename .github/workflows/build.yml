@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ['16']
-        python-version: ['3.9', '3.10']
+        node-version: ['18', '20']
+        python-version: ['3.10']
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -24,6 +24,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Set up CI Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
       - name: Check if package-lock.json is up to date
         run: |
           npx --yes package-lock-utd@1.1.0
@@ -31,4 +40,4 @@ jobs:
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           npm ci
-          npm run build
+          npm run build-v4

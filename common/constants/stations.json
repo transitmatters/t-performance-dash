@@ -1,0 +1,1504 @@
+{
+  "Red": {
+    "type": "rapidtransit",
+    "direction": {
+      "0": "northbound",
+      "1": "southbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Alewife",
+        "branches": ["A", "B"],
+        "station": "place-alfcl",
+        "order": 1,
+        "stops": {
+          "0": ["70061"],
+          "1": ["70061"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true,
+        "pedal_park": true,
+        "terminus": true
+      },
+      {
+        "stop_name": "Davis",
+        "branches": ["A", "B"],
+        "station": "place-davis",
+        "order": 2,
+        "stops": {
+          "0": ["70064"],
+          "1": ["70063"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true,
+        "pedal_park": true
+      },
+      {
+        "stop_name": "Porter",
+        "branches": ["A", "B"],
+        "station": "place-portr",
+        "order": 3,
+        "stops": {
+          "0": ["70066"],
+          "1": ["70065"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Harvard",
+        "branches": ["A", "B"],
+        "station": "place-harsq",
+        "order": 4,
+        "stops": {
+          "0": ["70068"],
+          "1": ["70067"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Central",
+        "branches": ["A", "B"],
+        "station": "place-cntsq",
+        "order": 5,
+        "stops": {
+          "0": ["70070"],
+          "1": ["70069"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Kendall/MIT",
+        "short": "Kendall",
+        "branches": ["A", "B"],
+        "station": "place-knncl",
+        "order": 6,
+        "stops": {
+          "0": ["70072"],
+          "1": ["70071"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Charles/MGH",
+        "short": "MGH",
+        "branches": ["A", "B"],
+        "station": "place-chmnl",
+        "order": 7,
+        "stops": {
+          "0": ["70074"],
+          "1": ["70073"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Park Street",
+        "short": "Park St.",
+        "branches": ["A", "B"],
+        "station": "place-pktrm",
+        "order": 8,
+        "stops": {
+          "0": ["70076"],
+          "1": ["70075"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Downtown Crossing",
+        "short": "DTX",
+        "branches": ["A", "B"],
+        "station": "place-dwnxg",
+        "order": 9,
+        "stops": {
+          "0": ["70078"],
+          "1": ["70077"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "South Station",
+        "short": "S. Station",
+        "branches": ["A", "B"],
+        "station": "place-sstat",
+        "order": 10,
+        "stops": {
+          "0": ["70080"],
+          "1": ["70079"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Broadway",
+        "branches": ["A", "B"],
+        "station": "place-brdwy",
+        "order": 11,
+        "stops": {
+          "0": ["70082"],
+          "1": ["70081"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Andrew",
+        "branches": ["A", "B"],
+        "station": "place-andrw",
+        "order": 12,
+        "stops": {
+          "0": ["70084"],
+          "1": ["70083"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "JFK/UMass (Ashmont)",
+        "short": "JFK (A)",
+        "branches": ["A"],
+        "station": "place-jfk",
+        "order": 101,
+        "stops": {
+          "0": ["70086"],
+          "1": ["70085"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Savin Hill",
+        "branches": ["A"],
+        "station": "place-shmnl",
+        "order": 102,
+        "stops": {
+          "0": ["70088"],
+          "1": ["70087"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Fields Corner",
+        "short": "Fields Cor.",
+        "branches": ["A"],
+        "station": "place-fldcr",
+        "order": 103,
+        "stops": {
+          "0": ["70090"],
+          "1": ["70089"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Shawmut",
+        "branches": ["A"],
+        "station": "place-smmnl",
+        "order": 104,
+        "stops": {
+          "0": ["70092"],
+          "1": ["70091"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Ashmont",
+        "branches": ["A"],
+        "station": "place-asmnl",
+        "order": 105,
+        "stops": {
+          "0": ["70094"],
+          "1": ["70093"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true,
+        "pedal_park": true,
+        "terminus": true
+      },
+      {
+        "stop_name": "JFK/UMass (Braintree)",
+        "short": "JFK (B)",
+        "branches": ["B"],
+        "station": "place-jfk",
+        "order": 201,
+        "stops": {
+          "0": ["70096"],
+          "1": ["70095"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "North Quincy",
+        "short": "N. Quincy",
+        "branches": ["B"],
+        "station": "place-nqncy",
+        "order": 202,
+        "stops": {
+          "0": ["70098"],
+          "1": ["70097"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Wollaston",
+        "branches": ["B"],
+        "station": "place-wlsta",
+        "order": 203,
+        "stops": {
+          "0": ["70100"],
+          "1": ["70099"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true,
+        "pedal_park": true
+      },
+      {
+        "stop_name": "Quincy Center",
+        "short": "Quincy Ctr.",
+        "branches": ["B"],
+        "station": "place-qnctr",
+        "order": 204,
+        "stops": {
+          "0": ["70102"],
+          "1": ["70101"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Quincy Adams",
+        "short": "Q. Adams",
+        "branches": ["B"],
+        "station": "place-qamnl",
+        "order": 205,
+        "stops": {
+          "0": ["70104"],
+          "1": ["70103"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Braintree",
+        "branches": ["B"],
+        "station": "place-brntn",
+        "order": 206,
+        "stops": {
+          "0": ["70105"],
+          "1": ["70105"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true,
+        "pedal_park": true,
+        "terminus": true
+      }
+    ]
+  },
+  "Orange": {
+    "type": "rapidtransit",
+    "direction": {
+      "0": "northbound",
+      "1": "southbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Oak Grove",
+        "branches": null,
+        "station": "place-ogmnl",
+        "order": 1,
+        "stops": {
+          "0": ["70036"],
+          "1": ["70036"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true,
+        "pedal_park": true,
+        "terminus": true
+      },
+      {
+        "stop_name": "Malden Center",
+        "short": "Malden Ctr.",
+        "branches": null,
+        "station": "place-mlmnl",
+        "order": 2,
+        "stops": {
+          "0": ["70035"],
+          "1": ["70034"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true,
+        "pedal_park": true
+      },
+      {
+        "stop_name": "Wellington",
+        "branches": null,
+        "station": "place-welln",
+        "order": 3,
+        "stops": {
+          "0": ["70033"],
+          "1": ["70032"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Assembly",
+        "branches": null,
+        "station": "place-astao",
+        "order": 4,
+        "stops": {
+          "0": ["70279"],
+          "1": ["70278"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Sullivan Square",
+        "short": "Sullivan Sq.",
+        "branches": null,
+        "station": "place-sull",
+        "order": 5,
+        "stops": {
+          "0": ["70031"],
+          "1": ["70030"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Community College",
+        "short": "Comm. Coll.",
+        "branches": null,
+        "station": "place-ccmnl",
+        "order": 6,
+        "stops": {
+          "0": ["70029"],
+          "1": ["70028"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "North Station",
+        "short": "N. Station",
+        "branches": null,
+        "station": "place-north",
+        "order": 7,
+        "stops": {
+          "0": ["70027"],
+          "1": ["70026"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Haymarket",
+        "branches": null,
+        "station": "place-haecl",
+        "order": 8,
+        "stops": {
+          "0": ["70025"],
+          "1": ["70024"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "State Street",
+        "short": "State St.",
+        "branches": null,
+        "station": "place-state",
+        "order": 9,
+        "stops": {
+          "0": ["70023"],
+          "1": ["70022"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Downtown Crossing",
+        "short": "DTX",
+        "branches": null,
+        "station": "place-dwnxg",
+        "order": 10,
+        "stops": {
+          "0": ["70021"],
+          "1": ["70020"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Chinatown",
+        "branches": null,
+        "station": "place-chncl",
+        "order": 11,
+        "stops": {
+          "0": ["70019"],
+          "1": ["70018"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Tufts Medical Center",
+        "short": "Tufts Medical",
+        "branches": null,
+        "station": "place-tumnl",
+        "order": 12,
+        "stops": {
+          "0": ["70017"],
+          "1": ["70016"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Back Bay",
+        "branches": null,
+        "station": "place-bbsta",
+        "order": 13,
+        "stops": {
+          "0": ["70015"],
+          "1": ["70014"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true,
+        "pedal_park": true
+      },
+      {
+        "stop_name": "Massachusetts Avenue",
+        "short": "Mass. Ave.",
+        "branches": null,
+        "station": "place-masta",
+        "order": 14,
+        "stops": {
+          "0": ["70013"],
+          "1": ["70012"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Ruggles",
+        "branches": null,
+        "station": "place-rugg",
+        "order": 15,
+        "stops": {
+          "0": ["70011"],
+          "1": ["70010"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Roxbury Crossing",
+        "short": "Roxbury Xing",
+        "branches": null,
+        "station": "place-rcmnl",
+        "order": 16,
+        "stops": {
+          "0": ["70009"],
+          "1": ["70008"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Jackson Square",
+        "short": "Jackson Sq.",
+        "branches": null,
+        "station": "place-jaksn",
+        "order": 17,
+        "stops": {
+          "0": ["70007"],
+          "1": ["70006"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Stony Brook",
+        "branches": null,
+        "station": "place-sbmnl",
+        "order": 18,
+        "stops": {
+          "0": ["70005"],
+          "1": ["70004"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Green Street",
+        "short": "Green St.",
+        "branches": null,
+        "station": "place-grnst",
+        "order": 19,
+        "stops": {
+          "0": ["70003"],
+          "1": ["70002"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Forest Hills",
+        "branches": null,
+        "station": "place-forhl",
+        "order": 20,
+        "stops": {
+          "0": ["70001"],
+          "1": ["70001"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true,
+        "pedal_park": true,
+        "terminus": true
+      }
+    ]
+  },
+  "Blue": {
+    "type": "rapidtransit",
+    "direction": {
+      "0": "northbound",
+      "1": "southbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Wonderland",
+        "branches": null,
+        "station": "place-wondl",
+        "order": 1,
+        "stops": {
+          "0": ["70060"],
+          "1": ["70059"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true,
+        "pedal_park": true,
+        "terminus": true
+      },
+      {
+        "stop_name": "Revere Beach",
+        "short": "Revere Bch.",
+        "branches": null,
+        "station": "place-rbmnl",
+        "order": 2,
+        "stops": {
+          "0": ["70058"],
+          "1": ["70057"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Beachmont",
+        "branches": null,
+        "station": "place-bmmnl",
+        "order": 3,
+        "stops": {
+          "0": ["70056"],
+          "1": ["70055"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Suffolk Downs",
+        "short": "Suff. Downs",
+        "branches": null,
+        "station": "place-sdmnl",
+        "order": 4,
+        "stops": {
+          "0": ["70054"],
+          "1": ["70053"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Orient Heights",
+        "short": "Orient Hts.",
+        "branches": null,
+        "station": "place-orhte",
+        "order": 5,
+        "stops": {
+          "0": ["70052"],
+          "1": ["70051"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Wood Island",
+        "branches": null,
+        "station": "place-wimnl",
+        "order": 6,
+        "stops": {
+          "0": ["70050"],
+          "1": ["70049"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Airport",
+        "branches": null,
+        "station": "place-aport",
+        "order": 7,
+        "stops": {
+          "0": ["70048"],
+          "1": ["70047"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Maverick",
+        "branches": null,
+        "station": "place-mvbcl",
+        "order": 8,
+        "stops": {
+          "0": ["70046"],
+          "1": ["70045"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Aquarium",
+        "branches": null,
+        "station": "place-aqucl",
+        "order": 9,
+        "stops": {
+          "0": ["70044"],
+          "1": ["70043"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "State Street",
+        "short": "State St.",
+        "branches": null,
+        "station": "place-state",
+        "order": 10,
+        "stops": {
+          "0": ["70042"],
+          "1": ["70041"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Government Center",
+        "short": "Gov. Center",
+        "branches": null,
+        "station": "place-gover",
+        "order": 11,
+        "stops": {
+          "0": ["70040"],
+          "1": ["70039"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Bowdoin",
+        "branches": null,
+        "station": "place-bomnl",
+        "order": 12,
+        "stops": {
+          "0": ["70038"],
+          "1": ["70838"]
+        },
+        "accessible": false,
+        "terminus": true
+      }
+    ]
+  },
+  "Green": {
+    "type": "rapidtransit",
+    "direction": {
+      "0": "eastbound",
+      "1": "westbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Medford/Tufts",
+        "branches": ["E"],
+        "station": "place-mdftf",
+        "disabled": false,
+        "order": 1,
+        "stops": {
+          "0": ["70511"],
+          "1": ["70512"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true,
+        "terminus": true
+      },
+      {
+        "stop_name": "Ball Square",
+        "branches": ["E"],
+        "station": "place-balsq",
+        "disabled": false,
+        "order": 2,
+        "stops": {
+          "0": ["70509"],
+          "1": ["70510"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Magoun Square",
+        "branches": ["E"],
+        "station": "place-mgngl",
+        "disabled": false,
+        "order": 3,
+        "stops": {
+          "0": ["70507"],
+          "1": ["70508"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Gilman Square",
+        "branches": ["E"],
+        "station": "place-gilmn",
+        "disabled": false,
+        "order": 4,
+        "stops": {
+          "0": ["70505"],
+          "1": ["70506"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "East Somerville",
+        "branches": ["E"],
+        "station": "place-esomr",
+        "disabled": false,
+        "order": 5,
+        "stops": {
+          "0": ["70513"],
+          "1": ["70514"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Union Square",
+        "branches": ["D"],
+        "station": "place-unsqu",
+        "disabled": false,
+        "order": 6,
+        "stops": {
+          "0": ["70503"],
+          "1": ["70504"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true,
+        "terminus": true
+      },
+      {
+        "stop_name": "Lechmere",
+        "branches": ["D", "E"],
+        "station": "place-lech",
+        "order": 7,
+        "stops": {
+          "0": ["70501", "70209"],
+          "1": ["70502", "70210"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Science Park",
+        "branches": ["D", "E"],
+        "station": "place-spmnl",
+        "order": 8,
+        "stops": {
+          "0": ["70207"],
+          "1": ["70208"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "North Station",
+        "branches": ["C", "D", "E"],
+        "station": "place-north",
+        "order": 9,
+        "stops": {
+          "0": ["70205"],
+          "1": ["70206"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Haymarket",
+        "branches": ["C", "D", "E"],
+        "station": "place-haecl",
+        "order": 10,
+        "stops": {
+          "0": ["70203"],
+          "1": ["70204"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Government Center",
+        "branches": ["B", "C", "D", "E"],
+        "station": "place-gover",
+        "order": 11,
+        "stops": {
+          "0": ["70201"],
+          "1": ["70202"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Park Street",
+        "branches": ["B", "C", "D", "E"],
+        "station": "place-pktrm",
+        "order": 12,
+        "stops": {
+          "0": ["70200"],
+          "1": ["70196", "70197", "70198", "70199"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Boylston",
+        "branches": ["B", "C", "D", "E"],
+        "station": "place-boyls",
+        "order": 13,
+        "stops": {
+          "0": ["70158"],
+          "1": ["70159"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Arlington",
+        "branches": ["B", "C", "D", "E"],
+        "station": "place-armnl",
+        "order": 14,
+        "stops": {
+          "0": ["70156"],
+          "1": ["70157"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Copley",
+        "branches": ["B", "C", "D", "E"],
+        "station": "place-coecl",
+        "order": 15,
+        "stops": {
+          "0": ["70154"],
+          "1": ["70155"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Hynes",
+        "branches": ["B", "C", "D"],
+        "station": "place-hymnl",
+        "order": 16,
+        "stops": {
+          "0": ["70152"],
+          "1": ["70153"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Kenmore",
+        "branches": ["B", "C", "D"],
+        "station": "place-kencl",
+        "order": 17,
+        "stops": {
+          "0": ["70150", "71150"],
+          "1": ["70151", "71151"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Blandford Street",
+        "branches": ["B"],
+        "station": "place-bland",
+        "order": 101,
+        "stops": {
+          "0": ["70148"],
+          "1": ["70149"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Boston University East",
+        "branches": ["B"],
+        "station": "place-buest",
+        "order": 102,
+        "stops": {
+          "0": ["70146"],
+          "1": ["70147"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Boston University Central",
+        "branches": ["B"],
+        "station": "place-bucen",
+        "order": 103,
+        "stops": {
+          "0": ["70144"],
+          "1": ["70145"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Amory Street",
+        "branches": ["B"],
+        "station": "place-amory",
+        "order": 105,
+        "stops": {
+          "0": ["170140", "70140"],
+          "1": ["170141", "70141"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Babcock Street",
+        "branches": ["B"],
+        "station": "place-babck",
+        "order": 107,
+        "stops": {
+          "0": ["170136", "70136"],
+          "1": ["170137", "70137"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Packards Corner",
+        "branches": ["B"],
+        "station": "place-brico",
+        "order": 108,
+        "stops": {
+          "0": ["70134"],
+          "1": ["70135"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Harvard Avenue",
+        "branches": ["B"],
+        "station": "place-harvd",
+        "order": 109,
+        "stops": {
+          "0": ["70130"],
+          "1": ["70131"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Griggs Street",
+        "branches": ["B"],
+        "station": "place-grigg",
+        "order": 110,
+        "stops": {
+          "0": ["70128"],
+          "1": ["70129"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Allston Street",
+        "branches": ["B"],
+        "station": "place-alsgr",
+        "order": 111,
+        "stops": {
+          "0": ["70126"],
+          "1": ["70127"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Warren Street",
+        "branches": ["B"],
+        "station": "place-wrnst",
+        "order": 112,
+        "stops": {
+          "0": ["70124"],
+          "1": ["70125"]
+        },
+        "accessible": false,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Washington Street",
+        "branches": ["B"],
+        "station": "place-wascm",
+        "order": 113,
+        "stops": {
+          "0": ["70120"],
+          "1": ["70121"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Sutherland Road",
+        "branches": ["B"],
+        "station": "place-sthld",
+        "order": 114,
+        "stops": {
+          "0": ["70116"],
+          "1": ["70117"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Chiswick Road",
+        "branches": ["B"],
+        "station": "place-chswk",
+        "order": 115,
+        "stops": {
+          "0": ["70114"],
+          "1": ["70115"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Chestnut Hill Avenue",
+        "branches": ["B"],
+        "station": "place-chill",
+        "order": 116,
+        "stops": {
+          "0": ["70112"],
+          "1": ["70113"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "South Street",
+        "branches": ["B"],
+        "station": "place-sougr",
+        "order": 117,
+        "stops": {
+          "0": ["70110"],
+          "1": ["70111"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Boston College",
+        "branches": ["B"],
+        "station": "place-lake",
+        "order": 118,
+        "stops": {
+          "0": ["70106"],
+          "1": ["70107"]
+        },
+        "accessible": true,
+        "terminus": true
+      },
+      {
+        "stop_name": "Saint Marys Street",
+        "branches": ["C"],
+        "station": "place-smary",
+        "order": 201,
+        "stops": {
+          "0": ["70212"],
+          "1": ["70211"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Hawes Street",
+        "branches": ["C"],
+        "station": "place-hwsst",
+        "order": 202,
+        "stops": {
+          "0": ["70214"],
+          "1": ["70213"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Kent Street",
+        "branches": ["C"],
+        "station": "place-kntst",
+        "order": 203,
+        "stops": {
+          "0": ["70216"],
+          "1": ["70215"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Saint Paul Street (C)",
+        "branches": ["C"],
+        "station": "place-stpul",
+        "order": 204,
+        "stops": {
+          "0": ["70218"],
+          "1": ["70217"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Coolidge Corner",
+        "branches": ["C"],
+        "station": "place-cool",
+        "order": 205,
+        "stops": {
+          "0": ["70220"],
+          "1": ["70219"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Summit Avenue",
+        "branches": ["C"],
+        "station": "place-sumav",
+        "order": 206,
+        "stops": {
+          "0": ["70224"],
+          "1": ["70223"]
+        },
+        "accessible": false,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Brandon Hall",
+        "branches": ["C"],
+        "station": "place-bndhl",
+        "order": 207,
+        "stops": {
+          "0": ["70226"],
+          "1": ["70225"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Fairbanks Street",
+        "branches": ["C"],
+        "station": "place-fbkst",
+        "order": 208,
+        "stops": {
+          "0": ["70228"],
+          "1": ["70227"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Washington Square",
+        "branches": ["C"],
+        "station": "place-bcnwa",
+        "order": 209,
+        "stops": {
+          "0": ["70230"],
+          "1": ["70229"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Tappan Street",
+        "branches": ["C"],
+        "station": "place-tapst",
+        "order": 210,
+        "stops": {
+          "0": ["70232"],
+          "1": ["70231"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Dean Road",
+        "branches": ["C"],
+        "station": "place-denrd",
+        "order": 211,
+        "stops": {
+          "0": ["70234"],
+          "1": ["70233"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Englewood Avenue",
+        "branches": ["C"],
+        "station": "place-engav",
+        "order": 212,
+        "stops": {
+          "0": ["70236"],
+          "1": ["70235"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Cleveland Circle",
+        "branches": ["C"],
+        "station": "place-clmnl",
+        "order": 213,
+        "stops": {
+          "0": ["70238"],
+          "1": ["70237"]
+        },
+        "accessible": true,
+        "terminus": true
+      },
+      {
+        "stop_name": "Fenway",
+        "branches": ["D"],
+        "station": "place-fenwy",
+        "order": 301,
+        "stops": {
+          "0": ["70186"],
+          "1": ["70187"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Longwood",
+        "branches": ["D"],
+        "station": "place-longw",
+        "order": 302,
+        "stops": {
+          "0": ["70182"],
+          "1": ["70183"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Brookline Village",
+        "branches": ["D"],
+        "station": "place-bvmnl",
+        "order": 303,
+        "stops": {
+          "0": ["70180"],
+          "1": ["70181"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Brookline Hills",
+        "branches": ["D"],
+        "station": "place-brkhl",
+        "order": 304,
+        "stops": {
+          "0": ["70178"],
+          "1": ["70179"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Beaconsfield",
+        "branches": ["D"],
+        "station": "place-bcnfd",
+        "order": 305,
+        "stops": {
+          "0": ["70176"],
+          "1": ["70177"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Reservoir",
+        "branches": ["D"],
+        "station": "place-rsmnl",
+        "order": 306,
+        "stops": {
+          "0": ["70174"],
+          "1": ["70175"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Chestnut Hill",
+        "branches": ["D"],
+        "station": "place-chhil",
+        "order": 307,
+        "stops": {
+          "0": ["70172"],
+          "1": ["70173"]
+        },
+        "accessible": false,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Newton Centre",
+        "branches": ["D"],
+        "station": "place-newto",
+        "order": 308,
+        "stops": {
+          "0": ["70170"],
+          "1": ["70171"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Newton Highlands",
+        "branches": ["D"],
+        "station": "place-newtn",
+        "order": 309,
+        "stops": {
+          "0": ["70168"],
+          "1": ["70169"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Eliot",
+        "branches": ["D"],
+        "station": "place-eliot",
+        "order": 310,
+        "stops": {
+          "0": ["70166"],
+          "1": ["70167"]
+        },
+        "accessible": false,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Waban",
+        "branches": ["D"],
+        "station": "place-waban",
+        "order": 311,
+        "stops": {
+          "0": ["70164"],
+          "1": ["70165"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Woodland",
+        "branches": ["D"],
+        "station": "place-woodl",
+        "order": 312,
+        "stops": {
+          "0": ["70162"],
+          "1": ["70163"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true
+      },
+      {
+        "stop_name": "Riverside",
+        "branches": ["D"],
+        "station": "place-river",
+        "order": 313,
+        "stops": {
+          "0": ["70160"],
+          "1": ["70161"]
+        },
+        "accessible": true,
+        "enclosed_bike_parking": true,
+        "terminus": true
+      },
+      {
+        "stop_name": "Prudential",
+        "branches": ["E"],
+        "station": "place-prmnl",
+        "order": 401,
+        "stops": {
+          "0": ["70240"],
+          "1": ["70239"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Symphony",
+        "branches": ["E"],
+        "station": "place-symcl",
+        "order": 402,
+        "stops": {
+          "0": ["70242"],
+          "1": ["70241"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Northeastern University",
+        "branches": ["E"],
+        "station": "place-nuniv",
+        "order": 403,
+        "stops": {
+          "0": ["70244"],
+          "1": ["70243"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Museum of Fine Arts",
+        "branches": ["E"],
+        "station": "place-mfa",
+        "order": 404,
+        "stops": {
+          "0": ["70246"],
+          "1": ["70245"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Longwood Medical Area",
+        "branches": ["E"],
+        "station": "place-lngmd",
+        "order": 405,
+        "stops": {
+          "0": ["70248"],
+          "1": ["70247"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Brigham Circle",
+        "branches": ["E"],
+        "station": "place-brmnl",
+        "order": 406,
+        "stops": {
+          "0": ["70250"],
+          "1": ["70249"]
+        },
+        "accessible": true
+      },
+      {
+        "stop_name": "Fenwood Road",
+        "branches": ["E"],
+        "station": "place-fenwd",
+        "order": 407,
+        "stops": {
+          "0": ["70252"],
+          "1": ["70251"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Mission Park",
+        "branches": ["E"],
+        "station": "place-mispk",
+        "order": 408,
+        "stops": {
+          "0": ["70254"],
+          "1": ["70253"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Riverway",
+        "branches": ["E"],
+        "station": "place-rvrwy",
+        "order": 409,
+        "stops": {
+          "0": ["70256"],
+          "1": ["70255"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Back of the Hill",
+        "branches": ["E"],
+        "station": "place-bckhl",
+        "order": 410,
+        "stops": {
+          "0": ["70258"],
+          "1": ["70257"]
+        },
+        "accessible": false
+      },
+      {
+        "stop_name": "Heath Street",
+        "branches": ["E"],
+        "station": "place-hsmnl",
+        "order": 411,
+        "stops": {
+          "0": ["70260"],
+          "1": ["70260"]
+        },
+        "accessible": true,
+        "terminus": true
+      }
+    ]
+  }
+}

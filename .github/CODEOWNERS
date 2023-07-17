@@ -1,4 +1,7 @@
-*         @austinjpaul @mathcolo @friendchris @skaplan-dev @devinmatte @PatrickCleary
-/.github/ @austinjpaul @mathcolo @friendchris @skaplan-dev @devinmatte @PatrickCleary @nathan-weinberg
-.flake8   @austinjpaul @mathcolo @friendchris @skaplan-dev @devinmatte @PatrickCleary @nathan-weinberg
-deploy.sh @austinjpaul @mathcolo @friendchris @skaplan-dev @devinmatte @PatrickCleary @nathan-weinberg
+* @mathcolo @idreyn @skaplan-dev @devinmatte @PatrickCleary
+.github @mathcolo @nathan-weinberg
+.flake8 @mathcolo @nathan-weinberg
+deploy.sh @mathcolo @nathan-weinberg
+server @austinjpaul @idreyn
+server/frontend-cfn.json @mathcolo @nathan-weinberg
+server/.chalice @mathcolo @nathan-weinberg

@@ -27,6 +27,20 @@
       "Resource": [
         "arn:aws:s3:::tm-mbta-performance/*"
       ]
+    },
+    {
+      "Action": [
+        "dynamodb:Query"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:dynamodb:*:*:table/DeliveredTripMetrics",
+        "arn:aws:dynamodb:*:*:table/DeliveredTripMetricsWeekly",
+        "arn:aws:dynamodb:*:*:table/DeliveredTripMetricsMonthly",
+        "arn:aws:dynamodb:*:*:table/ScheduledServiceDaily",
+        "arn:aws:dynamodb:*:*:table/Ridership",
+        "arn:aws:dynamodb:*:*:table/SpeedRestrictions"
+      ]
     }
   ]
 }

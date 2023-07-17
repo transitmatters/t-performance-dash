@@ -1,10 +1,45 @@
 import datetime
 import pytz
 import traceback
+from datetime import date, timedelta
+from typing import Dict, Any, Callable, List, Union
 from chalicelib import MbtaPerformanceAPI, s3_historical, s3_alerts, s3
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
 WE_HAVE_ALERTS_SINCE = datetime.date(2017, 11, 6)
+
+
+def bucket_by(
+    items: List[any],
+    key_getter: Union[str, Callable[[Any], str]],
+) -> Dict[str, List[any]]:
+    res = {}
+    if isinstance(key_getter, str):
+        key_getter_as_str = key_getter
+        key_getter = lambda dict: dict[key_getter_as_str]
+    for item in items:
+        key = key_getter(item)
+        res.setdefault(key, [])
+        res[key].append(item)
+    return res
+
+
+def index_by(items: List[any], key_getter: Union[str, Callable[[Any], str]]):
+    res = {}
+    if isinstance(key_getter, str):
+        key_getter_as_str = key_getter
+        key_getter = lambda dict: dict[key_getter_as_str]
+    for item in items:
+        key = key_getter(item)
+        res[key] = item
+    return res
+
+
+def date_range(start_date: date, end_date: date):
+    now = start_date
+    while now <= end_date:
+        yield now
+        now = now + timedelta(days=1)
 
 
 def stamp_to_dt(stamp):
@@ -71,25 +106,19 @@ def current_transit_day():
 
 def process_mbta_headways(stops, sdate, edate=None):
     # get data
-    api_data = MbtaPerformanceAPI.get_api_data("headways",
-                                               {"stop": stops},
-                                               sdate, edate)
+    api_data = MbtaPerformanceAPI.get_api_data("headways", {"stop": stops}, sdate, edate)
     # combine all headways data
     headways = []
     for dict_data in api_data:
-        headways += dict_data.get('headways', [])
+        headways += dict_data.get("headways", [])
 
     # conversion
     for headway_dict in headways:
         # convert to datetime
-        headway_dict["current_dep_dt"] = stamp_to_dt(
-            headway_dict.get("current_dep_dt"))
-        headway_dict["previous_dep_dt"] = stamp_to_dt(
-            headway_dict.get("previous_dep_dt"))
+        headway_dict["current_dep_dt"] = stamp_to_dt(headway_dict.get("current_dep_dt"))
+        headway_dict["previous_dep_dt"] = stamp_to_dt(headway_dict.get("previous_dep_dt"))
         # convert to int
-        headway_dict["benchmark_headway_time_sec"] = int(
-            headway_dict.get("benchmark_headway_time_sec")
-        )
+        headway_dict["benchmark_headway_time_sec"] = int(headway_dict.get("benchmark_headway_time_sec"))
         headway_dict["headway_time_sec"] = int(headway_dict.get("headway_time_sec"))
         headway_dict["direction"] = int(headway_dict.get("direction"))
 
@@ -111,8 +140,7 @@ def travel_times(sdate, from_stops, to_stops, edate=None):
 
     if api_interval:
         start, end = api_interval
-        all_data.extend(process_mbta_travel_times(from_stops, to_stops,
-                                                  start, end))
+        all_data.extend(process_mbta_travel_times(from_stops, to_stops, start, end))
     return all_data
 
 
@@ -163,22 +191,18 @@ def dwells(sdate, stops, edate=None):
 
 def process_mbta_dwells(stops, sdate, edate=None):
     # get data
-    api_data = MbtaPerformanceAPI.get_api_data("dwells",
-                                               {"stop": stops},
-                                               sdate, edate)
+    api_data = MbtaPerformanceAPI.get_api_data("dwells", {"stop": stops}, sdate, edate)
 
     # combine all travel times data
     dwells = []
     for dict_data in api_data:
-        dwells += dict_data.get('dwell_times', [])
+        dwells += dict_data.get("dwell_times", [])
 
     # conversion
     for dwell_dict in dwells:
         # convert to datetime
-        dwell_dict["arr_dt"] = stamp_to_dt(
-            dwell_dict.get("arr_dt"))
-        dwell_dict["dep_dt"] = stamp_to_dt(
-            dwell_dict.get("dep_dt"))
+        dwell_dict["arr_dt"] = stamp_to_dt(dwell_dict.get("arr_dt"))
+        dwell_dict["dep_dt"] = stamp_to_dt(dwell_dict.get("dep_dt"))
         # convert to int
         dwell_dict["dwell_time_sec"] = int(dwell_dict.get("dwell_time_sec"))
         dwell_dict["direction"] = int(dwell_dict.get("direction"))
@@ -205,17 +229,19 @@ def alerts(day, params):
         # combine all alerts data
         alert_items = []
         for dict_data in api_data:
-            alert_items = alert_items + dict_data.get('past_alerts', [])
+            alert_items = alert_items + dict_data.get("past_alerts", [])
 
         # get data
         flat_alerts = []
         for alert_item in alert_items:
             for alert_version in alert_item["alert_versions"]:
-                flat_alerts.append({
-                    "valid_from": stamp_to_dt(int(alert_version["valid_from"])),
-                    "valid_to": stamp_to_dt(int(alert_version["valid_to"])),
-                    "text": alert_version["header_text"]
-                })
+                flat_alerts.append(
+                    {
+                        "valid_from": stamp_to_dt(int(alert_version["valid_from"])),
+                        "valid_to": stamp_to_dt(int(alert_version["valid_to"])),
+                        "text": alert_version["header_text"],
+                    }
+                )
         return flat_alerts
     except Exception:
         traceback.print_exc()

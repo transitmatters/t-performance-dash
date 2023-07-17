@@ -1,23 +1,31 @@
 import json
 import os
 import subprocess
-from chalice import Chalice, CORSConfig, ConflictError, Response
+from chalice import Chalice, CORSConfig, ConflictError, Response, ConvertToMiddleware
 from datetime import date, timedelta
+from datadog_lambda.wrapper import datadog_lambda_wrapper
 from chalicelib import (
     aggregation,
     data_funcs,
     MbtaPerformanceAPI,
-    secrets
+    secrets,
+    mbta_v3,
+    speed,
+    speed_restrictions,
+    service_levels,
+    ridership,
 )
+
 
 app = Chalice(app_name="data-dashboard")
 
-# will run on localhost if TM_FRONTEND_HOST is not set in env
-TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", "localhost")
+localhost = "localhost:3000"
+TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", localhost)
 
-cors_config = CORSConfig(
-    allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600
-)
+cors_config = CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600)
+
+if TM_FRONTEND_HOST != localhost:
+    app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
 
 
 def parse_user_date(user_date):
@@ -33,13 +41,25 @@ def mutlidict_to_dict(mutlidict):
     return res_dict
 
 
-@app.route("/healthcheck", cors=cors_config)
+@app.route("/api/healthcheck", cors=cors_config)
 def healthcheck():
     # These functions must return True or False :-)
     checks = {
         "API Key Present": (lambda: len(secrets.MBTA_V2_API_KEY) > 0),
-        "S3 Headway Fetching": (lambda: "2020-11-07 10:33:40" in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))),
-        "Performance API Check": (lambda: MbtaPerformanceAPI.get_api_data("headways", {"stop": [70067]}, date.today() - timedelta(days=1), date.today()))
+        "S3 Headway Fetching": (
+            lambda: "2020-11-07 10:33:40"
+            in json.dumps(
+                data_funcs.headways(date(year=2020, month=11, day=7), ["70061"])
+            )
+        ),
+        "Performance API Check": (
+            lambda: MbtaPerformanceAPI.get_api_data(
+                "headways",
+                {"stop": [70067]},
+                date.today() - timedelta(days=1),
+                date.today(),
+            )
+        ),
     }
 
     failed_checks = {}
@@ -55,32 +75,33 @@ def healthcheck():
             failed_checks[check] = f"Check threw an exception: {e_str}"
 
     if len(failed_checks) == 0:
-        return Response(body={
-            "status": "pass"
-        }, status_code=200)
+        return Response(body={"status": "pass"}, status_code=200)
 
-    return Response(body={
-        "status": "fail",
-        "failed_checks_sum": len(failed_checks),
-        "failed_checks": failed_checks
-    }, status_code=500)
+    return Response(
+        body={
+            "status": "fail",
+            "failed_checks_sum": len(failed_checks),
+            "failed_checks": failed_checks,
+        },
+        status_code=500,
+    )
 
 
-@app.route("/headways/{user_date}", cors=cors_config)
+@app.route("/api/headways/{user_date}", cors=cors_config)
 def headways_route(user_date):
     date = parse_user_date(user_date)
     stops = app.current_request.query_params.getlist("stop")
     return data_funcs.headways(date, stops)
 
 
-@app.route("/dwells/{user_date}", cors=cors_config)
+@app.route("/api/dwells/{user_date}", cors=cors_config)
 def dwells_route(user_date):
     date = parse_user_date(user_date)
     stops = app.current_request.query_params.getlist("stop")
     return data_funcs.dwells(date, stops)
 
 
-@app.route("/traveltimes/{user_date}", cors=cors_config)
+@app.route("/api/traveltimes/{user_date}", cors=cors_config)
 def traveltime_route(user_date):
     date = parse_user_date(user_date)
     from_stops = app.current_request.query_params.getlist("from_stop")
@@ -88,13 +109,15 @@ def traveltime_route(user_date):
     return data_funcs.travel_times(date, from_stops, to_stops)
 
 
-@app.route("/alerts/{user_date}", cors=cors_config)
+@app.route("/api/alerts/{user_date}", cors=cors_config)
 def alerts_route(user_date):
     date = parse_user_date(user_date)
-    return json.dumps(data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params)))
+    return json.dumps(
+        data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params))
+    )
 
 
-@app.route("/aggregate/traveltimes", cors=cors_config)
+@app.route("/api/aggregate/traveltimes", cors=cors_config)
 def traveltime_aggregate_route():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
@@ -105,7 +128,7 @@ def traveltime_aggregate_route():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/aggregate/traveltimes2", cors=cors_config)
+@app.route("/api/aggregate/traveltimes2", cors=cors_config)
 def traveltime_aggregate_route_2():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
@@ -116,7 +139,7 @@ def traveltime_aggregate_route_2():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/aggregate/headways", cors=cors_config)
+@app.route("/api/aggregate/headways", cors=cors_config)
 def headways_aggregate_route():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
@@ -126,7 +149,7 @@ def headways_aggregate_route():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/aggregate/dwells", cors=cors_config)
+@app.route("/api/aggregate/dwells", cors=cors_config)
 def dwells_aggregate_route():
     sdate = parse_user_date(app.current_request.query_params["start_date"])
     edate = parse_user_date(app.current_request.query_params["end_date"])
@@ -136,11 +159,69 @@ def dwells_aggregate_route():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/git_id", cors=cors_config)
+@app.route("/api/git_id", cors=cors_config)
 def get_git_id():
     # Only do this on localhost
     if TM_FRONTEND_HOST == "localhost":
-        git_id = str(subprocess.check_output(['git', 'describe', '--always', '--dirty', '--abbrev=10']))[2:-3]
+        git_id = str(
+            subprocess.check_output(
+                ["git", "describe", "--always", "--dirty", "--abbrev=10"]
+            )
+        )[2:-3]
         return json.dumps({"git_id": git_id})
     else:
         raise ConflictError("Cannot get git id from serverless host")
+
+
+@app.route("/api/alerts", cors=cors_config)
+def get_alerts():
+    response = mbta_v3.getV3("alerts", app.current_request.query_params)
+    return json.dumps(response, indent=4, sort_keys=True, default=str)
+
+
+@app.route("/api/tripmetrics", cors=cors_config)
+def get_trips_by_line():
+    response = speed.trip_metrics_by_line(app.current_request.query_params)
+    return json.dumps(response, indent=4, sort_keys=True)
+
+
+@app.route("/api/scheduledservice", cors=cors_config)
+def get_scheduled_service():
+    query = app.current_request.query_params
+    start_date = parse_user_date(query["start_date"])
+    end_date = parse_user_date(query["end_date"])
+    route_id = query.get("route_id")
+    agg = query["agg"]
+    response = service_levels.get_scheduled_service(
+        start_date=start_date,
+        end_date=end_date,
+        route_id=route_id,
+        agg=agg,
+    )
+    return json.dumps(response)
+
+
+@app.route("/api/ridership", cors=cors_config)
+def get_ridership():
+    query = app.current_request.query_params
+    start_date = parse_user_date(query["start_date"])
+    end_date = parse_user_date(query["end_date"])
+    line_id = query.get("line_id")
+    response = ridership.get_ridership(
+        start_date=start_date,
+        end_date=end_date,
+        line_id=line_id,
+    )
+    return json.dumps(response)
+
+
+@app.route("/api/speed_restrictions", cors=cors_config)
+def get_speed_restrictions():
+    query = app.current_request.query_params
+    on_date = query["date"]
+    line_id = query["line_id"]
+    response = speed_restrictions.query_speed_restrictions(
+        line_id=line_id,
+        on_date=on_date,
+    )
+    return json.dumps(response)

@@ -1,9 +1,9 @@
 {
-  "Parameters" : {
+  "Parameters": {
     "TMFrontendHostname": {
       "Type": "String",
       "Default": "dashboard-beta.labs.transitmatters.org",
-      "AllowedValues": ["dashboard-beta.labs.transitmatters.org", "dashboard.transitmatters.org"],
+      "AllowedValues": ["dashboard.transitmatters.org", "dashboard-beta.labs.transitmatters.org"],
       "Description": "The frontend hostname for the data dashboard."
     },
     "TMFrontendZone": {
@@ -35,6 +35,10 @@
     "MbtaV2ApiKey": {
       "Type": "String",
       "Description": "MBTA-performance API key."
+    },
+    "DDApiKey": {
+      "Type": "String",
+      "Description": "Datadog API key."
     }
   },
   "Resources": {
@@ -51,10 +55,7 @@
         "AliasTarget": {
           "HostedZoneId": "Z2FDTNDATAQYW2",
           "DNSName": {
-            "Fn::GetAtt": [
-              "FrontendCloudFront",
-              "DomainName"
-            ]
+            "Fn::GetAtt": ["FrontendCloudFront", "DomainName"]
           }
         },
         "Type": "A"
@@ -67,16 +68,10 @@
         "HostedZoneName": { "Fn::Sub": "${TMBackendZone}." },
         "AliasTarget": {
           "HostedZoneId": {
-            "Fn::GetAtt": [
-              "ApiGatewayCustomDomain",
-              "RegionalHostedZoneId"
-            ]
+            "Fn::GetAtt": ["ApiGatewayCustomDomain", "RegionalHostedZoneId"]
           },
           "DNSName": {
-            "Fn::GetAtt": [
-              "ApiGatewayCustomDomain",
-              "RegionalDomainName"
-            ]
+            "Fn::GetAtt": ["ApiGatewayCustomDomain", "RegionalDomainName"]
           }
         },
         "Type": "A"
@@ -84,9 +79,11 @@
     },
     "APIHandler": {
       "Properties": {
+        "Handler": "datadog_lambda.handler.handler",
         "Environment": {
           "Variables": {
-            "MBTA_V2_API_KEY": { "Ref": "MbtaV2ApiKey" }
+            "MBTA_V2_API_KEY": { "Ref": "MbtaV2ApiKey" },
+            "DD_API_KEY": { "Ref": "DDApiKey" }
           }
         }
       }
@@ -94,11 +91,14 @@
     "FrontendBucket": {
       "Type": "AWS::S3::Bucket",
       "Properties": {
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicPolicy": false,
+          "RestrictPublicBuckets": false
+        },
         "BucketName": { "Ref": "TMFrontendHostname" },
-        "AccessControl": "PublicRead",
         "WebsiteConfiguration": {
           "IndexDocument": "index.html",
-          "ErrorDocument": "index.html"
+          "ErrorDocument": "404.html"
         }
       }
     },
@@ -114,19 +114,24 @@
               "Effect": "Allow",
               "Principal": "*",
               "Action": "s3:GetObject",
-              "Resource": { "Fn::Join" : [ "", [ { "Fn::GetAtt" : [ "FrontendBucket", "Arn" ] }, "/*" ] ] }
+              "Resource": { "Fn::Join": ["", [{ "Fn::GetAtt": ["FrontendBucket", "Arn"] }, "/*"]] }
             }
           ]
         }
+      }
+    },
+    "ApiGatewayCustomDomainMapping": {
+      "Type": "AWS::ApiGateway::BasePathMapping",
+      "Properties": {
+        "RestApiId": { "Ref": "RestAPI" },
+        "Stage": { "Ref": "RestAPI.Stage" }
       }
     },
     "FrontendCloudFront": {
       "Type": "AWS::CloudFront::Distribution",
       "Properties": {
         "DistributionConfig": {
-          "Aliases": [
-            { "Ref": "TMFrontendHostname" }
-          ],
+          "Aliases": [{ "Ref": "TMFrontendHostname" }],
           "Enabled": "true",
           "DefaultCacheBehavior": {
             "Compress": true,
@@ -144,15 +149,20 @@
                 "HTTPSPort": "443",
                 "OriginProtocolPolicy": "http-only"
               },
-              "DomainName": { "Fn::GetAtt" : [ "FrontendBucket", "DomainName" ] },
+              "DomainName": {
+                "Fn::Join": [
+                  "",
+                  [{ "Ref": "TMFrontendHostname" }, ".s3-website-us-east-1.amazonaws.com"]
+                ]
+              },
               "Id": "only-origin"
             }
           ],
           "CustomErrorResponses": [
             {
               "ErrorCode": "404",
-              "ResponsePagePath": "/index.html",
-              "ResponseCode": "200",
+              "ResponsePagePath": "/404.html",
+              "ResponseCode": "404",
               "ErrorCachingMinTTL": "86400"
             }
           ],

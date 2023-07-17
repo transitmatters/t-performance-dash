@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --transitmatters-red: #d31a2b;
+  --red-line: #da291c;
+  --orange-line: #ed8b00;
+  --blue-line: #003da5;
+  --green-line: #00843d;
+  --bus: #ffc72c;
+  --dark-grey: #353535;
+  --subtitle-grey: #808080;
+
+  --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  --incident-color: #c02828;
+  --incident-tooltip-color: #eaeaea;
+  --swap-white: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125'><path fill='white' transform='rotate(90 50 62)' style='text-indent:0;text-transform:none;block-progression:tb' d='M42 10a2 2 0 00-2 1l-8 9a2 2 0 000 3l9 10a2 2 0 103-3l-6-7h27c10 0 15 7 15 13s-5 12-15 12H35c-12 0-19 8-19 16 0 9 7 17 19 17h27l-5 5a2 2 0 103 3l8-9a2 2 0 000-3l-9-10a2 2 0 10-3 3l6 7H35c-10 0-15-6-15-13 0-6 5-12 15-12h30c12 0 19-8 19-16s-7-17-19-17H38l5-5a2 2 0 00-1-4z' fill-rule='evenodd' overflow='visible'/></svg>");
+  --swap-black: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125'><path fill='black' transform='rotate(90 50 62)' style='text-indent:0;text-transform:none;block-progression:tb' d='M42 10a2 2 0 00-2 1l-8 9a2 2 0 000 3l9 10a2 2 0 103-3l-6-7h27c10 0 15 7 15 13s-5 12-15 12H35c-12 0-19 8-19 16 0 9 7 17 19 17h27l-5 5a2 2 0 103 3l8-9a2 2 0 000-3l-9-10a2 2 0 10-3 3l6 7H35c-10 0-15-6-15-13 0-6 5-12 15-12h30c12 0 19-8 19-16s-7-17-19-17H38l5-5a2 2 0 00-1-4z' fill-rule='evenodd' overflow='visible'/></svg>");
+  --download-icon: url("data:image/svg+xml,<svg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M9 17L15 17' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round'/><path d='M12 6V13M12 13L15.5 9.5M12 13L8.5 9.5' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+    Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.main-column {
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.mb-safe {
+  margin-bottom: env(safe-area-inset-bottom);
+}
