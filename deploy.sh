@@ -93,7 +93,8 @@ aws cloudformation deploy --template-file cfn/packaged.yaml --stack-name $CF_STA
     TMBackendHostname=$BACKEND_HOSTNAME \
     TMBackendZone=$BACKEND_ZONE \
     MbtaV2ApiKey=$MBTA_V2_API_KEY \
-    DDApiKey=$DD_API_KEY
+    DDApiKey=$DD_API_KEY \
+    GitId=$GIT_ID
 
 popd > /dev/null
 aws s3 sync out/ s3://$FRONTEND_HOSTNAME
