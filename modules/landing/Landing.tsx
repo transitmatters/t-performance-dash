@@ -18,7 +18,7 @@ export function Landing() {
   }, []);
 
   return (
-    <PageWrapper pageTitle="TransitMatters Dashboard">
+    <PageWrapper pageTitle="Home">
       <div
         className={classNames(
           isMobile && 'pb-32',

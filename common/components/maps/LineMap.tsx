@@ -33,9 +33,11 @@ export type SegmentRenderOptions = {
   labels?: SegmentLabel[];
 };
 
+export type TooltipSide = 'left' | 'right' | 'top';
+
 type TooltipRenderer = (props: {
   segmentLocation: SegmentLocation<true>;
-  isHorizontal: boolean;
+  side: TooltipSide;
 }) => React.ReactNode;
 
 type TooltipOptions = {
@@ -247,9 +249,12 @@ export const LineMap: React.FC<LineMapProps> = ({
   };
 
   const renderTooltip = () => {
+    const tooltipX = tooltipViewportCoordinates?.x;
+    const tooltipOnRightSide = tooltipX && tooltipX / window.innerWidth <= 0.5;
+    const tooltipSide = isHorizontal ? 'top' : tooltipOnRightSide ? 'right' : 'left';
     const tooltipContents =
       tooltipSegmentLocation &&
-      tooltip?.render({ segmentLocation: tooltipSegmentLocation, isHorizontal });
+      tooltip?.render({ segmentLocation: tooltipSegmentLocation, side: tooltipSide });
     if (tooltipViewportCoordinates && tooltipContents) {
       const { x, y } = viewportCoordsToContainer(tooltipViewportCoordinates);
       return (
@@ -258,7 +263,12 @@ export const LineMap: React.FC<LineMapProps> = ({
           style={{
             left: x,
             top: y,
-            transform: isHorizontal ? `translateY(-100%) translateX(-50%)` : `translateY(-50%)`,
+            transform:
+              tooltipSide === 'top'
+                ? `translate(-50%, -100%)`
+                : tooltipSide === 'left'
+                ? `translate(-100%, -50%)`
+                : `translateY(-50%)`,
           }}
         >
           {tooltipContents}
