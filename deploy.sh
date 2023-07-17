@@ -48,16 +48,9 @@ else
     git fetch --tags
 fi
 
-# If production, identify build with latest git tag
-# If beta, identify build with dirty hash
-
-if $PRODUCTION; then
-    GIT_ID=`git describe --tags --abbrev=0`
-    echo "Deploying git tag $GIT_ID to production site"
-else
-    GIT_ID=`git describe --always --dirty --abbrev=10`
-    echo "Deploying git commit id $GIT_ID to beta site"
-fi
+# Identify the version and commit of the current deploy
+GIT_VERSION=`git describe --tags`
+echo "Deploying version $GIT_VERSION"
 
 BACKEND_BUCKET=datadashboard-backend$ENV_SUFFIX
 FRONTEND_HOSTNAME=$FRONTEND_DOMAIN_PREFIX$FRONTEND_ZONE # Must match in .chalice/config.json!
@@ -94,7 +87,7 @@ aws cloudformation deploy --template-file cfn/packaged.yaml --stack-name $CF_STA
     TMBackendZone=$BACKEND_ZONE \
     MbtaV2ApiKey=$MBTA_V2_API_KEY \
     DDApiKey=$DD_API_KEY \
-    GitId=$GIT_ID
+    GitVersion=$GIT_VERSION
 
 popd > /dev/null
 aws s3 sync out/ s3://$FRONTEND_HOSTNAME
