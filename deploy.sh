@@ -52,10 +52,10 @@ fi
 # If beta, identify build with dirty hash
 
 if $PRODUCTION; then
-    GIT_ID=`git describe --tags --abbrev=0`
+    GIT_ID=`git describe --tags`
     echo "Deploying git tag $GIT_ID to production site"
 else
-    GIT_ID=`git describe --always --dirty --abbrev=10`
+    GIT_ID=`git describe --always`
     echo "Deploying git commit id $GIT_ID to beta site"
 fi
 
