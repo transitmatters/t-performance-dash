@@ -71,7 +71,7 @@ export const getSingleDayWidgets = (
   return [
     { text: 'Avg', widgetValue: new TimeWidgetValue(average), type: 'data' },
     { text: 'Median', widgetValue: new TimeWidgetValue(median), type: 'data' },
-    { text: 'Min', widgetValue: new TimeWidgetValue(max), type: 'data' },
-    { text: 'Max', widgetValue: new TimeWidgetValue(min), type: 'data' },
+    { text: 'Min', widgetValue: new TimeWidgetValue(min), type: 'data' },
+    { text: 'Max', widgetValue: new TimeWidgetValue(max), type: 'data' },
   ];
 };
