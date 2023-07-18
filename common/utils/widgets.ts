@@ -22,7 +22,6 @@ const getPeaks = (data: (number | undefined)[]) => {
     if (b !== undefined && a !== undefined) return a - b;
     return 0;
   });
-  console.log(data);
   return {
     min: data[0],
     max: data[data.length - 1],
