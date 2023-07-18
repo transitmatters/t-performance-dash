@@ -56,7 +56,11 @@ fi
 
 # Identify the version and commit of the current deploy
 GIT_VERSION=`git describe --tags`
-echo "Deploying version $GIT_VERSION"
+GIT_SHA=`git rev-parse --short HEAD`
+echo "Deploying version $GIT_VERSION | $GIT_SHA"
+
+# Adding some datadog tags to get better data
+DD_TAGS="git.commit.sha:$GIT_SHA,git.repository_url:github.com/transitmatters/t-performance-dash"
 
 BACKEND_BUCKET=datadashboard-backend$ENV_SUFFIX
 FRONTEND_HOSTNAME=$FRONTEND_DOMAIN_PREFIX$FRONTEND_ZONE # Must match in .chalice/config.json!
@@ -93,7 +97,8 @@ aws cloudformation deploy --template-file cfn/packaged.yaml --stack-name $CF_STA
     TMBackendZone=$BACKEND_ZONE \
     MbtaV2ApiKey=$MBTA_V2_API_KEY \
     DDApiKey=$DD_API_KEY \
-    GitVersion=$GIT_VERSION
+    GitVersion=$GIT_VERSION \
+    DDTags=$DD_TAGS
 
 popd > /dev/null
 aws s3 sync out/ s3://$FRONTEND_HOSTNAME

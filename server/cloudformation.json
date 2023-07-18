@@ -40,6 +40,10 @@
       "Type": "String",
       "Description": "Datadog API key."
     },
+    "DDTags": {
+      "Type": "String",
+      "Description": "Additional Datadog Tags"
+    },
     "GitVersion": {
       "Type": "String",
       "Description": "Current Git Id"
@@ -88,7 +92,8 @@
           "Variables": {
             "MBTA_V2_API_KEY": { "Ref": "MbtaV2ApiKey" },
             "DD_API_KEY": { "Ref": "DDApiKey" },
-            "DD_VERSION": { "Ref": "GitVersion" }
+            "DD_VERSION": { "Ref": "GitVersion" },
+            "DD_TAGS": { "Ref": "DDTags" }
           }
         }
       }
