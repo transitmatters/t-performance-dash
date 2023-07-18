@@ -18,7 +18,11 @@ const getAverage = (data: (number | undefined)[]) => {
 };
 
 const getPeaks = (data: (number | undefined)[]) => {
-  data.sort();
+  data.sort((a, b) => {
+    if (b !== undefined && a !== undefined) return a - b;
+    return 0;
+  });
+  console.log(data);
   return {
     min: data[0],
     max: data[data.length - 1],
