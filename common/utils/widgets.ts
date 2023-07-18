@@ -18,7 +18,10 @@ const getAverage = (data: (number | undefined)[]) => {
 };
 
 const getPeaks = (data: (number | undefined)[]) => {
-  data.sort();
+  data.sort((a, b) => {
+    if (b !== undefined && a !== undefined) return a - b;
+    return 0;
+  });
   return {
     min: data[0],
     max: data[data.length - 1],
@@ -71,7 +74,7 @@ export const getSingleDayWidgets = (
   return [
     { text: 'Avg', widgetValue: new TimeWidgetValue(average), type: 'data' },
     { text: 'Median', widgetValue: new TimeWidgetValue(median), type: 'data' },
-    { text: 'Min', widgetValue: new TimeWidgetValue(max), type: 'data' },
-    { text: 'Max', widgetValue: new TimeWidgetValue(min), type: 'data' },
+    { text: 'Min', widgetValue: new TimeWidgetValue(min), type: 'data' },
+    { text: 'Max', widgetValue: new TimeWidgetValue(max), type: 'data' },
   ];
 };
