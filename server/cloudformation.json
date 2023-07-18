@@ -39,6 +39,10 @@
     "DDApiKey": {
       "Type": "String",
       "Description": "Datadog API key."
+    },
+    "GitVersion": {
+      "Type": "String",
+      "Description": "Current Git Id"
     }
   },
   "Resources": {
@@ -83,7 +87,8 @@
         "Environment": {
           "Variables": {
             "MBTA_V2_API_KEY": { "Ref": "MbtaV2ApiKey" },
-            "DD_API_KEY": { "Ref": "DDApiKey" }
+            "DD_API_KEY": { "Ref": "DDApiKey" },
+            "DD_VERSION": { "Ref": "GitVersion" }
           }
         }
       }
@@ -125,6 +130,15 @@
       "Properties": {
         "RestApiId": { "Ref": "RestAPI" },
         "Stage": { "Ref": "RestAPI.Stage" }
+      }
+    },
+    "RestAPI": {
+      "Properties": {
+        "DefinitionBody": {
+          "info": {
+            "title": { "Ref": "TMBackendHostname" }
+          }
+        }
       }
     },
     "FrontendCloudFront": {

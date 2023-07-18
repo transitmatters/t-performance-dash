@@ -2,6 +2,7 @@ import type { ReadonlyURLSearchParams } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { RAIL_LINES, type BusRoute, type LinePath, BUS_ROUTES } from '../types/lines';
+import { TODAY_STRING } from '../constants/dates';
 
 const getBusOrLine = (
   lineString: string
@@ -65,7 +66,14 @@ export const useRewriteV3Route = () => {
 
   // handle v3 slowzones route
   if (router.asPath.startsWith('/slowzones')) {
-    return router.push(`/system/slowzones/?${search.toString()}`);
+    // `search` is read-only, so we have to clone it to modify
+    const newParams = new URLSearchParams(search.toString());
+    // v3 permitted a slowzones view with no end date—we splice in an end date of today
+    //   if needed
+    if (newParams.has('startDate') && !newParams.has('endDate')) {
+      newParams.set('endDate', TODAY_STRING);
+    }
+    return router.push(`/system/slowzones/?${newParams.toString()}`);
   }
 
   // handle v3 rapid transit route

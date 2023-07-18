@@ -3,5 +3,5 @@
 .flake8 @mathcolo @nathan-weinberg
 deploy.sh @mathcolo @nathan-weinberg
 server @austinjpaul @idreyn
-server/frontend-cfn.json @mathcolo @nathan-weinberg
+server/cloudformation.json @mathcolo @nathan-weinberg
 server/.chalice @mathcolo @nathan-weinberg

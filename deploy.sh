@@ -25,6 +25,12 @@ while getopts "pc" opt; do
   esac
 done
 
+# Ensure required secrets are set
+if [[ -z "$MBTA_V2_API_KEY" || -z "$DD_API_KEY"  ]]; then
+    echo "Must provide MBTA_V2_API_KEY and DD_API_KEY in environment to deploy" 1>&2
+    exit 1
+fi
+
 # Setup environment stuff
 # By default deploy to beta, otherwise deploys to production
 
@@ -48,16 +54,9 @@ else
     git fetch --tags
 fi
 
-# If production, identify build with latest git tag
-# If beta, identify build with dirty hash
-
-if $PRODUCTION; then
-    GIT_ID=`git describe --tags --abbrev=0`
-    echo "Deploying git tag $GIT_ID to production site"
-else
-    GIT_ID=`git describe --always --dirty --abbrev=10`
-    echo "Deploying git commit id $GIT_ID to beta site"
-fi
+# Identify the version and commit of the current deploy
+GIT_VERSION=`git describe --tags`
+echo "Deploying version $GIT_VERSION"
 
 BACKEND_BUCKET=datadashboard-backend$ENV_SUFFIX
 FRONTEND_HOSTNAME=$FRONTEND_DOMAIN_PREFIX$FRONTEND_ZONE # Must match in .chalice/config.json!
@@ -83,7 +82,7 @@ npm run build-v4
 
 pushd server/ > /dev/null
 poetry export --without-hashes --output requirements.txt
-poetry run chalice package --stage $CHALICE_STAGE --merge-template frontend-cfn.json cfn/
+poetry run chalice package --stage $CHALICE_STAGE --merge-template cloudformation.json cfn/
 aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUCKET --output-template-file cfn/packaged.yaml
 aws cloudformation deploy --template-file cfn/packaged.yaml --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset --parameter-overrides \
     TMFrontendHostname=$FRONTEND_HOSTNAME \
@@ -93,7 +92,8 @@ aws cloudformation deploy --template-file cfn/packaged.yaml --stack-name $CF_STA
     TMBackendHostname=$BACKEND_HOSTNAME \
     TMBackendZone=$BACKEND_ZONE \
     MbtaV2ApiKey=$MBTA_V2_API_KEY \
-    DDApiKey=$DD_API_KEY
+    DDApiKey=$DD_API_KEY \
+    GitVersion=$GIT_VERSION
 
 popd > /dev/null
 aws s3 sync out/ s3://$FRONTEND_HOSTNAME
