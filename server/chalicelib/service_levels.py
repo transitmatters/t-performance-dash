@@ -67,21 +67,21 @@ def get_service_levels(
 
 
 def get_weekly_scheduled_service(scheduled_service_arr, start_date, end_date):
-    df = pd.DataFrame({'value': scheduled_service_arr}, index=pd.date_range(start_date, end_date))
-    weekly_df = df.resample('W-SUN').median()
+    df = pd.DataFrame({"value": scheduled_service_arr}, index=pd.date_range(start_date, end_date))
+    weekly_df = df.resample("W-SUN").median()
     # Drop the first week if it is incomplete
     if datetime.fromisoformat(start_date.isoformat()).weekday() != 6:
         weekly_df = weekly_df[1:]
-    return weekly_df['value'].tolist()
+    return weekly_df["value"].tolist()
 
 
 def get_monthly_scheduled_service(scheduled_service_arr, start_date, end_date):
-    df = pd.DataFrame({'value': scheduled_service_arr}, index=pd.date_range(start_date, end_date))
-    monthly_df = df.resample('M').median()
+    df = pd.DataFrame({"value": scheduled_service_arr}, index=pd.date_range(start_date, end_date))
+    monthly_df = df.resample("M").median()
     # Drop the first month if it is incomplete
     if datetime.fromisoformat(start_date.isoformat()).day != 1:
         monthly_df = monthly_df[1:]
-    return monthly_df['value'].tolist()
+    return monthly_df["value"].tolist()
 
 
 def get_scheduled_service(
@@ -105,11 +105,11 @@ def get_scheduled_service(
             scheduled_service_count = None
         scheduled_service_arr.append(scheduled_service_count)
     counts = []
-    if agg == 'daily':
+    if agg == "daily":
         counts = scheduled_service_arr
-    if agg == 'weekly':
+    if agg == "weekly":
         counts = get_weekly_scheduled_service(scheduled_service_arr, start_date, end_date)
-    if agg == 'monthly':
+    if agg == "monthly":
         counts = get_monthly_scheduled_service(scheduled_service_arr, start_date, end_date)
 
     return {

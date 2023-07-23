@@ -103,7 +103,7 @@
     "generate-oss-list": "generate-attribution --outputDir common/constants/licenses",
     "lint": "npm run lint-frontend && npm run lint-backend",
     "lint-frontend": "tsc --noEmit && eslint . && next lint",
-    "lint-backend": "cd server && poetry run flake8",
+    "lint-backend": "cd server && poetry run flake8 && poetry run black . --check",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "postinstall": "cd server && poetry install",

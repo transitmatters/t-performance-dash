@@ -19,12 +19,19 @@ def aggregate_actual_trips(actual_trips, agg, start_date):
     # Create a DataFrame from the flattened data
     df = pd.DataFrame(flat_data)
     # Set miles_covered to NaN for each date with any entry having miles_covered as nan
-    df.loc[df.groupby('date')['miles_covered'].transform(lambda x: (np.isnan(x)).any()), ['count', 'total_time', 'miles_covered']] = np.nan
+    df.loc[
+        df.groupby("date")["miles_covered"].transform(lambda x: (np.isnan(x)).any()),
+        ["count", "total_time", "miles_covered"],
+    ] = np.nan
     # Group each branch into one entry. Keep NaN entries as NaN
-    df_grouped = df.groupby('date').agg({'miles_covered': 'sum', 'total_time': 'sum', 'count': 'sum', 'line': 'first'}).reset_index()
+    df_grouped = (
+        df.groupby("date")
+        .agg({"miles_covered": "sum", "total_time": "sum", "count": "sum", "line": "first"})
+        .reset_index()
+    )
     # set index to use datetime object.
-    df_grouped.set_index(pd.to_datetime(df_grouped['date']), inplace=True)
-    return df_grouped.to_dict(orient='records')
+    df_grouped.set_index(pd.to_datetime(df_grouped["date"]), inplace=True)
+    return df_grouped.to_dict(orient="records")
 
 
 def trip_metrics_by_line(params):
@@ -53,7 +60,7 @@ def trip_metrics_by_line(params):
 
 
 def is_invalid_range(start_date, end_date, max_delta):
-    '''Check if number of requested entries is more than maximum for the table'''
+    """Check if number of requested entries is more than maximum for the table"""
     start_datetime = datetime.strptime(start_date, DATE_FORMAT_BACKEND)
     end_datetime = datetime.strptime(end_date, DATE_FORMAT_BACKEND)
     return start_datetime + timedelta(days=max_delta) < end_datetime
