@@ -18,7 +18,10 @@ def query_daily_trips_on_route(table_name, route, start_date, end_date):
 def query_daily_trips_on_line(table_name, line, start_date, end_date):
     route_keys = constants.LINE_TO_ROUTE_MAP[line]
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-        futures = [executor.submit(query_daily_trips_on_route, table_name, route_key, start_date, end_date) for route_key in route_keys]
+        futures = [
+            executor.submit(query_daily_trips_on_route, table_name, route_key, start_date, end_date)
+            for route_key in route_keys
+        ]
         results = []
         for future in concurrent.futures.as_completed(futures):
             result = future.result()
