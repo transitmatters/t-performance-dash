@@ -11,8 +11,8 @@ import {
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import type { DatePresetKey } from '../../../constants/dates';
 import { RANGE_PRESETS, SINGLE_PRESETS } from '../../../constants/dates';
-import { useDatePresetConfig } from '../../../state/datePresetConfig';
-import { useSelectedPreset } from '../../../state/utils/datePresetUtils';
+import { useDatePresetStore } from '../../../state/datePresetStore';
+import { checkForPreset, useSelectedPreset } from '../../../state/utils/datePresetUtils';
 import { ALL_PAGES } from '../../../constants/pages';
 import { DatePickers } from './DatePickers';
 import { DatePickerPresets } from './DatePickerPresets';
@@ -23,19 +23,19 @@ interface DateSelectionProps {
 }
 
 export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) => {
-  const { line, page } = useDelimitatedRoute();
+  const { line, page, tab, query } = useDelimitatedRoute();
   const [range, setRange] = useState<boolean>(false);
-  const { section } = ALL_PAGES[page];
-  const setDatePreset = useDatePresetConfig((state) => state.setDatePreset);
-  const datePreset = useSelectedPreset(range);
+  const { dateStoreSection } = ALL_PAGES[page];
+  const setDatePreset = useDatePresetStore((state) => state.setDatePreset);
+  const datePreset = useSelectedPreset();
   const updateQueryParams = useUpdateQuery();
-  const presets = range ? RANGE_PRESETS : SINGLE_PRESETS;
+  const presets = range ? RANGE_PRESETS[tab] : SINGLE_PRESETS[tab];
   const presetDateArray = Object.values(presets);
 
   const handleSelection = (datePresetKey: DatePresetKey) => {
     const selectedPreset = presets[datePresetKey];
-    if (selectedPreset?.input) updateQueryParams(selectedPreset.input, range);
-    setDatePreset(datePresetKey, section, range);
+    if (selectedPreset?.input) updateQueryParams(selectedPreset.input, range, false);
+    setDatePreset(datePresetKey, dateStoreSection, range);
   };
 
   useEffect(() => {
@@ -43,8 +43,14 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
   }, [type]);
 
   const clearPreset = () => {
-    setDatePreset('custom', section, range);
+    setDatePreset('custom', dateStoreSection, range);
   };
+
+  useEffect(() => {
+    if (checkForPreset(query) !== datePreset) {
+      setDatePreset(checkForPreset(query), dateStoreSection, range);
+    }
+  }, [datePreset, dateStoreSection, query, range, setDatePreset]);
 
   return (
     <div

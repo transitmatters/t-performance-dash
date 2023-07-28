@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import type { FetchTripCountsOptions } from '../../types/api';
+import type { FetchScheduledServiceOptions } from '../../types/api';
 import { ONE_HOUR } from '../../constants/time';
-import { fetchTripCounts } from '../service';
+import { fetchScheduledService } from '../service';
 
-export const useTripCounts = (params: FetchTripCountsOptions, enabled?: boolean) => {
-  return useQuery(['trips', params], () => fetchTripCounts(params), {
+export const useScheduledService = (params: FetchScheduledServiceOptions, enabled?: boolean) => {
+  return useQuery(['scheduledservice', params], () => fetchScheduledService(params), {
     enabled: enabled,
     staleTime: ONE_HOUR,
   });

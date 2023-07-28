@@ -12,7 +12,7 @@ This is the repository for the TransitMatters Data Dashboard. Client code is wri
 - node 18.x and npm 9.x required
   - With `nvm` installed, use `nvm install && nvm use`
   - verify with `node -v`
-- Python 3.9 with recent poetry
+- Python 3.10 with recent poetry (1.5.0 or later)
   - Verify with `python --version && poetry --version`
   - `poetry self update` to update poetry
 
@@ -31,9 +31,7 @@ This is the repository for the TransitMatters Data Dashboard. Client code is wri
 1. Configure AWS CLI 1.x or 2.x with your AWS access key ID and secret under the profile name `transitmatters`.
 2. Configure shell environment variables for AWS ACM domain certificates.
    - `TM_FRONTEND_CERT_ARN`
-   - `TM_FRONTEND_CERT_ARN_BETA`
-   - `TM_BACKEND_CERT_ARN`
-   - `TM_BACKEND_CERT_ARN_BETA`
+   - `TM_LABS_WILDCARD_CERT_ARN`
    - (You may also need to set `AWS_DEFAULT_REGION` in your shell to `us-east-1`. Maybe not! We're not sure.)
 3. Execute `./deploy.sh` (for beta) or `./deploy.sh -p` (for production). If deploying from a CI platform (such as GitHub Actions) you may also want to include the `-c` flag.
 

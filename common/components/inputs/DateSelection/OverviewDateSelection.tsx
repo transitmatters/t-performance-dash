@@ -1,18 +1,18 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { ButtonGroup } from '../../general/ButtonGroup';
-import { useDashboardConfig } from '../../../state/dashboardConfig';
-import { useDatePresetConfig } from '../../../state/datePresetConfig';
+import { useDateStore } from '../../../state/dateStore';
+import { useDatePresetStore } from '../../../state/datePresetStore';
 import type { OverviewDatePresetKey } from '../../../constants/dates';
 import { OverviewRangeTypes } from '../../../constants/dates';
 
 export const OverviewDateSelection = () => {
   const router = useRouter();
-  const setDatePreset = useDatePresetConfig((state) => state.setDatePreset);
+  const setDatePreset = useDatePresetStore((state) => state.setDatePreset);
   const selectedView = router.query.view ?? 'year';
   const selectedIndex = Object.keys(OverviewRangeTypes).findIndex((view) => view === selectedView);
 
-  const overviewPresetChange = useDashboardConfig((state) => state.overviewPresetChange);
+  const overviewPresetChange = useDateStore((state) => state.overviewPresetChange);
   const handlePresetSelection = (value: OverviewDatePresetKey) => {
     overviewPresetChange({ view: value });
     setDatePreset(value, 'line', true);
@@ -25,8 +25,8 @@ export const OverviewDateSelection = () => {
       selectedIndex={selectedIndex}
       pressFunction={handlePresetSelection}
       options={Object.entries(OverviewRangeTypes)}
-      additionalButtonClass="w-fit"
-      additionalDivClass="md:max-w-md h-10 md:h-7 "
+      additionalButtonClass="w-fit text-xs sm:text-base md:text-xs lg:text-sm"
+      additionalDivClass="md:max-w-md h-10 md:h-7"
       isOverview
     />
   );

@@ -1,19 +1,13 @@
 import React from 'react';
-import classNames from 'classnames';
-import type { SpeedDataPoint } from '../../common/types/dataPoints';
-import type { Line } from '../../common/types/lines';
-import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
+import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
-import { MPHWidgetValue } from '../../common/types/basicWidgets';
-import { getDetailsSpeedWidgetValues } from './utils/utils';
-import { SpeedGraph } from './SpeedGraph';
 import type { ParamsType } from './constants/speeds';
+import { SpeedGraphWrapper } from './SpeedGraphWrapper';
 
 interface SpeedDetailsWrapperProps {
-  data: SpeedDataPoint[];
+  data: DeliveredTripMetrics[];
   config: ParamsType;
-  line: Line;
   startDate: string;
   endDate: string;
 }
@@ -21,49 +15,15 @@ interface SpeedDetailsWrapperProps {
 export const SpeedDetailsWrapper: React.FC<SpeedDetailsWrapperProps> = ({
   data,
   config,
-  line,
   startDate,
   endDate,
 }) => {
-  const dataNoNulls = data.filter((datapoint) => datapoint.value !== null);
-  const { current, delta, average, peak } = getDetailsSpeedWidgetValues(dataNoNulls, line);
-
   return (
     <>
       <WidgetDiv>
-        <WidgetTitle title="Median Speed" />
-        <div className={classNames('flex h-60 flex-row items-center pr-4')}>
-          <SpeedGraph config={config} data={data} startDate={startDate} endDate={endDate} />
-        </div>
+        <WidgetTitle title="Speed" />
+        <SpeedGraphWrapper data={data} config={config} startDate={startDate} endDate={endDate} />
       </WidgetDiv>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <WidgetDiv className="w-full">
-          <BasicWidgetDataLayout
-            title={`Current (${config.getWidgetTitle(dataNoNulls[dataNoNulls.length - 1].date)})`}
-            widgetValue={new MPHWidgetValue(current, delta)}
-            analysis="over period"
-            sentimentDirection={'positiveOnIncrease'}
-          />
-        </WidgetDiv>
-        <WidgetDiv className="w-full">
-          <BasicWidgetDataLayout
-            title={'Average'}
-            widgetValue={new MPHWidgetValue(average, undefined)}
-            analysis={'Over this period'}
-            sentimentDirection={'positiveOnIncrease'}
-            layoutKind="no-delta"
-          />
-        </WidgetDiv>
-        <WidgetDiv className="w-full">
-          <BasicWidgetDataLayout
-            title={'Peak'}
-            widgetValue={new MPHWidgetValue(peak.value, undefined)}
-            analysis={config.getWidgetTitle(peak.date)}
-            sentimentDirection={'positiveOnIncrease'}
-            layoutKind="no-delta"
-          />
-        </WidgetDiv>
-      </div>
     </>
   );
 };

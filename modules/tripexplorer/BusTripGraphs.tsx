@@ -3,8 +3,13 @@ import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
-import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
+import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { getLocationDetails } from '../../common/utils/stations';
+import type { Line } from '../../common/types/lines';
+import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
+import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
+import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
+import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 
 interface BusTripGraphsProps {
   fromStation: Station;
@@ -12,6 +17,7 @@ interface BusTripGraphsProps {
   parameters: AggregateAPIOptions | SingleDayAPIOptions; // TODO
   aggregate: boolean;
   enabled: boolean;
+  line: Line | undefined;
 }
 
 export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
@@ -20,6 +26,7 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
   parameters,
   aggregate,
   enabled,
+  line,
 }) => {
   const { traveltimes, headways } = useTripExplorerQueries(
     'bus',
@@ -28,44 +35,55 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
     aggregate,
     enabled
   );
+  const location = getLocationDetails(fromStation, toStation);
 
   return (
     <div className="flex flex-col gap-4">
       {aggregate ? (
         <>
           <WidgetDiv>
-            <AggregateChartWrapper
+            <WidgetTitle title="Travel times" location={location} line={line} both />
+            <TravelTimesAggregateWrapper
               query={traveltimes}
-              toStation={toStation}
               fromStation={fromStation}
-              type={'traveltimes'}
+              toStation={toStation}
             />
           </WidgetDiv>
           <WidgetDiv>
-            <AggregateChartWrapper
+            <WidgetTitle
+              title="Headways"
+              subtitle="Time between buses"
+              location={location}
+              line={line}
+            />
+            <HeadwaysAggregateWrapper
               query={headways}
               toStation={toStation}
               fromStation={fromStation}
-              type={'headways'}
             />
           </WidgetDiv>
         </>
       ) : (
         <>
           <WidgetDiv>
-            <SingleChartWrapper
+            <WidgetTitle title="Travel times" location={location} line={line} both />
+            <TravelTimesSingleWrapper
               query={traveltimes}
               toStation={toStation}
               fromStation={fromStation}
-              type={'traveltimes'}
             />
           </WidgetDiv>
           <WidgetDiv>
-            <SingleChartWrapper
+            <WidgetTitle
+              title="Headways"
+              subtitle="Time between buses"
+              location={location}
+              line={line}
+            />
+            <HeadwaysSingleWrapper
               query={headways}
               toStation={toStation}
               fromStation={fromStation}
-              type={'headways'}
             />
           </WidgetDiv>
         </>

@@ -11,6 +11,7 @@ from chalicelib import (
     secrets,
     mbta_v3,
     speed,
+    speed_restrictions,
     service_levels,
     ridership,
 )
@@ -66,7 +67,10 @@ def healthcheck():
             if not check_bool:
                 failed_checks[check] = "Check failed :("
         except Exception as e:
-            failed_checks[check] = f"Check threw an exception: {e}"
+            e_str = str(e)
+            for secret in secrets.HEALTHCHECK_HIDE_SECRETS:
+                e_str.replace(secret, "HIDDEN")
+            failed_checks[check] = f"Check threw an exception: {e_str}"
 
     if len(failed_checks) == 0:
         return Response(body={"status": "pass"}, status_code=200)
@@ -167,20 +171,20 @@ def get_alerts():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/api/speed", cors=cors_config)
-def get_speed():
-    response = speed.get_speeds(app.current_request.query_params)
+@app.route("/api/tripmetrics", cors=cors_config)
+def get_trips_by_line():
+    response = speed.trip_metrics_by_line(app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True)
 
 
-@app.route("/api/tripcounts", cors=cors_config)
-def get_trip_counts():
+@app.route("/api/scheduledservice", cors=cors_config)
+def get_scheduled_service():
     query = app.current_request.query_params
     start_date = parse_user_date(query["start_date"])
     end_date = parse_user_date(query["end_date"])
     route_id = query.get("route_id")
     agg = query["agg"]
-    response = service_levels.get_trip_counts(
+    response = service_levels.get_scheduled_service(
         start_date=start_date,
         end_date=end_date,
         route_id=route_id,
@@ -207,3 +211,15 @@ def get_ridership():
 def get_facilities():
     response = mbta_v3.getV3("facilities", app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
+
+
+@app.route("/api/speed_restrictions", cors=cors_config)
+def get_speed_restrictions():
+    query = app.current_request.query_params
+    on_date = query["date"]
+    line_id = query["line_id"]
+    response = speed_restrictions.query_speed_restrictions(
+        line_id=line_id,
+        on_date=on_date,
+    )
+    return json.dumps(response)

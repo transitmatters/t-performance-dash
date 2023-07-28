@@ -24,7 +24,7 @@ export type SegmentLabel = {
   mapSide: MapSide;
   boundingSize?: number;
   offset?: { x: number; y: number };
-  content: React.ReactNode;
+  content: (size: { width: number; height: number }) => React.ReactNode;
 };
 
 export type SegmentRenderOptions = {
@@ -33,12 +33,14 @@ export type SegmentRenderOptions = {
   labels?: SegmentLabel[];
 };
 
-export type TooltipRenderer = (props: {
+export type TooltipSide = 'left' | 'right' | 'top';
+
+type TooltipRenderer = (props: {
   segmentLocation: SegmentLocation<true>;
-  isHorizontal: boolean;
+  side: TooltipSide;
 }) => React.ReactNode;
 
-export type TooltipOptions = {
+type TooltipOptions = {
   render: TooltipRenderer;
   snapToSegment?: boolean;
   maxDistance?: number;
@@ -64,7 +66,7 @@ const getPropsForStrokeOptions = (options: Partial<StrokeOptions>) => {
   };
 };
 
-const getLabelPositionProps = (
+const getSegmentLabelBounds = (
   segmentBounds: Rect,
   segmentLabel: SegmentLabel,
   isHorizontal: boolean
@@ -75,32 +77,19 @@ const getLabelPositionProps = (
   if (isHorizontal) {
     const moveAcross = mapSide === '0';
     return {
-      foreignObjectProps: {
-        x: top + offset.x,
-        y: 0 - left - (moveAcross ? boundingSize + width : 0) + offset.y,
-        width: height,
-        height: boundingSize,
-        style: { transform: 'rotate(90deg)' },
-      },
-      wrapperDivStyles: {
-        flexDirection: 'row',
-        alignItems: moveAcross ? 'flex-end' : 'flex-start',
-      },
+      x: top + offset.x,
+      y: 0 - left - (moveAcross ? boundingSize + width : 0) + offset.y,
+      width: height,
+      height: boundingSize,
     } as const;
   }
   const moveAcross = mapSide === '1';
   return {
-    foreignObjectProps: {
-      x: right - (moveAcross ? boundingSize + width : 0) + offset.x,
-      y: top + offset.y,
-      height,
-      width: boundingSize,
-    },
-    wrapperDivStyles: {
-      flexDirection: 'column',
-      alignItems: moveAcross ? 'flex-end' : 'flex-start',
-    },
-  } as const;
+    x: right - (moveAcross ? boundingSize + width : 0) + offset.x,
+    y: top + offset.y,
+    height,
+    width: boundingSize,
+  };
 };
 
 export const LineMap: React.FC<LineMapProps> = ({
@@ -173,27 +162,15 @@ export const LineMap: React.FC<LineMapProps> = ({
       });
 
       const computedLabels = labels.map((label, index) => {
-        const { foreignObjectProps, wrapperDivStyles } = getLabelPositionProps(
-          bounds,
-          label,
-          isHorizontal
-        );
+        const { x, y, width, height } = getSegmentLabelBounds(bounds, label, isHorizontal);
         return (
-          <foreignObject
+          <g
             key={`label-${fromStationId}-${toStationId}-${index}`}
-            {...foreignObjectProps}
+            transform={`translate(${x}, ${y})`}
           >
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                ...wrapperDivStyles,
-              }}
-            >
-              {label.content}
-            </div>
-          </foreignObject>
+            <rect x={0} y={0} width={width} height={height} fill="transparent" />
+            {label.content({ width, height })}
+          </g>
         );
       });
 
@@ -263,13 +240,21 @@ export const LineMap: React.FC<LineMapProps> = ({
   };
 
   const renderComputedLabels = () => {
-    return computedSegmentExtras.map((segment) => segment.computedLabels).flat();
+    const transform = isHorizontal ? 'rotate(90)' : undefined;
+    return (
+      <g transform={transform}>
+        {computedSegmentExtras.map((segment) => segment.computedLabels).flat()}
+      </g>
+    );
   };
 
   const renderTooltip = () => {
+    const tooltipX = tooltipViewportCoordinates?.x;
+    const tooltipOnRightSide = tooltipX && tooltipX / window.innerWidth <= 0.5;
+    const tooltipSide = isHorizontal ? 'top' : tooltipOnRightSide ? 'right' : 'left';
     const tooltipContents =
       tooltipSegmentLocation &&
-      tooltip?.render({ segmentLocation: tooltipSegmentLocation, isHorizontal });
+      tooltip?.render({ segmentLocation: tooltipSegmentLocation, side: tooltipSide });
     if (tooltipViewportCoordinates && tooltipContents) {
       const { x, y } = viewportCoordsToContainer(tooltipViewportCoordinates);
       return (
@@ -278,7 +263,12 @@ export const LineMap: React.FC<LineMapProps> = ({
           style={{
             left: x,
             top: y,
-            transform: isHorizontal ? `translateY(-100%) translateX(-50%)` : `translateY(-50%)`,
+            transform:
+              tooltipSide === 'top'
+                ? `translate(-50%, -100%)`
+                : tooltipSide === 'left'
+                ? `translate(-100%, -50%)`
+                : `translateY(-50%)`,
           }}
         >
           {tooltipContents}

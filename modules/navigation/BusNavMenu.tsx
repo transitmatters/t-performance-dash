@@ -1,5 +1,5 @@
 import React from 'react';
-import { BUS_OVERVIEW, BUS_PAGES } from '../../common/constants/pages';
+import { BUS_OVERVIEW, TRIP_PAGES } from '../../common/constants/pages';
 import { BusSelection } from './BusSelection';
 import { SidebarTabs } from './SidebarTabs';
 
@@ -11,10 +11,9 @@ export const BusNavMenu: React.FC<BusNavMenuProps> = ({ setSidebarOpen }) => {
   return (
     <>
       <BusSelection setSidebarOpen={setSidebarOpen} />
-      <div className="mx-2 flex flex-col gap-y-4">
-        <hr className="h-1 w-full border-stone-400" />
+      <div className="flex flex-col gap-y-3 px-1" role={'navigation'}>
         <SidebarTabs tabs={BUS_OVERVIEW} setSidebarOpen={setSidebarOpen} />
-        <SidebarTabs tabs={BUS_PAGES} setSidebarOpen={setSidebarOpen} />
+        <SidebarTabs tabs={TRIP_PAGES} setSidebarOpen={setSidebarOpen} />
       </div>
     </>
   );

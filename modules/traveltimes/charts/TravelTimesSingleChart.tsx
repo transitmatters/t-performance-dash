@@ -4,7 +4,7 @@ import type { SingleDayDataPoint } from '../../../common/types/charts';
 import { BenchmarkFieldKeys, PointFieldKeys, MetricFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { locationDetails } from '../../../common/utils/stations';
+import { getLocationDetails } from '../../../common/utils/stations';
 
 interface TravelTimesSingleChartProps {
   traveltimes: SingleDayDataPoint[];
@@ -23,8 +23,7 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
 }) => {
   const {
     linePath,
-    lineShort,
-    query: { startDate },
+    query: { date },
   } = useDelimitatedRoute();
 
   const anyTravelBenchmarks =
@@ -35,14 +34,13 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
     return (
       <SingleDayLineChart
         chartId={`traveltimes-chart-${linePath}`}
-        title={'Travel Times'}
         data={traveltimes}
-        date={startDate}
+        date={date}
         metricField={MetricFieldKeys.travelTimeSec}
         pointField={PointFieldKeys.depDt}
         benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
         bothStops={true}
-        location={locationDetails(fromStation, toStation, lineShort)}
+        location={getLocationDetails(fromStation, toStation)}
         fname={'traveltimes'}
         showLegend={showLegend && anyTravelBenchmarks}
         isHomescreen={isHomescreen}
@@ -51,10 +49,9 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
   }, [
     linePath,
     traveltimes,
-    startDate,
+    date,
     fromStation,
     toStation,
-    lineShort,
     showLegend,
     anyTravelBenchmarks,
     isHomescreen,

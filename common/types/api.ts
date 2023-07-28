@@ -1,3 +1,7 @@
+import type { AggType } from '../../modules/speed/constants/speeds';
+import type { SpeedRestriction } from './dataPoints';
+import type { Line } from './lines';
+
 export enum QueryNameKeys {
   traveltimes = 'traveltimes',
   headways = 'headways',
@@ -33,8 +37,25 @@ export type AggregateAPIOptions = { [key in AggregateAPIParams]?: string[] | str
 export type PartialAggregateAPIOptions = Partial<AggregateAPIOptions>;
 
 export type FetchSpeedsOptions = {
-  [key in FetchSpeedsParams]?: string;
+  agg: AggType;
+  start_date?: string;
+  end_date?: string;
+  line?: Line;
 };
+
+export type FetchDeliveredTripMetricsOptions = {
+  agg: AggType;
+  start_date?: string;
+  end_date?: string;
+  line?: Line;
+};
+
+export enum FetchDeliveredTripMetricsParams {
+  startDate = 'start_date',
+  endDate = 'end_date',
+  agg = 'agg',
+  line = 'line',
+}
 
 export enum FetchSpeedsParams {
   startDate = 'start_date',
@@ -43,13 +64,34 @@ export enum FetchSpeedsParams {
   line = 'line',
 }
 
-export type FetchTripCountsOptions = {
-  [key in FetchTripCountsParams]?: string;
+export type FetchScheduledServiceOptions = {
+  [key in FetchScheduledServiceParams]?: string;
 };
 
-export enum FetchTripCountsParams {
+export enum FetchScheduledServiceParams {
   startDate = 'start_date',
   endDate = 'end_date',
   routeId = 'route_id',
   agg = 'agg',
 }
+
+export type FetchRidershipOptions = {
+  [key in FetchRidershipParams]?: string;
+};
+
+export enum FetchRidershipParams {
+  lineId = 'line_id',
+  startDate = 'start_date',
+  endDate = 'end_date',
+}
+
+export type FetchSpeedRestrictionsOptions = {
+  lineId: Line;
+  date: string;
+};
+
+export type FetchSpeedRestrictionsResponse = {
+  available: boolean;
+  date: string;
+  zones: SpeedRestriction[];
+};

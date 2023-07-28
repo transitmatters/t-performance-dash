@@ -5,7 +5,7 @@ import type { AggregateDataResponse, TravelTimesUnit } from '../../../common/typ
 import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { locationDetails } from '../../../common/utils/stations';
+import { getLocationDetails } from '../../../common/utils/stations';
 
 interface TravelTimesAggregateChartProps {
   traveltimes: AggregateDataResponse;
@@ -23,25 +23,18 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
   peakTime = true,
 }) => {
   const {
-    lineShort,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
 
-  const timeUnitByDate = timeUnit === 'by_date';
-
-  const traveltimesData = timeUnitByDate
-    ? traveltimes.by_date.filter((datapoint) => datapoint.peak === 'all')
-    : traveltimes.by_time.filter((datapoint) => datapoint.is_peak_day === peakTime);
-
-  const title = timeUnitByDate
-    ? 'Travel times'
-    : `Travel times by hour (${peakTime ? 'Weekday' : 'Weekend/Holiday'})`;
-
   const chart = useMemo(() => {
+    const timeUnitByDate = timeUnit === 'by_date';
+
+    const traveltimesData = timeUnitByDate
+      ? traveltimes.by_date.filter((datapoint) => datapoint.peak === 'all')
+      : traveltimes.by_time.filter((datapoint) => datapoint.is_peak_day === peakTime);
     return (
       <AggregateLineChart
-        chartId={'travel_times_agg'}
-        title={title}
+        chartId={`travel_times_agg_${timeUnitByDate ? 'by_date' : 'by_time'}`}
         data={traveltimesData}
         // This is service date when agg by date. dep_time_from_epoch when agg by hour
         pointField={timeUnitByDate ? PointFieldKeys.serviceDate : PointFieldKeys.depTimeFromEpoch}
@@ -52,21 +45,12 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
         startDate={startDate}
         endDate={endDate}
         fillColor={timeUnitByDate ? CHART_COLORS.FILL : CHART_COLORS.FILL_HOURLY}
-        location={locationDetails(fromStation, toStation, lineShort)}
+        location={getLocationDetails(fromStation, toStation)}
         bothStops={true}
         fname="traveltimes"
       />
     );
-  }, [
-    title,
-    traveltimesData,
-    timeUnitByDate,
-    startDate,
-    endDate,
-    fromStation,
-    toStation,
-    lineShort,
-  ]);
+  }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime]);
 
   return chart;
 };

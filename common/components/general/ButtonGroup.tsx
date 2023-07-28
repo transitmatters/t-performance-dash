@@ -53,10 +53,10 @@ export const ButtonGroup: <T extends string, K extends string>(
                       ? `${lineColorBackground[line ?? 'DEFAULT']} text-white hover:bg-opacity-90`
                       : `hover:${
                           lineColorBackground[line ?? 'DEFAULT']
-                        } bg-white text-stone-900 hover:bg-opacity-70 hover:text-white`
+                        } bg-white text-stone-900 hover:bg-opacity-70 `
                   )}
                 >
-                  {option[1]}
+                  <p className="leading-none">{option[1]}</p>
                 </button>
               )}
             </Tab>

@@ -1,47 +1,64 @@
 import React from 'react';
+import classNames from 'classnames';
 import type { BusRoute, Line } from '../../types/lines';
-import type { Section } from '../../constants/pages';
-import type { QueryTypeOptions } from '../../types/router';
+import type { DateStoreSection } from '../../constants/pages';
+import { lineColorBackground } from '../../styles/general';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
 
 interface MobileControlPanelProps {
-  section: Section;
-  line: Line;
+  dateStoreSection: DateStoreSection;
   busRoute: BusRoute | undefined;
-  queryType?: QueryTypeOptions;
+  line: Line | undefined;
 }
 
 export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
-  section,
+  dateStoreSection,
   line,
   busRoute,
-  queryType,
 }) => {
+  const singleDate = dateStoreSection === 'singleTrips';
   const getControls = () => {
-    if (section === 'trips' && queryType) {
+    if (line && (dateStoreSection === 'singleTrips' || dateStoreSection === 'multiTrips')) {
       return (
         <>
           <div className="p-1 pb-0">
-            <DateControl section={section} queryType={queryType} />
+            <DateControl
+              dateStoreSection={dateStoreSection}
+              queryType={singleDate ? 'single' : 'range'}
+            />
           </div>
-          <div className="flex flex-row items-center justify-center bg-tm-grey">
+          <div
+            className={classNames(
+              'flex flex-row items-center justify-center ',
+              lineColorBackground[line ?? 'DEFAULT']
+            )}
+          >
             <StationSelectorWidget line={line} busRoute={busRoute} />
           </div>
         </>
       );
     }
-    if (section === 'line' || section === 'overview') {
+    if (
+      dateStoreSection === 'line' ||
+      dateStoreSection === 'overview' ||
+      dateStoreSection === 'system'
+    ) {
       return (
         <div className="p-1">
-          <DateControl section={section} queryType={'range'} />
+          <DateControl dateStoreSection={dateStoreSection} queryType={'range'} />
         </div>
       );
     }
   };
 
   return (
-    <div className={'pb-safe fixed bottom-0 z-20 flex w-full flex-col justify-center bg-tm-grey'}>
+    <div
+      className={classNames(
+        'pb-safe fixed bottom-0 flex w-full flex-col justify-center',
+        lineColorBackground[line ?? 'DEFAULT']
+      )}
+    >
       {getControls()}
     </div>
   );

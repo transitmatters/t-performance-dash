@@ -6,8 +6,9 @@ import { LineMap, createDefaultDiagramForLine } from '../../../common/components
 import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
 import type { SlowZonesLineName } from '../types';
 
-import type { SegmentLabel } from '../../../common/components/maps/LineMap';
+import type { SegmentLabel, TooltipSide } from '../../../common/components/maps/LineMap';
 import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
+import { useDelimitatedRoute } from '../../../common/utils/router';
 import { segmentSlowZones } from './segment';
 import { SlowSegmentLabel } from './SlowSegmentLabel';
 import { SlowZonesTooltip } from './SlowZonesTooltip';
@@ -69,16 +70,19 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
     return createDefaultDiagramForLine(lineName, { pxPerStation: 15 });
   }, [lineName]);
 
+  const { query } = useDelimitatedRoute();
+  const { endDate } = query;
+
   const { segments } = useMemo(
     () =>
       segmentSlowZones({
         slowZones,
         speedRestrictions,
         lineName: line.short,
-        date: new Date(),
+        date: endDate ? new Date(endDate) : new Date(),
         diagram,
       }),
-    [slowZones, speedRestrictions, line, diagram]
+    [slowZones, speedRestrictions, line, diagram, endDate]
   );
 
   const getSegmentsForSlowZones = ({ isHorizontal }: { isHorizontal: boolean }) => {
@@ -90,7 +94,14 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
             mapSide: '0' as const,
             boundingSize: isHorizontal ? 15 : 20,
             ...getSegmentLabelOverrides(segment.segmentLocation, isHorizontal),
-            content: <SlowSegmentLabel isHorizontal={isHorizontal} segment={segment} line={line} />,
+            content: (size) => (
+              <SlowSegmentLabel
+                isHorizontal={isHorizontal}
+                segment={segment}
+                line={line}
+                {...size}
+              />
+            ),
           },
         ],
         strokes: Object.entries(segment.slowZones).map(([direction, zones]) => {
@@ -109,11 +120,11 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
 
   const renderSlowZonesTooltip = (options: {
     segmentLocation: SegmentLocation<true>;
-    isHorizontal: boolean;
+    side: TooltipSide;
   }) => {
     const {
       segmentLocation: { fromStationId, toStationId },
-      isHorizontal,
+      side,
     } = options;
     const slowSegment = segments.find(
       (seg) =>
@@ -121,9 +132,7 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
         seg.segmentLocation.toStationId === toStationId
     );
     if (slowSegment) {
-      return (
-        <SlowZonesTooltip isHorizontal={isHorizontal} segment={slowSegment} color={line.color} />
-      );
+      return <SlowZonesTooltip side={side} segment={slowSegment} color={line.color} />;
     }
 
     return null;

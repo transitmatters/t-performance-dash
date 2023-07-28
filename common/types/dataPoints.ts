@@ -75,12 +75,24 @@ export interface SpeedDataPoint {
   value: number;
 }
 
+export interface DeliveredTripMetrics {
+  line: Line;
+  date: string;
+  miles_covered: number;
+  total_time: number;
+  count: number;
+}
+
 export type LineSegmentData = {
   duration: number;
   x: string[];
   y: string[];
   id: string;
   delay: number;
+  stations:
+    | { fromStopIds: string[]; toStopIds: string[] }
+    | { fromStopIds: undefined; toStopIds: undefined };
+  color: string;
 };
 
 export type SpeedRestriction = {
@@ -88,13 +100,14 @@ export type SpeedRestriction = {
   line: Exclude<LineShort, 'Bus'>;
   description: string;
   reason: string;
-  status: string;
   fromStopId: null | string;
   toStopId: null | string;
   reported: string;
-  cleared: string;
   speedMph: number;
   trackFeet: number;
+  lineId: Line;
+  currentAsOf: Date;
+  validAsOf: Date;
 };
 
 export type DayKind = 'weekday' | 'saturday' | 'sunday';
@@ -106,10 +119,15 @@ export type ServiceLevels = {
   };
 };
 
-export type TripCounts = {
+export type ScheduledService = {
   counts: number[];
   start_date: string;
   end_date: string;
   start_date_service_levels: ServiceLevels;
   end_date_service_levels: ServiceLevels;
+};
+
+export type RidershipCount = {
+  date: string;
+  count: number;
 };

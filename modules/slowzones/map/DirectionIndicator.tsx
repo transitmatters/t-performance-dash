@@ -19,7 +19,7 @@ export const DirectionIndicator: React.FC<DirectionIndicatorProps> = ({
 }) => {
   const rotation = isHorizontal ? (direction === '1' ? 90 : 270) : direction === '1' ? 180 : 0;
   return (
-    <div
+    <span
       className={styles.directionIndicator}
       style={{
         borderTopColor: color,

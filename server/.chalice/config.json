@@ -5,7 +5,7 @@
   "minimum_compression_size": 1000,
   "lambda_timeout": 30,
   "lambda_memory_size": 512,
-  "layers": ["arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:42"],
+  "layers": ["arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:44"],
   "stages": {
     "production": {
       "api_gateway_stage": "production",
@@ -17,10 +17,10 @@
         "DD_SITE": "datadoghq.com",
         "DD_TRACE_ENABLED": "true",
         "DD_ENV": "prod",
-        "TM_FRONTEND_HOST": "dashboard-v4.transitmatters.org"
+        "TM_FRONTEND_HOST": "dashboard.transitmatters.org"
       },
       "api_gateway_custom_domain": {
-        "domain_name": "dashboard-v4-api.transitmatters.org",
+        "domain_name": "dashboard-api.labs.transitmatters.org",
         "tls_version": "TLS_1_2",
         "certificate_arn": ""
       }
@@ -35,10 +35,10 @@
         "DD_SITE": "datadoghq.com",
         "DD_TRACE_ENABLED": "true",
         "DD_ENV": "beta",
-        "TM_FRONTEND_HOST": "dashboard-v4-beta.labs.transitmatters.org"
+        "TM_FRONTEND_HOST": "dashboard-beta.labs.transitmatters.org"
       },
       "api_gateway_custom_domain": {
-        "domain_name": "dashboard-v4-beta-api.labs.transitmatters.org",
+        "domain_name": "dashboard-api-beta.labs.transitmatters.org",
         "tls_version": "TLS_1_2",
         "certificate_arn": ""
       }

@@ -7,6 +7,7 @@ import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Speed } from '../commute/speed/Speed';
 import { useAccessibilityAlertsData, useAlertsData } from '../../common/api/hooks/alerts';
 import { useDelimitatedRoute } from '../../common/utils/router';
+import type { Line } from '../../common/types/lines';
 import { WidgetTitle } from './WidgetTitle';
 
 interface TodayProps {
@@ -15,7 +16,10 @@ interface TodayProps {
 
 export const Today: React.FC<TodayProps> = ({ lineShort }) => {
   const allSlow = useSlowzoneAllData();
-  const speedRestrictions = useSpeedRestrictionData();
+  const speedRestrictions = useSpeedRestrictionData({
+    lineId: `line-${lineShort.toLowerCase()}` as Line,
+    date: new Date().toISOString().split('T')[0],
+  });
   const canShowSlowZonesMap = lineShort !== 'Green';
 
   const {
@@ -34,7 +38,7 @@ export const Today: React.FC<TodayProps> = ({ lineShort }) => {
         </div>
         {canShowSlowZonesMap && allSlow.data && speedRestrictions.data && (
           <WidgetDiv className="h-full">
-            <WidgetTitle title="Slow Zones" />
+            <WidgetTitle title="Slow zones" />
             <SlowZonesMap
               key={lineShort}
               slowZones={allSlow.data}

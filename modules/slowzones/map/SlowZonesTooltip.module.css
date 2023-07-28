@@ -5,8 +5,9 @@
     --tooltip-background: white;
 }
 
-.vertical {
+.reverseVertical {
     flex-direction: row;
+    flex-direction: row-reverse;
 }
 
 .horizontal {
@@ -22,6 +23,10 @@
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
     border-right: 8px solid white;
+}
+
+.triangleReverse {
+    transform: scaleX(-1);
 }
 
 .triangleHorizontal {

@@ -31,7 +31,7 @@ const getDirection = (to: Station, from: Station) => {
 };
 
 // Data formatting & cleanup
-export const formatSlowZones = (data: SlowZoneResponse[]): SlowZone[] =>
+const formatSlowZones = (data: SlowZoneResponse[]): SlowZone[] =>
   data.map((sz) => {
     // This will never be undefined unless there is a new station that we don't have in our const file
     const from = getParentStationForStopId(sz.fr_id) as Station;
@@ -57,15 +57,7 @@ export const getStationPairName = (from: Station, to: Station, short?: boolean):
   return `${from.stop_name}-${to.stop_name}`;
 };
 
-export const groupByRoute = (data: SlowZone[]) =>
-  data.reduce((series: Record<string, SlowZone[]>, sz: SlowZone) => {
-    const key = sz.id;
-    const s = (series[key] || []).concat(sz);
-    series[key] = s;
-    return series;
-  }, {});
-
-export const groupByLine = (data: SlowZone[]) =>
+const groupByLine = (data: SlowZone[]) =>
   data.reduce((series: Record<string, SlowZone[]>, sz) => {
     const key = sz.color;
     const s = (series[key] || []).concat(sz);
@@ -73,20 +65,29 @@ export const groupByLine = (data: SlowZone[]) =>
     return series;
   }, {});
 
-export const useFormatSegments = (
+export const formatSegments = (
   data: SlowZoneResponse[],
   startDateUTC: dayjs.Dayjs,
   direction: Direction
 ) => {
-  return useMemo(() => {
-    return formatSlowZones(
-      data.filter((d) => {
-        const szDate = dayjs.utc(d.end);
-        return szDate.isAfter(startDateUTC);
-      })
-    ).filter((sz) => sz.direction === direction);
-  }, [data, startDateUTC, direction]);
+  if (!data) return [];
+
+  const filteredData = data.filter((item) => {
+    const szDate = dayjs.utc(item.end);
+    return szDate.isAfter(startDateUTC);
+  });
+
+  return formatSlowZones(filteredData).filter((sz) => sz.direction === direction);
 };
+
+export const useFormatSegments = (
+  data: SlowZoneResponse[],
+  startDateUTC: dayjs.Dayjs,
+  direction: Direction
+) =>
+  useMemo(() => {
+    return formatSegments(data, startDateUTC, direction);
+  }, [data, startDateUTC, direction]);
 
 export const getRoutes = (direction: Direction, data: SlowZone[], isMobile: boolean) => {
   // group by line, sort by order , flatten, get ids, filter out duplicates
@@ -104,24 +105,33 @@ export const getSlowZoneDelayDelta = (totals: DayDelayTotals[], lineShort: strin
   return totals[totals.length - 1][lineShort] - totals[0][lineShort];
 };
 
+export const filterAllSlow = (
+  data: SlowZoneResponse[],
+  startDateUTC: dayjs.Dayjs,
+  endDateUTC: dayjs.Dayjs,
+  lineShort?: LineShort
+) => {
+  if (!data) return [];
+
+  return data.filter((item) => {
+    const start = dayjs.utc(item.start);
+    const end = dayjs.utc(item.end);
+    const isWithinDateRange =
+      (start.isAfter(startDateUTC) || end.isAfter(startDateUTC)) && start.isBefore(endDateUTC);
+
+    return (lineShort ? item.color === lineShort : true) && isWithinDateRange;
+  });
+};
+
 export const useFilteredAllSlow = (
   data: SlowZoneResponse[],
   startDateUTC: dayjs.Dayjs,
   endDateUTC: dayjs.Dayjs,
-  lineShort: LineShort
-) => {
-  return useMemo(() => {
-    return data.filter((t) => {
-      const start = dayjs.utc(t.start);
-      const end = dayjs.utc(t.end);
-      return (
-        t.color === lineShort &&
-        (start.isAfter(startDateUTC) || end.isAfter(startDateUTC)) &&
-        start.isBefore(endDateUTC)
-      );
-    });
+  lineShort?: LineShort
+) =>
+  useMemo(() => {
+    return filterAllSlow(data, startDateUTC, endDateUTC, lineShort);
   }, [data, startDateUTC, endDateUTC, lineShort]);
-};
 
 export const useFilteredDelayTotals = (
   data: DayDelayTotals[],
@@ -181,5 +191,6 @@ export const getDateAxisConfig = (startDateUTC: dayjs.Dayjs, endDateUTC: dayjs.D
       },
     },
     display: true,
+    offset: true,
   };
 };

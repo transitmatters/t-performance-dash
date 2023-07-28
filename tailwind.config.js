@@ -15,6 +15,9 @@ module.exports = {
     },
   ],
   darkMode: 'class',
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     screens: {
       sm: '640px',
@@ -72,6 +75,7 @@ module.exports = {
         tm: {
           red: '#a31e1e',
           grey: '#2e2d2c',
+          lightGrey: '#3E3E3E',
         },
       },
     },

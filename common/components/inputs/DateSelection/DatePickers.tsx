@@ -10,6 +10,8 @@ import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { FLAT_PICKER_OPTIONS, TODAY_STRING, RANGE_PRESETS } from '../../../constants/dates';
 import { buttonHighlightFocus } from '../../../styles/general';
 import type { Line } from '../../../types/lines';
+import { ALL_PAGES } from '../../../constants/pages';
+import { getDefaultDates } from '../../../state/defaults/dateDefaults';
 import { RangeButton } from './RangeButton';
 
 interface DatePickerProps {
@@ -19,7 +21,7 @@ interface DatePickerProps {
   clearPreset: () => void;
 }
 
-export const updateColor = (line: Line | undefined) => {
+const updateColor = (line: Line | undefined) => {
   const selectedDates = document.querySelectorAll('.flatpickr-day.selected');
   selectedDates.forEach((selectedDate) => {
     if (line) {
@@ -30,56 +32,70 @@ export const updateColor = (line: Line | undefined) => {
 
 export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, clearPreset }) => {
   const updateQueryParams = useUpdateQuery();
-  const { query, line, tab } = useDelimitatedRoute();
-  const { startDate, endDate } = query;
+  const { query, line, tab, page } = useDelimitatedRoute();
+  const { startDate, endDate, date } = query;
   const endDateObject = dayjs(endDate);
-  const startDateObject = dayjs(startDate);
+  const startDateObject = dayjs(startDate ?? date);
+  const isSingleDate = page === 'singleTrips';
 
   const handleRangeToggle = () => {
     if (range) {
-      updateQueryParams({ startDate: startDate }, !range);
+      updateQueryParams({ startDate: startDate }, !range, false);
     } else if (startDate === TODAY_STRING) {
       // If start date is today -> set range to past week. This prevents bugs with startDate === endDate
-      updateQueryParams(RANGE_PRESETS[0].input, !range);
+      updateQueryParams(RANGE_PRESETS[0].input, !range, false);
     } else {
-      updateQueryParams({ startDate: startDate }, !range);
+      updateQueryParams({ startDate: startDate }, !range, false);
     }
     setRange(!range);
   };
 
-  const handleEndDateChange = (date: string) => {
-    const updatedDate = dayjs(date);
+  const handleEndDateChange = (newDate: string) => {
+    const updatedDate = dayjs(newDate);
     if (updatedDate.isSame(startDateObject)) {
       if (type === 'combo') handleRangeToggle();
       return;
     }
     if (updatedDate.isBefore(startDateObject)) {
       // Swap start and end if new end < startDate
-      updateQueryParams({ startDate: date, endDate: startDate }, range);
+      updateQueryParams({ startDate: newDate, endDate: startDate }, range, false);
     } else {
-      updateQueryParams({ startDate: startDate, endDate: date }, range);
+      updateQueryParams({ startDate: startDate, endDate: newDate }, range, false);
     }
     clearPreset();
   };
 
-  const handleStartDateChange = (date: string) => {
-    const updatedDate = dayjs(date);
+  const handleStartDateChange = (newDate: string) => {
+    const updatedDate = dayjs(newDate);
     if (updatedDate.isSame(endDateObject)) {
       if (type === 'combo') handleRangeToggle();
       return;
     }
     if (updatedDate.isAfter(endDateObject)) {
       // Swap start and end if new start > endDate
-      updateQueryParams({ startDate: endDate, endDate: date }, range);
+      updateQueryParams({ startDate: endDate, endDate: newDate }, range, false);
     } else {
-      updateQueryParams({ startDate: date, endDate: endDate }, range);
+      updateQueryParams({ startDate: newDate, endDate: endDate }, range, false);
     }
+    clearPreset();
+  };
+
+  const handleDateChange = (newDate: string) => {
+    updateQueryParams({ date: newDate }, false, false);
     clearPreset();
   };
 
   React.useEffect(() => {
     updateColor(line);
-  });
+  }, [line]);
+
+  React.useEffect(() => {
+    if (tab && page && !date && !startDate && !endDate) {
+      const pageObject = ALL_PAGES[page];
+      const defaultDateParams = getDefaultDates(pageObject.dateStoreSection, tab);
+      if (defaultDateParams) updateQueryParams(defaultDateParams, true);
+    }
+  }, [tab, page, startDate, endDate, updateQueryParams, date]);
 
   return (
     <div className="-ml-[1px] flex h-10 flex-row justify-center self-stretch rounded-r-md bg-white md:h-7">
@@ -89,12 +105,14 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
             'flex w-[6.75rem] cursor-pointer border-none bg-transparent px-2 py-0 text-center text-sm focus:ring-opacity-0',
             line && buttonHighlightFocus[line]
           )}
-          value={startDate}
+          value={startDate ?? date}
           key={'start'}
           placeholder={'mm/dd/yyyy'}
           options={FLAT_PICKER_OPTIONS[tab]}
           onChange={(dates, currentDateString) => {
-            handleStartDateChange(currentDateString);
+            isSingleDate
+              ? handleDateChange(currentDateString)
+              : handleStartDateChange(currentDateString);
           }}
           onMonthChange={() => updateColor(line)}
           onOpen={() => updateColor(line)}

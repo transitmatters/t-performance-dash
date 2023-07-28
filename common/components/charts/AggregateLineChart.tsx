@@ -1,42 +1,21 @@
 import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  TimeScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+import type { Chart as ChartJS } from 'chart.js';
+
 import 'chartjs-adapter-date-fns';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../../common/constants/colors';
-import { DownloadButton } from '../general/DownloadButton';
-import { writeError } from '../../utils/chartError';
+import { DownloadButton } from '../buttons/DownloadButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
+import { writeError } from '../../utils/chartError';
+import { getFormattedTimeString } from '../../utils/time';
 import { LegendLongTerm } from './Legend';
-import { drawTitle } from './Title';
-
-ChartJS.register(
-  CategoryScale,
-  TimeScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ChartjsPluginWatermark,
-  Filler,
-  Title,
-  Tooltip,
-  Legend
-);
+import { ChartBorder } from './ChartBorder';
+import { ChartDiv } from './ChartDiv';
 
 const xAxisLabel = (startDate: string, endDate: string, hourly: boolean) => {
   if (hourly) {
@@ -50,7 +29,6 @@ const xAxisLabel = (startDate: string, endDate: string, hourly: boolean) => {
 
 export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   chartId,
-  title,
   data,
   location,
   pointField,
@@ -74,12 +52,12 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
 
   return (
-    <div className="relative flex w-full flex-col pr-2">
-      <div className="flex h-60 w-full flex-row">
+    <ChartBorder>
+      <ChartDiv isMobile={isMobile}>
         <Line
           id={chartId}
           ref={ref}
-          height={240}
+          height={isMobile ? 200 : 240}
           redraw={true}
           data={{
             labels,
@@ -137,7 +115,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                   stepSize: 1,
                   tooltipFormat: timeFormat,
                 },
-                // @ts-expect-error The typing expectations are wrong
                 type: 'time',
                 adapters: {
                   date: {
@@ -155,11 +132,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
             },
             responsive: true,
             maintainAspectRatio: false,
-            layout: {
-              padding: {
-                top: 25,
-              },
-            },
             // Make the tooltip display all 3 datapoints for each x axis entry.
             interaction: {
               mode: 'index',
@@ -170,17 +142,15 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
               legend: {
                 display: false,
               },
-              title: {
-                // empty title to set font and leave room for drawTitle fn
-                display: true,
-                text: '',
-              },
               tooltip: {
                 mode: 'index',
                 position: 'nearest',
                 callbacks: {
                   label: (tooltipItem) => {
-                    return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y} minutes`;
+                    return `${tooltipItem.dataset.label}: ${getFormattedTimeString(
+                      tooltipItem.parsed.y,
+                      'minutes'
+                    )}`;
                   },
                 },
               },
@@ -193,13 +163,13 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 if (startDate === undefined || endDate === undefined || data.length === 0) {
                   writeError(chart);
                 }
-                drawTitle(title, location, bothStops, chart);
               },
             },
+            ChartjsPluginWatermark,
           ]}
         />
-      </div>
-      <div className="flex flex-row items-end gap-4 pl-6">
+      </ChartDiv>
+      <div className="flex flex-row items-end gap-4 ">
         {showLegend && <LegendLongTerm />}
         {!isHomescreen && startDate && (
           <DownloadButton
@@ -211,6 +181,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           />
         )}
       </div>
-    </div>
+    </ChartBorder>
   );
 };

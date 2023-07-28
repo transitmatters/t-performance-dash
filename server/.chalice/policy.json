@@ -34,11 +34,12 @@
       ],
       "Effect": "Allow",
       "Resource": [
-        "arn:aws:dynamodb:*:*:table/DailySpeed",
-        "arn:aws:dynamodb:*:*:table/WeeklySpeed",
-        "arn:aws:dynamodb:*:*:table/MonthlySpeed",
-        "arn:aws:dynamodb:*:*:table/TripCounts",
-        "arn:aws:dynamodb:*:*:table/Ridership"
+        "arn:aws:dynamodb:*:*:table/DeliveredTripMetrics",
+        "arn:aws:dynamodb:*:*:table/DeliveredTripMetricsWeekly",
+        "arn:aws:dynamodb:*:*:table/DeliveredTripMetricsMonthly",
+        "arn:aws:dynamodb:*:*:table/ScheduledServiceDaily",
+        "arn:aws:dynamodb:*:*:table/Ridership",
+        "arn:aws:dynamodb:*:*:table/SpeedRestrictions"
       ]
     }
   ]

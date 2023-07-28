@@ -1,5 +1,4 @@
 import type { TimeUnit } from 'chart.js';
-import type { LineShort } from './lines';
 import type { Station } from './stations';
 
 export interface SingleDayDataPoint {
@@ -40,7 +39,6 @@ export interface Location {
   to: string;
   from: string;
   direction: Direction;
-  line: LineShort;
 }
 
 export type TravelTimesUnit = 'by_date' | 'by_time';
@@ -72,7 +70,6 @@ export type BenchmarkField = BenchmarkFieldKeys;
 type DataName = 'traveltimes' | 'headways' | 'dwells' | 'traveltimesByHour';
 
 export interface LineProps {
-  title: string;
   chartId: string;
   location: Location;
   pointField: PointField; // X value
@@ -104,7 +101,6 @@ export interface SingleDayLineProps extends LineProps {
 }
 
 export interface HeadwayHistogramProps {
-  title: string;
   chartId: string;
   data: SingleDayDataPoint[];
   date: string | undefined;

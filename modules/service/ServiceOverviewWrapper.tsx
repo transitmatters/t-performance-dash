@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
+import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { PercentageWidgetValue, TripsWidgetValue } from '../../common/types/basicWidgets';
 import type { ParamsType } from '../speed/constants/speeds';
@@ -8,8 +8,8 @@ import { ServiceGraph } from './ServiceGraph';
 import { getServiceWidgetValues } from './utils/utils';
 
 interface ServiceOverviewWrapperProps {
-  data: SpeedDataPoint[];
-  predictedData: TripCounts;
+  data: DeliveredTripMetrics[];
+  predictedData: ScheduledService;
   config: ParamsType;
   startDate: string;
   endDate: string;
@@ -26,12 +26,12 @@ export const ServiceOverviewWrapper: React.FC<ServiceOverviewWrapperProps> = ({
 
   return (
     <>
-      <div className={classNames('space-between flex w-full flex-row')}>
+      <div className={classNames('space-between flex w-full flex-row gap-2')}>
         <BasicWidgetDataLayout
-          title={`Scheduled Service Delivered`}
+          title={`Service Delivered`}
           widgetValue={new PercentageWidgetValue(percentDelivered, undefined)}
           layoutKind="no-delta"
-          analysis="over period"
+          analysis="of scheduled"
           sentimentDirection={'positiveOnIncrease'}
         />
         <BasicWidgetDataLayout

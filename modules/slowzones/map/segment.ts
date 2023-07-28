@@ -142,8 +142,8 @@ export const segmentSlowZones = (options: SegmentSlowZonesOptions): Segmentation
       speedRestrictions,
       lineName,
       effectiveDate,
-      (rs) => new Date(rs.cleared ?? '4000'),
-      (rs) => rs.line
+      (rs) => rs.validAsOf,
+      (rs) => rs.lineId.replace('line-', '') as LineShort
     ),
     (rs) => getStationById(rs.fromStopId!),
     (rs) => getStationById(rs.toStopId!)

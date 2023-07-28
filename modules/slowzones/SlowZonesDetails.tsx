@@ -16,22 +16,28 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import type { Direction } from '../../common/types/dataPoints';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
+import { Layout } from '../../common/layouts/layoutTypes';
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
 import { DirectionObject } from './constants/constants';
+import { SlowZonesWidgetTitle } from './SlowZonesWidgetTitle';
 dayjs.extend(utc);
 
 export function SlowZonesDetails() {
-  const delayTotals = useSlowzoneDelayTotalData();
   const [direction, setDirection] = useState<Direction>('northbound');
-  const allSlow = useSlowzoneAllData();
-  const speedRestrictions = useSpeedRestrictionData();
+
   const {
     lineShort,
+    linePath,
     line,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
+
+  const delayTotals = useSlowzoneDelayTotalData();
+  const allSlow = useSlowzoneAllData();
+  const speedRestrictions = useSpeedRestrictionData({ lineId: line!, date: endDate! });
 
   const startDateUTC = startDate ? dayjs.utc(startDate).startOf('day') : undefined;
   const endDateUTC = endDate ? dayjs.utc(endDate).startOf('day') : undefined;
@@ -49,10 +55,10 @@ export function SlowZonesDetails() {
   }
 
   return (
-    <PageWrapper pageTitle={'Slow Zones'}>
-      <div className="flex flex-col gap-4">
+    <PageWrapper pageTitle={'Slow zones'}>
+      <ChartPageDiv>
         <WidgetDiv>
-          <WidgetTitle title="Total delays" />
+          <WidgetTitle title="Total slow time" />
           <div className="relative flex flex-col">
             {totalSlowTimeReady ? (
               <TotalSlowTimeWrapper
@@ -70,7 +76,7 @@ export function SlowZonesDetails() {
           </div>
         </WidgetDiv>
         <WidgetDiv>
-          <WidgetTitle title="Line Map" />
+          <SlowZonesWidgetTitle />
           <div className="relative flex flex-col">
             {allSlow.data && speedRestrictions.data && canShowSlowZonesMap ? (
               <SlowZonesMap
@@ -88,18 +94,19 @@ export function SlowZonesDetails() {
           </div>
         </WidgetDiv>
         {/* Not Using WidgetDiv here - removed the padding so the chart goes to the edge of the widget on mobile. */}
-        <div className="h-full rounded-lg bg-white p-0 shadow-dataBox sm:p-2">
-          <div className="flex flex-col p-2 sm:p-0 md:flex-row">
-            <WidgetTitle title={`${DirectionObject[direction]} Segments`} />
-            <div className="p-2">
+        <div className="h-full rounded-lg bg-white p-0 shadow-dataBox sm:p-4">
+          <div className="flex flex-col p-4 sm:p-0 lg:flex-row">
+            <WidgetTitle title={`${DirectionObject[direction]} segments`} />
+            <div className="lg:ml-2">
               <ButtonGroup pressFunction={setDirection} options={Object.entries(DirectionObject)} />
             </div>
           </div>
-          <div className="relative flex flex-col py-2 sm:py-0">
+          <div className="relative flex flex-col">
             {segmentsReady ? (
               <SlowZonesSegmentsWrapper
                 data={allSlow.data}
                 lineShort={lineShort}
+                linePath={linePath}
                 endDateUTC={endDateUTC}
                 startDateUTC={startDateUTC}
                 direction={direction}
@@ -109,7 +116,9 @@ export function SlowZonesDetails() {
             )}
           </div>
         </div>
-      </div>
+      </ChartPageDiv>
     </PageWrapper>
   );
 }
+
+SlowZonesDetails.Layout = Layout.Dashboard;

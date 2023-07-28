@@ -1,5 +1,5 @@
 import { stations } from '../constants/stations';
-import type { AlertsResponse } from '../types/alerts';
+import type { AlertsResponse, OldAlert } from '../types/alerts';
 import type { LineShort } from '../types/lines';
 import type { Station } from '../types/stations';
 import { isLineMap } from '../types/stations';
@@ -73,6 +73,28 @@ export const fetchAccessibilityAlertsForLine = async (
 
   const options = { ...accessibilityAlertsAPIConfig, stop: stationKeys.join(',') };
 
+  Object.entries(options).forEach(([key, value]) => {
+    url.searchParams.append(key, value.toString());
+  });
+  const response = await fetch(url.toString());
+  if (!response.ok) {
+    throw new Error('Failed to fetch alerts');
+  }
+  return await response.json();
+};
+
+export const fetchHistoricalAlerts = async (
+  date: string | undefined,
+  route: LineShort,
+  busRoute?: string
+): Promise<OldAlert[]> => {
+  const url = new URL(`${APP_DATA_BASE_PATH}/api/alerts/${date}`, window.location.origin);
+  const options = { route: '' };
+  if (route === 'Bus' && busRoute) {
+    options['route'] = busRoute;
+  } else {
+    options['route'] = route;
+  }
   Object.entries(options).forEach(([key, value]) => {
     url.searchParams.append(key, value.toString());
   });

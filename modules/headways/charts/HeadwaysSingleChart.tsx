@@ -3,7 +3,7 @@ import { SingleDayLineChart } from '../../../common/components/charts/SingleDayL
 import type { HeadwaysChartProps } from '../../../common/types/charts';
 import { BenchmarkFieldKeys, PointFieldKeys, MetricFieldKeys } from '../../../common/types/charts';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { locationDetails } from '../../../common/utils/stations';
+import { getLocationDetails } from '../../../common/utils/stations';
 
 export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
   headways,
@@ -14,8 +14,7 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
 }) => {
   const {
     linePath,
-    lineShort,
-    query: { startDate },
+    query: { date },
   } = useDelimitatedRoute();
 
   const anyHeadwayBenchmarks = headways.some(
@@ -26,13 +25,12 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
     return (
       <SingleDayLineChart
         chartId={`headways-chart-${linePath}`}
-        title={`Time between ${lineShort !== 'Bus' ? 'trains' : 'bus'} (headways)`}
         data={headways}
-        date={startDate}
+        date={date}
         metricField={MetricFieldKeys.headwayTimeSec}
         pointField={PointFieldKeys.currentDepDt}
         benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
-        location={locationDetails(fromStation, toStation, lineShort)}
+        location={getLocationDetails(fromStation, toStation)}
         fname={'headways'}
         showLegend={showLegend && anyHeadwayBenchmarks}
         isHomescreen={isHomescreen}
@@ -41,10 +39,9 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
   }, [
     linePath,
     headways,
-    startDate,
+    date,
     fromStation,
     toStation,
-    lineShort,
     showLegend,
     anyHeadwayBenchmarks,
     isHomescreen,

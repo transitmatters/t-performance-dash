@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import React from 'react';
 import { useDelimitatedRoute } from '../../utils/router';
-import { mbtaTextConfig } from '../inputs/styles/tailwind';
+import { mbtaTextConfig } from '../../styles/general';
 
 interface ErrorNoticeProps {
   isWidget?: boolean;
@@ -22,7 +22,7 @@ export const ErrorNotice: React.FC<ErrorNoticeProps> = ({ isWidget, inverse }) =
       )}
     >
       <FontAwesomeIcon size={'3x'} icon={faTriangleExclamation} className={color} />
-      <>Uh oh... error</>
+      <>An error has occurred</>
     </div>
   );
 };
