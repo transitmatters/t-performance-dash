@@ -86,7 +86,12 @@ type UseQueriesOverload = {
   ): {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<SingleDayDataPoint[]>;
   };
-  (busOrSubway: BusOrSubway, parameters: AggregateAPIOptions, aggregate: true, enabled?: boolean): {
+  (
+    busOrSubway: BusOrSubway,
+    parameters: AggregateAPIOptions,
+    aggregate: true,
+    enabled?: boolean
+  ): {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<AggregateDataResponse>;
   };
 };
