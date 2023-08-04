@@ -5,11 +5,29 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: 'npm' # See documentation for possible values
+    directory: '/' # Location of package manifests
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
     ignore:
       # Ignore patch version bumps
-      - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+      - dependency-name: '*'
+        update-types: ['version-update:semver-patch']
+    groups:
+      storybook:
+        patterns:
+          - '@storybook/*'
+          - 'storybook'
+          - '*-storybook'
+      fontawesome:
+        patterns:
+          - '@fortawesome/*'
+      chartjs:
+        patterns:
+          - 'chart.js'
+          - 'chartjs-*'
+      next:
+        patterns:
+          - 'next'
+          - '*-next'
+          - 'next-*'
