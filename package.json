@@ -68,7 +68,7 @@
     "babel-plugin-inline-react-svg": "^2.0.2",
     "eslint": "^8.46.0",
     "eslint-config-next": "13.4.7",
-    "eslint-config-prettier": "^8.9.0",
+    "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-import": "^2.28.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.1",
