@@ -1,6 +1,5 @@
 import React from 'react';
 import type { TimePredictionWeek } from '../../common/types/dataPoints';
-import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { PredictionsGraphWrapper } from './PredictionsGraphWrapper';
 
@@ -17,10 +16,8 @@ export const PredictionsDetailsWrapper: React.FC<PredictionsDetailsWrapperProps>
 }) => {
   return (
     <>
-      <WidgetDiv>
-        <WidgetTitle title="Time Predictions" />
-        <PredictionsGraphWrapper data={data} startDate={startDate} endDate={endDate} />
-      </WidgetDiv>
+      <WidgetTitle title="Time Predictions" />
+      <PredictionsGraphWrapper data={data} startDate={startDate} endDate={endDate} />
     </>
   );
 };
