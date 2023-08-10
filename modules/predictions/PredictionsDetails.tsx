@@ -16,7 +16,7 @@ import { PredictionsDetailsWrapper } from './PredictionsDetailsWrapper';
 import { lineToDefaultRouteId } from './utils/utils';
 dayjs.extend(utc);
 
-export enum GreenLineBranchOptions {
+enum GreenLineBranchOptions {
   'Green-B' = 'B Branch',
   'Green-C' = 'C Branch',
   'Green-D' = 'D Branch',

@@ -1,3 +1,5 @@
+import { flatten } from 'lodash';
+import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import type { Line, LineRouteId } from '../../../common/types/lines';
 
 export const lineToDefaultRouteId = (line: Line | undefined): LineRouteId => {
@@ -21,4 +23,32 @@ export const lineToDefaultRouteId = (line: Line | undefined): LineRouteId => {
       return 'Red';
     }
   }
+};
+
+const calcValues = (predictions: TimePredictionWeek[]) => {
+  const predictionsList = flatten(predictions.map(({ prediction }) => prediction));
+  const averageAccurate =
+    predictionsList.reduce(
+      (currentSum, pred) =>
+        !isNaN(pred.num_accurate_predictions)
+          ? currentSum + pred.num_accurate_predictions
+          : currentSum,
+      0
+    ) / predictionsList.length;
+  const averageTotal =
+    predictionsList.reduce(
+      (currentSum, pred) =>
+        !isNaN(pred.num_predictions) ? currentSum + pred.num_predictions : currentSum,
+      0
+    ) / predictionsList.length;
+
+  const average = averageAccurate / averageTotal;
+
+  return {
+    average,
+  };
+};
+
+export const getDetailsPredictiondWidgetValues = (datapoints: TimePredictionWeek[]) => {
+  return calcValues(datapoints);
 };
