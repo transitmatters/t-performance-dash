@@ -221,7 +221,7 @@ def get_speed_restrictions():
 
 
 @app.route("/api/time_predictions", cors=cors_config)
-def get_speed_restrictions():
+def get_time_predictions():
     query = app.current_request.query_params
     route_id = query["route_id"]
     response = predictions.query_time_predictions(
