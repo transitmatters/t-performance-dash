@@ -219,6 +219,7 @@ def get_speed_restrictions():
     )
     return json.dumps(response)
 
+
 @app.route("/api/time_predictions", cors=cors_config)
 def get_speed_restrictions():
     query = app.current_request.query_params
