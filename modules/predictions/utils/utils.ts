@@ -56,8 +56,20 @@ const calcValues = (predictions: TimePredictionWeek[]) => {
     ),
   };
 
+  const worst = {
+    ...predictionsList.reduce(
+      (min, pred) =>
+        pred.num_accurate_predictions / pred.num_predictions <
+        min.num_accurate_predictions / min.num_predictions
+          ? pred
+          : min,
+      predictionsList[0]
+    ),
+  };
+
   return {
     peak,
+    worst,
     average,
   };
 };

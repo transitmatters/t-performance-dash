@@ -21,7 +21,7 @@ export const PredictionsGraphWrapper: React.FC<PredictionsGraphWrapperProps> = (
   endDate,
 }) => {
   if (data.length < 1) return <NoDataNotice isLineMetric />;
-  const { average, peak } = getDetailsPredictiondWidgetValues(data);
+  const { average, peak, worst } = getDetailsPredictiondWidgetValues(data);
   return (
     <CarouselGraphDiv>
       <WidgetCarousel>
@@ -36,6 +36,14 @@ export const PredictionsGraphWrapper: React.FC<PredictionsGraphWrapperProps> = (
             new PercentageWidgetValue(peak.num_accurate_predictions / peak.num_predictions)
           }
           analysis={`Peak Accuracy (${prettyDate(peak.weekly, false)})`}
+          sentimentDirection={'positiveOnIncrease'}
+          layoutKind="no-delta"
+        />
+        <WidgetForCarousel
+          widgetValue={
+            new PercentageWidgetValue(worst.num_accurate_predictions / worst.num_predictions)
+          }
+          analysis={`Worst Accuracy (${prettyDate(worst.weekly, false)})`}
           sentimentDirection={'positiveOnIncrease'}
           layoutKind="no-delta"
         />
