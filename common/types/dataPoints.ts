@@ -110,6 +110,22 @@ export type SpeedRestriction = {
   validAsOf: Date;
 };
 
+export interface TimePrediction {
+  mode: 'subway' | 'bus';
+  arrival_departure: string;
+  route_id: string;
+  bin: '0-3 min' | '3-6 min' | '6-12 min' | '12-30 min';
+  weekly: string;
+  num_accurate_predictions: number;
+  num_predictions: number;
+}
+
+export interface TimePredictionWeek {
+  week: string;
+  prediction: TimePrediction[];
+  routeId: string;
+}
+
 export type DayKind = 'weekday' | 'saturday' | 'sunday';
 
 export type ServiceLevels = {
