@@ -27,6 +27,7 @@ export const lineToDefaultRouteId = (line: Line | undefined): LineRouteId => {
 
 const calcValues = (predictions: TimePredictionWeek[]) => {
   const predictionsList = flatten(predictions.map(({ prediction }) => prediction));
+
   const averageAccurate =
     predictionsList.reduce(
       (currentSum, pred) =>
@@ -44,7 +45,19 @@ const calcValues = (predictions: TimePredictionWeek[]) => {
 
   const average = averageAccurate / averageTotal;
 
+  const peak = {
+    ...predictionsList.reduce(
+      (max, pred) =>
+        pred.num_accurate_predictions / pred.num_predictions >
+        max.num_accurate_predictions / max.num_predictions
+          ? pred
+          : max,
+      predictionsList[0]
+    ),
+  };
+
   return {
+    peak,
     average,
   };
 };

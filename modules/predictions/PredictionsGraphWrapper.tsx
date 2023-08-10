@@ -5,6 +5,7 @@ import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { PercentageWidgetValue } from '../../common/types/basicWidgets';
+import { prettyDate } from '../../common/utils/date';
 import { PredictionsGraph } from './PredictionsGraph';
 import { getDetailsPredictiondWidgetValues } from './utils/utils';
 
@@ -20,13 +21,21 @@ export const PredictionsGraphWrapper: React.FC<PredictionsGraphWrapperProps> = (
   endDate,
 }) => {
   if (data.length < 1) return <NoDataNotice isLineMetric />;
-  const { average } = getDetailsPredictiondWidgetValues(data);
+  const { average, peak } = getDetailsPredictiondWidgetValues(data);
   return (
     <CarouselGraphDiv>
       <WidgetCarousel>
         <WidgetForCarousel
           widgetValue={new PercentageWidgetValue(average)}
           analysis={'Average Accuracy'}
+          sentimentDirection={'positiveOnIncrease'}
+          layoutKind="no-delta"
+        />
+        <WidgetForCarousel
+          widgetValue={
+            new PercentageWidgetValue(peak.num_accurate_predictions / peak.num_predictions)
+          }
+          analysis={`Peak Accuracy (${prettyDate(peak.weekly, false)})`}
           sentimentDirection={'positiveOnIncrease'}
           layoutKind="no-delta"
         />
