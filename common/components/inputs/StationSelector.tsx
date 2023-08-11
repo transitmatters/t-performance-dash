@@ -99,7 +99,9 @@ export const StationSelector: React.FC<StationSelector> = ({
                             branchLabelWidth[line ?? 'DEFAULT'] ?? ''
                           )}
                         >
-                          {station.branches?.map((branch) => <p key={branch}>{branch}</p>)}
+                          {station.branches?.map((branch) => (
+                            <p key={branch}>{branch}</p>
+                          ))}
                         </div>
                         {station.stop_name}
                       </div>
