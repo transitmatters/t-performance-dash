@@ -5,6 +5,7 @@ import type { ChartDataset } from 'chart.js';
 
 import 'chartjs-adapter-date-fns';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import { enUS } from 'date-fns/locale';
 import { COLORS } from '../../../common/constants/colors';
@@ -12,7 +13,7 @@ import { THREE_MONTHS_AGO_STRING, TODAY_STRING } from '../../../common/constants
 import { SPEED_RANGE_PARAM_MAP } from '../../speed/constants/speeds';
 import { LANDING_RAIL_LINES } from '../../../common/types/lines';
 import { LINE_OBJECTS } from '../../../common/constants/lines';
-import { watermarkLayout } from '../../../common/constants/charts';
+import { DATA_LABELS_LANDING, watermarkLayout } from '../../../common/constants/charts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 
 interface LandingPageChartsProps {
@@ -20,14 +21,17 @@ interface LandingPageChartsProps {
   labels: string[];
   id: string;
 }
+// Add padding for datalabels.
+const CHART_PADDING = 48;
 
 export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, labels, id }) => {
   const isMobile = !useBreakpoint('md');
 
   const chart = useMemo(() => {
+    const watermarkLayoutValues = watermarkLayout(isMobile);
     const { tooltipFormat, unit, callbacks } = SPEED_RANGE_PARAM_MAP.week;
     return (
-      <div className="chart-container relative h-[240px] w-full lg:max-w-md">
+      <div className="chart-container relative h-[280px] w-full">
         <Line
           id={id}
           redraw={true}
@@ -36,15 +40,19 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
             datasets: datasets,
           }}
           options={{
+            layout: {
+              padding: { right: CHART_PADDING },
+            },
             responsive: true,
             maintainAspectRatio: false,
             interaction: {
               intersect: false,
-              mode: 'index',
+              mode: 'point',
             },
             // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
+            watermark: { ...watermarkLayoutValues, x: watermarkLayoutValues.x - CHART_PADDING }, // Adjust x to match the padding.
             plugins: {
+              datalabels: DATA_LABELS_LANDING,
               tooltip: {
                 position: 'nearest',
                 callbacks: {
@@ -99,7 +107,7 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
               },
             },
           }}
-          plugins={[ChartjsPluginWatermark]}
+          plugins={[ChartjsPluginWatermark, ChartDataLabels]}
         />
       </div>
     );

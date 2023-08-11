@@ -5,11 +5,11 @@ const BASELINE_STYLE = 'text-stone-900 italic text-xs text-center';
 
 //  copy from: https://docs.google.com/document/d/1kpJqbsNrJpW8gqfeuIjd2KplDacQyorAKE2w5wB6HUY/edit
 
-export const SpeedBaseline = <p className={BASELINE_STYLE}>Compared to historical maximums.</p>;
+export const SpeedBaseline = <p className={BASELINE_STYLE}>Compared to historical maximums</p>;
 
-export const ServiceBaseline = <p className={BASELINE_STYLE}>Compared to historical maximums. </p>;
+export const ServiceBaseline = <p className={BASELINE_STYLE}>Compared to historical maximums </p>;
 
-export const RidershipBaseline = <p className={BASELINE_STYLE}>Compared to historical maximums.</p>;
+export const RidershipBaseline = <p className={BASELINE_STYLE}>Compared to historical maximums</p>;
 
 export const SpeedDescription = (
   <p className={DESCRIPTION_STYLE}>

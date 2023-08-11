@@ -21,6 +21,8 @@ import Annotation from 'chartjs-plugin-annotation';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { GCScript } from 'next-goatcounter';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 import '../styles/dashboard.css';
 import '../styles/globals.css';
 import { Layouts } from '../common/layouts/Layouts';
@@ -42,6 +44,7 @@ ChartJS.register(
   PointElement,
   LineElement,
   Annotation,
+  ChartDataLabels,
   Filler,
   Title,
   Tooltip,
