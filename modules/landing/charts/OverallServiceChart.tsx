@@ -15,8 +15,8 @@ export const OverallServiceChart: React.FC<OverallServiceChartProps> = ({ servic
 
   return (
     <LandingChartDiv>
-      {ServiceBaseline}
       <LandingPageChart datasets={datasets} labels={labels} id="system-service" />
+      {ServiceBaseline}
     </LandingChartDiv>
   );
 };

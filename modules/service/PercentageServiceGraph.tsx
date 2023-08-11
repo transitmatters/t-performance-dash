@@ -24,7 +24,7 @@ interface PercentageServiceGraphProps {
   config: ParamsType;
   startDate: string;
   endDate: string;
-  comparison: 'Peak' | 'Scheduled';
+  comparison: 'Historical Maximum' | 'Scheduled';
   showTitle?: boolean;
 }
 

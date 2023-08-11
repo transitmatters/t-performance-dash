@@ -15,7 +15,7 @@ export const LandingCharts: React.FC = () => {
     line: 'line-red',
   });
   return (
-    <div className="flex flex-col items-center gap-8">
+    <div className="flex flex-col items-center gap-8 lg:gap-12">
       <LandingChartWidget title="Speed">
         <OverallSpeedChartWrapper />
       </LandingChartWidget>
