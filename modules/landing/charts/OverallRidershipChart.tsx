@@ -14,8 +14,8 @@ export const OverallRidershipChart: React.FC<OverallRidershipChartProps> = ({ ri
   const datasets = convertToRidershipDataset(ridershipData);
   return (
     <LandingChartDiv>
-      {RidershipBaseline}
       <LandingPageChart datasets={datasets} labels={labels} id="system-ridership" />
+      {RidershipBaseline}
     </LandingChartDiv>
   );
 };

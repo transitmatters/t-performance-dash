@@ -1,28 +1,15 @@
 import React from 'react';
 import type { LandingCharts } from '../modules/landing/types';
-const DESCRIPTION_STYLE = 'text-stone-90000 text-lg';
+const DESCRIPTION_STYLE = 'text-stone-900 text-lg';
 const BASELINE_STYLE = 'text-stone-900 italic text-xs text-center';
 
 //  copy from: https://docs.google.com/document/d/1kpJqbsNrJpW8gqfeuIjd2KplDacQyorAKE2w5wB6HUY/edit
 
-export const SpeedBaseline = (
-  <p className={BASELINE_STYLE}>
-    Peak speed is the calendar month with the highest average daily speed per line.
-  </p>
-);
+export const SpeedBaseline = <p className={BASELINE_STYLE}>Compared to historical maximums.</p>;
 
-export const ServiceBaseline = (
-  <p className={BASELINE_STYLE}>
-    Peak service is the calendar month with the highest average daily service per line.
-  </p>
-);
+export const ServiceBaseline = <p className={BASELINE_STYLE}>Compared to historical maximums. </p>;
 
-export const RidershipBaseline = (
-  <p className={BASELINE_STYLE}>
-    Peak ridership is the four-week period with the highest average <b>weekday</b> ridership per
-    line.
-  </p>
-);
+export const RidershipBaseline = <p className={BASELINE_STYLE}>Compared to historical maximums.</p>;
 
 export const SpeedDescription = (
   <p className={DESCRIPTION_STYLE}>

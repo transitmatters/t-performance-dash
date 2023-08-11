@@ -4,12 +4,16 @@ import { Line } from 'react-chartjs-2';
 import type { ChartDataset } from 'chart.js';
 
 import 'chartjs-adapter-date-fns';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+
 import { enUS } from 'date-fns/locale';
 import { COLORS } from '../../../common/constants/colors';
 import { THREE_MONTHS_AGO_STRING, TODAY_STRING } from '../../../common/constants/dates';
 import { SPEED_RANGE_PARAM_MAP } from '../../speed/constants/speeds';
 import { LANDING_RAIL_LINES } from '../../../common/types/lines';
 import { LINE_OBJECTS } from '../../../common/constants/lines';
+import { watermarkLayout } from '../../../common/constants/charts';
+import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 
 interface LandingPageChartsProps {
   datasets: ChartDataset<'line'>[];
@@ -18,6 +22,8 @@ interface LandingPageChartsProps {
 }
 
 export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, labels, id }) => {
+  const isMobile = !useBreakpoint('md');
+
   const chart = useMemo(() => {
     const { tooltipFormat, unit, callbacks } = SPEED_RANGE_PARAM_MAP.week;
     return (
@@ -36,6 +42,7 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
               intersect: false,
               mode: 'index',
             },
+            watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
                 position: 'nearest',
@@ -91,9 +98,10 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
               },
             },
           }}
+          plugins={[ChartjsPluginWatermark]}
         />
       </div>
     );
-  }, [datasets, labels, id]);
+  }, [datasets, labels, id, isMobile]);
   return chart;
 };
