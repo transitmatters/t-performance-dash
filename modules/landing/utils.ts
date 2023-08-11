@@ -12,11 +12,15 @@ import type { Line } from '../../common/types/lines';
 const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
   return {
     pointRadius: 4,
+    pointHitRadius: 8,
     borderColor: LINE_COLORS[line ?? 'default'],
     borderWidth: 4,
     pointBackgroundColor: LINE_COLORS[line ?? 'default'],
     pointBorderWidth: 0,
     tension: 0,
+    datalabels: {
+      backgroundColor: LINE_COLORS[line ?? 'default'],
+    },
     pointHoverRadius: 6,
     spanGaps: true,
     pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
