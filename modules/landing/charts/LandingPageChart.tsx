@@ -9,17 +9,12 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import { enUS } from 'date-fns/locale';
 import { COLORS } from '../../../common/constants/colors';
-import {
-  ONE_WEEK_AGO_STRING,
-  THREE_MONTHS_AGO_STRING,
-  TODAY_STRING,
-} from '../../../common/constants/dates';
+import { THREE_MONTHS_AGO_STRING, TODAY_STRING } from '../../../common/constants/dates';
 import { SPEED_RANGE_PARAM_MAP } from '../../speed/constants/speeds';
 import { LANDING_RAIL_LINES } from '../../../common/types/lines';
 import { LINE_OBJECTS } from '../../../common/constants/lines';
-import { watermarkLayout } from '../../../common/constants/charts';
+import { DATA_LABELS_LANDING, watermarkLayout } from '../../../common/constants/charts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { isMobile } from 'react-device-detect';
 
 interface LandingPageChartsProps {
   datasets: ChartDataset<'line'>[];
@@ -31,9 +26,9 @@ const CHART_PADDING = 48;
 
 export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, labels, id }) => {
   const isMobile = !useBreakpoint('md');
-  const watermarkLayoutValues = watermarkLayout(isMobile);
 
   const chart = useMemo(() => {
+    const watermarkLayoutValues = watermarkLayout(isMobile);
     const { tooltipFormat, unit, callbacks } = SPEED_RANGE_PARAM_MAP.week;
     return (
       <div className="chart-container relative h-[280px] w-full">
@@ -55,27 +50,9 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
               mode: 'point',
             },
             // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: { ...watermarkLayoutValues, x: watermarkLayoutValues.x - CHART_PADDING }, // Adjust x to
+            watermark: { ...watermarkLayoutValues, x: watermarkLayoutValues.x - CHART_PADDING }, // Adjust x to match the padding.
             plugins: {
-              datalabels: {
-                align: 'right', // Position of the labels relative to the data points
-                anchor: 'start',
-                clip: false,
-                color: '#ffffffe0', // Background color of the labels
-                padding: {
-                  top: 0,
-                  bottom: 0,
-                  right: 4,
-                  left: 4,
-                },
-                borderRadius: 10, // Border radius of the labels
-
-                font: {
-                  size: 12, // Font size of the labels
-                },
-                display: (context) => context.dataIndex === context.dataset.data.length - 1,
-                formatter: (value) => `${value}%`, // Format the label content
-              },
+              datalabels: DATA_LABELS_LANDING,
               tooltip: {
                 position: 'nearest',
                 callbacks: {
