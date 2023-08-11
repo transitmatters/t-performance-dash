@@ -15,7 +15,6 @@ import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { PEAK_SPEED } from '../../common/constants/baselines';
 import { getShuttlingBlockAnnotations } from '../service/utils/graphUtils';
-import { PEAK_MPH } from './constants/speeds';
 import type { ParamsType } from './constants/speeds';
 
 interface SpeedGraphProps {
@@ -68,7 +67,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
               },
               {
                 // This null dataset produces the entry in the legend for the baseline annotation.
-                label: `Peak (${peak})`,
+                label: `Historical Maximum (${peak})`,
                 backgroundColor: CHART_COLORS.ANNOTATIONS,
                 data: null,
               },
@@ -96,7 +95,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                   label: (context) => {
                     return `${context.parsed.y} (${((100 * context.parsed.y) / peak).toFixed(
                       1
-                    )}% of peak)`;
+                    )}% of historical maximum)`;
                   },
                 },
               },
@@ -130,7 +129,6 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
             scales: {
               y: {
                 suggestedMin: 0,
-                suggestedMax: PEAK_MPH[line ?? 'DEFAULT'],
                 display: true,
                 ticks: {
                   color: COLORS.design.subtitleGrey,

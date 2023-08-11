@@ -41,7 +41,7 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
                 position: 'nearest',
                 callbacks: {
                   label: (value) =>
-                    `${value.formattedValue}% of peak (${
+                    `${value.formattedValue}% of historical maximum (${
                       LINE_OBJECTS[LANDING_RAIL_LINES[value.datasetIndex]].name
                     })`,
                   ...callbacks,
@@ -56,14 +56,13 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
                 suggestedMax: 100,
                 display: true,
                 grid: { display: false },
-
                 ticks: {
                   color: COLORS.design.darkGrey,
                   callback: (value) => `${value}%`,
                 },
                 title: {
                   display: true,
-                  text: 'Percentage of peak',
+                  text: 'Percentage of historical maximum',
                   color: COLORS.design.darkGrey,
                 },
               },
@@ -72,7 +71,6 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
                 max: TODAY_STRING,
                 type: 'time',
                 grid: { display: false },
-
                 time: {
                   unit: unit,
                   tooltipFormat: tooltipFormat,

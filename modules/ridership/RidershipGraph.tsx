@@ -71,7 +71,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
 
                 {
                   // This null dataset produces the entry in the legend for the peak annotation.
-                  label: `peak (${PEAK_RIDERSHIP[routeIndex ?? 'DEFAULT']})`,
+                  label: `Historical Maximum (${PEAK_RIDERSHIP[routeIndex ?? 'DEFAULT']})`,
                   backgroundColor: CHART_COLORS.ANNOTATIONS,
                   data: null,
                 },
@@ -100,7 +100,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                       return `${context.parsed.y} (${(
                         (100 * context.parsed.y) /
                         PEAK_RIDERSHIP[routeIndex ?? 'DEFAULT']
-                      ).toFixed(1)}% of peak)`;
+                      ).toFixed(1)}% of historical maximum)`;
                     },
                   },
                 },

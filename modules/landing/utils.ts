@@ -28,7 +28,6 @@ export const convertToSpeedDataset = (data: { [key in Line]?: DeliveredTripMetri
     const datasetOptions = getDatasetOptions(line);
     return {
       ...datasetOptions,
-      label: `% of peak`,
       data:
         data[line]?.map((datapoint) =>
           datapoint.miles_covered
@@ -47,7 +46,6 @@ export const convertToServiceDataset = (data: { [key in Line]?: DeliveredTripMet
     const datasetOptions = getDatasetOptions(line);
     return {
       ...datasetOptions,
-      label: `% of peak`,
       data:
         data[line]?.map((datapoint) =>
           datapoint.miles_covered
@@ -64,7 +62,6 @@ export const convertToRidershipDataset = (data: { [key in Line]: RidershipCount[
       const datasetOptions = getDatasetOptions(line);
       return {
         ...datasetOptions,
-        label: `% of peak`,
         data: data[line]?.map((datapoint) =>
           datapoint.count
             ? Math.round(10 * 100 * (datapoint.count / PEAK_RIDERSHIP[line])) / 10

@@ -40,7 +40,7 @@ export const configToQueryParams = (search: ReadonlyURLSearchParams | URLSearchP
 
   const queryArr = Object.entries(query).filter((pair) => pair[1] !== undefined) as [
     string,
-    string,
+    string
   ][];
   if (busOrLine.type === 'bus') queryArr.push(['busRoute', busOrLine.value]);
 

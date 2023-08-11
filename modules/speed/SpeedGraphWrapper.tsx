@@ -42,7 +42,7 @@ export const SpeedGraphWrapper: React.FC<SpeedGraphWrapperProps> = ({
         />
         <WidgetForCarousel
           widgetValue={new MPHWidgetValue(peak.mph, undefined)}
-          analysis={`Peak (${config.getWidgetTitle(peak.date)})`}
+          analysis={`Historical Maximum - ${config.getWidgetTitle(peak.date)}`}
           sentimentDirection={'positiveOnIncrease'}
           layoutKind="no-delta"
         />
