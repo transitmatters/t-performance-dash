@@ -76,12 +76,4 @@ export const CORE_TRACK_LENGTHS = {
   DEFAULT: 1,
 };
 
-// Commented this out because these resulted in values slightly higher than the actual peaks in our data
-// export const PEAK_MPH = {
-//   'line-red': CORE_TRACK_LENGTHS['line-red'] / (PEAK_COMPLETE_TRIP_TIMES['line-red'].value / 3600),
-//   'line-orange':
-//     CORE_TRACK_LENGTHS['line-orange'] / (PEAK_COMPLETE_TRIP_TIMES['line-orange'].value / 3600),
-//   'line-blue':
-//     CORE_TRACK_LENGTHS['line-blue'] / (PEAK_COMPLETE_TRIP_TIMES['line-blue'].value / 3600),
-//   DEFAULT: 1,
-// };
+// Peak_MPH removed in #825
