@@ -27,7 +27,7 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
   const chart = useMemo(() => {
     const { tooltipFormat, unit, callbacks } = SPEED_RANGE_PARAM_MAP.week;
     return (
-      <div className="h-[240px]">
+      <div className="chart-container relative h-[240px] w-full lg:max-w-md">
         <Line
           id={id}
           redraw={true}
