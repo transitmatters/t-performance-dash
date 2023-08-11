@@ -42,6 +42,7 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
               intersect: false,
               mode: 'index',
             },
+            // @ts-expect-error The watermark plugin doesn't have typescript support
             watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
