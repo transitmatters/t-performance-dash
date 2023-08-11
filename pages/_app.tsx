@@ -51,6 +51,10 @@ ChartJS.register(
   Legend
 );
 
+// ChartDataLabels plugin defaults to displaying on every chart.
+if (ChartJS.defaults.plugins.datalabels?.display)
+  ChartJS.defaults.plugins.datalabels.display = false;
+
 export default function App({ Component, pageProps }) {
   const isProd = typeof window !== 'undefined' && window.location.hostname === PRODUCTION;
 
