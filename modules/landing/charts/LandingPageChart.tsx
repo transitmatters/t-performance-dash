@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 
 import { Line } from 'react-chartjs-2';
 import type { ChartDataset } from 'chart.js';
+import dayjs from 'dayjs';
 
 import 'chartjs-adapter-date-fns';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
@@ -9,7 +10,11 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import { enUS } from 'date-fns/locale';
 import { COLORS } from '../../../common/constants/colors';
-import { THREE_MONTHS_AGO_STRING, TODAY_STRING } from '../../../common/constants/dates';
+import {
+  PRETTY_DATE_FORMAT,
+  THREE_MONTHS_AGO_STRING,
+  TODAY_STRING,
+} from '../../../common/constants/dates';
 import { SPEED_RANGE_PARAM_MAP } from '../../speed/constants/speeds';
 import { LANDING_RAIL_LINES } from '../../../common/types/lines';
 import { LINE_OBJECTS } from '../../../common/constants/lines';
@@ -29,7 +34,7 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
 
   const chart = useMemo(() => {
     const watermarkLayoutValues = watermarkLayout(isMobile);
-    const { tooltipFormat, unit, callbacks } = SPEED_RANGE_PARAM_MAP.week;
+    const { tooltipFormat, unit } = SPEED_RANGE_PARAM_MAP.week;
     return (
       <div className="chart-container relative h-[280px] w-full">
         <Line
@@ -60,7 +65,13 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
                     `${value.formattedValue}% of historical maximum (${
                       LINE_OBJECTS[LANDING_RAIL_LINES[value.datasetIndex]].name
                     })`,
-                  ...callbacks,
+                  title: (value) => {
+                    const startDay = dayjs(value[0].label);
+                    const endDay = startDay.add(6, 'days');
+                    return `${startDay.format(PRETTY_DATE_FORMAT)} - ${endDay.format(
+                      PRETTY_DATE_FORMAT
+                    )}`;
+                  },
                 },
               },
               legend: {
