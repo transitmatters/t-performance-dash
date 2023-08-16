@@ -82,7 +82,7 @@ echo "Backend hostname: $BACKEND_HOSTNAME"
 echo "CloudFormation stack name: $CF_STACK_NAME"
 
 # build frontend
-npm run build-v4
+npm run build
 
 pushd server/ > /dev/null
 poetry export --without-hashes --output requirements.txt

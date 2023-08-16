@@ -2,7 +2,6 @@ import type { TooltipCallbacks, TooltipItem, TooltipModel } from 'chart.js';
 import type { _DeepPartialObject } from 'chart.js/dist/types/utils';
 import dayjs from 'dayjs';
 import { todayOrDate } from '../../../common/constants/dates';
-import { PEAK_COMPLETE_TRIP_TIMES } from '../../../common/constants/baselines';
 
 export type AggType = 'daily' | 'weekly' | 'monthly';
 export type ParamsType = {
@@ -77,11 +76,4 @@ export const CORE_TRACK_LENGTHS = {
   DEFAULT: 1,
 };
 
-export const PEAK_MPH = {
-  'line-red': CORE_TRACK_LENGTHS['line-red'] / (PEAK_COMPLETE_TRIP_TIMES['line-red'].value / 3600),
-  'line-orange':
-    CORE_TRACK_LENGTHS['line-orange'] / (PEAK_COMPLETE_TRIP_TIMES['line-orange'].value / 3600),
-  'line-blue':
-    CORE_TRACK_LENGTHS['line-blue'] / (PEAK_COMPLETE_TRIP_TIMES['line-blue'].value / 3600),
-  DEFAULT: 1,
-};
+// Peak_MPH removed in #825

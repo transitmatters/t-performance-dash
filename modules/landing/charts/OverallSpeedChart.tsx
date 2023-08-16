@@ -14,8 +14,8 @@ export const OverallSpeedChart: React.FC<OverallSpeedChartProps> = ({ speedData 
   const datasets = convertToSpeedDataset(speedData);
   return (
     <LandingChartDiv>
-      {SpeedBaseline}
       <LandingPageChart datasets={datasets} labels={labels} id="system-speed" />
+      {SpeedBaseline}
     </LandingChartDiv>
   );
 };
