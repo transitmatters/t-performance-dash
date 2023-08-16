@@ -12,6 +12,7 @@ import { usePredictionData } from '../../common/api/hooks/predictions';
 import type { LineRouteId } from '../../common/types/lines';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import { Accordion } from '../../common/components/accordion/Accordion';
 import { PredictionsDetailsWrapper } from './PredictionsDetailsWrapper';
 import { lineToDefaultRouteId } from './utils/utils';
 dayjs.extend(utc);
@@ -79,6 +80,35 @@ export function PredictionsDetails() {
             </div>
           )}
           {greenBranchToggle}
+        </WidgetDiv>
+        <WidgetDiv>
+          <Accordion
+            contentList={[
+              {
+                title: 'About this Data',
+                content: (
+                  <div>
+                    <p>
+                      Prediction accuracy is a calculation based on data collected by the MBTA.
+                      Whenever the MBTA makes a prediction about a train or bus arrival, for example
+                      "Alewife 4 mins", it records that and then checks back when that train it
+                      predicted would be there in 4 minutes actually arrived. The T categorizes
+                      these into 4 groups: "0-3 min", "3-6 min", "6-12 min", and "12-30 min". Each
+                      grouping has different thresholds for what count as "accurate".
+                    </p>
+                    <p>For a given bin, the passing threshold is if a vehicle arrives:</p>
+                    <ul className={'ml-7 list-disc'}>
+                      <li>0-3 min: 60 seconds early to 60 seconds late</li>
+                      <li>3-6 min: 90 seconds early to 120 seconds late</li>
+                      <li>6-12 min: 150 seconds early to 210 seconds late</li>
+                      <li>12-30 min: 240 seconds early to 360 seconds late.</li>
+                    </ul>
+                  </div>
+                ),
+              },
+            ]}
+            size={'lg'}
+          />
         </WidgetDiv>
       </ChartPageDiv>
     </PageWrapper>
