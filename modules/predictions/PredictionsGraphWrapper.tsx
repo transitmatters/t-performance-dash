@@ -35,7 +35,7 @@ export const PredictionsGraphWrapper: React.FC<PredictionsGraphWrapperProps> = (
           widgetValue={
             new PercentageWidgetValue(peak.num_accurate_predictions / peak.num_predictions)
           }
-          analysis={`Peak Accuracy (${prettyDate(peak.weekly, false)})`}
+          analysis={`Best Accuracy (${prettyDate(peak.weekly, false)})`}
           sentimentDirection={'positiveOnIncrease'}
           layoutKind="no-delta"
         />
