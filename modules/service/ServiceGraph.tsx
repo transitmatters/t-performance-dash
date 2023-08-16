@@ -89,7 +89,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                 },
                 {
                   // This null dataset produces the entry in the legend for the baseline annotation.
-                  label: `Historical Maximum (${peak})`,
+                  label: `Historical Maximum (${peak.toLocaleString("en-us")} trips)`,
                   backgroundColor: CHART_COLORS.ANNOTATIONS,
                   data: null,
                 },
@@ -115,9 +115,8 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   callbacks: {
                     ...callbacks,
                     label: (context) => {
-                      return `${context.datasetIndex === 0 ? 'Actual:' : 'Scheduled:'} ${
-                        context.parsed.y
-                      } (${((100 * context.parsed.y) / peak).toFixed(1)}% of historical maximum)`;
+                      return `${context.datasetIndex === 0 ? 'Actual:' : 'Scheduled:'} ${context.parsed.y
+                        } (${((100 * context.parsed.y) / peak).toFixed(1)}% of historical maximum)`;
                     },
                   },
                 },
@@ -157,7 +156,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   },
                   title: {
                     display: true,
-                    text: 'trips',
+                    text: 'Trips',
                     color: COLORS.design.subtitleGrey,
                   },
                 },

@@ -1,6 +1,7 @@
 name: healthcheck
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '15 23 * * *' # 7:15PM EST every day
 

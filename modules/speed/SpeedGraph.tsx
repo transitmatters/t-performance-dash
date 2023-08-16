@@ -53,6 +53,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
             datasets: [
               {
                 label: `MPH`,
+                backgroundColor: COLORS.design.background,
                 borderColor: LINE_COLORS[line ?? 'default'],
                 pointRadius: 0,
                 pointBorderWidth: 0,
@@ -67,7 +68,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
               },
               {
                 // This null dataset produces the entry in the legend for the baseline annotation.
-                label: `Historical Maximum (${peak})`,
+                label: `Historical Maximum (${peak} mph)`,
                 backgroundColor: CHART_COLORS.ANNOTATIONS,
                 data: null,
               },
