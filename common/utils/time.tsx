@@ -43,7 +43,7 @@ export const getFormattedTimeValue = (value: number, isLarge?: boolean) => {
         <p>
           <WidgetText isLarge={isLarge} text={duration.format('H')} />
           <UnitText isLarge={isLarge} text={'h'} />{' '}
-          <WidgetText text={duration.format('m').padStart(2, '0')} />
+          <WidgetText isLarge={isLarge} text={duration.format('m').padStart(2, '0')} />
           <UnitText isLarge={isLarge} text={'m'} />
         </p>
       );
