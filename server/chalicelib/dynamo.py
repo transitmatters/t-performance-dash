@@ -11,14 +11,26 @@ dynamodb = boto3.resource("dynamodb")
 
 def query_daily_trips_on_route(table_name, route, start_date, end_date):
     table = dynamodb.Table(table_name)
-    response = table.query(KeyConditionExpression=Key("route").eq(route) & Key("date").between(start_date, end_date))
+    response = table.query(
+        KeyConditionExpression=Key("route").eq(route)
+        & Key("date").between(start_date, end_date)
+    )
     return ddb_json.loads(response["Items"])
 
 
 def query_daily_trips_on_line(table_name, line, start_date, end_date):
     route_keys = constants.LINE_TO_ROUTE_MAP[line]
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-        futures = [executor.submit(query_daily_trips_on_route, table_name, route_key, start_date, end_date) for route_key in route_keys]
+        futures = [
+            executor.submit(
+                query_daily_trips_on_route,
+                table_name,
+                route_key,
+                start_date,
+                end_date,
+            )
+            for route_key in route_keys
+        ]
         results = []
         for future in concurrent.futures.as_completed(futures):
             result = future.result()
@@ -44,7 +56,9 @@ def query_ridership(start_date: date, end_date: date, line_id: str = None):
     return ddb_json.loads(response["Items"])
 
 
-def query_agg_trip_metrics(start_date: str, end_date: str, table_name: str, line: str = None):
+def query_agg_trip_metrics(
+    start_date: str, end_date: str, table_name: str, line: str = None
+):
     table = dynamodb.Table(table_name)
     line_condition = Key("line").eq(line)
     date_condition = Key("date").between(start_date, end_date)
