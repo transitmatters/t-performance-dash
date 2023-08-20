@@ -1,21 +1,21 @@
 import React from 'react';
-import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
-import type { TimePredictionWeek } from '../../common/types/dataPoints';
-import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
-import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
-import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
-import { PercentageWidgetValue } from '../../common/types/basicWidgets';
-import { prettyDate } from '../../common/utils/date';
-import { PredictionsGraph } from './PredictionsGraph';
-import { getDetailsPredictiondWidgetValues } from './utils/utils';
+import { CarouselGraphDiv } from '../../../common/components/charts/CarouselGraphDiv';
+import type { TimePredictionWeek } from '../../../common/types/dataPoints';
+import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
+import { WidgetCarousel } from '../../../common/components/general/WidgetCarousel';
+import { WidgetForCarousel } from '../../../common/components/widgets/internal/WidgetForCarousel';
+import { PercentageWidgetValue } from '../../../common/types/basicWidgets';
+import { prettyDate } from '../../../common/utils/date';
+import { PredictionsBinsGraph } from './PredictionsBinsGraph';
+import { getDetailsPredictiondWidgetValues } from '../utils/utils';
 
-interface PredictionsGraphWrapperProps {
+interface PredictionsBinsGraphWrapperProps {
   data: TimePredictionWeek[];
   startDate: string;
   endDate: string;
 }
 
-export const PredictionsGraphWrapper: React.FC<PredictionsGraphWrapperProps> = ({
+export const PredictionsBinsGraphWrapper: React.FC<PredictionsBinsGraphWrapperProps> = ({
   data,
   startDate,
   endDate,
@@ -48,7 +48,7 @@ export const PredictionsGraphWrapper: React.FC<PredictionsGraphWrapperProps> = (
           layoutKind="no-delta"
         />
       </WidgetCarousel>
-      <PredictionsGraph data={data} startDate={startDate} endDate={endDate} />
+      <PredictionsBinsGraph data={data} startDate={startDate} endDate={endDate} />
     </CarouselGraphDiv>
   );
 };

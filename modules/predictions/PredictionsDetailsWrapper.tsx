@@ -1,7 +1,7 @@
 import React from 'react';
 import type { TimePredictionWeek } from '../../common/types/dataPoints';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
-import { PredictionsGraphWrapper } from './PredictionsGraphWrapper';
+import { PredictionsBinsGraphWrapper } from './charts/PredictionsBinsGraphWrapper';
 
 interface PredictionsDetailsWrapperProps {
   data: TimePredictionWeek[];
@@ -17,7 +17,7 @@ export const PredictionsDetailsWrapper: React.FC<PredictionsDetailsWrapperProps>
   return (
     <>
       <WidgetTitle title="Time Predictions" />
-      <PredictionsGraphWrapper data={data} startDate={startDate} endDate={endDate} />
+      <PredictionsBinsGraphWrapper data={data} startDate={startDate} endDate={endDate} />
     </>
   );
 };

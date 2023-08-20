@@ -5,24 +5,24 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
-import { useDelimitatedRoute } from '../../common/utils/router';
-import { CHART_COLORS, COLORS, LINE_COLORS_LEVELS } from '../../common/constants/colors';
-import type { TimePrediction, TimePredictionWeek } from '../../common/types/dataPoints';
-import { drawSimpleTitle } from '../../common/components/charts/Title';
-import { useBreakpoint } from '../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../common/constants/charts';
-import { ChartBorder } from '../../common/components/charts/ChartBorder';
-import { ChartDiv } from '../../common/components/charts/ChartDiv';
-import { PEAK_SPEED } from '../../common/constants/baselines';
+import { useDelimitatedRoute } from '../../../common/utils/router';
+import { CHART_COLORS, COLORS, LINE_COLORS_LEVELS } from '../../../common/constants/colors';
+import type { TimePrediction, TimePredictionWeek } from '../../../common/types/dataPoints';
+import { drawSimpleTitle } from '../../../common/components/charts/Title';
+import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
+import { watermarkLayout } from '../../../common/constants/charts';
+import { ChartBorder } from '../../../common/components/charts/ChartBorder';
+import { ChartDiv } from '../../../common/components/charts/ChartDiv';
+import { PEAK_SPEED } from '../../../common/constants/baselines';
 
-interface PredictionsGraphProps {
+interface PredictionsBinsGraphProps {
   data: TimePredictionWeek[];
   startDate: string;
   endDate: string;
   showTitle?: boolean;
 }
 
-export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
+export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
   data,
   startDate,
   endDate,
