@@ -1,7 +1,6 @@
 import React from 'react';
 import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
-import { getDetailsPredictiondWidgetValues } from '../utils/utils';
 import { WidgetTitle } from '../../dashboard/WidgetTitle';
 import { PredictionsBinsGraph } from './PredictionsBinsGraph';
 
@@ -17,7 +16,6 @@ export const PredictionsBinsGraphWrapper: React.FC<PredictionsBinsGraphWrapperPr
   endDate,
 }) => {
   if (data.length < 1) return <NoDataNotice isLineMetric />;
-  const { average, peak, worst } = getDetailsPredictiondWidgetValues(data);
   return (
     <>
       <WidgetTitle title="Time Predictions by Bin" />

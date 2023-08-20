@@ -34,20 +34,23 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.week);
 
-  const reducedData = data
-      .map(({ week, prediction }) => ({ week: week, num_predictions: prediction.reduce((total, { num_predictions}) => {
-        if (total !== undefined && num_predictions !== undefined) {
-          return total + num_predictions;
-        } else {
-          return total;
-        }
-      }, 0), num_accurate_predictions: prediction.reduce((total, { num_accurate_predictions}) => {
-        if (total !== undefined && num_accurate_predictions !== undefined) {
-          return total + num_accurate_predictions;
-        } else {
-          return total;
-        }
-      }, 0) }));
+  const reducedData = data.map(({ week, prediction }) => ({
+    week: week,
+    num_predictions: prediction.reduce((total, { num_predictions }) => {
+      if (total !== undefined && num_predictions !== undefined) {
+        return total + num_predictions;
+      } else {
+        return total;
+      }
+    }, 0),
+    num_accurate_predictions: prediction.reduce((total, { num_accurate_predictions }) => {
+      if (total !== undefined && num_accurate_predictions !== undefined) {
+        return total + num_accurate_predictions;
+      } else {
+        return total;
+      }
+    }, 0),
+  }));
 
   return (
     <ChartBorder>
