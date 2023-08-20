@@ -13,8 +13,9 @@ import type { LineRouteId } from '../../common/types/lines';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { Accordion } from '../../common/components/accordion/Accordion';
-import { PredictionsDetailsWrapper } from './PredictionsDetailsWrapper';
 import { lineToDefaultRouteId } from './utils/utils';
+import { PredictionsGraphWrapper } from './charts/PredictionsGraphWrapper';
+import { PredictionsBinsGraphWrapper } from './charts/PredictionsBinsGraphWrapper';
 dayjs.extend(utc);
 
 enum GreenLineBranchOptions {
@@ -69,7 +70,21 @@ export function PredictionsDetails() {
       <ChartPageDiv>
         <WidgetDiv>
           {predictionsReady ? (
-            <PredictionsDetailsWrapper
+            <PredictionsGraphWrapper
+              data={predictions.data}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          ) : (
+            <div className="relative flex h-full">
+              <ChartPlaceHolder query={predictions} />
+            </div>
+          )}
+          {greenBranchToggle}
+        </WidgetDiv>
+        <WidgetDiv>
+          {predictionsReady ? (
+            <PredictionsBinsGraphWrapper
               data={predictions.data}
               startDate={startDate}
               endDate={endDate}
