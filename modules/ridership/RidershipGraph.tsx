@@ -58,7 +58,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
               labels,
               datasets: [
                 {
-                  label: `Riders`,
+                  label: `Fare Validations`,
                   borderColor: lineColor,
                   backgroundColor: hexWithAlpha(lineColor, 0.8),
                   pointRadius: 0,
@@ -73,7 +73,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                   // This null dataset produces the entry in the legend for the peak annotation.
                   label: `Historical Maximum (${PEAK_RIDERSHIP[
                     routeIndex ?? 'DEFAULT'
-                  ].toLocaleString('en-us')} riders)`,
+                  ].toLocaleString('en-us')} fare validations)`,
                   backgroundColor: CHART_COLORS.ANNOTATIONS,
                   data: null,
                 },
@@ -99,7 +99,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                   callbacks: {
                     ...callbacks,
                     label: (context) => {
-                      return `${context.parsed.y} (${(
+                      return `${context.parsed.y.toLocaleString('en-us')} (${(
                         (100 * context.parsed.y) /
                         PEAK_RIDERSHIP[routeIndex ?? 'DEFAULT']
                       ).toFixed(1)}% of historical maximum)`;
@@ -141,7 +141,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                   },
                   title: {
                     display: true,
-                    text: 'Riders',
+                    text: 'Fare Validations',
                     color: COLORS.design.subtitleGrey,
                   },
                 },
