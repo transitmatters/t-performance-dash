@@ -157,7 +157,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   },
                   title: {
                     display: true,
-                    text: 'Round Trips',
+                    text: 'Round trips',
                     color: COLORS.design.subtitleGrey,
                   },
                 },

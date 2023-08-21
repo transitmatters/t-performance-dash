@@ -58,7 +58,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
               labels,
               datasets: [
                 {
-                  label: `Fare Validations`,
+                  label: `Fare validations`,
                   borderColor: lineColor,
                   backgroundColor: hexWithAlpha(lineColor, 0.8),
                   pointRadius: 0,
@@ -141,7 +141,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                   },
                   title: {
                     display: true,
-                    text: 'Fare Validations',
+                    text: 'Fare validations',
                     color: COLORS.design.subtitleGrey,
                   },
                 },
