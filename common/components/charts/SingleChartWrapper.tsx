@@ -12,7 +12,6 @@ interface SingleChartWrapperProps {
   toStation: Station | undefined;
   fromStation: Station | undefined;
   type: 'headways' | 'traveltimes' | 'dwells';
-  isHomescreen?: boolean;
   showLegend?: boolean;
 }
 
@@ -21,7 +20,6 @@ export const SingleChartWrapper: React.FC<SingleChartWrapperProps> = ({
   toStation,
   fromStation,
   type,
-  isHomescreen,
   showLegend,
 }) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
@@ -34,7 +32,6 @@ export const SingleChartWrapper: React.FC<SingleChartWrapperProps> = ({
           traveltimes={query.data}
           toStation={toStation}
           fromStation={fromStation}
-          isHomescreen={isHomescreen}
           showLegend={showLegend}
         />
       );
@@ -44,7 +41,6 @@ export const SingleChartWrapper: React.FC<SingleChartWrapperProps> = ({
           headways={query.data}
           fromStation={fromStation}
           toStation={toStation}
-          isHomescreen={isHomescreen}
         />
       );
     case 'dwells':
@@ -53,7 +49,6 @@ export const SingleChartWrapper: React.FC<SingleChartWrapperProps> = ({
           dwells={query.data}
           fromStation={fromStation}
           toStation={toStation}
-          isHomescreen={isHomescreen}
         />
       );
   }

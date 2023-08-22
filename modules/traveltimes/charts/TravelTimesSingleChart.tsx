@@ -11,7 +11,6 @@ interface TravelTimesSingleChartProps {
   toStation: Station;
   fromStation: Station;
   showLegend?: boolean;
-  isHomescreen?: boolean;
 }
 
 export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
@@ -19,7 +18,6 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
   toStation,
   fromStation,
   showLegend = true,
-  isHomescreen = false,
 }) => {
   const {
     linePath,
@@ -43,7 +41,6 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
         location={getLocationDetails(fromStation, toStation)}
         fname={'traveltimes'}
         showLegend={showLegend && anyTravelBenchmarks}
-        isHomescreen={isHomescreen}
       />
     );
   }, [
@@ -54,7 +51,6 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
     toStation,
     showLegend,
     anyTravelBenchmarks,
-    isHomescreen,
   ]);
 
   return chart;
