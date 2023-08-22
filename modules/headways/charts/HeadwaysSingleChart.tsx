@@ -34,16 +34,7 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
         showLegend={showLegend && anyHeadwayBenchmarks}
       />
     );
-  }, [
-    linePath,
-    headways,
-    date,
-    fromStation,
-    toStation,
-    showLegend,
-    anyHeadwayBenchmarks,
-
-  ]);
+  }, [linePath, headways, date, fromStation, toStation, showLegend, anyHeadwayBenchmarks]);
 
   return chart;
 };

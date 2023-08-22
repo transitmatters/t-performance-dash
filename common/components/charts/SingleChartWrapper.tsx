@@ -45,11 +45,7 @@ export const SingleChartWrapper: React.FC<SingleChartWrapperProps> = ({
       );
     case 'dwells':
       return (
-        <DwellsSingleChart
-          dwells={query.data}
-          fromStation={fromStation}
-          toStation={toStation}
-        />
+        <DwellsSingleChart dwells={query.data} fromStation={fromStation} toStation={toStation} />
       );
   }
 };

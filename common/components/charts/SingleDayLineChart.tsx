@@ -74,10 +74,14 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
 
   // Format benchmark data if it exists.
-  const benchmarkData = data.map((datapoint) => (benchmarkField && datapoint[benchmarkField]) ? datapoint[benchmarkField] : undefined)
-  const displayBenchmarkData = benchmarkData.every((datapoint) => datapoint !== undefined)
+  const benchmarkData = data.map((datapoint) =>
+    benchmarkField && datapoint[benchmarkField] ? datapoint[benchmarkField] : undefined
+  );
+  const displayBenchmarkData = benchmarkData.every((datapoint) => datapoint !== undefined);
   // Have to use `as number` because typescript doesn't understand `datapoint` is not undefined.
-  const benchmarkDataFormatted = displayBenchmarkData ? benchmarkData.map((datapoint) => (datapoint as number / 60).toFixed(2)) : null
+  const benchmarkDataFormatted = displayBenchmarkData
+    ? benchmarkData.map((datapoint) => ((datapoint as number) / 60).toFixed(2))
+    : null;
 
   return (
     <ChartBorder>

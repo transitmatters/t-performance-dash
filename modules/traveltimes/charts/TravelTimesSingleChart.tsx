@@ -43,15 +43,7 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
         showLegend={showLegend && anyTravelBenchmarks}
       />
     );
-  }, [
-    linePath,
-    traveltimes,
-    date,
-    fromStation,
-    toStation,
-    showLegend,
-    anyTravelBenchmarks,
-  ]);
+  }, [linePath, traveltimes, date, fromStation, toStation, showLegend, anyTravelBenchmarks]);
 
   return chart;
 };
