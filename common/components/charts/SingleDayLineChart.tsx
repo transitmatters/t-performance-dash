@@ -5,12 +5,11 @@ import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { DataPoint } from '../../types/dataPoints';
-import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import { CHART_COLORS, COLORS } from '../../../common/constants/colors';
 import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
 import type { SingleDayLineProps } from '../../../common/types/charts';
 import { getAlertAnnotations } from '../../../modules/service/utils/graphUtils';
 import { prettyDate } from '../../utils/date';
-import { useDelimitatedRoute } from '../../utils/router';
 import { DownloadButton } from '../buttons/DownloadButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
@@ -66,7 +65,6 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   fname,
   bothStops = false,
   location,
-  isHomescreen = false,
   showLegend = true,
 }) => {
   const ref = useRef();
@@ -74,7 +72,17 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const alertAnnotations = date && alerts ? getAlertAnnotations(alerts, date) : [];
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
-  const { line } = useDelimitatedRoute();
+
+  // Format benchmark data if it exists.
+  const benchmarkData = data.map((datapoint) =>
+    benchmarkField && datapoint[benchmarkField] ? datapoint[benchmarkField] : undefined
+  );
+  const displayBenchmarkData = benchmarkData.every((datapoint) => datapoint !== undefined);
+  // Have to use `as number` because typescript doesn't understand `datapoint` is not undefined.
+  const benchmarkDataFormatted = displayBenchmarkData
+    ? benchmarkData.map((datapoint) => ((datapoint as number) / 60).toFixed(2))
+    : null;
+
   return (
     <ChartBorder>
       <ChartDiv isMobile={isMobile}>
@@ -90,16 +98,9 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 label: `Actual`,
                 fill: false,
                 borderColor: '#a0a0a030',
-                pointBackgroundColor:
-                  isHomescreen && line
-                    ? LINE_COLORS[line]
-                    : pointColors(data, metricField, benchmarkField),
-                pointBorderWidth: isHomescreen ? 0 : undefined,
+                pointBackgroundColor: pointColors(data, metricField, benchmarkField),
                 pointHoverRadius: 3,
-                pointHoverBackgroundColor:
-                  isHomescreen && line
-                    ? LINE_COLORS[line]
-                    : pointColors(data, metricField, benchmarkField),
+                pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField),
                 pointRadius: 3,
                 pointHitRadius: 10,
                 data: data.map((datapoint) => ((datapoint[metricField] as number) / 60).toFixed(2)),
@@ -107,13 +108,11 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               {
                 label: `Benchmark MBTA`,
                 backgroundColor: '#a0a0a030',
-                data: benchmarkField
-                  ? data.map((datapoint) => ((datapoint[benchmarkField] as number) / 60).toFixed(2))
-                  : [],
+                data: benchmarkDataFormatted,
                 pointRadius: 0,
                 pointHoverRadius: 3,
                 fill: true,
-                hidden: benchmarkField === undefined,
+                hidden: !displayBenchmarkData,
               },
             ],
           }}
@@ -218,7 +217,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
         {alerts && <AlertsDisclaimer alerts={alerts} />}
         <div className="flex flex-row items-end gap-4 ">
           {showLegend && benchmarkField ? <LegendSingleDay /> : <div className="w-full" />}
-          {!isHomescreen && date && (
+          {date && (
             <DownloadButton
               data={data}
               datasetName={fname}

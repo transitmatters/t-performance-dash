@@ -10,14 +10,12 @@ interface DwellsSingleChartProps {
   dwells: SingleDayDataPoint[];
   toStation: Station;
   fromStation: Station;
-  isHomescreen?: boolean;
 }
 
 export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
   dwells,
   toStation,
   fromStation,
-  isHomescreen = false,
 }) => {
   const {
     linePath,
@@ -35,10 +33,9 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
         location={getLocationDetails(fromStation, toStation)}
         fname={'dwells'}
         showLegend={false}
-        isHomescreen={isHomescreen}
       />
     );
-  }, [dwells, fromStation, linePath, date, toStation, isHomescreen]);
+  }, [dwells, fromStation, linePath, date, toStation]);
 
   return chart;
 };
