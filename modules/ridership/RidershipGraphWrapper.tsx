@@ -27,7 +27,7 @@ export const RidershipGraphWrapper: React.FC<RidershipGraphWrapperProps> = ({
   endDate,
 }) => {
   if (!data.some((datapoint) => datapoint.count !== null)) return <NoDataNotice isLineMetric />;
-  const { average, percentage } = getRidershipWidgetValues(data, line, busRoute);
+  const { average, percentage, peak } = getRidershipWidgetValues(data, line, busRoute);
 
   return (
     <CarouselGraphDiv>
@@ -39,10 +39,16 @@ export const RidershipGraphWrapper: React.FC<RidershipGraphWrapperProps> = ({
           layoutKind="no-delta"
         />
         <WidgetForCarousel
-          analysis={'of peak'}
+          analysis={'of Historical Maximum'}
           sentimentDirection={'positiveOnIncrease'}
           layoutKind="no-delta"
           widgetValue={new PercentageWidgetValue(percentage)}
+        />
+        <WidgetForCarousel
+          layoutKind="no-delta"
+          sentimentDirection={'positiveOnIncrease'}
+          analysis={`Max - ${config.getWidgetTitle(peak.date)}`}
+          widgetValue={new RidersWidgetValue(peak ? peak.count : undefined)}
         />
       </WidgetCarousel>
       <RidershipGraph config={config} data={data} startDate={startDate} endDate={endDate} />

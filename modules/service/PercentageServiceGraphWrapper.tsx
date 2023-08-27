@@ -18,8 +18,8 @@ interface PercentageServiceGraphWrapperProps {
   config: ParamsType;
   startDate: string;
   endDate: string;
-  comparison: 'Scheduled' | 'Peak';
-  setComparison: React.Dispatch<SetStateAction<'Scheduled' | 'Peak'>>;
+  comparison: 'Scheduled' | 'Historical Maximum';
+  setComparison: React.Dispatch<SetStateAction<'Scheduled' | 'Historical Maximum'>>;
 }
 
 export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapperProps> = ({
@@ -62,7 +62,10 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
       </CarouselGraphDiv>
       <div className={'flex w-full justify-center pt-2'}>
         <ButtonGroup
-          options={Object.entries({ Scheduled: 'Scheduled', Peak: 'Peak' })}
+          options={Object.entries({
+            Scheduled: 'Scheduled',
+            'Historical Maximum': 'Historical Maximum',
+          })}
           pressFunction={setComparison}
           additionalDivClass="md:w-auto"
           additionalButtonClass="md:w-fit"

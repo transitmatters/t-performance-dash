@@ -1,3 +1,5 @@
+import type { LabelOptions } from 'chartjs-plugin-datalabels/types/options';
+
 export const watermarkLayout = (isMobile: boolean) => {
   return {
     image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
@@ -11,4 +13,24 @@ export const watermarkLayout = (isMobile: boolean) => {
     alignY: 'top',
     position: 'back',
   };
+};
+
+export const DATA_LABELS_LANDING: LabelOptions = {
+  align: 'right',
+  anchor: 'center',
+  offset: 8,
+  clip: false,
+  color: '#ffffffe0', // Slight opacity to add tint of line color.
+  padding: {
+    top: 0,
+    bottom: 0,
+    right: 4,
+    left: 4,
+  },
+  borderRadius: 4,
+  font: {
+    size: 12,
+  },
+  display: (context) => context.dataIndex === context.dataset.data.length - 1,
+  formatter: (value) => `${value}%`, // Format the label content
 };

@@ -73,7 +73,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   ),
                 },
                 {
-                  label: `MBTA scheduled trips`,
+                  label: `Scheduled round trips`,
                   stepped: true,
                   fill: true,
                   pointBorderWidth: 0,
@@ -89,7 +89,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                 },
                 {
                   // This null dataset produces the entry in the legend for the baseline annotation.
-                  label: `Peak (${peak})`,
+                  label: `Historical Maximum (${peak.toLocaleString('en-us')} round trips)`,
                   backgroundColor: CHART_COLORS.ANNOTATIONS,
                   data: null,
                 },
@@ -117,7 +117,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                     label: (context) => {
                       return `${context.datasetIndex === 0 ? 'Actual:' : 'Scheduled:'} ${
                         context.parsed.y
-                      } (${((100 * context.parsed.y) / peak).toFixed(1)}% of peak)`;
+                      } (${((100 * context.parsed.y) / peak).toFixed(1)}% of historical maximum)`;
                     },
                   },
                 },
@@ -157,7 +157,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = ({
                   },
                   title: {
                     display: true,
-                    text: 'trips',
+                    text: 'Round trips',
                     color: COLORS.design.subtitleGrey,
                   },
                 },

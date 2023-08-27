@@ -145,7 +145,7 @@ export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValu
 
 export class TripsWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'Trips';
+    return 'Round trips';
   }
 
   getFormattedValue(isLarge?: boolean) {
@@ -188,7 +188,7 @@ export class MPHWidgetValue extends BaseWidgetValue implements WidgetValueInterf
 
 export class RidersWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'Riders';
+    return 'Fare validations';
   }
 
   getFormattedValue(isLarge?: boolean) {
