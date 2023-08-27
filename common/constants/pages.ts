@@ -22,6 +22,7 @@ export enum PAGES {
   slowzones = 'slowzones',
   systemSlowzones = 'systemSlowzones',
   ridership = 'ridership',
+  alerts = 'alerts',
   singleTrips = 'singleTrips',
   multiTrips = 'multiTrips',
 }
@@ -147,6 +148,16 @@ export const ALL_PAGES: PageMap = {
     sectionTitle: 'Line',
     sub: true,
   },
+  alerts: {
+    key: 'alerts',
+    path: '/alerts',
+    name: 'Alerts',
+    lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
+    icon: faWarning,
+    dateStoreSection: 'line',
+    sectionTitle: 'Line',
+    sub: true,
+  },
 };
 
 /* Groups of pages for tab sections */
@@ -162,6 +173,7 @@ export const LINE_PAGES = [
   ALL_PAGES.slowzones,
   ALL_PAGES.speed,
   ALL_PAGES.ridership,
+  ALL_PAGES.alerts,
 ];
 
 export const SUB_PAGES_MAP = {
