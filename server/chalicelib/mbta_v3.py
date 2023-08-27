@@ -130,7 +130,7 @@ def format_active_alerts(alert_active_period):
 
 
 def getAlerts(params={}):
-    response = getV3('alerts', params)
+    response = getV3("alerts", params)
     return format_alerts_response(response["data"])
 
 
