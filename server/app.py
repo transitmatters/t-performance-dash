@@ -234,11 +234,9 @@ def get_service_hours():
     line_id = query.get("line_id")
     start_date = parse_user_date(query["start_date"])
     end_date = parse_user_date(query["end_date"])
-    agg = query["agg"]
     response = service_hours.get_service_hours(
-        line_id=line_id,
+        single_route_id=line_id,
         start_date=start_date,
         end_date=end_date,
-        agg=agg,
     )
     return json.dumps(response)

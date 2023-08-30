@@ -118,13 +118,13 @@ def get_scheduled_service(
     daily_service_minutes = []
     for current_day in date_range(start_date, end_date):
         current_day_iso = current_day.isoformat()
-        entry_today = scheduled_service_by_day[current_day_iso]
         if current_day_iso in scheduled_service_by_day:
+            entry_today = scheduled_service_by_day[current_day_iso]
             count_today = entry_today["count"]
             service_minutes_today = entry_today["serviceMinutes"]
         else:
-            count_today = None
-            service_minutes_today = None
+            count_today = 0
+            service_minutes_today = 0
         daily_counts.append(count_today)
         daily_service_minutes.append(service_minutes_today)
     counts = []
