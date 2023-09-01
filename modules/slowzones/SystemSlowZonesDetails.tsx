@@ -39,7 +39,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
   const graphData = useMemo(() => {
     if (allData.data && startDateUTC && endDateUTC) {
       const fitleredData = filterAllSlow(allData.data, startDateUTC, endDateUTC);
-      return formatSegments(fitleredData, startDateUTC, 'northbound');
+      return formatSegments(fitleredData, startDateUTC, direction);
     } else return [];
   }, [allData.data, endDateUTC, startDateUTC]);
 

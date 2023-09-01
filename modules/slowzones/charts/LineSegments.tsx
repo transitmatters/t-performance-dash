@@ -6,7 +6,7 @@ import utc from 'dayjs/plugin/utc';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import type { ChartDataset } from 'chart.js';
-import { DATE_FORMAT, YESTERDAY_MIDNIGHT } from '../../../common/constants/dates';
+import { DATE_FORMAT, YESTERDAY_MIDNIGHT, YESTERDAY_STRING } from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
 import type { Direction, LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
 import type { LinePath } from '../../../common/types/lines';
@@ -143,8 +143,8 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
         parsing: isMobile
           ? { xAxisKey: 'id' }
           : {
-              yAxisKey: 'id',
-            },
+            yAxisKey: 'id',
+          },
         indexAxis: isMobile ? 'x' : 'y',
         scales: {
           x: isMobile
@@ -174,12 +174,29 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
                 if (!(start && end)) return 'Unknown dates';
                 const startUTC = dayjs.utc(start);
                 const endUTC = dayjs.utc(end);
-                return `${startUTC.format('MMM D, YYYY')} - ${
-                  dayjs.utc(endUTC).isSame(YESTERDAY_MIDNIGHT)
-                    ? 'Ongoing'
-                    : dayjs(endUTC).format('MMM D, YYYY')
-                }`;
+                return `${startUTC.format('MMM D, YYYY')} - ${dayjs.utc(endUTC).isSame(YESTERDAY_MIDNIGHT)
+                  ? 'Ongoing'
+                  : dayjs(endUTC).format('MMM D, YYYY')
+                  }`;
               },
+            },
+          },
+          annotation: {
+            // TODO: This doesn't work properly when switching screen sizes without a refresh.
+            annotations: {
+              today: {
+                type: 'line',
+                xMin: isMobile ? undefined : YESTERDAY_STRING,
+                yMin: isMobile ? YESTERDAY_STRING : undefined,
+                xMax: isMobile ? undefined : YESTERDAY_STRING,
+                yMax: isMobile ? YESTERDAY_STRING : undefined,
+                borderWidth: 1,
+                borderColor: '#10101030',
+                borderDash: [5, 5],
+                label: {
+                  display: true,
+                }
+              }
             },
           },
         },
