@@ -41,7 +41,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
       const fitleredData = filterAllSlow(allData.data, startDateUTC, endDateUTC);
       return formatSegments(fitleredData, startDateUTC, direction);
     } else return [];
-  }, [allData.data, endDateUTC, startDateUTC]);
+  }, [allData.data, endDateUTC, startDateUTC, direction]);
 
   const stationPairs = new Set(graphData.map((dataPoint) => dataPoint.id));
 

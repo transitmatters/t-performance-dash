@@ -140,11 +140,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
           // @ts-expect-error TS doesn't think target has `style` (rude), but it does
           event.native.target.style.cursor = elements?.[0] ? 'pointer' : 'default';
         },
-        parsing: isMobile
-          ? { xAxisKey: 'id' }
-          : {
-            yAxisKey: 'id',
-          },
+        parsing: isMobile ? { xAxisKey: 'id' } : { yAxisKey: 'id' },
         indexAxis: isMobile ? 'x' : 'y',
         scales: {
           x: isMobile
@@ -174,10 +170,11 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
                 if (!(start && end)) return 'Unknown dates';
                 const startUTC = dayjs.utc(start);
                 const endUTC = dayjs.utc(end);
-                return `${startUTC.format('MMM D, YYYY')} - ${dayjs.utc(endUTC).isSame(YESTERDAY_MIDNIGHT)
-                  ? 'Ongoing'
-                  : dayjs(endUTC).format('MMM D, YYYY')
-                  }`;
+                return `${startUTC.format('MMM D, YYYY')} - ${
+                  dayjs.utc(endUTC).isSame(YESTERDAY_MIDNIGHT)
+                    ? 'Ongoing'
+                    : dayjs(endUTC).format('MMM D, YYYY')
+                }`;
               },
             },
           },
@@ -195,8 +192,8 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
                 borderDash: [5, 5],
                 label: {
                   display: true,
-                }
-              }
+                },
+              },
             },
           },
         },
