@@ -1,13 +1,18 @@
 import 'chartjs-adapter-date-fns';
 import { Bar } from 'react-chartjs-2';
 import React, { useMemo, useRef } from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import minMax from 'dayjs/plugin/minMax';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import type { ChartDataset } from 'chart.js';
-import { DATE_FORMAT, YESTERDAY_MIDNIGHT, YESTERDAY_STRING, todayOrDate, TODAY } from '../../../common/constants/dates';
+import {
+  DATE_FORMAT,
+  YESTERDAY_MIDNIGHT,
+  YESTERDAY_STRING,
+  TODAY,
+} from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
 import type { Direction, LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
 import type { LinePath } from '../../../common/types/lines';
@@ -172,10 +177,12 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
                 if (!(start && end)) return 'Unknown dates';
                 const startUTC = dayjs.utc(start);
                 const endUTC = dayjs.utc(end);
-                return `${startUTC.format('MMM D, YYYY')} - ${dayjs.utc(endUTC).isSame(YESTERDAY_MIDNIGHT)
-                  ? 'Ongoing'
-                  : dayjs(endUTC).format('MMM D, YYYY')
-                  }`;
+                return `${startUTC.format('MMM D, YYYY')} -
+                 ${
+                   dayjs.utc(endUTC).isSame(YESTERDAY_MIDNIGHT)
+                     ? 'Ongoing'
+                     : dayjs(endUTC).format('MMM D, YYYY')
+                 }`;
               },
             },
           },
