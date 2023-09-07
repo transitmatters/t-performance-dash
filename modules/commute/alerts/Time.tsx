@@ -71,7 +71,7 @@ export const UpcomingTime: React.FC<TimeProps> = ({ times }) => {
   );
 };
 
-export const SinceTime: React.FC<TimeProps> = ({ times }) => {
+export const EffectiveTime: React.FC<TimeProps> = ({ times }) => {
   const timeString = dayjs(times[0].start).format('MMM D YYYY');
   return (
     <>

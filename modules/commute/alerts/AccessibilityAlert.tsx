@@ -24,19 +24,22 @@ export const AccessibilityAlert: React.FC<DelayAlertProps> = ({ alert, type, lin
     )
     .filter((stop) => stop !== undefined);
 
+  const alertText =
+    alert.type === AlertEffect.ESCALATOR_CLOSURE
+      ? 'Escalator out of service at'
+      : 'Elevator out of service at';
+  const stopsText = stops.map((stop) => stop?.stop_name).join(', ');
+
   return (
     <AlertBoxInner
       header={alert.header}
       Icon={alert.type === AlertEffect.ESCALATOR_CLOSURE ? EscalatorIcon : ElevatorIcon}
       alert={alert}
       type={type}
-      showTimeSince={true}
+      showEffectiveTime={true}
     >
       <span>
-        {alert.type === AlertEffect.ESCALATOR_CLOSURE
-          ? 'Escalator out of service'
-          : 'Elevator out of service'}{' '}
-        at <strong>{stops.map((stop) => stop?.stop_name).join(', ')}</strong>
+        {alertText} <strong>{stopsText}</strong>
       </span>
     </AlertBoxInner>
   );

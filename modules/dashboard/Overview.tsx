@@ -23,11 +23,11 @@ export function Overview() {
   return (
     <PageWrapper pageTitle={'Overview'}>
       <div className="grid w-full grid-cols-1 gap-4 md:gap-8 xl:grid-cols-2">
-        {tab === 'Subway' && lineShort && <AlertsWidget lineShort={lineShort} />}
         {tab === 'Subway' && <SpeedWidget />}
         {tab === 'Subway' && <ServiceWidget />}
         <RidershipWidget />
         {tab === 'Subway' && isHeavyRailLine && <SlowZonesWidget />}
+        {tab === 'Subway' && lineShort && <AlertsWidget lineShort={lineShort} />}
       </div>
     </PageWrapper>
   );

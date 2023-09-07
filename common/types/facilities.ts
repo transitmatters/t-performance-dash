@@ -4,7 +4,7 @@ export interface FacilityProperty {
 }
 
 export interface Facility {
-  type: string;
+  type: 'facility';
   relationships: {
     stop: {
       data: {

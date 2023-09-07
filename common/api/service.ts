@@ -1,18 +1,16 @@
 import type { FetchScheduledServiceOptions } from '../types/api';
 import { FetchScheduledServiceParams } from '../types/api';
 import type { ScheduledService } from '../types/dataPoints';
-import { APP_DATA_BASE_PATH } from '../utils/constants';
+import { apiFetch } from './utils/fetch';
 
 export const fetchScheduledService = async (
-  params: FetchScheduledServiceOptions
+  options: FetchScheduledServiceOptions
 ): Promise<ScheduledService | undefined> => {
-  if (!params[FetchScheduledServiceParams.routeId]) return undefined;
-  const url = new URL(`${APP_DATA_BASE_PATH}/api/scheduledservice`, window.location.origin);
-  Object.keys(params).forEach((paramKey) => {
-    url.searchParams.append(paramKey, params[paramKey]);
-  });
-  const response = await fetch(url.toString());
-  if (!response.ok) throw new Error('Failed to fetch trip counts');
+  if (!options[FetchScheduledServiceParams.routeId]) return undefined;
 
-  return await response.json();
+  return await apiFetch({
+    path: '/api/scheduledservice',
+    options,
+    errorMessage: 'Failed to fetch trip counts',
+  });
 };
