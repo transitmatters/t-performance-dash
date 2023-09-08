@@ -4,10 +4,10 @@ import { FIVE_MINUTES } from '../../constants/time';
 import { fetchActualTripsByLine, fetchLandingTripMetrics } from '../tripmetrics';
 
 export const useDeliveredTripMetrics = (
-  params: FetchDeliveredTripMetricsOptions,
+  options: FetchDeliveredTripMetricsOptions,
   enabled?: boolean
 ) => {
-  return useQuery(['actualTrips', params], () => fetchActualTripsByLine(params), {
+  return useQuery(['actualTrips', options], () => fetchActualTripsByLine(options), {
     enabled: enabled,
     staleTime: FIVE_MINUTES,
   });

@@ -20,6 +20,10 @@ export interface Station {
   short?: string;
 }
 
+export const isLineMap = (obj: LineMap | Station[]): obj is LineMap => {
+  return (obj as LineMap).stations !== undefined;
+};
+
 export interface LineMap {
   type: string;
   direction: Direction;
