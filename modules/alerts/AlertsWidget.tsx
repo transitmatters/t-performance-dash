@@ -1,3 +1,4 @@
+import React from 'react';
 import { useAccessibilityAlertsData, useAlertsData } from '../../common/api/hooks/alerts';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import type { LineShort } from '../../common/types/lines';

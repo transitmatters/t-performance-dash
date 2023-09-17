@@ -26,23 +26,27 @@ const getPeaks = (data: (number | undefined)[]) => {
     min: data[0],
     max: data[data.length - 1],
     median: data[Math.round(data.length / 2)],
+    p10: data[Math.floor(data.length / 10)],
+    p90: data[Math.floor(9 * (data.length / 10))],
   };
 };
 
 const getAggDataPointsOfInterest = (aggData: AggregateDataPoint[]) => {
   const medianData = aggData.map((tt) => tt['50%']);
-  const { min, max, median } = getPeaks(medianData);
+  const { min, max, median, p10, p90 } = getPeaks(medianData);
   const average = getAverage(medianData);
-  return { average, min, max, median };
+  return { average, min, max, median, p10, p90 };
 };
 
 export const getAggDataWidgets = (aggData: AggregateDataPoint[]) => {
-  const { average, min, max, median } = getAggDataPointsOfInterest(aggData);
+  const { average, min, max, median, p10, p90 } = getAggDataPointsOfInterest(aggData);
   return [
     { text: 'Avg', widgetValue: new TimeWidgetValue(average), type: 'data' },
     { text: 'Median', widgetValue: new TimeWidgetValue(median), type: 'data' },
     { text: 'Min', widgetValue: new TimeWidgetValue(min), type: 'data' },
     { text: 'Max', widgetValue: new TimeWidgetValue(max), type: 'data' },
+    { text: '10%', widgetValue: new TimeWidgetValue(p10), type: 'data' },
+    { text: '90%', widgetValue: new TimeWidgetValue(p90), type: 'data' },
   ];
 };
 
@@ -61,20 +65,22 @@ const getSingleDayPointsOfInterest = (
   type: 'traveltimes' | 'dwells' | 'headways'
 ) => {
   const _data = getSingleDayNumberArray(data, type);
-  const { max, min, median } = getPeaks(_data);
+  const { max, min, median, p10, p90 } = getPeaks(_data);
   const average = getAverage(_data);
-  return { max, min, median, average };
+  return { max, min, median, average, p10, p90 };
 };
 
 export const getSingleDayWidgets = (
   data: SingleDayDataPoint[],
   type: 'traveltimes' | 'dwells' | 'headways'
 ) => {
-  const { max, min, median, average } = getSingleDayPointsOfInterest(data, type);
+  const { max, min, median, average, p10, p90 } = getSingleDayPointsOfInterest(data, type);
   return [
     { text: 'Avg', widgetValue: new TimeWidgetValue(average), type: 'data' },
     { text: 'Median', widgetValue: new TimeWidgetValue(median), type: 'data' },
     { text: 'Min', widgetValue: new TimeWidgetValue(min), type: 'data' },
     { text: 'Max', widgetValue: new TimeWidgetValue(max), type: 'data' },
+    { text: '10%', widgetValue: new TimeWidgetValue(p10), type: 'data' },
+    { text: '90%', widgetValue: new TimeWidgetValue(p90), type: 'data' },
   ];
 };
