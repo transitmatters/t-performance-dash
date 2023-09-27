@@ -1,5 +1,5 @@
 import type { Line, LineShort } from '../../common/types/lines';
-import type { Station } from '../../common/types/stations';
+import { isLineMap, type Station } from '../../common/types/stations';
 import type { Location } from '../types/charts';
 import type { Direction } from '../types/dataPoints';
 import { stations, rtStations, busStations } from './../constants/stations';
@@ -112,4 +112,13 @@ export const getLocationDetails = (
     from: from.stop_name,
     direction: travelDirection(from, to),
   };
+};
+
+export const getStationKeysFromStations = (line: LineShort): string[] => {
+  const lineStations = stations[line].stations;
+  if (isLineMap(lineStations)) {
+    return lineStations.stations.map((station: Station) => station.station);
+  } else {
+    return lineStations.map((station: Station) => station.station);
+  }
 };

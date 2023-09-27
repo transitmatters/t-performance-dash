@@ -84,7 +84,7 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
               <i>Slowest:</i> {minimumSpeed} mph
             </div>
             <div>
-              <i>Oldest:</i> {oldestString}
+              <i>Since:</i> {oldestString}
             </div>
           </div>
         </div>
