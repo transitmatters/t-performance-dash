@@ -15,7 +15,7 @@
     "@tippyjs/react": "^4.2.6",
     "@types/react-flatpickr": "^3.8.8",
     "bezier-js": "^6.1.4",
-    "chart.js": "4.3.0",
+    "chart.js": "4.4.0",
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-color": "^2.4.1",
     "chartjs-plugin-annotation": "^3.0.1",
