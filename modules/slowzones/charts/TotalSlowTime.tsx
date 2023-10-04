@@ -82,6 +82,15 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
           tension: 0.1,
         },
       ];
+
+  const dataMin = Math.min(
+    ...datasets[0].data
+      .map((d) => parseFloat(d))
+      .slice(
+        labels.indexOf(startDateUTC.format('YYYY-MM-DD')),
+        labels.indexOf(endDateUTC.format('YYYY-MM-DD'))
+      )
+  );
   return (
     <ChartBorder>
       <ChartDiv isMobile={isMobile}>
@@ -111,7 +120,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
             scales: {
               y: {
                 display: true,
-                min: 0,
+                min: dataMin < 0 ? 0 : undefined,
                 ticks: {
                   color: COLORS.design.subtitleGrey,
                 },
