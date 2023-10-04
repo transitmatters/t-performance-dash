@@ -111,6 +111,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
             scales: {
               y: {
                 display: true,
+                min: 0,
                 ticks: {
                   color: COLORS.design.subtitleGrey,
                 },
