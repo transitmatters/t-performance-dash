@@ -26,8 +26,8 @@ Steps to reproduce the behavior:
 **Device Info (please complete the following information):**
  - Device: [e.g. iPhone 6, Laptop]
  - OS: [e.g. iOS, Windows]
- - Browser: [e.g. chrome, safari]
- - Version: [e.g. 22]
+ - Browser: [e.g. Chrome, Safari]
+ - Browser Version: [e.g. 22]
 
 **Additional context**
 <!-- Add any other context about the problem here. -->

@@ -4,8 +4,8 @@ import type {
   SpeedRestriction,
 } from '../../common/types/dataPoints';
 import type { FetchSpeedRestrictionsOptions, FetchSpeedRestrictionsResponse } from '../types/api';
-import { APP_DATA_BASE_PATH } from '../utils/constants';
 import { getGtfsRailLineId } from '../utils/lines';
+import { apiFetch } from './utils/fetch';
 
 export const fetchDelayTotals = (): Promise<DayDelayTotals[]> => {
   const url = new URL(`/static/slowzones/delay_totals.json`, window.location.origin);
@@ -21,18 +21,18 @@ export const fetchSpeedRestrictions = async (
   options: FetchSpeedRestrictionsOptions
 ): Promise<SpeedRestriction[]> => {
   const { lineId, date: requestedDate } = options;
-  const params = new URLSearchParams({ line_id: getGtfsRailLineId(lineId), date: requestedDate });
-  const speedRestrictionsUrl = new URL(
-    `${APP_DATA_BASE_PATH}/api/speed_restrictions?${params.toString()}`,
-    window.location.origin
-  );
-  const today = new Date();
-  const response = await fetch(speedRestrictionsUrl.toString());
+
   const {
     available,
     date: resolvedDate,
     zones,
-  }: FetchSpeedRestrictionsResponse = await response.json();
+  }: FetchSpeedRestrictionsResponse = await apiFetch({
+    path: `/api/speed_restrictions`,
+    options: { line_id: getGtfsRailLineId(lineId), date: requestedDate },
+    errorMessage: 'Failed to fetch speed restrictions',
+  });
+
+  const today = new Date();
   if (available) {
     return zones.map((zone) => ({
       ...zone,

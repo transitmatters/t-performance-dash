@@ -52,14 +52,17 @@ const filterActiveElements = <T extends Record<string, unknown>>(
   records: T[],
   targetLine: LineShort,
   targetDate: Date,
-  getRecordDate: (t: T) => Date,
+  getRecordDateRange: (t: T) => [Date, Date],
   getRecordLine: (t: T) => LineShort
 ) => {
-  return records.filter(
-    (record) =>
-      getRecordDate(record).valueOf() >= targetDate.valueOf() &&
+  return records.filter((record) => {
+    const [startDate, endDate] = getRecordDateRange(record);
+    return (
+      startDate.valueOf() <= targetDate.valueOf() &&
+      endDate.valueOf() >= targetDate.valueOf() &&
       getRecordLine(record) === targetLine
-  );
+    );
+  });
 };
 
 const locateIntoSegments = <T extends Record<string, unknown>>(
@@ -131,7 +134,7 @@ export const segmentSlowZones = (options: SegmentSlowZonesOptions): Segmentation
       slowZones,
       lineName,
       effectiveDate,
-      (sz) => new Date(sz.end),
+      (sz) => [new Date(sz.start), new Date(sz.end)],
       (sz) => sz.color
     ),
     (sz) => getParentStationForStopId(sz.fr_id),
@@ -142,7 +145,7 @@ export const segmentSlowZones = (options: SegmentSlowZonesOptions): Segmentation
       speedRestrictions,
       lineName,
       effectiveDate,
-      (rs) => rs.validAsOf,
+      (rs) => [new Date(rs.reported), rs.validAsOf],
       (rs) => rs.lineId.replace('line-', '') as LineShort
     ),
     (rs) => getStationById(rs.fromStopId!),
