@@ -1,74 +1,82 @@
 import type { AlertsResponse, OldAlert } from '../types/alerts';
 import type { LineShort } from '../types/lines';
-import { APP_DATA_BASE_PATH } from '../utils/constants';
+import { getStationKeysFromStations } from '../utils/stations';
+import { apiFetch } from './utils/fetch';
 
 const alertsAPIConfig = {
   activity: 'BOARD,EXIT,RIDE',
 };
 
-export const fetchAlerts = async (
-  route: LineShort,
-  busRoute?: string
-): Promise<AlertsResponse[]> => {
-  if (route === 'Bus' && busRoute) {
-    return fetchAlertsForBus(busRoute);
-  }
-  return fetchAlertsForLine(route);
+const accessibilityAlertsAPIConfig = {
+  activity: 'USING_ESCALATOR,USING_WHEELCHAIR',
 };
 
-const fetchAlertsForLine = async (route: LineShort): Promise<AlertsResponse[]> => {
-  const url = new URL(`${APP_DATA_BASE_PATH}/api/alerts`, window.location.origin);
+export const fetchAlerts = async (
+  line: LineShort,
+  busRoute?: string
+): Promise<AlertsResponse[]> => {
+  if (line === 'Bus' && busRoute) {
+    return fetchAlertsForBus(busRoute);
+  }
+  return fetchAlertsForLine(line);
+};
+
+const fetchAlertsForLine = async (line: LineShort): Promise<AlertsResponse[]> => {
   const options = { ...alertsAPIConfig };
-  if (route === 'Green') {
+  if (line === 'Green') {
     // route_type 0 is light rail (green line & Mattapan)
     options['route_type'] = '0';
   } else {
     options['route_type'] = '1';
-    options['route'] = route;
+    options['route'] = line;
   }
-  Object.entries(options).forEach(([key, value]) => {
-    url.searchParams.append(key, value.toString());
+
+  return await apiFetch({
+    path: '/api/alerts',
+    options,
+    errorMessage: `Failed to fetch alerts for line ${line}`,
   });
-  const response = await fetch(url.toString());
-  if (!response.ok) {
-    throw new Error('Failed to fetch alerts');
-  }
-  return await response.json();
 };
 
 const fetchAlertsForBus = async (busRoute: string): Promise<AlertsResponse[]> => {
-  const url = new URL(`${APP_DATA_BASE_PATH}/api/alerts`, window.location.origin);
-  const options = { ...alertsAPIConfig };
+  const options = { ...alertsAPIConfig, route: busRoute };
   options['route_type'] = '3';
-  options['route'] = busRoute;
-  Object.entries(options).forEach(([key, value]) => {
-    url.searchParams.append(key, value.toString());
+
+  return await apiFetch({
+    path: '/api/alerts',
+    options,
+    errorMessage: `Failed to fetch alerts for bus route ${busRoute}`,
   });
-  const response = await fetch(url.toString());
-  if (!response.ok) {
-    throw new Error('Failed to fetch alerts');
-  }
-  return await response.json();
+};
+
+export const fetchAccessibilityAlertsForLine = async (
+  line: LineShort
+): Promise<AlertsResponse[]> => {
+  const stationKeys = getStationKeysFromStations(line);
+  const options = { ...accessibilityAlertsAPIConfig, stop: stationKeys.join(',') };
+
+  return await apiFetch({
+    path: '/api/alerts',
+    options,
+    errorMessage: 'Failed to fetch accessibility alerts',
+  });
 };
 
 export const fetchHistoricalAlerts = async (
   date: string | undefined,
-  route: LineShort,
+  line: LineShort,
   busRoute?: string
 ): Promise<OldAlert[]> => {
-  const url = new URL(`${APP_DATA_BASE_PATH}/api/alerts/${date}`, window.location.origin);
   const options = { route: '' };
-  if (route === 'Bus' && busRoute) {
+  if (line === 'Bus' && busRoute) {
     options['route'] = busRoute;
   } else {
-    options['route'] = route;
+    options['route'] = line;
   }
-  Object.entries(options).forEach(([key, value]) => {
-    url.searchParams.append(key, value.toString());
+
+  return await apiFetch({
+    path: `/api/alerts/${date}`,
+    options,
+    errorMessage: 'Failed to fetch historical alerts',
   });
-  const response = await fetch(url.toString());
-  if (!response.ok) {
-    throw new Error('Failed to fetch alerts');
-  }
-  return await response.json();
 };

@@ -11,22 +11,23 @@ json-api-doc = "0.15.0"
 requests = "2.31.0"
 pytz = "2023.3"
 boto3 = "1.26.153"
+botocore = "1.29.153"
 numpy = "1.24.3"
 pandas = "1.5.3"
-datadog_lambda = "4.73.0"
+datadog_lambda = "4.75.0"
+ddtrace = "1.15.0"
 dynamodb-json = "^1.3"
 
 [tool.poetry.dev-dependencies]
 pip = ">=23.0"
-setuptools = ">=67.6.1"
 chalice = "1.29.0"
 flake8 = "~6.0.0"
-black = "~23.3.0"
+black = "~23.7.0"
 
 [tool.black]
 line-length = 120
 target-version = ['py310']
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.5.0"]
 build-backend = "poetry.core.masonry.api"

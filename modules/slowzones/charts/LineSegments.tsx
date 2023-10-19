@@ -3,10 +3,16 @@ import { Bar } from 'react-chartjs-2';
 import React, { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import minMax from 'dayjs/plugin/minMax';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import type { ChartDataset } from 'chart.js';
-import { DATE_FORMAT, YESTERDAY_MIDNIGHT } from '../../../common/constants/dates';
+import {
+  DATE_FORMAT,
+  YESTERDAY_MIDNIGHT,
+  YESTERDAY_STRING,
+  TODAY,
+} from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
 import type { Direction, LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
 import type { LinePath } from '../../../common/types/lines';
@@ -24,6 +30,7 @@ import { stopIdsForStations } from '../../../common/utils/stations';
 import { ALL_PAGES } from '../../../common/constants/pages';
 import type { QueryParams } from '../../../common/types/router';
 dayjs.extend(utc);
+dayjs.extend(minMax);
 
 interface LineSegmentsProps {
   data: SlowZone[];
@@ -128,7 +135,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
             const queryParams: QueryParams = {
               // Show 7 days before slowzone start for comparison
               startDate: dayjs(x[0]).subtract(7, 'days').format(DATE_FORMAT),
-              endDate: x[1],
+              endDate: dayjs.min(TODAY, dayjs(x[1]).add(7, 'days'))?.format(DATE_FORMAT),
               to: stations.toStopIds?.[0],
               from: stations.fromStopIds?.[0],
             };
@@ -138,13 +145,9 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
         },
         onHover: (event, elements) => {
           // @ts-expect-error TS doesn't think target has `style` (rude), but it does
-          event.native?.target.style.cursor = elements?.[0] ? 'pointer' : 'default';
+          event.native.target.style.cursor = elements?.[0] ? 'pointer' : 'default';
         },
-        parsing: isMobile
-          ? { xAxisKey: 'id' }
-          : {
-              yAxisKey: 'id',
-            },
+        parsing: isMobile ? { xAxisKey: 'id' } : { yAxisKey: 'id' },
         indexAxis: isMobile ? 'x' : 'y',
         scales: {
           x: isMobile
@@ -174,11 +177,30 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
                 if (!(start && end)) return 'Unknown dates';
                 const startUTC = dayjs.utc(start);
                 const endUTC = dayjs.utc(end);
-                return `${startUTC.format('MMM D, YYYY')} - ${
-                  dayjs.utc(endUTC).isSame(YESTERDAY_MIDNIGHT)
-                    ? 'Ongoing'
-                    : dayjs(endUTC).format('MMM D, YYYY')
-                }`;
+                return `${startUTC.format('MMM D, YYYY')} -
+                 ${
+                   dayjs.utc(endUTC).isSame(YESTERDAY_MIDNIGHT)
+                     ? 'Ongoing'
+                     : dayjs(endUTC).format('MMM D, YYYY')
+                 }`;
+              },
+            },
+          },
+          annotation: {
+            // TODO: This doesn't work properly when switching screen sizes without a refresh.
+            annotations: {
+              today: {
+                type: 'line',
+                xMin: isMobile ? undefined : YESTERDAY_STRING,
+                yMin: isMobile ? YESTERDAY_STRING : undefined,
+                xMax: isMobile ? undefined : YESTERDAY_STRING,
+                yMax: isMobile ? YESTERDAY_STRING : undefined,
+                borderWidth: 1,
+                borderColor: '#10101030',
+                borderDash: [5, 5],
+                label: {
+                  display: true,
+                },
               },
             },
           },

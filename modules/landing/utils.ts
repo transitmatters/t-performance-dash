@@ -12,11 +12,15 @@ import type { Line } from '../../common/types/lines';
 const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
   return {
     pointRadius: 4,
+    pointHitRadius: 8,
     borderColor: LINE_COLORS[line ?? 'default'],
     borderWidth: 4,
     pointBackgroundColor: LINE_COLORS[line ?? 'default'],
     pointBorderWidth: 0,
     tension: 0,
+    datalabels: {
+      backgroundColor: LINE_COLORS[line ?? 'default'],
+    },
     pointHoverRadius: 6,
     spanGaps: true,
     pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
@@ -28,7 +32,6 @@ export const convertToSpeedDataset = (data: { [key in Line]?: DeliveredTripMetri
     const datasetOptions = getDatasetOptions(line);
     return {
       ...datasetOptions,
-      label: `% of peak`,
       data:
         data[line]?.map((datapoint) =>
           datapoint.miles_covered
@@ -47,7 +50,6 @@ export const convertToServiceDataset = (data: { [key in Line]?: DeliveredTripMet
     const datasetOptions = getDatasetOptions(line);
     return {
       ...datasetOptions,
-      label: `% of peak`,
       data:
         data[line]?.map((datapoint) =>
           datapoint.miles_covered
@@ -64,7 +66,6 @@ export const convertToRidershipDataset = (data: { [key in Line]: RidershipCount[
       const datasetOptions = getDatasetOptions(line);
       return {
         ...datasetOptions,
-        label: `% of peak`,
         data: data[line]?.map((datapoint) =>
           datapoint.count
             ? Math.round(10 * 100 * (datapoint.count / PEAK_RIDERSHIP[line])) / 10

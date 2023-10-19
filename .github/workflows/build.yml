@@ -40,4 +40,4 @@ jobs:
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           npm ci
-          npm run build-v4
+          npm run build

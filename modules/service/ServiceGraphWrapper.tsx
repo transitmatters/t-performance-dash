@@ -38,7 +38,7 @@ export const ServiceGraphWrapper: React.FC<ServiceGraphWrapperProps> = ({
         <WidgetForCarousel
           layoutKind="no-delta"
           sentimentDirection={'positiveOnIncrease'}
-          analysis={`Peak - ${config.getWidgetTitle(peak.date)}`}
+          analysis={`Max - ${config.getWidgetTitle(peak.date)}`}
           widgetValue={new TripsWidgetValue(peak ? peak.count : undefined)}
         />
       </WidgetCarousel>

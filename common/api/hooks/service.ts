@@ -3,8 +3,8 @@ import type { FetchScheduledServiceOptions, FetchServiceHoursOptions } from '../
 import { ONE_HOUR } from '../../constants/time';
 import { fetchScheduledService, fetchServiceHours } from '../service';
 
-export const useScheduledService = (params: FetchScheduledServiceOptions, enabled?: boolean) => {
-  return useQuery(['scheduledservice', params], () => fetchScheduledService(params), {
+export const useScheduledService = (options: FetchScheduledServiceOptions, enabled?: boolean) => {
+  return useQuery(['scheduledservice', options], () => fetchScheduledService(options), {
     enabled: enabled,
     staleTime: ONE_HOUR,
   });

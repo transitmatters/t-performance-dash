@@ -73,7 +73,7 @@ def read_gtfs(date: datetime.date):
     services = get_services(date, archive_dir)
 
     # specify dtypes to avoid warnings
-    trips = pd.read_csv(archive_dir / "trips.txt", dtype={"trip_short_name": str})
+    trips = pd.read_csv(archive_dir / "trips.txt", dtype={"trip_short_name": str, "block_id": str})
     trips = trips[trips.service_id.isin(services)]
 
     stops = pd.read_csv(

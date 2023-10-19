@@ -54,7 +54,23 @@ def delay_alert(attributes, id):
     }
 
 
-def format_response(alerts_data):  # TODO: separate logic for bus to avoid repeat stops.
+def accessibility_alert(attributes, id):
+    """Format alerts for escalators"""
+    stops = set()  # Eliminate duplicates (bus alerts sometimes have entries for multiple routes for one stop.)
+    for entity in attributes["informed_entity"]:
+        if entity.get("stop") and not entity["stop"].isdigit():  # Only get `place-<name>` stop types - no numbers.
+            stops.add(entity["stop"])
+    return {
+        "id": id,
+        "stops": list(stops),
+        "header": attributes["header"],
+        "description": attributes["description"],
+        "type": attributes["effect"],
+        "active_period": format_active_alerts(attributes["active_period"]),
+    }
+
+
+def format_alerts_response(alerts_data):  # TODO: separate logic for bus to avoid repeat stops.
     alerts_filtered = []
     for alert in alerts_data:
         attributes = alert["attributes"]
@@ -66,6 +82,8 @@ def format_response(alerts_data):  # TODO: separate logic for bus to avoid repea
             alerts_filtered.append(shuttle_alert(attributes, alert["id"]))
         if attributes["effect"] == "DELAY" or attributes["effect"] == "DETOUR":
             alerts_filtered.append(delay_alert(attributes, alert["id"]))
+        if attributes["effect"] == "ESCALATOR_CLOSURE" or attributes["effect"] == "ELEVATOR_CLOSURE":
+            alerts_filtered.append(accessibility_alert(attributes, alert["id"]))
 
     return alerts_filtered
 
@@ -111,6 +129,11 @@ def format_active_alerts(alert_active_period):
     return list(map(get_active, alert_active_period))
 
 
+def getAlerts(params={}):
+    response = getV3("alerts", params)
+    return format_alerts_response(response["data"])
+
+
 def getV3(command, params={}):
     """Make a GET request against the MBTA v3 API"""
     url = BASE_URL_V3.format(command=command, parameters=format_parameters(params))
@@ -123,4 +146,4 @@ def getV3(command, params={}):
         print(response.content.decode("utf-8"))
         raise  # TODO: catch this gracefully
     data = json.loads(response.content.decode("utf-8"), parse_float=Decimal, parse_int=Decimal)
-    return format_response(data["data"])
+    return data
