@@ -34,7 +34,7 @@ interface ScheduledAndDeliveredGraph {
   startDate: string;
   endDate: string;
   labels: string[];
-  peak: number;
+  peak?: number;
   showTitle?: boolean;
 }
 
@@ -99,7 +99,7 @@ export const ScheduledAndDeliveredGraph: React.FC<ScheduledAndDeliveredGraph> = 
                 peak
                   ? {
                       // This null dataset produces the entry in the legend for the baseline annotation.
-                      label: `Peak (${peak})`,
+                      label: `Historical Maximum (${peak} round trips)`,
                       backgroundColor: CHART_COLORS.ANNOTATIONS,
                       data: null,
                     }

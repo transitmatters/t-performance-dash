@@ -12,8 +12,8 @@ from chalicelib import (
     mbta_v3,
     speed,
     speed_restrictions,
+    scheduled_service,
     service_hours,
-    service_levels,
     ridership,
 )
 
@@ -49,7 +49,9 @@ def healthcheck():
         "API Key Present": (lambda: len(secrets.MBTA_V2_API_KEY) > 0),
         "S3 Headway Fetching": (
             lambda: "2020-11-07 10:33:40"
-            in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))
+            in json.dumps(
+                data_funcs.headways(date(year=2020, month=11, day=7), ["70061"])
+            )
         ),
         "Performance API Check": (
             lambda: MbtaPerformanceAPI.get_api_data(
@@ -111,7 +113,9 @@ def traveltime_route(user_date):
 @app.route("/api/alerts/{user_date}", cors=cors_config)
 def alerts_route(user_date):
     date = parse_user_date(user_date)
-    return json.dumps(data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params)))
+    return json.dumps(
+        data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params))
+    )
 
 
 @app.route("/api/aggregate/traveltimes", cors=cors_config)
@@ -160,7 +164,11 @@ def dwells_aggregate_route():
 def get_git_id():
     # Only do this on localhost
     if TM_FRONTEND_HOST == "localhost":
-        git_id = str(subprocess.check_output(["git", "describe", "--always", "--dirty", "--abbrev=10"]))[2:-3]
+        git_id = str(
+            subprocess.check_output(
+                ["git", "describe", "--always", "--dirty", "--abbrev=10"]
+            )
+        )[2:-3]
         return json.dumps({"git_id": git_id})
     else:
         raise ConflictError("Cannot get git id from serverless host")
@@ -185,7 +193,7 @@ def get_scheduled_service():
     end_date = parse_user_date(query["end_date"])
     route_id = query.get("route_id")
     agg = query["agg"]
-    response = service_levels.get_scheduled_service(
+    response = scheduled_service.get_scheduled_service_counts(
         start_date=start_date,
         end_date=end_date,
         route_id=route_id,
@@ -232,9 +240,11 @@ def get_service_hours():
     line_id = query.get("line_id")
     start_date = parse_user_date(query["start_date"])
     end_date = parse_user_date(query["end_date"])
+    agg = query["agg"]
     response = service_hours.get_service_hours(
         single_route_id=line_id,
         start_date=start_date,
         end_date=end_date,
+        agg=agg,
     )
     return json.dumps(response)

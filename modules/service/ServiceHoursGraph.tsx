@@ -22,7 +22,7 @@ export const ServiceHoursGraph: React.FC<ServiceGraphProps> = (props: ServiceGra
 
   const scheduled = useMemo(() => {
     return {
-      label: 'MBTA scheduled service hours',
+      label: 'Scheduled service hours',
       values: serviceHours.map((sh) => sh.scheduled),
     };
   }, [serviceHours]);

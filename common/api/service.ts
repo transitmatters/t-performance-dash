@@ -5,6 +5,7 @@ import type {
 } from '../types/api';
 import { FetchScheduledServiceParams } from '../types/api';
 import type { ScheduledService } from '../types/dataPoints';
+import { APP_DATA_BASE_PATH } from '../utils/constants';
 import { apiFetch } from './utils/fetch';
 
 export const fetchScheduledService = async (

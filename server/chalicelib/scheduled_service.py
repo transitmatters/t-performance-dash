@@ -4,6 +4,7 @@ import pandas as pd
 
 from .dynamo import query_scheduled_service
 from .data_funcs import index_by, date_range
+from .sampling import resample_and_aggregate
 
 ByHourServiceLevels = List[int]
 DayKind = Union[Literal["weekday"], Literal["saturday"], Literal["sunday"]]
@@ -25,10 +26,8 @@ class ByDayKindServiceLevels(TypedDict):
 class GetScheduledServiceResponse(TypedDict):
     start_date_service_levels: ByDayKindServiceLevels
     end_date_service_levels: ByDayKindServiceLevels
-    start_date: str
-    end_date: str
-    counts: List[int]
-    service_minutes: List[int]
+    counts: Dict[str, int]
+    service_hours: Dict[str, float]
 
 
 def get_next_day_kind_service_levels(
@@ -69,39 +68,6 @@ def get_service_levels(
     }
 
 
-def sample_weekly(
-    values: List[float],
-    start_date: date,
-    end_date: date,
-    avg_type=Literal["mean", "median"],
-):
-    df = pd.DataFrame({"value": values}, index=pd.date_range(start_date, end_date))
-    resampled = df.resample("W-SUN")
-    weekly_df = resampled.mean() if avg_type == "mean" else resampled.median()
-    # Drop the first week if it is incomplete
-    if datetime.fromisoformat(start_date.isoformat()).weekday() != 6:
-        weekly_df = weekly_df[1:]
-    return weekly_df["value"].tolist()
-
-
-def sample_monthly(
-    values: List[float],
-    start_date: date,
-    end_date: date,
-    avg_type=Literal["mean", "median"],
-):
-    df = pd.DataFrame(
-        {"value": values},
-        index=pd.date_range(start_date, end_date),
-    )
-    resampled = df.resample("M")
-    monthly_df = resampled.mean() if avg_type == "mean" else resampled.median()
-    # Drop the first month if it is incomplete
-    if datetime.fromisoformat(start_date.isoformat()).day != 1:
-        monthly_df = monthly_df[1:]
-    return monthly_df["value"].tolist()
-
-
 def get_scheduled_service(
     start_date: date,
     end_date: date,
@@ -114,49 +80,21 @@ def get_scheduled_service(
         route_id=route_id,
     )
     scheduled_service_by_day = index_by(scheduled_service, "date")
-    daily_counts = []
-    daily_service_minutes = []
-    for current_day in date_range(start_date, end_date):
-        current_day_iso = current_day.isoformat()
-        if current_day_iso in scheduled_service_by_day:
-            entry_today = scheduled_service_by_day[current_day_iso]
-            count_today = entry_today["count"]
-            service_minutes_today = entry_today["serviceMinutes"]
-        else:
-            count_today = 0
-            service_minutes_today = 0
-        daily_counts.append(count_today)
-        daily_service_minutes.append(service_minutes_today)
-    counts = []
-    if agg == "daily":
-        counts = daily_counts
-        service_minutes = daily_service_minutes
-    if agg == "weekly":
-        counts = sample_weekly(
-            values=daily_counts,
-            start_date=start_date,
-            end_date=end_date,
-            avg_type="median",
-        )
-        service_minutes = sample_weekly(
-            values=daily_service_minutes,
-            start_date=start_date,
-            end_date=end_date,
-            avg_type="mean",
-        )
-    if agg == "monthly":
-        counts = sample_monthly(
-            values=daily_counts,
-            start_date=start_date,
-            end_date=end_date,
-            avg_type="median",
-        )
-        service_minutes = sample_monthly(
-            values=daily_service_minutes,
-            start_date=start_date,
-            end_date=end_date,
-            avg_type="mean",
-        )
+    counts_by_day = {}
+    service_minutes_by_day = {}
+    for current_day, current_day_service in scheduled_service_by_day.items():
+        counts_by_day[current_day] = current_day_service["count"]
+        service_minutes_by_day[current_day] = current_day_service["serviceMinutes"]
+    counts = resample_and_aggregate(
+        values=counts_by_day,
+        agg=agg,
+        avg_type="median",
+    )
+    service_minutes = resample_and_aggregate(
+        values=service_minutes_by_day,
+        agg=agg,
+        avg_type="median",
+    )
     return {
         "counts": counts,
         "service_minutes": service_minutes,
@@ -164,4 +102,43 @@ def get_scheduled_service(
         "end_date": end_date.isoformat(),
         "start_date_service_levels": get_service_levels(scheduled_service, False),
         "end_date_service_levels": get_service_levels(scheduled_service, True),
+    }
+
+
+def get_scheduled_service_counts(
+    start_date: date,
+    end_date: date,
+    agg: AggTypes,
+    route_id: str = None,
+):
+    result = get_scheduled_service(
+        start_date=start_date,
+        end_date=end_date,
+        agg=agg,
+        route_id=route_id,
+    )
+    return {
+        "start_date": result["start_date"],
+        "end_date": result["end_date"],
+        "start_date_service_levels": result["start_date_service_levels"],
+        "end_date_service_levels": result["end_date_service_levels"],
+        "counts": list(result["counts"].values()),
+    }
+
+
+def get_scheduled_service_hours(
+    start_date: date,
+    end_date: date,
+    agg: AggTypes,
+    route_id: str = None,
+):
+    result = get_scheduled_service(
+        start_date=start_date,
+        end_date=end_date,
+        agg=agg,
+        route_id=route_id,
+    )
+    return {
+        date: result["service_minutes"][date] // 60
+        for date in result["service_minutes"]
     }

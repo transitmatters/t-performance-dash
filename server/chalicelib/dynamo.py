@@ -3,8 +3,10 @@ from boto3.dynamodb.conditions import Key
 import boto3
 from dynamodb_json import json_util as ddb_json
 from chalicelib import constants
-from typing import List
+from typing import List, Literal
 import concurrent.futures
+
+from .sampling import resample_and_aggregate
 
 # Create a DynamoDB resource
 dynamodb = boto3.resource("dynamodb")
@@ -68,7 +70,11 @@ def query_agg_trip_metrics(
     return ddb_json.loads(response["Items"])
 
 
-def query_extended_trip_metrics(start_date: date, end_date: date, route_ids: List[str]):
+def query_extended_trip_metrics(
+    start_date: date,
+    end_date: date,
+    route_ids: List[str],
+):
     table = dynamodb.Table("DeliveredTripMetricsExtended")
     start_date_str = start_date.strftime("%Y-%m-%d")
     end_date_str = end_date.strftime("%Y-%m-%d")

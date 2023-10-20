@@ -46,7 +46,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
 
   const scheduled = useMemo(() => {
     return {
-      label: 'MBTA scheduled round trips',
+      label: 'Scheduled round trips',
       values: predictedData.counts.map((count, index) =>
         data[index]?.miles_covered > 0 && count ? count / 2 : Number.NaN
       ),
