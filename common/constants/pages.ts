@@ -106,7 +106,6 @@ export const ALL_PAGES: PageMap = {
     icon: faGaugeHigh,
     dateStoreSection: 'line',
     sectionTitle: 'Line',
-    sub: true,
   },
   service: {
     key: 'service',
@@ -116,7 +115,6 @@ export const ALL_PAGES: PageMap = {
     dateStoreSection: 'line',
     sectionTitle: 'Line',
     icon: faClockFour,
-    sub: true,
   },
   slowzones: {
     key: 'slowzones',
@@ -126,7 +124,6 @@ export const ALL_PAGES: PageMap = {
     icon: faWarning,
     dateStoreSection: 'line',
     sectionTitle: 'Line',
-    sub: true,
   },
   systemSlowzones: {
     key: 'systemSlowzones',
@@ -145,7 +142,6 @@ export const ALL_PAGES: PageMap = {
     icon: faUsers,
     dateStoreSection: 'line',
     sectionTitle: 'Line',
-    sub: true,
   },
 };
 
@@ -156,8 +152,11 @@ export const TODAY = [ALL_PAGES.today];
 
 export const BUS_OVERVIEW = [ALL_PAGES.ridership];
 
+export const OVERVIEW_PAGE = [
+  ALL_PAGES.overview
+]
+
 export const LINE_PAGES = [
-  ALL_PAGES.overview,
   ALL_PAGES.service,
   ALL_PAGES.slowzones,
   ALL_PAGES.speed,
