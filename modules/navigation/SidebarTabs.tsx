@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import {
   useDelimitatedRoute,
