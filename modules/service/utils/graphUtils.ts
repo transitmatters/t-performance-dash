@@ -4,6 +4,7 @@ import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AlertForModal } from '../../../common/types/alerts';
 import { hexWithAlpha } from '../../../common/utils/general';
 import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
+import { TODAY } from '../../../common/constants/dates';
 
 const shuttlingAnnotationBlockStyle = {
   backgroundColor: CHART_COLORS.BLOCKS,
@@ -50,6 +51,25 @@ export const getShuttlingBlockAnnotations = (
     }
   });
   return dateBlocks;
+};
+
+/*
+ * This function return ChartJS annotations from a date to TODAY.
+ * Great for datasets that are delivered with a week or month delay
+ */
+export const getRemainingBlockAnnotation = (
+  xMin: string | undefined
+): AnnotationOptions<keyof AnnotationTypeRegistry>[] => {
+  const xMax: string | undefined = TODAY.toString();
+
+  return [
+    {
+      type: 'box',
+      xMin: xMin,
+      xMax: xMax,
+      ...shuttlingAnnotationBlockStyle,
+    },
+  ];
 };
 
 export const getAlertAnnotations = (alerts: AlertForModal[], date: string) => {

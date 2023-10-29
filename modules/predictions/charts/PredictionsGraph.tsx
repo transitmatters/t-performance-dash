@@ -5,6 +5,8 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import { max } from 'date-fns';
+import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { TimePredictionWeek } from '../../../common/types/dataPoints';
@@ -14,6 +16,8 @@ import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartBorder } from '../../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { PEAK_SPEED } from '../../../common/constants/baselines';
+import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
+import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
 
 interface PredictionsGraphProps {
   data: TimePredictionWeek[];
@@ -33,6 +37,11 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
   const ref = useRef();
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.week);
+  const remainingBlocks = getRemainingBlockAnnotation(
+    dayjs(max(data.map(({ prediction }) => dayjs(prediction[0].weekly).toDate())))
+      .add(1, 'day')
+      .format(DATE_FORMAT) ?? TODAY.format(DATE_FORMAT)
+  );
 
   const reducedData = data.map(({ week, prediction }) => ({
     week: week,
@@ -128,6 +137,7 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
                     display: (ctx) => ctx.chart.isDatasetVisible(1),
                     borderWidth: 2,
                   },
+                  ...remainingBlocks,
                 ],
               },
             },
