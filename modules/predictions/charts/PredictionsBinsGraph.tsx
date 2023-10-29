@@ -147,6 +147,9 @@ export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
                 mode: 'index',
                 position: 'nearest',
                 callbacks: {
+                  title: (context) => {
+                    return `Week of ${context[0].label}`;
+                  },
                   label: (context) => {
                     return `${context.dataset.label}: ${context.parsed.y}% accurate`;
                   },
