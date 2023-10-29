@@ -19,7 +19,7 @@ interface SubwayDropdownProps {
     route: Route;
 }
 const Dropdown: React.FC = ({ }) => {
-    return <div className={"flex rounded-b-md bg-neutral-800 flex-col px-1 gap-[2px] py-[2px]"} role={'navigation'}>
+    return <div className={"flex rounded-b-md bg-neutral-800 flex-col px-1 gap-[2px] py-[4px]"} role={'navigation'}>
         <SidebarTabs tabs={OVERVIEW_PAGE} />
         <hr className="border-neutral-500 h-[1px] w-3/4 self-center" />
         <SidebarTabs tabs={LINE_PAGES} />
