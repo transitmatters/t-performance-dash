@@ -1,5 +1,5 @@
 import { NavSectionHeader } from "./NavSectionHeader"
-import { SubwayDropdown } from "./SubwayDropdown"
+import { MenuDropdown } from "./MenuDropdown"
 import { SubwaySection } from "./SubwaySection"
 
 interface NavSectionProps {

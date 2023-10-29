@@ -14,12 +14,6 @@ interface SideNavigationProps {
 }
 
 export const SideNavigation: React.FC<SideNavigationProps> = ({ setSidebarOpen }) => {
-  const getNavMenu = (tab: Tab) => {
-    if (tab === 'Subway') return <SubwayNavMenu setSidebarOpen={setSidebarOpen} />;
-    if (tab === 'Bus') return <BusNavMenu setSidebarOpen={setSidebarOpen} />;
-    if (tab === 'System') return <SystemNavMenu setSidebarOpen={setSidebarOpen} />;
-  };
-  const { tab } = useDelimitatedRoute();
   return (
     <nav className="flex flex-1 flex-col pb-3 md:px-4 md:pb-0 md:pt-5">
       <ul role={'navigation'} className="flex flex-1 flex-col gap-y-1">

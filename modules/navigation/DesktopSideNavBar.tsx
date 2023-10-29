@@ -8,7 +8,7 @@ import { SideNavigation } from './SideNavigation';
 export const SideNavBar = () => {
   return (
     <>
-      <div className="bg-tm-grey text-gray-300">
+      <div className="bg-tm-grey text-gray-200">
         <div className="fixed inset-y-0 flex w-64 flex-col overflow-y-hidden bg-tm-grey">
           <Link href="/" className="sticky flex flex-shrink-0 px-6 pb-2 pt-6">
             <Image src={'/TMLogo.png'} alt="TransitMatters Logo" width={3204} height={301} />
