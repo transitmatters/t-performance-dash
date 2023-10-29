@@ -100,6 +100,9 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
                 mode: 'index',
                 position: 'nearest',
                 callbacks: {
+                  title: (context) => {
+                    return `Week of ${context[0].label}`;
+                  },
                   label: (context) => {
                     return `${context.dataset.label}: ${context.parsed.y}% accurate`;
                   },
