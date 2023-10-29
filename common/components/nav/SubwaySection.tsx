@@ -8,16 +8,16 @@ export const SubwaySection: React.FC = () => {
 
     return <div className="w-full gap-y-2">
         <MenuDropdown line="line-red" route={route}>
-            <SubwayDropdown />
+            <SubwayDropdown line="line-red" />
         </MenuDropdown>
         <MenuDropdown line="line-orange" route={route}>
-            <SubwayDropdown />
+            <SubwayDropdown line="line-orange" />
         </MenuDropdown>
         <MenuDropdown line="line-blue" route={route}>
-            <SubwayDropdown />
+            <SubwayDropdown line="line-blue" />
         </MenuDropdown>
         <MenuDropdown line="line-green" route={route}>
-            <SubwayDropdown />
+            <SubwayDropdown line="line-green" />
         </MenuDropdown>
     </div>
 
