@@ -77,6 +77,7 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
             />
             <div className={'flex w-full justify-center pt-2'}>
               <ButtonGroup
+                line={line}
                 pressFunction={setPeakTime}
                 options={[
                   ['weekday', 'Weekday'],
