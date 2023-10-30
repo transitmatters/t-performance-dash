@@ -1,91 +1,82 @@
-import React, { useCallback, useMemo } from 'react';
-import type { AnnotationOptions } from 'chartjs-plugin-annotation';
+import React, { useMemo } from 'react';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { CHART_COLORS } from '../../common/constants/colors';
-import type { ParamsType } from '../speed/constants/speeds';
 import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/baselines';
 import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
+import type { ParamsType } from '../speed/constants/speeds';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
 
 interface ServiceGraphProps {
+  config: ParamsType;
   data: DeliveredTripMetrics[];
   predictedData: ScheduledService;
-  config: ParamsType;
   startDate: string;
   endDate: string;
-  showTitle?: boolean;
 }
 
 export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphProps) => {
-  const { data, predictedData, config, startDate, endDate, showTitle = false } = props;
+  const { data, predictedData, startDate, endDate, config } = props;
   const { line } = useDelimitatedRoute();
 
   const peak = PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'];
 
-  const annotations = useMemo((): AnnotationOptions[] => {
-    const shuttlingBlocks = getShuttlingBlockAnnotations(data);
-    return [
-      {
-        type: 'line',
-        yMin: peak,
-        yMax: peak,
-        borderColor: CHART_COLORS.ANNOTATIONS,
-        // corresponds to null dataset index.
-        display: (ctx) => ctx.chart.isDatasetVisible(2),
-        borderWidth: 2,
-      },
-      ...shuttlingBlocks,
-    ];
-  }, [data, peak]);
+  const benchmarks = useMemo(() => {
+    const label = `Historical maximum (${peak} round trips)`;
+    return [{ label, value: peak }];
+  }, [peak]);
 
-  const labels = useMemo(() => {
-    return data.map((point) => point.date);
+  const blocks = useMemo(() => {
+    const shuttlingBlocks = getShuttlingBlockAnnotations(data);
+    return shuttlingBlocks.map((block) => ({
+      from: block.xMin as string,
+      to: block.xMax as string,
+    }));
   }, [data]);
 
   const scheduled = useMemo(() => {
     return {
       label: 'Scheduled round trips',
-      values: predictedData.counts.map((count, index) =>
-        data[index]?.miles_covered > 0 && count ? count / 2 : Number.NaN
-      ),
+      data: predictedData.counts.map(({ date, count }, index) => {
+        const value = data[index]?.miles_covered > 0 && count ? count / 2 : 0;
+        return { date, value };
+      }),
+      style: {
+        fillPattern: 'striped' as const,
+        tooltipLabel: (point) => {
+          const percentOfPeak = `${((100 * point.value) / peak).toFixed(1)}%`;
+          return `Scheduled: ${point.value} (${percentOfPeak} of peak)`;
+        },
+      },
     };
-  }, [data, predictedData]);
+  }, [data, predictedData, peak]);
 
   const delivered = useMemo(() => {
     return {
       label: 'Daily round trips',
-      values: data.map((datapoint) =>
-        datapoint.miles_covered ? Math.round(datapoint.count) : Number.NaN
-      ),
+      data: data.map((datapoint) => {
+        const value = datapoint.miles_covered ? Math.round(datapoint.count) : 0;
+        return { date: datapoint.date, value };
+      }),
+      style: {
+        tooltipLabel: (point) => {
+          const percentOfPeak = `${((100 * point.value) / peak).toFixed(1)}%`;
+          return `Actual: ${point.value} (${percentOfPeak} of peak)`;
+        },
+      },
     };
-  }, [data]);
-
-  const label = useCallback(
-    (context) => {
-      return `${context.datasetIndex === 0 ? 'Actual:' : 'Scheduled:'} ${context.parsed.y} (${(
-        (100 * context.parsed.y) /
-        peak
-      ).toFixed(1)}% of peak)`;
-    },
-    [peak]
-  );
+  }, [data, peak]);
 
   return (
     <ScheduledAndDeliveredGraph
-      title="Daily round trips"
-      yAxisLabel="Round trips"
-      labels={labels}
+      valueAxisLabel="Round trips"
       scheduled={scheduled}
       delivered={delivered}
-      annotations={annotations}
-      tooltipLabel={label}
-      config={config}
+      blocks={blocks}
+      benchmarks={benchmarks}
       startDate={startDate}
       endDate={endDate}
-      showTitle={showTitle}
-      peak={peak}
+      agg={config.agg}
     />
   );
 };

@@ -154,6 +154,8 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
 
     return {
       x: {
+        min: timeAxis.from,
+        max: timeAxis.to,
         display: true,
         type: 'time' as const,
         adapters: {

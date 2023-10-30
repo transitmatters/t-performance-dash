@@ -90,8 +90,8 @@ export type LineSegmentData = {
   id: string;
   delay: number;
   stations:
-  | { fromStopIds: string[]; toStopIds: string[] }
-  | { fromStopIds: undefined; toStopIds: undefined };
+    | { fromStopIds: string[]; toStopIds: string[] }
+    | { fromStopIds: undefined; toStopIds: undefined };
   color: string;
 };
 
@@ -120,11 +120,11 @@ export type ServiceLevels = {
 };
 
 export type ScheduledService = {
-  counts: number[];
   start_date: string;
   end_date: string;
   start_date_service_levels: ServiceLevels;
   end_date_service_levels: ServiceLevels;
+  counts: { date: string; count: number }[];
 };
 
 export type ServiceHours = {

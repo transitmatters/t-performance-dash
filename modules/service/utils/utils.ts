@@ -4,14 +4,14 @@ import type { Line } from '../../../common/types/lines';
 
 export const getServiceWidgetValues = (
   deliveredTripMetrics: DeliveredTripMetrics[],
-  predictedData: number[]
+  predictedData: ScheduledService
 ) => {
   const totals = deliveredTripMetrics.reduce(
     (totals, datapoint, index) => {
-      if (datapoint.count && predictedData[index]) {
+      if (datapoint.count && predictedData.counts[index].count) {
         return {
           actual: totals.actual + datapoint.count,
-          scheduled: totals.scheduled + predictedData[index],
+          scheduled: totals.scheduled + predictedData.counts[index].count,
         };
       }
       return { actual: totals.actual, scheduled: totals.scheduled };
@@ -40,7 +40,7 @@ export const getPercentageData = (
 ) => {
   const scheduled = data.map((datapoint, index) => {
     return datapoint.miles_covered && predictedData.counts[index]
-      ? (100 * datapoint.count) / (predictedData.counts[index] / 2)
+      ? (100 * datapoint.count) / (predictedData.counts[index].count / 2)
       : Number.NaN;
   });
   const peak = data.map((datapoint) =>

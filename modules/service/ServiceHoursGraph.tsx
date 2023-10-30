@@ -3,15 +3,19 @@ import React, { useMemo } from 'react';
 
 import type { FetchServiceHoursResponse } from '../../common/types/api';
 import type { AggType } from '../speed/constants/speeds';
-import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraphNew';
+import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
 
-interface ServiceGraphProps {
+interface ServiceHoursGraphProps {
   serviceHours: FetchServiceHoursResponse;
   agg: AggType;
+  startDate: string;
+  endDate: string;
 }
 
-export const ServiceHoursGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphProps) => {
-  const { serviceHours, agg } = props;
+export const ServiceHoursGraph: React.FC<ServiceHoursGraphProps> = (
+  props: ServiceHoursGraphProps
+) => {
+  const { serviceHours, agg, startDate, endDate } = props;
 
   const scheduled = useMemo(() => {
     return {
@@ -32,6 +36,8 @@ export const ServiceHoursGraph: React.FC<ServiceGraphProps> = (props: ServiceGra
     <ScheduledAndDeliveredGraph
       scheduled={scheduled}
       delivered={delivered}
+      startDate={startDate}
+      endDate={endDate}
       agg={agg}
       valueAxisLabel="Service hours"
     />

@@ -122,7 +122,9 @@ def get_scheduled_service_counts(
         "end_date": result["end_date"],
         "start_date_service_levels": result["start_date_service_levels"],
         "end_date_service_levels": result["end_date_service_levels"],
-        "counts": list(result["counts"].values()),
+        "counts": [
+            {"date": date, "count": count} for (date, count) in result["counts"].items()
+        ],
     }
 
 

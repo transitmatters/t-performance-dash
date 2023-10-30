@@ -101,7 +101,7 @@ export function ServiceDetails() {
           )}
         </WidgetDiv>
         <WidgetDiv>
-          <WidgetTitle title="Daily service hours" />
+          <WidgetTitle title="Hours of service" subtitle="Across all trains" />
           {serviceHoursDataReady ? (
             <ServiceHoursGraph
               serviceHours={serviceHoursData.data!}

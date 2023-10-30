@@ -10,6 +10,10 @@ def resample_and_aggregate(
     agg: Literal["daily", "weekly", "monthly"],
     avg_type=Literal["mean", "median"],
 ):
+    # parse start_date and end_date to pandas datetime64
+    start_date = pd.to_datetime(min(values.keys()))
+    end_date = pd.to_datetime(max(values.keys()))
+
     if agg == "daily":
         return values
     df = pd.DataFrame(list(values.items()), columns=["date", "value"])
@@ -32,6 +36,16 @@ def resample_and_aggregate(
 
     df_agg = df_agg.reset_index()
     df_agg.dropna(inplace=True)
+
+    if agg == "weekly":
+        # Pandas resample uses the end date of the range as the index. So we subtract 6 days to convert to first date of the range.
+        df_agg["date"] = df_agg["date"] - pd.Timedelta(days=6)
+
+    # drop any rows where date is not between start_date and end_date
+    df_agg = df_agg[
+        (df_agg["date"] >= start_date) & (df_agg["date"] <= end_date)
+    ].copy()
+
     df_agg["date"] = df_agg["date"].dt.strftime("%Y-%m-%d")
 
     return {row["date"]: row["value"] for _, row in df_agg.iterrows()}
