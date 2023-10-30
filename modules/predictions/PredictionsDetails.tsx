@@ -100,18 +100,17 @@ export function PredictionsDetails() {
           <Accordion
             contentList={[
               {
-                title: 'About this Data',
+                title: 'About this data',
                 content: (
                   <div>
                     <p>
-                      Prediction accuracy is a calculation based on data collected by the MBTA.
-                      Whenever the MBTA makes a prediction about a train or bus arrival, for example
-                      "Alewife 4 mins", it records that and then checks back when that train it
+                      MBTA calculates and publishes prediction accuracy data for each line. Whenever
+                      the MBTA makes a prediction about a train or bus arrival, for example "Alewife
+                      4 mins", their system records it and then checks back when that train it
                       predicted would be there in 4 minutes actually arrived. The T categorizes
                       these into 4 groups: "0-3 min", "3-6 min", "6-12 min", and "12-30 min". Each
-                      grouping has different thresholds for what count as "accurate".
+                      grouping has different thresholds for what count as "accurate":
                     </p>
-                    <p>For a given bin, the passing threshold is if a vehicle arrives:</p>
                     <ul className={'ml-7 list-disc'}>
                       <li>0-3 min: 60 seconds early to 60 seconds late</li>
                       <li>3-6 min: 90 seconds early to 120 seconds late</li>
