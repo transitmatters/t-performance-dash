@@ -66,7 +66,7 @@ export function PredictionsDetails() {
   }
 
   return (
-    <PageWrapper pageTitle={'Speed'}>
+    <PageWrapper pageTitle={'Predictions'}>
       <ChartPageDiv>
         <WidgetDiv>
           {predictionsReady ? (
