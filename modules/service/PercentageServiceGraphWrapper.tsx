@@ -62,6 +62,7 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
       </CarouselGraphDiv>
       <div className={'flex w-full justify-center pt-2'}>
         <ButtonGroup
+          line={line}
           options={Object.entries({
             Scheduled: 'Scheduled',
             'Historical Maximum': 'Historical Maximum',
