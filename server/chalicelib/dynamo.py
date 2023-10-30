@@ -3,10 +3,8 @@ from boto3.dynamodb.conditions import Key
 import boto3
 from dynamodb_json import json_util as ddb_json
 from chalicelib import constants
-from typing import List, Literal
+from typing import List
 import concurrent.futures
-
-from .sampling import resample_and_aggregate
 
 # Create a DynamoDB resource
 dynamodb = boto3.resource("dynamodb")
@@ -14,10 +12,7 @@ dynamodb = boto3.resource("dynamodb")
 
 def query_daily_trips_on_route(table_name, route, start_date, end_date):
     table = dynamodb.Table(table_name)
-    response = table.query(
-        KeyConditionExpression=Key("route").eq(route)
-        & Key("date").between(start_date, end_date)
-    )
+    response = table.query(KeyConditionExpression=Key("route").eq(route) & Key("date").between(start_date, end_date))
     return ddb_json.loads(response["Items"])
 
 
@@ -59,9 +54,7 @@ def query_ridership(start_date: date, end_date: date, line_id: str = None):
     return ddb_json.loads(response["Items"])
 
 
-def query_agg_trip_metrics(
-    start_date: str, end_date: str, table_name: str, line: str = None
-):
+def query_agg_trip_metrics(start_date: str, end_date: str, table_name: str, line: str = None):
     table = dynamodb.Table(table_name)
     line_condition = Key("line").eq(line)
     date_condition = Key("date").between(start_date, end_date)

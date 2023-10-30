@@ -1,9 +1,8 @@
 from datetime import date, datetime
 from typing import List, Dict, TypedDict, Union, Literal
-import pandas as pd
 
 from .dynamo import query_scheduled_service
-from .data_funcs import index_by, date_range
+from .data_funcs import index_by
 from .sampling import resample_and_aggregate
 
 ByHourServiceLevels = List[int]
@@ -48,9 +47,7 @@ def get_next_day_kind_service_levels(
         if predicate(daily_service_count):
             return {
                 "date": daily_service_count["date"],
-                "service_levels": daily_service_count.get("byHour", {}).get(
-                    "totals", []
-                ),
+                "service_levels": daily_service_count.get("byHour", {}).get("totals", []),
             }
     return None
 
@@ -122,9 +119,7 @@ def get_scheduled_service_counts(
         "end_date": result["end_date"],
         "start_date_service_levels": result["start_date_service_levels"],
         "end_date_service_levels": result["end_date_service_levels"],
-        "counts": [
-            {"date": date, "count": count} for (date, count) in result["counts"].items()
-        ],
+        "counts": [{"date": date, "count": count} for (date, count) in result["counts"].items()],
     }
 
 
@@ -140,7 +135,4 @@ def get_scheduled_service_hours(
         agg=agg,
         route_id=route_id,
     )
-    return {
-        date: result["service_minutes"][date] // 60
-        for date in result["service_minutes"]
-    }
+    return {date: result["service_minutes"][date] // 60 for date in result["service_minutes"]}

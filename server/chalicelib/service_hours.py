@@ -35,8 +35,8 @@ def get_delivered_service_times(response_dicts: List[Dict[str, any]], agg: AggTy
     service_hours = {}
     # unique service_dates
     service_dates = df["date"].unique()
-    for date in service_dates:
-        df_for_date = df[df["date"] == date][
+    for today in service_dates:
+        df_for_date = df[df["date"] == today][
             [
                 "dir_0_exclusive_count",
                 "dir_1_exclusive_count",
@@ -48,7 +48,7 @@ def get_delivered_service_times(response_dicts: List[Dict[str, any]], agg: AggTy
             df_for_date["dir_0_exclusive_count"] * df_for_date["dir_0_inclusive_mean"]
             + df_for_date["dir_1_exclusive_count"] * df_for_date["dir_1_inclusive_mean"]
         ) // 3600
-        service_hours[date] = df_for_date.sum()["total_time"]
+        service_hours[today] = df_for_date.sum()["total_time"]
     return resample_and_aggregate(values=service_hours, agg=agg, avg_type="median")
 
 

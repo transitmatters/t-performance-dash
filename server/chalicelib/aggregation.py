@@ -19,10 +19,8 @@ def train_peak_status(df):
     is_peak_day = (~df["holiday"]) & (df["weekday"] < 5)
     df["is_peak_day"] = is_peak_day
     conditions = [
-        is_peak_day
-        & (df["dep_time"].between(datetime.time(6, 30), datetime.time(9, 0))),
-        is_peak_day
-        & (df["dep_time"].between(datetime.time(15, 30), datetime.time(18, 30))),
+        is_peak_day & (df["dep_time"].between(datetime.time(6, 30), datetime.time(9, 0))),
+        is_peak_day & (df["dep_time"].between(datetime.time(15, 30), datetime.time(18, 30))),
     ]
     choices = ["am_peak", "pm_peak"]
     df["peak"] = np.select(conditions, choices, default="off_peak")
@@ -81,14 +79,8 @@ def calc_travel_times_by_time(df):
     timedeltas.loc[timedeltas < SERVICE_HR_OFFSET] += datetime.timedelta(days=1)
     df["dep_time_from_epoch"] = timedeltas + datetime.datetime(1970, 1, 1)
 
-    stats = faster_describe(
-        df.groupby("is_peak_day").resample("30T", on="dep_time_from_epoch")[
-            "travel_time_sec"
-        ]
-    )
-    stats["dep_time_from_epoch"] = stats["dep_time_from_epoch"].dt.strftime(
-        "%Y-%m-%dT%H:%M:%S"
-    )
+    stats = faster_describe(df.groupby("is_peak_day").resample("30T", on="dep_time_from_epoch")["travel_time_sec"])
+    stats["dep_time_from_epoch"] = stats["dep_time_from_epoch"].dt.strftime("%Y-%m-%dT%H:%M:%S")
 
     return stats
 
@@ -99,9 +91,7 @@ def calc_travel_times_by_date(df):
     summary_stats["peak"] = "all"
 
     # summary_stats for peak / off-peak trains
-    summary_stats_peak = faster_describe(
-        df.groupby(["service_date", "peak"])["travel_time_sec"]
-    )
+    summary_stats_peak = faster_describe(df.groupby(["service_date", "peak"])["travel_time_sec"])
 
     # combine summary stats
     summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
@@ -154,9 +144,7 @@ def headways_over_time(sdate, edate, stops):
     summary_stats["peak"] = "all"
 
     # summary_stats for peak / off-peak trains
-    summary_stats_peak = faster_describe(
-        df.groupby(["service_date", "peak"])["headway_time_sec"]
-    )
+    summary_stats_peak = faster_describe(df.groupby(["service_date", "peak"])["headway_time_sec"])
 
     # combine summary stats
     summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
@@ -188,9 +176,7 @@ def dwells_over_time(sdate, edate, stops):
     summary_stats["peak"] = "all"
 
     # summary_stats for peak / off-peak trains
-    summary_stats_peak = faster_describe(
-        df.groupby(["service_date", "peak"])["dwell_time_sec"]
-    )
+    summary_stats_peak = faster_describe(df.groupby(["service_date", "peak"])["dwell_time_sec"])
 
     # combine summary stats
     summary_stats_final = pd.concat([summary_stats, summary_stats_peak])

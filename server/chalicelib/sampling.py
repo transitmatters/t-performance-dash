@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date
 from typing import Dict, List, Literal
 import pandas as pd
 
@@ -42,9 +42,7 @@ def resample_and_aggregate(
         df_agg["date"] = df_agg["date"] - pd.Timedelta(days=6)
 
     # drop any rows where date is not between start_date and end_date
-    df_agg = df_agg[
-        (df_agg["date"] >= start_date) & (df_agg["date"] <= end_date)
-    ].copy()
+    df_agg = df_agg[(df_agg["date"] >= start_date) & (df_agg["date"] <= end_date)].copy()
 
     df_agg["date"] = df_agg["date"].dt.strftime("%Y-%m-%d")
 
