@@ -144,7 +144,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
 
   const scales = useMemo(() => {
     const unit = timeAxis.axisUnit ?? timeAxis.granularity;
-    const time = timeAxis.granularity !== 'time' && {
+    const time = unit !== 'time' && {
       unit,
       tooltipFormat: timeAxis.tooltipFormat ?? timeAxis.format,
       displayFormats: {
