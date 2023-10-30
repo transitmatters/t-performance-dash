@@ -48,6 +48,7 @@ export interface SlowZone {
   end: string;
   duration: number;
   delay: number;
+  latest_delay: number | null;
   color: string;
   id: string;
   direction: Direction;
@@ -63,6 +64,8 @@ export type SlowZoneResponse = {
   duration: number;
   baseline: number;
   delay: number;
+  latest_delay: number | null;
+  previous_delay: number | null;
   color: Exclude<LineShort, 'Bus'>;
   fr_id: string;
   to_id: string;
@@ -89,6 +92,7 @@ export type LineSegmentData = {
   y: string[];
   id: string;
   delay: number;
+  latest_delay: number | null;
   stations:
     | { fromStopIds: string[]; toStopIds: string[] }
     | { fromStopIds: undefined; toStopIds: undefined };
