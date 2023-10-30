@@ -39,6 +39,7 @@ export const CHART_COLORS = {
   DARK_LINE: '#303030a0',
   ANNOTATIONS: hexWithAlpha('#202020', 0.4),
   BLOCKS: hexWithAlpha('#202020', 0.2),
+  BLOCKS_SOLID: '#d2d2d2',
 };
 
 export const LINE_COLORS = {
