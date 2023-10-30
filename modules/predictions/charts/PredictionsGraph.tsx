@@ -200,7 +200,7 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
                   ctx.fillText('No data to display', width / 2, height / 2);
                   ctx.restore();
                 }
-                if (showTitle) drawSimpleTitle(`Time Predictions`, chart);
+                if (showTitle) drawSimpleTitle(`Arrival Predictions`, chart);
               },
             },
             ChartjsPluginWatermark,
