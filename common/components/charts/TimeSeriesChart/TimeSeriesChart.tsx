@@ -37,10 +37,17 @@ import type {
   DisplayStyle,
   GridOptions,
   LegendOptions,
-  TimeAxis,
+  ProvidedTimeAxis,
+  ResolvedTimeAxis,
   ValueAxis,
 } from './types';
-import { mergeAndApplyStyles, getLabelsForData, getFillProps, getTimeAxis } from './helpers';
+import {
+  mergeAndApplyStyles,
+  getLabelsForData,
+  getFillProps,
+  getGranularityForAgg,
+  getDefaultTimeAxis,
+} from './helpers';
 
 ChartJS.register(
   BarController,
@@ -66,7 +73,7 @@ interface Props<Data extends Dataset[]> {
   legend?: LegendOptions;
   grid?: GridOptions;
   style?: Partial<DisplayStyle<Data[number]['data'][number]>>;
-  timeAxis?: Partial<TimeAxis>;
+  timeAxis?: Partial<ProvidedTimeAxis>;
   valueAxis: ValueAxis;
 }
 
@@ -125,14 +132,23 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     return { labels, datasets: [...datasets, ...benchmarkDummyDatasets] };
   }, [data, benchmarks, appliedStyles]);
 
-  const timeAxis = useMemo(() => getTimeAxis(providedTimeAxis), [providedTimeAxis]);
+  const timeAxis = useMemo((): ResolvedTimeAxis => {
+    const providedGranularity =
+      'granularity' in providedTimeAxis
+        ? providedTimeAxis.granularity
+        : 'agg' in providedTimeAxis && providedTimeAxis.agg
+        ? getGranularityForAgg(providedTimeAxis.agg)
+        : null;
+    return { ...getDefaultTimeAxis(providedGranularity ?? null), ...providedTimeAxis };
+  }, [providedTimeAxis]);
 
   const scales = useMemo(() => {
-    const time = timeAxis.granularity !== 'time' && {
-      unit: timeAxis.granularity,
-      tooltipFormat: timeAxis.tooltipFormat || timeAxis.format,
+    const unit = timeAxis.axisUnit ?? timeAxis.granularity;
+    const time = unit !== 'time' && {
+      unit,
+      tooltipFormat: timeAxis.tooltipFormat ?? timeAxis.format,
       displayFormats: {
-        [timeAxis.granularity]: timeAxis.format,
+        [unit]: timeAxis.format,
       },
     };
 

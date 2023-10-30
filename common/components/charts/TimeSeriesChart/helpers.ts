@@ -1,23 +1,25 @@
 import pattern from 'patternomaly';
-
+import { hexWithAlpha } from '../../../utils/general';
+import type { AggType } from '../../../../modules/speed/constants/speeds';
 import type {
   Granularity,
-  TimeAxis,
   Dataset,
   DisplayStyle,
   AppliedDisplayStyle,
   DataPoint,
+  ResolvedTimeAxis,
 } from './types';
 import {
   defaultTimeAxis,
   defaultDayAxis,
   defaultMonthAxis,
-  defaultYearAxis,
   defaultStyle,
   defaultWeekAxis,
 } from './defaults';
 
-const getDefaultTimeAxis = <Unit extends Granularity>(unit: Unit): TimeAxis => {
+export const getDefaultTimeAxis = <Unit extends Granularity>(
+  unit: null | Unit
+): ResolvedTimeAxis => {
   if (unit === 'time') {
     return defaultTimeAxis;
   }
@@ -30,14 +32,17 @@ const getDefaultTimeAxis = <Unit extends Granularity>(unit: Unit): TimeAxis => {
   if (unit === 'month') {
     return defaultMonthAxis;
   }
-  return defaultYearAxis;
+  return defaultTimeAxis;
 };
 
-export const getTimeAxis = (axis: Partial<TimeAxis>): TimeAxis => {
-  return {
-    ...getDefaultTimeAxis(axis.granularity ?? 'time'),
-    ...axis,
-  };
+export const getGranularityForAgg = (agg: AggType): Granularity => {
+  if (agg === 'daily') {
+    return 'day';
+  }
+  if (agg === 'weekly') {
+    return 'week';
+  }
+  return 'month';
 };
 
 export const getLabelsForData = <Data extends Dataset[]>(data: Data) => {
@@ -78,7 +83,9 @@ export const getFillProps = (style: AppliedDisplayStyle<DataPoint>) => {
     const backgroundColor =
       fillPattern === 'solid'
         ? resolvedFillColor
-        : pattern.draw('diagonal', 'transparent', resolvedFillColor, 5);
+        : fillPattern === 'slightly-transparent'
+          ? hexWithAlpha(resolvedFillColor, 0.8)
+          : pattern.draw('diagonal', 'transparent', resolvedFillColor, 5);
     return {
       fill: true,
       backgroundColor,

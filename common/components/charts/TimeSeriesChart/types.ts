@@ -1,4 +1,5 @@
 import type { ChartDataset } from 'chart.js';
+import type { AggType } from '../../../../modules/speed/constants/speeds';
 
 export type DataPoint = ({ date: string } | { time: string }) & { value: number };
 
@@ -8,7 +9,7 @@ type ResolvedFromDataPoint<
   ReturnType = string,
 > = Applied extends true ? ReturnType[] : { byPoint: (point: Point) => ReturnType };
 
-type FillPattern = 'solid' | 'striped';
+type FillPattern = 'solid' | 'slightly-transparent' | 'striped';
 
 export type DisplayStyle<Point extends DataPoint, Applied extends boolean = false> = {
   color: string;
@@ -33,11 +34,20 @@ export type DisplayStyle<Point extends DataPoint, Applied extends boolean = fals
 
 export type AppliedDisplayStyle<Point extends DataPoint> = DisplayStyle<Point, true>;
 
-export type Granularity = 'time' | 'day' | 'week' | 'month' | 'year';
+export type Granularity = 'time' | 'day' | 'week' | 'month';
+export type AxisUnit = 'day' | 'month';
 
-export type TimeAxis = {
+export type ProvidedTimeAxis = {
+  label: string;
+  format?: string;
+  tooltipFormat?: string;
+  axisUnit?: AxisUnit;
+} & ({ granularity: Granularity } | { agg: AggType });
+
+export type ResolvedTimeAxis = {
   granularity: Granularity;
   label: string;
+  axisUnit?: AxisUnit;
   format?: string;
   tooltipFormat?: string;
 };
