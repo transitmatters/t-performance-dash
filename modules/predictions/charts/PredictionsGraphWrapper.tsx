@@ -25,7 +25,7 @@ export const PredictionsGraphWrapper: React.FC<PredictionsGraphWrapperProps> = (
   const { average, peak, worst } = getDetailsPredictiondWidgetValues(data);
   return (
     <>
-      <WidgetTitle title="Time Predictions" />
+      <WidgetTitle title="Arrival Predictions" />
       <CarouselGraphDiv>
         <WidgetCarousel>
           <WidgetForCarousel

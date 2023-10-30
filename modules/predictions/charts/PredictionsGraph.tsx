@@ -73,7 +73,7 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
             labels,
             datasets: [
               {
-                label: `Time Predictions`,
+                label: `Arrival Predictions`,
                 borderColor: LINE_COLORS[line ?? 'default'],
                 pointRadius: 0,
                 pointBorderWidth: 0,
