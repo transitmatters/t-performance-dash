@@ -34,7 +34,7 @@ interface ScheduledAndDeliveredGraph {
   startDate: string;
   endDate: string;
   labels: string[];
-  peak?: number;
+  peak: number;
   showTitle?: boolean;
 }
 
@@ -96,15 +96,13 @@ export const ScheduledAndDeliveredGraph: React.FC<ScheduledAndDeliveredGraph> = 
                   data: scheduled.values,
                   backgroundColor: pattern.draw('diagonal', 'transparent', lineColor, 5),
                 },
-                peak
-                  ? {
-                      // This null dataset produces the entry in the legend for the baseline annotation.
-                      label: `Historical Maximum (${peak} round trips)`,
-                      backgroundColor: CHART_COLORS.ANNOTATIONS,
-                      data: null,
-                    }
-                  : null,
-              ].filter((x) => x),
+                {
+                  // This null dataset produces the entry in the legend for the baseline annotation.
+                  label: `Peak (${peak})`,
+                  backgroundColor: CHART_COLORS.ANNOTATIONS,
+                  data: null,
+                },
+              ],
             }}
             options={{
               responsive: true,

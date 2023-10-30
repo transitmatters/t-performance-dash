@@ -105,7 +105,7 @@ export function ServiceDetails() {
           {serviceHoursDataReady ? (
             <ServiceHoursGraph
               serviceHours={serviceHoursData.data!}
-              config={config}
+              agg={config.agg}
               startDate={startDate}
               endDate={endDate}
             />

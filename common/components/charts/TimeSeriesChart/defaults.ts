@@ -1,10 +1,10 @@
-import type { DataPoint, TimeAxis, DisplayStyle } from './types';
+import type { DataPoint, DisplayStyle, ResolvedTimeAxis } from './types';
 
 export const defaultStyle: DisplayStyle<DataPoint> = {
   color: '#ddd',
   width: 2,
   fillColor: null,
-  fillPattern: 'solid',
+  fillPattern: 'slightly-transparent',
   pointColor: null,
   pointRadius: 0,
   pointHitRadius: 0,
@@ -15,34 +15,31 @@ export const defaultStyle: DisplayStyle<DataPoint> = {
   },
 };
 
-export const defaultTimeAxis: TimeAxis = {
+export const defaultTimeAxis: ResolvedTimeAxis = {
   granularity: 'time',
   label: 'Time',
   format: 'h a',
 };
 
-export const defaultDayAxis: TimeAxis = {
+export const defaultDayAxis: ResolvedTimeAxis = {
   granularity: 'day',
   label: 'Date',
   format: 'MMM d',
   tooltipFormat: 'MMM d, yyyy',
 };
 
-export const defaultWeekAxis: TimeAxis = {
+export const defaultWeekAxis: ResolvedTimeAxis = {
   granularity: 'week',
+  axisUnit: 'month',
   label: 'Date',
-  format: 'MMM d',
+  format: 'MMM',
   tooltipFormat: 'MMM d, yyyy',
 };
 
-export const defaultMonthAxis: TimeAxis = {
+export const defaultMonthAxis: ResolvedTimeAxis = {
   granularity: 'month',
+  axisUnit: 'year',
   label: 'Month',
-  format: 'MMM yyyy',
-};
-
-export const defaultYearAxis: TimeAxis = {
-  granularity: 'year',
-  label: 'Year',
   format: 'yyyy',
+  tooltipFormat: 'MMM yyyy',
 };

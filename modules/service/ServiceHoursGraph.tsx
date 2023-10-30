@@ -1,56 +1,39 @@
 /* eslint-disable import/no-unused-modules */
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
-import type { ParamsType } from '../speed/constants/speeds';
 import type { FetchServiceHoursResponse } from '../../common/types/api';
-import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
+import type { AggType } from '../speed/constants/speeds';
+import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraphNew';
 
 interface ServiceGraphProps {
   serviceHours: FetchServiceHoursResponse;
-  config: ParamsType;
-  startDate: string;
-  endDate: string;
-  showTitle?: boolean;
+  agg: AggType;
 }
 
 export const ServiceHoursGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphProps) => {
-  const { serviceHours, config, startDate, endDate, showTitle = false } = props;
-
-  const labels = useMemo(() => {
-    return serviceHours.map((sh) => sh.date);
-  }, [serviceHours]);
+  const { serviceHours, agg } = props;
 
   const scheduled = useMemo(() => {
     return {
       label: 'Scheduled service hours',
-      values: serviceHours.map((sh) => sh.scheduled),
+      data: serviceHours.map((sh) => ({ date: sh.date, value: sh.scheduled })),
+      style: { fillPattern: 'striped' as const },
     };
   }, [serviceHours]);
 
   const delivered = useMemo(() => {
     return {
-      label: 'Service hours',
-      values: serviceHours.map((sh) => sh.delivered),
+      label: 'Delivered service hours',
+      data: serviceHours.map((sh) => ({ date: sh.date, value: sh.delivered })),
     };
   }, [serviceHours]);
 
-  const label = useCallback((context) => {
-    return `${context.datasetIndex === 0 ? 'Actual:' : 'Scheduled:'} ${context.parsed.y}`;
-  }, []);
-
   return (
     <ScheduledAndDeliveredGraph
-      title="Daily service hours"
-      yAxisLabel="Service hours"
-      labels={labels}
       scheduled={scheduled}
       delivered={delivered}
-      annotations={[]}
-      tooltipLabel={label}
-      config={config}
-      startDate={startDate}
-      endDate={endDate}
-      showTitle={showTitle}
+      agg={agg}
+      valueAxisLabel="Service hours"
     />
   );
 };
