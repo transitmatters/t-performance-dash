@@ -1,7 +1,11 @@
 import dayjs from 'dayjs';
 import React, { useMemo, useState } from 'react';
 
-import { useSlowzoneAllData, useSlowzoneDelayTotalData } from '../../common/api/hooks/slowzones';
+import {
+  useSlowzoneAllData,
+  useSlowzoneDelayTotalData,
+  useSpeedRestrictionData,
+} from '../../common/api/hooks/slowzones';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
@@ -13,9 +17,12 @@ import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import type { Direction } from '../../common/types/dataPoints';
+import type { Line, LineShort } from '../../common/types/lines';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 import { LineSegments } from './charts/LineSegments';
 import { DirectionObject } from './constants/constants';
+import { SlowZonesWidgetTitle } from './SlowZonesWidgetTitle';
+import { SlowZonesMap } from './map';
 
 interface SystemSlowZonesDetailsProps {
   showTitle?: boolean;
@@ -27,9 +34,15 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
   const isMobile = !useBreakpoint('sm');
   const [direction, setDirection] = useState<Direction>('northbound');
 
+  const [lineShort, setLineShort] = useState<LineShort>('Red');
+  const line = `line-${lineShort.toLowerCase()}` as Line;
+  const canShowSlowZonesMap = lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange';
+
   const {
     query: { startDate, endDate },
   } = useDelimitatedRoute();
+
+  const speedRestrictions = useSpeedRestrictionData({ lineId: line!, date: endDate! });
 
   const startDateUTC = startDate ? dayjs.utc(startDate).startOf('day') : undefined;
   const endDateUTC = endDate ? dayjs.utc(endDate).startOf('day') : undefined;
@@ -101,6 +114,33 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
             </div>
           </div>
         </div>
+        <WidgetDiv>
+          <SlowZonesWidgetTitle />
+          <div className="relative flex flex-col">
+            {allData.data && speedRestrictions.data && canShowSlowZonesMap ? (
+              <SlowZonesMap
+                key={lineShort}
+                slowZones={allData.data}
+                speedRestrictions={speedRestrictions.data}
+                lineName={lineShort}
+                direction="horizontal-on-desktop"
+              />
+            ) : (
+              <div className="relative flex h-full">
+                <ChartPlaceHolder query={delayTotals} />
+              </div>
+            )}
+          </div>
+          <ButtonGroup
+            line={line}
+            pressFunction={setLineShort}
+            options={Object.entries({
+              Red: 'Red',
+              Orange: 'Orange',
+              Blue: 'Blue',
+            })}
+          />
+        </WidgetDiv>
       </ChartPageDiv>
     </PageWrapper>
   );

@@ -101,6 +101,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             />
             <div className={'flex w-full justify-center pt-2'}>
               <ButtonGroup
+                line={line}
                 pressFunction={setPeakTime}
                 options={[
                   ['weekday', 'Weekday'],
