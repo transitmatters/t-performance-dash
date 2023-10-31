@@ -18,7 +18,7 @@ export const PredictionsBinsGraphWrapper: React.FC<PredictionsBinsGraphWrapperPr
   if (data.length < 1) return <NoDataNotice isLineMetric />;
   return (
     <>
-      <WidgetTitle title="Arrival Predictions by Bin" />
+      <WidgetTitle title="Arrival Predictions by bin" />
       <PredictionsBinsGraph data={data} startDate={startDate} endDate={endDate} />
     </>
   );

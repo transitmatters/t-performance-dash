@@ -115,7 +115,7 @@ export function PredictionsDetails() {
                       <li>0-3 min: 60 seconds early to 60 seconds late</li>
                       <li>3-6 min: 90 seconds early to 120 seconds late</li>
                       <li>6-12 min: 150 seconds early to 210 seconds late</li>
-                      <li>12-30 min: 240 seconds early to 360 seconds late.</li>
+                      <li>12-30 min: 240 seconds early to 360 seconds late</li>
                     </ul>
                   </div>
                 ),

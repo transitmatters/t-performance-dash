@@ -201,7 +201,7 @@ export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Percentage Accurate',
+                  text: 'Accuracy (%)',
                   color: COLORS.design.subtitleGrey,
                 },
               },

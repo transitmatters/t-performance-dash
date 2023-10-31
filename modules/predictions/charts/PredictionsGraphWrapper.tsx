@@ -30,7 +30,7 @@ export const PredictionsGraphWrapper: React.FC<PredictionsGraphWrapperProps> = (
         <WidgetCarousel>
           <WidgetForCarousel
             widgetValue={new PercentageWidgetValue(average)}
-            analysis={'Average Accuracy'}
+            analysis={'Average accuracy'}
             sentimentDirection={'positiveOnIncrease'}
             layoutKind="no-delta"
           />
@@ -38,7 +38,7 @@ export const PredictionsGraphWrapper: React.FC<PredictionsGraphWrapperProps> = (
             widgetValue={
               new PercentageWidgetValue(peak.num_accurate_predictions / peak.num_predictions)
             }
-            analysis={`Peak Accuracy (${prettyDate(peak.weekly, false)})`}
+            analysis={`Most accurate (${prettyDate(peak.weekly, false)})`}
             sentimentDirection={'positiveOnIncrease'}
             layoutKind="no-delta"
           />
@@ -46,7 +46,7 @@ export const PredictionsGraphWrapper: React.FC<PredictionsGraphWrapperProps> = (
             widgetValue={
               new PercentageWidgetValue(worst.num_accurate_predictions / worst.num_predictions)
             }
-            analysis={`Worst Accuracy (${prettyDate(worst.weekly, false)})`}
+            analysis={`Least accurate (${prettyDate(worst.weekly, false)})`}
             sentimentDirection={'positiveOnIncrease'}
             layoutKind="no-delta"
           />

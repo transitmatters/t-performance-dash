@@ -151,7 +151,7 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Percentage Accurate',
+                  text: 'Accuracy (%)',
                   color: COLORS.design.subtitleGrey,
                 },
               },
