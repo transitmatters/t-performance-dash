@@ -5,7 +5,7 @@ import type { QueryParams } from '../types/router';
 import { PRESET_DEFAULTS } from './defaults/datePresetDefaults';
 import { checkForPreset } from './utils/datePresetUtils';
 
-export interface DatePresetStore {
+interface DatePresetStore {
   linePreset: DatePresetKey | undefined | 'custom';
   singleTripPreset: DatePresetKey | undefined | 'custom';
   rangeTripPreset: DatePresetKey | undefined | 'custom';

@@ -26,6 +26,14 @@ export type LineMetadata = {
 };
 export type LineObject = { [key in Line]: LineMetadata };
 
+export type LineRouteId =
+  | Exclude<LineShort, 'Bus' | 'Green'>
+  | 'bus'
+  | 'Green-B'
+  | 'Green-C'
+  | 'Green-D'
+  | 'Green-E';
+
 export const RIDERSHIP_KEYS = {
   'line-red': 'line-Red',
   'line-orange': 'line-Orange',
