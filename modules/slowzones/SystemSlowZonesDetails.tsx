@@ -78,6 +78,33 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
             )}
           </div>
         </WidgetDiv>
+        <WidgetDiv>
+          <SlowZonesWidgetTitle />
+          <div className="relative flex flex-col">
+            {allData.data && speedRestrictions.data && canShowSlowZonesMap ? (
+              <SlowZonesMap
+                key={lineShort}
+                slowZones={allData.data}
+                speedRestrictions={speedRestrictions.data}
+                lineName={lineShort}
+                direction="horizontal-on-desktop"
+              />
+            ) : (
+              <div className="relative flex h-full">
+                <ChartPlaceHolder query={delayTotals} />
+              </div>
+            )}
+          </div>
+          <ButtonGroup
+            line={line}
+            pressFunction={setLineShort}
+            options={Object.entries({
+              Red: 'Red',
+              Orange: 'Orange',
+              Blue: 'Blue',
+            })}
+          />
+        </WidgetDiv>
         <div className="h-full rounded-lg bg-white p-4 shadow-dataBox">
           <div className="flex flex-col p-4 sm:p-0 lg:flex-row">
             <WidgetTitle title={`${DirectionObject[direction]} segments`} />
@@ -114,33 +141,6 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
             </div>
           </div>
         </div>
-        <WidgetDiv>
-          <SlowZonesWidgetTitle />
-          <div className="relative flex flex-col">
-            {allData.data && speedRestrictions.data && canShowSlowZonesMap ? (
-              <SlowZonesMap
-                key={lineShort}
-                slowZones={allData.data}
-                speedRestrictions={speedRestrictions.data}
-                lineName={lineShort}
-                direction="horizontal-on-desktop"
-              />
-            ) : (
-              <div className="relative flex h-full">
-                <ChartPlaceHolder query={delayTotals} />
-              </div>
-            )}
-          </div>
-          <ButtonGroup
-            line={line}
-            pressFunction={setLineShort}
-            options={Object.entries({
-              Red: 'Red',
-              Orange: 'Orange',
-              Blue: 'Blue',
-            })}
-          />
-        </WidgetDiv>
       </ChartPageDiv>
     </PageWrapper>
   );
