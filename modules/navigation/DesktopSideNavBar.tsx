@@ -8,15 +8,14 @@ import { SideNavigation } from './SideNavigation';
 export const SideNavBar = () => {
   return (
     <>
-      <div className="bg-tm-grey text-gray-200">
-        <div className="fixed inset-y-0 flex w-64 flex-col overflow-y-hidden bg-tm-grey">
-          <Link href="/" className="sticky flex flex-shrink-0 px-6 pb-2 pt-6">
-            <Image src={'/TMLogo.png'} alt="TransitMatters Logo" width={3204} height={301} />
-          </Link>
-          <div className="relative flex flex-grow flex-col overflow-y-auto pb-4">
-            <div className="fixed h-5 w-64 bg-gradient-to-b from-tm-grey to-transparent"></div>
+      <div className="bg-tm-grey text-gray-200 w-64 fixed flex flex-col top-0 left-0 h-full">
+        <Link href="/" className="top-0 flex flex-shrink-0 justify-center px-4 pb-2 pt-6 w-full">
+          <Image src={'/TMLogo.png'} alt="TransitMatters Logo" width={3204} height={301} />
+        </Link>
+        <div className="inset-y-0  pl-2 flex flex-col overflow-y-auto bg-tm-grey h-full justify-between pb-1">
+          <div className="relative flex flex-col pb-4">
+            <div className="sticky h-5 w-full bg-gradient-to-b from-tm-grey to-transparent"></div>
             <SideNavigation />
-            <div className="fixed bottom-36 h-5 w-64 bg-gradient-to-t from-tm-grey to-transparent"></div>
           </div>
           <div className="flex flex-col gap-1 px-6 py-2 text-sm">
             <Link

@@ -26,9 +26,10 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ line, route, childre
     }, [selected])
     return <div className={classNames('w-full')}>
         <Link href={line === 'line-bus' ? `/bus/trips/single?busRoute=1&date=${BUS_DEFAULTS.singleTripConfig.date}` : getLineSelectionItemHref(line, route)} >
-            <div className={classNames('w-full px-2 gap-2 flex py-1 items-center flex-row rounded-t-md ', selected ? `${lineColorBackground[line ?? 'DEFAULT']} text-white text-opacity-95` : '')}>
-                <div className={classNames(lineColorBackground[line ?? 'DEFAULT'], "rounded-full flex items-center w-8 h-8 justify-center")}>
-                    <FontAwesomeIcon icon={line === 'line-green' ? faTrainTram : faTrainSubway} className="h-5 w-5" />
+            <div className={classNames('w-full gap-2 flex py-1 items-center text-sm flex-row rounded-t-md ', selected ? `${lineColorBackground[line ?? 'DEFAULT']} text-white text-opacity-95` : '')}>
+                <div className={classNames(lineColorBackground[line ?? 'DEFAULT'], "rounded-full flex items-center w-7 h-7 justify-center bg-opacity-75")}>
+                    {/* TODO: add bus icon */}
+                    <FontAwesomeIcon icon={line === 'line-green' ? faTrainTram : faTrainSubway} className="h-4 w-4" />
                 </div>
                 {LINE_OBJECTS[line].name}
             </div>

@@ -8,9 +8,9 @@ interface NavSectionProps {
 }
 
 export const NavSection: React.FC<NavSectionProps> = ({ title, content }) => {
-    return <div  >
+    return <div className="mt-1">
         <NavSectionHeader title={title} />
-        <div className="px-1 ">
+        <div >
             {content}
         </div>
     </div>

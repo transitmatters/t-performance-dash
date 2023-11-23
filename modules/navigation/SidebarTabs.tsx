@@ -10,10 +10,10 @@ import type { PageMetadata } from '../../common/constants/pages';
 
 interface SidebarTabs {
   tabs: PageMetadata[];
-  setSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  close?: (focusableElement?: HTMLElement | React.MouseEvent<HTMLElement, MouseEvent> | React.MutableRefObject<HTMLElement | null> | undefined) => void
 }
 
-export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => {
+export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, close }) => {
   const { line, page, query, linePath } = useDelimitatedRoute();
   const handlePageConfig = useHandleConfigStore();
   const generateHref = useGenerateHref();
@@ -21,7 +21,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => 
   const handleChange = (enabled: boolean, tab: PageMetadata) => {
     if (!enabled) return null;
     handlePageConfig(tab);
-    setSidebarOpen && setSidebarOpen(false);
+    close && close();
   };
 
   return (
