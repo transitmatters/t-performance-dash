@@ -17,7 +17,7 @@ export enum PAGES {
   landing = 'landing',
   today = 'today',
   overview = 'overview',
-  speed = 'speed',
+  speed = 'speed', 
   service = 'service',
   slowzones = 'slowzones',
   systemSlowzones = 'systemSlowzones',
