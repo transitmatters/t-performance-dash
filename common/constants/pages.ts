@@ -114,7 +114,6 @@ export const ALL_PAGES: PageMap = {
     lines: ['line-red', 'line-orange', 'line-blue', 'line-green'],
     icon: faStopwatch20,
     dateStoreSection: 'line',
-    sectionTitle: 'Line',
     sub: true,
   },
   service: {
