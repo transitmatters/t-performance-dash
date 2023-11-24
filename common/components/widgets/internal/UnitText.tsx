@@ -6,7 +6,7 @@ export interface UnitTextProps {
 }
 export const UnitText: React.FC<UnitTextProps> = ({ text, isLarge = false }) => {
   return (
-    <span className={classNames('text-design-subtitleGrey', isLarge ? 'text-md' : 'text-md')}>
+    <span className={classNames('text-design-subtitleGrey', isLarge ? 'text-md' : 'text-sm')}>
       {text}
     </span>
   );
