@@ -13,7 +13,7 @@ export const MobileNavHeader = () => {
   return (
     <>
       <div className="sticky top-0 z-10 even bg-tm-grey text-gray-300 ">
-        <div className="top-0 z-10 flex flex-row items-center justify-between bg-tm-grey p-2">
+        <div className="top-0 z-10 flex flex-row items-center overflow-y-auto justify-between bg-tm-grey p-2">
           <Link
             href="/"
             className="h-5 w-auto overflow-hidden focus:outline-none"
@@ -49,44 +49,53 @@ export const MobileNavHeader = () => {
                   leaveTo="opacity-0 "
                 >
 
-                  <Popover.Panel className="absolute flex flex-col z-10 mt-2 h-[100vh] pb-12 w-90 transform px-4 right-0 bg-tm-grey backdrop-blur-md bg-opacity-90 justify-between shadow-inner">
+                  <Popover.Panel className="absolute flex flex-col overflow-y-auto h-[100vh] mt-2 z-10 pb-40 w-full max-w-[18rem] transform px-8 right-0 bg-tm-grey backdrop-blur-md bg-opacity-90 shadow-inner">
 
-                    <div className="overflow-y-auto px-4 pt-5 ">
-                      <div className="text-white md:mt-5">
-                        <SideNavigation close={close} />
-                      </div>
+                    <div className="pt-5 md:mt-5 text-white">
+                      <SideNavigation close={close} />
                     </div>
-                    <div className="flex flex-col gap-1 px-6 py-2 text-sm bg-tm-grey bg-opacity-50">
+                    <hr className="border-stone-600" />
+                    <div className="flex flex-col gap-1 py-2 text-sm">
                       <Link
                         href="https://transitmatters.org/transitmatters-labs"
-                        className="text-white hover:text-blue-500"
+                        className="text-white hover:text-blue-500 flex items-center flex-row gap-2"
                       >
+                        <div className="h-8 w-8" />
                         About
                       </Link>
                       <Link
                         href="https://transitmatters.org/join"
-                        className="text-white hover:text-blue-500"
+                        className="text-white hover:text-blue-500 flex items-center flex-row gap-2"
                       >
+                        <div className="h-8 w-8" />
+
                         Join Us
                       </Link>
                       <Link
                         href="https://forms.gle/SKYtxgKSyCrYxM1v7"
-                        className="text-white hover:text-blue-500"
+                        className="text-white hover:text-blue-500 flex items-center flex-row gap-2"
                       >
+                        <div className="h-8 w-8" />
+
                         Feedback
                       </Link>
-                      <p className="text-white">
-                        <Link
-                          href="https://github.com/transitmatters/t-performance-dash"
-                          className="text-white hover:text-blue-500"
-                        >
-                          Source Code
-                        </Link>{' '}
-                        /{' '}
-                        <Link href="/opensource" className="text-white hover:text-blue-500">
-                          Attributions
-                        </Link>
-                      </p>
+                      <Link
+                        href="https://github.com/transitmatters/t-performance-dash"
+                        className="text-white hover:text-blue-500 flex items-center flex-row gap-2"
+                      >
+                        <div className="h-8 w-8" />
+
+                        Source Code
+                      </Link>
+                      <Link href="/opensource"
+                        className="text-white hover:text-blue-500 flex items-center flex-row gap-2"
+                      >
+                        <div className="h-8 w-8" />
+
+                        Attributions
+                      </Link>
+                      <hr className="border-stone-600" />
+
                       <DonateButton />
                     </div>
                   </Popover.Panel>
