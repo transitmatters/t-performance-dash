@@ -73,6 +73,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
       y: szTimePeriod,
       id: getStationPairName(sz.from, sz.to, useShortStationNames),
       delay: sz.delay,
+      latest_delay: sz.latest_delay,
       stations: stopIdsForStations(sz.from, sz.to),
       color: sz.color,
     };
@@ -166,7 +167,13 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
           tooltip: {
             callbacks: {
               label: (context) => {
-                return 'Delay: ' + (context.raw as LineSegmentData).delay.toFixed(0) + ' sec';
+                const slowzone = context.raw as LineSegmentData;
+                const delays = [` Average Delay: ${slowzone.delay.toFixed(0)} sec.`];
+
+                if (slowzone.latest_delay !== null) {
+                  delays.push(` Latest Delay: ${slowzone.latest_delay.toFixed(0)} sec`);
+                }
+                return delays;
               },
               title: (context) => {
                 return context[0].label;
@@ -177,12 +184,11 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
                 if (!(start && end)) return 'Unknown dates';
                 const startUTC = dayjs.utc(start);
                 const endUTC = dayjs.utc(end);
-                return `${startUTC.format('MMM D, YYYY')} -
-                 ${
-                   dayjs.utc(endUTC).isSame(YESTERDAY_MIDNIGHT)
-                     ? 'Ongoing'
-                     : dayjs(endUTC).format('MMM D, YYYY')
-                 }`;
+                return `${startUTC.format('MMM D, YYYY')} - ${
+                  dayjs.utc(endUTC).isSame(YESTERDAY_MIDNIGHT)
+                    ? 'Ongoing'
+                    : dayjs(endUTC).format('MMM D, YYYY')
+                }`;
               },
             },
           },

@@ -8,6 +8,7 @@ import type { Turtle } from './types';
 type DiagrammableLineName = 'Red' | 'Orange' | 'Blue';
 
 type CreateDiagramOptions = {
+  /** Number of pixels between each station */
   pxPerStation?: number;
 };
 
@@ -35,7 +36,7 @@ export const createRedLineDiagram = (options: CreateDiagramOptions = {}) => {
     ranges: ['branch-a'],
     commands: [
       trunk,
-      wiggle(15, -15),
+      wiggle(15, -20),
       line(10),
       line(pxPerStation * stationsABranch.length, ['branch-a-stations']),
     ],
@@ -45,7 +46,7 @@ export const createRedLineDiagram = (options: CreateDiagramOptions = {}) => {
     ranges: ['branch-b'],
     commands: [
       trunk,
-      wiggle(15, 15),
+      wiggle(15, 20),
       line(60),
       line(pxPerStation * stationsBBranch.length, ['branch-b-stations']),
     ],
@@ -76,8 +77,10 @@ export const createDefaultDiagramForLine = (
   lineName: DiagrammableLineName,
   options: CreateDiagramOptions = {}
 ) => {
-  if (lineName === 'Red') {
-    return createRedLineDiagram(options);
+  switch (lineName) {
+    case 'Red':
+      return createRedLineDiagram(options);
+    default:
+      return createStraightLineDiagram(lineName, options);
   }
-  return createStraightLineDiagram(lineName, options);
 };

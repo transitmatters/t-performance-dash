@@ -12,6 +12,7 @@ from chalicelib import (
     mbta_v3,
     speed,
     speed_restrictions,
+    predictions,
     service_levels,
     ridership,
 )
@@ -221,5 +222,15 @@ def get_speed_restrictions():
     response = speed_restrictions.query_speed_restrictions(
         line_id=line_id,
         on_date=on_date,
+    )
+    return json.dumps(response)
+
+
+@app.route("/api/time_predictions", cors=cors_config)
+def get_time_predictions():
+    query = app.current_request.query_params
+    route_id = query["route_id"]
+    response = predictions.query_time_predictions(
+        route_id=route_id,
     )
     return json.dumps(response)
