@@ -5,7 +5,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { LINE_OBJECTS } from '../../constants/lines';
 import { BUS_DEFAULTS } from '../../state/defaults/dateDefaults';
-import { lineColorBackground } from '../../styles/general';
+import { lineColorBackground, lineColorBackgroundHover } from '../../styles/general';
 import { Line } from '../../types/lines';
 import { Route } from '../../types/router';
 import { getLineSelectionItemHref } from '../../utils/router';
@@ -26,7 +26,7 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ line, route, childre
     }, [selected])
     return <div className={classNames('w-full')}>
         <Link href={line === 'line-bus' ? `/bus/trips/single?busRoute=1&date=${BUS_DEFAULTS.singleTripConfig.date}` : getLineSelectionItemHref(line, route)} >
-            <div className={classNames('w-full gap-2 flex py-1 items-center text-sm flex-row rounded-t-md ', selected ? `${lineColorBackground[line ?? 'DEFAULT']} text-white text-opacity-95` : '')}>
+            <div className={classNames('w-full gap-2 flex py-1 items-center text-sm flex-row rounded-t-md ', `${lineColorBackground[line ?? 'DEFAULT']}`, selected ? `bg-opacity-100 text-white text-opacity-95` : `hover:bg-opacity-30 bg-opacity-0 hover:rounded-md`)}>
                 <div className={classNames(lineColorBackground[line ?? 'DEFAULT'], "rounded-full flex items-center w-8 h-8 justify-center bg-opacity-75")}>
                     {/* TODO: add bus icon */}
                     <FontAwesomeIcon icon={line === 'line-green' ? faTrainTram : faTrainSubway} size="lg" />
