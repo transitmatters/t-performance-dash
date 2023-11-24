@@ -9,6 +9,8 @@ import type { TooltipSide } from '../../../common/components/maps/LineMap';
 import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
 import { prettyDate } from '../../../common/utils/date';
 
+import { TODAY_STRING } from '../../../common/constants/dates';
+import { useDelimitatedRoute } from '../../../common/utils/router';
 import { DIRECTIONS } from './segment';
 import type { ByDirection, SlowZoneDirection, SlowZonesSegment } from './segment';
 import { DirectionIndicator } from './DirectionIndicator';
@@ -49,6 +51,9 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
     color,
     segment: { slowZones, speedRestrictions },
   } = props;
+  const {
+    query: { endDate },
+  } = useDelimitatedRoute();
 
   const isHorizontal = side === 'top';
 
@@ -94,15 +99,16 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
   };
 
   const renderSlowZoneForDirection = (direction: SlowZoneDirection) => {
+    const isToday = endDate === TODAY_STRING;
+
     const [slowZone] = slowZones[direction];
     const speedRestrictionsForDirection = speedRestrictions[direction];
     if (slowZone) {
+      const delayVal = isToday && slowZone.latest_delay ? slowZone.latest_delay : slowZone.delay;
       return (
         <div className={styles.direction}>
           <BasicWidgetDataLayout
-            widgetValue={
-              new DeltaTimeWidgetValue(slowZone.delay + slowZone.baseline, slowZone.delay)
-            }
+            widgetValue={new DeltaTimeWidgetValue(delayVal + slowZone.baseline, delayVal)}
             key={`${slowZone.fr_id}${slowZone.to_id}`}
             title={
               <div className={styles.directionTitle}>

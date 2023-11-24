@@ -9,6 +9,7 @@ import type { SlowZonesLineName } from '../types';
 import type { SegmentLabel, TooltipSide } from '../../../common/components/maps/LineMap';
 import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
 import { useDelimitatedRoute } from '../../../common/utils/router';
+import { TODAY_STRING } from '../../../common/constants/dates';
 import { segmentSlowZones } from './segment';
 import { SlowSegmentLabel } from './SlowSegmentLabel';
 import { SlowZonesTooltip } from './SlowZonesTooltip';
@@ -106,7 +107,11 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
         ],
         strokes: Object.entries(segment.slowZones).map(([direction, zones]) => {
           const offset = direction === '0' ? 1 : -1;
-          const totalDelay = zones.reduce((sum, zone) => sum + zone.delay, 0);
+          const isToday = endDate === TODAY_STRING;
+          const totalDelay = zones.reduce(
+            (sum, zone) => sum + (isToday && zone.latest_delay ? zone.latest_delay : zone.delay),
+            0
+          );
           return {
             offset,
             stroke: line.color,

@@ -48,6 +48,7 @@ export interface SlowZone {
   end: string;
   duration: number;
   delay: number;
+  latest_delay: number | null;
   color: string;
   id: string;
   direction: Direction;
@@ -63,6 +64,8 @@ export type SlowZoneResponse = {
   duration: number;
   baseline: number;
   delay: number;
+  latest_delay: number | null;
+  previous_delay: number | null;
   color: Exclude<LineShort, 'Bus'>;
   fr_id: string;
   to_id: string;
@@ -89,6 +92,7 @@ export type LineSegmentData = {
   y: string[];
   id: string;
   delay: number;
+  latest_delay: number | null;
   stations:
     | { fromStopIds: string[]; toStopIds: string[] }
     | { fromStopIds: undefined; toStopIds: undefined };
@@ -109,6 +113,24 @@ export type SpeedRestriction = {
   currentAsOf: Date;
   validAsOf: Date;
 };
+
+export interface TimePrediction {
+  mode: 'subway' | 'bus';
+  arrival_departure: string;
+  route_id: string;
+  bin: PredictionBin;
+  weekly: string;
+  num_accurate_predictions: number;
+  num_predictions: number;
+}
+
+export type PredictionBin = '0-3 min' | '3-6 min' | '6-12 min' | '12-30 min';
+
+export interface TimePredictionWeek {
+  week: string;
+  prediction: TimePrediction[];
+  routeId: string;
+}
 
 export type DayKind = 'weekday' | 'saturday' | 'sunday';
 

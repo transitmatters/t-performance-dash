@@ -46,6 +46,7 @@ const formatSlowZones = (data: SlowZoneResponse[]): SlowZone[] =>
       to: to,
       title: `${from.short ?? from.stop_name}-${to.short ?? to.stop_name}`,
       delay: sz.delay,
+      latest_delay: sz.latest_delay,
       duration: sz.duration,
       color: sz.color,
       direction,

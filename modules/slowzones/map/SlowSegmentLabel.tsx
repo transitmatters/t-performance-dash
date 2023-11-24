@@ -4,6 +4,8 @@ import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 import type { LineMetadata } from '../../../common/types/lines';
 
 import { getClockFormattedTimeString } from '../../../common/utils/time';
+import { useDelimitatedRoute } from '../../../common/utils/router';
+import { TODAY_STRING } from '../../../common/constants/dates';
 import type { ByDirection, SlowZoneDirection, SlowZonesSegment } from './segment';
 import { DIRECTIONS } from './segment';
 
@@ -28,16 +30,22 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
   containingWidth,
   offset,
   isHorizontal,
-  slowZone: { delay, baseline },
+  slowZone: { delay, latest_delay, baseline },
 }) => {
+  const {
+    query: { endDate },
+  } = useDelimitatedRoute();
+  const isToday = endDate === TODAY_STRING;
+  const delayVal = isToday && latest_delay ? latest_delay : delay;
+
   const delayString = useMemo(
     () =>
-      getClockFormattedTimeString(delay, {
+      getClockFormattedTimeString(delayVal, {
         showHours: false,
         showSeconds: true,
         truncateLeadingZeros: true,
       }),
-    [delay]
+    [delayVal]
   );
   const indicatorBeforeText = direction === '1';
   const indicatorSolidArrow = indicatorBeforeText
