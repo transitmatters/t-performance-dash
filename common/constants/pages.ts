@@ -152,9 +152,7 @@ export const TODAY = [ALL_PAGES.today];
 
 export const BUS_OVERVIEW = [ALL_PAGES.ridership];
 
-export const OVERVIEW_PAGE = [
-  ALL_PAGES.overview
-]
+export const OVERVIEW_PAGE = [ALL_PAGES.overview];
 
 export const LINE_PAGES = [
   ALL_PAGES.service,

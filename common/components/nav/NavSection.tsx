@@ -1,17 +1,16 @@
-import { NavSectionHeader } from "./NavSectionHeader"
-import { MenuDropdown } from "./MenuDropdown"
-import { SubwaySection } from "./SubwaySection"
+import React from 'react';
+import { NavSectionHeader } from './NavSectionHeader';
 
 interface NavSectionProps {
-    title: string;
-    content: React.ReactNode
+  title: string;
+  content: React.ReactNode;
 }
 
 export const NavSection: React.FC<NavSectionProps> = ({ title, content }) => {
-    return <div className="mt-1">
-        <NavSectionHeader title={title} />
-        <div >
-            {content}
-        </div>
+  return (
+    <div className="mt-1">
+      <NavSectionHeader title={title} />
+      <div>{content}</div>
     </div>
-}
+  );
+};

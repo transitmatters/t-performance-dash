@@ -10,7 +10,13 @@ import type { PageMetadata } from '../../common/constants/pages';
 
 interface SidebarTabs {
   tabs: PageMetadata[];
-  close?: (focusableElement?: HTMLElement | React.MouseEvent<HTMLElement, MouseEvent> | React.MutableRefObject<HTMLElement | null> | undefined) => void
+  close?: (
+    focusableElement?:
+      | HTMLElement
+      | React.MouseEvent<HTMLElement, MouseEvent>
+      | React.MutableRefObject<HTMLElement | null>
+      | undefined
+  ) => void;
 }
 
 export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, close }) => {
@@ -44,8 +50,8 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, close }) => {
                   selected
                     ? 'bg-stone-900 text-white'
                     : enabled && 'text-stone-300 hover:bg-stone-800 hover:text-white',
-                  'group flex select-none items-center gap-x-3 rounded-sm text-xs font-semibold leading-6 pl-1',
-                  enabled ? 'cursor-pointer' : 'cursor-default  text-stone-600',
+                  'group flex select-none items-center gap-x-3 rounded-sm pl-1 text-xs font-semibold leading-6',
+                  enabled ? 'cursor-pointer' : 'cursor-default  text-stone-600'
                 )}
               >
                 <span className="text-lg">•</span>

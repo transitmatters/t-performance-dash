@@ -9,7 +9,6 @@ export const lineColorBackground: DefaultStyleMap = {
   DEFAULT: `bg-stone-800`,
 };
 
-
 export const lineColorBackgroundHover: DefaultStyleMap = {
   'line-red': `hvoer:bg-mbta-red`,
   'line-orange': `hvoer:bg-mbta-orange`,
