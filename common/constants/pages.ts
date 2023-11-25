@@ -36,7 +36,6 @@ export type DateStoreSection =
   | 'singleTrips'
   | 'multiTrips'
   | 'system';
-export type SectionTitle = 'Today' | 'Line' | 'Overview' | 'Trips' | 'System';
 
 export type PageMetadata = {
   key: string;
@@ -46,7 +45,6 @@ export type PageMetadata = {
   icon: IconDefinition;
   hasStationStore?: boolean;
   dateStoreSection: DateStoreSection;
-  sectionTitle?: SectionTitle;
   sub?: boolean;
   title?: string;
 };
@@ -107,7 +105,6 @@ export const ALL_PAGES: PageMap = {
     lines: ['line-red', 'line-orange', 'line-blue', 'line-green'],
     icon: faGaugeHigh,
     dateStoreSection: 'line',
-    sectionTitle: 'Line',
     sub: true,
   },
   predictions: {
@@ -117,7 +114,6 @@ export const ALL_PAGES: PageMap = {
     lines: ['line-red', 'line-orange', 'line-blue', 'line-green'],
     icon: faStopwatch20,
     dateStoreSection: 'line',
-    sectionTitle: 'Line',
     sub: true,
   },
   service: {
@@ -126,7 +122,6 @@ export const ALL_PAGES: PageMap = {
     name: 'Service',
     lines: ['line-red', 'line-orange', 'line-blue', 'line-green'],
     dateStoreSection: 'line',
-    sectionTitle: 'Line',
     icon: faClockFour,
     sub: true,
   },
@@ -137,7 +132,6 @@ export const ALL_PAGES: PageMap = {
     lines: ['line-red', 'line-blue', 'line-orange'],
     icon: faWarning,
     dateStoreSection: 'line',
-    sectionTitle: 'Line',
     sub: true,
   },
   systemSlowzones: {
@@ -147,7 +141,6 @@ export const ALL_PAGES: PageMap = {
     lines: [],
     icon: faWarning,
     dateStoreSection: 'system',
-    sectionTitle: 'System',
   },
   ridership: {
     key: 'ridership',
@@ -156,7 +149,6 @@ export const ALL_PAGES: PageMap = {
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
     icon: faUsers,
     dateStoreSection: 'line',
-    sectionTitle: 'Line',
     sub: true,
   },
 };

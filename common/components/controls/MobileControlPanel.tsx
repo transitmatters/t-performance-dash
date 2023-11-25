@@ -55,7 +55,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   return (
     <div
       className={classNames(
-        'pb-safe fixed bottom-0 flex w-full flex-col justify-center',
+        'pb-safe fixed bottom-0 flex w-full flex-col justify-center rounded-t-sm',
         lineColorBackground[line ?? 'DEFAULT']
       )}
     >
