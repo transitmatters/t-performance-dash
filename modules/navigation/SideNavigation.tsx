@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faWarning } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
-import { NavSection } from '../../common/components/nav/NavSection';
 import { SubwaySection } from '../../common/components/nav/SubwaySection';
 import { BusSection } from '../../common/components/nav/BusSection';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -50,10 +49,8 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({ close }) => {
           <h2>Slow Zones</h2>
         </Link>
         <hr className="border-stone-600" />
-
-        <NavSection title="Subway" content={<SubwaySection close={close} />} />
-
-        <NavSection title="Bus" content={<BusSection close={close} />} />
+        <SubwaySection close={close} />
+        <BusSection close={close} />
       </ul>
     </nav>
   );
