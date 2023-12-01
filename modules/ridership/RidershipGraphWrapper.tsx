@@ -11,8 +11,8 @@ import { getRidershipWidgetValues } from './utils/utils';
 import { RidershipGraph } from './RidershipGraph';
 interface RidershipGraphWrapperProps {
   data: RidershipCount[];
-  line: Line;
-  busRoute: BusRoute | undefined;
+  line?: Line;
+  busRoute?: BusRoute | undefined;
   config: ParamsType;
   startDate: string;
   endDate: string;
