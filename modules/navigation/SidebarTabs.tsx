@@ -1,13 +1,13 @@
 import classNames from 'classnames';
 import React from 'react';
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   useDelimitatedRoute,
   useGenerateHref,
   useHandleConfigStore,
 } from '../../common/utils/router';
 import type { PageMetadata } from '../../common/constants/pages';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface SidebarTabs {
   tabs: PageMetadata[];
