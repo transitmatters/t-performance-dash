@@ -46,7 +46,7 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({ close }) => {
           <div className="flex h-8 w-8 items-center justify-center rounded-full">
             <FontAwesomeIcon icon={faWarning} size="lg" />
           </div>
-          <h2>Slow Zones</h2>
+          <h2>Slow zones</h2>
         </Link>
         <hr className="border-stone-600" />
         <SubwaySection close={close} />

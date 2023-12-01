@@ -17,7 +17,7 @@ export const ExtraMenuItems: React.FC = () => {
         className="flex flex-row items-center gap-2 text-white hover:text-blue-500"
       >
         <div className="h-8 w-8" />
-        Join Us
+        Join us
       </Link>
       <Link
         href="https://forms.gle/SKYtxgKSyCrYxM1v7"
@@ -31,7 +31,7 @@ export const ExtraMenuItems: React.FC = () => {
         className="flex flex-row items-center gap-2 text-white hover:text-blue-500"
       >
         <div className="h-8 w-8" />
-        Source Code
+        Source code
       </Link>
       <Link
         href="/opensource"
