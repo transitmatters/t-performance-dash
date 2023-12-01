@@ -16,9 +16,7 @@ interface BusDropdownProps {
 export const BusDropdown: React.FC<BusDropdownProps> = ({ close }) => {
   return (
     <div className="rounded-b-md">
-      <div>
-        <BusRouteSelection />
-      </div>
+      <BusRouteSelection />
       <div
         className={
           'flex flex-col gap-[2px] rounded-b-md border border-t-0 border-mbta-bus  border-opacity-50 bg-neutral-800 px-1 py-[4px]'
