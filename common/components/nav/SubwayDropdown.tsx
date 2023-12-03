@@ -7,13 +7,7 @@ import type { Line } from '../../types/lines';
 
 interface SubwayDropdownProps {
   line: Line;
-  close?: (
-    focusableElement?:
-      | HTMLElement
-      | React.MouseEvent<HTMLElement, MouseEvent>
-      | React.MutableRefObject<HTMLElement | null>
-      | undefined
-  ) => void;
+  close?: () => void;
 }
 
 export const SubwayDropdown: React.FC<SubwayDropdownProps> = ({ line, close }) => {

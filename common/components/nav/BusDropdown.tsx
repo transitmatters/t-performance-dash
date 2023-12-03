@@ -4,13 +4,7 @@ import { TRIP_PAGES, BUS_OVERVIEW } from '../../constants/pages';
 import { BusRouteSelection } from './BusRouteSelection';
 
 interface BusDropdownProps {
-  close?: (
-    focusableElement?:
-      | HTMLElement
-      | React.MouseEvent<HTMLElement, MouseEvent>
-      | React.MutableRefObject<HTMLElement | null>
-      | undefined
-  ) => void;
+  close?: () => void;
 }
 
 export const BusDropdown: React.FC<BusDropdownProps> = ({ close }) => {

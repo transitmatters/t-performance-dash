@@ -4,20 +4,14 @@ import { MenuDropdown } from './MenuDropdown';
 import { SubwayDropdown } from './SubwayDropdown';
 
 interface SubwaySectionProps {
-  close?: (
-    focusableElement?:
-      | HTMLElement
-      | React.MouseEvent<HTMLElement, MouseEvent>
-      | React.MutableRefObject<HTMLElement | null>
-      | undefined
-  ) => void;
+  close?: () => void;
 }
 
 export const SubwaySection: React.FC<SubwaySectionProps> = ({ close }) => {
   const route = useDelimitatedRoute();
 
   return (
-    <div className="w-full gap-y-2">
+    <div className="flex w-full flex-col gap-y-1">
       <MenuDropdown line="line-red" route={route}>
         <SubwayDropdown line="line-red" close={close} />
       </MenuDropdown>

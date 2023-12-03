@@ -4,13 +4,7 @@ import { BusDropdown } from './BusDropdown';
 import { MenuDropdown } from './MenuDropdown';
 
 interface BusSectionProps {
-  close?: (
-    focusableElement?:
-      | HTMLElement
-      | React.MouseEvent<HTMLElement, MouseEvent>
-      | React.MutableRefObject<HTMLElement | null>
-      | undefined
-  ) => void;
+  close?: () => void;
 }
 
 export const BusSection: React.FC<BusSectionProps> = ({ close }) => {

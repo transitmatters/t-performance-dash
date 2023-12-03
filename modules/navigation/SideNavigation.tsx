@@ -8,13 +8,7 @@ import { BusSection } from '../../common/components/nav/BusSection';
 import { useDelimitatedRoute } from '../../common/utils/router';
 
 interface SideNavigationProps {
-  close?: (
-    focusableElement?:
-      | HTMLElement
-      | React.MouseEvent<HTMLElement, MouseEvent>
-      | React.MutableRefObject<HTMLElement | null>
-      | undefined
-  ) => void;
+  close?: () => void;
 }
 
 export const SideNavigation: React.FC<SideNavigationProps> = ({ close }) => {
@@ -26,7 +20,7 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({ close }) => {
           href="/"
           className={classNames(
             page === 'landing' ? 'bg-opacity-75' : 'bg-opacity-0',
-            'flex flex-row items-center gap-2 rounded-md bg-black hover:bg-opacity-25 hover:text-white focus:outline-1'
+            'flex flex-row items-center gap-2 rounded-md bg-black pl-1  hover:bg-opacity-25 hover:text-white focus:outline-1'
           )}
           onClick={() => (close ? close() : undefined)}
         >
@@ -39,7 +33,7 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({ close }) => {
           href="/system/slowzones"
           className={classNames(
             page === 'systemSlowzones' ? 'bg-opacity-75' : 'bg-opacity-0',
-            'flex flex-row items-center gap-2 rounded-md bg-black bg-opacity-0 hover:bg-opacity-25 hover:text-white'
+            'flex flex-row items-center gap-2 rounded-md bg-black bg-opacity-0 pl-1 hover:bg-opacity-25 hover:text-white'
           )}
           onClick={() => (close ? close() : undefined)}
         >

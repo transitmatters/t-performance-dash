@@ -11,13 +11,7 @@ import type { PageMetadata } from '../../common/constants/pages';
 
 interface SidebarTabs {
   tabs: PageMetadata[];
-  close?: (
-    focusableElement?:
-      | HTMLElement
-      | React.MouseEvent<HTMLElement, MouseEvent>
-      | React.MutableRefObject<HTMLElement | null>
-      | undefined
-  ) => void;
+  close?: () => void;
 }
 
 export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, close }) => {
