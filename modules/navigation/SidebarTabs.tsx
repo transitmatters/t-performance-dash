@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   useDelimitatedRoute,
   useGenerateHref,
@@ -11,10 +11,10 @@ import type { PageMetadata } from '../../common/constants/pages';
 
 interface SidebarTabs {
   tabs: PageMetadata[];
-  setSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  close?: () => void;
 }
 
-export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => {
+export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, close }) => {
   const { line, page, query, linePath } = useDelimitatedRoute();
   const handlePageConfig = useHandleConfigStore();
   const generateHref = useGenerateHref();
@@ -22,12 +22,12 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => 
   const handleChange = (enabled: boolean, tab: PageMetadata) => {
     if (!enabled) return null;
     handlePageConfig(tab);
-    setSidebarOpen && setSidebarOpen(false);
+    close && close();
   };
 
   return (
-    <div className="rounded-md bg-white bg-opacity-5 p-1" role={'navigation'}>
-      <ul className="space-y-1">
+    <div className="px-1" role={'navigation'}>
+      <ul>
         {tabs.map((tab: PageMetadata) => {
           const enabled = line ? tab.lines.includes(line) : true;
           const selected = page === tab.key;
@@ -45,21 +45,11 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, setSidebarOpen }) => 
                   selected
                     ? 'bg-stone-900 text-white'
                     : enabled && 'text-stone-300 hover:bg-stone-800 hover:text-white',
-                  'group flex select-none items-center gap-x-3 rounded-md px-2 text-sm font-semibold leading-6',
-                  enabled ? 'cursor-pointer' : 'cursor-default  text-stone-600',
-                  tab.sub ? 'ml-2 py-1 text-xs' : 'py-2'
+                  'group flex select-none items-center gap-x-3 rounded-sm py-2 pl-2 text-sm font-semibold leading-6',
+                  enabled ? 'cursor-pointer' : 'cursor-default  text-stone-600'
                 )}
               >
-                <FontAwesomeIcon
-                  icon={tab.icon}
-                  aria-hidden={true}
-                  className={classNames(
-                    selected ? 'text-white' : 'text-stone-200',
-                    enabled ? 'group-hover:text-white' : 'text-stone-600',
-                    'shrink-0',
-                    tab.sub ? 'h-4 w-4' : 'h-6 w-6'
-                  )}
-                />
+                <FontAwesomeIcon icon={tab.icon} />
                 <span className="truncate">{tab.name}</span>
               </Link>
             </li>

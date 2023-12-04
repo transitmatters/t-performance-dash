@@ -45,7 +45,6 @@ export type PageMetadata = {
   icon: IconDefinition;
   hasStationStore?: boolean;
   dateStoreSection: DateStoreSection;
-  sub?: boolean;
   title?: string;
 };
 
@@ -105,7 +104,6 @@ export const ALL_PAGES: PageMap = {
     lines: ['line-red', 'line-orange', 'line-blue', 'line-green'],
     icon: faGaugeHigh,
     dateStoreSection: 'line',
-    sub: true,
   },
   predictions: {
     key: 'predictions',
@@ -114,7 +112,6 @@ export const ALL_PAGES: PageMap = {
     lines: ['line-red', 'line-orange', 'line-blue', 'line-green'],
     icon: faStopwatch20,
     dateStoreSection: 'line',
-    sub: true,
   },
   service: {
     key: 'service',
@@ -123,7 +120,6 @@ export const ALL_PAGES: PageMap = {
     lines: ['line-red', 'line-orange', 'line-blue', 'line-green'],
     dateStoreSection: 'line',
     icon: faClockFour,
-    sub: true,
   },
   slowzones: {
     key: 'slowzones',
@@ -132,7 +128,6 @@ export const ALL_PAGES: PageMap = {
     lines: ['line-red', 'line-blue', 'line-orange'],
     icon: faWarning,
     dateStoreSection: 'line',
-    sub: true,
   },
   systemSlowzones: {
     key: 'systemSlowzones',
@@ -149,7 +144,6 @@ export const ALL_PAGES: PageMap = {
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
     icon: faUsers,
     dateStoreSection: 'line',
-    sub: true,
   },
 };
 
@@ -160,8 +154,9 @@ export const TODAY = [ALL_PAGES.today];
 
 export const BUS_OVERVIEW = [ALL_PAGES.ridership];
 
+export const OVERVIEW_PAGE = [ALL_PAGES.overview];
+
 export const LINE_PAGES = [
-  ALL_PAGES.overview,
   ALL_PAGES.service,
   ALL_PAGES.slowzones,
   ALL_PAGES.speed,

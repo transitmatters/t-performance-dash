@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { faHeart } from '@fortawesome/free-regular-svg-icons';
-import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 
 export const DonateButton: React.FC = () => {
   const [hovered, setHovered] = useState<boolean>(false);
@@ -12,11 +11,13 @@ export const DonateButton: React.FC = () => {
         href="https://transitmatters.org/donate"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="flex w-full cursor-pointer justify-center gap-x-2 rounded-md bg-tm-red p-2 ring-white focus:outline-none focus:ring-1 md:justify-start"
+        className="rounded-mdring-white group flex w-full cursor-pointer justify-start gap-x-2 rounded-md bg-tm-red hover:bg-white focus:outline-none focus:ring-1 md:justify-start"
       >
-        <div className="relative flex flex-row items-center text-base text-stone-100 md:pl-1">
-          <FontAwesomeIcon icon={hovered ? faHeartSolid : faHeart} className="pr-2" size="lg" />
-          <p>Donate</p>
+        <div className="relative  flex flex-row items-center gap-2 pl-1 text-sm text-stone-100">
+          <div className="group flex h-8 w-8 items-center justify-center rounded-full ">
+            <FontAwesomeIcon icon={faHeartSolid} size="lg" className="group-hover:text-tm-red" />
+          </div>
+          <p className="group-hover:text-tm-red">Make a donation</p>
         </div>
       </Link>
     </>
