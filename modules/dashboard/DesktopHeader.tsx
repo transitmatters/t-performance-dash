@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ALL_PAGES } from '../../common/constants/pages';
-import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ControlPanel } from '../../common/components/controls/ControlPanel';
 import { lineColorBackground } from '../../common/styles/general';
 
@@ -15,14 +14,12 @@ export const DesktopHeader: React.FC = () => {
     tab,
   } = useDelimitatedRoute();
   const dateStoreSection = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
-  const lg = useBreakpoint('lg');
 
   const showControls =
     dateStoreSection && (line || tab === 'System') && dateStoreSection !== 'today';
 
   const getLineName = () => {
     if (busRoute) return `Route ${busRoute}`;
-    if (line && !lg) return LINE_OBJECTS[line]?.short;
     if (line) return LINE_OBJECTS[line]?.name;
     if (tab === 'System') return 'System';
   };
@@ -35,17 +32,9 @@ export const DesktopHeader: React.FC = () => {
     >
       <div className={classNames('flex h-14 shrink-0 flex-col justify-center pt-2')}>
         <div className="flex shrink-0 flex-row items-baseline pl-3">
-          <h3 className="text-xl font-semibold">{getLineName()}</h3>
-          {ALL_PAGES[page]?.sectionTitle && tab !== 'System' && (
-            <>
-              <span className="px-1 text-xl">•</span>
-              <h2 className="select-none text-xl font-semibold">
-                <span>{ALL_PAGES[page]?.sectionTitle}</span>
-              </h2>
-            </>
-          )}
+          <h3 className="text-xl">{getLineName()}</h3>
           <span className="px-1 text-xl">•</span>
-          <h2 className="select-none text-xl font-semibold">
+          <h2 className="select-none text-xl">
             <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
           </h2>
         </div>

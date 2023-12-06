@@ -153,7 +153,7 @@ export class TripsWidgetValue extends BaseWidgetValue implements WidgetValueInte
     return (
       <p>
         <WidgetText isLarge={isLarge} text={Math.abs(this.value).toFixed(0)} />{' '}
-        <UnitText text={this.getUnits()} />
+        <UnitText isLarge={isLarge} text={this.getUnits()} />
       </p>
     );
   }
@@ -174,7 +174,7 @@ export class MPHWidgetValue extends BaseWidgetValue implements WidgetValueInterf
     return (
       <p>
         <WidgetText isLarge={isLarge} text={this.value.toFixed(1)} />{' '}
-        <UnitText text={this.getUnits()} />
+        <UnitText isLarge={isLarge} text={this.getUnits()} />
       </p>
     );
   }

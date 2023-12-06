@@ -11,7 +11,7 @@ export const ServiceBaseline = <p className={BASELINE_STYLE}>Compared to histori
 
 export const RidershipBaseline = <p className={BASELINE_STYLE}>Compared to historical maximums</p>;
 
-export const SpeedDescription = (
+const SpeedDescription = (
   <p className={DESCRIPTION_STYLE}>
     How quickly can riders move through Boston?
     <br />
@@ -22,7 +22,7 @@ export const SpeedDescription = (
   </p>
 );
 
-export const ServiceDescription = (
+const ServiceDescription = (
   <p className={DESCRIPTION_STYLE}>
     How long must riders wait for trains and buses?
     <span className="text-sm text-stone-800">
@@ -33,7 +33,7 @@ export const ServiceDescription = (
   </p>
 );
 
-export const RidershipDescription = (
+const RidershipDescription = (
   <p className={DESCRIPTION_STYLE}>
     How many riders are using the system?
     <br />

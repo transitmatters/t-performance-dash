@@ -32,12 +32,7 @@ export const HomescreenWidgetTitle: React.FC<HomescreenWidgetTitle> = ({ title, 
     <div className="flex w-full items-baseline justify-between">
       <Link onClick={() => handlePageConfig(ALL_PAGES[tab])} href={href}>
         <div className="flex w-full cursor-pointer flex-row items-center text-xl">
-          <h3
-            className={classNames(
-              'font-semibold',
-              line ? mbtaTextConfig[line] : 'text-design-subtitleGrey'
-            )}
-          >
+          <h3 className={classNames(line ? mbtaTextConfig[line] : 'text-design-subtitleGrey')}>
             {title}
           </h3>
           <FontAwesomeIcon

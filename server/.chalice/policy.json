@@ -40,7 +40,8 @@
         "arn:aws:dynamodb:*:*:table/DeliveredTripMetricsMonthly",
         "arn:aws:dynamodb:*:*:table/ScheduledServiceDaily",
         "arn:aws:dynamodb:*:*:table/Ridership",
-        "arn:aws:dynamodb:*:*:table/SpeedRestrictions"
+        "arn:aws:dynamodb:*:*:table/SpeedRestrictions",
+        "arn:aws:dynamodb:*:*:table/TimePredictions"
       ]
     }
   ]

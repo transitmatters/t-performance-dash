@@ -29,6 +29,9 @@ done
 if [[ -z "$MBTA_V2_API_KEY" || -z "$DD_API_KEY"  ]]; then
     echo "Must provide MBTA_V2_API_KEY and DD_API_KEY in environment to deploy" 1>&2
     exit 1
+elif [ -z "$TM_FRONTEND_CERT_ARN" ] && [ -z "$TM_LABS_WILDCARD_CERT_ARN" ]; then
+    echo "Must provide TM_FRONTEND_CERT_ARN or TM_LABS_WILDCARD_CERT_ARN in environment to deploy" 1>&2
+    exit 1
 fi
 
 # Setup environment stuff
@@ -43,7 +46,7 @@ $PRODUCTION && FRONTEND_DOMAIN_PREFIX=""                        || FRONTEND_DOMA
 
 BACKEND_ZONE="labs.transitmatters.org"
 BACKEND_CERT_ARN="$TM_LABS_WILDCARD_CERT_ARN"
-$PRODUCTION && BACKEND_DOMAIN_PREFIX="dashboard-api."            || BACKEND_DOMAIN_PREFIX="dashboard-api-beta."
+$PRODUCTION && BACKEND_DOMAIN_PREFIX="dashboard-api."           || BACKEND_DOMAIN_PREFIX="dashboard-api-beta."
 
 # Fetch repository tags
 # Run unshallow if deploying in CI

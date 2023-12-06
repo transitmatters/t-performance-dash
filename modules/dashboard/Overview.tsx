@@ -27,7 +27,9 @@ export function Overview() {
         {tab === 'Subway' && <ServiceWidget />}
         <RidershipWidget />
         {tab === 'Subway' && isHeavyRailLine && <SlowZonesWidget />}
-        {tab === 'Subway' && lineShort && <AlertsWidget lineShort={lineShort} />}
+        <div className="grid w-full grid-cols-1 gap-4 md:gap-8 xl:col-span-2 xl:grid-cols-2">
+          {tab === 'Subway' && lineShort && <AlertsWidget lineShort={lineShort} />}
+        </div>
       </div>
     </PageWrapper>
   );
