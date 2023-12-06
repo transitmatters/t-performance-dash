@@ -24,7 +24,7 @@ export const ServiceGraphWrapper: React.FC<ServiceGraphWrapperProps> = ({
   endDate,
 }) => {
   if (!data.some((datapoint) => datapoint.miles_covered)) return <NoDataNotice isLineMetric />;
-  const { average, peak } = getServiceWidgetValues(data, predictedData.counts);
+  const { average, peak } = getServiceWidgetValues(data, predictedData);
 
   return (
     <CarouselGraphDiv>

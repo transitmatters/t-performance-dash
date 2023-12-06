@@ -3,15 +3,15 @@ import type { DeliveredTripMetrics, ScheduledService } from '../../../common/typ
 import type { Line } from '../../../common/types/lines';
 
 export const getServiceWidgetValues = (
-  datapoints: DeliveredTripMetrics[],
-  predictedData: number[]
+  deliveredTripMetrics: DeliveredTripMetrics[],
+  predictedData: ScheduledService
 ) => {
-  const totals = datapoints.reduce(
+  const totals = deliveredTripMetrics.reduce(
     (totals, datapoint, index) => {
-      if (datapoint.count && predictedData[index]) {
+      if (datapoint.count && predictedData.counts[index].count) {
         return {
           actual: totals.actual + datapoint.count,
-          scheduled: totals.scheduled + predictedData[index],
+          scheduled: totals.scheduled + predictedData.counts[index].count,
         };
       }
       return { actual: totals.actual, scheduled: totals.scheduled };
@@ -19,13 +19,16 @@ export const getServiceWidgetValues = (
     { actual: 0, scheduled: 0 }
   );
   const percentDelivered = totals.actual / totals.scheduled;
-  const datapointsCount = datapoints.filter((datapoint) => datapoint.miles_covered).length;
-  const current = datapoints[datapoints.length - 1].count;
-  const delta = current - datapoints[0].count;
-  const average = datapoints.reduce((sum, speed) => sum + speed.count, 0) / datapointsCount;
-  const peak = datapoints.reduce(
+  const datapointsCount = deliveredTripMetrics.filter(
+    (datapoint) => datapoint.miles_covered
+  ).length;
+  const current = deliveredTripMetrics[deliveredTripMetrics.length - 1].count;
+  const delta = current - deliveredTripMetrics[0].count;
+  const average =
+    deliveredTripMetrics.reduce((sum, speed) => sum + speed.count, 0) / datapointsCount;
+  const peak = deliveredTripMetrics.reduce(
     (max, speed) => (speed.count > max.count ? speed : max),
-    datapoints[0]
+    deliveredTripMetrics[0]
   );
   return { current, delta, average, peak, percentDelivered };
 };
@@ -37,7 +40,7 @@ export const getPercentageData = (
 ) => {
   const scheduled = data.map((datapoint, index) => {
     return datapoint.miles_covered && predictedData.counts[index]
-      ? (100 * datapoint.count) / (predictedData.counts[index] / 2)
+      ? (100 * datapoint.count) / (predictedData.counts[index].count / 2)
       : Number.NaN;
   });
   const peak = data.map((datapoint) =>

@@ -12,8 +12,9 @@ from chalicelib import (
     mbta_v3,
     speed,
     speed_restrictions,
+    scheduled_service,
+    service_hours,
     predictions,
-    service_levels,
     ridership,
 )
 
@@ -185,7 +186,7 @@ def get_scheduled_service():
     end_date = parse_user_date(query["end_date"])
     route_id = query.get("route_id")
     agg = query["agg"]
-    response = service_levels.get_scheduled_service(
+    response = scheduled_service.get_scheduled_service_counts(
         start_date=start_date,
         end_date=end_date,
         route_id=route_id,
@@ -222,6 +223,22 @@ def get_speed_restrictions():
     response = speed_restrictions.query_speed_restrictions(
         line_id=line_id,
         on_date=on_date,
+    )
+    return json.dumps(response)
+
+
+@app.route("/api/service_hours", cors=cors_config)
+def get_service_hours():
+    query = app.current_request.query_params
+    line_id = query.get("line_id")
+    start_date = parse_user_date(query["start_date"])
+    end_date = parse_user_date(query["end_date"])
+    agg = query["agg"]
+    response = service_hours.get_service_hours(
+        single_route_id=line_id,
+        start_date=start_date,
+        end_date=end_date,
+        agg=agg,
     )
     return json.dumps(response)
 

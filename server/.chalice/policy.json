@@ -35,6 +35,7 @@
       "Effect": "Allow",
       "Resource": [
         "arn:aws:dynamodb:*:*:table/DeliveredTripMetrics",
+        "arn:aws:dynamodb:*:*:table/DeliveredTripMetricsExtended",
         "arn:aws:dynamodb:*:*:table/DeliveredTripMetricsWeekly",
         "arn:aws:dynamodb:*:*:table/DeliveredTripMetricsMonthly",
         "arn:aws:dynamodb:*:*:table/ScheduledServiceDaily",

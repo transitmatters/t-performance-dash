@@ -38,7 +38,7 @@ export const defaultWeekAxis: ResolvedTimeAxis = {
 
 export const defaultMonthAxis: ResolvedTimeAxis = {
   granularity: 'month',
-  axisUnit: 'month',
+  axisUnit: 'year',
   label: 'Month',
   format: 'yyyy',
   tooltipFormat: 'MMM yyyy',

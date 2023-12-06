@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { useScheduledService } from '../../common/api/hooks/service';
+import { useScheduledService, useServiceHours } from '../../common/api/hooks/service';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
@@ -14,6 +14,7 @@ import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';
 import { PercentageServiceGraphWrapper } from './PercentageServiceGraphWrapper';
+import { ServiceHoursGraph } from './ServiceHoursGraph';
 dayjs.extend(utc);
 
 export function ServiceDetails() {
@@ -45,7 +46,18 @@ export function ServiceDetails() {
     enabled
   ).data;
 
+  const serviceHoursData = useServiceHours(
+    {
+      start_date: startDate,
+      end_date: endDate,
+      line_id: line,
+      agg: config.agg,
+    },
+    enabled
+  );
+
   const serviceDataReady = !tripsData.isError && tripsData.data && line && config && predictedData;
+  const serviceHoursDataReady = !serviceHoursData.isError && serviceHoursData.data;
 
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
@@ -88,7 +100,22 @@ export function ServiceDetails() {
             </div>
           )}
         </WidgetDiv>
-      </ChartPageDiv>{' '}
+        <WidgetDiv>
+          <WidgetTitle title="Hours of service" subtitle="Across all trains" />
+          {serviceHoursDataReady ? (
+            <ServiceHoursGraph
+              serviceHours={serviceHoursData.data!}
+              agg={config.agg}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          ) : (
+            <div className="relative flex h-full">
+              <ChartPlaceHolder query={serviceHoursData} />
+            </div>
+          )}
+        </WidgetDiv>
+      </ChartPageDiv>
     </PageWrapper>
   );
 }

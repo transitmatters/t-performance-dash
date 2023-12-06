@@ -35,13 +35,15 @@ export type DisplayStyle<Point extends DataPoint, Applied extends boolean = fals
 export type AppliedDisplayStyle<Point extends DataPoint> = DisplayStyle<Point, true>;
 
 export type Granularity = 'time' | 'day' | 'week' | 'month';
-export type AxisUnit = 'day' | 'month';
+export type AxisUnit = 'day' | 'month' | 'year';
 
 export type ProvidedTimeAxis = {
   label: string;
   format?: string;
   tooltipFormat?: string;
   axisUnit?: AxisUnit;
+  from?: string;
+  to?: string;
 } & ({ granularity: Granularity } | { agg: AggType });
 
 export type ResolvedTimeAxis = {
@@ -50,6 +52,8 @@ export type ResolvedTimeAxis = {
   axisUnit?: AxisUnit;
   format?: string;
   tooltipFormat?: string;
+  from?: string;
+  to?: string;
 };
 
 export type ValueAxis = {

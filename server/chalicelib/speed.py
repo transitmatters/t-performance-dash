@@ -1,8 +1,17 @@
+from typing import TypedDict
 from chalice import BadRequestError, ForbiddenError
 from chalicelib import dynamo
 from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
+
+
+class TripMetricsByLineParams(TypedDict):
+    start_date: str
+    end_date: str
+    agg: str
+    line: str
+
 
 # Delta values put limits on the numbers of days for which data that can be requested. For each table it is approximately 150 entries.
 AGG_TO_CONFIG_MAP = {
@@ -26,7 +35,14 @@ def aggregate_actual_trips(actual_trips, agg, start_date):
     # Group each branch into one entry. Keep NaN entries as NaN
     df_grouped = (
         df.groupby("date")
-        .agg({"miles_covered": "sum", "total_time": "sum", "count": "sum", "line": "first"})
+        .agg(
+            {
+                "miles_covered": "sum",
+                "total_time": "sum",
+                "count": "sum",
+                "line": "first",
+            }
+        )
         .reset_index()
     )
     # set index to use datetime object.
@@ -34,7 +50,7 @@ def aggregate_actual_trips(actual_trips, agg, start_date):
     return df_grouped.to_dict(orient="records")
 
 
-def trip_metrics_by_line(params):
+def trip_metrics_by_line(params: TripMetricsByLineParams):
     """
     Get trip metrics grouped by line. The weekly and monthly dbs are already aggregated by line.
     The daily db is not, and gets aggregated on the fly.
