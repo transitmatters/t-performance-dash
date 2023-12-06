@@ -15,7 +15,6 @@ from chalicelib import (
     scheduled_service,
     service_hours,
     predictions,
-    service_levels,
     ridership,
 )
 
