@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import React, { useMemo, useState } from 'react';
 
+import Link from 'next/link';
 import {
   useSlowzoneAllData,
   useSlowzoneDelayTotalData,
@@ -23,7 +24,6 @@ import { LineSegments } from './charts/LineSegments';
 import { DirectionObject } from './constants/constants';
 import { SlowZonesWidgetTitle } from './SlowZonesWidgetTitle';
 import { SlowZonesMap } from './map';
-import Link from 'next/link';
 
 interface SystemSlowZonesDetailsProps {
   showTitle?: boolean;
@@ -64,10 +64,12 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
       <ChartPageDiv>
         <WidgetDiv>
           <WidgetTitle title="Total slow time" />
-          <Link 
+          <Link
             href="https://transitmatters.org/blog/slowzonesupdate"
             className="whitespace-nowrap text-sm italic text-stone-600"
-            >Time over Baseline across Line</Link>
+          >
+            Time over Baseline across Line
+          </Link>
           <div className="relative flex flex-col">
             {totalSlowTimeReady ? (
               <TotalSlowTime
