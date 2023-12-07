@@ -23,6 +23,7 @@ import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
 import { DirectionObject } from './constants/constants';
 import { SlowZonesWidgetTitle } from './SlowZonesWidgetTitle';
+import Link from 'next/link';
 dayjs.extend(utc);
 
 export function SlowZonesDetails() {
@@ -59,6 +60,11 @@ export function SlowZonesDetails() {
       <ChartPageDiv>
         <WidgetDiv>
           <WidgetTitle title="Total slow time" />
+          <Link 
+            href="https://transitmatters.org/blog/slowzonesupdate"
+            className="whitespace-nowrap text-sm italic text-stone-600"
+            >Time over Baseline across Line</Link>
+          
           <div className="relative flex flex-col">
             {totalSlowTimeReady ? (
               <TotalSlowTimeWrapper
