@@ -1,5 +1,5 @@
 import type { AggType } from '../../modules/speed/constants/speeds';
-import type { SpeedRestriction } from './dataPoints';
+import type { ServiceHours, SpeedRestriction } from './dataPoints';
 import type { Line, LineRouteId } from './lines';
 
 export enum QueryNameKeys {
@@ -99,3 +99,12 @@ export type FetchSpeedRestrictionsResponse = {
   date: string;
   zones: SpeedRestriction[];
 };
+
+export type FetchServiceHoursOptions = Partial<{
+  start_date: string;
+  end_date: string;
+  line_id: string;
+  agg: AggType;
+}>;
+
+export type FetchServiceHoursResponse = ServiceHours[];

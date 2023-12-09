@@ -1,9 +1,9 @@
 from datetime import date, datetime
 from typing import List, Dict, TypedDict, Union, Literal
-import pandas as pd
 
 from .dynamo import query_scheduled_service
-from .data_funcs import index_by, date_range
+from .data_funcs import index_by
+from .sampling import resample_and_aggregate
 
 ByHourServiceLevels = List[int]
 DayKind = Union[Literal["weekday"], Literal["saturday"], Literal["sunday"]]
@@ -25,9 +25,8 @@ class ByDayKindServiceLevels(TypedDict):
 class GetScheduledServiceResponse(TypedDict):
     start_date_service_levels: ByDayKindServiceLevels
     end_date_service_levels: ByDayKindServiceLevels
-    start_date: str
-    end_date: str
-    counts: List[int]
+    counts: Dict[str, int]
+    service_hours: Dict[str, float]
 
 
 def get_next_day_kind_service_levels(
@@ -66,24 +65,6 @@ def get_service_levels(
     }
 
 
-def get_weekly_scheduled_service(scheduled_service_arr, start_date, end_date):
-    df = pd.DataFrame({"value": scheduled_service_arr}, index=pd.date_range(start_date, end_date))
-    weekly_df = df.resample("W-SUN").median()
-    # Drop the first week if it is incomplete
-    if datetime.fromisoformat(start_date.isoformat()).weekday() != 6:
-        weekly_df = weekly_df[1:]
-    return weekly_df["value"].tolist()
-
-
-def get_monthly_scheduled_service(scheduled_service_arr, start_date, end_date):
-    df = pd.DataFrame({"value": scheduled_service_arr}, index=pd.date_range(start_date, end_date))
-    monthly_df = df.resample("M").median()
-    # Drop the first month if it is incomplete
-    if datetime.fromisoformat(start_date.isoformat()).day != 1:
-        monthly_df = monthly_df[1:]
-    return monthly_df["value"].tolist()
-
-
 def get_scheduled_service(
     start_date: date,
     end_date: date,
@@ -96,26 +77,62 @@ def get_scheduled_service(
         route_id=route_id,
     )
     scheduled_service_by_day = index_by(scheduled_service, "date")
-    scheduled_service_arr = []
-    for current_day in date_range(start_date, end_date):
-        current_day_iso = current_day.isoformat()
-        if current_day_iso in scheduled_service_by_day:
-            scheduled_service_count = scheduled_service_by_day[current_day_iso]["count"]
-        else:
-            scheduled_service_count = None
-        scheduled_service_arr.append(scheduled_service_count)
-    counts = []
-    if agg == "daily":
-        counts = scheduled_service_arr
-    if agg == "weekly":
-        counts = get_weekly_scheduled_service(scheduled_service_arr, start_date, end_date)
-    if agg == "monthly":
-        counts = get_monthly_scheduled_service(scheduled_service_arr, start_date, end_date)
-
+    counts_by_day = {}
+    service_minutes_by_day = {}
+    for current_day, current_day_service in scheduled_service_by_day.items():
+        counts_by_day[current_day] = current_day_service["count"]
+        service_minutes_by_day[current_day] = current_day_service["serviceMinutes"]
+    counts = resample_and_aggregate(
+        values=counts_by_day,
+        agg=agg,
+        avg_type="median",
+    )
+    service_minutes = resample_and_aggregate(
+        values=service_minutes_by_day,
+        agg=agg,
+        avg_type="median",
+    )
     return {
         "counts": counts,
+        "service_minutes": service_minutes,
         "start_date": start_date.isoformat(),
         "end_date": end_date.isoformat(),
         "start_date_service_levels": get_service_levels(scheduled_service, False),
         "end_date_service_levels": get_service_levels(scheduled_service, True),
     }
+
+
+def get_scheduled_service_counts(
+    start_date: date,
+    end_date: date,
+    agg: AggTypes,
+    route_id: str = None,
+):
+    result = get_scheduled_service(
+        start_date=start_date,
+        end_date=end_date,
+        agg=agg,
+        route_id=route_id,
+    )
+    return {
+        "start_date": result["start_date"],
+        "end_date": result["end_date"],
+        "start_date_service_levels": result["start_date_service_levels"],
+        "end_date_service_levels": result["end_date_service_levels"],
+        "counts": [{"date": date, "count": count} for (date, count) in result["counts"].items()],
+    }
+
+
+def get_scheduled_service_hours(
+    start_date: date,
+    end_date: date,
+    agg: AggTypes,
+    route_id: str = None,
+):
+    result = get_scheduled_service(
+        start_date=start_date,
+        end_date=end_date,
+        agg=agg,
+        route_id=route_id,
+    )
+    return {date: result["service_minutes"][date] // 60 for date in result["service_minutes"]}

@@ -22,7 +22,7 @@ export const ServiceOverviewWrapper: React.FC<ServiceOverviewWrapperProps> = ({
   startDate,
   endDate,
 }) => {
-  const { average, percentDelivered } = getServiceWidgetValues(data, predictedData.counts);
+  const { average, percentDelivered } = getServiceWidgetValues(data, predictedData);
 
   return (
     <>
@@ -49,7 +49,6 @@ export const ServiceOverviewWrapper: React.FC<ServiceOverviewWrapperProps> = ({
           predictedData={predictedData}
           startDate={startDate}
           endDate={endDate}
-          showTitle
         />
       </div>
     </>

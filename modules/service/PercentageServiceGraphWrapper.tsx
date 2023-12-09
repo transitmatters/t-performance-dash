@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import type { SetStateAction } from 'react';
 import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
@@ -33,11 +33,20 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
 }) => {
   // TODO: Add 1 or 2 widgets to percentage service graph.
   const { line } = useDelimitatedRoute();
+
+  const { scheduled, peak } = useMemo(
+    () => getPercentageData(data, predictedData, line),
+    [data, predictedData, line]
+  );
+
+  const { scheduledAverage, peakAverage } = useMemo(() => {
+    const scheduledAverage = getAverageWithNaNs(scheduled);
+    const peakAverage = getAverageWithNaNs(peak);
+    return { scheduledAverage, peakAverage };
+  }, [scheduled, peak]);
+
   if (!data.some((datapoint) => datapoint.miles_covered)) return <NoDataNotice isLineMetric />;
 
-  const { scheduled, peak } = getPercentageData(data, predictedData, line);
-  const scheduledAverage = getAverageWithNaNs(scheduled);
-  const peakAverage = getAverageWithNaNs(peak);
   return (
     <>
       <CarouselGraphDiv>

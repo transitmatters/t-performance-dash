@@ -142,11 +142,17 @@ export type ServiceLevels = {
 };
 
 export type ScheduledService = {
-  counts: number[];
   start_date: string;
   end_date: string;
   start_date_service_levels: ServiceLevels;
   end_date_service_levels: ServiceLevels;
+  counts: { date: string; count: number }[];
+};
+
+export type ServiceHours = {
+  date: string;
+  scheduled: number;
+  delivered: number;
 };
 
 export type RidershipCount = {
