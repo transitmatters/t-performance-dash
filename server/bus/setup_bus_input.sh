@@ -2,18 +2,18 @@
 
 mkdir -p data/input
 
-wget -O data/input/2023.zip https://www.arcgis.com/sharing/rest/content/items/b7b36fdb7b3a4728af2fccc78c2ca5b7/data
-wget -O data/input/2022.zip https://www.arcgis.com/sharing/rest/content/items/ef464a75666349f481353f16514c06d0/data
-wget -O data/input/2021.zip https://www.arcgis.com/sharing/rest/content/items/2d415555f63b431597721151a7e07a3e/data
-wget -O data/input/2020.zip https://www.arcgis.com/sharing/rest/content/items/4c1293151c6c4a069d49e6b85ee68ea4/data
-wget -O data/input/2019.zip https://www.arcgis.com/sharing/rest/content/items/1bd340b39942438685d8dcdfe3f26d1a/data
-wget -O data/input/2018.zip https://www.arcgis.com/sharing/rest/content/items/d685ba39d9a54d908f49a2a762a9eb47/data
+wget -N -O data/input/2023.zip https://www.arcgis.com/sharing/rest/content/items/b7b36fdb7b3a4728af2fccc78c2ca5b7/data
+wget -N -O data/input/2022.zip https://www.arcgis.com/sharing/rest/content/items/ef464a75666349f481353f16514c06d0/data
+wget -N -O data/input/2021.zip https://www.arcgis.com/sharing/rest/content/items/2d415555f63b431597721151a7e07a3e/data
+wget -N -O data/input/2020.zip https://www.arcgis.com/sharing/rest/content/items/4c1293151c6c4a069d49e6b85ee68ea4/data
+wget -N -O data/input/2019.zip https://www.arcgis.com/sharing/rest/content/items/1bd340b39942438685d8dcdfe3f26d1a/data
+wget -N -O data/input/2018.zip https://www.arcgis.com/sharing/rest/content/items/d685ba39d9a54d908f49a2a762a9eb47/data
 
-wget -O data/input/gtfs.zip https://cdn.mbta.com/MBTA_GTFS.zip
+wget -N -O data/input/gtfs.zip https://cdn.mbta.com/MBTA_GTFS.zip
 unzip -d data/input/MBTA_GTFS/ data/input/gtfs.zip 
 
 cd data/input
-for i in 2022 2021 2020 2019 2018; do
+for i in `seq 2018 2023`; do
   unzip -d $i $i.zip
 done
 
@@ -32,4 +32,3 @@ mv "2019/MBTA Bus Arrival Departure Oct-Dec 2019.csv" "2019/2019-Q4.csv"
 mv "2018/MBTA Bus Arrival Departure Aug-Sept 2018.csv" "2018/2018-Q3.csv"
 mv "2018/MBTA Bus Arrival Departure Oct-Dec 2018.csv" "2018/2018-Q4.csv"
 sed -i -e 's/<U+FEFF>//' 2020/2020-Q3.csv
-
