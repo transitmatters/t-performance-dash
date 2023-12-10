@@ -23,6 +23,7 @@ import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
 import { DirectionObject } from './constants/constants';
 import { SlowZonesWidgetTitle } from './SlowZonesWidgetTitle';
+
 dayjs.extend(utc);
 
 export function SlowZonesDetails() {

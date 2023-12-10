@@ -267,8 +267,8 @@ export const LineMap: React.FC<LineMapProps> = ({
               tooltipSide === 'top'
                 ? `translate(-50%, -100%)`
                 : tooltipSide === 'left'
-                ? `translate(-100%, -50%)`
-                : `translateY(-50%)`,
+                  ? `translate(-100%, -50%)`
+                  : `translateY(-50%)`,
           }}
         >
           {tooltipContents}
