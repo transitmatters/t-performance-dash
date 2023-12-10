@@ -4,7 +4,7 @@ import type { BusRoute, Line } from '../../../common/types/lines';
 
 export const getRidershipWidgetValues = (
   ridership: RidershipCount[],
-  line: Line,
+  line?: Line,
   busRoute?: BusRoute
 ) => {
   const routeIndex = busRoute ? busRoute.replaceAll('/', '') : line;

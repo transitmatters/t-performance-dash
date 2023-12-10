@@ -36,7 +36,7 @@ export const PEAK_RIDERSHIP = {
   '77': 8015,
   '111': 11258,
   '114116117': 12867,
-  DEFAULT: 0,
+  DEFAULT: 520580,
 };
 
 export const PEAK_COMPLETE_TRIP_TIMES = {
