@@ -58,6 +58,11 @@ def use_S3(date, bus=False):
 
 
 def partition_S3_dates(start_date, end_date, bus=False):
+    """
+    Partitions dates by what data source they should be fetched from.
+    S3 is used for archival data and for bus data. API is used for recent (within 90 days) subway data.
+    TODO: Add Gobble data to this partitioning.
+    """
     CUTOFF = datetime.date.today() - datetime.timedelta(days=90)
 
     s3_dates = None
