@@ -13,7 +13,7 @@ export const useAlertStore = create<AlertStore>((set, get) => ({
   setAlerts: (alerts) =>
     set(() => ({
       alerts: alerts?.map((alert) => {
-        const match = get().alerts.find(
+        const match = get().alerts?.find(
           (other) =>
             other.valid_from === alert.valid_from &&
             other.valid_to === alert.valid_to &&
