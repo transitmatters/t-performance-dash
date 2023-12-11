@@ -10,7 +10,18 @@ interface AlertStore {
 
 export const useAlertStore = create<AlertStore>((set, get) => ({
   alerts: [],
-  setAlerts: (alerts) => set(() => ({ alerts: alerts })),
+  setAlerts: (alerts) =>
+    set(() => ({
+      alerts: alerts?.map((alert) => {
+        const match = get().alerts.find(
+          (other) =>
+            other.valid_from === alert.valid_from &&
+            other.valid_to === alert.valid_to &&
+            other.text === alert.text
+        );
+        return match ? match : alert;
+      }),
+    })),
   changeAlertApplied: (alerts, index) => {
     if (!alerts)
       return set(() => ({
