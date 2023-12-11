@@ -150,8 +150,6 @@ export const ALL_PAGES: PageMap = {
 /* Groups of pages for tab sections */
 export const TRIP_PAGES = [ALL_PAGES.singleTrips, ALL_PAGES.multiTrips];
 
-export const TODAY = [ALL_PAGES.today];
-
 export const BUS_OVERVIEW = [ALL_PAGES.ridership];
 
 export const OVERVIEW_PAGE = [ALL_PAGES.overview];
