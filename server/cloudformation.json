@@ -109,7 +109,13 @@
         "WebsiteConfiguration": {
           "IndexDocument": "index.html",
           "ErrorDocument": "404.html"
-        }
+        },
+        "Tags": [
+          {
+            "Key": "service",
+            "Value": "t-performance-dash"
+          }
+        ]
       }
     },
     "FrontendBucketPolicy": {
