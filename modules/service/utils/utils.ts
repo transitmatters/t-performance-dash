@@ -8,10 +8,11 @@ export const getServiceWidgetValues = (
 ) => {
   const totals = deliveredTripMetrics.reduce(
     (totals, datapoint, index) => {
-      if (datapoint.count && predictedData.counts[index].count) {
+      const predictedDatapoint = predictedData.counts[index];
+      if (datapoint.count && predictedDatapoint?.count) {
         return {
           actual: totals.actual + datapoint.count,
-          scheduled: totals.scheduled + predictedData.counts[index].count,
+          scheduled: totals.scheduled + predictedDatapoint.count,
         };
       }
       return { actual: totals.actual, scheduled: totals.scheduled };
