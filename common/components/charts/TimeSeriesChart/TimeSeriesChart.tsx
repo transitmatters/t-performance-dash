@@ -137,8 +137,8 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
       'granularity' in providedTimeAxis
         ? providedTimeAxis.granularity
         : 'agg' in providedTimeAxis && providedTimeAxis.agg
-        ? getGranularityForAgg(providedTimeAxis.agg)
-        : null;
+          ? getGranularityForAgg(providedTimeAxis.agg)
+          : null;
     return { ...getDefaultTimeAxis(providedGranularity ?? null), ...providedTimeAxis };
   }, [providedTimeAxis]);
 

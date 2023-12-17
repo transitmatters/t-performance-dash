@@ -84,8 +84,8 @@ export const getFillProps = (style: AppliedDisplayStyle<DataPoint>) => {
       fillPattern === 'solid'
         ? resolvedFillColor
         : fillPattern === 'slightly-transparent'
-        ? hexWithAlpha(resolvedFillColor, 0.8)
-        : pattern.draw('diagonal', 'transparent', resolvedFillColor, 5);
+          ? hexWithAlpha(resolvedFillColor, 0.8)
+          : pattern.draw('diagonal', 'transparent', resolvedFillColor, 5);
     return {
       fill: true,
       backgroundColor,

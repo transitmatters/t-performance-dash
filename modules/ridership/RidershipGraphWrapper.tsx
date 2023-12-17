@@ -9,6 +9,7 @@ import type { BusRoute, Line } from '../../common/types/lines';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { getRidershipWidgetValues } from './utils/utils';
 import { RidershipGraph } from './RidershipGraph';
+
 interface RidershipGraphWrapperProps {
   data: RidershipCount[];
   line?: Line;

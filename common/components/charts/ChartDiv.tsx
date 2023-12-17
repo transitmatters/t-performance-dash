@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
+
 interface ChartDivProps {
   children: React.ReactNode;
   isMobile?: boolean;

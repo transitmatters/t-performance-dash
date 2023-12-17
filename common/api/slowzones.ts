@@ -1,8 +1,4 @@
-import type {
-  DayDelayTotals,
-  SlowZoneResponse,
-  SpeedRestriction,
-} from '../../common/types/dataPoints';
+import type { DayDelayTotals, SlowZoneResponse, SpeedRestriction } from '../types/dataPoints';
 import type { FetchSpeedRestrictionsOptions, FetchSpeedRestrictionsResponse } from '../types/api';
 import { getGtfsRailLineId } from '../utils/lines';
 import { apiFetch } from './utils/fetch';

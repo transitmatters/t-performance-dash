@@ -8,6 +8,7 @@ import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDi
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { getServiceWidgetValues } from './utils/utils';
 import { ServiceGraph } from './ServiceGraph';
+
 interface ServiceGraphWrapperProps {
   data: DeliveredTripMetrics[];
   predictedData: ScheduledService;
