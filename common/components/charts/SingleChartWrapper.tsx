@@ -6,12 +6,13 @@ import { ChartPlaceHolder } from '../graphics/ChartPlaceHolder';
 import { TravelTimesSingleChart } from '../../../modules/traveltimes/charts/TravelTimesSingleChart';
 import { HeadwaysSingleChart } from '../../../modules/headways/charts/HeadwaysSingleChart';
 import { DwellsSingleChart } from '../../../modules/dwells/charts/DwellsSingleChart';
+import { SpeedBetweenStationsSingleChart } from '../../../modules/speed/SpeedBetweenStationsSingleChart';
 
 interface SingleChartWrapperProps {
   query: UseQueryResult<SingleDayDataPoint[]>;
   toStation: Station | undefined;
   fromStation: Station | undefined;
-  type: 'headways' | 'traveltimes' | 'dwells';
+  type: 'headways' | 'traveltimes' | 'dwells' | 'speeds';
   showLegend?: boolean;
 }
 
@@ -46,6 +47,14 @@ export const SingleChartWrapper: React.FC<SingleChartWrapperProps> = ({
     case 'dwells':
       return (
         <DwellsSingleChart dwells={query.data} fromStation={fromStation} toStation={toStation} />
+      );
+    case 'speeds':
+      return (
+        <SpeedBetweenStationsSingleChart
+          traveltimes={query.data}
+          fromStation={fromStation}
+          toStation={toStation}
+        />
       );
   }
 };

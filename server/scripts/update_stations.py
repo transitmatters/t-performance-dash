@@ -74,5 +74,112 @@ for facility in bike_storage["data"]:
             stations_by_id[station_id][indx]["pedal_park"] = True
 
 
+
+####
+# Station distances
+def get_station_distances_by_stop_id():
+    
+
+    """
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": 1,
+      "geometry": null,
+      "properties": {
+        "route_id": "Blue",
+        "direction_id": 0,
+        "route_pattern_name": "Wonderland - Bowdoin",
+        "from_stop_id": "70059",
+        "from_station_id": "place-wondl",
+        "from_stop_name": "Wonderland",
+        "to_stop_id": "70057",
+        "to_station_id": "place-rbmnl",
+        "to_stop_name": "Revere Beach",
+        "from_to_meters": 648.07954,
+        "cumulative_meters": 648.07954,
+        "from_to_miles": 0.402697956434423,
+        "cumulative_miles": 0.402697956434423,
+        "ObjectId": 1
+      }
+    },
+    ...
+}
+    """
+    stop_distances = {}
+    stop_distance_response = requests.get(
+        f'https://services1.arcgis.com/ceiitspzDAHrdGO1/arcgis/rest/services/MBTA_Rapid_Transit_Stop_Distances/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson'
+    )
+
+    stop_response_json = stop_distance_response.json()
+    for feature in stop_response_json["features"]:
+        distance_details = feature["properties"]
+
+
+        from_stop_id = distance_details["from_stop_id"]
+        to_stop_id = distance_details["to_stop_id"]
+
+        # ignore stations we don't have data for
+        if distance_details["from_station_id"] not in stations_by_id:
+            continue
+
+        from_stop_distances = stop_distances.get(from_stop_id, {})
+        from_stop_distances[to_stop_id] = distance_details["from_to_miles"]
+        stop_distances[from_stop_id] = from_stop_distances
+
+    # there is definitely a more efficient way to do this.
+    # maybe hardcode the termini and start traversal from there?
+    # this also generates extraneous data for trips that are impossible
+    # for example: 70093 => 70096 by this is 20 miles.  that is JFK U/Mass (braintree) to Ashmont..
+    def populate_distances(target_stop_id):
+        stop_stack = []
+        seen_stops = set()
+        
+        # assume each stop starts with one destination 
+        first_dest, first_dist = next(iter(stop_distances[target_stop_id].items()))
+        stop_stack.append((first_dest, first_dist))
+        distances = {first_dest: first_dist}
+
+        while len(stop_stack) > 0:
+            dest, dist = stop_stack.pop()
+            distances[dest] = dist
+
+            print(f"dest: {dest}, dist {dist}")
+
+            if dest not in stop_distances or stop_distances[dest] == None or len(stop_distances[dest]) == 0:
+                break
+
+            if dest in seen_stops:
+                continue
+
+            seen_stops.add(dest)
+
+            # again, assuming at this point there is only one destination (to_stop)
+            # for each from_stop
+            dest_of_dest, dist_of_dest_of_dest = next(iter(stop_distances[dest].items())) 
+
+            print(f"{dest_of_dest}, {dist_of_dest_of_dest}")
+            stop_stack.append((dest_of_dest, dist + dist_of_dest_of_dest))
+
+        
+        return distances
+        
+        
+
+
+    # traverse the list, getting distances for all stops reachable by this stop
+    for stop_id in stop_distances:
+        stop_distances[stop_id] = populate_distances(stop_id)
+
+    return stop_distances
+
+
+station_distances = get_station_distances_by_stop_id()
+
+with open("common/constants/stop_distances.json", 'w') as f:
+    json.dump(station_distances, f, indent=2)
+
 with open("common/constants/stations.json", "w") as f:
     json.dump(stations, f, indent=2)

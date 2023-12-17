@@ -65,6 +65,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   fname,
   bothStops = false,
   location,
+  units = 'Minutes',
   showLegend = true,
 }) => {
   const ref = useRef();
@@ -82,6 +83,11 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const benchmarkDataFormatted = displayBenchmarkData
     ? benchmarkData.map((datapoint) => ((datapoint as number) / 60).toFixed(2))
     : null;
+
+  const multiplier = units === 'Minutes' ? 1 / 60 : 1;
+  const convertedData = data.map((datapoint) =>
+    ((datapoint[metricField] as number) * multiplier).toFixed(2)
+  );
 
   return (
     <ChartBorder>
@@ -103,7 +109,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField),
                 pointRadius: 3,
                 pointHitRadius: 10,
-                data: data.map((datapoint) => ((datapoint[metricField] as number) / 60).toFixed(2)),
+                data: convertedData,
               },
               {
                 label: `Benchmark MBTA`,
@@ -133,10 +139,11 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                     ) {
                       return '';
                     }
-                    return `${tooltipItem.dataset.label}: ${getFormattedTimeString(
-                      tooltipItem.parsed.y,
-                      'minutes'
-                    )}`;
+                    return `${tooltipItem.dataset.label}: ${
+                      units === 'Minutes'
+                        ? getFormattedTimeString(tooltipItem.parsed.y, 'minutes')
+                        : `${tooltipItem.parsed.y} ${units}`
+                    }`;
                   },
                   afterBody: (tooltipItems) => {
                     return departureFromNormalString(
@@ -162,7 +169,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Minutes',
+                  text: units,
                   color: COLORS.design.subtitleGrey,
                 },
               },

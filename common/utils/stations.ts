@@ -1,8 +1,9 @@
 import type { BusRoute, Line, LineShort } from '../types/lines';
 import { isLineMap, type Station } from '../types/stations';
 import type { Location } from '../types/charts';
-import type { Direction } from '../types/dataPoints';
+import type { Direction, Distance } from '../types/dataPoints';
 import { stations, rtStations, busStations } from '../constants/stations';
+import { stop_distances } from '../constants/stop_distances';
 
 export const optionsForField = (
   type: 'from' | 'to',
@@ -62,8 +63,19 @@ const createParentStationIndex = () => {
   return index;
 };
 
+const createStopDistanceIndex = () => {
+  const index: Record<string, Distance> = {};
+
+  for (const [key, value] of Object.entries(stop_distances)) {
+    index[key] = value as Distance;
+  }
+
+  return index;
+};
+
 const stationIndex = createStationIndex();
 const parentStationIndex = createParentStationIndex();
+const stopDistanceIndex = createStopDistanceIndex();
 
 export const getStationById = (stationStopId: string) => {
   return stationIndex[stationStopId];
@@ -71,6 +83,10 @@ export const getStationById = (stationStopId: string) => {
 
 export const getParentStationForStopId = (stopId: string) => {
   return parentStationIndex[stopId];
+};
+
+export const getDistancesForStopId = (fromStopId: string, toStopId: string) => {
+  return stopDistanceIndex[fromStopId][toStopId];
 };
 
 export const getStationForInvalidFromSelection = (line: Line, busRoute?: BusRoute): Station => {

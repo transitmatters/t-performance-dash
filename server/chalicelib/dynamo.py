@@ -60,6 +60,7 @@ def query_agg_trip_metrics(start_date: str, end_date: str, table_name: str, line
     date_condition = Key("date").between(start_date, end_date)
     condition = line_condition & date_condition
     response = table.query(KeyConditionExpression=condition)
+    print(response)
     return ddb_json.loads(response["Items"])
 
 

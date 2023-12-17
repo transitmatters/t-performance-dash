@@ -13,6 +13,7 @@ export interface SingleDayDataPoint {
   benchmark_travel_time_sec?: number;
   benchmark_headway_time_sec?: number;
   threshold_flag_1?: string;
+  speed_mph?: number;
 }
 
 export interface AggregateDataPoint {
@@ -57,6 +58,7 @@ export enum MetricFieldKeys {
   travelTimeSec = 'travel_time_sec',
   headwayTimeSec = 'headway_time_sec',
   dwellTimeSec = 'dwell_time_sec',
+  speedMph = 'speed_mph',
 }
 export enum BenchmarkFieldKeys {
   benchmarkTravelTimeSec = 'benchmark_travel_time_sec',
@@ -67,7 +69,7 @@ export type PointField = PointFieldKeys;
 export type MetricField = MetricFieldKeys;
 export type BenchmarkField = BenchmarkFieldKeys;
 
-type DataName = 'traveltimes' | 'headways' | 'dwells' | 'traveltimesByHour';
+type DataName = 'traveltimes' | 'headways' | 'dwells' | 'traveltimesByHour' | 'speeds';
 
 export interface LineProps {
   chartId: string;
@@ -97,6 +99,7 @@ export interface SingleDayLineProps extends LineProps {
   metricField: MetricField;
   date: string | undefined;
   benchmarkField?: BenchmarkField;
+  units: 'Minutes' | 'MPH';
 }
 
 export interface HeadwayHistogramProps {
