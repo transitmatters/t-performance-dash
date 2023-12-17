@@ -65,6 +65,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
         <WidgetDiv>
           <WidgetTitle title="Total slow time" />
           <Link
+            target="_blank"
             href="https://transitmatters.org/blog/slowzonesupdate"
             className="whitespace-nowrap text-sm italic text-stone-600"
           >

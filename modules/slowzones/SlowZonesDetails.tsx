@@ -62,6 +62,7 @@ export function SlowZonesDetails() {
           <WidgetTitle title="Total slow time" />
           <Link
             href="https://transitmatters.org/blog/slowzonesupdate"
+            target="_blank"
             className="whitespace-nowrap text-sm italic text-stone-600"
           >
             Time over Baseline across Line
