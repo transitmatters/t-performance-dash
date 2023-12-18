@@ -37,4 +37,11 @@ export const LINE_OBJECTS: LineObject = {
     key: 'line-bus',
     color: COLORS.mbta.bus,
   },
+  'line-commuter-rail': {
+    name: 'Commuter Rail',
+    short: 'Commuter Rail',
+    path: 'commuter-rail',
+    key: 'line-commuter-rail',
+    color: COLORS.mbta.commuterRail,
+  },
 };

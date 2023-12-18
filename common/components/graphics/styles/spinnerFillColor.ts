@@ -6,4 +6,5 @@ export const spinnerFillColor: StyleMap = {
   'line-green': 'fill-mbta-green',
   'line-blue': 'fill-mbta-blue',
   'line-bus': 'fill-mbta-bus',
+  'line-commuter-rail': 'fill-mbta-commuterRail',
 };
