@@ -12,7 +12,7 @@ import {
 } from '../../constants/dates';
 import type { WithOptional } from '../../types/general';
 
-export const SUBWAY_DEFAULTS: Partial<DateStoreConfiguration> = {
+const SUBWAY_DEFAULTS: Partial<DateStoreConfiguration> = {
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
   multiTripConfig: {
     startDate: ONE_WEEK_AGO_STRING,
@@ -36,7 +36,7 @@ export const BUS_DEFAULTS: WithOptional<DateStoreConfiguration, 'systemConfig' |
     },
   };
 
-export const SYSTEM_DEFAULTS: Partial<DateStoreConfiguration> = {
+const SYSTEM_DEFAULTS: Partial<DateStoreConfiguration> = {
   systemConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
 };
 

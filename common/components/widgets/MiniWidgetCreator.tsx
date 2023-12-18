@@ -26,7 +26,7 @@ const getWidgets = (widgetObject: MiniWidgetObject[]) => {
   const widgets: React.ReactNode[] = [];
   for (let x = 0; x < widgetObject.length; x += 2) {
     widgets.push(
-      <DataPair last={x + 3 > widgetObject.length}>
+      <DataPair key={x} last={x + 3 > widgetObject.length}>
         {getDeltaOrDataComponent(widgetObject[x])}
         {x + 1 < widgetObject.length ? getDeltaOrDataComponent(widgetObject[x + 1]) : null}
       </DataPair>

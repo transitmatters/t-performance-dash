@@ -7,6 +7,7 @@ export const COLORS = {
     blue: '#003da5',
     green: '#00834d',
     bus: '#FFC72C',
+    commuterRail: '#80276c',
   },
   charts: {
     fillBackgroundColor: '#bfc8d680',

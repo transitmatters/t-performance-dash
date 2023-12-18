@@ -152,6 +152,8 @@ export const TRIP_PAGES = [ALL_PAGES.singleTrips, ALL_PAGES.multiTrips];
 
 export const BUS_OVERVIEW = [ALL_PAGES.ridership];
 
+export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.ridership];
+
 export const OVERVIEW_PAGE = [ALL_PAGES.overview];
 
 export const LINE_PAGES = [

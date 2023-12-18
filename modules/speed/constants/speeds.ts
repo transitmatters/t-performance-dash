@@ -61,7 +61,7 @@ export const SPEED_RANGE_PARAM_MAP: { [s: string]: ParamsType } = {
 };
 
 // TODO: Upload this to overviewStats db
-export const MINIMUMS = {
+const MINIMUMS = {
   'line-red': { date: 'May 2020', value: 8374.5 },
   'line-blue': { date: 'May 2020', value: 1860.5 },
   'line-orange': { date: 'May 2020', value: 3776.75 },
@@ -75,5 +75,3 @@ export const CORE_TRACK_LENGTHS = {
   'line-blue': 5.38 + 5.37, //<Gov. Center -> Revere> + <reverse>
   DEFAULT: 1,
 };
-
-// Peak_MPH removed in #825
