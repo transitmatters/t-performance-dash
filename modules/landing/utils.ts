@@ -9,7 +9,7 @@ import { LINE_COLORS } from '../../common/constants/colors';
 import type { RidershipCount, DeliveredTripMetrics } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 import type { SingleDayDataPoint } from '../../common/types/charts';
-import { getDistancesForStopId } from '../../common/utils/stations';
+import { getStationDistance } from '../../common/utils/stations';
 
 const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
   return {
@@ -52,8 +52,8 @@ export const convertToStationSpeedDataset = (
   toStationId: string,
   data: SingleDayDataPoint[]
 ) => {
-  const intervalDistance = getDistancesForStopId(fromStationId, toStationId);
-  console.log(`${fromStationId}, ${toStationId}, ${intervalDistance}`);
+  const intervalDistance = getStationDistance(fromStationId, toStationId);
+  console.log(`distance: ${intervalDistance}`);
   const ret =
     data?.map((datapoint) => {
       return {
@@ -61,7 +61,6 @@ export const convertToStationSpeedDataset = (
         speed_mph: (3600 * intervalDistance) / datapoint.travel_time_sec,
       };
     }) ?? [];
-  console.log(`dataset: ${JSON.stringify(ret)}`);
   return ret;
 };
 

@@ -31,7 +31,7 @@ export const SpeedBetweenStationsSingleChart: React.FC<SpeedBetweenStationsSingl
     return (
       <SingleDayLineChart
         chartId={`speed-between-stations-chart-${linePath}`}
-        data={convertToStationSpeedDataset(to as string, from as string, traveltimes)}
+        data={convertToStationSpeedDataset(fromStation.station, toStation.station, traveltimes)}
         date={date}
         metricField={MetricFieldKeys.speedMph}
         pointField={PointFieldKeys.depDt}

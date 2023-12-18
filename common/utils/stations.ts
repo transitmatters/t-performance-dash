@@ -2,8 +2,8 @@ import type { BusRoute, Line, LineShort } from '../types/lines';
 import { isLineMap, type Station } from '../types/stations';
 import type { Location } from '../types/charts';
 import type { Direction, Distance } from '../types/dataPoints';
-import { stations, rtStations, busStations } from '../constants/stations';
-import { stop_distances } from '../constants/stop_distances';
+import { stations, rtStations, busStations } from './../constants/stations';
+import { stop_distances } from './../constants/stop_distances';
 
 export const optionsForField = (
   type: 'from' | 'to',
@@ -70,7 +70,6 @@ const createStopDistanceIndex = () => {
     index[key] = value as Distance;
   }
 
-  console.log(index);
   return index;
 };
 
