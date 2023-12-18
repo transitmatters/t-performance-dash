@@ -9,7 +9,7 @@ import type {
   SingleDayAPIOptions,
   BusOrSubway,
 } from '../types/api';
-import { APP_DATA_BASE_PATH } from '../../common/utils/constants';
+import { APP_DATA_BASE_PATH } from '../utils/constants';
 import { getCurrentDate } from '../utils/date';
 import type { AggregateDataResponse, SingleDayDataPoint } from '../types/charts';
 import { ONE_MINUTE } from '../constants/time';

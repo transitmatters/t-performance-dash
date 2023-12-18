@@ -1,8 +1,8 @@
-import type { Line, LineShort } from '../../common/types/lines';
-import { isLineMap, type Station } from '../../common/types/stations';
+import type { Line, LineShort } from '../types/lines';
+import { isLineMap, type Station } from '../types/stations';
 import type { Location } from '../types/charts';
 import type { Direction } from '../types/dataPoints';
-import { stations, rtStations, busStations } from './../constants/stations';
+import { stations, rtStations, busStations } from '../constants/stations';
 
 export const optionsForField = (
   type: 'from' | 'to',

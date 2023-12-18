@@ -53,8 +53,8 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
       ? '❮'
       : '▲'
     : isHorizontal
-    ? '❯'
-    : '▼';
+      ? '❯'
+      : '▼';
   const fractionOverBaseline = -1 + (delay + baseline) / baseline;
   const isBold = fractionOverBaseline >= 0.5;
 

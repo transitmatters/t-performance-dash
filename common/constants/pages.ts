@@ -16,7 +16,6 @@ export type Page = keyof typeof PAGES;
 
 export enum PAGES {
   landing = 'landing',
-  today = 'today',
   overview = 'overview',
   speed = 'speed',
   predictions = 'predictions',
@@ -61,14 +60,6 @@ export const ALL_PAGES: PageMap = {
     lines: [],
     icon: faHouse,
     dateStoreSection: 'landing',
-  },
-  today: {
-    key: 'today',
-    path: '/',
-    name: 'Today',
-    lines: ['line-red', 'line-blue', 'line-green', 'line-orange'],
-    icon: faHouse,
-    dateStoreSection: 'today',
   },
   singleTrips: {
     key: 'singleTrips',
@@ -159,9 +150,9 @@ export const ALL_PAGES: PageMap = {
 /* Groups of pages for tab sections */
 export const TRIP_PAGES = [ALL_PAGES.singleTrips, ALL_PAGES.multiTrips];
 
-export const TODAY = [ALL_PAGES.today];
-
 export const BUS_OVERVIEW = [ALL_PAGES.ridership];
+
+export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.ridership];
 
 export const OVERVIEW_PAGE = [ALL_PAGES.overview];
 

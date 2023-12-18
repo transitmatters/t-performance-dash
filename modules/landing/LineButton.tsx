@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import type { Line } from '../../common/types/lines';
 import { lineColorBackground, lineColorBorder } from '../../common/styles/general';
 import { LINE_OBJECTS } from '../../common/constants/lines';
+
 interface LineButtonProps {
   children: React.ReactNode;
   line: Line;

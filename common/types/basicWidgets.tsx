@@ -4,6 +4,7 @@ import duration from 'dayjs/plugin/duration';
 import { getFormattedTimeValue, getTimeUnit } from '../utils/time';
 import { WidgetText } from '../components/widgets/internal/WidgetText';
 import { UnitText } from '../components/widgets/internal/UnitText';
+
 dayjs.extend(duration);
 
 export interface WidgetValueInterface {
