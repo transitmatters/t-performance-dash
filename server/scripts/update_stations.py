@@ -122,8 +122,8 @@ def get_station_distances():
     # the route id in this case is basically just the line
     station_lines = {}
 
-    # stop id => route that the stop is on (used to filter the distances)
-    stop_routes = {}
+    # stop id => direction of stop 
+    stop_directions = {}
 
     # stop id => station that the stop is on
     stop_stations = {}
@@ -149,11 +149,11 @@ def get_station_distances():
 
         stop_distances[from_stop_id] = from_stop_distances
         # route pattern name is more detaield than id - e.g. route_id is always Red for all routes
-        stop_routes[from_stop_id] = distance_details["route_pattern_name"]
+        stop_directions[from_stop_id] = distance_details["direction_id"]
         stop_stations[from_stop_id] = distance_details["from_station_id"]
 
         # set this just in case the to station is a terminus
-        stop_routes[to_stop_id] = distance_details["route_pattern_name"]
+        stop_directions[to_stop_id] = distance_details["direction_id"]
         stop_stations[to_stop_id] = distance_details["to_station_id"]
 
         station_lines[distance_details["from_station_id"]] = distance_details["route_id"]
@@ -168,7 +168,6 @@ def get_station_distances():
     # there is probably still a more efficient way to do this.
     def populate_distances(target_stop_id):
         stop_stack = []
-        seen_stops = set()
         
         # assume each stop starts with one destination 
         first_dest, first_dist = next(iter(stop_distances[target_stop_id].items()))
@@ -186,80 +185,27 @@ def get_station_distances():
             destination_station = get_station_id(dest)
             target_station_distances[destination_station] = dist
 
+            # distance is a symmetric relationship, so set the distance here for those routes that have a direction id change
+            destination_station_distances = station_distances.get(destination_station, dict())
+            destination_station_distances[target_station] = dist
+
             current_stop_distances[dest] = dist
 
-            # This should be a terminus
+           # This should be a terminus
             if dest not in stop_distances or stop_distances[dest] == None or len(stop_distances[dest]) == 0:
                 break
 
-            # If a stop is not on the same route as target stop, ignore it
-            if stop_routes[target_stop_id] != stop_routes[dest]:
-                continue
-
-            # cycles should never happen on the same route.... but for some reason they do?
-            if dest in seen_stops:
-                continue
-
-            seen_stops.add(dest)
-
-            # again, assuming at this point there is only one destination (to_stop)
-            # for each from_stop
-            dest_of_dest, dist_of_dest_of_dest = next(iter(stop_distances[dest].items())) 
-            stop_stack.append((dest_of_dest, dist + dist_of_dest_of_dest))
+            for child, child_distance in stop_distances[dest].items():
+                if stop_directions[child] == stop_directions[target_stop_id]:
+                    stop_stack.append((child, dist + child_distance))
 
         station_distances[target_station] = target_station_distances
         
         return current_stop_distances
 
-    def populate_station_distances(station_id):
-        reachable_stations = station_distances[station_id]
-
-        seen_stations = set()
-
-        station_stack = [(k, v) for k, v in reachable_stations.items()] 
-
-        while len(station_stack) > 0:
-            other_station_id, other_station_distance = station_stack.pop()
-
-            # for now, only do stations on the same line
-            # in the future, you could improve this to do all station pairs
-            if station_lines[other_station_id] != station_lines[station_id]:
-                continue
-
-            seen_stations.add(other_station_id)
-
-            reachable_stations[other_station_id] = min(reachable_stations.get(other_station_id, float('inf')), other_station_distance)
-
-            if other_station_id not in station_distances:
-                continue
-
-            for child, child_distance in station_distances[other_station_id].items():
-                if child not in seen_stations:
-                    station_stack.append((child, other_station_distance + child_distance))
-
-
-
-        return reachable_stations
-
-
-
-
-
-
-
-
-
-
-
     # traverse the list, getting distances for all stops reachable by this stop
     for stop_id in stop_distances:
         stop_distances[stop_id] = populate_distances(stop_id)
-
-    # we need to do one dfs of the station graph to connect stations 
-    # that are really reachable in one trip, but happen to not be reachable using one route
-    # for example, charles mgh => ashmont
-    for station_id in station_distances:
-        station_distances[station_id] = populate_station_distances(station_id)
 
     return station_distances
 
