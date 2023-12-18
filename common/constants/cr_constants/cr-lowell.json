@@ -1,0 +1,81 @@
+{
+  "cr-lowell": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Lowell",
+        "station": "place-NHRML-0254",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "North Billerica",
+        "station": "place-NHRML-0218",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Wilmington",
+        "station": "place-NHRML-0152",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Anderson/Woburn",
+        "station": "place-NHRML-0127",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Wedgemere",
+        "station": "place-NHRML-0073",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "West Medford",
+        "station": "place-NHRML-0055",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "North Station",
+        "station": "place-north",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      }
+    ]
+  }
+}

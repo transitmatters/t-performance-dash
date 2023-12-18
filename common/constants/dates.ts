@@ -8,7 +8,7 @@ import type {
   DateSelectionDefaultOptions,
   SingleDateParams,
 } from '../components/inputs/DateSelection/types/DateSelectionTypes';
-import type { Tab } from './dashboardTabs';
+import type { Tab } from '../types/router';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -65,6 +65,14 @@ export const FLAT_PICKER_OPTIONS: {
     dateFormat: 'Y-m-d',
   },
   System: {
+    enableTime: false,
+    minDate: TRAIN_MIN_DATE,
+    maxDate: TODAY_STRING,
+    altInput: true,
+    altFormat: 'M j, Y',
+    dateFormat: 'Y-m-d',
+  },
+  'Commuter Rail': {
     enableTime: false,
     minDate: TRAIN_MIN_DATE,
     maxDate: TODAY_STRING,
@@ -143,6 +151,7 @@ export const SINGLE_PRESETS: {
   Subway: SINGLE_RAPID_PRESETS,
   Bus: SINGLE_BUS_PRESETS,
   System: SINGLE_RAPID_PRESETS,
+  'Commuter Rail': SINGLE_RAPID_PRESETS,
 };
 
 const RANGE_RAPID_PRESETS: {
@@ -265,6 +274,7 @@ export const RANGE_PRESETS: {
   Subway: RANGE_RAPID_PRESETS,
   Bus: RANGE_BUS_PRESETS,
   System: RANGE_RAPID_PRESETS,
+  'Commuter Rail': RANGE_RAPID_PRESETS,
 };
 
 export type DatePresetKey =

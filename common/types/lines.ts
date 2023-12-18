@@ -7,6 +7,8 @@ export type Line =
   | 'line-commuter-rail';
 export type LineShort = 'Red' | 'Orange' | 'Green' | 'Blue' | 'Bus' | 'Commuter Rail';
 export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus' | 'commuter-rail';
+
+/** All currently available Bus Routes */
 export type BusRoute =
   | '1'
   | '15'
@@ -22,6 +24,14 @@ export type BusRoute =
   | '77'
   | '111'
   | '114/116/117';
+
+/** TODO: Expand list to all lines */
+export type CommuterRailRoute =
+  | 'cr-fitchburg'
+  | 'cr-franklin'
+  | 'cr-greenbush'
+  | 'cr-haverhill'
+  | 'cr-lowell';
 
 export type LineMetadata = {
   name: string;
@@ -54,7 +64,7 @@ export const HEAVY_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue']
 export const LANDING_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue', 'line-green'];
 
 export const RAIL_LINES = ['red', 'orange', 'green', 'blue'];
-export const BUS_ROUTES = [
+export const BUS_ROUTES: BusRoute[] = [
   '1',
   '15',
   '22',
@@ -71,6 +81,21 @@ export const BUS_ROUTES = [
   '114/116/117',
 ];
 
+export const COMMUTER_RAIL_ROUTES: CommuterRailRoute[] = [
+  'cr-fitchburg',
+  'cr-franklin',
+  'cr-greenbush',
+  'cr-haverhill',
+  'cr-lowell',
+];
+export const COMMUTER_RAIL_LINE_NAMES: { [line in CommuterRailRoute]: string } = {
+  'cr-fitchburg': 'Fitchburg Line',
+  'cr-franklin': 'Franklin Line',
+  'cr-greenbush': 'Greenbush Line',
+  'cr-haverhill': 'Haverhill Line',
+  'cr-lowell': 'Lowell Line',
+};
+
 export const ALL_LINE_PATHS = RAIL_LINES.map((line) => {
   return {
     params: {
@@ -82,5 +107,11 @@ export const ALL_LINE_PATHS = RAIL_LINES.map((line) => {
 export const BUS_PATH = {
   params: {
     line: 'bus',
+  },
+};
+
+export const COMMUTER_RAIL_PATH = {
+  params: {
+    line: 'commuter-rail',
   },
 };

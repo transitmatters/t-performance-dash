@@ -1,4 +1,4 @@
-import type { Line, LineShort } from '../types/lines';
+import type { BusRoute, CommuterRailRoute, Line, LineShort } from '../types/lines';
 import { isLineMap, type Station } from '../types/stations';
 import type { Location } from '../types/charts';
 import type { Direction } from '../types/dataPoints';
@@ -8,13 +8,14 @@ export const optionsForField = (
   type: 'from' | 'to',
   line: LineShort,
   fromStation: Station | null,
-  busRoute?: string
+  busRoute?: BusRoute,
+  crRoute?: CommuterRailRoute
 ) => {
   if (type === 'from') {
-    return optionsStation(line, busRoute);
+    return optionsStation(line, busRoute, crRoute);
   }
   if (type === 'to') {
-    return optionsStation(line, busRoute)?.filter((entry) => {
+    return optionsStation(line, busRoute, crRoute)?.filter((entry) => {
       if (fromStation && fromStation.branches && entry.branches) {
         return entry.branches.some((entryBranch) => fromStation.branches?.includes(entryBranch));
       }
@@ -23,7 +24,11 @@ export const optionsForField = (
   }
 };
 
-export const optionsStation = (line: LineShort, busRoute?: string): Station[] | undefined => {
+export const optionsStation = (
+  line: LineShort,
+  busRoute?: BusRoute,
+  crRoute?: CommuterRailRoute
+): Station[] | undefined => {
   if (!line || !stations[line]) {
     return undefined;
   }
@@ -34,6 +39,14 @@ export const optionsStation = (line: LineShort, busRoute?: string): Station[] | 
     }
 
     return stations[line][busRoute].stations.sort((a, b) => a.order - b.order);
+  }
+
+  if (line === 'Commuter Rail') {
+    if (!crRoute || !stations[line][crRoute]) {
+      return undefined;
+    }
+
+    return stations[line][crRoute].stations.sort((a, b) => a.order - b.order);
   }
 
   return stations[line].stations.sort((a, b) => a.order - b.order);

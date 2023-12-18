@@ -1,5 +1,5 @@
 import type { ParsedUrlQuery } from 'querystring';
-import { capitalize, isEqual, pickBy } from 'lodash';
+import { isEqual, pickBy, startCase, toLower } from 'lodash';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import type { Line, LinePath, LineShort } from '../types/lines';
@@ -15,12 +15,13 @@ import { useStationStore } from '../state/stationStore';
 import { useDateStore } from '../state/dateStore';
 import type { DateStore } from '../state/dateStore';
 
-const linePathToKeyMap: Record<string, Line> = {
+const linePathToKeyMap: Record<LinePath, Line> = {
   red: 'line-red',
   orange: 'line-orange',
   green: 'line-green',
   blue: 'line-blue',
   bus: 'line-bus',
+  'commuter-rail': 'line-commuter-rail',
 };
 
 const getParams = (params: ParsedUrlQuery | QueryParams) => {
@@ -54,11 +55,13 @@ const getPage = (pathItems: string[], tab: Tab): string => {
   return pageArray[0];
 };
 
-const getTab = (path: string) => {
+const getTab = (path: LinePath) => {
   if (RAIL_LINES.includes(path)) {
     return 'Subway';
   } else if (path === 'bus') {
     return 'Bus';
+  } else if (path === 'commuter-rail') {
+    return 'Commuter Rail';
   } else {
     return 'System';
   }
@@ -69,14 +72,14 @@ export const useDelimitatedRoute = (): Route => {
   const path = router.asPath.split('?');
   const pathItems = path[0].split('/');
   const queryParams = router.query;
-  const tab = getTab(pathItems[1] ?? 'System');
+  const tab = getTab((pathItems[1] as LinePath) ?? 'System');
   const page = getPage(pathItems, tab) as Page;
   const newParams = getParams(queryParams);
 
   return {
     line: linePathToKeyMap[pathItems[1]],
     linePath: pathItems[1] as LinePath, //TODO: Remove as
-    lineShort: capitalize(pathItems[1]) as LineShort, //TODO: Remove as
+    lineShort: startCase(toLower(pathItems[1]).replace('-', ' ')) as LineShort, //TODO: Remove as
     page: page,
     tab,
     query: router.isReady ? newParams : {},
@@ -180,6 +183,25 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   return href;
 };
 
+export const getCommuterRailRouteSelectionItemHref = (newRoute: string, route: Route): string => {
+  const { query, page } = route;
+  const currentPage = ALL_PAGES[page] ?? ALL_PAGES['singleTrips'];
+  const currentPath = currentPage.path;
+  const validPage = currentPage.lines.includes('line-commuter-rail');
+  if (newRoute === route.query.crRoute || !validPage) {
+    return `/commuter-rail/trips/single?crRoute=${newRoute}`;
+  }
+  delete query.from;
+  delete query.to;
+  const queryParams = query
+    ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'crRoute'))
+    : new URLSearchParams();
+  queryParams.append('crRoute', newRoute);
+  let href = `/commuter-rail${currentPath}`;
+  href += `?${queryParams.toString() ?? ''}`;
+  return href;
+};
+
 export const useGenerateHref = () => {
   const dateStore = useDateStore();
   const stationStore = useStationStore();
@@ -242,6 +264,10 @@ const getBusRouteQueryParam = (query: QueryParams) => {
   if (query.busRoute) return { busRoute: query.busRoute };
 };
 
+const getCRRouteQueryParam = (query: QueryParams) => {
+  if (query.crRoute) return { crRoute: query.crRoute };
+};
+
 const getStationQueryParams = (
   currentPage: PageMetadata | undefined,
   newPage: PageMetadata,
@@ -266,6 +292,7 @@ const getQueryParams = (
     ...getStationQueryParams(currentPage, newPage, query, stationStore),
     ...getDateQueryParams(currentPage, newPage, query, dateStore),
     ...getBusRouteQueryParam(query),
+    ...getCRRouteQueryParam(query),
   };
 };
 

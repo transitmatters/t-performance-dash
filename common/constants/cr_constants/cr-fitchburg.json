@@ -1,0 +1,181 @@
+{
+  "cr-fitchburg": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Wachusett",
+        "station": "place-FR-3338",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Fitchburg",
+        "station": "place-FR-0494",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "North Leominster",
+        "station": "place-FR-0451",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Shirley",
+        "station": "place-FR-0394",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Ayer",
+        "station": "place-FR-0361",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Littleton/Route 495",
+        "station": "place-FR-0301",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "South Acton",
+        "station": "place-FR-0253",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "West Concord",
+        "station": "place-FR-0219",
+        "branches": null,
+        "order": 8,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Concord",
+        "station": "place-FR-0201",
+        "branches": null,
+        "order": 9,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Lincoln",
+        "station": "place-FR-0167",
+        "branches": null,
+        "order": 10,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Kendal Green",
+        "station": "place-FR-0132",
+        "branches": null,
+        "order": 11,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Brandeis/Roberts",
+        "station": "place-FR-0115",
+        "branches": null,
+        "order": 12,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Waltham",
+        "station": "place-FR-0098",
+        "branches": null,
+        "order": 13,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Waverley",
+        "station": "place-FR-0074",
+        "branches": null,
+        "order": 14,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Belmont",
+        "station": "place-FR-0064",
+        "branches": null,
+        "order": 15,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Porter",
+        "station": "place-portr",
+        "branches": null,
+        "order": 16,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "North Station",
+        "station": "place-north",
+        "branches": null,
+        "order": 17,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      }
+    ]
+  }
+}

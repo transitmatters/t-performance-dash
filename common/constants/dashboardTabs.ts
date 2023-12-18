@@ -1,7 +1,5 @@
-import { BUS_DEFAULTS } from '../state/defaults/dateDefaults';
-import type { QueryParams } from '../types/router';
-
-export type Tab = 'Subway' | 'Bus' | 'System';
+import { BUS_DEFAULTS, COMMUTER_RAIL_DEFAULTS } from '../state/defaults/dateDefaults';
+import type { QueryParams, Tab } from '../types/router';
 
 export const DASHBOARD_TABS: {
   [key in Tab]: { name: Tab; path: string; disabled?: boolean; query?: QueryParams };
@@ -12,5 +10,10 @@ export const DASHBOARD_TABS: {
     name: 'Bus',
     path: '/bus/trips/single',
     query: { busRoute: '1', date: BUS_DEFAULTS.singleTripConfig.date },
+  },
+  'Commuter Rail': {
+    name: 'Commuter Rail',
+    path: '/commuter-rail',
+    query: { crRoute: 'cr-lowell', date: COMMUTER_RAIL_DEFAULTS.singleTripConfig.date },
   },
 };
