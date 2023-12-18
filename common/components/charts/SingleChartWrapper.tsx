@@ -54,6 +54,7 @@ export const SingleChartWrapper: React.FC<SingleChartWrapperProps> = ({
           traveltimes={query.data}
           fromStation={fromStation}
           toStation={toStation}
+          showLegend={showLegend}
         />
       );
   }

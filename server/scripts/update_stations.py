@@ -108,7 +108,13 @@ def get_station_distances_by_stop_id():
     ...
 }
     """
+
+    # stop id => distance to other reachable stops on the same route
     stop_distances = {}
+
+    # stop id => route that the stop is on (used to filter the distances)
+    stop_routes = {}
+
     stop_distance_response = requests.get(
         f'https://services1.arcgis.com/ceiitspzDAHrdGO1/arcgis/rest/services/MBTA_Rapid_Transit_Stop_Distances/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson'
     )
@@ -127,12 +133,12 @@ def get_station_distances_by_stop_id():
 
         from_stop_distances = stop_distances.get(from_stop_id, {})
         from_stop_distances[to_stop_id] = distance_details["from_to_miles"]
-        stop_distances[from_stop_id] = from_stop_distances
 
-    # there is definitely a more efficient way to do this.
-    # maybe hardcode the termini and start traversal from there?
-    # this also generates extraneous data for trips that are impossible
-    # for example: 70093 => 70096 by this is 20 miles.  that is JFK U/Mass (braintree) to Ashmont..
+        stop_distances[from_stop_id] = from_stop_distances
+        # route pattern name is more detaield than id - e.g. route_id is always Red for all routes
+        stop_routes[from_stop_id] = distance_details["route_pattern_name"]
+
+    # there is probably still a more efficient way to do this.
     def populate_distances(target_stop_id):
         stop_stack = []
         seen_stops = set()
@@ -146,11 +152,15 @@ def get_station_distances_by_stop_id():
             dest, dist = stop_stack.pop()
             distances[dest] = dist
 
-            print(f"dest: {dest}, dist {dist}")
-
+            # This should be a terminus
             if dest not in stop_distances or stop_distances[dest] == None or len(stop_distances[dest]) == 0:
                 break
 
+            # If a stop is not on the same route as target stop, ignore it
+            if stop_routes[target_stop_id] != stop_routes[dest]:
+                continue
+
+            # cycles should never happen on the same route.... but for some reason they do?
             if dest in seen_stops:
                 continue
 

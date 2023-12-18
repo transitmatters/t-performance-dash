@@ -70,6 +70,7 @@ const createStopDistanceIndex = () => {
     index[key] = value as Distance;
   }
 
+  console.log(index);
   return index;
 };
 

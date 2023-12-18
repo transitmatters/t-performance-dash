@@ -137,11 +137,13 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               subtitle="Speed between stops"
               location={location}
               line={line}
+              both
             />
             <SingleChartWrapper
               query={traveltimes}
               fromStation={fromStation}
               toStation={toStation}
+              showLegend={true}
               type={'speeds'}
             />
           </WidgetDiv>
