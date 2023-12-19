@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
+import { isArray } from 'lodash';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -63,7 +64,7 @@ export function SlowZonesDetails() {
           <div className="relative flex flex-col">
             {totalSlowTimeReady ? (
               <TotalSlowTimeWrapper
-                data={delayTotals.data}
+                data={isArray(delayTotals.data) ? delayTotals.data : delayTotals.data.data}
                 startDateUTC={startDateUTC}
                 endDateUTC={endDateUTC}
                 line={line}
@@ -82,7 +83,7 @@ export function SlowZonesDetails() {
             {allSlow.data && speedRestrictions.data && canShowSlowZonesMap ? (
               <SlowZonesMap
                 key={lineShort}
-                slowZones={allSlow.data}
+                slowZones={isArray(allSlow.data) ? allSlow.data : allSlow.data.data}
                 speedRestrictions={speedRestrictions.data}
                 lineName={lineShort}
                 direction="horizontal-on-desktop"
@@ -105,7 +106,7 @@ export function SlowZonesDetails() {
           <div className="relative flex flex-col">
             {segmentsReady ? (
               <SlowZonesSegmentsWrapper
-                data={allSlow.data}
+                data={isArray(allSlow.data) ? allSlow.data : allSlow.data.data}
                 lineShort={lineShort}
                 linePath={linePath}
                 endDateUTC={endDateUTC}
