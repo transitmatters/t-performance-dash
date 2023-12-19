@@ -70,8 +70,6 @@ def trip_metrics_by_line(params: TripMetricsByLineParams):
     # If querying for daily data, query then aggregate.
     if params["agg"] == "daily":
         actual_trips = dynamo.query_daily_trips_on_line(config["table_name"], line, start_date, end_date)
-        with open('output_actual_trips', 'a') as f:
-            f.writelines(str(actual_trips))
         return aggregate_actual_trips(actual_trips, params["agg"], params["start_date"])
     # If querying for weekly/monthly data, can just return the query.
     return dynamo.query_agg_trip_metrics(start_date, end_date, config["table_name"], line)
@@ -83,5 +81,3 @@ def is_invalid_range(start_date, end_date, max_delta):
     end_datetime = datetime.strptime(end_date, DATE_FORMAT_BACKEND)
     return start_datetime + timedelta(days=max_delta) < end_datetime
 
-if __name__ == 'main':
-    params: TripMetricsByLineParams = {'start_date': '12-01-2023', 'end_date': '12-08-2023', 'agg': 'daily', 'line': 'red'}
