@@ -1,6 +1,4 @@
 import json
-import sys
-
 import requests
 
 with open("common/constants/stations.json", "r") as f:
@@ -125,7 +123,7 @@ def get_station_distances():
     stop_stations = {}
 
     stop_distance_response = requests.get(
-        f"https://services1.arcgis.com/ceiitspzDAHrdGO1/arcgis/rest/services/MBTA_Rapid_Transit_Stop_Distances/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson"
+        "https://services1.arcgis.com/ceiitspzDAHrdGO1/arcgis/rest/services/MBTA_Rapid_Transit_Stop_Distances/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson"
     )
 
     stop_response_json = stop_distance_response.json()
@@ -182,7 +180,7 @@ def get_station_distances():
             current_stop_distances[dest] = dist
 
             # This should be a terminus
-            if dest not in stop_distances or stop_distances[dest] == None or len(stop_distances[dest]) == 0:
+            if dest not in stop_distances or stop_distances[dest] is None or len(stop_distances[dest]) == 0:
                 break
 
             for child, child_distance in stop_distances[dest].items():
