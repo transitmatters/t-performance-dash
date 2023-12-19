@@ -1,15 +1,13 @@
-import type { SelectOption } from '../../common/types/inputs';
-import type { LineShort } from '../../common/types/lines';
-import type { Station } from '../../common/types/stations';
+import type { Line, LineShort } from '../types/lines';
+import { isLineMap, type Station } from '../types/stations';
 import type { Location } from '../types/charts';
 import type { Direction } from '../types/dataPoints';
-import { stations, rtStations, busStations } from './../constants/stations';
+import { stations, rtStations, busStations } from '../constants/stations';
 
 export const optionsForField = (
   type: 'from' | 'to',
   line: LineShort,
   fromStation: Station | null,
-  toStation: Station | null,
   busRoute?: string
 ) => {
   if (type === 'from') {
@@ -39,16 +37,6 @@ export const optionsStation = (line: LineShort, busRoute?: string): Station[] | 
   }
 
   return stations[line].stations.sort((a, b) => a.order - b.order);
-};
-
-export const swapStations = (
-  fromStation: SelectOption<Station> | null,
-  toStation: SelectOption<Station> | null,
-  setFromStation: (fromStation: SelectOption<Station> | null) => void,
-  setToStation: (toStation: SelectOption<Station> | null) => void
-) => {
-  setFromStation(toStation);
-  setToStation(fromStation);
 };
 
 const createStationIndex = () => {
@@ -85,6 +73,12 @@ export const getParentStationForStopId = (stopId: string) => {
   return parentStationIndex[stopId];
 };
 
+export const getStationForInvalidFromSelection = (line: Line): Station => {
+  if (line === 'line-green') return getParentStationForStopId('70202'); // Gov. Center
+  if (line === 'line-red') return getParentStationForStopId('70076'); // Park St.
+  throw new Error('There should be no other lines with invalid from station selections.');
+};
+
 export const stopIdsForStations = (from: Station | undefined, to: Station | undefined) => {
   if (to === undefined || from === undefined) {
     return { fromStopIds: undefined, toStopIds: undefined };
@@ -118,4 +112,13 @@ export const getLocationDetails = (
     from: from.stop_name,
     direction: travelDirection(from, to),
   };
+};
+
+export const getStationKeysFromStations = (line: LineShort): string[] => {
+  const lineStations = stations[line].stations;
+  if (isLineMap(lineStations)) {
+    return lineStations.stations.map((station: Station) => station.station);
+  } else {
+    return lineStations.map((station: Station) => station.station);
+  }
 };

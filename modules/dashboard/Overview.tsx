@@ -8,6 +8,8 @@ import { Layout } from '../../common/layouts/layoutTypes';
 import { RidershipWidget } from '../ridership/RidershipWidget';
 import { HEAVY_RAIL_LINES } from '../../common/types/lines';
 import { useRewriteV3Route } from '../../common/utils/middleware';
+import { LINE_OBJECTS } from '../../common/constants/lines';
+import { AlertsWidget } from '../alerts/AlertsWidget';
 
 export function Overview() {
   const { tab, line } = useDelimitatedRoute();
@@ -15,14 +17,18 @@ export function Overview() {
   useRewriteV3Route();
 
   const isHeavyRailLine = line ? HEAVY_RAIL_LINES.includes(line) : false;
+
+  const lineShort = line && line !== 'line-bus' ? LINE_OBJECTS[line].short : null;
+
   return (
     <PageWrapper pageTitle={'Overview'}>
-      <div className="flex flex-col pt-2">
-        <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
-          {tab === 'Subway' && isHeavyRailLine && <SlowZonesWidget />}
-          {tab === 'Subway' && isHeavyRailLine && <SpeedWidget />}
-          {tab === 'Subway' && isHeavyRailLine && <ServiceWidget />}
-          <RidershipWidget />
+      <div className="grid w-full grid-cols-1 gap-4 md:gap-8 xl:grid-cols-2">
+        {tab === 'Subway' && <SpeedWidget />}
+        {tab === 'Subway' && <ServiceWidget />}
+        <RidershipWidget />
+        {tab === 'Subway' && isHeavyRailLine && <SlowZonesWidget />}
+        <div className="grid w-full grid-cols-1 gap-4 md:gap-8 xl:col-span-2 xl:grid-cols-2">
+          {tab === 'Subway' && lineShort && <AlertsWidget lineShort={lineShort} />}
         </div>
       </div>
     </PageWrapper>

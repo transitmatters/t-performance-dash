@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import type { SetStateAction } from 'react';
 import React, { Fragment } from 'react';
 import { lineColorBackground, lineColorBorder, lineColorLightBorder } from '../../styles/general';
-import { useDelimitatedRoute } from '../../utils/router';
+import type { Line } from '../../types/lines';
 
 interface ButtonGroupProps<K, T> {
   options: [K, T][];
@@ -12,6 +12,7 @@ interface ButtonGroupProps<K, T> {
   additionalDivClass?: string;
   additionalButtonClass?: string;
   isOverview?: boolean;
+  line?: Line;
 }
 
 export const ButtonGroup: <T extends string, K extends string>(
@@ -23,8 +24,8 @@ export const ButtonGroup: <T extends string, K extends string>(
   additionalDivClass,
   additionalButtonClass,
   isOverview,
+  line,
 }) => {
-  const { line } = useDelimitatedRoute();
   return (
     <Tab.Group
       selectedIndex={selectedIndex}
@@ -53,7 +54,7 @@ export const ButtonGroup: <T extends string, K extends string>(
                       ? `${lineColorBackground[line ?? 'DEFAULT']} text-white hover:bg-opacity-90`
                       : `hover:${
                           lineColorBackground[line ?? 'DEFAULT']
-                        } bg-white text-stone-900 hover:bg-opacity-70 hover:text-white`
+                        } bg-white text-stone-900 hover:bg-opacity-70 `
                   )}
                 >
                   <p className="leading-none">{option[1]}</p>

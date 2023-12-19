@@ -6,18 +6,19 @@ import { enUS } from 'date-fns/locale';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { SpeedDataPoint } from '../../common/types/dataPoints';
+import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
+import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
-import { CORE_TRACK_LENGTHS, PEAK_MPH } from './constants/speeds';
+import { PEAK_SPEED } from '../../common/constants/baselines';
+import { getShuttlingBlockAnnotations } from '../service/utils/graphUtils';
 import type { ParamsType } from './constants/speeds';
 
 interface SpeedGraphProps {
-  data: SpeedDataPoint[];
+  data: DeliveredTripMetrics[];
   config: ParamsType;
   startDate: string;
   endDate: string;
@@ -33,9 +34,12 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
 }) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
+  const peak = PEAK_SPEED[line ?? 'DEFAULT'];
   const ref = useRef();
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
+  const shuttlingBlocks = getShuttlingBlockAnnotations(data);
+
   return (
     <ChartBorder>
       <ChartDiv isMobile={isMobile}>
@@ -49,6 +53,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
             datasets: [
               {
                 label: `MPH`,
+                backgroundColor: COLORS.design.background,
                 borderColor: LINE_COLORS[line ?? 'default'],
                 pointRadius: 0,
                 pointBorderWidth: 0,
@@ -56,11 +61,16 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 pointHoverRadius: 6,
                 spanGaps: false,
                 pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
+                pointBackgroundColor: LINE_COLORS[line ?? 'default'],
                 data: data.map((datapoint) =>
-                  datapoint.value
-                    ? (CORE_TRACK_LENGTHS[line ?? 'DEFAULT'] / (datapoint.value / 3600)).toFixed(1)
-                    : Number.NaN
+                  (datapoint.miles_covered / (datapoint.total_time / 3600)).toFixed(1)
                 ),
+              },
+              {
+                // This null dataset produces the entry in the legend for the baseline annotation.
+                label: `Historical Maximum (${peak} mph)`,
+                backgroundColor: CHART_COLORS.ANNOTATIONS,
+                data: null,
               },
             ],
           }}
@@ -81,21 +91,45 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
               tooltip: {
                 mode: 'index',
                 position: 'nearest',
-                callbacks: callbacks,
+                callbacks: {
+                  ...callbacks,
+                  label: (context) => {
+                    return `${context.parsed.y} (${((100 * context.parsed.y) / peak).toFixed(
+                      1
+                    )}% of historical maximum)`;
+                  },
+                },
               },
               legend: {
-                display: false,
+                position: 'bottom',
+                labels: {
+                  boxWidth: 15,
+                },
               },
               title: {
                 // empty title to set font and leave room for drawTitle fn
                 display: showTitle,
                 text: '',
               },
+              annotation: {
+                // Add your annotations here
+                annotations: [
+                  {
+                    type: 'line',
+                    yMin: peak,
+                    yMax: peak,
+                    borderColor: CHART_COLORS.ANNOTATIONS,
+                    // corresponds to null dataset index.
+                    display: (ctx) => ctx.chart.isDatasetVisible(1),
+                    borderWidth: 2,
+                  },
+                  ...shuttlingBlocks,
+                ],
+              },
             },
             scales: {
               y: {
                 suggestedMin: 0,
-                suggestedMax: PEAK_MPH[line ?? 'DEFAULT'],
                 display: true,
                 ticks: {
                   color: COLORS.design.subtitleGrey,
@@ -151,7 +185,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                   ctx.fillText('No data to display', width / 2, height / 2);
                   ctx.restore();
                 }
-                if (showTitle) drawSimpleTitle(`Median Speed`, chart);
+                if (showTitle) drawSimpleTitle(`Speed`, chart);
               },
             },
             ChartjsPluginWatermark,

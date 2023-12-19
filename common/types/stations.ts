@@ -1,4 +1,4 @@
-export interface Direction {
+interface Direction {
   0: string;
   1: string;
 }
@@ -19,6 +19,10 @@ export interface Station {
   disabled?: boolean;
   short?: string;
 }
+
+export const isLineMap = (obj: LineMap | Station[]): obj is LineMap => {
+  return (obj as LineMap).stations !== undefined;
+};
 
 export interface LineMap {
   type: string;

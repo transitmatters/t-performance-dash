@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import type { SetStateAction } from 'react';
-import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
+import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { PercentageWidgetValue } from '../../common/types/basicWidgets';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
@@ -13,13 +13,13 @@ import { PercentageServiceGraph } from './PercentageServiceGraph';
 import { getPercentageData, getAverageWithNaNs } from './utils/utils';
 
 interface PercentageServiceGraphWrapperProps {
-  data: SpeedDataPoint[];
-  predictedData: TripCounts;
+  data: DeliveredTripMetrics[];
+  predictedData: ScheduledService;
   config: ParamsType;
   startDate: string;
   endDate: string;
-  comparison: 'Scheduled' | 'Baseline';
-  setComparison: React.Dispatch<SetStateAction<'Scheduled' | 'Baseline'>>;
+  comparison: 'Scheduled' | 'Historical Maximum';
+  setComparison: React.Dispatch<SetStateAction<'Scheduled' | 'Historical Maximum'>>;
 }
 
 export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapperProps> = ({
@@ -33,20 +33,27 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
 }) => {
   // TODO: Add 1 or 2 widgets to percentage service graph.
   const { line } = useDelimitatedRoute();
-  if (!data.some((datapoint) => datapoint.value !== null)) return <NoDataNotice isLineMetric />;
 
-  const { scheduled, baseline } = getPercentageData(data, predictedData, line);
-  const scheduledAverage = getAverageWithNaNs(scheduled);
-  const baselineAverage = getAverageWithNaNs(baseline);
+  const { scheduled, peak } = useMemo(
+    () => getPercentageData(data, predictedData, line),
+    [data, predictedData, line]
+  );
+
+  const { scheduledAverage, peakAverage } = useMemo(() => {
+    const scheduledAverage = getAverageWithNaNs(scheduled);
+    const peakAverage = getAverageWithNaNs(peak);
+    return { scheduledAverage, peakAverage };
+  }, [scheduled, peak]);
+
+  if (!data.some((datapoint) => datapoint.miles_covered)) return <NoDataNotice isLineMetric />;
+
   return (
     <>
       <CarouselGraphDiv>
         <WidgetCarousel isSingleWidget>
           <WidgetForCarousel
             widgetValue={
-              new PercentageWidgetValue(
-                comparison === 'Scheduled' ? scheduledAverage : baselineAverage
-              )
+              new PercentageWidgetValue(comparison === 'Scheduled' ? scheduledAverage : peakAverage)
             }
             analysis={`Average`}
             layoutKind="no-delta"
@@ -56,7 +63,7 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
         <PercentageServiceGraph
           config={config}
           data={data}
-          calculatedData={{ scheduled: scheduled, baseline: baseline }}
+          calculatedData={{ scheduled: scheduled, peak: peak }}
           startDate={startDate}
           endDate={endDate}
           comparison={comparison}
@@ -64,7 +71,11 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
       </CarouselGraphDiv>
       <div className={'flex w-full justify-center pt-2'}>
         <ButtonGroup
-          options={Object.entries({ Scheduled: 'Scheduled', Baseline: 'Baseline' })}
+          line={line}
+          options={Object.entries({
+            Scheduled: 'Scheduled',
+            'Historical Maximum': 'Historical Maximum',
+          })}
           pressFunction={setComparison}
           additionalDivClass="md:w-auto"
           additionalButtonClass="md:w-fit"

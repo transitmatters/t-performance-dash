@@ -87,7 +87,7 @@ export const useUpdateQuery = () => {
   const router = useRouter();
 
   const updateQueryParams = useCallback(
-    (newQueryParams: QueryParams, range?: boolean) => {
+    (newQueryParams: QueryParams, range?: boolean, replace = true) => {
       if (!newQueryParams) return;
       if (!router.isReady) return;
 
@@ -125,7 +125,11 @@ export const useUpdateQuery = () => {
 
       if (!isEqual(router.query, newQuery)) {
         const query = pickBy(newQuery, (attr) => attr !== undefined);
-        router.replace({ pathname: router.pathname, query }, undefined, { shallow: true });
+        if (replace) {
+          router.replace({ pathname: router.pathname, query }, undefined, { shallow: true });
+        } else {
+          router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
+        }
       }
     },
     [router]

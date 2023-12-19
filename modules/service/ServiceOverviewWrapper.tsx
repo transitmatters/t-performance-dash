@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import type { SpeedDataPoint, TripCounts } from '../../common/types/dataPoints';
+import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import { BasicWidgetDataLayout } from '../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { PercentageWidgetValue, TripsWidgetValue } from '../../common/types/basicWidgets';
 import type { ParamsType } from '../speed/constants/speeds';
@@ -8,8 +8,8 @@ import { ServiceGraph } from './ServiceGraph';
 import { getServiceWidgetValues } from './utils/utils';
 
 interface ServiceOverviewWrapperProps {
-  data: SpeedDataPoint[];
-  predictedData: TripCounts;
+  data: DeliveredTripMetrics[];
+  predictedData: ScheduledService;
   config: ParamsType;
   startDate: string;
   endDate: string;
@@ -22,7 +22,7 @@ export const ServiceOverviewWrapper: React.FC<ServiceOverviewWrapperProps> = ({
   startDate,
   endDate,
 }) => {
-  const { average, percentDelivered } = getServiceWidgetValues(data, predictedData.counts);
+  const { average, percentDelivered } = getServiceWidgetValues(data, predictedData);
 
   return (
     <>
@@ -49,7 +49,6 @@ export const ServiceOverviewWrapper: React.FC<ServiceOverviewWrapperProps> = ({
           predictedData={predictedData}
           startDate={startDate}
           endDate={endDate}
-          showTitle
         />
       </div>
     </>

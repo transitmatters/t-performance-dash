@@ -48,6 +48,7 @@ export interface SlowZone {
   end: string;
   duration: number;
   delay: number;
+  latest_delay: number | null;
   color: string;
   id: string;
   direction: Direction;
@@ -63,6 +64,8 @@ export type SlowZoneResponse = {
   duration: number;
   baseline: number;
   delay: number;
+  latest_delay: number | null;
+  previous_delay: number | null;
   color: Exclude<LineShort, 'Bus'>;
   fr_id: string;
   to_id: string;
@@ -75,15 +78,25 @@ export interface SpeedDataPoint {
   value: number;
 }
 
+export interface DeliveredTripMetrics {
+  line: Line;
+  date: string;
+  miles_covered: number;
+  total_time: number;
+  count: number;
+}
+
 export type LineSegmentData = {
   duration: number;
   x: string[];
   y: string[];
   id: string;
   delay: number;
+  latest_delay: number | null;
   stations:
     | { fromStopIds: string[]; toStopIds: string[] }
     | { fromStopIds: undefined; toStopIds: undefined };
+  color: string;
 };
 
 export type SpeedRestriction = {
@@ -91,14 +104,33 @@ export type SpeedRestriction = {
   line: Exclude<LineShort, 'Bus'>;
   description: string;
   reason: string;
-  status: string;
   fromStopId: null | string;
   toStopId: null | string;
   reported: string;
-  cleared: string;
   speedMph: number;
   trackFeet: number;
+  lineId: Line;
+  currentAsOf: Date;
+  validAsOf: Date;
 };
+
+export interface TimePrediction {
+  mode: 'subway' | 'bus';
+  arrival_departure: string;
+  route_id: string;
+  bin: PredictionBin;
+  weekly: string;
+  num_accurate_predictions: number;
+  num_predictions: number;
+}
+
+export type PredictionBin = '0-3 min' | '3-6 min' | '6-12 min' | '12-30 min';
+
+export interface TimePredictionWeek {
+  week: string;
+  prediction: TimePrediction[];
+  routeId: string;
+}
 
 export type DayKind = 'weekday' | 'saturday' | 'sunday';
 
@@ -109,12 +141,18 @@ export type ServiceLevels = {
   };
 };
 
-export type TripCounts = {
-  counts: number[];
+export type ScheduledService = {
   start_date: string;
   end_date: string;
   start_date_service_levels: ServiceLevels;
   end_date_service_levels: ServiceLevels;
+  counts: { date: string; count: number }[];
+};
+
+export type ServiceHours = {
+  date: string;
+  scheduled: number;
+  delivered: number;
 };
 
 export type RidershipCount = {

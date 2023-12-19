@@ -15,6 +15,9 @@ module.exports = {
     },
   ],
   darkMode: 'class',
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     screens: {
       sm: '640px',
@@ -68,6 +71,9 @@ module.exports = {
           bus: '#f5B400',
           lightBus: '#FFE395',
           darkBus: '#E6A800',
+          commuterRail: '#80276c',
+          lightCommuterRail: '#942d7c',
+          darkCommuterRail: '#6c215c',
         },
         tm: {
           red: '#a31e1e',

@@ -11,7 +11,10 @@ from chalicelib import (
     secrets,
     mbta_v3,
     speed,
-    service_levels,
+    speed_restrictions,
+    scheduled_service,
+    service_hours,
+    predictions,
     ridership,
 )
 
@@ -166,24 +169,24 @@ def get_git_id():
 
 @app.route("/api/alerts", cors=cors_config)
 def get_alerts():
-    response = mbta_v3.getV3("alerts", app.current_request.query_params)
+    response = mbta_v3.getAlerts(app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/api/speed", cors=cors_config)
-def get_speed():
-    response = speed.get_speeds(app.current_request.query_params)
+@app.route("/api/tripmetrics", cors=cors_config)
+def get_trips_by_line():
+    response = speed.trip_metrics_by_line(app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True)
 
 
-@app.route("/api/tripcounts", cors=cors_config)
-def get_trip_counts():
+@app.route("/api/scheduledservice", cors=cors_config)
+def get_scheduled_service():
     query = app.current_request.query_params
     start_date = parse_user_date(query["start_date"])
     end_date = parse_user_date(query["end_date"])
     route_id = query.get("route_id")
     agg = query["agg"]
-    response = service_levels.get_trip_counts(
+    response = scheduled_service.get_scheduled_service_counts(
         start_date=start_date,
         end_date=end_date,
         route_id=route_id,
@@ -202,5 +205,49 @@ def get_ridership():
         start_date=start_date,
         end_date=end_date,
         line_id=line_id,
+    )
+    return json.dumps(response)
+
+
+@app.route("/api/facilities", cors=cors_config)
+def get_facilities():
+    response = mbta_v3.getV3("facilities", app.current_request.query_params)
+    return json.dumps(response, indent=4, sort_keys=True, default=str)
+
+
+@app.route("/api/speed_restrictions", cors=cors_config)
+def get_speed_restrictions():
+    query = app.current_request.query_params
+    on_date = query["date"]
+    line_id = query["line_id"]
+    response = speed_restrictions.query_speed_restrictions(
+        line_id=line_id,
+        on_date=on_date,
+    )
+    return json.dumps(response)
+
+
+@app.route("/api/service_hours", cors=cors_config)
+def get_service_hours():
+    query = app.current_request.query_params
+    line_id = query.get("line_id")
+    start_date = parse_user_date(query["start_date"])
+    end_date = parse_user_date(query["end_date"])
+    agg = query["agg"]
+    response = service_hours.get_service_hours(
+        single_route_id=line_id,
+        start_date=start_date,
+        end_date=end_date,
+        agg=agg,
+    )
+    return json.dumps(response)
+
+
+@app.route("/api/time_predictions", cors=cors_config)
+def get_time_predictions():
+    query = app.current_request.query_params
+    route_id = query["route_id"]
+    response = predictions.query_time_predictions(
+        route_id=route_id,
     )
     return json.dumps(response)

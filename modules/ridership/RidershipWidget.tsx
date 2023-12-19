@@ -1,9 +1,10 @@
 import React from 'react';
+import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
-import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
+import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { useRidershipData } from '../../common/api/hooks/ridership';
 import { RIDERSHIP_KEYS } from '../../common/types/lines';
@@ -13,7 +14,7 @@ export const RidershipWidget: React.FC = () => {
   const { line, query } = useDelimitatedRoute();
   const { startDate } = OVERVIEW_OPTIONS[query.view ?? 'year'];
   const endDate = TODAY_STRING;
-  const config = SPEED_RANGE_PARAM_MAP.week;
+  const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const lineId = query.busRoute
     ? `line-${query.busRoute.replaceAll('/', '')}`
     : RIDERSHIP_KEYS[line ?? ''];
@@ -23,14 +24,15 @@ export const RidershipWidget: React.FC = () => {
     start_date: startDate,
     end_date: endDate,
   });
-  const serviceReady = !ridership.isError && lineId && lineOrRoute;
+  const serviceReady = !ridership.isError && lineId && line && lineOrRoute;
 
   return (
     <WidgetDiv>
       <HomescreenWidgetTitle title="Weekday ridership" tab="ridership" />
       {ridership.data && serviceReady ? (
         <RidershipGraphWrapper
-          lineOrRoute={lineOrRoute}
+          line={line}
+          busRoute={query.busRoute}
           data={ridership.data}
           config={config}
           startDate={startDate}

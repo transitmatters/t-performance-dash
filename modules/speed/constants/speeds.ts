@@ -2,7 +2,6 @@ import type { TooltipCallbacks, TooltipItem, TooltipModel } from 'chart.js';
 import type { _DeepPartialObject } from 'chart.js/dist/types/utils';
 import dayjs from 'dayjs';
 import { todayOrDate } from '../../../common/constants/dates';
-import { PEAK_COMPLETE_TRIP_TIMES } from '../../../common/constants/baselines';
 
 export type AggType = 'daily' | 'weekly' | 'monthly';
 export type ParamsType = {
@@ -62,7 +61,7 @@ export const SPEED_RANGE_PARAM_MAP: { [s: string]: ParamsType } = {
 };
 
 // TODO: Upload this to overviewStats db
-export const MINIMUMS = {
+const MINIMUMS = {
   'line-red': { date: 'May 2020', value: 8374.5 },
   'line-blue': { date: 'May 2020', value: 1860.5 },
   'line-orange': { date: 'May 2020', value: 3776.75 },
@@ -74,14 +73,5 @@ export const CORE_TRACK_LENGTHS = {
   'line-red': 14.82 + 14.82 + 10.13 + 10.13, // <Quincy Adams -> Davis> + <reverse> + <Shawmut -> Davis> + <reverse>
   'line-orange': 9.64 + 9.58, // <Malden Station -> Green Street> + <reverse>
   'line-blue': 5.38 + 5.37, //<Gov. Center -> Revere> + <reverse>
-  DEFAULT: 1,
-};
-
-export const PEAK_MPH = {
-  'line-red': CORE_TRACK_LENGTHS['line-red'] / (PEAK_COMPLETE_TRIP_TIMES['line-red'].value / 3600),
-  'line-orange':
-    CORE_TRACK_LENGTHS['line-orange'] / (PEAK_COMPLETE_TRIP_TIMES['line-orange'].value / 3600),
-  'line-blue':
-    CORE_TRACK_LENGTHS['line-blue'] / (PEAK_COMPLETE_TRIP_TIMES['line-blue'].value / 3600),
   DEFAULT: 1,
 };

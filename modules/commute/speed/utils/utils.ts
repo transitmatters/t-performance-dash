@@ -1,5 +1,6 @@
+import { PEAK_SPEED } from '../../../../common/constants/baselines';
 import type { SpeedDataPoint } from '../../../../common/types/dataPoints';
-import { CORE_TRACK_LENGTHS, PEAK_MPH } from '../../../speed/constants/speeds';
+import { CORE_TRACK_LENGTHS } from '../../../speed/constants/speeds';
 
 export const calculateCommuteSpeedWidgetValues = (
   weeklyData: SpeedDataPoint[],
@@ -14,7 +15,7 @@ export const calculateCommuteSpeedWidgetValues = (
   const weeklyAverageMPH = CORE_TRACK_LENGTHS[line ?? 'DEFAULT'] / weeklyAverage;
   const weeklyComp = Math.round((100 * (MPH - weeklyAverageMPH)) / weeklyAverageMPH);
   const peakComp = Math.round(
-    (100 * (MPH - PEAK_MPH[line ?? 'DEFAULT'])) / PEAK_MPH[line ?? 'DEFAULT']
+    (100 * (MPH - PEAK_SPEED[line ?? 'DEFAULT'])) / PEAK_SPEED[line ?? 'DEFAULT']
   );
 
   return {

@@ -14,6 +14,7 @@ import { DwellsAggregateWrapper } from '../dwells/DwellsAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
 import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { DwellsSingleWrapper } from '../dwells/DwellsSingleWrapper';
+import { HeadwaysHistogramWrapper } from '../headways/charts/HeadwaysHistogramWrapper';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -44,11 +45,17 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
   const location = getLocationDetails(fromStation, toStation);
 
   return (
-    <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
+    <>
       {aggregate ? (
         <>
           <WidgetDiv>
-            <WidgetTitle title="Travel times" location={location} line={line} both />
+            <WidgetTitle
+              title="Travel times"
+              subtitle="Time between stops"
+              location={location}
+              line={line}
+              both
+            />
             <TravelTimesAggregateWrapper
               query={traveltimes}
               fromStation={fromStation}
@@ -94,6 +101,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             />
             <div className={'flex w-full justify-center pt-2'}>
               <ButtonGroup
+                line={line}
                 pressFunction={setPeakTime}
                 options={[
                   ['weekday', 'Weekday'],
@@ -108,7 +116,13 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
       ) : (
         <>
           <WidgetDiv>
-            <WidgetTitle title="Travel times" location={location} line={line} both />
+            <WidgetTitle
+              title="Travel times"
+              subtitle="Time between stops"
+              location={location}
+              line={line}
+              both
+            />
             <TravelTimesSingleWrapper
               query={traveltimes}
               toStation={toStation}
@@ -138,8 +152,21 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             />
             <DwellsSingleWrapper query={dwells} toStation={toStation} fromStation={fromStation} />
           </WidgetDiv>
+          <WidgetDiv>
+            <WidgetTitle
+              title="Headway distribution"
+              subtitle="Time between trains"
+              location={location}
+              line={line}
+            />
+            <HeadwaysHistogramWrapper
+              query={headways}
+              toStation={toStation}
+              fromStation={fromStation}
+            />
+          </WidgetDiv>
         </>
       )}
-    </div>
+    </>
   );
 };

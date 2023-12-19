@@ -20,7 +20,7 @@
   "@babel/code-frame": {
     "ignore": false,
     "name": "@babel/code-frame",
-    "version": "7.21.4",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -29,7 +29,7 @@
   "@babel/compat-data": {
     "ignore": false,
     "name": "@babel/compat-data",
-    "version": "7.21.7",
+    "version": "7.22.6",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -38,7 +38,7 @@
   "@babel/core": {
     "ignore": false,
     "name": "@babel/core",
-    "version": "7.21.8",
+    "version": "7.22.8",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -47,7 +47,7 @@
   "@babel/generator": {
     "ignore": false,
     "name": "@babel/generator",
-    "version": "7.21.5",
+    "version": "7.22.7",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -56,7 +56,7 @@
   "@babel/helper-annotate-as-pure": {
     "ignore": false,
     "name": "@babel/helper-annotate-as-pure",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -65,7 +65,7 @@
   "@babel/helper-builder-binary-assignment-operator-visitor": {
     "ignore": false,
     "name": "@babel/helper-builder-binary-assignment-operator-visitor",
-    "version": "7.18.9",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -74,7 +74,7 @@
   "@babel/helper-compilation-targets": {
     "ignore": false,
     "name": "@babel/helper-compilation-targets",
-    "version": "7.21.5",
+    "version": "7.22.6",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -83,7 +83,7 @@
   "@babel/helper-create-class-features-plugin": {
     "ignore": false,
     "name": "@babel/helper-create-class-features-plugin",
-    "version": "7.21.4",
+    "version": "7.22.6",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -92,7 +92,7 @@
   "@babel/helper-create-regexp-features-plugin": {
     "ignore": false,
     "name": "@babel/helper-create-regexp-features-plugin",
-    "version": "7.21.4",
+    "version": "7.22.6",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -101,7 +101,7 @@
   "@babel/helper-define-polyfill-provider": {
     "ignore": false,
     "name": "@babel/helper-define-polyfill-provider",
-    "version": "0.3.3",
+    "version": "0.4.1",
     "url": "https://github.com/babel/babel-polyfills",
     "license": "MIT",
     "licenseText": "MIT License\n\nCopyright (c) 2014-present Nicolò Ribaudo and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
@@ -109,16 +109,7 @@
   "@babel/helper-environment-visitor": {
     "ignore": false,
     "name": "@babel/helper-environment-visitor",
-    "version": "7.21.5",
-    "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
-    "license": "MIT",
-    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-  },
-  "@babel/helper-explode-assignable-expression": {
-    "ignore": false,
-    "name": "@babel/helper-explode-assignable-expression",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -127,7 +118,7 @@
   "@babel/helper-function-name": {
     "ignore": false,
     "name": "@babel/helper-function-name",
-    "version": "7.21.0",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -136,7 +127,7 @@
   "@babel/helper-hoist-variables": {
     "ignore": false,
     "name": "@babel/helper-hoist-variables",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -145,7 +136,7 @@
   "@babel/helper-member-expression-to-functions": {
     "ignore": false,
     "name": "@babel/helper-member-expression-to-functions",
-    "version": "7.21.0",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -154,7 +145,7 @@
   "@babel/helper-module-imports": {
     "ignore": false,
     "name": "@babel/helper-module-imports",
-    "version": "7.21.4",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -163,7 +154,7 @@
   "@babel/helper-module-transforms": {
     "ignore": false,
     "name": "@babel/helper-module-transforms",
-    "version": "7.21.5",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -172,7 +163,7 @@
   "@babel/helper-optimise-call-expression": {
     "ignore": false,
     "name": "@babel/helper-optimise-call-expression",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -181,7 +172,7 @@
   "@babel/helper-plugin-utils": {
     "ignore": false,
     "name": "@babel/helper-plugin-utils",
-    "version": "7.21.5",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -190,7 +181,7 @@
   "@babel/helper-remap-async-to-generator": {
     "ignore": false,
     "name": "@babel/helper-remap-async-to-generator",
-    "version": "7.18.9",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -199,7 +190,7 @@
   "@babel/helper-replace-supers": {
     "ignore": false,
     "name": "@babel/helper-replace-supers",
-    "version": "7.20.7",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -208,7 +199,7 @@
   "@babel/helper-simple-access": {
     "ignore": false,
     "name": "@babel/helper-simple-access",
-    "version": "7.21.5",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -217,7 +208,7 @@
   "@babel/helper-skip-transparent-expression-wrappers": {
     "ignore": false,
     "name": "@babel/helper-skip-transparent-expression-wrappers",
-    "version": "7.20.0",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -226,7 +217,7 @@
   "@babel/helper-split-export-declaration": {
     "ignore": false,
     "name": "@babel/helper-split-export-declaration",
-    "version": "7.18.6",
+    "version": "7.22.6",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -235,7 +226,7 @@
   "@babel/helper-string-parser": {
     "ignore": false,
     "name": "@babel/helper-string-parser",
-    "version": "7.21.5",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -244,7 +235,7 @@
   "@babel/helper-validator-identifier": {
     "ignore": false,
     "name": "@babel/helper-validator-identifier",
-    "version": "7.19.1",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -253,7 +244,7 @@
   "@babel/helper-validator-option": {
     "ignore": false,
     "name": "@babel/helper-validator-option",
-    "version": "7.21.0",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -262,7 +253,7 @@
   "@babel/helper-wrap-function": {
     "ignore": false,
     "name": "@babel/helper-wrap-function",
-    "version": "7.20.5",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -271,7 +262,7 @@
   "@babel/helpers": {
     "ignore": false,
     "name": "@babel/helpers",
-    "version": "7.21.5",
+    "version": "7.22.6",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -280,7 +271,7 @@
   "@babel/highlight": {
     "ignore": false,
     "name": "@babel/highlight",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -289,7 +280,7 @@
   "@babel/parser": {
     "ignore": false,
     "name": "@babel/parser",
-    "version": "7.21.8",
+    "version": "7.22.7",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -298,7 +289,7 @@
   "@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression": {
     "ignore": false,
     "name": "@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -307,124 +298,7 @@
   "@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining": {
     "ignore": false,
     "name": "@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining",
-    "version": "7.20.7",
-    "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
-    "license": "MIT",
-    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-  },
-  "@babel/plugin-proposal-async-generator-functions": {
-    "ignore": false,
-    "name": "@babel/plugin-proposal-async-generator-functions",
-    "version": "7.20.7",
-    "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
-    "license": "MIT",
-    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-  },
-  "@babel/plugin-proposal-class-properties": {
-    "ignore": false,
-    "name": "@babel/plugin-proposal-class-properties",
-    "version": "7.18.6",
-    "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
-    "license": "MIT",
-    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-  },
-  "@babel/plugin-proposal-class-static-block": {
-    "ignore": false,
-    "name": "@babel/plugin-proposal-class-static-block",
-    "version": "7.21.0",
-    "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
-    "license": "MIT",
-    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-  },
-  "@babel/plugin-proposal-dynamic-import": {
-    "ignore": false,
-    "name": "@babel/plugin-proposal-dynamic-import",
-    "version": "7.18.6",
-    "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
-    "license": "MIT",
-    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-  },
-  "@babel/plugin-proposal-export-namespace-from": {
-    "ignore": false,
-    "name": "@babel/plugin-proposal-export-namespace-from",
-    "version": "7.18.9",
-    "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
-    "license": "MIT",
-    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-  },
-  "@babel/plugin-proposal-json-strings": {
-    "ignore": false,
-    "name": "@babel/plugin-proposal-json-strings",
-    "version": "7.18.6",
-    "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
-    "license": "MIT",
-    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-  },
-  "@babel/plugin-proposal-logical-assignment-operators": {
-    "ignore": false,
-    "name": "@babel/plugin-proposal-logical-assignment-operators",
-    "version": "7.20.7",
-    "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
-    "license": "MIT",
-    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-  },
-  "@babel/plugin-proposal-nullish-coalescing-operator": {
-    "ignore": false,
-    "name": "@babel/plugin-proposal-nullish-coalescing-operator",
-    "version": "7.18.6",
-    "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
-    "license": "MIT",
-    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-  },
-  "@babel/plugin-proposal-numeric-separator": {
-    "ignore": false,
-    "name": "@babel/plugin-proposal-numeric-separator",
-    "version": "7.18.6",
-    "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
-    "license": "MIT",
-    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-  },
-  "@babel/plugin-proposal-object-rest-spread": {
-    "ignore": false,
-    "name": "@babel/plugin-proposal-object-rest-spread",
-    "version": "7.20.7",
-    "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
-    "license": "MIT",
-    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-  },
-  "@babel/plugin-proposal-optional-catch-binding": {
-    "ignore": false,
-    "name": "@babel/plugin-proposal-optional-catch-binding",
-    "version": "7.18.6",
-    "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
-    "license": "MIT",
-    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-  },
-  "@babel/plugin-proposal-optional-chaining": {
-    "ignore": false,
-    "name": "@babel/plugin-proposal-optional-chaining",
-    "version": "7.21.0",
-    "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
-    "license": "MIT",
-    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-  },
-  "@babel/plugin-proposal-private-methods": {
-    "ignore": false,
-    "name": "@babel/plugin-proposal-private-methods",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -433,9 +307,9 @@
   "@babel/plugin-proposal-private-property-in-object": {
     "ignore": false,
     "name": "@babel/plugin-proposal-private-property-in-object",
-    "version": "7.21.0",
+    "version": "7.21.0-placeholder-for-preset-env.2",
     "authors": "The Babel Team (https://babel.dev/team)",
-    "url": "https://github.com/babel/babel",
+    "url": "https://github.com/babel/babel-plugin-proposal-private-property-in-object",
     "license": "MIT",
     "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
   },
@@ -492,7 +366,16 @@
   "@babel/plugin-syntax-import-assertions": {
     "ignore": false,
     "name": "@babel/plugin-syntax-import-assertions",
-    "version": "7.20.0",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-syntax-import-attributes": {
+    "ignore": false,
+    "name": "@babel/plugin-syntax-import-attributes",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -517,7 +400,7 @@
   "@babel/plugin-syntax-jsx": {
     "ignore": false,
     "name": "@babel/plugin-syntax-jsx",
-    "version": "7.21.4",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -592,7 +475,16 @@
   "@babel/plugin-syntax-typescript": {
     "ignore": false,
     "name": "@babel/plugin-syntax-typescript",
-    "version": "7.21.4",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-syntax-unicode-sets-regex": {
+    "ignore": false,
+    "name": "@babel/plugin-syntax-unicode-sets-regex",
+    "version": "7.18.6",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -601,7 +493,16 @@
   "@babel/plugin-transform-arrow-functions": {
     "ignore": false,
     "name": "@babel/plugin-transform-arrow-functions",
-    "version": "7.21.5",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-async-generator-functions": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-async-generator-functions",
+    "version": "7.22.7",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -610,7 +511,7 @@
   "@babel/plugin-transform-async-to-generator": {
     "ignore": false,
     "name": "@babel/plugin-transform-async-to-generator",
-    "version": "7.20.7",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -619,7 +520,7 @@
   "@babel/plugin-transform-block-scoped-functions": {
     "ignore": false,
     "name": "@babel/plugin-transform-block-scoped-functions",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -628,7 +529,25 @@
   "@babel/plugin-transform-block-scoping": {
     "ignore": false,
     "name": "@babel/plugin-transform-block-scoping",
-    "version": "7.21.0",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-class-properties": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-class-properties",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-class-static-block": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-class-static-block",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -637,7 +556,7 @@
   "@babel/plugin-transform-classes": {
     "ignore": false,
     "name": "@babel/plugin-transform-classes",
-    "version": "7.21.0",
+    "version": "7.22.6",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -646,7 +565,7 @@
   "@babel/plugin-transform-computed-properties": {
     "ignore": false,
     "name": "@babel/plugin-transform-computed-properties",
-    "version": "7.21.5",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -655,7 +574,7 @@
   "@babel/plugin-transform-destructuring": {
     "ignore": false,
     "name": "@babel/plugin-transform-destructuring",
-    "version": "7.21.3",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -664,7 +583,7 @@
   "@babel/plugin-transform-dotall-regex": {
     "ignore": false,
     "name": "@babel/plugin-transform-dotall-regex",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -673,7 +592,16 @@
   "@babel/plugin-transform-duplicate-keys": {
     "ignore": false,
     "name": "@babel/plugin-transform-duplicate-keys",
-    "version": "7.18.9",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-dynamic-import": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-dynamic-import",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -682,7 +610,16 @@
   "@babel/plugin-transform-exponentiation-operator": {
     "ignore": false,
     "name": "@babel/plugin-transform-exponentiation-operator",
-    "version": "7.18.6",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-export-namespace-from": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-export-namespace-from",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -691,7 +628,7 @@
   "@babel/plugin-transform-for-of": {
     "ignore": false,
     "name": "@babel/plugin-transform-for-of",
-    "version": "7.21.5",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -700,7 +637,16 @@
   "@babel/plugin-transform-function-name": {
     "ignore": false,
     "name": "@babel/plugin-transform-function-name",
-    "version": "7.18.9",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-json-strings": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-json-strings",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -709,7 +655,16 @@
   "@babel/plugin-transform-literals": {
     "ignore": false,
     "name": "@babel/plugin-transform-literals",
-    "version": "7.18.9",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-logical-assignment-operators": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-logical-assignment-operators",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -718,7 +673,7 @@
   "@babel/plugin-transform-member-expression-literals": {
     "ignore": false,
     "name": "@babel/plugin-transform-member-expression-literals",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -727,7 +682,7 @@
   "@babel/plugin-transform-modules-amd": {
     "ignore": false,
     "name": "@babel/plugin-transform-modules-amd",
-    "version": "7.20.11",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -736,7 +691,7 @@
   "@babel/plugin-transform-modules-commonjs": {
     "ignore": false,
     "name": "@babel/plugin-transform-modules-commonjs",
-    "version": "7.21.5",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -745,7 +700,7 @@
   "@babel/plugin-transform-modules-systemjs": {
     "ignore": false,
     "name": "@babel/plugin-transform-modules-systemjs",
-    "version": "7.20.11",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -754,7 +709,7 @@
   "@babel/plugin-transform-modules-umd": {
     "ignore": false,
     "name": "@babel/plugin-transform-modules-umd",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -763,7 +718,7 @@
   "@babel/plugin-transform-named-capturing-groups-regex": {
     "ignore": false,
     "name": "@babel/plugin-transform-named-capturing-groups-regex",
-    "version": "7.20.5",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -772,7 +727,34 @@
   "@babel/plugin-transform-new-target": {
     "ignore": false,
     "name": "@babel/plugin-transform-new-target",
-    "version": "7.18.6",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-nullish-coalescing-operator": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-nullish-coalescing-operator",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-numeric-separator": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-numeric-separator",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-object-rest-spread": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-object-rest-spread",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -781,7 +763,25 @@
   "@babel/plugin-transform-object-super": {
     "ignore": false,
     "name": "@babel/plugin-transform-object-super",
-    "version": "7.18.6",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-optional-catch-binding": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-optional-catch-binding",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-optional-chaining": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-optional-chaining",
+    "version": "7.22.6",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -790,7 +790,25 @@
   "@babel/plugin-transform-parameters": {
     "ignore": false,
     "name": "@babel/plugin-transform-parameters",
-    "version": "7.21.3",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-private-methods": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-private-methods",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-private-property-in-object": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-private-property-in-object",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -799,7 +817,7 @@
   "@babel/plugin-transform-property-literals": {
     "ignore": false,
     "name": "@babel/plugin-transform-property-literals",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -817,7 +835,7 @@
   "@babel/plugin-transform-react-display-name": {
     "ignore": false,
     "name": "@babel/plugin-transform-react-display-name",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -826,7 +844,7 @@
   "@babel/plugin-transform-react-jsx-development": {
     "ignore": false,
     "name": "@babel/plugin-transform-react-jsx-development",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -835,7 +853,7 @@
   "@babel/plugin-transform-react-jsx": {
     "ignore": false,
     "name": "@babel/plugin-transform-react-jsx",
-    "version": "7.21.0",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -844,7 +862,7 @@
   "@babel/plugin-transform-react-pure-annotations": {
     "ignore": false,
     "name": "@babel/plugin-transform-react-pure-annotations",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -853,7 +871,7 @@
   "@babel/plugin-transform-regenerator": {
     "ignore": false,
     "name": "@babel/plugin-transform-regenerator",
-    "version": "7.21.5",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -862,7 +880,7 @@
   "@babel/plugin-transform-reserved-words": {
     "ignore": false,
     "name": "@babel/plugin-transform-reserved-words",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -871,7 +889,7 @@
   "@babel/plugin-transform-shorthand-properties": {
     "ignore": false,
     "name": "@babel/plugin-transform-shorthand-properties",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -880,7 +898,7 @@
   "@babel/plugin-transform-spread": {
     "ignore": false,
     "name": "@babel/plugin-transform-spread",
-    "version": "7.20.7",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -889,7 +907,7 @@
   "@babel/plugin-transform-sticky-regex": {
     "ignore": false,
     "name": "@babel/plugin-transform-sticky-regex",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -898,7 +916,7 @@
   "@babel/plugin-transform-template-literals": {
     "ignore": false,
     "name": "@babel/plugin-transform-template-literals",
-    "version": "7.18.9",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -907,7 +925,7 @@
   "@babel/plugin-transform-typeof-symbol": {
     "ignore": false,
     "name": "@babel/plugin-transform-typeof-symbol",
-    "version": "7.18.9",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -916,7 +934,7 @@
   "@babel/plugin-transform-typescript": {
     "ignore": false,
     "name": "@babel/plugin-transform-typescript",
-    "version": "7.21.3",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -925,7 +943,16 @@
   "@babel/plugin-transform-unicode-escapes": {
     "ignore": false,
     "name": "@babel/plugin-transform-unicode-escapes",
-    "version": "7.21.5",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-unicode-property-regex": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-unicode-property-regex",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -934,7 +961,16 @@
   "@babel/plugin-transform-unicode-regex": {
     "ignore": false,
     "name": "@babel/plugin-transform-unicode-regex",
-    "version": "7.18.6",
+    "version": "7.22.5",
+    "authors": "The Babel Team (https://babel.dev/team)",
+    "url": "https://github.com/babel/babel",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2014-present Sebastian McKenzie and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+  },
+  "@babel/plugin-transform-unicode-sets-regex": {
+    "ignore": false,
+    "name": "@babel/plugin-transform-unicode-sets-regex",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -943,7 +979,7 @@
   "@babel/preset-env": {
     "ignore": false,
     "name": "@babel/preset-env",
-    "version": "7.21.5",
+    "version": "7.22.7",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -960,7 +996,7 @@
   "@babel/preset-react": {
     "ignore": false,
     "name": "@babel/preset-react",
-    "version": "7.18.6",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -969,7 +1005,7 @@
   "@babel/preset-typescript": {
     "ignore": false,
     "name": "@babel/preset-typescript",
-    "version": "7.21.5",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -996,7 +1032,7 @@
   "@babel/template": {
     "ignore": false,
     "name": "@babel/template",
-    "version": "7.20.7",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -1005,7 +1041,7 @@
   "@babel/traverse": {
     "ignore": false,
     "name": "@babel/traverse",
-    "version": "7.21.5",
+    "version": "7.22.8",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -1014,7 +1050,7 @@
   "@babel/types": {
     "ignore": false,
     "name": "@babel/types",
-    "version": "7.21.5",
+    "version": "7.22.5",
     "authors": "The Babel Team (https://babel.dev/team)",
     "url": "https://github.com/babel/babel",
     "license": "MIT",
@@ -1023,7 +1059,7 @@
   "@floating-ui/core": {
     "ignore": false,
     "name": "@floating-ui/core",
-    "version": "1.2.6",
+    "version": "1.3.1",
     "authors": "atomiks",
     "url": "https://github.com/floating-ui/floating-ui",
     "license": "MIT",
@@ -1032,7 +1068,7 @@
   "@floating-ui/dom": {
     "ignore": false,
     "name": "@floating-ui/dom",
-    "version": "1.2.6",
+    "version": "1.4.4",
     "authors": "atomiks",
     "url": "https://github.com/floating-ui/floating-ui",
     "license": "MIT",
@@ -1041,7 +1077,7 @@
   "@floating-ui/react-dom": {
     "ignore": false,
     "name": "@floating-ui/react-dom",
-    "version": "1.3.0",
+    "version": "2.0.1",
     "authors": "atomiks",
     "url": "https://github.com/floating-ui/floating-ui",
     "license": "MIT",
@@ -1050,7 +1086,7 @@
   "@floating-ui/react": {
     "ignore": false,
     "name": "@floating-ui/react",
-    "version": "0.20.1",
+    "version": "0.24.6",
     "authors": "atomiks",
     "url": "https://github.com/floating-ui/floating-ui",
     "license": "MIT",
@@ -1074,6 +1110,15 @@
     "license": "MIT",
     "licenseText": "Fonticons, Inc. (https://fontawesome.com)\n\n--------------------------------------------------------------------------------\n\nFont Awesome Free License\n\nFont Awesome Free is free, open source, and GPL friendly. You can use it for\ncommercial projects, open source projects, or really almost whatever you want.\nFull Font Awesome Free license: https://fontawesome.com/license/free.\n\n--------------------------------------------------------------------------------\n\n# Icons: CC BY 4.0 License (https://creativecommons.org/licenses/by/4.0/)\n\nThe Font Awesome Free download is licensed under a Creative Commons\nAttribution 4.0 International License and applies to all icons packaged\nas SVG and JS file types.\n\n--------------------------------------------------------------------------------\n\n# Fonts: SIL OFL 1.1 License\n\nIn the Font Awesome Free download, the SIL OFL license applies to all icons\npackaged as web and desktop font files.\n\nCopyright (c) 2023 Fonticons, Inc. (https://fontawesome.com)\nwith Reserved Font Name: \"Font Awesome\".\n\nThis Font Software is licensed under the SIL Open Font License, Version 1.1.\nThis license is copied below, and is also available with a FAQ at:\nhttp://scripts.sil.org/OFL\n\nSIL OPEN FONT LICENSE\nVersion 1.1 - 26 February 2007\n\nPREAMBLE\nThe goals of the Open Font License (OFL) are to stimulate worldwide\ndevelopment of collaborative font projects, to support the font creation\nefforts of academic and linguistic communities, and to provide a free and\nopen framework in which fonts may be shared and improved in partnership\nwith others.\n\nThe OFL allows the licensed fonts to be used, studied, modified and\nredistributed freely as long as they are not sold by themselves. The\nfonts, including any derivative works, can be bundled, embedded,\nredistributed and/or sold with any software provided that any reserved\nnames are not used by derivative works. The fonts and derivatives,\nhowever, cannot be released under any other type of license. The\nrequirement for fonts to remain under this license does not apply\nto any document created using the fonts or their derivatives.\n\nDEFINITIONS\n\"Font Software\" refers to the set of files released by the Copyright\nHolder(s) under this license and clearly marked as such. This may\ninclude source files, build scripts and documentation.\n\n\"Reserved Font Name\" refers to any names specified as such after the\ncopyright statement(s).\n\n\"Original Version\" refers to the collection of Font Software components as\ndistributed by the Copyright Holder(s).\n\n\"Modified Version\" refers to any derivative made by adding to, deleting,\nor substituting — in part or in whole — any of the components of the\nOriginal Version, by changing formats or by porting the Font Software to a\nnew environment.\n\n\"Author\" refers to any designer, engineer, programmer, technical\nwriter or other person who contributed to the Font Software.\n\nPERMISSION & CONDITIONS\nPermission is hereby granted, free of charge, to any person obtaining\na copy of the Font Software, to use, study, copy, merge, embed, modify,\nredistribute, and sell modified and unmodified copies of the Font\nSoftware, subject to the following conditions:\n\n1) Neither the Font Software nor any of its individual components,\nin Original or Modified Versions, may be sold by itself.\n\n2) Original or Modified Versions of the Font Software may be bundled,\nredistributed and/or sold with any software, provided that each copy\ncontains the above copyright notice and this license. These can be\nincluded either as stand-alone text files, human-readable headers or\nin the appropriate machine-readable metadata fields within text or\nbinary files as long as those fields can be easily viewed by the user.\n\n3) No Modified Version of the Font Software may use the Reserved Font\nName(s) unless explicit written permission is granted by the corresponding\nCopyright Holder. This restriction only applies to the primary font name as\npresented to the users.\n\n4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font\nSoftware shall not be used to promote, endorse or advertise any\nModified Version, except to acknowledge the contribution(s) of the\nCopyright Holder(s) and the Author(s) or with their explicit written\npermission.\n\n5) The Font Software, modified or unmodified, in part or in whole,\nmust be distributed entirely under this license, and must not be\ndistributed under any other license. The requirement for fonts to\nremain under this license does not apply to any document created\nusing the Font Software.\n\nTERMINATION\nThis license becomes null and void if any of the above conditions are\nnot met.\n\nDISCLAIMER\nTHE FONT SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT\nOF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE\nCOPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\nINCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL\nDAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\nFROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM\nOTHER DEALINGS IN THE FONT SOFTWARE.\n\n--------------------------------------------------------------------------------\n\n# Code: MIT License (https://opensource.org/licenses/MIT)\n\nIn the Font Awesome Free download, the MIT license applies to all non-font and\nnon-icon files.\n\nCopyright 2023 Fonticons, Inc.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in the\nSoftware without restriction, including without limitation the rights to use, copy,\nmodify, merge, publish, distribute, sublicense, and/or sell copies of the Software,\nand to permit persons to whom the Software is furnished to do so, subject to the\nfollowing conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,\nINCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A\nPARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT\nHOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n--------------------------------------------------------------------------------\n\n# Attribution\n\nAttribution is required by MIT, SIL OFL, and CC BY licenses. Downloaded Font\nAwesome Free files already contain embedded comments with sufficient\nattribution, so you shouldn't need to do anything additional when using these\nfiles normally.\n\nWe've kept attribution comments terse, so we ask that you do not actively work\nto remove them from files, especially code. They're a great way for folks to\nlearn about Font Awesome.\n\n--------------------------------------------------------------------------------\n\n# Brand Icons\n\nAll brand icons are trademarks of their respective owners. The use of these\ntrademarks does not indicate endorsement of the trademark holder by Font\nAwesome, nor vice versa. **Please do not use brand logos for any purpose except\nto represent the company, product, or service to which they refer.**\n"
   },
+  "@fortawesome/free-regular-svg-icons": {
+    "ignore": false,
+    "name": "@fortawesome/free-regular-svg-icons",
+    "version": "6.4.0",
+    "authors": "The Font Awesome Team (https://github.com/orgs/FortAwesome/people)",
+    "url": "https://github.com/FortAwesome/Font-Awesome",
+    "license": "(CC-BY-4.0 AND MIT)",
+    "licenseText": "Fonticons, Inc. (https://fontawesome.com)\n\n--------------------------------------------------------------------------------\n\nFont Awesome Free License\n\nFont Awesome Free is free, open source, and GPL friendly. You can use it for\ncommercial projects, open source projects, or really almost whatever you want.\nFull Font Awesome Free license: https://fontawesome.com/license/free.\n\n--------------------------------------------------------------------------------\n\n# Icons: CC BY 4.0 License (https://creativecommons.org/licenses/by/4.0/)\n\nThe Font Awesome Free download is licensed under a Creative Commons\nAttribution 4.0 International License and applies to all icons packaged\nas SVG and JS file types.\n\n--------------------------------------------------------------------------------\n\n# Fonts: SIL OFL 1.1 License\n\nIn the Font Awesome Free download, the SIL OFL license applies to all icons\npackaged as web and desktop font files.\n\nCopyright (c) 2023 Fonticons, Inc. (https://fontawesome.com)\nwith Reserved Font Name: \"Font Awesome\".\n\nThis Font Software is licensed under the SIL Open Font License, Version 1.1.\nThis license is copied below, and is also available with a FAQ at:\nhttp://scripts.sil.org/OFL\n\nSIL OPEN FONT LICENSE\nVersion 1.1 - 26 February 2007\n\nPREAMBLE\nThe goals of the Open Font License (OFL) are to stimulate worldwide\ndevelopment of collaborative font projects, to support the font creation\nefforts of academic and linguistic communities, and to provide a free and\nopen framework in which fonts may be shared and improved in partnership\nwith others.\n\nThe OFL allows the licensed fonts to be used, studied, modified and\nredistributed freely as long as they are not sold by themselves. The\nfonts, including any derivative works, can be bundled, embedded,\nredistributed and/or sold with any software provided that any reserved\nnames are not used by derivative works. The fonts and derivatives,\nhowever, cannot be released under any other type of license. The\nrequirement for fonts to remain under this license does not apply\nto any document created using the fonts or their derivatives.\n\nDEFINITIONS\n\"Font Software\" refers to the set of files released by the Copyright\nHolder(s) under this license and clearly marked as such. This may\ninclude source files, build scripts and documentation.\n\n\"Reserved Font Name\" refers to any names specified as such after the\ncopyright statement(s).\n\n\"Original Version\" refers to the collection of Font Software components as\ndistributed by the Copyright Holder(s).\n\n\"Modified Version\" refers to any derivative made by adding to, deleting,\nor substituting — in part or in whole — any of the components of the\nOriginal Version, by changing formats or by porting the Font Software to a\nnew environment.\n\n\"Author\" refers to any designer, engineer, programmer, technical\nwriter or other person who contributed to the Font Software.\n\nPERMISSION & CONDITIONS\nPermission is hereby granted, free of charge, to any person obtaining\na copy of the Font Software, to use, study, copy, merge, embed, modify,\nredistribute, and sell modified and unmodified copies of the Font\nSoftware, subject to the following conditions:\n\n1) Neither the Font Software nor any of its individual components,\nin Original or Modified Versions, may be sold by itself.\n\n2) Original or Modified Versions of the Font Software may be bundled,\nredistributed and/or sold with any software, provided that each copy\ncontains the above copyright notice and this license. These can be\nincluded either as stand-alone text files, human-readable headers or\nin the appropriate machine-readable metadata fields within text or\nbinary files as long as those fields can be easily viewed by the user.\n\n3) No Modified Version of the Font Software may use the Reserved Font\nName(s) unless explicit written permission is granted by the corresponding\nCopyright Holder. This restriction only applies to the primary font name as\npresented to the users.\n\n4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font\nSoftware shall not be used to promote, endorse or advertise any\nModified Version, except to acknowledge the contribution(s) of the\nCopyright Holder(s) and the Author(s) or with their explicit written\npermission.\n\n5) The Font Software, modified or unmodified, in part or in whole,\nmust be distributed entirely under this license, and must not be\ndistributed under any other license. The requirement for fonts to\nremain under this license does not apply to any document created\nusing the Font Software.\n\nTERMINATION\nThis license becomes null and void if any of the above conditions are\nnot met.\n\nDISCLAIMER\nTHE FONT SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT\nOF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE\nCOPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\nINCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL\nDAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\nFROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM\nOTHER DEALINGS IN THE FONT SOFTWARE.\n\n--------------------------------------------------------------------------------\n\n# Code: MIT License (https://opensource.org/licenses/MIT)\n\nIn the Font Awesome Free download, the MIT license applies to all non-font and\nnon-icon files.\n\nCopyright 2023 Fonticons, Inc.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in the\nSoftware without restriction, including without limitation the rights to use, copy,\nmodify, merge, publish, distribute, sublicense, and/or sell copies of the Software,\nand to permit persons to whom the Software is furnished to do so, subject to the\nfollowing conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,\nINCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A\nPARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT\nHOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n--------------------------------------------------------------------------------\n\n# Attribution\n\nAttribution is required by MIT, SIL OFL, and CC BY licenses. Downloaded Font\nAwesome Free files already contain embedded comments with sufficient\nattribution, so you shouldn't need to do anything additional when using these\nfiles normally.\n\nWe've kept attribution comments terse, so we ask that you do not actively work\nto remove them from files, especially code. They're a great way for folks to\nlearn about Font Awesome.\n\n--------------------------------------------------------------------------------\n\n# Brand Icons\n\nAll brand icons are trademarks of their respective owners. The use of these\ntrademarks does not indicate endorsement of the trademark holder by Font\nAwesome, nor vice versa. **Please do not use brand logos for any purpose except\nto represent the company, product, or service to which they refer.**\n"
+  },
   "@fortawesome/free-solid-svg-icons": {
     "ignore": false,
     "name": "@fortawesome/free-solid-svg-icons",
@@ -1095,7 +1140,7 @@
   "@headlessui/react": {
     "ignore": false,
     "name": "@headlessui/react",
-    "version": "1.7.14",
+    "version": "1.7.15",
     "url": "https://github.com/tailwindlabs/headlessui",
     "license": "MIT",
     "licenseText": ""
@@ -1138,7 +1183,7 @@
   "@jridgewell/source-map": {
     "ignore": false,
     "name": "@jridgewell/source-map",
-    "version": "0.3.3",
+    "version": "0.3.5",
     "authors": "Justin Ridgewell <justin@ridgewell.name>",
     "url": "https://github.com/jridgewell/source-map",
     "license": "MIT",
@@ -1174,7 +1219,7 @@
   "@next/env": {
     "ignore": false,
     "name": "@next/env",
-    "version": "13.4.2",
+    "version": "13.4.7",
     "authors": "Next.js Team <support@vercel.com>",
     "url": "https://github.com/vercel/next.js",
     "license": "MIT",
@@ -1183,10 +1228,18 @@
   "@next/swc-darwin-arm64": {
     "ignore": false,
     "name": "@next/swc-darwin-arm64",
-    "version": "13.4.2",
+    "version": "13.4.7",
     "url": "https://github.com/vercel/next.js",
     "license": "MIT",
     "licenseText": ""
+  },
+  "@nicolo-ribaudo/semver-v6": {
+    "ignore": false,
+    "name": "@nicolo-ribaudo/semver-v6",
+    "version": "6.3.3",
+    "url": "https://github.com/nicolo-ribaudo/semver-v6",
+    "license": "ISC",
+    "licenseText": "The ISC License\n\nCopyright (c) Isaac Z. Schlueter and Contributors\n\nPermission to use, copy, modify, and/or distribute this software for any\npurpose with or without fee is hereby granted, provided that the above\ncopyright notice and this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES\nWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF\nMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR\nANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES\nWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN\nACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR\nIN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.\n"
   },
   "@nodelib/fs.scandir": {
     "ignore": false,
@@ -1367,7 +1420,7 @@
   "@tanstack/query-core": {
     "ignore": false,
     "name": "@tanstack/query-core",
-    "version": "4.29.7",
+    "version": "4.29.19",
     "authors": "tannerlinsley",
     "url": "https://github.com/tanstack/query",
     "license": "MIT",
@@ -1376,7 +1429,7 @@
   "@tanstack/react-query-devtools": {
     "ignore": false,
     "name": "@tanstack/react-query-devtools",
-    "version": "4.29.7",
+    "version": "4.29.19",
     "authors": "tannerlinsley",
     "url": "https://github.com/tanstack/query",
     "license": "MIT",
@@ -1385,7 +1438,7 @@
   "@tanstack/react-query": {
     "ignore": false,
     "name": "@tanstack/react-query",
-    "version": "4.29.7",
+    "version": "4.29.19",
     "authors": "tannerlinsley",
     "url": "https://github.com/tanstack/query",
     "license": "MIT",
@@ -1421,7 +1474,7 @@
   "@types/eslint": {
     "ignore": false,
     "name": "@types/eslint",
-    "version": "8.37.0",
+    "version": "8.44.0",
     "authors": "Pierre-Marie Dartus <https://github.com/pmdartus>, Jed Fox <https://github.com/j-f1>, Saad Quadri <https://github.com/saadq>, Jason Kwok <https://github.com/JasonHK>, Brad Zacher <https://github.com/bradzacher>, JounQin <https://github.com/JounQin>",
     "url": "https://github.com/DefinitelyTyped/DefinitelyTyped",
     "license": "MIT",
@@ -1475,7 +1528,7 @@
   "@types/react": {
     "ignore": false,
     "name": "@types/react",
-    "version": "18.2.6",
+    "version": "18.2.14",
     "authors": "Asana <https://asana.com>, AssureSign <http://www.assuresign.com>, Microsoft <https://microsoft.com>, John Reilly <https://github.com/johnnyreilly>, Benoit Benezech <https://github.com/bbenezech>, Patricio Zavolinsky <https://github.com/pzavolinsky>, Eric Anderson <https://github.com/ericanderson>, Dovydas Navickas <https://github.com/DovydasNavickas>, Josh Rutherford <https://github.com/theruther4d>, Guilherme Hübner <https://github.com/guilhermehubner>, Ferdy Budhidharma <https://github.com/ferdaber>, Johann Rakotoharisoa <https://github.com/jrakotoharisoa>, Olivier Pascal <https://github.com/pascaloliv>, Martin Hochel <https://github.com/hotell>, Frank Li <https://github.com/franklixuefei>, Jessica Franco <https://github.com/Jessidhia>, Saransh Kataria <https://github.com/saranshkataria>, Kanitkorn Sujautra <https://github.com/lukyth>, Sebastian Silbermann <https://github.com/eps1lon>, Kyle Scully <https://github.com/zieka>, Cong Zhang <https://github.com/dancerphil>, Dimitri Mitropoulos <https://github.com/dimitropoulos>, JongChan Choi <https://github.com/disjukr>, Victor Magalhães <https://github.com/vhfmag>, Dale Tan <https://github.com/hellatan>, Priyanshu Rav <https://github.com/priyanshurav>, Dmitry Semigradsky <https://github.com/Semigradsky>",
     "url": "https://github.com/DefinitelyTyped/DefinitelyTyped",
     "license": "MIT",
@@ -1662,7 +1715,7 @@
   "acorn": {
     "ignore": false,
     "name": "acorn",
-    "version": "8.8.2",
+    "version": "8.10.0",
     "authors": "Marijn Haverbeke <marijnh@gmail.com>, Ingvar Stepanyan <me@rreverser.com>, Adrian Heine",
     "url": "https://github.com/acornjs/acorn",
     "license": "MIT",
@@ -1769,7 +1822,7 @@
   "babel-plugin-polyfill-corejs2": {
     "ignore": false,
     "name": "babel-plugin-polyfill-corejs2",
-    "version": "0.3.3",
+    "version": "0.4.4",
     "url": "https://github.com/babel/babel-polyfills",
     "license": "MIT",
     "licenseText": "MIT License\n\nCopyright (c) 2014-present Nicolò Ribaudo and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
@@ -1777,7 +1830,7 @@
   "babel-plugin-polyfill-corejs3": {
     "ignore": false,
     "name": "babel-plugin-polyfill-corejs3",
-    "version": "0.6.0",
+    "version": "0.8.2",
     "url": "https://github.com/babel/babel-polyfills",
     "license": "MIT",
     "licenseText": "MIT License\n\nCopyright (c) 2014-present Nicolò Ribaudo and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
@@ -1785,7 +1838,7 @@
   "babel-plugin-polyfill-regenerator": {
     "ignore": false,
     "name": "babel-plugin-polyfill-regenerator",
-    "version": "0.4.1",
+    "version": "0.5.1",
     "url": "https://github.com/babel/babel-polyfills",
     "license": "MIT",
     "licenseText": "MIT License\n\nCopyright (c) 2014-present Nicolò Ribaudo and other contributors\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
@@ -1883,7 +1936,7 @@
   "browserslist": {
     "ignore": false,
     "name": "browserslist",
-    "version": "4.21.5",
+    "version": "4.21.9",
     "authors": "Andrey Sitnik <andrey@sitnik.ru>",
     "url": "https://github.com/browserslist/browserslist",
     "license": "MIT",
@@ -1945,7 +1998,7 @@
   "caniuse-lite": {
     "ignore": false,
     "name": "caniuse-lite",
-    "version": "1.0.30001478",
+    "version": "1.0.30001515",
     "authors": "Ben Briggs <beneb.info@gmail.com>",
     "url": "https://github.com/browserslist/caniuse-lite",
     "license": "CC-BY-4.0",
@@ -1995,7 +2048,7 @@
   "chartjs-plugin-annotation": {
     "ignore": false,
     "name": "chartjs-plugin-annotation",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "authors": "Evert Timberg <evert.timberg@gmail.com>",
     "url": "https://github.com/chartjs/chartjs-plugin-annotation",
     "license": "MIT",
@@ -2110,7 +2163,7 @@
   "concurrently": {
     "ignore": false,
     "name": "concurrently",
-    "version": "8.0.1",
+    "version": "8.2.0",
     "authors": "Kimmo Brunfeldt",
     "url": "https://github.com/open-cli-tools/concurrently",
     "license": "MIT",
@@ -2137,7 +2190,7 @@
   "core-js-compat": {
     "ignore": false,
     "name": "core-js-compat",
-    "version": "3.30.0",
+    "version": "3.31.1",
     "authors": "Denis Pushkarev <zloirock@zloirock.ru>",
     "url": "https://github.com/zloirock/core-js",
     "license": "MIT",
@@ -2227,7 +2280,7 @@
   "dayjs": {
     "ignore": false,
     "name": "dayjs",
-    "version": "1.11.7",
+    "version": "1.11.9",
     "authors": "iamkun",
     "url": "https://github.com/iamkun/dayjs",
     "license": "MIT",
@@ -2387,7 +2440,7 @@
   "electron-to-chromium": {
     "ignore": false,
     "name": "electron-to-chromium",
-    "version": "1.4.361",
+    "version": "1.4.455",
     "authors": "Kilian Valkhof",
     "url": "https://github.com/kilian/electron-to-chromium",
     "license": "ISC",
@@ -2414,7 +2467,7 @@
   "enhanced-resolve": {
     "ignore": false,
     "name": "enhanced-resolve",
-    "version": "5.14.0",
+    "version": "5.15.0",
     "authors": "Tobias Koppers @sokra",
     "url": "https://github.com/webpack/enhanced-resolve",
     "license": "MIT",
@@ -2441,7 +2494,7 @@
   "es-module-lexer": {
     "ignore": false,
     "name": "es-module-lexer",
-    "version": "1.2.1",
+    "version": "1.3.0",
     "authors": "Guy Bedford",
     "url": "https://github.com/guybedford/es-module-lexer",
     "license": "MIT",
@@ -2593,7 +2646,7 @@
   "flowbite-react": {
     "ignore": false,
     "name": "flowbite-react",
-    "version": "0.4.4",
+    "version": "0.4.11",
     "url": "https://github.com/themesberg/flowbite-react",
     "license": "MIT",
     "licenseText": "MIT License\n\nCopyright (c) 2023 Bergside Inc.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
@@ -2601,7 +2654,7 @@
   "flowbite": {
     "ignore": false,
     "name": "flowbite",
-    "version": "1.6.5",
+    "version": "1.7.0",
     "authors": "Bergside Inc.",
     "url": "https://github.com/themesberg/flowbite",
     "license": "MIT",
@@ -3071,6 +3124,14 @@
     "license": "MIT",
     "licenseText": "The MIT License (MIT)\n\nCopyright (c) 2015 Andres Suarez <zertosh@gmail.com>\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE.\n"
   },
+  "lottie-web": {
+    "ignore": false,
+    "name": "lottie-web",
+    "version": "5.12.0",
+    "url": "https://github.com/airbnb/lottie-web",
+    "license": "MIT",
+    "licenseText": "The MIT License (MIT)\r\n\r\nCopyright (c) 2015 Bodymovin\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the \"Software\"), to deal\r\nin the Software without restriction, including without limitation the rights\r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\ncopies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\nSOFTWARE."
+  },
   "lower-case": {
     "ignore": false,
     "name": "lower-case",
@@ -3154,7 +3215,7 @@
   "mini-css-extract-plugin": {
     "ignore": false,
     "name": "mini-css-extract-plugin",
-    "version": "2.7.5",
+    "version": "2.7.6",
     "authors": "Tobias Koppers @sokra",
     "url": "https://github.com/webpack-contrib/mini-css-extract-plugin",
     "license": "MIT",
@@ -3230,10 +3291,19 @@
     "license": "MIT",
     "licenseText": "MIT License\n\nCopyright (c) 2014-2018 Suguru Motegi\nBased on Async.js, Copyright Caolan McMahon\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
   },
+  "next-goatcounter": {
+    "ignore": false,
+    "name": "next-goatcounter",
+    "version": "1.0.3",
+    "authors": "Haider Ali Punjabi <me@haideralipunjabi.com>",
+    "url": "https://github.com/haideralipunjabi/next-goatcounter",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2018 Gary Meehan\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+  },
   "next": {
     "ignore": false,
     "name": "next",
-    "version": "13.4.2",
+    "version": "13.4.7",
     "url": "https://github.com/vercel/next.js",
     "license": "MIT",
     "licenseText": "The MIT License (MIT)\n\nCopyright (c) 2023 Vercel, Inc.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
@@ -3250,7 +3320,7 @@
   "node-releases": {
     "ignore": false,
     "name": "node-releases",
-    "version": "2.0.10",
+    "version": "2.0.13",
     "authors": "Sergey Rubanov <chi187@gmail.com>",
     "url": "https://github.com/chicoxyzzy/node-releases",
     "license": "MIT",
@@ -3582,7 +3652,7 @@
   "postcss": {
     "ignore": false,
     "name": "postcss",
-    "version": "8.4.23",
+    "version": "8.4.25",
     "authors": "Andrey Sitnik <andrey@sitnik.ru>",
     "url": "https://github.com/postcss/postcss",
     "license": "MIT",
@@ -3705,11 +3775,11 @@
   "react-icons": {
     "ignore": false,
     "name": "react-icons",
-    "version": "4.8.0",
+    "version": "4.10.1",
     "authors": "Goran Gajic",
     "url": "https://github.com/react-icons/react-icons",
     "license": "MIT",
-    "licenseText": "Copyright 2018 kamijin_fanta <kamijin@live.jp>\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n---\nIcons are taken from the other projects\nso please check each project licences accordingly.\n\nCircum Icons - https://circumicons.com/\nLicense: MPL-2.0 license https://github.com/Klarr-Agency/Circum-Icons/blob/main/LICENSE\n\nFont Awesome 5 - https://fontawesome.com/\nLicense: CC BY 4.0 License https://creativecommons.org/licenses/by/4.0/\n\nIonicons 4 - https://ionicons.com/\nLicense: MIT https://github.com/ionic-team/ionicons/blob/master/LICENSE\n\nIonicons 5 - https://ionicons.com/\nLicense: MIT https://github.com/ionic-team/ionicons/blob/master/LICENSE\n\nMaterial Design icons - http://google.github.io/material-design-icons/\nLicense: Apache License Version 2.0 https://github.com/google/material-design-icons/blob/master/LICENSE\n\nTypicons - http://s-ings.com/typicons/\nLicense: CC BY-SA 3.0 https://creativecommons.org/licenses/by-sa/3.0/\n\nGithub Octicons icons - https://octicons.github.com/\nLicense: MIT https://github.com/primer/octicons/blob/master/LICENSE\n\nFeather - https://feathericons.com/\nLicense: MIT https://github.com/feathericons/feather/blob/master/LICENSE\n\nGame Icons - https://game-icons.net/\nLicense: CC BY 3.0 https://creativecommons.org/licenses/by/3.0/\n\nWeather Icons - https://erikflowers.github.io/weather-icons/\nLicense: SIL OFL 1.1 http://scripts.sil.org/OFL\n\nDevicons - https://vorillaz.github.io/devicons/\nLicense: MIT https://opensource.org/licenses/MIT\n\nAnt Design Icons - https://github.com/ant-design/ant-design-icons\nLicense: MIT https://opensource.org/licenses/MIT\n\nBootstrap Icons - https://github.com/twbs/icons\nLicense: MIT https://opensource.org/licenses/MIT\n\nRemix Icon - https://github.com/Remix-Design/RemixIcon\nLicense: Apache License Version 2.0 http://www.apache.org/licenses/\n\nFlat Color Icons - https://github.com/icons8/flat-color-icons\nLicense: MIT https://opensource.org/licenses/MIT\n\nGrommet-Icons - https://github.com/grommet/grommet-icons\nLicense: Apache License Version 2.0 http://www.apache.org/licenses/\n\nHeroicons - https://github.com/tailwindlabs/heroicons\nLicense: MIT https://opensource.org/licenses/MIT\n\nHeroicons 2 - https://github.com/tailwindlabs/heroicons\nLicense: MIT https://opensource.org/licenses/MIT\n\nSimple Icons - https://simpleicons.org/\nLicense: CC0 1.0 Universal https://creativecommons.org/publicdomain/zero/1.0/\n\nSimple Line Icons - https://thesabbir.github.io/simple-line-icons/\nLicense: MIT https://opensource.org/licenses/MIT\n\nIcoMoon Free - https://github.com/Keyamoon/IcoMoon-Free\nLicense: CC BY 4.0 License https://github.com/Keyamoon/IcoMoon-Free/blob/master/License.txt\n\nBoxIcons - https://github.com/atisawd/boxicons\nLicense: CC BY 4.0 License https://github.com/atisawd/boxicons/blob/master/LICENSE\n\ncss.gg - https://github.com/astrit/css.gg\nLicense: MIT https://opensource.org/licenses/MIT\n\nVS Code Icons - https://github.com/microsoft/vscode-codicons\nLicense: CC BY 4.0 https://creativecommons.org/licenses/by/4.0/\n\nTabler Icons - https://github.com/tabler/tabler-icons\nLicense: MIT https://opensource.org/licenses/MIT\n\nThemify Icons - https://github.com/lykmapipo/themify-icons\nLicense: MIT https://github.com/thecreation/standard-icons/blob/master/modules/themify-icons/LICENSE\n\nRadix Icons - https://icons.radix-ui.com\nLicense: MIT https://github.com/radix-ui/icons/blob/master/LICENSE\n"
+    "licenseText": "Copyright 2018 kamijin_fanta <kamijin@live.jp>\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n---\nIcons are taken from the other projects\nso please check each project licences accordingly.\n\nCircum Icons - https://circumicons.com/\nLicense: MPL-2.0 license https://github.com/Klarr-Agency/Circum-Icons/blob/main/LICENSE\n\nFont Awesome 5 - https://fontawesome.com/\nLicense: CC BY 4.0 License https://creativecommons.org/licenses/by/4.0/\n\nFont Awesome 6 - https://fontawesome.com/\nLicense: CC BY 4.0 License https://creativecommons.org/licenses/by/4.0/\n\nIonicons 4 - https://ionicons.com/\nLicense: MIT https://github.com/ionic-team/ionicons/blob/master/LICENSE\n\nIonicons 5 - https://ionicons.com/\nLicense: MIT https://github.com/ionic-team/ionicons/blob/master/LICENSE\n\nMaterial Design icons - http://google.github.io/material-design-icons/\nLicense: Apache License Version 2.0 https://github.com/google/material-design-icons/blob/master/LICENSE\n\nTypicons - http://s-ings.com/typicons/\nLicense: CC BY-SA 3.0 https://creativecommons.org/licenses/by-sa/3.0/\n\nGithub Octicons icons - https://octicons.github.com/\nLicense: MIT https://github.com/primer/octicons/blob/master/LICENSE\n\nFeather - https://feathericons.com/\nLicense: MIT https://github.com/feathericons/feather/blob/master/LICENSE\n\nLucide - https://lucide.dev/\nLicense: ISC https://github.com/lucide-icons/lucide/blob/main/LICENSE\n\nGame Icons - https://game-icons.net/\nLicense: CC BY 3.0 https://creativecommons.org/licenses/by/3.0/\n\nWeather Icons - https://erikflowers.github.io/weather-icons/\nLicense: SIL OFL 1.1 http://scripts.sil.org/OFL\n\nDevicons - https://vorillaz.github.io/devicons/\nLicense: MIT https://opensource.org/licenses/MIT\n\nAnt Design Icons - https://github.com/ant-design/ant-design-icons\nLicense: MIT https://opensource.org/licenses/MIT\n\nBootstrap Icons - https://github.com/twbs/icons\nLicense: MIT https://opensource.org/licenses/MIT\n\nRemix Icon - https://github.com/Remix-Design/RemixIcon\nLicense: Apache License Version 2.0 http://www.apache.org/licenses/\n\nFlat Color Icons - https://github.com/icons8/flat-color-icons\nLicense: MIT https://opensource.org/licenses/MIT\n\nGrommet-Icons - https://github.com/grommet/grommet-icons\nLicense: Apache License Version 2.0 http://www.apache.org/licenses/\n\nHeroicons - https://github.com/tailwindlabs/heroicons\nLicense: MIT https://opensource.org/licenses/MIT\n\nHeroicons 2 - https://github.com/tailwindlabs/heroicons\nLicense: MIT https://opensource.org/licenses/MIT\n\nSimple Icons - https://simpleicons.org/\nLicense: CC0 1.0 Universal https://creativecommons.org/publicdomain/zero/1.0/\n\nSimple Line Icons - https://thesabbir.github.io/simple-line-icons/\nLicense: MIT https://opensource.org/licenses/MIT\n\nIcoMoon Free - https://github.com/Keyamoon/IcoMoon-Free\nLicense: CC BY 4.0 License https://github.com/Keyamoon/IcoMoon-Free/blob/master/License.txt\n\nBoxIcons - https://github.com/atisawd/boxicons\nLicense: CC BY 4.0 License https://github.com/atisawd/boxicons/blob/master/LICENSE\n\ncss.gg - https://github.com/astrit/css.gg\nLicense: MIT https://opensource.org/licenses/MIT\n\nVS Code Icons - https://github.com/microsoft/vscode-codicons\nLicense: CC BY 4.0 https://creativecommons.org/licenses/by/4.0/\n\nTabler Icons - https://github.com/tabler/tabler-icons\nLicense: MIT https://opensource.org/licenses/MIT\n\nThemify Icons - https://github.com/lykmapipo/themify-icons\nLicense: MIT https://github.com/thecreation/standard-icons/blob/master/modules/themify-icons/LICENSE\n\nRadix Icons - https://icons.radix-ui.com\nLicense: MIT https://github.com/radix-ui/icons/blob/master/LICENSE\n\nPhosphor Icons - https://github.com/phosphor-icons/core\nLicense: MIT https://github.com/phosphor-icons/core/blob/main/LICENSE\n\nIcons8 Line Awesome - https://icons8.com/line-awesome\nLicense: MIT https://github.com/icons8/line-awesome/blob/master/LICENSE.md\n"
   },
   "react-indiana-drag-scroll": {
     "ignore": false,
@@ -3727,6 +3797,15 @@
     "url": "https://github.com/facebook/react",
     "license": "MIT",
     "licenseText": "MIT License\n\nCopyright (c) Facebook, Inc. and its affiliates.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+  },
+  "react-lottie-player": {
+    "ignore": false,
+    "name": "react-lottie-player",
+    "version": "1.5.4",
+    "authors": "mifi",
+    "url": "https://github.com/mifi/react-lottie-player",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2020 Mikael Finstad\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
   },
   "react-responsive": {
     "ignore": false,
@@ -3925,6 +4004,15 @@
     "license": "MIT",
     "licenseText": "The MIT License (MIT)\n\nCopyright (c) 2015 Matteo Collina\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\n"
   },
+  "rfdc": {
+    "ignore": false,
+    "name": "rfdc",
+    "version": "1.3.0",
+    "authors": "David Mark Clements <david.clements@nearform.com>",
+    "url": "https://github.com/davidmarkclements/rfdc",
+    "license": "MIT",
+    "licenseText": "Copyright 2019 \"David Mark Clements <david.mark.clements@gmail.com>\"\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated \ndocumentation files (the \"Software\"), to deal in the Software without restriction, including without limitation \nthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and \nto permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions \nof the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED \nTO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL \nTHE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF \nCONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS \nIN THE SOFTWARE.\n"
+  },
   "rimraf": {
     "ignore": false,
     "name": "rimraf",
@@ -3946,7 +4034,7 @@
   "rxjs": {
     "ignore": false,
     "name": "rxjs",
-    "version": "7.8.0",
+    "version": "7.8.1",
     "authors": "Ben Lesh <ben@benlesh.com>",
     "url": "https://github.com/reactivex/rxjs",
     "license": "Apache-2.0",
@@ -3981,7 +4069,7 @@
   "semver": {
     "ignore": false,
     "name": "semver",
-    "version": "6.3.0",
+    "version": "5.7.1",
     "url": "https://github.com/npm/node-semver",
     "license": "ISC",
     "licenseText": "The ISC License\n\nCopyright (c) Isaac Z. Schlueter and Contributors\n\nPermission to use, copy, modify, and/or distribute this software for any\npurpose with or without fee is hereby granted, provided that the above\ncopyright notice and this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES\nWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF\nMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR\nANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES\nWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN\nACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR\nIN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.\n"
@@ -4087,10 +4175,10 @@
   "spawn-command": {
     "ignore": false,
     "name": "spawn-command",
-    "version": "0.0.2-1",
+    "version": "0.0.2",
     "authors": "Maciej Małecki <me@mmalecki.com>",
-    "url": "https://github.com/mmalecki/spawn-command",
-    "license": "MIT",
+    "url": "",
+    "license": "MIT*",
     "licenseText": "Copyright (C) 2011 by Maciej Małecki\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE.\n"
   },
   "spdx-compare": {
@@ -4275,11 +4363,20 @@
   "tabbable": {
     "ignore": false,
     "name": "tabbable",
-    "version": "6.1.1",
+    "version": "6.2.0",
     "authors": "David Clark <http://davidtheclark.com/>",
     "url": "https://github.com/focus-trap/tabbable",
     "license": "MIT",
     "licenseText": "The MIT License (MIT)\n\nCopyright (c) 2015 David Clark\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\n"
+  },
+  "tailwind-merge": {
+    "ignore": false,
+    "name": "tailwind-merge",
+    "version": "1.13.2",
+    "authors": "Dany Castillo",
+    "url": "https://github.com/dcastil/tailwind-merge",
+    "license": "MIT",
+    "licenseText": "MIT License\n\nCopyright (c) 2021 Dany Castillo\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
   },
   "tailwindcss": {
     "ignore": false,
@@ -4310,7 +4407,7 @@
   "terser-webpack-plugin": {
     "ignore": false,
     "name": "terser-webpack-plugin",
-    "version": "5.3.8",
+    "version": "5.3.9",
     "authors": "webpack Contrib Team",
     "url": "https://github.com/webpack-contrib/terser-webpack-plugin",
     "license": "MIT",
@@ -4319,7 +4416,7 @@
   "terser": {
     "ignore": false,
     "name": "terser",
-    "version": "5.17.3",
+    "version": "5.19.0",
     "authors": "Mihai Bazon <mihai.bazon@gmail.com> (http://lisperator.net/)",
     "url": "https://github.com/terser/terser",
     "license": "BSD-2-Clause",
@@ -4463,7 +4560,7 @@
   "update-browserslist-db": {
     "ignore": false,
     "name": "update-browserslist-db",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "authors": "Andrey Sitnik <andrey@sitnik.ru>",
     "url": "https://github.com/browserslist/update-db",
     "license": "MIT",
@@ -4533,7 +4630,7 @@
   "webpack": {
     "ignore": false,
     "name": "webpack",
-    "version": "5.82.1",
+    "version": "5.88.1",
     "authors": "Tobias Koppers @sokra",
     "url": "https://github.com/webpack/webpack",
     "license": "MIT",
@@ -4623,7 +4720,7 @@
   "zustand": {
     "ignore": false,
     "name": "zustand",
-    "version": "4.3.8",
+    "version": "4.3.9",
     "authors": "Paul Henschel",
     "url": "https://github.com/pmndrs/zustand",
     "license": "MIT",

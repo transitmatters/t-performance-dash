@@ -7,8 +7,8 @@ import React, { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
 import { prettyDate } from '../../utils/date';
-import { CHART_COLORS } from '../../../common/constants/colors';
-import { DownloadButton } from '../general/DownloadButton';
+import { CHART_COLORS } from '../../constants/colors';
+import { DownloadButton } from '../buttons/DownloadButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
@@ -43,7 +43,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   suggestedYMin,
   suggestedYMax,
   showLegend = true,
-  isHomescreen = false,
   byTime = false,
 }) => {
   const ref = useRef();
@@ -169,9 +168,9 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           ]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end gap-4 pl-6 pr-2">
+      <div className="flex flex-row items-end gap-4 ">
         {showLegend && <LegendLongTerm />}
-        {!isHomescreen && startDate && (
+        {startDate && (
           <DownloadButton
             data={data}
             datasetName={fname}

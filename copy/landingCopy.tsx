@@ -1,30 +1,18 @@
 import React from 'react';
 import type { LandingCharts } from '../modules/landing/types';
-const DESCRIPTION_STYLE = 'text-stone-90000 text-lg';
+
+const DESCRIPTION_STYLE = 'text-stone-900 text-lg';
 const BASELINE_STYLE = 'text-stone-900 italic text-xs text-center';
 
 //  copy from: https://docs.google.com/document/d/1kpJqbsNrJpW8gqfeuIjd2KplDacQyorAKE2w5wB6HUY/edit
 
-export const SpeedBaseline = (
-  <p className={BASELINE_STYLE}>
-    Baseline speed is the calendar month with the highest average daily speed per line.
-  </p>
-);
+export const SpeedBaseline = <p className={BASELINE_STYLE}>Compared to historical maximums</p>;
 
-export const ServiceBaseline = (
-  <p className={BASELINE_STYLE}>
-    Baseline service is the calendar month with the highest average daily service per line.
-  </p>
-);
+export const ServiceBaseline = <p className={BASELINE_STYLE}>Compared to historical maximums </p>;
 
-export const RidershipBaseline = (
-  <p className={BASELINE_STYLE}>
-    Baseline ridership is the four-week period with the highest average <b>weekly</b> ridership per
-    line.
-  </p>
-);
+export const RidershipBaseline = <p className={BASELINE_STYLE}>Compared to historical maximums</p>;
 
-export const SpeedDescription = (
+const SpeedDescription = (
   <p className={DESCRIPTION_STYLE}>
     How quickly can riders move through Boston?
     <br />
@@ -35,7 +23,7 @@ export const SpeedDescription = (
   </p>
 );
 
-export const ServiceDescription = (
+const ServiceDescription = (
   <p className={DESCRIPTION_STYLE}>
     How long must riders wait for trains and buses?
     <span className="text-sm text-stone-800">
@@ -46,7 +34,7 @@ export const ServiceDescription = (
   </p>
 );
 
-export const RidershipDescription = (
+const RidershipDescription = (
   <p className={DESCRIPTION_STYLE}>
     How many riders are using the system?
     <br />

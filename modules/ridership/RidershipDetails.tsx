@@ -5,6 +5,7 @@ import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { RIDERSHIP_KEYS } from '../../common/types/lines';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
+import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
@@ -28,27 +29,30 @@ export function RidershipDetails() {
     },
     enabled
   );
-  const ridershipDataReady = !ridership.isError && startDate && endDate && lineOrRoute;
+  const ridershipDataReady = !ridership.isError && startDate && endDate && lineOrRoute && line;
 
   return (
     <PageWrapper pageTitle={'Ridership'}>
-      <WidgetDiv>
-        <WidgetTitle title="Weekday ridership" />
+      <ChartPageDiv>
+        <WidgetDiv>
+          <WidgetTitle title="Weekday ridership" />
 
-        {ridership.data && ridershipDataReady ? (
-          <RidershipGraphWrapper
-            data={ridership.data}
-            config={config}
-            startDate={startDate}
-            endDate={endDate}
-            lineOrRoute={lineOrRoute}
-          />
-        ) : (
-          <div className="relative flex h-full">
-            <ChartPlaceHolder query={ridership} />
-          </div>
-        )}
-      </WidgetDiv>
+          {ridership.data && ridershipDataReady ? (
+            <RidershipGraphWrapper
+              data={ridership.data}
+              config={config}
+              startDate={startDate}
+              endDate={endDate}
+              line={line}
+              busRoute={busRoute}
+            />
+          ) : (
+            <div className="relative flex h-full">
+              <ChartPlaceHolder query={ridership} />
+            </div>
+          )}
+        </WidgetDiv>
+      </ChartPageDiv>
     </PageWrapper>
   );
 }

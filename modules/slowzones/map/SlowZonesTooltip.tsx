@@ -5,9 +5,12 @@ import { getParentStationForStopId } from '../../../common/utils/stations';
 
 import { BasicWidgetDataLayout } from '../../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { DeltaTimeWidgetValue } from '../../../common/types/basicWidgets';
+import type { TooltipSide } from '../../../common/components/maps/LineMap';
 import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
 import { prettyDate } from '../../../common/utils/date';
 
+import { TODAY_STRING } from '../../../common/constants/dates';
+import { useDelimitatedRoute } from '../../../common/utils/router';
 import { DIRECTIONS } from './segment';
 import type { ByDirection, SlowZoneDirection, SlowZonesSegment } from './segment';
 import { DirectionIndicator } from './DirectionIndicator';
@@ -16,8 +19,8 @@ import styles from './SlowZonesTooltip.module.css';
 
 interface SlowZonesTooltipProps {
   segment: SlowZonesSegment;
-  isHorizontal: boolean;
   color: string;
+  side: TooltipSide;
 }
 
 const getOrderedStationNames = (slowZones: ByDirection<SlowZoneResponse[]>) => {
@@ -44,10 +47,15 @@ const getOrderedStationNames = (slowZones: ByDirection<SlowZoneResponse[]>) => {
 
 export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
   const {
-    isHorizontal,
+    side,
     color,
     segment: { slowZones, speedRestrictions },
   } = props;
+  const {
+    query: { endDate },
+  } = useDelimitatedRoute();
+
+  const isHorizontal = side === 'top';
 
   const { fromStationName, toStationName } = useMemo(
     () => getOrderedStationNames(slowZones)!,
@@ -67,7 +75,7 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
       const totalFeet = speedRestrictions.reduce((sum, sr) => sum + sr.trackFeet, 0);
       const [oldest] = speedRestrictions
         .filter((sr) => sr.reported)
-        .map((sr) => new Date(sr.reported).toISOString())
+        .map((sr) => sr.reported)
         .sort();
       const oldestString = prettyDate(oldest, false);
       return (
@@ -81,7 +89,7 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
               <i>Slowest:</i> {minimumSpeed} mph
             </div>
             <div>
-              <i>Oldest:</i> {oldestString}
+              <i>Since:</i> {oldestString}
             </div>
           </div>
         </div>
@@ -91,15 +99,16 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
   };
 
   const renderSlowZoneForDirection = (direction: SlowZoneDirection) => {
+    const isToday = endDate === TODAY_STRING;
+
     const [slowZone] = slowZones[direction];
     const speedRestrictionsForDirection = speedRestrictions[direction];
     if (slowZone) {
+      const delayVal = isToday && slowZone.latest_delay ? slowZone.latest_delay : slowZone.delay;
       return (
         <div className={styles.direction}>
           <BasicWidgetDataLayout
-            widgetValue={
-              new DeltaTimeWidgetValue(slowZone.delay + slowZone.baseline, slowZone.delay)
-            }
+            widgetValue={new DeltaTimeWidgetValue(delayVal + slowZone.baseline, delayVal)}
             key={`${slowZone.fr_id}${slowZone.to_id}`}
             title={
               <div className={styles.directionTitle}>
@@ -113,7 +122,7 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
               </div>
             }
             layoutKind="delta-and-percent-change"
-            analysis="compared to baseline"
+            analysis="compared to peak"
           />
           {renderSpeedRestrictions(speedRestrictionsForDirection)}
         </div>
@@ -125,9 +134,18 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
   return (
     <div
       style={{ '--tooltip-accent-color': color } as React.CSSProperties}
-      className={classNames(styles.slowZonesTooltip, isHorizontal && styles.horizontal)}
+      className={classNames(
+        styles.slowZonesTooltip,
+        isHorizontal && styles.horizontal,
+        side === 'left' && styles.reverseVertical
+      )}
     >
-      <div className={isHorizontal ? styles.triangleHorizontal : styles.triangle}></div>
+      <div
+        className={classNames(
+          isHorizontal ? styles.triangleHorizontal : styles.triangle,
+          side === 'left' && styles.triangleReverse
+        )}
+      ></div>
       <div className={classNames(styles.content, 'shadow-dataBox')}>
         <div className={classNames(styles.title)}>
           {fromStationName} — {toStationName}

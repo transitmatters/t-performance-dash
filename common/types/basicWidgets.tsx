@@ -4,6 +4,7 @@ import duration from 'dayjs/plugin/duration';
 import { getFormattedTimeValue, getTimeUnit } from '../utils/time';
 import { WidgetText } from '../components/widgets/internal/WidgetText';
 import { UnitText } from '../components/widgets/internal/UnitText';
+
 dayjs.extend(duration);
 
 export interface WidgetValueInterface {
@@ -12,7 +13,7 @@ export interface WidgetValueInterface {
   readonly percentChange?: number;
 
   getUnits: () => string;
-  getFormattedValue: () => React.ReactNode;
+  getFormattedValue: (isLarge?: boolean) => React.ReactNode;
   getFormattedDelta: () => string;
   getFormattedPercentChange: () => string;
 }
@@ -43,9 +44,9 @@ export class DeltaTimeWidgetValue extends BaseWidgetValue implements WidgetValue
     if (this.delta === undefined) return '...';
     return getTimeUnit(this.delta);
   }
-  getFormattedValue() {
+  getFormattedValue(isLarge?: boolean) {
     if (this.delta === undefined) return '...';
-    return getFormattedTimeValue(this.delta);
+    return getFormattedTimeValue(this.delta, isLarge);
   }
   getFormattedDelta() {
     new Error('DeltaWidgets should use `getFormattedValue`');
@@ -57,12 +58,15 @@ export class DeltaZonesWidgetValue extends BaseWidgetValue implements WidgetValu
   getUnits() {
     return 'zones';
   }
-  getFormattedValue() {
+  getFormattedValue(isLarge?: boolean) {
     if (this.delta === undefined) return '...';
     return (
       <p>
-        <WidgetText text={`${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta)}`} />{' '}
-        <UnitText text={this.getUnits()} />
+        <WidgetText
+          isLarge={isLarge}
+          text={`${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta)}`}
+        />{' '}
+        <UnitText isLarge={isLarge} text={this.getUnits()} />
       </p>
     );
   }
@@ -79,9 +83,9 @@ export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInter
     return getTimeUnit(this.value);
   }
 
-  getFormattedValue() {
+  getFormattedValue(isLarge?: boolean) {
     if (this.value === undefined) return '...';
-    return getFormattedTimeValue(this.value);
+    return getFormattedTimeValue(this.value, isLarge);
   }
 
   getFormattedDelta() {
@@ -104,12 +108,12 @@ export class SZWidgetValue extends BaseWidgetValue implements WidgetValueInterfa
   getUnits() {
     return 'zones';
   }
-  getFormattedValue() {
+  getFormattedValue(isLarge?: boolean) {
     if (typeof this.value === 'undefined') return '...';
     return (
       <p className="">
-        <WidgetText text={`${Math.abs(this.value).toString()}`} />{' '}
-        <UnitText text={this.getUnits()} />
+        <WidgetText isLarge={isLarge} text={`${Math.abs(this.value).toString()}`} />{' '}
+        <UnitText isLarge={isLarge} text={this.getUnits()} />
       </p>
     );
   }
@@ -124,12 +128,12 @@ export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValu
     return '%';
   }
 
-  getFormattedValue() {
+  getFormattedValue(isLarge?: boolean) {
     if (this.value === undefined) return '...';
     return (
       <p>
-        <WidgetText text={`${Math.round(100 * this.value).toString()}`} />{' '}
-        <UnitText text={this.getUnits()} />
+        <WidgetText isLarge={isLarge} text={`${Math.round(100 * this.value).toString()}`} />{' '}
+        <UnitText isLarge={isLarge} text={this.getUnits()} />
       </p>
     );
   }
@@ -142,14 +146,15 @@ export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValu
 
 export class TripsWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'Trips';
+    return 'Round trips';
   }
 
-  getFormattedValue() {
+  getFormattedValue(isLarge?: boolean) {
     if (this.value === undefined) return '...';
     return (
       <p>
-        <WidgetText text={Math.abs(this.value).toFixed(0)} /> <UnitText text={this.getUnits()} />
+        <WidgetText isLarge={isLarge} text={Math.abs(this.value).toFixed(0)} />{' '}
+        <UnitText isLarge={isLarge} text={this.getUnits()} />
       </p>
     );
   }
@@ -165,11 +170,12 @@ export class MPHWidgetValue extends BaseWidgetValue implements WidgetValueInterf
     return 'MPH';
   }
 
-  getFormattedValue() {
+  getFormattedValue(isLarge?: boolean) {
     if (typeof this.value === 'undefined') return '...';
     return (
       <p>
-        <WidgetText text={this.value.toFixed(1)} /> <UnitText text={this.getUnits()} />
+        <WidgetText isLarge={isLarge} text={this.value.toFixed(1)} />{' '}
+        <UnitText isLarge={isLarge} text={this.getUnits()} />
       </p>
     );
   }
@@ -183,15 +189,15 @@ export class MPHWidgetValue extends BaseWidgetValue implements WidgetValueInterf
 
 export class RidersWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'Riders';
+    return 'Fare validations';
   }
 
-  getFormattedValue() {
+  getFormattedValue(isLarge?: boolean) {
     if (this.value === undefined) return '...';
     return (
       <p>
-        <WidgetText text={`${(this.value / 1000).toFixed(1)}k`} />{' '}
-        <UnitText text={this.getUnits()} />
+        <WidgetText isLarge={isLarge} text={`${(this.value / 1000).toFixed(1)}k`} />{' '}
+        <UnitText isLarge={isLarge} text={this.getUnits()} />
       </p>
     );
   }

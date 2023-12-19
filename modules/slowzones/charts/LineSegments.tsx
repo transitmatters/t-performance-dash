@@ -1,15 +1,21 @@
 import 'chartjs-adapter-date-fns';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar } from 'react-chartjs-2';
 import React, { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import minMax from 'dayjs/plugin/minMax';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
-import { YESTERDAY_MIDNIGHT } from '../../../common/constants/dates';
+import type { ChartDataset } from 'chart.js';
+import {
+  DATE_FORMAT,
+  YESTERDAY_MIDNIGHT,
+  YESTERDAY_STRING,
+  TODAY,
+} from '../../../common/constants/dates';
 import { COLORS } from '../../../common/constants/colors';
 import type { Direction, LineSegmentData, SlowZone } from '../../../common/types/dataPoints';
-import type { LinePath, LineShort } from '../../../common/types/lines';
+import type { LinePath } from '../../../common/types/lines';
 import {
   getRoutes,
   getSlowZoneOpacity,
@@ -23,12 +29,13 @@ import { watermarkLayout } from '../../../common/constants/charts';
 import { stopIdsForStations } from '../../../common/utils/stations';
 import { ALL_PAGES } from '../../../common/constants/pages';
 import type { QueryParams } from '../../../common/types/router';
+
 dayjs.extend(utc);
+dayjs.extend(minMax);
 
 interface LineSegmentsProps {
   data: SlowZone[];
-  line: LineShort;
-  linePath: LinePath;
+  linePath?: LinePath;
   startDateUTC: dayjs.Dayjs;
   endDateUTC: dayjs.Dayjs;
   direction: Direction;
@@ -36,7 +43,6 @@ interface LineSegmentsProps {
 
 export const LineSegments: React.FC<LineSegmentsProps> = ({
   data,
-  line,
   linePath,
   startDateUTC,
   endDateUTC,
@@ -51,12 +57,6 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
     { active: useBreakpoint('sm'), value: chartRange / 12 },
   ];
   const useShortStationNames = !breakpoint[1].active;
-  const getDisplayCutoff = () => {
-    for (const bp of breakpoint) {
-      if (bp.active) return bp.value;
-    }
-    return chartRange / 20;
-  };
 
   const isMobile = !breakpoint[3].active;
   const routes = useMemo(
@@ -74,9 +74,27 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
       y: szTimePeriod,
       id: getStationPairName(sz.from, sz.to, useShortStationNames),
       delay: sz.delay,
+      latest_delay: sz.latest_delay,
       stations: stopIdsForStations(sz.from, sz.to),
+      color: sz.color,
     };
   });
+
+  const groupDataByColor = (data: LineSegmentData[]) => {
+    return data.reduce((groups: Record<string, LineSegmentData[]>, item) => {
+      const group = item.color;
+      if (!groups[group]) {
+        groups[group] = [];
+      }
+      groups[group].push(item);
+      return groups;
+    }, {});
+  };
+
+  const lineSegmentDataByColor = useMemo(
+    () => groupDataByColor(lineSegmentData),
+    [lineSegmentData]
+  );
 
   return (
     <Bar
@@ -84,58 +102,54 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
       id={`timeline-slow-zones-${linePath}`}
       data={{
         labels: routes,
-        datasets: [
-          {
+        datasets: Object.entries(lineSegmentDataByColor).map(([color, data]) => {
+          const datasetObject: ChartDataset<'bar', LineSegmentData[]> = {
             borderWidth: 2,
-            borderRadius: 4,
-            borderColor: line && COLORS.mbta[line.toLowerCase()],
+            borderColor: COLORS.mbta[color.toLowerCase()],
             backgroundColor: (context) => {
               return hexWithAlpha(
-                line && COLORS.mbta[line.toLowerCase()],
-                getSlowZoneOpacity(lineSegmentData[context.dataIndex]?.delay)
+                COLORS.mbta[color.toLowerCase()],
+                getSlowZoneOpacity(data[context.dataIndex]?.delay)
               );
             },
-            label: line,
+            label: color,
             borderSkipped: false,
-            data: lineSegmentData,
-          },
-        ],
+            data,
+          };
+
+          // If we're in system mode
+          if (Object.entries(lineSegmentDataByColor).length > 1) {
+            datasetObject.barPercentage = 50;
+            datasetObject.categoryPercentage = 0.05;
+          }
+
+          return datasetObject;
+        }),
       }}
-      plugins={[ChartDataLabels, ChartjsPluginWatermark]}
+      plugins={[ChartjsPluginWatermark]}
       options={{
         maintainAspectRatio: false,
         responsive: true,
-
-        layout: {
-          padding: {},
-        },
-        interaction: {
-          intersect: true,
-          mode: 'index',
-        },
         onClick: (event, elements) => {
           if (elements.length >= 1) {
-            const segment = elements[0].element['$context'].raw as LineSegmentData;
-            const hrefPathname = `/${linePath}${ALL_PAGES.multiTrips.path}`;
+            const { color, x, stations } = elements[0].element['$context'].raw as LineSegmentData;
+            const hrefPathname = `/${color.toLowerCase()}${ALL_PAGES.multiTrips.path}`;
             const queryParams: QueryParams = {
-              startDate: segment.x[0],
-              endDate: segment.x[1],
-              to: segment.stations.toStopIds?.[0],
-              from: segment.stations.fromStopIds?.[0],
+              // Show 7 days before slowzone start for comparison
+              startDate: dayjs(x[0]).subtract(7, 'days').format(DATE_FORMAT),
+              endDate: dayjs.min(TODAY, dayjs(x[1]).add(7, 'days'))?.format(DATE_FORMAT),
+              to: stations.toStopIds?.[0],
+              from: stations.fromStopIds?.[0],
             };
             const params = new URLSearchParams(queryParams);
-            window.open(`${hrefPathname}?${params.toString()}`);
+            window.open(`${hrefPathname}/?${params.toString()}`, '_blank', 'noreferrer');
           }
         },
         onHover: (event, elements) => {
           // @ts-expect-error TS doesn't think target has `style` (rude), but it does
-          event.native?.target.style.cursor = elements?.[0] ? 'pointer' : 'default';
+          event.native.target.style.cursor = elements?.[0] ? 'pointer' : 'default';
         },
-        parsing: isMobile
-          ? { xAxisKey: 'id' }
-          : {
-              yAxisKey: 'id',
-            },
+        parsing: isMobile ? { xAxisKey: 'id' } : { yAxisKey: 'id' },
         indexAxis: isMobile ? 'x' : 'y',
         scales: {
           x: isMobile
@@ -154,13 +168,16 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
           tooltip: {
             callbacks: {
               label: (context) => {
-                return 'Delay: ' + data[context.dataIndex].delay.toFixed(0) + ' sec';
+                const slowzone = context.raw as LineSegmentData;
+                const delays = [` Average Delay: ${slowzone.delay.toFixed(0)} sec.`];
+
+                if (slowzone.latest_delay !== null) {
+                  delays.push(` Latest Delay: ${slowzone.latest_delay.toFixed(0)} sec`);
+                }
+                return delays;
               },
               title: (context) => {
-                return getStationPairName(
-                  data[context[0].dataIndex].from,
-                  data[context[0].dataIndex].to
-                );
+                return context[0].label;
               },
               beforeBody: (context) => {
                 const start = context[0].parsed._custom?.barStart;
@@ -176,20 +193,21 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
               },
             },
           },
-          datalabels: {
-            anchor: 'center',
-            clamp: true,
-            clip: false,
-            padding: 2,
-            formatter: (context) => {
-              return context.delay.toFixed(0) + ' s';
-            },
-            display: (context) => lineSegmentData[context.dataIndex].duration > getDisplayCutoff(),
-            labels: {
-              value: {
-                backgroundColor: hexWithAlpha(line && COLORS.mbta[line.toLowerCase()], 0.8),
-                borderRadius: 4,
-                color: '#ffffff',
+          annotation: {
+            // TODO: This doesn't work properly when switching screen sizes without a refresh.
+            annotations: {
+              today: {
+                type: 'line',
+                xMin: isMobile ? undefined : YESTERDAY_STRING,
+                yMin: isMobile ? YESTERDAY_STRING : undefined,
+                xMax: isMobile ? undefined : YESTERDAY_STRING,
+                yMax: isMobile ? YESTERDAY_STRING : undefined,
+                borderWidth: 1,
+                borderColor: '#10101030',
+                borderDash: [5, 5],
+                label: {
+                  display: true,
+                },
               },
             },
           },

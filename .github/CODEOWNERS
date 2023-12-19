@@ -1,4 +1,7 @@
-* @austinjpaul @skaplan-dev @devinmatte @PatrickCleary
-.github @nathan-weinberg
-.flake8 @nathan-weinberg
+* @mathcolo @idreyn @skaplan-dev @devinmatte @PatrickCleary
+.github @mathcolo @nathan-weinberg
+.flake8 @mathcolo @nathan-weinberg
 deploy.sh @mathcolo @nathan-weinberg
+server @austinjpaul @idreyn
+server/cloudformation.json @mathcolo @nathan-weinberg
+server/.chalice @mathcolo @nathan-weinberg

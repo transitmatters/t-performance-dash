@@ -1,8 +1,12 @@
+import classNames from 'classnames';
 import React from 'react';
 
 export interface WidgetTextProps {
   text: string;
+  isLarge?: boolean;
 }
-export const WidgetText: React.FC<WidgetTextProps> = ({ text }) => {
-  return <span className="text-2xl font-semibold text-gray-900">{text}</span>;
+export const WidgetText: React.FC<WidgetTextProps> = ({ text, isLarge = false }) => {
+  return (
+    <span className={classNames('text-gray-900', isLarge ? 'text-2xl' : 'text-sm')}>{text}</span>
+  );
 };

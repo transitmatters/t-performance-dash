@@ -46,7 +46,7 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children, isSingleWidg
             className={classNames(
               'group/button flex cursor-pointer items-center justify-center rounded-md focus:outline-none lg:p-1'
             )}
-            aria-label={'Next Statistic'}
+            title={'Next Statistic'}
             onClick={navigateTo(activeItem + 1)}
             type="button"
           >
@@ -58,7 +58,7 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children, isSingleWidg
           </button>
         )}
       </div>
-      <div className="relative h-8 w-full overflow-hidden lg:h-[3.25rem] ">
+      <div className="relative h-[3.25rem] w-full overflow-hidden">
         {items?.map((item, index) => (
           <div
             key={index}

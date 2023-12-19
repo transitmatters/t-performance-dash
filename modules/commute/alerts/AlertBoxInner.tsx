@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { AlertModal } from './AlertModal';
-import { CurrentTime, UpcomingTime } from './Time';
+import { CurrentTime, EffectiveTime, UpcomingTime } from './Time';
 
 interface AlertBoxInnerProps {
   header: string;
@@ -12,6 +12,7 @@ interface AlertBoxInnerProps {
   type: UpcomingOrCurrent;
   children: React.ReactNode;
   noShrink?: boolean;
+  showEffectiveTime?: boolean;
 }
 
 export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
@@ -21,6 +22,7 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
   type,
   noShrink,
   children,
+  showEffectiveTime,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const isMobile = !useBreakpoint('md');
@@ -40,6 +42,7 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
           showModal={showModal}
           setShowModal={setShowModal}
           header={header}
+          description={alert.description}
           Icon={Icon}
           type={alert.type}
         />
@@ -50,7 +53,7 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
         <div className="flex w-full flex-col items-center justify-center text-stone-100">
           <div
             className={classNames(
-              'flex w-full flex-row items-center pr-2 text-center text-lg ',
+              'flex w-full flex-row items-center pr-2 text-lg ',
               _noShrink && 'flex-wrap'
             )}
           >
@@ -64,7 +67,11 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
             )}
           >
             {type === 'current' ? (
-              <CurrentTime times={alert.relevantTimes} />
+              showEffectiveTime ? (
+                <EffectiveTime times={alert.relevantTimes} />
+              ) : (
+                <CurrentTime times={alert.relevantTimes} />
+              )
             ) : (
               <UpcomingTime times={alert.relevantTimes} />
             )}

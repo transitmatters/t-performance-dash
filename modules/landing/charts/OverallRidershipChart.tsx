@@ -7,16 +7,15 @@ import { LandingChartDiv } from '../LandingChartDiv';
 import { LandingPageChart } from './LandingPageChart';
 
 interface OverallRidershipChartProps {
-  ridershipData: { line: LineType; data: RidershipCount[] }[];
+  ridershipData: { [key in LineType]: RidershipCount[] };
 }
 export const OverallRidershipChart: React.FC<OverallRidershipChartProps> = ({ ridershipData }) => {
-  const labels = ridershipData[0].data.map((point) => point.date);
-  const datasets = ridershipData.map((item) => convertToRidershipDataset(item.data, item.line));
-
+  const labels = Object.values(ridershipData)[0].map((point) => point.date);
+  const datasets = convertToRidershipDataset(ridershipData);
   return (
     <LandingChartDiv>
-      {RidershipBaseline}
       <LandingPageChart datasets={datasets} labels={labels} id="system-ridership" />
+      {RidershipBaseline}
     </LandingChartDiv>
   );
 };

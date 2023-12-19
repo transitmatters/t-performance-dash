@@ -10,7 +10,6 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
   toStation,
   fromStation,
   showLegend = true,
-  isHomescreen = false,
 }) => {
   const {
     linePath,
@@ -33,19 +32,9 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
         location={getLocationDetails(fromStation, toStation)}
         fname={'headways'}
         showLegend={showLegend && anyHeadwayBenchmarks}
-        isHomescreen={isHomescreen}
       />
     );
-  }, [
-    linePath,
-    headways,
-    date,
-    fromStation,
-    toStation,
-    showLegend,
-    anyHeadwayBenchmarks,
-    isHomescreen,
-  ]);
+  }, [linePath, headways, date, fromStation, toStation, showLegend, anyHeadwayBenchmarks]);
 
   return chart;
 };
