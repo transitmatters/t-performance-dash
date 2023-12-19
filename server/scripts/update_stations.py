@@ -112,7 +112,7 @@ def get_station_distances():
     # station id => distance to other reachable stations on all routes
     station_distances = {}
 
-    # stop id => route of stop 
+    # stop id => route of stop
     stop_routes = {}
 
     # stop id => direction of stop
@@ -184,7 +184,10 @@ def get_station_distances():
 
             for child, child_distance in stop_distances[dest].items():
                 # if the stops or in the same direction OR on the same route, keep traversing
-                if stop_directions[child] == stop_directions[target_stop_id] or stop_routes[child] == stop_routes[target_stop_id]:
+                if (
+                    stop_directions[child] == stop_directions[target_stop_id]
+                    or stop_routes[child] == stop_routes[target_stop_id]
+                ):
                     stop_stack.append((child, dist + child_distance))
 
         station_distances[target_station] = target_station_distances

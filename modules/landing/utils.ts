@@ -53,7 +53,6 @@ export const convertToStationSpeedDataset = (
   data: SingleDayDataPoint[]
 ) => {
   const intervalDistance = getStationDistance(fromStationId, toStationId);
-  console.log(intervalDistance);
   const ret =
     data?.map((datapoint) => {
       return {
