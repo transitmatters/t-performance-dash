@@ -1,3 +1,3 @@
-import stationDistancesJson from '../../common/constants/station_distances.json';
+import stationDistancesJson from './station_distances.json';
 
 export const station_distances = stationDistancesJson;

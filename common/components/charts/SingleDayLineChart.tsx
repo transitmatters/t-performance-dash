@@ -65,7 +65,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   fname,
   bothStops = false,
   location,
-  units = 'Minutes',
+  units,
   showLegend = true,
 }) => {
   const ref = useRef();
