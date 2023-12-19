@@ -36,7 +36,8 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
 
   const [lineShort, setLineShort] = useState<LineShort>('Red');
   const line = `line-${lineShort.toLowerCase()}` as Line;
-  const canShowSlowZonesMap = lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange';
+  const canShowSlowZonesMap =
+    lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange' || lineShort === 'Green';
 
   const {
     query: { startDate, endDate },
@@ -102,6 +103,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
               Red: 'Red',
               Orange: 'Orange',
               Blue: 'Blue',
+              Green: 'Green',
             })}
           />
         </WidgetDiv>

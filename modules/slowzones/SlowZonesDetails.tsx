@@ -45,7 +45,8 @@ export function SlowZonesDetails() {
   const totalSlowTimeReady =
     !delayTotals.isError && delayTotals.data && startDateUTC && endDateUTC && lineShort && line;
   const segmentsReady = !allSlow.isError && allSlow.data && startDateUTC && lineShort;
-  const canShowSlowZonesMap = lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange';
+  const canShowSlowZonesMap =
+    lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange' || lineShort === 'Green';
 
   if (!endDateUTC || !startDateUTC) {
     return (
