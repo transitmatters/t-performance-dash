@@ -5,7 +5,6 @@ import type { Station } from '../../common/types/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
 import { getLocationDetails } from '../../common/utils/stations';
-import { convertToStationSpeedDataset } from '../landing/utils';
 
 interface SpeedBetweenStationsSingleChartProps {
   traveltimes: SingleDayDataPoint[];
@@ -22,7 +21,7 @@ export const SpeedBetweenStationsSingleChart: React.FC<SpeedBetweenStationsSingl
 }) => {
   const {
     linePath,
-    query: { date, to, from },
+    query: { date },
   } = useDelimitatedRoute();
 
   const location = getLocationDetails(fromStation, toStation);
@@ -31,7 +30,7 @@ export const SpeedBetweenStationsSingleChart: React.FC<SpeedBetweenStationsSingl
     return (
       <SingleDayLineChart
         chartId={`speed-between-stations-chart-${linePath}`}
-        data={convertToStationSpeedDataset(fromStation.station, toStation.station, traveltimes)}
+        data={traveltimes}
         date={date}
         metricField={MetricFieldKeys.speedMph}
         pointField={PointFieldKeys.depDt}

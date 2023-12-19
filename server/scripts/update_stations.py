@@ -112,9 +112,8 @@ def get_station_distances():
     # station id => distance to other reachable stations on all routes
     station_distances = {}
 
-    # station id => route id that the station is on
-    # the route id in this case is basically just the line
-    station_lines = {}
+    # stop id => route of stop 
+    stop_routes = {}
 
     # stop id => direction of stop
     stop_directions = {}
@@ -142,15 +141,15 @@ def get_station_distances():
 
         stop_distances[from_stop_id] = from_stop_distances
         # route pattern name is more detaield than id - e.g. route_id is always Red for all routes
-        stop_directions[from_stop_id] = distance_details["direction_id"]
+        stop_routes[from_stop_id] = distance_details["route_pattern_name"]
         stop_stations[from_stop_id] = distance_details["from_station_id"]
 
         # set this just in case the to station is a terminus
-        stop_directions[to_stop_id] = distance_details["direction_id"]
+        stop_routes[to_stop_id] = distance_details["route_pattern_name"]
         stop_stations[to_stop_id] = distance_details["to_station_id"]
 
-        station_lines[distance_details["from_station_id"]] = distance_details["route_id"]
-        station_lines[distance_details["to_station_id"]] = distance_details["route_id"]
+        stop_directions[to_stop_id] = distance_details["direction_id"]
+        stop_directions[from_stop_id] = distance_details["direction_id"]
 
     def get_station_id(stop_id):
         return stop_stations[stop_id]
@@ -184,7 +183,8 @@ def get_station_distances():
                 break
 
             for child, child_distance in stop_distances[dest].items():
-                if stop_directions[child] == stop_directions[target_stop_id]:
+                # if the stops or in the same direction OR on the same route, keep traversing
+                if stop_directions[child] == stop_directions[target_stop_id] or stop_routes[child] == stop_routes[target_stop_id]:
                     stop_stack.append((child, dist + child_distance))
 
         station_distances[target_station] = target_station_distances

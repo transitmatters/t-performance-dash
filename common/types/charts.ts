@@ -14,6 +14,7 @@ export interface SingleDayDataPoint {
   benchmark_headway_time_sec?: number;
   threshold_flag_1?: string;
   speed_mph?: number;
+  benchmark_speed_mph?: number;
 }
 
 export interface AggregateDataPoint {
@@ -63,6 +64,7 @@ export enum MetricFieldKeys {
 export enum BenchmarkFieldKeys {
   benchmarkTravelTimeSec = 'benchmark_travel_time_sec',
   benchmarkHeadwayTimeSec = 'benchmark_headway_time_sec',
+  benchmarkSpeedMph = 'benchmark_speed_mph',
 }
 
 export type PointField = PointFieldKeys;

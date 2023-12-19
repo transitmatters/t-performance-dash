@@ -80,11 +80,11 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   );
   const displayBenchmarkData = benchmarkData.every((datapoint) => datapoint !== undefined);
   // Have to use `as number` because typescript doesn't understand `datapoint` is not undefined.
+  const multiplier = units === 'Minutes' ? 1 / 60 : 1;
   const benchmarkDataFormatted = displayBenchmarkData
-    ? benchmarkData.map((datapoint) => ((datapoint as number) / 60).toFixed(2))
+    ? benchmarkData.map((datapoint) => ((datapoint as number) * multiplier).toFixed(2))
     : null;
 
-  const multiplier = units === 'Minutes' ? 1 / 60 : 1;
   const convertedData = data.map((datapoint) =>
     ((datapoint[metricField] as number) * multiplier).toFixed(2)
   );

@@ -53,12 +53,16 @@ export const convertToStationSpeedDataset = (
   data: SingleDayDataPoint[]
 ) => {
   const intervalDistance = getStationDistance(fromStationId, toStationId);
+  console.log(intervalDistance);
   const ret =
     data?.map((datapoint) => {
       return {
         ...datapoint,
         speed_mph: datapoint.travel_time_sec
           ? (3600 * intervalDistance) / datapoint.travel_time_sec
+          : undefined,
+        benchmark_speed_mph: datapoint.benchmark_travel_time_sec
+          ? (3600 * intervalDistance) / datapoint.benchmark_travel_time_sec
           : undefined,
       };
     }) ?? [];

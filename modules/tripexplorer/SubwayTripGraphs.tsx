@@ -15,7 +15,7 @@ import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrappe
 import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { DwellsSingleWrapper } from '../dwells/DwellsSingleWrapper';
 import { HeadwaysHistogramWrapper } from '../headways/charts/HeadwaysHistogramWrapper';
-import { SingleChartWrapper } from '../../common/components/charts/SingleChartWrapper';
+import { SpeedBetweenStationsSingleWrapper } from '../speed/SpeedBetweenStationsGraphWrapper';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -139,12 +139,10 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               line={line}
               both
             />
-            <SingleChartWrapper
+            <SpeedBetweenStationsSingleWrapper
               query={traveltimes}
               fromStation={fromStation}
               toStation={toStation}
-              showLegend={true}
-              type={'speeds'}
             />
           </WidgetDiv>
 
