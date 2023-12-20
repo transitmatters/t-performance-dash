@@ -71,6 +71,16 @@ export type SlowZoneResponse = {
   to_id: string;
 };
 
+export interface SlowZoneAllSlowResponse {
+  data: SlowZoneResponse[];
+  updated_on: string;
+}
+
+export interface SlowZoneDayTotalsResponse {
+  data: DayDelayTotals[];
+  updated_on: string;
+}
+
 export interface SpeedDataPoint {
   count: number;
   date: string;
