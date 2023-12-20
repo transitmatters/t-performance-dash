@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ['18']
+        node-version: ['20']
         python-version: ['3.11']
     env:
       AWS_PROFILE: transitmatters
