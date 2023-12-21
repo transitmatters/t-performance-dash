@@ -1,5 +1,6 @@
 import React from 'react';
 import type { LandingCharts } from '../modules/landing/types';
+
 const DESCRIPTION_STYLE = 'text-stone-900 text-lg';
 const BASELINE_STYLE = 'text-stone-900 italic text-xs text-center';
 

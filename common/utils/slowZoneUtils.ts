@@ -6,13 +6,8 @@ import utc from 'dayjs/plugin/utc';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { useMemo } from 'react';
-import type { Station } from '../../common/types/stations';
-import type {
-  DayDelayTotals,
-  Direction,
-  SlowZone,
-  SlowZoneResponse,
-} from '../../common/types/dataPoints';
+import type { Station } from '../types/stations';
+import type { DayDelayTotals, Direction, SlowZone, SlowZoneResponse } from '../types/dataPoints';
 import { TODAY_MIDNIGHT } from '../constants/dates';
 import type { LineShort } from '../types/lines';
 import { getParentStationForStopId } from './stations';

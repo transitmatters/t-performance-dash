@@ -34,7 +34,21 @@ module.exports = {
     'import/no-self-import': 'error',
     'import/no-default-export': 'warn',
     'import/order': 'error',
+    'import/newline-after-import': 'error',
     'import/no-unused-modules': ['warn', { unusedExports: true }],
+    'import/no-useless-path-segments': [
+      'error',
+      {
+        noUselessIndex: true,
+      },
+    ],
+    'import/max-dependencies': [
+      'warn',
+      {
+        max: 20,
+        ignoreTypeImports: false,
+      },
+    ],
     'prettier/prettier': 'error',
     'react/prop-types': 'warn',
     'react/jsx-no-target-blank': 'warn',
