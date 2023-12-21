@@ -1,18 +1,22 @@
 import type {
   DayDelayTotals,
+  SlowZoneAllSlowResponse,
+  SlowZoneDayTotalsResponse,
   SlowZoneResponse,
   SpeedRestriction,
-} from '../../common/types/dataPoints';
+} from '../types/dataPoints';
 import type { FetchSpeedRestrictionsOptions, FetchSpeedRestrictionsResponse } from '../types/api';
 import { getGtfsRailLineId } from '../utils/lines';
 import { apiFetch } from './utils/fetch';
 
-export const fetchDelayTotals = (): Promise<DayDelayTotals[]> => {
+// TODO: Remove the Array option once the slowzone change is mature
+export const fetchDelayTotals = (): Promise<SlowZoneDayTotalsResponse | DayDelayTotals[]> => {
   const url = new URL(`/static/slowzones/delay_totals.json`, window.location.origin);
   return fetch(url.toString()).then((resp) => resp.json());
 };
 
-export const fetchAllSlow = (): Promise<SlowZoneResponse[]> => {
+// TODO: Remove the Array option once the slowzone change is mature
+export const fetchAllSlow = (): Promise<SlowZoneAllSlowResponse | SlowZoneResponse[]> => {
   const all_slow_url = new URL(`/static/slowzones/all_slow.json`, window.location.origin);
   return fetch(all_slow_url.toString()).then((resp) => resp.json());
 };

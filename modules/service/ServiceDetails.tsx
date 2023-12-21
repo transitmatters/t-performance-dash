@@ -15,6 +15,7 @@ import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';
 import { PercentageServiceGraphWrapper } from './PercentageServiceGraphWrapper';
 import { ServiceHoursGraph } from './ServiceHoursGraph';
+
 dayjs.extend(utc);
 
 export function ServiceDetails() {

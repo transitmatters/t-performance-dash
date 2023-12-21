@@ -9,10 +9,10 @@ This is the repository for the TransitMatters Data Dashboard. Client code is wri
 
 ## Requirements to develop locally
 
-- node 18.x and npm 9.x required
+- node 20.x and npm 9.x+ required
   - With `nvm` installed, use `nvm install && nvm use`
   - verify with `node -v`
-- Python 3.10 with recent poetry (1.5.0 or later)
+- Python 3.11 with recent poetry (1.6.0 or later)
   - Verify with `python --version && poetry --version`
   - `poetry self update` to update poetry
 

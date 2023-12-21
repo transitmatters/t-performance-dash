@@ -16,7 +16,8 @@ import bus_77 from './bus_constants/77.json';
 import bus_111 from './bus_constants/111.json';
 import bus_114_116_117 from './bus_constants/114-116-117.json';
 
-export const rtStations: { [key in Exclude<LineShort, 'Bus'>]: LineMap } = stations_json;
+export const rtStations: { [key in Exclude<LineShort, 'Bus' | 'Commuter Rail'>]: LineMap } =
+  stations_json;
 
 export const busStations: { [key: string]: LineMap } = {
   ...bus_1,
@@ -35,8 +36,14 @@ export const busStations: { [key: string]: LineMap } = {
   ...bus_114_116_117,
 };
 
+export const commuterRailStations: { [key: string]: LineMap } = {};
+
 export const stations = { ...rtStations, Bus: busStations };
 
 export const getBusRoutes = (): string[] => {
   return Object.keys(busStations);
+};
+
+export const getCommuterRailRoutes = (): string[] => {
+  return Object.keys(commuterRailStations);
 };

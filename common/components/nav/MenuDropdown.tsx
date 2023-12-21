@@ -1,4 +1,4 @@
-import { faTrainSubway, faTrainTram } from '@fortawesome/free-solid-svg-icons';
+import { faBus, faTrain, faTrainSubway, faTrainTram } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import Link from 'next/link';
@@ -24,6 +24,20 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ line, route, childre
   useEffect(() => {
     setTimeout(() => setShow(true), 0);
   }, [selected]);
+
+  const icon = React.useMemo(() => {
+    switch (line) {
+      case 'line-bus':
+        return faBus;
+      case 'line-green':
+        return faTrainTram;
+      case 'line-commuter-rail':
+        return faTrain;
+      default:
+        return faTrainSubway;
+    }
+  }, [line]);
+
   return (
     <div className={classNames('w-full')}>
       <Link
@@ -48,8 +62,7 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ line, route, childre
               'flex h-8 w-8 items-center justify-center rounded-full bg-opacity-75'
             )}
           >
-            {/* TODO: add bus icon */}
-            <FontAwesomeIcon icon={line === 'line-green' ? faTrainTram : faTrainSubway} size="lg" />
+            <FontAwesomeIcon icon={icon} size="lg" />
           </div>
           {LINE_OBJECTS[line].name}
         </div>

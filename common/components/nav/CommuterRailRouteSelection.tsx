@@ -4,14 +4,16 @@ import { Listbox, Transition } from '@headlessui/react';
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { useRouter } from 'next/navigation';
 import React, { Fragment } from 'react';
-import { getBusRoutes } from '../../constants/stations';
+import { getCommuterRailRoutes } from '../../constants/stations';
 import { getBusRouteSelectionItemHref, useDelimitatedRoute } from '../../utils/router';
 
-export const BusRouteSelection: React.FC = () => {
+// TODO: This is a duplicate of common/components/nav/BusRouteSelection.tsx
+export const CommuterRailRouteSelection: React.FC = () => {
   const route = useDelimitatedRoute();
   const router = useRouter();
-  const busRoutes = getBusRoutes();
+  const crRoutes = getCommuterRailRoutes();
   const selected = route.query.busRoute;
+
   return (
     <div className="bg-mbta-lightBus">
       <Listbox
@@ -32,7 +34,7 @@ export const BusRouteSelection: React.FC = () => {
             leaveTo="opacity-0"
           >
             <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-              {busRoutes.map((busRoute, personIdx) => (
+              {crRoutes.map((crRoute, personIdx) => (
                 <Listbox.Option
                   key={personIdx}
                   className={({ active }) =>
@@ -40,14 +42,14 @@ export const BusRouteSelection: React.FC = () => {
                       active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
                     }`
                   }
-                  value={busRoute}
+                  value={crRoute}
                 >
                   {({ selected }) => (
                     <>
                       <span
                         className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}
                       >
-                        {busRoute}
+                        {crRoute}
                       </span>
                       {selected ? (
                         <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-mbta-bus">

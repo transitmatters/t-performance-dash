@@ -16,6 +16,7 @@ import { Accordion } from '../../common/components/accordion/Accordion';
 import { lineToDefaultRouteId } from './utils/utils';
 import { PredictionsGraphWrapper } from './charts/PredictionsGraphWrapper';
 import { PredictionsBinsGraphWrapper } from './charts/PredictionsBinsGraphWrapper';
+
 dayjs.extend(utc);
 
 enum GreenLineBranchOptions {
