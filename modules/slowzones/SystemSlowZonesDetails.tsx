@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
 import React, { useMemo, useState } from 'react';
 
+import Link from 'next/link';
+import { isArray } from 'lodash';
 import {
   useSlowzoneAllData,
   useSlowzoneDelayTotalData,
@@ -51,7 +53,11 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
   const lineSegmentsReady = !allData.isError && allData.data && startDateUTC && endDateUTC;
   const graphData = useMemo(() => {
     if (allData.data && startDateUTC && endDateUTC) {
-      const fitleredData = filterAllSlow(allData.data, startDateUTC, endDateUTC);
+      const fitleredData = filterAllSlow(
+        isArray(allData.data) ? allData.data : allData.data.data,
+        startDateUTC,
+        endDateUTC
+      );
       return formatSegments(fitleredData, startDateUTC, direction);
     } else return [];
   }, [allData.data, endDateUTC, startDateUTC, direction]);
@@ -63,10 +69,17 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
       <ChartPageDiv>
         <WidgetDiv>
           <WidgetTitle title="Total slow time" />
+          <Link
+            target="_blank"
+            href="https://transitmatters.org/blog/slowzonesupdate"
+            className="whitespace-nowrap text-sm italic text-stone-600"
+          >
+            Time over Baseline across Line
+          </Link>
           <div className="relative flex flex-col">
             {totalSlowTimeReady ? (
               <TotalSlowTime
-                data={delayTotals.data}
+                data={isArray(delayTotals.data) ? delayTotals.data : delayTotals.data.data}
                 startDateUTC={startDateUTC}
                 endDateUTC={endDateUTC}
                 showTitle={showTitle}
@@ -84,7 +97,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
             {allData.data && speedRestrictions.data && canShowSlowZonesMap ? (
               <SlowZonesMap
                 key={lineShort}
-                slowZones={allData.data}
+                slowZones={isArray(allData.data) ? allData.data : allData.data.data}
                 speedRestrictions={speedRestrictions.data}
                 lineName={lineShort}
                 direction="horizontal-on-desktop"
