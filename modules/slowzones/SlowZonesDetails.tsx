@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
+import Link from 'next/link';
 import { isArray } from 'lodash';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
@@ -61,6 +62,14 @@ export function SlowZonesDetails() {
       <ChartPageDiv>
         <WidgetDiv>
           <WidgetTitle title="Total slow time" />
+          <Link
+            href="https://transitmatters.org/blog/slowzonesupdate"
+            target="_blank"
+            className="whitespace-nowrap text-sm italic text-stone-600"
+          >
+            Time over Baseline across Line
+          </Link>
+
           <div className="relative flex flex-col">
             {totalSlowTimeReady ? (
               <TotalSlowTimeWrapper

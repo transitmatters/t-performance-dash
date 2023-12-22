@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import React, { useMemo, useState } from 'react';
 
+import Link from 'next/link';
 import { isArray } from 'lodash';
 import {
   useSlowzoneAllData,
@@ -68,6 +69,13 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
       <ChartPageDiv>
         <WidgetDiv>
           <WidgetTitle title="Total slow time" />
+          <Link
+            target="_blank"
+            href="https://transitmatters.org/blog/slowzonesupdate"
+            className="whitespace-nowrap text-sm italic text-stone-600"
+          >
+            Time over Baseline across Line
+          </Link>
           <div className="relative flex flex-col">
             {totalSlowTimeReady ? (
               <TotalSlowTime
