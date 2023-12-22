@@ -40,6 +40,7 @@ const BUS_MAX_DAY = dayjs(BUS_MAX_DATE);
 export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
   .subtract(7, 'days')
   .format(DATE_FORMAT);
+export const COMMUTER_RAIL_MIN_DATE = '2023-12-15';
 
 export const getESTDayjs = (date: string) => {
   return dayjs(date).tz(est);
@@ -74,7 +75,7 @@ export const FLAT_PICKER_OPTIONS: {
   },
   'Commuter Rail': {
     enableTime: false,
-    minDate: TRAIN_MIN_DATE,
+    minDate: COMMUTER_RAIL_MIN_DATE,
     maxDate: TODAY_STRING,
     altInput: true,
     altFormat: 'M j, Y',
