@@ -94,6 +94,7 @@ export interface AggregateLineProps extends LineProps {
   suggestedYMax?: number;
   byTime?: boolean;
   children?: React.ReactNode;
+  yUnit: string;
 }
 
 export interface SingleDayLineProps extends LineProps {

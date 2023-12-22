@@ -44,6 +44,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   suggestedYMax,
   showLegend = true,
   byTime = false,
+  yUnit = 'Minutes',
 }) => {
   const ref = useRef();
   const hourly = timeUnit === 'hour';
@@ -99,7 +100,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
               y: {
                 title: {
                   display: true,
-                  text: 'Minutes',
+                  text: yUnit,
                 },
                 ticks: {
                   precision: 1,

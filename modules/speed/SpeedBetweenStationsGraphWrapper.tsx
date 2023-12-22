@@ -8,7 +8,7 @@ import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { MiniWidgetCreator } from '../../common/components/widgets/MiniWidgetCreator';
 import { getSingleDayWidgets } from '../../common/utils/widgets';
 import { convertToStationSpeedDataset } from '../landing/utils';
-import { SpeedBetweenStationsSingleChart } from './SpeedBetweenStationsSingleChart';
+import { SpeedBetweenStationsSingleChart } from './charts/SpeedBetweenStationsSingleChart';
 
 interface SpeedBetweenStationsSingleWrapperProps {
   query: UseQueryResult<SingleDayDataPoint[]>;

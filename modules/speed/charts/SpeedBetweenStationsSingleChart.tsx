@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import type { SingleDayDataPoint } from '../../common/types/charts';
-import { MetricFieldKeys, PointFieldKeys } from '../../common/types/charts';
-import type { Station } from '../../common/types/stations';
-import { useDelimitatedRoute } from '../../common/utils/router';
-import { SingleDayLineChart } from '../../common/components/charts/SingleDayLineChart';
-import { getLocationDetails } from '../../common/utils/stations';
+import type { SingleDayDataPoint } from '../../../common/types/charts';
+import { MetricFieldKeys, PointFieldKeys } from '../../../common/types/charts';
+import type { Station } from '../../../common/types/stations';
+import { useDelimitatedRoute } from '../../../common/utils/router';
+import { SingleDayLineChart } from '../../../common/components/charts/SingleDayLineChart';
+import { getLocationDetails } from '../../../common/utils/stations';
 
 interface SpeedBetweenStationsSingleChartProps {
   traveltimes: SingleDayDataPoint[];

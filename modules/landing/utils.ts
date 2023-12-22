@@ -8,7 +8,7 @@ import {
 import { LINE_COLORS } from '../../common/constants/colors';
 import type { RidershipCount, DeliveredTripMetrics } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
-import type { SingleDayDataPoint } from '../../common/types/charts';
+import type { AggregateDataResponse, SingleDayDataPoint } from '../../common/types/charts';
 import { getStationDistance } from '../../common/utils/stations';
 
 const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
@@ -47,6 +47,10 @@ export const convertToSpeedDataset = (data: { [key in Line]?: DeliveredTripMetri
   });
 };
 
+function convertSecondsToMph(travelTimeSec: number | undefined, distanceMiles: number | undefined) {
+  return distanceMiles && travelTimeSec ? (3600 * distanceMiles) / travelTimeSec : undefined;
+}
+
 export const convertToStationSpeedDataset = (
   fromStationId: string,
   toStationId: string,
@@ -57,14 +61,47 @@ export const convertToStationSpeedDataset = (
     data?.map((datapoint) => {
       return {
         ...datapoint,
-        speed_mph: datapoint.travel_time_sec
-          ? (3600 * intervalDistance) / datapoint.travel_time_sec
-          : undefined,
-        benchmark_speed_mph: datapoint.benchmark_travel_time_sec
-          ? (3600 * intervalDistance) / datapoint.benchmark_travel_time_sec
-          : undefined,
+        speed_mph: convertSecondsToMph(datapoint.travel_time_sec, intervalDistance),
+        benchmark_speed_mph: convertSecondsToMph(
+          datapoint.benchmark_travel_time_sec,
+          intervalDistance
+        ),
       };
     }) ?? [];
+  return ret;
+};
+
+export const convertToAggregateStationSpeedDataset = (
+  fromStationId: string,
+  toStationId: string,
+  data: AggregateDataResponse[]
+) => {
+  const intervalDistance = getStationDistance(fromStationId, toStationId);
+
+  // i apologize for my sins 🙏
+  const ret = data.map((resp) => {
+    return {
+      by_time: resp.by_time.map((datapoint) => {
+        return {
+          ...datapoint,
+          mean: convertSecondsToMph(datapoint.mean, intervalDistance),
+          max: convertSecondsToMph(datapoint.max, intervalDistance),
+          min: convertSecondsToMph(datapoint.min, intervalDistance),
+          std: convertSecondsToMph(datapoint.std, intervalDistance),
+        };
+      }),
+      by_date: resp.by_time.map((datapoint) => {
+        return {
+          ...datapoint,
+          mean: convertSecondsToMph(datapoint.mean, intervalDistance),
+          max: convertSecondsToMph(datapoint.max, intervalDistance),
+          min: convertSecondsToMph(datapoint.min, intervalDistance),
+          std: convertSecondsToMph(datapoint.std, intervalDistance),
+        };
+      }),
+    };
+  });
+
   return ret;
 };
 
