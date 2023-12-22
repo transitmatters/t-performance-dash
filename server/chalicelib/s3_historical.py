@@ -1,4 +1,3 @@
-from datetime import datetime
 from chalicelib import s3
 from chalicelib.constants import EVENT_ARRIVAL, EVENT_DEPARTURE
 
