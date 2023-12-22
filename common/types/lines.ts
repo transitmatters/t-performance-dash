@@ -27,11 +27,12 @@ export type BusRoute =
 
 /** TODO: Expand list to all lines */
 export type CommuterRailRoute =
-  | 'cr-fitchburg'
-  | 'cr-franklin'
-  | 'cr-greenbush'
-  | 'cr-haverhill'
-  | 'cr-lowell';
+  | 'CR-Fitchburg'
+  | 'CR-Franklin'
+  | 'CR-Greenbush'
+  | 'CR-Haverhill'
+  | 'CR-Lowell'
+  | 'CR-Foxboro';
 
 export type LineMetadata = {
   name: string;
@@ -82,18 +83,20 @@ export const BUS_ROUTES: BusRoute[] = [
 ];
 
 export const COMMUTER_RAIL_ROUTES: CommuterRailRoute[] = [
-  'cr-fitchburg',
-  'cr-franklin',
-  'cr-greenbush',
-  'cr-haverhill',
-  'cr-lowell',
+  'CR-Fitchburg',
+  'CR-Franklin',
+  'CR-Greenbush',
+  'CR-Haverhill',
+  'CR-Lowell',
+  'CR-Foxboro',
 ];
 export const COMMUTER_RAIL_LINE_NAMES: { [line in CommuterRailRoute]: string } = {
-  'cr-fitchburg': 'Fitchburg Line',
-  'cr-franklin': 'Franklin Line',
-  'cr-greenbush': 'Greenbush Line',
-  'cr-haverhill': 'Haverhill Line',
-  'cr-lowell': 'Lowell Line',
+  'CR-Fitchburg': 'Fitchburg Line',
+  'CR-Franklin': 'Franklin Line',
+  'CR-Greenbush': 'Greenbush Line',
+  'CR-Haverhill': 'Haverhill Line',
+  'CR-Lowell': 'Lowell Line',
+  'CR-Foxboro': 'Foxboro Line',
 };
 
 export const ALL_LINE_PATHS = RAIL_LINES.map((line) => {

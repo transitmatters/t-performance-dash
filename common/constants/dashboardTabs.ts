@@ -14,6 +14,6 @@ export const DASHBOARD_TABS: {
   'Commuter Rail': {
     name: 'Commuter Rail',
     path: '/commuter-rail',
-    query: { crRoute: 'cr-lowell', date: COMMUTER_RAIL_DEFAULTS.singleTripConfig.date },
+    query: { crRoute: 'CR-Lowell', date: COMMUTER_RAIL_DEFAULTS.singleTripConfig.date },
   },
 };

@@ -2,7 +2,7 @@ import type { BusRoute, CommuterRailRoute, Line, LineShort } from '../types/line
 import { isLineMap, type Station } from '../types/stations';
 import type { Location } from '../types/charts';
 import type { Direction } from '../types/dataPoints';
-import { stations, rtStations, busStations } from '../constants/stations';
+import { stations, rtStations, busStations, crStations } from '../constants/stations';
 
 export const optionsForField = (
   type: 'from' | 'to',
@@ -54,7 +54,7 @@ export const optionsStation = (
 
 const createStationIndex = () => {
   const index: Record<string, Station> = {};
-  Object.values({ ...rtStations, ...busStations }).forEach((line) => {
+  Object.values({ ...rtStations, ...busStations, ...crStations }).forEach((line) => {
     line.stations.forEach((station) => {
       index[station.station] = station;
     });
@@ -64,7 +64,7 @@ const createStationIndex = () => {
 
 const createParentStationIndex = () => {
   const index: Record<string, Station> = {};
-  Object.values({ ...rtStations, ...busStations }).forEach((line) => {
+  Object.values({ ...rtStations, ...busStations, ...crStations }).forEach((line) => {
     line.stations.forEach((station) => {
       const allStopIds = [...(station.stops['0'] || []), ...(station.stops['1'] || [])];
       allStopIds.forEach((stopId) => {

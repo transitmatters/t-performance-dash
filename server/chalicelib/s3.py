@@ -28,8 +28,21 @@ def upload(key, bytes, compress=True):
     s3.put_object(Bucket=BUCKET, Key=key, Body=bytes)
 
 
-def is_bus(stop_id):
+def is_bus(stop_id: str):
     return ("-0-" in stop_id) or ("-1-" in stop_id)
+
+
+def is_cr(stop_id: str):
+    return stop_id.startswith("CR-")
+
+
+def get_live_folder(stop_id: str):
+    if is_bus(stop_id):
+        return "daily-bus-data"
+    elif is_cr(stop_id):
+        return "daily-cr-data"
+    else:
+        return "daily-data"
 
 
 def download_one_event_file(date, stop_id, live=False):
@@ -37,7 +50,7 @@ def download_one_event_file(date, stop_id, live=False):
     year, month, day = date.year, date.month, date.day
 
     if live:
-        folder = "daily-bus-data" if is_bus(stop_id) else "daily-data"
+        folder = get_live_folder(stop_id)
         key = f"Events-live/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
     else:
         folder = "monthly-bus-data" if is_bus(stop_id) else "monthly-data"

@@ -19,6 +19,7 @@ import bus_114_116_117 from './bus_constants/114-116-117.json';
 import cr_lowell from './cr_constants/cr-lowell.json';
 import cr_fitchburg from './cr_constants/cr-fitchburg.json';
 import cr_franklin from './cr_constants/cr-franklin.json';
+import cr_foxboro from './cr_constants/cr-foxboro.json';
 
 export const rtStations: { [key in Exclude<LineShort, 'Bus' | 'Commuter Rail'>]: LineMap } =
   stations_json;
@@ -40,18 +41,19 @@ export const busStations: { [key: string]: LineMap } = {
   ...bus_114_116_117,
 };
 
-export const commuterRailStations: { [key: string]: LineMap } = {
+export const crStations: { [key: string]: LineMap } = {
   ...cr_lowell,
   ...cr_fitchburg,
   ...cr_franklin,
+  ...cr_foxboro,
 };
 
-export const stations = { ...rtStations, Bus: busStations, 'Commuter Rail': commuterRailStations };
+export const stations = { ...rtStations, Bus: busStations, 'Commuter Rail': crStations };
 
 export const getBusRoutes = (): string[] => {
   return Object.keys(busStations);
 };
 
 export const getCommuterRailRoutes = (): string[] => {
-  return Object.keys(commuterRailStations);
+  return Object.keys(crStations);
 };
