@@ -51,7 +51,7 @@ def download_one_event_file(date, stop_id, live=False):
         if ex.response["Error"]["Code"] == "NoSuchKey":
             # raise Exception(f"Data not available on S3 for key {key} ") from None
             print(f"WARNING: No data available on S3 for key: {key}")
-            if live == False:
+            if not live:
                 return download_one_event_file(date, stop_id, live=True)
             return []
         else:
