@@ -1,5 +1,5 @@
 {
-  "cr-lowell": {
+  "cr-foxboro": {
     "type": "commuter-rail",
     "direction": {
       "0": "outbound",
@@ -7,8 +7,8 @@
     },
     "stations": [
       {
-        "stop_name": "Lowell",
-        "station": "place-NHRML-0254",
+        "stop_name": "Providence",
+        "station": "place-NEC-1851",
         "branches": null,
         "order": 1,
         "stops": {
@@ -17,18 +17,18 @@
         }
       },
       {
-        "stop_name": "North Billerica",
-        "station": "place-NHRML-0218",
+        "stop_name": "Pawtucket/Central Falls",
+        "station": "place-NEC-1891",
         "branches": null,
         "order": 2,
         "stops": {
           "0": [],
-          "1": ["NHRML-0218-02"]
+          "1": []
         }
       },
       {
-        "stop_name": "Wilmington",
-        "station": "place-NHRML-0152",
+        "stop_name": "Attleboro",
+        "station": "place-NEC-1969",
         "branches": null,
         "order": 3,
         "stops": {
@@ -37,18 +37,18 @@
         }
       },
       {
-        "stop_name": "Anderson/Woburn",
-        "station": "place-NHRML-0127",
+        "stop_name": "Mansfield",
+        "station": "place-NEC-2040",
         "branches": null,
         "order": 4,
         "stops": {
-          "0": ["NHRML-0127-01"],
-          "1": ["NHRML-0127-02"]
+          "0": [],
+          "1": []
         }
       },
       {
-        "stop_name": "Wedgemere",
-        "station": "place-NHRML-0073",
+        "stop_name": "South Station",
+        "station": "place-sstat",
         "branches": null,
         "order": 5,
         "stops": {
@@ -57,20 +57,30 @@
         }
       },
       {
-        "stop_name": "West Medford",
-        "station": "place-NHRML-0055",
+        "stop_name": "Back Bay",
+        "station": "place-bbsta",
         "branches": null,
         "order": 6,
         "stops": {
-          "0": ["NHRML-0055-01"],
+          "0": [],
           "1": []
         }
       },
       {
-        "stop_name": "North Station",
-        "station": "place-north",
+        "stop_name": "Dedham Corporate Center",
+        "station": "place-FB-0118",
         "branches": null,
         "order": 7,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Foxboro",
+        "station": "place-FS-0049",
+        "branches": null,
+        "order": 8,
         "stops": {
           "0": [],
           "1": []
