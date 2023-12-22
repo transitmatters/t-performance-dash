@@ -32,12 +32,16 @@ def is_bus(stop_id):
     return ("-0-" in stop_id) or ("-1-" in stop_id)
 
 
-def download_one_event_file(date, stop_id):
+def download_one_event_file(date, stop_id, live=False):
     """As advertised: single event file from s3"""
-    year, month = date.year, date.month
+    year, month, day = date.year, date.month, date.day
 
-    folder = "monthly-bus-data" if is_bus(stop_id) else "monthly-data"
-    key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
+    if live:
+        folder = "daily-bus-data" if is_bus(stop_id) else "daily-data"
+        key = f"Events-live/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
+    else:
+        folder = "monthly-bus-data" if is_bus(stop_id) else "monthly-data"
+        key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
 
     # Download events from S3
     try:
@@ -47,6 +51,8 @@ def download_one_event_file(date, stop_id):
         if ex.response["Error"]["Code"] == "NoSuchKey":
             # raise Exception(f"Data not available on S3 for key {key} ") from None
             print(f"WARNING: No data available on S3 for key: {key}")
+            if not live:
+                return download_one_event_file(date, stop_id, live=True)
             return []
         else:
             raise
@@ -68,7 +74,9 @@ def parallel_download_events(datestop):
 
 
 def download_events(sdate, edate, stops):
-    datestops = itertools.product(parallel.month_range(sdate, edate), stops)
+    # This used to be month_range but updated to date_range to support live ranges
+    # If something breaks, this may be why
+    datestops = itertools.product(parallel.date_range(sdate, edate), stops)
     result = parallel_download_events(datestops)
     result = filter(lambda row: sdate.strftime("%Y-%m-%d") <= row["service_date"] <= edate.strftime("%Y-%m-%d"), result)
     return sorted(result, key=lambda row: row["event_time"])
