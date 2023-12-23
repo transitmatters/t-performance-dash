@@ -141,6 +141,14 @@ export const useTripExplorerQueries: UseQueriesOverload = (
       [QueryNameKeys.headways]: requests[1],
     };
   }
+
+  if (busOrSubway === 'cr') {
+    return {
+      [QueryNameKeys.traveltimes]: requests[0],
+      [QueryNameKeys.headways]: requests[1],
+    };
+  }
+
   return {
     [QueryNameKeys.traveltimes]: requests[0],
     [QueryNameKeys.headways]: requests[1],

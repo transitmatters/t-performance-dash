@@ -12,8 +12,8 @@
         "branches": null,
         "order": 1,
         "stops": {
-          "0": ["NHRML-0254-01"],
-          "1": ["NHRML-0254-02"]
+          "0": ["CR-Lowell_0_NHRML-0254-01"],
+          "1": ["CR-Lowell_1_NHRML-0254-02", "CR-Lowell_1_NHRML-0254-04"]
         }
       },
       {
@@ -22,8 +22,8 @@
         "branches": null,
         "order": 2,
         "stops": {
-          "0": ["NHRML-0218-01"],
-          "1": ["NHRML-0218-02"]
+          "0": ["CR-Lowell_0_NHRML-0218-01"],
+          "1": ["CR-Lowell_1_NHRML-0218-02"]
         }
       },
       {
@@ -32,8 +32,8 @@
         "branches": null,
         "order": 3,
         "stops": {
-          "0": ["NHRML-0152-01"],
-          "1": ["NHRML-0152-02"]
+          "0": ["CR-Lowell_0_NHRML-0152-01"],
+          "1": ["CR-Lowell_1_NHRML-0152-02"]
         }
       },
       {
@@ -42,8 +42,8 @@
         "branches": null,
         "order": 4,
         "stops": {
-          "0": ["NHRML-0127-01"],
-          "1": ["NHRML-0127-02"]
+          "0": ["CR-Lowell_0_NHRML-0127-01"],
+          "1": ["CR-Lowell_1_NHRML-0127-02"]
         }
       },
       {
@@ -52,8 +52,8 @@
         "branches": null,
         "order": 5,
         "stops": {
-          "0": ["NHRML-0073-01"],
-          "1": ["NHRML-0073-02"]
+          "0": ["CR-Lowell_0_NHRML-0073-01"],
+          "1": ["CR-Lowell_1_NHRML-0073-02"]
         }
       },
       {
@@ -62,8 +62,8 @@
         "branches": null,
         "order": 6,
         "stops": {
-          "0": ["NHRML-0055-01"],
-          "1": ["NHRML-0055-02"]
+          "0": ["CR-Lowell_0_NHRML-0055-01"],
+          "1": ["CR-Lowell_1_NHRML-0055-02"]
         }
       },
       {
