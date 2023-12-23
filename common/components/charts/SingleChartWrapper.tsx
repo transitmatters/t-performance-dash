@@ -6,7 +6,7 @@ import { ChartPlaceHolder } from '../graphics/ChartPlaceHolder';
 import { TravelTimesSingleChart } from '../../../modules/traveltimes/charts/TravelTimesSingleChart';
 import { HeadwaysSingleChart } from '../../../modules/headways/charts/HeadwaysSingleChart';
 import { DwellsSingleChart } from '../../../modules/dwells/charts/DwellsSingleChart';
-import { SpeedBetweenStationsSingleChart } from '../../../modules/speed/SpeedBetweenStationsSingleChart';
+import { SpeedBetweenStationsSingleChart } from '../../../modules/speed/charts/SpeedBetweenStationsSingleChart';
 
 interface SingleChartWrapperProps {
   query: UseQueryResult<SingleDayDataPoint[]>;

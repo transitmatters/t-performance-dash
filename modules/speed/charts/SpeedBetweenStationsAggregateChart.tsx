@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
-import type { AggregateDataResponse, SpeedBetweenStationsUnit } from '../../../common/types/charts';
+import type { AggregateDataResponse, TravelTimesUnit } from '../../../common/types/charts';
 import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
@@ -12,7 +12,7 @@ interface SpeedBetweenStationsAggregateChartProps {
   traveltimes: AggregateDataResponse;
   toStation: Station;
   fromStation: Station;
-  timeUnit?: SpeedBetweenStationsUnit;
+  timeUnit?: TravelTimesUnit;
   peakTime?: boolean;
 }
 
