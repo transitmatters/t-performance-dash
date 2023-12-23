@@ -6,6 +6,7 @@ import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { getLocationDetails } from '../../../common/utils/stations';
+import { convertToAggregateStationSpeedDataset } from '../../landing/utils';
 
 interface SpeedBetweenStationsAggregateChartProps {
   traveltimes: AggregateDataResponse;
@@ -28,16 +29,15 @@ export const SpeedBetweenStationsAggregateChart: React.FC<
     const traveltimesData = timeUnitByDate
       ? traveltimes.by_date.filter((datapoint) => datapoint.peak === 'all')
       : traveltimes.by_time.filter((datapoint) => datapoint.is_peak_day === peakTime);
-    function convertToAggregateStationSpeedDataset(
-      traveltimesData: import('../../../common/types/charts').AggregateDataPoint[]
-    ): import('../../../common/types/charts').AggregateDataPoint[] {
-      throw new Error('Function not implemented.');
-    }
 
     return (
       <AggregateLineChart
-        chartId={`travel_times_agg_${timeUnitByDate ? 'by_date' : 'by_time'}`}
-        data={convertToAggregateStationSpeedDataset(traveltimesData)}
+        chartId={`speed_between_stations_agg_${timeUnitByDate ? 'by_date' : 'by_time'}`}
+        data={convertToAggregateStationSpeedDataset(
+          fromStation.station,
+          toStation.station,
+          traveltimesData
+        )}
         // This is service date when agg by date. dep_time_from_epoch when agg by hour
         pointField={timeUnitByDate ? PointFieldKeys.serviceDate : PointFieldKeys.depTimeFromEpoch}
         timeUnit={timeUnitByDate ? 'day' : 'hour'}

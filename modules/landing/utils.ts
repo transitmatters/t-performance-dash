@@ -8,7 +8,7 @@ import {
 import { LINE_COLORS } from '../../common/constants/colors';
 import type { RidershipCount, DeliveredTripMetrics } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
-import type { AggregateDataResponse, SingleDayDataPoint } from '../../common/types/charts';
+import type { AggregateDataPoint, SingleDayDataPoint } from '../../common/types/charts';
 import { getStationDistance } from '../../common/utils/stations';
 
 const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
@@ -74,33 +74,24 @@ export const convertToStationSpeedDataset = (
 export const convertToAggregateStationSpeedDataset = (
   fromStationId: string,
   toStationId: string,
-  data: AggregateDataResponse[]
+  data: AggregateDataPoint[]
 ) => {
   const intervalDistance = getStationDistance(fromStationId, toStationId);
 
-  // i apologize for my sins 🙏
-  const ret = data.map((resp) => {
+  const ret = data.map((datapoint) => {
     return {
-      by_time: resp.by_time.map((datapoint) => {
-        return {
-          ...datapoint,
-          mean: convertSecondsToMph(datapoint.mean, intervalDistance),
-          max: convertSecondsToMph(datapoint.max, intervalDistance),
-          min: convertSecondsToMph(datapoint.min, intervalDistance),
-          std: convertSecondsToMph(datapoint.std, intervalDistance),
-        };
-      }),
-      by_date: resp.by_time.map((datapoint) => {
-        return {
-          ...datapoint,
-          mean: convertSecondsToMph(datapoint.mean, intervalDistance),
-          max: convertSecondsToMph(datapoint.max, intervalDistance),
-          min: convertSecondsToMph(datapoint.min, intervalDistance),
-          std: convertSecondsToMph(datapoint.std, intervalDistance),
-        };
-      }),
+      ...datapoint,
+      // could be bad to default to zero here
+      '25%': convertSecondsToMph(datapoint['25%'], intervalDistance) ?? 0,
+      '50%': convertSecondsToMph(datapoint['50%'], intervalDistance) ?? 0,
+      '75%': convertSecondsToMph(datapoint['75%'], intervalDistance) ?? 0,
+      mean: convertSecondsToMph(datapoint.mean, intervalDistance) ?? 0,
+      max: convertSecondsToMph(datapoint.max, intervalDistance) ?? 0,
+      min: convertSecondsToMph(datapoint.min, intervalDistance) ?? 0,
+      std: convertSecondsToMph(datapoint.std, intervalDistance) ?? 0,
     };
   });
+  console.log(`return value ${JSON.stringify(ret)}`);
 
   return ret;
 };

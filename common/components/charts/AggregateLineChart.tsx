@@ -51,6 +51,8 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
 
+  const multiplier = yUnit === 'Minutes' ? 1 / 60 : 1;
+
   return (
     <ChartBorder>
       <ChartDiv isMobile={isMobile}>
@@ -73,7 +75,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 pointRadius: byTime ? 0 : 3,
                 pointHitRadius: 10,
                 stepped: byTime,
-                data: data.map((item: AggregateDataPoint) => (item['50%'] / 60).toFixed(2)),
+                data: data.map((item: AggregateDataPoint) => (item['50%'] * multiplier).toFixed(2)),
               },
               {
                 label: '25th percentile',
@@ -82,7 +84,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 stepped: byTime,
                 tension: 0.4,
                 pointRadius: 0,
-                data: data.map((item: AggregateDataPoint) => (item['25%'] / 60).toFixed(2)),
+                data: data.map((item: AggregateDataPoint) => (item['25%'] * multiplier).toFixed(2)),
               },
               {
                 label: '75th percentile',
@@ -91,7 +93,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 stepped: byTime,
                 tension: 0.4,
                 pointRadius: 0,
-                data: data.map((item: AggregateDataPoint) => (item['75%'] / 60).toFixed(2)),
+                data: data.map((item: AggregateDataPoint) => (item['75%'] * multiplier).toFixed(2)),
               },
             ],
           }}
@@ -147,10 +149,11 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 position: 'nearest',
                 callbacks: {
                   label: (tooltipItem) => {
-                    return `${tooltipItem.dataset.label}: ${getFormattedTimeString(
-                      tooltipItem.parsed.y,
-                      'minutes'
-                    )}`;
+                    return `${tooltipItem.dataset.label}: ${
+                      yUnit === 'Minutes'
+                        ? getFormattedTimeString(tooltipItem.parsed.y, 'minutes')
+                        : `${tooltipItem.parsed.y} ${yUnit}`
+                    }`;
                   },
                 },
               },

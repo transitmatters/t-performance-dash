@@ -38,15 +38,15 @@ const getAggDataPointsOfInterest = (aggData: AggregateDataPoint[]) => {
   return { average, min, max, median, p10, p90 };
 };
 
-export const getAggDataWidgets = (aggData: AggregateDataPoint[]) => {
+export const getAggDataWidgets = (aggData: AggregateDataPoint[], type: 'times' | 'speeds') => {
   const { average, min, max, median, p10, p90 } = getAggDataPointsOfInterest(aggData);
   return [
-    { text: 'Avg', widgetValue: new TimeWidgetValue(average), type: 'data' },
-    { text: 'Median', widgetValue: new TimeWidgetValue(median), type: 'data' },
-    { text: '10%', widgetValue: new TimeWidgetValue(p10), type: 'data' },
-    { text: '90%', widgetValue: new TimeWidgetValue(p90), type: 'data' },
-    { text: 'Min', widgetValue: new TimeWidgetValue(min), type: 'data' },
-    { text: 'Max', widgetValue: new TimeWidgetValue(max), type: 'data' },
+    { text: 'Avg', widgetValue: getWidget(type, average), type: 'data' },
+    { text: 'Median', widgetValue: getWidget(type, median), type: 'data' },
+    { text: '10%', widgetValue: getWidget(type, p10), type: 'data' },
+    { text: '90%', widgetValue: getWidget(type, p90), type: 'data' },
+    { text: 'Min', widgetValue: getWidget(type, min), type: 'data' },
+    { text: 'Max', widgetValue: getWidget(type, max), type: 'data' },
   ];
 };
 
@@ -71,16 +71,13 @@ const getSingleDayPointsOfInterest = (
   return { max, min, median, average, p10, p90 };
 };
 
-export const getWidget = (
-  type: 'traveltimes' | 'dwells' | 'headways' | 'speeds',
-  value: number | undefined
-) => {
+function getWidget(type: string, value: number | undefined) {
   if (type === 'speeds') {
     return new MPHWidgetValue(value);
   } else {
     return new TimeWidgetValue(value);
   }
-};
+}
 
 export const getSingleDayWidgets = (
   data: SingleDayDataPoint[],
