@@ -41,6 +41,7 @@ def transform_to_line(route_from_api: str):
     else:
         return "Green"
 
+
 def initialize_interstop_data():
     # stop id => distance to other reachable stops on the same route
     stop_distances: WeightedGraph = {}
