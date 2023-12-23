@@ -34,6 +34,13 @@ import requests
 WeightedGraph: TypeAlias = Dict[str, Dict[str, float]]
 
 
+# for the purpose of this, we need all the green to be one line
+def transform_to_line(route_from_api: str):
+    if not route_from_api.startswith("Green"):
+        return route_from_api
+    else:
+        return "Green"
+
 def initialize_interstop_data():
     # stop id => distance to other reachable stops on the same route
     stop_distances: WeightedGraph = {}
@@ -85,9 +92,9 @@ def initialize_interstop_data():
 
         from_station_lines = station_lines.get(from_station_id, set())
         to_station_lines = station_lines.get(to_station_id, set())
-
-        from_station_lines.add(distance_details["route_id"])
-        to_station_lines.add(distance_details["route_id"])
+        transformed_line = transform_to_line(distance_details["route_id"])
+        from_station_lines.add(transformed_line)
+        to_station_lines.add(transformed_line)
 
         station_lines[from_station_id] = from_station_lines
         station_lines[to_station_id] = to_station_lines
@@ -139,6 +146,7 @@ def enrich_distances(target_stop_id, stop_distances, station_distances, stop_sta
 def connect_stations_graph(station_id, station_distances, station_lines):
     stk = []
     seen_stations = set()
+    seen_stations.add(station_id)
 
     for dest, dist in station_distances[station_id].items():
         stk.append((dest, dist))
@@ -156,7 +164,8 @@ def connect_stations_graph(station_id, station_distances, station_lines):
         for second_dest, second_dist in station_distances[dest].items():
             # the station we're going to is unseen and is on one of the lines we started on
             # this should help to avoid inter-line cycles
-            if second_dest not in seen_stations and len(station_lines[station_id].intersection(second_dest)) > 0:
+            common_lines = station_lines[second_dest].intersection(station_lines[station_id])
+            if second_dest not in seen_stations and len(common_lines) > 0:
                 stk.append((second_dest, second_dist + dist))
 
 
