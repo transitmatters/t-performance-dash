@@ -13,7 +13,7 @@
         "order": 1,
         "stops": {
           "0": [],
-          "1": []
+          "1": ["CR-Fitchburg_1_FR-3338-CS"]
         }
       },
       {
@@ -22,8 +22,8 @@
         "branches": null,
         "order": 2,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0494-CS"],
+          "1": ["CR-Fitchburg_1_FR-0494-CS"]
         }
       },
       {
@@ -32,8 +32,8 @@
         "branches": null,
         "order": 3,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0451-01"],
+          "1": ["CR-Fitchburg_1_FR-0451-02"]
         }
       },
       {
@@ -42,8 +42,8 @@
         "branches": null,
         "order": 4,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0394-01"],
+          "1": ["CR-Fitchburg_1_FR-0394-02"]
         }
       },
       {
@@ -52,8 +52,8 @@
         "branches": null,
         "order": 5,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0361-01"],
+          "1": ["CR-Fitchburg_1_FR-0361-02"]
         }
       },
       {
@@ -62,8 +62,8 @@
         "branches": null,
         "order": 6,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0301-01"],
+          "1": ["CR-Fitchburg_1_FR-0301-02"]
         }
       },
       {
@@ -72,8 +72,8 @@
         "branches": null,
         "order": 7,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0253-01"],
+          "1": ["CR-Fitchburg_1_FR-0253-02"]
         }
       },
       {
@@ -82,8 +82,8 @@
         "branches": null,
         "order": 8,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0219-01"],
+          "1": ["CR-Fitchburg_1_FR-0219-02"]
         }
       },
       {
@@ -92,8 +92,8 @@
         "branches": null,
         "order": 9,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0201-01"],
+          "1": ["CR-Fitchburg_1_FR-0201-02"]
         }
       },
       {
@@ -102,8 +102,8 @@
         "branches": null,
         "order": 10,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0167-01"],
+          "1": ["CR-Fitchburg_1_FR-0167-02"]
         }
       },
       {
@@ -112,8 +112,8 @@
         "branches": null,
         "order": 11,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0132-01"],
+          "1": ["CR-Fitchburg_1_FR-0132-02"]
         }
       },
       {
@@ -122,8 +122,8 @@
         "branches": null,
         "order": 12,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0115-01"],
+          "1": ["CR-Fitchburg_1_FR-0115-02"]
         }
       },
       {
@@ -132,8 +132,8 @@
         "branches": null,
         "order": 13,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0098-01"],
+          "1": ["CR-Fitchburg_1_FR-0098-S"]
         }
       },
       {
@@ -142,8 +142,8 @@
         "branches": null,
         "order": 14,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0074-01"],
+          "1": ["CR-Fitchburg_1_FR-0074-02"]
         }
       },
       {
@@ -152,8 +152,8 @@
         "branches": null,
         "order": 15,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0064-01"],
+          "1": ["CR-Fitchburg_1_FR-0064-02"]
         }
       },
       {
@@ -162,8 +162,8 @@
         "branches": null,
         "order": 16,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_FR-0034-01"],
+          "1": ["CR-Fitchburg_1_FR-0034-02"]
         }
       },
       {
@@ -172,8 +172,8 @@
         "branches": null,
         "order": 17,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Fitchburg_0_BNT-0000"],
+          "1": ["CR-Fitchburg_0_BNT-0000-08"]
         }
       }
     ]
