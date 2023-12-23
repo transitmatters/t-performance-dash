@@ -97,7 +97,7 @@ def headways(stop_ids, sdate, edate):
     return headways
 
 
-def travel_times(stops_a, stops_b, sdate, edate):
+def travel_times(stops_a: list, stops_b: list, sdate, edate):
     rows_by_time_a = s3.download_events(sdate, edate, stops_a)
     rows_by_time_b = s3.download_events(sdate, edate, stops_b)
 

@@ -134,7 +134,7 @@ def process_mbta_headways(stops, sdate, edate=None):
     return sorted(headways, key=lambda x: x["current_dep_dt"])
 
 
-def travel_times(sdate, from_stops, to_stops, edate=None):
+def travel_times(sdate: date, from_stops: list, to_stops: list, edate=None):
     if edate is None:
         if use_S3(sdate, is_bus(from_stops)) or use_S3(sdate, is_cr(from_stops)):
             return s3_historical.travel_times(from_stops, to_stops, sdate, sdate)

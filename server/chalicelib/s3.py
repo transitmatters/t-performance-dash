@@ -86,7 +86,7 @@ def parallel_download_events(datestop):
     return download_one_event_file(date, stop)
 
 
-def download_events(sdate, edate, stops):
+def download_events(sdate, edate, stops: list):
     # This used to be month_range but updated to date_range to support live ranges
     # If something breaks, this may be why
     datestops = itertools.product(parallel.date_range(sdate, edate), stops)

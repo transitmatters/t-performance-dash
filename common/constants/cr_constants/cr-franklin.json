@@ -13,7 +13,7 @@
         "order": 1,
         "stops": {
           "0": [],
-          "1": []
+          "1": ["CR-Franklin_1_FB-0303-S"]
         }
       },
       {
@@ -22,8 +22,8 @@
         "branches": null,
         "order": 2,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Franklin_0_FB-0275-S"],
+          "1": ["CR-Franklin_1_FB-0275-S"]
         }
       },
       {
@@ -32,8 +32,8 @@
         "branches": null,
         "order": 3,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Franklin_0_FB-0230-S"],
+          "1": ["CR-Franklin_1_FB-0230-S"]
         }
       },
       {
@@ -43,7 +43,7 @@
         "order": 4,
         "stops": {
           "0": [],
-          "1": []
+          "1": ["CR-Franklin_1_FS-0049-S"]
         }
       },
       {
@@ -52,8 +52,8 @@
         "branches": null,
         "order": 5,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Franklin_0_FB-0191-S"],
+          "1": ["CR-Franklin_1_FB-0191-S"]
         }
       },
       {
@@ -62,8 +62,8 @@
         "branches": null,
         "order": 6,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Franklin_0_FB-0166-S"],
+          "1": ["CR-Franklin_1_FB-0166-S"]
         }
       },
       {
@@ -72,8 +72,8 @@
         "branches": null,
         "order": 7,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Franklin_0_FB-0148-01"],
+          "1": ["CR-Franklin_1_FB-0148-02"]
         }
       },
       {
@@ -82,8 +82,8 @@
         "branches": null,
         "order": 8,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Franklin_0_FB-0143-01"],
+          "1": ["CR-Franklin_1_FB-0143-02"]
         }
       },
       {
@@ -92,8 +92,8 @@
         "branches": null,
         "order": 9,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Franklin_0_FB-0125-01"],
+          "1": ["CR-Franklin_1_FB-0125-02"]
         }
       },
       {
@@ -102,8 +102,8 @@
         "branches": null,
         "order": 10,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Franklin_0_FB-0118-01"],
+          "1": ["CR-Franklin_1_FB-0118-02"]
         }
       },
       {
@@ -112,8 +112,8 @@
         "branches": null,
         "order": 11,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Franklin_0_FB-0109-01"],
+          "1": ["CR-Franklin_1_FB-0109-02"]
         }
       },
       {
@@ -122,8 +122,8 @@
         "branches": null,
         "order": 12,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Franklin_0_FB-0095-05"],
+          "1": ["CR-Franklin_1_FB-0095-05"]
         }
       },
       {
@@ -132,7 +132,7 @@
         "branches": null,
         "order": 13,
         "stops": {
-          "0": [],
+          "0": ["CR-Franklin_0_NEC-2237-03"],
           "1": []
         }
       },
@@ -142,8 +142,8 @@
         "branches": null,
         "order": 14,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Franklin_0_NEC-2265-01"],
+          "1": ["CR-Franklin_1_NEC-2265-03"]
         }
       },
       {
@@ -152,8 +152,8 @@
         "branches": null,
         "order": 15,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Franklin_0_NEC-2276-01"],
+          "1": ["CR-Franklin_1_NEC-2276-03"]
         }
       },
       {
@@ -162,8 +162,25 @@
         "branches": null,
         "order": 16,
         "stops": {
-          "0": [],
-          "1": []
+          "0": [
+            "CR-Franklin_0_NEC-2287",
+            "CR-Franklin_0_DB-2205-01",
+            "CR-Franklin_0_DB-2222-01",
+            "CR-Franklin_0_DB-2230-01",
+            "CR-Franklin_0_DB-2240-01",
+            "CR-Franklin_0_DB-2249-01",
+            "CR-Franklin_0_DB-2258-01",
+            "CR-Franklin_0_DB-2265-01"
+          ],
+          "1": [
+            "CR-Franklin_1_DB-2205-02",
+            "CR-Franklin_1_DB-2222-02",
+            "CR-Franklin_1_DB-2230-02",
+            "CR-Franklin_1_DB-2240-02",
+            "CR-Franklin_1_DB-2249-02",
+            "CR-Franklin_1_DB-2258-02",
+            "CR-Franklin_1_DB-2265-02"
+          ]
         }
       },
       {
@@ -172,7 +189,7 @@
         "branches": null,
         "order": 17,
         "stops": {
-          "0": [],
+          "0": ["CR-Franklin_0_NEC-2203-03"],
           "1": []
         }
       }
