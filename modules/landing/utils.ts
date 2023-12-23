@@ -91,7 +91,6 @@ export const convertToAggregateStationSpeedDataset = (
       std: convertSecondsToMph(datapoint.std, intervalDistance) ?? 0,
     };
   });
-  console.log(`return value ${JSON.stringify(ret)}`);
 
   return ret;
 };
