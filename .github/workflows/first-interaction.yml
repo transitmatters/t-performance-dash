@@ -6,7 +6,7 @@ on:
     types: [opened]
 
 jobs:
-  check_for_first_interaction:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/first-interaction@v1
