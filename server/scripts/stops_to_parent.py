@@ -1,44 +1,22 @@
 import json
 import os
 import requests
+import boto3
+import botocore
 
 MBTA_V3_API_KEY = os.environ.get("MBTA_V3_API_KEY", "")
 
-stop_names = [
-    "CR-Fitchburg_0_BNT-0000",
-    "CR-Fitchburg_0_BNT-0000-08",
-    "CR-Fitchburg_0_FR-0034-01",
-    "CR-Fitchburg_0_FR-0064-01",
-    "CR-Fitchburg_0_FR-0074-01",
-    "CR-Fitchburg_0_FR-0098-01",
-    "CR-Fitchburg_0_FR-0115-01",
-    "CR-Fitchburg_0_FR-0132-01",
-    "CR-Fitchburg_0_FR-0167-01",
-    "CR-Fitchburg_0_FR-0201-01",
-    "CR-Fitchburg_0_FR-0219-01",
-    "CR-Fitchburg_0_FR-0253-01",
-    "CR-Fitchburg_0_FR-0301-01",
-    "CR-Fitchburg_0_FR-0361-01",
-    "CR-Fitchburg_0_FR-0394-01",
-    "CR-Fitchburg_0_FR-0451-01",
-    "CR-Fitchburg_0_FR-0494-CS",
-    "CR-Fitchburg_1_FR-0034-02",
-    "CR-Fitchburg_1_FR-0064-02",
-    "CR-Fitchburg_1_FR-0074-02",
-    "CR-Fitchburg_1_FR-0098-S",
-    "CR-Fitchburg_1_FR-0115-02",
-    "CR-Fitchburg_1_FR-0132-02",
-    "CR-Fitchburg_1_FR-0167-02",
-    "CR-Fitchburg_1_FR-0201-02",
-    "CR-Fitchburg_1_FR-0219-02",
-    "CR-Fitchburg_1_FR-0253-02",
-    "CR-Fitchburg_1_FR-0301-02",
-    "CR-Fitchburg_1_FR-0361-02",
-    "CR-Fitchburg_1_FR-0394-02",
-    "CR-Fitchburg_1_FR-0451-02",
-    "CR-Fitchburg_1_FR-0494-CS",
-    "CR-Fitchburg_1_FR-3338-CS",
-]
+LINE_KEY = "CR-Fitchburg"
+
+BUCKET = "tm-mbta-performance"
+s3 = boto3.client("s3", config=botocore.client.Config(max_pool_connections=15))
+
+objects = s3.list_objects_v2(Bucket=BUCKET, Prefix="Events-live/daily-cr-data/{}".format(LINE_KEY))
+
+stop_names = set()
+
+for obj in objects["Contents"]:
+    stop_names.add(obj["Key"].split("/")[2])
 
 stop_ids = []
 

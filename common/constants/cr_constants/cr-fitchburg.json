@@ -172,8 +172,12 @@
         "branches": null,
         "order": 17,
         "stops": {
-          "0": ["CR-Fitchburg_0_BNT-0000"],
-          "1": ["CR-Fitchburg_0_BNT-0000-08"]
+          "0": [
+            "CR-Fitchburg_0_BNT-0000-10",
+            "CR-Fitchburg_0_BNT-0000-08",
+            "CR-Fitchburg_0_BNT-0000"
+          ],
+          "1": []
         }
       }
     ]

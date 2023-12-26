@@ -152,7 +152,12 @@
         "branches": null,
         "order": 15,
         "stops": {
-          "0": ["CR-Haverhill_0_BNT-0000", "CR-Haverhill_0_BNT-0000-01"],
+          "0": [
+            "CR-Haverhill_0_BNT-0000-03",
+            "CR-Haverhill_0_BNT-0000-05",
+            "CR-Haverhill_0_BNT-0000-01",
+            "CR-Haverhill_0_BNT-0000"
+          ],
           "1": []
         }
       }

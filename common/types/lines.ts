@@ -33,7 +33,13 @@ export type CommuterRailRoute =
   | 'CR-Haverhill'
   | 'CR-Lowell'
   | 'CR-Foxboro'
-  | 'CR-Worcester';
+  | 'CR-Worcester'
+  | 'CR-Fairmount'
+  | 'CR-Kingston'
+  | 'CR-Middleborough'
+  | 'CR-Needham'
+  | 'CR-Newburyport'
+  | 'CR-Providence';
 
 export type LineMetadata = {
   name: string;
@@ -84,13 +90,19 @@ export const BUS_ROUTES: BusRoute[] = [
 ];
 
 export const COMMUTER_RAIL_ROUTES: CommuterRailRoute[] = [
+  'CR-Fairmount',
   'CR-Fitchburg',
+  'CR-Worcester',
   'CR-Franklin',
   'CR-Greenbush',
   'CR-Haverhill',
+  'CR-Kingston',
   'CR-Lowell',
+  'CR-Middleborough',
+  'CR-Needham',
+  'CR-Newburyport',
+  'CR-Providence',
   'CR-Foxboro',
-  'CR-Worcester',
 ];
 export const COMMUTER_RAIL_LINE_NAMES: { [line in CommuterRailRoute]: string } = {
   'CR-Fitchburg': 'Fitchburg Line',
@@ -100,6 +112,12 @@ export const COMMUTER_RAIL_LINE_NAMES: { [line in CommuterRailRoute]: string } =
   'CR-Lowell': 'Lowell Line',
   'CR-Foxboro': 'Foxboro Line',
   'CR-Worcester': 'Worcester Line',
+  'CR-Fairmount': 'Fairmount Line',
+  'CR-Kingston': 'Kingston/Plymouth Line',
+  'CR-Middleborough': 'Middleborough Line',
+  'CR-Needham': 'Needham Line',
+  'CR-Newburyport': 'Newburyport/Rockport Line',
+  'CR-Providence': 'Providence/Stoughton Line',
 };
 
 export const ALL_LINE_PATHS = RAIL_LINES.map((line) => {

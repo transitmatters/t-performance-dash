@@ -22,6 +22,11 @@ import cr_franklin from './cr_constants/cr-franklin.json';
 import cr_worcester from './cr_constants/cr-worcester.json';
 import cr_haverhill from './cr_constants/cr-haverhill.json';
 import cr_greenbush from './cr_constants/cr-greenbush.json';
+import cr_fairmount from './cr_constants/cr-fairmount.json';
+import cr_kingston from './cr_constants/cr-kingston.json';
+import cr_middleborough from './cr_constants/cr-middleborough.json';
+import cr_needham from './cr_constants/cr-needham.json';
+import cr_providence from './cr_constants/cr-providence.json';
 
 export const rtStations: { [key in Exclude<LineShort, 'Bus' | 'Commuter Rail'>]: LineMap } =
   stations_json;
@@ -50,6 +55,11 @@ export const crStations: { [key: string]: LineMap } = {
   ...cr_worcester,
   ...cr_haverhill,
   ...cr_greenbush,
+  ...cr_fairmount,
+  ...cr_kingston,
+  ...cr_middleborough,
+  ...cr_needham,
+  ...cr_providence,
 };
 
 export const stations = { ...rtStations, Bus: busStations, 'Commuter Rail': crStations };

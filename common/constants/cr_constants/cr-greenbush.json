@@ -102,8 +102,8 @@
         "branches": null,
         "order": 10,
         "stops": {
-          "0": ["CR-Greenbush_0_NEC-2287"],
-          "1": ["CR-Greenbush_0_NEC-2287-13"]
+          "0": ["CR-Greenbush_0_NEC-2287", "CR-Greenbush_0_NEC-2287-13"],
+          "1": []
         }
       }
     ]

@@ -133,7 +133,7 @@
         "order": 13,
         "stops": {
           "0": ["CR-Franklin_0_NEC-2237-03"],
-          "1": []
+          "1": ["CR-Franklin_1_NEC-2237-03"]
         }
       },
       {
@@ -152,11 +152,7 @@
         "branches": null,
         "order": 15,
         "stops": {
-          "0": [
-            "CR-Franklin_0_NEC-2276-01",
-            "CR-Franklin_0_NEC-2276-01",
-            "CR-Franklin_0_NEC-2276-01"
-          ],
+          "0": ["CR-Franklin_0_NEC-2276-01"],
           "1": ["CR-Franklin_1_NEC-2276-03"]
         }
       },
@@ -166,25 +162,8 @@
         "branches": null,
         "order": 16,
         "stops": {
-          "0": [
-            "CR-Franklin_0_NEC-2287",
-            "CR-Franklin_0_DB-2205-01",
-            "CR-Franklin_0_DB-2222-01",
-            "CR-Franklin_0_DB-2230-01",
-            "CR-Franklin_0_DB-2240-01",
-            "CR-Franklin_0_DB-2249-01",
-            "CR-Franklin_0_DB-2258-01",
-            "CR-Franklin_0_DB-2265-01"
-          ],
-          "1": [
-            "CR-Franklin_1_DB-2205-02",
-            "CR-Franklin_1_DB-2222-02",
-            "CR-Franklin_1_DB-2230-02",
-            "CR-Franklin_1_DB-2240-02",
-            "CR-Franklin_1_DB-2249-02",
-            "CR-Franklin_1_DB-2258-02",
-            "CR-Franklin_1_DB-2265-02"
-          ]
+          "0": ["CR-Franklin_0_NEC-2287"],
+          "1": []
         }
       },
       {
