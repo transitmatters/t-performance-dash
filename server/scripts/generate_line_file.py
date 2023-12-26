@@ -22,29 +22,27 @@ def get_line_stops():
 
     stop_ids = []
 
+    stop_prefix_len = len(LINE_KEY) + 3
     for stop in stop_names:
-        stop_ids.append({"id": stop[(len(LINE_KEY) + 3) :], "name": stop})
+        stop_ids.append({"id": stop[stop_prefix_len:], "name": stop})
 
     parent_children_map = {}
 
     for stop in stop_ids:
-        try:
-            r_f = requests.get(
-                "https://api-v3.mbta.com/stops/{}?include=parent_station&api_key={}".format(stop["id"], MBTA_V3_API_KEY)
-            )
-            stop_details = r_f.json()
+        r_f = requests.get(
+            "https://api-v3.mbta.com/stops/{}?include=parent_station&api_key={}".format(stop["id"], MBTA_V3_API_KEY)
+        )
+        stop_details = r_f.json()
 
-            parent_id = stop_details["data"]["relationships"]["parent_station"]["data"]["id"]
+        parent_id = stop_details["data"]["relationships"]["parent_station"]["data"]["id"]
 
-            if parent_id not in parent_children_map:
-                if is_inbound_or_outbound(stop["name"]) == "0":
-                    parent_children_map[parent_id] = {"0": [stop["name"]], "1": []}
-                else:
-                    parent_children_map[parent_id] = {"0": [], "1": [stop["name"]]}
+        if parent_id not in parent_children_map:
+            if is_inbound_or_outbound(stop["name"]) == "0":
+                parent_children_map[parent_id] = {"0": [stop["name"]], "1": []}
             else:
-                parent_children_map[parent_id][is_inbound_or_outbound(stop["name"])].append(stop["name"])
-        except:
-            print("Error with stop: {}".format(stop["name"]))
+                parent_children_map[parent_id] = {"0": [], "1": [stop["name"]]}
+        else:
+            parent_children_map[parent_id][is_inbound_or_outbound(stop["name"])].append(stop["name"])
 
     return parent_children_map
 
