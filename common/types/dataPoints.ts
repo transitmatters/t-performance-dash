@@ -27,12 +27,6 @@ export interface HeadwayPoint extends DataPoint {
   threshold_flag_3?: string;
 }
 
-// data for rendering headway in a chart
-export interface HeadwayData {
-  number_of_trains: number;
-  pct_of_trains: number;
-}
-
 export interface DwellPoint extends DataPoint {
   arr_dt: string;
   dep_dt: string;
