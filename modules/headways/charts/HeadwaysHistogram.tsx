@@ -4,19 +4,25 @@ import React, { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
-import type { HeadwaysChartProps } from '../../../common/types/charts';
+import type { HeadwayTooltipData, HeadwaysChartProps } from '../../../common/types/charts';
 import { MetricFieldKeys } from '../../../common/types/charts';
 import type { HeadwayPoint } from '../../../common/types/dataPoints';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { ChartBorder } from '../../../common/components/charts/ChartBorder';
+import { getFormattedTimeString } from '../../../common/utils/time';
 
 export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) => {
   const { line, linePath, lineShort } = useDelimitatedRoute();
 
   const ref = useRef();
   const isMobile = !useBreakpoint('md');
+
+  const benchmarkTime =
+    useMemo(() => {
+      return headways.length > 0 ? headways[0].benchmark_headway_time_sec : 0;
+    }, [headways]) ?? 0;
 
   // dataObject is a mapping from headway bucket -> number of trains.
   // All keys are increased by 0.5. This is a workaround to get chartjs to display the tick labels in between the bars.
@@ -36,6 +42,17 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
     });
     return headwayBuckets;
   }, [headways]);
+
+  // headway bucket => % [of trains in that bucket, difference from benchmark]
+  const headwayBucketPercentages: Record<string, HeadwayTooltipData> = useMemo(() => {
+    const headwayBucketPercentages = {};
+    Object.entries(dataObject).forEach(([k, v]) => {
+      headwayBucketPercentages[k] = {
+        pct_trains: Math.floor((100 * v) / headways.length),
+      };
+    });
+    return headwayBucketPercentages;
+  }, [headways, dataObject]);
 
   const histogram = useMemo(() => {
     return (
@@ -100,7 +117,14 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
                       const { x } = item.parsed;
                       const min = x - 0.5;
                       const max = x + 0.5;
-                      return `${min} - ${max} min.`;
+                      const tooltip = [`${min} - ${max} min.`];
+
+                      const tooltipData = headwayBucketPercentages[x.toString()];
+                      tooltip.push(`${tooltipData.pct_trains}% of trains`);
+                      tooltip.push(
+                        `Benchmark: ${getFormattedTimeString(benchmarkTime, 'seconds')}`
+                      );
+                      return tooltip;
                     },
                   },
                 },
