@@ -117,3 +117,8 @@ export interface HeadwaysChartProps {
   toStation: Station;
   showLegend?: boolean;
 }
+
+// additional data for rendering headway tooltip
+export interface HeadwayTooltipData {
+  pct_trains: number;
+}
