@@ -32,7 +32,8 @@ export type CommuterRailRoute =
   | 'CR-Greenbush'
   | 'CR-Haverhill'
   | 'CR-Lowell'
-  | 'CR-Foxboro';
+  | 'CR-Foxboro'
+  | 'CR-Worcester';
 
 export type LineMetadata = {
   name: string;
@@ -89,6 +90,7 @@ export const COMMUTER_RAIL_ROUTES: CommuterRailRoute[] = [
   'CR-Haverhill',
   'CR-Lowell',
   'CR-Foxboro',
+  'CR-Worcester',
 ];
 export const COMMUTER_RAIL_LINE_NAMES: { [line in CommuterRailRoute]: string } = {
   'CR-Fitchburg': 'Fitchburg Line',
@@ -97,6 +99,7 @@ export const COMMUTER_RAIL_LINE_NAMES: { [line in CommuterRailRoute]: string } =
   'CR-Haverhill': 'Haverhill Line',
   'CR-Lowell': 'Lowell Line',
   'CR-Foxboro': 'Foxboro Line',
+  'CR-Worcester': 'Worcester Line',
 };
 
 export const ALL_LINE_PATHS = RAIL_LINES.map((line) => {

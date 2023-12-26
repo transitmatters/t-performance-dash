@@ -1,0 +1,161 @@
+{
+  "CR-Haverhill": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Haverhill",
+        "station": "place-WR-0329",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Bradford",
+        "station": "place-WR-0325",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Lawrence",
+        "station": "place-WR-0264",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Andover",
+        "station": "place-WR-0228",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Ballardvale",
+        "station": "place-WR-0205",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "North Wilmington",
+        "station": "place-WR-0163",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Reading",
+        "station": "place-WR-0120",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Wakefield",
+        "station": "place-WR-0099",
+        "branches": null,
+        "order": 8,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Greenwood",
+        "station": "place-WR-0085",
+        "branches": null,
+        "order": 9,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Melrose Highlands",
+        "station": "place-WR-0075",
+        "branches": null,
+        "order": 10,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Melrose/Cedar Park",
+        "station": "place-WR-0067",
+        "branches": null,
+        "order": 11,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Wyoming Hill",
+        "station": "place-WR-0062",
+        "branches": null,
+        "order": 12,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Oak Grove",
+        "station": "place-ogmnl",
+        "branches": null,
+        "order": 13,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "Malden Center",
+        "station": "place-mlmnl",
+        "branches": null,
+        "order": 14,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      },
+      {
+        "stop_name": "North Station",
+        "station": "place-north",
+        "branches": null,
+        "order": 15,
+        "stops": {
+          "0": [],
+          "1": []
+        }
+      }
+    ]
+  }
+}

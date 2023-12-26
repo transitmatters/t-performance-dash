@@ -72,8 +72,8 @@
         "branches": null,
         "order": 7,
         "stops": {
-          "0": ["CR-Lowell_0_BNT-0000"],
-          "1": ["CR-Lowell_1_BNT-0000"]
+          "0": ["CR-Lowell_0_BNT-0000", "CR-Lowell_0_BNT-0000-09"],
+          "1": ["CR-Lowell_1_BNT-0000", "CR-Lowell_1_BNT-0000-09"]
         }
       }
     ]

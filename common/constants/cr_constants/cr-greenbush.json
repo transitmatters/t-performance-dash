@@ -1,0 +1,111 @@
+{
+  "CR-Greenbush": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Greenbush",
+        "station": "place-GRB-0276",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": ["CR-Greenbush_1_GRB-0276-S"]
+        }
+      },
+      {
+        "stop_name": "North Scituate",
+        "station": "place-GRB-0233",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["CR-Greenbush_0_GRB-0233-S"],
+          "1": ["CR-Greenbush_1_GRB-0233-S"]
+        }
+      },
+      {
+        "stop_name": "Cohasset",
+        "station": "place-GRB-0199",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": ["CR-Greenbush_0_GRB-0199-S"],
+          "1": ["CR-Greenbush_1_GRB-0199-S"]
+        }
+      },
+      {
+        "stop_name": "Nantasket Junction",
+        "station": "place-GRB-0183",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": ["CR-Greenbush_0_GRB-0183-S"],
+          "1": ["CR-Greenbush_1_GRB-0183-S"]
+        }
+      },
+      {
+        "stop_name": "West Hingham",
+        "station": "place-GRB-0162",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": ["CR-Greenbush_0_GRB-0162-S"],
+          "1": ["CR-Greenbush_1_GRB-0162-S"]
+        }
+      },
+      {
+        "stop_name": "East Weymouth",
+        "station": "place-GRB-0146",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": ["CR-Greenbush_0_GRB-0146-S"],
+          "1": ["CR-Greenbush_1_GRB-0146-S"]
+        }
+      },
+      {
+        "stop_name": "Weymouth Landing/East Braintree",
+        "station": "place-GRB-0118",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": ["CR-Greenbush_0_GRB-0118-S"],
+          "1": ["CR-Greenbush_1_GRB-0118-S"]
+        }
+      },
+      {
+        "stop_name": "Quincy Center",
+        "station": "place-qnctr",
+        "branches": null,
+        "order": 8,
+        "stops": {
+          "0": ["CR-Greenbush_0_MM-0079-S"],
+          "1": ["CR-Greenbush_1_MM-0079-S"]
+        }
+      },
+      {
+        "stop_name": "JFK/UMass",
+        "station": "place-jfk",
+        "branches": null,
+        "order": 9,
+        "stops": {
+          "0": ["CR-Greenbush_0_MM-0023-S"],
+          "1": ["CR-Greenbush_1_MM-0023-S"]
+        }
+      },
+      {
+        "stop_name": "South Station",
+        "station": "place-sstat",
+        "branches": null,
+        "order": 10,
+        "stops": {
+          "0": ["CR-Greenbush_0_NEC-2287"],
+          "1": ["CR-Greenbush_0_NEC-2287-13"]
+        }
+      }
+    ]
+  }
+}
