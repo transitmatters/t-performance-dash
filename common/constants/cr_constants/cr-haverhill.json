@@ -13,7 +13,7 @@
         "order": 1,
         "stops": {
           "0": [],
-          "1": []
+          "1": ["CR-Haverhill_1_WR-0329-02"]
         }
       },
       {
@@ -22,8 +22,8 @@
         "branches": null,
         "order": 2,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Haverhill_0_WR-0325-01"],
+          "1": ["CR-Haverhill_1_WR-0325-02"]
         }
       },
       {
@@ -32,8 +32,8 @@
         "branches": null,
         "order": 3,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Haverhill_0_WR-0264-02"],
+          "1": ["CR-Haverhill_1_WR-0264-02"]
         }
       },
       {
@@ -42,8 +42,8 @@
         "branches": null,
         "order": 4,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Haverhill_0_WR-0228-02"],
+          "1": ["CR-Haverhill_1_WR-0228-02"]
         }
       },
       {
@@ -52,8 +52,8 @@
         "branches": null,
         "order": 5,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Haverhill_0_WR-0205-02"],
+          "1": ["CR-Haverhill_1_WR-0205-02"]
         }
       },
       {
@@ -62,8 +62,8 @@
         "branches": null,
         "order": 6,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Haverhill_0_WR-0163-S"],
+          "1": ["CR-Haverhill_1_WR-0163-S"]
         }
       },
       {
@@ -72,8 +72,8 @@
         "branches": null,
         "order": 7,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Haverhill_0_WR-0120-S"],
+          "1": ["CR-Haverhill_1_WR-0120-S"]
         }
       },
       {
@@ -82,8 +82,8 @@
         "branches": null,
         "order": 8,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Haverhill_0_WR-0099-01"],
+          "1": ["CR-Haverhill_1_WR-0099-02"]
         }
       },
       {
@@ -92,8 +92,8 @@
         "branches": null,
         "order": 9,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Haverhill_0_WR-0085-01"],
+          "1": ["CR-Haverhill_1_WR-0085-02"]
         }
       },
       {
@@ -102,8 +102,8 @@
         "branches": null,
         "order": 10,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Haverhill_0_WR-0075-01"],
+          "1": ["CR-Haverhill_1_WR-0075-02"]
         }
       },
       {
@@ -112,8 +112,8 @@
         "branches": null,
         "order": 11,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Haverhill_0_WR-0067-01"],
+          "1": ["CR-Haverhill_1_WR-0067-02"]
         }
       },
       {
@@ -122,8 +122,8 @@
         "branches": null,
         "order": 12,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Haverhill_0_WR-0062-01"],
+          "1": ["CR-Haverhill_1_WR-0062-02"]
         }
       },
       {
@@ -132,8 +132,8 @@
         "branches": null,
         "order": 13,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Haverhill_0_WR-0053-S"],
+          "1": ["CR-Haverhill_1_WR-0053-S"]
         }
       },
       {
@@ -142,8 +142,8 @@
         "branches": null,
         "order": 14,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["CR-Haverhill_0_WR-0045-S"],
+          "1": ["CR-Haverhill_1_WR-0045-S"]
         }
       },
       {
@@ -152,7 +152,7 @@
         "branches": null,
         "order": 15,
         "stops": {
-          "0": [],
+          "0": ["CR-Haverhill_0_BNT-0000", "CR-Haverhill_0_BNT-0000-01"],
           "1": []
         }
       }
