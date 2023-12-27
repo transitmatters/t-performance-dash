@@ -5,9 +5,23 @@ import boto3
 import botocore
 
 MBTA_V3_API_KEY = os.environ.get("MBTA_V3_API_KEY", "")
-
-LINE_KEY = "CR-Providence"
 BUCKET = "tm-mbta-performance"
+
+ROUTES_CR = [
+    "CR-Fairmount",
+    "CR-Fitchburg",
+    "CR-Worcester",
+    "CR-Franklin",
+    "CR-Greenbush",
+    "CR-Haverhill",
+    "CR-Kingston",
+    "CR-Lowell",
+    "CR-Middleborough",
+    "CR-Needham",
+    "CR-Newburyport",
+    "CR-Providence",
+    "CR-Foxboro",
+]
 
 
 def get_line_stops():
@@ -54,31 +68,31 @@ def is_inbound_or_outbound(stop_id: str):
         return "1"
 
 
-r_f = requests.get("https://api-v3.mbta.com/stops?filter%5Broute%5D={}".format(LINE_KEY))
-stops = r_f.json()
+for LINE_KEY in ROUTES_CR:
+    r_f = requests.get("https://api-v3.mbta.com/stops?filter%5Broute%5D={}".format(LINE_KEY))
+    stops = r_f.json()
 
-stop_layout = get_line_stops()
+    stop_layout = get_line_stops()
 
-stops_formatted = [
-    {
-        "stop_name": stop["attributes"]["name"],
-        "station": stop["id"],
-        "branches": None,
-        "order": index + 1,
-        "stops": stop_layout[stop["id"]],
+    stops_formatted = [
+        {
+            "stop_name": stop["attributes"]["name"],
+            "station": stop["id"],
+            "branches": None,
+            "order": index + 1,
+            "stops": stop_layout[stop["id"]],
+        }
+        for index, stop in enumerate(stops["data"])
+    ]
+
+    output = {
+        LINE_KEY: {
+            "type": "commuter-rail",
+            "direction": {"0": "outbound", "1": "inbound"},
+            "stations": stops_formatted,
+        }
     }
-    for index, stop in enumerate(stops["data"])
-]
 
-output = {
-    LINE_KEY: {
-        "type": "commuter-rail",
-        "direction": {"0": "outbound", "1": "inbound"},
-        "stations": stops_formatted,
-    }
-}
-
-
-out_json = json.dumps(output, indent=2)
-with open("../common/constants/cr_constants/{}.json".format(LINE_KEY.lower()), "w") as f:
-    f.write(out_json)
+    out_json = json.dumps(output, indent=2)
+    with open("../common/constants/cr_constants/{}.json".format(LINE_KEY.lower()), "w") as f:
+        f.write(out_json)

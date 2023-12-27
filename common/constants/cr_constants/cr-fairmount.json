@@ -93,9 +93,9 @@
         "order": 9,
         "stops": {
           "0": [
-            "CR-Fairmount_0_NEC-2287-09",
             "CR-Fairmount_0_NEC-2287-10",
-            "CR-Fairmount_0_NEC-2287"
+            "CR-Fairmount_0_NEC-2287",
+            "CR-Fairmount_0_NEC-2287-09"
           ],
           "1": []
         }
