@@ -102,7 +102,7 @@
         "branches": null,
         "order": 10,
         "stops": {
-          "0": ["CR-Middleborough_0_NEC-2287", "CR-Middleborough_0_NEC-2287-13"],
+          "0": ["CR-Middleborough_0_NEC-2287-13", "CR-Middleborough_0_NEC-2287"],
           "1": []
         }
       }

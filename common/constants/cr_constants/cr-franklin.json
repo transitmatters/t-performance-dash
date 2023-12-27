@@ -123,7 +123,7 @@
         "order": 12,
         "stops": {
           "0": ["CR-Franklin_0_FB-0095-05", "CR-Franklin_0_FB-0095-04"],
-          "1": ["CR-Franklin_1_FB-0095-05", "CR-Franklin_1_FB-0095-04"]
+          "1": ["CR-Franklin_1_FB-0095-04", "CR-Franklin_1_FB-0095-05"]
         }
       },
       {

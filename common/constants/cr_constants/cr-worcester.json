@@ -63,7 +63,7 @@
         "order": 6,
         "stops": {
           "0": ["CR-Worcester_0_WML-0214-02", "CR-Worcester_0_WML-0214-01"],
-          "1": ["CR-Worcester_1_WML-0214-02", "CR-Worcester_1_WML-0214-01"]
+          "1": ["CR-Worcester_1_WML-0214-01", "CR-Worcester_1_WML-0214-02"]
         }
       },
       {
@@ -82,7 +82,7 @@
         "branches": null,
         "order": 8,
         "stops": {
-          "0": ["CR-Worcester_0_WML-0177-01", "CR-Worcester_0_WML-0177-02"],
+          "0": ["CR-Worcester_0_WML-0177-02", "CR-Worcester_0_WML-0177-01"],
           "1": ["CR-Worcester_1_WML-0177-02", "CR-Worcester_1_WML-0177-01"]
         }
       },
@@ -92,8 +92,8 @@
         "branches": null,
         "order": 9,
         "stops": {
-          "0": ["CR-Worcester_0_WML-0147-02", "CR-Worcester_0_WML-0147-01"],
-          "1": ["CR-Worcester_1_WML-0147-02", "CR-Worcester_1_WML-0147-01"]
+          "0": ["CR-Worcester_0_WML-0147-01", "CR-Worcester_0_WML-0147-02"],
+          "1": ["CR-Worcester_1_WML-0147-01", "CR-Worcester_1_WML-0147-02"]
         }
       },
       {
@@ -103,7 +103,7 @@
         "order": 10,
         "stops": {
           "0": ["CR-Worcester_0_WML-0135-01", "CR-Worcester_0_WML-0135-02"],
-          "1": ["CR-Worcester_1_WML-0135-02", "CR-Worcester_1_WML-0135-01"]
+          "1": ["CR-Worcester_1_WML-0135-01", "CR-Worcester_1_WML-0135-02"]
         }
       },
       {
@@ -112,8 +112,8 @@
         "branches": null,
         "order": 11,
         "stops": {
-          "0": ["CR-Worcester_0_WML-0125-02", "CR-Worcester_0_WML-0125-01"],
-          "1": ["CR-Worcester_1_WML-0125-02", "CR-Worcester_1_WML-0125-01"]
+          "0": ["CR-Worcester_0_WML-0125-01", "CR-Worcester_0_WML-0125-02"],
+          "1": ["CR-Worcester_1_WML-0125-01", "CR-Worcester_1_WML-0125-02"]
         }
       },
       {
@@ -152,7 +152,7 @@
         "branches": null,
         "order": 15,
         "stops": {
-          "0": ["CR-Worcester_0_WML-0035-01", "CR-Worcester_0_WML-0035-02"],
+          "0": ["CR-Worcester_0_WML-0035-02", "CR-Worcester_0_WML-0035-01"],
           "1": ["CR-Worcester_1_WML-0035-02", "CR-Worcester_1_WML-0035-01"]
         }
       },

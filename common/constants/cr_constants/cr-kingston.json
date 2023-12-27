@@ -102,7 +102,7 @@
         "branches": null,
         "order": 10,
         "stops": {
-          "0": ["CR-Kingston_0_NEC-2287-12", "CR-Kingston_0_NEC-2287"],
+          "0": ["CR-Kingston_0_NEC-2287", "CR-Kingston_0_NEC-2287-12"],
           "1": []
         }
       }
