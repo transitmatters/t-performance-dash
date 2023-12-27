@@ -44,11 +44,12 @@ export const CHART_COLORS = {
 };
 
 export const LINE_COLORS = {
-  'line-red': '#D13434',
-  'line-orange': '#ed8b00',
-  'line-blue': '#003da5',
-  'line-green': '#00834d',
-  'line-bus': '#ffc72c',
+  'line-red': COLORS.mbta.red,
+  'line-orange': COLORS.mbta.orange,
+  'line-blue': COLORS.mbta.blue,
+  'line-green': COLORS.mbta.green,
+  'line-bus': COLORS.mbta.bus,
+  'line-commuter-rail': COLORS.mbta.commuterRail,
   default: '#303030',
 };
 
