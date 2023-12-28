@@ -9,11 +9,12 @@ export enum QueryNameKeys {
 }
 export type QueryNameOptions = QueryNameKeys;
 
-export type BusOrSubway = 'bus' | 'subway';
+export type BusOrSubway = 'bus' | 'subway' | 'cr';
 
 export const QUERIES: { [key in BusOrSubway]: QueryNameOptions[] } = {
   subway: [QueryNameKeys.traveltimes, QueryNameKeys.headways, QueryNameKeys.dwells],
   bus: [QueryNameKeys.traveltimes, QueryNameKeys.headways],
+  cr: [QueryNameKeys.traveltimes, QueryNameKeys.headways],
 };
 
 export enum SingleDayAPIParams {

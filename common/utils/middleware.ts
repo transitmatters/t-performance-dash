@@ -9,7 +9,7 @@ const getBusOrLine = (
 ): { type: 'rail' | 'bus'; value: LinePath | BusRoute } | undefined => {
   if (RAIL_LINES.includes(lineString.toLowerCase()))
     return { type: 'rail', value: lineString.toLowerCase() as LinePath };
-  if (BUS_ROUTES.includes(lineString.toString()))
+  if (BUS_ROUTES.includes(lineString.toString() as BusRoute))
     return { type: 'bus', value: lineString as BusRoute };
 };
 
