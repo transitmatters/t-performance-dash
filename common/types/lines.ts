@@ -77,6 +77,7 @@ export const BUS_ROUTES: BusRoute[] = [
   '220/221/222',
 ];
 
+// potential TODO: make this a type or make the line names for routing constants
 export const ALL_LINE_PATHS = RAIL_LINES.map((line) => {
   return {
     params: {
