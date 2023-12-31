@@ -66,20 +66,6 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="Speeds"
-              subtitle="Speed between stops"
-              location={location}
-              line={line}
-              both
-            />
-            <SpeedBetweenStationsAggregateWrapper
-              query={traveltimes}
-              fromStation={fromStation}
-              toStation={toStation}
-            />
-          </WidgetDiv>
-          <WidgetDiv>
-            <WidgetTitle
               title="Headways"
               subtitle="Time between trains"
               location={location}
@@ -101,6 +87,20 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             />
             <DwellsAggregateWrapper
               query={dwells}
+              fromStation={fromStation}
+              toStation={toStation}
+            />
+          </WidgetDiv>
+          <WidgetDiv>
+            <WidgetTitle
+              title="Speeds"
+              subtitle="Average speed between stops"
+              location={location}
+              line={line}
+              both
+            />
+            <SpeedBetweenStationsAggregateWrapper
+              query={traveltimes}
               fromStation={fromStation}
               toStation={toStation}
             />
@@ -148,21 +148,6 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
 
           <WidgetDiv>
             <WidgetTitle
-              title="Speeds"
-              subtitle="Speed between stops"
-              location={location}
-              line={line}
-              both
-            />
-            <SpeedBetweenStationsSingleWrapper
-              query={traveltimes}
-              fromStation={fromStation}
-              toStation={toStation}
-            />
-          </WidgetDiv>
-
-          <WidgetDiv>
-            <WidgetTitle
               title="Headways"
               subtitle="Time between trains"
               location={location}
@@ -182,6 +167,21 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               line={line}
             />
             <DwellsSingleWrapper query={dwells} toStation={toStation} fromStation={fromStation} />
+          </WidgetDiv>
+
+          <WidgetDiv>
+            <WidgetTitle
+              title="Speeds"
+              subtitle="Average speed between stops"
+              location={location}
+              line={line}
+              both
+            />
+            <SpeedBetweenStationsSingleWrapper
+              query={traveltimes}
+              fromStation={fromStation}
+              toStation={toStation}
+            />
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
