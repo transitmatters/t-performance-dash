@@ -1,0 +1,81 @@
+{
+  "222": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "East Weymouth",
+        "branches": null,
+        "station": "ewymt",
+        "order": 1,
+        "stops": {
+          "1": ["222-1-3684"],
+          "0": ["222-0-3684"]
+        }
+      },
+      {
+        "stop_name": "Pleasant & Washington (Weymouth)",
+        "branches": null,
+        "station": "plwas",
+        "order": 1,
+        "stops": {
+          "1": ["222-1-13844"],
+          "0": ["222-0-13844"]
+        }
+      },
+      {
+        "stop_name": "Broad Street @ Middle Street",
+        "branches": null,
+        "station": "brmdl",
+        "order": 2,
+        "stops": {
+          "1": ["222-1-3692", "222-1-4439"],
+          "0": ["222-0-3675", "222-0-4435"]
+        }
+      },
+      {
+        "stop_name": "Bicknell Square",
+        "branches": null,
+        "station": "bknsq",
+        "order": 3,
+        "stops": {
+          "1": ["222-1-3707"],
+          "0": ["222-0-3539"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ Southern Artery",
+        "branches": null,
+        "station": "wassa",
+        "order": 4,
+        "stops": {
+          "1": ["222-1-3630"],
+          "0": ["222-0-3525"]
+        }
+      },
+      {
+        "stop_name": "McGrath Highway @ Washington Street",
+        "branches": null,
+        "station": "mgrwa",
+        "order": 5,
+        "stops": {
+          "1": ["222-1-3639"],
+          "0": ["222-0-3516"]
+        }
+      },
+      {
+        "stop_name": "Quincy Center",
+        "branches": null,
+        "station": "qnctr",
+        "order": 6,
+        "stops": {
+          "1": ["222-1-32004"],
+          "0": ["222-0-32004"]
+        }
+      }
+    ]
+  }
+}
