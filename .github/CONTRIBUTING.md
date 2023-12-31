@@ -1,6 +1,6 @@
 # Contributing to TransitMatters Labs Projects
 
-Thanks for your interest in contributing to TransitMatters Labs! TransitMatters Labs is an entirely volunteer run group within TransitMatters.
+Thanks for your interest in contributing to TransitMatters Labs! TransitMatters Labs is an entirely volunteer-run group within [TransitMatters](https://transitmatters.org/).
 
 ## Volunteer with us
 
