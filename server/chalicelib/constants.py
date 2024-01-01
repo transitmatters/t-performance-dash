@@ -7,7 +7,3 @@ LINE_TO_ROUTE_MAP = {
     "line-blue": ["line-blue"],
     "line-orange": ["line-orange"],
 }
-
-# Most recent date for which we have official MBTA data in S3
-# TODO: Fetch this date from S3 automatically
-BUS_MAX_DATE = "2023-10-31"
