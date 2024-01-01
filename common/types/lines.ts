@@ -22,7 +22,7 @@ export type BusRoute =
   | '77'
   | '111'
   | '114/116/117'
-  | '222';
+  | '220/221/222';
 
 export type LineMetadata = {
   name: string;
@@ -70,7 +70,7 @@ export const BUS_ROUTES = [
   '77',
   '111',
   '114/116/117',
-  '222',
+  '220/221/222',
 ];
 
 export const ALL_LINE_PATHS = RAIL_LINES.map((line) => {

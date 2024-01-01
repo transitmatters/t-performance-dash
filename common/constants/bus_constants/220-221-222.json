@@ -1,0 +1,111 @@
+{
+  "220/221/222": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Pleasant & Washington (Weymouth)",
+        "branches": ["222"],
+        "station": "plwas",
+        "order": 1,
+        "stops": {
+          "1": ["222-1-13844"],
+          "0": ["222-0-13844"]
+        }
+      },
+      {
+        "stop_name": "East Weymouth",
+        "branches": ["222"],
+        "station": "ewymt",
+        "order": 2,
+        "stops": {
+          "1": ["222-1-3684"],
+          "0": ["222-0-3684"]
+        }
+      },
+      {
+        "stop_name": "Hingham Depot",
+        "branches": ["220"],
+        "station": "hngdpt",
+        "order": 1,
+        "stops": {
+          "1": ["220-1-3582"],
+          "0": ["220-0-3582"]
+        }
+      },
+      {
+        "stop_name": "Broad Street @ Middle Street",
+        "branches": ["222"],
+        "station": "brmdl",
+        "order": 3,
+        "stops": {
+          "1": ["222-1-3692", "222-1-4439"],
+          "0": ["222-0-3675", "222-0-4435"]
+        }
+      },
+      {
+        "stop_name": "Otis Street & Downer Avenue",
+        "branches": ["220"],
+        "station": "otdow",
+        "order": 4,
+        "stops": {
+          "1": ["220-1-3595"],
+          "0": ["220-0-3560"]
+        }
+      },
+      {
+        "stop_name": "Hingham Shipyard",
+        "branches": ["220"],
+        "station": "shpyd",
+        "order": 5,
+        "stops": {
+          "1": ["220-1-3603", "220-1-36031"],
+          "0": ["220-0-3549"]
+        }
+      },
+      {
+        "stop_name": "Bicknell Square",
+        "branches": ["220", "221", "222"],
+        "station": "bknsq",
+        "order": 6,
+        "stops": {
+          "1": ["220-1-3616", "221-1-3616", "222-1-3707"],
+          "0": ["220-0-3539", "221-0-3539", "222-0-3539"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ Southern Artery",
+        "branches": ["220", "221", "222"],
+        "station": "wassa",
+        "order": 7,
+        "stops": {
+          "1": ["220-1-3630", "221-1-3630", "222-1-3630"],
+          "0": ["220-0-3525", "221-0-3525", "222-0-3525"]
+        }
+      },
+      {
+        "stop_name": "McGrath Highway @ Washington Street",
+        "branches": ["220", "222"],
+        "station": "mgrwa",
+        "order": 8,
+        "stops": {
+          "1": ["220-1-3639", "222-1-3639"],
+          "0": ["220-0-3516", "222-0-3516"]
+        }
+      },
+      {
+        "stop_name": "Quincy Center",
+        "branches": ["220", "221", "222"],
+        "station": "qnctr",
+        "order": 9,
+        "stops": {
+          "1": ["220-1-32004", "221-1-32004", "222-1-32004"],
+          "0": ["220-0-32004", "221-0-32004", "222-0-32004"]
+        }
+      }
+    ]
+  }
+}
