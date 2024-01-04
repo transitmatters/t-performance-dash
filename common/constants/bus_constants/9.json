@@ -1,0 +1,71 @@
+{
+  "9": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "City Point",
+        "branches": null,
+        "station": "ctypt",
+        "order": 1,
+        "stops": {
+          "1": ["9-1-33"],
+          "0": ["9-0-33"]
+        }
+      },
+      {
+        "stop_name": "L Street @ Broadway",
+        "branches": null,
+        "station": "lbrwy",
+        "order": 2,
+        "stops": {
+          "1": ["9-1-41"],
+          "0": ["9-0-25", "9-0-886"]
+        }
+      },
+      {
+        "stop_name": "Perkins Square (Dorchester) @ Broadway (Southbound)",
+        "branches": null,
+        "station": "perks",
+        "order": 3,
+        "stops": {
+          "1": ["9-1-45"],
+          "0": ["9-0-21", "9-0-157"]
+        }
+      },
+      {
+        "stop_name": "Broadway Station",
+        "branches": null,
+        "station": "brway",
+        "order": 4,
+        "stops": {
+          "1": ["9-1-150"],
+          "0": ["9-0-150", "9-0-151"]
+        }
+      },
+      {
+        "stop_name": "Silver Line @ Washington Street",
+        "branches": null,
+        "station": "slvwa",
+        "order": 5,
+        "stops": {
+          "1": ["9-1-36541"],
+          "0": ["9-0-148"]
+        }
+      },
+      {
+        "stop_name": "Copley",
+        "branches": null,
+        "station": "copst",
+        "order": 6,
+        "stops": {
+          "1": ["9-1-175"],
+          "0": ["9-0-175"]
+        }
+      }
+    ]
+  }
+}

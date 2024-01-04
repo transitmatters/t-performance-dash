@@ -9,7 +9,9 @@ export type LineShort = 'Red' | 'Orange' | 'Green' | 'Blue' | 'Bus' | 'Commuter 
 export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus' | 'commuter-rail';
 export type BusRoute =
   | '1'
+  | '9'
   | '15'
+  | '16'
   | '22'
   | '23'
   | '28'
@@ -55,9 +57,11 @@ export const HEAVY_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue']
 export const LANDING_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue', 'line-green'];
 
 export const RAIL_LINES = ['red', 'orange', 'green', 'blue'];
-export const BUS_ROUTES = [
+export const BUS_ROUTES: BusRoute[] = [
   '1',
+  '9',
   '15',
+  '16',
   '22',
   '23',
   '28',
