@@ -5,11 +5,11 @@ import { RAIL_LINES, type BusRoute, type LinePath, BUS_ROUTES } from '../types/l
 import { TODAY_STRING } from '../constants/dates';
 
 const getBusOrLine = (
-  lineString: string
+  lineString: string | BusRoute
 ): { type: 'rail' | 'bus'; value: LinePath | BusRoute } | undefined => {
   if (RAIL_LINES.includes(lineString.toLowerCase()))
     return { type: 'rail', value: lineString.toLowerCase() as LinePath };
-  if (BUS_ROUTES.includes(lineString.toString()))
+  if (BUS_ROUTES.includes(lineString.toString() as BusRoute))
     return { type: 'bus', value: lineString as BusRoute };
 };
 
