@@ -15,6 +15,7 @@ import bus_73 from './bus_constants/73.json';
 import bus_77 from './bus_constants/77.json';
 import bus_111 from './bus_constants/111.json';
 import bus_114_116_117 from './bus_constants/114-116-117.json';
+import bus_220_221_222 from './bus_constants/220-221-222.json';
 
 export const rtStations: { [key in Exclude<LineShort, 'Bus' | 'Commuter Rail'>]: LineMap } =
   stations_json;
@@ -34,6 +35,7 @@ export const busStations: { [key: string]: LineMap } = {
   ...bus_77,
   ...bus_111,
   ...bus_114_116_117,
+  ...bus_220_221_222,
 };
 
 export const commuterRailStations: { [key: string]: LineMap } = {};
