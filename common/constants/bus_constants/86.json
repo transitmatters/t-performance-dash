@@ -1,0 +1,91 @@
+{
+  "86": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Harvard Bus Tunnels",
+        "branches": null,
+        "station": "bally",
+        "order": 0,
+        "stops": {
+          "1": [],
+          "0": ["86-0-20761"]
+        }
+      },
+      {
+        "stop_name": "Sullivan Square",
+        "branches": null,
+        "station": "sull",
+        "order": 1,
+        "stops": {
+          "1": ["86-1-29005"],
+          "0": ["86-0-29001"]
+        }
+      },
+      {
+        "stop_name": "Union Square",
+        "branches": null,
+        "station": "unsqu",
+        "order": 2,
+        "stops": {
+          "1": ["86-1-2612"],
+          "0": ["86-0-2597"]
+        }
+      },
+      {
+        "stop_name": "Harvard",
+        "branches": null,
+        "station": "harsq",
+        "order": 3,
+        "stops": {
+          "1": ["86-1-22549"],
+          "0": []
+        }
+      },
+      {
+        "stop_name": "North Harvard & Western",
+        "branches": null,
+        "station": "nhvws",
+        "order": 4,
+        "stops": {
+          "1": ["86-1-2553"],
+          "0": ["86-0-2561"]
+        }
+      },
+      {
+        "stop_name": "Market & Western",
+        "branches": null,
+        "station": "mktwe",
+        "order": 5,
+        "stops": {
+          "1": ["86-1-1077"],
+          "0": ["86-0-1043"]
+        }
+      },
+      {
+        "stop_name": "Brighton Center",
+        "branches": null,
+        "station": "brctr",
+        "order": 6,
+        "stops": {
+          "1": ["86-1-1084"],
+          "0": ["86-0-1026"]
+        }
+      },
+      {
+        "stop_name": "Reservoir Busway",
+        "branches": null,
+        "station": "resbu",
+        "order": 7,
+        "stops": {
+          "1": ["86-1-21917"],
+          "0": ["86-0-21917"]
+        }
+      }
+    ]
+  }
+}
