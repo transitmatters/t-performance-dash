@@ -58,7 +58,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
           !newStation?.branches?.some((branch) => toStation?.branches?.includes(branch))
         ) {
           // If `from` station is on a separate branch, set the `to` station to gov center for GL and Park for RL.
-          const newToStation = getStationForInvalidFromSelection(line);
+          const newToStation = getStationForInvalidFromSelection(line, busRoute);
           const stationIds = stopIdsForStations(newStation, newToStation);
           updateQueryParams(
             {

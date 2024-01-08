@@ -2,7 +2,9 @@ import type { LineShort } from '../types/lines';
 import type { LineMap } from '../types/stations';
 import stations_json from './stations.json';
 import bus_1 from './bus_constants/1.json';
+import bus_9 from './bus_constants/9.json';
 import bus_15 from './bus_constants/15.json';
+import bus_16 from './bus_constants/16.json';
 import bus_22 from './bus_constants/22.json';
 import bus_23 from './bus_constants/23.json';
 import bus_28 from './bus_constants/28.json';
@@ -15,6 +17,7 @@ import bus_73 from './bus_constants/73.json';
 import bus_77 from './bus_constants/77.json';
 import bus_111 from './bus_constants/111.json';
 import bus_114_116_117 from './bus_constants/114-116-117.json';
+import bus_220_221_222 from './bus_constants/220-221-222.json';
 
 import cr_lowell from './cr_constants/cr-lowell.json';
 import cr_fitchburg from './cr_constants/cr-fitchburg.json';
@@ -33,7 +36,9 @@ export const rtStations: { [key in Exclude<LineShort, 'Bus' | 'Commuter Rail'>]:
 
 export const busStations: { [key: string]: LineMap } = {
   ...bus_1,
+  ...bus_9,
   ...bus_15,
+  ...bus_16,
   ...bus_22,
   ...bus_23,
   ...bus_28,
@@ -46,6 +51,7 @@ export const busStations: { [key: string]: LineMap } = {
   ...bus_77,
   ...bus_111,
   ...bus_114_116_117,
+  ...bus_220_221_222,
 };
 
 export const crStations: { [key: string]: LineMap } = {

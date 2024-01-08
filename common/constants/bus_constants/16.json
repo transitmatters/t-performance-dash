@@ -1,0 +1,111 @@
+{
+  "16": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Forest Hills Busway",
+        "branches": null,
+        "station": "fhill",
+        "order": 1,
+        "stops": {
+          "1": ["16-1-875"],
+          "0": ["16-0-875"]
+        }
+      },
+      {
+        "stop_name": "Franklin Park",
+        "branches": null,
+        "station": "frnpk",
+        "order": 2,
+        "stops": {
+          "1": ["16-1-1565", "16-1-2922"],
+          "0": ["16-0-1587"]
+        }
+      },
+      {
+        "stop_name": "Columbia Road @ Washington Street",
+        "branches": null,
+        "station": "cowas",
+        "order": 3,
+        "stops": {
+          "1": ["16-1-2925"],
+          "0": ["16-0-2919"]
+        }
+      },
+      {
+        "stop_name": "Columbia Road @ Quincy Street",
+        "branches": null,
+        "station": "coqui",
+        "order": 4,
+        "stops": {
+          "1": ["16-1-2931"],
+          "0": ["16-0-2913"]
+        }
+      },
+      {
+        "stop_name": "Uphams Corner",
+        "branches": null,
+        "station": "upham",
+        "order": 5,
+        "stops": {
+          "1": ["16-1-1480"],
+          "0": ["16-0-2910"]
+        }
+      },
+      {
+        "stop_name": "South Bay Mall",
+        "branches": null,
+        "station": "sobay",
+        "order": 6,
+        "stops": {
+          "1": ["16-1-29051"],
+          "0": ["16-0-11241"]
+        }
+      },
+      {
+        "stop_name": "Andrew",
+        "branches": null,
+        "station": "andrw",
+        "order": 7,
+        "stops": {
+          "1": ["16-1-13"],
+          "0": ["16-0-13"]
+        }
+      },
+      {
+        "stop_name": "JFK/UMass",
+        "branches": null,
+        "station": "jfk",
+        "order": 8,
+        "stops": {
+          "1": ["16-1-121"],
+          "0": ["16-0-121"]
+        }
+      },
+      {
+        "stop_name": "McCormack Housing",
+        "branches": null,
+        "station": "mkrmk",
+        "order": 8,
+        "stops": {
+          "1": ["16-1-35201"],
+          "0": ["16-0-35201"]
+        }
+      },
+      {
+        "stop_name": "University of Massachusetts, Boston",
+        "branches": null,
+        "station": "umass",
+        "order": 9,
+        "stops": {
+          "1": ["16-1-142"],
+          "0": ["16-0-111"]
+        }
+      }
+    ]
+  }
+}

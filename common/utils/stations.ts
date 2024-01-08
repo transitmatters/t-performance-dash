@@ -86,9 +86,12 @@ export const getParentStationForStopId = (stopId: string) => {
   return parentStationIndex[stopId];
 };
 
-export const getStationForInvalidFromSelection = (line: Line): Station => {
+export const getStationForInvalidFromSelection = (line: Line, busRoute?: BusRoute): Station => {
   if (line === 'line-green') return getParentStationForStopId('70202'); // Gov. Center
   if (line === 'line-red') return getParentStationForStopId('70076'); // Park St.
+  if (line === 'line-bus') {
+    if (busRoute === '220/221/222') return getParentStationForStopId('222-1-32004');
+  }
   throw new Error('There should be no other lines with invalid from station selections.');
 };
 

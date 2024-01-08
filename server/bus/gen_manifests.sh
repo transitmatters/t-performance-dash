@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for route in 1 111 15  22  23  28  32  39  57  66  71  73  77  114  116  117; do
+for route in 1  9  15  22  23  28  32  39  57  66  71  73  77  111  114  116  117  220  221  222; do
     mkdir -p data/output/manifests/$route
 
     for f in $(find data/input/ -name *.csv); do
