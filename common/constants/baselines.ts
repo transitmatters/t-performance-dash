@@ -1,4 +1,4 @@
-import type { BusRoute, CommuterRailRoute, Line } from '../types/lines';
+import type { BusRouteId, CommuterRailRoute, Line } from '../types/lines';
 
 // These are manually chosen based off the peak *monthly* scheduled service. Selecting highest value "
 export const PEAK_SCHEDULED_SERVICE = {
@@ -22,9 +22,8 @@ export const PEAK_SPEED = {
 export const PEAK_RIDERSHIP: {
   [key in
     | Exclude<Line, 'line-bus' | 'line-commuter-rail'>
-    | Exclude<BusRoute, '114/116/117'>
+    | BusRouteId
     | CommuterRailRoute
-    | '114116117'
     | 'DEFAULT']: number;
 } = {
   'line-red': 213703,

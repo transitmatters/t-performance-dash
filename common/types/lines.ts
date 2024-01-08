@@ -28,6 +28,11 @@ export type BusRoute =
   | '114/116/117'
   | '220/221/222';
 
+export type BusRouteId =
+  | Exclude<BusRoute, '114/116/117' | '220/221/222'>
+  | '114116117'
+  | '220221222';
+
 /** TODO: Expand list to all lines */
 export type CommuterRailRoute =
   | 'CR-Fitchburg'
