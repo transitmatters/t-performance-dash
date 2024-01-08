@@ -29,16 +29,10 @@ def get_line_stops():
 
     objects = s3.list_objects_v2(Bucket=BUCKET, Prefix="Events-live/daily-cr-data/{}".format(LINE_KEY))
 
-    stop_names = set()
+    stop_ids = set()
 
     for obj in objects["Contents"]:
-        stop_names.add(obj["Key"].split("/")[2])
-
-    stop_ids = []
-
-    stop_prefix_len = len(LINE_KEY) + 3
-    for stop in stop_names:
-        stop_ids.append({"id": stop[stop_prefix_len:], "name": stop})
+        stop_ids.add(parse_s3_cr_uri(obj)[2])
 
     parent_children_map = {}
 
@@ -51,21 +45,27 @@ def get_line_stops():
         parent_id = stop_details["data"]["relationships"]["parent_station"]["data"]["id"]
 
         if parent_id not in parent_children_map:
-            if is_inbound_or_outbound(stop["name"]) == "0":
-                parent_children_map[parent_id] = {"0": [stop["name"]], "1": []}
+            if stop["direction"] == "0":
+                parent_children_map[parent_id] = {"0": [stop["stop_id"]], "1": []}
             else:
-                parent_children_map[parent_id] = {"0": [], "1": [stop["name"]]}
+                parent_children_map[parent_id] = {"0": [], "1": [stop["stop_id"]]}
         else:
-            parent_children_map[parent_id][is_inbound_or_outbound(stop["name"])].append(stop["name"])
+            parent_children_map[parent_id][stop["direction"]].append(stop["stop_id"])
 
     return parent_children_map
 
 
-def is_inbound_or_outbound(stop_id: str):
-    if "_0_" in stop_id:
-        return "0"
-    elif "_1_" in stop_id:
-        return "1"
+def parse_s3_cr_uri(uri: str):
+    """
+    Parse a CR s3 URI beginning with Events-live
+    """
+    _, _, stop_name, year, month, day, _ = uri["Key"].split("/")
+    line, direction, stop_id = stop_name.split("_")
+    return {"line": line, "direction": direction, "stop_id": stop_id, "year": year, "month": month, "day": day}
+
+
+def cr_stop_info_to_s3_prefix(line, direction, stop_id):
+    return "{}_{}_{}".format(line, direction, stop_id)
 
 
 for LINE_KEY in ROUTES_CR:

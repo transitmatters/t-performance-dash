@@ -9,9 +9,9 @@ export enum QueryNameKeys {
 }
 export type QueryNameOptions = QueryNameKeys;
 
-export type BusOrSubway = 'bus' | 'subway' | 'cr';
+export type RouteType = 'bus' | 'subway' | 'cr';
 
-export const QUERIES: { [key in BusOrSubway]: QueryNameOptions[] } = {
+export const QUERIES: { [key in RouteType]: QueryNameOptions[] } = {
   subway: [QueryNameKeys.traveltimes, QueryNameKeys.headways, QueryNameKeys.dwells],
   bus: [QueryNameKeys.traveltimes, QueryNameKeys.headways],
   cr: [QueryNameKeys.traveltimes, QueryNameKeys.headways],
