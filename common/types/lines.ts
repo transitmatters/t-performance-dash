@@ -7,6 +7,8 @@ export type Line =
   | 'line-commuter-rail';
 export type LineShort = 'Red' | 'Orange' | 'Green' | 'Blue' | 'Bus' | 'Commuter Rail';
 export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus' | 'commuter-rail';
+
+/** All currently available Bus Routes */
 export type BusRoute =
   | '1'
   | '9'
@@ -32,6 +34,20 @@ export type BusRoute =
   | '61/70/170'
   | '114/116/117'
   | '220/221/222';
+
+export type CommuterRailRoute =
+  | 'CR-Fitchburg'
+  | 'CR-Franklin'
+  | 'CR-Greenbush'
+  | 'CR-Haverhill'
+  | 'CR-Lowell'
+  | 'CR-Worcester'
+  | 'CR-Fairmount'
+  | 'CR-Kingston'
+  | 'CR-Middleborough'
+  | 'CR-Needham'
+  | 'CR-Newburyport'
+  | 'CR-Providence';
 
 export type LineMetadata = {
   name: string;
@@ -91,7 +107,36 @@ export const BUS_ROUTES: BusRoute[] = [
   '220/221/222',
 ];
 
-// potential TODO: make this a type or make the line names for routing constants
+export const COMMUTER_RAIL_ROUTES: CommuterRailRoute[] = [
+  'CR-Fairmount',
+  'CR-Fitchburg',
+  'CR-Worcester',
+  'CR-Franklin',
+  'CR-Greenbush',
+  'CR-Haverhill',
+  'CR-Kingston',
+  'CR-Lowell',
+  'CR-Middleborough',
+  'CR-Needham',
+  'CR-Newburyport',
+  'CR-Providence',
+];
+
+export const COMMUTER_RAIL_LINE_NAMES: { [line in CommuterRailRoute]: string } = {
+  'CR-Fitchburg': 'Fitchburg Line',
+  'CR-Franklin': 'Franklin Line',
+  'CR-Greenbush': 'Greenbush Line',
+  'CR-Haverhill': 'Haverhill Line',
+  'CR-Lowell': 'Lowell Line',
+  'CR-Worcester': 'Worcester Line',
+  'CR-Fairmount': 'Fairmount Line',
+  'CR-Kingston': 'Kingston/Plymouth Line',
+  'CR-Middleborough': 'Middleborough Line',
+  'CR-Needham': 'Needham Line',
+  'CR-Newburyport': 'Newburyport/Rockport Line',
+  'CR-Providence': 'Providence/Stoughton Line',
+};
+
 export const ALL_LINE_PATHS = RAIL_LINES.map((line) => {
   return {
     params: {
