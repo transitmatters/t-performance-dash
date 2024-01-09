@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unused-modules */
 import React, { useState } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
