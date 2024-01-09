@@ -8,7 +8,7 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
-import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 
 export function RidershipDetails() {

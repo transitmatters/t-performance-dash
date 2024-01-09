@@ -9,6 +9,7 @@ export interface Route {
   page: Page;
   query: QueryParams;
   tab: Tab;
+  color: string;
 }
 
 export const DATE_PARAMS = ['startDate', 'endDate', 'date'];

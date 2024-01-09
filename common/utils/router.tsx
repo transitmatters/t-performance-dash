@@ -14,6 +14,7 @@ import type { StationStore } from '../state/stationStore';
 import { useStationStore } from '../state/stationStore';
 import { useDateStore } from '../state/dateStore';
 import type { DateStore } from '../state/dateStore';
+import { LINE_COLORS } from '../constants/colors';
 
 const linePathToKeyMap: Record<string, Line> = {
   red: 'line-red',
@@ -72,14 +73,16 @@ export const useDelimitatedRoute = (): Route => {
   const tab = getTab(pathItems[1] ?? 'System');
   const page = getPage(pathItems, tab) as Page;
   const newParams = getParams(queryParams);
+  const line = linePathToKeyMap[pathItems[1]];
 
   return {
-    line: linePathToKeyMap[pathItems[1]],
+    line,
     linePath: pathItems[1] as LinePath, //TODO: Remove as
     lineShort: capitalize(pathItems[1]) as LineShort, //TODO: Remove as
     page: page,
     tab,
     query: router.isReady ? newParams : {},
+    color: LINE_COLORS[line ?? 'default'],
   };
 };
 

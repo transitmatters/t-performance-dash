@@ -7,7 +7,7 @@ import { WidgetForCarousel } from '../../../common/components/widgets/internal/W
 import { PercentageWidgetValue } from '../../../common/types/basicWidgets';
 import { prettyDate } from '../../../common/utils/date';
 import { getDetailsPredictiondWidgetValues } from '../utils/utils';
-import { WidgetTitle } from '../../dashboard/WidgetTitle';
+import { WidgetTitle } from '../../../common/components/widgets/WidgetTitle';
 import { PredictionsGraph } from './PredictionsGraph';
 
 interface PredictionsGraphWrapperProps {
