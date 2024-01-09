@@ -1,0 +1,91 @@
+{
+  "47": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Central Square (Cambridge)",
+        "branches": null,
+        "station": "cntsq",
+        "order": 1,
+        "stops": {
+          "1": ["47-1-72"],
+          "0": ["47-0-1123"]
+        }
+      },
+      {
+        "stop_name": "Mountfort Street @ Commonwealth Avenue",
+        "branches": null,
+        "station": "mount",
+        "order": 2,
+        "stops": {
+          "1": ["47-1-1773"],
+          "0": ["47-0-1809"]
+        }
+      },
+      {
+        "stop_name": "Brookline & Longwood Avenues",
+        "branches": null,
+        "station": "brlng",
+        "order": 3,
+        "stops": {
+          "1": ["47-1-1779"],
+          "0": ["47-0-1804"]
+        }
+      },
+      {
+        "stop_name": "Ruggles",
+        "branches": null,
+        "station": "rugg",
+        "order": 4,
+        "stops": {
+          "1": ["47-1-17861"],
+          "0": ["47-0-17863"]
+        }
+      },
+      {
+        "stop_name": "Nubian Station",
+        "branches": null,
+        "station": "nubn",
+        "order": 5,
+        "stops": {
+          "1": ["47-1-64"],
+          "0": ["47-0-64"]
+        }
+      },
+      {
+        "stop_name": "BU Medical Campus",
+        "branches": null,
+        "station": "bumed",
+        "order": 6,
+        "stops": {
+          "1": ["47-1-10006", "47-1-5090"],
+          "0": ["47-0-10015", "47-0-5090"]
+        }
+      },
+      {
+        "stop_name": "Albany Garage",
+        "branches": null,
+        "station": "alban",
+        "order": 7,
+        "stops": {
+          "1": ["47-1-10008"],
+          "0": ["47-0-10011"]
+        }
+      },
+      {
+        "stop_name": "Broadway Station",
+        "branches": null,
+        "station": "brway",
+        "order": 8,
+        "stops": {
+          "1": ["47-1-150"],
+          "0": ["47-0-150"]
+        }
+      }
+    ]
+  }
+}
