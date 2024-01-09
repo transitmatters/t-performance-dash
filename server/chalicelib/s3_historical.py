@@ -2,7 +2,7 @@ from chalicelib import s3
 from chalicelib.constants import EVENT_ARRIVAL, EVENT_DEPARTURE
 
 import itertools
-import chalicelib.date_utils as date_utils
+from chalicelib import date_utils
 
 
 def pairwise(iterable):

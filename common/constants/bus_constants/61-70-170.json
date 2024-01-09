@@ -1,0 +1,121 @@
+{
+  "61/70/170": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Cedarwood",
+        "branches": ["70"],
+        "station": "cdrwd",
+        "order": 1,
+        "stops": {
+          "1": ["70-1-9522"],
+          "0": ["70-0-9522"]
+        }
+      },
+      {
+        "stop_name": "Lincoln Street @ Silver Hill Lane",
+        "branches": ["61"],
+        "station": "linsh",
+        "order": 1,
+        "stops": {
+          "1": ["61-1-7784"],
+          "0": ["61-0-7784"]
+        }
+      },
+      {
+        "stop_name": "Market Place Drive (Waltham)",
+        "branches": ["70"],
+        "station": "mkpld",
+        "order": 1,
+        "stops": {
+          "1": ["70-1-9526"],
+          "0": ["70-0-9525"]
+        }
+      },
+      {
+        "stop_name": "Moody & Carter Streets (Central Square, Waltham)",
+        "branches": ["61", "70"],
+        "station": "mdyca",
+        "order": 2,
+        "stops": {
+          "1": ["61-1-86944", "70-1-86944"],
+          "0": ["61-0-86944", "70-0-86944", "70-0-88333"]
+        }
+      },
+      {
+        "stop_name": "Totten Pond Road @ Third Avenue",
+        "branches": ["61"],
+        "station": "tpthd",
+        "order": 2,
+        "stops": {
+          "1": ["61-1-18928"],
+          "0": ["61-0-89610"]
+        }
+      },
+      {
+        "stop_name": "Watertown/Waltham Line",
+        "branches": ["70"],
+        "station": "wtrwm",
+        "order": 3,
+        "stops": {
+          "1": ["70-1-8678"],
+          "0": ["70-0-8825"]
+        }
+      },
+      {
+        "stop_name": "Watertown Square",
+        "branches": ["70"],
+        "station": "wtrsq",
+        "order": 4,
+        "stops": {
+          "1": ["70-1-8297"],
+          "0": ["70-0-8178", "70-0-8815"]
+        }
+      },
+      {
+        "stop_name": "Market & Western",
+        "branches": ["70"],
+        "station": "mktwe",
+        "order": 5,
+        "stops": {
+          "1": ["70-1-1043"],
+          "0": ["70-0-1077"]
+        }
+      },
+      {
+        "stop_name": "Western Avenue @ North Harvard",
+        "branches": ["70"],
+        "station": "wnhvd",
+        "order": 6,
+        "stops": {
+          "1": ["70-1-1051"],
+          "0": ["70-0-1070"]
+        }
+      },
+      {
+        "stop_name": "Central Square (Cambridge)",
+        "branches": ["70"],
+        "station": "cntsq",
+        "order": 7,
+        "stops": {
+          "1": ["70-1-1123", "70-1-72"],
+          "0": ["70-0-1123"]
+        }
+      },
+      {
+        "stop_name": "University Park (Cambridge)",
+        "branches": ["70"],
+        "station": "unvpk",
+        "order": 8,
+        "stops": {
+          "1": ["70-1-730"],
+          "0": ["70-0-730"]
+        }
+      }
+    ]
+  }
+}

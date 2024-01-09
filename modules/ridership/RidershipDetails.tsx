@@ -8,8 +8,8 @@ import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
 import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { getRidershipLineId } from '../../common/utils/ridership';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
-import { getRidershipLineId } from './utils/utils';
 
 export function RidershipDetails() {
   const {

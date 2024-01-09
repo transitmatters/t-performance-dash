@@ -90,7 +90,9 @@ export const getStationForInvalidFromSelection = (line: Line, busRoute?: BusRout
   if (line === 'line-green') return getParentStationForStopId('70202'); // Gov. Center
   if (line === 'line-red') return getParentStationForStopId('70076'); // Park St.
   if (line === 'line-bus') {
+    if (busRoute === '17/19') return getParentStationForStopId('17-1-323');
     if (busRoute === '220/221/222') return getParentStationForStopId('222-1-32004');
+    if (busRoute === '61/70/170') return getParentStationForStopId('70-0-88333');
   }
   throw new Error('There should be no other lines with invalid from station selections.');
 };
