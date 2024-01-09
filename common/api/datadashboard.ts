@@ -6,8 +6,8 @@ import type {
   PartialAggregateAPIOptions,
   PartialSingleDayAPIOptions,
   QueryNameOptions,
+  RouteType,
   SingleDayAPIOptions,
-  BusOrSubway,
 } from '../types/api';
 import { APP_DATA_BASE_PATH } from '../utils/constants';
 import { getCurrentDate } from '../utils/date';
@@ -79,7 +79,7 @@ const aggregateQueryDependencies: { [key in QueryNameKeys]: AggregateAPIParams[]
 // Overload call to specify type for single day queries
 type UseQueriesOverload = {
   (
-    busOrSubway: BusOrSubway,
+    routeType: RouteType,
     parameters: SingleDayAPIOptions,
     aggregate: false,
     enabled?: boolean
@@ -87,7 +87,7 @@ type UseQueriesOverload = {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<SingleDayDataPoint[]>;
   };
   (
-    busOrSubway: BusOrSubway,
+    routeType: RouteType,
     parameters: AggregateAPIOptions,
     aggregate: true,
     enabled?: boolean
@@ -98,12 +98,12 @@ type UseQueriesOverload = {
 
 // Return type `any` because the return type is specified in the overload in `UseQueriesOverload`
 export const useTripExplorerQueries: UseQueriesOverload = (
-  busOrSubway: BusOrSubway,
+  routeType: RouteType,
   parameters: SingleDayAPIOptions | AggregateAPIOptions,
   aggregate: boolean,
   enabled = true
 ): any => {
-  const queryTypes = QUERIES[busOrSubway];
+  const queryTypes = QUERIES[routeType];
   const dependencies = aggregate ? aggregateQueryDependencies : singleDayQueryDependencies;
   // Create objects with keys of query names which contains keys and parameters.
   const queries = {};
@@ -135,12 +135,20 @@ export const useTripExplorerQueries: UseQueriesOverload = (
   });
 
   // Return each query.
-  if (busOrSubway === 'bus') {
+  if (routeType === 'bus') {
     return {
       [QueryNameKeys.traveltimes]: requests[0],
       [QueryNameKeys.headways]: requests[1],
     };
   }
+
+  if (routeType === 'cr') {
+    return {
+      [QueryNameKeys.traveltimes]: requests[0],
+      [QueryNameKeys.headways]: requests[1],
+    };
+  }
+
   return {
     [QueryNameKeys.traveltimes]: requests[0],
     [QueryNameKeys.headways]: requests[1],

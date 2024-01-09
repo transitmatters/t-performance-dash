@@ -1,6 +1,6 @@
 import type { OverviewDatePresetKey } from '../constants/dates';
 import type { Page } from '../constants/pages';
-import type { BusRoute, Line, LinePath, LineShort } from './lines';
+import type { BusRoute, CommuterRailRoute, Line, LinePath, LineShort } from './lines';
 
 export interface Route {
   line: Line | undefined;
@@ -20,6 +20,7 @@ export type QueryParams = {
   endDate?: string;
   date?: string;
   busRoute?: BusRoute;
+  crRoute?: CommuterRailRoute;
   view?: OverviewDatePresetKey;
   to?: string;
   from?: string;

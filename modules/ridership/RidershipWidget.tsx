@@ -7,7 +7,7 @@ import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { useRidershipData } from '../../common/api/hooks/ridership';
-import { RIDERSHIP_KEYS } from '../../common/types/lines';
+import { getRidershipLineId } from '../../common/utils/ridership';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 
 export const RidershipWidget: React.FC = () => {
@@ -15,9 +15,7 @@ export const RidershipWidget: React.FC = () => {
   const { startDate } = OVERVIEW_OPTIONS[query.view ?? 'year'];
   const endDate = TODAY_STRING;
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
-  const lineId = query.busRoute
-    ? `line-${query.busRoute.replaceAll('/', '')}`
-    : RIDERSHIP_KEYS[line ?? ''];
+  const lineId = getRidershipLineId(line, query.busRoute);
   const lineOrRoute = query.busRoute ? `line-${query.busRoute.replaceAll('/', '')}` : line;
   const ridership = useRidershipData({
     line_id: lineId,
