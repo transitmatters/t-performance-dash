@@ -20,7 +20,6 @@ ROUTES_CR = [
     "CR-Needham",
     "CR-Newburyport",
     "CR-Providence",
-    "CR-Foxboro",
 ]
 
 

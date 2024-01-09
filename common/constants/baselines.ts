@@ -59,7 +59,6 @@ export const PEAK_RIDERSHIP: {
   'CR-Greenbush': 0,
   'CR-Haverhill': 0,
   'CR-Lowell': 0,
-  'CR-Foxboro': 0,
   'CR-Worcester': 0,
   'CR-Fairmount': 0,
   'CR-Kingston': 0,
