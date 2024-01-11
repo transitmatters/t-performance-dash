@@ -9,6 +9,7 @@ import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getParentStationForStopId } from '../../common/utils/stations';
+import { PokeySchleppieAwardBanner } from '../../common/components/notices/PokeySchleppieAwardBanner';
 import { useAlertStore } from './AlertStore';
 import { TripGraphs } from './TripGraphs';
 
@@ -36,6 +37,7 @@ export const TripExplorer = () => {
     <PageWrapper pageTitle={'Trips'}>
       <ChartPageDiv>
         {alertsForModal?.length ? <AlertNotice /> : null}
+        <PokeySchleppieAwardBanner busRoute={busRoute} />
         <TripGraphs fromStation={fromStation} toStation={toStation} />
         <SameDayNotice />
         <TerminusNotice toStation={toStation} fromStation={fromStation} />
