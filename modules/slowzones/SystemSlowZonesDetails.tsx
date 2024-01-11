@@ -11,7 +11,7 @@ import {
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { filterAllSlow, formatSegments } from '../../common/utils/slowZoneUtils';

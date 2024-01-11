@@ -1,6 +1,6 @@
 import React from 'react';
 import { useBreakpoint } from '../hooks/useBreakpoint';
-import { WidgetPage } from '../components/widgets/Widget';
+import { WidgetPage } from '../components/widgets/WidgetPage';
 import { MobileHeader } from '../../modules/dashboard/MobileHeader';
 import { DesktopHeader } from '../../modules/dashboard/DesktopHeader';
 import { useDelimitatedRoute } from '../utils/router';

@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unused-modules */
 import React, { useMemo } from 'react';
 
 import type { FetchServiceHoursResponse } from '../../common/types/api';
