@@ -1,0 +1,51 @@
+{
+  "55": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Jersey & Queensberry",
+        "branches": null,
+        "station": "jqnsb",
+        "order": 1,
+        "stops": {
+          "1": ["55-1-1926"],
+          "0": ["55-0-1926"]
+        }
+      },
+      {
+        "stop_name": "Massachusetts Ave & Boylston St",
+        "branches": null,
+        "station": "maboy",
+        "order": 2,
+        "stops": {
+          "1": ["55-1-1932"],
+          "0": ["55-0-11391"]
+        }
+      },
+      {
+        "stop_name": "Saint James Ave @ Dartmouth St",
+        "branches": null,
+        "station": "stjim",
+        "order": 3,
+        "stops": {
+          "1": ["55-1-178"],
+          "0": ["55-0-178"]
+        }
+      },
+      {
+        "stop_name": "Park Street",
+        "branches": null,
+        "station": "pktrm",
+        "order": 4,
+        "stops": {
+          "1": ["55-1-10000"],
+          "0": ["55-0-10000"]
+        }
+      }
+    ]
+  }
+}

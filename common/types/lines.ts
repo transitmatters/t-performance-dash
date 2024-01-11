@@ -11,6 +11,7 @@ export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus' | 'commuter-r
 /** All currently available Bus Routes */
 export type BusRoute =
   | '1'
+  | '4'
   | '9'
   | '15'
   | '16'
@@ -22,18 +23,33 @@ export type BusRoute =
   | '32'
   | '34'
   | '39'
+  | '41'
+  | '45'
   | '47'
+  | '55'
   | '57'
   | '66'
   | '71'
   | '73'
   | '77'
+  | '85'
   | '86'
   | '89'
+  | '91'
+  | '92'
   | '111'
   | '61/70/170'
+  | '104/109'
   | '114/116/117'
   | '220/221/222';
+
+export type BusRouteId =
+  | Exclude<BusRoute, '17/19' | '61/70/170' | '104/109' | '114/116/117' | '220/221/222'>
+  | '1719'
+  | '6170170'
+  | '104109'
+  | '114116117'
+  | '220221222';
 
 export type CommuterRailRoute =
   | 'CR-Fitchburg'
@@ -82,6 +98,7 @@ export const LANDING_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue
 export const RAIL_LINES = ['red', 'orange', 'green', 'blue'];
 export const BUS_ROUTES: BusRoute[] = [
   '1',
+  '4',
   '9',
   '15',
   '16',
@@ -92,17 +109,24 @@ export const BUS_ROUTES: BusRoute[] = [
   '32',
   '34',
   '39',
+  '41',
+  '45',
   '47',
+  '55',
   '57',
   '66',
   '71',
   '73',
   '77',
+  '85',
   '86',
   '89',
+  '91',
+  '92',
   '111',
   '17/19',
   '61/70/170',
+  '104/109',
   '114/116/117',
   '220/221/222',
 ];

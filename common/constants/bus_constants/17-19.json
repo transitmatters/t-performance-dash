@@ -17,7 +17,7 @@
         }
       },
       {
-        "stop_name": "Geneva Avenue @ Bowdoin Street",
+        "stop_name": "Geneva Ave @ Bowdoin St",
         "branches": ["19"],
         "station": "genbo",
         "order": 2,
@@ -37,7 +37,7 @@
         }
       },
       {
-        "stop_name": "Geneva Avenue @ Columbia Road",
+        "stop_name": "Geneva Ave @ Columbia Road",
         "branches": ["19"],
         "station": "genco",
         "order": 3,
@@ -57,7 +57,7 @@
         }
       },
       {
-        "stop_name": "Edward Everett Square Columbia @ Massachusetts Avenue",
+        "stop_name": "Edward Everett Square Columbia @ Massachusetts Ave",
         "branches": ["17"],
         "station": "edevt",
         "order": 4,
@@ -87,7 +87,7 @@
         }
       },
       {
-        "stop_name": "Warren Street @ Boston Latin Academy",
+        "stop_name": "Warren St @ Boston Latin Academy",
         "branches": ["19"],
         "station": "latac",
         "order": 5,
@@ -97,7 +97,7 @@
         }
       },
       {
-        "stop_name": "Warren Street @ Walnut Avenue",
+        "stop_name": "Warren St @ Walnut Ave",
         "branches": ["19"],
         "station": "warwl",
         "order": 6,
@@ -117,7 +117,7 @@
         }
       },
       {
-        "stop_name": "Melnea Cass Boulevard @ Washington Street",
+        "stop_name": "Melnea Cass Boulevard @ Washington St",
         "branches": ["19"],
         "station": "melwa",
         "order": 8,
@@ -157,7 +157,7 @@
         }
       },
       {
-        "stop_name": "Brookline Avenue @ Park Drive",
+        "stop_name": "Brookline Ave @ Park Drive",
         "branches": ["19"],
         "station": "brkpk",
         "order": 12,

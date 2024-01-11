@@ -7,7 +7,7 @@
     },
     "stations": [
       {
-        "stop_name": "Dedham Line (Washington Street)",
+        "stop_name": "Dedham Line (Washington St)",
         "branches": null,
         "station": "dline",
         "order": 1,
@@ -27,7 +27,7 @@
         }
       },
       {
-        "stop_name": "Stimson Street @ Washington Street",
+        "stop_name": "Stimson St @ Washington St",
         "branches": null,
         "station": "stims",
         "order": 2,
@@ -37,7 +37,7 @@
         }
       },
       {
-        "stop_name": "Washington Street @ West Boundary Road",
+        "stop_name": "Washington St @ West Boundary Road",
         "branches": null,
         "station": "wawbw",
         "order": 3,
@@ -47,7 +47,7 @@
         }
       },
       {
-        "stop_name": "Washington Street @ LaGrange Street",
+        "stop_name": "Washington St @ LaGrange St",
         "branches": null,
         "station": "walag",
         "order": 4,
@@ -57,7 +57,7 @@
         }
       },
       {
-        "stop_name": "Washington Street @ Metropolitan Avenue",
+        "stop_name": "Washington St @ Metropolitan Avenue",
         "branches": null,
         "station": "wamet",
         "order": 5,
