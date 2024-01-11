@@ -5,9 +5,11 @@ import { useDateStore } from '../../../state/dateStore';
 import { useDatePresetStore } from '../../../state/datePresetStore';
 import type { OverviewDatePresetKey } from '../../../constants/dates';
 import { OverviewRangeTypes } from '../../../constants/dates';
+import { useDelimitatedRoute } from '../../../utils/router';
 
 export const OverviewDateSelection = () => {
   const router = useRouter();
+  const { line } = useDelimitatedRoute();
   const setDatePreset = useDatePresetStore((state) => state.setDatePreset);
   const selectedView = router.query.view ?? 'year';
   const selectedIndex = Object.keys(OverviewRangeTypes).findIndex((view) => view === selectedView);
@@ -28,6 +30,7 @@ export const OverviewDateSelection = () => {
       additionalButtonClass="w-fit text-xs sm:text-base md:text-xs lg:text-sm"
       additionalDivClass="md:max-w-md h-10 md:h-7"
       isOverview
+      line={line}
     />
   );
 };

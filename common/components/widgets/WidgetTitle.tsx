@@ -1,15 +1,15 @@
 import React from 'react';
 import classNames from 'classnames';
-import type { Location } from '../../common/types/charts';
-import type { Line } from '../../common/types/lines';
-import { useBreakpoint } from '../../common/hooks/useBreakpoint';
-import { useDelimitatedRoute } from '../../common/utils/router';
-import { getSelectedDates } from '../../common/state/utils/dateStoreUtils';
-import { LocationTitle } from './LocationTitle';
+import type { Location } from '../../types/charts';
+import type { Line } from '../../types/lines';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { useDelimitatedRoute } from '../../utils/router';
+import { getSelectedDates } from '../../state/utils/dateStoreUtils';
+import { LocationTitle } from '../../../modules/dashboard/LocationTitle';
 
 interface WidgetTitle {
-  title: string;
-  subtitle?: string;
+  title: React.ReactNode;
+  subtitle?: React.ReactNode;
   location?: Location;
   both?: boolean;
   line?: Line;

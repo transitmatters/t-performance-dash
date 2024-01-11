@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unused-modules */
 import React, { useMemo } from 'react';
 import { Line as LineChart } from 'react-chartjs-2';
 import {
