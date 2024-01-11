@@ -17,7 +17,7 @@
         }
       },
       {
-        "stop_name": "Dorchester Avenue @ Gallivan Boulevard",
+        "stop_name": "Dorchester Ave @ Gallivan Boulevard",
         "branches": null,
         "station": "dotga",
         "order": 2,
@@ -37,7 +37,7 @@
         }
       },
       {
-        "stop_name": "Morton Street @ Blue Hill Avenue",
+        "stop_name": "Morton St @ Blue Hill Ave",
         "branches": null,
         "station": "mortn",
         "order": 4,
