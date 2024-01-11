@@ -5,13 +5,13 @@ import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/type
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
-import { WidgetTitle } from '../dashboard/WidgetTitle';
 import { getLocationDetails } from '../../common/utils/stations';
 import type { Line } from '../../common/types/lines';
 import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
 import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
+import { WidgetTitle } from '../../common/components/widgets';
 
 interface CommuterRailTripGraphsProps {
   fromStation: Station;
