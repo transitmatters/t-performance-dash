@@ -155,6 +155,8 @@ def connect_stations_graph(station_id, station_distances, station_lines):
     while len(stk) > 0:
         dest, dist = stk.pop()
 
+        print(f"Traversing from {station_id} to {dest}. Distance: {dist}")
+
         seen_stations.add(dest)
 
         station_distances[station_id][dest] = dist
@@ -163,10 +165,11 @@ def connect_stations_graph(station_id, station_distances, station_lines):
             continue
 
         for second_dest, second_dist in station_distances[dest].items():
+
             # the station we're going to is unseen and is on one of the lines we started on
             # this should help to avoid inter-line cycles
             common_lines = station_lines[second_dest].intersection(station_lines[station_id])
-            if second_dest not in seen_stations and len(common_lines) > 0:
+            if second_dest not in seen_stations and len(common_lines) > 0 and second_dest not in station_distances[station_id]:
                 stk.append((second_dest, second_dist + dist))
 
 
