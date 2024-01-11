@@ -37,7 +37,7 @@
         }
       },
       {
-        "stop_name": "Broad Street @ Middle Street",
+        "stop_name": "Broad St @ Middle St",
         "branches": ["222"],
         "station": "brmdl",
         "order": 3,
@@ -47,7 +47,7 @@
         }
       },
       {
-        "stop_name": "Otis Street & Downer Avenue",
+        "stop_name": "Otis St & Downer Ave",
         "branches": ["220"],
         "station": "otdow",
         "order": 4,
@@ -77,7 +77,7 @@
         }
       },
       {
-        "stop_name": "Washington Street @ Southern Artery",
+        "stop_name": "Washington St @ Southern Artery",
         "branches": ["220", "221", "222"],
         "station": "wassa",
         "order": 7,
@@ -87,7 +87,7 @@
         }
       },
       {
-        "stop_name": "McGrath Highway @ Washington Street",
+        "stop_name": "McGrath Highway @ Washington St",
         "branches": ["220", "222"],
         "station": "mgrwa",
         "order": 8,

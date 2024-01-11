@@ -80,6 +80,7 @@ export const getStationForInvalidFromSelection = (line: Line, busRoute?: BusRout
     if (busRoute === '17/19') return getParentStationForStopId('17-1-323');
     if (busRoute === '220/221/222') return getParentStationForStopId('222-1-32004');
     if (busRoute === '61/70/170') return getParentStationForStopId('70-0-88333');
+    if (busRoute === '104/109') return getParentStationForStopId('104-1-5560');
   }
   throw new Error('There should be no other lines with invalid from station selections.');
 };

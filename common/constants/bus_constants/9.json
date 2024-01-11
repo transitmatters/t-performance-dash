@@ -17,7 +17,7 @@
         }
       },
       {
-        "stop_name": "L Street @ Broadway",
+        "stop_name": "L St @ Broadway",
         "branches": null,
         "station": "lbrwy",
         "order": 2,
@@ -47,7 +47,7 @@
         }
       },
       {
-        "stop_name": "Silver Line @ Washington Street",
+        "stop_name": "Silver Line @ Washington St",
         "branches": null,
         "station": "slvwa",
         "order": 5,

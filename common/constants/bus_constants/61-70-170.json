@@ -17,13 +17,13 @@
         }
       },
       {
-        "stop_name": "Lincoln Street @ Silver Hill Lane",
+        "stop_name": "Lincoln St @ Silver Hill Lane",
         "branches": ["61"],
         "station": "linsh",
         "order": 1,
         "stops": {
-          "1": ["61-1-7784"],
-          "0": ["61-0-7784"]
+          "1": ["61-1-7784", "61-1-7783"],
+          "0": ["61-0-7784", "61-0-7783"]
         }
       },
       {
@@ -47,7 +47,7 @@
         }
       },
       {
-        "stop_name": "Totten Pond Road @ Third Avenue",
+        "stop_name": "Totten Pond Road @ Third Ave",
         "branches": ["61"],
         "station": "tpthd",
         "order": 2,
@@ -87,7 +87,7 @@
         }
       },
       {
-        "stop_name": "Western Avenue @ North Harvard",
+        "stop_name": "Western Ave @ North Harvard",
         "branches": ["70"],
         "station": "wnhvd",
         "order": 6,

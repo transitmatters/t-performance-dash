@@ -1,0 +1,101 @@
+{
+  "41": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Jamaica Plain Center (Monument)",
+        "branches": null,
+        "station": "jpctr",
+        "order": 1,
+        "stops": {
+          "1": ["41-1-11939"],
+          "0": ["41-0-1939"]
+        }
+      },
+      {
+        "stop_name": "Centre St & South Huntington Ave",
+        "branches": null,
+        "station": "shunt",
+        "order": 2,
+        "stops": {
+          "1": ["41-1-11131"],
+          "0": ["41-0-11609", "41-0-1160"]
+        }
+      },
+      {
+        "stop_name": "Jackson Square Station",
+        "branches": null,
+        "station": "jasst",
+        "order": 3,
+        "stops": {
+          "1": ["41-1-11531"],
+          "0": ["41-0-11531"]
+        }
+      },
+      {
+        "stop_name": "Nubian Station",
+        "branches": null,
+        "station": "nubn",
+        "order": 4,
+        "stops": {
+          "1": ["41-1-64000"],
+          "0": ["41-0-64000"]
+        }
+      },
+      {
+        "stop_name": "Blue Hill Ave @ Dudley St",
+        "branches": null,
+        "station": "bhdud",
+        "order": 5,
+        "stops": {
+          "1": ["41-1-1497"],
+          "0": ["41-0-1486"]
+        }
+      },
+      {
+        "stop_name": "Uphams Corner",
+        "branches": null,
+        "station": "upham",
+        "order": 6,
+        "stops": {
+          "1": ["41-1-2933"],
+          "0": ["41-0-2910"]
+        }
+      },
+      {
+        "stop_name": "Edward Everett Square Columbia @ Massachusetts Ave",
+        "branches": null,
+        "station": "edevt",
+        "order": 7,
+        "stops": {
+          "1": ["41-1-2935"],
+          "0": ["41-0-123"]
+        }
+      },
+      {
+        "stop_name": "Columbia Road @ Dorchester Ave",
+        "branches": null,
+        "station": "coldt",
+        "order": 8,
+        "stops": {
+          "1": ["41-1-136"],
+          "0": ["41-0-122"]
+        }
+      },
+      {
+        "stop_name": "JFK/UMass",
+        "branches": null,
+        "station": "jfk",
+        "order": 9,
+        "stops": {
+          "1": ["41-1-121"],
+          "0": ["41-0-121"]
+        }
+      }
+    ]
+  }
+}

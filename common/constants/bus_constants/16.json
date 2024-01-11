@@ -27,7 +27,7 @@
         }
       },
       {
-        "stop_name": "Columbia Road @ Washington Street",
+        "stop_name": "Columbia Road @ Washington St",
         "branches": null,
         "station": "cowas",
         "order": 3,
@@ -37,7 +37,7 @@
         }
       },
       {
-        "stop_name": "Columbia Road @ Quincy Street",
+        "stop_name": "Columbia Road @ Quincy St",
         "branches": null,
         "station": "coqui",
         "order": 4,
