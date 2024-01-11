@@ -8,7 +8,7 @@ import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { RidershipCount } from '../../common/types/dataPoints';
+import type { DataPoint, RidershipCount } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
@@ -17,6 +17,8 @@ import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
+import { DownloadButton } from '../../common/components/buttons/DownloadButton';
+import type { AggregateDataPoint } from '../../common/types/charts';
 
 interface RidershipGraphProps {
   data: RidershipCount[];
@@ -198,6 +200,17 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
             ]}
           />
         </ChartDiv>
+        <div className="flex flex-row items-end justify-end gap-4">
+          {startDate && (
+            <DownloadButton
+              data={data as unknown as (DataPoint | AggregateDataPoint)[]}
+              datasetName="ridership"
+              bothStops={false}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          )}
+        </div>
       </ChartBorder>
     );
   }, [

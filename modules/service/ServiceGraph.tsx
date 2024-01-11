@@ -2,10 +2,17 @@ import React, { useMemo } from 'react';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/baselines';
-import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
+import type {
+  DataPoint,
+  DeliveredTripMetrics,
+  ScheduledService,
+} from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
-import { getShuttlingBlockAnnotations } from './utils/graphUtils';
+import { ChartBorder } from '../../common/components/charts/ChartBorder';
+import { DownloadButton } from '../../common/components/buttons/DownloadButton';
+import type { AggregateDataPoint } from '../../common/types/charts';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
+import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 interface ServiceGraphProps {
   config: ParamsType;
@@ -68,15 +75,29 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
   }, [data, peak]);
 
   return (
-    <ScheduledAndDeliveredGraph
-      valueAxisLabel="Round trips"
-      scheduled={scheduled}
-      delivered={delivered}
-      blocks={blocks}
-      benchmarks={benchmarks}
-      startDate={startDate}
-      endDate={endDate}
-      agg={config.agg}
-    />
+    <ChartBorder>
+      <ScheduledAndDeliveredGraph
+        valueAxisLabel="Round trips"
+        scheduled={scheduled}
+        delivered={delivered}
+        blocks={blocks}
+        benchmarks={benchmarks}
+        startDate={startDate}
+        endDate={endDate}
+        agg={config.agg}
+      />
+
+      <div className="flex flex-row items-end justify-end gap-4">
+        {startDate && (
+          <DownloadButton
+            data={data as unknown as (DataPoint | AggregateDataPoint)[]}
+            datasetName="service"
+            bothStops={false}
+            startDate={startDate}
+            endDate={endDate}
+          />
+        )}
+      </div>
+    </ChartBorder>
   );
 };

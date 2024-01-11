@@ -9,7 +9,7 @@ import { max } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
-import type { TimePredictionWeek } from '../../../common/types/dataPoints';
+import type { DataPoint, TimePredictionWeek } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
@@ -18,6 +18,9 @@ import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { PEAK_SPEED } from '../../../common/constants/baselines';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
+import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
+import type { AggregateDataPoint } from '../../../common/types/charts';
+import { addAccuracyPercentageToData } from '../utils/utils';
 
 interface PredictionsGraphProps {
   data: TimePredictionWeek[];
@@ -60,6 +63,8 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
       }
     }, 0),
   }));
+
+  const dataWithPercentage = addAccuracyPercentageToData(data);
 
   return (
     <ChartBorder>
@@ -207,6 +212,17 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
           ]}
         />
       </ChartDiv>
+      <div className="flex flex-row items-end justify-end gap-4">
+        {startDate && (
+          <DownloadButton
+            data={dataWithPercentage as unknown as (DataPoint | AggregateDataPoint)[]}
+            datasetName="ridership predictions"
+            bothStops={false}
+            startDate={startDate}
+            endDate={endDate}
+          />
+        )}
+      </div>
     </ChartBorder>
   );
 };
