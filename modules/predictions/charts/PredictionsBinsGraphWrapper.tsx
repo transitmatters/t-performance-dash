@@ -1,7 +1,7 @@
 import React from 'react';
 import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
-import { WidgetTitle } from '../../dashboard/WidgetTitle';
+import { WidgetTitle } from '../../../common/components/widgets/WidgetTitle';
 import { PredictionsBinsGraph } from './PredictionsBinsGraph';
 
 interface PredictionsBinsGraphWrapperProps {

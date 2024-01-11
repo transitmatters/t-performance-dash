@@ -1,7 +1,7 @@
 import React from 'react';
 import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import type { ParamsType } from './constants/speeds';
 import { SpeedGraphWrapper } from './SpeedGraphWrapper';
 

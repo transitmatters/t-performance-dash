@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unused-modules */
 import React, { useMemo } from 'react';
 
 import type { Benchmark, Block, Dataset } from '../../common/components/charts/TimeSeriesChart';

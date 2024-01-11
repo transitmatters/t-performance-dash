@@ -1,4 +1,4 @@
-export const prettyDate = (dateString: string, withDow: boolean) => {
+export const prettyDate = (dateString: string, withDow: boolean = false) => {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'long',

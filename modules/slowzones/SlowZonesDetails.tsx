@@ -7,7 +7,7 @@ import utc from 'dayjs/plugin/utc';
 import Link from 'next/link';
 import { isArray } from 'lodash';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import {
   useSlowzoneAllData,
