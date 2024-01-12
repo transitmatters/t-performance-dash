@@ -90,8 +90,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
                 line={line}
                 pressFunction={setTravelTimeDisplay}
                 options={[
+                  ['traveltimes', 'Travel times'],
                   ['speeds', 'Speeds'],
-                  ['traveltimes', 'Travel Times'],
                 ]}
                 additionalDivClass="md:w-auto"
                 additionalButtonClass="md:w-fit"
@@ -188,8 +188,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
                 line={line}
                 pressFunction={setTravelTimeDisplay}
                 options={[
+                  ['traveltimes', 'Travel times'],
                   ['speeds', 'Speeds'],
-                  ['traveltimes', 'Travel Times'],
                 ]}
                 additionalDivClass="md:w-auto"
                 additionalButtonClass="md:w-fit"
