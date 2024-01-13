@@ -3,17 +3,16 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileArrowDown } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
-import type { DataPoint } from '../../types/dataPoints';
-import type { AggregateDataPoint, Location } from '../../types/charts';
+import type { Location } from '../../types/charts';
 import { lineColorTextHover } from '../../styles/general';
 import { useDelimitatedRoute } from '../../utils/router';
-import { filename } from '../../utils/csv';
+import { getCsvFilename } from '../../utils/csv';
 
 interface DownloadButtonProps {
   datasetName: string;
-  data: (DataPoint | AggregateDataPoint)[];
-  bothStops: boolean;
+  data: Record<string, any>[];
   startDate: string;
+  bothStops: boolean;
   location?: Location;
   endDate?: string;
 }
@@ -33,7 +32,7 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
         className={'csv-link'}
         data={data}
         title={'Download data as CSV'}
-        filename={filename(datasetName, bothStops, startDate, line, location, endDate)}
+        filename={getCsvFilename(datasetName, bothStops, startDate, line, location, endDate)}
       >
         <FontAwesomeIcon
           icon={faFileArrowDown}

@@ -9,7 +9,7 @@ const directionAbbrs = {
   outbound: 'OB',
 };
 
-export function filename(
+export function getCsvFilename(
   datasetName: string,
   bothStops: boolean,
   startDate: string,

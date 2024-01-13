@@ -7,7 +7,7 @@ import { enUS } from 'date-fns/locale';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { DataPoint, DeliveredTripMetrics } from '../../common/types/dataPoints';
+import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
@@ -16,7 +16,6 @@ import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { PEAK_SPEED } from '../../common/constants/baselines';
 import { getShuttlingBlockAnnotations } from '../service/utils/graphUtils';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
-import type { AggregateDataPoint } from '../../common/types/charts';
 import type { ParamsType } from './constants/speeds';
 import { addMPHToSpeedData } from './utils/utils';
 
@@ -199,7 +198,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
       <div className="flex flex-row items-end justify-end gap-4">
         {startDate && (
           <DownloadButton
-            data={dataWithMPH as unknown as (DataPoint | AggregateDataPoint)[]}
+            data={dataWithMPH}
             datasetName="speed"
             bothStops={false}
             startDate={startDate}
