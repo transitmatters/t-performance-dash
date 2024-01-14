@@ -73,5 +73,5 @@ for facility in bike_storage["data"]:
             stations_by_id[station_id][indx]["pedal_park"] = True
 
 
-with open("common/constants/stations_distances.json", "w") as f:
+with open("common/constants/stations.json", "w") as f:
     json.dump(stations, f, indent=2)
