@@ -11,10 +11,12 @@ import type { Line } from '../../common/types/lines';
 import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 import { DwellsAggregateWrapper } from '../dwells/DwellsAggregateWrapper';
-import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
 import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { DwellsSingleWrapper } from '../dwells/DwellsSingleWrapper';
 import { HeadwaysHistogramWrapper } from '../headways/charts/HeadwaysHistogramWrapper';
+import { SpeedBetweenStationsSingleWrapper } from '../speed/SpeedBetweenStationsGraphWrapper';
+import { SpeedBetweenStationsAggregateWrapper } from '../speed/SpeedBetweenStationsAggregateWrapper';
+import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -34,6 +36,9 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
   line,
 }) => {
   const [peakTime, setPeakTime] = React.useState<'weekday' | 'weekend'>('weekday');
+  const [travelTimeDisplay, setTravelTimeDisplay] = React.useState<'speeds' | 'traveltimes'>(
+    'traveltimes'
+  );
 
   const { traveltimes, headways, dwells } = useTripExplorerQueries(
     'subway',
@@ -49,18 +54,53 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
       {aggregate ? (
         <>
           <WidgetDiv>
-            <WidgetTitle
-              title="Travel times"
-              subtitle="Time between stops"
-              location={location}
-              line={line}
-              both
-            />
-            <TravelTimesAggregateWrapper
-              query={traveltimes}
-              fromStation={fromStation}
-              toStation={toStation}
-            />
+            {travelTimeDisplay === 'speeds' ? (
+              <>
+                <WidgetTitle
+                  title="Speeds"
+                  subtitle="Average speed between stops"
+                  location={location}
+                  line={line}
+                  both
+                />
+                <SpeedBetweenStationsAggregateWrapper
+                  query={traveltimes}
+                  fromStation={fromStation}
+                  toStation={toStation}
+                />
+              </>
+            ) : (
+              <>
+                <WidgetTitle
+                  title="Travel times"
+                  subtitle="Time between stops"
+                  location={location}
+                  line={line}
+                  both
+                />
+                <TravelTimesAggregateWrapper
+                  query={traveltimes}
+                  fromStation={fromStation}
+                  toStation={toStation}
+                />
+              </>
+            )}
+            {line !== 'line-green' ? (
+              <div className={'flex w-full justify-center pt-2'}>
+                <ButtonGroup
+                  line={line}
+                  pressFunction={setTravelTimeDisplay}
+                  options={[
+                    ['traveltimes', 'Travel times'],
+                    ['speeds', 'Speeds'],
+                  ]}
+                  additionalDivClass="md:w-auto"
+                  additionalButtonClass="md:w-fit"
+                />
+              </div>
+            ) : (
+              <React.Fragment />
+            )}
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
@@ -116,18 +156,53 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
       ) : (
         <>
           <WidgetDiv>
-            <WidgetTitle
-              title="Travel times"
-              subtitle="Time between stops"
-              location={location}
-              line={line}
-              both
-            />
-            <TravelTimesSingleWrapper
-              query={traveltimes}
-              toStation={toStation}
-              fromStation={fromStation}
-            />
+            {travelTimeDisplay === 'speeds' ? (
+              <>
+                <WidgetTitle
+                  title="Speeds"
+                  subtitle="Average speed between stops"
+                  location={location}
+                  line={line}
+                  both
+                />
+                <SpeedBetweenStationsSingleWrapper
+                  query={traveltimes}
+                  fromStation={fromStation}
+                  toStation={toStation}
+                />
+              </>
+            ) : (
+              <>
+                <WidgetTitle
+                  title="Travel times"
+                  subtitle="Time between stops"
+                  location={location}
+                  line={line}
+                  both
+                />
+                <TravelTimesSingleWrapper
+                  query={traveltimes}
+                  fromStation={fromStation}
+                  toStation={toStation}
+                />
+              </>
+            )}
+            {line !== 'line-green' ? (
+              <div className={'flex w-full justify-center pt-2'}>
+                <ButtonGroup
+                  line={line}
+                  pressFunction={setTravelTimeDisplay}
+                  options={[
+                    ['traveltimes', 'Travel times'],
+                    ['speeds', 'Speeds'],
+                  ]}
+                  additionalDivClass="md:w-auto"
+                  additionalButtonClass="md:w-fit"
+                />
+              </div>
+            ) : (
+              <React.Fragment />
+            )}
           </WidgetDiv>
 
           <WidgetDiv>
