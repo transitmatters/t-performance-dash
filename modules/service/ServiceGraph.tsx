@@ -90,7 +90,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
       <div className="flex flex-row items-end justify-end gap-4">
         {startDate && (
           <DownloadButton
-            data={data as unknown as (DataPoint | AggregateDataPoint)[]}
+            data={data}
             datasetName="service"
             includeBothStopsForLocation={false}
             startDate={startDate}
