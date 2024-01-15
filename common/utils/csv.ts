@@ -1,6 +1,6 @@
 import { flatten } from 'lodash';
 import type { Location } from '../types/charts';
-import { DeliveredTripMetrics, TimePredictionWeek } from '../types/dataPoints';
+import type { DeliveredTripMetrics, TimePredictionWeek } from '../types/dataPoints';
 
 const directionAbbrs = {
   northbound: 'NB',
@@ -18,12 +18,10 @@ type GetCsvFilenameOptions = {
   line?: string;
   location?: Location;
   includeBothStopsForLocation?: boolean | undefined;
-}
+};
 
-export function getCsvFilename(
-  options: GetCsvFilenameOptions
-) {
-  const {datasetName, startDate, endDate, line, location, includeBothStopsForLocation} = options
+export function getCsvFilename(options: GetCsvFilenameOptions) {
+  const { datasetName, startDate, endDate, line, location, includeBothStopsForLocation } = options;
   // CharlesMGH-SB_dwells_20210315.csv
   // CentralSquareCambridge-MelneaCassWashington_traveltimesByHour-weekday_20200101-20201231.csv
   // BostonUniversityWest-EB_headways_20161226-20170328.csv

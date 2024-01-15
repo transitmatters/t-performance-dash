@@ -34,7 +34,7 @@ export const SpeedBetweenStationsSingleChart: React.FC<SpeedBetweenStationsSingl
         date={date}
         metricField={MetricFieldKeys.speedMph}
         pointField={PointFieldKeys.depDt}
-        bothStops={true}
+        includeBothStopsForLocation={true}
         location={location}
         units={'MPH'}
         fname={'speeds'}

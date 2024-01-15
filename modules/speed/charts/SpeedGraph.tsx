@@ -16,8 +16,8 @@ import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { PEAK_SPEED } from '../../../common/constants/baselines';
 import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
-import type { ParamsType } from './../constants/speeds';
 import { addMPHToSpeedData } from '../../../common/utils/csv';
+import type { ParamsType } from '../constants/speeds';
 
 interface SpeedGraphProps {
   data: DeliveredTripMetrics[];
