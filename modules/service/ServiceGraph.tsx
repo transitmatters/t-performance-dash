@@ -92,7 +92,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
           <DownloadButton
             data={data as unknown as (DataPoint | AggregateDataPoint)[]}
             datasetName="service"
-            bothStops={false}
+            includeBothStopsForLocation={false}
             startDate={startDate}
             endDate={endDate}
           />

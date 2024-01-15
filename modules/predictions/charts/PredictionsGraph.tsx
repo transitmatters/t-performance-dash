@@ -19,7 +19,7 @@ import { PEAK_SPEED } from '../../../common/constants/baselines';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
-import { addAccuracyPercentageToData } from '../utils/utils';
+import { addAccuracyPercentageToData } from '../../../common/utils/csv';
 
 interface PredictionsGraphProps {
   data: TimePredictionWeek[];
@@ -216,7 +216,7 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
           <DownloadButton
             data={dataWithPercentage}
             datasetName="ridership predictions"
-            bothStops={false}
+            includeBothStopsForLocation={false}
             startDate={startDate}
             endDate={endDate}
           />

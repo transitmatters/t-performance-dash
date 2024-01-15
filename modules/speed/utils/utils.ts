@@ -26,13 +26,3 @@ const calcValues = (speeds: DeliveredTripMetrics[], isOverview = false) => {
 export const getDetailsSpeedWidgetValues = (datapoints: DeliveredTripMetrics[]) => {
   return calcValues(datapoints);
 };
-
-export const addMPHToSpeedData = (data: DeliveredTripMetrics[]) => {
-  const newData = data.map((item) => {
-    const hours = item.total_time / 3600;
-    const mph = item.miles_covered / hours;
-    return { ...item, miles_per_hour: mph.toFixed(1) };
-  });
-
-  return newData;
-};

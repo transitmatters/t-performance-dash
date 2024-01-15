@@ -77,14 +77,3 @@ const calcValues = (predictions: TimePredictionWeek[]) => {
 export const getDetailsPredictiondWidgetValues = (datapoints: TimePredictionWeek[]) => {
   return calcValues(datapoints);
 };
-
-export const addAccuracyPercentageToData = (data: TimePredictionWeek[]) => {
-  const predictionsList = flatten(data.map(({ prediction }) => prediction));
-
-  const newData = predictionsList.map((item) => {
-    const accuracyPercentage = (item?.num_accurate_predictions / item?.num_predictions) * 100;
-    return { ...item, accuracy_percentage: accuracyPercentage.toFixed(1) };
-  });
-
-  return newData;
-};

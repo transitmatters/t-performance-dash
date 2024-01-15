@@ -204,7 +204,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
             <DownloadButton
               data={data}
               datasetName="ridership"
-              bothStops={false}
+              includeBothStopsForLocation={false}
               startDate={startDate}
               endDate={endDate}
             />

@@ -17,7 +17,7 @@ import { PEAK_SPEED } from '../../common/constants/baselines';
 import { getShuttlingBlockAnnotations } from '../service/utils/graphUtils';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
 import type { ParamsType } from './constants/speeds';
-import { addMPHToSpeedData } from './utils/utils';
+import { addMPHToSpeedData } from '../../common/utils/csv';
 
 interface SpeedGraphProps {
   data: DeliveredTripMetrics[];
@@ -200,7 +200,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
           <DownloadButton
             data={dataWithMPH}
             datasetName="speed"
-            bothStops={false}
+            includeBothStopsForLocation={false}
             startDate={startDate}
             endDate={endDate}
           />

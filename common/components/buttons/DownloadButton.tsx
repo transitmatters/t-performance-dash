@@ -12,7 +12,7 @@ interface DownloadButtonProps {
   datasetName: string;
   data: Record<string, any>[];
   startDate: string;
-  bothStops: boolean;
+  includeBothStopsForLocation?: boolean;
   location?: Location;
   endDate?: string;
 }
@@ -20,7 +20,7 @@ interface DownloadButtonProps {
 export const DownloadButton: React.FC<DownloadButtonProps> = ({
   datasetName,
   data,
-  bothStops,
+  includeBothStopsForLocation,
   startDate,
   location,
   endDate,
@@ -32,7 +32,14 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
         className={'csv-link'}
         data={data}
         title={'Download data as CSV'}
-        filename={getCsvFilename(datasetName, bothStops, startDate, line, location, endDate)}
+        filename={getCsvFilename({
+          datasetName,
+          includeBothStopsForLocation,
+          startDate,
+          line,
+          location,
+          endDate,
+        })}
       >
         <FontAwesomeIcon
           icon={faFileArrowDown}
