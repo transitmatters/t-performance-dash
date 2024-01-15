@@ -63,7 +63,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   pointField,
   benchmarkField,
   fname,
-  bothStops = false,
+  includeBothStopsForLocation = false,
   location,
   units,
   showLegend = true,
@@ -229,7 +229,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               data={data}
               datasetName={fname}
               location={location}
-              bothStops={bothStops}
+              includeBothStopsForLocation={includeBothStopsForLocation}
               startDate={date}
             />
           )}

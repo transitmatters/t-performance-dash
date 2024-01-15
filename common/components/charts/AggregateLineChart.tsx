@@ -32,7 +32,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   data,
   location,
   pointField,
-  bothStops = false,
+  includeBothStopsForLocation = false,
   fname,
   timeUnit,
   timeFormat,
@@ -179,7 +179,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
             data={data}
             datasetName={fname}
             location={location}
-            bothStops={bothStops}
+            includeBothStopsForLocation={includeBothStopsForLocation}
             startDate={startDate}
           />
         )}
