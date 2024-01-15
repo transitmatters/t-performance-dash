@@ -32,3 +32,10 @@ target-version = ['py311']
 [build-system]
 requires = ["poetry-core>=1.6.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pyright]
+reportMissingImports = true
+reportMissingTypeStubs = false
+useLibraryCodeForTypes = false
+
+
