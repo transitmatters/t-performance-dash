@@ -39,6 +39,7 @@ export const DwellsAggregateChart: React.FC<DwellsAggregateChartProps> = ({
         location={getLocationDetails(fromStation, toStation)}
         includeBothStopsForLocation={false}
         fname="dwells"
+        yUnit="Minutes"
       />
     );
   }, [dwells.by_date, startDate, endDate, fromStation, toStation]);

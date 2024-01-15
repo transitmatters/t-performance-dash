@@ -5,19 +5,19 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
-import { useDelimitatedRoute } from '../../common/utils/router';
-import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
-import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
-import { drawSimpleTitle } from '../../common/components/charts/Title';
-import { useBreakpoint } from '../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../common/constants/charts';
-import { ChartBorder } from '../../common/components/charts/ChartBorder';
-import { ChartDiv } from '../../common/components/charts/ChartDiv';
-import { PEAK_SPEED } from '../../common/constants/baselines';
-import { getShuttlingBlockAnnotations } from '../service/utils/graphUtils';
-import { DownloadButton } from '../../common/components/buttons/DownloadButton';
-import type { ParamsType } from './constants/speeds';
-import { addMPHToSpeedData } from '../../common/utils/csv';
+import { useDelimitatedRoute } from '../../../common/utils/router';
+import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
+import { drawSimpleTitle } from '../../../common/components/charts/Title';
+import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
+import { watermarkLayout } from '../../../common/constants/charts';
+import { ChartBorder } from '../../../common/components/charts/ChartBorder';
+import { ChartDiv } from '../../../common/components/charts/ChartDiv';
+import { PEAK_SPEED } from '../../../common/constants/baselines';
+import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
+import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
+import type { ParamsType } from './../constants/speeds';
+import { addMPHToSpeedData } from '../../../common/utils/csv';
 
 interface SpeedGraphProps {
   data: DeliveredTripMetrics[];

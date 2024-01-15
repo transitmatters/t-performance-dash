@@ -43,6 +43,10 @@ export interface DayDelayTotals {
 
 export type Direction = 'northbound' | 'southbound';
 
+export type Distance = {
+  [to_stop_id: string]: number;
+};
+
 export interface SlowZone {
   start: string;
   end: string;
