@@ -14,7 +14,7 @@ unzip -d data/input/MBTA_GTFS/ data/input/gtfs.zip
 
 cd data/input
 for i in `seq 2018 2023`; do
-  unzip -d $i $i.zip
+  unzip -o -d $i $i.zip
 done
 
 mv 2021/MBTA*/*.csv 2021/
