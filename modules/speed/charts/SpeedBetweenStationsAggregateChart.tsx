@@ -48,7 +48,7 @@ export const SpeedBetweenStationsAggregateChart: React.FC<
         endDate={endDate}
         fillColor={timeUnitByDate ? CHART_COLORS.FILL : CHART_COLORS.FILL_HOURLY}
         location={getLocationDetails(fromStation, toStation)}
-        bothStops={true}
+        includeBothStopsForLocation={true}
         fname="speeds"
         yUnit="MPH"
       />

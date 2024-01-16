@@ -17,6 +17,7 @@ import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
+import { DownloadButton } from '../../common/components/buttons/DownloadButton';
 
 interface RidershipGraphProps {
   data: RidershipCount[];
@@ -198,6 +199,17 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
             ]}
           />
         </ChartDiv>
+        <div className="flex flex-row items-end justify-end gap-4">
+          {startDate && (
+            <DownloadButton
+              data={data}
+              datasetName="ridership"
+              includeBothStopsForLocation={false}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          )}
+        </div>
       </ChartBorder>
     );
   }, [

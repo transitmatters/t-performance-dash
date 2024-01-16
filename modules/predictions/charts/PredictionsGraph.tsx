@@ -18,6 +18,8 @@ import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { PEAK_SPEED } from '../../../common/constants/baselines';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
+import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
+import { addAccuracyPercentageToData } from '../../../common/utils/csv';
 
 interface PredictionsGraphProps {
   data: TimePredictionWeek[];
@@ -60,6 +62,8 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
       }
     }, 0),
   }));
+
+  const dataWithPercentage = addAccuracyPercentageToData(data);
 
   return (
     <ChartBorder>
@@ -207,6 +211,17 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
           ]}
         />
       </ChartDiv>
+      <div className="flex flex-row items-end justify-end gap-4">
+        {startDate && (
+          <DownloadButton
+            data={dataWithPercentage}
+            datasetName="ridership predictions"
+            includeBothStopsForLocation={false}
+            startDate={startDate}
+            endDate={endDate}
+          />
+        )}
+      </div>
     </ChartBorder>
   );
 };

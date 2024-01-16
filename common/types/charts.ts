@@ -77,7 +77,7 @@ export interface LineProps {
   chartId: string;
   location: Location;
   pointField: PointField; // X value
-  bothStops?: boolean;
+  includeBothStopsForLocation?: boolean;
   fname: DataName;
   showLegend?: boolean;
 }
@@ -111,7 +111,7 @@ export interface HeadwayHistogramProps {
   date: string | undefined;
   location: Location;
   isLoading: boolean;
-  bothStops?: boolean;
+  includeBothStopsForLocation?: boolean;
   fname: DataName;
   showLegend?: boolean;
   metricField: MetricField;
