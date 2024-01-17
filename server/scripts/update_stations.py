@@ -1,5 +1,4 @@
 import json
-
 import requests
 
 with open("common/constants/stations.json", "r") as f:

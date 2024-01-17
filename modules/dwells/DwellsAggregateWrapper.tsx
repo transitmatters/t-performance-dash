@@ -24,7 +24,7 @@ export const DwellsAggregateWrapper: React.FC<DwellsAggregateWrapperProps> = ({
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   const dwellsData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
   if (dwellsData.length < 1) return <NoDataNotice />;
-  const widgetObjects = getAggDataWidgets(dwellsData);
+  const widgetObjects = getAggDataWidgets(dwellsData, 'times');
   return (
     <CarouselGraphDiv>
       <DwellsAggregateChart dwells={query.data} toStation={toStation} fromStation={fromStation} />

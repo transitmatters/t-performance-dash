@@ -43,6 +43,10 @@ export interface DayDelayTotals {
 
 export type Direction = 'northbound' | 'southbound';
 
+export type Distance = {
+  [to_stop_id: string]: number;
+};
+
 export interface SlowZone {
   start: string;
   end: string;
@@ -94,6 +98,7 @@ export interface DeliveredTripMetrics {
   miles_covered: number;
   total_time: number;
   count: number;
+  miles_per_hour?: string;
 }
 
 export type LineSegmentData = {
@@ -132,6 +137,7 @@ export interface TimePrediction {
   weekly: string;
   num_accurate_predictions: number;
   num_predictions: number;
+  accuracy_percentage?: string;
 }
 
 export type PredictionBin = '0-3 min' | '3-6 min' | '6-12 min' | '12-30 min';

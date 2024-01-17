@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 
 import type { FetchServiceHoursResponse } from '../../common/types/api';
 import type { AggType } from '../speed/constants/speeds';
+import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
 
 interface ServiceHoursGraphProps {
@@ -32,13 +33,15 @@ export const ServiceHoursGraph: React.FC<ServiceHoursGraphProps> = (
   }, [serviceHours]);
 
   return (
-    <ScheduledAndDeliveredGraph
-      scheduled={scheduled}
-      delivered={delivered}
-      startDate={startDate}
-      endDate={endDate}
-      agg={agg}
-      valueAxisLabel="Service hours"
-    />
+    <ChartBorder>
+      <ScheduledAndDeliveredGraph
+        scheduled={scheduled}
+        delivered={delivered}
+        startDate={startDate}
+        endDate={endDate}
+        agg={agg}
+        valueAxisLabel="Service hours"
+      />
+    </ChartBorder>
   );
 };
