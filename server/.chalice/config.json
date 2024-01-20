@@ -19,6 +19,10 @@
         "DD_ENV": "prod",
         "TM_FRONTEND_HOST": "dashboard.transitmatters.org"
       },
+      "tags": {
+        "service": "t-performance-dash",
+        "env": "prod"
+      },
       "api_gateway_custom_domain": {
         "domain_name": "dashboard-api.labs.transitmatters.org",
         "tls_version": "TLS_1_2",
@@ -36,6 +40,10 @@
         "DD_TRACE_ENABLED": "true",
         "DD_ENV": "beta",
         "TM_FRONTEND_HOST": "dashboard-beta.labs.transitmatters.org"
+      },
+      "tags": {
+        "service": "t-performance-dash",
+        "env": "beta"
       },
       "api_gateway_custom_domain": {
         "domain_name": "dashboard-api-beta.labs.transitmatters.org",
