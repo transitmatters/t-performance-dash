@@ -176,6 +176,24 @@ def connect_stations_graph(station_id, station_distances, station_lines):
                 stk.append((second_dest, second_dist + dist))
 
 
+def floyd_warshall(station_distances: WeightedGraph):
+    dist = {}
+
+    for u in station_distances:
+        for v in station_distances[u]:
+            if u not in dist:
+                dist[u] = {}
+            dist[u][v] = station_distances[u][v]
+
+    for k in dist:
+        for i in dist[k]:
+            for j in dist[i]:
+                if j in dist[k] and j in dist[i] and dist[i][j] > dist[i][k] + dist[k][j]:
+                    dist[i][j] = dist[i][k] + dist[k][j]
+
+    return dist
+
+
 def ingest_station_distances():
     # station id => distance to other reachable stations on all routes
     stop_distances, station_lines, stop_routes, stop_directions, stop_stations = initialize_interstop_data()
@@ -191,7 +209,8 @@ def ingest_station_distances():
     for station_id in station_distances:
         connect_stations_graph(station_id, station_distances, station_lines)
 
-    return station_distances
+    # do floyd warshall algorithm on the station graph to minimize all distances
+    return floyd_warshall(station_distances)
 
 
 if __name__ == "__main__":

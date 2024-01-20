@@ -85,22 +85,18 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
                 />
               </>
             )}
-            {line !== 'line-green' ? (
-              <div className={'flex w-full justify-center pt-2'}>
-                <ButtonGroup
-                  line={line}
-                  pressFunction={setTravelTimeDisplay}
-                  options={[
-                    ['traveltimes', 'Travel times'],
-                    ['speeds', 'Speeds'],
-                  ]}
-                  additionalDivClass="md:w-auto"
-                  additionalButtonClass="md:w-fit"
-                />
-              </div>
-            ) : (
-              <React.Fragment />
-            )}
+            <div className={'flex w-full justify-center pt-2'}>
+              <ButtonGroup
+                line={line}
+                pressFunction={setTravelTimeDisplay}
+                options={[
+                  ['traveltimes', 'Travel times'],
+                  ['speeds', 'Speeds'],
+                ]}
+                additionalDivClass="md:w-auto"
+                additionalButtonClass="md:w-fit"
+              />
+            </div>
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
@@ -187,22 +183,18 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
                 />
               </>
             )}
-            {line !== 'line-green' ? (
-              <div className={'flex w-full justify-center pt-2'}>
-                <ButtonGroup
-                  line={line}
-                  pressFunction={setTravelTimeDisplay}
-                  options={[
-                    ['traveltimes', 'Travel times'],
-                    ['speeds', 'Speeds'],
-                  ]}
-                  additionalDivClass="md:w-auto"
-                  additionalButtonClass="md:w-fit"
-                />
-              </div>
-            ) : (
-              <React.Fragment />
-            )}
+            <div className={'flex w-full justify-center pt-2'}>
+              <ButtonGroup
+                line={line}
+                pressFunction={setTravelTimeDisplay}
+                options={[
+                  ['traveltimes', 'Travel times'],
+                  ['speeds', 'Speeds'],
+                ]}
+                additionalDivClass="md:w-auto"
+                additionalButtonClass="md:w-fit"
+              />
+            </div>
           </WidgetDiv>
 
           <WidgetDiv>
