@@ -103,10 +103,10 @@
         "order": 10,
         "stops": {
           "0": [
-            "CR-Middleborough_0_NEC-2287-13",
-            "CR-Middleborough_0_NEC-2287-12",
+            "CR-Middleborough_0_NEC-2287",
             "CR-Middleborough_0_NEC-2287-11",
-            "CR-Middleborough_0_NEC-2287"
+            "CR-Middleborough_0_NEC-2287-13",
+            "CR-Middleborough_0_NEC-2287-12"
           ],
           "1": []
         }
