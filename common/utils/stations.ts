@@ -13,12 +13,20 @@ export const optionsForField = (
   crRoute?: CommuterRailRoute
 ) => {
   if (type === 'from') {
-    return optionsStation(line, busRoute, crRoute);
+    return optionsStation(line, busRoute, crRoute)?.filter((entry) => {
+      if (entry.stops[0].length === 0) {
+        return false;
+      }
+      return true;
+    });
   }
   if (type === 'to') {
     return optionsStation(line, busRoute, crRoute)?.filter((entry) => {
       if (fromStation && fromStation.branches && entry.branches) {
         return entry.branches.some((entryBranch) => fromStation.branches?.includes(entryBranch));
+      }
+      if (entry.stops[1].length === 0) {
+        return false;
       }
       return true;
     });
