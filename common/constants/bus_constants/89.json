@@ -1,0 +1,71 @@
+{
+  "89": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Clarendon Hill",
+        "branches": null,
+        "station": "clarh",
+        "order": 1,
+        "stops": {
+          "1": ["89-1-2637"],
+          "0": ["89-0-2637"]
+        }
+      },
+      {
+        "stop_name": "Davis",
+        "branches": null,
+        "station": "davis",
+        "order": 1,
+        "stops": {
+          "1": ["89-1-5104"],
+          "0": ["89-0-5104", "89-0-5015"]
+        }
+      },
+      {
+        "stop_name": "Powder House",
+        "branches": null,
+        "station": "powdr",
+        "order": 2,
+        "stops": {
+          "1": ["89-1-2695"],
+          "0": ["89-0-2738"]
+        }
+      },
+      {
+        "stop_name": "Teele Square @ Broadway",
+        "branches": null,
+        "station": "teele",
+        "order": 2,
+        "stops": {
+          "1": ["89-1-2691"],
+          "0": ["89-0-2634"]
+        }
+      },
+      {
+        "stop_name": "Winter Hill",
+        "branches": null,
+        "station": "whill",
+        "order": 3,
+        "stops": {
+          "1": ["89-1-2703"],
+          "0": ["89-0-2729"]
+        }
+      },
+      {
+        "stop_name": "Sullivan Square",
+        "branches": null,
+        "station": "sull",
+        "order": 4,
+        "stops": {
+          "1": ["89-1-29001", "89-1-2874"],
+          "0": ["89-0-29011", "89-0-2874"]
+        }
+      }
+    ]
+  }
+}

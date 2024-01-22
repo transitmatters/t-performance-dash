@@ -24,7 +24,7 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   const traveltimesData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
   if (traveltimesData.length < 1) return <NoDataNotice />;
-  const widgetObjects = getAggDataWidgets(traveltimesData);
+  const widgetObjects = getAggDataWidgets(traveltimesData, 'times');
   return (
     <CarouselGraphDiv>
       <TravelTimesAggregateChart

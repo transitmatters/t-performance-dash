@@ -32,6 +32,7 @@ export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
         pointField={PointFieldKeys.arrDt}
         location={getLocationDetails(fromStation, toStation)}
         fname={'dwells'}
+        units={'Minutes'}
         showLegend={false}
       />
     );

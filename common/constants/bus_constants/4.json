@@ -1,0 +1,81 @@
+{
+  "4": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "North Station",
+        "branches": null,
+        "station": "north",
+        "order": 1,
+        "stops": {
+          "1": ["4-1-113", "4-1-114"],
+          "0": ["4-0-113", "4-0-114"]
+        }
+      },
+      {
+        "stop_name": "Atlantic & State Streets",
+        "branches": null,
+        "station": "atlst",
+        "order": 2,
+        "stops": {
+          "1": ["4-1-236"],
+          "0": ["4-0-224"]
+        }
+      },
+      {
+        "stop_name": "Haymarket",
+        "branches": null,
+        "station": "hayms",
+        "order": 2,
+        "stops": {
+          "1": ["4-1-30203", "4-1-83091"],
+          "0": ["4-0-117"]
+        }
+      },
+      {
+        "stop_name": "South Station",
+        "branches": null,
+        "station": "sosta",
+        "order": 3,
+        "stops": {
+          "1": ["4-1-6564"],
+          "0": ["4-0-892"]
+        }
+      },
+      {
+        "stop_name": "Seaport Boulevard @ Sleeper St",
+        "branches": null,
+        "station": "seasl",
+        "order": 4,
+        "stops": {
+          "1": ["4-1-21599"],
+          "0": ["4-0-11599"]
+        }
+      },
+      {
+        "stop_name": "World Trade Center",
+        "branches": null,
+        "station": "trade",
+        "order": 5,
+        "stops": {
+          "1": ["4-1-242", "4-1-243"],
+          "0": ["4-0-214"]
+        }
+      },
+      {
+        "stop_name": "Drydock Avenue @ Design Center Place",
+        "branches": null,
+        "station": "drdck",
+        "order": 6,
+        "stops": {
+          "1": ["4-1-210", "4-1-31255"],
+          "0": ["4-0-210", "4-0-31255"]
+        }
+      }
+    ]
+  }
+}

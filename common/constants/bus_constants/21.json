@@ -1,0 +1,71 @@
+{
+  "21": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Ashmont Terminal",
+        "branches": null,
+        "station": "ashmt",
+        "order": 1,
+        "stops": {
+          "1": ["21-1-334"],
+          "0": ["21-0-334"]
+        }
+      },
+      {
+        "stop_name": "Dorchester Ave @ Gallivan Boulevard",
+        "branches": null,
+        "station": "dotga",
+        "order": 2,
+        "stops": {
+          "1": ["21-1-537"],
+          "0": ["21-0-533"]
+        }
+      },
+      {
+        "stop_name": "Morton @ Gallivan",
+        "branches": null,
+        "station": "mort",
+        "order": 3,
+        "stops": {
+          "1": ["21-1-499"],
+          "0": ["21-0-507"]
+        }
+      },
+      {
+        "stop_name": "Morton St @ Blue Hill Ave",
+        "branches": null,
+        "station": "mortn",
+        "order": 4,
+        "stops": {
+          "1": ["21-1-543"],
+          "0": ["21-0-526"]
+        }
+      },
+      {
+        "stop_name": "Shattuck Hospital",
+        "branches": null,
+        "station": "shosp",
+        "order": 5,
+        "stops": {
+          "1": ["21-1-546"],
+          "0": ["21-0-5232"]
+        }
+      },
+      {
+        "stop_name": "Forest Hills Busway",
+        "branches": null,
+        "station": "fhill",
+        "order": 6,
+        "stops": {
+          "1": ["21-1-10642", "21-1-875"],
+          "0": ["21-0-875"]
+        }
+      }
+    ]
+  }
+}

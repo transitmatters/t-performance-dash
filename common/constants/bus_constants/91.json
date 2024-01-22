@@ -1,0 +1,51 @@
+{
+  "91": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Sullivan Square",
+        "branches": null,
+        "station": "sull",
+        "order": 1,
+        "stops": {
+          "1": ["91-1-28741", "91-1-29006"],
+          "0": ["91-0-2874", "91-0-29001"]
+        }
+      },
+      {
+        "stop_name": "Union Square",
+        "branches": null,
+        "station": "unsqu",
+        "order": 2,
+        "stops": {
+          "1": ["91-1-2612"],
+          "0": ["91-0-2597", "91-0-2531"]
+        }
+      },
+      {
+        "stop_name": "Inman Square",
+        "branches": null,
+        "station": "inman",
+        "order": 3,
+        "stops": {
+          "1": ["91-1-2439", "91-1-12439"],
+          "0": ["91-0-2451", "91-0-12451"]
+        }
+      },
+      {
+        "stop_name": "Central Square (Cambridge)",
+        "branches": null,
+        "station": "cntsq",
+        "order": 4,
+        "stops": {
+          "1": ["91-1-1060"],
+          "0": ["91-0-1060"]
+        }
+      }
+    ]
+  }
+}

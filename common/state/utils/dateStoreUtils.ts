@@ -45,7 +45,7 @@ export const getSelectedDates = (dateConfig: {
       viewInput.endDate
     ).format(SMALL_DATE_FORMAT)}`;
   if (startDate && endDate) {
-    return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+    return `${formatDate(startDate)} — ${formatDate(endDate)}`;
   }
 
   if (startDate) return formatDate(startDate);

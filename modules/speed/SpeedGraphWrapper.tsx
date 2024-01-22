@@ -5,7 +5,7 @@ import { WidgetForCarousel } from '../../common/components/widgets/internal/Widg
 import { MPHWidgetValue } from '../../common/types/basicWidgets';
 import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
-import { SpeedGraph } from './SpeedGraph';
+import { SpeedGraph } from './charts/SpeedGraph';
 import { getDetailsSpeedWidgetValues } from './utils/utils';
 import type { ParamsType } from './constants/speeds';
 

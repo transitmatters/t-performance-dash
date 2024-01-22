@@ -1,0 +1,91 @@
+{
+  "104/109": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Linden Square (Malden)",
+        "branches": ["109"],
+        "station": "lindn",
+        "order": 1,
+        "stops": {
+          "1": ["109-1-7412"],
+          "0": ["109-0-7412", "109-0-7417"]
+        }
+      },
+      {
+        "stop_name": "Malden Center Station",
+        "branches": ["104"],
+        "station": "malst",
+        "order": 1,
+        "stops": {
+          "1": ["104-1-53270"],
+          "0": ["104-0-53270"]
+        }
+      },
+      {
+        "stop_name": "Broadway Plaza @ Broadway",
+        "branches": ["109"],
+        "station": "brypl",
+        "order": 2,
+        "stops": {
+          "1": ["109-1-5481"],
+          "0": ["109-0-5524"]
+        }
+      },
+      {
+        "stop_name": "Ferry St @ Cross St",
+        "branches": ["104"],
+        "station": "fercr",
+        "order": 2,
+        "stops": {
+          "1": ["104-1-5347"],
+          "0": ["104-0-5361"]
+        }
+      },
+      {
+        "stop_name": "Glendale Square",
+        "branches": ["104", "109"],
+        "station": "glndl",
+        "order": 3,
+        "stops": {
+          "1": ["104-1-5354", "109-1-5488"],
+          "0": ["104-0-5518", "109-0-5518", "104-0-5517", "109-0-5517"]
+        }
+      },
+      {
+        "stop_name": "Everett Square",
+        "branches": ["104", "109"],
+        "station": "evrtc",
+        "order": 4,
+        "stops": {
+          "1": ["104-1-5496", "109-1-5496"],
+          "0": ["104-0-5695", "109-0-5695"]
+        }
+      },
+      {
+        "stop_name": "Sweester Circle",
+        "branches": ["104", "109"],
+        "station": "sweet",
+        "order": 5,
+        "stops": {
+          "1": ["104-1-5560", "109-1-5560"],
+          "0": ["104-0-5565", "109-0-5565"]
+        }
+      },
+      {
+        "stop_name": "Sullivan Square",
+        "branches": ["104", "109"],
+        "station": "sull",
+        "order": 6,
+        "stops": {
+          "1": ["104-1-2874", "109-1-2874"],
+          "0": ["104-0-2874", "109-0-2874"]
+        }
+      }
+    ]
+  }
+}

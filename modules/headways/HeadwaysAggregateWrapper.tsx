@@ -24,7 +24,7 @@ export const HeadwaysAggregateWrapper: React.FC<HeadwaysAggregateWrapperProps> =
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   const headwaysData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
   if (headwaysData.length < 1) return <NoDataNotice />;
-  const widgetObjects = getAggDataWidgets(headwaysData);
+  const widgetObjects = getAggDataWidgets(headwaysData, 'times');
 
   return (
     <CarouselGraphDiv>
