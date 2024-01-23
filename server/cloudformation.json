@@ -197,7 +197,13 @@
             "AcmCertificateArn": { "Ref": "TMFrontendCertArn" },
             "SslSupportMethod": "sni-only"
           }
-        }
+        },
+        "Tags": [
+          {
+            "Key": "service",
+            "Value": "t-performance-dash"
+          }
+        ]
       }
     }
   },
