@@ -20,52 +20,70 @@ ROUTES_CR = [
     "CR-Needham",
     "CR-Newburyport",
     "CR-Providence",
-    "CR-Foxboro",
 ]
+
+
+def get_all_s3_objects(s3, **base_kwargs):
+    continuation_token = None
+    while True:
+        list_kwargs = dict(MaxKeys=1000, **base_kwargs)
+        if continuation_token:
+            list_kwargs["ContinuationToken"] = continuation_token
+        response = s3.list_objects_v2(**list_kwargs)
+        yield from response.get("Contents", [])
+        if not response.get("IsTruncated"):  # At the end of the list?
+            break
+        continuation_token = response.get("NextContinuationToken")
 
 
 def get_line_stops():
     s3 = boto3.client("s3", config=botocore.client.Config(max_pool_connections=15))
 
-    objects = s3.list_objects_v2(Bucket=BUCKET, Prefix="Events-live/daily-cr-data/{}".format(LINE_KEY))
+    objects = []
 
-    stop_ids = set()
+    for file in get_all_s3_objects(s3, Bucket=BUCKET, Prefix="Events-live/daily-cr-data/{}".format(LINE_KEY)):
+        objects.append(file)
 
-    for obj in objects["Contents"]:
-        stop_ids.add(parse_s3_cr_uri(obj)[2])
+    stop_names = set()
+
+    for obj in objects:
+        stop_names.add(obj["Key"].split("/")[2])
+
+    stop_ids = []
+
+    stop_prefix_len = len(LINE_KEY) + 3
+    for stop in stop_names:
+        stop_ids.append({"id": stop[stop_prefix_len:], "name": stop})
 
     parent_children_map = {}
 
     for stop in stop_ids:
+        _, direction, stop_id = parse_stop_name(stop["name"])
+
         r_f = requests.get(
-            "https://api-v3.mbta.com/stops/{}?include=parent_station&api_key={}".format(stop["id"], MBTA_V3_API_KEY)
+            "https://api-v3.mbta.com/stops/{}?include=parent_station&api_key={}".format(stop_id, MBTA_V3_API_KEY)
         )
         stop_details = r_f.json()
 
         parent_id = stop_details["data"]["relationships"]["parent_station"]["data"]["id"]
 
         if parent_id not in parent_children_map:
-            if stop["direction"] == "0":
-                parent_children_map[parent_id] = {"0": [stop["stop_id"]], "1": []}
+            if direction == "0":
+                parent_children_map[parent_id] = {"0": [stop["name"]], "1": []}
             else:
-                parent_children_map[parent_id] = {"0": [], "1": [stop["stop_id"]]}
+                parent_children_map[parent_id] = {"0": [], "1": [stop["name"]]}
         else:
-            parent_children_map[parent_id][stop["direction"]].append(stop["stop_id"])
+            parent_children_map[parent_id][direction].append(stop["name"])
 
     return parent_children_map
 
 
-def parse_s3_cr_uri(uri: str):
+def parse_stop_name(stop_name: str):
     """
-    Parse a CR s3 URI beginning with Events-live
+    Parse a CR stop id into its components
     """
-    _, _, stop_name, year, month, day, _ = uri["Key"].split("/")
     line, direction, stop_id = stop_name.split("_")
-    return {"line": line, "direction": direction, "stop_id": stop_id, "year": year, "month": month, "day": day}
-
-
-def cr_stop_info_to_s3_prefix(line, direction, stop_id):
-    return "{}_{}_{}".format(line, direction, stop_id)
+    return line, direction, stop_id
 
 
 for LINE_KEY in ROUTES_CR:
@@ -74,16 +92,42 @@ for LINE_KEY in ROUTES_CR:
 
     stop_layout = get_line_stops()
 
-    stops_formatted = [
-        {
-            "stop_name": stop["attributes"]["name"],
-            "station": stop["id"],
-            "branches": None,
-            "order": index + 1,
-            "stops": stop_layout[stop["id"]],
-        }
-        for index, stop in enumerate(stops["data"])
-    ]
+    stops_formatted = []
+
+    for index, stop in enumerate(stops["data"]):
+        try:
+            stops_formatted.append(
+                {
+                    "stop_name": stop["attributes"]["name"],
+                    "station": stop["id"],
+                    "branches": None,
+                    "order": index + 1,
+                    "stops": stop_layout[stop["id"]],
+                }
+            )
+        except KeyError:
+            c_f = requests.get(
+                "https://api-v3.mbta.com/stops/{}?include=child_stops&api_key={}".format(stop["id"], MBTA_V3_API_KEY)
+            )
+            stop_details = c_f.json()
+
+            child_stops = [
+                child_stop["id"] for child_stop in stop_details["data"]["relationships"]["child_stops"]["data"]
+            ]
+            stops_map = {
+                "0": [f"{LINE_KEY}_0_{stop}" for stop in child_stops],
+                "1": [f"{LINE_KEY}_1_{stop}" for stop in child_stops],
+            }
+
+            stops_formatted.append(
+                {
+                    "stop_name": stop["attributes"]["name"],
+                    "station": stop["id"],
+                    "branches": None,
+                    "order": index + 1,
+                    "stops": stops_map,
+                }
+            )
 
     output = {
         LINE_KEY: {

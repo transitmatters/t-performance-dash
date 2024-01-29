@@ -16,13 +16,12 @@ export const RidershipWidget: React.FC = () => {
   const endDate = TODAY_STRING;
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const lineId = getRidershipLineId(line, query.busRoute);
-  const lineOrRoute = query.busRoute ? `line-${query.busRoute.replaceAll('/', '')}` : line;
   const ridership = useRidershipData({
     line_id: lineId,
     start_date: startDate,
     end_date: endDate,
   });
-  const serviceReady = !ridership.isError && lineId && line && lineOrRoute;
+  const serviceReady = !ridership.isError && lineId && line;
 
   return (
     <WidgetDiv>
