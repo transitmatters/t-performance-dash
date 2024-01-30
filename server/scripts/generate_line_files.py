@@ -4,6 +4,15 @@ import requests
 import boto3
 import botocore
 
+from chalicelib.s3 import get_all_s3_objects
+
+"""
+To run, run as
+
+poetry shell
+python -m scripts.generate_line_files
+"""
+
 MBTA_V3_API_KEY = os.environ.get("MBTA_V3_API_KEY", "")
 BUCKET = "tm-mbta-performance"
 
@@ -21,19 +30,6 @@ ROUTES_CR = [
     "CR-Newburyport",
     "CR-Providence",
 ]
-
-
-def get_all_s3_objects(s3, **base_kwargs):
-    continuation_token = None
-    while True:
-        list_kwargs = dict(MaxKeys=1000, **base_kwargs)
-        if continuation_token:
-            list_kwargs["ContinuationToken"] = continuation_token
-        response = s3.list_objects_v2(**list_kwargs)
-        yield from response.get("Contents", [])
-        if not response.get("IsTruncated"):  # At the end of the list?
-            break
-        continuation_token = response.get("NextContinuationToken")
 
 
 def get_line_stops():
@@ -138,5 +134,5 @@ for LINE_KEY in ROUTES_CR:
     }
 
     out_json = json.dumps(output, indent=2)
-    with open("../common/constants/cr_constants/{}.json".format(LINE_KEY.lower()), "w") as f:
+    with open("../common/constants/cr_constants/{}.json".format(LINE_KEY.lower()), "w+") as f:
         f.write(out_json)
