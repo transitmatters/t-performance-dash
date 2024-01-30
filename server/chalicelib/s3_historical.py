@@ -32,7 +32,7 @@ def unique_everseen(iterable, key=None):
                 yield element
 
 
-def dwells(stop_ids, sdate, edate):
+def dwells(stop_ids: list, sdate, edate):
     rows_by_time = s3.download_events(sdate, edate, stop_ids)
 
     dwells = []
@@ -59,7 +59,7 @@ def dwells(stop_ids, sdate, edate):
     return dwells
 
 
-def headways(stop_ids, sdate, edate):
+def headways(stop_ids: list, sdate, edate):
     rows_by_time = s3.download_events(sdate, edate, stop_ids)
 
     only_departures = filter(lambda row: row["event_type"] in EVENT_DEPARTURE, rows_by_time)
@@ -97,7 +97,7 @@ def headways(stop_ids, sdate, edate):
     return headways
 
 
-def travel_times(stops_a, stops_b, sdate, edate):
+def travel_times(stops_a: list, stops_b: list, sdate, edate):
     rows_by_time_a = s3.download_events(sdate, edate, stops_a)
     rows_by_time_b = s3.download_events(sdate, edate, stops_b)
 

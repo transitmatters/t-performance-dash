@@ -28,16 +28,27 @@ def upload(key, bytes, compress=True):
     s3.put_object(Bucket=BUCKET, Key=key, Body=bytes)
 
 
-def is_bus(stop_id):
+def is_bus(stop_id: str):
     return ("-0-" in stop_id) or ("-1-" in stop_id)
 
 
-def download_one_event_file(date, stop_id):
-    """As advertised: single event file from s3"""
-    year, month = date.year, date.month
+def get_live_folder(stop_id: str):
+    if is_bus(stop_id):
+        return "daily-bus-data"
+    else:
+        return "daily-rapid-data"
 
-    folder = "monthly-bus-data" if is_bus(stop_id) else "monthly-data"
-    key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
+
+def download_one_event_file(date, stop_id: str, use_live_data=False):
+    """As advertised: single event file from s3"""
+    year, month, day = date.year, date.month, date.day
+
+    if use_live_data:
+        folder = get_live_folder(stop_id)
+        key = f"Events-live/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
+    else:
+        folder = "monthly-bus-data" if is_bus(stop_id) else "monthly-data"
+        key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
 
     # Download events from S3
     try:
@@ -47,6 +58,8 @@ def download_one_event_file(date, stop_id):
         if ex.response["Error"]["Code"] == "NoSuchKey":
             # raise Exception(f"Data not available on S3 for key {key} ") from None
             print(f"WARNING: No data available on S3 for key: {key}")
+            if not use_live_data and is_bus(stop_id):
+                return download_one_event_file(date, stop_id, use_live_data=True)
             return []
         else:
             raise
@@ -67,8 +80,23 @@ def parallel_download_events(datestop):
     return download_one_event_file(date, stop)
 
 
-def download_events(sdate, edate, stops):
-    datestops = itertools.product(parallel.month_range(sdate, edate), stops)
+def download_events(sdate, edate, stops: list):
+    # This used to be month_range but updated to date_range to support live ranges
+    # If something breaks, this may be why
+    datestops = itertools.product(parallel.date_range(sdate, edate), stops)
     result = parallel_download_events(datestops)
     result = filter(lambda row: sdate.strftime("%Y-%m-%d") <= row["service_date"] <= edate.strftime("%Y-%m-%d"), result)
     return sorted(result, key=lambda row: row["event_time"])
+
+
+def get_all_s3_objects(s3, **base_kwargs):
+    continuation_token = None
+    while True:
+        list_kwargs = dict(MaxKeys=1000, **base_kwargs)
+        if continuation_token:
+            list_kwargs["ContinuationToken"] = continuation_token
+        response = s3.list_objects_v2(**list_kwargs)
+        yield from response.get("Contents", [])
+        if not response.get("IsTruncated"):  # At the end of the list?
+            break
+        continuation_token = response.get("NextContinuationToken")

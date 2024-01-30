@@ -14,7 +14,7 @@ wget -N -O data/input/2023.zip https://www.arcgis.com/sharing/rest/content/items
 
 cd data/input
 for i in `seq 2017 2023`; do
-    unzip -d $i $i.zip
+    unzip -o -d $i $i.zip
 done
 
 # The following years only have single csv files
