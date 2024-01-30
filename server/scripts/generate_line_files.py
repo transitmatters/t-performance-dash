@@ -4,6 +4,15 @@ import requests
 import boto3
 import botocore
 
+from chalicelib.s3 import get_all_s3_objects
+
+"""
+To run, run as
+
+poetry shell
+python -m scripts.generate_line_files
+"""
+
 MBTA_V3_API_KEY = os.environ.get("MBTA_V3_API_KEY", "")
 BUCKET = "tm-mbta-performance"
 
@@ -138,5 +147,5 @@ for LINE_KEY in ROUTES_CR:
     }
 
     out_json = json.dumps(output, indent=2)
-    with open("../common/constants/cr_constants/{}.json".format(LINE_KEY.lower()), "w") as f:
+    with open("../common/constants/cr_constants/{}.json".format(LINE_KEY.lower()), "w+") as f:
         f.write(out_json)
