@@ -17,7 +17,7 @@ export const ChartPlaceHolder: React.FC<ChartPlaceHolder> = ({
   const isError = query?.isError || readyState === 'error';
   return (
     <div className="relative flex h-60 w-full items-center justify-center">
-      {isError ? <ErrorNotice inverse={inverse} /> : <LoadingSpinner />}
+      {isError ? <ErrorNotice query={query} inverse={inverse} /> : <LoadingSpinner />}
     </div>
   );
 };
