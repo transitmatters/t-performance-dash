@@ -88,7 +88,7 @@ def headways(stop_ids, sdate, edate):
             {
                 "route_id": this["route_id"],
                 "direction": this["direction_id"],
-                "current_dep_dt": this["event_time"],
+                "current_dep_dt": date_utils.return_formatted_date(this_dt),
                 "headway_time_sec": headway_time_sec,
                 "benchmark_headway_time_sec": benchmark_headway,
             }
