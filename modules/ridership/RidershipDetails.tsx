@@ -18,7 +18,6 @@ export function RidershipDetails() {
   } = useDelimitatedRoute();
   const config = SPEED_RANGE_PARAM_MAP.week;
   const lineId = getRidershipLineId(line, busRoute);
-  const lineOrRoute = busRoute ? `line-${busRoute.replaceAll('/', '')}` : line;
   const enabled = Boolean(startDate && endDate && lineId);
 
   const ridership = useRidershipData(
@@ -29,7 +28,7 @@ export function RidershipDetails() {
     },
     enabled
   );
-  const ridershipDataReady = !ridership.isError && startDate && endDate && lineOrRoute && line;
+  const ridershipDataReady = !ridership.isError && startDate && endDate && line;
 
   return (
     <PageWrapper pageTitle={'Ridership'}>

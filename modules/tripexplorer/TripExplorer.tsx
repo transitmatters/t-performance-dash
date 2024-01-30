@@ -9,6 +9,8 @@ import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getParentStationForStopId } from '../../common/utils/stations';
+import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
+import { GobbleDataNotice } from '../../common/components/notices/GobbleDataNotice';
 import { useAlertStore } from './AlertStore';
 import { TripGraphs } from './TripGraphs';
 
@@ -37,8 +39,12 @@ export const TripExplorer = () => {
       <ChartPageDiv>
         {alertsForModal?.length ? <AlertNotice /> : null}
         <TripGraphs fromStation={fromStation} toStation={toStation} />
-        <SameDayNotice />
-        <TerminusNotice toStation={toStation} fromStation={fromStation} />
+        <div>
+          <GobbleDataNotice />
+          <BusDataNotice />
+          <SameDayNotice />
+          <TerminusNotice toStation={toStation} fromStation={fromStation} />
+        </div>
       </ChartPageDiv>
     </PageWrapper>
   );
