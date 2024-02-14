@@ -45,9 +45,10 @@ def s3_date_range(start: str, end: str):
 
     # all dates between month_end and end if month_end is less than end
     if pd.to_datetime(month_end) < pd.to_datetime(end):
-        dates = pd.date_range(month_end, end, freq="1D", inclusive="both")
+        daily_dates = pd.date_range(month_end, end, freq="1D", inclusive="both")
 
-    # combine the two date ranges of months and dates
-    months = months.union(dates)
+        # combine the two date ranges of months and dates
+        if daily_dates is not None and len(daily_dates) > 0:
+            months = months.union(daily_dates)
 
     return months
