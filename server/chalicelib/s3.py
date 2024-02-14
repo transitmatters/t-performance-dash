@@ -89,9 +89,9 @@ def parallel_download_events(datestop):
 
 
 def download_events(sdate, edate, stops: list):
-    # This used to be month_range but updated to date_range to support live ranges
-    # If something breaks, this may be why
-    datestops = itertools.product(parallel.date_range(sdate, edate), stops)
+    # This needs to be month_range for performance and memory,
+    # however, for data from gobble we'll need specific dates, not just first of the month
+    datestops = itertools.product(parallel.month_range(sdate, edate), stops)
     result = parallel_download_events(datestops)
     result = filter(lambda row: sdate.strftime("%Y-%m-%d") <= row["service_date"] <= edate.strftime("%Y-%m-%d"), result)
     return sorted(result, key=lambda row: row["event_time"])

@@ -77,6 +77,7 @@ def headways(stop_ids: list, sdate, edate):
         headway_time_sec = delta.total_seconds()
 
         # Throw out any headways > 120 min
+        # TODO: We can't do this anymore for CR data
         if headway_time_sec > 120 * 60:
             continue
 
