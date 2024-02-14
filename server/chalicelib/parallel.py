@@ -1,7 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pandas as pd
 
-from server.chalicelib.date_utils import MAX_MONTH_DATA_DATE
+from chalicelib.date_utils import MAX_MONTH_DATA_DATE
 
 
 def make_parallel(single_func, THREAD_COUNT=5):
