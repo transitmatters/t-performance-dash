@@ -80,10 +80,8 @@ def parallel_download_events(datestop):
     return download_one_event_file(date, stop)
 
 
-def download_events(sdate, edate, stops: list):
-    # This needs to be month_range for performance and memory,
-    # however, for data from gobble we'll need specific dates, not just first of the month
-    datestops = itertools.product(parallel.month_range(sdate, edate), stops)
+def download_events(sdate: str, edate: str, stops: list):
+    datestops = itertools.product(parallel.s3_date_range(sdate, edate), stops)
     result = parallel_download_events(datestops)
     result = filter(lambda row: sdate.strftime("%Y-%m-%d") <= row["service_date"] <= edate.strftime("%Y-%m-%d"), result)
     return sorted(result, key=lambda row: row["event_time"])
