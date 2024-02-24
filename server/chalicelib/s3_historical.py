@@ -1,3 +1,4 @@
+from datetime import date
 from chalicelib import s3
 from chalicelib.constants import EVENT_ARRIVAL, EVENT_DEPARTURE
 
@@ -32,8 +33,8 @@ def unique_everseen(iterable, key=None):
                 yield element
 
 
-def dwells(stop_ids: list, sdate: str, edate: str):
-    rows_by_time = s3.download_events(sdate, edate, stop_ids)
+def dwells(stop_ids: list, start_date: str | date, end_date: str | date):
+    rows_by_time = s3.download_events(start_date, end_date, stop_ids)
 
     dwells = []
     for maybe_an_arrival, maybe_a_departure in pairwise(rows_by_time):
@@ -59,8 +60,8 @@ def dwells(stop_ids: list, sdate: str, edate: str):
     return dwells
 
 
-def headways(stop_ids: list, sdate: str, edate: str):
-    rows_by_time = s3.download_events(sdate, edate, stop_ids)
+def headways(stop_ids: list, start_date: str | date, end_date: str | date):
+    rows_by_time = s3.download_events(start_date, end_date, stop_ids)
 
     only_departures = filter(lambda row: row["event_type"] in EVENT_DEPARTURE, rows_by_time)
 
@@ -98,9 +99,9 @@ def headways(stop_ids: list, sdate: str, edate: str):
     return headways
 
 
-def travel_times(stops_a: list, stops_b: list, sdate: str, edate: str):
-    rows_by_time_a = s3.download_events(sdate, edate, stops_a)
-    rows_by_time_b = s3.download_events(sdate, edate, stops_b)
+def travel_times(stops_a: list, stops_b: list, start_date: str | date, end_date: str | date):
+    rows_by_time_a = s3.download_events(start_date, end_date, stops_a)
+    rows_by_time_b = s3.download_events(start_date, end_date, stops_b)
 
     departures = filter(lambda event: event["event_type"] in EVENT_DEPARTURE, rows_by_time_a)
     # we reverse arrivals so that if the same train arrives twice (this can happen),
