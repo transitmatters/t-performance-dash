@@ -37,8 +37,9 @@ export const DwellsAggregateChart: React.FC<DwellsAggregateChartProps> = ({
         endDate={endDate}
         fillColor={CHART_COLORS.FILL}
         location={getLocationDetails(fromStation, toStation)}
-        bothStops={false}
+        includeBothStopsForLocation={false}
         fname="dwells"
+        yUnit="Minutes"
       />
     );
   }, [dwells.by_date, startDate, endDate, fromStation, toStation]);

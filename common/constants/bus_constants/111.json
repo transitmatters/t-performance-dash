@@ -17,7 +17,7 @@
         }
       },
       {
-        "stop_name": "Garfield Avenue & Clyde",
+        "stop_name": "Garfield Ave & Clyde",
         "branches": null,
         "station": "garfi",
         "order": 2,
@@ -87,7 +87,7 @@
         }
       },
       {
-        "stop_name": "Rutherford Avenue & Ramp",
+        "stop_name": "Rutherford Ave & Ramp",
         "branches": null,
         "station": "ruthf",
         "order": 8,

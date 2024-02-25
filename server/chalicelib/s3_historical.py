@@ -1,11 +1,9 @@
-from datetime import datetime
+from datetime import date
 from chalicelib import s3
 from chalicelib.constants import EVENT_ARRIVAL, EVENT_DEPARTURE
 
 import itertools
-
-DATE_FORMAT_MASSDOT = "%Y-%m-%d %H:%M:%S"
-DATE_FORMAT_OUT = "%Y-%m-%dT%H:%M:%S"
+from chalicelib import date_utils
 
 
 def pairwise(iterable):
@@ -35,8 +33,8 @@ def unique_everseen(iterable, key=None):
                 yield element
 
 
-def dwells(stop_ids, sdate, edate):
-    rows_by_time = s3.download_events(sdate, edate, stop_ids)
+def dwells(stop_ids: list, start_date: str | date, end_date: str | date):
+    rows_by_time = s3.download_events(start_date, end_date, stop_ids)
 
     dwells = []
     for maybe_an_arrival, maybe_a_departure in pairwise(rows_by_time):
@@ -46,15 +44,15 @@ def dwells(stop_ids, sdate, edate):
             and maybe_a_departure["event_type"] in EVENT_DEPARTURE
             and maybe_an_arrival["trip_id"] == maybe_a_departure["trip_id"]
         ):
-            dep_dt = datetime.strptime(maybe_a_departure["event_time"], DATE_FORMAT_MASSDOT)
-            arr_dt = datetime.strptime(maybe_an_arrival["event_time"], DATE_FORMAT_MASSDOT)
+            dep_dt = date_utils.parse_event_date(maybe_a_departure["event_time"])
+            arr_dt = date_utils.parse_event_date(maybe_an_arrival["event_time"])
             delta = dep_dt - arr_dt
             dwells.append(
                 {
                     "route_id": maybe_a_departure["route_id"],
                     "direction": int(maybe_a_departure["direction_id"]),
-                    "arr_dt": arr_dt.strftime(DATE_FORMAT_OUT),
-                    "dep_dt": dep_dt.strftime(DATE_FORMAT_OUT),
+                    "arr_dt": date_utils.return_formatted_date(arr_dt),
+                    "dep_dt": date_utils.return_formatted_date(dep_dt),
                     "dwell_time_sec": delta.total_seconds(),
                 }
             )
@@ -62,8 +60,8 @@ def dwells(stop_ids, sdate, edate):
     return dwells
 
 
-def headways(stop_ids, sdate, edate):
-    rows_by_time = s3.download_events(sdate, edate, stop_ids)
+def headways(stop_ids: list, start_date: str | date, end_date: str | date):
+    rows_by_time = s3.download_events(start_date, end_date, stop_ids)
 
     only_departures = filter(lambda row: row["event_type"] in EVENT_DEPARTURE, rows_by_time)
 
@@ -74,12 +72,13 @@ def headways(stop_ids, sdate, edate):
             # Here, we should skip the headway
             # (though if trip_id is empty, we don't know).
             continue
-        this_dt = datetime.strptime(this["event_time"], DATE_FORMAT_MASSDOT)
-        prev_dt = datetime.strptime(prev["event_time"], DATE_FORMAT_MASSDOT)
+        this_dt = date_utils.parse_event_date(this["event_time"])
+        prev_dt = date_utils.parse_event_date(prev["event_time"])
         delta = this_dt - prev_dt
         headway_time_sec = delta.total_seconds()
 
         # Throw out any headways > 120 min
+        # TODO: We can't do this anymore for CR data
         if headway_time_sec > 120 * 60:
             continue
 
@@ -91,7 +90,7 @@ def headways(stop_ids, sdate, edate):
             {
                 "route_id": this["route_id"],
                 "direction": this["direction_id"],
-                "current_dep_dt": this["event_time"],
+                "current_dep_dt": date_utils.return_formatted_date(this_dt),
                 "headway_time_sec": headway_time_sec,
                 "benchmark_headway_time_sec": benchmark_headway,
             }
@@ -100,9 +99,9 @@ def headways(stop_ids, sdate, edate):
     return headways
 
 
-def travel_times(stops_a, stops_b, sdate, edate):
-    rows_by_time_a = s3.download_events(sdate, edate, stops_a)
-    rows_by_time_b = s3.download_events(sdate, edate, stops_b)
+def travel_times(stops_a: list, stops_b: list, start_date: str | date, end_date: str | date):
+    rows_by_time_a = s3.download_events(start_date, end_date, stops_a)
+    rows_by_time_b = s3.download_events(start_date, end_date, stops_b)
 
     departures = filter(lambda event: event["event_type"] in EVENT_DEPARTURE, rows_by_time_a)
     # we reverse arrivals so that if the same train arrives twice (this can happen),
@@ -121,8 +120,8 @@ def travel_times(stops_a, stops_b, sdate, edate):
         dep = departure["event_time"]
         arr = arrival["event_time"]
 
-        dep_dt = datetime.strptime(dep, DATE_FORMAT_MASSDOT)
-        arr_dt = datetime.strptime(arr, DATE_FORMAT_MASSDOT)
+        dep_dt = date_utils.parse_event_date(dep)
+        arr_dt = date_utils.parse_event_date(arr)
         delta = arr_dt - dep_dt
         travel_time_sec = delta.total_seconds()
 
@@ -143,8 +142,8 @@ def travel_times(stops_a, stops_b, sdate, edate):
             {
                 "route_id": departure["route_id"],
                 "direction": int(departure["direction_id"]),
-                "dep_dt": dep_dt.strftime(DATE_FORMAT_OUT),
-                "arr_dt": arr_dt.strftime(DATE_FORMAT_OUT),
+                "dep_dt": date_utils.return_formatted_date(dep_dt),
+                "arr_dt": date_utils.return_formatted_date(arr_dt),
                 "travel_time_sec": travel_time_sec,
                 "benchmark_travel_time_sec": benchmark,
             }

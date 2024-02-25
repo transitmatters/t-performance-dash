@@ -21,7 +21,6 @@ def process_events(input_csv, outdir, nozip=False):
         input_csv,
         usecols=columns,
         parse_dates=["service_date"],
-        infer_datetime_format=True,
         dtype={
             "route_id": "str",
             "trip_id": "str",

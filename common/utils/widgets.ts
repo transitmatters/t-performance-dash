@@ -1,4 +1,4 @@
-import { TimeWidgetValue } from '../types/basicWidgets';
+import { MPHWidgetValue, TimeWidgetValue } from '../types/basicWidgets';
 import type { AggregateDataPoint, SingleDayDataPoint } from '../types/charts';
 
 const getAverage = (data: (number | undefined)[]) => {
@@ -38,23 +38,24 @@ const getAggDataPointsOfInterest = (aggData: AggregateDataPoint[]) => {
   return { average, min, max, median, p10, p90 };
 };
 
-export const getAggDataWidgets = (aggData: AggregateDataPoint[]) => {
+export const getAggDataWidgets = (aggData: AggregateDataPoint[], type: 'times' | 'speeds') => {
   const { average, min, max, median, p10, p90 } = getAggDataPointsOfInterest(aggData);
   return [
-    { text: 'Avg', widgetValue: new TimeWidgetValue(average), type: 'data' },
-    { text: 'Median', widgetValue: new TimeWidgetValue(median), type: 'data' },
-    { text: '10%', widgetValue: new TimeWidgetValue(p10), type: 'data' },
-    { text: '90%', widgetValue: new TimeWidgetValue(p90), type: 'data' },
-    { text: 'Min', widgetValue: new TimeWidgetValue(min), type: 'data' },
-    { text: 'Max', widgetValue: new TimeWidgetValue(max), type: 'data' },
+    { text: 'Avg', widgetValue: getWidget(type, average), type: 'data' },
+    { text: 'Median', widgetValue: getWidget(type, median), type: 'data' },
+    { text: '10%', widgetValue: getWidget(type, p10), type: 'data' },
+    { text: '90%', widgetValue: getWidget(type, p90), type: 'data' },
+    { text: 'Min', widgetValue: getWidget(type, min), type: 'data' },
+    { text: 'Max', widgetValue: getWidget(type, max), type: 'data' },
   ];
 };
 
 const getSingleDayNumberArray = (
   data: SingleDayDataPoint[],
-  type: 'traveltimes' | 'dwells' | 'headways'
+  type: 'traveltimes' | 'dwells' | 'headways' | 'speeds'
 ) => {
   if (type === 'traveltimes') return data.map((data) => data.travel_time_sec);
+  if (type === 'speeds') return data.map((data) => data.speed_mph);
   if (type === 'dwells') return data.map((data) => data.dwell_time_sec);
   if (type === 'headways') return data.map((data) => data.headway_time_sec);
   return [];
@@ -62,7 +63,7 @@ const getSingleDayNumberArray = (
 
 const getSingleDayPointsOfInterest = (
   data: SingleDayDataPoint[],
-  type: 'traveltimes' | 'dwells' | 'headways'
+  type: 'traveltimes' | 'dwells' | 'headways' | 'speeds'
 ) => {
   const _data = getSingleDayNumberArray(data, type);
   const { max, min, median, p10, p90 } = getPeaks(_data);
@@ -70,17 +71,25 @@ const getSingleDayPointsOfInterest = (
   return { max, min, median, average, p10, p90 };
 };
 
+function getWidget(type: string, value: number | undefined) {
+  if (type === 'speeds') {
+    return new MPHWidgetValue(value);
+  } else {
+    return new TimeWidgetValue(value);
+  }
+}
+
 export const getSingleDayWidgets = (
   data: SingleDayDataPoint[],
-  type: 'traveltimes' | 'dwells' | 'headways'
+  type: 'traveltimes' | 'dwells' | 'headways' | 'speeds'
 ) => {
   const { max, min, median, average, p10, p90 } = getSingleDayPointsOfInterest(data, type);
   return [
-    { text: 'Avg', widgetValue: new TimeWidgetValue(average), type: 'data' },
-    { text: 'Median', widgetValue: new TimeWidgetValue(median), type: 'data' },
-    { text: '10%', widgetValue: new TimeWidgetValue(p10), type: 'data' },
-    { text: '90%', widgetValue: new TimeWidgetValue(p90), type: 'data' },
-    { text: 'Min', widgetValue: new TimeWidgetValue(min), type: 'data' },
-    { text: 'Max', widgetValue: new TimeWidgetValue(max), type: 'data' },
+    { text: 'Avg', widgetValue: getWidget(type, average), type: 'data' },
+    { text: 'Median', widgetValue: getWidget(type, median), type: 'data' },
+    { text: '10%', widgetValue: getWidget(type, p10), type: 'data' },
+    { text: '90%', widgetValue: getWidget(type, p90), type: 'data' },
+    { text: 'Min', widgetValue: getWidget(type, min), type: 'data' },
+    { text: 'Max', widgetValue: getWidget(type, max), type: 'data' },
   ];
 };

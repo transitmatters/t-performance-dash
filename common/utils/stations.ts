@@ -1,8 +1,9 @@
-import type { Line, LineShort } from '../types/lines';
+import type { BusRoute, Line, LineShort } from '../types/lines';
 import { isLineMap, type Station } from '../types/stations';
 import type { Location } from '../types/charts';
-import type { Direction } from '../types/dataPoints';
+import type { Direction, Distance } from '../types/dataPoints';
 import { stations, rtStations, busStations } from '../constants/stations';
+import { station_distances } from '../constants/station_distances';
 
 export const optionsForField = (
   type: 'from' | 'to',
@@ -62,8 +63,19 @@ const createParentStationIndex = () => {
   return index;
 };
 
+const createStationDistanceIndex = () => {
+  const index: Record<string, Distance> = {};
+
+  for (const [key, value] of Object.entries(station_distances)) {
+    index[key] = value as Distance;
+  }
+
+  return index;
+};
+
 const stationIndex = createStationIndex();
 const parentStationIndex = createParentStationIndex();
+const stationDistanceIndex = createStationDistanceIndex();
 
 export const getStationById = (stationStopId: string) => {
   return stationIndex[stationStopId];
@@ -73,9 +85,19 @@ export const getParentStationForStopId = (stopId: string) => {
   return parentStationIndex[stopId];
 };
 
-export const getStationForInvalidFromSelection = (line: Line): Station => {
+export const getStationDistance = (fromStationId: string, toStationId: string) => {
+  return stationDistanceIndex[fromStationId][toStationId];
+};
+
+export const getStationForInvalidFromSelection = (line: Line, busRoute?: BusRoute): Station => {
   if (line === 'line-green') return getParentStationForStopId('70202'); // Gov. Center
   if (line === 'line-red') return getParentStationForStopId('70076'); // Park St.
+  if (line === 'line-bus') {
+    if (busRoute === '17/19') return getParentStationForStopId('17-1-323');
+    if (busRoute === '220/221/222') return getParentStationForStopId('222-1-32004');
+    if (busRoute === '61/70/170') return getParentStationForStopId('70-0-88333');
+    if (busRoute === '104/109') return getParentStationForStopId('104-1-5560');
+  }
   throw new Error('There should be no other lines with invalid from station selections.');
 };
 

@@ -1,0 +1,81 @@
+{
+  "45": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Franklin Park",
+        "branches": null,
+        "station": "frnpk",
+        "order": 1,
+        "stops": {
+          "1": ["45-1-1565", "45-1-383"],
+          "0": ["45-0-1565", "45-0-415"]
+        }
+      },
+      {
+        "stop_name": "Grove Hall",
+        "branches": null,
+        "station": "ghall",
+        "order": 2,
+        "stops": {
+          "1": ["45-1-1566"],
+          "0": ["45-0-1586"]
+        }
+      },
+      {
+        "stop_name": "Blue Hill Ave @ Quincy St",
+        "branches": null,
+        "station": "bhqui",
+        "order": 3,
+        "stops": {
+          "1": ["45-1-1569"],
+          "0": ["45-0-1583"]
+        }
+      },
+      {
+        "stop_name": "Blue Hill Ave @ Dudley St",
+        "branches": null,
+        "station": "bhdud",
+        "order": 4,
+        "stops": {
+          "1": ["45-1-1576"],
+          "0": ["45-0-1577"]
+        }
+      },
+      {
+        "stop_name": "Nubian Station",
+        "branches": null,
+        "station": "nubn",
+        "order": 5,
+        "stops": {
+          "1": ["45-1-64000"],
+          "0": ["45-0-64000"]
+        }
+      },
+      {
+        "stop_name": "Roxbury Crossing Station",
+        "branches": null,
+        "station": "roxbs",
+        "order": 6,
+        "stops": {
+          "1": ["45-1-21148"],
+          "0": ["45-0-11257"]
+        }
+      },
+      {
+        "stop_name": "Ruggles",
+        "branches": null,
+        "station": "rugg",
+        "order": 7,
+        "stops": {
+          "1": ["45-1-17861"],
+          "0": ["45-0-17863"]
+        }
+      }
+    ]
+  }
+}

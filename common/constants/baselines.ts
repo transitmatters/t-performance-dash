@@ -1,3 +1,5 @@
+import type { BusRouteId, Line } from '../types/lines';
+
 // These are manually chosen based off the peak *monthly* scheduled service. Selecting highest value "
 export const PEAK_SCHEDULED_SERVICE = {
   'line-red': 223,
@@ -17,25 +19,45 @@ export const PEAK_SPEED = {
 };
 
 // These are manually chosen based off the peak value. Need to be updated when all data is generated.
-export const PEAK_RIDERSHIP = {
+export const PEAK_RIDERSHIP: {
+  [key in Exclude<Line, 'line-bus' | 'line-commuter-rail'> | BusRouteId | 'DEFAULT']: number;
+} = {
   'line-red': 213703,
   'line-orange': 169578,
   'line-blue': 60129,
   'line-green': 87148,
   '1': 15272,
+  '4': 850,
+  '9': 7116,
   '15': 6379,
+  '16': 6197,
+  '1719': 6300,
+  '21': 5236,
   '22': 8767,
   '23': 12225,
   '28': 12893,
   '32': 10982,
+  '34': 6674,
   '39': 11792,
-  '57': 14505,
+  '41': 2119,
+  '45': 3310,
+  '47': 5955,
+  '55': 816,
+  '57': 11284,
+  '6170170': 6988,
   '66': 14505,
   '71': 5789,
   '73': 6616,
   '77': 8015,
+  '85': 1189,
+  '86': 6850,
+  '89': 3963,
+  '91': 1942,
+  '92': 1459,
+  '104109': 8163,
   '111': 11258,
   '114116117': 12867,
+  '220221222': 3370,
   DEFAULT: 520580,
 };
 

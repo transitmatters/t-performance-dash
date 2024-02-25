@@ -54,8 +54,8 @@ def faster_describe(grouped):
 # `travel_times_over_time` is legacy and returns just the by_date aggregation w/ peak == all
 
 
-def aggregate_traveltime_data(sdate, edate, from_stops, to_stops):
-    all_data = data_funcs.travel_times(sdate, from_stops, to_stops, edate)
+def aggregate_traveltime_data(start_date: str | datetime.date, end_date: str | datetime.date, from_stops, to_stops):
+    all_data = data_funcs.travel_times(start_date, from_stops, to_stops, end_date)
     if not all_data:
         return None
 
@@ -99,8 +99,8 @@ def calc_travel_times_by_date(df):
     return summary_stats_final
 
 
-def travel_times_all(sdate, edate, from_stops, to_stops):
-    df = aggregate_traveltime_data(sdate, edate, from_stops, to_stops)
+def travel_times_all(start_date: str | datetime.date, end_date: str, from_stops, to_stops):
+    df = aggregate_traveltime_data(start_date, end_date, from_stops, to_stops)
     if df is None:
         return {"by_date": [], "by_time": []}
     by_date = calc_travel_times_by_date(df)
@@ -112,8 +112,8 @@ def travel_times_all(sdate, edate, from_stops, to_stops):
     }
 
 
-def travel_times_over_time(sdate, edate, from_stops, to_stops):
-    df = aggregate_traveltime_data(sdate, edate, from_stops, to_stops)
+def travel_times_over_time(start_date: str | datetime.date, end_date: str | datetime.date, from_stops, to_stops):
+    df = aggregate_traveltime_data(start_date, end_date, from_stops, to_stops)
     if df is None:
         return []
     stats = calc_travel_times_by_date(df)
@@ -123,8 +123,8 @@ def travel_times_over_time(sdate, edate, from_stops, to_stops):
 ####################
 # HEADWAYS
 ####################
-def headways_over_time(sdate, edate, stops):
-    all_data = data_funcs.headways(sdate, stops, edate)
+def headways_over_time(start_date: str | datetime.date, end_date: str | datetime.date, stops):
+    all_data = data_funcs.headways(start_date, stops, end_date)
     if not all_data:
         return []
 
@@ -155,8 +155,8 @@ def headways_over_time(sdate, edate, stops):
     return results.to_dict("records")
 
 
-def dwells_over_time(sdate, edate, stops):
-    all_data = data_funcs.dwells(sdate, stops, edate)
+def dwells_over_time(start_date: str | datetime.date, end_date: str | datetime.date, stops):
+    all_data = data_funcs.dwells(start_date, stops, end_date)
     if not all_data:
         return []
 
