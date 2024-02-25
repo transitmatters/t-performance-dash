@@ -1,3 +1,4 @@
+from datetime import date
 import boto3
 import botocore
 from botocore.exceptions import ClientError
@@ -80,12 +81,12 @@ def parallel_download_events(datestop):
     return download_one_event_file(date, stop)
 
 
-def download_events(sdate, edate, stops: list):
-    # This needs to be month_range for performance and memory,
-    # however, for data from gobble we'll need specific dates, not just first of the month
-    datestops = itertools.product(parallel.month_range(sdate, edate), stops)
+def download_events(start_date: str | date, end_date: str | date, stops: list):
+    datestops = itertools.product(parallel.s3_date_range(start_date, end_date), stops)
     result = parallel_download_events(datestops)
-    result = filter(lambda row: sdate.strftime("%Y-%m-%d") <= row["service_date"] <= edate.strftime("%Y-%m-%d"), result)
+    result = filter(
+        lambda row: start_date.strftime("%Y-%m-%d") <= row["service_date"] <= end_date.strftime("%Y-%m-%d"), result
+    )
     return sorted(result, key=lambda row: row["event_time"])
 
 

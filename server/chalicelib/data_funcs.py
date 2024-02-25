@@ -57,7 +57,7 @@ def use_S3(date, bus=False):
     return archival or bus
 
 
-def partition_S3_dates(start_date, end_date, bus=False):
+def partition_S3_dates(start_date: str | date, end_date: str | date, bus=False):
     """
     Partitions dates by what data source they should be fetched from.
     S3 is used for archival data and for bus data. API is used for recent (within 90 days) subway data.
@@ -79,14 +79,14 @@ def partition_S3_dates(start_date, end_date, bus=False):
     return (s3_dates, api_dates)
 
 
-def headways(sdate, stops, edate=None):
-    if edate is None:
-        if use_S3(sdate, is_bus(stops)):
-            return s3_historical.headways(stops, sdate, sdate)
+def headways(start_date: str | date, stops, end_date: str | date | None = None):
+    if end_date is None:
+        if use_S3(start_date, is_bus(stops)):
+            return s3_historical.headways(stops, start_date, start_date)
         else:
-            return process_mbta_headways(stops, sdate)
+            return process_mbta_headways(stops, start_date)
 
-    s3_interval, api_interval = partition_S3_dates(sdate, edate, is_bus(stops))
+    s3_interval, api_interval = partition_S3_dates(start_date, end_date, is_bus(stops))
     all_data = []
     if s3_interval:
         start, end = s3_interval
@@ -109,9 +109,9 @@ def current_transit_day():
     return today
 
 
-def process_mbta_headways(stops, sdate, edate=None):
+def process_mbta_headways(stops, start_date: str | date, end_date: str | date | None = None):
     # get data
-    api_data = MbtaPerformanceAPI.get_api_data("headways", {"stop": stops}, sdate, edate)
+    api_data = MbtaPerformanceAPI.get_api_data("headways", {"stop": stops}, start_date, end_date)
     # combine all headways data
     headways = []
     for dict_data in api_data:
@@ -130,14 +130,14 @@ def process_mbta_headways(stops, sdate, edate=None):
     return sorted(headways, key=lambda x: x["current_dep_dt"])
 
 
-def travel_times(sdate, from_stops, to_stops, edate=None):
-    if edate is None:
-        if use_S3(sdate, is_bus(from_stops)):
-            return s3_historical.travel_times(from_stops, to_stops, sdate, sdate)
+def travel_times(start_date, from_stops, to_stops, end_date: str | date | None = None):
+    if end_date is None:
+        if use_S3(start_date, is_bus(from_stops)):
+            return s3_historical.travel_times(from_stops, to_stops, start_date, start_date)
         else:
-            return process_mbta_travel_times(from_stops, to_stops, sdate)
+            return process_mbta_travel_times(from_stops, to_stops, start_date)
 
-    s3_interval, api_interval = partition_S3_dates(sdate, edate, is_bus(from_stops))
+    s3_interval, api_interval = partition_S3_dates(start_date, end_date, is_bus(from_stops))
     all_data = []
     if s3_interval:
         start, end = s3_interval
@@ -149,10 +149,10 @@ def travel_times(sdate, from_stops, to_stops, edate=None):
     return all_data
 
 
-def process_mbta_travel_times(from_stops, to_stops, sdate, edate=None):
+def process_mbta_travel_times(from_stops, to_stops, start_date: str | date, end_date: str | date | None = None):
     # get data
     api_data = MbtaPerformanceAPI.get_api_data(
-        "traveltimes", {"from_stop": from_stops, "to_stop": to_stops}, sdate, edate
+        "traveltimes", {"from_stop": from_stops, "to_stop": to_stops}, start_date, end_date
     )
     # combine all travel times data, remove threshold flags from performance API, and dedupe on `dep_dt`
     trips = {}
@@ -174,14 +174,14 @@ def process_mbta_travel_times(from_stops, to_stops, sdate, edate=None):
     return sorted(trips_list, key=lambda x: x["dep_dt"])
 
 
-def dwells(sdate, stops, edate=None):
-    if edate is None:
-        if use_S3(sdate, is_bus(stops)):
-            return s3_historical.dwells(stops, sdate, sdate)
+def dwells(start_date, stops, end_date: str | date | None = None):
+    if end_date is None:
+        if use_S3(start_date, is_bus(stops)):
+            return s3_historical.dwells(stops, start_date, start_date)
         else:
-            return process_mbta_dwells(stops, sdate)
+            return process_mbta_dwells(stops, start_date)
 
-    s3_interval, api_interval = partition_S3_dates(sdate, edate, is_bus(stops))
+    s3_interval, api_interval = partition_S3_dates(start_date, end_date, is_bus(stops))
     all_data = []
     if s3_interval:
         start, end = s3_interval
@@ -194,9 +194,9 @@ def dwells(sdate, stops, edate=None):
     return all_data
 
 
-def process_mbta_dwells(stops, sdate, edate=None):
+def process_mbta_dwells(stops, start_date: str | date, end_date: str | date | None = None):
     # get data
-    api_data = MbtaPerformanceAPI.get_api_data("dwells", {"stop": stops}, sdate, edate)
+    api_data = MbtaPerformanceAPI.get_api_data("dwells", {"stop": stops}, start_date, end_date)
 
     # combine all travel times data
     dwells = []
