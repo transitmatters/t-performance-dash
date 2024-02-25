@@ -7,6 +7,9 @@ DATE_FORMAT_TIMEZONE = "%Y-%m-%d %H:%M:%S%z"
 DATE_FORMAT_OUT = "%Y-%m-%dT%H:%M:%S"
 EASTERN_TIME = ZoneInfo("US/Eastern")
 
+# The most recent date for which we have monthly data
+MAX_MONTH_DATA_DATE = "2023-12-31"
+
 
 def parse_event_date(date_str: str):
     if len(date_str) == 19:
