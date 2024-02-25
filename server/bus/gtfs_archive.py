@@ -73,7 +73,17 @@ def read_gtfs(date: datetime.date):
     services = get_services(date, archive_dir)
 
     # specify dtypes to avoid warnings
-    trips = pd.read_csv(archive_dir / "trips.txt", dtype={"trip_short_name": str, "block_id": str})
+    trips = pd.read_csv(
+        archive_dir / "trips.txt",
+        dtype={
+            "route_id": str,
+            "service_id": str,
+            "trip_id": str,
+            "trip_headsign": str,
+            "trip_short_name": str,
+            "block_id": str,
+        },
+    )
     trips = trips[trips.service_id.isin(services)]
 
     stops = pd.read_csv(
@@ -87,7 +97,7 @@ def read_gtfs(date: datetime.date):
     return trips, stops
 
 
-def add_gtfs_headways(events_df):
+def add_gtfs_headways(events_df: pd.DataFrame):
     """
     This will calculate scheduled headway and traveltime information
     from gtfs for the routes we care about, and then match our actual

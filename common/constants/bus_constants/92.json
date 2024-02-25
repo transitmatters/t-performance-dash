@@ -1,0 +1,61 @@
+{
+  "92": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Sullivan Square",
+        "branches": null,
+        "station": "sull",
+        "order": 1,
+        "stops": {
+          "1": ["92-1-28741", "92-1-29009"],
+          "0": ["92-0-2874", "92-0-29001"]
+        }
+      },
+      {
+        "stop_name": "Main St @ Bunker Hill St",
+        "branches": null,
+        "station": "mnbnk",
+        "order": 2,
+        "stops": {
+          "1": ["92-1-2821"],
+          "0": ["92-0-32840"]
+        }
+      },
+      {
+        "stop_name": "City Square",
+        "branches": null,
+        "station": "ctysq",
+        "order": 3,
+        "stops": {
+          "1": ["92-1-28281"],
+          "0": ["92-0-2835"]
+        }
+      },
+      {
+        "stop_name": "Haymarket",
+        "branches": null,
+        "station": "hayms",
+        "order": 4,
+        "stops": {
+          "1": ["92-1-117", "92-1-30203", "92-1-83091"],
+          "0": ["92-0-117"]
+        }
+      },
+      {
+        "stop_name": "Milk & Devonshire St",
+        "branches": null,
+        "station": "milk",
+        "order": 5,
+        "stops": {
+          "1": ["92-1-6548"],
+          "0": ["92-0-6548"]
+        }
+      }
+    ]
+  }
+}

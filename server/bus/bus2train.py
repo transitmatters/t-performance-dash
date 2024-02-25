@@ -28,7 +28,7 @@ def load_data(input_csv, routes):
     """
 
     # thinking about doing this in pandas to have all the info at once
-    df = pd.read_csv(input_csv, dtype={"stop_id": str})
+    df = pd.read_csv(input_csv, dtype={"service_date": str, "route_id": str, "direction": str, "stop_id": str})
     df.rename(
         columns={
             # This set of transformations covers prior-year bus data.
@@ -74,7 +74,7 @@ def load_data(input_csv, routes):
     return df
 
 
-def process_events(df):
+def process_events(df: pd.DataFrame):
     """
     Take the tidied input data and rearrange the columns to match rapidtransit format.
     - Rename columns (trip_id, stop_sequence, event_time)
@@ -98,7 +98,9 @@ def process_events(df):
     ]
 
     df = df.rename(columns={"half_trip_id": "trip_id", "time_point_order": "stop_sequence", "actual": "event_time"})
-    df = df.drop(columns=["time_point_id", "standard_type", "scheduled", "scheduled_headway", "headway"])
+    df = df.drop(
+        columns=["time_point_id", "standard_type", "scheduled", "scheduled_headway", "headway"], errors="ignore"
+    )
 
     df = add_gtfs_headways(df)
     # We can't use headway info for the combined routes since gtfs won't be grouped this way.
@@ -113,7 +115,7 @@ def process_events(df):
     return df
 
 
-def to_disk(df, outdir, nozip=False):
+def to_disk(df: pd.DataFrame, outdir, nozip=False):
     """
     For each service_date/stop_id/direction/route group, we write the events to disk.
     """

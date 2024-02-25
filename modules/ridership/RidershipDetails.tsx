@@ -3,12 +3,12 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { useRidershipData } from '../../common/api/hooks/ridership';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Layout } from '../../common/layouts/layoutTypes';
-import { RIDERSHIP_KEYS } from '../../common/types/lines';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
-import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
+import { getRidershipLineId } from '../../common/utils/ridership';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 
 export function RidershipDetails() {
@@ -17,8 +17,7 @@ export function RidershipDetails() {
     query: { startDate, endDate, busRoute },
   } = useDelimitatedRoute();
   const config = SPEED_RANGE_PARAM_MAP.week;
-  const lineId = busRoute ? `line-${busRoute.replaceAll('/', '')}` : RIDERSHIP_KEYS[line ?? ''];
-  const lineOrRoute = busRoute ? `line-${busRoute.replaceAll('/', '')}` : line;
+  const lineId = getRidershipLineId(line, busRoute);
   const enabled = Boolean(startDate && endDate && lineId);
 
   const ridership = useRidershipData(
@@ -29,7 +28,7 @@ export function RidershipDetails() {
     },
     enabled
   );
-  const ridershipDataReady = !ridership.isError && startDate && endDate && lineOrRoute && line;
+  const ridershipDataReady = !ridership.isError && startDate && endDate && line;
 
   return (
     <PageWrapper pageTitle={'Ridership'}>

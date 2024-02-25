@@ -3,7 +3,7 @@ import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { WidgetTitle } from '../dashboard/WidgetTitle';
+import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { getLocationDetails } from '../../common/utils/stations';
 import type { Line } from '../../common/types/lines';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';

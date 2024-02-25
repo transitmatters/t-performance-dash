@@ -17,7 +17,7 @@
         }
       },
       {
-        "stop_name": "[117] Bell Circle",
+        "stop_name": "Bell Circle",
         "branches": ["117"],
         "station": "bell",
         "order": 2,
@@ -27,7 +27,7 @@
         }
       },
       {
-        "stop_name": "[117] Revere City Hall",
+        "stop_name": "Revere City Hall",
         "_comment": "only the 117 is logged here",
         "branches": ["117"],
         "station": "rcith",
@@ -38,7 +38,7 @@
         }
       },
       {
-        "stop_name": "[116] Broadway & Central (Revere)",
+        "stop_name": "Broadway & Central (Revere)",
         "_comment": "only the 116 is logged here, plus first and last 117 trips each day. They can be honorary 116s",
         "branches": ["116"],
         "station": "bwcen",

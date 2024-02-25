@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unused-modules */
 import React, { useMemo } from 'react';
 import { Line as LineChart } from 'react-chartjs-2';
 import {
@@ -24,7 +23,6 @@ import type { ChartData } from 'chart.js';
 
 import { enUS } from 'date-fns/locale';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
-import { ChartBorder } from '../ChartBorder';
 import { ChartDiv } from '../ChartDiv';
 import { CHART_COLORS, COLORS } from '../../../constants/colors';
 
@@ -283,9 +281,5 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     );
   }, [isMobile, chartJsData, chartJsOptions, chartJsPlugins]);
 
-  return (
-    <ChartBorder>
-      <ChartDiv isMobile={isMobile}>{chart}</ChartDiv>
-    </ChartBorder>
-  );
+  return <ChartDiv isMobile={isMobile}>{chart}</ChartDiv>;
 };
