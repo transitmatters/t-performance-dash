@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-for y in `seq 2016 2023`; do
+for y in `seq 2016 2024`; do
     for f in $(find data/input/$y/ -name '*.csv'); do
         echo "Generating stop data from $f"
         poetry run python process_events.py $f data/output
