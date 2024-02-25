@@ -1,0 +1,20 @@
+name: first-contribution
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          pr-message: |
+            Hello! Thank you for your contribution.
+
+            TransitMatters is a volunteer-run organization, so if you haven't yet we'd appreciate you filling out our volunteer form: https://transitmatters.org/volunteer
+
+            If you have already filled out the form, but have not yet heard back please let us know on this PR and we'll follow up with you!

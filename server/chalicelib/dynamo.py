@@ -54,7 +54,7 @@ def query_ridership(start_date: date, end_date: date, line_id: str = None):
     return ddb_json.loads(response["Items"])
 
 
-def query_agg_trip_metrics(start_date: str, end_date: str, table_name: str, line: str = None):
+def query_agg_trip_metrics(start_date: str | date, end_date: str | date, table_name: str, line: str = None):
     table = dynamodb.Table(table_name)
     line_condition = Key("line").eq(line)
     date_condition = Key("date").between(start_date, end_date)

@@ -1,14 +1,14 @@
 from typing import TypedDict
 from chalice import BadRequestError, ForbiddenError
 from chalicelib import dynamo
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 import pandas as pd
 import numpy as np
 
 
 class TripMetricsByLineParams(TypedDict):
-    start_date: str
-    end_date: str
+    start_date: str | date
+    end_date: str | date
     agg: str
     line: str
 

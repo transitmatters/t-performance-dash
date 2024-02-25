@@ -117,43 +117,43 @@ def alerts_route(user_date):
 
 @app.route("/api/aggregate/traveltimes", cors=cors_config)
 def traveltime_aggregate_route():
-    sdate = parse_user_date(app.current_request.query_params["start_date"])
-    edate = parse_user_date(app.current_request.query_params["end_date"])
+    start_date = parse_user_date(app.current_request.query_params["start_date"])
+    end_date = parse_user_date(app.current_request.query_params["end_date"])
     from_stops = app.current_request.query_params.getlist("from_stop")
     to_stops = app.current_request.query_params.getlist("to_stop")
 
-    response = aggregation.travel_times_over_time(sdate, edate, from_stops, to_stops)
+    response = aggregation.travel_times_over_time(start_date, end_date, from_stops, to_stops)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
 @app.route("/api/aggregate/traveltimes2", cors=cors_config)
 def traveltime_aggregate_route_2():
-    sdate = parse_user_date(app.current_request.query_params["start_date"])
-    edate = parse_user_date(app.current_request.query_params["end_date"])
+    start_date = parse_user_date(app.current_request.query_params["start_date"])
+    end_date = parse_user_date(app.current_request.query_params["end_date"])
     from_stop = app.current_request.query_params.getlist("from_stop")
     to_stop = app.current_request.query_params.getlist("to_stop")
 
-    response = aggregation.travel_times_all(sdate, edate, from_stop, to_stop)
+    response = aggregation.travel_times_all(start_date, end_date, from_stop, to_stop)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
 @app.route("/api/aggregate/headways", cors=cors_config)
 def headways_aggregate_route():
-    sdate = parse_user_date(app.current_request.query_params["start_date"])
-    edate = parse_user_date(app.current_request.query_params["end_date"])
+    start_date = parse_user_date(app.current_request.query_params["start_date"])
+    end_date = parse_user_date(app.current_request.query_params["end_date"])
     stops = app.current_request.query_params.getlist("stop")
 
-    response = aggregation.headways_over_time(sdate, edate, stops)
+    response = aggregation.headways_over_time(start_date, end_date, stops)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
 @app.route("/api/aggregate/dwells", cors=cors_config)
 def dwells_aggregate_route():
-    sdate = parse_user_date(app.current_request.query_params["start_date"])
-    edate = parse_user_date(app.current_request.query_params["end_date"])
+    start_date = parse_user_date(app.current_request.query_params["start_date"])
+    end_date = parse_user_date(app.current_request.query_params["end_date"])
     stops = app.current_request.query_params.getlist("stop")
 
-    response = aggregation.dwells_over_time(sdate, edate, stops)
+    response = aggregation.dwells_over_time(start_date, end_date, stops)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
