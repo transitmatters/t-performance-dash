@@ -24,6 +24,9 @@ export const SubwaySection: React.FC<SubwaySectionProps> = ({ close }) => {
       <MenuDropdown line="line-green" route={route}>
         <SubwayDropdown line="line-green" close={close} />
       </MenuDropdown>
+      <MenuDropdown line="line-mattapan" route={route}>
+        <SubwayDropdown line="line-mattapan" close={close} />
+      </MenuDropdown>
     </div>
   );
 };

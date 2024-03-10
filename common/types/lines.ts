@@ -3,10 +3,11 @@ export type Line =
   | 'line-orange'
   | 'line-green'
   | 'line-blue'
+  | 'line-mattapan'
   | 'line-bus'
   | 'line-commuter-rail';
-export type LineShort = 'Red' | 'Orange' | 'Green' | 'Blue' | 'Bus' | 'Commuter Rail';
-export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'bus' | 'commuter-rail';
+export type LineShort = 'Red' | 'Orange' | 'Green' | 'Blue' | 'Mattapan' | 'Bus' | 'Commuter Rail';
+export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'mattapan' | 'bus' | 'commuter-rail';
 
 /** All currently available Bus Routes */
 export type BusRoute =
@@ -87,15 +88,22 @@ export const RIDERSHIP_KEYS = {
   'line-orange': 'line-Orange',
   'line-blue': 'line-Blue',
   'line-green': 'line-Green',
+  'line-mattapan': 'line-Mattapan',
 };
 
-export const GTFS_COLOR_LINE_IDS = ['line-Red', 'line-Orange', 'line-Blue', 'line-Green'] as const;
+export const GTFS_COLOR_LINE_IDS = [
+  'line-Red',
+  'line-Orange',
+  'line-Blue',
+  'line-Green',
+  'line-Mattapan',
+] as const;
 export type GtfsColorLineId = (typeof GTFS_COLOR_LINE_IDS)[number];
 
 export const HEAVY_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue'];
 export const LANDING_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue', 'line-green'];
 
-export const RAIL_LINES = ['red', 'orange', 'green', 'blue'];
+export const RAIL_LINES = ['red', 'orange', 'green', 'blue', 'mattapan'];
 export const BUS_ROUTES: BusRoute[] = [
   '1',
   '4',

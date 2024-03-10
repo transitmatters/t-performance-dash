@@ -26,6 +26,7 @@ export const PEAK_RIDERSHIP: {
   'line-orange': 169578,
   'line-blue': 60129,
   'line-green': 87148,
+  'line-mattapan': 0,
   '1': 15272,
   '4': 850,
   '9': 7116,

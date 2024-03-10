@@ -23,7 +23,7 @@ export const SubwayDropdown: React.FC<SubwayDropdownProps> = ({ line, close }) =
       <hr className="h-[1px] w-3/4 self-center border-neutral-500" />
       <SidebarTabs
         tabs={
-          line === 'line-green'
+          line === 'line-green' || line === 'line-mattapan'
             ? LINE_PAGES.filter((cur) => cur !== ALL_PAGES.slowzones)
             : LINE_PAGES
         }
