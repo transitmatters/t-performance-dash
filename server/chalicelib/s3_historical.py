@@ -78,8 +78,7 @@ def headways(stop_ids: list, start_date: str | date, end_date: str | date):
         headway_time_sec = delta.total_seconds()
 
         # Throw out any headways > 120 min
-        # TODO: We can't do this anymore for CR data
-        if headway_time_sec > 120 * 60:
+        if headway_time_sec > 120 * 60 and not s3.is_cr(this["route_id"]):
             continue
 
         benchmark_headway = this.get("scheduled_headway")
