@@ -14,7 +14,8 @@
         "stops": {
           "0": [],
           "1": ["CR-Kingston_1_KB-0351-S"]
-        }
+        },
+        "terminus": true
       },
       {
         "stop_name": "Halifax",
@@ -103,14 +104,15 @@
         "order": 10,
         "stops": {
           "0": [
+            "CR-Kingston_0_NEC-2287-09",
+            "CR-Kingston_0_NEC-2287-12",
             "CR-Kingston_0_NEC-2287",
             "CR-Kingston_0_NEC-2287-11",
-            "CR-Kingston_0_NEC-2287-13",
-            "CR-Kingston_0_NEC-2287-09",
-            "CR-Kingston_0_NEC-2287-12"
+            "CR-Kingston_0_NEC-2287-13"
           ],
           "1": []
-        }
+        },
+        "terminus": true
       }
     ]
   }

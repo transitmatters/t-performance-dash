@@ -14,7 +14,8 @@
         "stops": {
           "0": ["CR-Franklin_0_FB-0303-S"],
           "1": ["CR-Franklin_1_FB-0303-S"]
-        }
+        },
+        "terminus": true
       },
       {
         "stop_name": "Franklin",
@@ -122,8 +123,8 @@
         "branches": null,
         "order": 12,
         "stops": {
-          "0": ["CR-Franklin_0_FB-0095-04", "CR-Franklin_0_FB-0095-05"],
-          "1": ["CR-Franklin_1_FB-0095-04", "CR-Franklin_1_FB-0095-05"]
+          "0": ["CR-Franklin_0_FB-0095-05", "CR-Franklin_0_FB-0095-04"],
+          "1": ["CR-Franklin_1_FB-0095-05", "CR-Franklin_1_FB-0095-04"]
         }
       },
       {
@@ -142,8 +143,12 @@
         "branches": null,
         "order": 14,
         "stops": {
-          "0": ["CR-Franklin_0_NEC-2265-01", "CR-Franklin_0_NEC-2265-03"],
-          "1": ["CR-Franklin_1_NEC-2265-03"]
+          "0": ["CR-Franklin_0_NEC-2265-03", "CR-Franklin_0_NEC-2265-01"],
+          "1": [
+            "CR-Franklin_1_NEC-2265-03",
+            "CR-Franklin_1_NEC-2265-01",
+            "CR-Franklin_1_NEC-2265-02"
+          ]
         }
       },
       {
@@ -153,7 +158,11 @@
         "order": 15,
         "stops": {
           "0": ["CR-Franklin_0_NEC-2276-01", "CR-Franklin_0_NEC-2276-03"],
-          "1": ["CR-Franklin_1_NEC-2276-03"]
+          "1": [
+            "CR-Franklin_1_NEC-2276-02",
+            "CR-Franklin_1_NEC-2276-01",
+            "CR-Franklin_1_NEC-2276-03"
+          ]
         }
       },
       {
@@ -164,14 +173,17 @@
         "stops": {
           "0": [
             "CR-Franklin_0_NEC-2287-03",
+            "CR-Franklin_0_NEC-2287-04",
+            "CR-Franklin_0_NEC-2287-08",
+            "CR-Franklin_0_NEC-2287-07",
+            "CR-Franklin_0_NEC-2287-10",
             "CR-Franklin_0_NEC-2287",
             "CR-Franklin_0_NEC-2287-11",
-            "CR-Franklin_0_NEC-2287-05",
-            "CR-Franklin_0_NEC-2287-07",
-            "CR-Franklin_0_NEC-2287-04"
+            "CR-Franklin_0_NEC-2287-05"
           ],
           "1": []
-        }
+        },
+        "terminus": true
       },
       {
         "stop_name": "Hyde Park",

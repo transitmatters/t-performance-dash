@@ -14,7 +14,8 @@
         "stops": {
           "0": ["CR-Worcester_0_WML-0442-CS"],
           "1": ["CR-Worcester_1_WML-0442-CS"]
-        }
+        },
+        "terminus": true
       },
       {
         "stop_name": "Grafton",
@@ -73,7 +74,7 @@
         "order": 7,
         "stops": {
           "0": ["CR-Worcester_0_WML-0199-02", "CR-Worcester_0_WML-0199-01"],
-          "1": ["CR-Worcester_1_WML-0199-01", "CR-Worcester_1_WML-0199-02"]
+          "1": ["CR-Worcester_1_WML-0199-02", "CR-Worcester_1_WML-0199-01"]
         }
       },
       {
@@ -102,17 +103,51 @@
         "branches": null,
         "order": 10,
         "stops": {
-          "0": ["CR-Worcester_0_WML-0135-01", "CR-Worcester_0_WML-0135-02"],
-          "1": ["CR-Worcester_1_WML-0135-02", "CR-Worcester_1_WML-0135-01"]
+          "0": ["CR-Worcester_0_WML-0135-02", "CR-Worcester_0_WML-0135-01"],
+          "1": ["CR-Worcester_1_WML-0135-01", "CR-Worcester_1_WML-0135-02"]
+        }
+      },
+      {
+        "stop_name": "Riverside",
+        "station": "place-river",
+        "branches": null,
+        "order": 11,
+        "stops": {
+          "0": [
+            "CR-Worcester_0_38155",
+            "CR-Worcester_0_70160",
+            "CR-Worcester_0_70161",
+            "CR-Worcester_0_door-river-estairs",
+            "CR-Worcester_0_door-river-ramp",
+            "CR-Worcester_0_door-river-wstairs",
+            "CR-Worcester_0_node-river-estairs-lobby",
+            "CR-Worcester_0_node-river-farepaid",
+            "CR-Worcester_0_node-river-fareunpaid",
+            "CR-Worcester_0_node-river-ramp-lobby",
+            "CR-Worcester_0_node-river-wstairs-lobby"
+          ],
+          "1": [
+            "CR-Worcester_1_38155",
+            "CR-Worcester_1_70160",
+            "CR-Worcester_1_70161",
+            "CR-Worcester_1_door-river-estairs",
+            "CR-Worcester_1_door-river-ramp",
+            "CR-Worcester_1_door-river-wstairs",
+            "CR-Worcester_1_node-river-estairs-lobby",
+            "CR-Worcester_1_node-river-farepaid",
+            "CR-Worcester_1_node-river-fareunpaid",
+            "CR-Worcester_1_node-river-ramp-lobby",
+            "CR-Worcester_1_node-river-wstairs-lobby"
+          ]
         }
       },
       {
         "stop_name": "Wellesley Farms",
         "station": "place-WML-0125",
         "branches": null,
-        "order": 11,
+        "order": 12,
         "stops": {
-          "0": ["CR-Worcester_0_WML-0125-01", "CR-Worcester_0_WML-0125-02"],
+          "0": ["CR-Worcester_0_WML-0125-02", "CR-Worcester_0_WML-0125-01"],
           "1": ["CR-Worcester_1_WML-0125-01", "CR-Worcester_1_WML-0125-02"]
         }
       },
@@ -120,7 +155,7 @@
         "stop_name": "Auburndale",
         "station": "place-WML-0102",
         "branches": null,
-        "order": 12,
+        "order": 13,
         "stops": {
           "0": ["CR-Worcester_0_WML-0102-02"],
           "1": ["CR-Worcester_1_WML-0102-02"]
@@ -130,7 +165,7 @@
         "stop_name": "West Newton",
         "station": "place-WML-0091",
         "branches": null,
-        "order": 13,
+        "order": 14,
         "stops": {
           "0": ["CR-Worcester_0_WML-0091-02"],
           "1": ["CR-Worcester_1_WML-0091-02"]
@@ -140,7 +175,7 @@
         "stop_name": "Newtonville",
         "station": "place-WML-0081",
         "branches": null,
-        "order": 14,
+        "order": 15,
         "stops": {
           "0": ["CR-Worcester_0_WML-0081-02"],
           "1": ["CR-Worcester_1_WML-0081-02"]
@@ -150,17 +185,17 @@
         "stop_name": "Boston Landing",
         "station": "place-WML-0035",
         "branches": null,
-        "order": 15,
+        "order": 16,
         "stops": {
-          "0": ["CR-Worcester_0_WML-0035-02", "CR-Worcester_0_WML-0035-01"],
-          "1": ["CR-Worcester_1_WML-0035-01", "CR-Worcester_1_WML-0035-02"]
+          "0": ["CR-Worcester_0_WML-0035-01", "CR-Worcester_0_WML-0035-02"],
+          "1": ["CR-Worcester_1_WML-0035-02", "CR-Worcester_1_WML-0035-01"]
         }
       },
       {
         "stop_name": "Lansdowne",
         "station": "place-WML-0025",
         "branches": null,
-        "order": 16,
+        "order": 17,
         "stops": {
           "0": ["CR-Worcester_0_WML-0025-07"],
           "1": ["CR-Worcester_1_WML-0025-05"]
@@ -170,26 +205,30 @@
         "stop_name": "Back Bay",
         "station": "place-bbsta",
         "branches": null,
-        "order": 17,
+        "order": 18,
         "stops": {
           "0": ["CR-Worcester_0_WML-0012-07"],
-          "1": ["CR-Worcester_1_WML-0012-05"]
+          "1": ["CR-Worcester_1_WML-0012-07", "CR-Worcester_1_WML-0012-05"]
         }
       },
       {
         "stop_name": "South Station",
         "station": "place-sstat",
         "branches": null,
-        "order": 18,
+        "order": 19,
         "stops": {
           "0": [
+            "CR-Worcester_0_NEC-2287-03",
+            "CR-Worcester_0_NEC-2287-04",
+            "CR-Worcester_0_NEC-2287-05",
             "CR-Worcester_0_NEC-2287",
-            "CR-Worcester_0_NEC-2287-01",
             "CR-Worcester_0_NEC-2287-02",
-            "CR-Worcester_0_NEC-2287-04"
+            "CR-Worcester_0_NEC-2287-10",
+            "CR-Worcester_0_NEC-2287-01"
           ],
           "1": []
-        }
+        },
+        "terminus": true
       }
     ]
   }

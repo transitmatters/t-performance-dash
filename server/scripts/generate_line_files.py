@@ -105,15 +105,17 @@ for LINE_KEY in ROUTES_CR:
 
     for index, stop in enumerate(stops["data"]):
         try:
-            stops_formatted.append(
-                {
-                    "stop_name": stop["attributes"]["name"],
-                    "station": stop["id"],
-                    "branches": None,
-                    "order": index + 1,
-                    "stops": stop_layout[stop["id"]],
-                }
-            )
+            station_json = {
+                "stop_name": stop["attributes"]["name"],
+                "station": stop["id"],
+                "branches": None,
+                "order": index + 1,
+                "stops": stop_layout[stop["id"]],
+            }
+            if index == 0 or index == len(stops["data"]) - 1:
+                station_json["terminus"] = True
+
+            stops_formatted.append(station_json)
         except KeyError:
             c_f = requests.get(
                 "https://api-v3.mbta.com/stops/{}?include=child_stops&api_key={}".format(stop["id"], MBTA_V3_API_KEY)

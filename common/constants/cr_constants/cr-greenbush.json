@@ -14,7 +14,8 @@
         "stops": {
           "0": [],
           "1": ["CR-Greenbush_1_GRB-0276-S"]
-        }
+        },
+        "terminus": true
       },
       {
         "stop_name": "North Scituate",
@@ -109,7 +110,8 @@
             "CR-Greenbush_0_NEC-2287-11"
           ],
           "1": []
-        }
+        },
+        "terminus": true
       }
     ]
   }

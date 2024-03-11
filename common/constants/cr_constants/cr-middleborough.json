@@ -14,7 +14,8 @@
         "stops": {
           "0": [],
           "1": ["CR-Middleborough_1_MM-0356-S"]
-        }
+        },
+        "terminus": true
       },
       {
         "stop_name": "Bridgewater",
@@ -109,7 +110,8 @@
             "CR-Middleborough_0_NEC-2287-12"
           ],
           "1": []
-        }
+        },
+        "terminus": true
       }
     ]
   }

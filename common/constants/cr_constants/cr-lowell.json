@@ -14,7 +14,8 @@
         "stops": {
           "0": [],
           "1": ["CR-Lowell_1_NHRML-0254-04"]
-        }
+        },
+        "terminus": true
       },
       {
         "stop_name": "North Billerica",
@@ -73,19 +74,20 @@
         "order": 7,
         "stops": {
           "0": [
-            "CR-Lowell_0_BNT-0000-02",
-            "CR-Lowell_0_BNT-0000-09",
-            "CR-Lowell_0_BNT-0000-06",
-            "CR-Lowell_0_BNT-0000-07",
-            "CR-Lowell_0_BNT-0000-04",
             "CR-Lowell_0_BNT-0000-08",
-            "CR-Lowell_0_BNT-0000",
+            "CR-Lowell_0_BNT-0000-06",
+            "CR-Lowell_0_BNT-0000-04",
+            "CR-Lowell_0_BNT-0000-07",
+            "CR-Lowell_0_BNT-0000-02",
             "CR-Lowell_0_BNT-0000-10",
+            "CR-Lowell_0_BNT-0000",
+            "CR-Lowell_0_BNT-0000-03",
             "CR-Lowell_0_BNT-0000-05",
-            "CR-Lowell_0_BNT-0000-03"
+            "CR-Lowell_0_BNT-0000-09"
           ],
           "1": []
-        }
+        },
+        "terminus": true
       }
     ]
   }

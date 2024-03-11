@@ -14,7 +14,8 @@
         "stops": {
           "0": [],
           "1": ["CR-Fairmount_1_FB-0095-04"]
-        }
+        },
+        "terminus": true
       },
       {
         "stop_name": "Fairmount",
@@ -93,14 +94,15 @@
         "order": 9,
         "stops": {
           "0": [
+            "CR-Fairmount_0_NEC-2287-09",
             "CR-Fairmount_0_NEC-2287-11",
             "CR-Fairmount_0_NEC-2287-10",
-            "CR-Fairmount_0_NEC-2287",
-            "CR-Fairmount_0_NEC-2287-09",
-            "CR-Fairmount_0_NEC-2287-07"
+            "CR-Fairmount_0_NEC-2287-07",
+            "CR-Fairmount_0_NEC-2287"
           ],
           "1": []
-        }
+        },
+        "terminus": true
       }
     ]
   }
