@@ -6,11 +6,12 @@ import { TODAY_STRING } from '../../constants/dates';
 
 export const SameDayNotice: React.FC = () => {
   const {
+    line,
     query: { date, endDate },
   } = useDelimitatedRoute();
   const isToday = date === TODAY_STRING || endDate === TODAY_STRING;
 
-  if (isToday) {
+  if (isToday && line !== 'line-commuter-rail') {
     return (
       <div className={'flex items-center'}>
         <FontAwesomeIcon icon={faCalendarDay} size={'lg'} />

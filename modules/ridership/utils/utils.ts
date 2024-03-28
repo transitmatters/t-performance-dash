@@ -1,6 +1,6 @@
 import type { RidershipCount } from '../../../common/types/dataPoints';
 import { PEAK_RIDERSHIP } from '../../../common/constants/baselines';
-import type { BusRoute, Line } from '../../../common/types/lines';
+import { type BusRoute, type Line } from '../../../common/types/lines';
 
 export const getRidershipWidgetValues = (
   ridership: RidershipCount[],

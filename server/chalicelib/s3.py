@@ -33,9 +33,15 @@ def is_bus(stop_id: str):
     return ("-0-" in stop_id) or ("-1-" in stop_id)
 
 
+def is_cr(stop_id: str):
+    return stop_id.startswith("CR-")
+
+
 def get_live_folder(stop_id: str):
     if is_bus(stop_id):
         return "daily-bus-data"
+    elif is_cr(stop_id):
+        return "daily-cr-data"
     else:
         return "daily-rapid-data"
 
@@ -59,7 +65,7 @@ def download_one_event_file(date, stop_id: str, use_live_data=False):
         if ex.response["Error"]["Code"] == "NoSuchKey":
             # raise Exception(f"Data not available on S3 for key {key} ") from None
             print(f"WARNING: No data available on S3 for key: {key}")
-            if not use_live_data and is_bus(stop_id):
+            if not use_live_data:
                 return download_one_event_file(date, stop_id, use_live_data=True)
             return []
         else:
@@ -78,6 +84,8 @@ def download_one_event_file(date, stop_id: str, use_live_data=False):
 @parallel.make_parallel
 def parallel_download_events(datestop):
     (date, stop) = datestop
+    if is_cr(stop):
+        return download_one_event_file(date, stop, use_live_data=True)
     return download_one_event_file(date, stop)
 
 

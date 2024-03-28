@@ -8,7 +8,7 @@ import type {
   DateSelectionDefaultOptions,
   SingleDateParams,
 } from '../components/inputs/DateSelection/types/DateSelectionTypes';
-import type { Tab } from './dashboardTabs';
+import type { Tab } from '../types/router';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -40,6 +40,7 @@ export const BUS_MAX_DAY = dayjs(BUS_MAX_DATE);
 export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
   .subtract(7, 'days')
   .format(DATE_FORMAT);
+export const COMMUTER_RAIL_MIN_DATE = '2023-12-22';
 
 export const getESTDayjs = (date: string) => {
   return dayjs(date).tz(est);
@@ -59,7 +60,7 @@ export const FLAT_PICKER_OPTIONS: {
   Bus: {
     enableTime: false,
     minDate: BUS_MIN_DATE,
-    maxDate: BUS_MAX_DATE,
+    maxDate: TODAY_STRING,
     altInput: true,
     altFormat: 'M j, Y',
     dateFormat: 'Y-m-d',
@@ -67,6 +68,14 @@ export const FLAT_PICKER_OPTIONS: {
   System: {
     enableTime: false,
     minDate: TRAIN_MIN_DATE,
+    maxDate: TODAY_STRING,
+    altInput: true,
+    altFormat: 'M j, Y',
+    dateFormat: 'Y-m-d',
+  },
+  'Commuter Rail': {
+    enableTime: false,
+    minDate: COMMUTER_RAIL_MIN_DATE,
     maxDate: TODAY_STRING,
     altInput: true,
     altFormat: 'M j, Y',
@@ -141,8 +150,9 @@ export const SINGLE_PRESETS: {
   [key in Tab]: { [key in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams> };
 } = {
   Subway: SINGLE_RAPID_PRESETS,
-  Bus: SINGLE_BUS_PRESETS,
+  Bus: SINGLE_RAPID_PRESETS,
   System: SINGLE_RAPID_PRESETS,
+  'Commuter Rail': SINGLE_RAPID_PRESETS,
 };
 
 const RANGE_RAPID_PRESETS: {
@@ -265,6 +275,7 @@ export const RANGE_PRESETS: {
   Subway: RANGE_RAPID_PRESETS,
   Bus: RANGE_BUS_PRESETS,
   System: RANGE_RAPID_PRESETS,
+  'Commuter Rail': RANGE_RAPID_PRESETS,
 };
 
 export type DatePresetKey =
