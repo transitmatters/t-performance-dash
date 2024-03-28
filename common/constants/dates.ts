@@ -59,7 +59,7 @@ export const FLAT_PICKER_OPTIONS: {
   Bus: {
     enableTime: false,
     minDate: BUS_MIN_DATE,
-    maxDate: BUS_MAX_DATE,
+    maxDate: TODAY_STRING,
     altInput: true,
     altFormat: 'M j, Y',
     dateFormat: 'Y-m-d',
@@ -141,7 +141,7 @@ export const SINGLE_PRESETS: {
   [key in Tab]: { [key in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams> };
 } = {
   Subway: SINGLE_RAPID_PRESETS,
-  Bus: SINGLE_BUS_PRESETS,
+  Bus: SINGLE_RAPID_PRESETS,
   System: SINGLE_RAPID_PRESETS,
 };
 
@@ -263,7 +263,7 @@ export const RANGE_PRESETS: {
   [key in Tab]: { [key in DatePresetKey]?: DateSelectionDefaultOptions<DateParams> };
 } = {
   Subway: RANGE_RAPID_PRESETS,
-  Bus: RANGE_BUS_PRESETS,
+  Bus: RANGE_RAPID_PRESETS,
   System: RANGE_RAPID_PRESETS,
 };
 

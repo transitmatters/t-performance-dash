@@ -78,6 +78,7 @@ def download_one_event_file(date, stop_id: str, use_live_data=False):
 @parallel.make_parallel
 def parallel_download_events(datestop):
     (date, stop) = datestop
+    # TODO: Force gobble when date is past the max monthly data date
     return download_one_event_file(date, stop)
 
 
