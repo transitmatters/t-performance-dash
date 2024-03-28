@@ -14,7 +14,7 @@ wget -N -O data/input/gtfs.zip https://cdn.mbta.com/MBTA_GTFS.zip
 unzip -o -d data/input/MBTA_GTFS/ data/input/gtfs.zip 
 
 cd data/input
-for i in `seq 2023 2024`; do
+for i in `seq 2018 2024`; do
   unzip -o -d $i $i.zip
 done
 
