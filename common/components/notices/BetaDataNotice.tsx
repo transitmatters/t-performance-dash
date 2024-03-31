@@ -40,14 +40,14 @@ export const BetaDataNotice: React.FC = () => {
                   target="_blank"
                   className={classNames(lineColorTextHover[line ?? 'DEFAULT'])}
                 >
-                  MBTA's streaming API
+                  MBTA's V3 API
                 </Link>
                 . Unlike other data sources we show, this data is not cleaned or filtered in any way
-                before display. Innacuracies may be present.
+                before display. Please expect reduced accuracy.
               </p>
               <p>
-                Official MBTA data will be shown when available. Technical details of our data
-                collection can be found{' '}
+                We favor official performance data from the MBTA when it's available. Technical
+                details of our data collection can be found{' '}
                 <Link
                   href="https://github.com/transitmatters/gobble"
                   rel="noopener noreferrer"
