@@ -2,8 +2,6 @@ import type { Tab } from '../../constants/dashboardTabs';
 import type { DateStoreSection } from '../../constants/pages';
 import type { DateStoreConfiguration } from '../types/dateStoreTypes';
 import {
-  BUS_MAX_DATE,
-  BUS_MAX_DATE_MINUS_ONE_WEEK,
   ONE_WEEK_AGO_STRING,
   OVERVIEW_OPTIONS,
   TODAY_STRING,
@@ -28,11 +26,11 @@ export const BUS_DEFAULTS: WithOptional<DateStoreConfiguration, 'systemConfig' |
   {
     lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
     multiTripConfig: {
-      startDate: BUS_MAX_DATE_MINUS_ONE_WEEK,
-      endDate: BUS_MAX_DATE,
+      startDate: ONE_WEEK_AGO_STRING,
+      endDate: TODAY_STRING,
     },
     singleTripConfig: {
-      date: BUS_MAX_DATE,
+      date: TODAY_SERVICE_STARTED ? TODAY_STRING : YESTERDAY_STRING,
     },
   };
 
