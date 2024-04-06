@@ -21,7 +21,7 @@ export const Alerts: React.FC<AlertsProps> = ({ title, alerts }) => {
   } = useDelimitatedRoute();
 
   const divStyle = classNames(
-    'flex flex-col rounded-md py-4 text-white shadow-dataBox w-full gap-y-2 md:max-h-[309px] md:overflow-y-auto',
+    'flex flex-col rounded-md py-3 sm:py-4 text-white shadow-dataBox w-full gap-y-2 md:max-h-[309px] md:overflow-y-auto',
     lineColorBackground[line ?? 'DEFAULT']
   );
 
