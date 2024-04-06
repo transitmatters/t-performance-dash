@@ -20,12 +20,19 @@ import { LegendSingleDay } from './Legend';
 import { ChartDiv } from './ChartDiv';
 import { ChartBorder } from './ChartBorder';
 
-const pointColors = (data: DataPoint[], metric_field: string, benchmark_field?: string) => {
+const pointColors = (
+  data: DataPoint[],
+  metric_field: string,
+  benchmark_field?: string,
+  showUnderRatio?: boolean
+) => {
   return data.map((point: DataPoint) => {
     if (benchmark_field) {
       const ratio = point[metric_field] / point[benchmark_field];
       if (point[benchmark_field] === null) {
         return CHART_COLORS.GREY; //grey
+      } else if (ratio <= 0.5 && showUnderRatio) {
+        return CHART_COLORS.BLUE; //blue
       } else if (ratio <= 1.25) {
         return CHART_COLORS.GREEN; //green
       } else if (ratio <= 1.5) {
@@ -41,9 +48,11 @@ const pointColors = (data: DataPoint[], metric_field: string, benchmark_field?: 
   });
 };
 
-const departureFromNormalString = (metric: number, benchmark: number) => {
+const departureFromNormalString = (metric: number, benchmark: number, showUnderRatio?: boolean) => {
   const ratio = metric / benchmark;
-  if (!isFinite(ratio) || ratio <= 1.25) {
+  if (showUnderRatio && ratio <= 0.5) {
+    return '50%+ under schedule';
+  } else if (!isFinite(ratio) || ratio <= 1.25) {
     return '';
   } else if (ratio <= 1.5) {
     return '25%+ over schedule';
@@ -67,6 +76,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   location,
   units,
   showLegend = true,
+  showUnderRatio = false,
 }) => {
   const ref = useRef();
   const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);
@@ -104,9 +114,19 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 label: `Actual`,
                 fill: false,
                 borderColor: '#a0a0a030',
-                pointBackgroundColor: pointColors(data, metricField, benchmarkField),
+                pointBackgroundColor: pointColors(
+                  data,
+                  metricField,
+                  benchmarkField,
+                  showUnderRatio
+                ),
                 pointHoverRadius: 3,
-                pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField),
+                pointHoverBackgroundColor: pointColors(
+                  data,
+                  metricField,
+                  benchmarkField,
+                  showUnderRatio
+                ),
                 pointRadius: 3,
                 pointHitRadius: 10,
                 data: convertedData,
@@ -148,7 +168,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   afterBody: (tooltipItems) => {
                     return departureFromNormalString(
                       tooltipItems[0].parsed.y,
-                      tooltipItems[1]?.parsed.y
+                      tooltipItems[1]?.parsed.y,
+                      showUnderRatio
                     );
                   },
                 },
@@ -223,7 +244,11 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
       <div className="flex flex-col">
         {alerts && <AlertsDisclaimer alerts={alerts} />}
         <div className="flex flex-row items-end gap-4 ">
-          {showLegend && benchmarkField ? <LegendSingleDay /> : <div className="w-full" />}
+          {showLegend && benchmarkField ? (
+            <LegendSingleDay showUnderRatio={showUnderRatio} />
+          ) : (
+            <div className="w-full" />
+          )}
           {date && (
             <DownloadButton
               data={data}
