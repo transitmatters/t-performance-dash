@@ -4,15 +4,17 @@ import { ONE_HOUR } from '../../constants/time';
 import type { FetchSpeedRestrictionsOptions } from '../../types/api';
 
 export const useSlowzoneAllData = () => {
-  return useQuery(['allSlow'], fetchAllSlow, { staleTime: ONE_HOUR });
+  return useQuery({ queryKey: ['allSlow'], queryFn: fetchAllSlow, staleTime: ONE_HOUR });
 };
 
 export const useSlowzoneDelayTotalData = () => {
-  return useQuery(['delayTotals'], fetchDelayTotals, { staleTime: ONE_HOUR });
+  return useQuery({ queryKey: ['delayTotals'], queryFn: fetchDelayTotals, staleTime: ONE_HOUR });
 };
 
 export const useSpeedRestrictionData = (options: FetchSpeedRestrictionsOptions) => {
-  return useQuery(['speedRestrictions', options], () => fetchSpeedRestrictions(options), {
+  return useQuery({
+    queryKey: ['speedRestrictions', options],
+    queryFn: () => fetchSpeedRestrictions(options),
     enabled: options.date !== undefined,
     staleTime: ONE_HOUR,
   });

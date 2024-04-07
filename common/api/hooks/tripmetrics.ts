@@ -7,12 +7,14 @@ export const useDeliveredTripMetrics = (
   options: FetchDeliveredTripMetricsOptions,
   enabled?: boolean
 ) => {
-  return useQuery(['actualTrips', options], () => fetchActualTripsByLine(options), {
+  return useQuery({
+    queryKey: ['actualTrips', options],
+    queryFn: () => fetchActualTripsByLine(options),
     enabled: enabled,
     staleTime: FIVE_MINUTES,
   });
 };
 
 export const useTripMetricsForLanding = () => {
-  return useQuery(['landingTrips'], () => fetchLandingTripMetrics());
+  return useQuery({ queryKey: ['landingTrips'], queryFn: () => fetchLandingTripMetrics() });
 };
