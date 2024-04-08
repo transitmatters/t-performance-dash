@@ -1,5 +1,6 @@
 import json
 import datetime
+from typing_extensions import deprecated
 import pytz
 import requests
 from urllib.parse import urlencode
@@ -100,6 +101,7 @@ _multithreaded_api = make_parallel(_get_api_data)
 
 
 # we offer this convenient wrapper, that also dispatches to multi-threaded if needed
+@deprecated("Usage of the performance API is deprecated")
 def get_api_data(module, params, start_day, end_day=None):
     if end_day is None:
         return _get_api_data((start_day, None), module, params)
