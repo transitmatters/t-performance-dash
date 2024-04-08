@@ -30,7 +30,7 @@ if TM_FRONTEND_HOST != localhost:
     app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
 
 
-def parse_user_date(user_date):
+def parse_user_date(user_date: str):
     date_split = user_date.split("-")
     [year, month, day] = [int(x) for x in date_split[0:3]]
     return date(year=year, month=month, day=day)

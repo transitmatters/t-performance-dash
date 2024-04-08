@@ -11,6 +11,13 @@ EASTERN_TIME = ZoneInfo("US/Eastern")
 MAX_MONTH_DATA_DATE = "2024-02-29"
 
 
+def get_max_monthly_data_date():
+    """
+    Returns the most recent date for which we have monthly data
+    """
+    return datetime.strptime(MAX_MONTH_DATA_DATE, "%Y-%m-%d").date()
+
+
 def parse_event_date(date_str: str):
     if len(date_str) == 19:
         return datetime.strptime(date_str, DATE_FORMAT_MASSDOT).replace(tzinfo=EASTERN_TIME)
