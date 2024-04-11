@@ -125,7 +125,7 @@ def alerts(day: date, params):
                             {
                                 "valid_from": alert_version["start"],
                                 "valid_to": alert_version["end"],
-                                "text": alert_item["attributes"]["short_header"],
+                                "text": alert_item["attributes"]["short_header"] or alert_item["attributes"]["header"],
                             }
                         )
                 except KeyError as e:
