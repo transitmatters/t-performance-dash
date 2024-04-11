@@ -1,6 +1,6 @@
 from datetime import date
 import json
-from chalicelib import MbtaPerformanceAPI, s3
+from chalicelib import s3
 
 
 def routes_for_alert(alert):
@@ -52,9 +52,3 @@ def get_v3_alerts(day: date, routes: list[str]):
         return any(r in targets for r in routes)
 
     return list(filter(matches_route, alerts.values()))
-
-
-def store_alerts(day):
-    api_data = MbtaPerformanceAPI.get_api_data("pastalerts", {}, day)
-    alerts = json.dumps(api_data).encode("utf8")
-    s3.upload(key(day), alerts, True)

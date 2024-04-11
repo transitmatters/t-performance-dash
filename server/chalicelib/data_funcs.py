@@ -94,17 +94,12 @@ def alerts(day: date, params):
         # Use the API for today and yesterday's transit day, otherwise us.
         if day >= WE_HAVE_V2_ALERTS_SINCE and day <= WE_HAVE_V3_ALERTS_SINCE:
             # This is stupid because we're emulating MBTA-performance ick
-            api_data = [{"past_alerts": s3_alerts.get_v2_alerts(day, params["route"])}]
+            alert_items = s3_alerts.get_v2_alerts(day, params["route"])
         elif day >= WE_HAVE_V3_ALERTS_SINCE:
             # fetch s3 v3 data
-            api_data = [{"past_alerts": s3_alerts.get_v3_alerts(day, params["route"])}]
+            alert_items = s3_alerts.get_v3_alerts(day, params["route"])
         else:
             return None
-
-        # combine all alerts data
-        alert_items = []
-        for dict_data in api_data:
-            alert_items = alert_items + dict_data.get("past_alerts", [])
 
         # get data
         flat_alerts = []

@@ -2,12 +2,11 @@ import json
 import os
 import subprocess
 from chalice import Chalice, CORSConfig, ConflictError, Response, ConvertToMiddleware
-from datetime import date, timedelta
+from datetime import date
 from datadog_lambda.wrapper import datadog_lambda_wrapper
 from chalicelib import (
     aggregation,
     data_funcs,
-    MbtaPerformanceAPI,
     secrets,
     mbta_v3,
     speed,
@@ -51,14 +50,6 @@ def healthcheck():
         "S3 Headway Fetching": (
             lambda: "2020-11-07T10:33:40"
             in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))
-        ),
-        "Performance API Check": (
-            lambda: MbtaPerformanceAPI.get_api_data(
-                "headways",
-                {"stop": [70067]},
-                date.today() - timedelta(days=1),
-                date.today(),
-            )
         ),
     }
 
