@@ -116,7 +116,9 @@ def alerts(day: date, params):
                         )
                 except KeyError as e:
                     print(f"Handled KeyError: Couldn't access {e} from alert {alert_item}")
-            elif "attributes" in alert_item and "DELAY" in alert_item["attributes"]["effect"]:
+            elif "attributes" in alert_item and any(
+                alert_item["attributes"]["effect"] == x for x in ["DETOUR", "DELAY", "STOP_CLOSURE", "SERVICE_CHANGE"]
+            ):
                 try:
                     for alert_version in alert_item["attributes"]["active_period"]:
                         flat_alerts.append(
