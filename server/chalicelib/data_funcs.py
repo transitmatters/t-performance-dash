@@ -3,10 +3,11 @@ import pytz
 import traceback
 from datetime import date, timedelta
 from typing import Dict, Any, Callable, List, Union
-from chalicelib import MbtaPerformanceAPI, s3_historical, s3_alerts, s3
+from chalicelib import s3_historical, s3_alerts, s3
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
-WE_HAVE_ALERTS_SINCE = datetime.date(2017, 11, 6)
+WE_HAVE_V2_ALERTS_SINCE = datetime.date(2017, 11, 6)
+WE_HAVE_V3_ALERTS_SINCE = datetime.date(2024, 4, 9)
 
 
 def bucket_by(
@@ -88,21 +89,15 @@ def dwells(start_date, stops, end_date: date | None = None):
     return s3_historical.dwells(stops, start_date, end_date)
 
 
-def alerts(day, params):
+def alerts(day: date, params):
     try:
-        # Grab the current "transit day" (3:30am-3:30am)
-        today = current_transit_day()
-        # yesterday + 1 bonus day to cover the gap, since aws is only populated at 5/6am.
-        yesterday = today - datetime.timedelta(days=2)
-
-        # TODO: Handle either format (v2 or v3) of alerts
         # Use the API for today and yesterday's transit day, otherwise us.
-        if day >= yesterday:
-            # TODO: Replace v2 calls with v3
-            api_data = MbtaPerformanceAPI.get_api_data("pastalerts", params, day)
-        elif day >= WE_HAVE_ALERTS_SINCE:
+        if day >= WE_HAVE_V2_ALERTS_SINCE and day <= WE_HAVE_V3_ALERTS_SINCE:
             # This is stupid because we're emulating MBTA-performance ick
-            api_data = [{"past_alerts": s3_alerts.get_alerts(day, params["route"])}]
+            api_data = [{"past_alerts": s3_alerts.get_v2_alerts(day, params["route"])}]
+        elif day >= WE_HAVE_V3_ALERTS_SINCE:
+            # fetch s3 v3 data
+            api_data = [{"past_alerts": s3_alerts.get_v3_alerts(day, params["route"])}]
         else:
             return None
 
@@ -114,14 +109,30 @@ def alerts(day, params):
         # get data
         flat_alerts = []
         for alert_item in alert_items:
-            for alert_version in alert_item["alert_versions"]:
-                flat_alerts.append(
-                    {
-                        "valid_from": stamp_to_dt(int(alert_version["valid_from"])),
-                        "valid_to": stamp_to_dt(int(alert_version["valid_to"])),
-                        "text": alert_version["header_text"],
-                    }
-                )
+            if "alert_versions" in alert_item:
+                try:
+                    for alert_version in alert_item["alert_versions"]:
+                        flat_alerts.append(
+                            {
+                                "valid_from": stamp_to_dt(int(alert_version["valid_from"])),
+                                "valid_to": stamp_to_dt(int(alert_version["valid_to"])),
+                                "text": alert_version["header_text"],
+                            }
+                        )
+                except KeyError as e:
+                    print(f"Handled KeyError: Couldn't access {e} from alert {alert_item}")
+            elif "attributes" in alert_item and "DELAY" in alert_item["attributes"]["effect"]:
+                try:
+                    for alert_version in alert_item["attributes"]["active_period"]:
+                        flat_alerts.append(
+                            {
+                                "valid_from": alert_version["start"],
+                                "valid_to": alert_version["end"],
+                                "text": alert_item["attributes"]["short_header"],
+                            }
+                        )
+                except KeyError as e:
+                    print(f"Handled KeyError: Couldn't access {e} from alert {alert_item}")
         return flat_alerts
     except Exception:
         traceback.print_exc()

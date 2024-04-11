@@ -1,7 +1,7 @@
 import datetime
 
 from chalicelib.parallel import date_range
-from chalicelib.s3_alerts import store_alerts, get_alerts
+from chalicelib.s3_alerts import store_alerts, get_v2_alerts
 
 import sys
 
@@ -16,7 +16,7 @@ END = datetime.datetime.strptime(end_str, "%Y-%m-%d").date()
 
 def do_alerts_exist(d):
     try:
-        get_alerts(d, ["Red"])
+        get_v2_alerts(d, ["Red"])
     except Exception as err:
         if err.response["Error"]["Code"] == "NoSuchKey":
             return False
