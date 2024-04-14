@@ -43,7 +43,7 @@ export const Alerts: React.FC<AlertsProps> = ({ title, alerts }) => {
           <Divider title="Today" line={line} />
 
           <AlertBox
-            alerts={alerts.data}
+            alerts={alerts.data || []}
             lineShort={lineShort}
             busRoute={busRoute}
             type={'current'}
@@ -53,7 +53,7 @@ export const Alerts: React.FC<AlertsProps> = ({ title, alerts }) => {
           <Divider title="Upcoming" line={line} />
 
           <AlertBox
-            alerts={alerts.data}
+            alerts={alerts.data || []}
             lineShort={lineShort}
             busRoute={busRoute}
             type={'upcoming'}

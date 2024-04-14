@@ -5,7 +5,7 @@ import { OverallServiceChart } from './OverallServiceChart';
 
 export const OverallServiceChartWrapper: React.FC = () => {
   const serviceData = useTripMetricsForLanding();
-  const serviceDataReady = !serviceData.isLoading && !serviceData.isError;
+  const serviceDataReady = !serviceData.isLoading && !serviceData.isError && serviceData.data;
   if (!serviceDataReady) return <ChartPlaceHolder query={serviceData} />;
 
   return <OverallServiceChart serviceData={serviceData.data} />;
