@@ -21,6 +21,7 @@ const nextConfig = {
   async rewrites() {
     return rewrites;
   },
+  output: 'export',
   trailingSlash: true,
   reactStrictMode: true,
   transpilePackages: ['next-goatcounter'],
