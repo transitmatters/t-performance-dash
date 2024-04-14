@@ -10,27 +10,29 @@ export const useHistoricalAlertsData = (
   line: LineShort,
   busRoute?: string
 ) => {
-  return useQuery(
-    ['alerts', date, line, busRoute],
-    () => fetchHistoricalAlerts(date, line, busRoute),
-    {
-      staleTime: FIVE_MINUTES,
-      enabled: date !== undefined,
-    }
-  );
+  return useQuery({
+    queryKey: ['alerts', date, line, busRoute],
+    queryFn: () => fetchHistoricalAlerts(date, line, busRoute),
+    staleTime: FIVE_MINUTES,
+    enabled: date !== undefined,
+  });
 };
 
 export const useAlertsData = (
   line: LineShort,
   busRoute?: string
 ): UseQueryResult<AlertsResponse[]> => {
-  return useQuery(['alerts', line, busRoute], () => fetchAlerts(line, busRoute), {
+  return useQuery({
+    queryKey: ['alerts', line, busRoute],
+    queryFn: () => fetchAlerts(line, busRoute),
     staleTime: ONE_MINUTE,
   });
 };
 
 export const useAccessibilityAlertsData = (line: LineShort) => {
-  return useQuery(['accessibilityAlerts', line], () => fetchAccessibilityAlertsForLine(line), {
+  return useQuery({
+    queryKey: ['accessibilityAlerts', line],
+    queryFn: () => fetchAccessibilityAlertsForLine(line),
     staleTime: ONE_MINUTE,
   });
 };

@@ -5,7 +5,7 @@ import { OverallSpeedChart } from './OverallSpeedChart';
 
 export const OverallSpeedChartWrapper: React.FC = () => {
   const speedData = useTripMetricsForLanding();
-  const speedDataReady = !speedData.isLoading && !speedData.isError;
+  const speedDataReady = !speedData.isLoading && !speedData.isError && speedData.data;
   if (!speedDataReady) return <ChartPlaceHolder query={speedData} />;
 
   return <OverallSpeedChart speedData={speedData.data} />;
