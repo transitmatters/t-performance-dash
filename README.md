@@ -12,7 +12,7 @@ This is the repository for the TransitMatters Data Dashboard. Client code is wri
 - node 20.x and npm 9.x+ required
   - With `nvm` installed, use `nvm install && nvm use`
   - verify with `node -v`
-- Python 3.11 with recent poetry (1.6.0 or later)
+- Python 3.12 with recent poetry (1.7.0 or later)
   - Verify with `python --version && poetry --version`
   - `poetry self update` to update poetry
 

@@ -23,8 +23,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
     <div className="flex flex-1 flex-col pb-24 md:pb-0 md:pl-64">
       <main className="flex-1">
         {isMobile ? <MobileHeader /> : <DesktopHeader />}
-        <div className="py-2 md:py-6">
-          <div className="h-full px-4 sm:px-6 md:px-8">
+        <div className="py-2 md:py-4">
+          <div className="h-full px-2 sm:px-4 md:px-6">
             <WidgetPage>{children}</WidgetPage>
           </div>
         </div>
