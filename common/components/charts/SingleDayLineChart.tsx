@@ -30,17 +30,22 @@ const pointColors = (
     if (benchmark_field) {
       const ratio = point[metric_field] / point[benchmark_field];
       if (point[benchmark_field] === null) {
-        return CHART_COLORS.GREY; //grey
+        return CHART_COLORS.GREY;
+      } else if (ratio <= 0.05 && showUnderRatio) {
+        // Not actually 100% off, but we want to show it as an extreme
+        return CHART_COLORS.PURPLE;
       } else if (ratio <= 0.5 && showUnderRatio) {
-        return CHART_COLORS.BLUE; //blue
+        return CHART_COLORS.RED;
+      } else if (ratio <= 0.75 && showUnderRatio) {
+        return CHART_COLORS.YELLOW;
       } else if (ratio <= 1.25) {
-        return CHART_COLORS.GREEN; //green
+        return CHART_COLORS.GREEN;
       } else if (ratio <= 1.5) {
-        return CHART_COLORS.YELLOW; //yellow
+        return CHART_COLORS.YELLOW;
       } else if (ratio <= 2.0) {
-        return CHART_COLORS.RED; //red
+        return CHART_COLORS.RED;
       } else if (ratio > 2.0) {
-        return CHART_COLORS.PURPLE; //purple
+        return CHART_COLORS.PURPLE;
       }
     }
 
@@ -52,6 +57,8 @@ const departureFromNormalString = (metric: number, benchmark: number, showUnderR
   const ratio = metric / benchmark;
   if (showUnderRatio && ratio <= 0.5) {
     return '50%+ under schedule';
+  } else if (showUnderRatio && ratio <= 0.75) {
+    return '25%+ under schedule';
   } else if (!isFinite(ratio) || ratio <= 1.25) {
     return '';
   } else if (ratio <= 1.5) {

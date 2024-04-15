@@ -41,31 +41,25 @@ const LegendSingle: React.FC<LegendProps> = ({ showUnderRatio = false }) => {
           MBTA benchmark:
         </p>
       </div>
-      {showUnderRatio && (
-        <p>
-          <span className="mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#0066ff] bg-[#0096FF]"></span>
-          {'50%+ early'}
-        </p>
-      )}
       <p>
         <span className="mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#57945B] bg-[#64b96a]"></span>
         {'On time'}
       </p>
       <p>
         <span className="mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#D9D31E] bg-[#f5ed00]"></span>
-        {'25%+ above'}
+        {'25%+ off'}
       </p>
       <p>
         <span
           className={`mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#A1384A] bg-[#c33149]`}
         ></span>{' '}
-        {'50%+ above'}
+        {'50%+ off'}
       </p>
       <p>
         <span
           className={`mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#925396] bg-[#bb5cc1]`}
         ></span>{' '}
-        {'100%+ above'}
+        {'100%+ off'}
       </p>
     </>
   );
