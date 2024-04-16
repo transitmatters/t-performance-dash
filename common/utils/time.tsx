@@ -25,14 +25,14 @@ export const getFormattedTimeValue = (value: number, isLarge?: boolean) => {
   switch (true) {
     case absValue < 100:
       return (
-        <p>
+        <p className="text-sm">
           <WidgetText isLarge={isLarge} text={absValue.toFixed(0)} />
           <UnitText isLarge={isLarge} text={'s'} />
         </p>
       );
     case absValue < 3600:
       return (
-        <p>
+        <p className="text-sm">
           <WidgetText isLarge={isLarge} text={duration.format('m')} />
           <UnitText isLarge={isLarge} text={'m'} />{' '}
           <WidgetText isLarge={isLarge} text={duration.format('s').padStart(2, '0')} />
@@ -41,7 +41,7 @@ export const getFormattedTimeValue = (value: number, isLarge?: boolean) => {
       );
     default:
       return (
-        <p>
+        <p className="text-sm">
           <WidgetText isLarge={isLarge} text={duration.format('H')} />
           <UnitText isLarge={isLarge} text={'h'} />{' '}
           <WidgetText isLarge={isLarge} text={duration.format('m').padStart(2, '0')} />

@@ -33,6 +33,7 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
         fname={'headways'}
         units={'Minutes'}
         showLegend={showLegend && anyHeadwayBenchmarks}
+        showUnderRatio={true}
       />
     );
   }, [linePath, headways, date, fromStation, toStation, showLegend, anyHeadwayBenchmarks]);
