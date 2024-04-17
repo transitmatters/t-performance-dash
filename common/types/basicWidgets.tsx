@@ -111,7 +111,7 @@ export class SZWidgetValue extends BaseWidgetValue implements WidgetValueInterfa
   getFormattedValue(isLarge?: boolean) {
     if (typeof this.value === 'undefined') return '...';
     return (
-      <p className="">
+      <p className="text-sm">
         <WidgetText isLarge={isLarge} text={`${Math.abs(this.value).toString()}`} />{' '}
         <UnitText isLarge={isLarge} text={this.getUnits()} />
       </p>
@@ -131,7 +131,7 @@ export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValu
   getFormattedValue(isLarge?: boolean) {
     if (this.value === undefined) return '...';
     return (
-      <p>
+      <p className="text-sm">
         <WidgetText isLarge={isLarge} text={`${Math.round(100 * this.value).toString()}`} />{' '}
         <UnitText isLarge={isLarge} text={this.getUnits()} />
       </p>

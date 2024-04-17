@@ -80,6 +80,8 @@ export interface LineProps {
   includeBothStopsForLocation?: boolean;
   fname: DataName;
   showLegend?: boolean;
+  /** Show ratios under 1.00 differently in chart */
+  showUnderRatio?: boolean;
 }
 
 export interface AggregateLineProps extends LineProps {
