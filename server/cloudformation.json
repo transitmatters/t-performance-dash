@@ -32,7 +32,7 @@
       "Type": "String",
       "Description": "The ACM ARN of the backend certificate."
     },
-    "MbtaV2ApiKey": {
+    "MbtaV3ApiKey": {
       "Type": "String",
       "Description": "MBTA-performance API key."
     },
@@ -92,7 +92,7 @@
         "Handler": "datadog_lambda.handler.handler",
         "Environment": {
           "Variables": {
-            "MBTA_V2_API_KEY": { "Ref": "MbtaV2ApiKey" },
+            "MBTA_V3_API_KEY": { "Ref": "MbtaV3ApiKey" },
             "DD_API_KEY": { "Ref": "DDApiKey" },
             "DD_VERSION": { "Ref": "GitVersion" },
             "DD_TAGS": { "Ref": "DDTags" }

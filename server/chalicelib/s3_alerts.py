@@ -33,7 +33,6 @@ def key(day, v3: bool = False):
 
 def get_v2_alerts(day: date, routes):
     alerts_str = s3.download(key(day), "utf8")
-    # TODO: Handle either format (v2 or v3) of alerts
     alerts = json.loads(alerts_str)[0]["past_alerts"]
 
     def matches_route(alert):
