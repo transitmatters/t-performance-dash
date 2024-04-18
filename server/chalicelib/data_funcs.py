@@ -7,7 +7,7 @@ from chalicelib import s3_historical, s3_alerts, s3
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
 WE_HAVE_V2_ALERTS_SINCE = datetime.date(2017, 11, 6)
-WE_HAVE_V3_ALERTS_SINCE = datetime.date(2024, 4, 9)
+WE_HAVE_V3_ALERTS_SINCE = datetime.date(2024, 4, 12)
 
 
 def bucket_by(
