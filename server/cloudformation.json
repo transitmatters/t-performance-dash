@@ -34,7 +34,7 @@
     },
     "MbtaV3ApiKey": {
       "Type": "String",
-      "Description": "MBTA-performance API key."
+      "Description": "MBTA V3 API key."
     },
     "DDApiKey": {
       "Type": "String",
