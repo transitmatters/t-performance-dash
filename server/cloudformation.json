@@ -86,7 +86,9 @@
       }
     },
     "APIHandler": {
+      "Type": "AWS::Serverless::Function",
       "Properties": {
+        "Description": "API handler for data dashboard. This is the backend for the app.",
         "Handler": "datadog_lambda.handler.handler",
         "Environment": {
           "Variables": {
