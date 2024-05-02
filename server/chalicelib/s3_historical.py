@@ -130,8 +130,8 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
 
         # benchmark calculation:
         # not every file will have the scheduled_tt field, so we use get.
-        sched_arr = arrival.get("scheduled_tt")
-        sched_dep = departure.get("scheduled_tt")
+        sched_arr = arrival.get("scheduled_tt") or arrival.get("scheduled_travel_time")
+        sched_dep = departure.get("scheduled_tt") or departure.get("scheduled_travel_time")
         try:
             # sched values may be None or ''
             benchmark = float(sched_arr) - float(sched_dep)
