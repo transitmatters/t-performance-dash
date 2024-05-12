@@ -11,7 +11,7 @@ export interface SingleDayDataPoint {
   headway_time_sec?: number;
   dwell_time_sec?: number;
   benchmark_travel_time_sec?: number;
-  benchmark_headway_time_sec?: number;
+  benchmark_headway_time_sec?: number | null;
   threshold_flag_1?: string;
   speed_mph?: number;
   benchmark_speed_mph?: number;
