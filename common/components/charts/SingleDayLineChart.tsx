@@ -16,6 +16,7 @@ import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
 import { getFormattedTimeString } from '../../utils/time';
 import { AlertsDisclaimer } from '../general/AlertsDisclaimer';
+import { FIVE_MINUTES } from '../../constants/time';
 import { LegendSingleDay } from './Legend';
 import { ChartDiv } from './ChartDiv';
 import { ChartBorder } from './ChartBorder';
@@ -93,14 +94,14 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
 
   // Format benchmark data if it exists.
   const benchmarkData = data.map((datapoint) =>
-    benchmarkField && datapoint[benchmarkField] ? datapoint[benchmarkField] : undefined
+    benchmarkField && datapoint[benchmarkField] ? datapoint[benchmarkField] : null
   );
-  const displayBenchmarkData = benchmarkData.every((datapoint) => datapoint !== undefined);
-  // Have to use `as number` because typescript doesn't understand `datapoint` is not undefined.
+  const displayBenchmarkData = benchmarkData.some((datapoint) => datapoint !== null);
+
   const multiplier = units === 'Minutes' ? 1 / 60 : 1;
-  const benchmarkDataFormatted = displayBenchmarkData
-    ? benchmarkData.map((datapoint) => ((datapoint as number) * multiplier).toFixed(2))
-    : null;
+  const benchmarkDataFormatted = benchmarkData
+    .map((datapoint) => (datapoint ? (datapoint * multiplier).toFixed(2) : null))
+    .filter((datapoint) => datapoint !== null);
 
   const convertedData = data.map((datapoint) =>
     ((datapoint[metricField] as number) * multiplier).toFixed(2)
@@ -225,7 +226,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   const today = new Date(`${date}T00:00:00`);
                   const low = new Date(today);
                   low.setHours(6);
-                  axis.min = Math.min(axis.min, low.valueOf());
+                  axis.min = Math.min(axis.min - FIVE_MINUTES, low.valueOf());
                   const high = new Date(today);
                   high.setDate(high.getDate() + 1);
                   high.setHours(1);

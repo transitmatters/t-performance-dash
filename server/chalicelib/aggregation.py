@@ -54,7 +54,7 @@ def faster_describe(grouped):
 # `travel_times_over_time` is legacy and returns just the by_date aggregation w/ peak == all
 
 
-def aggregate_traveltime_data(start_date: str | datetime.date, end_date: str | datetime.date, from_stops, to_stops):
+def aggregate_traveltime_data(start_date: datetime.date, end_date: datetime.date, from_stops, to_stops):
     all_data = data_funcs.travel_times(start_date, from_stops, to_stops, end_date)
     if not all_data:
         return None
@@ -99,7 +99,7 @@ def calc_travel_times_by_date(df):
     return summary_stats_final
 
 
-def travel_times_all(start_date: str | datetime.date, end_date: str, from_stops, to_stops):
+def travel_times_all(start_date: datetime.date, end_date: datetime.date, from_stops, to_stops):
     df = aggregate_traveltime_data(start_date, end_date, from_stops, to_stops)
     if df is None:
         return {"by_date": [], "by_time": []}
@@ -112,7 +112,7 @@ def travel_times_all(start_date: str | datetime.date, end_date: str, from_stops,
     }
 
 
-def travel_times_over_time(start_date: str | datetime.date, end_date: str | datetime.date, from_stops, to_stops):
+def travel_times_over_time(start_date: datetime.date, end_date: datetime.date, from_stops, to_stops):
     df = aggregate_traveltime_data(start_date, end_date, from_stops, to_stops)
     if df is None:
         return []
@@ -123,7 +123,7 @@ def travel_times_over_time(start_date: str | datetime.date, end_date: str | date
 ####################
 # HEADWAYS
 ####################
-def headways_over_time(start_date: str | datetime.date, end_date: str | datetime.date, stops):
+def headways_over_time(start_date: datetime.date, end_date: datetime.date, stops):
     all_data = data_funcs.headways(start_date, stops, end_date)
     if not all_data:
         return []
