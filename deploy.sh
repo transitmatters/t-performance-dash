@@ -26,8 +26,8 @@ while getopts "pc" opt; do
 done
 
 # Ensure required secrets are set
-if [[ -z "$MBTA_V2_API_KEY" || -z "$DD_API_KEY"  ]]; then
-    echo "Must provide MBTA_V2_API_KEY and DD_API_KEY in environment to deploy" 1>&2
+if [[ -z "$MBTA_V3_API_KEY" || -z "$DD_API_KEY"  ]]; then
+    echo "Must provide MBTA_V3_API_KEY and DD_API_KEY in environment to deploy" 1>&2
     exit 1
 elif [ -z "$TM_FRONTEND_CERT_ARN" ] && [ -z "$TM_LABS_WILDCARD_CERT_ARN" ]; then
     echo "Must provide TM_FRONTEND_CERT_ARN or TM_LABS_WILDCARD_CERT_ARN in environment to deploy" 1>&2
@@ -98,7 +98,7 @@ aws cloudformation deploy --template-file cfn/packaged.yaml --stack-name $CF_STA
     TMBackendCertArn=$BACKEND_CERT_ARN \
     TMBackendHostname=$BACKEND_HOSTNAME \
     TMBackendZone=$BACKEND_ZONE \
-    MbtaV2ApiKey=$MBTA_V2_API_KEY \
+    MbtaV3ApiKey=$MBTA_V3_API_KEY \
     DDApiKey=$DD_API_KEY \
     GitVersion=$GIT_VERSION \
     DDTags=$DD_TAGS

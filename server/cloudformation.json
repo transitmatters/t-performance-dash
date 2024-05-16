@@ -32,9 +32,9 @@
       "Type": "String",
       "Description": "The ACM ARN of the backend certificate."
     },
-    "MbtaV2ApiKey": {
+    "MbtaV3ApiKey": {
       "Type": "String",
-      "Description": "MBTA-performance API key."
+      "Description": "MBTA V3 API key."
     },
     "DDApiKey": {
       "Type": "String",
@@ -86,11 +86,13 @@
       }
     },
     "APIHandler": {
+      "Type": "AWS::Serverless::Function",
       "Properties": {
+        "Description": "API handler for data dashboard. This is the backend for the app.",
         "Handler": "datadog_lambda.handler.handler",
         "Environment": {
           "Variables": {
-            "MBTA_V2_API_KEY": { "Ref": "MbtaV2ApiKey" },
+            "MBTA_V3_API_KEY": { "Ref": "MbtaV3ApiKey" },
             "DD_API_KEY": { "Ref": "DDApiKey" },
             "DD_VERSION": { "Ref": "GitVersion" },
             "DD_TAGS": { "Ref": "DDTags" }

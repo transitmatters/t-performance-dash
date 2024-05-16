@@ -4,7 +4,7 @@ import { DataPair } from '../general/DataPair';
 import { SmallDelta } from './internal/SmallDelta';
 import { SmallData } from './internal/SmallData';
 
-interface MiniWidgetObject {
+export interface MiniWidgetObject {
   type: 'delta' | 'data' | string;
   widgetValue: WidgetValueInterface;
   text: string;
