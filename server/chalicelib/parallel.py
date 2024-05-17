@@ -2,6 +2,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date
 import pandas as pd
 
+from chalicelib import s3
 from chalicelib import date_utils
 
 
@@ -27,7 +28,7 @@ def date_range(start: str, end: str):
     return pd.date_range(start, end)
 
 
-def s3_date_range(start: date, end: date):
+def s3_date_range(start: date, end: date, stops: list[str]):
     """
     Generates a date range, meant for s3 data
     For all dates that we have monthly datasets for, return 1 date of the month
@@ -39,10 +40,13 @@ def s3_date_range(start: date, end: date):
 
     date_range = pd.date_range(start, month_end, freq="1D", inclusive="both")
 
+    # are any of the stops CR, if so use daily data only
+    cr_data = any([s3.is_cr(stop) for stop in stops])
+
     # This is kinda funky, but is stil simpler than other approaches
     # pandas won't generate a monthly date_range that includes Jan and Feb for Jan31-Feb1 e.g.
     # So we generate a daily date_range and then resample it down (summing 0s as a no-op in the process) so it aligns.
-    if date_utils.get_max_monthly_data_date() > start:
+    if date_utils.get_max_monthly_data_date() > start and not cr_data:
         dates = pd.date_range(start, month_end, freq="1D", inclusive="both")
         series = pd.Series(0, index=dates)
         date_range = series.resample("1M").sum().index
