@@ -32,6 +32,7 @@ export const COLORS = {
 // Colors for charts
 export const CHART_COLORS = {
   GREY: '#1c1c1c',
+  BLUE: '#0096FF',
   GREEN: '#64b96a',
   YELLOW: '#f5ed00',
   RED: '#c33149',

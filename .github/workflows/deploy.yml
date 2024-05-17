@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['20']
-        python-version: ['3.11']
+        python-version: ['3.12']
     env:
       AWS_PROFILE: transitmatters
       AWS_DEFAULT_REGION: us-east-1
@@ -21,7 +21,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       TM_FRONTEND_CERT_ARN: ${{ secrets.TM_FRONTEND_CERT_ARN }}
       TM_LABS_WILDCARD_CERT_ARN: ${{ secrets.TM_LABS_WILDCARD_CERT_ARN }}
-      MBTA_V2_API_KEY: ${{ secrets.MBTA_V2_API_KEY }}
+      MBTA_V3_API_KEY: ${{ secrets.MBTA_V3_API_KEY }}
       DD_API_KEY: ${{ secrets.DD_API_KEY }}
 
     steps:

@@ -35,7 +35,7 @@ export const THREE_MONTHS_AGO_STRING = TODAY.subtract(90, 'days').format(DATE_FO
 const OVERVIEW_TRAIN_MIN_DATE = '2016-02-01';
 const TRAIN_MIN_DATE = '2016-01-15';
 const BUS_MIN_DATE = '2018-08-01';
-export const BUS_MAX_DATE = '2023-12-31';
+export const BUS_MAX_DATE = '2024-03-31';
 export const BUS_MAX_DAY = dayjs(BUS_MAX_DATE);
 export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
   .subtract(7, 'days')
@@ -273,7 +273,7 @@ export const RANGE_PRESETS: {
   [key in Tab]: { [key in DatePresetKey]?: DateSelectionDefaultOptions<DateParams> };
 } = {
   Subway: RANGE_RAPID_PRESETS,
-  Bus: RANGE_BUS_PRESETS,
+  Bus: RANGE_RAPID_PRESETS,
   System: RANGE_RAPID_PRESETS,
   'Commuter Rail': RANGE_RAPID_PRESETS,
 };

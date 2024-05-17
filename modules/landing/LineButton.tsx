@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import type { Line } from '../../common/types/lines';
 import { lineColorBackground, lineColorBorder } from '../../common/styles/general';
 import { LINE_OBJECTS } from '../../common/constants/lines';
+import { BUS_DEFAULTS } from '../../common/state/defaults/dateDefaults';
 
 interface LineButtonProps {
   children: React.ReactNode;
@@ -15,7 +16,11 @@ export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
 
   return (
     <Link
-      href={`/${lineObject.path}`}
+      href={
+        line === 'line-bus'
+          ? `/${lineObject.path}?busRoute=1&date=${BUS_DEFAULTS.singleTripConfig.date}`
+          : `/${lineObject.path}`
+      }
       className="group flex cursor-pointer flex-row items-center gap-x-8 gap-y-4 md:flex-col"
     >
       <div
@@ -29,7 +34,6 @@ export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
       </div>
       <div className="flex flex-row items-baseline gap-2 md:flex-col md:items-center">
         <h3 className="text-center text-3xl md:text-xl">{LINE_OBJECTS[line].name}</h3>
-        {line === 'line-bus' && <p className="text-center font-bold">(WIP)</p>}
       </div>
     </Link>
   );

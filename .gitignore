@@ -30,6 +30,7 @@ build
 .env.test.local
 .env.production.local
 .eslintcache
+.envrc
 
 **/data
 

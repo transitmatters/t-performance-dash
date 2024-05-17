@@ -1,12 +1,14 @@
 from datetime import date
 import boto3
 import botocore
+import pandas as pd
 from botocore.exceptions import ClientError
 import csv
 import itertools
 import zlib
 
 from chalicelib import parallel
+from chalicelib import date_utils
 
 BUCKET = "tm-mbta-performance"
 s3 = boto3.client("s3", config=botocore.client.Config(max_pool_connections=15))
@@ -37,7 +39,7 @@ def is_cr(stop_id: str):
     return stop_id.startswith("CR-")
 
 
-def get_live_folder(stop_id: str):
+def get_gobble_folder(stop_id: str):
     if is_bus(stop_id):
         return "daily-bus-data"
     elif is_cr(stop_id):
@@ -46,27 +48,37 @@ def get_live_folder(stop_id: str):
         return "daily-rapid-data"
 
 
-def download_one_event_file(date, stop_id: str, use_live_data=False):
+def get_lamp_folder():
+    return "daily-data"
+
+
+def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False):
     """As advertised: single event file from s3"""
     year, month, day = date.year, date.month, date.day
 
-    if use_live_data:
-        folder = get_live_folder(stop_id)
-        key = f"Events-live/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
+    # if current date is newer than the max monthly data date, use LAMP
+    if date.date() > date_utils.get_max_monthly_data_date():
+        # if we've asked to use gobble data or bus data, check gobble
+        if use_gobble or is_bus(stop_id):
+            folder = get_gobble_folder(stop_id)
+            key = f"Events-live/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
+        else:
+            folder = get_lamp_folder()
+            key = f"Events-lamp/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv"
     else:
         folder = "monthly-bus-data" if is_bus(stop_id) else "monthly-data"
         key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
 
     # Download events from S3
     try:
-        decompressed = download(key, "ascii")
+        decompressed = download(key, "ascii", ".gz" in key)
 
     except ClientError as ex:
         if ex.response["Error"]["Code"] == "NoSuchKey":
             # raise Exception(f"Data not available on S3 for key {key} ") from None
             print(f"WARNING: No data available on S3 for key: {key}")
-            if not use_live_data:
-                return download_one_event_file(date, stop_id, use_live_data=True)
+            if not use_gobble and not is_bus(stop_id):
+                return download_one_event_file(date, stop_id, use_gobble=True)
             return []
         else:
             raise
@@ -82,14 +94,14 @@ def download_one_event_file(date, stop_id: str, use_live_data=False):
 
 
 @parallel.make_parallel
-def parallel_download_events(datestop):
+def parallel_download_events(datestop: itertools.product):
     (date, stop) = datestop
     if is_cr(stop):
         return download_one_event_file(date, stop, use_live_data=True)
     return download_one_event_file(date, stop)
 
 
-def download_events(start_date: str | date, end_date: str | date, stops: list):
+def download_events(start_date: date, end_date: date, stops: list):
     datestops = itertools.product(parallel.s3_date_range(start_date, end_date), stops)
     result = parallel_download_events(datestops)
     result = filter(

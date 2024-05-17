@@ -8,7 +8,14 @@ DATE_FORMAT_OUT = "%Y-%m-%dT%H:%M:%S"
 EASTERN_TIME = ZoneInfo("US/Eastern")
 
 # The most recent date for which we have monthly data
-MAX_MONTH_DATA_DATE = "2023-12-31"
+MAX_MONTH_DATA_DATE = "2024-03-31"
+
+
+def get_max_monthly_data_date():
+    """
+    Returns the most recent date for which we have monthly data
+    """
+    return datetime.strptime(MAX_MONTH_DATA_DATE, "%Y-%m-%d").date()
 
 
 def parse_event_date(date_str: str):

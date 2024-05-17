@@ -19,7 +19,7 @@ export const TerminusNotice: React.FC<TerminusNoticeProps> = ({ toStation, fromS
             Due to data collection issues at terminus stations, data is not guaranteed to be
             complete.
           </p>
-          <p>This may lead to inaccuracies, particularly in travel time & dwell calculations.</p>
+          <p>This may lead to inaccuracy, particularly in travel time & dwell calculations.</p>
         </div>
       </div>
     );

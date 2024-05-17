@@ -16,24 +16,37 @@ import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
 import { getFormattedTimeString } from '../../utils/time';
 import { AlertsDisclaimer } from '../general/AlertsDisclaimer';
+import { FIVE_MINUTES } from '../../constants/time';
 import { LegendSingleDay } from './Legend';
 import { ChartDiv } from './ChartDiv';
 import { ChartBorder } from './ChartBorder';
 
-const pointColors = (data: DataPoint[], metric_field: string, benchmark_field?: string) => {
+const pointColors = (
+  data: DataPoint[],
+  metric_field: string,
+  benchmark_field?: string,
+  showUnderRatio?: boolean
+) => {
   return data.map((point: DataPoint) => {
     if (benchmark_field) {
       const ratio = point[metric_field] / point[benchmark_field];
       if (point[benchmark_field] === null) {
-        return CHART_COLORS.GREY; //grey
+        return CHART_COLORS.GREY;
+      } else if (ratio <= 0.05 && showUnderRatio) {
+        // Not actually 100% off, but we want to show it as an extreme
+        return CHART_COLORS.PURPLE;
+      } else if (ratio <= 0.5 && showUnderRatio) {
+        return CHART_COLORS.RED;
+      } else if (ratio <= 0.75 && showUnderRatio) {
+        return CHART_COLORS.YELLOW;
       } else if (ratio <= 1.25) {
-        return CHART_COLORS.GREEN; //green
+        return CHART_COLORS.GREEN;
       } else if (ratio <= 1.5) {
-        return CHART_COLORS.YELLOW; //yellow
+        return CHART_COLORS.YELLOW;
       } else if (ratio <= 2.0) {
-        return CHART_COLORS.RED; //red
+        return CHART_COLORS.RED;
       } else if (ratio > 2.0) {
-        return CHART_COLORS.PURPLE; //purple
+        return CHART_COLORS.PURPLE;
       }
     }
 
@@ -41,9 +54,13 @@ const pointColors = (data: DataPoint[], metric_field: string, benchmark_field?: 
   });
 };
 
-const departureFromNormalString = (metric: number, benchmark: number) => {
+const departureFromNormalString = (metric: number, benchmark: number, showUnderRatio?: boolean) => {
   const ratio = metric / benchmark;
-  if (!isFinite(ratio) || ratio <= 1.25) {
+  if (showUnderRatio && ratio <= 0.5) {
+    return '50%+ under schedule';
+  } else if (showUnderRatio && ratio <= 0.75) {
+    return '25%+ under schedule';
+  } else if (!isFinite(ratio) || ratio <= 1.25) {
     return '';
   } else if (ratio <= 1.5) {
     return '25%+ over schedule';
@@ -67,6 +84,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   location,
   units,
   showLegend = true,
+  showUnderRatio = false,
 }) => {
   const ref = useRef();
   const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);
@@ -76,14 +94,14 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
 
   // Format benchmark data if it exists.
   const benchmarkData = data.map((datapoint) =>
-    benchmarkField && datapoint[benchmarkField] ? datapoint[benchmarkField] : undefined
+    benchmarkField && datapoint[benchmarkField] ? datapoint[benchmarkField] : null
   );
-  const displayBenchmarkData = benchmarkData.every((datapoint) => datapoint !== undefined);
-  // Have to use `as number` because typescript doesn't understand `datapoint` is not undefined.
+  const displayBenchmarkData = benchmarkData.some((datapoint) => datapoint !== null);
+
   const multiplier = units === 'Minutes' ? 1 / 60 : 1;
-  const benchmarkDataFormatted = displayBenchmarkData
-    ? benchmarkData.map((datapoint) => ((datapoint as number) * multiplier).toFixed(2))
-    : null;
+  const benchmarkDataFormatted = benchmarkData
+    .map((datapoint) => (datapoint ? (datapoint * multiplier).toFixed(2) : null))
+    .filter((datapoint) => datapoint !== null);
 
   const convertedData = data.map((datapoint) =>
     ((datapoint[metricField] as number) * multiplier).toFixed(2)
@@ -104,9 +122,19 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 label: `Actual`,
                 fill: false,
                 borderColor: '#a0a0a030',
-                pointBackgroundColor: pointColors(data, metricField, benchmarkField),
+                pointBackgroundColor: pointColors(
+                  data,
+                  metricField,
+                  benchmarkField,
+                  showUnderRatio
+                ),
                 pointHoverRadius: 3,
-                pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField),
+                pointHoverBackgroundColor: pointColors(
+                  data,
+                  metricField,
+                  benchmarkField,
+                  showUnderRatio
+                ),
                 pointRadius: 3,
                 pointHitRadius: 10,
                 data: convertedData,
@@ -148,7 +176,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   afterBody: (tooltipItems) => {
                     return departureFromNormalString(
                       tooltipItems[0].parsed.y,
-                      tooltipItems[1]?.parsed.y
+                      tooltipItems[1]?.parsed.y,
+                      showUnderRatio
                     );
                   },
                 },
@@ -197,7 +226,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   const today = new Date(`${date}T00:00:00`);
                   const low = new Date(today);
                   low.setHours(6);
-                  axis.min = Math.min(axis.min, low.valueOf());
+                  axis.min = Math.min(axis.min - FIVE_MINUTES, low.valueOf());
                   const high = new Date(today);
                   high.setDate(high.getDate() + 1);
                   high.setHours(1);
@@ -223,7 +252,11 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
       <div className="flex flex-col">
         {alerts && <AlertsDisclaimer alerts={alerts} />}
         <div className="flex flex-row items-end gap-4 ">
-          {showLegend && benchmarkField ? <LegendSingleDay /> : <div className="w-full" />}
+          {showLegend && benchmarkField ? (
+            <LegendSingleDay showUnderRatio={showUnderRatio} />
+          ) : (
+            <div className="w-full" />
+          )}
           {date && (
             <DownloadButton
               data={data}

@@ -15,7 +15,7 @@ export const BusDataNotice: React.FC = () => {
             Due to data collection issues, bus data is not guaranteed to be complete for any stop or
             date.
           </p>
-          <p>This may lead to inaccuracies, particularly in headway calculations.</p>
+          <p>This may lead to inaccuracy, particularly in headway calculations.</p>
         </div>
       </div>
     );
