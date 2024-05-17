@@ -62,28 +62,6 @@ def use_S3(date, bus=False):
     return archival or bus
 
 
-def partition_S3_dates(start_date: str | date, end_date: str | date, bus=False, cr=False):
-    """
-    Partitions dates by what data source they should be fetched from.
-    S3 is used for archival data and for bus data. API is used for recent (within 90 days) subway data.
-    TODO: Add Gobble data to this partitioning.
-    """
-    CUTOFF = datetime.date.today() - datetime.timedelta(days=90)
-
-    s3_dates = None
-    api_dates = None
-
-    if end_date < CUTOFF or bus or cr:
-        s3_dates = (start_date, end_date)
-    elif CUTOFF <= start_date:
-        api_dates = (start_date, end_date)
-    else:
-        s3_dates = (start_date, CUTOFF - datetime.timedelta(days=1))
-        api_dates = (CUTOFF, end_date)
-
-    return (s3_dates, api_dates)
-
-
 def headways(start_date: date, stops, end_date: date | None = None):
     if end_date is None:
         return s3_historical.headways(stops, start_date, start_date)
