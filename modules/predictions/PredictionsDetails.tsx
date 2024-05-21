@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -118,6 +119,18 @@ export function PredictionsDetails() {
                       <li>6-12 min: 150 seconds early to 210 seconds late</li>
                       <li>12-30 min: 240 seconds early to 360 seconds late</li>
                     </ul>
+                    <br />
+                    <p>
+                      We receive this data in monthly batches from the{' '}
+                      <Link
+                        href="https://mbta-massdot.opendata.arcgis.com"
+                        target="_blank"
+                        className="hover:text-blue-500"
+                      >
+                        MassDOT Open Data Portal
+                      </Link>
+                      - if recent data is missing, it's likely because it's not yet available.
+                    </p>
                   </div>
                 ),
               },

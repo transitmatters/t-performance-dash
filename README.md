@@ -1,5 +1,6 @@
 # TransitMatters Data Dashboard
 
+![Release](https://img.shields.io/github/v/release/transitmatters/t-performance-dash)
 ![lint](https://github.com/transitmatters/t-performance-dash/workflows/lint/badge.svg?branch=main)
 ![build](https://github.com/transitmatters/t-performance-dash/workflows/build/badge.svg?branch=main)
 ![deploy](https://github.com/transitmatters/t-performance-dash/workflows/deploy/badge.svg?branch=main)
