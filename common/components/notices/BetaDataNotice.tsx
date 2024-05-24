@@ -33,7 +33,7 @@ export const BetaDataNotice: React.FC = () => {
             <h3 className="text-sm font-medium text-yellow-800">Real-time bus data is in beta</h3>
             <div className="mt-2 text-sm text-yellow-700">
               <p>
-                Data shown here is collected by TransitMatters using the{' '}
+                TransitMatters collects this data using the{' '}
                 <Link
                   href="https://www.mbta.com/developers/v3-api/streaming"
                   rel="noopener noreferrer"
@@ -42,20 +42,21 @@ export const BetaDataNotice: React.FC = () => {
                 >
                   MBTA's V3 API
                 </Link>
-                . Unlike other data sources we show, this data is not cleaned or filtered in any way
-                before display. Please expect reduced accuracy.
+                . Unlike data from other sources, it is not cleaned or filtered before display.
+                Please expect reduced accuracy.
               </p>
               <p>
                 We favor official performance data from the MBTA when it's available. Technical
-                details of our data collection can be found{' '}
+                details of our data collection are available in our{' '}
                 <Link
                   href="https://github.com/transitmatters/gobble"
                   rel="noopener noreferrer"
                   target="_blank"
                   className={classNames(lineColorTextHover[line ?? 'DEFAULT'])}
                 >
-                  here
+                  GitHub repository
                 </Link>
+                .
               </p>
             </div>
           </div>

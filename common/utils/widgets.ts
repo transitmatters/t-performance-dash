@@ -1,5 +1,12 @@
-import { MPHWidgetValue, TimeWidgetValue } from '../types/basicWidgets';
-import type { AggregateDataPoint, SingleDayDataPoint } from '../types/charts';
+import type { MiniWidgetObject } from '../components/widgets/MiniWidgetCreator';
+import { MPHWidgetValue, PercentageWidgetValue, TimeWidgetValue } from '../types/basicWidgets';
+import {
+  BenchmarkFieldKeys,
+  type AggregateDataPoint,
+  type SingleDayDataPoint,
+  MetricFieldKeys,
+} from '../types/charts';
+import type { DataPoint } from '../types/dataPoints';
 
 const getAverage = (data: (number | undefined)[]) => {
   const { length } = data;
@@ -15,6 +22,30 @@ const getAverage = (data: (number | undefined)[]) => {
   } else {
     return 0;
   }
+};
+
+const getBunchedPercentage = (data: SingleDayDataPoint[]) => {
+  const bunchedPoints = data.map((point: DataPoint) => {
+    const ratio =
+      point[MetricFieldKeys.headwayTimeSec] / point[BenchmarkFieldKeys.benchmarkHeadwayTimeSec];
+    if (ratio <= 0.5) {
+      return 1;
+    }
+    return 0;
+  });
+  return bunchedPoints.reduce((a, b) => a + b, 0) / data.length;
+};
+
+const getOnTimePercentage = (data: SingleDayDataPoint[]) => {
+  const onTimePoints = data.map((point: DataPoint) => {
+    const ratio =
+      point[MetricFieldKeys.headwayTimeSec] / point[BenchmarkFieldKeys.benchmarkHeadwayTimeSec];
+    if (ratio > 0.75 && ratio < 1.25) {
+      return 1;
+    }
+    return 0;
+  });
+  return onTimePoints.reduce((a, b) => a + b, 0) / data.length;
 };
 
 const getPeaks = (data: (number | undefined)[]) => {
@@ -68,7 +99,9 @@ const getSingleDayPointsOfInterest = (
   const _data = getSingleDayNumberArray(data, type);
   const { max, min, median, p10, p90 } = getPeaks(_data);
   const average = getAverage(_data);
-  return { max, min, median, average, p10, p90 };
+  const onTimePercentage = getOnTimePercentage(data);
+  const bunchedPercentage = getBunchedPercentage(data);
+  return { max, min, median, average, p10, p90, onTimePercentage, bunchedPercentage };
 };
 
 function getWidget(type: string, value: number | undefined) {
@@ -82,9 +115,11 @@ function getWidget(type: string, value: number | undefined) {
 export const getSingleDayWidgets = (
   data: SingleDayDataPoint[],
   type: 'traveltimes' | 'dwells' | 'headways' | 'speeds'
-) => {
-  const { max, min, median, average, p10, p90 } = getSingleDayPointsOfInterest(data, type);
-  return [
+): MiniWidgetObject[] => {
+  const { max, min, median, average, p10, p90, onTimePercentage, bunchedPercentage } =
+    getSingleDayPointsOfInterest(data, type);
+
+  const widgets: MiniWidgetObject[] = [
     { text: 'Avg', widgetValue: getWidget(type, average), type: 'data' },
     { text: 'Median', widgetValue: getWidget(type, median), type: 'data' },
     { text: '10%', widgetValue: getWidget(type, p10), type: 'data' },
@@ -92,4 +127,19 @@ export const getSingleDayWidgets = (
     { text: 'Min', widgetValue: getWidget(type, min), type: 'data' },
     { text: 'Max', widgetValue: getWidget(type, max), type: 'data' },
   ];
+
+  if (type === 'headways') {
+    widgets.push({
+      text: 'On Time Trips',
+      widgetValue: new PercentageWidgetValue(onTimePercentage),
+      type: 'data',
+    });
+    widgets.push({
+      text: 'Bunched Trips',
+      widgetValue: new PercentageWidgetValue(bunchedPercentage),
+      type: 'data',
+    });
+  }
+
+  return widgets;
 };

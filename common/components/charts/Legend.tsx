@@ -3,7 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Disclosure } from '@headlessui/react';
 import React from 'react';
 
-export const LegendSingleDay: React.FC = () => {
+interface LegendProps {
+  showUnderRatio?: boolean;
+}
+
+export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio = false }) => {
   return (
     <Disclosure>
       {({ open }) => (
@@ -19,7 +23,7 @@ export const LegendSingleDay: React.FC = () => {
               'grid w-full grid-cols-2 items-baseline p-1 px-4 text-left text-xs lg:flex lg:flex-row lg:gap-4'
             }
           >
-            <LegendSingle />
+            <LegendSingle showUnderRatio={showUnderRatio} />
           </Disclosure.Panel>
         </div>
       )}
@@ -27,7 +31,7 @@ export const LegendSingleDay: React.FC = () => {
   );
 };
 
-const LegendSingle: React.FC = () => {
+const LegendSingle: React.FC<LegendProps> = ({ showUnderRatio = false }) => {
   return (
     <>
       <div className="col-span-2 flex flex-row items-baseline gap-2 pb-1 italic lg:pb-0">
@@ -43,19 +47,19 @@ const LegendSingle: React.FC = () => {
       </p>
       <p>
         <span className="mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#D9D31E] bg-[#f5ed00]"></span>
-        {'25%+ above'}
+        {'25%+ off'}
       </p>
       <p>
         <span
           className={`mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#A1384A] bg-[#c33149]`}
         ></span>{' '}
-        {'50%+ above'}
+        {'50%+ off'}
       </p>
       <p>
         <span
           className={`mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#925396] bg-[#bb5cc1]`}
         ></span>{' '}
-        {'100%+ above'}
+        {'100%+ off'}
       </p>
     </>
   );
