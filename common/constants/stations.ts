@@ -5,12 +5,17 @@ import stations_json from './stations.json';
 import bus_1 from './bus_constants/1.json';
 import bus_4 from './bus_constants/4.json';
 import bus_9 from './bus_constants/9.json';
+import bus_10 from './bus_constants/10.json';
+import bus_11 from './bus_constants/11.json';
+import bus_14 from './bus_constants/14.json';
 import bus_15 from './bus_constants/15.json';
 import bus_16 from './bus_constants/16.json';
 import bus_17_19 from './bus_constants/17-19.json';
+import bus_18 from './bus_constants/18.json';
 import bus_21 from './bus_constants/21.json';
 import bus_22 from './bus_constants/22.json';
 import bus_23 from './bus_constants/23.json';
+import bus_26 from './bus_constants/26.json';
 import bus_28 from './bus_constants/28.json';
 import bus_32 from './bus_constants/32.json';
 import bus_34 from './bus_constants/34.json';
@@ -42,12 +47,17 @@ export const busStations: { [key: string]: LineMap } = {
   ...bus_1,
   ...bus_4,
   ...bus_9,
+  ...bus_10,
+  ...bus_11,
+  ...bus_14,
   ...bus_15,
   ...bus_16,
   ...bus_17_19,
+  ...bus_18,
   ...bus_21,
   ...bus_22,
   ...bus_23,
+  ...bus_26,
   ...bus_28,
   ...bus_32,
   ...bus_34,
