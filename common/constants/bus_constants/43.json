@@ -1,0 +1,61 @@
+{
+  "43": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Ruggles",
+        "branches": null,
+        "station": "rugg",
+        "order": 1,
+        "stops": {
+          "1": ["43-1-17863"],
+          "0": ["43-0-17863"]
+        }
+      },
+      {
+        "stop_name": "Tremont & Massachusetts Avenue",
+        "branches": null,
+        "station": "trmas",
+        "order": 2,
+        "stops": {
+          "1": ["43-1-1230"],
+          "0": ["43-0-1252"]
+        }
+      },
+      {
+        "stop_name": "Tremont Street @ Darthmouth/West Dedham Streets",
+        "branches": null,
+        "station": "tred",
+        "order": 3,
+        "stops": {
+          "1": ["43-1-1235"],
+          "0": ["43-0-1246"]
+        }
+      },
+      {
+        "stop_name": "Park Square (Charles Street)",
+        "branches": null,
+        "station": "prksq",
+        "order": 4,
+        "stops": {
+          "1": ["43-1-1241"],
+          "0": ["43-0-8281"]
+        }
+      },
+      {
+        "stop_name": "Park Street",
+        "branches": null,
+        "station": "pktrm",
+        "order": 5,
+        "stops": {
+          "1": ["43-1-10000"],
+          "0": ["43-0-10000"]
+        }
+      }
+    ]
+  }
+}

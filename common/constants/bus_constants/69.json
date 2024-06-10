@@ -1,0 +1,51 @@
+{
+  "69": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Harvard",
+        "branches": null,
+        "station": "hhgat",
+        "order": 1,
+        "stops": {
+          "1": ["69-1-110"],
+          "0": ["69-0-110"]
+        }
+      },
+      {
+        "stop_name": "Inman Square",
+        "branches": null,
+        "station": "inman",
+        "order": 2,
+        "stops": {
+          "1": ["69-1-1404"],
+          "0": ["69-0-1425"]
+        }
+      },
+      {
+        "stop_name": "Cambridge Street @ Windsor Street",
+        "branches": null,
+        "station": "camwd",
+        "order": 3,
+        "stops": {
+          "1": ["69-1-11408"],
+          "0": ["69-0-1422"]
+        }
+      },
+      {
+        "stop_name": "Lechmere Station",
+        "branches": null,
+        "station": "lchmr",
+        "order": 4,
+        "stops": {
+          "1": ["69-1-70500"],
+          "0": ["69-0-70500"]
+        }
+      }
+    ]
+  }
+}
