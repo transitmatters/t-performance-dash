@@ -47,8 +47,6 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
   const scheduledDataByDate = indexByProperty(predictedData.counts, 'date');
   const deliveredDataByDate = indexByProperty(data, 'date');
 
-  console.log(allDates);
-
   const scheduled = useMemo(() => {
     return {
       label: 'Scheduled round trips',

@@ -150,8 +150,6 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
       },
     };
 
-    console.log({ unit, time });
-
     return {
       x: {
         min: timeAxis.from,
