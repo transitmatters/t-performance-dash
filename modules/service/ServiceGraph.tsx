@@ -6,6 +6,7 @@ import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/
 import type { ParamsType } from '../speed/constants/speeds';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
+import { indexByProperty } from '../../common/utils/array';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
@@ -36,11 +37,27 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
     }));
   }, [data]);
 
+  const allDates = [
+    ...new Set([
+      ...predictedData.counts.map((point) => point.date),
+      ...data.map((point) => point.date),
+    ]),
+  ].sort((a, b) => (a > b ? 1 : -1));
+
+  const scheduledDataByDate = indexByProperty(predictedData.counts, 'date');
+  const deliveredDataByDate = indexByProperty(data, 'date');
+
+  console.log(allDates);
+
   const scheduled = useMemo(() => {
     return {
       label: 'Scheduled round trips',
-      data: predictedData.counts.map(({ date, count }, index) => {
-        const value = data[index]?.miles_covered > 0 && count ? count / 2 : 0;
+      data: allDates.map((date) => {
+        const scheduledToday = scheduledDataByDate[date];
+        const deliveredToday = deliveredDataByDate[date];
+        const anyDeliveredToday = deliveredToday?.miles_covered > 0;
+        const value =
+          scheduledToday.count && anyDeliveredToday ? Math.round(scheduledToday.count) / 2 : 0;
         return { date, value };
       }),
       style: {
@@ -51,14 +68,15 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
         },
       },
     };
-  }, [data, predictedData, peak]);
+  }, [allDates, deliveredDataByDate, peak, scheduledDataByDate]);
 
   const delivered = useMemo(() => {
     return {
       label: 'Daily round trips',
-      data: data.map((datapoint) => {
-        const value = datapoint.miles_covered ? Math.round(datapoint.count) : 0;
-        return { date: datapoint.date, value };
+      data: allDates.map((date) => {
+        const deliveredToday = deliveredDataByDate[date];
+        const value = deliveredToday?.miles_covered ? Math.round(deliveredToday.count) : 0;
+        return { date, value };
       }),
       style: {
         tooltipLabel: (point) => {
