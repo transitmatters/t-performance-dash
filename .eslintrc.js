@@ -63,7 +63,7 @@ module.exports = {
     'react/no-unescaped-entities': 'off',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
-    'react/react-in-jsx-scope': 'warn',
+    'react/react-in-jsx-scope': 'error',
     'react/no-unused-prop-types': 'warn',
     'unused-imports/no-unused-imports': 'error',
     'no-console': 'error',
