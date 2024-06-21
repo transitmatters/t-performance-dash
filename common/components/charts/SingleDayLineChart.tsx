@@ -251,7 +251,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
       </ChartDiv>
       <div className="flex flex-col">
         {alerts && <AlertsDisclaimer alerts={alerts} />}
-        <div className="flex flex-row items-end gap-4 ">
+        <div className="flex flex-row items-end gap-4">
           {showLegend && benchmarkField ? (
             <LegendSingleDay showUnderRatio={showUnderRatio} />
           ) : (

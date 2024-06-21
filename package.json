@@ -28,9 +28,9 @@
     "dayjs": "^1.11.11",
     "fast-memoize": "^2.5.2",
     "flowbite": "^2.3.0",
-    "flowbite-react": "^0.8.0",
+    "flowbite-react": "^0.10.1",
     "lodash": "^4.17.21",
-    "mini-css-extract-plugin": "^2.8.1",
+    "mini-css-extract-plugin": "^2.9.0",
     "next": "14.2.4",
     "next-goatcounter": "^1.0.5",
     "oss-attribution-generator": "^1.7.1",
@@ -65,8 +65,8 @@
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.78",
     "@types/react-csv": "^1.1.10",
-    "@typescript-eslint/eslint-plugin": "^7.7.0",
-    "@typescript-eslint/parser": "^7.7.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
     "autoprefixer": "^10.4.19",
     "babel-plugin-inline-react-svg": "^2.0.2",
     "eslint": "^8.57.0",
@@ -84,7 +84,7 @@
     "serve": "^14.2.3",
     "storybook": "^8.1.10",
     "tailwindcss": "^3.4.4",
-    "typescript": "~5.4.5"
+    "typescript": "~5.5.2"
   },
   "overrides": {
     "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.0c3f3b7.0"
