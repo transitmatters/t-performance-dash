@@ -114,5 +114,5 @@ module.exports = {
       },
     },
   ],
-  ignorePatterns: ['node_modules/**/*', 'build/**/*', 'out/**/*'],
+  ignorePatterns: ['node_modules/**/*', 'build/**/*', 'out/**/*', '*.js'],
 };
