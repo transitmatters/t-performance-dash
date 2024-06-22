@@ -21,10 +21,12 @@ module.exports = {
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
+    warnOnUnsupportedTypeScriptVersion: false,
+    project: true,
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 2021,
+    ecmaVersion: 2022,
     sourceType: 'module',
   },
   plugins: [
@@ -73,6 +75,7 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/no-unnecessary-type-assertion': 'error',
     '@typescript-eslint/consistent-type-imports': [
       'error',
       {
