@@ -44,7 +44,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
     query: { startDate, endDate },
   } = useDelimitatedRoute();
 
-  const speedRestrictions = useSpeedRestrictionData({ lineId: line!, date: endDate! });
+  const speedRestrictions = useSpeedRestrictionData({ lineId: line, date: endDate! });
 
   const startDateUTC = startDate ? dayjs.utc(startDate).startOf('day') : undefined;
   const endDateUTC = endDate ? dayjs.utc(endDate).startOf('day') : undefined;

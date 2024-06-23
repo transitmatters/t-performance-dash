@@ -12,7 +12,7 @@ export const SideNavBar = () => {
         <Link href="/" className="top-0 flex w-full flex-shrink-0 justify-center px-4 pb-2 pt-6">
           <Image src={'/TMLogo.png'} alt="TransitMatters Logo" width={3204} height={301} />
         </Link>
-        <div className="inset-y-0  flex h-full flex-col justify-between overflow-y-auto bg-tm-grey px-6 pb-1">
+        <div className="inset-y-0 flex h-full flex-col justify-between overflow-y-auto bg-tm-grey px-6 pb-1">
           <div className="relative flex flex-col pb-4">
             <div className="sticky h-5 w-full bg-gradient-to-b from-tm-grey to-transparent"></div>
             <SideNavigation />

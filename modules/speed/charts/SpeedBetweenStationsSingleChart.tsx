@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import type { SingleDayDataPoint } from '../../../common/types/charts';
 import { MetricFieldKeys, PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';

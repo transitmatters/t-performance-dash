@@ -16,7 +16,7 @@ export const SlowZonesWidgetTitle: React.FC<SlowZonesWidgetTitle> = () => {
 
   return (
     <div className="flex w-full flex-col items-baseline justify-between gap-x-4 gap-y-1 pb-1 text-base md:flex-row md:text-xl">
-      <div className="flex w-full flex-col md:w-auto ">
+      <div className="flex w-full flex-col md:w-auto">
         <div className="flex w-full flex-row items-baseline justify-between">
           <h2
             className={classNames(

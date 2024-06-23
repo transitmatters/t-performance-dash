@@ -58,7 +58,7 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
   const isHorizontal = side === 'top';
 
   const { fromStationName, toStationName } = useMemo(
-    () => getOrderedStationNames(slowZones)!,
+    () => getOrderedStationNames(slowZones),
     [slowZones]
   );
 
