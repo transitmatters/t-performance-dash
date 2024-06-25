@@ -20,6 +20,7 @@ import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Layout } from '../../common/layouts/layoutTypes';
+import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
@@ -48,6 +49,7 @@ export function SlowZonesDetails() {
     !delayTotals.isError && delayTotals.data && startDateUTC && endDateUTC && lineShort && line;
   const segmentsReady = !allSlow.isError && allSlow.data && startDateUTC && lineShort;
   const canShowSlowZonesMap = lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange';
+  const isDesktop = useBreakpoint('lg');
 
   if (!endDateUTC || !startDateUTC) {
     return (
@@ -95,7 +97,7 @@ export function SlowZonesDetails() {
                 slowZones={isArray(allSlow.data) ? allSlow.data : allSlow.data.data}
                 speedRestrictions={speedRestrictions.data}
                 lineName={lineShort}
-                direction="horizontal-on-desktop"
+                direction={isDesktop ? 'horizontal' : 'vertical'}
               />
             ) : (
               <div className="relative flex h-full">
