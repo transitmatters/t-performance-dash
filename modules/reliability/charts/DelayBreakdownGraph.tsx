@@ -56,7 +56,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 fill: true,
                 pointHoverRadius: 6,
                 pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.disabled_train),
+                data: data.map((datapoint) => datapoint.disabled_vehicle),
               },
               {
                 label: `Door Problem`,
@@ -123,6 +123,17 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 pointHoverRadius: 6,
                 pointHoverBackgroundColor: lineColor,
                 data: data.map((datapoint) => datapoint.track_issue),
+              },
+              {
+                label: `Mechanical Problem`,
+                borderColor: '#451a03',
+                backgroundColor: hexWithAlpha('#451a03', 0.8),
+                pointRadius: 0,
+                pointBorderWidth: 0,
+                fill: true,
+                pointHoverRadius: 6,
+                pointHoverBackgroundColor: lineColor,
+                data: data.map((datapoint) => datapoint.mechanical_problem),
               },
               {
                 label: `Flooding`,
