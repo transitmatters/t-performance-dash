@@ -1,7 +1,6 @@
 import argparse
 import pathlib
 import pandas as pd
-import numpy as np
 from datetime import datetime
 
 from gtfs_archive import add_gtfs_headways
@@ -103,8 +102,6 @@ def process_events(df: pd.DataFrame):
     )
 
     df = add_gtfs_headways(df)
-    # We can't use headway info for the combined routes since gtfs won't be grouped this way.
-    df.loc[df.route_id.isin(["114", "116", "117"]), "scheduled_headway"] = np.nan
 
     df["vehicle_id"] = ""
     df["vehicle_label"] = ""
@@ -119,7 +116,7 @@ def to_disk(df: pd.DataFrame, outdir, nozip=False):
     """
     For each service_date/stop_id/direction/route group, we write the events to disk.
     """
-    monthly_service_date = pd.Grouper(key="service_date", freq="1M")
+    monthly_service_date = pd.Grouper(key="service_date", freq="1ME")
     grouped = df.groupby([monthly_service_date, "stop_id", "direction_id", "route_id"])
 
     for name, events in grouped:

@@ -1,0 +1,81 @@
+{
+  "51": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Reservoir Busway",
+        "branches": null,
+        "station": "resbu",
+        "order": 1,
+        "stops": {
+          "1": ["51-1-21917"],
+          "0": ["51-0-21917"]
+        }
+      },
+      {
+        "stop_name": "Boylston @ Chestnut Hill Avenue",
+        "branches": null,
+        "station": "bocnh",
+        "order": 2,
+        "stops": {
+          "1": ["51-1-11545"],
+          "0": ["51-0-81916"]
+        }
+      },
+      {
+        "stop_name": "Grove & South Streets",
+        "branches": null,
+        "station": "south",
+        "order": 3,
+        "stops": {
+          "1": ["51-1-11837"],
+          "0": ["51-0-1895"]
+        }
+      },
+      {
+        "stop_name": "VFW Parkway @ Corey Street",
+        "branches": null,
+        "station": "vfcor",
+        "order": 4,
+        "stops": {
+          "1": ["51-1-1839"],
+          "0": ["51-0-1888"]
+        }
+      },
+      {
+        "stop_name": "Centre Street @ Weld Street",
+        "branches": null,
+        "station": "ctrwe",
+        "order": 5,
+        "stops": {
+          "1": ["51-1-1853"],
+          "0": ["51-0-1875"]
+        }
+      },
+      {
+        "stop_name": "Roslindale Square",
+        "branches": null,
+        "station": "rossq",
+        "order": 6,
+        "stops": {
+          "1": ["51-1-636"],
+          "0": ["51-0-602"]
+        }
+      },
+      {
+        "stop_name": "Forest Hills Busway",
+        "branches": null,
+        "station": "fhill",
+        "order": 7,
+        "stops": {
+          "1": ["51-1-10642"],
+          "0": ["51-0-10642"]
+        }
+      }
+    ]
+  }
+}

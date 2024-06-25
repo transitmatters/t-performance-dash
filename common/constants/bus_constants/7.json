@@ -1,0 +1,61 @@
+{
+  "7": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "City Point",
+        "branches": null,
+        "station": "ctypt",
+        "order": 1,
+        "stops": {
+          "1": ["7-1-33", "7-1-333"],
+          "0": ["7-0-33", "7-0-333"]
+        }
+      },
+      {
+        "stop_name": "L Street @ Broadway",
+        "branches": null,
+        "station": "lbrwy",
+        "order": 2,
+        "stops": {
+          "1": ["7-1-886"],
+          "0": ["7-0-879"]
+        }
+      },
+      {
+        "stop_name": "Boston Convention Center",
+        "branches": null,
+        "station": "bcec",
+        "order": 3,
+        "stops": {
+          "1": ["7-1-890"],
+          "0": ["7-0-889"]
+        }
+      },
+      {
+        "stop_name": "South Station",
+        "branches": null,
+        "station": "sosta",
+        "order": 4,
+        "stops": {
+          "1": ["7-1-892"],
+          "0": ["7-0-6564"]
+        }
+      },
+      {
+        "stop_name": "Otis & Summer Streets",
+        "branches": null,
+        "station": "otsum",
+        "order": 5,
+        "stops": {
+          "1": ["7-1-16535"],
+          "0": ["7-0-16535"]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "90": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Davis",
+        "branches": null,
+        "station": "davis",
+        "order": 1,
+        "stops": {
+          "1": ["90-1-5104"],
+          "0": ["90-0-5104"]
+        }
+      },
+      {
+        "stop_name": "Highland Avenue @ School Street (Somerville High School)",
+        "branches": null,
+        "station": "hlscl",
+        "order": 2,
+        "stops": {
+          "1": ["90-1-2684"],
+          "0": ["90-0-2662"]
+        }
+      },
+      {
+        "stop_name": "Broadway @ Cross Street",
+        "branches": null,
+        "station": "brwcr",
+        "order": 3,
+        "stops": {
+          "1": ["90-1-2747"],
+          "0": ["90-0-2748"]
+        }
+      },
+      {
+        "stop_name": "Sullivan Square",
+        "branches": null,
+        "station": "sull",
+        "order": 4,
+        "stops": {
+          "1": ["90-1-29001"],
+          "0": ["90-0-29001"]
+        }
+      },
+      {
+        "stop_name": "Assembly Mall & Row",
+        "branches": null,
+        "station": "amall",
+        "order": 5,
+        "stops": {
+          "1": ["90-1-28745"],
+          "0": ["90-0-28746"]
+        }
+      }
+    ]
+  }
+}

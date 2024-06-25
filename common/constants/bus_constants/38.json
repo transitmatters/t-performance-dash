@@ -1,0 +1,71 @@
+{
+  "38": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Wren Street",
+        "branches": null,
+        "station": "wren",
+        "order": 1,
+        "stops": {
+          "1": ["38-1-5263"],
+          "0": ["38-0-5263"]
+        }
+      },
+      {
+        "stop_name": "West Roxbury Parkway @ Centre",
+        "branches": null,
+        "station": "pkwy",
+        "order": 2,
+        "stops": {
+          "1": ["38-1-15216", "38-1-804"],
+          "0": ["38-0-5256"]
+        }
+      },
+      {
+        "stop_name": "Centre Street @ Weld Street",
+        "branches": null,
+        "station": "ctrwe",
+        "order": 3,
+        "stops": {
+          "1": ["38-1-5223"],
+          "0": ["38-0-5249"]
+        }
+      },
+      {
+        "stop_name": "Centre Street @ Faulkner Hospital",
+        "branches": null,
+        "station": "fahsp",
+        "order": 4,
+        "stops": {
+          "1": ["38-1-5227"],
+          "0": ["38-0-5245"]
+        }
+      },
+      {
+        "stop_name": "Jamaica Plain Center (Monument)",
+        "branches": null,
+        "station": "jpctr",
+        "order": 5,
+        "stops": {
+          "1": ["38-1-2003", "38-1-99991"],
+          "0": ["38-0-1128", "38-0-11939"]
+        }
+      },
+      {
+        "stop_name": "Forest Hills Busway",
+        "branches": null,
+        "station": "fhill",
+        "order": 6,
+        "stops": {
+          "1": ["38-1-10642"],
+          "0": ["38-0-10642"]
+        }
+      }
+    ]
+  }
+}

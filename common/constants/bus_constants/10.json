@@ -1,0 +1,91 @@
+{
+  "10": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "City Point",
+        "branches": null,
+        "station": "ctypt",
+        "order": 1,
+        "stops": {
+          "1": ["10-1-33"],
+          "0": ["10-0-33"]
+        }
+      },
+      {
+        "stop_name": "L Street @ Broadway",
+        "branches": null,
+        "station": "lbrwy",
+        "order": 2,
+        "stops": {
+          "1": ["10-1-41"],
+          "0": ["10-0-25"]
+        }
+      },
+      {
+        "stop_name": "Perkins Square (Dorchester) @ Broadway (Southbound)",
+        "branches": null,
+        "station": "perks",
+        "order": 3,
+        "stops": {
+          "1": ["10-1-45"],
+          "0": ["10-0-20"]
+        }
+      },
+      {
+        "stop_name": "Andrew",
+        "branches": null,
+        "station": "andrw",
+        "order": 4,
+        "stops": {
+          "1": ["10-1-13"],
+          "0": ["10-0-13"]
+        }
+      },
+      {
+        "stop_name": "South Bay Mall",
+        "branches": null,
+        "station": "sobay",
+        "order": 5,
+        "stops": {
+          "1": ["10-1-11241"],
+          "0": ["10-0-29051"]
+        }
+      },
+      {
+        "stop_name": "BU Medical Campus",
+        "branches": null,
+        "station": "bumed",
+        "order": 6,
+        "stops": {
+          "1": ["10-1-5090"],
+          "0": ["10-0-5089"]
+        }
+      },
+      {
+        "stop_name": "Back Bay",
+        "branches": null,
+        "station": "bbsta",
+        "order": 7,
+        "stops": {
+          "1": ["10-1-11384"],
+          "0": ["10-0-176"]
+        }
+      },
+      {
+        "stop_name": "Saint James Avenue @ Dartmouth Street",
+        "branches": null,
+        "station": "stjim",
+        "order": 8,
+        "stops": {
+          "1": ["10-1-178"],
+          "0": ["10-0-178"]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "97": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Malden Center Station",
+        "branches": null,
+        "station": "malst",
+        "order": 1,
+        "stops": {
+          "1": ["97-1-5327"],
+          "0": ["97-0-5327"]
+        }
+      },
+      {
+        "stop_name": "Medford Street @ Main Street",
+        "branches": null,
+        "station": "mfdmn",
+        "order": 2,
+        "stops": {
+          "1": ["97-1-45331"],
+          "0": ["97-0-45413"]
+        }
+      },
+      {
+        "stop_name": "Everett Square",
+        "branches": null,
+        "station": "evrtc",
+        "order": 3,
+        "stops": {
+          "1": ["97-1-5496"],
+          "0": ["97-0-5695"]
+        }
+      },
+      {
+        "stop_name": "Sweester Circle",
+        "branches": null,
+        "station": "sweet",
+        "order": 4,
+        "stops": {
+          "1": ["97-1-5560"],
+          "0": ["97-0-5565"]
+        }
+      },
+      {
+        "stop_name": "Wellington Station",
+        "branches": null,
+        "station": "welst",
+        "order": 5,
+        "stops": {
+          "1": ["97-1-5271"],
+          "0": ["97-0-5271"]
+        }
+      }
+    ]
+  }
+}

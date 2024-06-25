@@ -1,0 +1,71 @@
+{
+  "99": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Upper Highland",
+        "branches": null,
+        "station": "uphgh",
+        "order": 1,
+        "stops": {
+          "1": ["99-1-15058"],
+          "0": ["99-0-15058"]
+        }
+      },
+      {
+        "stop_name": "Glen Ridge Nursing Home",
+        "branches": null,
+        "station": "glrdg",
+        "order": 2,
+        "stops": {
+          "1": ["99-1-5080"],
+          "0": ["99-0-5080"]
+        }
+      },
+      {
+        "stop_name": "Malden Center Station",
+        "branches": null,
+        "station": "malst",
+        "order": 3,
+        "stops": {
+          "1": ["99-1-5327"],
+          "0": ["99-0-5072"]
+        }
+      },
+      {
+        "stop_name": "Main Street @ Cross Street",
+        "branches": null,
+        "station": "mncrs",
+        "order": 4,
+        "stops": {
+          "1": ["99-1-5449"],
+          "0": ["99-0-5451"]
+        }
+      },
+      {
+        "stop_name": "Sweester Circle",
+        "branches": null,
+        "station": "sweet",
+        "order": 5,
+        "stops": {
+          "1": ["99-1-5404"],
+          "0": ["99-0-5405"]
+        }
+      },
+      {
+        "stop_name": "Wellington Station",
+        "branches": null,
+        "station": "welst",
+        "order": 6,
+        "stops": {
+          "1": ["99-1-5271"],
+          "0": ["99-0-5271"]
+        }
+      }
+    ]
+  }
+}

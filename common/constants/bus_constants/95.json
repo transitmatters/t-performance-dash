@@ -1,0 +1,71 @@
+{
+  "95": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Arlington Center",
+        "branches": null,
+        "station": "arlct",
+        "order": 1,
+        "stops": {
+          "1": ["95-1-2362"],
+          "0": ["95-0-2362"]
+        }
+      },
+      {
+        "stop_name": "Playstead Road",
+        "branches": null,
+        "station": "plast",
+        "order": 1,
+        "stops": {
+          "1": ["95-1-6310"],
+          "0": ["95-0-6310"]
+        }
+      },
+      {
+        "stop_name": "High Street @ Harvard Avenue",
+        "branches": null,
+        "station": "hihar",
+        "order": 2,
+        "stops": {
+          "1": ["95-1-16316"],
+          "0": ["95-0-16305"]
+        }
+      },
+      {
+        "stop_name": "Winthrop Circle",
+        "branches": null,
+        "station": "wicir",
+        "order": 3,
+        "stops": {
+          "1": ["95-1-6322"],
+          "0": ["95-0-5005"]
+        }
+      },
+      {
+        "stop_name": "Medford Square",
+        "branches": null,
+        "station": "medfd",
+        "order": 4,
+        "stops": {
+          "1": ["95-1-5031", "95-1-63241"],
+          "0": ["95-0-5002", "95-0-63241"]
+        }
+      },
+      {
+        "stop_name": "Sullivan Square",
+        "branches": null,
+        "station": "sull",
+        "order": 5,
+        "stops": {
+          "1": ["95-1-29001"],
+          "0": ["95-0-29003"]
+        }
+      }
+    ]
+  }
+}

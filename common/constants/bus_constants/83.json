@@ -1,0 +1,61 @@
+{
+  "83": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Rindge Avenue",
+        "branches": null,
+        "station": "rindg",
+        "order": 1,
+        "stops": {
+          "1": ["83-1-2425"],
+          "0": ["83-0-2425"]
+        }
+      },
+      {
+        "stop_name": "Porter Square",
+        "branches": null,
+        "station": "portr",
+        "order": 2,
+        "stops": {
+          "1": ["83-1-2430"],
+          "0": ["83-0-23151", "83-0-2460"]
+        }
+      },
+      {
+        "stop_name": "Inman Square",
+        "branches": null,
+        "station": "inman",
+        "order": 3,
+        "stops": {
+          "1": ["83-1-2439"],
+          "0": ["83-0-2451"]
+        }
+      },
+      {
+        "stop_name": "Prospect Street @ Broadway",
+        "branches": null,
+        "station": "proby",
+        "order": 4,
+        "stops": {
+          "1": ["83-1-2441"],
+          "0": ["83-0-2448"]
+        }
+      },
+      {
+        "stop_name": "Central Square (Cambridge)",
+        "branches": null,
+        "station": "cntsq",
+        "order": 5,
+        "stops": {
+          "1": ["83-1-1060"],
+          "0": ["83-0-1060"]
+        }
+      }
+    ]
+  }
+}

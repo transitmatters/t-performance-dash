@@ -1,0 +1,81 @@
+{
+  "88": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Clarendon Hill",
+        "branches": null,
+        "station": "clarh",
+        "order": 1,
+        "stops": {
+          "1": ["88-1-2637"],
+          "0": ["88-0-2637"]
+        }
+      },
+      {
+        "stop_name": "Teele Square @ Broadway",
+        "branches": null,
+        "station": "teele",
+        "order": 2,
+        "stops": {
+          "1": ["88-1-2577"],
+          "0": ["88-0-2634"]
+        }
+      },
+      {
+        "stop_name": "Davis",
+        "branches": null,
+        "station": "davis",
+        "order": 3,
+        "stops": {
+          "1": ["88-1-2581"],
+          "0": ["88-0-5104"]
+        }
+      },
+      {
+        "stop_name": "Highland Avenue @ Cedar Street",
+        "branches": null,
+        "station": "hlcdr",
+        "order": 4,
+        "stops": {
+          "1": ["88-1-2677"],
+          "0": ["88-0-2671"]
+        }
+      },
+      {
+        "stop_name": "Highland Avenue @ School Street (Somerville High School)",
+        "branches": null,
+        "station": "hlscl",
+        "order": 5,
+        "stops": {
+          "1": ["88-1-2684"],
+          "0": ["88-0-2662", "88-0-2664"]
+        }
+      },
+      {
+        "stop_name": "McGrath Highway @ Somerville Avenue",
+        "branches": null,
+        "station": "mcgsm",
+        "order": 6,
+        "stops": {
+          "1": ["88-1-2600"],
+          "0": ["88-0-2607"]
+        }
+      },
+      {
+        "stop_name": "Lechmere Station",
+        "branches": null,
+        "station": "lchmr",
+        "order": 7,
+        "stops": {
+          "1": ["88-1-70500"],
+          "0": ["88-0-70500"]
+        }
+      }
+    ]
+  }
+}
