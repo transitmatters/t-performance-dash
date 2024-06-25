@@ -20,7 +20,7 @@ export const BetaDataNotice: React.FC = () => {
   const isEndDateAfterBusMaxDay = endDate !== undefined && dayjs(endDate).isAfter(BUS_MAX_DAY);
 
   if (
-    (line === 'line-bus' || linePath === 'bus') &&
+    (line === 'line-commuter-rail' || linePath === 'commuter-rail') &&
     (isStartDateAfterBusMaxDay || isEndDateAfterBusMaxDay)
   ) {
     return (
@@ -30,7 +30,9 @@ export const BetaDataNotice: React.FC = () => {
             <ExclamationTriangleIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />
           </div>
           <div className="ml-3">
-            <h3 className="text-sm font-medium text-yellow-800">Real-time bus data is in beta</h3>
+            <h3 className="text-sm font-medium text-yellow-800">
+              Real-time Commuter Rail data is in beta
+            </h3>
             <div className="mt-2 text-sm text-yellow-700">
               <p>
                 TransitMatters collects this data using the{' '}
@@ -46,8 +48,7 @@ export const BetaDataNotice: React.FC = () => {
                 Please expect reduced accuracy.
               </p>
               <p>
-                We favor official performance data from the MBTA when it's available. Technical
-                details of our data collection are available in our{' '}
+                Technical details of our data collection are available in our{' '}
                 <Link
                   href="https://github.com/transitmatters/gobble"
                   rel="noopener noreferrer"

@@ -32,6 +32,19 @@ ROUTES_CR = [
 ]
 
 
+def get_all_s3_objects(s3, **base_kwargs):
+    continuation_token = None
+    while True:
+        list_kwargs = dict(MaxKeys=1000, **base_kwargs)
+        if continuation_token:
+            list_kwargs["ContinuationToken"] = continuation_token
+        response = s3.list_objects_v2(**list_kwargs)
+        yield from response.get("Contents", [])
+        if not response.get("IsTruncated"):  # At the end of the list?
+            break
+        continuation_token = response.get("NextContinuationToken")
+
+
 def get_line_stops():
     s3 = boto3.client("s3", config=botocore.client.Config(max_pool_connections=15))
 
@@ -92,15 +105,17 @@ for LINE_KEY in ROUTES_CR:
 
     for index, stop in enumerate(stops["data"]):
         try:
-            stops_formatted.append(
-                {
-                    "stop_name": stop["attributes"]["name"],
-                    "station": stop["id"],
-                    "branches": None,
-                    "order": index + 1,
-                    "stops": stop_layout[stop["id"]],
-                }
-            )
+            station_json = {
+                "stop_name": stop["attributes"]["name"],
+                "station": stop["id"],
+                "branches": None,
+                "order": index + 1,
+                "stops": stop_layout[stop["id"]],
+            }
+            if index == 0 or index == len(stops["data"]) - 1:
+                station_json["terminus"] = True
+
+            stops_formatted.append(station_json)
         except KeyError:
             c_f = requests.get(
                 "https://api-v3.mbta.com/stops/{}?include=child_stops&api_key={}".format(stop["id"], MBTA_V3_API_KEY)
