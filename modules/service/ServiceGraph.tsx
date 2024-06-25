@@ -53,9 +53,9 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
       data: allDates.map((date) => {
         const scheduledToday = scheduledDataByDate[date];
         const deliveredToday = deliveredDataByDate[date];
-        const anyDeliveredToday = deliveredToday?.miles_covered > 0;
+        const anyDeliveredToday = deliveredToday && deliveredToday.miles_covered > 0;
         const value =
-          scheduledToday.count && anyDeliveredToday ? Math.round(scheduledToday.count) / 2 : 0;
+          scheduledToday?.count && anyDeliveredToday ? Math.round(scheduledToday?.count) / 2 : 0;
         return { date, value };
       }),
       style: {
