@@ -45,7 +45,7 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, close }) => {
                   selected
                     ? 'bg-stone-900 text-white'
                     : enabled && 'text-stone-300 hover:bg-stone-800 hover:text-white',
-                  'group flex select-none items-center gap-x-3 rounded-sm py-2 pl-2 text-sm font-semibold leading-6',
+                  'group flex select-none items-center gap-x-3 rounded-sm py-1.5 pl-2 text-sm font-semibold leading-6',
                   enabled ? 'cursor-pointer' : 'cursor-default text-stone-600'
                 )}
               >

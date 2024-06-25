@@ -1,7 +1,6 @@
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import {
   faMapLocationDot,
-  faCalendar,
   faHouse,
   faUsers,
   faWarning,
@@ -9,6 +8,8 @@ import {
   faGaugeHigh,
   faTableColumns,
   faStopwatch20,
+  faCalendarDays,
+  faCalendarXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import type { Line } from '../types/lines';
 
@@ -19,6 +20,7 @@ export enum PAGES {
   overview = 'overview',
   speed = 'speed',
   predictions = 'predictions',
+  reliability = 'reliability',
   service = 'service',
   slowzones = 'slowzones',
   systemSlowzones = 'systemSlowzones',
@@ -77,7 +79,7 @@ export const ALL_PAGES: PageMap = {
     name: 'Multi-day trips',
     title: 'Multi-day trips',
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
-    icon: faCalendar,
+    icon: faCalendarDays,
     dateStoreSection: 'multiTrips',
     hasStationStore: true,
   },
@@ -112,6 +114,14 @@ export const ALL_PAGES: PageMap = {
     lines: ['line-red', 'line-orange', 'line-blue', 'line-green'],
     dateStoreSection: 'line',
     icon: faClockFour,
+  },
+  reliability: {
+    key: 'reliability',
+    path: '/reliability',
+    name: 'Reliability',
+    lines: ['line-red', 'line-orange', 'line-blue', 'line-green'],
+    icon: faCalendarXmark,
+    dateStoreSection: 'line',
   },
   slowzones: {
     key: 'slowzones',
@@ -161,6 +171,7 @@ export const LINE_PAGES = [
   ALL_PAGES.slowzones,
   ALL_PAGES.speed,
   ALL_PAGES.predictions,
+  ALL_PAGES.reliability,
   ALL_PAGES.ridership,
 ];
 
