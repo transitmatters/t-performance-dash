@@ -1,4 +1,5 @@
-import type { Diagram, SegmentLocation } from '../../../common/components/maps';
+import type { Diagram, SegmentLocation } from '@transitmatters/stripmap';
+
 import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
 import type { Station } from '../../../common/types/stations';

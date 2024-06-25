@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react';
+import type { SegmentLocation, SegmentLabel, TooltipSide } from '@transitmatters/stripmap';
+import { LineMap, createDefaultDiagramForLine } from '@transitmatters/stripmap';
+
+import '@transitmatters/stripmap/dist/style.css';
 
 import { LINE_OBJECTS } from '../../../common/constants/lines';
-import type { SegmentLocation } from '../../../common/components/maps';
-import { LineMap, createDefaultDiagramForLine } from '../../../common/components/maps';
 import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
 import type { SlowZonesLineName } from '../types';
 
-import type { SegmentLabel, TooltipSide } from '../../../common/components/maps/LineMap';
 import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { TODAY_STRING } from '../../../common/constants/dates';
