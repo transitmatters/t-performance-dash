@@ -21,6 +21,7 @@ const linePathToKeyMap: Record<string, Line> = {
   orange: 'line-orange',
   green: 'line-green',
   blue: 'line-blue',
+  mattapan: 'line-mattapan',
   bus: 'line-bus',
 };
 
