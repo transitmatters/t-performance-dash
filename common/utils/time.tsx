@@ -55,11 +55,14 @@ export const getFormattedTimeString = (value: number, unit: 'minutes' | 'seconds
   const secondsValue = unit === 'seconds' ? value : value * 60;
   const absValue = Math.round(Math.abs(secondsValue));
   const duration = dayjs.duration(absValue, 'seconds');
+  const hoursDuration = duration.asHours();
   switch (true) {
     case absValue < 100:
       return `${absValue}s`;
     case absValue < 3600:
       return `${duration.format('m')}m ${duration.format('s').padStart(2, '0')}s`;
+    case absValue > 86400:
+      return `${hoursDuration.toFixed(0)}h ${duration.format('m').padStart(2, '0')}m`;
     default:
       return `${duration.format('H')}h ${duration.format('m').padStart(2, '0')}m`;
   }

@@ -116,7 +116,7 @@
   "proxy": "http://localhost:5000",
   "engines": {
     "node": ">=20.10.0",
-    "npm": ">=9.0.0"
+    "npm": ">=10.0.0"
   },
   "browserslist": {
     "production": [

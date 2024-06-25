@@ -8,6 +8,7 @@ from chalicelib import (
     aggregation,
     data_funcs,
     secrets,
+    reliability,
     mbta_v3,
     speed,
     speed_restrictions,
@@ -162,6 +163,12 @@ def get_git_id():
 def get_alerts():
     response = mbta_v3.getAlerts(app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
+
+
+@app.route("/api/linedelays", cors=cors_config)
+def get_delays_by_line():
+    response = reliability.delay_time_by_line(app.current_request.query_params)
+    return json.dumps(response, indent=4, sort_keys=True)
 
 
 @app.route("/api/tripmetrics", cors=cors_config)

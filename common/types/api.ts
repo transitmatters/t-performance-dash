@@ -51,10 +51,22 @@ export type FetchDeliveredTripMetricsOptions = {
   line?: Line;
 };
 
+export type FetchAlertDelaysByLineOptions = {
+  start_date?: string;
+  end_date?: string;
+  line?: Line;
+};
+
 export enum FetchDeliveredTripMetricsParams {
   startDate = 'start_date',
   endDate = 'end_date',
   agg = 'agg',
+  line = 'line',
+}
+
+export enum FetchAlertDelaysByLineParams {
+  startDate = 'start_date',
+  endDate = 'end_date',
   line = 'line',
 }
 
