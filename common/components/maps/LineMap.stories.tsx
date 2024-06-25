@@ -54,9 +54,17 @@ const redLineSegments: SegmentRenderOptions[] = [
   },
 ];
 
+const greenLine = createDefaultDiagramForLine('Green');
+
 export const Testing = () => {
   return (
     <>
+      <LineMap
+        direction="horizontal"
+        diagram={greenLine}
+        getStationLabel={(options) => options.stationId}
+        strokeOptions={{ stroke: 'green' }}
+      />
       <LineMap
         direction="horizontal"
         diagram={redLine}
