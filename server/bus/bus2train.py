@@ -119,7 +119,7 @@ def to_disk(df: pd.DataFrame, outdir, nozip=False):
     """
     For each service_date/stop_id/direction/route group, we write the events to disk.
     """
-    monthly_service_date = pd.Grouper(key="service_date", freq="1M")
+    monthly_service_date = pd.Grouper(key="service_date", freq="1ME")
     grouped = df.groupby([monthly_service_date, "stop_id", "direction_id", "route_id"])
 
     for name, events in grouped:
