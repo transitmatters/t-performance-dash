@@ -54,7 +54,7 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ line, route, childre
       <Link href={href}>
         <div
           className={classNames(
-            'flex w-full flex-row items-center gap-2 rounded-t-md py-1 pl-1 text-sm ',
+            'flex w-full flex-row items-center gap-2 rounded-t-md py-1 pl-1 text-sm',
             `${lineColorBackground[line ?? 'DEFAULT']}`,
             selected
               ? `bg-opacity-100 text-white text-opacity-95`

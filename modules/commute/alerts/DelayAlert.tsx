@@ -20,7 +20,7 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort, busRoute?: 
     const { min, max } = getStations(alert.stops, lineOrRoute);
     return (
       <>
-        <p className="mr-1 ">Delays</p>
+        <p className="mr-1">Delays</p>
         <p className="font-bold">{min?.stop_name}</p>
         <FontAwesomeIcon icon={faLeftRight} className={'mx-2 h-4 w-4'} />
         <p className="font-bold">{max?.stop_name}</p>
@@ -35,12 +35,12 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort, busRoute?: 
         return match ? match[1] : '';
       });
     return (
-      <p className="mr-1 ">
+      <p className="mr-1">
         Delays on {lineOrRoute} {!busRoute && 'Line'} ({formattedRoutes?.join(', ')})
       </p>
     );
   }
-  return <p className="mr-1 ">Delays</p>;
+  return <p className="mr-1">Delays</p>;
 };
 
 export const DelayAlert: React.FC<DelayAlertProps> = ({ alert, lineShort, type, busRoute }) => {

@@ -172,7 +172,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           ]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end gap-4 ">
+      <div className="flex flex-row items-end gap-4">
         {showLegend && <LegendLongTerm />}
         {startDate && (
           <DownloadButton

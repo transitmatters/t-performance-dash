@@ -28,7 +28,7 @@ export const WidgetForCarousel: React.FC<WidgetForCarouselProps> = ({
           <div className="flex flex-row items-baseline gap-x-1">
             {widgetValue.getFormattedValue(true)}
           </div>
-          <div className="flex flex-row items-baseline gap-x-1 ">
+          <div className="flex flex-row items-baseline gap-x-1">
             {layoutKind !== 'no-delta' && (
               <Delta
                 widgetValue={widgetValue}

@@ -12,7 +12,7 @@ export const MobileNavHeader = () => {
 
   return (
     <>
-      <div className="even sticky top-0 z-10 bg-tm-grey text-gray-300 ">
+      <div className="even sticky top-0 z-10 bg-tm-grey text-gray-300">
         <div className="top-0 z-10 flex flex-row items-center justify-between overflow-y-auto bg-tm-grey p-2">
           <Link
             href="/"

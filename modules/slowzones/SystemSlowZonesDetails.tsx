@@ -39,12 +39,13 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
   const [lineShort, setLineShort] = useState<LineShort>('Red');
   const line = `line-${lineShort.toLowerCase()}` as Line;
   const canShowSlowZonesMap = lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange';
+  const isDesktop = useBreakpoint('lg');
 
   const {
     query: { startDate, endDate },
   } = useDelimitatedRoute();
 
-  const speedRestrictions = useSpeedRestrictionData({ lineId: line!, date: endDate! });
+  const speedRestrictions = useSpeedRestrictionData({ lineId: line, date: endDate! });
 
   const startDateUTC = startDate ? dayjs.utc(startDate).startOf('day') : undefined;
   const endDateUTC = endDate ? dayjs.utc(endDate).startOf('day') : undefined;
@@ -100,7 +101,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
                 slowZones={isArray(allData.data) ? allData.data : allData.data.data}
                 speedRestrictions={speedRestrictions.data}
                 lineName={lineShort}
-                direction="horizontal-on-desktop"
+                direction={isDesktop ? 'horizontal' : 'vertical'}
               />
             ) : (
               <div className="relative flex h-full">

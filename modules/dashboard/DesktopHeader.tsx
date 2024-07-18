@@ -29,7 +29,7 @@ export const DesktopHeader: React.FC = () => {
   return (
     <div
       className={classNames(
-        'sticky top-0 z-10 mx-3 mb-2 flex flex-row justify-between gap-x-6 rounded-bl-none rounded-br-md  border-gray-200 text-white shadow-md md:mx-0 md:mr-4 md:border-l-0',
+        'sticky top-0 z-10 mx-3 mb-2 flex flex-row justify-between gap-x-6 rounded-bl-none rounded-br-md border-gray-200 text-white shadow-md md:mx-0 md:mr-4 md:border-l-0',
         lineColorBackground[line ?? 'DEFAULT']
       )}
     >

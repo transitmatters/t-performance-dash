@@ -32,7 +32,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
           </div>
           <div
             className={classNames(
-              'flex flex-row items-center justify-center ',
+              'flex flex-row items-center justify-center',
               lineColorBackground[line ?? 'DEFAULT']
             )}
           >

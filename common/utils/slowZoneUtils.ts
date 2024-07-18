@@ -29,8 +29,8 @@ const getDirection = (to: Station, from: Station) => {
 const formatSlowZones = (data: SlowZoneResponse[]): SlowZone[] =>
   data.map((sz) => {
     // This will never be undefined unless there is a new station that we don't have in our const file
-    const from = getParentStationForStopId(sz.fr_id) as Station;
-    const to = getParentStationForStopId(sz.to_id) as Station;
+    const from = getParentStationForStopId(sz.fr_id);
+    const to = getParentStationForStopId(sz.to_id);
     const direction = getDirection(to, from);
     return {
       order: from.order,
