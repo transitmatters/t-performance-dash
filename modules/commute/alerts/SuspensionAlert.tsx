@@ -20,14 +20,14 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort) => {
 
     return (
       <>
-        <p className="mr-1 ">No service</p>
+        <p className="mr-1">No service</p>
         <p className="font-bold">{min?.stop_name}</p>
         <FontAwesomeIcon icon={faLeftRight} className={'mx-2 h-4 w-4'} />
         <p className="font-bold">{max?.stop_name}</p>
       </>
     );
   }
-  return <p className="mr-1 ">Detours on {lineShort} Line</p>;
+  return <p className="mr-1">Detours on {lineShort} Line</p>;
 };
 
 export const SuspensionAlert: React.FC<SuspensionAlertProps> = ({

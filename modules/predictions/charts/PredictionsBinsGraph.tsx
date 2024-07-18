@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import { max } from 'date-fns';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS_LEVELS } from '../../../common/constants/colors';
-import type { TimePrediction, TimePredictionWeek } from '../../../common/types/dataPoints';
+import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
@@ -46,16 +46,16 @@ export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
   // Split data by bin
   const bin0to3 = data
     .map(({ prediction }) => prediction.find(({ bin }) => bin === '0-3 min'))
-    .filter((p) => p !== undefined) as TimePrediction[];
+    .filter((p) => p !== undefined);
   const bin3to6 = data
     .map(({ prediction }) => prediction.find(({ bin }) => bin === '3-6 min'))
-    .filter((p) => p !== undefined) as TimePrediction[];
+    .filter((p) => p !== undefined);
   const bin6to12 = data
     .map(({ prediction }) => prediction.find(({ bin }) => bin === '6-12 min'))
-    .filter((p) => p !== undefined) as TimePrediction[];
+    .filter((p) => p !== undefined);
   const bin12to30 = data
     .map(({ prediction }) => prediction.find(({ bin }) => bin === '12-30 min'))
-    .filter((p) => p !== undefined) as TimePrediction[];
+    .filter((p) => p !== undefined);
 
   return (
     <ChartBorder>

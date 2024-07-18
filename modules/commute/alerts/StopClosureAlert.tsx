@@ -16,7 +16,7 @@ export const StopClosure: React.FC<StopClosureProps> = ({ alert, type }) => {
       alert={alert}
       type={type}
     >
-      <p className="mr-1 ">Stop Closures</p>
+      <p className="mr-1">Stop Closures</p>
     </AlertBoxInner>
   );
 };
