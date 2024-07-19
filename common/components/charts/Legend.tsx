@@ -14,7 +14,7 @@ export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio = false 
         <div className="flex w-full flex-col rounded-md border border-stone-100 text-stone-700 shadow-sm">
           <Disclosure.Button className="">
             <div className="flex flex-row items-center justify-between px-4 py-1">
-              <p className="text-xs italic ">Legend</p>
+              <p className="text-xs italic">Legend</p>
               <FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} className="" />
             </div>
           </Disclosure.Button>

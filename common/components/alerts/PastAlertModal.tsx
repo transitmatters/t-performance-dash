@@ -43,7 +43,7 @@ export const PastAlertModal: React.FC<PastAlertModalProps> = ({ alertsOpen, setA
                   <div className="flex flex-col items-center text-lg">
                     <p
                       style={{ fontFamily: 'Helvetica Neue' }}
-                      className="text-5xl text-yellow-300 "
+                      className="text-5xl text-yellow-300"
                     >
                       ⚠️
                     </p>
@@ -54,8 +54,8 @@ export const PastAlertModal: React.FC<PastAlertModalProps> = ({ alertsOpen, setA
                       <div
                         key={index}
                         className={classNames(
-                          alert.applied ? 'bg-yellow-200' : 'bg-yellow-100 ',
-                          'flex cursor-pointer flex-col rounded-md border border-yellow-200 bg-yellow-100 p-2 shadow-sm hover:bg-yellow-200 '
+                          alert.applied ? 'bg-yellow-200' : 'bg-yellow-100',
+                          'flex cursor-pointer flex-col rounded-md border border-yellow-200 bg-yellow-100 p-2 shadow-sm hover:bg-yellow-200'
                         )}
                         onClick={() => {
                           alertStore.changeAlertApplied(alertStore.alerts, index);

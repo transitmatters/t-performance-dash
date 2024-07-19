@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
+import type { TooltipSide } from '@transitmatters/stripmap';
 
 import { getParentStationForStopId } from '../../../common/utils/stations';
 
 import { BasicWidgetDataLayout } from '../../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { DeltaTimeWidgetValue } from '../../../common/types/basicWidgets';
-import type { TooltipSide } from '../../../common/components/maps/LineMap';
 import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
 import { prettyDate } from '../../../common/utils/date';
 
@@ -58,7 +58,7 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
   const isHorizontal = side === 'top';
 
   const { fromStationName, toStationName } = useMemo(
-    () => getOrderedStationNames(slowZones)!,
+    () => getOrderedStationNames(slowZones),
     [slowZones]
   );
 

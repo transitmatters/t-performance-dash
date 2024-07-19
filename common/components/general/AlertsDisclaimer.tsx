@@ -11,7 +11,7 @@ export const AlertsDisclaimer: React.FC<AlertsDisclaimerProps> = ({ alerts }) =>
     <div>
       {alerts?.map((alert, index) => (
         <div key={index} className="flex flex-row items-baseline gap-1 p-1">
-          <p className="text-sm  text-stone-800">
+          <p className="text-sm text-stone-800">
             <span style={{ fontFamily: 'Helvetica Neue' }}>⚠️ </span>
             <span className="font-bold italic">
               {getDateString(alert.valid_from, alert.valid_to)}
