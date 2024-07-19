@@ -32,19 +32,6 @@ ROUTES_CR = [
 ]
 
 
-def get_all_s3_objects(s3, **base_kwargs):
-    continuation_token = None
-    while True:
-        list_kwargs = dict(MaxKeys=1000, **base_kwargs)
-        if continuation_token:
-            list_kwargs["ContinuationToken"] = continuation_token
-        response = s3.list_objects_v2(**list_kwargs)
-        yield from response.get("Contents", [])
-        if not response.get("IsTruncated"):  # At the end of the list?
-            break
-        continuation_token = response.get("NextContinuationToken")
-
-
 def get_line_stops():
     s3 = boto3.client("s3", config=botocore.client.Config(max_pool_connections=15))
 
