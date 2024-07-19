@@ -12,6 +12,7 @@ interface OverallRidershipChartProps {
 export const OverallRidershipChart: React.FC<OverallRidershipChartProps> = ({ ridershipData }) => {
   const labels = Object.values(ridershipData)[0].map((point) => point.date);
   const datasets = convertToRidershipDataset(ridershipData);
+
   return (
     <LandingChartDiv>
       <LandingPageChart datasets={datasets} labels={labels} id="system-ridership" />
