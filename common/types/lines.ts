@@ -174,3 +174,9 @@ export const BUS_PATH = {
     line: 'bus',
   },
 };
+
+export const COMMUTER_RAIL_PATH = {
+  params: {
+    line: 'commuter-rail',
+  },
+};

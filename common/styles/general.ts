@@ -10,7 +10,7 @@ export const lineColorBackground: DefaultStyleMap = {
   DEFAULT: `bg-stone-800`,
 };
 
-export const lineColorLightBorder = {
+export const lineColorLightBorder: DefaultStyleMap = {
   'line-red': `border-mbta-lightRed`,
   'line-orange': `border-mbta-lightOrange`,
   'line-green': `border-mbta-lightGreen`,
