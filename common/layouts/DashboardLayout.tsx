@@ -30,12 +30,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
         </div>
       </main>
       {isMobile && showControlParams && (
-        <MobileControlPanel
-          dateStoreSection={dateStoreSection}
-          line={line}
-          busRoute={busRoute}
-          crRoute={crRoute}
-        />
+        <MobileControlPanel dateStoreSection={dateStoreSection} line={line} busRoute={busRoute} />
       )}
     </div>
   );

@@ -42,12 +42,7 @@ export const DesktopHeader: React.FC = () => {
         </div>
       </div>
       {showControls && (
-        <ControlPanel
-          dateStoreSection={dateStoreSection}
-          line={line}
-          busRoute={busRoute}
-          crRoute={crRoute}
-        />
+        <ControlPanel dateStoreSection={dateStoreSection} line={line} busRoute={busRoute} />
       )}
     </div>
   );
