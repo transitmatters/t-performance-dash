@@ -1,3 +1,4 @@
+import type { Tab } from '../../types/router';
 import type { DateStoreSection } from '../../constants/pages';
 import type { DateStoreConfiguration } from '../types/dateStoreTypes';
 import {

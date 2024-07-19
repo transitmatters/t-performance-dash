@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import type { Line } from '../../common/types/lines';
 import { lineColorBackground, lineColorBorder } from '../../common/styles/general';
 import { LINE_OBJECTS } from '../../common/constants/lines';
-import { BUS_DEFAULTS } from '../../common/state/defaults/dateDefaults';
+import { BUS_DEFAULTS, COMMUTER_RAIL_DEFAULTS } from '../../common/state/defaults/dateDefaults';
 
 interface LineButtonProps {
   children: React.ReactNode;
@@ -17,9 +17,11 @@ export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
   return (
     <Link
       href={
-        line === 'line-bus'
-          ? `/${lineObject.path}?busRoute=1&date=${BUS_DEFAULTS.singleTripConfig.date}`
-          : `/${lineObject.path}`
+        line === 'line-commuter-rail'
+          ? `/commuter-rail/ridership?crRoute=CR-Lowell&startDate=${COMMUTER_RAIL_DEFAULTS.lineConfig.startDate}&endDate=${COMMUTER_RAIL_DEFAULTS.lineConfig.endDate}`
+          : line === 'line-bus'
+            ? `/${lineObject.path}?busRoute=1&date=${BUS_DEFAULTS.singleTripConfig.date}`
+            : `/${lineObject.path}`
       }
       className="group flex cursor-pointer flex-row items-center gap-x-8 gap-y-4 md:flex-col"
     >
@@ -34,6 +36,7 @@ export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
       </div>
       <div className="flex flex-row items-baseline gap-2 md:flex-col md:items-center">
         <h3 className="text-center text-3xl md:text-xl">{LINE_OBJECTS[line].name}</h3>
+        {line === 'line-commuter-rail' && <p className="text-center font-bold">(Beta)</p>}
       </div>
     </Link>
   );

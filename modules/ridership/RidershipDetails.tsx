@@ -44,6 +44,7 @@ export function RidershipDetails() {
               endDate={endDate}
               line={line}
               busRoute={busRoute}
+              crRoute={crRoute}
             />
           ) : (
             <div className="relative flex h-full">

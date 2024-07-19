@@ -15,8 +15,7 @@ export const getRidershipLineId = (
       default:
         return `line-${busRoute.replaceAll('/', '')}`;
     }
-  }
-  if (line === 'line-commuter-rail' && crRoute) {
+  } else if (line === 'line-commuter-rail' && crRoute) {
     return `line-${crRoute.substring(3)}`;
   } else {
     return RIDERSHIP_KEYS[line ?? ''];

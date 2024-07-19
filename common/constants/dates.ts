@@ -40,7 +40,7 @@ export const BUS_MAX_DAY = dayjs(BUS_MAX_DATE);
 export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
   .subtract(7, 'days')
   .format(DATE_FORMAT);
-export const COMMUTER_RAIL_MIN_DATE = '2023-12-22';
+export const COMMUTER_RAIL_MIN_DATE = '2022-06-22';
 
 export const getESTDayjs = (date: string) => {
   return dayjs(date).tz(est);

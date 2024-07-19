@@ -30,6 +30,7 @@ export const RidershipWidget: React.FC = () => {
         <RidershipGraphWrapper
           line={line}
           busRoute={query.busRoute}
+          crRoute={query.crRoute}
           data={ridership.data}
           config={config}
           startDate={startDate}
