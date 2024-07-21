@@ -20,11 +20,7 @@ export const PEAK_SPEED = {
 
 // These are manually chosen based off the peak value. Need to be updated when all data is generated.
 export const PEAK_RIDERSHIP: {
-  [key in
-    | Exclude<Line, 'line-bus' | 'line-commuter-rail'>
-    | BusRouteId
-    | CommuterRailRoute
-    | 'DEFAULT']: number;
+  [key in Exclude<Line, 'line-bus'> | BusRouteId | CommuterRailRoute | 'DEFAULT']: number;
 } = {
   'line-red': 213703,
   'line-orange': 169578,
@@ -74,6 +70,7 @@ export const PEAK_RIDERSHIP: {
   'CR-Needham': 6690,
   'CR-Newburyport': 14972,
   'CR-Providence': 25728,
+  'line-commuter-rail': 126755,
   DEFAULT: 520580,
 };
 
