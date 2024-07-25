@@ -1,4 +1,4 @@
-import { ALL_LINE_PATHS, BUS_PATH } from '../../common/types/lines';
+import { ALL_LINE_PATHS, BUS_PATH, COMMUTER_RAIL_PATH } from '../../common/types/lines';
 import { RidershipDetails } from '../../modules/ridership/RidershipDetails';
 
 export async function getStaticProps() {
@@ -7,7 +7,7 @@ export async function getStaticProps() {
 
 export async function getStaticPaths() {
   return {
-    paths: [...ALL_LINE_PATHS, BUS_PATH],
+    paths: [...ALL_LINE_PATHS, BUS_PATH, COMMUTER_RAIL_PATH],
     fallback: false,
   };
 }

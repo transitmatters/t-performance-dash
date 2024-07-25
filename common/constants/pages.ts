@@ -141,7 +141,7 @@ export const ALL_PAGES: PageMap = {
     key: 'ridership',
     path: '/ridership',
     name: 'Ridership',
-    lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus'],
+    lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus', 'line-commuter-rail'],
     icon: faUsers,
     dateStoreSection: 'line',
   },
