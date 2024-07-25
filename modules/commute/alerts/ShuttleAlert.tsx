@@ -23,7 +23,7 @@ export const ShuttleAlert: React.FC<ShuttleAlertProps> = ({ alert, lineShort, ty
       alert={alert}
       noShrink={noShrink}
     >
-      <p className="mr-1 ">Shuttling</p>
+      <p className="mr-1">Shuttling</p>
       <p className="font-bold">{min?.stop_name}</p>
       <FontAwesomeIcon icon={faLeftRight} className={'mx-2 h-4 w-4'} />
       <p className="font-bold">{max?.stop_name}</p>

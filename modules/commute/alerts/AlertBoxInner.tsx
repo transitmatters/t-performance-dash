@@ -53,7 +53,7 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
         <div className="flex w-full flex-col items-center justify-center text-stone-100">
           <div
             className={classNames(
-              'flex w-full flex-row items-center pr-2 text-lg ',
+              'flex w-full flex-row items-center pr-2 text-lg',
               _noShrink && 'flex-wrap'
             )}
           >
@@ -62,7 +62,7 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
 
           <div
             className={classNames(
-              'flex w-full flex-row items-center  gap-x-1 text-center text-stone-200',
+              'flex w-full flex-row items-center gap-x-1 text-center text-stone-200',
               _noShrink && 'flex-wrap'
             )}
           >
