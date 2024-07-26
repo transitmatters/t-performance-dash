@@ -1,5 +1,5 @@
 /* eslint-disable import/max-dependencies */
-import type { LineShort } from '../types/lines';
+import { COMMUTER_RAIL_ROUTES, type LineShort } from '../types/lines';
 import type { LineMap } from '../types/stations';
 import stations_json from './stations.json';
 import bus_1 from './bus_constants/1.json';
@@ -142,5 +142,7 @@ export const getBusRoutes = (): string[] => {
 };
 
 export const getCommuterRailRoutes = (): string[] => {
+  return COMMUTER_RAIL_ROUTES;
+  // TODO: use this once we are on trips
   return Object.keys(commuterRailStations);
 };

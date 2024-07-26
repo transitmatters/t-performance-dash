@@ -1,4 +1,4 @@
-import type { BusRouteId, Line } from '../types/lines';
+import type { BusRouteId, CommuterRailRoute, Line } from '../types/lines';
 
 // These are manually chosen based off the peak *monthly* scheduled service. Selecting highest value "
 export const PEAK_SCHEDULED_SERVICE = {
@@ -20,7 +20,7 @@ export const PEAK_SPEED = {
 
 // These are manually chosen based off the peak value. Need to be updated when all data is generated.
 export const PEAK_RIDERSHIP: {
-  [key in Exclude<Line, 'line-bus' | 'line-commuter-rail'> | BusRouteId | 'DEFAULT']: number;
+  [key in Exclude<Line, 'line-bus'> | BusRouteId | CommuterRailRoute | 'DEFAULT']: number;
 } = {
   'line-red': 213703,
   'line-orange': 169578,
@@ -88,6 +88,19 @@ export const PEAK_RIDERSHIP: {
   '111': 11258,
   '114116117': 12867,
   '220221222': 3370,
+  'CR-Fitchburg': 9302,
+  'CR-Franklin': 11671,
+  'CR-Greenbush': 6114,
+  'CR-Haverhill': 7112,
+  'CR-Lowell': 10925,
+  'CR-Worcester': 18637,
+  'CR-Fairmount': 2652,
+  'CR-Kingston': 6089,
+  'CR-Middleborough': 6863,
+  'CR-Needham': 6690,
+  'CR-Newburyport': 14972,
+  'CR-Providence': 25728,
+  'line-commuter-rail': 126755,
   DEFAULT: 520580,
 };
 

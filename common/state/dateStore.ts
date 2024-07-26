@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../constants/dates';
-import type { Tab } from '../constants/dashboardTabs';
+import type { Tab } from '../types/router';
 import type {
   LineSectionParams,
   MultiTripsSectionParams,
