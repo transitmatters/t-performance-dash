@@ -1,0 +1,71 @@
+{
+  "35": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Dedham Mall",
+        "branches": null,
+        "station": "dmall",
+        "order": 1,
+        "stops": {
+          "1": ["35-1-10833"],
+          "0": ["35-0-10833"]
+        }
+      },
+      {
+        "stop_name": "Stimson Street @ Washington Street",
+        "branches": null,
+        "station": "stims",
+        "order": 2,
+        "stops": {
+          "1": ["35-1-616", "35-1-763"],
+          "0": ["35-0-616", "35-0-831"]
+        }
+      },
+      {
+        "stop_name": "Spring Street @ Centre Street",
+        "branches": null,
+        "station": "sring",
+        "order": 3,
+        "stops": {
+          "1": ["35-1-780"],
+          "0": ["35-0-821"]
+        }
+      },
+      {
+        "stop_name": "West Roxbury Parkway @ Centre",
+        "branches": null,
+        "station": "pkwy",
+        "order": 4,
+        "stops": {
+          "1": ["35-1-787"],
+          "0": ["35-0-5256", "35-0-804"]
+        }
+      },
+      {
+        "stop_name": "Roslindale Square",
+        "branches": null,
+        "station": "rossq",
+        "order": 5,
+        "stops": {
+          "1": ["35-1-636"],
+          "0": ["35-0-602"]
+        }
+      },
+      {
+        "stop_name": "Forest Hills Busway",
+        "branches": null,
+        "station": "fhill",
+        "order": 6,
+        "stops": {
+          "1": ["35-1-10642"],
+          "0": ["35-0-10642"]
+        }
+      }
+    ]
+  }
+}
