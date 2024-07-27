@@ -19,7 +19,7 @@ ddtrace = "2.9.1"
 dynamodb-json = "^1.4.2"
 
 [tool.poetry.dev-dependencies]
-pip = ">=23.3"
+pip = ">=24.0"
 chalice = "1.31.2"
 flake8 = "~7.1.0"
 black = "~24.4.2"

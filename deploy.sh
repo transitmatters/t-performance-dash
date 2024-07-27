@@ -91,7 +91,7 @@ pushd server/ > /dev/null
 poetry export --without-hashes --output requirements.txt
 poetry run chalice package --stage $CHALICE_STAGE --merge-template cloudformation.json cfn/
 aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUCKET --output-template-file cfn/packaged.yaml
-aws cloudformation deploy --template-file cfn/packaged.yaml --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset --parameter-overrides \
+aws cloudformation deploy --template-file cfn/packaged.yaml --s3-bucket $BACKEND_BUCKET --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset --parameter-overrides \
     TMFrontendHostname=$FRONTEND_HOSTNAME \
     TMFrontendZone=$FRONTEND_ZONE \
     TMFrontendCertArn=$FRONTEND_CERT_ARN \
