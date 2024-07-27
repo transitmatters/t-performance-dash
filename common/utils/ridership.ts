@@ -1,7 +1,11 @@
-import type { BusRoute, Line } from '../types/lines';
+import type { BusRoute, CommuterRailRoute, Line } from '../types/lines';
 import { RIDERSHIP_KEYS } from '../types/lines';
 
-export const getRidershipLineId = (line: Line | undefined, busRoute: BusRoute | undefined) => {
+export const getRidershipLineId = (
+  line: Line | undefined,
+  busRoute: BusRoute | undefined,
+  crRoute: CommuterRailRoute | undefined
+) => {
   if (line === 'line-bus' && busRoute) {
     switch (busRoute) {
       case '34':
@@ -11,6 +15,8 @@ export const getRidershipLineId = (line: Line | undefined, busRoute: BusRoute | 
       default:
         return `line-${busRoute.replaceAll('/', '')}`;
     }
+  } else if (line === 'line-commuter-rail' && crRoute) {
+    return `line-${crRoute.substring(3)}`;
   } else {
     return RIDERSHIP_KEYS[line ?? ''];
   }

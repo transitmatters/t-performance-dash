@@ -1,0 +1,101 @@
+{
+  "29": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Mattapan Station",
+        "branches": null,
+        "station": "matpn",
+        "order": 1,
+        "stops": {
+          "1": ["29-1-18511"],
+          "0": ["29-0-18511"]
+        }
+      },
+      {
+        "stop_name": "Wellington Hill",
+        "branches": null,
+        "station": "wellh",
+        "order": 2,
+        "stops": {
+          "1": ["29-1-1728"],
+          "0": ["29-0-1714"]
+        }
+      },
+      {
+        "stop_name": "Morton Street @ Blue Hill Avenue",
+        "branches": null,
+        "station": "mortn",
+        "order": 3,
+        "stops": {
+          "1": ["29-1-1731"],
+          "0": ["29-0-11712"]
+        }
+      },
+      {
+        "stop_name": "Blue Hill Avenue @ Talbot Avenue",
+        "branches": null,
+        "station": "bltal",
+        "order": 4,
+        "stops": {
+          "1": ["29-1-1737"],
+          "0": ["29-0-419"]
+        }
+      },
+      {
+        "stop_name": "Franklin Field Housing",
+        "branches": null,
+        "station": "field",
+        "order": 4,
+        "stops": {
+          "1": ["29-1-11735"],
+          "0": ["29-0-11735"]
+        }
+      },
+      {
+        "stop_name": "Franklin Park",
+        "branches": null,
+        "station": "frnpk",
+        "order": 5,
+        "stops": {
+          "1": ["29-1-383"],
+          "0": ["29-0-17391"]
+        }
+      },
+      {
+        "stop_name": "Seaver & Humboldt",
+        "branches": null,
+        "station": "svrhm",
+        "order": 6,
+        "stops": {
+          "1": ["29-1-1741"],
+          "0": ["29-0-17411"]
+        }
+      },
+      {
+        "stop_name": "Egleston Square",
+        "branches": null,
+        "station": "egles",
+        "order": 7,
+        "stops": {
+          "1": ["29-1-1188"],
+          "0": ["29-0-10413"]
+        }
+      },
+      {
+        "stop_name": "Jackson Square Station",
+        "branches": null,
+        "station": "jasst",
+        "order": 8,
+        "stops": {
+          "1": ["29-1-11531"],
+          "0": ["29-0-11531"]
+        }
+      }
+    ]
+  }
+}

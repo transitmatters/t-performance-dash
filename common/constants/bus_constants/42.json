@@ -1,0 +1,51 @@
+{
+  "42": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Forest Hills Busway",
+        "branches": null,
+        "station": "fhill",
+        "order": 1,
+        "stops": {
+          "1": ["42-1-875"],
+          "0": ["42-0-875"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ Green Street",
+        "branches": null,
+        "station": "wasgr",
+        "order": 2,
+        "stops": {
+          "1": ["42-1-5236"],
+          "0": ["42-0-41187"]
+        }
+      },
+      {
+        "stop_name": "Egleston Square",
+        "branches": null,
+        "station": "egles",
+        "order": 3,
+        "stops": {
+          "1": ["42-1-1165"],
+          "0": ["42-0-1187"]
+        }
+      },
+      {
+        "stop_name": "Nubian Station",
+        "branches": null,
+        "station": "nubn",
+        "order": 4,
+        "stops": {
+          "1": ["42-1-64000"],
+          "0": ["42-0-64000"]
+        }
+      }
+    ]
+  }
+}

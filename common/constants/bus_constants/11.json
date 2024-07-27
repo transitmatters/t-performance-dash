@@ -1,0 +1,101 @@
+{
+  "11": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "South Station",
+        "branches": null,
+        "station": "sosta",
+        "order": 0,
+        "stops": {
+          "1": ["11-1-6564"],
+          "0": ["11-0-6564"]
+        }
+      },
+      {
+        "stop_name": "City Point",
+        "branches": null,
+        "station": "ctypt",
+        "order": 1,
+        "stops": {
+          "1": ["11-1-33"],
+          "0": ["11-0-33"]
+        }
+      },
+      {
+        "stop_name": "Day Boulevard & O Street",
+        "branches": null,
+        "station": "dayo",
+        "order": 2,
+        "stops": {
+          "1": ["11-1-275"],
+          "0": ["11-0-268"]
+        }
+      },
+      {
+        "stop_name": "Dorchester Street & 8th Street",
+        "branches": null,
+        "station": "dotst",
+        "order": 3,
+        "stops": {
+          "1": ["11-1-286"],
+          "0": ["11-0-258"]
+        }
+      },
+      {
+        "stop_name": "C @ Cabot Garage",
+        "branches": null,
+        "station": "cabgr",
+        "order": 4,
+        "stops": {
+          "1": ["11-1-30294"],
+          "0": ["11-0-30294"]
+        }
+      },
+      {
+        "stop_name": "Broadway Station",
+        "branches": null,
+        "station": "brway",
+        "order": 5,
+        "stops": {
+          "1": ["11-1-150"],
+          "0": ["11-0-151"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ Herald Street",
+        "branches": null,
+        "station": "waher",
+        "order": 6,
+        "stops": {
+          "1": ["11-1-15095"],
+          "0": ["11-0-15095"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ Tufts Medical Center",
+        "branches": null,
+        "station": "tumed",
+        "order": 7,
+        "stops": {
+          "1": ["11-1-6565"],
+          "0": ["11-0-6565"]
+        }
+      },
+      {
+        "stop_name": "Bedford & Chauncy Streets",
+        "branches": null,
+        "station": "bdfch",
+        "order": 8,
+        "stops": {
+          "1": ["11-1-16538"],
+          "0": ["11-0-16538"]
+        }
+      }
+    ]
+  }
+}

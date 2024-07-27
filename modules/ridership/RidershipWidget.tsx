@@ -15,7 +15,7 @@ export const RidershipWidget: React.FC = () => {
   const { startDate } = OVERVIEW_OPTIONS[query.view ?? 'year'];
   const endDate = TODAY_STRING;
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
-  const lineId = getRidershipLineId(line, query.busRoute);
+  const lineId = getRidershipLineId(line, query.busRoute, query.crRoute);
   const ridership = useRidershipData({
     line_id: lineId,
     start_date: startDate,
@@ -30,6 +30,7 @@ export const RidershipWidget: React.FC = () => {
         <RidershipGraphWrapper
           line={line}
           busRoute={query.busRoute}
+          crRoute={query.crRoute}
           data={ridership.data}
           config={config}
           startDate={startDate}

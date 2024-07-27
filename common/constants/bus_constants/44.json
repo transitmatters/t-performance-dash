@@ -1,0 +1,91 @@
+{
+  "44": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Jackson Square Station",
+        "branches": null,
+        "station": "jasst",
+        "order": 1,
+        "stops": {
+          "1": ["44-1-11531"],
+          "0": ["44-0-11531"]
+        }
+      },
+      {
+        "stop_name": "Egleston Square",
+        "branches": null,
+        "station": "egles",
+        "order": 2,
+        "stops": {
+          "1": ["44-1-10413"],
+          "0": ["44-0-1188"]
+        }
+      },
+      {
+        "stop_name": "Seaver & Humboldt",
+        "branches": null,
+        "station": "svrhm",
+        "order": 3,
+        "stops": {
+          "1": ["44-1-1325"],
+          "0": ["44-0-1354"]
+        }
+      },
+      {
+        "stop_name": "Townsend Street @ Humboldt Avenue (Latin Academy)",
+        "branches": null,
+        "station": "towhm",
+        "order": 4,
+        "stops": {
+          "1": ["44-1-1332"],
+          "0": ["44-0-1346"]
+        }
+      },
+      {
+        "stop_name": "Warren Street @ Walnut Avenue",
+        "branches": null,
+        "station": "warwl",
+        "order": 5,
+        "stops": {
+          "1": ["44-1-396"],
+          "0": ["44-0-40001"]
+        }
+      },
+      {
+        "stop_name": "Nubian Station",
+        "branches": null,
+        "station": "nubn",
+        "order": 6,
+        "stops": {
+          "1": ["44-1-64000"],
+          "0": ["44-0-64000"]
+        }
+      },
+      {
+        "stop_name": "Roxbury Crossing Station",
+        "branches": null,
+        "station": "roxbs",
+        "order": 7,
+        "stops": {
+          "1": ["44-1-21148"],
+          "0": ["44-0-11257"]
+        }
+      },
+      {
+        "stop_name": "Ruggles",
+        "branches": null,
+        "station": "rugg",
+        "order": 8,
+        "stops": {
+          "1": ["44-1-17861"],
+          "0": ["44-0-17863"]
+        }
+      }
+    ]
+  }
+}

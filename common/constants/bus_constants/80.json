@@ -1,0 +1,81 @@
+{
+  "80": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Arlington Center",
+        "branches": null,
+        "station": "arlct",
+        "order": 1,
+        "stops": {
+          "1": ["80-1-2362"],
+          "0": ["80-0-2362"]
+        }
+      },
+      {
+        "stop_name": "Boston Street @ High Street",
+        "branches": null,
+        "station": "boshi",
+        "order": 2,
+        "stops": {
+          "1": ["80-1-3513"],
+          "0": ["80-0-2418"]
+        }
+      },
+      {
+        "stop_name": "North Street",
+        "branches": null,
+        "station": "nostr",
+        "order": 3,
+        "stops": {
+          "1": ["80-1-2374"],
+          "0": ["80-0-2412"]
+        }
+      },
+      {
+        "stop_name": "Powder House",
+        "branches": null,
+        "station": "powdr",
+        "order": 4,
+        "stops": {
+          "1": ["80-1-2381"],
+          "0": ["80-0-2738"]
+        }
+      },
+      {
+        "stop_name": "Magoun Square",
+        "branches": null,
+        "station": "mgnsq",
+        "order": 5,
+        "stops": {
+          "1": ["80-1-2699"],
+          "0": ["80-0-2404"]
+        }
+      },
+      {
+        "stop_name": "Medford Street @ School Street (Somerville High School)",
+        "branches": null,
+        "station": "mdscl",
+        "order": 6,
+        "stops": {
+          "1": ["80-1-2388"],
+          "0": ["80-0-2398"]
+        }
+      },
+      {
+        "stop_name": "Lechmere Station",
+        "branches": null,
+        "station": "lchmr",
+        "order": 7,
+        "stops": {
+          "1": ["80-1-70500"],
+          "0": ["80-0-70500"]
+        }
+      }
+    ]
+  }
+}
