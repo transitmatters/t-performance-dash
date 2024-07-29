@@ -1,0 +1,121 @@
+{
+  "8": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "University of Massachusetts, Boston",
+        "branches": null,
+        "station": "umass",
+        "order": 1,
+        "stops": {
+          "1": ["8-1-111"],
+          "0": ["8-0-142"]
+        }
+      },
+      {
+        "stop_name": "JFK/UMass",
+        "branches": null,
+        "station": "jfk",
+        "order": 2,
+        "stops": {
+          "1": ["8-1-121"],
+          "0": ["8-0-121"]
+        }
+      },
+      {
+        "stop_name": "Edward Everett Square Columbia @ Massachusetts Avenue",
+        "branches": null,
+        "station": "edevt",
+        "order": 3,
+        "stops": {
+          "1": ["8-1-123"],
+          "0": ["8-0-134"]
+        }
+      },
+      {
+        "stop_name": "South Bay Mall",
+        "branches": null,
+        "station": "sobay",
+        "order": 4,
+        "stops": {
+          "1": ["8-1-29051"],
+          "0": ["8-0-11241"]
+        }
+      },
+      {
+        "stop_name": "BU Medical Campus",
+        "branches": null,
+        "station": "bumed",
+        "order": 5,
+        "stops": {
+          "1": ["8-1-10015"],
+          "0": ["8-0-5089"]
+        }
+      },
+      {
+        "stop_name": "Nubian Station",
+        "branches": null,
+        "station": "nubn",
+        "order": 6,
+        "stops": {
+          "1": ["8-1-64"],
+          "0": ["8-0-64"]
+        }
+      },
+      {
+        "stop_name": "Ruggles",
+        "branches": null,
+        "station": "rugg",
+        "order": 7,
+        "stops": {
+          "1": ["8-1-17863"],
+          "0": ["8-0-17861"]
+        }
+      },
+      {
+        "stop_name": "Huntington & Ruggles",
+        "branches": null,
+        "station": "hrugg",
+        "order": 8,
+        "stops": {
+          "1": ["8-1-1799"],
+          "0": ["8-0-1784"]
+        }
+      },
+      {
+        "stop_name": "Brookline & Longwood Avenues",
+        "branches": null,
+        "station": "brlng",
+        "order": 9,
+        "stops": {
+          "1": ["8-1-1804"],
+          "0": ["8-0-1779"]
+        }
+      },
+      {
+        "stop_name": "Fenway Park",
+        "branches": null,
+        "station": "fnypk",
+        "order": 10,
+        "stops": {
+          "1": ["8-1-1563"],
+          "0": ["8-0-1518"]
+        }
+      },
+      {
+        "stop_name": "Kenmore (Busway)",
+        "branches": null,
+        "station": "kenbs",
+        "order": 11,
+        "stops": {
+          "1": ["8-1-899"],
+          "0": ["8-0-899"]
+        }
+      }
+    ]
+  }
+}

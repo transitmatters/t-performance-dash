@@ -1,0 +1,101 @@
+{
+  "14": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Belgrade & Corinth Streets (Roslindale Square)",
+        "branches": null,
+        "station": "belco",
+        "order": 1,
+        "stops": {
+          "1": ["14-1-797"],
+          "0": ["14-0-797"]
+        }
+      },
+      {
+        "stop_name": "Hyde Park Avenue @ Cummins Highway",
+        "branches": null,
+        "station": "hpave",
+        "order": 2,
+        "stops": {
+          "1": ["14-1-6433"],
+          "0": ["14-0-6460"]
+        }
+      },
+      {
+        "stop_name": "Cummins Highway",
+        "branches": null,
+        "station": "cmhwy",
+        "order": 3,
+        "stops": {
+          "1": ["14-1-26500"],
+          "0": ["14-0-10424"]
+        }
+      },
+      {
+        "stop_name": "Franklin Park",
+        "branches": null,
+        "station": "frnpk",
+        "order": 4,
+        "stops": {
+          "1": ["14-1-383"],
+          "0": ["14-0-415"]
+        }
+      },
+      {
+        "stop_name": "Grove Hall",
+        "branches": null,
+        "station": "ghall",
+        "order": 5,
+        "stops": {
+          "1": ["14-1-386"],
+          "0": ["14-0-412"]
+        }
+      },
+      {
+        "stop_name": "Warren Street @ Boston Latin Academy",
+        "branches": null,
+        "station": "latac",
+        "order": 6,
+        "stops": {
+          "1": ["14-1-390"],
+          "0": ["14-0-407"]
+        }
+      },
+      {
+        "stop_name": "Nubian Station",
+        "branches": null,
+        "station": "nubn",
+        "order": 7,
+        "stops": {
+          "1": ["14-1-64000"],
+          "0": ["14-0-64000"]
+        }
+      },
+      {
+        "stop_name": "Jackson Square Station",
+        "branches": null,
+        "station": "jasst",
+        "order": 8,
+        "stops": {
+          "1": ["14-1-11531"],
+          "0": ["14-0-11531"]
+        }
+      },
+      {
+        "stop_name": "Heath Street Loop",
+        "branches": null,
+        "station": "heath",
+        "order": 9,
+        "stops": {
+          "1": ["14-1-1761"],
+          "0": ["14-0-1761"]
+        }
+      }
+    ]
+  }
+}

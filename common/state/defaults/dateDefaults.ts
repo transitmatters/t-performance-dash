@@ -1,3 +1,4 @@
+import type { Tab } from '../../types/router';
 import type { DateStoreSection } from '../../constants/pages';
 import type { DateStoreConfiguration } from '../types/dateStoreTypes';
 import {
@@ -9,7 +10,6 @@ import {
   COMMUTER_RAIL_MIN_DATE,
 } from '../../constants/dates';
 import type { WithOptional } from '../../types/general';
-import type { Tab } from '../../types/router';
 
 const SUBWAY_DEFAULTS: Partial<DateStoreConfiguration> = {
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },

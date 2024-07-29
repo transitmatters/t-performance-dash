@@ -1,0 +1,51 @@
+{
+  "18": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Ashmont Terminal",
+        "branches": null,
+        "station": "ashmt",
+        "order": 1,
+        "stops": {
+          "1": ["18-1-334"],
+          "0": ["18-0-334"]
+        }
+      },
+      {
+        "stop_name": "Fields Corner",
+        "branches": null,
+        "station": "fldcr",
+        "order": 2,
+        "stops": {
+          "1": ["18-1-322"],
+          "0": ["18-0-323"]
+        }
+      },
+      {
+        "stop_name": "Bay Street @ Auckland Street",
+        "branches": null,
+        "station": "bauck",
+        "order": 3,
+        "stops": {
+          "1": ["18-1-180"],
+          "0": ["18-0-180"]
+        }
+      },
+      {
+        "stop_name": "Andrew",
+        "branches": null,
+        "station": "andrw",
+        "order": 4,
+        "stops": {
+          "1": ["18-1-13"],
+          "0": ["18-0-13"]
+        }
+      }
+    ]
+  }
+}
