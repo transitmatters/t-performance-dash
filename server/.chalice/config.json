@@ -33,7 +33,6 @@
       "api_gateway_stage": "beta",
       "autogen_policy": false,
       "iam_policy_file": "policy.json",
-      "log_retention_in_days": 3,
       "environment_variables": {
         "DD_LAMBDA_HANDLER": "app.app",
         "DD_SERVICE": "t-performance-dash",
