@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "app_name": "data-dashboard-v4",
+  "app_name": "data-dashboard",
   "api_gateway_endpoint_type": "REGIONAL",
   "minimum_compression_size": 1000,
   "lambda_timeout": 30,
@@ -11,7 +11,6 @@
       "api_gateway_stage": "production",
       "autogen_policy": false,
       "iam_policy_file": "policy.json",
-      "log_retention_in_days": 7,
       "environment_variables": {
         "DD_LAMBDA_HANDLER": "app.app",
         "DD_SERVICE": "t-performance-dash",
