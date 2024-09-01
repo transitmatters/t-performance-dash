@@ -8,7 +8,7 @@ from chalicelib import (
     aggregation,
     data_funcs,
     secrets,
-    reliability,
+    delays,
     mbta_v3,
     speed,
     speed_restrictions,
@@ -167,7 +167,7 @@ def get_alerts():
 
 @app.route("/api/linedelays", cors=cors_config)
 def get_delays_by_line():
-    response = reliability.delay_time_by_line(app.current_request.query_params)
+    response = delays.delay_time_by_line(app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True)
 
 

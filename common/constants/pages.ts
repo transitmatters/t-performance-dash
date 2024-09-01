@@ -20,7 +20,7 @@ export enum PAGES {
   overview = 'overview',
   speed = 'speed',
   predictions = 'predictions',
-  reliability = 'reliability',
+  delays = 'delays',
   service = 'service',
   slowzones = 'slowzones',
   systemSlowzones = 'systemSlowzones',
@@ -115,10 +115,10 @@ export const ALL_PAGES: PageMap = {
     dateStoreSection: 'line',
     icon: faClockFour,
   },
-  reliability: {
-    key: 'reliability',
-    path: '/reliability',
-    name: 'Reliability',
+  delays: {
+    key: 'delays',
+    path: '/delays',
+    name: 'Delays',
     lines: ['line-red', 'line-orange', 'line-blue', 'line-green'],
     icon: faCalendarXmark,
     dateStoreSection: 'line',
@@ -171,7 +171,7 @@ export const LINE_PAGES = [
   ALL_PAGES.slowzones,
   ALL_PAGES.speed,
   ALL_PAGES.predictions,
-  ALL_PAGES.reliability,
+  ALL_PAGES.delays,
   ALL_PAGES.ridership,
 ];
 

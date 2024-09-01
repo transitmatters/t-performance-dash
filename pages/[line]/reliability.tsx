@@ -1,5 +1,5 @@
 import { ALL_LINE_PATHS } from '../../common/types/lines';
-import { ReliabilityDetails } from '../../modules/reliability/ReliabilityDetails';
+import { DelaysDetails } from '../../modules/delays/DelaysDetails';
 
 export async function getStaticProps() {
   return { props: {} };
@@ -12,4 +12,4 @@ export async function getStaticPaths() {
   };
 }
 
-export default ReliabilityDetails;
+export default DelaysDetails;

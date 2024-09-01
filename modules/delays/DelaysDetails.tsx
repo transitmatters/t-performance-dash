@@ -8,7 +8,7 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
-import { useAlertDelays } from '../../common/api/hooks/reliability';
+import { useAlertDelays } from '../../common/api/hooks/delays';
 import { Widget } from '../../common/components/widgets';
 import { TotalDelayGraph } from './charts/TotalDelayGraph';
 import { DelayBreakdownGraph } from './charts/DelayBreakdownGraph';
@@ -16,7 +16,7 @@ import { DelayByCategoryGraph } from './charts/DelayByCategoryGraph';
 
 dayjs.extend(utc);
 
-export function ReliabilityDetails() {
+export function DelaysDetails() {
   const {
     line,
     query: { startDate, endDate },
@@ -31,16 +31,16 @@ export function ReliabilityDetails() {
     },
     enabled
   );
-  const reliabilityReady = alertDelays && line && !alertDelays.isError && alertDelays.data;
+  const delaysReady = alertDelays && line && !alertDelays.isError && alertDelays.data;
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
   }
 
   return (
-    <PageWrapper pageTitle={'Reliability'}>
+    <PageWrapper pageTitle={'Delays'}>
       <ChartPageDiv>
         <Widget title="Total Time Delayed" ready={[alertDelays]}>
-          {reliabilityReady ? (
+          {delaysReady ? (
             <TotalDelayGraph data={alertDelays.data} startDate={startDate} endDate={endDate} />
           ) : (
             <div className="relative flex h-full">
@@ -49,7 +49,7 @@ export function ReliabilityDetails() {
           )}
         </Widget>
         <Widget title="Delay Time by Reason" ready={[alertDelays]}>
-          {reliabilityReady ? (
+          {delaysReady ? (
             <DelayBreakdownGraph data={alertDelays.data} startDate={startDate} endDate={endDate} />
           ) : (
             <div className="relative flex h-full">
@@ -58,7 +58,7 @@ export function ReliabilityDetails() {
           )}
         </Widget>
         <Widget title="Delay Time by Reason" ready={[alertDelays]}>
-          {reliabilityReady ? (
+          {delaysReady ? (
             <DelayByCategoryGraph data={alertDelays.data} />
           ) : (
             <div className="relative flex h-full">
@@ -71,4 +71,4 @@ export function ReliabilityDetails() {
   );
 }
 
-ReliabilityDetails.Layout = Layout.Dashboard;
+DelaysDetails.Layout = Layout.Dashboard;

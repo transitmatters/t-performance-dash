@@ -11,7 +11,7 @@ import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartBorder } from '../../../common/components/charts/ChartBorder';
-import type { LineDelays } from '../../../common/types/reliability';
+import type { LineDelays } from '../../../common/types/delays';
 import { getFormattedTimeString } from '../../../common/utils/time';
 
 interface DelayByCategoryGraphProps {
