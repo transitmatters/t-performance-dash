@@ -54,7 +54,7 @@ export type FetchDeliveredTripMetricsOptions = {
 export type FetchAlertDelaysByLineOptions = {
   start_date?: string;
   end_date?: string;
-  line?: Line;
+  line?: LineRouteId;
 };
 
 export enum FetchDeliveredTripMetricsParams {

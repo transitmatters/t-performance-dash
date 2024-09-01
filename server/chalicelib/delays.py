@@ -27,7 +27,15 @@ def delay_time_by_line(params: AlertDelaysByLineParams):
         start_date = params["start_date"]
         end_date = params["end_date"]
         line = params["line"]
-        if line not in ["line-red", "line-blue", "line-green", "line-orange"]:
+        if line not in [
+            "Red",
+            "Blue",
+            "Orange",
+            "Green-B",
+            "Green-C",
+            "Green-D",
+            "Green-E",
+        ]:
             raise BadRequestError("Invalid Line key.")
     except KeyError:
         raise BadRequestError("Missing or invalid parameters.")

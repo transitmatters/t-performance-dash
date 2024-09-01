@@ -11,21 +11,14 @@ import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { usePredictionData } from '../../common/api/hooks/predictions';
 import type { LineRouteId } from '../../common/types/lines';
-import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { Accordion } from '../../common/components/accordion/Accordion';
+import { BranchSelector } from '../../common/components/inputs/BranchSelector';
 import { lineToDefaultRouteId } from './utils/utils';
 import { PredictionsGraphWrapper } from './charts/PredictionsGraphWrapper';
 import { PredictionsBinsGraphWrapper } from './charts/PredictionsBinsGraphWrapper';
 
 dayjs.extend(utc);
-
-enum GreenLineBranchOptions {
-  'Green-B' = 'B Branch',
-  'Green-C' = 'C Branch',
-  'Green-D' = 'D Branch',
-  'Green-E' = 'E Branch',
-}
 
 export function PredictionsDetails() {
   const {
@@ -38,23 +31,10 @@ export function PredictionsDetails() {
   React.useEffect(() => {
     setRouteId(lineToDefaultRouteId(line));
   }, [line]);
-  const selectedIndex = Object.keys(GreenLineBranchOptions).findIndex((route) => route === routeId);
 
   const greenBranchToggle = React.useMemo(() => {
-    return (
-      line === 'line-green' && (
-        <div className={'flex w-full justify-center pt-2'}>
-          <ButtonGroup
-            selectedIndex={selectedIndex}
-            pressFunction={setRouteId}
-            options={Object.entries(GreenLineBranchOptions)}
-            additionalDivClass="md:w-auto"
-            additionalButtonClass="md:w-fit"
-          />
-        </div>
-      )
-    );
-  }, [line, selectedIndex]);
+    return line === 'line-green' && <BranchSelector routeId={routeId} setRouteId={setRouteId} />;
+  }, [line, routeId]);
 
   const predictions = usePredictionData(
     {

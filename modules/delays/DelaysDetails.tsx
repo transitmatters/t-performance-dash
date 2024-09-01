@@ -13,6 +13,9 @@ import { Widget } from '../../common/components/widgets';
 import { TotalDelayGraph } from './charts/TotalDelayGraph';
 import { DelayBreakdownGraph } from './charts/DelayBreakdownGraph';
 import { DelayByCategoryGraph } from './charts/DelayByCategoryGraph';
+import { BranchSelector } from '../../common/components/inputs/BranchSelector';
+import { lineToDefaultRouteId } from '../predictions/utils/utils';
+import { LineRouteId } from '../../common/types/lines';
 
 dayjs.extend(utc);
 
@@ -22,12 +25,17 @@ export function DelaysDetails() {
     query: { startDate, endDate },
   } = useDelimitatedRoute();
 
+  const [routeId, setRouteId] = React.useState<LineRouteId>(lineToDefaultRouteId(line));
+  const greenBranchToggle = React.useMemo(() => {
+    return line === 'line-green' && <BranchSelector routeId={routeId} setRouteId={setRouteId} />;
+  }, [line, routeId]);
+
   const enabled = Boolean(startDate && endDate && line);
   const alertDelays = useAlertDelays(
     {
       start_date: startDate,
       end_date: endDate,
-      line,
+      line: routeId,
     },
     enabled
   );
@@ -47,6 +55,7 @@ export function DelaysDetails() {
               <ChartPlaceHolder query={alertDelays} />
             </div>
           )}
+          {greenBranchToggle}
         </Widget>
         <Widget title="Delay Time by Reason" ready={[alertDelays]}>
           {delaysReady ? (
@@ -56,6 +65,7 @@ export function DelaysDetails() {
               <ChartPlaceHolder query={alertDelays} />
             </div>
           )}
+          {greenBranchToggle}
         </Widget>
         <Widget title="Delay Time by Reason" ready={[alertDelays]}>
           {delaysReady ? (
@@ -65,6 +75,7 @@ export function DelaysDetails() {
               <ChartPlaceHolder query={alertDelays} />
             </div>
           )}
+          {greenBranchToggle}
         </Widget>
       </ChartPageDiv>
     </PageWrapper>
