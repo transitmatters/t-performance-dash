@@ -1,14 +1,13 @@
-import type { Tab } from '../../constants/dashboardTabs';
+import type { Tab } from '../../types/router';
 import type { DateStoreSection } from '../../constants/pages';
 import type { DateStoreConfiguration } from '../types/dateStoreTypes';
 import {
-  BUS_MAX_DATE,
-  BUS_MAX_DATE_MINUS_ONE_WEEK,
   ONE_WEEK_AGO_STRING,
   OVERVIEW_OPTIONS,
   TODAY_STRING,
   YESTERDAY_STRING,
   TODAY_SERVICE_STARTED,
+  COMMUTER_RAIL_MIN_DATE,
 } from '../../constants/dates';
 import type { WithOptional } from '../../types/general';
 
@@ -28,13 +27,27 @@ export const BUS_DEFAULTS: WithOptional<DateStoreConfiguration, 'systemConfig' |
   {
     lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
     multiTripConfig: {
-      startDate: BUS_MAX_DATE_MINUS_ONE_WEEK,
-      endDate: BUS_MAX_DATE,
+      startDate: ONE_WEEK_AGO_STRING,
+      endDate: TODAY_STRING,
     },
     singleTripConfig: {
-      date: BUS_MAX_DATE,
+      date: TODAY_SERVICE_STARTED ? TODAY_STRING : YESTERDAY_STRING,
     },
   };
+
+export const COMMUTER_RAIL_DEFAULTS: WithOptional<
+  DateStoreConfiguration,
+  'systemConfig' | 'overviewPreset'
+> = {
+  lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
+  multiTripConfig: {
+    startDate: COMMUTER_RAIL_MIN_DATE,
+    endDate: TODAY_STRING,
+  },
+  singleTripConfig: {
+    date: TODAY_SERVICE_STARTED ? TODAY_STRING : YESTERDAY_STRING,
+  },
+};
 
 const SYSTEM_DEFAULTS: Partial<DateStoreConfiguration> = {
   systemConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
@@ -44,6 +57,7 @@ const TAB_DATE_MAP: { [key in Tab]: Partial<DateStoreConfiguration> } = {
   Subway: SUBWAY_DEFAULTS,
   Bus: BUS_DEFAULTS,
   System: SYSTEM_DEFAULTS,
+  'Commuter Rail': COMMUTER_RAIL_DEFAULTS,
 };
 
 export const getDefaultDates = (dateStoreSection: DateStoreSection, tab: Tab) => {

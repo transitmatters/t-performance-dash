@@ -1,5 +1,5 @@
 import React from 'react';
-import { faBus, faTrainSubway, faTrainTram } from '@fortawesome/free-solid-svg-icons';
+import { faBus, faTrain, faTrainSubway, faTrainTram } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { LineButton } from './LineButton';
@@ -37,6 +37,12 @@ export const LineSelectionLanding: React.FC = () => {
         <LineButton line="line-bus">
           <FontAwesomeIcon
             icon={faBus}
+            className={classNames('h-16 w-16 lg:h-20 lg:w-20', 'text-white')}
+          />
+        </LineButton>
+        <LineButton line="line-commuter-rail">
+          <FontAwesomeIcon
+            icon={faTrain}
             className={classNames('h-16 w-16 lg:h-20 lg:w-20', 'text-white')}
           />
         </LineButton>

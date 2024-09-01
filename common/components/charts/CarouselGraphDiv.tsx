@@ -5,5 +5,5 @@ interface CarouselGraphDivProps {
 }
 
 export const CarouselGraphDiv: React.FC<CarouselGraphDivProps> = ({ children }) => {
-  return <div className="flex flex-col gap-y-1 pt-2 ">{children}</div>;
+  return <div className="flex flex-col gap-y-1 pt-2">{children}</div>;
 };

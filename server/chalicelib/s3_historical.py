@@ -33,7 +33,7 @@ def unique_everseen(iterable, key=None):
                 yield element
 
 
-def dwells(stop_ids: list, start_date: str | date, end_date: str | date):
+def dwells(stop_ids: list, start_date: date, end_date: date):
     rows_by_time = s3.download_events(start_date, end_date, stop_ids)
 
     dwells = []
@@ -60,7 +60,7 @@ def dwells(stop_ids: list, start_date: str | date, end_date: str | date):
     return dwells
 
 
-def headways(stop_ids: list, start_date: str | date, end_date: str | date):
+def headways(stop_ids: list, start_date: date, end_date: date):
     rows_by_time = s3.download_events(start_date, end_date, stop_ids)
 
     only_departures = filter(lambda row: row["event_type"] in EVENT_DEPARTURE, rows_by_time)
@@ -99,7 +99,7 @@ def headways(stop_ids: list, start_date: str | date, end_date: str | date):
     return headways
 
 
-def travel_times(stops_a: list, stops_b: list, start_date: str | date, end_date: str | date):
+def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date):
     rows_by_time_a = s3.download_events(start_date, end_date, stops_a)
     rows_by_time_b = s3.download_events(start_date, end_date, stops_b)
 
@@ -130,11 +130,13 @@ def travel_times(stops_a: list, stops_b: list, start_date: str | date, end_date:
 
         # benchmark calculation:
         # not every file will have the scheduled_tt field, so we use get.
-        sched_arr = arrival.get("scheduled_tt")
-        sched_dep = departure.get("scheduled_tt")
+        sched_arr = arrival.get("scheduled_tt") or arrival.get("scheduled_travel_time")
+        sched_dep = departure.get("scheduled_tt") or departure.get("scheduled_travel_time")
         try:
             # sched values may be None or ''
             benchmark = float(sched_arr) - float(sched_dep)
+            if benchmark < 1:
+                benchmark = None
         except (TypeError, ValueError):
             benchmark = None
 

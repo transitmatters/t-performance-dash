@@ -40,12 +40,13 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
   const line = `line-${lineShort.toLowerCase()}` as Line;
   const canShowSlowZonesMap =
     lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange' || lineShort === 'Green';
+  const isDesktop = useBreakpoint('lg');
 
   const {
     query: { startDate, endDate },
   } = useDelimitatedRoute();
 
-  const speedRestrictions = useSpeedRestrictionData({ lineId: line!, date: endDate! });
+  const speedRestrictions = useSpeedRestrictionData({ lineId: line, date: endDate! });
 
   const startDateUTC = startDate ? dayjs.utc(startDate).startOf('day') : undefined;
   const endDateUTC = endDate ? dayjs.utc(endDate).startOf('day') : undefined;
@@ -101,7 +102,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
                 slowZones={isArray(allData.data) ? allData.data : allData.data.data}
                 speedRestrictions={speedRestrictions.data}
                 lineName={lineShort}
-                direction="horizontal-on-desktop"
+                direction={isDesktop ? 'horizontal' : 'vertical'}
               />
             ) : (
               <div className="relative flex h-full">
@@ -120,7 +121,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
             })}
           />
         </WidgetDiv>
-        <div className="h-full rounded-lg bg-white p-4 shadow-dataBox">
+        <div className="h-full rounded-lg bg-white p-3 shadow-dataBox sm:p-4">
           <div className="flex flex-col p-4 sm:p-0 lg:flex-row">
             <WidgetTitle title={`${DirectionObject[direction]} segments`} />
             <div className="lg:ml-2">

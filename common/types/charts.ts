@@ -11,7 +11,7 @@ export interface SingleDayDataPoint {
   headway_time_sec?: number;
   dwell_time_sec?: number;
   benchmark_travel_time_sec?: number;
-  benchmark_headway_time_sec?: number;
+  benchmark_headway_time_sec?: number | null;
   threshold_flag_1?: string;
   speed_mph?: number;
   benchmark_speed_mph?: number;
@@ -80,6 +80,8 @@ export interface LineProps {
   includeBothStopsForLocation?: boolean;
   fname: DataName;
   showLegend?: boolean;
+  /** Show ratios under 1.00 differently in chart */
+  showUnderRatio?: boolean;
 }
 
 export interface AggregateLineProps extends LineProps {

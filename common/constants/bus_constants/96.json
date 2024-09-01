@@ -1,0 +1,91 @@
+{
+  "96": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Medford Square",
+        "branches": null,
+        "station": "medfd",
+        "order": 1,
+        "stops": {
+          "1": ["96-1-45002"],
+          "0": ["96-0-45002"]
+        }
+      },
+      {
+        "stop_name": "Main Street @ George Street (Medford)",
+        "branches": null,
+        "station": "mngrg",
+        "order": 2,
+        "stops": {
+          "1": ["96-1-5034"],
+          "0": ["96-0-5040"]
+        }
+      },
+      {
+        "stop_name": "Boston Street @ Winthrop Street",
+        "branches": null,
+        "station": "bowin",
+        "order": 3,
+        "stops": {
+          "1": ["96-1-2376"],
+          "0": ["96-0-2410"]
+        }
+      },
+      {
+        "stop_name": "Powder House",
+        "branches": null,
+        "station": "powdr",
+        "order": 4,
+        "stops": {
+          "1": ["96-1-2381"],
+          "0": ["96-0-2405"]
+        }
+      },
+      {
+        "stop_name": "Davis",
+        "branches": null,
+        "station": "davis",
+        "order": 5,
+        "stops": {
+          "1": ["96-1-5015"],
+          "0": ["96-0-5104"]
+        }
+      },
+      {
+        "stop_name": "Porter Square",
+        "branches": null,
+        "station": "portr",
+        "order": 6,
+        "stops": {
+          "1": ["96-1-12301"],
+          "0": ["96-0-23151"]
+        }
+      },
+      {
+        "stop_name": "Cambridge Common Loop",
+        "branches": null,
+        "station": "hloop",
+        "order": 7,
+        "stops": {
+          "1": ["96-1-2307"],
+          "0": ["96-0-2310"]
+        }
+      },
+      {
+        "stop_name": "Harvard Bus Tunnels",
+        "branches": null,
+        "station": "bally",
+        "order": 8,
+        "stops": {
+          "1": ["96-1-32549"],
+          "0": ["96-0-20761"]
+        }
+      }
+    ]
+  }
+}

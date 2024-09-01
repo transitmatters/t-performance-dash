@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { SubwaySection } from '../../common/components/nav/SubwaySection';
 import { BusSection } from '../../common/components/nav/BusSection';
 import { useDelimitatedRoute } from '../../common/utils/router';
+import { CommuterRailSection } from '../../common/components/nav/CommuterRailSection';
 
 interface SideNavigationProps {
   close?: () => void;
@@ -20,11 +21,11 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({ close }) => {
           href="/"
           className={classNames(
             page === 'landing' ? 'bg-opacity-75' : 'bg-opacity-0',
-            'flex flex-row items-center gap-2 rounded-md bg-black pl-1  hover:bg-opacity-25 hover:text-white focus:outline-1'
+            'flex flex-row items-center gap-2 rounded-md bg-black pl-1 hover:bg-opacity-25 hover:text-white focus:outline-1'
           )}
           onClick={() => (close ? close() : undefined)}
         >
-          <div className="flex  h-8 w-8 items-center justify-center rounded-full">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full">
             <FontAwesomeIcon icon={faHouse} size="lg" />
           </div>
           <h2>Home</h2>
@@ -58,6 +59,7 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({ close }) => {
         <hr className="border-stone-600" />
         <SubwaySection close={close} />
         <BusSection close={close} />
+        <CommuterRailSection close={close} />
       </ul>
     </nav>
   );

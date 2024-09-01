@@ -5,12 +5,13 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { ALL_PAGES } from '../../common/constants/pages';
 import { ControlPanel } from '../../common/components/controls/ControlPanel';
 import { lineColorBackground } from '../../common/styles/general';
+import { COMMUTER_RAIL_LINE_NAMES } from '../../common/types/lines';
 
 export const DesktopHeader: React.FC = () => {
   const {
     line,
     page,
-    query: { busRoute },
+    query: { busRoute, crRoute },
     tab,
   } = useDelimitatedRoute();
   const dateStoreSection = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
@@ -20,13 +21,14 @@ export const DesktopHeader: React.FC = () => {
 
   const getLineName = () => {
     if (busRoute) return `Route ${busRoute}`;
+    if (crRoute) return COMMUTER_RAIL_LINE_NAMES[crRoute];
     if (line) return LINE_OBJECTS[line]?.name;
     if (tab === 'System') return 'System';
   };
   return (
     <div
       className={classNames(
-        'sticky top-0 z-10 mx-3 mb-2 flex flex-row justify-between gap-x-6 rounded-bl-none rounded-br-md  border-gray-200 text-white shadow-md md:mx-0 md:mr-4 md:border-l-0',
+        'sticky top-0 z-10 mx-3 mb-2 flex flex-row justify-between gap-x-6 rounded-bl-none rounded-br-md border-gray-200 text-white shadow-md md:mx-0 md:mr-4 md:border-l-0',
         lineColorBackground[line ?? 'DEFAULT']
       )}
     >

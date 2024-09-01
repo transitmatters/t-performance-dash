@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['20']
-        python-version: ['3.11']
+        python-version: ['3.12']
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3

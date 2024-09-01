@@ -1,0 +1,91 @@
+{
+  "87": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Arlington Center",
+        "branches": null,
+        "station": "arlct",
+        "order": 1,
+        "stops": {
+          "1": ["87-1-12644"],
+          "0": ["87-0-12644"]
+        }
+      },
+      {
+        "stop_name": "Clarendon Hill",
+        "branches": null,
+        "station": "clarh",
+        "order": 2,
+        "stops": {
+          "1": ["87-1-2637"],
+          "0": ["87-0-12636", "87-0-2637"]
+        }
+      },
+      {
+        "stop_name": "Teele Square @ Broadway",
+        "branches": null,
+        "station": "teele",
+        "order": 3,
+        "stops": {
+          "1": ["87-1-2577"],
+          "0": ["87-0-2634"]
+        }
+      },
+      {
+        "stop_name": "Davis",
+        "branches": null,
+        "station": "davis",
+        "order": 4,
+        "stops": {
+          "1": ["87-1-2581"],
+          "0": ["87-0-5104"]
+        }
+      },
+      {
+        "stop_name": "Somerville Avenue @ Park Street",
+        "branches": null,
+        "station": "smvpk",
+        "order": 5,
+        "stops": {
+          "1": ["87-1-2591"],
+          "0": ["87-0-2618"]
+        }
+      },
+      {
+        "stop_name": "Union Square",
+        "branches": null,
+        "station": "unsqu",
+        "order": 6,
+        "stops": {
+          "1": ["87-1-2510"],
+          "0": ["87-0-2612"]
+        }
+      },
+      {
+        "stop_name": "McGrath Highway @ Somerville Avenue",
+        "branches": null,
+        "station": "mcgsm",
+        "order": 7,
+        "stops": {
+          "1": ["87-1-2600"],
+          "0": ["87-0-2607"]
+        }
+      },
+      {
+        "stop_name": "Lechmere Station",
+        "branches": null,
+        "station": "lchmr",
+        "order": 8,
+        "stops": {
+          "1": ["87-1-70500"],
+          "0": ["87-0-70500"]
+        }
+      }
+    ]
+  }
+}

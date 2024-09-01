@@ -1,5 +1,6 @@
 # TransitMatters Data Dashboard
 
+![Release](https://img.shields.io/github/v/release/transitmatters/t-performance-dash)
 ![lint](https://github.com/transitmatters/t-performance-dash/workflows/lint/badge.svg?branch=main)
 ![build](https://github.com/transitmatters/t-performance-dash/workflows/build/badge.svg?branch=main)
 ![deploy](https://github.com/transitmatters/t-performance-dash/workflows/deploy/badge.svg?branch=main)
@@ -12,14 +13,13 @@ This is the repository for the TransitMatters Data Dashboard. Client code is wri
 - node 20.x and npm 9.x+ required
   - With `nvm` installed, use `nvm install && nvm use`
   - verify with `node -v`
-- Python 3.11 with recent poetry (1.6.0 or later)
+- Python 3.12 with recent poetry (1.7.0 or later)
   - Verify with `python --version && poetry --version`
   - `poetry self update` to update poetry
 
 ## Development Instructions
 
-1. Add `MBTA_V2_API_KEY` and `MBTA_V3_API_KEY` to your shell environment:
-   - `export MBTA_V2_API_KEY='KEY'` in ~/.bashrc or ~/.zshrc
+1. Add `MBTA_V3_API_KEY` to your shell environment:
    - `export MBTA_V3_API_KEY='KEY'` in ~/.bashrc or ~/.zshrc
 2. Add your AWS credentials (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) to your shell environment, OR add them to a .boto config file with awscli command `aws configure`.
 3. In the root directory, run `npm install` to install all frontend and backend dependencies
