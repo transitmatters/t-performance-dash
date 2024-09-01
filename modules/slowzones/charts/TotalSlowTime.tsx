@@ -82,7 +82,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
           tension: 0.1,
         },
         {
-          label: `Green Line`,
+          label: `Green Line (D)`,
           data: data?.map((d) => (d['Green'] / 60).toFixed(2)),
           borderColor: LINE_COLORS['line-green'],
           backgroundColor: LINE_COLORS['line-green'],
