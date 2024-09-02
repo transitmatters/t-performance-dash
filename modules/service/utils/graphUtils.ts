@@ -68,6 +68,12 @@ export const getRemainingBlockAnnotation = (
       xMin: xMin,
       xMax: xMax,
       ...shuttlingAnnotationBlockStyle,
+      label: {
+        content: 'Data not ready',
+        rotation: -90,
+        color: 'white',
+        display: true,
+      },
     },
   ];
 };

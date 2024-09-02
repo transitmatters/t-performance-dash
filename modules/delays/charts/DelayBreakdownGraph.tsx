@@ -3,6 +3,8 @@ import { Line } from 'react-chartjs-2';
 
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
+import dayjs from 'dayjs';
+import { max } from 'date-fns';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import classNames from 'classnames';
@@ -15,6 +17,8 @@ import { ChartBorder } from '../../../common/components/charts/ChartBorder';
 import type { LineDelays } from '../../../common/types/delays';
 import { getFormattedTimeString } from '../../../common/utils/time';
 import { hexWithAlpha } from '../../../common/utils/general';
+import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
+import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
 
 interface DelayBreakdownGraphProps {
   data: LineDelays[];
@@ -35,6 +39,11 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
   const labels = data.map((point) => point.date);
 
   const lineColor = LINE_COLORS[line ?? 'default'];
+
+  const remainingBlocks = getRemainingBlockAnnotation(
+    dayjs(max(data.map((delay) => dayjs(delay.date).toDate()))).format(DATE_FORMAT) ??
+      TODAY.format(DATE_FORMAT)
+  );
 
   return (
     <ChartBorder>
@@ -231,6 +240,10 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 // empty title to set font and leave room for drawTitle fn
                 display: showTitle,
                 text: '',
+              },
+              annotation: {
+                // Add your annotations here
+                annotations: [...remainingBlocks],
               },
             },
             scales: {

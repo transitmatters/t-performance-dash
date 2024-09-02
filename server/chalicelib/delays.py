@@ -6,7 +6,7 @@ from chalicelib.constants import DATE_FORMAT_BACKEND
 
 
 TABLE_NAME = "AlertDelaysWeekly"
-MAX_DELTA = 1000
+MAX_DELTA = 5000
 
 
 class AlertDelaysByLineParams(TypedDict):
@@ -39,7 +39,7 @@ def delay_time_by_line(params: AlertDelaysByLineParams):
             raise BadRequestError("Invalid Line key.")
     except KeyError:
         raise BadRequestError("Missing or invalid parameters.")
-    # Prevent queries of more than 1000 items.
+    # Prevent queries of more than 5000 items.
     if is_invalid_range(start_date, end_date, MAX_DELTA):
         raise ForbiddenError("Date range too long. The maximum number of requested values is 150.")
     # If querying for weekly/monthly data, can just return the query.

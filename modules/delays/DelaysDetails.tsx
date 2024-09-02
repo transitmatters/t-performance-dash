@@ -30,6 +30,10 @@ export function DelaysDetails() {
     return line === 'line-green' && <BranchSelector routeId={routeId} setRouteId={setRouteId} />;
   }, [line, routeId]);
 
+  React.useEffect(() => {
+    setRouteId(lineToDefaultRouteId(line));
+  }, [line]);
+
   const enabled = Boolean(startDate && endDate && line);
   const alertDelays = useAlertDelays(
     {
