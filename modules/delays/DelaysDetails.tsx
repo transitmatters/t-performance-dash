@@ -98,43 +98,43 @@ export function DelaysDetails() {
                     </p>
                     <h4 className="mt-2 font-semibold">Example Alerts</h4>
                     <blockquote className="my-2 border-s-4 border-gray-300 bg-gray-50 p-4 dark:border-gray-500 dark:bg-gray-800">
-                      <span className="animate-text bg-transparent bg-clip-text text-mbta-blue shadow-none transition-shadow duration-300">
+                      <span className="animate-text bg-clip-text text-mbta-blue shadow-none transition-shadow duration-300">
                         Blue Line
                       </span>
                       : Delays of about{' '}
-                      <span className="animate-text bg-transparent bg-gradient-to-r from-red-500 to-blue-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
+                      <span className="animate-text bg-gradient-to-r from-red-500 to-blue-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
                         20 minutes
                       </span>{' '}
                       due to a{' '}
-                      <span className="animate-text bg-transparent bg-yellow-400 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
+                      <span className="animate-text bg-yellow-400 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
                         power issue
                       </span>{' '}
                       near wood island. Some trains may hold at stations.
                     </blockquote>
                     <blockquote className="my-2 border-s-4 border-gray-300 bg-gray-50 p-4 dark:border-gray-500 dark:bg-gray-800">
-                      <span className="animate-text bg-transparent bg-clip-text text-mbta-orange shadow-none transition-shadow duration-300">
+                      <span className="animate-text bg-clip-text text-mbta-orange shadow-none transition-shadow duration-300">
                         Orange Line
                       </span>
                       : Delays of about{' '}
-                      <span className="animate-text bg-transparent bg-gradient-to-r from-red-500 to-blue-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
+                      <span className="animate-text bg-gradient-to-r from-red-500 to-blue-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
                         10 minutes
                       </span>{' '}
                       due to a{' '}
-                      <span className="animate-text bg-red-500 bg-transparent bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
+                      <span className="animate-text bg-red-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
                         disabled train
                       </span>{' '}
                       at Northeastern.
                     </blockquote>
                     <blockquote className="my-2 border-s-4 border-gray-300 bg-gray-50 p-4 dark:border-gray-500 dark:bg-gray-800">
-                      <span className="animate-text bg-transparent bg-clip-text text-mbta-green shadow-none transition-shadow duration-300">
+                      <span className="animate-text bg-clip-text text-mbta-green shadow-none transition-shadow duration-300">
                         Green Line D Branch
                       </span>
                       : Delays of about{' '}
-                      <span className="animate-text bg-transparent bg-gradient-to-r from-red-500 to-blue-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
+                      <span className="animate-text bg-gradient-to-r from-red-500 to-blue-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
                         10 minutes
                       </span>{' '}
                       eastbound due to a maintenance train{' '}
-                      <span className="animate-text bg-transparent bg-yellow-400 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
+                      <span className="animate-text bg-yellow-400 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
                         inspecting the overhead
                       </span>{' '}
                       between riverside and kenmore.
