@@ -3,7 +3,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import Link from 'next/link';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { Layout } from '../../common/layouts/layoutTypes';
@@ -11,13 +10,13 @@ import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useAlertDelays } from '../../common/api/hooks/delays';
 import { Widget, WidgetDiv } from '../../common/components/widgets';
-import { TotalDelayGraph } from './charts/TotalDelayGraph';
-import { DelayBreakdownGraph } from './charts/DelayBreakdownGraph';
-import { DelayByCategoryGraph } from './charts/DelayByCategoryGraph';
 import { BranchSelector } from '../../common/components/inputs/BranchSelector';
 import { lineToDefaultRouteId } from '../predictions/utils/utils';
-import { LineRouteId } from '../../common/types/lines';
+import type { LineRouteId } from '../../common/types/lines';
 import { Accordion } from '../../common/components/accordion/Accordion';
+import { DelayByCategoryGraph } from './charts/DelayByCategoryGraph';
+import { DelayBreakdownGraph } from './charts/DelayBreakdownGraph';
+import { TotalDelayGraph } from './charts/TotalDelayGraph';
 
 dayjs.extend(utc);
 
