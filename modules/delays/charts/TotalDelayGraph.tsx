@@ -4,7 +4,7 @@ import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
-import { max } from 'date-fns';
+import { max, min } from 'date-fns';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
@@ -43,6 +43,10 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
   const remainingBlocks = getRemainingBlockAnnotation(
     dayjs(max(data.map((delay) => dayjs(delay.date).toDate()))).format(DATE_FORMAT) ??
       TODAY.format(DATE_FORMAT)
+  );
+  const earlierBlocks = getRemainingBlockAnnotation(
+    undefined,
+    dayjs(min(data.map((delay) => dayjs(delay.date).toDate()))).format(DATE_FORMAT)
   );
 
   return (
@@ -108,7 +112,7 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
               },
               annotation: {
                 // Add your annotations here
-                annotations: [...remainingBlocks],
+                annotations: [...earlierBlocks, ...remainingBlocks],
               },
             },
             scales: {

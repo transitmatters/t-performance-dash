@@ -5,7 +5,7 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
-import { max } from 'date-fns';
+import { max, min } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
@@ -43,6 +43,12 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
     dayjs(max(data.map(({ prediction }) => dayjs(prediction[0].weekly).toDate())))
       .add(1, 'day')
       .format(DATE_FORMAT) ?? TODAY.format(DATE_FORMAT)
+  );
+  const earlierBlocks = getRemainingBlockAnnotation(
+    undefined,
+    dayjs(min(data.map(({ prediction }) => dayjs(prediction[0].weekly).toDate()))).format(
+      DATE_FORMAT
+    )
   );
 
   const reducedData = data.map(({ week, prediction }) => ({
@@ -132,6 +138,7 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
               annotation: {
                 // Add your annotations here
                 annotations: [
+                  ...earlierBlocks,
                   {
                     type: 'line',
                     yMin: peak,

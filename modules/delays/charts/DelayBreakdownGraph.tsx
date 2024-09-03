@@ -4,7 +4,7 @@ import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
-import { max } from 'date-fns';
+import { max, min } from 'date-fns';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import classNames from 'classnames';
@@ -44,6 +44,10 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
     dayjs(max(data.map((delay) => dayjs(delay.date).toDate()))).format(DATE_FORMAT) ??
       TODAY.format(DATE_FORMAT)
   );
+  const earlierBlocks = getRemainingBlockAnnotation(
+    undefined,
+    dayjs(min(data.map((delay) => dayjs(delay.date).toDate()))).format(DATE_FORMAT)
+  );
 
   return (
     <ChartBorder>
@@ -57,7 +61,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
             labels,
             datasets: [
               {
-                label: `Disabled Train`,
+                label: `🚉 Disabled Train`,
                 borderColor: '#dc2626',
                 backgroundColor: hexWithAlpha('#dc2626', 0.8),
                 pointRadius: 0,
@@ -68,7 +72,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.disabled_vehicle),
               },
               {
-                label: `Door Problem`,
+                label: `🚪 Door Problem`,
                 borderColor: '#3f6212',
                 backgroundColor: hexWithAlpha('#3f6212', 0.8),
                 pointRadius: 0,
@@ -79,7 +83,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.door_problem),
               },
               {
-                label: `Power/Wire Issue`,
+                label: `🔌 Power/Wire Issue`,
                 borderColor: '#eab308',
                 backgroundColor: hexWithAlpha('#eab308', 0.8),
                 pointRadius: 0,
@@ -90,7 +94,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.power_problem),
               },
               {
-                label: `Signal Problem`,
+                label: `🚦 Signal Problem`,
                 borderColor: '#84cc16',
                 backgroundColor: hexWithAlpha('#84cc16', 0.8),
                 pointRadius: 0,
@@ -101,7 +105,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.signal_problem),
               },
               {
-                label: `Switch Problem`,
+                label: `🎚️ Switch Problem`,
                 borderColor: '#10b981',
                 backgroundColor: hexWithAlpha('#10b981', 0.8),
                 pointRadius: 0,
@@ -112,7 +116,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.switch_problem),
               },
               {
-                label: `Brake Issue`,
+                label: `🛑 Brake Issue`,
                 borderColor: '#4c1d95',
                 backgroundColor: hexWithAlpha('#4c1d95', 0.8),
                 pointRadius: 0,
@@ -123,7 +127,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.brake_problem),
               },
               {
-                label: `Track Issue`,
+                label: `🛤️ Track Issue`,
                 borderColor: '#8b5cf6',
                 backgroundColor: hexWithAlpha('#8b5cf6', 0.8),
                 pointRadius: 0,
@@ -134,7 +138,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.track_issue),
               },
               {
-                label: `Mechanical Problem`,
+                label: `🔧 Mechanical Problem`,
                 borderColor: '#451a03',
                 backgroundColor: hexWithAlpha('#451a03', 0.8),
                 pointRadius: 0,
@@ -145,7 +149,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.mechanical_problem),
               },
               {
-                label: `Flooding`,
+                label: `🌊 Flooding`,
                 borderColor: '#0ea5e9',
                 backgroundColor: hexWithAlpha('#0ea5e9', 0.8),
                 pointRadius: 0,
@@ -156,7 +160,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.flooding),
               },
               {
-                label: `Police Activity`,
+                label: `🚓 Police Activity`,
                 borderColor: '#1d4ed8',
                 backgroundColor: hexWithAlpha('#1d4ed8', 0.8),
                 pointRadius: 0,
@@ -167,7 +171,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.police_activity),
               },
               {
-                label: `Medical Emergency`,
+                label: `🚑 Medical Emergency`,
                 borderColor: '#be123c',
                 backgroundColor: hexWithAlpha('#be123c', 0.8),
                 pointRadius: 0,
@@ -178,7 +182,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.medical_emergency),
               },
               {
-                label: `Fire Department Activity`,
+                label: `🚒 Fire Department Activity`,
                 borderColor: '#ea580c',
                 backgroundColor: hexWithAlpha('#ea580c', 0.8),
                 pointRadius: 0,
@@ -223,6 +227,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                     return `Week of ${context[0].label}`;
                   },
                   label: (tooltipItem) => {
+                    if (tooltipItem.parsed.y === 0) return '';
                     return `${tooltipItem.dataset.label}: ${getFormattedTimeString(
                       tooltipItem.parsed.y,
                       'minutes'
@@ -243,7 +248,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
               },
               annotation: {
                 // Add your annotations here
-                annotations: [...remainingBlocks],
+                annotations: [...earlierBlocks, ...remainingBlocks],
               },
             },
             scales: {
