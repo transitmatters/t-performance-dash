@@ -106,7 +106,7 @@ export function DelaysDetails() {
                         20 minutes
                       </span>{' '}
                       due to a{' '}
-                      <span className="animate-text bg-[#eab308] bg-transparent bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
+                      <span className="animate-text bg-transparent bg-yellow-400 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
                         power issue
                       </span>{' '}
                       near wood island. Some trains may hold at stations.
@@ -120,7 +120,7 @@ export function DelaysDetails() {
                         10 minutes
                       </span>{' '}
                       due to a{' '}
-                      <span className="animate-text bg-[#dc2626] bg-transparent bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
+                      <span className="animate-text bg-red-500 bg-transparent bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
                         disabled train
                       </span>{' '}
                       at Northeastern.
@@ -134,7 +134,7 @@ export function DelaysDetails() {
                         10 minutes
                       </span>{' '}
                       eastbound due to a maintenance train{' '}
-                      <span className="animate-text bg-[#eab308] bg-transparent bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
+                      <span className="animate-text bg-transparent bg-yellow-400 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
                         inspecting the overhead
                       </span>{' '}
                       between riverside and kenmore.
