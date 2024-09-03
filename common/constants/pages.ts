@@ -22,7 +22,7 @@ export enum PAGES {
   service = 'service',
   slowzones = 'slowzones',
   systemSlowzones = 'systemSlowzones',
-  systemRidership = 'systemRidership',
+  systemServiceAndRidership = 'systemServiceAndRidership',
   ridership = 'ridership',
   singleTrips = 'singleTrips',
   multiTrips = 'multiTrips',
@@ -129,10 +129,10 @@ export const ALL_PAGES: PageMap = {
     icon: faWarning,
     dateStoreSection: 'system',
   },
-  systemRidership: {
-    key: 'systemRidership',
+  systemServiceAndRidership: {
+    key: 'systemServiceAndRidership',
     path: '/ridership',
-    name: 'Ridership',
+    name: 'Service & Ridership',
     lines: [],
     icon: faUsers,
     dateStoreSection: 'system',
@@ -171,17 +171,17 @@ export const SUB_PAGES_MAP = {
   },
   system: {
     slowzones: 'systemSlowzones',
-    ridership: 'systemRidership',
+    ridership: 'systemServiceAndRidership',
   },
 };
 
 export const SYSTEM_PAGES_MAP = {
   system: {
     slowzones: 'systemSlowzones',
-    ridership: 'systemRidership',
+    ridership: 'systemServiceAndRidership',
   },
 };
 
 export const LANDING_PAGE = [ALL_PAGES.landing];
 
-export const SYSTEM_SUB_PAGES = [ALL_PAGES.systemSlowzones, ALL_PAGES.systemRidership];
+export const SYSTEM_SUB_PAGES = [ALL_PAGES.systemSlowzones, ALL_PAGES.systemServiceAndRidership];

@@ -15,6 +15,7 @@ from chalicelib import (
     service_hours,
     predictions,
     ridership,
+    service_ridership_dashboard,
 )
 
 
@@ -242,3 +243,9 @@ def get_time_predictions():
         route_id=route_id,
     )
     return json.dumps(response)
+
+
+@app.route("/api/service_ridership_dashboard", cors=cors_config)
+def get_service_ridership_dashboard():
+    response = service_ridership_dashboard.get_service_ridership_dash_json()
+    return response

@@ -1,0 +1,41 @@
+.button {
+    position: fixed;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.button:focus {
+    opacity: 1;
+    width: auto;
+    height: auto;
+    margin: 10px 0;
+    z-index: 1;
+}
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(black, 0.5);
+    z-index: 2;
+}
+
+.dialog {
+    position: fixed;
+    max-width: 80vw;
+    max-height: 80vh;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    overflow: scroll;
+    padding: 10px;
+    background: white;
+    border-radius: 2px;
+    z-index: 3;
+}

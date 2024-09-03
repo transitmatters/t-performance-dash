@@ -1,0 +1,91 @@
+.cancellationText {
+    z-index: -1;
+    position: absolute;
+    text-transform: uppercase;
+    font-size: 90px;
+    font-weight: 500;
+    margin: auto;
+    top: 0%;
+    left: 50%;
+    transform: rotate(-15deg) translateX(-50%) translateY(0%);
+    opacity: 0.5;
+    color: tomato;
+}
+
+.cancellationIcon {
+    z-index: -1;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transform: scale(40) translateX(10%) translateY(-20%);
+    color: tomato;
+    opacity: 0.2;
+}
+
+.statusBadge {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    border-radius: 4px;
+    padding: 5px 10px;
+}
+
+.statusBadgeGood {
+    color: white;
+    background: green
+}
+
+.statusBadgeBad {
+    color: white;
+    background: red
+}
+
+.statusBadgeWarning {
+    color: white;
+    background: yellow
+}
+
+.statusBadge>svg {
+    margin-right: 4px;
+}
+
+.statusBadge a {
+    color: inherit;
+    text-decoration-style: dotted;
+}
+
+
+.sectionLabel {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    font-weight: 300;
+    font-size: 16px;
+}
+
+.sectionLabelLabel {
+    font-style: italic;
+}
+
+.sectionLabelRule {
+    margin-left: 10px;
+    flex-grow: 1;
+    height: 0px;
+    border-bottom: 1px dotted currentColor;
+    transform: translateY(1px);
+}
+
+.serviceAndRidershipChartContainer {
+    height: 200px;
+    position: relative;
+}
+
+.tabs {
+    margin-left: 5px !important;
+}
+
+.detailsExpanded {
+    font-size: 14px;
+    margin-top: 5px;
+    font-style: initial;
+}
