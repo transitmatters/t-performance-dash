@@ -28,12 +28,12 @@ export const DailyServiceHistogram: React.FC<Props> = (props) => {
     return [
       {
         label: prettyDate(startDate),
-        data: startServiceLevels!,
+        data: startServiceLevels!.map((value) => value / 2),
         style: { opacity: 0.5 },
       },
       {
         label: prettyDate(endDate),
-        data: endServiceLevels!,
+        data: endServiceLevels!.map((value) => value / 2),
       },
     ];
   }, [scheduledService, dayKind]);

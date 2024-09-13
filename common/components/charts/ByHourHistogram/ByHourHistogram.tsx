@@ -11,6 +11,7 @@ import {
 } from 'chart.js';
 import Color from 'color';
 
+import type { Context } from 'chartjs-plugin-datalabels';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../../constants/charts';
 import type { ByHourDataset, DisplayStyle, ValueAxis as ValueAxis } from './types';
@@ -68,6 +69,20 @@ export const ByHourHistogram: React.FC<Props> = (props) => {
   const ref = useRef();
   const isMobile = !useBreakpoint('md');
 
+  const tooltipFormat = React.useCallback(
+    ({ datasetIndex, dataIndex }: Context) => {
+      const dataset = data[datasetIndex];
+      const value = dataset.data[dataIndex];
+      const { label } = dataset;
+
+      if (datasetRoundTrips) {
+        return `${label}: ${value} ${valueAxis.tooltipItemLabel ?? ''} (${Math.round(60 / value)}m headways)`.trim();
+      }
+      return `${label}: ${value} ${valueAxis.tooltipItemLabel ?? ''}`.trim();
+    },
+    [data, datasetRoundTrips, valueAxis.tooltipItemLabel]
+  );
+
   const chartData = useMemo(() => {
     return {
       labels: timeLabels,
@@ -118,17 +133,13 @@ export const ByHourHistogram: React.FC<Props> = (props) => {
           mode: 'index' as const,
           callbacks: {
             label: (context) => {
-              const { datasetIndex, dataIndex } = context;
-              const dataset = data[datasetIndex];
-              const value = dataset.data[dataIndex];
-              const { label } = dataset;
-              return `${label}: ${value} ${valueAxis.tooltipItemLabel ?? ''} ${datasetRoundTrips ? `(${Math.round((60 / value) * 2)}m headways)` : ''}`.trim();
+              return tooltipFormat(context);
             },
           },
         },
       },
     };
-  }, [valueAxis.title, valueAxis.tooltipItemLabel, isMobile, data, datasetRoundTrips]);
+  }, [valueAxis.title, isMobile, tooltipFormat]);
 
   return (
     <BarChart
@@ -136,7 +147,7 @@ export const ByHourHistogram: React.FC<Props> = (props) => {
       ref={ref}
       data={chartData}
       options={chartOptions}
-      height={isMobile ? 240 : 80}
+      height={isMobile ? 200 : 75}
       plugins={[ChartjsPluginWatermark]}
     />
   );
