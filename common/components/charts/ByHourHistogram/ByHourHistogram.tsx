@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { Bar as BarChart } from 'react-chartjs-2';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,6 +12,7 @@ import {
 import Color from 'color';
 
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
+import { watermarkLayout } from '../../../constants/charts';
 import type { ByHourDataset, DisplayStyle, ValueAxis as ValueAxis } from './types';
 import { resolveStyle } from './styles';
 
@@ -20,6 +22,8 @@ interface Props {
   style?: Partial<DisplayStyle>;
   data: ByHourDataset[];
   valueAxis: ValueAxis;
+  /** Whether the dataset is roundtrips, and we want to additionally convert and show the values as headways */
+  datasetRoundTrips?: boolean;
 }
 
 const allTimeLabels = ['AM', 'PM']
@@ -51,11 +55,17 @@ const stripZeroHoursAndRotateMidnightToEnd = (
 };
 
 export const ByHourHistogram: React.FC<Props> = (props) => {
-  const { data: dataWithZeros, valueAxis, style: baseStyle = null } = props;
+  const {
+    data: dataWithZeros,
+    valueAxis,
+    style: baseStyle = null,
+    datasetRoundTrips = false,
+  } = props;
   const { data, timeLabels } = useMemo(
     () => stripZeroHoursAndRotateMidnightToEnd(dataWithZeros),
     [dataWithZeros]
   );
+  const ref = useRef();
   const isMobile = !useBreakpoint('md');
 
   const chartData = useMemo(() => {
@@ -96,6 +106,9 @@ export const ByHourHistogram: React.FC<Props> = (props) => {
           },
         },
       },
+      responsive: true,
+      maintainAspectRatio: false,
+      watermark: watermarkLayout(isMobile),
       plugins: {
         legend: {
           display: true,
@@ -109,13 +122,22 @@ export const ByHourHistogram: React.FC<Props> = (props) => {
               const dataset = data[datasetIndex];
               const value = dataset.data[dataIndex];
               const { label } = dataset;
-              return `${label}: ${value} ${valueAxis.tooltipItemLabel ?? ''}`.trim();
+              return `${label}: ${value} ${valueAxis.tooltipItemLabel ?? ''} ${datasetRoundTrips ? `(${Math.round((60 / value) * 2)}m headways)` : ''}`.trim();
             },
           },
         },
       },
     };
-  }, [valueAxis.title, valueAxis.tooltipItemLabel, data]);
+  }, [valueAxis.title, valueAxis.tooltipItemLabel, isMobile, data, datasetRoundTrips]);
 
-  return <BarChart data={chartData} options={chartOptions} height={isMobile ? 50 : 70} />;
+  return (
+    <BarChart
+      redraw
+      ref={ref}
+      data={chartData}
+      options={chartOptions}
+      height={isMobile ? 240 : 80}
+      plugins={[ChartjsPluginWatermark]}
+    />
+  );
 };
