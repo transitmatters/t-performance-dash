@@ -4,25 +4,24 @@ version = "4.0.0"
 description = "TransitMatters performance visualizer for the MBTA"
 authors = ["TransitMatters Labs Team"]
 license = "MIT"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "~3.12"
 json-api-doc = "0.15.0"
 requests = "^2.32.3"
 pytz = "2024.1"
-boto3 = "1.34.128"
-botocore = "1.34.128"
+boto3 = "1.35.10"
 numpy = "1.26.4"
-pandas = "2.2.2"
-datadog_lambda = "6.96.0"
-ddtrace = "2.9.1"
+pandas = "2.2.3"
+datadog_lambda = "6.98.0"
 dynamodb-json = "^1.4.2"
 
 [tool.poetry.dev-dependencies]
-pip = ">=23.3"
+pip = ">=24.0"
 chalice = "1.31.2"
-flake8 = "~7.1.0"
-black = "~24.4.2"
+flake8 = "~7.1.1"
+black = "~24.8.0"
 poetry-plugin-export = "^1.8.0"
 
 [tool.black]
