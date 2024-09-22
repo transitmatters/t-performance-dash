@@ -3,79 +3,57 @@ import { Line } from 'react-chartjs-2';
 
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
+import dayjs from 'dayjs';
+import { max, min } from 'date-fns';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
-import { max, min } from 'date-fns';
-import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
-import type { TimePredictionWeek } from '../../../common/types/dataPoints';
+import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartBorder } from '../../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
-import { PEAK_SPEED } from '../../../common/constants/baselines';
+import type { LineDelays } from '../../../common/types/delays';
+import { getFormattedTimeString } from '../../../common/utils/time';
+import { hexWithAlpha } from '../../../common/utils/general';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
-import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
-import { addAccuracyPercentageToData } from '../../../common/utils/csv';
 
-interface PredictionsGraphProps {
-  data: TimePredictionWeek[];
+interface TotalDelayGraphProps {
+  data: LineDelays[];
   startDate: string;
   endDate: string;
   showTitle?: boolean;
 }
 
-export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
+export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
   data,
   startDate,
   endDate,
   showTitle = false,
 }) => {
   const { line, linePath } = useDelimitatedRoute();
-  const peak = PEAK_SPEED[line ?? 'DEFAULT'];
   const ref = useRef();
   const isMobile = !useBreakpoint('md');
-  const labels = data.map((point) => point.week);
+  const labels = data.map((point) => point.date);
+
+  const lineColor = LINE_COLORS[line ?? 'default'];
+
   const remainingBlocks = getRemainingBlockAnnotation(
-    dayjs(max(data.map(({ prediction }) => dayjs(prediction[0].weekly).toDate())))
-      .add(1, 'day')
-      .format(DATE_FORMAT) ?? TODAY.format(DATE_FORMAT)
+    dayjs(max(data.map((delay) => dayjs(delay.date).toDate()))).format(DATE_FORMAT) ??
+      TODAY.format(DATE_FORMAT)
   );
   const earlierBlocks = getRemainingBlockAnnotation(
     undefined,
-    dayjs(min(data.map(({ prediction }) => dayjs(prediction[0].weekly).toDate()))).format(
-      DATE_FORMAT
-    )
+    dayjs(min(data.map((delay) => dayjs(delay.date).toDate()))).format(DATE_FORMAT)
   );
-
-  const reducedData = data.map(({ week, prediction }) => ({
-    week: week,
-    num_predictions: prediction.reduce((total, { num_predictions }) => {
-      if (total !== undefined && num_predictions !== undefined) {
-        return total + num_predictions;
-      } else {
-        return total;
-      }
-    }, 0),
-    num_accurate_predictions: prediction.reduce((total, { num_accurate_predictions }) => {
-      if (total !== undefined && num_accurate_predictions !== undefined) {
-        return total + num_accurate_predictions;
-      } else {
-        return total;
-      }
-    }, 0),
-  }));
-
-  const dataWithPercentage = addAccuracyPercentageToData(data);
 
   return (
     <ChartBorder>
       <ChartDiv isMobile={isMobile}>
         <Line
-          id={`speed-${linePath}`}
+          id={`totaldelay-${linePath}`}
           height={isMobile ? 240 : 200}
           ref={ref}
           redraw={true}
@@ -83,21 +61,15 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
             labels,
             datasets: [
               {
-                label: `Arrival Predictions`,
-                borderColor: LINE_COLORS[line ?? 'default'],
+                label: `Total time delayed`,
+                borderColor: lineColor,
+                backgroundColor: hexWithAlpha(lineColor, 0.8),
                 pointRadius: 0,
                 pointBorderWidth: 0,
-                stepped: true,
+                fill: true,
                 pointHoverRadius: 6,
-                spanGaps: false,
-                pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
-                pointBackgroundColor: LINE_COLORS[line ?? 'default'],
-                data: reducedData.map((datapoint) =>
-                  (
-                    (datapoint?.num_accurate_predictions / datapoint?.num_predictions) *
-                    100
-                  ).toFixed(2)
-                ),
+                pointHoverBackgroundColor: lineColor,
+                data: data.map((datapoint) => datapoint.total_delay_time),
               },
             ],
           }}
@@ -122,8 +94,11 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
                   title: (context) => {
                     return `Week of ${context[0].label}`;
                   },
-                  label: (context) => {
-                    return `${context.dataset.label}: ${context.parsed.y}% accurate`;
+                  label: (tooltipItem) => {
+                    return `${tooltipItem.dataset.label}: ${getFormattedTimeString(
+                      tooltipItem.parsed.y,
+                      'minutes'
+                    )}`;
                   },
                 },
               },
@@ -137,32 +112,20 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
               },
               annotation: {
                 // Add your annotations here
-                annotations: [
-                  ...earlierBlocks,
-                  {
-                    type: 'line',
-                    yMin: peak,
-                    yMax: peak,
-                    borderColor: CHART_COLORS.ANNOTATIONS,
-                    // corresponds to null dataset index.
-                    display: (ctx) => ctx.chart.isDatasetVisible(1),
-                    borderWidth: 2,
-                  },
-                  ...remainingBlocks,
-                ],
+                annotations: [...earlierBlocks, ...remainingBlocks],
               },
             },
             scales: {
               y: {
-                suggestedMin: 75,
-                suggestedMax: 100,
+                suggestedMin: 0,
+                min: 0,
                 display: true,
                 ticks: {
                   color: COLORS.design.subtitleGrey,
                 },
                 title: {
                   display: true,
-                  text: 'Accuracy (%)',
+                  text: 'Total time delayed (minutes)',
                   color: COLORS.design.subtitleGrey,
                 },
               },
@@ -211,24 +174,13 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
                   ctx.fillText('No data to display', width / 2, height / 2);
                   ctx.restore();
                 }
-                if (showTitle) drawSimpleTitle(`Arrival Predictions`, chart);
+                if (showTitle) drawSimpleTitle(`Speed`, chart);
               },
             },
             ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end justify-end gap-4">
-        {startDate && (
-          <DownloadButton
-            data={dataWithPercentage}
-            datasetName="ridership predictions"
-            includeBothStopsForLocation={false}
-            startDate={startDate}
-            endDate={endDate}
-          />
-        )}
-      </div>
     </ChartBorder>
   );
 };
