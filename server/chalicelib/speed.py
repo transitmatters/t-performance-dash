@@ -4,6 +4,7 @@ from chalicelib import dynamo
 from datetime import date, datetime, timedelta
 import pandas as pd
 import numpy as np
+from chalicelib.constants import DATE_FORMAT_BACKEND
 
 
 class TripMetricsByLineParams(TypedDict):
@@ -19,8 +20,6 @@ AGG_TO_CONFIG_MAP = {
     "weekly": {"table_name": "DeliveredTripMetricsWeekly", "delta": 7 * 150},
     "monthly": {"table_name": "DeliveredTripMetricsMonthly", "delta": 30 * 150},
 }
-
-DATE_FORMAT_BACKEND = "%Y-%m-%d"
 
 
 def aggregate_actual_trips(actual_trips, agg, start_date):
