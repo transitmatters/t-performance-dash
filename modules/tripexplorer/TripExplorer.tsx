@@ -12,6 +12,7 @@ import { getParentStationForStopId } from '../../common/utils/stations';
 import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { GobbleDataNotice } from '../../common/components/notices/GobbleDataNotice';
 import { BetaDataNotice } from '../../common/components/notices/BetaDataNotice';
+import { PokeySchleppieAwardBanner } from '../../common/components/notices/PokeySchleppieAwardBanner';
 import { useAlertStore } from './AlertStore';
 import { TripGraphs } from './TripGraphs';
 
@@ -40,6 +41,7 @@ export const TripExplorer = () => {
       <ChartPageDiv>
         <BetaDataNotice />
         {alertsForModal?.length ? <AlertNotice /> : null}
+        <PokeySchleppieAwardBanner busRoute={busRoute} />
         <TripGraphs fromStation={fromStation} toStation={toStation} />
         <div>
           <GobbleDataNotice />

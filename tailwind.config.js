@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -41,6 +43,11 @@ module.exports = {
         illuminate: '0px 0px 2px rgba(255,255,255,0.5);',
         shadowUp: '0px -2px 2px rgba(0, 0, 0, 0.25);',
       },
+      textShadow: {
+        sm: '0 1px 2px var(--tw-shadow-color)',
+        DEFAULT: '0 2px 4px var(--tw-shadow-color)',
+        lg: '0 8px 16px var(--tw-shadow-color)',
+      },
       colors: {
         design: {
           darkGrey: '#353535',
@@ -83,5 +90,18 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms'), require('flowbite/plugin')],
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('flowbite/plugin'),
+    plugin(function ({ matchUtilities, theme }) {
+      matchUtilities(
+        {
+          'text-shadow': (value) => ({
+            textShadow: value,
+          }),
+        },
+        { values: theme('textShadow') }
+      );
+    }),
+  ],
 };
