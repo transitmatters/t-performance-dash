@@ -18,9 +18,9 @@ const nextConfig = {
 
     return config;
   },
-  async rewrites() {
-    return rewrites;
-  },
+  // async rewrites() {
+  //   return rewrites;
+  // },
   output: 'export',
   trailingSlash: true,
   reactStrictMode: true,

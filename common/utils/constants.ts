@@ -9,4 +9,4 @@ let domain = '';
 if (typeof window !== 'undefined') {
   domain = window.location.hostname;
 }
-export const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP[domain] || '';
+export const APP_DATA_BASE_PATH = 'http://127.0.0.1:5000';
