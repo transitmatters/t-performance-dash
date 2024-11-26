@@ -88,7 +88,6 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
   );
 
   const getSegmentsForSlowZones = ({ isHorizontal }: { isHorizontal: boolean }) => {
-    console.log(segments);
     return segments.map((segment) => {
       return {
         location: segment.segmentLocation,
