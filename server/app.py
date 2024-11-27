@@ -24,7 +24,7 @@ app = Chalice(app_name="data-dashboard")
 localhost = "localhost:3000"
 TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", localhost)
 
-cors_config = CORSConfig(allow_origin=f"{TM_FRONTEND_HOST}", max_age=3600)
+cors_config = CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600)
 
 if TM_FRONTEND_HOST != localhost:
     app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
