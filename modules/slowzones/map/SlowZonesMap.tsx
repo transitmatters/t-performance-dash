@@ -149,7 +149,7 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
       diagram={diagram}
       strokeOptions={{ stroke: line.color }}
       direction={direction}
-      getSegments={(isHorizontal) => []}
+      getSegments={getSegmentsForSlowZones}
       getStationLabel={abbreviateStationName}
       tooltip={{ snapToSegment: true, maxDistance: 20, render: renderSlowZonesTooltip }}
     />
