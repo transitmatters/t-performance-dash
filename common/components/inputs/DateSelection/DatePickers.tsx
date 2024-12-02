@@ -110,9 +110,11 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
           placeholder={'mm/dd/yyyy'}
           options={FLAT_PICKER_OPTIONS[tab]}
           onChange={(dates, currentDateString) => {
-            isSingleDate
-              ? handleDateChange(currentDateString)
-              : handleStartDateChange(currentDateString);
+            if (isSingleDate) {
+              handleDateChange(currentDateString);
+            } else {
+              handleStartDateChange(currentDateString);
+            }
           }}
           onMonthChange={() => updateColor(line)}
           onOpen={() => updateColor(line)}
