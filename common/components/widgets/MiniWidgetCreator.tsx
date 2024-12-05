@@ -9,7 +9,6 @@ export interface MiniWidgetObject {
   widgetValue: WidgetValueInterface;
   text: string;
 }
-[];
 
 interface MiniWidgetCreatorProps {
   widgetObjects: MiniWidgetObject[];
