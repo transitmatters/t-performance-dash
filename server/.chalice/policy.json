@@ -2,36 +2,22 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Action": [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ],
+      "Action": ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
       "Effect": "Allow",
       "Resource": "arn:*:logs:*:*:*"
     },
     {
-      "Action": [
-        "s3:ListBucket"
-      ],
+      "Action": ["s3:ListBucket"],
       "Effect": "Allow",
-      "Resource": [
-        "arn:aws:s3:::tm-mbta-performance"
-      ]
+      "Resource": ["arn:aws:s3:::tm-mbta-performance"]
     },
     {
-      "Action": [
-        "s3:GetObject"
-      ],
+      "Action": ["s3:GetObject"],
       "Effect": "Allow",
-      "Resource": [
-        "arn:aws:s3:::tm-mbta-performance/*"
-      ]
+      "Resource": ["arn:aws:s3:::tm-mbta-performance/*"]
     },
     {
-      "Action": [
-        "dynamodb:Query"
-      ],
+      "Action": ["dynamodb:Query"],
       "Effect": "Allow",
       "Resource": [
         "arn:aws:dynamodb:*:*:table/DeliveredTripMetrics",
@@ -41,7 +27,8 @@
         "arn:aws:dynamodb:*:*:table/ScheduledServiceDaily",
         "arn:aws:dynamodb:*:*:table/Ridership",
         "arn:aws:dynamodb:*:*:table/SpeedRestrictions",
-        "arn:aws:dynamodb:*:*:table/TimePredictions"
+        "arn:aws:dynamodb:*:*:table/TimePredictions",
+        "arn:aws:dynamodb:*:*:table/AlertDelaysWeekly"
       ]
     }
   ]

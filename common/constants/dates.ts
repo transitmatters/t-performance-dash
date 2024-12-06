@@ -32,7 +32,7 @@ export const ONE_YEAR_AGO_STRING = ONE_YEAR_AGO.format(DATE_FORMAT);
 export const THREE_MONTHS_AGO = TODAY.subtract(90, 'days');
 export const THREE_MONTHS_AGO_STRING = TODAY.subtract(90, 'days').format(DATE_FORMAT);
 
-const OVERVIEW_TRAIN_MIN_DATE = '2016-02-01';
+export const OVERVIEW_TRAIN_MIN_DATE = '2016-02-01';
 const TRAIN_MIN_DATE = '2016-01-15';
 const BUS_MIN_DATE = '2018-08-01';
 export const BUS_MAX_DATE = '2024-06-30';
