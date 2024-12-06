@@ -25,6 +25,7 @@ export const DesktopHeader: React.FC = () => {
     if (line) return LINE_OBJECTS[line]?.name;
     if (tab === 'System') return 'System';
   };
+
   return (
     <div
       className={classNames(
@@ -42,7 +43,12 @@ export const DesktopHeader: React.FC = () => {
         </div>
       </div>
       {showControls && (
-        <ControlPanel dateStoreSection={dateStoreSection} line={line} busRoute={busRoute} />
+        <ControlPanel
+          dateStoreSection={dateStoreSection}
+          line={line}
+          busRoute={busRoute}
+          crRoute={crRoute}
+        />
       )}
     </div>
   );
