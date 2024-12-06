@@ -21,8 +21,10 @@ export const GobbleDataNotice: React.FC = () => {
   const isEndDateAfterBusMaxDay = endDate !== undefined && dayjs(endDate).isAfter(BUS_MAX_DAY);
 
   if (
-    (line === 'line-bus' || linePath === 'bus') &&
-    (isStartDateAfterBusMaxDay || isEndDateAfterBusMaxDay)
+    ((line === 'line-bus' || linePath === 'bus') &&
+      (isStartDateAfterBusMaxDay || isEndDateAfterBusMaxDay)) ||
+    line === 'line-commuter-rail' ||
+    linePath === 'commuter-rail'
   ) {
     return (
       <div className={'flex items-center'}>

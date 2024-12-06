@@ -1,0 +1,61 @@
+{
+  "31": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Mattapan Station",
+        "branches": null,
+        "station": "matpn",
+        "order": 1,
+        "stops": {
+          "1": ["31-1-18511"],
+          "0": ["31-0-18511"]
+        }
+      },
+      {
+        "stop_name": "Wellington Hill",
+        "branches": null,
+        "station": "wellh",
+        "order": 2,
+        "stops": {
+          "1": ["31-1-1728"],
+          "0": ["31-0-1714"]
+        }
+      },
+      {
+        "stop_name": "Morton Street @ Blue Hill Avenue",
+        "branches": null,
+        "station": "mortn",
+        "order": 3,
+        "stops": {
+          "1": ["31-1-543"],
+          "0": ["31-0-11712"]
+        }
+      },
+      {
+        "stop_name": "Shattuck Hospital",
+        "branches": null,
+        "station": "shosp",
+        "order": 4,
+        "stops": {
+          "1": ["31-1-546"],
+          "0": ["31-0-5232"]
+        }
+      },
+      {
+        "stop_name": "Forest Hills Busway",
+        "branches": null,
+        "station": "fhill",
+        "order": 5,
+        "stops": {
+          "1": ["31-1-875"],
+          "0": ["31-0-875"]
+        }
+      }
+    ]
+  }
+}

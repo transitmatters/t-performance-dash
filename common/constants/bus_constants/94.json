@@ -1,0 +1,71 @@
+{
+  "94": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Medford Square",
+        "branches": null,
+        "station": "medfd",
+        "order": 1,
+        "stops": {
+          "1": ["94-1-45002"],
+          "0": ["94-0-45002"]
+        }
+      },
+      {
+        "stop_name": "Winthrop Circle",
+        "branches": null,
+        "station": "wicir",
+        "order": 2,
+        "stops": {
+          "1": ["94-1-5005"],
+          "0": ["94-0-6322"]
+        }
+      },
+      {
+        "stop_name": "Boston Street @ High Street",
+        "branches": null,
+        "station": "boshi",
+        "order": 3,
+        "stops": {
+          "1": ["94-1-3513"],
+          "0": ["94-0-2418"]
+        }
+      },
+      {
+        "stop_name": "North Street",
+        "branches": null,
+        "station": "nostr",
+        "order": 4,
+        "stops": {
+          "1": ["94-1-2374"],
+          "0": ["94-0-2412"]
+        }
+      },
+      {
+        "stop_name": "Powder House",
+        "branches": null,
+        "station": "powdr",
+        "order": 5,
+        "stops": {
+          "1": ["94-1-2381"],
+          "0": ["94-0-2405"]
+        }
+      },
+      {
+        "stop_name": "Davis",
+        "branches": null,
+        "station": "davis",
+        "order": 6,
+        "stops": {
+          "1": ["94-1-5104"],
+          "0": ["94-0-5104"]
+        }
+      }
+    ]
+  }
+}

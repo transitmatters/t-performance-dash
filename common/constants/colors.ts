@@ -1,3 +1,4 @@
+import type { Line } from '../types/lines';
 import { hexWithAlpha } from '../utils/general';
 
 export const COLORS = {
@@ -44,22 +45,26 @@ export const CHART_COLORS = {
   BLOCKS_SOLID: '#d2d2d2',
 };
 
-export const LINE_COLORS = {
-  'line-red': '#D13434',
-  'line-orange': '#ed8b00',
-  'line-blue': '#003da5',
-  'line-green': '#00834d',
-  'line-mattapan': '#D13434',
-  'line-bus': '#ffc72c',
+export const LINE_COLORS: { [key in Line | 'default']: string } = {
+  'line-red': COLORS.mbta.red,
+  'line-orange': COLORS.mbta.orange,
+  'line-blue': COLORS.mbta.blue,
+  'line-green': COLORS.mbta.green,
+  'line-bus': COLORS.mbta.bus,
+  'line-mattapan': COLORS.mbta.red,
+  'line-commuter-rail': COLORS.mbta.commuterRail,
   default: '#303030',
 };
 
-export const LINE_COLORS_LEVELS = {
+export const LINE_COLORS_LEVELS: {
+  [key in Line | 'default']: { [num in number]: string } | string;
+} = {
   'line-red': { 0: '#D13434', 1: '#d64949', 2: '#da5e5e', 3: '#df7272' },
   'line-orange': { 0: '#ed8b00', 1: '#ff9907', 2: '#ffa321', 3: '#ffae3b' },
   'line-blue': { 0: '#003da5', 1: '#0046bf', 2: '#0050d8', 3: '#0059f2' },
   'line-green': { 0: '#00834d', 1: '#009d5c', 2: '#00b66b', 3: '#00d07a' },
   'line-mattapan': { 0: '#D13434', 1: '#d64949', 2: '#da5e5e', 3: '#df7272' },
   'line-bus': { 0: '#ffc72c', 1: '#ffce46', 2: '#ffd55f', 3: '#ffdb79' },
+  'line-commuter-rail': { 0: '#80276c', 1: '#8f2f7e', 2: '#9e3790', 3: '#ad41a2' },
   default: '#303030',
 };

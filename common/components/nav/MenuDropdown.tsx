@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { LINE_OBJECTS } from '../../constants/lines';
-import { BUS_DEFAULTS } from '../../state/defaults/dateDefaults';
+import { BUS_DEFAULTS, COMMUTER_RAIL_DEFAULTS } from '../../state/defaults/dateDefaults';
 import { lineColorBackground } from '../../styles/general';
 import type { Line } from '../../types/lines';
 import type { Route } from '../../types/router';
@@ -39,15 +39,20 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ line, route, childre
     }
   }, [line]);
 
+  const href = React.useMemo(() => {
+    switch (line) {
+      case 'line-bus':
+        return `/bus/trips/single?busRoute=1&date=${BUS_DEFAULTS.singleTripConfig.date}`;
+      case 'line-commuter-rail':
+        return `/commuter-rail/ridership?crRoute=CR-Lowell&startDate=${COMMUTER_RAIL_DEFAULTS.lineConfig.startDate}&endDate=${COMMUTER_RAIL_DEFAULTS.lineConfig.endDate}`;
+      default:
+        return getLineSelectionItemHref(line, route);
+    }
+  }, [line, route]);
+
   return (
     <div className={classNames('w-full')}>
-      <Link
-        href={
-          line === 'line-bus'
-            ? `/bus/trips/single?busRoute=1&date=${BUS_DEFAULTS.singleTripConfig.date}`
-            : getLineSelectionItemHref(line, route)
-        }
-      >
+      <Link href={href}>
         <div
           className={classNames(
             'flex w-full flex-row items-center gap-2 rounded-t-md py-1 pl-1 text-sm',

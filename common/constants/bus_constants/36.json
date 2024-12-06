@@ -1,0 +1,101 @@
+{
+  "36": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Industrial Park (West Roxbury) near VA Rivermoor",
+        "branches": null,
+        "station": "indwr",
+        "order": 1,
+        "stops": {
+          "1": ["36-1-120"],
+          "0": ["36-0-120"]
+        }
+      },
+      {
+        "stop_name": "Millennium Park",
+        "branches": null,
+        "station": "mpark",
+        "order": 1,
+        "stops": {
+          "1": ["36-1-67120"],
+          "0": ["36-0-67120"]
+        }
+      },
+      {
+        "stop_name": "VA Hospital (Dedham)",
+        "branches": null,
+        "station": "vaded",
+        "order": 1,
+        "stops": {
+          "1": ["36-1-10820"],
+          "0": ["36-0-10820"]
+        }
+      },
+      {
+        "stop_name": "Charles River Loop",
+        "branches": null,
+        "station": "cloop",
+        "order": 2,
+        "stops": {
+          "1": ["36-1-774"],
+          "0": ["36-0-820"]
+        }
+      },
+      {
+        "stop_name": "Spring Street @ Centre Street",
+        "branches": null,
+        "station": "sring",
+        "order": 2,
+        "stops": {
+          "1": ["36-1-779"],
+          "0": ["36-0-812", "36-0-821"]
+        }
+      },
+      {
+        "stop_name": "Centre & LaGrange (West Roxbury)",
+        "branches": null,
+        "station": "wrox",
+        "order": 3,
+        "stops": {
+          "1": ["36-1-781"],
+          "0": ["36-0-810"]
+        }
+      },
+      {
+        "stop_name": "West Roxbury Parkway @ Centre",
+        "branches": null,
+        "station": "pkwy",
+        "order": 4,
+        "stops": {
+          "1": ["36-1-787"],
+          "0": ["36-0-804"]
+        }
+      },
+      {
+        "stop_name": "Roslindale Square",
+        "branches": null,
+        "station": "rossq",
+        "order": 5,
+        "stops": {
+          "1": ["36-1-636"],
+          "0": ["36-0-602"]
+        }
+      },
+      {
+        "stop_name": "Forest Hills Busway",
+        "branches": null,
+        "station": "fhill",
+        "order": 6,
+        "stops": {
+          "1": ["36-1-10642", "36-1-875"],
+          "0": ["36-0-10642"]
+        }
+      }
+    ]
+  }
+}

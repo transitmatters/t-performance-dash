@@ -16,13 +16,14 @@ import { useDateStore } from '../state/dateStore';
 import type { DateStore } from '../state/dateStore';
 import { LINE_COLORS } from '../constants/colors';
 
-const linePathToKeyMap: Record<string, Line> = {
+const linePathToKeyMap: Record<LinePath, Line> = {
   red: 'line-red',
   orange: 'line-orange',
   green: 'line-green',
   blue: 'line-blue',
   mattapan: 'line-mattapan',
   bus: 'line-bus',
+  'commuter-rail': 'line-commuter-rail',
 };
 
 const getParams = (params: ParsedUrlQuery | QueryParams) => {
@@ -61,6 +62,8 @@ const getTab = (path: LinePath) => {
     return 'Subway';
   } else if (path === 'bus') {
     return 'Bus';
+  } else if (path === 'commuter-rail') {
+    return 'Commuter Rail';
   } else {
     return 'System';
   }

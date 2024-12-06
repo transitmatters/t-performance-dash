@@ -5,6 +5,7 @@ import { ByHourHistogram } from '../../common/components/charts/ByHourHistogram'
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { prettyDate } from '../../common/utils/date';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
+import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 
 interface Props {
   scheduledService: ScheduledService;
@@ -27,23 +28,26 @@ export const DailyServiceHistogram: React.FC<Props> = (props) => {
     return [
       {
         label: prettyDate(startDate),
-        data: startServiceLevels!,
+        data: startServiceLevels!.map((value) => value / 2),
         style: { opacity: 0.5 },
       },
       {
         label: prettyDate(endDate),
-        data: endServiceLevels!,
+        data: endServiceLevels!.map((value) => value / 2),
       },
     ];
   }, [scheduledService, dayKind]);
 
   return (
     <>
-      <ByHourHistogram
-        data={data}
-        style={{ color }}
-        valueAxis={{ title: 'Scheduled round trips', tooltipItemLabel: 'round trips' }}
-      />
+      <CarouselGraphDiv>
+        <ByHourHistogram
+          data={data}
+          style={{ color }}
+          valueAxis={{ title: 'Scheduled round trips', tooltipItemLabel: 'round trips' }}
+          datasetRoundTrips
+        />
+      </CarouselGraphDiv>
       <div className={'flex w-full justify-center pt-2'}>
         <ButtonGroup
           line={line}

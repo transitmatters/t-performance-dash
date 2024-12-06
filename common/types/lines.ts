@@ -13,31 +13,61 @@ export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'mattapan' | 'bus' 
 export type BusRoute =
   | '1'
   | '4'
+  | '7'
+  | '8'
   | '9'
+  | '10'
+  | '11'
+  | '14'
   | '15'
   | '16'
   | '17/19'
+  | '18'
   | '21'
   | '22'
   | '23'
+  | '26'
   | '28'
+  | '29'
+  | '30'
+  | '31'
   | '32'
   | '34'
+  | '35'
+  | '36'
+  | '37'
+  | '38'
   | '39'
   | '41'
+  | '42'
+  | '43'
+  | '44'
   | '45'
   | '47'
+  | '51'
   | '55'
   | '57'
   | '66'
+  | '69'
   | '71'
   | '73'
   | '77'
+  | '80'
+  | '83'
   | '85'
   | '86'
+  | '87'
+  | '88'
   | '89'
+  | '90'
   | '91'
   | '92'
+  | '93'
+  | '94'
+  | '95'
+  | '96'
+  | '97'
+  | '99'
   | '111'
   | '61/70/170'
   | '104/109'
@@ -101,36 +131,72 @@ export const GTFS_COLOR_LINE_IDS = [
 export type GtfsColorLineId = (typeof GTFS_COLOR_LINE_IDS)[number];
 
 export const HEAVY_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue'];
-export const LANDING_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue', 'line-green'];
+export const LANDING_RAIL_LINES: Line[] = [
+  'line-red',
+  'line-orange',
+  'line-blue',
+  'line-green',
+  'line-commuter-rail',
+];
 
 export const RAIL_LINES = ['red', 'orange', 'green', 'blue', 'mattapan'];
 export const BUS_ROUTES: BusRoute[] = [
   '1',
   '4',
+  '7',
+  '8',
   '9',
+  '10',
+  '11',
+  '14',
   '15',
   '16',
+  '18',
   '21',
   '22',
   '23',
+  '26',
   '28',
+  '29',
+  '30',
+  '31',
   '32',
   '34',
+  '35',
+  '36',
+  '37',
+  '38',
   '39',
   '41',
+  '42',
+  '43',
+  '44',
   '45',
   '47',
+  '51',
   '55',
   '57',
   '66',
+  '69',
   '71',
   '73',
   '77',
+  '80',
+  '83',
   '85',
   '86',
+  '87',
+  '88',
   '89',
+  '90',
   '91',
   '92',
+  '93',
+  '94',
+  '95',
+  '96',
+  '97',
+  '99',
   '111',
   '17/19',
   '61/70/170',
@@ -180,5 +246,11 @@ export const ALL_LINE_PATHS = RAIL_LINES.map((line) => {
 export const BUS_PATH = {
   params: {
     line: 'bus',
+  },
+};
+
+export const COMMUTER_RAIL_PATH = {
+  params: {
+    line: 'commuter-rail',
   },
 };

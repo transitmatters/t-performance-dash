@@ -1,0 +1,61 @@
+{
+  "30": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Mattapan Station",
+        "branches": null,
+        "station": "matpn",
+        "order": 1,
+        "stops": {
+          "1": ["30-1-185"],
+          "0": ["30-0-185"]
+        }
+      },
+      {
+        "stop_name": "Cummins Highway @ American Legion Highway",
+        "branches": null,
+        "station": "cmaml",
+        "order": 2,
+        "stops": {
+          "1": ["30-1-96459"],
+          "0": ["30-0-16434"]
+        }
+      },
+      {
+        "stop_name": "Hyde Park Avenue @ Cummins Highway",
+        "branches": null,
+        "station": "hpave",
+        "order": 3,
+        "stops": {
+          "1": ["30-1-6459"],
+          "0": ["30-0-6433"]
+        }
+      },
+      {
+        "stop_name": "Roslindale Square",
+        "branches": null,
+        "station": "rossq",
+        "order": 4,
+        "stops": {
+          "1": ["30-1-636"],
+          "0": ["30-0-6022"]
+        }
+      },
+      {
+        "stop_name": "Forest Hills Busway",
+        "branches": null,
+        "station": "fhill",
+        "order": 5,
+        "stops": {
+          "1": ["30-1-10642"],
+          "0": ["30-0-10642"]
+        }
+      }
+    ]
+  }
+}
