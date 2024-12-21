@@ -6,6 +6,7 @@ import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/type
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
 import { BusTripGraphs } from './BusTripGraphs';
 import { SubwayTripGraphs } from './SubwayTripGraphs';
+import { CommuterRailTripGraphs } from './CommuterRailTripGraphs';
 
 interface TripGraphsProps {
   fromStation: Station;
@@ -39,6 +40,17 @@ export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }
   if (tab === 'Bus')
     return (
       <BusTripGraphs
+        fromStation={fromStation}
+        toStation={toStation}
+        parameters={parameters}
+        aggregate={aggregate}
+        enabled={enabled}
+        line={line}
+      />
+    );
+  if (tab === 'Commuter Rail')
+    return (
+      <CommuterRailTripGraphs
         fromStation={fromStation}
         toStation={toStation}
         parameters={parameters}

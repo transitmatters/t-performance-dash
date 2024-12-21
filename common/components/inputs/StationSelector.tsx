@@ -30,16 +30,17 @@ export const StationSelector: React.FC<StationSelector> = ({
   const {
     line,
     lineShort,
-    query: { busRoute },
+    query: { busRoute, crRoute },
   } = useDelimitatedRoute();
   const mdBreakpoint = useBreakpoint('md');
   const station = type === 'from' ? fromStation : toStation;
-  const stationOptions = optionsForField(type, lineShort, fromStation, busRoute);
+  const stationOptions = optionsForField(type, lineShort, fromStation, busRoute, crRoute);
   const branchLabelWidth = {
     'line-red': 'w-8',
     'line-green': 'w-12',
     DEFAULT: 'w-0',
   };
+
   return (
     <Listbox value={station} onChange={setStation}>
       {({ open }) => (
