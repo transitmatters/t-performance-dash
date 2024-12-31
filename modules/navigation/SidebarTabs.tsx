@@ -22,7 +22,9 @@ export const SidebarTabs: React.FC<SidebarTabs> = ({ tabs, close }) => {
   const handleChange = (enabled: boolean, tab: PageMetadata) => {
     if (!enabled) return null;
     handlePageConfig(tab);
-    close && close();
+    if (close) {
+      close();
+    }
   };
 
   return (

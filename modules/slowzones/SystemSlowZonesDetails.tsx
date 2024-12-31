@@ -99,7 +99,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
             {allData.data && speedRestrictions.data && canShowSlowZonesMap ? (
               <SlowZonesMap
                 key={lineShort}
-                slowZones={isArray(allData.data) ? allData.data : allData.data.data}
+                slowZones={allData.data}
                 speedRestrictions={speedRestrictions.data}
                 lineName={lineShort}
                 direction={isDesktop ? 'horizontal' : 'vertical'}
