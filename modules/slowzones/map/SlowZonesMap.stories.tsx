@@ -55,6 +55,19 @@ export const Primary = () => {
         direction="vertical"
         speedRestrictions={[]}
       />
+
+      <SlowZonesMap
+        lineName="Green"
+        slowZones={slowZonesResponses}
+        direction="vertical"
+        speedRestrictions={[]}
+      />
+      <SlowZonesMap
+        lineName="Green"
+        slowZones={slowZonesResponses}
+        direction="horizontal"
+        speedRestrictions={[]}
+      />
     </>
   );
 };
