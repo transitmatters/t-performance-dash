@@ -75,7 +75,7 @@ export function SlowZonesDetails() {
           <div className="relative flex flex-col">
             {totalSlowTimeReady ? (
               <TotalSlowTimeWrapper
-                data={isArray(delayTotals.data) ? delayTotals.data : delayTotals.data.data}
+                data={delayTotals.data.data}
                 startDateUTC={startDateUTC}
                 endDateUTC={endDateUTC}
                 line={line}
@@ -94,7 +94,7 @@ export function SlowZonesDetails() {
             {allSlow.data && speedRestrictions.data && canShowSlowZonesMap ? (
               <SlowZonesMap
                 key={lineShort}
-                slowZones={isArray(allSlow.data) ? allSlow.data : allSlow.data.data}
+                slowZones={allSlow.data}
                 speedRestrictions={speedRestrictions.data}
                 lineName={lineShort}
                 direction={isDesktop ? 'horizontal' : 'vertical'}
