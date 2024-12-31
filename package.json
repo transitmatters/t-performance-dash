@@ -2,6 +2,41 @@
   "name": "t-performance-dash",
   "version": "4.1.1",
   "private": true,
+  "homepage": ".",
+  "scripts": {
+    "build": "next build && rm -rf build/static/slowzones",
+    "build-storybook": "storybook build",
+    "eject": "react-scripts eject",
+    "generate-oss-list": "generate-attribution --outputDir common/constants/licenses",
+    "get-data": "npm run get-sz-totals && npm run get-szs && npm run get-speed-restrictions && npm run get-landing-trip-metrics && npm run get-landing-ridership",
+    "get-landing-ridership": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/landing/ridership.json",
+    "get-landing-trip-metrics": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/landing/trip_metrics.json",
+    "get-speed-restrictions": "cd server && poetry run python -m scripts.update_speed_restrictions && cd ..",
+    "get-sz-totals": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/slowzones/delay_totals.json",
+    "get-szs": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/slowzones/all_slow.json",
+    "postinstall": "cd server && poetry install",
+    "lint": "npm run lint-frontend && npm run lint-backend",
+    "lint-backend": "cd server && poetry run flake8 && poetry run black . --check",
+    "lint-frontend": "tsc --noEmit && eslint . && next lint",
+    "serve-static": "npm run build && serve out",
+    "start": "concurrently npm:start-python npm:start-react",
+    "start-python": "cd server && poetry run chalice local --port=5000",
+    "start-react": "npm run get-data && next dev",
+    "storybook": "storybook dev -p 6006",
+    "test": "react-scripts test"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.1",
     "@fortawesome/free-regular-svg-icons": "^6.7.1",
@@ -14,9 +49,6 @@
     "@tanstack/react-query-devtools": "^5.62.0",
     "@tippyjs/react": "^4.2.6",
     "@transitmatters/stripmap": "^0.1.12",
-    "@types/react-flatpickr": "^3.8.11",
-    "ajv": "^8.17.1",
-    "ajv-keywords": "^5.1.0",
     "bezier-js": "^6.1.4",
     "chart.js": "4.4.7",
     "chartjs-adapter-date-fns": "^3.0.0",
@@ -68,8 +100,11 @@
     "@types/node": "^20.12.7",
     "@types/react": "^18.3.12",
     "@types/react-csv": "^1.1.10",
+    "@types/react-flatpickr": "^3.8.11",
     "@typescript-eslint/eslint-plugin": "^8.16.0",
     "@typescript-eslint/parser": "^8.16.0",
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0",
     "autoprefixer": "^10.4.20",
     "babel-plugin-inline-react-svg": "^2.0.2",
     "eslint": "^8.57.0",
@@ -90,47 +125,12 @@
     "tailwindcss": "^3.4.15",
     "typescript": "~5.7.2"
   },
-  "overrides": {
-    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.0c3f3b7.0"
-  },
-  "homepage": ".",
-  "scripts": {
-    "start": "concurrently npm:start-python npm:start-react",
-    "start-python": "cd server && poetry run chalice local --port=5000",
-    "start-react": "npm run get-data && next dev",
-    "build": "next build && rm -rf build/static/slowzones",
-    "serve-static": "npm run build && serve out",
-    "get-data": "npm run get-sz-totals && npm run get-szs && npm run get-speed-restrictions && npm run get-landing-trip-metrics && npm run get-landing-ridership",
-    "get-sz-totals": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/slowzones/delay_totals.json",
-    "get-landing-trip-metrics": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/landing/trip_metrics.json",
-    "get-landing-ridership": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/landing/ridership.json",
-    "get-szs": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/slowzones/all_slow.json",
-    "get-speed-restrictions": "cd server && poetry run python -m scripts.update_speed_restrictions && cd ..",
-    "generate-oss-list": "generate-attribution --outputDir common/constants/licenses",
-    "lint": "npm run lint-frontend && npm run lint-backend",
-    "lint-frontend": "tsc --noEmit && eslint . && next lint",
-    "lint-backend": "cd server && poetry run flake8 && poetry run black . --check",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "postinstall": "cd server && poetry install",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
-  },
-  "proxy": "http://localhost:5000",
   "engines": {
     "node": ">=20.12.0",
     "npm": ">=10.2.0"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "overrides": {
+    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.0c3f3b7.0"
+  },
+  "proxy": "http://localhost:5000"
 }
