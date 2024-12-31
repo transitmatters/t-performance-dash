@@ -19,6 +19,7 @@ import { getFormattedTimeString } from '../../../common/utils/time';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
+import { filterOutZeroValueDatasets } from './utils';
 
 interface DelayBreakdownGraphProps {
   data: LineDelays[];
@@ -59,7 +60,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
           redraw={true}
           data={{
             labels,
-            datasets: [
+            datasets: filterOutZeroValueDatasets([
               {
                 label: `🚉 Disabled Train`,
                 borderColor: '#dc2626',
@@ -103,6 +104,28 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 pointHoverRadius: 6,
                 pointHoverBackgroundColor: lineColor,
                 data: data.map((datapoint) => datapoint.signal_problem),
+              },
+              {
+                label: `🚙 Cars/Traffic`,
+                borderColor: '#f59e0b',
+                backgroundColor: hexWithAlpha('#f59e0b', 0.8),
+                pointRadius: 0,
+                pointBorderWidth: 0,
+                fill: true,
+                pointHoverRadius: 6,
+                pointHoverBackgroundColor: lineColor,
+                data: data.map((datapoint) => datapoint.car_traffic),
+              },
+              {
+                label: `🚧 Track Work`,
+                borderColor: '#f87171',
+                backgroundColor: hexWithAlpha('#f87171', 0.8),
+                pointRadius: 0,
+                pointBorderWidth: 0,
+                fill: true,
+                pointHoverRadius: 6,
+                pointHoverBackgroundColor: lineColor,
+                data: data.map((datapoint) => datapoint.track_work),
               },
               {
                 label: `🎚️ Switch Problem`,
@@ -203,7 +226,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 pointHoverBackgroundColor: lineColor,
                 data: data.map((datapoint) => datapoint.other),
               },
-            ],
+            ]),
           }}
           options={{
             responsive: true,

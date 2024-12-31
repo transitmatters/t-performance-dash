@@ -12,6 +12,8 @@ export interface LineDelays {
   police_activity: number;
   power_problem: number;
   signal_problem: number;
+  track_work: number;
+  car_traffic: number;
   mechanical_problem: number;
   brake_problem: number;
   switch_problem: number;
