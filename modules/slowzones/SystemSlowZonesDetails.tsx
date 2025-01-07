@@ -117,6 +117,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
               Red: 'Red',
               Orange: 'Orange',
               Blue: 'Blue',
+              Green: 'Green',
             })}
           />
         </WidgetDiv>
