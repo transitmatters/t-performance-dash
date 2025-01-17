@@ -119,7 +119,7 @@ export const ALL_PAGES: PageMap = {
     key: 'delays',
     path: '/delays',
     name: 'Delays',
-    lines: ['line-red', 'line-orange', 'line-blue', 'line-green'],
+    lines: ['line-red', 'line-orange', 'line-blue', 'line-green', 'line-mattapan'],
     icon: faCalendarXmark,
     dateStoreSection: 'line',
   },

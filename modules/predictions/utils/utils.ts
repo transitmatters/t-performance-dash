@@ -16,6 +16,9 @@ export const lineToDefaultRouteId = (line: Line | undefined): LineRouteId => {
     case 'line-green': {
       return 'Green-B';
     }
+    case 'line-mattapan': {
+      return 'Mattapan';
+    }
     case 'line-bus': {
       return 'bus';
     }
