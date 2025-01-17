@@ -1,78 +1,77 @@
 .slowZonesTooltip {
-    display: flex;
-    align-items: center;
-    user-select: none;
-    --tooltip-background: white;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  --tooltip-background: white;
 }
 
 .reverseVertical {
-    flex-direction: row;
-    flex-direction: row-reverse;
+  flex-direction: row;
+  flex-direction: row-reverse;
 }
 
 .horizontal {
-    flex-direction: column-reverse;
-    align-items: center;
-    transform: translateY(-5px);
+  flex-direction: column-reverse;
+  align-items: center;
+  transform: translateY(-5px);
 }
 
 .triangle {
-    width: 0;
-    height: 0;
-    z-index: 1;
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-right: 8px solid white;
+  width: 0;
+  height: 0;
+  z-index: 1;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid white;
 }
 
 .triangleReverse {
-    transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 
 .triangleHorizontal {
-    width: 0;
-    height: 0;
-    z-index: 1;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 8px solid white;
+  width: 0;
+  height: 0;
+  z-index: 1;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid white;
 }
 
 .content {
-    border-radius: 4px;
-    overflow: hidden;
-    background: var(--tooltip-background);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--tooltip-background);
 }
 
-
 .title {
-    font-weight: 500;
-    padding: 6px 10px;
-    background: var(--tooltip-accent-color);
-    color: white;
+  font-weight: 500;
+  padding: 6px 10px;
+  background: var(--tooltip-accent-color);
+  color: white;
 }
 
 .body {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .directionTitle {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
 }
 
 .speedRestriction {
-    padding: 6px;
-    margin: 6px;
-    margin-top: 0px;
-    border-radius: 4px;
-    max-width: 300px;
+  padding: 6px;
+  margin: 6px;
+  margin-top: 0px;
+  border-radius: 4px;
+  max-width: 300px;
 }
 
 .speedRestrictionStats {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
