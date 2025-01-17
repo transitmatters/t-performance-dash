@@ -18,8 +18,8 @@ export const BetaSlowZoneDataNotice: React.FC = () => {
               grade-separated.
             </p>
             <p>
-              The slow zone data here is a work in progress, and we will likely make iterative
-              improvements upon it.
+              We're working on improving the data and we plan to add slow-zone tracking for other
+              branches, but that will require additional information on traffic patterns.
             </p>
           </div>
         </div>
