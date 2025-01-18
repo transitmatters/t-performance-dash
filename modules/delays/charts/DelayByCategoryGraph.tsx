@@ -13,6 +13,7 @@ import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartBorder } from '../../../common/components/charts/ChartBorder';
 import type { LineDelays } from '../../../common/types/delays';
 import { getFormattedTimeString } from '../../../common/utils/time';
+import { filterOutZeroValues } from './utils';
 
 interface DelayByCategoryGraphProps {
   data: LineDelays[];
@@ -40,54 +41,29 @@ export const DelayByCategoryGraph: React.FC<DelayByCategoryGraphProps> = ({
   const { linePath } = useDelimitatedRoute();
   const ref = useRef();
   const isMobile = !useBreakpoint('md');
-  const labels = [
-    '🚉 Disabled Train',
-    '🚪 Door Problem',
-    '🔌 Power/Wire Issue',
-    '🚦 Signal Problem',
-    '🎚️ Switch Problem',
-    '🛑 Brake Issue',
-    '🛤️ Track Issue',
-    '🔧 Mechanical Problem',
-    '🌊 Flooding',
-    '🚓 Police Activity',
-    '🚑 Medical Emergency',
-    '🚒 Fire Department Activity',
-    'Other',
-  ];
-  const backgroundColors = [
-    '#dc2626',
-    '#3f6212',
-    '#eab308',
-    '#84cc16',
-    '#10b981',
-    '#4c1d95',
-    '#8b5cf6',
-    '#451a03',
-    '#0ea5e9',
-    '#1d4ed8',
-    '#be123c',
-    '#ea580c',
-    '#6b7280',
-  ];
-  const delayTotals: number[] = sumArray(
-    data.map((datapoint) => {
-      return [
-        datapoint.disabled_vehicle,
-        datapoint.door_problem,
-        datapoint.power_problem,
-        datapoint.signal_problem,
-        datapoint.switch_problem,
-        datapoint.brake_problem,
-        datapoint.track_issue,
-        datapoint.mechanical_problem,
-        datapoint.flooding,
-        datapoint.police_activity,
-        datapoint.medical_emergency,
-        datapoint.fire,
-        datapoint.other,
-      ];
-    })
+
+  const { labels, backgroundColors, delayTotals } = filterOutZeroValues(
+    sumArray(
+      data.map((datapoint) => {
+        return [
+          datapoint.disabled_vehicle,
+          datapoint.door_problem,
+          datapoint.power_problem,
+          datapoint.signal_problem,
+          datapoint.switch_problem,
+          datapoint.brake_problem,
+          datapoint.track_issue,
+          datapoint.track_work,
+          datapoint.car_traffic,
+          datapoint.mechanical_problem,
+          datapoint.flooding,
+          datapoint.police_activity,
+          datapoint.medical_emergency,
+          datapoint.fire,
+          datapoint.other,
+        ];
+      })
+    )
   );
 
   return (

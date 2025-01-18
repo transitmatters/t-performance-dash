@@ -5,7 +5,7 @@ import { LineMap, createDefaultDiagramForLine } from '@transitmatters/stripmap';
 import '@transitmatters/stripmap/dist/style.css';
 
 import { LINE_OBJECTS } from '../../../common/constants/lines';
-import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
+import type { SlowZoneAllSlowResponse, SpeedRestriction } from '../../../common/types/dataPoints';
 import type { SlowZonesLineName } from '../types';
 
 import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
@@ -16,7 +16,7 @@ import { SlowSegmentLabel } from './SlowSegmentLabel';
 import { SlowZonesTooltip } from './SlowZonesTooltip';
 
 interface SlowZonesMapProps extends Pick<React.ComponentProps<typeof LineMap>, 'direction'> {
-  slowZones: SlowZoneResponse[];
+  slowZones: SlowZoneAllSlowResponse;
   speedRestrictions: SpeedRestriction[];
   lineName: SlowZonesLineName;
 }
