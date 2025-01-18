@@ -21,6 +21,7 @@ import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import { BetaSlowZoneDataNotice } from '../../common/components/notices/BetaSlowZoneDataNotice';
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
@@ -48,7 +49,8 @@ export function SlowZonesDetails() {
   const totalSlowTimeReady =
     !delayTotals.isError && delayTotals.data && startDateUTC && endDateUTC && lineShort && line;
   const segmentsReady = !allSlow.isError && allSlow.data && startDateUTC && lineShort;
-  const canShowSlowZonesMap = lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange';
+  const canShowSlowZonesMap =
+    lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange' || lineShort === 'Green';
   const isDesktop = useBreakpoint('lg');
 
   if (!endDateUTC || !startDateUTC) {
@@ -62,6 +64,7 @@ export function SlowZonesDetails() {
   return (
     <PageWrapper pageTitle={'Slow zones'}>
       <ChartPageDiv>
+        <BetaSlowZoneDataNotice />
         <WidgetDiv>
           <WidgetTitle title="Total slow time" />
           <Link

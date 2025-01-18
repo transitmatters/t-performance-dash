@@ -127,7 +127,7 @@ export const ALL_PAGES: PageMap = {
     key: 'slowzones',
     path: '/slowzones',
     name: 'Slow zones',
-    lines: ['line-red', 'line-blue', 'line-orange'],
+    lines: ['line-red', 'line-blue', 'line-orange', 'line-green'],
     icon: faWarning,
     dateStoreSection: 'line',
   },
