@@ -93,7 +93,7 @@
         "branches": null,
         "order": 9,
         "stops": {
-          "0": ["CR-Needham_0_NEC-2237-05", "CR-Needham_0_NEC-2237-03"],
+          "0": ["CR-Needham_0_NEC-2237-03", "CR-Needham_0_NEC-2237-05"],
           "1": ["CR-Needham_1_NEC-2237-05"]
         }
       },
@@ -103,8 +103,8 @@
         "branches": null,
         "order": 10,
         "stops": {
-          "0": ["CR-Needham_0_NEC-2265-01", "CR-Needham_0_NEC-2265-03"],
-          "1": ["CR-Needham_1_NEC-2265-03", "CR-Needham_1_NEC-2265-02"]
+          "0": ["CR-Needham_0_NEC-2265-03", "CR-Needham_0_NEC-2265-01"],
+          "1": ["CR-Needham_1_NEC-2265-02", "CR-Needham_1_NEC-2265-03"]
         }
       },
       {
@@ -124,16 +124,22 @@
         "order": 12,
         "stops": {
           "0": [
+            "CR-Needham_0_NEC-2287-10",
+            "CR-Needham_0_NEC-2287-05",
             "CR-Needham_0_NEC-2287-06",
-            "CR-Needham_0_NEC-2287",
-            "CR-Needham_0_NEC-2287-02",
+            "CR-Needham_0_NEC-2287-07",
             "CR-Needham_0_NEC-2287-08",
+            "CR-Needham_0_NEC-2287",
             "CR-Needham_0_NEC-2287-01",
-            "CR-Needham_0_NEC-2287-03",
-            "CR-Needham_0_NEC-2287-04"
+            "CR-Needham_0_NEC-2287-04",
+            "CR-Needham_0_NEC-2287-02",
+            "CR-Needham_0_NEC-2287-12",
+            "CR-Needham_0_NEC-2287-13",
+            "CR-Needham_0_NEC-2287-03"
           ],
           "1": []
-        }
+        },
+        "terminus": true
       }
     ]
   }

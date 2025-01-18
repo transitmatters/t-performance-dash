@@ -83,7 +83,7 @@ def parse_stop_name(stop_name: str):
 
 
 for LINE_KEY in ROUTES_CR:
-    r_f = requests.get("https://api-v3.mbta.com/stops?filter%5Broute%5D={}".format(LINE_KEY))
+    r_f = requests.get("https://api-v3.mbta.com/stops?filter%5Broute%5D={}&filter%5Bdirection_id%5D=1".format(LINE_KEY))
     stops = r_f.json()
 
     stop_layout = get_line_stops()

@@ -23,7 +23,7 @@
         "branches": null,
         "order": 2,
         "stops": {
-          "0": ["CR-Fairmount_0_DB-2205-01"],
+          "0": ["CR-Fairmount_0_DB-2205-01", "CR-Fairmount_0_DB-2205-02"],
           "1": ["CR-Fairmount_1_DB-2205-02"]
         }
       },
@@ -33,7 +33,7 @@
         "branches": null,
         "order": 3,
         "stops": {
-          "0": ["CR-Fairmount_0_DB-2222-01"],
+          "0": ["CR-Fairmount_0_DB-2222-02", "CR-Fairmount_0_DB-2222-01"],
           "1": ["CR-Fairmount_1_DB-2222-02"]
         }
       },
@@ -43,7 +43,7 @@
         "branches": null,
         "order": 4,
         "stops": {
-          "0": ["CR-Fairmount_0_DB-2230-01"],
+          "0": ["CR-Fairmount_0_DB-2230-01", "CR-Fairmount_0_DB-2230-02"],
           "1": ["CR-Fairmount_1_DB-2230-02"]
         }
       },
@@ -53,7 +53,7 @@
         "branches": null,
         "order": 5,
         "stops": {
-          "0": ["CR-Fairmount_0_DB-2240-01"],
+          "0": ["CR-Fairmount_0_DB-2240-01", "CR-Fairmount_0_DB-2240-02"],
           "1": ["CR-Fairmount_1_DB-2240-02"]
         }
       },
@@ -73,7 +73,7 @@
         "branches": null,
         "order": 7,
         "stops": {
-          "0": ["CR-Fairmount_0_DB-2258-01"],
+          "0": ["CR-Fairmount_0_DB-2258-01", "CR-Fairmount_0_DB-2258-02"],
           "1": ["CR-Fairmount_1_DB-2258-02"]
         }
       },
@@ -83,7 +83,7 @@
         "branches": null,
         "order": 8,
         "stops": {
-          "0": ["CR-Fairmount_0_DB-2265-01"],
+          "0": ["CR-Fairmount_0_DB-2265-02", "CR-Fairmount_0_DB-2265-01"],
           "1": ["CR-Fairmount_1_DB-2265-02"]
         }
       },
@@ -94,11 +94,15 @@
         "order": 9,
         "stops": {
           "0": [
-            "CR-Fairmount_0_NEC-2287-09",
-            "CR-Fairmount_0_NEC-2287-11",
-            "CR-Fairmount_0_NEC-2287-10",
             "CR-Fairmount_0_NEC-2287-07",
-            "CR-Fairmount_0_NEC-2287"
+            "CR-Fairmount_0_NEC-2287",
+            "CR-Fairmount_0_NEC-2287-11",
+            "CR-Fairmount_0_NEC-2287-08",
+            "CR-Fairmount_0_NEC-2287-13",
+            "CR-Fairmount_0_NEC-2287-09",
+            "CR-Fairmount_0_NEC-2287-01",
+            "CR-Fairmount_0_NEC-2287-10",
+            "CR-Fairmount_0_NEC-2287-12"
           ],
           "1": []
         },

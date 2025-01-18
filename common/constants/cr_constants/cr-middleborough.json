@@ -44,7 +44,7 @@
         "order": 4,
         "stops": {
           "0": ["CR-Middleborough_0_MM-0200-S"],
-          "1": ["CR-Middleborough_1_MM-0200-CS"]
+          "1": ["CR-Middleborough_1_MM-0200-S", "CR-Middleborough_1_MM-0200-CS"]
         }
       },
       {
@@ -54,7 +54,7 @@
         "order": 5,
         "stops": {
           "0": ["CR-Middleborough_0_MM-0186-S"],
-          "1": ["CR-Middleborough_1_MM-0186-CS"]
+          "1": ["CR-Middleborough_1_MM-0186-CS", "CR-Middleborough_1_MM-0186-S"]
         }
       },
       {
@@ -104,10 +104,13 @@
         "order": 10,
         "stops": {
           "0": [
-            "CR-Middleborough_0_NEC-2287",
-            "CR-Middleborough_0_NEC-2287-11",
             "CR-Middleborough_0_NEC-2287-13",
-            "CR-Middleborough_0_NEC-2287-12"
+            "CR-Middleborough_0_NEC-2287-12",
+            "CR-Middleborough_0_NEC-2287-11",
+            "CR-Middleborough_0_NEC-2287-10",
+            "CR-Middleborough_0_NEC-2287-08",
+            "CR-Middleborough_0_NEC-2287",
+            "CR-Middleborough_0_NEC-2287-09"
           ],
           "1": []
         },

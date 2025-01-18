@@ -12,7 +12,7 @@
         "branches": null,
         "order": 1,
         "stops": {
-          "0": ["CR-Fitchburg_0_FR-3338-CS"],
+          "0": [],
           "1": ["CR-Fitchburg_1_FR-3338-CS"]
         },
         "terminus": true
@@ -63,7 +63,7 @@
         "branches": null,
         "order": 6,
         "stops": {
-          "0": ["CR-Fitchburg_0_FR-0301-01"],
+          "0": ["CR-Fitchburg_0_FR-0301-02", "CR-Fitchburg_0_FR-0301-01"],
           "1": ["CR-Fitchburg_1_FR-0301-02"]
         }
       },
@@ -73,7 +73,7 @@
         "branches": null,
         "order": 7,
         "stops": {
-          "0": ["CR-Fitchburg_0_FR-0253-01"],
+          "0": ["CR-Fitchburg_0_FR-0253-01", "CR-Fitchburg_0_FR-0253-02"],
           "1": ["CR-Fitchburg_1_FR-0253-02"]
         }
       },
@@ -83,7 +83,7 @@
         "branches": null,
         "order": 8,
         "stops": {
-          "0": ["CR-Fitchburg_0_FR-0219-01"],
+          "0": ["CR-Fitchburg_0_FR-0219-02", "CR-Fitchburg_0_FR-0219-01"],
           "1": ["CR-Fitchburg_1_FR-0219-02"]
         }
       },
@@ -93,7 +93,7 @@
         "branches": null,
         "order": 9,
         "stops": {
-          "0": ["CR-Fitchburg_0_FR-0201-01"],
+          "0": ["CR-Fitchburg_0_FR-0201-02", "CR-Fitchburg_0_FR-0201-01"],
           "1": ["CR-Fitchburg_1_FR-0201-02"]
         }
       },
@@ -103,17 +103,27 @@
         "branches": null,
         "order": 10,
         "stops": {
-          "0": ["CR-Fitchburg_0_FR-0167-01"],
+          "0": ["CR-Fitchburg_0_FR-0167-01", "CR-Fitchburg_0_FR-0167-02"],
           "1": ["CR-Fitchburg_1_FR-0167-02"]
+        }
+      },
+      {
+        "stop_name": "Silver Hill",
+        "station": "place-FR-0147",
+        "branches": null,
+        "order": 11,
+        "stops": {
+          "0": ["CR-Fitchburg_0_FR-0147-01"],
+          "1": ["CR-Fitchburg_1_FR-0147-02"]
         }
       },
       {
         "stop_name": "Kendal Green",
         "station": "place-FR-0132",
         "branches": null,
-        "order": 11,
+        "order": 12,
         "stops": {
-          "0": ["CR-Fitchburg_0_FR-0132-01"],
+          "0": ["CR-Fitchburg_0_FR-0132-01", "CR-Fitchburg_0_FR-0132-02"],
           "1": ["CR-Fitchburg_1_FR-0132-02"]
         }
       },
@@ -121,9 +131,9 @@
         "stop_name": "Brandeis/Roberts",
         "station": "place-FR-0115",
         "branches": null,
-        "order": 12,
+        "order": 13,
         "stops": {
-          "0": ["CR-Fitchburg_0_FR-0115-01"],
+          "0": ["CR-Fitchburg_0_FR-0115-02", "CR-Fitchburg_0_FR-0115-01"],
           "1": ["CR-Fitchburg_1_FR-0115-02"]
         }
       },
@@ -131,9 +141,9 @@
         "stop_name": "Waltham",
         "station": "place-FR-0098",
         "branches": null,
-        "order": 13,
+        "order": 14,
         "stops": {
-          "0": ["CR-Fitchburg_0_FR-0098-01"],
+          "0": ["CR-Fitchburg_0_FR-0098-S", "CR-Fitchburg_0_FR-0098-01"],
           "1": ["CR-Fitchburg_1_FR-0098-S"]
         }
       },
@@ -141,9 +151,9 @@
         "stop_name": "Waverley",
         "station": "place-FR-0074",
         "branches": null,
-        "order": 14,
+        "order": 15,
         "stops": {
-          "0": ["CR-Fitchburg_0_FR-0074-01"],
+          "0": ["CR-Fitchburg_0_FR-0074-01", "CR-Fitchburg_0_FR-0074-02"],
           "1": ["CR-Fitchburg_1_FR-0074-02"]
         }
       },
@@ -151,9 +161,9 @@
         "stop_name": "Belmont",
         "station": "place-FR-0064",
         "branches": null,
-        "order": 15,
+        "order": 16,
         "stops": {
-          "0": ["CR-Fitchburg_0_FR-0064-01"],
+          "0": ["CR-Fitchburg_0_FR-0064-01", "CR-Fitchburg_0_FR-0064-02"],
           "1": ["CR-Fitchburg_1_FR-0064-02"]
         }
       },
@@ -161,9 +171,9 @@
         "stop_name": "Porter",
         "station": "place-portr",
         "branches": null,
-        "order": 16,
+        "order": 17,
         "stops": {
-          "0": ["CR-Fitchburg_0_FR-0034-01"],
+          "0": ["CR-Fitchburg_0_FR-0034-02", "CR-Fitchburg_0_FR-0034-01"],
           "1": ["CR-Fitchburg_1_FR-0034-02"]
         }
       },
@@ -171,19 +181,19 @@
         "stop_name": "North Station",
         "station": "place-north",
         "branches": null,
-        "order": 17,
+        "order": 18,
         "stops": {
           "0": [
-            "CR-Fitchburg_0_BNT-0000-01",
-            "CR-Fitchburg_0_BNT-0000",
-            "CR-Fitchburg_0_BNT-0000-04",
-            "CR-Fitchburg_0_BNT-0000-02",
-            "CR-Fitchburg_0_BNT-0000-10",
             "CR-Fitchburg_0_BNT-0000-05",
-            "CR-Fitchburg_0_BNT-0000-07",
-            "CR-Fitchburg_0_BNT-0000-09",
             "CR-Fitchburg_0_BNT-0000-06",
-            "CR-Fitchburg_0_BNT-0000-08"
+            "CR-Fitchburg_0_BNT-0000-07",
+            "CR-Fitchburg_0_BNT-0000-04",
+            "CR-Fitchburg_0_BNT-0000-01",
+            "CR-Fitchburg_0_BNT-0000-10",
+            "CR-Fitchburg_0_BNT-0000",
+            "CR-Fitchburg_0_BNT-0000-08",
+            "CR-Fitchburg_0_BNT-0000-02",
+            "CR-Fitchburg_0_BNT-0000-09"
           ],
           "1": []
         },

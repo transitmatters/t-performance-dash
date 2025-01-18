@@ -12,7 +12,7 @@
         "branches": null,
         "order": 1,
         "stops": {
-          "0": ["CR-Franklin_0_FB-0303-S"],
+          "0": [],
           "1": ["CR-Franklin_1_FB-0303-S"]
         },
         "terminus": true
@@ -43,7 +43,7 @@
         "branches": null,
         "order": 4,
         "stops": {
-          "0": ["CR-Franklin_0_FS-0049-S"],
+          "0": [],
           "1": ["CR-Franklin_1_FS-0049-S"]
         }
       },
@@ -124,7 +124,7 @@
         "order": 12,
         "stops": {
           "0": ["CR-Franklin_0_FB-0095-05", "CR-Franklin_0_FB-0095-04"],
-          "1": ["CR-Franklin_1_FB-0095-05", "CR-Franklin_1_FB-0095-04"]
+          "1": ["CR-Franklin_1_NEC-2192-02", "CR-Franklin_1_FB-0095-04", "CR-Franklin_1_FB-0095-05"]
         }
       },
       {
@@ -145,9 +145,9 @@
         "stops": {
           "0": ["CR-Franklin_0_NEC-2265-03", "CR-Franklin_0_NEC-2265-01"],
           "1": [
+            "CR-Franklin_1_NEC-2265-02",
             "CR-Franklin_1_NEC-2265-03",
-            "CR-Franklin_1_NEC-2265-01",
-            "CR-Franklin_1_NEC-2265-02"
+            "CR-Franklin_1_NEC-2265-01"
           ]
         }
       },
@@ -157,11 +157,15 @@
         "branches": null,
         "order": 15,
         "stops": {
-          "0": ["CR-Franklin_0_NEC-2276-01", "CR-Franklin_0_NEC-2276-03"],
+          "0": [
+            "CR-Franklin_0_WML-0012-07",
+            "CR-Franklin_0_NEC-2276-03",
+            "CR-Franklin_0_NEC-2276-01"
+          ],
           "1": [
             "CR-Franklin_1_NEC-2276-02",
-            "CR-Franklin_1_NEC-2276-01",
-            "CR-Franklin_1_NEC-2276-03"
+            "CR-Franklin_1_NEC-2276-03",
+            "CR-Franklin_1_NEC-2276-01"
           ]
         }
       },
@@ -172,28 +176,21 @@
         "order": 16,
         "stops": {
           "0": [
-            "CR-Franklin_0_NEC-2287-03",
+            "CR-Franklin_0_NEC-2287-10",
             "CR-Franklin_0_NEC-2287-04",
             "CR-Franklin_0_NEC-2287-08",
-            "CR-Franklin_0_NEC-2287-07",
-            "CR-Franklin_0_NEC-2287-10",
             "CR-Franklin_0_NEC-2287",
             "CR-Franklin_0_NEC-2287-11",
-            "CR-Franklin_0_NEC-2287-05"
+            "CR-Franklin_0_NEC-2287-03",
+            "CR-Franklin_0_NEC-2287-02",
+            "CR-Franklin_0_NEC-2287-07",
+            "CR-Franklin_0_NEC-2287-05",
+            "CR-Franklin_0_NEC-2287-06",
+            "CR-Franklin_0_NEC-2287-09"
           ],
           "1": []
         },
         "terminus": true
-      },
-      {
-        "stop_name": "Hyde Park",
-        "station": "place-NEC-2203",
-        "branches": null,
-        "order": 17,
-        "stops": {
-          "0": ["CR-Franklin_0_NEC-2203-03"],
-          "1": []
-        }
       }
     ]
   }

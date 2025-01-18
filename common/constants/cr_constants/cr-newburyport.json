@@ -12,7 +12,7 @@
         "branches": null,
         "order": 1,
         "stops": {
-          "0": ["CR-Newburyport_0_GB-0353-S"],
+          "0": [],
           "1": ["CR-Newburyport_1_GB-0353-S"]
         },
         "terminus": true
@@ -33,7 +33,7 @@
         "branches": null,
         "order": 3,
         "stops": {
-          "0": ["CR-Newburyport_0_GB-0296-01"],
+          "0": ["CR-Newburyport_0_GB-0296-01", "CR-Newburyport_0_GB-0296-02"],
           "1": ["CR-Newburyport_1_GB-0296-02"]
         }
       },
@@ -43,7 +43,7 @@
         "branches": null,
         "order": 4,
         "stops": {
-          "0": ["CR-Newburyport_0_GB-0254-01"],
+          "0": ["CR-Newburyport_0_GB-0254-01", "CR-Newburyport_0_GB-0254-02"],
           "1": ["CR-Newburyport_1_GB-0254-02"]
         }
       },
@@ -53,7 +53,7 @@
         "branches": null,
         "order": 5,
         "stops": {
-          "0": ["CR-Newburyport_0_GB-0229-01"],
+          "0": ["CR-Newburyport_0_GB-0229-01", "CR-Newburyport_0_GB-0229-02"],
           "1": ["CR-Newburyport_1_GB-0229-02"]
         }
       },
@@ -63,7 +63,7 @@
         "branches": null,
         "order": 6,
         "stops": {
-          "0": ["CR-Newburyport_0_GB-0198-01"],
+          "0": ["CR-Newburyport_0_GB-0198-02", "CR-Newburyport_0_GB-0198-01"],
           "1": ["CR-Newburyport_1_GB-0198-02"]
         }
       },
@@ -113,7 +113,7 @@
         "branches": null,
         "order": 11,
         "stops": {
-          "0": ["CR-Newburyport_0_ER-0208-01"],
+          "0": ["CR-Newburyport_0_ER-0208-02", "CR-Newburyport_0_ER-0208-01"],
           "1": ["CR-Newburyport_1_ER-0208-02"]
         }
       },
@@ -123,7 +123,7 @@
         "branches": null,
         "order": 12,
         "stops": {
-          "0": ["CR-Newburyport_0_ER-0183-01"],
+          "0": ["CR-Newburyport_0_ER-0183-02", "CR-Newburyport_0_ER-0183-01"],
           "1": ["CR-Newburyport_1_ER-0183-02"]
         }
       },
@@ -143,7 +143,7 @@
         "branches": null,
         "order": 14,
         "stops": {
-          "0": ["CR-Newburyport_0_ER-0128-01"],
+          "0": ["CR-Newburyport_0_ER-0128-01", "CR-Newburyport_0_ER-0128-02"],
           "1": ["CR-Newburyport_1_ER-0128-02"]
         }
       },
@@ -168,12 +168,128 @@
         }
       },
       {
-        "stop_name": "Lynn Interim",
-        "station": "place-ER-0117",
+        "stop_name": "Wonderland",
+        "station": "place-wondl",
         "branches": null,
         "order": 16,
         "stops": {
-          "0": ["CR-Newburyport_0_ER-0117-01"],
+          "0": [
+            "CR-Newburyport_0_15796",
+            "CR-Newburyport_0_15797",
+            "CR-Newburyport_0_15798",
+            "CR-Newburyport_0_15799",
+            "CR-Newburyport_0_15800",
+            "CR-Newburyport_0_70059",
+            "CR-Newburyport_0_70060",
+            "CR-Newburyport_0_door-wondl-nshore",
+            "CR-Newburyport_0_door-wondl-ocean",
+            "CR-Newburyport_0_door-wondl-oceann",
+            "CR-Newburyport_0_door-wondl-oceannele",
+            "CR-Newburyport_0_door-wondl-revere",
+            "CR-Newburyport_0_node-701-bridge",
+            "CR-Newburyport_0_node-701-lobby",
+            "CR-Newburyport_0_node-701-plaza",
+            "CR-Newburyport_0_node-702-bridge",
+            "CR-Newburyport_0_node-702-lobby",
+            "CR-Newburyport_0_node-702-plaza",
+            "CR-Newburyport_0_node-703-bridge",
+            "CR-Newburyport_0_node-703-lobby",
+            "CR-Newburyport_0_node-703-plaza",
+            "CR-Newburyport_0_node-708-lobby",
+            "CR-Newburyport_0_node-709-plaza",
+            "CR-Newburyport_0_node-709-street",
+            "CR-Newburyport_0_node-710-platform",
+            "CR-Newburyport_0_node-710-plaza",
+            "CR-Newburyport_0_node-711-plaza",
+            "CR-Newburyport_0_node-wondl-busramp-busway",
+            "CR-Newburyport_0_node-wondl-busstairs-busway",
+            "CR-Newburyport_0_node-wondl-buswaydoor",
+            "CR-Newburyport_0_node-wondl-eplazacenter",
+            "CR-Newburyport_0_node-wondl-farepaid",
+            "CR-Newburyport_0_node-wondl-fareunpaid",
+            "CR-Newburyport_0_node-wondl-footbridgeib",
+            "CR-Newburyport_0_node-wondl-footbridgeob",
+            "CR-Newburyport_0_node-wondl-ibfootbridgestairs-lobby",
+            "CR-Newburyport_0_node-wondl-ibplazaentrance",
+            "CR-Newburyport_0_node-wondl-ibplazastairs-bridge",
+            "CR-Newburyport_0_node-wondl-ibplazastairs-lobby",
+            "CR-Newburyport_0_node-wondl-ibplazastairs-plaza",
+            "CR-Newburyport_0_node-wondl-lobbycenter",
+            "CR-Newburyport_0_node-wondl-nshoreplazastairs-plaza",
+            "CR-Newburyport_0_node-wondl-nshoreplazastairs-street",
+            "CR-Newburyport_0_node-wondl-nshorestairs-bottom",
+            "CR-Newburyport_0_node-wondl-obplatstairs-platform",
+            "CR-Newburyport_0_node-wondl-obplazaentrance",
+            "CR-Newburyport_0_node-wondl-obplazastairs-street",
+            "CR-Newburyport_0_node-wondl-oceanaveingress",
+            "CR-Newburyport_0_node-wondl-oceanramp-bottom",
+            "CR-Newburyport_0_node-wondl-oceanstairs-plaza",
+            "CR-Newburyport_0_node-wondl-plazacenter",
+            "CR-Newburyport_0_node-wondl-revereramp-top"
+          ],
+          "1": [
+            "CR-Newburyport_1_15796",
+            "CR-Newburyport_1_15797",
+            "CR-Newburyport_1_15798",
+            "CR-Newburyport_1_15799",
+            "CR-Newburyport_1_15800",
+            "CR-Newburyport_1_70059",
+            "CR-Newburyport_1_70060",
+            "CR-Newburyport_1_door-wondl-nshore",
+            "CR-Newburyport_1_door-wondl-ocean",
+            "CR-Newburyport_1_door-wondl-oceann",
+            "CR-Newburyport_1_door-wondl-oceannele",
+            "CR-Newburyport_1_door-wondl-revere",
+            "CR-Newburyport_1_node-701-bridge",
+            "CR-Newburyport_1_node-701-lobby",
+            "CR-Newburyport_1_node-701-plaza",
+            "CR-Newburyport_1_node-702-bridge",
+            "CR-Newburyport_1_node-702-lobby",
+            "CR-Newburyport_1_node-702-plaza",
+            "CR-Newburyport_1_node-703-bridge",
+            "CR-Newburyport_1_node-703-lobby",
+            "CR-Newburyport_1_node-703-plaza",
+            "CR-Newburyport_1_node-708-lobby",
+            "CR-Newburyport_1_node-709-plaza",
+            "CR-Newburyport_1_node-709-street",
+            "CR-Newburyport_1_node-710-platform",
+            "CR-Newburyport_1_node-710-plaza",
+            "CR-Newburyport_1_node-711-plaza",
+            "CR-Newburyport_1_node-wondl-busramp-busway",
+            "CR-Newburyport_1_node-wondl-busstairs-busway",
+            "CR-Newburyport_1_node-wondl-buswaydoor",
+            "CR-Newburyport_1_node-wondl-eplazacenter",
+            "CR-Newburyport_1_node-wondl-farepaid",
+            "CR-Newburyport_1_node-wondl-fareunpaid",
+            "CR-Newburyport_1_node-wondl-footbridgeib",
+            "CR-Newburyport_1_node-wondl-footbridgeob",
+            "CR-Newburyport_1_node-wondl-ibfootbridgestairs-lobby",
+            "CR-Newburyport_1_node-wondl-ibplazaentrance",
+            "CR-Newburyport_1_node-wondl-ibplazastairs-bridge",
+            "CR-Newburyport_1_node-wondl-ibplazastairs-lobby",
+            "CR-Newburyport_1_node-wondl-ibplazastairs-plaza",
+            "CR-Newburyport_1_node-wondl-lobbycenter",
+            "CR-Newburyport_1_node-wondl-nshoreplazastairs-plaza",
+            "CR-Newburyport_1_node-wondl-nshoreplazastairs-street",
+            "CR-Newburyport_1_node-wondl-nshorestairs-bottom",
+            "CR-Newburyport_1_node-wondl-obplatstairs-platform",
+            "CR-Newburyport_1_node-wondl-obplazaentrance",
+            "CR-Newburyport_1_node-wondl-obplazastairs-street",
+            "CR-Newburyport_1_node-wondl-oceanaveingress",
+            "CR-Newburyport_1_node-wondl-oceanramp-bottom",
+            "CR-Newburyport_1_node-wondl-oceanstairs-plaza",
+            "CR-Newburyport_1_node-wondl-plazacenter",
+            "CR-Newburyport_1_node-wondl-revereramp-top"
+          ]
+        }
+      },
+      {
+        "stop_name": "Lynn Interim",
+        "station": "place-ER-0117",
+        "branches": null,
+        "order": 17,
+        "stops": {
+          "0": ["CR-Newburyport_0_ER-0117-02", "CR-Newburyport_0_ER-0117-01"],
           "1": ["CR-Newburyport_1_ER-0117-02"]
         }
       },
@@ -181,9 +297,9 @@
         "stop_name": "River Works",
         "station": "place-ER-0099",
         "branches": null,
-        "order": 17,
+        "order": 18,
         "stops": {
-          "0": ["CR-Newburyport_0_ER-0099-01"],
+          "0": ["CR-Newburyport_0_ER-0099-02", "CR-Newburyport_0_ER-0099-01"],
           "1": ["CR-Newburyport_1_ER-0099-02"]
         }
       },
@@ -191,9 +307,9 @@
         "stop_name": "Chelsea",
         "station": "place-chels",
         "branches": null,
-        "order": 18,
+        "order": 19,
         "stops": {
-          "0": ["CR-Newburyport_0_ER-0042-01"],
+          "0": ["CR-Newburyport_0_ER-0042-01", "CR-Newburyport_0_ER-0042-02"],
           "1": ["CR-Newburyport_1_ER-0042-02"]
         }
       },
@@ -201,20 +317,20 @@
         "stop_name": "North Station",
         "station": "place-north",
         "branches": null,
-        "order": 19,
+        "order": 20,
         "stops": {
           "0": [
-            "CR-Newburyport_0_BNT-0000-03",
-            "CR-Newburyport_0_BNT-0000-02",
-            "CR-Newburyport_0_BNT-0000-01",
             "CR-Newburyport_0_BNT-0000-04",
-            "CR-Newburyport_0_BNT-0000-07",
-            "CR-Newburyport_0_BNT-0000-10",
-            "CR-Newburyport_0_BNT-0000-05",
             "CR-Newburyport_0_BNT-0000-06",
-            "CR-Newburyport_0_BNT-0000",
+            "CR-Newburyport_0_BNT-0000-02",
+            "CR-Newburyport_0_BNT-0000-07",
             "CR-Newburyport_0_BNT-0000-09",
-            "CR-Newburyport_0_BNT-0000-08"
+            "CR-Newburyport_0_BNT-0000-01",
+            "CR-Newburyport_0_BNT-0000-08",
+            "CR-Newburyport_0_BNT-0000",
+            "CR-Newburyport_0_BNT-0000-10",
+            "CR-Newburyport_0_BNT-0000-03",
+            "CR-Newburyport_0_BNT-0000-05"
           ],
           "1": []
         },
