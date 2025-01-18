@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
 import { SidebarTabs } from '../../../modules/navigation/SidebarTabs';
-import { OVERVIEW_PAGE, LINE_PAGES, TRIP_PAGES } from '../../constants/pages';
+import { OVERVIEW_PAGE, LINE_PAGES, TRIP_PAGES, ALL_PAGES } from '../../constants/pages';
 import { lineColorBorder } from '../../styles/general';
 import type { Line } from '../../types/lines';
 
