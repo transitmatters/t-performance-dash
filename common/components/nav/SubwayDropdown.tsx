@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
 import { SidebarTabs } from '../../../modules/navigation/SidebarTabs';
-import { OVERVIEW_PAGE, LINE_PAGES, TRIP_PAGES, ALL_PAGES } from '../../constants/pages';
+import { OVERVIEW_PAGE, LINE_PAGES, TRIP_PAGES } from '../../constants/pages';
 import { lineColorBorder } from '../../styles/general';
 import type { Line } from '../../types/lines';
 
@@ -23,7 +23,7 @@ export const SubwayDropdown: React.FC<SubwayDropdownProps> = ({ line, close }) =
       <hr className="h-[1px] w-3/4 self-center border-neutral-500" />
       <SidebarTabs
         tabs={
-          line === 'line-green' || line === 'line-mattapan'
+          line === 'line-mattapan'
             ? LINE_PAGES.filter((cur) => cur !== ALL_PAGES.slowzones)
             : LINE_PAGES
         }

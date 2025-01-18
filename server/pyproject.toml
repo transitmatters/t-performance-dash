@@ -10,19 +10,21 @@ package-mode = false
 python = "~3.12"
 json-api-doc = "0.15.0"
 requests = "^2.32.3"
-pytz = "2024.1"
-boto3 = "1.35.10"
+pytz = "2024.2"
+boto3 = "~1.35.10"
 numpy = "1.26.4"
-pandas = "2.2.2"
-datadog_lambda = "6.98.0"
+pandas = "~2.2.3"
+datadog_lambda = "~6.104.0"
 dynamodb-json = "^1.4.2"
 
 [tool.poetry.dev-dependencies]
 pip = ">=24.0"
-chalice = "1.31.2"
+chalice = "1.31.3"
 flake8 = "~7.1.1"
-black = "~24.8.0"
-poetry-plugin-export = "^1.8.0"
+black = "~24.10.0"
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = "^1.9.0"
 
 [tool.black]
 line-length = 120
