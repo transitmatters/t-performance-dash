@@ -1514,8 +1514,8 @@
         "station": "place-asmnl",
         "order": 101,
         "stops": {
-          "0": ["70094", "70261"],
-          "1": ["70093", "70261"]
+          "0": ["70261", "70094"],
+          "1": ["70261", "70093"]
         },
         "accessible": true,
         "enclosed_bike_parking": true,
@@ -1570,7 +1570,7 @@
         "stop_name": "Valley Road",
         "branches": null,
         "station": "place-valrd",
-        "order": 105,
+        "order": 106,
         "stops": {
           "0": ["70272"],
           "1": ["70271"]
@@ -1581,7 +1581,7 @@
         "stop_name": "Capen Street",
         "branches": null,
         "station": "place-capst",
-        "order": 105,
+        "order": 107,
         "stops": {
           "0": ["70274"],
           "1": ["70273"]
@@ -1592,7 +1592,7 @@
         "stop_name": "Mattapan",
         "branches": null,
         "station": "place-matt",
-        "order": 105,
+        "order": 108,
         "stops": {
           "0": ["70276"],
           "1": ["70275"]
