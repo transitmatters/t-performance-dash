@@ -5,7 +5,7 @@ import { faBicycle, faChevronDown, faWheelchair } from '@fortawesome/free-solid-
 import classNames from 'classnames';
 import type { Station } from '../../types/stations';
 import { useDelimitatedRoute } from '../../utils/router';
-import { optionsForField } from '../../utils/stations';
+import { optionsForField, stopIdsForStations } from '../../utils/stations';
 import {
   buttonHighlightFocus,
   lineColorBackground,
@@ -77,8 +77,10 @@ export const StationSelector: React.FC<StationSelector> = ({
                     key={stationIndex}
                     disabled={
                       type === 'from'
-                        ? station.station === toStation.station
-                        : station.station === fromStation.station
+                        ? station.station === toStation.station ||
+                          stopIdsForStations(station, toStation).fromStopIds?.length === 0
+                        : station.station === fromStation.station ||
+                          stopIdsForStations(fromStation, station).toStopIds?.length === 0
                     }
                     className={({ active, selected, disabled }) =>
                       classNames(

@@ -35,6 +35,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
   const stations = optionsStation(lineShort, busRoute, crRoute);
   const toStation = to ? getParentStationForStopId(to) : stations?.[stations.length - 2];
   const fromStation = from ? getParentStationForStopId(from) : stations?.[1];
+
   React.useEffect(() => {
     const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
     updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });

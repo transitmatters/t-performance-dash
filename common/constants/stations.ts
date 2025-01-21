@@ -74,6 +74,7 @@ import cr_greenbush from './cr_constants/cr-greenbush.json';
 import cr_fairmount from './cr_constants/cr-fairmount.json';
 import cr_kingston from './cr_constants/cr-kingston.json';
 import cr_middleborough from './cr_constants/cr-middleborough.json';
+import cr_newburyport from './cr_constants/cr-newburyport.json';
 import cr_needham from './cr_constants/cr-needham.json';
 import cr_providence from './cr_constants/cr-providence.json';
 
@@ -155,6 +156,7 @@ export const crStations: { [key: string]: LineMap } = {
   ...cr_fairmount,
   ...cr_kingston,
   ...cr_middleborough,
+  ...cr_newburyport,
   ...cr_needham,
   ...cr_providence,
 };
