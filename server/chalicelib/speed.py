@@ -59,7 +59,7 @@ def trip_metrics_by_line(params: TripMetricsByLineParams):
         end_date = params["end_date"]
         config = AGG_TO_CONFIG_MAP[params["agg"]]
         line = params["line"]
-        if line not in ["line-red", "line-blue", "line-green", "line-orange"]:
+        if line not in ["line-red", "line-blue", "line-green", "line-orange", "line-mattapan"]:
             raise BadRequestError("Invalid Line key.")
     except KeyError:
         raise BadRequestError("Missing or invalid parameters.")

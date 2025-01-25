@@ -31,7 +31,7 @@ export const LINE_OBJECTS: LineObject = {
     color: COLORS.mbta.blue,
   },
   'line-mattapan': {
-    name: 'Mattapan Trolley',
+    name: 'Mattapan Line',
     short: 'Mattapan',
     path: 'mattapan',
     key: 'line-mattapan',

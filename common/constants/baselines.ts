@@ -6,6 +6,7 @@ export const PEAK_SCHEDULED_SERVICE = {
   'line-orange': 161,
   'line-blue': 186,
   'line-green': 506,
+  'line-mattapan': 159,
   'line-bus': 0,
   DEFAULT: 0,
 };
@@ -15,6 +16,7 @@ export const PEAK_SPEED = {
   'line-orange': 18,
   'line-blue': 20.5,
   'line-green': 12.6,
+  'line-mattapan': 21.6,
   'line-bus': 0,
 };
 
