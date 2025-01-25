@@ -1,7 +1,14 @@
 import { ExclamationTriangleIcon } from '@heroicons/react/20/solid';
 import React from 'react';
+import { useDelimitatedRoute } from '../../utils/router';
 
 export const BetaSlowZoneDataNotice: React.FC = () => {
+  const { line } = useDelimitatedRoute();
+
+  if (line !== 'line-green') {
+    return null;
+  }
+
   return (
     <div className="rounded-md bg-yellow-50 p-4">
       <div className="flex">
