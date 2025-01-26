@@ -16,7 +16,7 @@ export const PEAK_SPEED = {
   'line-orange': 18,
   'line-blue': 20.5,
   'line-green': 12.6,
-  'line-mattapan': 21.6,
+  'line-mattapan': 24.2,
   'line-bus': 0,
 };
 
