@@ -23,7 +23,7 @@ export const fetchAlerts = async (
 
 const fetchAlertsForLine = async (line: LineShort): Promise<AlertsResponse[]> => {
   const options = { ...alertsAPIConfig };
-  if (line === 'Green') {
+  if (line === 'Green' || line === 'Mattapan') {
     // route_type 0 is light rail (green line & Mattapan)
     options['route_type'] = '0';
   } else {
