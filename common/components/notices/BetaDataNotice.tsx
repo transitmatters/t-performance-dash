@@ -1,28 +1,14 @@
 import React from 'react';
-import dayjs from 'dayjs';
 import Link from 'next/link';
 import classNames from 'classnames';
 import { ExclamationTriangleIcon } from '@heroicons/react/20/solid';
 import { useDelimitatedRoute } from '../../utils/router';
-import { BUS_MAX_DAY } from '../../constants/dates';
 import { lineColorTextHover } from '../../styles/general';
 
 export const BetaDataNotice: React.FC = () => {
-  const {
-    line,
-    linePath,
-    query: { date, startDate, endDate },
-  } = useDelimitatedRoute();
+  const { line, linePath } = useDelimitatedRoute();
 
-  const isStartDateAfterBusMaxDay =
-    (startDate !== undefined && dayjs(startDate).isAfter(BUS_MAX_DAY)) ||
-    (date !== undefined && dayjs(date).isAfter(BUS_MAX_DAY));
-  const isEndDateAfterBusMaxDay = endDate !== undefined && dayjs(endDate).isAfter(BUS_MAX_DAY);
-
-  if (
-    (line === 'line-commuter-rail' || linePath === 'commuter-rail') &&
-    (isStartDateAfterBusMaxDay || isEndDateAfterBusMaxDay)
-  ) {
+  if (line === 'line-commuter-rail' || linePath === 'commuter-rail') {
     return (
       <div className="rounded-md bg-yellow-50 p-4">
         <div className="flex">
