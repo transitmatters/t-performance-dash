@@ -136,6 +136,7 @@ export const LANDING_RAIL_LINES: Line[] = [
   'line-orange',
   'line-blue',
   'line-green',
+  'line-mattapan',
   'line-commuter-rail',
 ];
 
