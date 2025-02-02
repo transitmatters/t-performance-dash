@@ -31,6 +31,11 @@ const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
 
 export const convertToSpeedDataset = (data: { [key in Line]?: DeliveredTripMetrics[] }) => {
   return Object.keys(data).map((line: Line) => {
+    // We don't need to show the Mattapan line on the landing page
+    if (line === 'line-mattapan') {
+      return { data: [] };
+    }
+
     const datasetOptions = getDatasetOptions(line);
     return {
       ...datasetOptions,
@@ -97,6 +102,11 @@ export const convertToAggregateStationSpeedDataset = (
 
 export const convertToServiceDataset = (data: { [key in Line]?: DeliveredTripMetrics[] }) => {
   return Object.keys(data).map((line: Line) => {
+    // We don't need to show the Mattapan line on the landing page
+    if (line === 'line-mattapan') {
+      return { data: [] };
+    }
+
     const datasetOptions = getDatasetOptions(line);
     return {
       ...datasetOptions,
@@ -113,6 +123,11 @@ export const convertToServiceDataset = (data: { [key in Line]?: DeliveredTripMet
 export const convertToRidershipDataset = (data: { [key in Line]: RidershipCount[] }) => {
   return (
     Object.keys(data).map((line: Line) => {
+      // We don't need to show the Mattapan line on the landing page
+      if (line === 'line-mattapan') {
+        return { data: [] };
+      }
+
       const datasetOptions = getDatasetOptions(line);
       return {
         ...datasetOptions,
