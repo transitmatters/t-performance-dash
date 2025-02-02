@@ -21,7 +21,7 @@ export const SubwayDropdown: React.FC<SubwayDropdownProps> = ({ line, close }) =
     >
       <SidebarTabs tabs={OVERVIEW_PAGE} close={close} />
       <hr className="h-[1px] w-3/4 self-center border-neutral-500" />
-      <SidebarTabs tabs={LINE_PAGES} close={close} />
+      <SidebarTabs tabs={LINE_PAGES.filter((cur) => cur.lines.includes(line))} close={close} />
       <hr className="h-[1px] w-3/4 self-center border-neutral-500" />
       <SidebarTabs tabs={TRIP_PAGES} close={close} />
     </div>
