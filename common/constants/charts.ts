@@ -31,6 +31,12 @@ export const DATA_LABELS_LANDING: LabelOptions = {
   font: {
     size: 12,
   },
-  display: (context) => context.dataIndex === context.dataset.data.length - 1,
+  display: (context) => {
+    const lastNonNullIndex = context.dataset.data.reduce(
+      (lastIndex, item, index) => (item !== null ? index : lastIndex),
+      -1
+    );
+    return context.dataIndex === lastNonNullIndex;
+  },
   formatter: (value) => `${value}%`, // Format the label content
 };
