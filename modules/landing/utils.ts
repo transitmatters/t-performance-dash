@@ -1,5 +1,6 @@
 import type { ChartDataset } from 'chart.js';
 import { round } from 'lodash';
+import dayjs from 'dayjs';
 import {
   PEAK_RIDERSHIP,
   PEAK_SCHEDULED_SERVICE,
@@ -10,6 +11,7 @@ import type { RidershipCount, DeliveredTripMetrics } from '../../common/types/da
 import type { Line } from '../../common/types/lines';
 import type { AggregateDataPoint, SingleDayDataPoint } from '../../common/types/charts';
 import { getStationDistance } from '../../common/utils/stations';
+import { DATE_FORMAT } from '../../common/constants/dates';
 
 const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
   return {
@@ -29,7 +31,10 @@ const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
   };
 };
 
-export const convertToSpeedDataset = (data: { [key in Line]?: DeliveredTripMetrics[] }) => {
+export const convertToSpeedDataset = (
+  data: { [key in Line]?: DeliveredTripMetrics[] },
+  labels: string[]
+) => {
   return Object.keys(data).map((line: Line) => {
     // We don't need to show the Mattapan line on the landing page
     if (line === 'line-mattapan') {
@@ -40,14 +45,18 @@ export const convertToSpeedDataset = (data: { [key in Line]?: DeliveredTripMetri
     return {
       ...datasetOptions,
       data:
-        data[line]?.map((datapoint) =>
-          datapoint.miles_covered
+        labels?.map((label) => {
+          const datapoint = data[line]?.find((datapoint) => datapoint.date === label);
+          if (!datapoint) {
+            return null;
+          }
+          return datapoint.miles_covered
             ? round(
                 (100 * datapoint.miles_covered) / (datapoint.total_time / 3600) / PEAK_SPEED[line],
                 1
               )
-            : Number.NaN
-        ) ?? [],
+            : null;
+        }) ?? [],
     };
   });
 };
@@ -100,7 +109,10 @@ export const convertToAggregateStationSpeedDataset = (
   return ret;
 };
 
-export const convertToServiceDataset = (data: { [key in Line]?: DeliveredTripMetrics[] }) => {
+export const convertToServiceDataset = (
+  data: { [key in Line]?: DeliveredTripMetrics[] },
+  labels: string[]
+) => {
   return Object.keys(data).map((line: Line) => {
     // We don't need to show the Mattapan line on the landing page
     if (line === 'line-mattapan') {
@@ -111,16 +123,21 @@ export const convertToServiceDataset = (data: { [key in Line]?: DeliveredTripMet
     return {
       ...datasetOptions,
       data:
-        data[line]?.map((datapoint) =>
-          datapoint.miles_covered
+        labels.map((label) => {
+          const datapoint = data[line]?.find((datapoint) => datapoint.date === label);
+          if (!datapoint) return null;
+          return datapoint.miles_covered
             ? round((100 * datapoint.count) / PEAK_SCHEDULED_SERVICE[line], 1)
-            : Number.NaN
-        ) ?? [],
+            : null;
+        }) ?? [],
     };
   });
 };
 
-export const convertToRidershipDataset = (data: { [key in Line]: RidershipCount[] }) => {
+export const convertToRidershipDataset = (
+  data: { [key in Line]: RidershipCount[] },
+  labels: string[]
+) => {
   return (
     Object.keys(data).map((line: Line) => {
       // We don't need to show the Mattapan line on the landing page
@@ -131,12 +148,31 @@ export const convertToRidershipDataset = (data: { [key in Line]: RidershipCount[
       const datasetOptions = getDatasetOptions(line);
       return {
         ...datasetOptions,
-        data: data[line]?.map((datapoint) =>
-          datapoint.count
+        data: labels.map((labels) => {
+          const datapoint = data[line]?.find((datapoint) => datapoint.date === labels);
+          if (!datapoint) return null;
+          return datapoint.count
             ? Math.round(10 * 100 * (datapoint.count / PEAK_RIDERSHIP[line])) / 10
-            : Number.NaN
-        ),
+            : null;
+        }),
       };
     }) ?? []
   );
 };
+
+const getLabels = () => {
+  // Get the most recent Monday. This date may or may not be in the dataset, but we can still use it to construct the labels.
+  // It's important to use Monday, that is the day the weekly trip metrics are based on.
+  const latestDate: dayjs.Dayjs = dayjs().startOf('week').add(1, 'day');
+
+  // Generate the labels for the last 14 weeks, starting from the most recent Monday.
+  // The endpoint returns 12 weeks, but we add 2 extra weeks in case the past Monday is not in the dataset.
+  // There's no harm in having extra labels.
+  const labels: string[] = [];
+  for (let i = 13; i >= 0; i--) {
+    labels.push(latestDate.subtract(i, 'weeks').format(DATE_FORMAT));
+  }
+  return labels;
+};
+
+export const LANDING_CHART_LABELS = getLabels();
