@@ -1,5 +1,6 @@
 import type { Diagram, SegmentLocation } from '@transitmatters/stripmap';
 
+import dayjs from 'dayjs';
 import type {
   SlowZoneAllSlowResponse,
   SlowZoneResponse,
@@ -44,11 +45,11 @@ type WithSegmentLocation<T> = {
  * Get the latest date that we have data on slow zones for
  */
 const getEffectiveDate = (desiredDate: Date, slowZones: SlowZoneAllSlowResponse) => {
-  const maxEndDate = new Date(slowZones.updated_on);
-  if (desiredDate.valueOf() > maxEndDate.valueOf()) {
+  const maxEndDate = dayjs(new Date(slowZones.updated_on)).startOf('day').toDate();
+  if (dayjs(desiredDate).isAfter(maxEndDate)) {
     return maxEndDate;
   }
-  return desiredDate;
+  return dayjs(desiredDate).startOf('day').toDate();
 };
 
 const filterActiveElements = <T extends Record<string, unknown>>(
