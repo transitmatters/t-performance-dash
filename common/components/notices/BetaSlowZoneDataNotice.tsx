@@ -19,14 +19,13 @@ export const BetaSlowZoneDataNotice: React.FC = () => {
           <h3 className="text-sm font-medium text-yellow-800">Green Line Slow Zones are in Beta</h3>
           <div className="mt-2 text-sm text-yellow-700">
             <p>
-              Due to the variable nature of service on the Green Line, we aren't able to detect slow
-              zones as easily as on the heavy rail lines. Additionaly, we are only monitoring slow
-              zones for stops serviced by the D line since that is the only line which is entirely
-              grade-separated.
-            </p>
-            <p>
-              We're working on improving the data and we plan to add slow-zone tracking for other
-              branches, but that will require additional information on traffic patterns.
+              Due to the variable nature of service on the Green Line, we can't detect slow zones as
+              easily as with heavy rail lines. Additionally, we only monitor the D branch as it is
+              the only{' '}
+              <a className="underline" href="https://en.wikipedia.org/wiki/Grade_separation">
+                grade-separated
+              </a>{' '}
+              branch
             </p>
           </div>
         </div>
