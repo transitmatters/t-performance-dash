@@ -23,8 +23,8 @@ export const TripExplorer = () => {
   } = useDelimitatedRoute();
   const { data: alerts } = useHistoricalAlertsData(date, lineShort, busRoute);
 
-  const fromStation = from ? getParentStationForStopId(from) : undefined;
-  const toStation = to ? getParentStationForStopId(to) : undefined;
+  const fromStation = from ? getParentStationForStopId(from, lineShort) : undefined;
+  const toStation = to ? getParentStationForStopId(to, lineShort) : undefined;
   const alertsForModal = alerts?.filter(findMatch).map((alert) => {
     return { ...alert, applied: false };
   });
