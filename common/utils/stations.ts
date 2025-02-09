@@ -81,7 +81,17 @@ export const getStationById = (stationStopId: string) => {
   return stationIndex[stationStopId];
 };
 
-export const getParentStationForStopId = (stopId: string) => {
+/** Given a stop id, return the full station it belongs to
+ * We need the line to get the correct station when lines share ids (Ex: Ashmont)
+ */
+export const getParentStationForStopId = (stopId: string, line?: LineShort) => {
+  if (line) {
+    return stations[line].stations.find(
+      (station: Station) =>
+        station.stops['0'].includes(stopId) || station.stops['1'].includes(stopId)
+    );
+  }
+
   return parentStationIndex[stopId];
 };
 
