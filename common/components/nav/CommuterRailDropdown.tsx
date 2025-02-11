@@ -1,6 +1,6 @@
 import React from 'react';
 import { SidebarTabs } from '../../../modules/navigation/SidebarTabs';
-import { COMMUTER_RAIL_OVERVIEW } from '../../constants/pages';
+import { COMMUTER_RAIL_OVERVIEW, TRIP_PAGES } from '../../constants/pages';
 import { CommuterRailRouteSelection } from './CommuterRailRouteSelection';
 
 interface CommuterRailDropdownProps {
@@ -18,10 +18,8 @@ export const CommuterRailDropdown: React.FC<CommuterRailDropdownProps> = ({ clos
         role={'navigation'}
       >
         <SidebarTabs tabs={COMMUTER_RAIL_OVERVIEW} close={close} />
-
-        {/* TODO: Once we have reliable travel data for CR */}
-        {/* <hr className="h-[1px] w-3/4 self-center border-neutral-500" /> */}
-        {/* <SidebarTabs tabs={TRIP_PAGES} close={close} /> */}
+        <hr className="h-[1px] w-3/4 self-center border-neutral-500" />
+        <SidebarTabs tabs={TRIP_PAGES} close={close} />
       </div>
     </div>
   );

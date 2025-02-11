@@ -35,9 +35,15 @@ def is_bus(stop_id: str):
     return ("-0-" in stop_id) or ("-1-" in stop_id)
 
 
+def is_cr(stop_id: str):
+    return stop_id.startswith("CR-")
+
+
 def get_gobble_folder(stop_id: str):
     if is_bus(stop_id):
         return "daily-bus-data"
+    elif is_cr(stop_id):
+        return "daily-cr-data"
     else:
         return "daily-rapid-data"
 
@@ -50,8 +56,11 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False):
     """As advertised: single event file from s3"""
     year, month, day = date.year, date.month, date.day
 
+    if is_cr(stop_id):
+        folder = get_gobble_folder(stop_id)
+        key = f"Events-live/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
     # if current date is newer than the max monthly data date, use LAMP
-    if date.date() > date_utils.get_max_monthly_data_date():
+    elif date.date() > date_utils.get_max_monthly_data_date():
         # if we've asked to use gobble data or bus data, check gobble
         if use_gobble or is_bus(stop_id):
             folder = get_gobble_folder(stop_id)
@@ -94,7 +103,7 @@ def parallel_download_events(datestop: itertools.product):
 
 
 def download_events(start_date: date, end_date: date, stops: list):
-    datestops = itertools.product(parallel.s3_date_range(start_date, end_date), stops)
+    datestops = itertools.product(parallel.s3_date_range(start_date, end_date, stops), stops)
     result = parallel_download_events(datestops)
     result = filter(
         lambda row: start_date.strftime("%Y-%m-%d") <= row["service_date"] <= end_date.strftime("%Y-%m-%d"), result

@@ -36,6 +36,7 @@ export const TripExplorer = () => {
   if (!(fromStation && toStation)) {
     return null;
   }
+
   return (
     <PageWrapper pageTitle={'Trips'}>
       <ChartPageDiv>
@@ -53,4 +54,5 @@ export const TripExplorer = () => {
     </PageWrapper>
   );
 };
+
 TripExplorer.Layout = Layout.Dashboard;
