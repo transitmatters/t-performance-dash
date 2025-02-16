@@ -1,6 +1,7 @@
 import datetime
 from chalicelib import data_funcs
 import pandas as pd
+from pandas.core.groupby.generic import DataFrameGroupBy
 from pandas.tseries.holiday import USFederalHolidayCalendar
 import numpy as np
 
@@ -8,7 +9,7 @@ import numpy as np
 SERVICE_HR_OFFSET = datetime.timedelta(hours=3, minutes=30)
 
 
-def train_peak_status(df):
+def train_peak_status(df: pd.DataFrame):
     cal = USFederalHolidayCalendar()
     holidays = cal.holidays(start=df["dep_dt"].min(), end=df["dep_dt"].max())
     # pandas has a bug where sometimes empty holidays returns an Index and we need DateTimeIndex
@@ -27,7 +28,7 @@ def train_peak_status(df):
     return df
 
 
-def faster_describe(grouped):
+def faster_describe(grouped: DataFrameGroupBy):
     # This does the same thing as pandas.DataFrame.describe(), but is up to 25x faster!
     # also, we can specify population std instead of sample.
     stats = grouped.aggregate(["count", "mean", "min", "median", "max", "sum"])
@@ -73,7 +74,7 @@ def aggregate_traveltime_data(start_date: datetime.date, end_date: datetime.date
     return df
 
 
-def calc_travel_times_by_time(df):
+def calc_travel_times_by_time(df: pd.DataFrame):
     # convert time of day to a consistent datetime relative to epoch
     timedeltas = pd.to_timedelta(df["dep_time"].astype(str))
     timedeltas.loc[timedeltas < SERVICE_HR_OFFSET] += datetime.timedelta(days=1)
@@ -85,7 +86,7 @@ def calc_travel_times_by_time(df):
     return stats
 
 
-def calc_travel_times_by_date(df):
+def calc_travel_times_by_date(df: pd.DataFrame):
     # get summary stats
     summary_stats = faster_describe(df.groupby("service_date")["travel_time_sec"])
     summary_stats["peak"] = "all"
@@ -148,6 +149,21 @@ def headways_over_time(start_date: datetime.date, end_date: datetime.date, stops
 
     # combine summary stats
     summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
+
+    grouped = df.groupby("service_date")
+    # Calculate the ratio of headway_time_sec to benchmark_headway_time_sec
+    df["benchmark_headway_time_sec"] = df["benchmark_headway_time_sec"].astype(float)
+    df["headway_ratio"] = df["headway_time_sec"] / df["benchmark_headway_time_sec"]
+
+    # Calculate the count of trips under 0.5 (bunched) per service_date
+    bunched = grouped.apply(lambda x: (x["headway_ratio"] <= 0.5).sum())
+    bunched.name = "bunched"
+    summary_stats_final = summary_stats_final.merge(bunched, on="service_date", how="left")
+
+    # Calculate the count of trips between 0.75 and 1.25 (on-time) per service_date
+    on_time = grouped.apply(lambda x: ((x["headway_ratio"] < 1.25) & (x["headway_ratio"] > 0.75)).sum())
+    on_time.name = "on_time"
+    summary_stats_final = summary_stats_final.merge(on_time, on="service_date", how="left")
 
     # filter peak status
     results = summary_stats_final.loc[summary_stats_final["peak"] == "all"]
