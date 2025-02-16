@@ -81,7 +81,7 @@ export const CommuterRailTripGraphs: React.FC<CommuterRailTripGraphsProps> = ({
               fromStation={fromStation}
               type={'traveltimes'}
               timeUnit={'by_time'}
-              peakTime={peakTime === 'weekday' ? true : false}
+              peakTime={peakTime === 'weekday'}
             />
             <div className={'flex w-full justify-center pt-2'}>
               <ButtonGroup
