@@ -132,7 +132,7 @@ export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValu
     if (this.value === undefined) return '...';
     return (
       <p className="text-sm">
-        <WidgetText isLarge={isLarge} text={`${Math.round(100 * this.value).toString()}`} />{' '}
+        <WidgetText isLarge={isLarge} text={`${Math.round(100 * this.value).toString()}`} />
         <UnitText isLarge={isLarge} text={this.getUnits()} />
       </p>
     );
