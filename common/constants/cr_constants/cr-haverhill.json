@@ -1,0 +1,175 @@
+{
+  "CR-Haverhill": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Bradford",
+        "station": "place-WR-0325",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": ["CR-Haverhill_0_WR-0325-01", "CR-Haverhill_0_WR-0325-02"],
+          "1": ["CR-Haverhill_1_WR-0325-02", "CR-Haverhill_1_WR-0325-01"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Lawrence",
+        "station": "place-WR-0264",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["CR-Haverhill_0_WR-0264-02"],
+          "1": ["CR-Haverhill_1_WR-0264-02"]
+        }
+      },
+      {
+        "stop_name": "Andover",
+        "station": "place-WR-0228",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": ["CR-Haverhill_0_WR-0228-02"],
+          "1": ["CR-Haverhill_1_WR-0228-02"]
+        }
+      },
+      {
+        "stop_name": "Ballardvale",
+        "station": "place-WR-0205",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": ["CR-Haverhill_0_WR-0205-02"],
+          "1": ["CR-Haverhill_1_WR-0205-02"]
+        }
+      },
+      {
+        "stop_name": "North Wilmington",
+        "station": "place-WR-0163",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": ["CR-Haverhill_0_WR-0163-S"],
+          "1": ["CR-Haverhill_1_WR-0163-S"]
+        }
+      },
+      {
+        "stop_name": "Reading",
+        "station": "place-WR-0120",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": ["CR-Haverhill_0_WR-0120-S"],
+          "1": ["CR-Haverhill_1_WR-0120-S"]
+        }
+      },
+      {
+        "stop_name": "Anderson/Woburn",
+        "station": "place-NHRML-0127",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": ["CR-Haverhill_0_NHRML-0127-01"],
+          "1": ["CR-Haverhill_1_NHRML-0127-02"]
+        }
+      },
+      {
+        "stop_name": "Wakefield",
+        "station": "place-WR-0099",
+        "branches": null,
+        "order": 8,
+        "stops": {
+          "0": ["CR-Haverhill_0_WR-0099-01", "CR-Haverhill_0_WR-0099-02"],
+          "1": ["CR-Haverhill_1_WR-0099-02", "CR-Haverhill_1_WR-0099-01"]
+        }
+      },
+      {
+        "stop_name": "Greenwood",
+        "station": "place-WR-0085",
+        "branches": null,
+        "order": 9,
+        "stops": {
+          "0": ["CR-Haverhill_0_WR-0085-01", "CR-Haverhill_0_WR-0085-02"],
+          "1": ["CR-Haverhill_1_WR-0085-02", "CR-Haverhill_1_WR-0085-01"]
+        }
+      },
+      {
+        "stop_name": "Melrose Highlands",
+        "station": "place-WR-0075",
+        "branches": null,
+        "order": 10,
+        "stops": {
+          "0": ["CR-Haverhill_0_WR-0075-02", "CR-Haverhill_0_WR-0075-01"],
+          "1": ["CR-Haverhill_1_WR-0075-02"]
+        }
+      },
+      {
+        "stop_name": "Melrose/Cedar Park",
+        "station": "place-WR-0067",
+        "branches": null,
+        "order": 11,
+        "stops": {
+          "0": ["CR-Haverhill_0_WR-0067-01", "CR-Haverhill_0_WR-0067-02"],
+          "1": ["CR-Haverhill_1_WR-0067-02"]
+        }
+      },
+      {
+        "stop_name": "Wyoming Hill",
+        "station": "place-WR-0062",
+        "branches": null,
+        "order": 12,
+        "stops": {
+          "0": ["CR-Haverhill_0_WR-0062-01", "CR-Haverhill_0_WR-0062-02"],
+          "1": ["CR-Haverhill_1_WR-0062-02"]
+        }
+      },
+      {
+        "stop_name": "Oak Grove",
+        "station": "place-ogmnl",
+        "branches": null,
+        "order": 13,
+        "stops": {
+          "0": ["CR-Haverhill_0_WR-0053-S"],
+          "1": ["CR-Haverhill_1_WR-0053-S"]
+        }
+      },
+      {
+        "stop_name": "Malden Center",
+        "station": "place-mlmnl",
+        "branches": null,
+        "order": 14,
+        "stops": {
+          "0": ["CR-Haverhill_0_WR-0045-S"],
+          "1": ["CR-Haverhill_1_WR-0045-S"]
+        }
+      },
+      {
+        "stop_name": "North Station",
+        "station": "place-north",
+        "branches": null,
+        "order": 15,
+        "stops": {
+          "0": [
+            "CR-Haverhill_0_BNT-0000-10",
+            "CR-Haverhill_0_BNT-0000-05",
+            "CR-Haverhill_0_BNT-0000-04",
+            "CR-Haverhill_0_BNT-0000-07",
+            "CR-Haverhill_0_BNT-0000",
+            "CR-Haverhill_0_BNT-0000-03",
+            "CR-Haverhill_0_BNT-0000-09",
+            "CR-Haverhill_0_BNT-0000-02",
+            "CR-Haverhill_0_BNT-0000-06",
+            "CR-Haverhill_0_BNT-0000-01",
+            "CR-Haverhill_0_BNT-0000-08"
+          ],
+          "1": []
+        },
+        "terminus": true
+      }
+    ]
+  }
+}

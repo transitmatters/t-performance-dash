@@ -1,0 +1,105 @@
+{
+  "CR-Lowell": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Lowell",
+        "station": "place-NHRML-0254",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": ["CR-Lowell_1_NHRML-0254-04"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "North Billerica",
+        "station": "place-NHRML-0218",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["CR-Lowell_0_NHRML-0218-02", "CR-Lowell_0_NHRML-0218-01"],
+          "1": ["CR-Lowell_1_NHRML-0218-02"]
+        }
+      },
+      {
+        "stop_name": "Wilmington",
+        "station": "place-NHRML-0152",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": ["CR-Lowell_0_NHRML-0152-02", "CR-Lowell_0_NHRML-0152-01"],
+          "1": ["CR-Lowell_1_NHRML-0152-02"]
+        }
+      },
+      {
+        "stop_name": "Anderson/Woburn",
+        "station": "place-NHRML-0127",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": ["CR-Lowell_0_NHRML-0127-02", "CR-Lowell_0_NHRML-0127-01"],
+          "1": ["CR-Lowell_1_NHRML-0127-02"]
+        }
+      },
+      {
+        "stop_name": "Winchester Center",
+        "station": "place-NHRML-0078",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": ["CR-Lowell_0_NHRML-0078-02", "CR-Lowell_0_NHRML-0078-01"],
+          "1": ["CR-Lowell_1_NHRML-0078-02"]
+        }
+      },
+      {
+        "stop_name": "Wedgemere",
+        "station": "place-NHRML-0073",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": ["CR-Lowell_0_NHRML-0073-02", "CR-Lowell_0_NHRML-0073-01"],
+          "1": ["CR-Lowell_1_NHRML-0073-02"]
+        }
+      },
+      {
+        "stop_name": "West Medford",
+        "station": "place-NHRML-0055",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": ["CR-Lowell_0_NHRML-0055-01", "CR-Lowell_0_NHRML-0055-02"],
+          "1": ["CR-Lowell_1_NHRML-0055-02"]
+        }
+      },
+      {
+        "stop_name": "North Station",
+        "station": "place-north",
+        "branches": null,
+        "order": 8,
+        "stops": {
+          "0": [
+            "CR-Lowell_0_BNT-0000-05",
+            "CR-Lowell_0_BNT-0000-08",
+            "CR-Lowell_0_BNT-0000-04",
+            "CR-Lowell_0_BNT-0000",
+            "CR-Lowell_0_BNT-0000-03",
+            "CR-Lowell_0_BNT-0000-07",
+            "CR-Lowell_0_BNT-0000-10",
+            "CR-Lowell_0_BNT-0000-09",
+            "CR-Lowell_0_BNT-0000-06",
+            "CR-Lowell_0_BNT-0000-01",
+            "CR-Lowell_0_BNT-0000-02"
+          ],
+          "1": []
+        },
+        "terminus": true
+      }
+    ]
+  }
+}
