@@ -62,7 +62,10 @@ export const convertToSpeedDataset = (
 };
 
 function convertSecondsToMph(travelTimeSec: number | undefined, distanceMiles: number | undefined) {
-  return distanceMiles && travelTimeSec ? (3600 * distanceMiles) / travelTimeSec : undefined;
+  if (distanceMiles && travelTimeSec) {
+    return (3600 * distanceMiles) / travelTimeSec;
+  }
+  return undefined;
 }
 
 export const convertToStationSpeedDataset = (
