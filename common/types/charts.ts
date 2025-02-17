@@ -22,6 +22,8 @@ export interface AggregateDataPoint {
   '50%': number;
   '75%': number;
   count: number;
+  bunched?: number;
+  on_time?: number;
   max: number;
   mean: number;
   min: number;

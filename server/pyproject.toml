@@ -17,7 +17,7 @@ pandas = "~2.2.3"
 datadog_lambda = "~6.104.0"
 dynamodb-json = "^1.4.2"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pip = ">=24.0"
 chalice = "1.31.3"
 flake8 = "~7.1.1"
@@ -31,7 +31,7 @@ line-length = 120
 target-version = ['py312']
 
 [build-system]
-requires = ["poetry-core>=1.7.0"]
+requires = ["poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pyright]

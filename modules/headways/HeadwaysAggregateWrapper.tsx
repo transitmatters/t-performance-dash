@@ -6,7 +6,7 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { MiniWidgetCreator } from '../../common/components/widgets/MiniWidgetCreator';
-import { getAggDataWidgets } from '../../common/utils/widgets';
+import { getAggHeadwayDataWidgets } from '../../common/utils/widgets';
 import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
 
 interface HeadwaysAggregateWrapperProps {
@@ -24,7 +24,7 @@ export const HeadwaysAggregateWrapper: React.FC<HeadwaysAggregateWrapperProps> =
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   const headwaysData = query.data.by_date.filter((datapoint) => datapoint.peak === 'all');
   if (headwaysData.length < 1) return <NoDataNotice />;
-  const widgetObjects = getAggDataWidgets(headwaysData, 'times');
+  const widgetObjects = getAggHeadwayDataWidgets(headwaysData, 'times');
 
   return (
     <CarouselGraphDiv>

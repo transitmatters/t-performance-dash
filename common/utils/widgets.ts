@@ -69,6 +69,18 @@ const getAggDataPointsOfInterest = (aggData: AggregateDataPoint[]) => {
   return { average, min, max, median, p10, p90 };
 };
 
+const getAggHeadwayDataPoints = (aggData: AggregateDataPoint[]) => {
+  const totalTrips = aggData.map((tt) => tt.count).reduce((a, b) => a + b, 0);
+  const bunchedTrips = aggData.map((tt) => tt.bunched).reduce((a = 0, b = 0) => a + b, 0) || 0;
+  const onTimeTrips = aggData.map((tt) => tt.on_time).reduce((a = 0, b = 0) => a + b, 0) || 0;
+
+  const bunched = bunchedTrips / totalTrips;
+  const onTime = onTimeTrips / totalTrips;
+
+  const { average, min, max, median, p10, p90 } = getAggDataPointsOfInterest(aggData);
+  return { average, min, max, median, p10, p90, bunched, onTime };
+};
+
 export const getAggDataWidgets = (aggData: AggregateDataPoint[], type: 'times' | 'speeds') => {
   const { average, min, max, median, p10, p90 } = getAggDataPointsOfInterest(aggData);
   return [
@@ -78,6 +90,20 @@ export const getAggDataWidgets = (aggData: AggregateDataPoint[], type: 'times' |
     { text: '90%', widgetValue: getWidget(type, p90), type: 'data' },
     { text: 'Min', widgetValue: getWidget(type, min), type: 'data' },
     { text: 'Max', widgetValue: getWidget(type, max), type: 'data' },
+  ];
+};
+
+export const getAggHeadwayDataWidgets = (aggData: AggregateDataPoint[], type: 'times') => {
+  const { average, min, max, median, p10, p90, bunched, onTime } = getAggHeadwayDataPoints(aggData);
+  return [
+    { text: 'Avg', widgetValue: getWidget(type, average), type: 'data' },
+    { text: 'Median', widgetValue: getWidget(type, median), type: 'data' },
+    { text: '10%', widgetValue: getWidget(type, p10), type: 'data' },
+    { text: '90%', widgetValue: getWidget(type, p90), type: 'data' },
+    { text: 'Min', widgetValue: getWidget(type, min), type: 'data' },
+    { text: 'Max', widgetValue: getWidget(type, max), type: 'data' },
+    { text: 'Bunched Trips', widgetValue: new PercentageWidgetValue(bunched), type: 'data' },
+    { text: 'On Time Trips', widgetValue: new PercentageWidgetValue(onTime), type: 'data' },
   ];
 };
 
