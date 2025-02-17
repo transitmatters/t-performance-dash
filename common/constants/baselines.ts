@@ -12,11 +12,11 @@ export const PEAK_SCHEDULED_SERVICE = {
 };
 
 export const PEAK_SPEED = {
-  'line-red': 21.2,
-  'line-orange': 18,
-  'line-blue': 20.5,
-  'line-green': 12.6,
-  'line-mattapan': 24.7,
+  'line-red': 24.9,
+  'line-orange': 20.6,
+  'line-blue': 22.7,
+  'line-green': 13.6,
+  'line-mattapan': 24.3,
   'line-bus': 0,
 };
 
