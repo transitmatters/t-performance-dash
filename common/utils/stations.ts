@@ -85,11 +85,14 @@ export const getStationById = (stationStopId: string) => {
  * We need the line to get the correct station when lines share ids (Ex: Ashmont)
  */
 export const getParentStationForStopId = (stopId: string, line?: LineShort) => {
-  if (line) {
-    return stations[line].stations.find(
+  if (line && line !== 'Bus' && line !== 'Commuter Rail') {
+    const station = stations[line].stations.find(
       (station: Station) =>
         station.stops['0'].includes(stopId) || station.stops['1'].includes(stopId)
     );
+    if (station) {
+      return station;
+    }
   }
 
   return parentStationIndex[stopId];
