@@ -86,10 +86,13 @@ export const getStationById = (stationStopId: string) => {
  */
 export const getParentStationForStopId = (stopId: string, line?: LineShort) => {
   if (line && line !== 'Bus' && line !== 'Commuter Rail') {
-    return stations[line].stations.find(
+    const station = stations[line].stations.find(
       (station: Station) =>
         station.stops['0'].includes(stopId) || station.stops['1'].includes(stopId)
     );
+    if (station) {
+      return station;
+    }
   }
 
   return parentStationIndex[stopId];
