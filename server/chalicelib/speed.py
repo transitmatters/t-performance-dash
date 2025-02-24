@@ -27,10 +27,11 @@ def aggregate_actual_trips(actual_trips, agg, start_date):
     # Create a DataFrame from the flattened data
     df = pd.DataFrame(flat_data)
     # Set miles_covered to NaN for each date with any entry having miles_covered as nan
-    df.loc[
-        df.groupby("date")["miles_covered"].transform(lambda x: (np.isnan(x)).any()),
-        ["count", "total_time", "miles_covered"],
-    ] = np.nan
+    if "miles_covered" in df.columns:
+        df.loc[
+            df.groupby("date")["miles_covered"].transform(lambda x: (np.isnan(x)).any()),
+            ["count", "total_time", "miles_covered"],
+        ] = np.nan
     # Group each branch into one entry. Keep NaN entries as NaN
     df_grouped = (
         df.groupby("date")
