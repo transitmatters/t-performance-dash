@@ -11,8 +11,9 @@ import { prettyDate } from '../../../common/utils/date';
 
 import { TODAY_STRING } from '../../../common/constants/dates';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { DIRECTIONS } from './segment';
-import type { ByDirection, SlowZoneDirection, SlowZonesSegment } from './segment';
+import type { ByDirection, SegmentDirection } from '../../../common/types/map';
+import { DIRECTIONS } from '../../../common/utils/mapSegments';
+import type { SlowZonesSegment } from './segment';
 import { DirectionIndicator } from './DirectionIndicator';
 
 import styles from './SlowZonesTooltip.module.css';
@@ -98,7 +99,7 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
     return null;
   };
 
-  const renderSlowZoneForDirection = (direction: SlowZoneDirection) => {
+  const renderSlowZoneForDirection = (direction: SegmentDirection) => {
     const isToday = endDate === TODAY_STRING;
 
     const [slowZone] = slowZones[direction];
