@@ -18,7 +18,7 @@ export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
     <Link
       href={
         line === 'line-commuter-rail'
-          ? `/${lineObject.path}/trips/single?crRoute=CR-Lowell&date=${COMMUTER_RAIL_DEFAULTS.singleTripConfig.date}`
+          ? `/${lineObject.path}/trips/single?crRoute=CR-Fairmount&date=${COMMUTER_RAIL_DEFAULTS.singleTripConfig.date}`
           : line === 'line-bus'
             ? `/${lineObject.path}?busRoute=1&date=${BUS_DEFAULTS.singleTripConfig.date}`
             : `/${lineObject.path}`

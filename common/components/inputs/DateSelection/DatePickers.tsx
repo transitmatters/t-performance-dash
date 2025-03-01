@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/light.css';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
-import { FLAT_PICKER_OPTIONS, TODAY_STRING, RANGE_PRESETS } from '../../../constants/dates';
+import { TODAY_STRING, RANGE_PRESETS, getDatePickerOptions } from '../../../constants/dates';
 import { buttonHighlightFocus } from '../../../styles/general';
 import type { Line } from '../../../types/lines';
 import { ALL_PAGES } from '../../../constants/pages';
@@ -108,7 +108,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
           value={startDate ?? date}
           key={'start'}
           placeholder={'mm/dd/yyyy'}
-          options={FLAT_PICKER_OPTIONS[tab]}
+          options={getDatePickerOptions(tab, page)}
           onChange={(dates, currentDateString) => {
             if (isSingleDate) {
               handleDateChange(currentDateString);
@@ -135,7 +135,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
               value={endDate}
               key={'end'}
               placeholder={'mm/dd/yyyy'}
-              options={FLAT_PICKER_OPTIONS[tab]}
+              options={getDatePickerOptions(tab, page)}
               onChange={(dates, currentDateString) => {
                 handleEndDateChange(currentDateString);
               }}
