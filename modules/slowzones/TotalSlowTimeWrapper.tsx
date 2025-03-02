@@ -16,7 +16,7 @@ interface TotalSlowTimeWrapperProps {
   startDateUTC: dayjs.Dayjs;
   endDateUTC: dayjs.Dayjs;
   line: Line;
-  lineShort: LineShort;
+  lineShort: Exclude<LineShort, 'Bus' | 'Mattapan' | 'Commuter Rail'>;
   showTitle?: boolean;
 }
 
