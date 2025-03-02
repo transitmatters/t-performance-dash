@@ -1,20 +1,17 @@
 import React, { useMemo } from 'react';
 
-import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 import type { LineMetadata } from '../../../common/types/lines';
 
 import { getClockFormattedTimeString } from '../../../common/utils/time';
-import { useDelimitatedRoute } from '../../../common/utils/router';
-import { TODAY_STRING } from '../../../common/constants/dates';
 import type { ByDirection, SegmentDirection } from '../../../common/types/map';
 import { DIRECTIONS } from '../../../common/utils/mapSegments';
-import type { SlowZonesSegment } from './segment';
+import type { SpeedPairData, SpeedSegment } from './segment';
 
-import styles from './SlowSegmentLabel.module.css';
+import styles from './SegmentSpeedLabel.module.css';
 
-interface SlowZoneLabelProps {
+interface SpeedLabelProps {
   direction: SegmentDirection;
-  slowZone: SlowZoneResponse;
+  speedPair: SpeedPairData;
   color: string;
   offset: number;
   isHorizontal: boolean;
@@ -25,28 +22,24 @@ const LABEL_INNER_PADDING = 2;
 const LABEL_HEIGHT = 4;
 const FONT_SIZE = 3;
 
-const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
+const SpeedLabel: React.FC<SpeedLabelProps> = ({
   direction,
   color,
   containingWidth,
   offset,
   isHorizontal,
-  slowZone: { delay, latest_delay, baseline },
+  speedPair: { travel_time, speed },
 }) => {
-  const {
-    query: { endDate },
-  } = useDelimitatedRoute();
-  const isToday = endDate === TODAY_STRING;
-  const delayVal = isToday && latest_delay ? latest_delay : delay;
-
   const delayString = useMemo(
     () =>
-      getClockFormattedTimeString(delayVal, {
-        showHours: false,
-        showSeconds: true,
-        truncateLeadingZeros: true,
-      }),
-    [delayVal]
+      speed
+        ? `${Math.round(speed)} mph` //TODO
+        : getClockFormattedTimeString(travel_time, {
+            showHours: false,
+            showSeconds: true,
+            truncateLeadingZeros: true,
+          }),
+    [speed, travel_time]
   );
   const indicatorBeforeText = direction === '1';
   const indicatorSolidArrow = indicatorBeforeText
@@ -56,8 +49,7 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
     : isHorizontal
       ? '❯'
       : '▼';
-  const fractionOverBaseline = -1 + (delay + baseline) / baseline;
-  const isBold = fractionOverBaseline >= 0.5;
+  const isBold = false; //TODO
 
   const indicator = (
     <tspan fontSize={FONT_SIZE * 1.25} fill={color}>
@@ -65,7 +57,11 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
     </tspan>
   );
 
-  const delayText = <tspan fontWeight={isBold ? 'bold' : undefined}>{delayString}</tspan>;
+  const delayText = (
+    <tspan fontWeight={isBold ? 'bold' : undefined} fontSize={FONT_SIZE * 1.1}>
+      {delayString}
+    </tspan>
+  );
 
   return (
     <text y={offset} x={containingWidth / 2} textAnchor="middle" fontSize={LABEL_HEIGHT}>
@@ -76,15 +72,15 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
   );
 };
 
-interface SlowSegmentLabelProps {
-  segment: SlowZonesSegment;
+interface SpeedSegmentLabelProps {
+  segment: SpeedSegment;
   line: LineMetadata;
   isHorizontal: boolean;
   width: number;
   height: number;
 }
 
-const getDirectionLabelOffsets = (slowZones: ByDirection<SlowZoneResponse[]>, height: number) => {
+const getDirectionLabelOffsets = (slowZones: ByDirection<SpeedPairData[]>, height: number) => {
   const hasZero = slowZones['0'].length > 0;
   const hasOne = slowZones['1'].length > 0;
   const isBidi = hasZero && hasOne;
@@ -109,29 +105,29 @@ const getDirectionLabelOffsets = (slowZones: ByDirection<SlowZoneResponse[]>, he
   return {};
 };
 
-export const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
+export const SpeedSegmentLabel: React.FC<SpeedSegmentLabelProps> = (props) => {
   const {
     isHorizontal,
-    segment: { slowZones },
+    segment: { segments },
     line,
     width,
     height,
   } = props;
 
-  const offsets = getDirectionLabelOffsets(slowZones, height);
+  const offsets = getDirectionLabelOffsets(segments, height);
 
   return (
     <g className={styles.slowSegmentLabel}>
       {DIRECTIONS.map((direction) => {
-        const [zone] = slowZones[direction];
+        const [zone] = segments[direction];
         if (!zone) {
           return null;
         }
         return (
-          <SlowZoneLabel
+          <SpeedLabel
             key={direction}
             direction={direction as SegmentDirection}
-            slowZone={zone}
+            speedPair={zone}
             color={line.color}
             isHorizontal={isHorizontal}
             offset={offsets[direction]!}

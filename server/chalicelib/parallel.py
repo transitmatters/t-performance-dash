@@ -45,7 +45,7 @@ def s3_date_range(start: date, end: date):
     if date_utils.get_max_monthly_data_date() > start:
         dates = pd.date_range(start, month_end, freq="1D", inclusive="both")
         series = pd.Series(0, index=dates)
-        date_range = series.resample("1M").sum().index
+        date_range = series.resample("1ME").sum().index
 
     # all dates between month_end and end if month_end is less than end
     if pd.to_datetime(month_end) < pd.to_datetime(end):

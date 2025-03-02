@@ -61,7 +61,10 @@ export const convertToSpeedDataset = (
   });
 };
 
-function convertSecondsToMph(travelTimeSec: number | undefined, distanceMiles: number | undefined) {
+export function convertSecondsToMph(
+  travelTimeSec: number | undefined,
+  distanceMiles: number | undefined
+) {
   if (distanceMiles && travelTimeSec) {
     return (3600 * distanceMiles) / travelTimeSec;
   }
