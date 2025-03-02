@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { lineColorBorder } from '../../styles/general';
-import type { BusRoute, Line } from '../../types/lines';
+import type { BusRoute, CommuterRailRoute, Line } from '../../types/lines';
 import type { DateStoreSection } from '../../constants/pages';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
@@ -9,10 +9,16 @@ import { DateControl } from './DateControl';
 interface ControlPanelProps {
   dateStoreSection: DateStoreSection;
   busRoute: BusRoute | undefined;
+  crRoute: CommuterRailRoute | undefined;
   line: Line | undefined;
 }
 
-export const ControlPanel: React.FC<ControlPanelProps> = ({ dateStoreSection, line, busRoute }) => {
+export const ControlPanel: React.FC<ControlPanelProps> = ({
+  dateStoreSection,
+  line,
+  busRoute,
+  crRoute,
+}) => {
   const getControls = () => {
     if ((dateStoreSection === 'singleTrips' || dateStoreSection === 'multiTrips') && line) {
       return (
@@ -21,7 +27,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({ dateStoreSection, li
             dateStoreSection={dateStoreSection}
             queryType={dateStoreSection === 'singleTrips' ? 'single' : 'range'}
           />
-          <StationSelectorWidget line={line} busRoute={busRoute} />
+          <StationSelectorWidget line={line} busRoute={busRoute} crRoute={crRoute} />
         </>
       );
     }

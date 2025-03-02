@@ -12,7 +12,7 @@ export default function Document() {
         <meta name="twitter:title" content="TransitMatters Data Dashboard" />
         <meta
           name="twitter:description"
-          content="Explore MBTA subway and bus performance data with the TransitMatters Data Dashboard."
+          content="Explore MBTA subway, commuter rail and bus performance data with the TransitMatters Data Dashboard."
         />
         <meta name="twitter:image" content={`/twitter-card.jpg`} />
         <link rel="icon" type="image/png" href={`/favicon.png`} />

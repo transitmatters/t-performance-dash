@@ -1,16 +1,25 @@
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
-import { RAIL_LINES, type BusRoute, type LinePath, BUS_ROUTES } from '../types/lines';
+import {
+  type CommuterRailRoute,
+  type BusRoute,
+  type LinePath,
+  COMMUTER_RAIL_ROUTES,
+  BUS_ROUTES,
+  RAIL_LINES,
+} from '../types/lines';
 import { TODAY_STRING } from '../constants/dates';
 
-const getBusOrLine = (
+const getLineOrRoute = (
   lineString: string | BusRoute
-): { type: 'rail' | 'bus'; value: LinePath | BusRoute } | undefined => {
+): { type: 'rail' | 'bus' | 'cr'; value: LinePath | BusRoute | CommuterRailRoute } | undefined => {
   if (RAIL_LINES.includes(lineString.toLowerCase()))
     return { type: 'rail', value: lineString.toLowerCase() as LinePath };
   if (BUS_ROUTES.includes(lineString.toString() as BusRoute))
     return { type: 'bus', value: lineString as BusRoute };
+  if (COMMUTER_RAIL_ROUTES.includes(lineString.toString() as CommuterRailRoute))
+    return { type: 'cr', value: lineString as CommuterRailRoute };
 };
 
 export const configToQueryParams = (search: ReadonlyURLSearchParams | URLSearchParams) => {
@@ -21,8 +30,8 @@ export const configToQueryParams = (search: ReadonlyURLSearchParams | URLSearchP
     : search.get('config')?.split(',');
   if (!configArr || configArr.length !== 5) return;
 
-  const busOrLine = getBusOrLine(configArr[0]);
-  if (!busOrLine) return;
+  const lineOrRoute = getLineOrRoute(configArr[0]);
+  if (!lineOrRoute) return;
 
   const query = {
     from: configArr[1] || undefined,
@@ -42,13 +51,20 @@ export const configToQueryParams = (search: ReadonlyURLSearchParams | URLSearchP
     string,
     string,
   ][];
-  if (busOrLine.type === 'bus') queryArr.push(['busRoute', busOrLine.value]);
+  if (lineOrRoute.type === 'bus') queryArr.push(['busRoute', lineOrRoute.value]);
+  if (lineOrRoute.type === 'cr') queryArr.push(['crRoute', lineOrRoute.value]);
 
   const newQueryParams = new URLSearchParams(queryArr);
 
-  if (busOrLine.type === 'rail')
+  if (lineOrRoute.type === 'rail')
     return {
-      line: busOrLine.value,
+      line: lineOrRoute.value,
+      queryParams: newQueryParams,
+      tripSection: singleOrMulti,
+    };
+  if (lineOrRoute.type === 'cr')
+    return {
+      line: 'commuter-rail',
       queryParams: newQueryParams,
       tripSection: singleOrMulti,
     };

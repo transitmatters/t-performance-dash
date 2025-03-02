@@ -13,6 +13,7 @@ import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { GobbleDataNotice } from '../../common/components/notices/GobbleDataNotice';
 import { BetaDataNotice } from '../../common/components/notices/BetaDataNotice';
 import { PokeySchleppieAwardBanner } from '../../common/components/notices/PokeySchleppieAwardBanner';
+import { CommuterRailDataNotice } from '../../common/components/notices/CommuterRailDataNotice';
 import { useAlertStore } from './AlertStore';
 import { TripGraphs } from './TripGraphs';
 
@@ -36,6 +37,7 @@ export const TripExplorer = () => {
   if (!(fromStation && toStation)) {
     return null;
   }
+
   return (
     <PageWrapper pageTitle={'Trips'}>
       <ChartPageDiv>
@@ -46,6 +48,7 @@ export const TripExplorer = () => {
         <div>
           <GobbleDataNotice />
           <BusDataNotice />
+          <CommuterRailDataNotice />
           <SameDayNotice />
           <TerminusNotice toStation={toStation} fromStation={fromStation} />
         </div>
@@ -53,4 +56,5 @@ export const TripExplorer = () => {
     </PageWrapper>
   );
 };
+
 TripExplorer.Layout = Layout.Dashboard;

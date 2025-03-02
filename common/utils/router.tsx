@@ -159,8 +159,11 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
   }
   delete query.from;
   delete query.to;
+  // Get queryParams but exclude busRoute and crRoute
   const queryParams = query
-    ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
+    ? new URLSearchParams(
+        Object.entries(query).filter(([key]) => key !== 'busRoute' && key !== 'crRoute')
+      )
     : new URLSearchParams();
   href += currentPath ? `${currentPath}` : '';
   const queryString = queryParams.toString();

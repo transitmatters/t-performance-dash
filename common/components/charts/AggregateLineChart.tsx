@@ -106,6 +106,11 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 },
                 ticks: {
                   precision: 1,
+                  callback: (value) => {
+                    return yUnit === 'Minutes' && typeof value === 'number'
+                      ? getFormattedTimeString(value, 'minutes')
+                      : value.toLocaleString();
+                  },
                 },
                 suggestedMin: suggestedYMin,
                 suggestedMax: suggestedYMax,
