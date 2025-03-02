@@ -1,0 +1,113 @@
+{
+  "CR-Fairmount": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Readville",
+        "station": "place-DB-0095",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": ["CR-Fairmount_1_FB-0095-04"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Fairmount",
+        "station": "place-DB-2205",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["CR-Fairmount_0_DB-2205-01", "CR-Fairmount_0_DB-2205-02"],
+          "1": ["CR-Fairmount_1_DB-2205-02"]
+        }
+      },
+      {
+        "stop_name": "Blue Hill Avenue",
+        "station": "place-DB-2222",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": ["CR-Fairmount_0_DB-2222-02", "CR-Fairmount_0_DB-2222-01"],
+          "1": ["CR-Fairmount_1_DB-2222-02"]
+        }
+      },
+      {
+        "stop_name": "Morton Street",
+        "station": "place-DB-2230",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": ["CR-Fairmount_0_DB-2230-01", "CR-Fairmount_0_DB-2230-02"],
+          "1": ["CR-Fairmount_1_DB-2230-02"]
+        }
+      },
+      {
+        "stop_name": "Talbot Avenue",
+        "station": "place-DB-2240",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": ["CR-Fairmount_0_DB-2240-01", "CR-Fairmount_0_DB-2240-02"],
+          "1": ["CR-Fairmount_1_DB-2240-02"]
+        }
+      },
+      {
+        "stop_name": "Four Corners/Geneva",
+        "station": "place-DB-2249",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": ["CR-Fairmount_0_DB-2249-01"],
+          "1": ["CR-Fairmount_1_DB-2249-02"]
+        }
+      },
+      {
+        "stop_name": "Uphams Corner",
+        "station": "place-DB-2258",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": ["CR-Fairmount_0_DB-2258-01", "CR-Fairmount_0_DB-2258-02"],
+          "1": ["CR-Fairmount_1_DB-2258-02"]
+        }
+      },
+      {
+        "stop_name": "Newmarket",
+        "station": "place-DB-2265",
+        "branches": null,
+        "order": 8,
+        "stops": {
+          "0": ["CR-Fairmount_0_DB-2265-02", "CR-Fairmount_0_DB-2265-01"],
+          "1": ["CR-Fairmount_1_DB-2265-02"]
+        }
+      },
+      {
+        "stop_name": "South Station",
+        "station": "place-sstat",
+        "branches": null,
+        "order": 9,
+        "stops": {
+          "0": [
+            "CR-Fairmount_0_NEC-2287-07",
+            "CR-Fairmount_0_NEC-2287",
+            "CR-Fairmount_0_NEC-2287-11",
+            "CR-Fairmount_0_NEC-2287-08",
+            "CR-Fairmount_0_NEC-2287-13",
+            "CR-Fairmount_0_NEC-2287-09",
+            "CR-Fairmount_0_NEC-2287-01",
+            "CR-Fairmount_0_NEC-2287-10",
+            "CR-Fairmount_0_NEC-2287-12"
+          ],
+          "1": []
+        },
+        "terminus": true
+      }
+    ]
+  }
+}

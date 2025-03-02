@@ -53,6 +53,10 @@ def is_bus(stops):
     return all(map(s3.is_bus, stops))
 
 
+def is_cr(stops):
+    return all(map(s3.is_cr, stops))
+
+
 def use_S3(date, bus=False):
     archival = (date.today() - date).days >= 90
     return archival or bus

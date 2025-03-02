@@ -1,21 +1,22 @@
-import type { BusRoute, Line, LineShort } from '../types/lines';
+import type { BusRoute, CommuterRailRoute, Line, LineShort } from '../types/lines';
 import { isLineMap, type Station } from '../types/stations';
 import type { Location } from '../types/charts';
 import type { Direction, Distance } from '../types/dataPoints';
-import { stations, rtStations, busStations } from '../constants/stations';
+import { stations, rtStations, busStations, crStations } from '../constants/stations';
 import { station_distances } from '../constants/station_distances';
 
 export const optionsForField = (
   type: 'from' | 'to',
   line: LineShort,
   fromStation: Station | null,
-  busRoute?: string
+  busRoute?: BusRoute,
+  crRoute?: CommuterRailRoute
 ) => {
   if (type === 'from') {
-    return optionsStation(line, busRoute);
+    return optionsStation(line, busRoute, crRoute);
   }
   if (type === 'to') {
-    return optionsStation(line, busRoute)?.filter((entry) => {
+    return optionsStation(line, busRoute, crRoute)?.filter((entry) => {
       if (fromStation && fromStation.branches && entry.branches) {
         return entry.branches.some((entryBranch) => fromStation.branches?.includes(entryBranch));
       }
@@ -24,7 +25,11 @@ export const optionsForField = (
   }
 };
 
-export const optionsStation = (line: LineShort, busRoute?: string): Station[] | undefined => {
+export const optionsStation = (
+  line: LineShort,
+  busRoute?: BusRoute,
+  crRoute?: CommuterRailRoute
+): Station[] | undefined => {
   if (!line || !stations[line]) {
     return undefined;
   }
@@ -37,12 +42,20 @@ export const optionsStation = (line: LineShort, busRoute?: string): Station[] | 
     return stations[line][busRoute].stations.sort((a, b) => a.order - b.order);
   }
 
+  if (line === 'Commuter Rail') {
+    if (!crRoute || !stations[line][crRoute]) {
+      return undefined;
+    }
+
+    return stations[line][crRoute].stations.sort((a, b) => a.order - b.order);
+  }
+
   return stations[line].stations.sort((a, b) => a.order - b.order);
 };
 
 const createStationIndex = () => {
   const index: Record<string, Station> = {};
-  Object.values({ ...rtStations, ...busStations }).forEach((line) => {
+  Object.values({ ...rtStations, ...busStations, ...crStations }).forEach((line) => {
     line.stations.forEach((station) => {
       index[station.station] = station;
     });
@@ -52,7 +65,7 @@ const createStationIndex = () => {
 
 const createParentStationIndex = () => {
   const index: Record<string, Station> = {};
-  Object.values({ ...rtStations, ...busStations }).forEach((line) => {
+  Object.values({ ...rtStations, ...busStations, ...crStations }).forEach((line) => {
     line.stations.forEach((station) => {
       const allStopIds = [...(station.stops['0'] || []), ...(station.stops['1'] || [])];
       allStopIds.forEach((stopId) => {
