@@ -18,6 +18,7 @@ import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
+import type { RidershipKey } from '../../common/types/ridership';
 
 interface RidershipGraphProps {
   data: RidershipCount[];
@@ -44,7 +45,9 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
   const ref = useRef();
 
   const chart = useMemo(() => {
-    const routeIndex = busRoute ? busRoute.replaceAll('/', '') : (crRoute ?? line);
+    const routeIndex = (
+      busRoute ? busRoute.replaceAll('/', '') : (crRoute ?? line)
+    ) as RidershipKey;
     const labels = data.map((point) => point.date);
     const lineColor = LINE_COLORS[line ?? 'default'];
 
