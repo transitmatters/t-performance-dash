@@ -71,6 +71,10 @@ def get_line_stops():
         else:
             parent_children_map[parent_id][direction].append(stop["name"])
 
+    for parent_id in parent_children_map:
+        for direction in parent_children_map[parent_id]:
+            parent_children_map[parent_id][direction].sort()
+
     return parent_children_map
 
 

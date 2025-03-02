@@ -63,7 +63,7 @@
         "branches": null,
         "order": 6,
         "stops": {
-          "0": ["CR-Newburyport_0_GB-0198-02", "CR-Newburyport_0_GB-0198-01"],
+          "0": ["CR-Newburyport_0_GB-0198-01", "CR-Newburyport_0_GB-0198-02"],
           "1": ["CR-Newburyport_1_GB-0198-02"]
         }
       },
@@ -113,7 +113,7 @@
         "branches": null,
         "order": 11,
         "stops": {
-          "0": ["CR-Newburyport_0_ER-0208-02", "CR-Newburyport_0_ER-0208-01"],
+          "0": ["CR-Newburyport_0_ER-0208-01", "CR-Newburyport_0_ER-0208-02"],
           "1": ["CR-Newburyport_1_ER-0208-02"]
         }
       },
@@ -123,7 +123,7 @@
         "branches": null,
         "order": 12,
         "stops": {
-          "0": ["CR-Newburyport_0_ER-0183-02", "CR-Newburyport_0_ER-0183-01"],
+          "0": ["CR-Newburyport_0_ER-0183-01", "CR-Newburyport_0_ER-0183-02"],
           "1": ["CR-Newburyport_1_ER-0183-02"]
         }
       },
@@ -289,7 +289,7 @@
         "branches": null,
         "order": 17,
         "stops": {
-          "0": ["CR-Newburyport_0_ER-0117-02", "CR-Newburyport_0_ER-0117-01"],
+          "0": ["CR-Newburyport_0_ER-0117-01", "CR-Newburyport_0_ER-0117-02"],
           "1": ["CR-Newburyport_1_ER-0117-02"]
         }
       },
@@ -299,7 +299,7 @@
         "branches": null,
         "order": 18,
         "stops": {
-          "0": ["CR-Newburyport_0_ER-0099-02", "CR-Newburyport_0_ER-0099-01"],
+          "0": ["CR-Newburyport_0_ER-0099-01", "CR-Newburyport_0_ER-0099-02"],
           "1": ["CR-Newburyport_1_ER-0099-02"]
         }
       },
@@ -320,17 +320,17 @@
         "order": 20,
         "stops": {
           "0": [
-            "CR-Newburyport_0_BNT-0000-04",
-            "CR-Newburyport_0_BNT-0000-06",
-            "CR-Newburyport_0_BNT-0000-02",
-            "CR-Newburyport_0_BNT-0000-07",
-            "CR-Newburyport_0_BNT-0000-09",
-            "CR-Newburyport_0_BNT-0000-01",
-            "CR-Newburyport_0_BNT-0000-08",
             "CR-Newburyport_0_BNT-0000",
-            "CR-Newburyport_0_BNT-0000-10",
+            "CR-Newburyport_0_BNT-0000-01",
+            "CR-Newburyport_0_BNT-0000-02",
             "CR-Newburyport_0_BNT-0000-03",
-            "CR-Newburyport_0_BNT-0000-05"
+            "CR-Newburyport_0_BNT-0000-04",
+            "CR-Newburyport_0_BNT-0000-05",
+            "CR-Newburyport_0_BNT-0000-06",
+            "CR-Newburyport_0_BNT-0000-07",
+            "CR-Newburyport_0_BNT-0000-08",
+            "CR-Newburyport_0_BNT-0000-09",
+            "CR-Newburyport_0_BNT-0000-10"
           ],
           "1": []
         },
