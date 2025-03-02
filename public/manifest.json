@@ -1,7 +1,7 @@
 {
   "short_name": "Data Dashboard",
   "name": "Transitmatters Data Dashboard",
-  "description": "Explore MBTA subway and bus performance data with the TransitMatters Data Dashboard.",
+  "description": "Explore MBTA subway, commuter rail and bus performance data with the TransitMatters Data Dashboard.",
   "icons": [
     {
       "src": "favicon_128.png",

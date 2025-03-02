@@ -195,6 +195,11 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 display: true,
                 ticks: {
                   color: COLORS.design.subtitleGrey,
+                  callback: (value) => {
+                    return units === 'Minutes' && typeof value === 'number'
+                      ? getFormattedTimeString(value, 'minutes')
+                      : value.toLocaleString();
+                  },
                 },
                 title: {
                   display: true,
