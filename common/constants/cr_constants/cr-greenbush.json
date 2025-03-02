@@ -104,10 +104,10 @@
         "order": 10,
         "stops": {
           "0": [
-            "CR-Greenbush_0_NEC-2287-10",
             "CR-Greenbush_0_NEC-2287",
-            "CR-Greenbush_0_NEC-2287-11",
             "CR-Greenbush_0_NEC-2287-09",
+            "CR-Greenbush_0_NEC-2287-10",
+            "CR-Greenbush_0_NEC-2287-11",
             "CR-Greenbush_0_NEC-2287-12",
             "CR-Greenbush_0_NEC-2287-13"
           ],

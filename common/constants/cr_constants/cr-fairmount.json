@@ -33,7 +33,7 @@
         "branches": null,
         "order": 3,
         "stops": {
-          "0": ["CR-Fairmount_0_DB-2222-02", "CR-Fairmount_0_DB-2222-01"],
+          "0": ["CR-Fairmount_0_DB-2222-01", "CR-Fairmount_0_DB-2222-02"],
           "1": ["CR-Fairmount_1_DB-2222-02"]
         }
       },
@@ -83,7 +83,7 @@
         "branches": null,
         "order": 8,
         "stops": {
-          "0": ["CR-Fairmount_0_DB-2265-02", "CR-Fairmount_0_DB-2265-01"],
+          "0": ["CR-Fairmount_0_DB-2265-01", "CR-Fairmount_0_DB-2265-02"],
           "1": ["CR-Fairmount_1_DB-2265-02"]
         }
       },
@@ -94,15 +94,15 @@
         "order": 9,
         "stops": {
           "0": [
-            "CR-Fairmount_0_NEC-2287-07",
             "CR-Fairmount_0_NEC-2287",
-            "CR-Fairmount_0_NEC-2287-11",
-            "CR-Fairmount_0_NEC-2287-08",
-            "CR-Fairmount_0_NEC-2287-13",
-            "CR-Fairmount_0_NEC-2287-09",
             "CR-Fairmount_0_NEC-2287-01",
+            "CR-Fairmount_0_NEC-2287-07",
+            "CR-Fairmount_0_NEC-2287-08",
+            "CR-Fairmount_0_NEC-2287-09",
             "CR-Fairmount_0_NEC-2287-10",
-            "CR-Fairmount_0_NEC-2287-12"
+            "CR-Fairmount_0_NEC-2287-11",
+            "CR-Fairmount_0_NEC-2287-12",
+            "CR-Fairmount_0_NEC-2287-13"
           ],
           "1": []
         },
