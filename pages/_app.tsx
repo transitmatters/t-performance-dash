@@ -22,6 +22,7 @@ import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { GCScript } from 'next-goatcounter';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import ChartTrendline from 'chartjs-plugin-trendline';
 
 import '../styles/dashboard.css';
 import '../styles/globals.css';
@@ -45,6 +46,7 @@ ChartJS.register(
   LineElement,
   Annotation,
   ChartDataLabels,
+  ChartTrendline,
   Filler,
   Title,
   Tooltip,
