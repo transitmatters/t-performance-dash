@@ -11,24 +11,31 @@ import {
   optionsStation,
   stopIdsForStations,
 } from '../../utils/stations';
-import type { BusRoute, Line } from '../../types/lines';
+import type { BusRoute, CommuterRailRoute, Line } from '../../types/lines';
 import { LINE_OBJECTS } from '../../constants/lines';
 import type { Station } from '../../types/stations';
 
 interface StationSelectorWidgetProps {
   line: Line;
   busRoute: BusRoute | undefined;
+  crRoute: CommuterRailRoute | undefined;
 }
 
-export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({ line, busRoute }) => {
+export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
+  line,
+  busRoute,
+  crRoute,
+}) => {
   const updateQueryParams = useUpdateQuery();
   const lineShort = LINE_OBJECTS[line].short;
   const {
     query: { from, to },
   } = useDelimitatedRoute();
-  const stations = optionsStation(lineShort, busRoute);
+
+  const stations = optionsStation(lineShort, busRoute, crRoute);
   const toStation = to ? getParentStationForStopId(to, lineShort) : stations?.[stations.length - 2];
   const fromStation = from ? getParentStationForStopId(from, lineShort) : stations?.[1];
+
   React.useEffect(() => {
     const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
     updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });

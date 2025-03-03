@@ -1,0 +1,122 @@
+{
+  "CR-Kingston": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Kingston",
+        "station": "place-KB-0351",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": ["CR-Kingston_1_KB-0351-S"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Halifax",
+        "station": "place-PB-0281",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["CR-Kingston_0_PB-0281-S"],
+          "1": ["CR-Kingston_1_PB-0281-CS", "CR-Kingston_1_PB-0281-S"]
+        }
+      },
+      {
+        "stop_name": "Hanson",
+        "station": "place-PB-0245",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": ["CR-Kingston_0_PB-0245-S"],
+          "1": ["CR-Kingston_1_PB-0245-S"]
+        }
+      },
+      {
+        "stop_name": "Whitman",
+        "station": "place-PB-0212",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": ["CR-Kingston_0_PB-0212-S"],
+          "1": ["CR-Kingston_1_PB-0212-S"]
+        }
+      },
+      {
+        "stop_name": "Abington",
+        "station": "place-PB-0194",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": ["CR-Kingston_0_PB-0194-S"],
+          "1": ["CR-Kingston_1_PB-0194-S"]
+        }
+      },
+      {
+        "stop_name": "South Weymouth",
+        "station": "place-PB-0158",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": ["CR-Kingston_0_PB-0158-S"],
+          "1": ["CR-Kingston_1_PB-0158-S"]
+        }
+      },
+      {
+        "stop_name": "Braintree",
+        "station": "place-brntn",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": ["CR-Kingston_0_MM-0109-S"],
+          "1": ["CR-Kingston_1_MM-0109-S"]
+        }
+      },
+      {
+        "stop_name": "Quincy Center",
+        "station": "place-qnctr",
+        "branches": null,
+        "order": 8,
+        "stops": {
+          "0": ["CR-Kingston_0_MM-0079-S"],
+          "1": ["CR-Kingston_1_MM-0079-S"]
+        }
+      },
+      {
+        "stop_name": "JFK/UMass",
+        "station": "place-jfk",
+        "branches": null,
+        "order": 9,
+        "stops": {
+          "0": ["CR-Kingston_0_MM-0023-S"],
+          "1": ["CR-Kingston_1_MM-0023-S"]
+        }
+      },
+      {
+        "stop_name": "South Station",
+        "station": "place-sstat",
+        "branches": null,
+        "order": 10,
+        "stops": {
+          "0": [
+            "CR-Kingston_0_NEC-2287-13",
+            "CR-Kingston_0_NEC-2287-12",
+            "CR-Kingston_0_NEC-2287-05",
+            "CR-Kingston_0_NEC-2287-09",
+            "CR-Kingston_0_NEC-2287-11",
+            "CR-Kingston_0_NEC-2287-07",
+            "CR-Kingston_0_NEC-2287-10",
+            "CR-Kingston_0_NEC-2287"
+          ],
+          "1": []
+        },
+        "terminus": true
+      }
+    ]
+  }
+}

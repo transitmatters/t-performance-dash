@@ -2,12 +2,14 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Disclosure } from '@headlessui/react';
 import React from 'react';
+import { useDelimitatedRoute } from '../../utils/router';
 
 interface LegendProps {
   showUnderRatio?: boolean;
 }
 
-export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio = false }) => {
+export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio }) => {
+  const { line } = useDelimitatedRoute();
   return (
     <Disclosure>
       {({ open }) => (
@@ -18,12 +20,28 @@ export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio = false 
               <FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} className="" />
             </div>
           </Disclosure.Button>
-          <Disclosure.Panel
-            className={
-              'grid w-full grid-cols-2 items-baseline p-1 px-4 text-left text-xs lg:flex lg:flex-row lg:gap-4'
-            }
-          >
-            <LegendSingle showUnderRatio={showUnderRatio} />
+          <Disclosure.Panel>
+            <div
+              className={
+                'grid w-full grid-cols-2 items-baseline p-1 px-4 text-left text-xs lg:flex lg:flex-row lg:gap-4'
+              }
+            >
+              <LegendSingle showUnderRatio={showUnderRatio} />
+            </div>
+
+            <div
+              className={
+                'mx-1 mb-1 grid w-full grid-cols-2 items-baseline p-1 px-4 text-left text-xs text-gray-500 lg:flex lg:flex-row lg:gap-4'
+              }
+            >
+              {line === 'line-commuter-rail' && (
+                <p>
+                  Due to how we collect data for Commuter Rail, we may occasionally miss trips or
+                  stops. This can lead to inaccuracies in headways numbers and gaps in travel time
+                  data. Confirm data you see here with official MBTA sources when possible.
+                </p>
+              )}
+            </div>
           </Disclosure.Panel>
         </div>
       )}

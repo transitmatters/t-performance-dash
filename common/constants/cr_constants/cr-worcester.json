@@ -1,0 +1,206 @@
+{
+  "CR-Worcester": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Worcester",
+        "station": "place-WML-0442",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": ["CR-Worcester_1_WML-0442-CS"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Grafton",
+        "station": "place-WML-0364",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0364-01", "CR-Worcester_0_WML-0364-02"],
+          "1": ["CR-Worcester_1_WML-0364-02"]
+        }
+      },
+      {
+        "stop_name": "Westborough",
+        "station": "place-WML-0340",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0340-01", "CR-Worcester_0_WML-0340-02"],
+          "1": ["CR-Worcester_1_WML-0340-02"]
+        }
+      },
+      {
+        "stop_name": "Southborough",
+        "station": "place-WML-0274",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0274-02", "CR-Worcester_0_WML-0274-01"],
+          "1": ["CR-Worcester_1_WML-0274-02"]
+        }
+      },
+      {
+        "stop_name": "Ashland",
+        "station": "place-WML-0252",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0252-01", "CR-Worcester_0_WML-0252-02"],
+          "1": ["CR-Worcester_1_WML-0252-02"]
+        }
+      },
+      {
+        "stop_name": "Framingham",
+        "station": "place-WML-0214",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0214-01", "CR-Worcester_0_WML-0214-02"],
+          "1": ["CR-Worcester_1_WML-0214-02", "CR-Worcester_1_WML-0214-01"]
+        }
+      },
+      {
+        "stop_name": "West Natick",
+        "station": "place-WML-0199",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0199-02", "CR-Worcester_0_WML-0199-01"],
+          "1": ["CR-Worcester_1_WML-0199-02", "CR-Worcester_1_WML-0199-01"]
+        }
+      },
+      {
+        "stop_name": "Natick Center",
+        "station": "place-WML-0177",
+        "branches": null,
+        "order": 8,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0177-01", "CR-Worcester_0_WML-0177-02"],
+          "1": ["CR-Worcester_1_WML-0177-01", "CR-Worcester_1_WML-0177-02"]
+        }
+      },
+      {
+        "stop_name": "Wellesley Square",
+        "station": "place-WML-0147",
+        "branches": null,
+        "order": 9,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0147-02", "CR-Worcester_0_WML-0147-01"],
+          "1": ["CR-Worcester_1_WML-0147-01", "CR-Worcester_1_WML-0147-02"]
+        }
+      },
+      {
+        "stop_name": "Wellesley Hills",
+        "station": "place-WML-0135",
+        "branches": null,
+        "order": 10,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0135-02", "CR-Worcester_0_WML-0135-01"],
+          "1": ["CR-Worcester_1_WML-0135-01", "CR-Worcester_1_WML-0135-02"]
+        }
+      },
+      {
+        "stop_name": "Wellesley Farms",
+        "station": "place-WML-0125",
+        "branches": null,
+        "order": 11,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0125-01", "CR-Worcester_0_WML-0125-02"],
+          "1": ["CR-Worcester_1_WML-0125-01", "CR-Worcester_1_WML-0125-02"]
+        }
+      },
+      {
+        "stop_name": "Auburndale",
+        "station": "place-WML-0102",
+        "branches": null,
+        "order": 12,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0102-02"],
+          "1": ["CR-Worcester_1_WML-0102-02"]
+        }
+      },
+      {
+        "stop_name": "West Newton",
+        "station": "place-WML-0091",
+        "branches": null,
+        "order": 13,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0091-02"],
+          "1": ["CR-Worcester_1_WML-0091-02"]
+        }
+      },
+      {
+        "stop_name": "Newtonville",
+        "station": "place-WML-0081",
+        "branches": null,
+        "order": 14,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0081-02"],
+          "1": ["CR-Worcester_1_WML-0081-02"]
+        }
+      },
+      {
+        "stop_name": "Boston Landing",
+        "station": "place-WML-0035",
+        "branches": null,
+        "order": 15,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0035-02", "CR-Worcester_0_WML-0035-01"],
+          "1": ["CR-Worcester_1_WML-0035-02", "CR-Worcester_1_WML-0035-01"]
+        }
+      },
+      {
+        "stop_name": "Lansdowne",
+        "station": "place-WML-0025",
+        "branches": null,
+        "order": 16,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0025-07"],
+          "1": ["CR-Worcester_1_WML-0025-05", "CR-Worcester_1_WML-0025-07"]
+        }
+      },
+      {
+        "stop_name": "Back Bay",
+        "station": "place-bbsta",
+        "branches": null,
+        "order": 17,
+        "stops": {
+          "0": ["CR-Worcester_0_WML-0012-07", "CR-Worcester_0_WML-0012-05"],
+          "1": ["CR-Worcester_1_WML-0012-05", "CR-Worcester_1_WML-0012-07"]
+        }
+      },
+      {
+        "stop_name": "South Station",
+        "station": "place-sstat",
+        "branches": null,
+        "order": 18,
+        "stops": {
+          "0": [
+            "CR-Worcester_0_NEC-2287-03",
+            "CR-Worcester_0_NEC-2287-12",
+            "CR-Worcester_0_NEC-2287-02",
+            "CR-Worcester_0_NEC-2287",
+            "CR-Worcester_0_NEC-2287-11",
+            "CR-Worcester_0_NEC-2287-06",
+            "CR-Worcester_0_NEC-2287-07",
+            "CR-Worcester_0_NEC-2287-05",
+            "CR-Worcester_0_NEC-2287-04",
+            "CR-Worcester_0_NEC-2287-01",
+            "CR-Worcester_0_NEC-2287-10",
+            "CR-Worcester_0_NEC-2287-09"
+          ],
+          "1": []
+        },
+        "terminus": true
+      }
+    ]
+  }
+}

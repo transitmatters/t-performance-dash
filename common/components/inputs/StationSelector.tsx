@@ -5,7 +5,7 @@ import { faBicycle, faChevronDown, faWheelchair } from '@fortawesome/free-solid-
 import classNames from 'classnames';
 import type { Station } from '../../types/stations';
 import { useDelimitatedRoute } from '../../utils/router';
-import { optionsForField } from '../../utils/stations';
+import { optionsForField, stopIdsForStations } from '../../utils/stations';
 import {
   buttonHighlightFocus,
   lineColorBackground,
@@ -30,16 +30,17 @@ export const StationSelector: React.FC<StationSelector> = ({
   const {
     line,
     lineShort,
-    query: { busRoute },
+    query: { busRoute, crRoute },
   } = useDelimitatedRoute();
   const mdBreakpoint = useBreakpoint('md');
   const station = type === 'from' ? fromStation : toStation;
-  const stationOptions = optionsForField(type, lineShort, fromStation, busRoute);
+  const stationOptions = optionsForField(type, lineShort, fromStation, busRoute, crRoute);
   const branchLabelWidth = {
     'line-red': 'w-8',
     'line-green': 'w-12',
     DEFAULT: 'w-0',
   };
+
   return (
     <Listbox value={station} onChange={setStation}>
       {({ open }) => (
@@ -76,8 +77,10 @@ export const StationSelector: React.FC<StationSelector> = ({
                     key={stationIndex}
                     disabled={
                       type === 'from'
-                        ? station.station === toStation.station
-                        : station.station === fromStation.station
+                        ? station.station === toStation.station ||
+                          stopIdsForStations(station, toStation).fromStopIds?.length === 0
+                        : station.station === fromStation.station ||
+                          stopIdsForStations(fromStation, station).toStopIds?.length === 0
                     }
                     className={({ active, selected, disabled }) =>
                       classNames(
