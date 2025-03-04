@@ -12,8 +12,8 @@ import { getSegmentLabelOverrides } from '../../slowzones/map/segment';
 import type { SlowZonesLineName } from '../../slowzones/types';
 import { getStationDistance } from '../../../common/utils/stations';
 import { convertSecondsToMph } from '../../landing/utils';
+import { useSegmentTripMetricsData } from '../../../common/api/hooks/tripmetrics';
 import { segmentStationPairs } from './segment';
-import { TEST_DATA } from './constants';
 import { SpeedSegmentLabel } from './SegmentSpeedLabel';
 import { SegmentSpeedTooltip } from './SegmentSpeedTooltip';
 
@@ -49,15 +49,23 @@ export const SegmentSpeedMap: React.FC<SegmentSpeedMapProps> = ({ lineName, dire
   const { query } = useDelimitatedRoute();
   const { endDate } = query;
 
-  // TODO: Pull from dynamo calculated hourly in data-ingestion
-  const speedData = TEST_DATA.map((data) => {
-    const intervalDistance = getStationDistance(data.from_id, data.to_id);
-
-    return {
-      ...data,
-      speed: convertSecondsToMph(data.travel_time, intervalDistance),
-    };
+  const { data: segmentData } = useSegmentTripMetricsData({
+    date: endDate,
+    line: lineName,
   });
+
+  const speedData = useMemo(
+    () =>
+      segmentData?.map((data) => {
+        const intervalDistance = getStationDistance(data.from_id, data.to_id);
+
+        return {
+          ...data,
+          speed: convertSecondsToMph(data.travel_time, intervalDistance),
+        };
+      }) ?? [],
+    [segmentData]
+  );
 
   const { segments } = useMemo(
     () =>

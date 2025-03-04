@@ -1,6 +1,6 @@
 import type { AggType } from '../../modules/speed/constants/speeds';
 import type { ServiceHours, SpeedRestriction } from './dataPoints';
-import type { Line, LineRouteId } from './lines';
+import type { Line, LineRouteId, LineShort } from './lines';
 
 export enum QueryNameKeys {
   traveltimes = 'traveltimes',
@@ -42,6 +42,11 @@ export type FetchSpeedsOptions = {
   start_date?: string;
   end_date?: string;
   line?: Line;
+};
+
+export type FetchSegmentTripMetricsOptions = {
+  date?: string;
+  line: LineShort;
 };
 
 export type FetchDeliveredTripMetricsOptions = {

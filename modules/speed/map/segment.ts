@@ -14,7 +14,7 @@ import type { LineShort } from '../../../common/types/lines';
 import { getStationById } from '../../../common/utils/stations';
 
 export type SpeedPairData = {
-  service_date: string;
+  date: string;
   travel_time: number;
   speed?: number;
   route: LineShort;
@@ -57,7 +57,7 @@ export const segmentStationPairs = (
       speedPairs,
       lineName,
       desiredDate,
-      (segment) => [new Date(segment.service_date), new Date(desiredDate)],
+      (segment) => [new Date(segment.date), new Date(desiredDate)],
       (segment) => segment.route
     ),
     (segment) => getStationById(segment.from_id),
