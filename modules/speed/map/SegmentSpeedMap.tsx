@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unused-modules */
 import React, { useMemo } from 'react';
 import type { SegmentLocation, TooltipSide } from '@transitmatters/stripmap';
 import { LineMap, createDefaultDiagramForLine } from '@transitmatters/stripmap';
@@ -5,19 +6,18 @@ import { LineMap, createDefaultDiagramForLine } from '@transitmatters/stripmap';
 import '@transitmatters/stripmap/dist/style.css';
 
 import { LINE_OBJECTS } from '../../../common/constants/lines';
-import type { SlowZoneAllSlowResponse, SpeedRestriction } from '../../../common/types/dataPoints';
-import type { SlowZonesLineName } from '../types';
 
-import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { TODAY_STRING } from '../../../common/constants/dates';
-import { getSegmentLabelOverrides, segmentSlowZones } from './segment';
-import { SlowSegmentLabel } from './SlowSegmentLabel';
-import { SlowZonesTooltip } from './SlowZonesTooltip';
+import { getSegmentLabelOverrides } from '../../slowzones/map/segment';
+import type { SlowZonesLineName } from '../../slowzones/types';
+import { getStationDistance } from '../../../common/utils/stations';
+import { convertSecondsToMph } from '../../landing/utils';
+import { useSegmentTripMetricsData } from '../../../common/api/hooks/tripmetrics';
+import { segmentStationPairs } from './segment';
+import { SpeedSegmentLabel } from './SegmentSpeedLabel';
+import { SegmentSpeedTooltip } from './SegmentSpeedTooltip';
 
-interface SlowZonesMapProps extends Pick<React.ComponentProps<typeof LineMap>, 'direction'> {
-  slowZones: SlowZoneAllSlowResponse;
-  speedRestrictions: SpeedRestriction[];
+interface SegmentSpeedMapProps extends Pick<React.ComponentProps<typeof LineMap>, 'direction'> {
   lineName: SlowZonesLineName;
 }
 
@@ -36,12 +36,7 @@ const abbreviateStationName = ({ stationName }) => {
     .replace('North Quincy', 'N. Quincy');
 };
 
-export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
-  lineName,
-  slowZones,
-  direction,
-  speedRestrictions,
-}) => {
+export const SegmentSpeedMap: React.FC<SegmentSpeedMapProps> = ({ lineName, direction }) => {
   const line = useMemo(
     () => Object.values(LINE_OBJECTS).find((obj) => obj.short === lineName)!,
     [lineName]
@@ -54,19 +49,36 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
   const { query } = useDelimitatedRoute();
   const { endDate } = query;
 
+  const { data: segmentData } = useSegmentTripMetricsData({
+    date: endDate,
+    line: lineName,
+  });
+
+  const speedData = useMemo(
+    () =>
+      segmentData?.map((data) => {
+        const intervalDistance = getStationDistance(data.from_id, data.to_id);
+
+        return {
+          ...data,
+          speed: convertSecondsToMph(data.travel_time, intervalDistance),
+        };
+      }) ?? [],
+    [segmentData]
+  );
+
   const { segments } = useMemo(
     () =>
-      segmentSlowZones({
-        slowZones,
-        speedRestrictions,
+      segmentStationPairs({
+        speedPairs: speedData,
         lineName: line.short,
         date: endDate ? new Date(endDate) : new Date(),
         diagram,
       }),
-    [slowZones, speedRestrictions, line, diagram, endDate]
+    [speedData, line, diagram, endDate]
   );
 
-  const getSegmentsForSlowZones = ({ isHorizontal }: { isHorizontal: boolean }) => {
+  const getSegmentsForSpeed = ({ isHorizontal }: { isHorizontal: boolean }) => {
     return segments.map((segment) => {
       return {
         location: segment.segmentLocation,
@@ -76,7 +88,7 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
             boundingSize: isHorizontal ? 15 : 20,
             ...getSegmentLabelOverrides(segment.segmentLocation, isHorizontal),
             content: (size) => (
-              <SlowSegmentLabel
+              <SpeedSegmentLabel
                 isHorizontal={isHorizontal}
                 segment={segment}
                 line={line}
@@ -85,25 +97,29 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
             ),
           },
         ],
-        strokes: Object.entries(segment.slowZones).map(([direction, zones]) => {
+        strokes: Object.entries(segment.segments).map(([direction, zones]) => {
           const offset = direction === '0' ? 1 : -1;
-          const isToday = endDate === TODAY_STRING;
-          const totalDelay = zones.reduce(
-            (sum, zone) => sum + (isToday && zone.latest_delay ? zone.latest_delay : zone.delay),
-            0
-          );
+          const speed = zones.reduce((sum, zone) => sum + zone.speed!, 0) / zones.length;
+
           return {
             offset,
-            stroke: line.color,
+            stroke:
+              speed === 0 || zones.length === 0
+                ? undefined
+                : speed < 20
+                  ? '#c33149'
+                  : speed < 30
+                    ? '#f5ed00'
+                    : '#64b96a',
             strokeWidth: 2,
-            opacity: getSlowZoneOpacity(totalDelay),
+            opacity: 0.35,
           };
         }),
       };
     });
   };
 
-  const renderSlowZonesTooltip = (options: {
+  const renderSegmentSpeedTooltip = (options: {
     segmentLocation: SegmentLocation<true>;
     side: TooltipSide;
   }) => {
@@ -117,7 +133,7 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
         seg.segmentLocation.toStationId === toStationId
     );
     if (slowSegment) {
-      return <SlowZonesTooltip side={side} segment={slowSegment} color={line.color} />;
+      return <SegmentSpeedTooltip side={side} segment={slowSegment} color={line.color} />;
     }
 
     return null;
@@ -128,9 +144,9 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
       diagram={diagram}
       strokeOptions={{ stroke: line.color }}
       direction={direction}
-      getSegments={getSegmentsForSlowZones}
+      getSegments={getSegmentsForSpeed}
       getStationLabel={abbreviateStationName}
-      tooltip={{ snapToSegment: true, maxDistance: 20, render: renderSlowZonesTooltip }}
+      tooltip={{ snapToSegment: true, maxDistance: 20, render: renderSegmentSpeedTooltip }}
     />
   );
 };

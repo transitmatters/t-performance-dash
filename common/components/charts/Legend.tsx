@@ -96,3 +96,47 @@ export const LegendLongTerm: React.FC = () => {
     </div>
   );
 };
+
+export const LegendSpeedMap: React.FC = () => {
+  return (
+    <Disclosure>
+      {({ open }) => (
+        <div className="flex w-full flex-col rounded-md border border-stone-100 text-stone-700 shadow-sm">
+          <Disclosure.Button className="">
+            <div className="flex flex-row items-center justify-between px-4 py-1">
+              <div className="flex w-full flex-row items-baseline gap-2 p-1 text-left text-xs sm:gap-4">
+                <p>
+                  <span className="mr-1 inline-block h-2.5 w-5 rounded-full border border-[#57945B]/35 bg-[#64b96a]/50"></span>
+                  {'Over 30 MPH'}
+                </p>
+                <p>
+                  <span className="mr-1 inline-block h-2.5 w-5 rounded-full border border-[#D9D31E]/35 bg-[#f5ed00]/50"></span>
+                  {'20-30 mph'}
+                </p>
+                <p>
+                  <span
+                    className={`mr-1 inline-block h-2.5 w-5 rounded-full border border-[#A1384A]/35 bg-[#c33149]/50`}
+                  ></span>{' '}
+                  {'Under 20mph'}
+                </p>
+              </div>
+              <FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} className="" />
+            </div>
+          </Disclosure.Button>
+          <Disclosure.Panel
+            className={
+              'grid w-full grid-cols-2 items-baseline p-1 px-4 text-left text-xs lg:flex lg:flex-row lg:gap-4'
+            }
+          >
+            Speed is calculated using the daily median of the travel times between the two stops,
+            divided by the distance between the two stops. These station distances are calculated
+            using official distances from a MBTA dataset. These distances may be different than the
+            distances between signals, and exclude dwells, leading to some higher or lower MPH
+            numbers than reality. These numbers are our best approximation of the speeds of trains
+            on the line.
+          </Disclosure.Panel>
+        </div>
+      )}
+    </Disclosure>
+  );
+};

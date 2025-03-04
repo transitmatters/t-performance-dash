@@ -1,11 +1,10 @@
 import React from 'react';
 
-import type { SlowZoneDirection } from './segment';
-
+import type { SegmentDirection } from '../../../common/types/map';
 import styles from './DirectionIndicator.module.css';
 
 interface DirectionIndicatorProps {
-  direction: SlowZoneDirection;
+  direction: SegmentDirection;
   color: string;
   isHorizontal: boolean;
   size?: number;
