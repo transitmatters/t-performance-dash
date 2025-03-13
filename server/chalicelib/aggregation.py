@@ -80,7 +80,7 @@ def calc_travel_times_by_time(df: pd.DataFrame):
     timedeltas.loc[timedeltas < SERVICE_HR_OFFSET] += datetime.timedelta(days=1)
     df["dep_time_from_epoch"] = timedeltas + datetime.datetime(1970, 1, 1)
 
-    stats = faster_describe(df.groupby("is_peak_day").resample("30T", on="dep_time_from_epoch")["travel_time_sec"])
+    stats = faster_describe(df.groupby("is_peak_day").resample("30min", on="dep_time_from_epoch")["travel_time_sec"])
     stats["dep_time_from_epoch"] = stats["dep_time_from_epoch"].dt.strftime("%Y-%m-%dT%H:%M:%S")
 
     return stats

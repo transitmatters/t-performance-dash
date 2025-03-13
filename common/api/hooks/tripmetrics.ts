@@ -1,7 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
-import type { FetchDeliveredTripMetricsOptions } from '../../types/api';
-import { FIVE_MINUTES } from '../../constants/time';
-import { fetchActualTripsByLine, fetchLandingTripMetrics } from '../tripmetrics';
+import type {
+  FetchDeliveredTripMetricsOptions,
+  FetchSegmentTripMetricsOptions,
+} from '../../types/api';
+import { FIVE_MINUTES, THIRTY_MINUTES } from '../../constants/time';
+import {
+  fetchActualTripsByLine,
+  fetchLandingTripMetrics,
+  fetchSegmentTripMetrics,
+} from '../tripmetrics';
 
 export const useDeliveredTripMetrics = (
   options: FetchDeliveredTripMetricsOptions,
@@ -17,4 +24,16 @@ export const useDeliveredTripMetrics = (
 
 export const useTripMetricsForLanding = () => {
   return useQuery({ queryKey: ['landingTrips'], queryFn: () => fetchLandingTripMetrics() });
+};
+
+export const useSegmentTripMetricsData = (
+  options: FetchSegmentTripMetricsOptions,
+  enabled: boolean = true
+) => {
+  return useQuery({
+    queryKey: ['segmentTripMetrics', options],
+    queryFn: () => fetchSegmentTripMetrics(options),
+    enabled: enabled && !!options.date,
+    staleTime: THIRTY_MINUTES,
+  });
 };
