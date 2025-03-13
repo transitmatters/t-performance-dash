@@ -30,7 +30,10 @@ export const SlowZonesWidget: React.FC = () => {
     <>
       <WidgetDiv className="relative">
         <HomescreenWidgetTitle title="Slow zones" tab="slowzones" />
-        {totalSlowTimeReady ? (
+        {totalSlowTimeReady &&
+        lineShort !== 'Mattapan' &&
+        lineShort !== 'Commuter Rail' &&
+        lineShort !== 'Bus' ? (
           <TotalSlowTimeWrapper
             data={delayTotals.data.data}
             startDateUTC={startDateUTC}

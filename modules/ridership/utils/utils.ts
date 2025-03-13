@@ -1,6 +1,7 @@
 import type { RidershipCount } from '../../../common/types/dataPoints';
 import { PEAK_RIDERSHIP } from '../../../common/constants/baselines';
 import type { BusRoute, CommuterRailRoute, Line } from '../../../common/types/lines';
+import type { RidershipKey } from '../../../common/types/ridership';
 
 export const getRidershipWidgetValues = (
   ridership: RidershipCount[],
@@ -8,7 +9,7 @@ export const getRidershipWidgetValues = (
   busRoute?: BusRoute,
   crRoute?: CommuterRailRoute
 ) => {
-  const routeIndex = crRoute ?? (busRoute ? busRoute.replaceAll('/', '') : line);
+  const routeIndex = (crRoute ?? (busRoute ? busRoute.replaceAll('/', '') : line)) as RidershipKey;
   const average = ridership.reduce((sum, current) => sum + current.count, 0) / ridership.length;
   const peak = ridership.reduce(
     (max, datapoint) => (datapoint.count > max.count ? datapoint : max),
