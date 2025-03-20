@@ -14,6 +14,11 @@ class TripMetricsByLineParams(TypedDict):
     line: str
 
 
+class TripMetricsByLineAndDateParams(TypedDict):
+    date: str | date
+    line: str
+
+
 # Delta values put limits on the numbers of days for which data that can be requested. For each table it is approximately 150 entries.
 AGG_TO_CONFIG_MAP = {
     "daily": {"table_name": "DeliveredTripMetrics", "delta": 150},
@@ -72,6 +77,21 @@ def trip_metrics_by_line(params: TripMetricsByLineParams):
         return aggregate_actual_trips(actual_trips, params["agg"], params["start_date"])
     # If querying for weekly/monthly data, can just return the query.
     return dynamo.query_agg_trip_metrics(start_date, end_date, config["table_name"], line)
+
+
+def query_speed_segment(params: TripMetricsByLineAndDateParams):
+    try:
+        date = params["date"]
+        line = params["line"]
+        if line not in ["Red", "Blue", "Green", "Orange", "Mattapan"]:
+            raise BadRequestError("Invalid Line key.")
+    except KeyError:
+        raise BadRequestError("Missing or invalid parameters.")
+    actual_trips = dynamo.query_segment_tts_on_route(line, date)
+    for trip in actual_trips:
+        if "date_stop_pair" in trip:
+            del trip["date_stop_pair"]
+    return actual_trips
 
 
 def is_invalid_range(start_date, end_date, max_delta):

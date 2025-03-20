@@ -10,9 +10,15 @@ import concurrent.futures
 dynamodb = boto3.resource("dynamodb")
 
 
-def query_daily_trips_on_route(table_name: str, route, start_date: str | date, end_date: str | date):
+def query_daily_trips_on_route(table_name: str, route: str, start_date: str | date, end_date: str | date):
     table = dynamodb.Table(table_name)
     response = table.query(KeyConditionExpression=Key("route").eq(route) & Key("date").between(start_date, end_date))
+    return ddb_json.loads(response["Items"])
+
+
+def query_segment_tts_on_route(route: str, date: str | date):
+    table = dynamodb.Table("SegmentTravelTimes")
+    response = table.query(KeyConditionExpression=Key("route").eq(route) & Key("date_stop_pair").begins_with(date))
     return ddb_json.loads(response["Items"])
 
 
