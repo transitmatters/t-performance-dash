@@ -33,7 +33,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
           Math.floor(datapoint[MetricFieldKeys.headwayTimeSec] / 60) + 0.5
       ) || [];
     const max = Math.max(...values);
-    const headwayBuckets = {};
+    const headwayBuckets: { [key in number]: number } = {};
     for (let i = 0.5; i <= max; i++) {
       headwayBuckets[i] = 0;
     }
@@ -45,7 +45,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
 
   // headway bucket => % [of trains in that bucket, difference from benchmark]
   const headwayBucketPercentages: Record<string, HeadwayTooltipData> = useMemo(() => {
-    const headwayBucketPercentages = {};
+    const headwayBucketPercentages: { [key in string]: { pct_trains: number } } = {};
     Object.entries(dataObject).forEach(([k, v]) => {
       headwayBucketPercentages[k] = {
         pct_trains: Math.floor((100 * v) / headways.length),

@@ -1,28 +1,32 @@
-import type { BusRouteId, CommuterRailRoute, Line } from '../types/lines';
+import type { Line } from '../types/lines';
+import type { RidershipKey } from '../types/ridership';
 
 // These are manually chosen based off the peak *monthly* scheduled service. Selecting highest value "
-export const PEAK_SCHEDULED_SERVICE = {
+export const PEAK_SCHEDULED_SERVICE: { [key in Line | 'DEFAULT']: number } = {
   'line-red': 223,
   'line-orange': 161,
   'line-blue': 186,
   'line-green': 506,
   'line-mattapan': 159,
+  'line-commuter-rail': 0,
   'line-bus': 0,
   DEFAULT: 0,
 };
 
-export const PEAK_SPEED = {
+export const PEAK_SPEED: { [key in Line | 'DEFAULT']: number } = {
   'line-red': 24.9,
   'line-orange': 20.6,
   'line-blue': 22.7,
   'line-green': 13.6,
   'line-mattapan': 24.3,
+  'line-commuter-rail': 0,
   'line-bus': 0,
+  DEFAULT: 0,
 };
 
 // These are manually chosen based off the peak value. Need to be updated when all data is generated.
 export const PEAK_RIDERSHIP: {
-  [key in Exclude<Line, 'line-bus'> | BusRouteId | CommuterRailRoute | 'DEFAULT']: number;
+  [key in RidershipKey]: number;
 } = {
   'line-red': 213703,
   'line-orange': 169578,
