@@ -26,6 +26,7 @@ ROUTES_CR = [
     "CR-Kingston",
     "CR-Lowell",
     "CR-Middleborough",
+    "CR-NewBedford",
     "CR-Needham",
     "CR-Newburyport",
     "CR-Providence",
@@ -138,6 +139,11 @@ for LINE_KEY in ROUTES_CR:
             "stations": stops_formatted,
         }
     }
+
+    if LINE_KEY == "CR-NewBedford":
+        output[LINE_KEY]["service_start"] = "2025-03-24"
+    if LINE_KEY == "CR-Middleborough":
+        output[LINE_KEY]["service_end"] = "2025-03-23"
 
     out_json = json.dumps(output, indent=2)
     with open("../common/constants/cr_constants/{}.json".format(LINE_KEY.lower()), "w+") as f:

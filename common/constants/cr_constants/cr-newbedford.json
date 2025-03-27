@@ -1,0 +1,203 @@
+{
+  "CR-NewBedford": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "service_start": "2025-03-24",
+    "stations": [
+      {
+        "stop_name": "New Bedford",
+        "station": "place-NBM-0546",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": ["CR-NewBedford_1_NBM-0546-S"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Church Street",
+        "station": "place-NBM-0523",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["CR-NewBedford_0_NBM-0523-S"],
+          "1": ["CR-NewBedford_1_NBM-0523-S"]
+        }
+      },
+      {
+        "stop_name": "Fall River Depot",
+        "station": "place-FRS-0109",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": [],
+          "1": ["CR-NewBedford_1_FRS-0109-S"]
+        }
+      },
+      {
+        "stop_name": "Freetown",
+        "station": "place-FRS-0054",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": ["CR-NewBedford_0_FRS-0054-S"],
+          "1": ["CR-NewBedford_1_FRS-0054-S"]
+        }
+      },
+      {
+        "stop_name": "East Taunton",
+        "station": "place-NBM-0374",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": ["CR-NewBedford_0_NBM-0374-01", "CR-NewBedford_0_NBM-0374-02"],
+          "1": ["CR-NewBedford_1_NBM-0374-01"]
+        }
+      },
+      {
+        "stop_name": "Middleborough",
+        "station": "place-MBS-0350",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": ["CR-NewBedford_0_MBS-0350-S"],
+          "1": ["CR-NewBedford_1_MBS-0350-S"]
+        }
+      },
+      {
+        "stop_name": "Bridgewater",
+        "station": "place-MM-0277",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": ["CR-NewBedford_0_MM-0277-S"],
+          "1": ["CR-NewBedford_1_MM-0277-S"]
+        }
+      },
+      {
+        "stop_name": "Campello",
+        "station": "place-MM-0219",
+        "branches": null,
+        "order": 8,
+        "stops": {
+          "0": ["CR-NewBedford_0_MM-0219-S"],
+          "1": ["CR-NewBedford_1_MM-0219-S"]
+        }
+      },
+      {
+        "stop_name": "Brockton",
+        "station": "place-MM-0200",
+        "branches": null,
+        "order": 9,
+        "stops": {
+          "0": ["CR-NewBedford_0_MM-0200-S"],
+          "1": ["CR-NewBedford_1_MM-0200-CS"]
+        }
+      },
+      {
+        "stop_name": "Montello",
+        "station": "place-MM-0186",
+        "branches": null,
+        "order": 10,
+        "stops": {
+          "0": ["CR-NewBedford_0_MM-0186-S"],
+          "1": ["CR-NewBedford_1_MM-0186-CS"]
+        }
+      },
+      {
+        "stop_name": "Holbrook/Randolph",
+        "station": "place-MM-0150",
+        "branches": null,
+        "order": 11,
+        "stops": {
+          "0": ["CR-NewBedford_0_MM-0150-S"],
+          "1": ["CR-NewBedford_1_MM-0150-S"]
+        }
+      },
+      {
+        "stop_name": "Braintree",
+        "station": "place-brntn",
+        "branches": null,
+        "order": 12,
+        "stops": {
+          "0": ["CR-NewBedford_0_MM-0109-S"],
+          "1": ["CR-NewBedford_1_MM-0109-S"]
+        }
+      },
+      {
+        "stop_name": "Quincy Center",
+        "station": "place-qnctr",
+        "branches": null,
+        "order": 13,
+        "stops": {
+          "0": ["CR-NewBedford_0_MM-0079-S"],
+          "1": ["CR-NewBedford_1_MM-0079-S"]
+        }
+      },
+      {
+        "stop_name": "JFK/UMass",
+        "station": "place-jfk",
+        "branches": null,
+        "order": 14,
+        "stops": {
+          "0": [],
+          "1": ["CR-NewBedford_1_MM-0023-S"]
+        }
+      },
+      {
+        "stop_name": "South Station",
+        "station": "place-sstat",
+        "branches": null,
+        "order": 15,
+        "stops": {
+          "0": [
+            "CR-NewBedford_0_70079",
+            "CR-NewBedford_0_70080",
+            "CR-NewBedford_0_74611",
+            "CR-NewBedford_0_74617",
+            "CR-NewBedford_0_NEC-2287",
+            "CR-NewBedford_0_NEC-2287-01",
+            "CR-NewBedford_0_NEC-2287-02",
+            "CR-NewBedford_0_NEC-2287-03",
+            "CR-NewBedford_0_NEC-2287-04",
+            "CR-NewBedford_0_NEC-2287-05",
+            "CR-NewBedford_0_NEC-2287-06",
+            "CR-NewBedford_0_NEC-2287-07",
+            "CR-NewBedford_0_NEC-2287-08",
+            "CR-NewBedford_0_NEC-2287-09",
+            "CR-NewBedford_0_NEC-2287-10",
+            "CR-NewBedford_0_NEC-2287-11",
+            "CR-NewBedford_0_NEC-2287-12",
+            "CR-NewBedford_0_NEC-2287-13",
+            "CR-NewBedford_0_NEC-2287-B"
+          ],
+          "1": [
+            "CR-NewBedford_1_70079",
+            "CR-NewBedford_1_70080",
+            "CR-NewBedford_1_74611",
+            "CR-NewBedford_1_74617",
+            "CR-NewBedford_1_NEC-2287",
+            "CR-NewBedford_1_NEC-2287-01",
+            "CR-NewBedford_1_NEC-2287-02",
+            "CR-NewBedford_1_NEC-2287-03",
+            "CR-NewBedford_1_NEC-2287-04",
+            "CR-NewBedford_1_NEC-2287-05",
+            "CR-NewBedford_1_NEC-2287-06",
+            "CR-NewBedford_1_NEC-2287-07",
+            "CR-NewBedford_1_NEC-2287-08",
+            "CR-NewBedford_1_NEC-2287-09",
+            "CR-NewBedford_1_NEC-2287-10",
+            "CR-NewBedford_1_NEC-2287-11",
+            "CR-NewBedford_1_NEC-2287-12",
+            "CR-NewBedford_1_NEC-2287-13",
+            "CR-NewBedford_1_NEC-2287-B"
+          ]
+        }
+      }
+    ]
+  }
+}

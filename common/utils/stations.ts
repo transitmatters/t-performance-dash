@@ -1,9 +1,10 @@
 import type { BusRoute, CommuterRailRoute, Line, LineShort } from '../types/lines';
-import { isLineMap, type Station } from '../types/stations';
+import { type Station } from '../types/stations';
 import type { Location } from '../types/charts';
 import type { Direction, Distance } from '../types/dataPoints';
 import { stations, rtStations, busStations, crStations } from '../constants/stations';
 import { station_distances } from '../constants/station_distances';
+import type { Tab } from '../types/router';
 
 export const optionsForField = (
   type: 'from' | 'to',
@@ -162,11 +163,29 @@ export const getLocationDetails = (
   };
 };
 
-export const getStationKeysFromStations = (line: LineShort): string[] => {
-  const lineStations = stations[line].stations;
-  if (isLineMap(lineStations)) {
-    return lineStations.stations.map((station: Station) => station.station);
-  } else {
-    return lineStations.map((station: Station) => station.station);
+export const getStationKeysFromStations = (
+  line: LineShort,
+  route?: BusRoute | CommuterRailRoute
+): string[] => {
+  if (line === 'Bus' || line === 'Commuter Rail') {
+    if (route) {
+      return stations[line][route].stations.map((station: Station) => station.station);
+    }
+    return [];
   }
+
+  const lineStations = stations[line].stations;
+  return lineStations.map((station: Station) => station.station);
+};
+
+export const getMinMaxDatesForRoute = (
+  tab: Tab,
+  route?: BusRoute | CommuterRailRoute
+): { minDate: string | undefined; maxDate: string | undefined } => {
+  if ((tab === 'Commuter Rail' || tab === 'Bus') && route) {
+    const minDate = stations[tab][route].service_start;
+    const maxDate = stations[tab][route].service_end;
+    return { minDate, maxDate };
+  }
+  return { minDate: undefined, maxDate: undefined };
 };

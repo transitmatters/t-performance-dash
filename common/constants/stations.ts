@@ -1,4 +1,5 @@
 /* eslint-disable import/max-dependencies */
+import type { BusRoute, CommuterRailRoute } from '../types/lines';
 import { COMMUTER_RAIL_ROUTES, type LineShort } from '../types/lines';
 import type { LineMap } from '../types/stations';
 import stations_json from './stations.json';
@@ -74,6 +75,7 @@ import cr_greenbush from './cr_constants/cr-greenbush.json';
 import cr_fairmount from './cr_constants/cr-fairmount.json';
 import cr_kingston from './cr_constants/cr-kingston.json';
 import cr_middleborough from './cr_constants/cr-middleborough.json';
+import cr_newbedford from './cr_constants/cr-newbedford.json';
 import cr_newburyport from './cr_constants/cr-newburyport.json';
 import cr_needham from './cr_constants/cr-needham.json';
 import cr_providence from './cr_constants/cr-providence.json';
@@ -81,7 +83,7 @@ import cr_providence from './cr_constants/cr-providence.json';
 export const rtStations: { [key in Exclude<LineShort, 'Bus' | 'Commuter Rail'>]: LineMap } =
   stations_json;
 
-export const busStations: { [key: string]: LineMap } = {
+export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_1,
   ...bus_4,
   ...bus_7,
@@ -146,7 +148,7 @@ export const busStations: { [key: string]: LineMap } = {
   ...bus_220_221_222,
 };
 
-export const crStations: { [key: string]: LineMap } = {
+export const crStations: { [key in CommuterRailRoute]: LineMap } = {
   ...cr_lowell,
   ...cr_fitchburg,
   ...cr_franklin,
@@ -156,6 +158,7 @@ export const crStations: { [key: string]: LineMap } = {
   ...cr_fairmount,
   ...cr_kingston,
   ...cr_middleborough,
+  ...cr_newbedford,
   ...cr_newburyport,
   ...cr_needham,
   ...cr_providence,

@@ -27,5 +27,7 @@ export const isLineMap = (obj: LineMap | Station[]): obj is LineMap => {
 export interface LineMap {
   type: string;
   direction: Direction;
+  service_start?: string;
+  service_end?: string;
   stations: Station[];
 }
