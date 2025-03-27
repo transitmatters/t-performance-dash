@@ -4,6 +4,7 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import ChartTrendline from 'chartjs-plugin-trendline';
 import type { DataPoint } from '../../types/dataPoints';
 import { CHART_COLORS, COLORS } from '../../constants/colors';
 import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
@@ -100,12 +101,38 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
 
   const multiplier = units === 'Minutes' ? 1 / 60 : 1;
   const benchmarkDataFormatted = benchmarkData
-    .map((datapoint) => (datapoint ? (datapoint * multiplier).toFixed(2) : null))
+    .map((datapoint) => (datapoint ? parseFloat((datapoint * multiplier).toFixed(2)) : null))
     .filter((datapoint) => datapoint !== null);
 
   const convertedData = data.map((datapoint) =>
-    ((datapoint[metricField] as number) * multiplier).toFixed(2)
+    parseFloat(((datapoint[metricField] as number) * multiplier).toFixed(2))
   );
+
+  function calculateTrendSlope(data) {
+    if (!data || data.length < 2) {
+      return 0; // Not enough data points to calculate a trend
+    }
+
+    let sumX = 0;
+    let sumY = 0;
+    let sumXY = 0;
+    let sumX2 = 0;
+    const n = data.length;
+
+    for (let i = 0; i < n; i++) {
+      const x = i + 1; // Assuming x values are sequential
+      const y = data[i];
+
+      sumX += x;
+      sumY += y;
+      sumXY += x * y;
+      sumX2 += x * x;
+    }
+
+    const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+
+    return Math.ceil(slope * 100) / 100;
+  }
 
   return (
     <ChartBorder>
@@ -138,6 +165,12 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 pointRadius: 3,
                 pointHitRadius: 10,
                 data: convertedData,
+                trendlineLinear: {
+                  colorMin: 'grey',
+                  colorMax: 'grey',
+                  lineStyle: 'dashed',
+                  width: 1,
+                },
               },
               {
                 label: `Benchmark MBTA`,
@@ -251,6 +284,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               },
             },
             ChartjsPluginWatermark,
+            ChartTrendline,
           ]}
         />
       </ChartDiv>
