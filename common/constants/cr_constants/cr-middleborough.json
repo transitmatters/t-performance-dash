@@ -5,6 +5,7 @@
       "0": "outbound",
       "1": "inbound"
     },
+    "service_end": "2025-03-23",
     "stations": [
       {
         "stop_name": "Middleborough/Lakeville",

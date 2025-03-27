@@ -108,7 +108,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
           value={startDate ?? date}
           key={'start'}
           placeholder={'mm/dd/yyyy'}
-          options={getDatePickerOptions(tab, page)}
+          options={getDatePickerOptions(tab, page, query.busRoute ?? query.crRoute)}
           onChange={(dates, currentDateString) => {
             if (isSingleDate) {
               handleDateChange(currentDateString);
@@ -135,7 +135,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
               value={endDate}
               key={'end'}
               placeholder={'mm/dd/yyyy'}
-              options={getDatePickerOptions(tab, page)}
+              options={getDatePickerOptions(tab, page, query.busRoute ?? query.crRoute)}
               onChange={(dates, currentDateString) => {
                 handleEndDateChange(currentDateString);
               }}

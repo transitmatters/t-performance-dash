@@ -9,6 +9,8 @@ import type {
   SingleDateParams,
 } from '../components/inputs/DateSelection/types/DateSelectionTypes';
 import type { Tab } from '../types/router';
+import type { BusRoute, CommuterRailRoute } from '../types/lines';
+import { getMinMaxDatesForRoute } from '../utils/stations';
 import type { Page } from './pages';
 
 dayjs.extend(utc);
@@ -50,22 +52,32 @@ export const getESTDayjs = (date: string) => {
   return dayjs(date).tz(est);
 };
 
-export const getDatePickerOptions = (tab: Tab, page?: Page) => {
+export const getDatePickerOptions = (
+  tab: Tab,
+  page?: Page,
+  route?: CommuterRailRoute | BusRoute
+) => {
+  const { minDate, maxDate } = getMinMaxDatesForRoute(tab, route);
+
   if (tab === 'Commuter Rail') {
     if (page === 'ridership') {
       return {
         ...FLAT_PICKER_OPTIONS[tab],
-        minDate: COMMUTER_RAIL_RIDERSHIP_MIN_DATE,
-        maxDate: TODAY_STRING,
+        minDate: minDate ?? COMMUTER_RAIL_RIDERSHIP_MIN_DATE,
+        maxDate: maxDate ?? TODAY_STRING,
       };
     }
   }
 
-  return FLAT_PICKER_OPTIONS[tab];
+  return {
+    ...FLAT_PICKER_OPTIONS[tab],
+    minDate: minDate ?? FLAT_PICKER_OPTIONS[tab].minDate,
+    maxDate: maxDate ?? FLAT_PICKER_OPTIONS[tab].maxDate,
+  };
 };
 
 const FLAT_PICKER_OPTIONS: {
-  [key in Tab]: DateTimePickerProps['options'];
+  [key in Tab]: DateTimePickerProps['options'] & { minDate: string; maxDate: string };
 } = {
   Subway: {
     enableTime: false,
