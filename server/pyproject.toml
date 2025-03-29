@@ -14,14 +14,17 @@ pytz = "2024.2"
 boto3 = "~1.35.10"
 numpy = "1.26.4"
 pandas = "~2.2.3"
-datadog_lambda = "~6.104.0"
+datadog_lambda = "~6.106.0"
 dynamodb-json = "^1.4.2"
+chalice-spec = "^0.7.0"
+pydantic = "^2.11.1"
+apispec = "^6.8.1"
 
 [tool.poetry.group.dev.dependencies]
 pip = ">=24.0"
-chalice = "1.31.3"
-flake8 = "~7.1.1"
-black = "~24.10.0"
+chalice = "1.31.4"
+flake8 = "~7.2.0"
+black = "~25.1.0"
 
 [tool.poetry.requires-plugins]
 poetry-plugin-export = "^1.9.0"
