@@ -454,25 +454,6 @@
           "/api"
         ]
       }
-    },
-    "/api/docs": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/APIDocsResponse"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "/api"
-        ]
-      }
     }
   },
   "info": {
@@ -1082,38 +1063,6 @@
           "predictions"
         ],
         "title": "TimePredictionResponse",
-        "type": "object"
-      },
-      "APIDocsResponse": {
-        "additionalProperties": true,
-        "properties": {
-          "openapi": {
-            "title": "Openapi",
-            "type": "string"
-          },
-          "info": {
-            "additionalProperties": true,
-            "title": "Info",
-            "type": "object"
-          },
-          "paths": {
-            "additionalProperties": true,
-            "title": "Paths",
-            "type": "object"
-          },
-          "components": {
-            "additionalProperties": true,
-            "title": "Components",
-            "type": "object"
-          }
-        },
-        "required": [
-          "openapi",
-          "info",
-          "paths",
-          "components"
-        ],
-        "title": "APIDocsResponse",
         "type": "object"
       }
     }

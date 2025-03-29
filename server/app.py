@@ -280,29 +280,3 @@ def get_time_predictions():
         route_id=route_id,
     )
     return json.dumps(response)
-
-
-@app.route("/api/docs", cors=cors_config, docs=Docs(response=models.APIDocsResponse))
-def get_docs():
-    try:
-        return app.spec.to_dict()
-    except AttributeError:
-        # When running in local dev mode with CustomLocalChalice, spec isn't available
-        # Return a minimal OpenAPI spec that can be expanded in production
-        return {
-            "openapi": "3.0.0",
-            "info": {
-                "title": "Data Dashboard API",
-                "version": "1.0.0",
-                "description": "TransitMatters Data Dashboard API.",
-            },
-            "paths": {
-                "/api/docs": {
-                    "get": {
-                        "summary": "Get API documentation",
-                        "description": "This is a minimal version of the API documentation for local development. Full documentation is available in production.",
-                        "responses": {"200": {"description": "Successful response with OpenAPI specification"}},
-                    }
-                },
-            },
-        }
