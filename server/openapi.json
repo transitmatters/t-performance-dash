@@ -775,49 +775,6 @@
         "type": "object"
       },
       "GetScheduledServiceResponse": {
-        "$defs": {
-          "ByDayKindServiceLevels": {
-            "properties": {
-              "date": {
-                "title": "Date",
-                "type": "string"
-              },
-              "service_levels": {
-                "items": {
-                  "type": "integer"
-                },
-                "title": "Service Levels",
-                "type": "array"
-              }
-            },
-            "required": [
-              "date",
-              "service_levels"
-            ],
-            "title": "ByDayKindServiceLevels",
-            "type": "object"
-          },
-          "ServiceLevelsByDayKind": {
-            "properties": {
-              "weekday": {
-                "$ref": "#/components/schemas/ByDayKindServiceLevels"
-              },
-              "saturday": {
-                "$ref": "#/components/schemas/ByDayKindServiceLevels"
-              },
-              "sunday": {
-                "$ref": "#/components/schemas/ByDayKindServiceLevels"
-              }
-            },
-            "required": [
-              "weekday",
-              "saturday",
-              "sunday"
-            ],
-            "title": "ServiceLevelsByDayKind",
-            "type": "object"
-          }
-        },
         "properties": {
           "start_date_service_levels": {
             "$ref": "#/components/schemas/ServiceLevelsByDayKind"
@@ -882,26 +839,6 @@
         "type": "object"
       },
       "RidershipResponse": {
-        "$defs": {
-          "RidershipEntry": {
-            "properties": {
-              "date": {
-                "title": "Date",
-                "type": "string"
-              },
-              "count": {
-                "title": "Count",
-                "type": "integer"
-              }
-            },
-            "required": [
-              "date",
-              "count"
-            ],
-            "title": "RidershipEntry",
-            "type": "object"
-          }
-        },
         "additionalProperties": true,
         "properties": {
           "data": {
@@ -1063,6 +1000,65 @@
           "predictions"
         ],
         "title": "TimePredictionResponse",
+        "type": "object"
+      },
+      "ByDayKindServiceLevels": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "service_levels": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Service Levels",
+            "type": "array"
+          }
+        },
+        "required": [
+          "date",
+          "service_levels"
+        ],
+        "title": "ByDayKindServiceLevels",
+        "type": "object"
+      },
+      "ServiceLevelsByDayKind": {
+        "properties": {
+          "weekday": {
+            "$ref": "#/components/schemas/ByDayKindServiceLevels"
+          },
+          "saturday": {
+            "$ref": "#/components/schemas/ByDayKindServiceLevels"
+          },
+          "sunday": {
+            "$ref": "#/components/schemas/ByDayKindServiceLevels"
+          }
+        },
+        "required": [
+          "weekday",
+          "saturday",
+          "sunday"
+        ],
+        "title": "ServiceLevelsByDayKind",
+        "type": "object"
+      },
+      "RidershipEntry": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "date",
+          "count"
+        ],
+        "title": "RidershipEntry",
         "type": "object"
       }
     }
