@@ -9,7 +9,7 @@ interface BnrdBannerProps {
 }
 
 const BNRD_TEXT =
-  'This route was upgraded as part of Bus Network Redesign (BNRD) Phase 1, with improved frequency and new connections.';
+  'This route was upgraded as part of Bus Network Redesign (BNRD) Phase 1, with service every 15 minutes or better during service hours.';
 
 export const BnrdBanner: React.FunctionComponent<BnrdBannerProps> = ({ busRoute }) => {
   if (!busRoute) {
@@ -17,11 +17,20 @@ export const BnrdBanner: React.FunctionComponent<BnrdBannerProps> = ({ busRoute 
   }
 
   const getText = () => {
-    if (busRoute === '86' || busRoute === '86-legacy') {
-      return 'This route was shortened to run between Reservoir and Harvard Square, with improved midday, evening, and weekend service.';
+    switch (busRoute) {
+      case '86':
+        return 'This route was shortened to run between Reservoir and Harvard Square, with improved midday, evening, and weekend service.';
+      case '104':
+        return 'This route now offers new crosstown service between Malden Center and Logan Airport, with buses every 15 minutes or better.';
+      case '109':
+        return 'This route now extends to Harvard Square and runs more frequently, with service every 15 minutes or better.';
+      case '110':
+        return 'This route now offers improved frequency between Wellington and Wonderland, with service every 15 minutes.';
+      case '116':
+        return 'This route now combines former Routes 116/117 with improved frequency, running every 15 minutes or better.';
+      default:
+        return BNRD_TEXT;
     }
-
-    return BNRD_TEXT;
   };
 
   if (isBNRDRoute(busRoute)) {
