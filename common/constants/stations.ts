@@ -64,6 +64,11 @@ import bus_104_109 from './bus_constants/104-109.json';
 import bus_61_70_170 from './bus_constants/61-70-170.json';
 import bus_114_116_117 from './bus_constants/114-116-117.json';
 import bus_220_221_222 from './bus_constants/220-221-222.json';
+import bus_110 from './bus_constants/110.json';
+import bus_104 from './bus_constants/104.json';
+import bus_109 from './bus_constants/109.json';
+import bus_116 from './bus_constants/116.json';
+import legacy_86 from './bus_constants/86-legacy.json';
 
 import cr_lowell from './cr_constants/cr-lowell.json';
 import cr_fitchburg from './cr_constants/cr-fitchburg.json';
@@ -126,7 +131,9 @@ export const busStations: { [key: string]: LineMap } = {
   ...bus_80,
   ...bus_83,
   ...bus_85,
+  // 86 changed during BNRD
   ...bus_86,
+  ...legacy_86,
   ...bus_87,
   ...bus_88,
   ...bus_89,
@@ -144,6 +151,10 @@ export const busStations: { [key: string]: LineMap } = {
   ...bus_61_70_170,
   ...bus_114_116_117,
   ...bus_220_221_222,
+  ...bus_110,
+  ...bus_104,
+  ...bus_109,
+  ...bus_116,
 };
 
 export const crStations: { [key: string]: LineMap } = {

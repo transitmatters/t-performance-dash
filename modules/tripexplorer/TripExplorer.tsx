@@ -16,6 +16,7 @@ import { PokeySchleppieAwardBanner } from '../../common/components/notices/Pokey
 import { CommuterRailDataNotice } from '../../common/components/notices/CommuterRailDataNotice';
 import { useAlertStore } from './AlertStore';
 import { TripGraphs } from './TripGraphs';
+import { BnrdBanner } from '../../common/components/notices/BnrdBanner';
 
 export const TripExplorer = () => {
   const {
@@ -44,6 +45,7 @@ export const TripExplorer = () => {
         <BetaDataNotice />
         {alertsForModal?.length ? <AlertNotice /> : null}
         <PokeySchleppieAwardBanner busRoute={busRoute} />
+        <BnrdBanner busRoute={busRoute} />
         <TripGraphs fromStation={fromStation} toStation={toStation} />
         <div>
           <GobbleDataNotice />

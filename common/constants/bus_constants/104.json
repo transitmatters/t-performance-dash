@@ -1,0 +1,109 @@
+{
+    "104": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Malden Center Station",
+                "branches": null,
+                "station": "malst",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "104-1-53270"
+                    ],
+                    "0": [
+                        "104-0-53270"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Ferry Street @ Cross Street",
+                "branches": null,
+                "station": "fercr",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "104-1-5347"
+                    ],
+                    "0": [
+                        "104-0-5361"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Glendale Square",
+                "branches": null,
+                "station": "glndl",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "104-1-5488"
+                    ],
+                    "0": [
+                        "104-0-53541"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Everett Square",
+                "branches": null,
+                "station": "evrtc",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "104-1-5496"
+                    ],
+                    "0": [
+                        "104-0-5695"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Spruce Street & Everett",
+                "branches": null,
+                "station": "speve",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "104-1-15055"
+                    ],
+                    "0": [
+                        "104-0-5648"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Bellingham Square (Chelsea)",
+                "branches": null,
+                "station": "belsq",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "104-1-5605"
+                    ],
+                    "0": [
+                        "104-0-5615"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Airport Station Busway",
+                "branches": null,
+                "station": "airbs",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "104-1-7096"
+                    ],
+                    "0": [
+                        "104-0-7096"
+                    ]
+                }
+            }
+        ]
+    }
+}
