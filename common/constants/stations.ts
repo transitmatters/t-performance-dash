@@ -1,7 +1,7 @@
 /* eslint-disable import/max-dependencies */
 import type { BusRoute, CommuterRailRoute } from '../types/lines';
 import { COMMUTER_RAIL_ROUTES, type LineShort } from '../types/lines';
-import type { LineMap } from '../types/stations';
+import type { LineMap, StationMap } from '../types/stations';
 import stations_json from './stations.json';
 import bus_1 from './bus_constants/1.json';
 import bus_4 from './bus_constants/4.json';
@@ -164,7 +164,11 @@ export const crStations: { [key in CommuterRailRoute]: LineMap } = {
   ...cr_providence,
 };
 
-export const stations = { ...rtStations, Bus: busStations, 'Commuter Rail': crStations };
+export const stations: StationMap = {
+  ...rtStations,
+  Bus: busStations,
+  'Commuter Rail': crStations,
+};
 
 export const getBusRoutes = (): string[] => {
   return Object.keys(busStations);
