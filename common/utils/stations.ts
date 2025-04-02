@@ -6,6 +6,33 @@ import { stations, rtStations, busStations, crStations } from '../constants/stat
 import { station_distances } from '../constants/station_distances';
 import type { Tab } from '../types/router';
 
+// Type guards for line types
+const isBusLine = (line: LineShort): line is 'Bus' => line === 'Bus';
+const isCommuterRailLine = (line: LineShort): line is 'Commuter Rail' => line === 'Commuter Rail';
+const isRapidTransitLine = (line: LineShort): line is Exclude<LineShort, 'Bus' | 'Commuter Rail'> =>
+  !isBusLine(line) && !isCommuterRailLine(line);
+
+// Helper function to safely get stations for a line
+const getStationsForLine = (
+  line: LineShort,
+  route?: BusRoute | CommuterRailRoute
+): Station[] | undefined => {
+  if (isBusLine(line) && route) {
+    return stations.Bus[route]?.stations;
+  }
+
+  if (isCommuterRailLine(line) && route) {
+    return stations['Commuter Rail'][route]?.stations;
+  }
+
+  // For rapid transit lines (Red, Orange, Green, Blue, Mattapan)
+  if (isRapidTransitLine(line)) {
+    return rtStations[line]?.stations;
+  }
+
+  return undefined;
+};
+
 export const optionsForField = (
   type: 'from' | 'to',
   line: LineShort,
@@ -35,7 +62,7 @@ export const optionsStation = (
     return undefined;
   }
 
-  if (line === 'Bus') {
+  if (isBusLine(line)) {
     if (!busRoute || !stations[line][busRoute]) {
       return undefined;
     }
@@ -43,7 +70,7 @@ export const optionsStation = (
     return stations[line][busRoute].stations.sort((a, b) => a.order - b.order);
   }
 
-  if (line === 'Commuter Rail') {
+  if (isCommuterRailLine(line)) {
     if (!crRoute || !stations[line][crRoute]) {
       return undefined;
     }
@@ -51,7 +78,12 @@ export const optionsStation = (
     return stations[line][crRoute].stations.sort((a, b) => a.order - b.order);
   }
 
-  return stations[line].stations.sort((a, b) => a.order - b.order);
+  // Fixed: Access rtStations directly for rapid transit lines
+  if (isRapidTransitLine(line)) {
+    return rtStations[line].stations.sort((a, b) => a.order - b.order);
+  }
+
+  return undefined;
 };
 
 const createStationIndex = () => {
@@ -99,8 +131,9 @@ export const getStationById = (stationStopId: string) => {
  * We need the line to get the correct station when lines share ids (Ex: Ashmont)
  */
 export const getParentStationForStopId = (stopId: string, line?: LineShort) => {
-  if (line && line !== 'Bus' && line !== 'Commuter Rail') {
-    const station = stations[line].stations.find(
+  if (line && isRapidTransitLine(line)) {
+    const stationsData = getStationsForLine(line);
+    const station = stationsData?.find(
       (station: Station) =>
         station.stops['0'].includes(stopId) || station.stops['1'].includes(stopId)
     );
@@ -167,15 +200,12 @@ export const getStationKeysFromStations = (
   line: LineShort,
   route?: BusRoute | CommuterRailRoute
 ): string[] => {
-  if (line === 'Bus' || line === 'Commuter Rail') {
-    if (route) {
-      return stations[line][route].stations.map((station: Station) => station.station);
-    }
+  const stationsData = getStationsForLine(line, route);
+  if (!stationsData) {
     return [];
   }
 
-  const lineStations = stations[line].stations;
-  return lineStations.map((station: Station) => station.station);
+  return stationsData.map((station: Station) => station.station);
 };
 
 export const getMinMaxDatesForRoute = (
