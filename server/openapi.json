@@ -1,0 +1,1066 @@
+{
+  "paths": {
+    "/api/healthcheck": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthcheckResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    },
+    "/api/headways/{user_date}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeadwayResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "user_date",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }
+      ]
+    },
+    "/api/dwells/{user_date}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DwellResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "user_date",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }
+      ]
+    },
+    "/api/traveltimes/{user_date}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TravelTimeResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "user_date",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }
+      ]
+    },
+    "/api/alerts/{user_date}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertsRouteResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "user_date",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }
+      ]
+    },
+    "/api/aggregate/traveltimes": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TravelTimeAggregateResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    },
+    "/api/aggregate/traveltimes2": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TravelTimeAggregateResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    },
+    "/api/aggregate/headways": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeadwaysAggregateResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    },
+    "/api/aggregate/dwells": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DwellsAggregateResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    },
+    "/api/git_id": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GitIdResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    },
+    "/api/alerts": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertsRouteResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    },
+    "/api/linedelays": {
+      "get": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlertDelaysByLineParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LineDelaysResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    },
+    "/api/tripmetrics": {
+      "get": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TripMetricsByLineParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TripMetricsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    },
+    "/api/scheduledservice": {
+      "get": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduledServiceParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetScheduledServiceResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    },
+    "/api/ridership": {
+      "get": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RidershipParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RidershipResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    },
+    "/api/facilities": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Facility"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    },
+    "/api/speed_restrictions": {
+      "get": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpeedRestrictionsParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpeedRestrictionsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    },
+    "/api/service_hours": {
+      "get": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceHoursParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceHoursResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    },
+    "/api/time_predictions": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimePredictionResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Data Dashboard API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.0.0",
+  "components": {
+    "schemas": {
+      "HealthcheckResponse": {
+        "properties": {
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "failed_checks_sum": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Failed Checks Sum"
+          },
+          "failed_checks": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Failed Checks"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "HealthcheckResponse",
+        "type": "object"
+      },
+      "HeadwayResponse": {
+        "additionalProperties": true,
+        "properties": {
+          "headways": {
+            "additionalProperties": true,
+            "title": "Headways",
+            "type": "object"
+          }
+        },
+        "required": [
+          "headways"
+        ],
+        "title": "HeadwayResponse",
+        "type": "object"
+      },
+      "DwellResponse": {
+        "additionalProperties": true,
+        "properties": {
+          "dwells": {
+            "additionalProperties": true,
+            "title": "Dwells",
+            "type": "object"
+          }
+        },
+        "required": [
+          "dwells"
+        ],
+        "title": "DwellResponse",
+        "type": "object"
+      },
+      "TravelTimeResponse": {
+        "additionalProperties": true,
+        "properties": {
+          "travel_times": {
+            "additionalProperties": true,
+            "title": "Travel Times",
+            "type": "object"
+          }
+        },
+        "required": [
+          "travel_times"
+        ],
+        "title": "TravelTimeResponse",
+        "type": "object"
+      },
+      "AlertsRouteResponse": {
+        "additionalProperties": true,
+        "properties": {
+          "alerts": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Alerts",
+            "type": "array"
+          }
+        },
+        "required": [
+          "alerts"
+        ],
+        "title": "AlertsRouteResponse",
+        "type": "object"
+      },
+      "TravelTimeAggregateResponse": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "TravelTimeAggregateResponse",
+        "type": "object"
+      },
+      "HeadwaysAggregateResponse": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "HeadwaysAggregateResponse",
+        "type": "object"
+      },
+      "DwellsAggregateResponse": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "DwellsAggregateResponse",
+        "type": "object"
+      },
+      "GitIdResponse": {
+        "properties": {
+          "git_id": {
+            "title": "Git Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "git_id"
+        ],
+        "title": "GitIdResponse",
+        "type": "object"
+      },
+      "AlertDelaysByLineParams": {
+        "properties": {
+          "start_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "format": "date",
+                "type": "string"
+              }
+            ],
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "format": "date",
+                "type": "string"
+              }
+            ],
+            "title": "End Date"
+          },
+          "line": {
+            "title": "Line",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "line"
+        ],
+        "title": "AlertDelaysByLineParams",
+        "type": "object"
+      },
+      "LineDelaysResponse": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "LineDelaysResponse",
+        "type": "object"
+      },
+      "TripMetricsByLineParams": {
+        "properties": {
+          "start_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "format": "date",
+                "type": "string"
+              }
+            ],
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "format": "date",
+                "type": "string"
+              }
+            ],
+            "title": "End Date"
+          },
+          "agg": {
+            "title": "Agg",
+            "type": "string"
+          },
+          "line": {
+            "title": "Line",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "agg",
+          "line"
+        ],
+        "title": "TripMetricsByLineParams",
+        "type": "object"
+      },
+      "TripMetricsResponse": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "TripMetricsResponse",
+        "type": "object"
+      },
+      "ScheduledServiceParams": {
+        "properties": {
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "route_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Route Id"
+          },
+          "agg": {
+            "title": "Agg",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "agg"
+        ],
+        "title": "ScheduledServiceParams",
+        "type": "object"
+      },
+      "GetScheduledServiceResponse": {
+        "properties": {
+          "start_date_service_levels": {
+            "$ref": "#/components/schemas/ServiceLevelsByDayKind"
+          },
+          "end_date_service_levels": {
+            "$ref": "#/components/schemas/ServiceLevelsByDayKind"
+          },
+          "counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Counts",
+            "type": "object"
+          },
+          "service_hours": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Service Hours",
+            "type": "object"
+          }
+        },
+        "required": [
+          "start_date_service_levels",
+          "end_date_service_levels",
+          "counts",
+          "service_hours"
+        ],
+        "title": "GetScheduledServiceResponse",
+        "type": "object"
+      },
+      "RidershipParams": {
+        "properties": {
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "line_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Line Id"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "RidershipParams",
+        "type": "object"
+      },
+      "RidershipResponse": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/RidershipEntry"
+            },
+            "title": "Data",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "RidershipResponse",
+        "type": "object"
+      },
+      "Facility": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          },
+          "attributes": {
+            "additionalProperties": true,
+            "title": "Attributes",
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "title": "Facility",
+        "type": "object"
+      },
+      "SpeedRestrictionsParams": {
+        "properties": {
+          "line_id": {
+            "title": "Line Id",
+            "type": "string"
+          },
+          "on_date": {
+            "title": "On Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "line_id",
+          "on_date"
+        ],
+        "title": "SpeedRestrictionsParams",
+        "type": "object"
+      },
+      "SpeedRestrictionsResponse": {
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Date"
+          },
+          "zones": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Zones"
+          }
+        },
+        "required": [
+          "available"
+        ],
+        "title": "SpeedRestrictionsResponse",
+        "type": "object"
+      },
+      "ServiceHoursParams": {
+        "properties": {
+          "single_route_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Single Route Id"
+          },
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "agg": {
+            "title": "Agg",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "agg"
+        ],
+        "title": "ServiceHoursParams",
+        "type": "object"
+      },
+      "ServiceHoursResponse": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ServiceHoursResponse",
+        "type": "object"
+      },
+      "TimePredictionResponse": {
+        "additionalProperties": true,
+        "properties": {
+          "predictions": {
+            "additionalProperties": true,
+            "title": "Predictions",
+            "type": "object"
+          }
+        },
+        "required": [
+          "predictions"
+        ],
+        "title": "TimePredictionResponse",
+        "type": "object"
+      },
+      "ByDayKindServiceLevels": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "service_levels": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Service Levels",
+            "type": "array"
+          }
+        },
+        "required": [
+          "date",
+          "service_levels"
+        ],
+        "title": "ByDayKindServiceLevels",
+        "type": "object"
+      },
+      "ServiceLevelsByDayKind": {
+        "properties": {
+          "weekday": {
+            "$ref": "#/components/schemas/ByDayKindServiceLevels"
+          },
+          "saturday": {
+            "$ref": "#/components/schemas/ByDayKindServiceLevels"
+          },
+          "sunday": {
+            "$ref": "#/components/schemas/ByDayKindServiceLevels"
+          }
+        },
+        "required": [
+          "weekday",
+          "saturday",
+          "sunday"
+        ],
+        "title": "ServiceLevelsByDayKind",
+        "type": "object"
+      },
+      "RidershipEntry": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "date",
+          "count"
+        ],
+        "title": "RidershipEntry",
+        "type": "object"
+      }
+    }
+  }
+}
