@@ -1,0 +1,341 @@
+{
+  "CR-Newburyport": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Rockport",
+        "station": "place-GB-0353",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": ["CR-Newburyport_1_GB-0353-S"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Gloucester",
+        "station": "place-GB-0316",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["CR-Newburyport_0_GB-0316-S"],
+          "1": ["CR-Newburyport_1_GB-0316-S"]
+        }
+      },
+      {
+        "stop_name": "West Gloucester",
+        "station": "place-GB-0296",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": ["CR-Newburyport_0_GB-0296-01", "CR-Newburyport_0_GB-0296-02"],
+          "1": ["CR-Newburyport_1_GB-0296-02"]
+        }
+      },
+      {
+        "stop_name": "Manchester",
+        "station": "place-GB-0254",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": ["CR-Newburyport_0_GB-0254-01", "CR-Newburyport_0_GB-0254-02"],
+          "1": ["CR-Newburyport_1_GB-0254-02"]
+        }
+      },
+      {
+        "stop_name": "Beverly Farms",
+        "station": "place-GB-0229",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": ["CR-Newburyport_0_GB-0229-01", "CR-Newburyport_0_GB-0229-02"],
+          "1": ["CR-Newburyport_1_GB-0229-02"]
+        }
+      },
+      {
+        "stop_name": "Montserrat",
+        "station": "place-GB-0198",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": ["CR-Newburyport_0_GB-0198-01", "CR-Newburyport_0_GB-0198-02"],
+          "1": ["CR-Newburyport_1_GB-0198-02"]
+        }
+      },
+      {
+        "stop_name": "Newburyport",
+        "station": "place-ER-0362",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": [],
+          "1": ["CR-Newburyport_1_ER-0362-01"]
+        }
+      },
+      {
+        "stop_name": "Rowley",
+        "station": "place-ER-0312",
+        "branches": null,
+        "order": 8,
+        "stops": {
+          "0": ["CR-Newburyport_0_ER-0312-S"],
+          "1": ["CR-Newburyport_1_ER-0312-S"]
+        }
+      },
+      {
+        "stop_name": "Ipswich",
+        "station": "place-ER-0276",
+        "branches": null,
+        "order": 9,
+        "stops": {
+          "0": ["CR-Newburyport_0_ER-0276-S"],
+          "1": ["CR-Newburyport_1_ER-0276-S"]
+        }
+      },
+      {
+        "stop_name": "Hamilton/Wenham",
+        "station": "place-ER-0227",
+        "branches": null,
+        "order": 10,
+        "stops": {
+          "0": ["CR-Newburyport_0_ER-0227-S"],
+          "1": ["CR-Newburyport_1_ER-0227-S"]
+        }
+      },
+      {
+        "stop_name": "North Beverly",
+        "station": "place-ER-0208",
+        "branches": null,
+        "order": 11,
+        "stops": {
+          "0": ["CR-Newburyport_0_ER-0208-01", "CR-Newburyport_0_ER-0208-02"],
+          "1": ["CR-Newburyport_1_ER-0208-02"]
+        }
+      },
+      {
+        "stop_name": "Beverly",
+        "station": "place-ER-0183",
+        "branches": null,
+        "order": 12,
+        "stops": {
+          "0": ["CR-Newburyport_0_ER-0183-01", "CR-Newburyport_0_ER-0183-02"],
+          "1": ["CR-Newburyport_1_ER-0183-02"]
+        }
+      },
+      {
+        "stop_name": "Salem",
+        "station": "place-ER-0168",
+        "branches": null,
+        "order": 13,
+        "stops": {
+          "0": ["CR-Newburyport_0_ER-0168-S"],
+          "1": ["CR-Newburyport_1_ER-0168-S"]
+        }
+      },
+      {
+        "stop_name": "Swampscott",
+        "station": "place-ER-0128",
+        "branches": null,
+        "order": 14,
+        "stops": {
+          "0": ["CR-Newburyport_0_ER-0128-01", "CR-Newburyport_0_ER-0128-02"],
+          "1": ["CR-Newburyport_1_ER-0128-02"]
+        }
+      },
+      {
+        "stop_name": "Lynn",
+        "station": "place-ER-0115",
+        "branches": null,
+        "order": 15,
+        "stops": {
+          "0": [
+            "CR-Newburyport_0_14748",
+            "CR-Newburyport_0_ER-0115",
+            "CR-Newburyport_0_ER-0115-01",
+            "CR-Newburyport_0_ER-0115-02"
+          ],
+          "1": [
+            "CR-Newburyport_1_14748",
+            "CR-Newburyport_1_ER-0115",
+            "CR-Newburyport_1_ER-0115-01",
+            "CR-Newburyport_1_ER-0115-02"
+          ]
+        }
+      },
+      {
+        "stop_name": "Wonderland",
+        "station": "place-wondl",
+        "branches": null,
+        "order": 16,
+        "stops": {
+          "0": [
+            "CR-Newburyport_0_15796",
+            "CR-Newburyport_0_15797",
+            "CR-Newburyport_0_15798",
+            "CR-Newburyport_0_15799",
+            "CR-Newburyport_0_15800",
+            "CR-Newburyport_0_70059",
+            "CR-Newburyport_0_70060",
+            "CR-Newburyport_0_door-wondl-nshore",
+            "CR-Newburyport_0_door-wondl-ocean",
+            "CR-Newburyport_0_door-wondl-oceann",
+            "CR-Newburyport_0_door-wondl-oceannele",
+            "CR-Newburyport_0_door-wondl-revere",
+            "CR-Newburyport_0_node-701-bridge",
+            "CR-Newburyport_0_node-701-lobby",
+            "CR-Newburyport_0_node-701-plaza",
+            "CR-Newburyport_0_node-702-bridge",
+            "CR-Newburyport_0_node-702-lobby",
+            "CR-Newburyport_0_node-702-plaza",
+            "CR-Newburyport_0_node-703-bridge",
+            "CR-Newburyport_0_node-703-lobby",
+            "CR-Newburyport_0_node-703-plaza",
+            "CR-Newburyport_0_node-708-lobby",
+            "CR-Newburyport_0_node-709-plaza",
+            "CR-Newburyport_0_node-709-street",
+            "CR-Newburyport_0_node-710-platform",
+            "CR-Newburyport_0_node-710-plaza",
+            "CR-Newburyport_0_node-711-plaza",
+            "CR-Newburyport_0_node-wondl-busramp-busway",
+            "CR-Newburyport_0_node-wondl-busstairs-busway",
+            "CR-Newburyport_0_node-wondl-buswaydoor",
+            "CR-Newburyport_0_node-wondl-eplazacenter",
+            "CR-Newburyport_0_node-wondl-farepaid",
+            "CR-Newburyport_0_node-wondl-fareunpaid",
+            "CR-Newburyport_0_node-wondl-footbridgeib",
+            "CR-Newburyport_0_node-wondl-footbridgeob",
+            "CR-Newburyport_0_node-wondl-ibfootbridgestairs-lobby",
+            "CR-Newburyport_0_node-wondl-ibplazaentrance",
+            "CR-Newburyport_0_node-wondl-ibplazastairs-bridge",
+            "CR-Newburyport_0_node-wondl-ibplazastairs-lobby",
+            "CR-Newburyport_0_node-wondl-ibplazastairs-plaza",
+            "CR-Newburyport_0_node-wondl-lobbycenter",
+            "CR-Newburyport_0_node-wondl-nshoreplazastairs-plaza",
+            "CR-Newburyport_0_node-wondl-nshoreplazastairs-street",
+            "CR-Newburyport_0_node-wondl-nshorestairs-bottom",
+            "CR-Newburyport_0_node-wondl-obplatstairs-platform",
+            "CR-Newburyport_0_node-wondl-obplazaentrance",
+            "CR-Newburyport_0_node-wondl-obplazastairs-street",
+            "CR-Newburyport_0_node-wondl-oceanaveingress",
+            "CR-Newburyport_0_node-wondl-oceanramp-bottom",
+            "CR-Newburyport_0_node-wondl-oceanstairs-plaza",
+            "CR-Newburyport_0_node-wondl-plazacenter",
+            "CR-Newburyport_0_node-wondl-revereramp-top"
+          ],
+          "1": [
+            "CR-Newburyport_1_15796",
+            "CR-Newburyport_1_15797",
+            "CR-Newburyport_1_15798",
+            "CR-Newburyport_1_15799",
+            "CR-Newburyport_1_15800",
+            "CR-Newburyport_1_70059",
+            "CR-Newburyport_1_70060",
+            "CR-Newburyport_1_door-wondl-nshore",
+            "CR-Newburyport_1_door-wondl-ocean",
+            "CR-Newburyport_1_door-wondl-oceann",
+            "CR-Newburyport_1_door-wondl-oceannele",
+            "CR-Newburyport_1_door-wondl-revere",
+            "CR-Newburyport_1_node-701-bridge",
+            "CR-Newburyport_1_node-701-lobby",
+            "CR-Newburyport_1_node-701-plaza",
+            "CR-Newburyport_1_node-702-bridge",
+            "CR-Newburyport_1_node-702-lobby",
+            "CR-Newburyport_1_node-702-plaza",
+            "CR-Newburyport_1_node-703-bridge",
+            "CR-Newburyport_1_node-703-lobby",
+            "CR-Newburyport_1_node-703-plaza",
+            "CR-Newburyport_1_node-708-lobby",
+            "CR-Newburyport_1_node-709-plaza",
+            "CR-Newburyport_1_node-709-street",
+            "CR-Newburyport_1_node-710-platform",
+            "CR-Newburyport_1_node-710-plaza",
+            "CR-Newburyport_1_node-711-plaza",
+            "CR-Newburyport_1_node-wondl-busramp-busway",
+            "CR-Newburyport_1_node-wondl-busstairs-busway",
+            "CR-Newburyport_1_node-wondl-buswaydoor",
+            "CR-Newburyport_1_node-wondl-eplazacenter",
+            "CR-Newburyport_1_node-wondl-farepaid",
+            "CR-Newburyport_1_node-wondl-fareunpaid",
+            "CR-Newburyport_1_node-wondl-footbridgeib",
+            "CR-Newburyport_1_node-wondl-footbridgeob",
+            "CR-Newburyport_1_node-wondl-ibfootbridgestairs-lobby",
+            "CR-Newburyport_1_node-wondl-ibplazaentrance",
+            "CR-Newburyport_1_node-wondl-ibplazastairs-bridge",
+            "CR-Newburyport_1_node-wondl-ibplazastairs-lobby",
+            "CR-Newburyport_1_node-wondl-ibplazastairs-plaza",
+            "CR-Newburyport_1_node-wondl-lobbycenter",
+            "CR-Newburyport_1_node-wondl-nshoreplazastairs-plaza",
+            "CR-Newburyport_1_node-wondl-nshoreplazastairs-street",
+            "CR-Newburyport_1_node-wondl-nshorestairs-bottom",
+            "CR-Newburyport_1_node-wondl-obplatstairs-platform",
+            "CR-Newburyport_1_node-wondl-obplazaentrance",
+            "CR-Newburyport_1_node-wondl-obplazastairs-street",
+            "CR-Newburyport_1_node-wondl-oceanaveingress",
+            "CR-Newburyport_1_node-wondl-oceanramp-bottom",
+            "CR-Newburyport_1_node-wondl-oceanstairs-plaza",
+            "CR-Newburyport_1_node-wondl-plazacenter",
+            "CR-Newburyport_1_node-wondl-revereramp-top"
+          ]
+        }
+      },
+      {
+        "stop_name": "Lynn Interim",
+        "station": "place-ER-0117",
+        "branches": null,
+        "order": 17,
+        "stops": {
+          "0": ["CR-Newburyport_0_ER-0117-01", "CR-Newburyport_0_ER-0117-02"],
+          "1": ["CR-Newburyport_1_ER-0117-02"]
+        }
+      },
+      {
+        "stop_name": "River Works",
+        "station": "place-ER-0099",
+        "branches": null,
+        "order": 18,
+        "stops": {
+          "0": ["CR-Newburyport_0_ER-0099-01", "CR-Newburyport_0_ER-0099-02"],
+          "1": ["CR-Newburyport_1_ER-0099-02"]
+        }
+      },
+      {
+        "stop_name": "Chelsea",
+        "station": "place-chels",
+        "branches": null,
+        "order": 19,
+        "stops": {
+          "0": ["CR-Newburyport_0_ER-0042-01", "CR-Newburyport_0_ER-0042-02"],
+          "1": ["CR-Newburyport_1_ER-0042-02"]
+        }
+      },
+      {
+        "stop_name": "North Station",
+        "station": "place-north",
+        "branches": null,
+        "order": 20,
+        "stops": {
+          "0": [
+            "CR-Newburyport_0_BNT-0000",
+            "CR-Newburyport_0_BNT-0000-01",
+            "CR-Newburyport_0_BNT-0000-02",
+            "CR-Newburyport_0_BNT-0000-03",
+            "CR-Newburyport_0_BNT-0000-04",
+            "CR-Newburyport_0_BNT-0000-05",
+            "CR-Newburyport_0_BNT-0000-06",
+            "CR-Newburyport_0_BNT-0000-07",
+            "CR-Newburyport_0_BNT-0000-08",
+            "CR-Newburyport_0_BNT-0000-09",
+            "CR-Newburyport_0_BNT-0000-10"
+          ],
+          "1": []
+        },
+        "terminus": true
+      }
+    ]
+  }
+}

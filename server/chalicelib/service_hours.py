@@ -14,6 +14,7 @@ ROUTE_IDS_BY_LINE = {
     "line-orange": ("line-orange",),
     "line-red": ("line-red", "line-red-a", "line-red-b"),
     "line-green": ("line-green-b", "line-green-c", "line-green-d", "line-green-e"),
+    "line-mattapan": ("line-mattapan"),
 }
 
 SINGLE_ROUTE_IDS_BY_LINE_KEY = {
@@ -21,6 +22,7 @@ SINGLE_ROUTE_IDS_BY_LINE_KEY = {
     "line-orange": "Orange",
     "line-red": "Red",
     "line-green": "Green",
+    "line-mattapan": "Mattapan",
 }
 
 

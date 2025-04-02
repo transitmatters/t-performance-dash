@@ -6,15 +6,17 @@ export const PEAK_SCHEDULED_SERVICE = {
   'line-orange': 161,
   'line-blue': 186,
   'line-green': 506,
+  'line-mattapan': 159,
   'line-bus': 0,
   DEFAULT: 0,
 };
 
 export const PEAK_SPEED = {
-  'line-red': 21.2,
-  'line-orange': 18,
-  'line-blue': 20.5,
-  'line-green': 12.6,
+  'line-red': 24.9,
+  'line-orange': 20.6,
+  'line-blue': 22.7,
+  'line-green': 13.6,
+  'line-mattapan': 24.3,
   'line-bus': 0,
 };
 
@@ -26,6 +28,7 @@ export const PEAK_RIDERSHIP: {
   'line-orange': 169578,
   'line-blue': 60129,
   'line-green': 87148,
+  'line-mattapan': 0,
   '1': 15272,
   '4': 850,
   '7': 5126,

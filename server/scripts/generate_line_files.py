@@ -71,6 +71,10 @@ def get_line_stops():
         else:
             parent_children_map[parent_id][direction].append(stop["name"])
 
+    for parent_id in parent_children_map:
+        for direction in parent_children_map[parent_id]:
+            parent_children_map[parent_id][direction].sort()
+
     return parent_children_map
 
 
@@ -83,7 +87,7 @@ def parse_stop_name(stop_name: str):
 
 
 for LINE_KEY in ROUTES_CR:
-    r_f = requests.get("https://api-v3.mbta.com/stops?filter%5Broute%5D={}".format(LINE_KEY))
+    r_f = requests.get("https://api-v3.mbta.com/stops?filter%5Broute%5D={}&filter%5Bdirection_id%5D=1".format(LINE_KEY))
     stops = r_f.json()
 
     stop_layout = get_line_stops()
@@ -92,15 +96,17 @@ for LINE_KEY in ROUTES_CR:
 
     for index, stop in enumerate(stops["data"]):
         try:
-            stops_formatted.append(
-                {
-                    "stop_name": stop["attributes"]["name"],
-                    "station": stop["id"],
-                    "branches": None,
-                    "order": index + 1,
-                    "stops": stop_layout[stop["id"]],
-                }
-            )
+            station_json = {
+                "stop_name": stop["attributes"]["name"],
+                "station": stop["id"],
+                "branches": None,
+                "order": index + 1,
+                "stops": stop_layout[stop["id"]],
+            }
+            if index == 0 or index == len(stops["data"]) - 1:
+                station_json["terminus"] = True
+
+            stops_formatted.append(station_json)
         except KeyError:
             c_f = requests.get(
                 "https://api-v3.mbta.com/stops/{}?include=child_stops&api_key={}".format(stop["id"], MBTA_V3_API_KEY)

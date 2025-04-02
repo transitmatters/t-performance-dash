@@ -1,0 +1,197 @@
+{
+  "CR-Franklin": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Forge Park/495",
+        "station": "place-FB-0303",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": ["CR-Franklin_1_FB-0303-S"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Franklin",
+        "station": "place-FB-0275",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["CR-Franklin_0_FB-0275-S"],
+          "1": ["CR-Franklin_1_FB-0275-S"]
+        }
+      },
+      {
+        "stop_name": "Norfolk",
+        "station": "place-FB-0230",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": ["CR-Franklin_0_FB-0230-S"],
+          "1": ["CR-Franklin_1_FB-0230-S"]
+        }
+      },
+      {
+        "stop_name": "Foxboro",
+        "station": "place-FS-0049",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": [],
+          "1": ["CR-Franklin_1_FS-0049-S"]
+        }
+      },
+      {
+        "stop_name": "Walpole",
+        "station": "place-FB-0191",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": ["CR-Franklin_0_FB-0191-S"],
+          "1": ["CR-Franklin_1_FB-0191-S"]
+        }
+      },
+      {
+        "stop_name": "Windsor Gardens",
+        "station": "place-FB-0166",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": ["CR-Franklin_0_FB-0166-S"],
+          "1": ["CR-Franklin_1_FB-0166-S"]
+        }
+      },
+      {
+        "stop_name": "Norwood Central",
+        "station": "place-FB-0148",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": ["CR-Franklin_0_FB-0148-01"],
+          "1": ["CR-Franklin_1_FB-0148-02"]
+        }
+      },
+      {
+        "stop_name": "Norwood Depot",
+        "station": "place-FB-0143",
+        "branches": null,
+        "order": 8,
+        "stops": {
+          "0": ["CR-Franklin_0_FB-0143-01"],
+          "1": ["CR-Franklin_1_FB-0143-02"]
+        }
+      },
+      {
+        "stop_name": "Islington",
+        "station": "place-FB-0125",
+        "branches": null,
+        "order": 9,
+        "stops": {
+          "0": ["CR-Franklin_0_FB-0125-01"],
+          "1": ["CR-Franklin_1_FB-0125-02"]
+        }
+      },
+      {
+        "stop_name": "Dedham Corporate Center",
+        "station": "place-FB-0118",
+        "branches": null,
+        "order": 10,
+        "stops": {
+          "0": ["CR-Franklin_0_FB-0118-01"],
+          "1": ["CR-Franklin_1_FB-0118-02"]
+        }
+      },
+      {
+        "stop_name": "Endicott",
+        "station": "place-FB-0109",
+        "branches": null,
+        "order": 11,
+        "stops": {
+          "0": ["CR-Franklin_0_FB-0109-01"],
+          "1": ["CR-Franklin_1_FB-0109-02"]
+        }
+      },
+      {
+        "stop_name": "Readville",
+        "station": "place-DB-0095",
+        "branches": null,
+        "order": 12,
+        "stops": {
+          "0": ["CR-Franklin_0_FB-0095-04", "CR-Franklin_0_FB-0095-05"],
+          "1": ["CR-Franklin_1_FB-0095-04", "CR-Franklin_1_FB-0095-05", "CR-Franklin_1_NEC-2192-02"]
+        }
+      },
+      {
+        "stop_name": "Forest Hills",
+        "station": "place-forhl",
+        "branches": null,
+        "order": 13,
+        "stops": {
+          "0": ["CR-Franklin_0_NEC-2237-03"],
+          "1": ["CR-Franklin_1_NEC-2237-03"]
+        }
+      },
+      {
+        "stop_name": "Ruggles",
+        "station": "place-rugg",
+        "branches": null,
+        "order": 14,
+        "stops": {
+          "0": ["CR-Franklin_0_NEC-2265-01", "CR-Franklin_0_NEC-2265-03"],
+          "1": [
+            "CR-Franklin_1_NEC-2265-01",
+            "CR-Franklin_1_NEC-2265-02",
+            "CR-Franklin_1_NEC-2265-03"
+          ]
+        }
+      },
+      {
+        "stop_name": "Back Bay",
+        "station": "place-bbsta",
+        "branches": null,
+        "order": 15,
+        "stops": {
+          "0": [
+            "CR-Franklin_0_NEC-2276-01",
+            "CR-Franklin_0_NEC-2276-03",
+            "CR-Franklin_0_WML-0012-07"
+          ],
+          "1": [
+            "CR-Franklin_1_NEC-2276-01",
+            "CR-Franklin_1_NEC-2276-02",
+            "CR-Franklin_1_NEC-2276-03"
+          ]
+        }
+      },
+      {
+        "stop_name": "South Station",
+        "station": "place-sstat",
+        "branches": null,
+        "order": 16,
+        "stops": {
+          "0": [
+            "CR-Franklin_0_NEC-2287",
+            "CR-Franklin_0_NEC-2287-02",
+            "CR-Franklin_0_NEC-2287-03",
+            "CR-Franklin_0_NEC-2287-04",
+            "CR-Franklin_0_NEC-2287-05",
+            "CR-Franklin_0_NEC-2287-06",
+            "CR-Franklin_0_NEC-2287-07",
+            "CR-Franklin_0_NEC-2287-08",
+            "CR-Franklin_0_NEC-2287-09",
+            "CR-Franklin_0_NEC-2287-10",
+            "CR-Franklin_0_NEC-2287-11"
+          ],
+          "1": []
+        },
+        "terminus": true
+      }
+    ]
+  }
+}

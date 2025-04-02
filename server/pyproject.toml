@@ -4,33 +4,37 @@ version = "4.0.0"
 description = "TransitMatters performance visualizer for the MBTA"
 authors = ["TransitMatters Labs Team"]
 license = "MIT"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "~3.12"
 json-api-doc = "0.15.0"
 requests = "^2.32.3"
-pytz = "2024.1"
-boto3 = "1.34.128"
-botocore = "1.34.128"
+pytz = "2024.2"
+boto3 = "~1.35.10"
 numpy = "1.26.4"
-pandas = "2.2.2"
-datadog_lambda = "6.96.0"
-ddtrace = "2.9.1"
+pandas = "~2.2.3"
+datadog_lambda = "~6.106.0"
 dynamodb-json = "^1.4.2"
+chalice-spec = "^0.7.0"
+pydantic = "^2.11.1"
+apispec = "^6.8.1"
 
-[tool.poetry.dev-dependencies]
-pip = ">=23.3"
-chalice = "1.31.2"
-flake8 = "~7.1.0"
-black = "~24.4.2"
-poetry-plugin-export = "^1.8.0"
+[tool.poetry.group.dev.dependencies]
+pip = ">=24.0"
+chalice = "1.31.4"
+flake8 = "~7.2.0"
+black = "~25.1.0"
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = "^1.9.0"
 
 [tool.black]
 line-length = 120
 target-version = ['py312']
 
 [build-system]
-requires = ["poetry-core>=1.7.0"]
+requires = ["poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pyright]

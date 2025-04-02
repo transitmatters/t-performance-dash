@@ -7,7 +7,6 @@ import {
   TODAY_STRING,
   YESTERDAY_STRING,
   TODAY_SERVICE_STARTED,
-  COMMUTER_RAIL_MIN_DATE,
 } from '../../constants/dates';
 import type { WithOptional } from '../../types/general';
 
@@ -41,7 +40,7 @@ export const COMMUTER_RAIL_DEFAULTS: WithOptional<
 > = {
   lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
   multiTripConfig: {
-    startDate: COMMUTER_RAIL_MIN_DATE,
+    startDate: ONE_WEEK_AGO_STRING,
     endDate: TODAY_STRING,
   },
   singleTripConfig: {

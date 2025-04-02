@@ -1,0 +1,121 @@
+{
+  "CR-Middleborough": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Middleborough/Lakeville",
+        "station": "place-MM-0356",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": ["CR-Middleborough_1_MM-0356-S"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Bridgewater",
+        "station": "place-MM-0277",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["CR-Middleborough_0_MM-0277-S"],
+          "1": ["CR-Middleborough_1_MM-0277-S"]
+        }
+      },
+      {
+        "stop_name": "Campello",
+        "station": "place-MM-0219",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": ["CR-Middleborough_0_MM-0219-S"],
+          "1": ["CR-Middleborough_1_MM-0219-S"]
+        }
+      },
+      {
+        "stop_name": "Brockton",
+        "station": "place-MM-0200",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": ["CR-Middleborough_0_MM-0200-S"],
+          "1": ["CR-Middleborough_1_MM-0200-CS", "CR-Middleborough_1_MM-0200-S"]
+        }
+      },
+      {
+        "stop_name": "Montello",
+        "station": "place-MM-0186",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": ["CR-Middleborough_0_MM-0186-S"],
+          "1": ["CR-Middleborough_1_MM-0186-CS", "CR-Middleborough_1_MM-0186-S"]
+        }
+      },
+      {
+        "stop_name": "Holbrook/Randolph",
+        "station": "place-MM-0150",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": ["CR-Middleborough_0_MM-0150-S"],
+          "1": ["CR-Middleborough_1_MM-0150-S"]
+        }
+      },
+      {
+        "stop_name": "Braintree",
+        "station": "place-brntn",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": ["CR-Middleborough_0_MM-0109-S"],
+          "1": ["CR-Middleborough_1_MM-0109-S"]
+        }
+      },
+      {
+        "stop_name": "Quincy Center",
+        "station": "place-qnctr",
+        "branches": null,
+        "order": 8,
+        "stops": {
+          "0": ["CR-Middleborough_0_MM-0079-S"],
+          "1": ["CR-Middleborough_1_MM-0079-S"]
+        }
+      },
+      {
+        "stop_name": "JFK/UMass",
+        "station": "place-jfk",
+        "branches": null,
+        "order": 9,
+        "stops": {
+          "0": ["CR-Middleborough_0_MM-0023-S"],
+          "1": ["CR-Middleborough_1_MM-0023-S"]
+        }
+      },
+      {
+        "stop_name": "South Station",
+        "station": "place-sstat",
+        "branches": null,
+        "order": 10,
+        "stops": {
+          "0": [
+            "CR-Middleborough_0_NEC-2287",
+            "CR-Middleborough_0_NEC-2287-08",
+            "CR-Middleborough_0_NEC-2287-09",
+            "CR-Middleborough_0_NEC-2287-10",
+            "CR-Middleborough_0_NEC-2287-11",
+            "CR-Middleborough_0_NEC-2287-12",
+            "CR-Middleborough_0_NEC-2287-13"
+          ],
+          "1": []
+        },
+        "terminus": true
+      }
+    ]
+  }
+}

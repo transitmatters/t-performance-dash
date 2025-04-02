@@ -25,7 +25,6 @@ const nextConfig = {
   trailingSlash: true,
   reactStrictMode: true,
   transpilePackages: ['next-goatcounter'],
-  swcMinify: true,
   // No nextJS image optimization for a static site.
   images: {
     unoptimized: true,

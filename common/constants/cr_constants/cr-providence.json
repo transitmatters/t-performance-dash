@@ -1,0 +1,200 @@
+{
+  "CR-Providence": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Wickford Junction",
+        "station": "place-NEC-1659",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": ["CR-Providence_1_NEC-1659-03"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "TF Green Airport",
+        "station": "place-NEC-1768",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["CR-Providence_0_NEC-1768-03"],
+          "1": ["CR-Providence_1_NEC-1768-03"]
+        }
+      },
+      {
+        "stop_name": "Providence",
+        "station": "place-NEC-1851",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": ["CR-Providence_0_NEC-1851-03"],
+          "1": ["CR-Providence_1_NEC-1851-03"]
+        }
+      },
+      {
+        "stop_name": "Pawtucket/Central Falls",
+        "station": "place-NEC-1891",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": ["CR-Providence_0_NEC-1891-01", "CR-Providence_0_NEC-1891-02"],
+          "1": ["CR-Providence_1_NEC-1891-01", "CR-Providence_1_NEC-1891-02"]
+        }
+      },
+      {
+        "stop_name": "South Attleboro",
+        "station": "place-NEC-1919",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": ["CR-Providence_0_NEC-1919-01"],
+          "1": ["CR-Providence_1_NEC-1919-01"]
+        }
+      },
+      {
+        "stop_name": "Attleboro",
+        "station": "place-NEC-1969",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": ["CR-Providence_0_NEC-1969-03", "CR-Providence_0_NEC-1969-04"],
+          "1": ["CR-Providence_1_NEC-1969-04"]
+        }
+      },
+      {
+        "stop_name": "Mansfield",
+        "station": "place-NEC-2040",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": ["CR-Providence_0_NEC-2040-01"],
+          "1": ["CR-Providence_1_NEC-2040-02"]
+        }
+      },
+      {
+        "stop_name": "Sharon",
+        "station": "place-NEC-2108",
+        "branches": null,
+        "order": 8,
+        "stops": {
+          "0": ["CR-Providence_0_NEC-2108-01", "CR-Providence_0_NEC-2108-02"],
+          "1": ["CR-Providence_1_NEC-2108-02"]
+        }
+      },
+      {
+        "stop_name": "Stoughton",
+        "station": "place-SB-0189",
+        "branches": null,
+        "order": 9,
+        "stops": {
+          "0": [],
+          "1": ["CR-Providence_1_SB-0189-S"]
+        }
+      },
+      {
+        "stop_name": "Canton Center",
+        "station": "place-SB-0156",
+        "branches": null,
+        "order": 10,
+        "stops": {
+          "0": ["CR-Providence_0_SB-0156-S"],
+          "1": ["CR-Providence_1_SB-0156-S"]
+        }
+      },
+      {
+        "stop_name": "Canton Junction",
+        "station": "place-NEC-2139",
+        "branches": null,
+        "order": 11,
+        "stops": {
+          "0": [
+            "CR-Providence_0_NEC-2139-01",
+            "CR-Providence_0_NEC-2139-02",
+            "CR-Providence_0_SB-0150-04"
+          ],
+          "1": ["CR-Providence_1_NEC-2139-02", "CR-Providence_1_SB-0150-06"]
+        }
+      },
+      {
+        "stop_name": "Route 128",
+        "station": "place-NEC-2173",
+        "branches": null,
+        "order": 12,
+        "stops": {
+          "0": ["CR-Providence_0_NEC-2173-01", "CR-Providence_0_NEC-2173-02"],
+          "1": ["CR-Providence_1_NEC-2173-01", "CR-Providence_1_NEC-2173-02"]
+        }
+      },
+      {
+        "stop_name": "Readville",
+        "station": "place-DB-0095",
+        "branches": null,
+        "order": 13,
+        "stops": {
+          "0": ["CR-Providence_0_NEC-2192-03"],
+          "1": ["CR-Providence_1_NEC-2192-02", "CR-Providence_1_NEC-2192-03"]
+        }
+      },
+      {
+        "stop_name": "Hyde Park",
+        "station": "place-NEC-2203",
+        "branches": null,
+        "order": 14,
+        "stops": {
+          "0": ["CR-Providence_0_NEC-2203-03"],
+          "1": ["CR-Providence_1_NEC-2203-02"]
+        }
+      },
+      {
+        "stop_name": "Ruggles",
+        "station": "place-rugg",
+        "branches": null,
+        "order": 15,
+        "stops": {
+          "0": ["CR-Providence_0_NEC-2265-01", "CR-Providence_0_NEC-2265-03"],
+          "1": ["CR-Providence_1_NEC-2265-02", "CR-Providence_1_NEC-2265-03"]
+        }
+      },
+      {
+        "stop_name": "Back Bay",
+        "station": "place-bbsta",
+        "branches": null,
+        "order": 16,
+        "stops": {
+          "0": ["CR-Providence_0_NEC-2276-01", "CR-Providence_0_NEC-2276-03"],
+          "1": ["CR-Providence_1_NEC-2276-02", "CR-Providence_1_NEC-2276-03"]
+        }
+      },
+      {
+        "stop_name": "South Station",
+        "station": "place-sstat",
+        "branches": null,
+        "order": 17,
+        "stops": {
+          "0": [
+            "CR-Providence_0_NEC-2287",
+            "CR-Providence_0_NEC-2287-02",
+            "CR-Providence_0_NEC-2287-03",
+            "CR-Providence_0_NEC-2287-04",
+            "CR-Providence_0_NEC-2287-05",
+            "CR-Providence_0_NEC-2287-06",
+            "CR-Providence_0_NEC-2287-07",
+            "CR-Providence_0_NEC-2287-08",
+            "CR-Providence_0_NEC-2287-09",
+            "CR-Providence_0_NEC-2287-10",
+            "CR-Providence_0_NEC-2287-11",
+            "CR-Providence_0_NEC-2287-12"
+          ],
+          "1": []
+        },
+        "terminus": true
+      }
+    ]
+  }
+}

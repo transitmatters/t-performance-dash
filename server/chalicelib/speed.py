@@ -4,6 +4,7 @@ from chalicelib import dynamo
 from datetime import date, datetime, timedelta
 import pandas as pd
 import numpy as np
+from chalicelib.constants import DATE_FORMAT_BACKEND
 
 
 class TripMetricsByLineParams(TypedDict):
@@ -19,8 +20,6 @@ AGG_TO_CONFIG_MAP = {
     "weekly": {"table_name": "DeliveredTripMetricsWeekly", "delta": 7 * 150},
     "monthly": {"table_name": "DeliveredTripMetricsMonthly", "delta": 30 * 150},
 }
-
-DATE_FORMAT_BACKEND = "%Y-%m-%d"
 
 
 def aggregate_actual_trips(actual_trips, agg, start_date):
@@ -60,7 +59,7 @@ def trip_metrics_by_line(params: TripMetricsByLineParams):
         end_date = params["end_date"]
         config = AGG_TO_CONFIG_MAP[params["agg"]]
         line = params["line"]
-        if line not in ["line-red", "line-blue", "line-green", "line-orange"]:
+        if line not in ["line-red", "line-blue", "line-green", "line-orange", "line-mattapan"]:
             raise BadRequestError("Invalid Line key.")
     except KeyError:
         raise BadRequestError("Missing or invalid parameters.")

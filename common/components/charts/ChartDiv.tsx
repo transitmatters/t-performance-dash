@@ -8,6 +8,6 @@ interface ChartDivProps {
 
 export const ChartDiv: React.FC<ChartDivProps> = ({ children, isMobile = false }) => {
   return (
-    <div className={classNames(isMobile ? 'h-50' : 'h-60', 'flex w-full flex-row')}>{children}</div>
+    <div className={classNames(isMobile ? 'h-48' : 'h-60', 'flex w-full flex-row')}>{children}</div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Line as LineChart } from 'react-chartjs-2';
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,7 +18,6 @@ import {
 } from 'chart.js';
 import Annotation from 'chartjs-plugin-annotation';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import 'chartjs-adapter-date-fns';
 import type { ChartData } from 'chart.js';
 
@@ -26,6 +26,7 @@ import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { ChartDiv } from '../ChartDiv';
 import { CHART_COLORS, COLORS } from '../../../constants/colors';
 
+import { watermarkLayout } from '../../../constants/charts';
 import type {
   AppliedDisplayStyle,
   Benchmark,
@@ -228,6 +229,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
       interaction: {
         intersect: false,
       },
+      watermark: watermarkLayout(isMobile),
       plugins: {
         datalabels: {
           display: false,

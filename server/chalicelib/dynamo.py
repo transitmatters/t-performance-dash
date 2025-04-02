@@ -10,13 +10,13 @@ import concurrent.futures
 dynamodb = boto3.resource("dynamodb")
 
 
-def query_daily_trips_on_route(table_name, route, start_date, end_date):
+def query_daily_trips_on_route(table_name: str, route, start_date: str | date, end_date: str | date):
     table = dynamodb.Table(table_name)
     response = table.query(KeyConditionExpression=Key("route").eq(route) & Key("date").between(start_date, end_date))
     return ddb_json.loads(response["Items"])
 
 
-def query_daily_trips_on_line(table_name, line, start_date, end_date):
+def query_daily_trips_on_line(table_name: str, line: str, start_date: str | date, end_date: str | date):
     route_keys = constants.LINE_TO_ROUTE_MAP[line]
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
         futures = [

@@ -12,6 +12,8 @@ import { getParentStationForStopId } from '../../common/utils/stations';
 import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { GobbleDataNotice } from '../../common/components/notices/GobbleDataNotice';
 import { BetaDataNotice } from '../../common/components/notices/BetaDataNotice';
+import { PokeySchleppieAwardBanner } from '../../common/components/notices/PokeySchleppieAwardBanner';
+import { CommuterRailDataNotice } from '../../common/components/notices/CommuterRailDataNotice';
 import { useAlertStore } from './AlertStore';
 import { TripGraphs } from './TripGraphs';
 
@@ -22,8 +24,8 @@ export const TripExplorer = () => {
   } = useDelimitatedRoute();
   const { data: alerts } = useHistoricalAlertsData(date, lineShort, busRoute);
 
-  const fromStation = from ? getParentStationForStopId(from) : undefined;
-  const toStation = to ? getParentStationForStopId(to) : undefined;
+  const fromStation = from ? getParentStationForStopId(from, lineShort) : undefined;
+  const toStation = to ? getParentStationForStopId(to, lineShort) : undefined;
   const alertsForModal = alerts?.filter(findMatch).map((alert) => {
     return { ...alert, applied: false };
   });
@@ -35,15 +37,18 @@ export const TripExplorer = () => {
   if (!(fromStation && toStation)) {
     return null;
   }
+
   return (
     <PageWrapper pageTitle={'Trips'}>
       <ChartPageDiv>
         <BetaDataNotice />
         {alertsForModal?.length ? <AlertNotice /> : null}
+        <PokeySchleppieAwardBanner busRoute={busRoute} />
         <TripGraphs fromStation={fromStation} toStation={toStation} />
         <div>
           <GobbleDataNotice />
           <BusDataNotice />
+          <CommuterRailDataNotice />
           <SameDayNotice />
           <TerminusNotice toStation={toStation} fromStation={fromStation} />
         </div>
@@ -51,4 +56,5 @@ export const TripExplorer = () => {
     </PageWrapper>
   );
 };
+
 TripExplorer.Layout = Layout.Dashboard;

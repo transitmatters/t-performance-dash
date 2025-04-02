@@ -1,6 +1,11 @@
 import type { Diagram, SegmentLocation } from '@transitmatters/stripmap';
 
-import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
+import dayjs from 'dayjs';
+import type {
+  SlowZoneAllSlowResponse,
+  SlowZoneResponse,
+  SpeedRestriction,
+} from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
 import type { Station } from '../../../common/types/stations';
 import { getParentStationForStopId, getStationById } from '../../../common/utils/stations';
@@ -26,7 +31,7 @@ type SegmentSlowZonesOptions = {
   date: Date;
   diagram: Diagram;
   speedRestrictions: SpeedRestriction[];
-  slowZones: SlowZoneResponse[];
+  slowZones: SlowZoneAllSlowResponse;
   lineName: LineShort;
 };
 
@@ -36,17 +41,15 @@ type WithSegmentLocation<T> = {
   value: T;
 };
 
-// TODO(ian): our slow zones calculations currently set the end_date of all active slow zones
-// to the moment when the calculation occurs. We can't distinguish these from a slow zone that
-// ended in the past, so we clamp addressable dates at the max date in the slow zones json.
-// To remove this hack we should set `end` on all active slow zones to null.
-const getEffectiveDate = (desiredDate: Date, slowZones: SlowZoneResponse[]) => {
-  const allEndDates = slowZones.map((zone) => new Date(zone.end));
-  const maxEndDate = allEndDates.sort((a, b) => a.valueOf() - b.valueOf()).pop()!;
-  if (desiredDate.valueOf() > maxEndDate.valueOf()) {
+/**
+ * Get the latest date that we have data on slow zones for
+ */
+const getEffectiveDate = (desiredDate: Date, slowZones: SlowZoneAllSlowResponse) => {
+  const maxEndDate = dayjs(new Date(slowZones.updated_on)).startOf('day').toDate();
+  if (dayjs(desiredDate).isAfter(maxEndDate)) {
     return maxEndDate;
   }
-  return desiredDate;
+  return dayjs(desiredDate).startOf('day').toDate();
 };
 
 const filterActiveElements = <T extends Record<string, unknown>>(
@@ -132,7 +135,7 @@ export const segmentSlowZones = (options: SegmentSlowZonesOptions): Segmentation
   const effectiveDate = getEffectiveDate(desiredDate, slowZones);
   const activeSlowZones = locateIntoSegments(
     filterActiveElements(
-      slowZones,
+      slowZones.data,
       lineName,
       effectiveDate,
       (sz) => [new Date(sz.start), new Date(sz.end)],

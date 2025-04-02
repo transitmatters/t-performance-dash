@@ -2,7 +2,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { isArray } from 'lodash';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -23,7 +22,7 @@ export const SlowZonesWidget: React.FC = () => {
   const totalSlowTimeReady =
     !delayTotals.isError && delayTotals.data && startDateUTC && endDateUTC && lineShort && line;
 
-  if (line === 'line-bus' || line === 'line-green' || line === 'line-commuter-rail') {
+  if (line === 'line-bus' || line === 'line-mattapan' || line === 'line-commuter-rail') {
     return null;
   }
 
@@ -33,7 +32,7 @@ export const SlowZonesWidget: React.FC = () => {
         <HomescreenWidgetTitle title="Slow zones" tab="slowzones" />
         {totalSlowTimeReady ? (
           <TotalSlowTimeWrapper
-            data={isArray(delayTotals.data) ? delayTotals.data : delayTotals.data.data}
+            data={delayTotals.data.data}
             startDateUTC={startDateUTC}
             endDateUTC={endDateUTC}
             line={line}

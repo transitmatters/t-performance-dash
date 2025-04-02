@@ -38,7 +38,8 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
 
   const [lineShort, setLineShort] = useState<LineShort>('Red');
   const line = `line-${lineShort.toLowerCase()}` as Line;
-  const canShowSlowZonesMap = lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange';
+  const canShowSlowZonesMap =
+    lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange' || lineShort === 'Green';
   const isDesktop = useBreakpoint('lg');
 
   const {
@@ -98,7 +99,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
             {allData.data && speedRestrictions.data && canShowSlowZonesMap ? (
               <SlowZonesMap
                 key={lineShort}
-                slowZones={isArray(allData.data) ? allData.data : allData.data.data}
+                slowZones={allData.data}
                 speedRestrictions={speedRestrictions.data}
                 lineName={lineShort}
                 direction={isDesktop ? 'horizontal' : 'vertical'}
@@ -116,6 +117,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
               Red: 'Red',
               Orange: 'Orange',
               Blue: 'Blue',
+              Green: 'Green',
             })}
           />
         </WidgetDiv>

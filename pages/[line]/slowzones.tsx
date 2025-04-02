@@ -7,7 +7,7 @@ export async function getStaticProps() {
 
 export async function getStaticPaths() {
   return {
-    paths: ALL_LINE_PATHS.filter((p) => p.params.line !== 'green'),
+    paths: ALL_LINE_PATHS,
     fallback: false,
   };
 }

@@ -2,6 +2,7 @@
 
 mkdir -p data/input
 
+wget -N -O data/input/2025.zip https://www.arcgis.com/sharing/rest/content/items/924df13d845f4907bb6a6c3ed380d57a/data
 wget -N -O data/input/2024.zip https://www.arcgis.com/sharing/rest/content/items/96c77138c3144906bce93d0257531b6a/data
 wget -N -O data/input/2023.zip https://www.arcgis.com/sharing/rest/content/items/b7b36fdb7b3a4728af2fccc78c2ca5b7/data
 wget -N -O data/input/2022.zip https://www.arcgis.com/sharing/rest/content/items/ef464a75666349f481353f16514c06d0/data
@@ -14,7 +15,7 @@ wget -N -O data/input/gtfs.zip https://cdn.mbta.com/MBTA_GTFS.zip
 unzip -o -d data/input/MBTA_GTFS/ data/input/gtfs.zip 
 
 cd data/input
-for i in `seq 2018 2024`; do
+for i in `seq 2018 2025`; do
   unzip -o -d $i $i.zip
 done
 

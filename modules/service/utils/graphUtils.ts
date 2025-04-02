@@ -4,7 +4,7 @@ import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AlertForModal } from '../../../common/types/alerts';
 import { hexWithAlpha } from '../../../common/utils/general';
 import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
-import { TODAY } from '../../../common/constants/dates';
+import { TODAY, OVERVIEW_TRAIN_MIN_DATE } from '../../../common/constants/dates';
 
 const shuttlingAnnotationBlockStyle = {
   backgroundColor: CHART_COLORS.BLOCKS,
@@ -58,10 +58,9 @@ export const getShuttlingBlockAnnotations = (
  * Great for datasets that are delivered with a week or month delay
  */
 export const getRemainingBlockAnnotation = (
-  xMin: string | undefined
+  xMin: string | undefined = OVERVIEW_TRAIN_MIN_DATE,
+  xMax: string | undefined = TODAY.toString()
 ): AnnotationOptions<keyof AnnotationTypeRegistry>[] => {
-  const xMax: string | undefined = TODAY.toString();
-
   return [
     {
       type: 'box',
