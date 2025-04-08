@@ -8,6 +8,7 @@
     "build-storybook": "storybook build",
     "eject": "react-scripts eject",
     "generate-oss-list": "generate-attribution --outputDir common/constants/licenses",
+    "generate-openapi": "cd server && poetry run python -m scripts.generate_openapi && cd ..",
     "get-data": "npm run get-sz-totals && npm run get-szs && npm run get-speed-restrictions && npm run get-landing-trip-metrics && npm run get-landing-ridership",
     "get-landing-ridership": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/landing/ridership.json",
     "get-landing-trip-metrics": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/landing/trip_metrics.json",

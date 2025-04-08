@@ -1,7 +1,9 @@
 import json
 import os
 import subprocess
-from chalice import Chalice, CORSConfig, ConflictError, Response, ConvertToMiddleware
+from chalice import CORSConfig, ConflictError, Response, ConvertToMiddleware
+from chalice_spec import ChaliceWithSpec, PydanticPlugin, Docs
+from apispec import APISpec
 from datetime import date
 from datadog_lambda.wrapper import datadog_lambda_wrapper
 from chalicelib import (
@@ -16,10 +18,17 @@ from chalicelib import (
     service_hours,
     predictions,
     ridership,
+    models,
 )
 
 
-app = Chalice(app_name="data-dashboard")
+spec = APISpec(
+    title="Data Dashboard API",
+    version="1.0.0",
+    openapi_version="3.0.0",
+    plugins=[PydanticPlugin()],
+)
+app = ChaliceWithSpec(app_name="data-dashboard", spec=spec, generate_default_docs=True)
 
 localhost = "localhost:3000"
 TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", localhost)
@@ -43,7 +52,7 @@ def mutlidict_to_dict(mutlidict):
     return res_dict
 
 
-@app.route("/api/healthcheck", cors=cors_config)
+@app.route("/api/healthcheck", cors=cors_config, docs=Docs(response=models.HealthcheckResponse))
 def healthcheck():
     # These functions must return True or False :-)
     checks = {
@@ -79,21 +88,21 @@ def healthcheck():
     )
 
 
-@app.route("/api/headways/{user_date}", cors=cors_config)
+@app.route("/api/headways/{user_date}", cors=cors_config, docs=Docs(response=models.HeadwayResponse))
 def headways_route(user_date):
     date = parse_user_date(user_date)
     stops = app.current_request.query_params.getlist("stop")
     return data_funcs.headways(date, stops)
 
 
-@app.route("/api/dwells/{user_date}", cors=cors_config)
+@app.route("/api/dwells/{user_date}", cors=cors_config, docs=Docs(response=models.DwellResponse))
 def dwells_route(user_date):
     date = parse_user_date(user_date)
     stops = app.current_request.query_params.getlist("stop")
     return data_funcs.dwells(date, stops)
 
 
-@app.route("/api/traveltimes/{user_date}", cors=cors_config)
+@app.route("/api/traveltimes/{user_date}", cors=cors_config, docs=Docs(response=models.TravelTimeResponse))
 def traveltime_route(user_date):
     date = parse_user_date(user_date)
     from_stops = app.current_request.query_params.getlist("from_stop")
@@ -101,13 +110,13 @@ def traveltime_route(user_date):
     return data_funcs.travel_times(date, from_stops, to_stops)
 
 
-@app.route("/api/alerts/{user_date}", cors=cors_config)
+@app.route("/api/alerts/{user_date}", cors=cors_config, docs=Docs(response=models.AlertsRouteResponse))
 def alerts_route(user_date):
     date = parse_user_date(user_date)
     return json.dumps(data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params)))
 
 
-@app.route("/api/aggregate/traveltimes", cors=cors_config)
+@app.route("/api/aggregate/traveltimes", cors=cors_config, docs=Docs(response=models.TravelTimeAggregateResponse))
 def traveltime_aggregate_route():
     start_date = parse_user_date(app.current_request.query_params["start_date"])
     end_date = parse_user_date(app.current_request.query_params["end_date"])
@@ -118,7 +127,7 @@ def traveltime_aggregate_route():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/api/aggregate/traveltimes2", cors=cors_config)
+@app.route("/api/aggregate/traveltimes2", cors=cors_config, docs=Docs(response=models.TravelTimeAggregateResponse))
 def traveltime_aggregate_route_2():
     start_date = parse_user_date(app.current_request.query_params["start_date"])
     end_date = parse_user_date(app.current_request.query_params["end_date"])
@@ -129,7 +138,7 @@ def traveltime_aggregate_route_2():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/api/aggregate/headways", cors=cors_config)
+@app.route("/api/aggregate/headways", cors=cors_config, docs=Docs(response=models.HeadwaysAggregateResponse))
 def headways_aggregate_route():
     start_date = parse_user_date(app.current_request.query_params["start_date"])
     end_date = parse_user_date(app.current_request.query_params["end_date"])
@@ -139,7 +148,7 @@ def headways_aggregate_route():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/api/aggregate/dwells", cors=cors_config)
+@app.route("/api/aggregate/dwells", cors=cors_config, docs=Docs(response=models.DwellsAggregateResponse))
 def dwells_aggregate_route():
     start_date = parse_user_date(app.current_request.query_params["start_date"])
     end_date = parse_user_date(app.current_request.query_params["end_date"])
@@ -149,7 +158,7 @@ def dwells_aggregate_route():
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/api/git_id", cors=cors_config)
+@app.route("/api/git_id", cors=cors_config, docs=Docs(response=models.GitIdResponse))
 def get_git_id():
     # Only do this on localhost
     if TM_FRONTEND_HOST == "localhost":
@@ -159,25 +168,37 @@ def get_git_id():
         raise ConflictError("Cannot get git id from serverless host")
 
 
-@app.route("/api/alerts", cors=cors_config)
+@app.route("/api/alerts", cors=cors_config, docs=Docs(response=models.AlertsRouteResponse))
 def get_alerts():
     response = mbta_v3.getAlerts(app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/api/linedelays", cors=cors_config)
+@app.route(
+    "/api/linedelays",
+    cors=cors_config,
+    docs=Docs(request=models.AlertDelaysByLineParams, response=models.LineDelaysResponse),
+)
 def get_delays_by_line():
     response = delays.delay_time_by_line(app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True)
 
 
-@app.route("/api/tripmetrics", cors=cors_config)
+@app.route(
+    "/api/tripmetrics",
+    cors=cors_config,
+    docs=Docs(request=models.TripMetricsByLineParams, response=models.TripMetricsResponse),
+)
 def get_trips_by_line():
     response = speed.trip_metrics_by_line(app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True)
 
 
-@app.route("/api/scheduledservice", cors=cors_config)
+@app.route(
+    "/api/scheduledservice",
+    cors=cors_config,
+    docs=Docs(request=models.ScheduledServiceParams, response=models.GetScheduledServiceResponse),
+)
 def get_scheduled_service():
     query = app.current_request.query_params
     start_date = parse_user_date(query["start_date"])
@@ -193,7 +214,9 @@ def get_scheduled_service():
     return json.dumps(response)
 
 
-@app.route("/api/ridership", cors=cors_config)
+@app.route(
+    "/api/ridership", cors=cors_config, docs=Docs(request=models.RidershipParams, response=models.RidershipResponse)
+)
 def get_ridership():
     query = app.current_request.query_params
     start_date = parse_user_date(query["start_date"])
@@ -207,13 +230,17 @@ def get_ridership():
     return json.dumps(response)
 
 
-@app.route("/api/facilities", cors=cors_config)
+@app.route("/api/facilities", cors=cors_config, docs=Docs(response=models.Facility))
 def get_facilities():
     response = mbta_v3.getV3("facilities", app.current_request.query_params)
     return json.dumps(response, indent=4, sort_keys=True, default=str)
 
 
-@app.route("/api/speed_restrictions", cors=cors_config)
+@app.route(
+    "/api/speed_restrictions",
+    cors=cors_config,
+    docs=Docs(request=models.SpeedRestrictionsParams, response=models.SpeedRestrictionsResponse),
+)
 def get_speed_restrictions():
     query = app.current_request.query_params
     on_date = query["date"]
@@ -225,7 +252,11 @@ def get_speed_restrictions():
     return json.dumps(response)
 
 
-@app.route("/api/service_hours", cors=cors_config)
+@app.route(
+    "/api/service_hours",
+    cors=cors_config,
+    docs=Docs(request=models.ServiceHoursParams, response=models.ServiceHoursResponse),
+)
 def get_service_hours():
     query = app.current_request.query_params
     line_id = query.get("line_id")
@@ -241,7 +272,7 @@ def get_service_hours():
     return json.dumps(response)
 
 
-@app.route("/api/time_predictions", cors=cors_config)
+@app.route("/api/time_predictions", cors=cors_config, docs=Docs(response=models.TimePredictionResponse))
 def get_time_predictions():
     query = app.current_request.query_params
     route_id = query["route_id"]
