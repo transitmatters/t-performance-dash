@@ -1,25 +1,25 @@
-import dayjs from 'dayjs';
-import type { SetStateAction } from 'react';
-import React from 'react';
-import classNames from 'classnames';
 import { faArrowRight, faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Flatpickr from 'react-flatpickr';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
 import 'flatpickr/dist/themes/light.css';
-import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
+import type { SetStateAction } from 'react';
+import React from 'react';
+import Flatpickr from 'react-flatpickr';
 import {
-  TODAY_STRING,
   RANGE_PRESETS,
+  TODAY_STRING,
   getDatePickerOptions,
-  isDateValid,
   getValidDateForRange,
+  isDateValid,
 } from '../../../constants/dates';
-import { buttonHighlightFocus } from '../../../styles/general';
-import type { Line } from '../../../types/lines';
 import { ALL_PAGES } from '../../../constants/pages';
 import { getDefaultDates } from '../../../state/defaults/dateDefaults';
-import { RangeButton } from './RangeButton';
+import { buttonHighlightFocus } from '../../../styles/general';
+import type { Line } from '../../../types/lines';
+import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { getMinMaxDatesForRoute } from '../../../utils/stations';
+import { RangeButton } from './RangeButton';
 
 interface DatePickerProps {
   range: boolean;

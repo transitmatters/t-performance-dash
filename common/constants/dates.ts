@@ -1,17 +1,18 @@
 import dayjs from 'dayjs';
 
-import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import type { DateTimePickerProps } from 'react-flatpickr';
 import type {
   DateParams,
   DateSelectionDefaultOptions,
   SingleDateParams,
 } from '../components/inputs/DateSelection/types/DateSelectionTypes';
+
+import type { BusRoute } from '../types/lines';
 import type { Tab } from '../types/router';
-import type { Page } from './pages';
 import { getMinMaxDatesForRoute } from '../utils/stations';
-import { BusRoute } from '../types/lines';
+import type { Page } from './pages';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

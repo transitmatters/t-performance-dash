@@ -18,7 +18,7 @@
     "postinstall": "cd server && poetry install",
     "lint": "npm run lint-frontend && npm run lint-backend",
     "lint-backend": "cd server && poetry run flake8 && poetry run black . --check",
-    "lint-frontend": "tsc --noEmit && eslint . && next lint",
+    "lint-frontend": "tsc --noEmit && eslint . --fix && next lint --fix",
     "serve-static": "npm run build && serve out",
     "start": "concurrently npm:start-python npm:start-react",
     "start-python": "cd server && poetry run chalice local --port=5000",

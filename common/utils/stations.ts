@@ -4,7 +4,7 @@ import type { Location } from '../types/charts';
 import type { Direction, Distance } from '../types/dataPoints';
 import { stations, rtStations, busStations, crStations } from '../constants/stations';
 import { station_distances } from '../constants/station_distances';
-import { Tab } from '../types/router';
+import type { Tab } from '../types/router';
 
 export const optionsForField = (
   type: 'from' | 'to',

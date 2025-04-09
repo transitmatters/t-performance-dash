@@ -1,8 +1,8 @@
-import React from 'react';
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleExclamation, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import React from 'react';
+import { isBNRDRoute } from '../../constants/bnrd';
 import type { BusRoute } from '../../types/lines';
-import { isBNRDRoute, isNewBnrdRoute } from '../../constants/bnrd';
 
 interface BnrdBannerProps {
   busRoute: BusRoute | undefined;
