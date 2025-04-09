@@ -28,4 +28,6 @@ export interface LineMap {
   type: string;
   direction: Direction;
   stations: Station[];
+  service_start?: string;
+  service_end?: string;
 }

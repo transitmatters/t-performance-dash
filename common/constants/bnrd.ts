@@ -9,12 +9,12 @@ export const BNRD = {
 };
 
 export const isNewBnrdRoute = (route: string) => {
-  const routeNum = parseInt(route);
+  const routeNum = parseInt(route, 10);
   return BNRD[1].new_routes.includes(routeNum);
 };
 
 export const isChangedBnrdRoute = (route: string) => {
-  const routeNum = parseInt(route);
+  const routeNum = parseInt(route, 10);
   return BNRD[1].changed_routes.includes(routeNum);
 };
 

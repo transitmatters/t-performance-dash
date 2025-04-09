@@ -5,6 +5,7 @@
       "0": "outbound",
       "1": "inbound"
     },
+    "service_start": "2024-12-15",
     "stations": [
       {
         "stop_name": "Linden Square (Malden)",

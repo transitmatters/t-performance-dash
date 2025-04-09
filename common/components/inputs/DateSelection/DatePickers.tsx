@@ -7,12 +7,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/light.css';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
-import { TODAY_STRING, RANGE_PRESETS, getDatePickerOptions } from '../../../constants/dates';
+import {
+  TODAY_STRING,
+  RANGE_PRESETS,
+  getDatePickerOptions,
+  isDateValid,
+  getValidDateForRange,
+} from '../../../constants/dates';
 import { buttonHighlightFocus } from '../../../styles/general';
 import type { Line } from '../../../types/lines';
 import { ALL_PAGES } from '../../../constants/pages';
 import { getDefaultDates } from '../../../state/defaults/dateDefaults';
 import { RangeButton } from './RangeButton';
+import { getMinMaxDatesForRoute } from '../../../utils/stations';
 
 interface DatePickerProps {
   range: boolean;
@@ -33,7 +40,7 @@ const updateColor = (line: Line | undefined) => {
 export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, clearPreset }) => {
   const updateQueryParams = useUpdateQuery();
   const { query, line, tab, page } = useDelimitatedRoute();
-  const { startDate, endDate, date } = query;
+  const { startDate, endDate, date, busRoute } = query;
   const endDateObject = dayjs(endDate);
   const startDateObject = dayjs(startDate ?? date);
   const isSingleDate = page === 'singleTrips';
@@ -43,7 +50,15 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
       updateQueryParams({ startDate: startDate }, !range, false);
     } else if (startDate === TODAY_STRING) {
       // If start date is today -> set range to past week. This prevents bugs with startDate === endDate
-      updateQueryParams(RANGE_PRESETS[0].input, !range, false);
+      const weekPreset = RANGE_PRESETS[tab]?.week;
+      if (weekPreset) {
+        updateQueryParams(weekPreset.input, !range, false);
+      } else {
+        // Fallback to a simple week range if preset not found
+        const endDate = TODAY_STRING;
+        const startDate = dayjs(TODAY_STRING).subtract(7, 'days').format('YYYY-MM-DD');
+        updateQueryParams({ startDate, endDate }, !range, false);
+      }
     } else {
       updateQueryParams({ startDate: startDate }, !range, false);
     }
@@ -90,12 +105,54 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
   }, [line]);
 
   React.useEffect(() => {
-    if (tab && page && !date && !startDate && !endDate) {
+    if (tab && page) {
       const pageObject = ALL_PAGES[page];
+      const { minDate, maxDate } = getMinMaxDatesForRoute(tab, busRoute);
       const defaultDateParams = getDefaultDates(pageObject.dateStoreSection, tab);
-      if (defaultDateParams) updateQueryParams(defaultDateParams, true);
+
+      // Update dates if none are set OR if current dates are outside valid range
+      if (!date && !startDate && !endDate) {
+        if (minDate || maxDate) {
+          if (range) {
+            if (minDate && maxDate) {
+              updateQueryParams({ startDate: minDate, endDate: maxDate }, true);
+            } else if (minDate) {
+              updateQueryParams({ startDate: minDate, endDate: TODAY_STRING }, true);
+            } else if (maxDate) {
+              const startDate = dayjs(maxDate).subtract(7, 'days').format('YYYY-MM-DD');
+              updateQueryParams({ startDate, endDate: maxDate }, true);
+            }
+          } else {
+            updateQueryParams({ date: maxDate || minDate }, false);
+          }
+        } else if (defaultDateParams) {
+          updateQueryParams(defaultDateParams, range);
+        }
+      } else if (minDate || maxDate) {
+        // Route change case - check if current dates are valid
+        if (range) {
+          const isStartValid = isDateValid(startDate, minDate, maxDate);
+          const isEndValid = isDateValid(endDate, minDate, maxDate);
+
+          if (!isStartValid || !isEndValid) {
+            updateQueryParams(
+              {
+                startDate: getValidDateForRange(startDate, minDate, maxDate, false),
+                endDate: getValidDateForRange(endDate, minDate, maxDate, true),
+              },
+              true
+            );
+          }
+        } else {
+          // Handle both date and startDate for single date mode
+          const currentDate = date || startDate;
+          if (currentDate && !isDateValid(currentDate, minDate, maxDate)) {
+            updateQueryParams({ date: getValidDateForRange(currentDate, minDate, maxDate) }, false);
+          }
+        }
+      }
     }
-  }, [tab, page, startDate, endDate, updateQueryParams, date]);
+  }, [tab, page, startDate, endDate, updateQueryParams, date, busRoute, range]);
 
   return (
     <div className="-ml-[1px] flex h-10 flex-row justify-center self-stretch rounded-r-md bg-white md:h-7">
@@ -108,7 +165,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
           value={startDate ?? date}
           key={'start'}
           placeholder={'mm/dd/yyyy'}
-          options={getDatePickerOptions(tab, page)}
+          options={getDatePickerOptions(tab, page, busRoute)}
           onChange={(dates, currentDateString) => {
             if (isSingleDate) {
               handleDateChange(currentDateString);
@@ -135,7 +192,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
               value={endDate}
               key={'end'}
               placeholder={'mm/dd/yyyy'}
-              options={getDatePickerOptions(tab, page)}
+              options={getDatePickerOptions(tab, page, busRoute)}
               onChange={(dates, currentDateString) => {
                 handleEndDateChange(currentDateString);
               }}

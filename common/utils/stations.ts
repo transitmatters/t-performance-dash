@@ -4,6 +4,7 @@ import type { Location } from '../types/charts';
 import type { Direction, Distance } from '../types/dataPoints';
 import { stations, rtStations, busStations, crStations } from '../constants/stations';
 import { station_distances } from '../constants/station_distances';
+import { Tab } from '../types/router';
 
 export const optionsForField = (
   type: 'from' | 'to',
@@ -133,9 +134,10 @@ export const stopIdsForStations = (from: Station | undefined, to: Station | unde
   }
 
   const isDirection1 = from.order < to.order;
+  const directionKey = isDirection1 ? '1' : '0';
   return {
-    fromStopIds: isDirection1 ? from.stops['1'] : from.stops['0'],
-    toStopIds: isDirection1 ? to.stops['1'] : to.stops['0'],
+    fromStopIds: from.stops[directionKey],
+    toStopIds: to.stops[directionKey],
   };
 };
 
@@ -169,4 +171,42 @@ export const getStationKeysFromStations = (line: LineShort): string[] => {
   } else {
     return lineStations.map((station: Station) => station.station);
   }
+};
+
+export const findValidDefaultStations = (stations: Station[] | undefined) => {
+  if (!stations?.length) return { defaultFrom: undefined, defaultTo: undefined };
+
+  for (const dir of ['1', '0']) {
+    const validStations = stations.filter((s) => s.stops[dir]?.length > 0);
+    if (validStations.length >= 2) {
+      const [defaultFrom, defaultTo] = validStations.slice(1, 3);
+      if (defaultFrom && defaultTo && defaultFrom.station !== defaultTo.station) {
+        return { defaultFrom, defaultTo };
+      }
+    }
+  }
+  return { defaultFrom: undefined, defaultTo: undefined };
+};
+
+export const findNextValidStation = (
+  station: Station,
+  stations: Station[] | undefined
+): Station | undefined =>
+  stations?.find(
+    (s) =>
+      s.order > station.order &&
+      s.station !== station.station &&
+      s.stops[station.stops['1']?.length ? '1' : '0']?.length > 0
+  );
+
+export const getMinMaxDatesForRoute = (
+  tab: Tab,
+  route?: BusRoute | CommuterRailRoute
+): { minDate: string | undefined; maxDate: string | undefined } => {
+  if ((tab === 'Commuter Rail' || tab === 'Bus') && route) {
+    const minDate = stations[tab][route].service_start;
+    const maxDate = stations[tab][route].service_end;
+    return { minDate, maxDate };
+  }
+  return { minDate: undefined, maxDate: undefined };
 };
