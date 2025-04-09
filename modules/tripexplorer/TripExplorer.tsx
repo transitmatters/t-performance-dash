@@ -14,9 +14,9 @@ import { GobbleDataNotice } from '../../common/components/notices/GobbleDataNoti
 import { BetaDataNotice } from '../../common/components/notices/BetaDataNotice';
 import { PokeySchleppieAwardBanner } from '../../common/components/notices/PokeySchleppieAwardBanner';
 import { CommuterRailDataNotice } from '../../common/components/notices/CommuterRailDataNotice';
+import { BnrdBanner } from '../../common/components/notices/BnrdBanner';
 import { useAlertStore } from './AlertStore';
 import { TripGraphs } from './TripGraphs';
-import { BnrdBanner } from '../../common/components/notices/BnrdBanner';
 
 export const TripExplorer = () => {
   const {
