@@ -54,10 +54,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
       if (weekPreset) {
         updateQueryParams(weekPreset.input, !range, false);
       } else {
-        // Fallback to a simple week range if preset not found
-        const endDate = TODAY_STRING;
-        const startDate = dayjs(TODAY_STRING).subtract(7, 'days').format('YYYY-MM-DD');
-        updateQueryParams({ startDate, endDate }, !range, false);
+        updateQueryParams(RANGE_PRESETS[0].input, !range, false);
       }
     } else {
       updateQueryParams({ startDate: startDate }, !range, false);
