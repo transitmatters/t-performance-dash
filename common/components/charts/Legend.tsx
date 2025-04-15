@@ -3,9 +3,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Disclosure } from '@headlessui/react';
 import React from 'react';
 import { useDelimitatedRoute } from '../../utils/router';
+import { CHART_COLORS } from '../../constants/colors';
 
 interface LegendProps {
   showUnderRatio?: boolean;
+}
+
+interface LegendLongTermProps {
+  showTrendline: boolean;
+  onToggleTrendline: () => void;
 }
 
 export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio }) => {
@@ -83,7 +89,10 @@ const LegendSingle: React.FC<LegendProps> = ({ showUnderRatio = false }) => {
   );
 };
 
-export const LegendLongTerm: React.FC = () => {
+export const LegendLongTerm: React.FC<LegendLongTermProps> = ({
+  showTrendline,
+  onToggleTrendline,
+}) => {
   return (
     <div className="flex w-full flex-row items-baseline gap-2 p-1 text-left text-xs sm:gap-4">
       <p>
@@ -93,6 +102,12 @@ export const LegendLongTerm: React.FC = () => {
         <span className={'mr-1 inline-block h-2.5 w-2.5 rounded-sm bg-[#C8CCD2]'}></span>{' '}
         Interquartile range
       </p>
+      <button onClick={onToggleTrendline} className="flex items-center hover:opacity-80">
+        <span
+          className={`mr-1 inline-block h-2.5 w-2.5 border-2 border-dashed ${showTrendline ? `border-tm-red` : 'border-gray-300'}`}
+        />
+        Trendline
+      </button>
     </div>
   );
 };
