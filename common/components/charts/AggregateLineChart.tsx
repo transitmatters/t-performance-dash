@@ -139,7 +139,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           redraw={true}
           data={{
             labels,
-            // @ts-ignore it doesnt like our combo of x,y in trendline + x and y seperate in datasets
+            // @ts-expect-error it doesnt like our combo of x,y in trendline + x and y seperate in datasets
             datasets,
           }}
           options={{
