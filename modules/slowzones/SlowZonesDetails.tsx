@@ -50,7 +50,11 @@ export function SlowZonesDetails() {
     !delayTotals.isError && delayTotals.data && startDateUTC && endDateUTC && lineShort && line;
   const segmentsReady = !allSlow.isError && allSlow.data && startDateUTC && lineShort;
   const canShowSlowZonesMap =
-    lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange' || lineShort === 'Green';
+    lineShort === 'Red' ||
+    lineShort === 'Blue' ||
+    lineShort === 'Orange' ||
+    lineShort === 'Green' ||
+    lineShort === 'Mattapan';
   const isDesktop = useBreakpoint('lg');
 
   if (!endDateUTC || !startDateUTC) {

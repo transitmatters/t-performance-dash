@@ -39,7 +39,11 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
   const [lineShort, setLineShort] = useState<LineShort>('Red');
   const line = `line-${lineShort.toLowerCase()}` as Line;
   const canShowSlowZonesMap =
-    lineShort === 'Red' || lineShort === 'Blue' || lineShort === 'Orange' || lineShort === 'Green';
+    lineShort === 'Red' ||
+    lineShort === 'Blue' ||
+    lineShort === 'Orange' ||
+    lineShort === 'Green' ||
+    lineShort === 'Mattapan';
   const isDesktop = useBreakpoint('lg');
 
   const {
@@ -118,6 +122,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
               Orange: 'Orange',
               Blue: 'Blue',
               Green: 'Green',
+              Mattapan: 'Mattapan',
             })}
           />
         </WidgetDiv>
