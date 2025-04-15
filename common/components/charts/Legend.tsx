@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Disclosure } from '@headlessui/react';
 import React from 'react';
 import { useDelimitatedRoute } from '../../utils/router';
-import { CHART_COLORS } from '../../constants/colors';
 
 interface LegendProps {
   showUnderRatio?: boolean;
