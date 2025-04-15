@@ -10,7 +10,7 @@ interface LegendProps {
 }
 
 interface LegendLongTermProps {
-  showTrendline: boolean;
+  isTrendlineVisible: boolean;
   onToggleTrendline: () => void;
 }
 
@@ -90,7 +90,7 @@ const LegendSingle: React.FC<LegendProps> = ({ showUnderRatio = false }) => {
 };
 
 export const LegendLongTerm: React.FC<LegendLongTermProps> = ({
-  showTrendline,
+  isTrendlineVisible,
   onToggleTrendline,
 }) => {
   return (
@@ -104,7 +104,7 @@ export const LegendLongTerm: React.FC<LegendLongTermProps> = ({
       </p>
       <button onClick={onToggleTrendline} className="flex items-center hover:opacity-80">
         <span
-          className={`mr-1 inline-block h-2.5 w-2.5 border-2 border-dashed ${showTrendline ? `border-tm-red` : 'border-gray-300'}`}
+          className={`mr-1 inline-block h-2.5 w-2.5 border-2 border-dashed ${isTrendlineVisible ? `border-tm-red` : 'border-gray-300'}`}
         />
         Trendline
       </button>

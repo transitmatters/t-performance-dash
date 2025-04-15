@@ -225,7 +225,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
       <div className="flex flex-row items-end gap-4">
         {showLegend && (
           <LegendLongTerm
-            showTrendline={isTrendlineVisible}
+            isTrendlineVisible={isTrendlineVisible}
             onToggleTrendline={() => setIsTrendlineVisible(!isTrendlineVisible)}
           />
         )}
