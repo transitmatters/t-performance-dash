@@ -32,6 +32,8 @@ export interface LineMap {
   service_start?: string;
   service_end?: string;
   stations: Station[];
+  service_start?: string;
+  service_end?: string;
 }
 
 export type StationMap = {

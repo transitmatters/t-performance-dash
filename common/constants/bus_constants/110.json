@@ -1,0 +1,92 @@
+{
+  "110": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "service_start": "2024-12-15",
+    "stations": [
+      {
+        "stop_name": "Wonderland Station West",
+        "branches": null,
+        "station": "wondw",
+        "order": 1,
+        "stops": {
+          "1": ["110-1-15797"],
+          "0": ["110-0-15800"]
+        }
+      },
+      {
+        "stop_name": "Bell Circle",
+        "branches": null,
+        "station": "bell",
+        "order": 2,
+        "stops": {
+          "1": ["110-1-4733"],
+          "0": ["110-0-4717"]
+        }
+      },
+      {
+        "stop_name": "Broadway & Central (Revere)",
+        "branches": null,
+        "station": "bwcen",
+        "order": 3,
+        "stops": {
+          "1": ["110-1-5713"],
+          "0": ["110-0-5763"]
+        }
+      },
+      {
+        "stop_name": "Woodlawn",
+        "branches": null,
+        "station": "woodc",
+        "order": 4,
+        "stops": {
+          "1": ["110-1-5547"],
+          "0": ["110-0-5577"]
+        }
+      },
+      {
+        "stop_name": "Elm Street @ Ferry Street (Glendale Park)",
+        "branches": null,
+        "station": "glnpk",
+        "order": 5,
+        "stops": {
+          "1": ["110-1-5553"],
+          "0": ["110-0-5569"]
+        }
+      },
+      {
+        "stop_name": "Everett Square",
+        "branches": null,
+        "station": "evrtc",
+        "order": 6,
+        "stops": {
+          "1": ["110-1-5496"],
+          "0": ["110-0-5695"]
+        }
+      },
+      {
+        "stop_name": "Sweester Circle",
+        "branches": null,
+        "station": "sweet",
+        "order": 7,
+        "stops": {
+          "1": ["110-1-5560"],
+          "0": ["110-0-5565"]
+        }
+      },
+      {
+        "stop_name": "Wellington Station",
+        "branches": null,
+        "station": "welst",
+        "order": 8,
+        "stops": {
+          "1": ["110-1-52720"],
+          "0": ["110-0-52713"]
+        }
+      }
+    ]
+  }
+}

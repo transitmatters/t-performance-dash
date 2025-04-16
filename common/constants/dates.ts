@@ -1,13 +1,15 @@
 import dayjs from 'dayjs';
 
-import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import type { DateTimePickerProps } from 'react-flatpickr';
 import type {
   DateParams,
   DateSelectionDefaultOptions,
   SingleDateParams,
 } from '../components/inputs/DateSelection/types/DateSelectionTypes';
+
+import type { BusRoute } from '../types/lines';
 import type { Tab } from '../types/router';
 import type { BusRoute, CommuterRailRoute } from '../types/lines';
 import { getMinMaxDatesForRoute } from '../utils/stations';
@@ -50,6 +52,37 @@ export const COMMUTER_RAIL_DATA_MIN_DATE = '2024-01-01';
 
 export const getESTDayjs = (date: string) => {
   return dayjs(date).tz(est);
+};
+
+export const isDateValid = (
+  dateStr: string | undefined,
+  minDate: string | undefined,
+  maxDate: string | undefined
+) => {
+  if (!dateStr) return true;
+  const dateObj = dayjs(dateStr);
+
+  if (minDate && dateObj.isBefore(minDate)) {
+    return false;
+  }
+
+  if (maxDate && dateObj.isAfter(maxDate)) {
+    return false;
+  }
+
+  return true;
+};
+
+export const getValidDateForRange = (
+  currentDate: string | undefined,
+  minDate: string | undefined,
+  maxDate: string | undefined,
+  fallbackToToday = true
+) => {
+  if (!currentDate || !isDateValid(currentDate, minDate, maxDate)) {
+    return maxDate || minDate || (fallbackToToday ? TODAY_STRING : undefined);
+  }
+  return currentDate;
 };
 
 export const getDatePickerOptions = (

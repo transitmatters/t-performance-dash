@@ -8,6 +8,11 @@ interface LegendProps {
   showUnderRatio?: boolean;
 }
 
+interface LegendLongTermProps {
+  isTrendlineVisible: boolean;
+  onToggleTrendline: () => void;
+}
+
 export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio }) => {
   const { line } = useDelimitatedRoute();
   return (
@@ -83,7 +88,10 @@ const LegendSingle: React.FC<LegendProps> = ({ showUnderRatio = false }) => {
   );
 };
 
-export const LegendLongTerm: React.FC = () => {
+export const LegendLongTerm: React.FC<LegendLongTermProps> = ({
+  isTrendlineVisible,
+  onToggleTrendline,
+}) => {
   return (
     <div className="flex w-full flex-row items-baseline gap-2 p-1 text-left text-xs sm:gap-4">
       <p>
@@ -93,6 +101,12 @@ export const LegendLongTerm: React.FC = () => {
         <span className={'mr-1 inline-block h-2.5 w-2.5 rounded-sm bg-[#C8CCD2]'}></span>{' '}
         Interquartile range
       </p>
+      <button onClick={onToggleTrendline} className="flex items-center hover:opacity-80">
+        <span
+          className={`mr-1 inline-block h-2.5 w-2.5 border-2 border-dashed ${isTrendlineVisible ? `border-tm-red` : 'border-gray-300'}`}
+        />
+        Trendline
+      </button>
     </div>
   );
 };
