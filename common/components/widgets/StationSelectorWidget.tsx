@@ -10,6 +10,8 @@ import {
   getStationForInvalidFromSelection,
   optionsStation,
   stopIdsForStations,
+  findValidDefaultStations,
+  findNextValidStation,
 } from '../../utils/stations';
 import type { BusRoute, CommuterRailRoute, Line } from '../../types/lines';
 import { LINE_OBJECTS } from '../../constants/lines';
@@ -33,13 +35,22 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
   } = useDelimitatedRoute();
 
   const stations = optionsStation(lineShort, busRoute, crRoute);
-  const toStation = to ? getParentStationForStopId(to, lineShort) : stations?.[stations.length - 2];
-  const fromStation = from ? getParentStationForStopId(from, lineShort) : stations?.[1];
+  const { defaultFrom, defaultTo } = findValidDefaultStations(stations);
+  const toStation = to ? getParentStationForStopId(to, lineShort) : defaultTo;
+  const fromStation = from ? getParentStationForStopId(from, lineShort) : defaultFrom;
 
   React.useEffect(() => {
-    const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
-    updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });
-  }, [fromStation, toStation, updateQueryParams]);
+    if (fromStation && toStation && fromStation.station === toStation.station) {
+      const nextValidStation = findNextValidStation(fromStation, stations);
+      if (nextValidStation) {
+        const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, nextValidStation);
+        updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });
+      }
+    } else {
+      const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
+      updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });
+    }
+  }, [fromStation, toStation, updateQueryParams, stations]);
 
   const updateStations = (action: 'to' | 'from' | 'swap', newStation?: Station) => {
     switch (action) {

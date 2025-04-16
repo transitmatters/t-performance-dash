@@ -1,0 +1,82 @@
+{
+  "116": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "service_start": "2024-12-15",
+    "stations": [
+      {
+        "stop_name": "Wonderland Station West",
+        "branches": null,
+        "station": "wondw",
+        "order": 1,
+        "stops": {
+          "1": ["116-1-15796"],
+          "0": ["116-0-15800"]
+        }
+      },
+      {
+        "stop_name": "Broadway & Central (Revere)",
+        "branches": null,
+        "station": "bwcen",
+        "order": 2,
+        "stops": {
+          "1": ["116-1-5713"],
+          "0": ["116-0-5763"]
+        }
+      },
+      {
+        "stop_name": "Broadway & Webster",
+        "branches": null,
+        "station": "webst",
+        "order": 3,
+        "stops": {
+          "1": ["116-1-5721"],
+          "0": ["116-0-5754"]
+        }
+      },
+      {
+        "stop_name": "Bellingham Square (Chelsea)",
+        "branches": null,
+        "station": "belsq",
+        "order": 4,
+        "stops": {
+          "1": ["116-1-5605"],
+          "0": ["116-0-5615"]
+        }
+      },
+      {
+        "stop_name": "Central Square (East Boston)",
+        "branches": null,
+        "station": "cntle",
+        "order": 5,
+        "stops": {
+          "1": ["116-1-5736"],
+          "0": ["116-0-5743"]
+        }
+      },
+      {
+        "stop_name": "Maverick Square (East Boston)",
+        "branches": null,
+        "station": "mavck",
+        "order": 6,
+        "stops": {
+          "1": ["116-1-5740"],
+          "0": ["116-0-5740"]
+        }
+      },
+      {
+        "stop_name": "Haymarket",
+        "branches": null,
+        "station": "hayms",
+        "order": 8,
+        "stops": {
+          "1": ["116-1-8309"],
+          "0": ["116-0-8309"]
+        }
+      }
+    ]
+  }
+}

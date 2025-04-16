@@ -1,11 +1,11 @@
 {
-  "86": {
+  "86-legacy": {
     "type": "bus",
     "direction": {
       "0": "outbound",
       "1": "inbound"
     },
-    "service_start": "2024-12-15",
+    "service_end": "2024-12-14",
     "stations": [
       {
         "stop_name": "Harvard Bus Tunnels",
@@ -14,24 +14,34 @@
         "order": 0,
         "stops": {
           "1": [],
-          "0": ["86-0-76123"]
+          "0": ["86-0-20761"]
         }
       },
       {
-        "stop_name": "Mount Auburn @ Story Street",
+        "stop_name": "Sullivan Square",
         "branches": null,
-        "station": "mtsty",
-        "order": 0,
+        "station": "sull",
+        "order": 1,
         "stops": {
-          "1": [],
-          "0": ["86-0-2074"]
+          "1": ["86-1-29005", "86-1-28741"],
+          "0": ["86-0-29001", "86-0-2874"]
+        }
+      },
+      {
+        "stop_name": "Union Square",
+        "branches": null,
+        "station": "unsqu",
+        "order": 2,
+        "stops": {
+          "1": ["86-1-2612"],
+          "0": ["86-0-2597"]
         }
       },
       {
         "stop_name": "Harvard",
         "branches": null,
         "station": "harsq",
-        "order": 1,
+        "order": 3,
         "stops": {
           "1": ["86-1-22549"],
           "0": []
@@ -41,7 +51,7 @@
         "stop_name": "North Harvard & Western",
         "branches": null,
         "station": "nhvws",
-        "order": 2,
+        "order": 4,
         "stops": {
           "1": ["86-1-2553"],
           "0": ["86-0-2561"]
@@ -51,7 +61,7 @@
         "stop_name": "Market & Western",
         "branches": null,
         "station": "mktwe",
-        "order": 3,
+        "order": 5,
         "stops": {
           "1": ["86-1-1077"],
           "0": ["86-0-1043"]
@@ -61,9 +71,9 @@
         "stop_name": "Brighton Center",
         "branches": null,
         "station": "brctr",
-        "order": 4,
+        "order": 6,
         "stops": {
-          "1": ["86-1-1083"],
+          "1": ["86-1-1084"],
           "0": ["86-0-1026"]
         }
       },
@@ -71,7 +81,7 @@
         "stop_name": "Reservoir Busway",
         "branches": null,
         "station": "resbu",
-        "order": 5,
+        "order": 7,
         "stops": {
           "1": ["86-1-21917"],
           "0": ["86-0-21917"]
