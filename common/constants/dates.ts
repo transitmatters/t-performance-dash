@@ -9,9 +9,8 @@ import type {
   SingleDateParams,
 } from '../components/inputs/DateSelection/types/DateSelectionTypes';
 
-import type { BusRoute } from '../types/lines';
-import type { Tab } from '../types/router';
 import type { BusRoute, CommuterRailRoute } from '../types/lines';
+import type { Tab } from '../types/router';
 import { getMinMaxDatesForRoute } from '../utils/stations';
 import type { Page } from './pages';
 

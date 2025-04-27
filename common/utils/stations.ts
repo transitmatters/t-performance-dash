@@ -209,18 +209,6 @@ export const getStationKeysFromStations = (
   return stationsData.map((station: Station) => station.station);
 };
 
-export const getMinMaxDatesForRoute = (
-  tab: Tab,
-  route?: BusRoute | CommuterRailRoute
-): { minDate: string | undefined; maxDate: string | undefined } => {
-  if ((tab === 'Commuter Rail' || tab === 'Bus') && route) {
-    const minDate = stations[tab][route].service_start;
-    const maxDate = stations[tab][route].service_end;
-    return { minDate, maxDate };
-  }
-  return { minDate: undefined, maxDate: undefined };
-};
-
 export const findValidDefaultStations = (stations: Station[] | undefined) => {
   if (!stations?.length) return { defaultFrom: undefined, defaultTo: undefined };
 
