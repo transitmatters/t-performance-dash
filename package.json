@@ -133,5 +133,8 @@
   "overrides": {
     "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.0c3f3b7.0"
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:5000",
+  "volta": {
+    "node": "20.19.0"
+  }
 }

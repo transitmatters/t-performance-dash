@@ -9,7 +9,7 @@ import type {
   SingleDateParams,
 } from '../components/inputs/DateSelection/types/DateSelectionTypes';
 
-import type { BusRoute } from '../types/lines';
+import type { BusRoute, CommuterRailRoute } from '../types/lines';
 import type { Tab } from '../types/router';
 import { getMinMaxDatesForRoute } from '../utils/stations';
 import type { Page } from './pages';
@@ -84,7 +84,11 @@ export const getValidDateForRange = (
   return currentDate;
 };
 
-export const getDatePickerOptions = (tab: Tab, page?: Page, route?: BusRoute) => {
+export const getDatePickerOptions = (
+  tab: Tab,
+  page?: Page,
+  route?: CommuterRailRoute | BusRoute
+) => {
   const { minDate, maxDate } = getMinMaxDatesForRoute(tab, route);
 
   if (tab === 'Commuter Rail') {
