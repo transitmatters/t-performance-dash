@@ -39,6 +39,7 @@ fi
 
 $PRODUCTION && ENV_SUFFIX=""                                    || ENV_SUFFIX="-beta"
 $PRODUCTION && CHALICE_STAGE="production"                       || CHALICE_STAGE="beta"
+$PRODUCTION && ENV_TAG="prod"                                   || ENV_TAG="beta"
 
 $PRODUCTION && FRONTEND_ZONE="dashboard.transitmatters.org"     || FRONTEND_ZONE="labs.transitmatters.org"
 $PRODUCTION && FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN"        || FRONTEND_CERT_ARN="$TM_LABS_WILDCARD_CERT_ARN"
@@ -91,11 +92,14 @@ pushd server/ > /dev/null
 poetry export --without-hashes --output requirements.txt
 poetry run chalice package --stage $CHALICE_STAGE --merge-template cloudformation.json cfn/
 aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUCKET --output-template-file cfn/packaged.yaml
-aws cloudformation deploy --template-file cfn/packaged.yaml --s3-bucket $BACKEND_BUCKET --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset --parameter-overrides \
-    TMFrontendHostname=$FRONTEND_HOSTNAME \
-    TMFrontendZone=$FRONTEND_ZONE \
-    TMFrontendCertArn=$FRONTEND_CERT_ARN \
-    TMBackendCertArn=$BACKEND_CERT_ARN \
+aws cloudformation deploy --template-file cfn/packaged.yaml --s3-bucket $BACKEND_BUCKET --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM \
+    --tags service=t-performance-dash env=$ENV_TAG \
+    --no-fail-on-empty-changeset \
+    --parameter-overrides \
+        TMFrontendHostname=$FRONTEND_HOSTNAME \
+        TMFrontendZone=$FRONTEND_ZONE \
+        TMFrontendCertArn=$FRONTEND_CERT_ARN \
+        TMBackendCertArn=$BACKEND_CERT_ARN \
     TMBackendHostname=$BACKEND_HOSTNAME \
     TMBackendZone=$BACKEND_ZONE \
     MbtaV3ApiKey=$MBTA_V3_API_KEY \
@@ -104,13 +108,16 @@ aws cloudformation deploy --template-file cfn/packaged.yaml --s3-bucket $BACKEND
     DDTags=$DD_TAGS
 
 popd > /dev/null
-aws s3 sync out/ s3://$FRONTEND_HOSTNAME
+aws s3 sync out/ s3://$FRONTEND_HOSTNAME \
+  --cache-control "public, max-age=31536000, immutable"
+aws s3 cp out/index.html s3://$FRONTEND_HOSTNAME/index.html \
+  --cache-control "no-cache, must-revalidate"
 
 # Band-aid the fact that v3 doesn't have trailing slashes on its path, but v4 does,
 #  so we need /THING to be a valid path in addition to the actual /THING/.
-aws s3 cp v3_to_v4_slash_trick/trick.html s3://$FRONTEND_HOSTNAME/rapidtransit --no-guess-mime-type --content-type="text/html"
-aws s3 cp v3_to_v4_slash_trick/trick.html s3://$FRONTEND_HOSTNAME/bus --no-guess-mime-type --content-type="text/html"
-aws s3 cp v3_to_v4_slash_trick/trick.html s3://$FRONTEND_HOSTNAME/slowzones --no-guess-mime-type --content-type="text/html"
+aws s3 cp v3_to_v4_slash_trick/trick.html s3://$FRONTEND_HOSTNAME/rapidtransit --no-guess-mime-type --content-type="text/html" --cache-control "no-cache, must-revalidate"
+aws s3 cp v3_to_v4_slash_trick/trick.html s3://$FRONTEND_HOSTNAME/bus --no-guess-mime-type --content-type="text/html" --cache-control "no-cache, must-revalidate"
+aws s3 cp v3_to_v4_slash_trick/trick.html s3://$FRONTEND_HOSTNAME/slowzones --no-guess-mime-type --content-type="text/html" --cache-control "no-cache, must-revalidate"
 
 # Grab the cloudfront ID and invalidate its cache
 CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null] | [?contains(Aliases.Items, '$FRONTEND_HOSTNAME')].Id | [0]" --output text)
