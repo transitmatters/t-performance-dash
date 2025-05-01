@@ -162,6 +162,9 @@
           "Enabled": "true",
           "DefaultCacheBehavior": {
             "Compress": true,
+            "DefaultTTL": 86400,
+            "MinTTL": 0,
+            "MaxTTL": 31536000,
             "ForwardedValues": {
               "QueryString": "false"
             },
