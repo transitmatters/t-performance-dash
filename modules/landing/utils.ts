@@ -35,7 +35,7 @@ export const convertToSpeedDataset = (
   data: { [key in Line]?: DeliveredTripMetrics[] },
   labels: string[]
 ) => {
-  return Object.keys(data).map((line: Line) => {
+  return (Object.keys(data) as Line[]).map((line: Line) => {
     // We don't need to show the Mattapan line on the landing page
     if (line === 'line-mattapan') {
       return { data: [] };
@@ -116,7 +116,7 @@ export const convertToServiceDataset = (
   data: { [key in Line]?: DeliveredTripMetrics[] },
   labels: string[]
 ) => {
-  return Object.keys(data).map((line: Line) => {
+  return (Object.keys(data) as Line[]).map((line: Line) => {
     // We don't need to show the Mattapan line on the landing page
     if (line === 'line-mattapan') {
       return { data: [] };
@@ -142,7 +142,7 @@ export const convertToRidershipDataset = (
   labels: string[]
 ) => {
   return (
-    Object.keys(data).map((line: Line) => {
+    (Object.keys(data) as Exclude<Line, 'line-bus'>[]).map((line: Exclude<Line, 'line-bus'>) => {
       // We don't need to show the Mattapan line on the landing page
       if (line === 'line-mattapan') {
         return { data: [] };

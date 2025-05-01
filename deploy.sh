@@ -39,6 +39,7 @@ fi
 
 $PRODUCTION && ENV_SUFFIX=""                                    || ENV_SUFFIX="-beta"
 $PRODUCTION && CHALICE_STAGE="production"                       || CHALICE_STAGE="beta"
+$PRODUCTION && ENV_TAG="prod"                                   || ENV_TAG="beta"
 
 $PRODUCTION && FRONTEND_ZONE="dashboard.transitmatters.org"     || FRONTEND_ZONE="labs.transitmatters.org"
 $PRODUCTION && FRONTEND_CERT_ARN="$TM_FRONTEND_CERT_ARN"        || FRONTEND_CERT_ARN="$TM_LABS_WILDCARD_CERT_ARN"
@@ -91,11 +92,14 @@ pushd server/ > /dev/null
 poetry export --without-hashes --output requirements.txt
 poetry run chalice package --stage $CHALICE_STAGE --merge-template cloudformation.json cfn/
 aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUCKET --output-template-file cfn/packaged.yaml
-aws cloudformation deploy --template-file cfn/packaged.yaml --s3-bucket $BACKEND_BUCKET --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset --parameter-overrides \
-    TMFrontendHostname=$FRONTEND_HOSTNAME \
-    TMFrontendZone=$FRONTEND_ZONE \
-    TMFrontendCertArn=$FRONTEND_CERT_ARN \
-    TMBackendCertArn=$BACKEND_CERT_ARN \
+aws cloudformation deploy --template-file cfn/packaged.yaml --s3-bucket $BACKEND_BUCKET --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM \
+    --tags service=t-performance-dash env=$ENV_TAG \
+    --no-fail-on-empty-changeset \
+    --parameter-overrides \
+        TMFrontendHostname=$FRONTEND_HOSTNAME \
+        TMFrontendZone=$FRONTEND_ZONE \
+        TMFrontendCertArn=$FRONTEND_CERT_ARN \
+        TMBackendCertArn=$BACKEND_CERT_ARN \
     TMBackendHostname=$BACKEND_HOSTNAME \
     TMBackendZone=$BACKEND_ZONE \
     MbtaV3ApiKey=$MBTA_V3_API_KEY \

@@ -55,11 +55,23 @@ ChartJS.register(
 if (ChartJS.defaults.plugins.datalabels?.display)
   ChartJS.defaults.plugins.datalabels.display = false;
 
-export default function App({ Component, pageProps }) {
+interface AppProps {
+  Component: React.ComponentType & { Layout?: keyof typeof Layouts };
+  pageProps: Record<string, unknown>;
+}
+
+export default function App({ Component, pageProps }: AppProps) {
   const isProd = typeof window !== 'undefined' && window.location.hostname === PRODUCTION;
 
   const [loaded, setLoaded] = useState(false);
-  const SecondaryLayout = Layouts[Component.Layout] ?? ((page) => page);
+
+  const SecondaryLayout: (typeof Layouts)[keyof typeof Layouts] | ((page: any) => any) | undefined =
+    React.useMemo(() => {
+      if (Component.Layout) {
+        return Layouts[Component.Layout];
+      }
+      return (page) => page;
+    }, [Component.Layout]);
 
   // Don't load on the server. This prevents hydration errors between mobile/desktop layouts.
   useEffect(() => {
