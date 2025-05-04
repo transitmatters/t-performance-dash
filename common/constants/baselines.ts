@@ -1,28 +1,32 @@
-import type { BusRouteId, CommuterRailRoute, Line } from '../types/lines';
+import type { Line } from '../types/lines';
+import type { RidershipKey } from '../types/ridership';
 
 // These are manually chosen based off the peak *monthly* scheduled service. Selecting highest value "
-export const PEAK_SCHEDULED_SERVICE = {
+export const PEAK_SCHEDULED_SERVICE: { [key in Line | 'DEFAULT']: number } = {
   'line-red': 223,
   'line-orange': 161,
   'line-blue': 186,
   'line-green': 506,
   'line-mattapan': 159,
+  'line-commuter-rail': 0,
   'line-bus': 0,
   DEFAULT: 0,
 };
 
-export const PEAK_SPEED = {
+export const PEAK_SPEED: { [key in Line | 'DEFAULT']: number } = {
   'line-red': 24.9,
   'line-orange': 20.6,
   'line-blue': 22.7,
   'line-green': 13.6,
   'line-mattapan': 24.3,
+  'line-commuter-rail': 0,
   'line-bus': 0,
+  DEFAULT: 0,
 };
 
 // These are manually chosen based off the peak value. Need to be updated when all data is generated.
 export const PEAK_RIDERSHIP: {
-  [key in Exclude<Line, 'line-bus'> | BusRouteId | CommuterRailRoute | 'DEFAULT']: number;
+  [key in RidershipKey]: number;
 } = {
   'line-red': 213703,
   'line-orange': 169578,
@@ -74,7 +78,8 @@ export const PEAK_RIDERSHIP: {
   '80': 1932,
   '83': 2146,
   '85': 1189,
-  '86': 6850,
+  '86-legacy': 6850,
+  '86': 0,
   '87': 4218,
   '88': 4292,
   '89': 3963,
@@ -87,8 +92,12 @@ export const PEAK_RIDERSHIP: {
   '96': 2387,
   '97': 1184,
   '99': 2039,
+  '104': 0,
+  '109': 0,
   '104109': 8163,
+  '110': 0,
   '111': 11258,
+  '116': 0,
   '114116117': 12867,
   '220221222': 3370,
   'CR-Fitchburg': 9302,
@@ -102,6 +111,7 @@ export const PEAK_RIDERSHIP: {
   'CR-Middleborough': 6863,
   'CR-Needham': 6690,
   'CR-Newburyport': 14972,
+  'CR-NewBedford': 6863, // Using same value as former Middleborough
   'CR-Providence': 25728,
   'line-commuter-rail': 126755,
   DEFAULT: 520580,

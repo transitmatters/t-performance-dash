@@ -21,7 +21,7 @@ interface SlowZonesMapProps extends Pick<React.ComponentProps<typeof LineMap>, '
   lineName: SlowZonesLineName;
 }
 
-const abbreviateStationName = ({ stationName }) => {
+const abbreviateStationName = ({ stationName }: { stationName: string }) => {
   if (stationName.startsWith('JFK')) {
     return 'JFK';
   }
@@ -96,7 +96,7 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
             mapSide: '0' as const,
             boundingSize: isHorizontal ? 15 : 20,
             ...getSegmentLabelOverrides(segment.segmentLocation, isHorizontal),
-            content: (size) => (
+            content: (size: { width: number; height: number }) => (
               <SlowSegmentLabel
                 isHorizontal={isHorizontal}
                 segment={segment}

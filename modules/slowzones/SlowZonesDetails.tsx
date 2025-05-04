@@ -80,7 +80,10 @@ export function SlowZonesDetails() {
           </Link>
 
           <div className="relative flex flex-col">
-            {totalSlowTimeReady ? (
+            {totalSlowTimeReady &&
+            lineShort !== 'Commuter Rail' &&
+            lineShort !== 'Bus' &&
+            lineShort !== 'Mattapan' ? (
               <TotalSlowTimeWrapper
                 data={delayTotals.data.data}
                 startDateUTC={startDateUTC}

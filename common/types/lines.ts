@@ -56,6 +56,7 @@ export type BusRoute =
   | '83'
   | '85'
   | '86'
+  | '86-legacy'
   | '87'
   | '88'
   | '89'
@@ -68,6 +69,10 @@ export type BusRoute =
   | '96'
   | '97'
   | '99'
+  | '104'
+  | '109'
+  | '110'
+  | '116'
   | '111'
   | '61/70/170'
   | '104/109'
@@ -92,6 +97,7 @@ export type CommuterRailRoute =
   | 'CR-Fairmount'
   | 'CR-Kingston'
   | 'CR-Middleborough'
+  | 'CR-NewBedford'
   | 'CR-Needham'
   | 'CR-Newburyport'
   | 'CR-Providence';
@@ -216,6 +222,7 @@ export const COMMUTER_RAIL_ROUTES: CommuterRailRoute[] = [
   'CR-Kingston',
   'CR-Lowell',
   'CR-Middleborough',
+  'CR-NewBedford',
   'CR-Needham',
   'CR-Newburyport',
   'CR-Providence',
@@ -231,6 +238,7 @@ export const COMMUTER_RAIL_LINE_NAMES: { [line in CommuterRailRoute]: string } =
   'CR-Fairmount': 'Fairmount Line',
   'CR-Kingston': 'Kingston/Plymouth Line',
   'CR-Middleborough': 'Middleborough Line',
+  'CR-NewBedford': 'Fall River/New Bedford Line',
   'CR-Needham': 'Needham Line',
   'CR-Newburyport': 'Newburyport/Rockport Line',
   'CR-Providence': 'Providence/Stoughton Line',
