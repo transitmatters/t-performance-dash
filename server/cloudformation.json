@@ -129,6 +129,14 @@
               "NoncurrentVersionExpiration": {
                 "NoncurrentDays": 45
               }
+            },
+            {
+              "Id": "ExpireOldCurrentObjects",
+              "Status": "Enabled",
+              "ExpirationInDays": 90,
+              "Filter": {
+                "Prefix": ""
+              }
             }
           ]
         },
