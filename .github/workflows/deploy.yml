@@ -2,10 +2,11 @@ name: deploy
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 * *' # Runs at 00:00 on the first day of every month
   push:
     branches:
       - main
-      - dashboard-v4
 
 jobs:
   deploy:
