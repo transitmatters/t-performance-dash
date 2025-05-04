@@ -118,16 +118,24 @@
         "LifecycleConfiguration": {
           "Rules": [
             {
-              "Id": "ArchiveAndExpireOldVersions",
+              "Id": "ArchiveAndDeleteNoncurrentVersions",
               "Status": "Enabled",
               "NoncurrentVersionTransitions": [
                 {
                   "StorageClass": "INTELLIGENT_TIERING_ARCHIVE_ACCESS",
-                  "TransitionInDays": 90
+                  "TransitionInDays": 15
                 }
               ],
               "NoncurrentVersionExpiration": {
-                "NoncurrentDays": 120
+                "NoncurrentDays": 45
+              }
+            },
+            {
+              "Id": "ExpireOldCurrentObjects",
+              "Status": "Enabled",
+              "ExpirationInDays": 90,
+              "Filter": {
+                "Prefix": ""
               }
             }
           ]
