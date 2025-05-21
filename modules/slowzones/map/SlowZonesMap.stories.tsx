@@ -68,6 +68,12 @@ export const Primary = () => {
         direction="horizontal"
         speedRestrictions={[]}
       />
+      <SlowZonesMap
+        lineName="Mattapan"
+        slowZones={slowZonesResponses}
+        direction="horizontal"
+        speedRestrictions={[]}
+      />
     </>
   );
 };

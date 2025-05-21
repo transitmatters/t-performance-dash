@@ -98,7 +98,7 @@ export const getRoutes = (direction: Direction, data: SlowZone[], isMobile: bool
 
 export const getSlowZoneDelayDelta = (
   totals: DayDelayTotals[],
-  lineShort: Exclude<LineShort, 'Bus' | 'Mattapan' | 'Commuter Rail'>
+  lineShort: Exclude<LineShort, 'Bus' | 'Commuter Rail'>
 ) => {
   if (!totals.length) return 0;
   return totals[totals.length - 1][lineShort] - totals[0][lineShort];

@@ -4,6 +4,7 @@ import { hexWithAlpha } from '../utils/general';
 export const COLORS = {
   mbta: {
     red: '#D13434',
+    mattapan: '#D13434',
     orange: '#ed8b00',
     blue: '#003da5',
     green: '#00834d',
@@ -51,7 +52,7 @@ export const LINE_COLORS: { [key in Line | 'default']: string } = {
   'line-blue': COLORS.mbta.blue,
   'line-green': COLORS.mbta.green,
   'line-bus': COLORS.mbta.bus,
-  'line-mattapan': COLORS.mbta.red,
+  'line-mattapan': COLORS.mbta.mattapan,
   'line-commuter-rail': COLORS.mbta.commuterRail,
   default: '#303030',
 };

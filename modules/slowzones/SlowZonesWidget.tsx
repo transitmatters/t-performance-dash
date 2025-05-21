@@ -22,7 +22,7 @@ export const SlowZonesWidget: React.FC = () => {
   const totalSlowTimeReady =
     !delayTotals.isError && delayTotals.data && startDateUTC && endDateUTC && lineShort && line;
 
-  if (line === 'line-bus' || line === 'line-mattapan' || line === 'line-commuter-rail') {
+  if (line === 'line-bus' || line === 'line-commuter-rail') {
     return null;
   }
 
@@ -30,10 +30,7 @@ export const SlowZonesWidget: React.FC = () => {
     <>
       <WidgetDiv className="relative">
         <HomescreenWidgetTitle title="Slow zones" tab="slowzones" />
-        {totalSlowTimeReady &&
-        lineShort !== 'Mattapan' &&
-        lineShort !== 'Commuter Rail' &&
-        lineShort !== 'Bus' ? (
+        {totalSlowTimeReady && lineShort !== 'Commuter Rail' && lineShort !== 'Bus' ? (
           <TotalSlowTimeWrapper
             data={delayTotals.data.data}
             startDateUTC={startDateUTC}
