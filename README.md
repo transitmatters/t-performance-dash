@@ -15,7 +15,6 @@ This is the repository for the [TransitMatters Data Dashboard](https://dashboard
 - node 20.x and npm 9.x+ required
   - With `nvm` installed, use `nvm install && nvm use`
   - verify with `node -v`
-  -
 - Python 3.12 with recent poetry (2.0.0 or later)
   - Verify with `python --version && poetry --version`
   - `poetry self update` to update poetry
@@ -72,6 +71,6 @@ If you're using VSCode, `.vscode` contains a based default workspace setup. It a
 
 See `server/bus/gen_latest_bus_data.sh` for instructions.
 
-## Support TransitMatters
+## ❤️ Support TransitMatters
 
 If you've found this app helpful or interesting, please consider [donating](https://transitmatters.org/donate) to TransitMatters to help support our mission to provide data-driven advocacy for a more reliable, sustainable, and equitable transit system in Metropolitan Boston.
