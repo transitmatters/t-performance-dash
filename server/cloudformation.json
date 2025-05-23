@@ -112,6 +112,31 @@
           "IndexDocument": "index.html",
           "ErrorDocument": "404.html"
         },
+        "VersioningConfiguration": {
+          "Status": "Enabled"
+        },
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "Id": "ArchiveAndDeleteNoncurrentVersions",
+              "Status": "Enabled",
+              "NoncurrentVersionTransitions": [
+                {
+                  "StorageClass": "INTELLIGENT_TIERING",
+                  "TransitionInDays": 45
+                }
+              ],
+              "NoncurrentVersionExpiration": {
+                "NoncurrentDays": 60
+              }
+            },
+            {
+              "Id": "ExpireOldCurrentObjects",
+              "Status": "Enabled",
+              "ExpirationInDays": 90
+            }
+          ]
+        },
         "Tags": [
           {
             "Key": "service",
