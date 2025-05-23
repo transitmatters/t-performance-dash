@@ -122,21 +122,18 @@
               "Status": "Enabled",
               "NoncurrentVersionTransitions": [
                 {
-                  "StorageClass": "INTELLIGENT_TIERING_ARCHIVE_ACCESS",
-                  "TransitionInDays": 15
+                  "StorageClass": "INTELLIGENT_TIERING",
+                  "TransitionInDays": 45
                 }
               ],
               "NoncurrentVersionExpiration": {
-                "NoncurrentDays": 45
+                "NoncurrentDays": 60
               }
             },
             {
               "Id": "ExpireOldCurrentObjects",
               "Status": "Enabled",
-              "ExpirationInDays": 90,
-              "Filter": {
-                "Prefix": ""
-              }
+              "ExpirationInDays": 90
             }
           ]
         },
