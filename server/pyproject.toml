@@ -9,7 +9,7 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "~3.12"
 json-api-doc = "0.15.0"
-requests = "^2.32.3"
+requests = "^2.32.4"
 pytz = "2025.2"
 boto3 = "~1.38.22"
 numpy = "1.26.4"
