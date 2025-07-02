@@ -9,21 +9,21 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "~3.12"
 json-api-doc = "0.15.0"
-requests = "^2.32.3"
+requests = "^2.32.4"
 pytz = "2025.2"
-boto3 = "~1.38.22"
+boto3 = "~1.38.33"
 numpy = "1.26.4"
 pandas = "~2.2.3"
-datadog_lambda = "~6.109.0"
+datadog_lambda = "~6.111.0"
 dynamodb-json = "^1.4.2"
 chalice-spec = "^0.7.0"
-pydantic = "^2.11.5"
+pydantic = "^2.11.7"
 apispec = "^6.8.2"
 
 [tool.poetry.group.dev.dependencies]
-pip = ">=24.0"
-chalice = "1.31.4"
-flake8 = "~7.2.0"
+pip = ">=24.1"
+chalice = "1.32.0"
+flake8 = "~7.3.0"
 black = "~25.1.0"
 
 [tool.poetry.requires-plugins]
@@ -41,5 +41,3 @@ build-backend = "poetry.core.masonry.api"
 reportMissingImports = true
 reportMissingTypeStubs = false
 useLibraryCodeForTypes = false
-
-
