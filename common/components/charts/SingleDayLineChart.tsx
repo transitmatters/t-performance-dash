@@ -167,10 +167,11 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                     ) {
                       return '';
                     }
-                    return `${tooltipItem.dataset.label}: ${units === 'Minutes'
+                    return `${tooltipItem.dataset.label}: ${
+                      units === 'Minutes'
                         ? getFormattedTimeString(tooltipItem.parsed.y, 'minutes')
                         : `${tooltipItem.parsed.y} ${units}`
-                      }`;
+                    }`;
                   },
                   afterBody: (tooltipItems) => {
                     const result: string[] = [];
