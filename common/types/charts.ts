@@ -15,6 +15,7 @@ export interface SingleDayDataPoint {
   threshold_flag_1?: string;
   speed_mph?: number;
   benchmark_speed_mph?: number;
+  vehicle_consist?: string;
 }
 
 export interface AggregateDataPoint {

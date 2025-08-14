@@ -167,18 +167,34 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                     ) {
                       return '';
                     }
-                    return `${tooltipItem.dataset.label}: ${
-                      units === 'Minutes'
+                    return `${tooltipItem.dataset.label}: ${units === 'Minutes'
                         ? getFormattedTimeString(tooltipItem.parsed.y, 'minutes')
                         : `${tooltipItem.parsed.y} ${units}`
-                    }`;
+                      }`;
                   },
                   afterBody: (tooltipItems) => {
-                    return departureFromNormalString(
+                    const result: string[] = [];
+
+                    // Add departure from normal information
+                    const departureInfo = departureFromNormalString(
                       tooltipItems[0].parsed.y,
                       tooltipItems[1]?.parsed.y,
                       showUnderRatio
                     );
+                    if (departureInfo) {
+                      result.push(departureInfo);
+                    }
+
+                    // Add vehicle consist information if available
+                    const { dataIndex } = tooltipItems[0];
+                    const dataPoint = data[dataIndex];
+                    if (dataPoint?.vehicle_consist) {
+                      result.push(
+                        `Vehicle Number(s): ${dataPoint.vehicle_consist.replaceAll('|', ', ')}`
+                      );
+                    }
+
+                    return result;
                   },
                 },
               },
