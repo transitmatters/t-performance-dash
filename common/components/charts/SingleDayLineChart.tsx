@@ -193,7 +193,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                       const arrNums = dataPoint.vehicle_consist.split('|').map(Number);
                       if (arrNums.length > 1) {
                         result.push(
-                          `Vehicle Number(s): ${dataPoint.vehicle_consist.replaceAll('|', ', ')}`
+                          `Vehicle Numbers: ${dataPoint.vehicle_consist.replaceAll('|', ', ')}`
                         );
                       } else {
                         result.push(`Vehicle Number: ${dataPoint.vehicle_consist}`);
