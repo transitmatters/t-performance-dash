@@ -58,6 +58,7 @@ def dwells(stop_ids: list, start_date: date, end_date: date):
                     "dep_dt": date_utils.return_formatted_date(dep_dt),
                     "dwell_time_sec": delta.total_seconds(),
                     "vehicle_consist": vehicle_consist,
+                    "vehicle_label": maybe_a_departure["vehicle_label"],
                 }
             )
 
@@ -100,6 +101,7 @@ def headways(stop_ids: list, start_date: date, end_date: date):
                 "headway_time_sec": headway_time_sec,
                 "benchmark_headway_time_sec": benchmark_headway,
                 "vehicle_consist": vehicle_consist,
+                "vehicle_label": this["vehicle_label"],
             }
         )
 
@@ -158,6 +160,7 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
                 "travel_time_sec": travel_time_sec,
                 "benchmark_travel_time_sec": benchmark,
                 "vehicle_consist": vehicle_consist,
+                "vehicle_label": departure["vehicle_label"],
             }
         )
 

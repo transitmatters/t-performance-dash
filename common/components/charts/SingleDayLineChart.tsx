@@ -190,9 +190,27 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                     const { dataIndex } = tooltipItems[0];
                     const dataPoint = data[dataIndex];
                     if (dataPoint?.vehicle_consist) {
-                      result.push(
-                        `Vehicle Number(s): ${dataPoint.vehicle_consist.replaceAll('|', ', ')}`
-                      );
+                      const arrNums = dataPoint.vehicle_consist.split('|').map(Number);
+                      if (arrNums.length > 1) {
+                        result.push(
+                          `Vehicle Number(s): ${dataPoint.vehicle_consist.replaceAll('|', ', ')}`
+                        );
+                      } else {
+                        result.push(`Vehicle Number: ${dataPoint.vehicle_consist}`);
+                      }
+                    }
+                    if (dataPoint?.vehicle_label) {
+                      if (dataPoint?.vehicle_consist) {
+                        const arrNums = dataPoint.vehicle_consist.split('|').map(Number);
+                        const consistHead = arrNums[0];
+                        if (consistHead === parseInt(dataPoint.vehicle_label)) {
+                          //pass
+                        } else {
+                          result.push(`Vehicle Label: ${dataPoint.vehicle_label}`);
+                        }
+                      } else {
+                        result.push(`Vehicle Label: ${dataPoint.vehicle_label}`);
+                      }
                     }
 
                     return result;

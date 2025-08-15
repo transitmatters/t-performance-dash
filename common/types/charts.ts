@@ -16,6 +16,7 @@ export interface SingleDayDataPoint {
   speed_mph?: number;
   benchmark_speed_mph?: number;
   vehicle_consist?: string;
+  vehicle_label?: string;
 }
 
 export interface AggregateDataPoint {
