@@ -49,7 +49,7 @@ def dwells(stop_ids: list, start_date: date, end_date: date):
             delta = dep_dt - arr_dt
 
             # not every vehicle will have vehicle_consist
-            vehicle_consist = maybe_a_departure.get("vehicle_consist", "placeholder|value|for|now")
+            vehicle_consist = maybe_a_departure.get("vehicle_consist")
             dwells.append(
                 {
                     "route_id": maybe_a_departure["route_id"],
@@ -91,7 +91,7 @@ def headways(stop_ids: list, start_date: date, end_date: date):
             benchmark_headway = None
 
         # not every vehicle will have vehicle_consist
-        vehicle_consist = this.get("vehicle_consist", "placeholder|value|for|now")
+        vehicle_consist = this.get("vehicle_consist")
 
         headways.append(
             {
@@ -150,7 +150,7 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
             benchmark = None
 
         # not every vehicle will have vehicle_consist
-        vehicle_consist = departure.get("vehicle_consist", "placeholder|value|for|now")
+        vehicle_consist = departure.get("vehicle_consist")
         travel_times.append(
             {
                 "route_id": departure["route_id"],
