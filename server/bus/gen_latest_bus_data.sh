@@ -24,7 +24,7 @@
 
 newfile=$1
 
-poetry run python bus2train.py $newfile data/output -r 1  9  15  16  22  23  28  32  39  57  66  71  73  77  111  114  116  117  220  221  222;
+poetry run python bus2train.py $newfile data/output -r 1  9  15  16  22  23  28  32  39  57  66  71  73  77  100  101  105  108  110  111  112  114  116  117  119  134  215  220  221  222  230  236  238  240  354  429  455;
 # sample upload command below. note that an aws cp --recursive will be faster.
 # aws s3 sync --dryrun data/output/Events/ s3://tm-mbta-performance/Events/
 # aws s3 cp --recursive --dryrun data/output/Events/ s3://tm-mbta-performance/Events/

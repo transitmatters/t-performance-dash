@@ -1,6 +1,10 @@
 /* eslint-disable import/max-dependencies */
-import type { BusRoute, CommuterRailRoute } from '../types/lines';
-import { COMMUTER_RAIL_ROUTES, type LineShort } from '../types/lines';
+import {
+  COMMUTER_RAIL_ROUTES,
+  type BusRoute,
+  type CommuterRailRoute,
+  type LineShort,
+} from '../types/lines';
 import type { LineMap, StationMap } from '../types/stations';
 import stations_json from './stations.json';
 import bus_1 from './bus_constants/1.json';
@@ -60,12 +64,27 @@ import bus_95 from './bus_constants/95.json';
 import bus_96 from './bus_constants/96.json';
 import bus_97 from './bus_constants/97.json';
 import bus_99 from './bus_constants/99.json';
+import bus_100 from './bus_constants/100.json';
+import bus_101 from './bus_constants/101.json';
+import bus_105 from './bus_constants/105.json';
+import bus_106 from './bus_constants/106.json';
+import bus_108 from './bus_constants/108.json';
+import bus_110 from './bus_constants/110.json';
+import bus_112 from './bus_constants/112.json';
+import bus_119 from './bus_constants/119.json';
+import bus_134 from './bus_constants/134.json';
+import bus_215 from './bus_constants/215.json';
+import bus_230 from './bus_constants/230.json';
+import bus_236 from './bus_constants/236.json';
+import bus_240 from './bus_constants/240.json';
+import bus_354 from './bus_constants/354.json';
+import bus_429 from './bus_constants/429.json';
+import bus_455 from './bus_constants/455.json';
 import bus_111 from './bus_constants/111.json';
 import bus_104_109 from './bus_constants/104-109.json';
 import bus_61_70_170 from './bus_constants/61-70-170.json';
 import bus_114_116_117 from './bus_constants/114-116-117.json';
 import bus_220_221_222 from './bus_constants/220-221-222.json';
-import bus_110 from './bus_constants/110.json';
 import bus_104 from './bus_constants/104.json';
 import bus_109 from './bus_constants/109.json';
 import bus_116 from './bus_constants/116.json';
@@ -148,15 +167,31 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_96,
   ...bus_97,
   ...bus_99,
-  ...bus_111,
+  ...bus_100,
+  ...bus_101,
+  ...bus_104,
   ...bus_104_109,
+  ...bus_105,
+  ...bus_106,
+  ...bus_108,
+  ...bus_110,
+  ...bus_111,
+  ...bus_112,
+  ...bus_119,
+  ...bus_134,
   ...bus_61_70_170,
   ...bus_114_116_117,
   ...bus_220_221_222,
-  ...bus_110,
-  ...bus_104,
   ...bus_109,
   ...bus_116,
+  ...bus_101,
+  ...bus_215,
+  ...bus_230,
+  ...bus_236,
+  ...bus_240,
+  ...bus_354,
+  ...bus_429,
+  ...bus_455,
 };
 
 export const crStations: { [key in CommuterRailRoute]: LineMap } = {
