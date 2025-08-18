@@ -76,6 +76,7 @@ import bus_134 from './bus_constants/134.json';
 import bus_215 from './bus_constants/215.json';
 import bus_230 from './bus_constants/230.json';
 import bus_236 from './bus_constants/236.json';
+import bus_238 from './bus_constants/238.json';
 import bus_240 from './bus_constants/240.json';
 import bus_354 from './bus_constants/354.json';
 import bus_429 from './bus_constants/429.json';
@@ -188,6 +189,7 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_215,
   ...bus_230,
   ...bus_236,
+  ...bus_238,
   ...bus_240,
   ...bus_354,
   ...bus_429,
