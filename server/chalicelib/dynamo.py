@@ -81,10 +81,10 @@ def query_extended_trip_metrics(
         response_dicts.extend(responses)
     return response_dicts
 
+
 def query_historic_max_ridership(start_date: date, end_date: date, line_id: str = None):
     potential_vals = query_ridership(start_date, end_date, line_id)
     ridership = {val["count"] for val in potential_vals}
     max_ridership = max(ridership)
-    
+
     return max_ridership
-    
