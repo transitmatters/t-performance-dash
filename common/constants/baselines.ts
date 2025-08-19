@@ -35,6 +35,8 @@ export const PEAK_RIDERSHIP: {
   'line-blue': 60129,
   'line-green': 87148,
   'line-mattapan': 0,
+  'line-SLWashington': 16817,
+  'line-SLWaterfront': 25670,
   '1': 15272,
   '4': 850,
   '7': 5126,
