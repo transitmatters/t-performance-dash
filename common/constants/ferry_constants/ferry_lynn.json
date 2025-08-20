@@ -1,0 +1,33 @@
+{
+  "Boat-Lynn": {
+    "type": "ferry",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Long Wharf (North)",
+        "station": "Boat-Long",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": ["Boat-Long"],
+          "1": ["Boat-Long"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Blossom Street Pier",
+        "station": "Boat-Blossom",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["Boat-Blossom"],
+          "1": ["Boat-Blossom"]
+        },
+        "terminus": true
+      }
+    ]
+  }
+}

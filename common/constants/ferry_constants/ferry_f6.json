@@ -1,0 +1,73 @@
+{
+  "Boat-F6": {
+    "type": "ferry",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Winthrop Landing",
+        "station": "Boat-Winthrop",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": ["Boat-Winthrop"],
+          "1": ["Boat-Winthrop"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Logan Airport Ferry Terminal",
+        "station": "Boat-Logan",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["Boat-Logan"],
+          "1": ["Boat-Logan"]
+        }
+      },
+      {
+        "stop_name": "Central Wharf (South)",
+        "station": "Boat-Aquarium",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": ["Boat-Aquarium"],
+          "1": ["Boat-Aquarium"]
+        }
+      },
+      {
+        "stop_name": "Seaport/Fan Pier",
+        "station": "Boat-Fan",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": ["Boat-Fan"],
+          "1": ["Boat-Fan"]
+        }
+      },
+      {
+        "stop_name": "Logan Airport Ferry Terminal",
+        "station": "Boat-Logan",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": ["Boat-Logan"],
+          "1": ["Boat-Logan"]
+        }
+      },
+      {
+        "stop_name": "Winthrop Landing",
+        "station": "Boat-Winthrop",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": ["Boat-Winthrop"],
+          "1": ["Boat-Winthrop"]
+        },
+        "terminus": true
+      }
+    ]
+  }
+}

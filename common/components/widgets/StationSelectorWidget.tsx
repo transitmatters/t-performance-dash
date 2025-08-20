@@ -13,7 +13,7 @@ import {
   findValidDefaultStations,
   findNextValidStation,
 } from '../../utils/stations';
-import type { BusRoute, CommuterRailRoute, Line } from '../../types/lines';
+import type { BusRoute, CommuterRailRoute, Line, FerryRoute } from '../../types/lines';
 import { LINE_OBJECTS } from '../../constants/lines';
 import type { Station } from '../../types/stations';
 
@@ -21,12 +21,14 @@ interface StationSelectorWidgetProps {
   line: Line;
   busRoute: BusRoute | undefined;
   crRoute: CommuterRailRoute | undefined;
+  ferryRoute: FerryRoute | undefined;
 }
 
 export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
   line,
   busRoute,
   crRoute,
+  ferryRoute,
 }) => {
   const updateQueryParams = useUpdateQuery();
   const lineShort = LINE_OBJECTS[line].short;
@@ -34,7 +36,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
     query: { from, to },
   } = useDelimitatedRoute();
 
-  const stations = optionsStation(lineShort, busRoute, crRoute);
+  const stations = optionsStation(lineShort, busRoute, crRoute, ferryRoute);
   const { defaultFrom, defaultTo } = findValidDefaultStations(stations);
   const toStation = to ? getParentStationForStopId(to, lineShort) : defaultTo;
   const fromStation = from ? getParentStationForStopId(from, lineShort) : defaultFrom;

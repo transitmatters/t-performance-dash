@@ -1,0 +1,77 @@
+{
+  "Boat-F1": {
+    "type": "ferry",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Long Wharf (North)",
+        "station": "Boat-Long",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": []
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Rowes Wharf",
+        "station": "Boat-Rowes",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": [],
+          "1": []
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Logan Airport Ferry Terminal",
+        "station": "Boat-Logan",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": []
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Georges Island",
+        "station": "Boat-George",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": [],
+          "1": []
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Hull",
+        "station": "Boat-Hull",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": [],
+          "1": []
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Hingham",
+        "station": "Boat-Hingham",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": [],
+          "1": []
+        },
+        "terminus": true
+      }
+    ]
+  }
+}

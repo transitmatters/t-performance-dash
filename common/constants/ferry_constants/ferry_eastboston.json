@@ -1,0 +1,33 @@
+{
+  "Boat-EastBoston": {
+    "type": "ferry",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Long Wharf (North)",
+        "station": "Boat-Long",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": ["Boat-Long"],
+          "1": ["Boat-Long"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Lewis Mall Wharf",
+        "station": "Boat-Lewis",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["Boat-Lewis"],
+          "1": ["Boat-Lewis"]
+        },
+        "terminus": true
+      }
+    ]
+  }
+}

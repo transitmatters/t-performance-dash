@@ -21,7 +21,7 @@ import { TripGraphs } from './TripGraphs';
 export const TripExplorer = () => {
   const {
     lineShort,
-    query: { to, from, date, busRoute, crRoute },
+    query: { to, from, date, busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
   const { data: alerts } = useHistoricalAlertsData(date, lineShort, busRoute, crRoute);
 

@@ -1,16 +1,25 @@
-import type { BusRoute, CommuterRailRoute, Line, LineShort } from '../types/lines';
+import type { BusRoute, CommuterRailRoute, Line, LineShort, FerryRoute } from '../types/lines';
 import { type Station } from '../types/stations';
 import type { Location } from '../types/charts';
 import type { Direction, Distance } from '../types/dataPoints';
-import { stations, rtStations, busStations, crStations } from '../constants/stations';
+import {
+  stations,
+  rtStations,
+  busStations,
+  crStations,
+  ferryStations,
+} from '../constants/stations';
 import { station_distances } from '../constants/station_distances';
 import type { Tab } from '../types/router';
 
 // Type guards for line types
 const isBusLine = (line: LineShort): line is 'Bus' => line === 'Bus';
 const isCommuterRailLine = (line: LineShort): line is 'Commuter Rail' => line === 'Commuter Rail';
-const isRapidTransitLine = (line: LineShort): line is Exclude<LineShort, 'Bus' | 'Commuter Rail'> =>
-  !isBusLine(line) && !isCommuterRailLine(line);
+const isFerryLine = (line: LineShort): line is 'Ferry' => line === 'Ferry';
+const isRapidTransitLine = (
+  line: LineShort
+): line is Exclude<LineShort, 'Bus' | 'Commuter Rail' | 'Ferry'> =>
+  !isBusLine(line) && !isCommuterRailLine(line) && !isFerryLine(line);
 
 // Helper function to safely get stations for a line
 const getStationsForLine = (
@@ -38,13 +47,14 @@ export const optionsForField = (
   line: LineShort,
   fromStation: Station | null,
   busRoute?: BusRoute,
-  crRoute?: CommuterRailRoute
+  crRoute?: CommuterRailRoute,
+  ferryRoute?: FerryRoute
 ) => {
   if (type === 'from') {
-    return optionsStation(line, busRoute, crRoute);
+    return optionsStation(line, busRoute, crRoute, ferryRoute);
   }
   if (type === 'to') {
-    return optionsStation(line, busRoute, crRoute)?.filter((entry) => {
+    return optionsStation(line, busRoute, crRoute, ferryRoute)?.filter((entry) => {
       if (fromStation && fromStation.branches && entry.branches) {
         return entry.branches.some((entryBranch) => fromStation.branches?.includes(entryBranch));
       }
@@ -56,7 +66,8 @@ export const optionsForField = (
 export const optionsStation = (
   line: LineShort,
   busRoute?: BusRoute,
-  crRoute?: CommuterRailRoute
+  crRoute?: CommuterRailRoute,
+  ferryRoute?: FerryRoute
 ): Station[] | undefined => {
   if (!line || !stations[line]) {
     return undefined;
@@ -83,29 +94,41 @@ export const optionsStation = (
     return rtStations[line].stations.sort((a, b) => a.order - b.order);
   }
 
+  if (isFerryLine(line)) {
+    if (!ferryRoute || !ferryStations[ferryRoute]) {
+      return undefined;
+    }
+
+    return ferryStations[ferryRoute].stations.sort((a, b) => a.order - b.order);
+  }
+
   return undefined;
 };
 
 const createStationIndex = () => {
   const index: Record<string, Station> = {};
-  Object.values({ ...rtStations, ...busStations, ...crStations }).forEach((line) => {
-    line.stations.forEach((station) => {
-      index[station.station] = station;
-    });
-  });
+  Object.values({ ...rtStations, ...busStations, ...crStations, ...ferryStations }).forEach(
+    (line) => {
+      line.stations.forEach((station) => {
+        index[station.station] = station;
+      });
+    }
+  );
   return index;
 };
 
 const createParentStationIndex = () => {
   const index: Record<string, Station> = {};
-  Object.values({ ...rtStations, ...busStations, ...crStations }).forEach((line) => {
-    line.stations.forEach((station) => {
-      const allStopIds = [...(station.stops['0'] || []), ...(station.stops['1'] || [])];
-      allStopIds.forEach((stopId) => {
-        index[stopId] = station;
+  Object.values({ ...rtStations, ...busStations, ...crStations, ...ferryStations }).forEach(
+    (line) => {
+      line.stations.forEach((station) => {
+        const allStopIds = [...(station.stops['0'] || []), ...(station.stops['1'] || [])];
+        allStopIds.forEach((stopId) => {
+          index[stopId] = station;
+        });
       });
-    });
-  });
+    }
+  );
   return index;
 };
 
@@ -149,7 +172,11 @@ export const getStationDistance = (fromStationId: string, toStationId: string) =
   return stationDistanceIndex[fromStationId][toStationId];
 };
 
-export const getStationForInvalidFromSelection = (line: Line, busRoute?: BusRoute): Station => {
+export const getStationForInvalidFromSelection = (
+  line: Line,
+  busRoute?: BusRoute,
+  ferryRoute?: FerryRoute
+): Station => {
   if (line === 'line-green') return getParentStationForStopId('70202'); // Gov. Center
   if (line === 'line-red') return getParentStationForStopId('70076'); // Park St.
   if (line === 'line-bus') {
@@ -157,6 +184,11 @@ export const getStationForInvalidFromSelection = (line: Line, busRoute?: BusRout
     if (busRoute === '220/221/222') return getParentStationForStopId('222-1-32004');
     if (busRoute === '61/70/170') return getParentStationForStopId('70-0-88333');
     if (busRoute === '104/109') return getParentStationForStopId('104-1-5560');
+  }
+  if (line === 'line-ferry' && ferryRoute) {
+    // Return the first ferry station for the route
+    const { stations } = ferryStations[ferryRoute];
+    return stations[0];
   }
   throw new Error('There should be no other lines with invalid from station selections.');
 };

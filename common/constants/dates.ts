@@ -143,6 +143,14 @@ const FLAT_PICKER_OPTIONS: {
     altFormat: 'M j, Y',
     dateFormat: 'Y-m-d',
   },
+  Ferry: {
+    enableTime: false,
+    minDate: BUS_MIN_DATE,
+    maxDate: TODAY_STRING,
+    altInput: true,
+    altFormat: 'M j, Y',
+    dateFormat: 'Y-m-d',
+  },
 };
 
 const SINGLE_RAPID_PRESETS: {
@@ -215,6 +223,7 @@ export const SINGLE_PRESETS: {
   Bus: SINGLE_RAPID_PRESETS,
   System: SINGLE_RAPID_PRESETS,
   'Commuter Rail': SINGLE_RAPID_PRESETS,
+  Ferry: SINGLE_RAPID_PRESETS,
 };
 
 const RANGE_RAPID_PRESETS: {
@@ -338,6 +347,7 @@ export const RANGE_PRESETS: {
   Bus: RANGE_RAPID_PRESETS,
   System: RANGE_RAPID_PRESETS,
   'Commuter Rail': RANGE_RAPID_PRESETS,
+  Ferry: RANGE_RAPID_PRESETS,
 };
 
 export type DatePresetKey =
