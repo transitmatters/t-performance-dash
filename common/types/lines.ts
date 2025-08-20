@@ -105,8 +105,8 @@ export type BusRoute =
   | '104/109'
   | '114/116/117'
   | '220/221/222'
-  | 'line-SLWashington'
-  | 'line-SLWaterfront';
+  | 'SLWaterfront'
+  | 'SLWashington';
 
 export type BusRouteId =
   | Exclude<BusRoute, '17/19' | '61/70/170' | '104/109' | '114/116/117' | '220/221/222'>
@@ -239,8 +239,8 @@ export const BUS_ROUTES: BusRoute[] = [
   '104/109',
   '114/116/117',
   '220/221/222',
-  'line-SLWashington',
-  'line-SLWaterfront',
+  'SLWaterfront',
+  'SLWashington',
 ];
 
 export const FERRY_ROUTES: FerryRoute[] = [

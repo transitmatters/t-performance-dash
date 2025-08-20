@@ -69,10 +69,9 @@ import bus_110 from './bus_constants/110.json';
 import bus_104 from './bus_constants/104.json';
 import bus_109 from './bus_constants/109.json';
 import bus_116 from './bus_constants/116.json';
+import bus_slw from './bus_constants/SLW.json';
+import bus_slwashington from './bus_constants/SLWashington.json';
 import legacy_86 from './bus_constants/86-legacy.json';
-import SLWashington from './bus_constants/SLWashington.json';
-import SLWaterfront from './bus_constants/SLWaterfront.json';
-
 import cr_lowell from './cr_constants/cr-lowell.json';
 import cr_fitchburg from './cr_constants/cr-fitchburg.json';
 import cr_franklin from './cr_constants/cr-franklin.json';
@@ -167,8 +166,8 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_104,
   ...bus_109,
   ...bus_116,
-  ...SLWashington,
-  ...SLWaterfront,
+  ...bus_slw,
+  ...bus_slwashington,
 };
 
 export const crStations: { [key in CommuterRailRoute]: LineMap } = {
