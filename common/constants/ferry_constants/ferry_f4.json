@@ -12,8 +12,8 @@
         "branches": null,
         "order": 1,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["Boat-Long-South"],
+          "1": ["Boat-Long-South"]
         },
         "terminus": true
       },
@@ -23,8 +23,8 @@
         "branches": null,
         "order": 2,
         "stops": {
-          "0": [],
-          "1": []
+          "0": ["Boat-Charlestown"],
+          "1": ["Boat-Charlestown"]
         },
         "terminus": true
       }
