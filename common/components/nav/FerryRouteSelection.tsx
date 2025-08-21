@@ -21,7 +21,7 @@ export const FerryRouteSelection: React.FC = () => {
         onChange={(key) => router.push(getFerryRouteSelectionItemHref(key, route))}
       >
         <div className="relative text-white text-opacity-95">
-          <Listbox.Button className="border-mbta-ferry relative w-full cursor-pointer border bg-tm-lightGrey py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+          <Listbox.Button className="relative w-full cursor-pointer border border-mbta-ferry bg-tm-lightGrey py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
             <span className="block truncate">{selected && FERRY_LINE_NAMES[selected]}</span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronUpDownIcon className="h-5 w-5" aria-hidden="true" />
@@ -52,7 +52,7 @@ export const FerryRouteSelection: React.FC = () => {
                         {FERRY_LINE_NAMES[ferryRoute]}
                       </span>
                       {selected ? (
-                        <span className="text-mbta-ferry absolute inset-y-0 left-0 flex items-center pl-3">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-mbta-ferry">
                           <FontAwesomeIcon
                             icon={faCheckCircle}
                             className="h-5 w-5"

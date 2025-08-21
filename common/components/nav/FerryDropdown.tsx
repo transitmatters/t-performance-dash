@@ -13,7 +13,7 @@ export const FerryDropdown: React.FC<FerryDropdownProps> = ({ close }) => {
       <FerryRouteSelection />
       <div
         className={
-          'border-mbta-ferry flex flex-col gap-[2px] rounded-b-md border border-t-0 border-opacity-50 bg-neutral-800 px-1 py-[4px]'
+          'flex flex-col gap-[2px] rounded-b-md border border-t-0 border-mbta-ferry border-opacity-50 bg-neutral-800 px-1 py-[4px]'
         }
         role={'navigation'}
       >
