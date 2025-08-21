@@ -1,0 +1,67 @@
+{
+    "121": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Eagle Square (East Boston)",
+                "branches": null,
+                "station": "eagle",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "121-1-5450"
+                    ],
+                    "0": [
+                        "121-0-5907"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Wood Island Station",
+                "branches": null,
+                "station": "woodi",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "121-1-5666"
+                    ],
+                    "0": [
+                        "121-0-5666"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Central Square (East Boston)",
+                "branches": null,
+                "station": "cntle",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "121-1-5736"
+                    ],
+                    "0": [
+                        "121-0-5743"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Maverick Square (East Boston)",
+                "branches": null,
+                "station": "mavck",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "121-1-5740"
+                    ],
+                    "0": [
+                        "121-0-5740"
+                    ]
+                }
+            }
+        ]
+    }
+}

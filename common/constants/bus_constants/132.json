@@ -1,0 +1,81 @@
+{
+    "132": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Redstone Shopping Plaza",
+                "branches": null,
+                "station": "rdstn",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "132-1-25989"
+                    ],
+                    "0": [
+                        "132-0-15989"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Stoneham Square",
+                "branches": null,
+                "station": "stone",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "132-1-15992"
+                    ],
+                    "0": [
+                        "132-0-15986"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Wyoming Square",
+                "branches": null,
+                "station": "wyomc",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "132-1-5980"
+                    ],
+                    "0": [
+                        "132-0-15975"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Oak Grove Station",
+                "branches": null,
+                "station": "okgrv",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "132-1-5991"
+                    ],
+                    "0": [
+                        "132-0-9326"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Malden Center Station",
+                "branches": null,
+                "station": "malst",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "132-1-5072"
+                    ],
+                    "0": [
+                        "132-0-5072"
+                    ]
+                }
+            }
+        ]
+    }
+}
