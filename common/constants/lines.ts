@@ -56,6 +56,6 @@ export const LINE_OBJECTS: LineObject = {
     short: 'Ferry',
     path: 'ferry',
     key: 'line-ferry',
-    color: COLORS.mbta.commuterRail,
+    color: COLORS.mbta.ferry,
   },
 };
