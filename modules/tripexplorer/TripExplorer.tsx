@@ -23,7 +23,7 @@ export const TripExplorer = () => {
     lineShort,
     query: { to, from, date, busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
-  const { data: alerts } = useHistoricalAlertsData(date, lineShort, busRoute, crRoute);
+  const { data: alerts } = useHistoricalAlertsData(date, lineShort, busRoute, crRoute, ferryRoute);
 
   const fromStation = from ? getParentStationForStopId(from, lineShort) : undefined;
   const toStation = to ? getParentStationForStopId(to, lineShort) : undefined;

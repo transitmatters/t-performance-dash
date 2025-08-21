@@ -207,7 +207,6 @@ export const getCommuterRailRoutes = (): string[] => {
   return COMMUTER_RAIL_ROUTES;
 };
 
-// TODO: Update busStations to FerryStations
 export const getFerryRoutes = (): string[] => {
   return Object.keys(ferryStations);
 };

@@ -31,7 +31,7 @@
         "stop_name": "Logan Airport Ferry Terminal",
         "station": "Boat-Logan",
         "branches": null,
-        "order": 1,
+        "order": 3,
         "stops": {
           "0": ["Boat-Logan"],
           "1": ["Boat-Logan"]
@@ -41,7 +41,7 @@
         "stop_name": "Georges Island",
         "station": "Boat-George",
         "branches": null,
-        "order": 2,
+        "order": 4,
         "stops": {
           "0": ["Boat-George"],
           "1": ["Boat-George"]
@@ -51,7 +51,7 @@
         "stop_name": "Hull",
         "station": "Boat-Hull",
         "branches": null,
-        "order": 1,
+        "order": 5,
         "stops": {
           "0": ["Boat-Hull"],
           "1": ["Boat-Hull"]
@@ -61,7 +61,7 @@
         "stop_name": "Hingham",
         "station": "Boat-Hingham",
         "branches": null,
-        "order": 2,
+        "order": 6,
         "stops": {
           "0": ["Boat-Hingham"],
           "1": ["Boat-Hingham"]
