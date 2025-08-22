@@ -5,9 +5,36 @@ export type Line =
   | 'line-blue'
   | 'line-mattapan'
   | 'line-bus'
-  | 'line-commuter-rail';
-export type LineShort = 'Red' | 'Orange' | 'Green' | 'Blue' | 'Mattapan' | 'Bus' | 'Commuter Rail';
-export type LinePath = 'red' | 'orange' | 'green' | 'blue' | 'mattapan' | 'bus' | 'commuter-rail';
+  | 'line-commuter-rail'
+  | 'line-ferry';
+
+export type LineShort =
+  | 'Red'
+  | 'Orange'
+  | 'Green'
+  | 'Blue'
+  | 'Mattapan'
+  | 'Bus'
+  | 'Commuter Rail'
+  | 'Ferry';
+
+export type LinePath =
+  | 'red'
+  | 'orange'
+  | 'green'
+  | 'blue'
+  | 'mattapan'
+  | 'bus'
+  | 'commuter-rail'
+  | 'ferry';
+
+export type FerryRoute =
+  | 'Boat-F1'
+  | 'Boat-F4'
+  | 'Boat-F6'
+  | 'Boat-F7'
+  | 'Boat-EastBoston'
+  | 'Boat-Lynn';
 
 /** All currently available Bus Routes */
 export type BusRoute =
@@ -212,6 +239,15 @@ export const BUS_ROUTES: BusRoute[] = [
   '220/221/222',
 ];
 
+export const FERRY_ROUTES: FerryRoute[] = [
+  'Boat-F1',
+  'Boat-F4',
+  'Boat-F6',
+  'Boat-F7',
+  'Boat-EastBoston',
+  'Boat-Lynn',
+];
+
 export const COMMUTER_RAIL_ROUTES: CommuterRailRoute[] = [
   'CR-Fairmount',
   'CR-Fitchburg',
@@ -244,6 +280,15 @@ export const COMMUTER_RAIL_LINE_NAMES: { [line in CommuterRailRoute]: string } =
   'CR-Providence': 'Providence/Stoughton Line',
 };
 
+export const FERRY_LINE_NAMES: { [line in FerryRoute]: string } = {
+  'Boat-F1': 'Hingham/Hull Ferry',
+  'Boat-F4': 'Charlestown Ferry',
+  'Boat-F6': 'Winthrop Ferry',
+  'Boat-F7': 'Quincy Ferry',
+  'Boat-EastBoston': 'East Boston Ferry',
+  'Boat-Lynn': 'Lynn Ferry',
+};
+
 export const ALL_LINE_PATHS = RAIL_LINES.map((line) => {
   return {
     params: {
@@ -261,5 +306,11 @@ export const BUS_PATH = {
 export const COMMUTER_RAIL_PATH = {
   params: {
     line: 'commuter-rail',
+  },
+};
+
+export const FERRY_PATH = {
+  params: {
+    line: 'ferry',
   },
 };

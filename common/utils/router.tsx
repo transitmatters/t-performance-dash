@@ -24,6 +24,7 @@ const linePathToKeyMap: Record<LinePath, Line> = {
   mattapan: 'line-mattapan',
   bus: 'line-bus',
   'commuter-rail': 'line-commuter-rail',
+  ferry: 'line-ferry',
 };
 
 const getParams = (params: ParsedUrlQuery | QueryParams) => {

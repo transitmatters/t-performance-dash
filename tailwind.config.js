@@ -13,7 +13,7 @@ module.exports = {
   safelist: [
     {
       pattern:
-        /(border|text|bg)-mbta-(red|lightRed|orange|lightOrange|blue|lightBlue|green|lightGreen|bus|lightBus)/,
+        /(border|text|bg)-mbta-(red|lightRed|orange|lightOrange|blue|lightBlue|green|lightGreen|bus|lightBus|ferry|lightFerry)/,
     },
   ],
   darkMode: 'class',
@@ -95,6 +95,9 @@ module.exports = {
           commuterRail: '#80276c',
           lightCommuterRail: '#942d7c',
           darkCommuterRail: '#6c215c',
+          ferry: '#008EAA',
+          lightFerry: '#80C7D7',
+          darkFerry: '#006B82',
         },
         tm: {
           red: '#a31e1e',
