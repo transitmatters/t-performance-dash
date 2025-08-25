@@ -47,6 +47,9 @@ def dwells(stop_ids: list, start_date: date, end_date: date):
             dep_dt = date_utils.parse_event_date(maybe_a_departure["event_time"])
             arr_dt = date_utils.parse_event_date(maybe_an_arrival["event_time"])
             delta = dep_dt - arr_dt
+
+            # not every vehicle will have vehicle_consist
+            vehicle_consist = maybe_a_departure.get("vehicle_consist")
             dwells.append(
                 {
                     "route_id": maybe_a_departure["route_id"],
@@ -54,6 +57,8 @@ def dwells(stop_ids: list, start_date: date, end_date: date):
                     "arr_dt": date_utils.return_formatted_date(arr_dt),
                     "dep_dt": date_utils.return_formatted_date(dep_dt),
                     "dwell_time_sec": delta.total_seconds(),
+                    "vehicle_consist": vehicle_consist,
+                    "vehicle_label": maybe_a_departure["vehicle_label"],
                 }
             )
 
@@ -85,6 +90,9 @@ def headways(stop_ids: list, start_date: date, end_date: date):
         if benchmark_headway == "":
             benchmark_headway = None
 
+        # not every vehicle will have vehicle_consist
+        vehicle_consist = this.get("vehicle_consist")
+
         headways.append(
             {
                 "route_id": this["route_id"],
@@ -92,6 +100,8 @@ def headways(stop_ids: list, start_date: date, end_date: date):
                 "current_dep_dt": date_utils.return_formatted_date(this_dt),
                 "headway_time_sec": headway_time_sec,
                 "benchmark_headway_time_sec": benchmark_headway,
+                "vehicle_consist": vehicle_consist,
+                "vehicle_label": this["vehicle_label"],
             }
         )
 
@@ -139,6 +149,8 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
         except (TypeError, ValueError):
             benchmark = None
 
+        # not every vehicle will have vehicle_consist
+        vehicle_consist = departure.get("vehicle_consist")
         travel_times.append(
             {
                 "route_id": departure["route_id"],
@@ -147,6 +159,8 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
                 "arr_dt": date_utils.return_formatted_date(arr_dt),
                 "travel_time_sec": travel_time_sec,
                 "benchmark_travel_time_sec": benchmark,
+                "vehicle_consist": vehicle_consist,
+                "vehicle_label": departure["vehicle_label"],
             }
         )
 

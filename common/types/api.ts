@@ -9,12 +9,13 @@ export enum QueryNameKeys {
 }
 export type QueryNameOptions = QueryNameKeys;
 
-export type RouteType = 'bus' | 'subway' | 'cr';
+export type RouteType = 'bus' | 'subway' | 'cr' | 'ferry';
 
 export const QUERIES: { [key in RouteType]: QueryNameOptions[] } = {
   subway: [QueryNameKeys.traveltimes, QueryNameKeys.headways, QueryNameKeys.dwells],
   bus: [QueryNameKeys.traveltimes, QueryNameKeys.headways],
   cr: [QueryNameKeys.traveltimes, QueryNameKeys.headways],
+  ferry: [QueryNameKeys.traveltimes, QueryNameKeys.headways],
 };
 
 export enum SingleDayAPIParams {

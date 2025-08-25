@@ -48,6 +48,20 @@ export const COMMUTER_RAIL_DEFAULTS: WithOptional<
   },
 };
 
+export const FERRY_DEFAULTS: WithOptional<
+  DateStoreConfiguration,
+  'systemConfig' | 'overviewPreset'
+> = {
+  lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
+  multiTripConfig: {
+    startDate: ONE_WEEK_AGO_STRING,
+    endDate: TODAY_STRING,
+  },
+  singleTripConfig: {
+    date: TODAY_SERVICE_STARTED ? TODAY_STRING : YESTERDAY_STRING,
+  },
+};
+
 const SYSTEM_DEFAULTS: Partial<DateStoreConfiguration> = {
   systemConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
 };
@@ -57,6 +71,7 @@ const TAB_DATE_MAP: { [key in Tab]: Partial<DateStoreConfiguration> } = {
   Bus: BUS_DEFAULTS,
   System: SYSTEM_DEFAULTS,
   'Commuter Rail': COMMUTER_RAIL_DEFAULTS,
+  Ferry: BUS_DEFAULTS,
 };
 
 export const getDefaultDates = (dateStoreSection: DateStoreSection, tab: Tab) => {
