@@ -76,6 +76,7 @@ export const ALL_PAGES: PageMap = {
       'line-mattapan',
       'line-commuter-rail',
       'line-bus',
+      'line-ferry',
     ],
     icon: faMapLocationDot,
     hasStationStore: true,
@@ -94,6 +95,7 @@ export const ALL_PAGES: PageMap = {
       'line-mattapan',
       'line-commuter-rail',
       'line-bus',
+      'line-ferry',
     ],
     icon: faCalendarDays,
     dateStoreSection: 'multiTrips',
@@ -167,7 +169,15 @@ export const ALL_PAGES: PageMap = {
     key: 'ridership',
     path: '/ridership',
     name: 'Ridership',
-    lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus', 'line-commuter-rail'],
+    lines: [
+      'line-red',
+      'line-blue',
+      'line-green',
+      'line-orange',
+      'line-bus',
+      'line-commuter-rail',
+      'line-ferry',
+    ],
     icon: faUsers,
     dateStoreSection: 'line',
   },
@@ -179,6 +189,8 @@ export const TRIP_PAGES = [ALL_PAGES.singleTrips, ALL_PAGES.multiTrips];
 export const BUS_OVERVIEW = [ALL_PAGES.ridership];
 
 export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.ridership];
+
+export const FERRY_OVERVIEW = [ALL_PAGES.ridership];
 
 export const OVERVIEW_PAGE = [ALL_PAGES.overview];
 

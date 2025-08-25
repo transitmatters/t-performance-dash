@@ -1,4 +1,4 @@
-import type { BusRoute, CommuterRailRoute, LineShort } from './lines';
+import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from './lines';
 
 interface Direction {
   0: string;
@@ -38,5 +38,6 @@ export type StationMap = {
   [key in LineShort]:
     | LineMap
     | { [key in CommuterRailRoute]: LineMap }
-    | { [key in BusRoute]: LineMap };
+    | { [key in BusRoute]: LineMap }
+    | { [key in FerryRoute]: LineMap };
 };

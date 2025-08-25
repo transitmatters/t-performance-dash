@@ -1,6 +1,6 @@
 /* eslint-disable import/max-dependencies */
-import type { BusRoute, CommuterRailRoute } from '../types/lines';
-import { COMMUTER_RAIL_ROUTES, type LineShort } from '../types/lines';
+import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from '../types/lines';
+import { COMMUTER_RAIL_ROUTES } from '../types/lines';
 import type { LineMap, StationMap } from '../types/stations';
 import stations_json from './stations.json';
 import bus_1 from './bus_constants/1.json';
@@ -85,8 +85,16 @@ import cr_newburyport from './cr_constants/cr-newburyport.json';
 import cr_needham from './cr_constants/cr-needham.json';
 import cr_providence from './cr_constants/cr-providence.json';
 
-export const rtStations: { [key in Exclude<LineShort, 'Bus' | 'Commuter Rail'>]: LineMap } =
-  stations_json;
+import ferry_f1 from './ferry_constants/ferry_f1.json';
+import ferry_f4 from './ferry_constants/ferry_f4.json';
+import ferry_f6 from './ferry_constants/ferry_f6.json';
+import ferry_f7 from './ferry_constants/ferry_f7.json';
+import ferry_eastboston from './ferry_constants/ferry_eastboston.json';
+import ferry_lynn from './ferry_constants/ferry_lynn.json';
+
+export const rtStations: {
+  [key in Exclude<LineShort, 'Bus' | 'Commuter Rail' | 'Ferry'>]: LineMap;
+} = stations_json;
 
 export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_1,
@@ -175,10 +183,20 @@ export const crStations: { [key in CommuterRailRoute]: LineMap } = {
   ...cr_providence,
 };
 
+export const ferryStations: { [key in FerryRoute]: LineMap } = {
+  ...ferry_f1,
+  ...ferry_f4,
+  ...ferry_f6,
+  ...ferry_f7,
+  ...ferry_eastboston,
+  ...ferry_lynn,
+};
+
 export const stations: StationMap = {
   ...rtStations,
   Bus: busStations,
   'Commuter Rail': crStations,
+  Ferry: ferryStations,
 };
 
 export const getBusRoutes = (): string[] => {
@@ -187,4 +205,8 @@ export const getBusRoutes = (): string[] => {
 
 export const getCommuterRailRoutes = (): string[] => {
   return COMMUTER_RAIL_ROUTES;
+};
+
+export const getFerryRoutes = (): string[] => {
+  return Object.keys(ferryStations);
 };
