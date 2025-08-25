@@ -1,0 +1,119 @@
+{
+    "101": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Sullivan Square",
+                "branches": null,
+                "station": "sllwr",
+                "order": 0,
+                "stops": {
+                    "1": [],
+                    "0": [
+                        "101-0-29012"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Malden Center Station",
+                "branches": null,
+                "station": "malst",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "101-1-5072"
+                    ],
+                    "0": [
+                        "101-0-5072"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Front of Fellsway Garage on street",
+                "branches": null,
+                "station": "fells",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "101-1-5282"
+                    ],
+                    "0": [
+                        "101-0-5325"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Medford Square",
+                "branches": null,
+                "station": "medfd",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "101-1-5002"
+                    ],
+                    "0": [
+                        "101-0-63241"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Main Street @ George Street (Medford)",
+                "branches": null,
+                "station": "mngrg",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "101-1-5291"
+                    ],
+                    "0": [
+                        "101-0-5316"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Tufts Square",
+                "branches": null,
+                "station": "tufts",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "101-1-5298"
+                    ],
+                    "0": [
+                        "101-0-5309"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Winter Hill",
+                "branches": null,
+                "station": "whill",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "101-1-5303"
+                    ],
+                    "0": [
+                        "101-0-2729"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Sullivan Square",
+                "branches": null,
+                "station": "sull",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "101-1-29001"
+                    ],
+                    "0": []
+                }
+            }
+        ]
+    }
+}

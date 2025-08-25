@@ -1,0 +1,84 @@
+{
+    "33": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "River & Milton Streets",
+                "branches": null,
+                "station": "miltn",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "33-1-18974",
+                        "33-1-18975"
+                    ],
+                    "0": [
+                        "33-0-18974",
+                        "33-0-18975"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Dedham Parkway @ Georgetowne Drive",
+                "branches": null,
+                "station": "dhgrt",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "33-1-6522"
+                    ],
+                    "0": [
+                        "33-0-8949"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Cleary Square",
+                "branches": null,
+                "station": "clsq",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "33-1-26531"
+                    ],
+                    "0": [
+                        "33-0-2783",
+                        "33-0-6509"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Logan Square (Hyde Park)",
+                "branches": null,
+                "station": "logan",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "33-1-6357"
+                    ],
+                    "0": [
+                        "33-0-6390"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Mattapan Station",
+                "branches": null,
+                "station": "matpn",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "33-1-185"
+                    ],
+                    "0": [
+                        "33-0-185"
+                    ]
+                }
+            }
+        ]
+    }
+}

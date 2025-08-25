@@ -1,0 +1,137 @@
+{
+    "215": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Quincy Center",
+                "branches": null,
+                "station": "qnctr",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "215-1-32003"
+                    ],
+                    "0": [
+                        "215-0-32003"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Hancock Street @ Cottage Avenue",
+                "branches": null,
+                "station": "hncot",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "215-1-3326"
+                    ],
+                    "0": [
+                        "215-0-3423"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Hancock Street (Quincy)",
+                "branches": null,
+                "station": "hnock",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "215-1-3327"
+                    ],
+                    "0": [
+                        "215-0-3422"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Franklin Street @ Water Street",
+                "branches": null,
+                "station": "frkwa",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "215-1-3330"
+                    ],
+                    "0": [
+                        "215-0-3418"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Granite & Copeland",
+                "branches": null,
+                "station": "grcpl",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "215-1-3336"
+                    ],
+                    "0": [
+                        "215-0-3412"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Willard Street @ Copeland Street",
+                "branches": null,
+                "station": "wldcp",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "215-1-3345"
+                    ],
+                    "0": [
+                        "215-0-3403"
+                    ]
+                }
+            },
+            {
+                "stop_name": "East Milton Square",
+                "branches": null,
+                "station": "emlsq",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "215-1-3359"
+                    ],
+                    "0": [
+                        "215-0-3389"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Presidents Golf Course",
+                "branches": null,
+                "station": "prsgc",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "215-1-3366"
+                    ],
+                    "0": [
+                        "215-0-3382"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Ashmont Terminal",
+                "branches": null,
+                "station": "ashmt",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "215-1-334"
+                    ],
+                    "0": [
+                        "215-0-334"
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,137 @@
+{
+    "354": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Chestnut Avenue (Burlington)",
+                "branches": null,
+                "station": "chnut",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "354-1-6902"
+                    ],
+                    "0": [
+                        "354-0-6902"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Burlington Center",
+                "branches": null,
+                "station": "burlc",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "354-1-8235"
+                    ],
+                    "0": [
+                        "354-0-1695"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Woburn Line",
+                "branches": null,
+                "station": "wobur",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "354-1-8244"
+                    ],
+                    "0": [
+                        "354-0-1687"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Four Corners (Woburn)",
+                "branches": null,
+                "station": "focor",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "354-1-82471"
+                    ],
+                    "0": [
+                        "354-0-49927"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Woburn Square",
+                "branches": null,
+                "station": "wobsq",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "354-1-9125"
+                    ],
+                    "0": [
+                        "354-0-49917"
+                    ]
+                }
+            },
+            {
+                "stop_name": "400 West Cummings Park",
+                "branches": null,
+                "station": "400cp",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "354-1-49999"
+                    ],
+                    "0": [
+                        "354-0-49999"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Montvale & I-93",
+                "branches": null,
+                "station": "mntvl",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "354-1-49842"
+                    ],
+                    "0": [
+                        "354-0-49901"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Medford Square",
+                "branches": null,
+                "station": "medfd",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "354-1-45003"
+                    ],
+                    "0": [
+                        "354-0-45003"
+                    ]
+                }
+            },
+            {
+                "stop_name": "State (Express Bus)",
+                "branches": null,
+                "station": "statx",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "354-1-65"
+                    ],
+                    "0": [
+                        "354-0-65"
+                    ]
+                }
+            }
+        ]
+    }
+}

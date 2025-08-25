@@ -1,0 +1,53 @@
+{
+    "61": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Lincoln Street @ Silver Hill Lane",
+                "branches": null,
+                "station": "linsh",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "61-1-7784"
+                    ],
+                    "0": [
+                        "61-0-7784"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Totten Pond Road @ Third Avenue",
+                "branches": null,
+                "station": "tpthd",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "61-1-18928"
+                    ],
+                    "0": [
+                        "61-0-89610"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Moody & Carter Streets (Central Square, Waltham)",
+                "branches": null,
+                "station": "mdyca",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "61-1-86944"
+                    ],
+                    "0": [
+                        "61-0-86944"
+                    ]
+                }
+            }
+        ]
+    }
+}

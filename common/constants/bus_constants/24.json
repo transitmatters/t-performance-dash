@@ -1,0 +1,123 @@
+{
+    "24": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Wakefield Avenue",
+                "branches": null,
+                "station": "wakav",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "24-1-6411"
+                    ],
+                    "0": [
+                        "24-0-6411"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Logan Square (Hyde Park)",
+                "branches": null,
+                "station": "logan",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "24-1-6357"
+                    ],
+                    "0": [
+                        "24-0-6390"
+                    ]
+                }
+            },
+            {
+                "stop_name": "River Street @ Cummins Highway",
+                "branches": null,
+                "station": "rivcm",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "24-1-6366"
+                    ],
+                    "0": [
+                        "24-0-6368"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Mattapan Station",
+                "branches": null,
+                "station": "matpn",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "24-1-185"
+                    ],
+                    "0": [
+                        "24-0-185"
+                    ]
+                }
+            },
+            {
+                "stop_name": "River Street @ Central Avenue",
+                "branches": null,
+                "station": "rvcen",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "24-1-588"
+                    ],
+                    "0": [
+                        "24-0-574"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Pierce Square",
+                "branches": null,
+                "station": "pierc",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "24-1-591"
+                    ],
+                    "0": [
+                        "24-0-571"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Dorchester Avenue @ Gallivan Boulevard",
+                "branches": null,
+                "station": "dotga",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "24-1-533"
+                    ],
+                    "0": [
+                        "24-0-537"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Ashmont Terminal",
+                "branches": null,
+                "station": "ashmt",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "24-1-334"
+                    ],
+                    "0": [
+                        "24-0-334"
+                    ]
+                }
+            }
+        ]
+    }
+}

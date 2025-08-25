@@ -1,0 +1,95 @@
+{
+    "108": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Linden Square (Malden)",
+                "branches": null,
+                "station": "lindn",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "108-1-74120"
+                    ],
+                    "0": [
+                        "108-0-74120"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Maplewood Square",
+                "branches": null,
+                "station": "mwood",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "108-1-9025"
+                    ],
+                    "0": [
+                        "108-0-9060"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Pleasant Street @ Main Street",
+                "branches": null,
+                "station": "plsmn",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "108-1-15431"
+                    ],
+                    "0": [
+                        "108-0-5342"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Malden Center Station",
+                "branches": null,
+                "station": "malst",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "108-1-5072"
+                    ],
+                    "0": [
+                        "108-0-53270"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Middlesex @ Second Streets (Medford)",
+                "branches": null,
+                "station": "mdlsc",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "108-1-9038"
+                    ],
+                    "0": [
+                        "108-0-9049"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Wellington Station",
+                "branches": null,
+                "station": "welst",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "108-1-52720"
+                    ],
+                    "0": [
+                        "108-0-52715"
+                    ]
+                }
+            }
+        ]
+    }
+}

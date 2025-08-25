@@ -1,0 +1,152 @@
+{
+    "134": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "North Woburn",
+                "branches": null,
+                "station": "nwobn",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "134-1-8852"
+                    ],
+                    "0": [
+                        "134-0-8852"
+                    ]
+                }
+            },
+            {
+                "stop_name": "TradeCenter 128",
+                "branches": null,
+                "station": "tc128",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "134-1-10016"
+                    ],
+                    "0": [
+                        "134-0-10016"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Woburn Square",
+                "branches": null,
+                "station": "wobsq",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "134-1-9125"
+                    ],
+                    "0": [
+                        "134-0-9125",
+                        "134-0-9127"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Winchester Square",
+                "branches": null,
+                "station": "winsq",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "134-1-6953"
+                    ],
+                    "0": [
+                        "134-0-9109"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Playstead Road",
+                "branches": null,
+                "station": "plast",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "134-1-9145"
+                    ],
+                    "0": [
+                        "134-0-8692"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Winthrop Circle",
+                "branches": null,
+                "station": "wicir",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "134-1-6322"
+                    ],
+                    "0": [
+                        "134-0-5005"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Medford Square",
+                "branches": null,
+                "station": "medfd",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "134-1-63241"
+                    ],
+                    "0": [
+                        "134-0-5002"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Locust @ Riverside (Meadow Glen Mall)",
+                "branches": null,
+                "station": "mdgln",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "134-1-49158"
+                    ],
+                    "0": [
+                        "134-0-49158"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Fells & Riverside",
+                "branches": null,
+                "station": "feriv",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "134-1-9161"
+                    ],
+                    "0": [
+                        "134-0-9162"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Wellington Station",
+                "branches": null,
+                "station": "welst",
+                "order": 10,
+                "stops": {
+                    "1": [
+                        "134-1-52720"
+                    ],
+                    "0": [
+                        "134-0-52714"
+                    ]
+                }
+            }
+        ]
+    }
+}

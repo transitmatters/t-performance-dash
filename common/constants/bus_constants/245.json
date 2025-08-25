@@ -1,0 +1,123 @@
+{
+    "245": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Quincy Center",
+                "branches": null,
+                "station": "qnctr",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "245-1-32001"
+                    ],
+                    "0": [
+                        "245-0-32001"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Adams @ Alleyne",
+                "branches": null,
+                "station": "aleyn",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "245-1-3093"
+                    ],
+                    "0": [
+                        "245-0-3199"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Granite Street @ Packards Lane",
+                "branches": null,
+                "station": "pckrd",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "245-1-13406"
+                    ],
+                    "0": [
+                        "245-0-23406"
+                    ]
+                }
+            },
+            {
+                "stop_name": "East Milton Square",
+                "branches": null,
+                "station": "emlsq",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "245-1-3359"
+                    ],
+                    "0": [
+                        "245-0-3391"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Reedsdale Road @ Randolph Avenue",
+                "branches": null,
+                "station": "rdran",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "245-1-4344"
+                    ],
+                    "0": [
+                        "245-0-4364"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Milton Hospital",
+                "branches": null,
+                "station": "mhosp",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "245-1-4198"
+                    ],
+                    "0": [
+                        "245-0-4147"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Brook Road @ Central Avenue",
+                "branches": null,
+                "station": "brkcn",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "245-1-4404"
+                    ],
+                    "0": [
+                        "245-0-4144"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Mattapan Station",
+                "branches": null,
+                "station": "matpn",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "245-1-185"
+                    ],
+                    "0": [
+                        "245-0-185"
+                    ]
+                }
+            }
+        ]
+    }
+}

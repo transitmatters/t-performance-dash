@@ -1,0 +1,110 @@
+{
+    "40": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Cleary Square",
+                "branches": null,
+                "station": "clsq",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "40-1-36466"
+                    ],
+                    "0": [
+                        "40-0-26531"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Georgetowne",
+                "branches": null,
+                "station": "gtown",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "40-1-1618"
+                    ],
+                    "0": [
+                        "40-0-11618",
+                        "40-0-1618"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Washington Street @ West Boundary Road",
+                "branches": null,
+                "station": "wawbw",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "40-1-625"
+                    ],
+                    "0": [
+                        "40-0-11613"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Washington Street @ LaGrange Street",
+                "branches": null,
+                "station": "walag",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "40-1-628"
+                    ],
+                    "0": [
+                        "40-0-609"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Washington Street @ Metropolitan Avenue",
+                "branches": null,
+                "station": "wamet",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "40-1-633"
+                    ],
+                    "0": [
+                        "40-0-604"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Roslindale Square",
+                "branches": null,
+                "station": "rossq",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "40-1-636"
+                    ],
+                    "0": [
+                        "40-0-6022"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Forest Hills Busway",
+                "branches": null,
+                "station": "fhill",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "40-1-10642"
+                    ],
+                    "0": [
+                        "40-0-10642"
+                    ]
+                }
+            }
+        ]
+    }
+}

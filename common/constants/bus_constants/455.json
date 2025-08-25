@@ -1,0 +1,138 @@
+{
+    "455": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Salem Depot",
+                "branches": null,
+                "station": "salem",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "455-1-37150"
+                    ],
+                    "0": [
+                        "455-0-37150"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Salem Center",
+                "branches": null,
+                "station": "slmct",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "455-1-6103"
+                    ],
+                    "0": [
+                        "455-0-6181"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Vinnin Square",
+                "branches": null,
+                "station": "vinsq",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "455-1-6126"
+                    ],
+                    "0": [
+                        "455-0-6157"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Essex Street @ Eastern Avenue",
+                "branches": null,
+                "station": "essex",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "455-1-6135"
+                    ],
+                    "0": [
+                        "455-0-6146"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Central Square, Lynn (Busway)",
+                "branches": null,
+                "station": "censq",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "455-1-14748",
+                        "455-1-16653"
+                    ],
+                    "0": [
+                        "455-0-14748"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Market Square (Lynn)",
+                "branches": null,
+                "station": "mktsq",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "455-1-4451"
+                    ],
+                    "0": [
+                        "455-0-4525"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Lynn Garage",
+                "branches": null,
+                "station": "wlynn",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "455-1-4492"
+                    ],
+                    "0": [
+                        "455-0-4520"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Brown Circle",
+                "branches": null,
+                "station": "brown",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "455-1-4498"
+                    ],
+                    "0": [
+                        "455-0-4515"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Wonderland Station West",
+                "branches": null,
+                "station": "wondw",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "455-1-15799"
+                    ],
+                    "0": [
+                        "455-0-15799"
+                    ]
+                }
+            }
+        ]
+    }
+}

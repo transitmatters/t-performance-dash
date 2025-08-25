@@ -1,0 +1,81 @@
+{
+    "351": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Bedford Woods",
+                "branches": null,
+                "station": "bdfwd",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "351-1-49795"
+                    ],
+                    "0": [
+                        "351-0-49795"
+                    ]
+                }
+            },
+            {
+                "stop_name": "EMD Serono Research Center",
+                "branches": null,
+                "station": "emdsr",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "351-1-49950"
+                    ],
+                    "0": [
+                        "351-0-49950"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Oak Park (Bedford)",
+                "branches": null,
+                "station": "oakpk",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "351-1-49797"
+                    ],
+                    "0": [
+                        "351-0-49797"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Network Drive (old Sun Microsystems)",
+                "branches": null,
+                "station": "sunms",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "351-1-49806"
+                    ],
+                    "0": [
+                        "351-0-49806"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Third Avenue (Burlington)",
+                "branches": null,
+                "station": "thrdb",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "351-1-49805"
+                    ],
+                    "0": [
+                        "351-0-49805"
+                    ]
+                }
+            }
+        ]
+    }
+}

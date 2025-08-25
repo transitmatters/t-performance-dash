@@ -1,0 +1,95 @@
+{
+    "211": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Quincy Center",
+                "branches": null,
+                "station": "qnctr",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "211-1-32005"
+                    ],
+                    "0": [
+                        "211-0-32005"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Newport Avenue @ Beale Street (Wollaston Station)",
+                "branches": null,
+                "station": "newbl",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "211-1-3476"
+                    ],
+                    "0": [
+                        "211-0-3191"
+                    ]
+                }
+            },
+            {
+                "stop_name": "North Quincy",
+                "branches": null,
+                "station": "nqncy",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "211-1-3125"
+                    ],
+                    "0": [
+                        "211-0-3125"
+                    ]
+                }
+            },
+            {
+                "stop_name": "East Squantum Street @ Newbury Avenue (North Quincy High School)",
+                "branches": null,
+                "station": "esqnb",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "211-1-3128"
+                    ],
+                    "0": [
+                        "211-0-3165"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Wollaston Beach",
+                "branches": null,
+                "station": "wobch",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "211-1-3136"
+                    ],
+                    "0": [
+                        "211-0-3157"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Squantum",
+                "branches": null,
+                "station": "sqntm",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "211-1-13142"
+                    ],
+                    "0": [
+                        "211-0-13142"
+                    ]
+                }
+            }
+        ]
+    }
+}
