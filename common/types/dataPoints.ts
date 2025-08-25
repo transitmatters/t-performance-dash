@@ -14,6 +14,8 @@ export interface TravelTimePoint extends DataPoint {
   threshold_flag_1?: string;
   threshold_flag_2?: string;
   threshold_flag_3?: string;
+  vehicle_consist?: string;
+  vehicle_label?: string;
 }
 
 export interface HeadwayPoint extends DataPoint {
@@ -25,12 +27,16 @@ export interface HeadwayPoint extends DataPoint {
   threshold_flag_1?: string;
   threshold_flag_2?: string;
   threshold_flag_3?: string;
+  vehicle_consist?: string;
+  vehicle_label?: string;
 }
 
 export interface DwellPoint extends DataPoint {
   arr_dt: string;
   dep_dt: string;
   dwell_time_sec: number;
+  vehicle_consist?: string;
+  vehicle_label?: string;
 }
 
 export interface DayDelayTotals {
