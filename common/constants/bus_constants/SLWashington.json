@@ -1,0 +1,61 @@
+{
+  "SLWashington": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Nubian Station",
+        "branches": null,
+        "station": "nubn",
+        "order": 1,
+        "stops": {
+          "1": ["SL5-1-64"],
+          "0": ["SL5-0-64"]
+        }
+      },
+      {
+        "stop_name": "Massachusetts Avenue @ Washington",
+        "branches": null,
+        "station": "wasma",
+        "order": 2,
+        "stops": {
+          "1": ["SL5-1-5"],
+          "0": ["SL5-0-55"]
+        }
+      },
+      {
+        "stop_name": "Washington & East Berkeley",
+        "branches": null,
+        "station": "webrk",
+        "order": 3,
+        "stops": {
+          "1": ["SL5-1-5095"],
+          "0": ["SL5-0-5098"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ Tufts Medical Center",
+        "branches": null,
+        "station": "tumed",
+        "order": 4,
+        "stops": {
+          "1": ["SL5-1-6565"],
+          "0": ["SL5-0-49002"]
+        }
+      },
+      {
+        "stop_name": "Temple Street @ Tremont Street",
+        "branches": null,
+        "station": "templ",
+        "order": 5,
+        "stops": {
+          "1": ["SL5-1-49001"],
+          "0": ["SL5-0-49001"]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "SLWaterfront": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Silver Line Way",
+        "branches": null,
+        "station": "conrd",
+        "order": 1,
+        "stops": {
+          "1": ["SL2-1-74614"],
+          "0": ["SL2-0-74624"]
+        }
+      },
+      {
+        "stop_name": "World Trade Center",
+        "branches": null,
+        "station": "wtcst",
+        "order": 2,
+        "stops": {
+          "1": ["SL2-1-74615"],
+          "0": ["SL2-0-74613"]
+        }
+      },
+      {
+        "stop_name": "Courthouse",
+        "branches": null,
+        "station": "crtst",
+        "order": 3,
+        "stops": {
+          "1": ["SL2-1-74616"],
+          "0": ["SL2-0-74612"]
+        }
+      },
+      {
+        "stop_name": "South Station (Silver Line)",
+        "branches": null,
+        "station": "soust",
+        "order": 4,
+        "stops": {
+          "1": ["SL2-1-74617"],
+          "0": ["SL2-0-74611"]
+        }
+      }
+    ]
+  }
+}

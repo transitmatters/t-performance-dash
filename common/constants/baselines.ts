@@ -102,6 +102,8 @@ export const PEAK_RIDERSHIP: {
   '116': 0,
   '114116117': 12867,
   '220221222': 3370,
+  SLWaterfront: 25670,
+  SLWashington: 16817,
   'CR-Fitchburg': 9302,
   'CR-Franklin': 11671,
   'CR-Greenbush': 6114,
