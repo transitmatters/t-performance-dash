@@ -7,6 +7,7 @@ export type Line =
   | 'line-bus'
   | 'line-commuter-rail'
   | 'line-ferry';
+
 export type LineShort =
   | 'Red'
   | 'Orange'
@@ -16,6 +17,7 @@ export type LineShort =
   | 'Bus'
   | 'Commuter Rail'
   | 'Ferry';
+
 export type LinePath =
   | 'red'
   | 'orange'

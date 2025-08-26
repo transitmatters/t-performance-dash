@@ -174,11 +174,46 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                     }`;
                   },
                   afterBody: (tooltipItems) => {
-                    return departureFromNormalString(
+                    const result: string[] = [];
+
+                    // Add departure from normal information
+                    const departureInfo = departureFromNormalString(
                       tooltipItems[0].parsed.y,
                       tooltipItems[1]?.parsed.y,
                       showUnderRatio
                     );
+                    if (departureInfo) {
+                      result.push(departureInfo);
+                    }
+
+                    // Add vehicle consist information if available
+                    const { dataIndex } = tooltipItems[0];
+                    const dataPoint = data[dataIndex];
+                    if (dataPoint?.vehicle_consist) {
+                      const arrNums = dataPoint.vehicle_consist.split('|').map(Number);
+                      if (arrNums.length > 1) {
+                        result.push(
+                          `Vehicle Numbers: ${dataPoint.vehicle_consist.replaceAll('|', ', ')}`
+                        );
+                      } else {
+                        result.push(`Vehicle Number: ${dataPoint.vehicle_consist}`);
+                      }
+                    }
+                    if (dataPoint?.vehicle_label) {
+                      if (dataPoint?.vehicle_consist) {
+                        const arrNums = dataPoint.vehicle_consist.split('|').map(Number);
+                        const consistHead = arrNums[0];
+                        if (consistHead === parseInt(dataPoint.vehicle_label)) {
+                          //pass
+                        } else {
+                          result.push(`Vehicle Label: ${dataPoint.vehicle_label}`);
+                        }
+                      } else {
+                        result.push(`Vehicle Label: ${dataPoint.vehicle_label}`);
+                      }
+                    }
+
+                    return result;
                   },
                 },
               },
