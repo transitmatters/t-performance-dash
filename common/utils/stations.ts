@@ -244,6 +244,16 @@ export const getStationKeysFromStations = (
 export const findValidDefaultStations = (stations: Station[] | undefined) => {
   if (!stations?.length) return { defaultFrom: undefined, defaultTo: undefined };
 
+  if (stations.length === 2) {
+    const defaultFrom = stations[0];
+    const defaultTo = stations[1];
+
+    //if defaultFrom && defaultTo are not null and defaultFrom is not equal to defaultTo
+    if (defaultFrom && defaultTo && defaultFrom.station !== defaultTo.station) {
+      return { defaultFrom, defaultTo };
+    }
+  }
+
   for (const dir of ['1', '0']) {
     const validStations = stations.filter((s) => s.stops[dir]?.length > 0);
     if (validStations.length >= 2) {
