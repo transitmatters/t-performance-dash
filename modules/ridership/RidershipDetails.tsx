@@ -14,10 +14,10 @@ import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 export function RidershipDetails() {
   const {
     line,
-    query: { startDate, endDate, busRoute, crRoute },
+    query: { startDate, endDate, busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
   const config = SPEED_RANGE_PARAM_MAP.week;
-  const lineId = getRidershipLineId(line, busRoute, crRoute);
+  const lineId = getRidershipLineId(line, busRoute, crRoute, ferryRoute);
   const enabled = Boolean(startDate && endDate && lineId);
 
   const ridership = useRidershipData(
@@ -45,6 +45,7 @@ export function RidershipDetails() {
               line={line}
               busRoute={busRoute}
               crRoute={crRoute}
+              ferryRoute={ferryRoute}
             />
           ) : (
             <div className="relative flex h-full">

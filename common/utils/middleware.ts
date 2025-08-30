@@ -4,22 +4,31 @@ import { useRouter } from 'next/router';
 import {
   type CommuterRailRoute,
   type BusRoute,
+  type FerryRoute,
   type LinePath,
   COMMUTER_RAIL_ROUTES,
   BUS_ROUTES,
+  FERRY_ROUTES,
   RAIL_LINES,
 } from '../types/lines';
 import { TODAY_STRING } from '../constants/dates';
 
 const getLineOrRoute = (
   lineString: string | BusRoute
-): { type: 'rail' | 'bus' | 'cr'; value: LinePath | BusRoute | CommuterRailRoute } | undefined => {
+):
+  | {
+      type: 'rail' | 'bus' | 'cr' | 'ferry';
+      value: LinePath | BusRoute | CommuterRailRoute | FerryRoute;
+    }
+  | undefined => {
   if (RAIL_LINES.includes(lineString.toLowerCase()))
     return { type: 'rail', value: lineString.toLowerCase() as LinePath };
   if (BUS_ROUTES.includes(lineString.toString() as BusRoute))
     return { type: 'bus', value: lineString as BusRoute };
   if (COMMUTER_RAIL_ROUTES.includes(lineString.toString() as CommuterRailRoute))
     return { type: 'cr', value: lineString as CommuterRailRoute };
+  if (FERRY_ROUTES.includes(lineString.toString() as FerryRoute))
+    return { type: 'ferry', value: lineString as FerryRoute };
 };
 
 export const configToQueryParams = (search: ReadonlyURLSearchParams | URLSearchParams) => {
@@ -53,6 +62,7 @@ export const configToQueryParams = (search: ReadonlyURLSearchParams | URLSearchP
   ][];
   if (lineOrRoute.type === 'bus') queryArr.push(['busRoute', lineOrRoute.value]);
   if (lineOrRoute.type === 'cr') queryArr.push(['crRoute', lineOrRoute.value]);
+  if (lineOrRoute.type === 'ferry') queryArr.push(['ferryRoute', lineOrRoute.value]);
 
   const newQueryParams = new URLSearchParams(queryArr);
 
@@ -65,6 +75,12 @@ export const configToQueryParams = (search: ReadonlyURLSearchParams | URLSearchP
   if (lineOrRoute.type === 'cr')
     return {
       line: 'commuter-rail',
+      queryParams: newQueryParams,
+      tripSection: singleOrMulti,
+    };
+  if (lineOrRoute.type === 'ferry')
+    return {
+      line: 'ferry',
       queryParams: newQueryParams,
       tripSection: singleOrMulti,
     };
