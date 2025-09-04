@@ -39,6 +39,7 @@ export const THREE_MONTHS_AGO_STRING = TODAY.subtract(90, 'days').format(DATE_FO
 export const OVERVIEW_TRAIN_MIN_DATE = '2016-02-01';
 const TRAIN_MIN_DATE = '2016-01-15';
 const BUS_MIN_DATE = '2018-08-01';
+const FERRY_MIN_DATE = '2018-11-01';
 export const BUS_MAX_DATE = '2025-04-30';
 export const BUS_MAX_DAY = dayjs(BUS_MAX_DATE);
 export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
@@ -145,7 +146,7 @@ const FLAT_PICKER_OPTIONS: {
   },
   Ferry: {
     enableTime: false,
-    minDate: BUS_MIN_DATE,
+    minDate: FERRY_MIN_DATE,
     maxDate: TODAY_STRING,
     altInput: true,
     altFormat: 'M j, Y',

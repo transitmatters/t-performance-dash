@@ -99,7 +99,7 @@ export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
           <WidgetDiv>
             <WidgetTitle
               title="Headways"
-              subtitle="Time between trains"
+              subtitle="Time between ferries"
               location={location}
               line={line}
             />
@@ -184,7 +184,7 @@ export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
           <WidgetDiv>
             <WidgetTitle
               title="Headways"
-              subtitle="Time between trains"
+              subtitle="Time between ferries"
               location={location}
               line={line}
             />
@@ -197,7 +197,7 @@ export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
           <WidgetDiv>
             <WidgetTitle
               title="Headway distribution"
-              subtitle="Time between trains"
+              subtitle="Time between ferries"
               location={location}
               line={line}
             />
