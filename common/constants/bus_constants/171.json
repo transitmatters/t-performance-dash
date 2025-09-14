@@ -1,10 +1,61 @@
 {
-    "171": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": []
-    }
+  "171": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Andrew",
+        "branches": null,
+        "station": "andrw",
+        "order": 0,
+        "stops": {
+          "1": [],
+          "0": ["171-0-13"]
+        }
+      },
+      {
+        "stop_name": "Nubian",
+        "branches": null,
+        "station": "dudly",
+        "order": 0,
+        "stops": {
+          "1": [],
+          "0": ["171-0-64"]
+        }
+      },
+      {
+        "stop_name": "Terminal E (Logan Airport)",
+        "branches": null,
+        "station": "terme",
+        "order": 0,
+        "stops": {
+          "1": [],
+          "0": ["171-0-17095"]
+        }
+      },
+      {
+        "stop_name": "Terminal B Stop 1 (Logan Airport)",
+        "branches": null,
+        "station": "trmb1",
+        "order": 0,
+        "stops": {
+          "1": [],
+          "0": ["171-0-27092"]
+        }
+      },
+      {
+        "stop_name": "Terminal C (formerly D) (Logan Airport)",
+        "branches": null,
+        "station": "trmcd",
+        "order": 0,
+        "stops": {
+          "1": [],
+          "0": ["171-0-17094"]
+        }
+      }
+    ]
+  }
 }
