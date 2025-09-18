@@ -162,7 +162,7 @@
                 }
             },
             {
-                "stop_name": NaN,
+                "stop_name": "NaN",
                 "branches": [
                     "505"
                 ],

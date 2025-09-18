@@ -17,43 +17,44 @@ import bus_18 from './bus_constants/18.json';
 import bus_21 from './bus_constants/21.json';
 import bus_22 from './bus_constants/22.json';
 import bus_23 from './bus_constants/23.json';
-import bus_24 from './bus_constants/24.json';
+import bus_24_27_33 from './bus_constants/24-27-33.json';
 import bus_26 from './bus_constants/26.json';
 import bus_28 from './bus_constants/28.json';
 import bus_29 from './bus_constants/29.json';
 import bus_30 from './bus_constants/30.json';
 import bus_31 from './bus_constants/31.json';
 import bus_32 from './bus_constants/32.json';
-import bus_33 from './bus_constants/33.json';
 import bus_34 from './bus_constants/34.json';
 import bus_35 from './bus_constants/35.json';
 import bus_36 from './bus_constants/36.json';
 import bus_37 from './bus_constants/37.json';
 import bus_38 from './bus_constants/38.json';
 import bus_39 from './bus_constants/39.json';
-import bus_40 from './bus_constants/40.json';
 import bus_41 from './bus_constants/41.json';
 import bus_42 from './bus_constants/42.json';
 import bus_43 from './bus_constants/43.json';
 import bus_44 from './bus_constants/44.json';
 import bus_45 from './bus_constants/45.json';
 import bus_47 from './bus_constants/47.json';
-import bus_50 from './bus_constants/50.json';
+import bus_40_50 from './bus_constants/40-50.json';
+import bus_52_59 from './bus_constants/52-59.json';
 import bus_51 from './bus_constants/51.json';
 import bus_55 from './bus_constants/55.json';
 import bus_57 from './bus_constants/57.json';
 import bus_59 from './bus_constants/59.json';
 import bus_60 from './bus_constants/60.json';
-import bus_61 from './bus_constants/61.json';
+import bus_60_65 from './bus_constants/60-65.json';
+import bus_62_76 from './bus_constants/62-76.json';
 import bus_64 from './bus_constants/64.json';
 import bus_66 from './bus_constants/66.json';
+import bus_67_69 from './bus_constants/67-79.json';
 import bus_68 from './bus_constants/68.json';
 import bus_69 from './bus_constants/69.json';
-import bus_70 from './bus_constants/70.json';
 import bus_71 from './bus_constants/71.json';
+import bus_72_74_75 from './bus_constants/72-74-75.json';
 import bus_73 from './bus_constants/73.json';
 import bus_77 from './bus_constants/77.json';
-import bus_78 from './bus_constants/78.json';
+import bus_78_84 from './bus_constants/78-84.json';
 import bus_80 from './bus_constants/80.json';
 import bus_83 from './bus_constants/83.json';
 import bus_85 from './bus_constants/85.json';
@@ -82,22 +83,22 @@ import bus_111 from './bus_constants/111.json';
 import bus_112 from './bus_constants/112.json';
 import bus_116 from './bus_constants/116.json';
 import bus_119 from './bus_constants/119.json';
-import bus_120 from './bus_constants/120.json';
-import bus_121 from './bus_constants/121.json';
-import bus_131 from './bus_constants/131.json';
-import bus_132 from './bus_constants/132.json';
+import bus_120_121 from './bus_constants/120-121.json';
+import bus_131_132 from './bus_constants/131-132.json';
 import bus_134 from './bus_constants/134.json';
-import bus_137 from './bus_constants/137.json';
+import bus_136_137 from './bus_constants/136-137.json';
 import bus_171 from './bus_constants/171.json';
-import bus_201 from './bus_constants/201.json';
-import bus_202 from './bus_constants/202.json';
+import bus_201_202 from './bus_constants/201-202.json';
 import bus_210 from './bus_constants/210.json';
+import bus_210_211_212 from './bus_constants/210-211-212.json';
 import bus_211 from './bus_constants/211.json';
+import bus_214_216 from './bus_constants/214-216.json';
 import bus_215 from './bus_constants/215.json';
-import bus_216 from './bus_constants/216.json';
 import bus_217 from './bus_constants/217.json';
+import bus_217_245 from './bus_constants/217-245.json';
 import bus_225 from './bus_constants/225.json';
 import bus_226 from './bus_constants/226.json';
+import bus_225_226 from './bus_constants/225-226.json';
 import bus_230 from './bus_constants/230.json';
 import bus_236 from './bus_constants/236.json';
 import bus_238 from './bus_constants/238.json';
@@ -105,10 +106,22 @@ import bus_240 from './bus_constants/240.json';
 import bus_245 from './bus_constants/245.json';
 import bus_350 from './bus_constants/350.json';
 import bus_351 from './bus_constants/351.json';
+import bus_350_351 from './bus_constants/350-351.json';
 import bus_354 from './bus_constants/354.json';
+import bus_411_430 from './bus_constants/411-430.json';
+import bus_424_450_456 from './bus_constants/424-450-456.json';
+import bus_426_428 from './bus_constants/426-428.json';
 import bus_429 from './bus_constants/429.json';
+import bus_434_435_436 from './bus_constants/434-435-436.json';
+import bus_439_441_442 from './bus_constants/439-441-442.json';
+import bus_451_465 from './bus_constants/451-465.json';
 import bus_455 from './bus_constants/455.json';
 import bus_456 from './bus_constants/456.json';
+import bus_501_503 from './bus_constants/501-503.json';
+import bus_502_504 from './bus_constants/502-504.json';
+import bus_505_553_554 from './bus_constants/505-553-554.json';
+import bus_556_558 from './bus_constants/556-558.json';
+import bus_712_713 from './bus_constants/712-713.json';
 import bus_104_109 from './bus_constants/104-109.json';
 import bus_61_70_170 from './bus_constants/61-70-170.json';
 import bus_114_116_117 from './bus_constants/114-116-117.json';
@@ -157,44 +170,45 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_21,
   ...bus_22,
   ...bus_23,
-  ...bus_24,
+  ...bus_24_27_33,
   ...bus_26,
   ...bus_28,
   ...bus_29,
   ...bus_30,
   ...bus_31,
   ...bus_32,
-  ...bus_33,
   ...bus_34,
   ...bus_35,
   ...bus_36,
   ...bus_37,
   ...bus_38,
   ...bus_39,
-  ...bus_40,
   ...bus_41,
   ...bus_42,
   ...bus_43,
   ...bus_44,
   ...bus_45,
   ...bus_47,
-  ...bus_50,
+  ...bus_40_50,
   ...bus_51,
+  ...bus_52_59,
   ...bus_55,
   ...bus_57,
   ...bus_59,
   ...bus_60,
-  ...bus_61,
+  ...bus_60_65,
   ...bus_61_70_170,
+  ...bus_62_76,
   ...bus_64,
   ...bus_66,
+  ...bus_67_69,
   ...bus_68,
   ...bus_69,
-  ...bus_70,
   ...bus_71,
+  ...bus_72_74_75,
   ...bus_73,
   ...bus_77,
-  ...bus_78,
+  ...bus_78_84,
   ...bus_80,
   ...bus_83,
   ...bus_85,
@@ -227,21 +241,21 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_114_116_117,
   ...bus_116,
   ...bus_119,
-  ...bus_120,
-  ...bus_121,
-  ...bus_131,
-  ...bus_132,
+  ...bus_120_121,
+  ...bus_131_132,
   ...bus_134,
-  ...bus_137,
+  ...bus_136_137,
   ...bus_171,
-  ...bus_201,
-  ...bus_202,
+  ...bus_201_202,
+  ...bus_210_211_212,
   ...bus_210,
   ...bus_211,
+  ...bus_214_216,
   ...bus_215,
-  ...bus_216,
   ...bus_217,
+  ...bus_217_245,
   ...bus_220_221_222,
+  ...bus_225_226,
   ...bus_225,
   ...bus_226,
   ...bus_230,
@@ -249,12 +263,24 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_238,
   ...bus_240,
   ...bus_245,
+  ...bus_350_351,
   ...bus_350,
   ...bus_351,
   ...bus_354,
+  ...bus_411_430,
+  ...bus_424_450_456,
+  ...bus_426_428,
   ...bus_429,
+  ...bus_434_435_436,
+  ...bus_439_441_442,
+  ...bus_451_465,
   ...bus_455,
   ...bus_456,
+  ...bus_501_503,
+  ...bus_502_504,
+  ...bus_505_553_554,
+  ...bus_556_558,
+  ...bus_712_713,
   ...bus_ct2,
   ...bus_ct3,
 };
