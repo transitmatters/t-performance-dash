@@ -12,6 +12,8 @@ export const getRidershipLineId = (
         return 'line-3434E';
       case '57':
         return 'line-5757A';
+      case 'CT2':
+        return 'line-747';
       default:
         return `line-${busRoute.replaceAll('/', '')}`;
     }
