@@ -162,22 +162,6 @@
                 }
             },
             {
-                "stop_name": "NaN",
-                "branches": [
-                    "505"
-                ],
-                "station": "altol",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "505-1-11082"
-                    ],
-                    "0": [
-                        "505-0-11081"
-                    ]
-                }
-            },
-            {
                 "stop_name": "Kneeland Street",
                 "branches": [
                     "505"

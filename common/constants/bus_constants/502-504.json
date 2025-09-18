@@ -53,22 +53,6 @@
                 }
             },
             {
-                "stop_name": "NaN",
-                "branches": [
-                    "504"
-                ],
-                "station": "altol",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "504-1-11082"
-                    ],
-                    "0": [
-                        "504-0-11081"
-                    ]
-                }
-            },
-            {
                 "stop_name": "Copley Square @ Stuart Street",
                 "branches": [
                     "504"
