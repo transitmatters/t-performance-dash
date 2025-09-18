@@ -1,0 +1,173 @@
+{
+    "72/74/75": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Aberdeen & Mount Auburn",
+                "branches": [
+                    "75"
+                ],
+                "station": "abmta",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "75-1-2077"
+                    ],
+                    "0": [
+                        "75-0-2098"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Belmont Center Station",
+                "branches": [
+                    "74",
+                    "75"
+                ],
+                "station": "conle",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "74-1-2137",
+                        "75-1-2137"
+                    ],
+                    "0": [
+                        "74-0-2137",
+                        "75-0-2137"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Concord Avenue @ Bright Road",
+                "branches": [
+                    "74",
+                    "75"
+                ],
+                "station": "conbr",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "74-1-2144",
+                        "75-1-2144"
+                    ],
+                    "0": [
+                        "74-0-2191",
+                        "75-0-2191"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Fresh Pond Parkway @ Concord Street",
+                "branches": [
+                    "74"
+                ],
+                "station": "fpond",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "74-1-2154"
+                    ],
+                    "0": [
+                        "74-0-2181"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Fresh Pond Parkway",
+                "branches": [
+                    "75"
+                ],
+                "station": "frpky",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "75-1-2080"
+                    ],
+                    "0": [
+                        "75-0-2095"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Huron Avenue",
+                "branches": [
+                    "74",
+                    "75"
+                ],
+                "station": "huron",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "74-1-2159",
+                        "75-1-2159"
+                    ],
+                    "0": [
+                        "74-0-2176",
+                        "75-0-2176"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Cambridge Common Loop",
+                "branches": [
+                    "74",
+                    "75"
+                ],
+                "station": "hloop",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "74-1-12614",
+                        "75-1-12614"
+                    ],
+                    "0": [
+                        "74-0-2170",
+                        "75-0-2170"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Harvard Bus Tunnels",
+                "branches": [
+                    "74",
+                    "75"
+                ],
+                "station": "bally",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "74-1-32549",
+                        "75-1-32549"
+                    ],
+                    "0": [
+                        "74-0-76126",
+                        "75-0-76126"
+                    ]
+                }
+            },
+            {
+                "stop_name": NaN,
+                "branches": [
+                    "74",
+                    "75"
+                ],
+                "station": "bennt",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "74-1-2169",
+                        "75-1-2169"
+                    ],
+                    "0": [
+                        "74-0-2169",
+                        "75-0-2169"
+                    ]
+                }
+            }
+        ]
+    }
+}

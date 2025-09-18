@@ -1,0 +1,135 @@
+{
+    "501/503": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Saint James Avenue @ Dartmouth Street",
+                "branches": [
+                    "501"
+                ],
+                "station": "stjim",
+                "order": 0,
+                "stops": {
+                    "1": [],
+                    "0": [
+                        "501-0-178"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Winship Street",
+                "branches": [
+                    "501"
+                ],
+                "station": "wnshp",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "501-1-994"
+                    ],
+                    "0": [
+                        "501-0-1994"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Allston Trpk Ramps",
+                "branches": [
+                    "501"
+                ],
+                "station": "alrmp",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "501-1-11086"
+                    ],
+                    "0": [
+                        "501-0-11085"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Newton Corner",
+                "branches": [
+                    "501"
+                ],
+                "station": "nwcor",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "501-1-987"
+                    ],
+                    "0": [
+                        "501-0-903"
+                    ]
+                }
+            },
+            {
+                "stop_name": NaN,
+                "branches": [
+                    "501"
+                ],
+                "station": "altol",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "501-1-11082"
+                    ],
+                    "0": [
+                        "501-0-11081"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Copley Square @ Stuart Street",
+                "branches": [
+                    "501"
+                ],
+                "station": "copsq",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "501-1-71855"
+                    ],
+                    "0": []
+                }
+            },
+            {
+                "stop_name": "Kneeland Street",
+                "branches": [
+                    "501"
+                ],
+                "station": "kneel",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "501-1-6550"
+                    ],
+                    "0": [
+                        "501-0-6555"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Federal & Franklin",
+                "branches": [
+                    "501"
+                ],
+                "station": "fedfr",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "501-1-6551"
+                    ],
+                    "0": [
+                        "501-0-6551"
+                    ]
+                }
+            }
+        ]
+    }
+}

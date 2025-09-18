@@ -1,5 +1,5 @@
 {
-    "137": {
+    "136/137": {
         "type": "bus",
         "direction": {
             "0": "outbound",
@@ -8,7 +8,9 @@
         "stations": [
             {
                 "stop_name": "Reading Commuter Rail Depot",
-                "branches": null,
+                "branches": [
+                    "137"
+                ],
                 "station": "readc",
                 "order": 1,
                 "stops": {
@@ -22,7 +24,9 @@
             },
             {
                 "stop_name": "Wakefield Square",
-                "branches": null,
+                "branches": [
+                    "137"
+                ],
                 "station": "wakef",
                 "order": 2,
                 "stops": {
@@ -36,7 +40,9 @@
             },
             {
                 "stop_name": "Greenwood Commuter Rail",
-                "branches": null,
+                "branches": [
+                    "137"
+                ],
                 "station": "grnwd",
                 "order": 3,
                 "stops": {
@@ -50,7 +56,9 @@
             },
             {
                 "stop_name": "Franklin Square",
-                "branches": null,
+                "branches": [
+                    "137"
+                ],
                 "station": "fklin",
                 "order": 4,
                 "stops": {
@@ -64,7 +72,9 @@
             },
             {
                 "stop_name": "Main & Porter",
-                "branches": null,
+                "branches": [
+                    "137"
+                ],
                 "station": "mport",
                 "order": 5,
                 "stops": {
@@ -78,7 +88,9 @@
             },
             {
                 "stop_name": "Main & Grove",
-                "branches": null,
+                "branches": [
+                    "137"
+                ],
                 "station": "mgrov",
                 "order": 6,
                 "stops": {
@@ -92,7 +104,9 @@
             },
             {
                 "stop_name": "Oak Grove Station",
-                "branches": null,
+                "branches": [
+                    "137"
+                ],
                 "station": "okgrv",
                 "order": 7,
                 "stops": {
@@ -106,7 +120,9 @@
             },
             {
                 "stop_name": "Malden Center Station",
-                "branches": null,
+                "branches": [
+                    "137"
+                ],
                 "station": "malst",
                 "order": 8,
                 "stops": {
