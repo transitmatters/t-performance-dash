@@ -1,0 +1,77 @@
+{
+    "202": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Adams & Gallivan Boulevard",
+                "branches": null,
+                "station": "adgal",
+                "order": 0,
+                "stops": {
+                    "1": [],
+                    "0": [
+                        "202-0-8687"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Keystone Apartments",
+                "branches": null,
+                "station": "keyst",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "202-1-38813"
+                    ],
+                    "0": [
+                        "202-0-38813"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Neponset Circle",
+                "branches": null,
+                "station": "nepon",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "202-1-8803"
+                    ],
+                    "0": []
+                }
+            },
+            {
+                "stop_name": "Neponset Avenue @ Adams Street",
+                "branches": null,
+                "station": "nepad",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "202-1-3087"
+                    ],
+                    "0": [
+                        "202-0-8326"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Fields Corner",
+                "branches": null,
+                "station": "fldcr",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "202-1-323"
+                    ],
+                    "0": [
+                        "202-0-323"
+                    ]
+                }
+            }
+        ]
+    }
+}

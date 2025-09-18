@@ -1,0 +1,214 @@
+{
+    "60/65": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Winship Street",
+                "branches": [
+                    "65"
+                ],
+                "station": "wnshp",
+                "order": 0,
+                "stops": {
+                    "1": [],
+                    "0": [
+                        "65-0-1994"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Brighton Center",
+                "branches": [
+                    "65"
+                ],
+                "station": "brctr",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "65-1-1026"
+                    ],
+                    "0": [
+                        "65-0-1026"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Chestnut Hill Mall",
+                "branches": [
+                    "60"
+                ],
+                "station": "cnhlm",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "60-1-19661"
+                    ],
+                    "0": [
+                        "60-0-19661"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Washington Square",
+                "branches": [
+                    "65"
+                ],
+                "station": "bcnwa",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "65-1-1276"
+                    ],
+                    "0": [
+                        "65-0-1292"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Boylston @ Tully",
+                "branches": [
+                    "60"
+                ],
+                "station": "botul",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "60-1-19821"
+                    ],
+                    "0": [
+                        "60-0-19821"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Boylston @ Hammond",
+                "branches": [
+                    "60"
+                ],
+                "station": "boham",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "60-1-1984"
+                    ],
+                    "0": [
+                        "60-0-1540"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Brookline Village",
+                "branches": [
+                    "60",
+                    "65"
+                ],
+                "station": "brkvl",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "60-1-1555",
+                        "65-1-1555"
+                    ],
+                    "0": [
+                        "60-0-11366",
+                        "60-0-1525",
+                        "65-0-1526"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Boylston @ Chestnut Hill Avenue",
+                "branches": [
+                    "60"
+                ],
+                "station": "bocnh",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "60-1-1545"
+                    ],
+                    "0": [
+                        "60-0-1535"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Brookline & Longwood Avenues",
+                "branches": [
+                    "60",
+                    "65"
+                ],
+                "station": "brlng",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "60-1-1804",
+                        "65-1-1804"
+                    ],
+                    "0": [
+                        "60-0-1521",
+                        "65-0-1521"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Cypress @ Boylston",
+                "branches": [
+                    "60"
+                ],
+                "station": "cypbo",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "60-1-1547"
+                    ],
+                    "0": [
+                        "60-0-1533"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Fenway Park",
+                "branches": [
+                    "60",
+                    "65"
+                ],
+                "station": "fnypk",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "60-1-1563",
+                        "65-1-1563"
+                    ],
+                    "0": [
+                        "60-0-1518",
+                        "65-0-1518"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Kenmore (Busway)",
+                "branches": [
+                    "60",
+                    "65"
+                ],
+                "station": "kenbs",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "60-1-899",
+                        "65-1-899"
+                    ],
+                    "0": [
+                        "60-0-899",
+                        "65-0-899"
+                    ]
+                }
+            }
+        ]
+    }
+}
