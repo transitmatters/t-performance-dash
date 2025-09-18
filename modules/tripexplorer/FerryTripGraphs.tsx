@@ -52,49 +52,20 @@ export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
       {aggregate ? (
         <>
           <WidgetDiv>
-            {travelTimeDisplay === 'speeds' ? (
-              <>
-                <WidgetTitle
-                  title="Speeds"
-                  subtitle="Average speed between stops"
-                  location={location}
-                  line={line}
-                  both
-                />
-                <SpeedBetweenStationsAggregateWrapper
-                  query={traveltimes}
-                  fromStation={fromStation}
-                  toStation={toStation}
-                />
-              </>
-            ) : (
-              <>
-                <WidgetTitle
-                  title="Travel times"
-                  subtitle="Time between stops"
-                  location={location}
-                  line={line}
-                  both
-                />
-                <TravelTimesAggregateWrapper
-                  query={traveltimes}
-                  fromStation={fromStation}
-                  toStation={toStation}
-                />
-              </>
-            )}
-            <div className={'flex w-full justify-center pt-2'}>
-              <ButtonGroup
+            <>
+              <WidgetTitle
+                title="Travel times"
+                subtitle="Time between stops"
+                location={location}
                 line={line}
-                pressFunction={setTravelTimeDisplay}
-                options={[
-                  ['traveltimes', 'Travel times'],
-                  ['speeds', 'Speeds'],
-                ]}
-                additionalDivClass="md:w-auto"
-                additionalButtonClass="md:w-fit"
+                both
               />
-            </div>
+              <TravelTimesAggregateWrapper
+                query={traveltimes}
+                fromStation={fromStation}
+                toStation={toStation}
+              />
+            </>
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
