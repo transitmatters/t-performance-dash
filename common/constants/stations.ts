@@ -38,6 +38,7 @@ import bus_43 from './bus_constants/43.json';
 import bus_44 from './bus_constants/44.json';
 import bus_45 from './bus_constants/45.json';
 import bus_47 from './bus_constants/47.json';
+import bus_50 from './bus_constants/50.json';
 import bus_51 from './bus_constants/51.json';
 import bus_55 from './bus_constants/55.json';
 import bus_57 from './bus_constants/57.json';
@@ -48,6 +49,7 @@ import bus_64 from './bus_constants/64.json';
 import bus_66 from './bus_constants/66.json';
 import bus_68 from './bus_constants/68.json';
 import bus_69 from './bus_constants/69.json';
+import bus_70 from './bus_constants/70.json';
 import bus_71 from './bus_constants/71.json';
 import bus_73 from './bus_constants/73.json';
 import bus_77 from './bus_constants/77.json';
@@ -174,6 +176,7 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_44,
   ...bus_45,
   ...bus_47,
+  ...bus_50,
   ...bus_51,
   ...bus_55,
   ...bus_57,
@@ -184,6 +187,7 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_66,
   ...bus_68,
   ...bus_69,
+  ...bus_70,
   ...bus_71,
   ...bus_73,
   ...bus_77,
