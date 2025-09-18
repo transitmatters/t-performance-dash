@@ -94,6 +94,10 @@ import bus_202 from './bus_constants/202.json';
 import bus_210 from './bus_constants/210.json';
 import bus_211 from './bus_constants/211.json';
 import bus_215 from './bus_constants/215.json';
+import bus_216 from './bus_constants/216.json';
+import bus_217 from './bus_constants/217.json';
+import bus_225 from './bus_constants/225.json';
+import bus_226 from './bus_constants/226.json';
 import bus_230 from './bus_constants/230.json';
 import bus_236 from './bus_constants/236.json';
 import bus_238 from './bus_constants/238.json';
@@ -105,8 +109,6 @@ import bus_354 from './bus_constants/354.json';
 import bus_429 from './bus_constants/429.json';
 import bus_455 from './bus_constants/455.json';
 import bus_456 from './bus_constants/456.json';
-import bus_712 from './bus_constants/712.json';
-import bus_713 from './bus_constants/713.json';
 import bus_104_109 from './bus_constants/104-109.json';
 import bus_61_70_170 from './bus_constants/61-70-170.json';
 import bus_114_116_117 from './bus_constants/114-116-117.json';
@@ -235,6 +237,10 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_210,
   ...bus_211,
   ...bus_215,
+  ...bus_216,
+  ...bus_217,
+  ...bus_225,
+  ...bus_226,
   ...bus_230,
   ...bus_236,
   ...bus_238,
@@ -246,8 +252,6 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_429,
   ...bus_455,
   ...bus_456,
-  ...bus_712,
-  ...bus_713,
   ...bus_61_70_170,
   ...bus_114_116_117,
   ...bus_220_221_222,
