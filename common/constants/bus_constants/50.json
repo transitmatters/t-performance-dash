@@ -1,0 +1,61 @@
+{
+  "50": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Cleary Square",
+        "branches": null,
+        "station": "clsq",
+        "order": 1,
+        "stops": {
+          "1": ["50-1-36466"],
+          "0": ["50-0-2819"]
+        }
+      },
+      {
+        "stop_name": "West @ Deforest Street",
+        "branches": null,
+        "station": "wdfst",
+        "order": 2,
+        "stops": {
+          "1": ["50-1-2789"],
+          "0": ["50-0-2812"]
+        }
+      },
+      {
+        "stop_name": "Poplar Street @ Metropolitan Avenue",
+        "branches": null,
+        "station": "pomet",
+        "order": 3,
+        "stops": {
+          "1": ["50-1-2796"],
+          "0": ["50-0-2805"]
+        }
+      },
+      {
+        "stop_name": "Roslindale Square",
+        "branches": null,
+        "station": "rossq",
+        "order": 4,
+        "stops": {
+          "1": ["50-1-636"],
+          "0": ["50-0-6022"]
+        }
+      },
+      {
+        "stop_name": "Forest Hills Busway",
+        "branches": null,
+        "station": "fhill",
+        "order": 5,
+        "stops": {
+          "1": ["50-1-10642"],
+          "0": ["50-0-10642"]
+        }
+      }
+    ]
+  }
+}
