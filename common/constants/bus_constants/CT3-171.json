@@ -1,0 +1,101 @@
+{
+  "CT3/171": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Avenue Louis Pasteur (Boston Latin School)",
+        "branches": ["CT3"],
+        "station": "louis",
+        "order": 1,
+        "stops": {
+          "1": ["CT3-1-11802", "708-1-11802"],
+          "0": ["CT3-0-11802", "708-0-11802"]
+        }
+      },
+      {
+        "stop_name": "Boston Children's Hospital on Longwood Avenue",
+        "branches": ["CT3"],
+        "station": "child",
+        "order": 2,
+        "stops": {
+          "1": ["CT3-1-11803", "708-1-11803"],
+          "0": ["CT3-0-11803", "708-0-11803"]
+        }
+      },
+      {
+        "stop_name": "Beth Israel Hospital @ Fenway",
+        "branches": ["CT3"],
+        "station": "bethi",
+        "order": 3,
+        "stops": {
+          "1": ["CT3-1-1805", "708-1-1805"],
+          "0": ["CT3-0-1805", "708-0-1805"]
+        }
+      },
+      {
+        "stop_name": "Huntington & Ruggles",
+        "branches": ["CT3"],
+        "station": "hrugg",
+        "order": 4,
+        "stops": {
+          "1": ["CT3-1-1784", "708-1-1784"],
+          "0": ["CT3-0-1799", "708-0-1799"]
+        }
+      },
+      {
+        "stop_name": "Ruggles",
+        "branches": ["CT3"],
+        "station": "rugg",
+        "order": 5,
+        "stops": {
+          "1": ["CT3-1-17862", "708-1-17862"],
+          "0": ["CT3-0-17863", "708-0-17863"]
+        }
+      },
+      {
+        "stop_name": "1010 Massachusetts Avenue @ Magazine Street",
+        "branches": ["CT3"],
+        "station": "1010m",
+        "order": 6,
+        "stops": {
+          "1": ["CT3-1-30009", "708-1-30009"],
+          "0": ["CT3-0-128", "708-0-128"]
+        }
+      },
+      {
+        "stop_name": "Melnea Cass Boulevard @ Washington Street",
+        "branches": ["CT3"],
+        "station": "melwa",
+        "order": 6,
+        "stops": {
+          "1": ["CT3-1-77777", "708-1-77777"],
+          "0": ["CT3-0-7", "708-0-7"]
+        }
+      },
+      {
+        "stop_name": "BU Medical Campus",
+        "branches": ["CT3"],
+        "station": "bumed",
+        "order": 7,
+        "stops": {
+          "1": ["CT3-1-5089", "708-1-5089"],
+          "0": ["CT3-0-10015", "708-0-10015"]
+        }
+      },
+      {
+        "stop_name": "Andrew",
+        "branches": ["171", "CT3"],
+        "station": "andrw",
+        "order": 8,
+        "stops": {
+          "1": ["CT3-1-13", "708-1-13"],
+          "0": ["171-0-13", "CT3-0-13", "708-0-13"]
+        }
+      }
+    ]
+  }
+}
