@@ -8,117 +8,198 @@
     "stations": [
       {
         "stop_name": "Chelsea",
-        "branches": ["SL3"],
+        "branches": [
+          "SL3"
+        ],
         "station": "chlst",
         "order": 1,
         "stops": {
-          "1": ["SL3-1-74630", "743-1-74630"],
-          "0": ["SL3-0-74631", "743-0-74631"]
+          "1": [
+            "SL3-1-74630",
+            "743-1-74630"
+          ],
+          "0": [
+            "SL3-0-74631",
+            "743-0-74631"
+          ]
         }
       },
       {
         "stop_name": "Drydock Avenue @ Design Center Place",
-        "branches": ["SL2"],
+        "branches": [
+          "SL2"
+        ],
         "station": "drdck",
         "order": 1,
         "stops": {
-          "1": ["SL2-1-30250", "742-1-30250"],
-          "0": ["SL2-0-30250", "742-0-30250"]
+          "1": [
+            "SL2-1-30250",
+            "742-1-30250"
+          ],
+          "0": [
+            "SL2-0-30250",
+            "742-0-30250"
+          ]
         }
       },
       {
         "stop_name": "Terminal A (Logan Airport)",
-        "branches": ["SL1"],
+        "branches": [
+          "SL1"
+        ],
         "station": "terma",
         "order": 1,
         "stops": {
-          "1": ["SL1-1-17091", "741-1-17091"],
-          "0": ["SL1-0-17091", "741-0-17091"]
+          "1": [
+            "SL1-1-17091",
+            "741-1-17091"
+          ],
+          "0": [
+            "SL1-0-17091",
+            "741-0-17091"
+          ]
         }
       },
       {
         "stop_name": "Bellingham Square",
-        "branches": ["SL3"],
+        "branches": [
+          "SL3"
+        ],
         "station": "blsqs",
         "order": 2,
         "stops": {
-          "1": ["SL3-1-74632", "743-1-74632"],
-          "0": ["SL3-0-74633", "743-0-74633"]
+          "1": [
+            "SL3-1-74632",
+            "743-1-74632"
+          ],
+          "0": [
+            "SL3-0-74633",
+            "743-0-74633"
+          ]
         }
       },
       {
         "stop_name": "Terminal B Stop 1 (Logan Airport)",
-        "branches": ["SL1"],
+        "branches": [
+          "SL1"
+        ],
         "station": "trmb1",
         "order": 2,
         "stops": {
-          "1": ["SL1-1-27092", "741-1-27092"],
+          "1": [
+            "SL1-1-27092",
+            "741-1-27092"
+          ],
           "0": []
         }
       },
       {
         "stop_name": "Box District",
-        "branches": ["SL3"],
+        "branches": [
+          "SL3"
+        ],
         "station": "boxds",
         "order": 3,
         "stops": {
-          "1": ["SL3-1-74634", "743-1-74634"],
-          "0": ["SL3-0-74635", "743-0-74635"]
+          "1": [
+            "SL3-1-74634",
+            "743-1-74634"
+          ],
+          "0": [
+            "SL3-0-74635",
+            "743-0-74635"
+          ]
         }
       },
       {
         "stop_name": "Terminal B Stop 2 (Logan Airport)",
-        "branches": ["SL1"],
+        "branches": [
+          "SL1"
+        ],
         "station": "trmb2",
         "order": 3,
         "stops": {
-          "1": ["SL1-1-17093", "741-1-17093"],
+          "1": [
+            "SL1-1-17093",
+            "741-1-17093"
+          ],
           "0": []
         }
       },
       {
         "stop_name": "Eastern Avenue",
-        "branches": ["SL3"],
+        "branches": [
+          "SL3"
+        ],
         "station": "esavs",
         "order": 4,
         "stops": {
-          "1": ["SL3-1-74636", "743-1-74636"],
-          "0": ["SL3-0-74637", "743-0-74637"]
+          "1": [
+            "SL3-1-74636",
+            "743-1-74636"
+          ],
+          "0": [
+            "SL3-0-74637",
+            "743-0-74637"
+          ]
         }
       },
       {
         "stop_name": "Terminal C (formerly D) (Logan Airport)",
-        "branches": ["SL1"],
+        "branches": [
+          "SL1"
+        ],
         "station": "trmcd",
         "order": 4,
         "stops": {
-          "1": ["SL1-1-17094", "741-1-17094"],
+          "1": [
+            "SL1-1-17094",
+            "741-1-17094"
+          ],
           "0": []
         }
       },
       {
         "stop_name": "Airport Station Busway",
-        "branches": ["SL3"],
+        "branches": [
+          "SL3"
+        ],
         "station": "airbs",
         "order": 5,
         "stops": {
-          "1": ["SL3-1-7097", "743-1-7097"],
-          "0": ["SL3-0-7096", "743-0-7096"]
+          "1": [
+            "SL3-1-7097",
+            "743-1-7097"
+          ],
+          "0": [
+            "SL3-0-7096",
+            "743-0-7096"
+          ]
         }
       },
       {
         "stop_name": "Terminal E (Logan Airport)",
-        "branches": ["SL1"],
+        "branches": [
+          "SL1"
+        ],
         "station": "terme",
         "order": 5,
         "stops": {
-          "1": ["SL1-1-17095", "741-1-17095"],
+          "1": [
+            "SL1-1-17095",
+            "741-1-17095"
+          ],
           "0": []
         }
       },
       {
         "stop_name": "Silver Line Way",
-        "branches": ["746_", "SL1", "SL2", "SL3"],
+        "branches": [
+          "SL1",
+          "SL2",
+          "SL3",
+          "SLW"
+        ],
         "station": "conrd",
         "order": 8,
         "stops": {
@@ -146,7 +227,12 @@
       },
       {
         "stop_name": "World Trade Center",
-        "branches": ["746_", "SL1", "SL2", "SL3"],
+        "branches": [
+          "SL1",
+          "SL2",
+          "SL3",
+          "SLW"
+        ],
         "station": "wtcst",
         "order": 9,
         "stops": {
@@ -178,7 +264,12 @@
       },
       {
         "stop_name": "Courthouse",
-        "branches": ["746_", "SL1", "SL2", "SL3"],
+        "branches": [
+          "SL1",
+          "SL2",
+          "SL3",
+          "SLW"
+        ],
         "station": "crtst",
         "order": 10,
         "stops": {
@@ -206,17 +297,30 @@
       },
       {
         "stop_name": "South Station",
-        "branches": ["SL1", "SL3"],
+        "branches": [
+          "SL1",
+          "SL3"
+        ],
         "station": "sosta",
         "order": 10,
         "stops": {
-          "1": ["SL1-1-892", "SL3-1-892", "741-1-892", "743-1-892"],
+          "1": [
+            "SL1-1-892",
+            "SL3-1-892",
+            "741-1-892",
+            "743-1-892"
+          ],
           "0": []
         }
       },
       {
         "stop_name": "South Station (Silver Line)",
-        "branches": ["746_", "SL1", "SL2", "SL3"],
+        "branches": [
+          "SL1",
+          "SL2",
+          "SL3",
+          "SLW"
+        ],
         "station": "soust",
         "order": 11,
         "stops": {
