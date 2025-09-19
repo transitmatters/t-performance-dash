@@ -157,6 +157,8 @@ export const getStationForInvalidFromSelection = (line: Line, busRoute?: BusRout
     if (busRoute === '220/221/222') return getParentStationForStopId('222-1-32004');
     if (busRoute === '61/70/170') return getParentStationForStopId('70-0-88333');
     if (busRoute === '104/109') return getParentStationForStopId('104-1-5560');
+    if (busRoute === 'SL1/SL2/SL3/SLW') return getParentStationForStopId('SL1-1-74617'); // South Station (Silver Line)
+    if (busRoute === 'SL4/SL5') return getParentStationForStopId('SL4-1-64'); // Nubian Station
   }
   throw new Error('There should be no other lines with invalid from station selections.');
 };

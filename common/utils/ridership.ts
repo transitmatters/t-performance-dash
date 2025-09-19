@@ -14,6 +14,12 @@ export const getRidershipLineId = (
         return 'line-5757A';
       case 'CT2':
         return 'line-747';
+      case 'CT3':
+        return 'line-708';
+      case 'SL1/SL2/SL3/SLW':
+        return 'line-SLWaterfront';
+      case 'SL4/SL5':
+        return 'line-SLWashington';
       default:
         return `line-${busRoute.replaceAll('/', '')}`;
     }
