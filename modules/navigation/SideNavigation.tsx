@@ -7,6 +7,7 @@ import { SubwaySection } from '../../common/components/nav/SubwaySection';
 import { BusSection } from '../../common/components/nav/BusSection';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CommuterRailSection } from '../../common/components/nav/CommuterRailSection';
+import { FerrySection } from '../../common/components/nav/FerrySection';
 
 interface SideNavigationProps {
   close?: () => void;
@@ -60,6 +61,7 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({ close }) => {
         <SubwaySection close={close} />
         <BusSection close={close} />
         <CommuterRailSection close={close} />
+        <FerrySection close={close} />
       </ul>
     </nav>
   );

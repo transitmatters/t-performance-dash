@@ -30,11 +30,18 @@ export const StationSelector: React.FC<StationSelector> = ({
   const {
     line,
     lineShort,
-    query: { busRoute, crRoute },
+    query: { busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
   const mdBreakpoint = useBreakpoint('md');
   const station = type === 'from' ? fromStation : toStation;
-  const stationOptions = optionsForField(type, lineShort, fromStation, busRoute, crRoute);
+  const stationOptions = optionsForField(
+    type,
+    lineShort,
+    fromStation,
+    busRoute,
+    crRoute,
+    ferryRoute
+  );
   const branchLabelWidth = {
     'line-red': 'w-8',
     'line-green': 'w-12',
