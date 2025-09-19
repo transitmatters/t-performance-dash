@@ -190,15 +190,6 @@ export type BusRouteId =
       | '505/553/554'
       | '556/558'
       | '712/713'
-    >
-  | Exclude<
-      BusRoute,
-      | '17/19'
-      | '61/70/170'
-      | '104/109'
-      | '114/116/117'
-      | '220/221/222'
-      | '220/221/222'
       | 'SL1/SL2/SL3/SLW'
       | 'SL4/SL5'
     >
@@ -234,7 +225,9 @@ export type BusRouteId =
   | '502504'
   | '505553554'
   | '556558'
-  | '712713';
+  | '712713'
+  | 'SL1SL2SL3SLW'
+  | 'SL4SL5';
 
 export type CommuterRailRoute =
   | 'CR-Fitchburg'
