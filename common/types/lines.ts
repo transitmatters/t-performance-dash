@@ -150,7 +150,9 @@ export type BusRoute =
   | '556/558'
   | '712/713'
   | 'CT2'
-  | 'CT3';
+  | 'CT3'
+  | 'SL1/SL2/SL3/SLW'
+  | 'SL4/SL5';
 
 export type BusRouteId =
   | Exclude<
@@ -188,6 +190,17 @@ export type BusRouteId =
       | '505/553/554'
       | '556/558'
       | '712/713'
+    >
+  | Exclude<
+      BusRoute,
+      | '17/19'
+      | '61/70/170'
+      | '104/109'
+      | '114/116/117'
+      | '220/221/222'
+      | '220/221/222'
+      | 'SL1/SL2/SL3/SLW'
+      | 'SL4/SL5'
     >
   | '1719'
   | '242733'
@@ -394,6 +407,8 @@ export const BUS_ROUTES: BusRoute[] = [
   '712/713',
   'CT2',
   'CT3',
+  'SL1/SL2/SL3/SLW',
+  'SL4/SL5',
 ];
 
 export const FERRY_ROUTES: FerryRoute[] = [

@@ -148,6 +148,8 @@ export const PEAK_RIDERSHIP: {
   '712713': 2740,
   CT2: 2256,
   CT3: 1800,
+  SL1SL2SL3SLW: 25670,
+  SL4SL5: 16817,
   'CR-Fitchburg': 9302,
   'CR-Franklin': 11671,
   'CR-Greenbush': 6114,
