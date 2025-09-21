@@ -13,7 +13,6 @@ import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { HeadwaysHistogramWrapper } from '../headways/charts/HeadwaysHistogramWrapper';
 import { SpeedBetweenStationsSingleWrapper } from '../speed/SpeedBetweenStationsGraphWrapper';
-import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
 
 interface FerryTripGraphsProps {
   fromStation: Station;
@@ -107,49 +106,19 @@ export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
       ) : (
         <>
           <WidgetDiv>
-            {travelTimeDisplay === 'speeds' ? (
-              <>
-                <WidgetTitle
-                  title="Speeds"
-                  subtitle="Average speed between stops"
-                  location={location}
-                  line={line}
-                  both
-                />
-                <SpeedBetweenStationsSingleWrapper
-                  query={traveltimes}
-                  fromStation={fromStation}
-                  toStation={toStation}
-                />
-              </>
-            ) : (
-              <>
-                <WidgetTitle
-                  title="Travel times"
-                  subtitle="Time between stops"
-                  location={location}
-                  line={line}
-                  both
-                />
-                <TravelTimesSingleWrapper
-                  query={traveltimes}
-                  fromStation={fromStation}
-                  toStation={toStation}
-                />
-              </>
-            )}
-            <div className={'flex w-full justify-center pt-2'}>
-              <ButtonGroup
-                line={line}
-                pressFunction={setTravelTimeDisplay}
-                options={[
-                  ['traveltimes', 'Travel times'],
-                  ['speeds', 'Speeds'],
-                ]}
-                additionalDivClass="md:w-auto"
-                additionalButtonClass="md:w-fit"
-              />
-            </div>
+            <WidgetTitle
+              title="Speeds"
+              subtitle="Average speed between stops"
+              location={location}
+              line={line}
+              both
+            />
+            <SpeedBetweenStationsSingleWrapper
+              query={traveltimes}
+              fromStation={fromStation}
+              toStation={toStation}
+            />
+            <div className={'flex w-full justify-center pt-2'}></div>
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
