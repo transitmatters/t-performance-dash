@@ -154,9 +154,38 @@ export const getStationForInvalidFromSelection = (line: Line, busRoute?: BusRout
   if (line === 'line-red') return getParentStationForStopId('70076'); // Park St.
   if (line === 'line-bus') {
     if (busRoute === '17/19') return getParentStationForStopId('17-1-323');
-    if (busRoute === '220/221/222') return getParentStationForStopId('222-1-32004');
-    if (busRoute === '61/70/170') return getParentStationForStopId('70-0-88333');
-    if (busRoute === '104/109') return getParentStationForStopId('104-1-5560');
+    if (busRoute === '24/27/33') return getParentStationForStopId('24-1-185'); // Mattapan Station
+    if (busRoute === '40/50') return getParentStationForStopId('40-1-36466'); // Cleary Square
+    // 52/59 have no overlaps
+    if (busRoute === '60/65') return getParentStationForStopId('65-1-1555'); // Brookline Village
+    if (busRoute === '61/70/170') return getParentStationForStopId('70-1-86944'); // Moody & Carter Streets (Central Square, Waltham)
+    if (busRoute === '62/76') return getParentStationForStopId('76-1-8629'); // Five Forks
+    // 67/79 79 does not appear in manifest
+    if (busRoute === '72/74/75') return getParentStationForStopId('75-1-2137'); // Belmont Center Station
+    // 78/84 84 does not appear in manifest
+    if (busRoute === '104/109') return getParentStationForStopId('109-1-5488'); // Glendale Square
+    if (busRoute === '114/116/117') return getParentStationForStopId('116-1-5740'); // Maverick Square (East Boston)
+    if (busRoute === '120/121') return getParentStationForStopId('121-1-5666'); // Wood Island Station
+    if (busRoute === '131/132') return getParentStationForStopId('131-1-9328'); // Oak Grove Station
+    // 136/137 137 does not appear in manifest
+    if (busRoute === '201/202') return getParentStationForStopId('201-1-3078'); // Adams & Gallivan Boulevard
+    if (busRoute === '210/211/212') return getParentStationForStopId('210-1-32005'); //Quincy Center
+    // 214/216 216 does not appear in manifest
+    if (busRoute === '217/245') return getParentStationForStopId('217-1-32005'); // Quincy Center
+    if (busRoute === '220/221/222') return getParentStationForStopId('221-1-3616'); // Bicknell Square
+    if (busRoute === '225/226') return getParentStationForStopId('226-1-3824'); // Weymouth Landing
+    if (busRoute === '350/351') return getParentStationForStopId('350-1-49848'); // Third Avenue (Burlington)
+    if (busRoute === '411/430') return getParentStationForStopId('411-1-8336'); // Kennedy Dr (Granada)
+    if (busRoute === '426/428') return getParentStationForStopId('426-1-7394'); // East Saugus
+    if (busRoute === '434/435/436') return getParentStationForStopId('424-1-14748'); // Central Square, Lynn (Busway)
+    if (busRoute === '439/441/442') return getParentStationForStopId('439-1-14748'); // Central Square, Lynn (Busway)
+    // 451/465 465 does not appear in manifest
+    // 501/503 503 does not appear in manifest
+    // 502/504 502 does not appear in manifest
+    if (busRoute === '505/553/554') return getParentStationForStopId('505-1-903'); // Newton Corner
+    if (busRoute === '556/558') return getParentStationForStopId('556-1-903'); // Newton Corner
+    if (busRoute === '712/713') return getParentStationForStopId('712-1-109853'); //Point Shirley
+    if (busRoute === 'CT3/171') return getParentStationForStopId('CT3-1-13'); //Andrew
     if (busRoute === 'SL1/SL2/SL3/SLW') return getParentStationForStopId('SL1-1-74617'); // South Station (Silver Line)
     if (busRoute === 'SL4/SL5') return getParentStationForStopId('SL4-1-64'); // Nubian Station
   }
