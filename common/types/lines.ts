@@ -141,6 +141,7 @@ export type BusRoute =
   | '424/450/456'
   | '426/428'
   | '429'
+  | '434/435/436'
   | '439/441/442'
   | '455'
   | '451/465'
@@ -150,7 +151,9 @@ export type BusRoute =
   | '556/558'
   | '712/713'
   | 'CT2'
-  | 'CT3';
+  | 'CT3/171'
+  | 'SL1/SL2/SL3/SLW'
+  | 'SL4/SL5';
 
 export type BusRouteId =
   | Exclude<
@@ -188,6 +191,10 @@ export type BusRouteId =
       | '505/553/554'
       | '556/558'
       | '712/713'
+      | 'SL1/SL2/SL3/SLW'
+      | 'SL4/SL5'
+      | 'CT2'
+      | 'CT3/171'
     >
   | '1719'
   | '242733'
@@ -221,7 +228,11 @@ export type BusRouteId =
   | '502504'
   | '505553554'
   | '556558'
-  | '712713';
+  | '712713'
+  | 'SL1SL2SL3SLW'
+  | 'SL4SL5'
+  | 'CT2'
+  | 'CT3171';
 
 export type CommuterRailRoute =
   | 'CR-Fitchburg'
@@ -393,7 +404,9 @@ export const BUS_ROUTES: BusRoute[] = [
   '556/558',
   '712/713',
   'CT2',
-  'CT3',
+  'CT3/171',
+  'SL1/SL2/SL3/SLW',
+  'SL4/SL5',
 ];
 
 export const FERRY_ROUTES: FerryRoute[] = [

@@ -113,7 +113,9 @@ import bus_61_70_170 from './bus_constants/61-70-170.json';
 import bus_114_116_117 from './bus_constants/114-116-117.json';
 import bus_220_221_222 from './bus_constants/220-221-222.json';
 import bus_ct2 from './bus_constants/CT2.json';
-import bus_ct3 from './bus_constants/CT3.json';
+import bus_ct3_171 from './bus_constants/CT3-171.json';
+import bus_SL1SL2SL3SLW from './bus_constants/SL1-SL2-SL3-SLW.json';
+import bus_SL4SL5 from './bus_constants/SL4-5.json';
 import legacy_86 from './bus_constants/86-legacy.json';
 import cr_lowell from './cr_constants/cr-lowell.json';
 import cr_fitchburg from './cr_constants/cr-fitchburg.json';
@@ -254,7 +256,9 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_556_558,
   ...bus_712_713,
   ...bus_ct2,
-  ...bus_ct3,
+  ...bus_ct3_171,
+  ...bus_SL1SL2SL3SLW,
+  ...bus_SL4SL5,
 };
 
 export const crStations: { [key in CommuterRailRoute]: LineMap } = {
