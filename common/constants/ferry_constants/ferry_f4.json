@@ -22,6 +22,21 @@
                 "terminus": true
             },
             {
+                "stop_name": "Central Wharf (South)",
+                "station": "Boat-Aquarium",
+                "branches": null,
+                "order": 1,
+                "stops": {
+                    "0": [
+                        "Boat-Aquarium"
+                    ],
+                    "1": [
+                        "Boat-Aquarium"
+                    ]
+                },
+                "terminus": true
+            },
+            {
                 "stop_name": "Charlestown Navy Yard",
                 "station": "Boat-Charlestown",
                 "branches": null,
