@@ -45,9 +45,9 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
   const ref = useRef();
 
   const chart = useMemo(() => {
-    const routeIndex = (
-      busRoute ? busRoute.replaceAll('/', '') : (crRoute ?? line ?? ferryRoute)
-    ) as RidershipKey;
+    const routeIndex = (crRoute ??
+      ferryRoute ??
+      (busRoute ? busRoute.replaceAll('/', '') : line)) as RidershipKey;
     const labels = data.map((point) => point.date);
     const lineColor = LINE_COLORS[line ?? 'default'];
 

@@ -27,7 +27,7 @@ export const getRidershipLineId = (
   } else if (line === 'line-commuter-rail' && crRoute) {
     return `line-${crRoute.substring(3)}`;
   } else if (line === 'line-ferry' && ferryRoute) {
-    return ferryRoute;
+    return `line-${ferryRoute}`;
   } else {
     return RIDERSHIP_KEYS[line ?? ''];
   }
