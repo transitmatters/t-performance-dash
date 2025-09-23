@@ -42,6 +42,9 @@ const BUS_MIN_DATE = '2018-08-01';
 const FERRY_MIN_DATE = '2018-11-01';
 export const FERRY_MAX_DATE = '2025-07-31';
 export const FERRY_MAX_DAY = dayjs(FERRY_MAX_DATE);
+export const FERRY_MAX_DATE_MINUS_ONE_WEEK = dayjs(FERRY_MAX_DATE)
+  .subtract(7, 'days')
+  .format(DATE_FORMAT);
 export const BUS_MAX_DATE = '2025-08-31';
 export const BUS_MAX_DAY = dayjs(BUS_MAX_DATE);
 export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)

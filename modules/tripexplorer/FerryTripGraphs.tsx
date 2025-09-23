@@ -9,10 +9,10 @@ import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { getLocationDetails } from '../../common/utils/stations';
 import type { Line } from '../../common/types/lines';
 import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
+import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { HeadwaysHistogramWrapper } from '../headways/charts/HeadwaysHistogramWrapper';
-import { SpeedBetweenStationsSingleWrapper } from '../speed/SpeedBetweenStationsGraphWrapper';
 
 interface FerryTripGraphsProps {
   fromStation: Station;
@@ -107,13 +107,13 @@ export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
         <>
           <WidgetDiv>
             <WidgetTitle
-              title="Speeds"
-              subtitle="Average speed between stops"
+              title="Travel times"
+              subtitle="Time between stops"
               location={location}
               line={line}
               both
             />
-            <SpeedBetweenStationsSingleWrapper
+            <TravelTimesSingleWrapper
               query={traveltimes}
               fromStation={fromStation}
               toStation={toStation}
