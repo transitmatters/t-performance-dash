@@ -40,6 +40,8 @@ export const OVERVIEW_TRAIN_MIN_DATE = '2016-02-01';
 const TRAIN_MIN_DATE = '2016-01-15';
 const BUS_MIN_DATE = '2018-08-01';
 const FERRY_MIN_DATE = '2018-11-01';
+export const FERRY_MAX_DATE = '2025-07-31';
+export const FERRY_MAX_DAY = dayjs(FERRY_MAX_DATE);
 export const BUS_MAX_DATE = '2025-08-31';
 export const BUS_MAX_DAY = dayjs(BUS_MAX_DATE);
 export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
@@ -147,7 +149,7 @@ const FLAT_PICKER_OPTIONS: {
   Ferry: {
     enableTime: false,
     minDate: FERRY_MIN_DATE,
-    maxDate: TODAY_STRING,
+    maxDate: FERRY_MAX_DATE,
     altInput: true,
     altFormat: 'M j, Y',
     dateFormat: 'Y-m-d',
@@ -341,6 +343,51 @@ const RANGE_BUS_PRESETS: {
   },
 };
 
+const RANGE_FERRY_PRESETS: {
+  [key in DatePresetKey]?: DateSelectionDefaultOptions<DateParams>;
+} = {
+  thisMonth: {
+    key: 'thisMonth',
+    name: FERRY_MAX_DAY.format('MMMM YYYY'),
+    input: {
+      startDate: FERRY_MAX_DAY.startOf('month').format(DATE_FORMAT),
+      endDate: FERRY_MAX_DATE,
+    },
+  },
+  lastMonth: {
+    key: 'lastMonth',
+    name: FERRY_MAX_DAY.subtract(1, 'month').format('MMMM YYYY'),
+    input: {
+      startDate: FERRY_MAX_DAY.subtract(1, 'month').startOf('month').format(DATE_FORMAT),
+      endDate: FERRY_MAX_DAY.subtract(1, 'month').endOf('month').format(DATE_FORMAT),
+    },
+  },
+  thisYear: {
+    key: 'thisYear',
+    name: FERRY_MAX_DAY.format('YYYY'),
+    input: {
+      startDate: FERRY_MAX_DAY.startOf('year').format(DATE_FORMAT),
+      endDate: FERRY_MAX_DATE,
+    },
+  },
+  lastYear: {
+    key: 'lastYear',
+    name: FERRY_MAX_DAY.subtract(1, 'year').format('YYYY'),
+    input: {
+      startDate: FERRY_MAX_DAY.startOf('year').subtract(1, 'year').format(DATE_FORMAT),
+      endDate: FERRY_MAX_DAY.endOf('year').subtract(1, 'year').format(DATE_FORMAT),
+    },
+  },
+  all: {
+    key: 'all',
+    name: 'All time',
+    input: {
+      startDate: dayjs(FERRY_MIN_DATE).format(DATE_FORMAT),
+      endDate: FERRY_MAX_DATE,
+    },
+  },
+};
+
 export const RANGE_PRESETS: {
   [key in Tab]: { [key in DatePresetKey]?: DateSelectionDefaultOptions<DateParams> };
 } = {
@@ -348,7 +395,7 @@ export const RANGE_PRESETS: {
   Bus: RANGE_RAPID_PRESETS,
   System: RANGE_RAPID_PRESETS,
   'Commuter Rail': RANGE_RAPID_PRESETS,
-  Ferry: RANGE_RAPID_PRESETS,
+  Ferry: RANGE_FERRY_PRESETS,
 };
 
 export type DatePresetKey =
