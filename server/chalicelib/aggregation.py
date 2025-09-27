@@ -152,7 +152,7 @@ def headways_over_time(start_date: datetime.date, end_date: datetime.date, stops
 
     grouped = df.groupby("service_date")
     # Calculate the ratio of headway_time_sec to benchmark_headway_time_sec
-    df["benchmark_headway_time_sec"] = df["benchmark_headway_time_sec"].astype(float)
+    df["benchmark_headway_time_sec"] = pd.to_numeric(df["benchmark_headway_time_sec"], errors="coerce")
     df["headway_ratio"] = df["headway_time_sec"] / df["benchmark_headway_time_sec"]
 
     # Calculate the count of trips under 0.5 (bunched) per service_date

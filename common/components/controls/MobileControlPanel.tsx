@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import type { BusRoute, CommuterRailRoute, Line } from '../../types/lines';
+import type { BusRoute, CommuterRailRoute, Line, FerryRoute } from '../../types/lines';
 import type { DateStoreSection } from '../../constants/pages';
 import { lineColorBackground } from '../../styles/general';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
@@ -11,6 +11,7 @@ interface MobileControlPanelProps {
   busRoute: BusRoute | undefined;
   crRoute: CommuterRailRoute | undefined;
   line: Line | undefined;
+  ferryRoute: FerryRoute | undefined;
 }
 
 export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
@@ -18,6 +19,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   line,
   busRoute,
   crRoute,
+  ferryRoute,
 }) => {
   const singleDate = dateStoreSection === 'singleTrips';
   const getControls = () => {
@@ -36,7 +38,12 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
               lineColorBackground[line ?? 'DEFAULT']
             )}
           >
-            <StationSelectorWidget line={line} busRoute={busRoute} crRoute={crRoute} />
+            <StationSelectorWidget
+              line={line}
+              busRoute={busRoute}
+              crRoute={crRoute}
+              ferryRoute={ferryRoute}
+            />
           </div>
         </>
       );

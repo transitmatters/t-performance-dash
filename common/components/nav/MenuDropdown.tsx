@@ -1,10 +1,20 @@
-import { faBus, faTrain, faTrainSubway, faTrainTram } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBus,
+  faTrain,
+  faTrainSubway,
+  faTrainTram,
+  faShip,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { LINE_OBJECTS } from '../../constants/lines';
-import { BUS_DEFAULTS, COMMUTER_RAIL_DEFAULTS } from '../../state/defaults/dateDefaults';
+import {
+  BUS_DEFAULTS,
+  COMMUTER_RAIL_DEFAULTS,
+  FERRY_DEFAULTS,
+} from '../../state/defaults/dateDefaults';
 import { lineColorBackground } from '../../styles/general';
 import type { Line } from '../../types/lines';
 import type { Route } from '../../types/router';
@@ -34,6 +44,8 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ line, route, childre
         return faTrainTram;
       case 'line-commuter-rail':
         return faTrain;
+      case 'line-ferry':
+        return faShip;
       default:
         return faTrainSubway;
     }
@@ -45,6 +57,8 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ line, route, childre
         return `/bus/trips/single?busRoute=1&date=${BUS_DEFAULTS.singleTripConfig.date}`;
       case 'line-commuter-rail':
         return `/commuter-rail/trips/single?crRoute=CR-Fairmount&date=${COMMUTER_RAIL_DEFAULTS.singleTripConfig.date}`;
+      case 'line-ferry':
+        return `/ferry/trips/single?ferryRoute=Boat-F6&date=${FERRY_DEFAULTS.singleTripConfig.date}`;
       default:
         return getLineSelectionItemHref(line, route);
     }
