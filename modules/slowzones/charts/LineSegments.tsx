@@ -48,7 +48,8 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
   endDateUTC,
   direction,
 }) => {
-  const ref = useRef();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ref = useRef<any>(null);
   const chartRange = endDateUTC.diff(startDateUTC, 'day');
   const breakpoint = [
     { active: useBreakpoint('xl'), value: chartRange / 36 },

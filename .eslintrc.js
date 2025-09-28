@@ -70,7 +70,7 @@ module.exports = {
     'unused-imports/no-unused-imports': 'error',
     'no-console': 'error',
     'no-empty': 'error',
-    'unicorn/no-empty-file': 'error',
+    // 'unicorn/no-empty-file': 'error', // Temporarily disabled due to compatibility issue
     '@typescript-eslint/no-unused-vars': 'warn',
     '@typescript-eslint/ban-ts-comment': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',

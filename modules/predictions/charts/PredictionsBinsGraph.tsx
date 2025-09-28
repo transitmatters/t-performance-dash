@@ -34,7 +34,8 @@ export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
 }) => {
   const { line, linePath } = useDelimitatedRoute();
   const peak = PEAK_SPEED[line ?? 'DEFAULT'];
-  const ref = useRef();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ref = useRef<any>(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.week);
   const remainingBlocks = getRemainingBlockAnnotation(

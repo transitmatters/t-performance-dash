@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function Document() {
   return (
-    <Html lang="en" className="font-sans h-full">
+    <Html lang="en" className="h-full font-sans">
       <Head>
         <meta charSet="UTF-8" />
         <meta name="theme-color" content="#000000" />

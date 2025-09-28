@@ -74,7 +74,8 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   byTime = false,
   yUnit = 'Minutes',
 }) => {
-  const ref = useRef();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ref = useRef<any>(null);
   const hourly = timeUnit === 'hour';
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);

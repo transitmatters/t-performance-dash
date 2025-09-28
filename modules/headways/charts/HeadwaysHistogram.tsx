@@ -16,7 +16,8 @@ import { getFormattedTimeString } from '../../../common/utils/time';
 export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) => {
   const { line, linePath, lineShort } = useDelimitatedRoute();
 
-  const ref = useRef();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ref = useRef<any>(null);
   const isMobile = !useBreakpoint('md');
 
   const benchmarkTime =

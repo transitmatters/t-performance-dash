@@ -37,7 +37,8 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const peak = PEAK_SPEED[line ?? 'DEFAULT'];
-  const ref = useRef();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ref = useRef<any>(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   const shuttlingBlocks = getShuttlingBlockAnnotations(data);

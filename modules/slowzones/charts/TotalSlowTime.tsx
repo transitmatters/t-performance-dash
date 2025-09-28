@@ -39,7 +39,8 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
   line,
   showTitle,
 }) => {
-  const ref = useRef();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ref = useRef<any>(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((item) => dayjs.utc(item.date).format('YYYY-MM-DD'));
   const unit = getTimeUnitSlowzones(startDateUTC, endDateUTC);

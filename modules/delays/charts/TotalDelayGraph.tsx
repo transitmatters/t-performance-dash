@@ -34,7 +34,8 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
   showTitle = false,
 }) => {
   const { line, linePath } = useDelimitatedRoute();
-  const ref = useRef();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ref = useRef<any>(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
 

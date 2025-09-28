@@ -39,7 +39,8 @@ export const DelayByCategoryGraph: React.FC<DelayByCategoryGraphProps> = ({
   showTitle = false,
 }) => {
   const { linePath } = useDelimitatedRoute();
-  const ref = useRef();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ref = useRef<any>(null);
   const isMobile = !useBreakpoint('md');
 
   const { labels, backgroundColors, delayTotals } = filterOutZeroValues(

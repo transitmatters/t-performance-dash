@@ -86,7 +86,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   showLegend = true,
   showUnderRatio = false,
 }) => {
-  const ref = useRef();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ref = useRef<any>(null);
   const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);
   const alertAnnotations = date && alerts ? getAlertAnnotations(alerts, date) : [];
   const isMobile = !useBreakpoint('md');
