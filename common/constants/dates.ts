@@ -222,6 +222,37 @@ const SINGLE_BUS_PRESETS: {
   },
 };
 
+const SINGLE_FERRY_PRESETS: {
+  [key in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams>;
+} = {
+  mostRecent: {
+    key: 'mostRecent',
+    name: `${FERRY_MAX_DAY.format(PRETTY_DATE_FORMAT)}`,
+    input: { date: FERRY_MAX_DATE },
+  },
+  firstOfMonth: {
+    key: 'firstOfMonth',
+    name: `${FERRY_MAX_DAY.startOf('month').format(PRETTY_DATE_FORMAT)}`,
+    input: {
+      date: FERRY_MAX_DAY.startOf('month').format(DATE_FORMAT),
+    },
+  },
+  firstOfYear: {
+    key: 'firstOfYear',
+    name: `First of ${FERRY_MAX_DAY.startOf('year').format('YYYY')}`,
+    input: {
+      date: FERRY_MAX_DAY.startOf('month').startOf('year').format(DATE_FORMAT),
+    },
+  },
+  firstOfPrevYear: {
+    key: 'firstOfPrevYear',
+    name: `First of ${FERRY_MAX_DAY.subtract(1, 'year').startOf('year').format('YYYY')}`,
+    input: {
+      date: FERRY_MAX_DAY.subtract(1, 'year').startOf('year').format(DATE_FORMAT),
+    },
+  },
+};
+
 export const SINGLE_PRESETS: {
   [key in Tab]: { [key in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams> };
 } = {
@@ -229,7 +260,7 @@ export const SINGLE_PRESETS: {
   Bus: SINGLE_RAPID_PRESETS,
   System: SINGLE_RAPID_PRESETS,
   'Commuter Rail': SINGLE_RAPID_PRESETS,
-  Ferry: SINGLE_RAPID_PRESETS,
+  Ferry: SINGLE_FERRY_PRESETS,
 };
 
 const RANGE_RAPID_PRESETS: {
