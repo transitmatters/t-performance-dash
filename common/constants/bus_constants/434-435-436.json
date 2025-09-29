@@ -1,217 +1,131 @@
 {
-    "434/435/436": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Salem Depot",
-                "branches": [
-                    "435"
-                ],
-                "station": "salem",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "435-1-37150"
-                    ],
-                    "0": [
-                        "435-0-37150"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Liberty Tree Mall",
-                "branches": [
-                    "435",
-                    "436"
-                ],
-                "station": "libtr",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "435-1-7270",
-                        "436-1-7270"
-                    ],
-                    "0": [
-                        "435-0-7270",
-                        "436-0-7270"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Centennial Park (Peabody)",
-                "branches": [
-                    "436"
-                ],
-                "station": "cenpk",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "436-1-4588"
-                    ],
-                    "0": [
-                        "436-0-4576"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Northshore Mall",
-                "branches": [
-                    "435",
-                    "436"
-                ],
-                "station": "nshor",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "435-1-7269",
-                        "436-1-7269"
-                    ],
-                    "0": [
-                        "435-0-7269",
-                        "436-0-7269"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Goodwins Circle",
-                "branches": [
-                    "436"
-                ],
-                "station": "goodw",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "436-1-7341"
-                    ],
-                    "0": [
-                        "436-0-7340"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Peabody Square (Peabody)",
-                "branches": [
-                    "435"
-                ],
-                "station": "pebdy",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "435-1-4935"
-                    ],
-                    "0": [
-                        "435-0-4928"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Euclid & Broadway",
-                "branches": [
-                    "435"
-                ],
-                "station": "eubrw",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "435-1-7263"
-                    ],
-                    "0": [
-                        "435-0-6862"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Wyoma Square",
-                "branches": [
-                    "436"
-                ],
-                "station": "wyoma",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "436-1-7292"
-                    ],
-                    "0": [
-                        "436-0-7260"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Chestnut Street & Western Avenue (Lynn)",
-                "branches": [
-                    "436"
-                ],
-                "station": "chest",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "436-1-7300"
-                    ],
-                    "0": [
-                        "436-0-7319"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Washington Street @ Western Avenue",
-                "branches": [
-                    "435"
-                ],
-                "station": "weswa",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "435-1-6767"
-                    ],
-                    "0": [
-                        "435-0-7245"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Central Square, Lynn (Busway)",
-                "branches": [
-                    "435",
-                    "436"
-                ],
-                "station": "censq",
-                "order": 7,
-                "stops": {
-                    "1": [
-                        "435-1-14748",
-                        "435-1-16653",
-                        "436-1-14748",
-                        "436-1-16653",
-                        "436-1-66731"
-                    ],
-                    "0": [
-                        "435-0-14748",
-                        "436-0-14748"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Neptune Towers",
-                "branches": [
-                    "435",
-                    "436"
-                ],
-                "station": "neptw",
-                "order": 8,
-                "stops": {
-                    "1": [
-                        "435-1-94320",
-                        "436-1-94320"
-                    ],
-                    "0": [
-                        "435-0-94320"
-                    ]
-                }
-            }
-        ]
-    }
+  "434/435/436": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Salem Depot",
+        "branches": ["435"],
+        "station": "salem",
+        "order": 1,
+        "stops": {
+          "1": ["435-1-37150"],
+          "0": ["435-0-37150"]
+        }
+      },
+      {
+        "stop_name": "Liberty Tree Mall",
+        "branches": ["435", "436"],
+        "station": "libtr",
+        "order": 2,
+        "stops": {
+          "1": ["435-1-7270", "436-1-7270"],
+          "0": ["435-0-7270", "436-0-7270"]
+        }
+      },
+      {
+        "stop_name": "Centennial Park (Peabody)",
+        "branches": ["436"],
+        "station": "cenpk",
+        "order": 3,
+        "stops": {
+          "1": ["436-1-4588"],
+          "0": ["436-0-4576"]
+        }
+      },
+      {
+        "stop_name": "Northshore Mall",
+        "branches": ["435", "436"],
+        "station": "nshor",
+        "order": 3,
+        "stops": {
+          "1": ["435-1-7269", "436-1-7269"],
+          "0": ["435-0-7269", "436-0-7269"]
+        }
+      },
+      {
+        "stop_name": "Goodwins Circle",
+        "branches": ["436"],
+        "station": "goodw",
+        "order": 4,
+        "stops": {
+          "1": ["436-1-7341"],
+          "0": ["436-0-7340"]
+        }
+      },
+      {
+        "stop_name": "Peabody Square (Peabody)",
+        "branches": ["435"],
+        "station": "pebdy",
+        "order": 4,
+        "stops": {
+          "1": ["435-1-4935"],
+          "0": ["435-0-4928"]
+        }
+      },
+      {
+        "stop_name": "Euclid & Broadway",
+        "branches": ["435"],
+        "station": "eubrw",
+        "order": 5,
+        "stops": {
+          "1": ["435-1-7263"],
+          "0": ["435-0-6862"]
+        }
+      },
+      {
+        "stop_name": "Wyoma Square",
+        "branches": ["436"],
+        "station": "wyoma",
+        "order": 5,
+        "stops": {
+          "1": ["436-1-7292"],
+          "0": ["436-0-7260"]
+        }
+      },
+      {
+        "stop_name": "Chestnut Street & Western Avenue (Lynn)",
+        "branches": ["436"],
+        "station": "chest",
+        "order": 6,
+        "stops": {
+          "1": ["436-1-7300"],
+          "0": ["436-0-7319"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ Western Avenue",
+        "branches": ["435"],
+        "station": "weswa",
+        "order": 6,
+        "stops": {
+          "1": ["435-1-6767"],
+          "0": ["435-0-7245"]
+        }
+      },
+      {
+        "stop_name": "Central Square, Lynn (Busway)",
+        "branches": ["435", "436"],
+        "station": "censq",
+        "order": 7,
+        "stops": {
+          "1": ["435-1-14748", "435-1-16653", "436-1-14748", "436-1-16653", "436-1-66731"],
+          "0": ["435-0-14748", "436-0-14748"]
+        }
+      },
+      {
+        "stop_name": "Neptune Towers",
+        "branches": ["435", "436"],
+        "station": "neptw",
+        "order": 8,
+        "stops": {
+          "1": ["435-1-94320", "436-1-94320"],
+          "0": ["435-0-94320"]
+        }
+      }
+    ]
+  }
 }

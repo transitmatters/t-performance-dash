@@ -1,109 +1,81 @@
 {
-    "106": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Lebanon Street",
-                "branches": null,
-                "station": "leban",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "106-1-5472"
-                    ],
-                    "0": [
-                        "106-0-5472"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Maplewood Square",
-                "branches": null,
-                "station": "mwood",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "106-1-5436"
-                    ],
-                    "0": [
-                        "106-0-5466"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Pleasant Street @ Main Street",
-                "branches": null,
-                "station": "plsmn",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "106-1-15431"
-                    ],
-                    "0": [
-                        "106-0-5342"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Malden Center Station",
-                "branches": null,
-                "station": "malst",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "106-1-53270"
-                    ],
-                    "0": [
-                        "106-0-53270"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Main Street @ Cross Street",
-                "branches": null,
-                "station": "mncrs",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "106-1-5449"
-                    ],
-                    "0": [
-                        "106-0-5451"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Sweester Circle",
-                "branches": null,
-                "station": "sweet",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "106-1-5404"
-                    ],
-                    "0": [
-                        "106-0-5405"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Wellington Station",
-                "branches": null,
-                "station": "welst",
-                "order": 7,
-                "stops": {
-                    "1": [
-                        "106-1-52720"
-                    ],
-                    "0": [
-                        "106-0-52712"
-                    ]
-                }
-            }
-        ]
-    }
+  "106": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Lebanon Street",
+        "branches": null,
+        "station": "leban",
+        "order": 1,
+        "stops": {
+          "1": ["106-1-5472"],
+          "0": ["106-0-5472"]
+        }
+      },
+      {
+        "stop_name": "Maplewood Square",
+        "branches": null,
+        "station": "mwood",
+        "order": 2,
+        "stops": {
+          "1": ["106-1-5436"],
+          "0": ["106-0-5466"]
+        }
+      },
+      {
+        "stop_name": "Pleasant Street @ Main Street",
+        "branches": null,
+        "station": "plsmn",
+        "order": 3,
+        "stops": {
+          "1": ["106-1-15431"],
+          "0": ["106-0-5342"]
+        }
+      },
+      {
+        "stop_name": "Malden Center Station",
+        "branches": null,
+        "station": "malst",
+        "order": 4,
+        "stops": {
+          "1": ["106-1-53270"],
+          "0": ["106-0-53270"]
+        }
+      },
+      {
+        "stop_name": "Main Street @ Cross Street",
+        "branches": null,
+        "station": "mncrs",
+        "order": 5,
+        "stops": {
+          "1": ["106-1-5449"],
+          "0": ["106-0-5451"]
+        }
+      },
+      {
+        "stop_name": "Sweester Circle",
+        "branches": null,
+        "station": "sweet",
+        "order": 6,
+        "stops": {
+          "1": ["106-1-5404"],
+          "0": ["106-0-5405"]
+        }
+      },
+      {
+        "stop_name": "Wellington Station",
+        "branches": null,
+        "station": "welst",
+        "order": 7,
+        "stops": {
+          "1": ["106-1-52720"],
+          "0": ["106-0-52712"]
+        }
+      }
+    ]
+  }
 }

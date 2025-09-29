@@ -29,7 +29,7 @@ export const DesktopHeader: React.FC = () => {
   return (
     <div
       className={classNames(
-        'sticky top-0 z-10 mx-3 mb-2 flex flex-row justify-between gap-x-6 rounded-bl-none rounded-br-md border-gray-200 text-white shadow-md md:mx-0 md:mr-4 md:border-l-0',
+        'sticky top-0 z-10 mx-3 mb-2 flex flex-row justify-between gap-x-6 rounded-br-md rounded-bl-none border-gray-200 text-white shadow-md md:mx-0 md:mr-4 md:border-l-0',
         lineColorBackground[line ?? 'DEFAULT']
       )}
     >
@@ -37,7 +37,7 @@ export const DesktopHeader: React.FC = () => {
         <div className="flex shrink-0 flex-row items-baseline pl-3">
           <h3 className="text-xl">{getLineName()}</h3>
           <span className="px-1 text-xl">•</span>
-          <h2 className="select-none text-xl">
+          <h2 className="text-xl select-none">
             <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
           </h2>
         </div>

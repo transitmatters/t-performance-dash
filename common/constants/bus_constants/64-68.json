@@ -1,144 +1,91 @@
 {
-    "64/68": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Harvard",
-                "branches": [
-                    "68"
-                ],
-                "station": "hhgat",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "68-1-110"
-                    ],
-                    "0": [
-                        "68-0-110"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Oak Square",
-                "branches": [
-                    "64"
-                ],
-                "station": "oaksq",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "64-1-1214"
-                    ],
-                    "0": [
-                        "64-0-1214"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Broadway @ Prospect Street",
-                "branches": [
-                    "68"
-                ],
-                "station": "prpct",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "68-1-24481"
-                    ],
-                    "0": [
-                        "68-0-24490"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Union Square",
-                "branches": [
-                    "64"
-                ],
-                "station": "union",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "64-1-1110"
-                    ],
-                    "0": [
-                        "64-0-1195"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Allston Trpk Ramps",
-                "branches": [
-                    "64"
-                ],
-                "station": "alrmp",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "64-1-1116"
-                    ],
-                    "0": [
-                        "64-0-1190"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Central Square (Cambridge)",
-                "branches": [
-                    "64"
-                ],
-                "station": "cntsq",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "64-1-1059"
-                    ],
-                    "0": [
-                        "64-0-1060",
-                        "64-0-1123",
-                        "64-0-2444"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Kendall Station (Busway)",
-                "branches": [
-                    "64",
-                    "68"
-                ],
-                "station": "kndl",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "64-1-2231",
-                        "68-1-2231"
-                    ],
-                    "0": [
-                        "64-0-2231",
-                        "68-0-2231"
-                    ]
-                }
-            },
-            {
-                "stop_name": "University Park (Cambridge)",
-                "branches": [
-                    "64"
-                ],
-                "station": "unvpk",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "64-1-730"
-                    ],
-                    "0": [
-                        "64-0-730"
-                    ]
-                }
-            }
-        ]
-    }
+  "64/68": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Harvard",
+        "branches": ["68"],
+        "station": "hhgat",
+        "order": 1,
+        "stops": {
+          "1": ["68-1-110"],
+          "0": ["68-0-110"]
+        }
+      },
+      {
+        "stop_name": "Oak Square",
+        "branches": ["64"],
+        "station": "oaksq",
+        "order": 1,
+        "stops": {
+          "1": ["64-1-1214"],
+          "0": ["64-0-1214"]
+        }
+      },
+      {
+        "stop_name": "Broadway @ Prospect Street",
+        "branches": ["68"],
+        "station": "prpct",
+        "order": 2,
+        "stops": {
+          "1": ["68-1-24481"],
+          "0": ["68-0-24490"]
+        }
+      },
+      {
+        "stop_name": "Union Square",
+        "branches": ["64"],
+        "station": "union",
+        "order": 2,
+        "stops": {
+          "1": ["64-1-1110"],
+          "0": ["64-0-1195"]
+        }
+      },
+      {
+        "stop_name": "Allston Trpk Ramps",
+        "branches": ["64"],
+        "station": "alrmp",
+        "order": 3,
+        "stops": {
+          "1": ["64-1-1116"],
+          "0": ["64-0-1190"]
+        }
+      },
+      {
+        "stop_name": "Central Square (Cambridge)",
+        "branches": ["64"],
+        "station": "cntsq",
+        "order": 4,
+        "stops": {
+          "1": ["64-1-1059"],
+          "0": ["64-0-1060", "64-0-1123", "64-0-2444"]
+        }
+      },
+      {
+        "stop_name": "Kendall Station (Busway)",
+        "branches": ["64", "68"],
+        "station": "kndl",
+        "order": 5,
+        "stops": {
+          "1": ["64-1-2231", "68-1-2231"],
+          "0": ["64-0-2231", "68-0-2231"]
+        }
+      },
+      {
+        "stop_name": "University Park (Cambridge)",
+        "branches": ["64"],
+        "station": "unvpk",
+        "order": 5,
+        "stops": {
+          "1": ["64-1-730"],
+          "0": ["64-0-730"]
+        }
+      }
+    ]
+  }
 }

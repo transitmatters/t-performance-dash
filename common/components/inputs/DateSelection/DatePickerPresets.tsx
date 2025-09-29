@@ -35,8 +35,8 @@ export const DatePickerPresets: React.FC<DatePickerPresetsProps> = ({
               className={classNames(
                 item.key === preset
                   ? 'bg-gray-200 text-gray-900'
-                  : 'text-gray-70 bg-gray-100 bg-opacity-0',
-                'flex w-full items-start px-4 py-2 text-sm hover:bg-opacity-80'
+                  : 'text-gray-70 bg-opacity-0 bg-gray-100',
+                'hover:bg-opacity-80 flex w-full items-start px-4 py-2 text-sm'
               )}
             >
               {item.name}

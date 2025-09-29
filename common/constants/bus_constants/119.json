@@ -1,115 +1,91 @@
 {
-    "119": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Broadway & Central (Revere)",
-                "branches": null,
-                "station": "bwcen",
-                "order": 0,
-                "stops": {
-                    "1": [],
-                    "0": [
-                        "119-0-5763"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Northgate Shopping Center",
-                "branches": null,
-                "station": "ngate",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "119-1-6267"
-                    ],
-                    "0": [
-                        "119-0-6267"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Linden Square (Malden)",
-                "branches": null,
-                "station": "lindn",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "119-1-74120"
-                    ],
-                    "0": [
-                        "119-0-74120"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Adams & Cooledge",
-                "branches": null,
-                "station": "coold",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "119-1-5832"
-                    ],
-                    "0": []
-                }
-            },
-            {
-                "stop_name": "Revere City Hall",
-                "branches": null,
-                "station": "rcith",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "119-1-5714"
-                    ],
-                    "0": []
-                }
-            },
-            {
-                "stop_name": "Beachmont",
-                "branches": null,
-                "station": "bchmt",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "119-1-5810"
-                    ],
-                    "0": []
-                }
-            },
-            {
-                "stop_name": "Tomasello Way",
-                "branches": null,
-                "station": "tmslw",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "119-1-15808"
-                    ],
-                    "0": [
-                        "119-0-15808"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Beachmont West",
-                "branches": null,
-                "station": "bchmw",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "119-1-5819"
-                    ],
-                    "0": [
-                        "119-0-5819"
-                    ]
-                }
-            }
-        ]
-    }
+  "119": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Broadway & Central (Revere)",
+        "branches": null,
+        "station": "bwcen",
+        "order": 0,
+        "stops": {
+          "1": [],
+          "0": ["119-0-5763"]
+        }
+      },
+      {
+        "stop_name": "Northgate Shopping Center",
+        "branches": null,
+        "station": "ngate",
+        "order": 1,
+        "stops": {
+          "1": ["119-1-6267"],
+          "0": ["119-0-6267"]
+        }
+      },
+      {
+        "stop_name": "Linden Square (Malden)",
+        "branches": null,
+        "station": "lindn",
+        "order": 2,
+        "stops": {
+          "1": ["119-1-74120"],
+          "0": ["119-0-74120"]
+        }
+      },
+      {
+        "stop_name": "Adams & Cooledge",
+        "branches": null,
+        "station": "coold",
+        "order": 3,
+        "stops": {
+          "1": ["119-1-5832"],
+          "0": []
+        }
+      },
+      {
+        "stop_name": "Revere City Hall",
+        "branches": null,
+        "station": "rcith",
+        "order": 4,
+        "stops": {
+          "1": ["119-1-5714"],
+          "0": []
+        }
+      },
+      {
+        "stop_name": "Beachmont",
+        "branches": null,
+        "station": "bchmt",
+        "order": 5,
+        "stops": {
+          "1": ["119-1-5810"],
+          "0": []
+        }
+      },
+      {
+        "stop_name": "Tomasello Way",
+        "branches": null,
+        "station": "tmslw",
+        "order": 5,
+        "stops": {
+          "1": ["119-1-15808"],
+          "0": ["119-0-15808"]
+        }
+      },
+      {
+        "stop_name": "Beachmont West",
+        "branches": null,
+        "station": "bchmw",
+        "order": 6,
+        "stops": {
+          "1": ["119-1-5819"],
+          "0": ["119-0-5819"]
+        }
+      }
+    ]
+  }
 }

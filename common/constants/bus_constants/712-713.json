@@ -1,120 +1,71 @@
 {
-    "712/713": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Point Shirley",
-                "branches": [
-                    "712",
-                    "713"
-                ],
-                "station": "pshly",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "712-1-109853",
-                        "713-1-109853"
-                    ],
-                    "0": [
-                        "712-0-109853",
-                        "713-0-109853"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Winthrop Beach (Paul Revere)",
-                "branches": [
-                    "712",
-                    "713"
-                ],
-                "station": "wnbch",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "712-1-109821",
-                        "713-1-109898"
-                    ],
-                    "0": [
-                        "712-0-109898",
-                        "713-0-109820",
-                        "713-0-109821"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Governor's Park",
-                "branches": [
-                    "712"
-                ],
-                "station": "govpk",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "712-1-109831"
-                    ],
-                    "0": [
-                        "712-0-109871"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Winthrop Ferry Terminal",
-                "branches": [
-                    "712",
-                    "713"
-                ],
-                "station": "winft",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "712-1-129863",
-                        "713-1-129863"
-                    ],
-                    "0": [
-                        "712-0-129863",
-                        "713-0-129863"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Winthrop Police Station",
-                "branches": [
-                    "713"
-                ],
-                "station": "winpst",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "713-1-109893"
-                    ],
-                    "0": [
-                        "713-0-109809"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Orient Heights Station",
-                "branches": [
-                    "712",
-                    "713"
-                ],
-                "station": "orhgt",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "712-1-15880",
-                        "713-1-15880"
-                    ],
-                    "0": [
-                        "712-0-15880",
-                        "713-0-15880"
-                    ]
-                }
-            }
-        ]
-    }
+  "712/713": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Point Shirley",
+        "branches": ["712", "713"],
+        "station": "pshly",
+        "order": 1,
+        "stops": {
+          "1": ["712-1-109853", "713-1-109853"],
+          "0": ["712-0-109853", "713-0-109853"]
+        }
+      },
+      {
+        "stop_name": "Winthrop Beach (Paul Revere)",
+        "branches": ["712", "713"],
+        "station": "wnbch",
+        "order": 1,
+        "stops": {
+          "1": ["712-1-109821", "713-1-109898"],
+          "0": ["712-0-109898", "713-0-109820", "713-0-109821"]
+        }
+      },
+      {
+        "stop_name": "Governor's Park",
+        "branches": ["712"],
+        "station": "govpk",
+        "order": 2,
+        "stops": {
+          "1": ["712-1-109831"],
+          "0": ["712-0-109871"]
+        }
+      },
+      {
+        "stop_name": "Winthrop Ferry Terminal",
+        "branches": ["712", "713"],
+        "station": "winft",
+        "order": 2,
+        "stops": {
+          "1": ["712-1-129863", "713-1-129863"],
+          "0": ["712-0-129863", "713-0-129863"]
+        }
+      },
+      {
+        "stop_name": "Winthrop Police Station",
+        "branches": ["713"],
+        "station": "winpst",
+        "order": 2,
+        "stops": {
+          "1": ["713-1-109893"],
+          "0": ["713-0-109809"]
+        }
+      },
+      {
+        "stop_name": "Orient Heights Station",
+        "branches": ["712", "713"],
+        "station": "orhgt",
+        "order": 3,
+        "stops": {
+          "1": ["712-1-15880", "713-1-15880"],
+          "0": ["712-0-15880", "713-0-15880"]
+        }
+      }
+    ]
+  }
 }

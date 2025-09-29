@@ -43,7 +43,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   return (
     <div
       className={classNames(
-        'shrink-1 flex w-full flex-col items-end justify-end gap-x-8 gap-y-2 overflow-hidden p-3 pl-0 text-stone-900 lg:max-w-2xl',
+        'flex w-full shrink-1 flex-col items-end justify-end gap-x-8 gap-y-2 overflow-hidden p-3 pl-0 text-stone-900 lg:max-w-2xl',
         lineColorBorder[line ?? 'DEFAULT']
       )}
     >

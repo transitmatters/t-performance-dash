@@ -1,219 +1,141 @@
 {
-    "CT2": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Sullivan Square",
-                "branches": null,
-                "station": "sull",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "747-1-29005",
-                        "CT2-1-29005"
-                    ],
-                    "0": [
-                        "747-0-29001",
-                        "CT2-0-29001"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Union Square",
-                "branches": null,
-                "station": "unsqu",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "747-1-2612",
-                        "CT2-1-2612"
-                    ],
-                    "0": [
-                        "747-0-2531",
-                        "CT2-0-2531"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Kendall Station (Busway)",
-                "branches": null,
-                "station": "kndl",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "747-1-34579",
-                        "CT2-1-34579"
-                    ],
-                    "0": [
-                        "747-0-12231",
-                        "CT2-0-12231"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Vassar @ Massachusetts Avenue",
-                "branches": null,
-                "station": "vasma",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "747-1-11771",
-                        "CT2-1-11771"
-                    ],
-                    "0": [
-                        "747-0-21773",
-                        "CT2-0-21773"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Vassar @ Memorial Drive",
-                "branches": null,
-                "station": "vasme",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "747-1-22173",
-                        "CT2-1-22173"
-                    ],
-                    "0": [
-                        "747-0-21772",
-                        "CT2-0-21772"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Mountfort Street @ Commonwealth Avenue",
-                "branches": null,
-                "station": "mount",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "747-1-1773",
-                        "CT2-1-1773"
-                    ],
-                    "0": [
-                        "747-0-11809",
-                        "CT2-0-11809"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Park Drive @ Beacon Street",
-                "branches": null,
-                "station": "prkbn",
-                "order": 7,
-                "stops": {
-                    "1": [
-                        "747-1-1775",
-                        "CT2-1-1775"
-                    ],
-                    "0": [
-                        "747-0-1808",
-                        "CT2-0-1808"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Fenway Station",
-                "branches": null,
-                "station": "fenwy",
-                "order": 8,
-                "stops": {
-                    "1": [
-                        "747-1-9434",
-                        "CT2-1-9434"
-                    ],
-                    "0": [
-                        "747-0-1807",
-                        "CT2-0-1807"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Beth Israel Hospital @ Fenway",
-                "branches": null,
-                "station": "bethi",
-                "order": 9,
-                "stops": {
-                    "1": [
-                        "747-1-1778",
-                        "CT2-1-1778"
-                    ],
-                    "0": [
-                        "747-0-1805",
-                        "CT2-0-1805"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Boston Children's Hospital on Longwood Avenue",
-                "branches": null,
-                "station": "child",
-                "order": 10,
-                "stops": {
-                    "1": [
-                        "747-1-1780",
-                        "CT2-1-1780"
-                    ],
-                    "0": [
-                        "747-0-11803",
-                        "CT2-0-11803"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Huntington Avenue & Longwood Avenue",
-                "branches": null,
-                "station": "hlong",
-                "order": 11,
-                "stops": {
-                    "1": [
-                        "747-1-31317",
-                        "CT2-1-31317"
-                    ],
-                    "0": [
-                        "747-0-91391",
-                        "CT2-0-91391"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Huntington & Ruggles",
-                "branches": null,
-                "station": "hrugg",
-                "order": 12,
-                "stops": {
-                    "1": [
-                        "747-1-1784",
-                        "CT2-1-1784"
-                    ],
-                    "0": [
-                        "747-0-71391",
-                        "CT2-0-71391"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Ruggles",
-                "branches": null,
-                "station": "rugg",
-                "order": 13,
-                "stops": {
-                    "1": [
-                        "747-1-17861",
-                        "CT2-1-17861"
-                    ],
-                    "0": [
-                        "747-0-17863",
-                        "CT2-0-17863"
-                    ]
-                }
-            }
-        ]
-    }
+  "CT2": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Sullivan Square",
+        "branches": null,
+        "station": "sull",
+        "order": 1,
+        "stops": {
+          "1": ["747-1-29005", "CT2-1-29005"],
+          "0": ["747-0-29001", "CT2-0-29001"]
+        }
+      },
+      {
+        "stop_name": "Union Square",
+        "branches": null,
+        "station": "unsqu",
+        "order": 2,
+        "stops": {
+          "1": ["747-1-2612", "CT2-1-2612"],
+          "0": ["747-0-2531", "CT2-0-2531"]
+        }
+      },
+      {
+        "stop_name": "Kendall Station (Busway)",
+        "branches": null,
+        "station": "kndl",
+        "order": 3,
+        "stops": {
+          "1": ["747-1-34579", "CT2-1-34579"],
+          "0": ["747-0-12231", "CT2-0-12231"]
+        }
+      },
+      {
+        "stop_name": "Vassar @ Massachusetts Avenue",
+        "branches": null,
+        "station": "vasma",
+        "order": 4,
+        "stops": {
+          "1": ["747-1-11771", "CT2-1-11771"],
+          "0": ["747-0-21773", "CT2-0-21773"]
+        }
+      },
+      {
+        "stop_name": "Vassar @ Memorial Drive",
+        "branches": null,
+        "station": "vasme",
+        "order": 5,
+        "stops": {
+          "1": ["747-1-22173", "CT2-1-22173"],
+          "0": ["747-0-21772", "CT2-0-21772"]
+        }
+      },
+      {
+        "stop_name": "Mountfort Street @ Commonwealth Avenue",
+        "branches": null,
+        "station": "mount",
+        "order": 6,
+        "stops": {
+          "1": ["747-1-1773", "CT2-1-1773"],
+          "0": ["747-0-11809", "CT2-0-11809"]
+        }
+      },
+      {
+        "stop_name": "Park Drive @ Beacon Street",
+        "branches": null,
+        "station": "prkbn",
+        "order": 7,
+        "stops": {
+          "1": ["747-1-1775", "CT2-1-1775"],
+          "0": ["747-0-1808", "CT2-0-1808"]
+        }
+      },
+      {
+        "stop_name": "Fenway Station",
+        "branches": null,
+        "station": "fenwy",
+        "order": 8,
+        "stops": {
+          "1": ["747-1-9434", "CT2-1-9434"],
+          "0": ["747-0-1807", "CT2-0-1807"]
+        }
+      },
+      {
+        "stop_name": "Beth Israel Hospital @ Fenway",
+        "branches": null,
+        "station": "bethi",
+        "order": 9,
+        "stops": {
+          "1": ["747-1-1778", "CT2-1-1778"],
+          "0": ["747-0-1805", "CT2-0-1805"]
+        }
+      },
+      {
+        "stop_name": "Boston Children's Hospital on Longwood Avenue",
+        "branches": null,
+        "station": "child",
+        "order": 10,
+        "stops": {
+          "1": ["747-1-1780", "CT2-1-1780"],
+          "0": ["747-0-11803", "CT2-0-11803"]
+        }
+      },
+      {
+        "stop_name": "Huntington Avenue & Longwood Avenue",
+        "branches": null,
+        "station": "hlong",
+        "order": 11,
+        "stops": {
+          "1": ["747-1-31317", "CT2-1-31317"],
+          "0": ["747-0-91391", "CT2-0-91391"]
+        }
+      },
+      {
+        "stop_name": "Huntington & Ruggles",
+        "branches": null,
+        "station": "hrugg",
+        "order": 12,
+        "stops": {
+          "1": ["747-1-1784", "CT2-1-1784"],
+          "0": ["747-0-71391", "CT2-0-71391"]
+        }
+      },
+      {
+        "stop_name": "Ruggles",
+        "branches": null,
+        "station": "rugg",
+        "order": 13,
+        "stops": {
+          "1": ["747-1-17861", "CT2-1-17861"],
+          "0": ["747-0-17863", "CT2-0-17863"]
+        }
+      }
+    ]
+  }
 }

@@ -13,7 +13,7 @@ export const CommuterRailDropdown: React.FC<CommuterRailDropdownProps> = ({ clos
       <CommuterRailRouteSelection />
       <div
         className={
-          'flex flex-col gap-[2px] rounded-b-md border border-t-0 border-mbta-commuterRail border-opacity-50 bg-neutral-800 px-1 py-[4px]'
+          'border-mbta-commuterRail border-opacity-50 flex flex-col gap-[2px] rounded-b-md border border-t-0 bg-neutral-800 px-1 py-[4px]'
         }
         role={'navigation'}
       >

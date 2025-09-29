@@ -64,7 +64,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
       >
         <Popover.Button
           className={classNames(
-            'flex h-10 w-full items-center justify-center self-stretch rounded-l-[.25rem] px-3 py-1 text-white text-opacity-95 hover:bg-opacity-70 focus:bg-opacity-70 focus:outline-none md:h-7',
+            'text-opacity-95 hover:bg-opacity-70 focus:bg-opacity-70 flex h-10 w-full items-center justify-center self-stretch rounded-l-[.25rem] px-3 py-1 text-white focus:outline-none md:h-7',
             line && buttonHighlightFocus[line],
             lineColorDarkBackground[line ?? 'DEFAULT']
           )}
@@ -87,7 +87,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Popover.Panel className="fixed bottom-[5.25rem] left-4 origin-bottom-left overflow-visible rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-auto md:right-auto md:top-auto md:mt-9 md:origin-top-left">
+          <Popover.Panel className="ring-opacity-5 fixed bottom-[5.25rem] left-4 origin-bottom-left overflow-visible rounded-md bg-white shadow-lg ring-1 ring-black focus:outline-none md:top-auto md:right-auto md:bottom-auto md:left-auto md:mt-9 md:origin-top-left">
             {({ close }) => (
               <div className="flex w-screen max-w-[160px] flex-col overflow-hidden rounded-md bg-white leading-6 shadow-lg ring-1 ring-gray-900/5">
                 {type === 'combo' && <RangeSelectionTab range={range} setRange={setRange} />}

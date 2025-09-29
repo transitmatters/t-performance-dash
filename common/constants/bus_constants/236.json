@@ -1,123 +1,91 @@
 {
-    "236": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "South Shore Plaza",
-                "branches": null,
-                "station": "ssplz",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "236-1-4019"
-                    ],
-                    "0": [
-                        "236-0-4019"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Braintree Five Corners",
-                "branches": null,
-                "station": "five",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "236-1-4024"
-                    ],
-                    "0": [
-                        "236-0-4017"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Braintree Station",
-                "branches": null,
-                "station": "brnst",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "236-1-38671"
-                    ],
-                    "0": [
-                        "236-0-38671"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Middle Street (Braintree)",
-                "branches": null,
-                "station": "midl",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "236-1-39683"
-                    ],
-                    "0": [
-                        "236-0-38493"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Franklin Street @ Water Street",
-                "branches": null,
-                "station": "frkwa",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "236-1-3959"
-                    ],
-                    "0": [
-                        "236-0-3330"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Hancock Street (Quincy)",
-                "branches": null,
-                "station": "hnock",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "236-1-3422"
-                    ],
-                    "0": [
-                        "236-0-3327"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Hancock Street @ Cottage Avenue",
-                "branches": null,
-                "station": "hncot",
-                "order": 7,
-                "stops": {
-                    "1": [
-                        "236-1-3423"
-                    ],
-                    "0": [
-                        "236-0-3326"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Quincy Center",
-                "branches": null,
-                "station": "qnctr",
-                "order": 8,
-                "stops": {
-                    "1": [
-                        "236-1-32001"
-                    ],
-                    "0": [
-                        "236-0-32001"
-                    ]
-                }
-            }
-        ]
-    }
+  "236": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "South Shore Plaza",
+        "branches": null,
+        "station": "ssplz",
+        "order": 1,
+        "stops": {
+          "1": ["236-1-4019"],
+          "0": ["236-0-4019"]
+        }
+      },
+      {
+        "stop_name": "Braintree Five Corners",
+        "branches": null,
+        "station": "five",
+        "order": 2,
+        "stops": {
+          "1": ["236-1-4024"],
+          "0": ["236-0-4017"]
+        }
+      },
+      {
+        "stop_name": "Braintree Station",
+        "branches": null,
+        "station": "brnst",
+        "order": 3,
+        "stops": {
+          "1": ["236-1-38671"],
+          "0": ["236-0-38671"]
+        }
+      },
+      {
+        "stop_name": "Middle Street (Braintree)",
+        "branches": null,
+        "station": "midl",
+        "order": 4,
+        "stops": {
+          "1": ["236-1-39683"],
+          "0": ["236-0-38493"]
+        }
+      },
+      {
+        "stop_name": "Franklin Street @ Water Street",
+        "branches": null,
+        "station": "frkwa",
+        "order": 5,
+        "stops": {
+          "1": ["236-1-3959"],
+          "0": ["236-0-3330"]
+        }
+      },
+      {
+        "stop_name": "Hancock Street (Quincy)",
+        "branches": null,
+        "station": "hnock",
+        "order": 6,
+        "stops": {
+          "1": ["236-1-3422"],
+          "0": ["236-0-3327"]
+        }
+      },
+      {
+        "stop_name": "Hancock Street @ Cottage Avenue",
+        "branches": null,
+        "station": "hncot",
+        "order": 7,
+        "stops": {
+          "1": ["236-1-3423"],
+          "0": ["236-0-3326"]
+        }
+      },
+      {
+        "stop_name": "Quincy Center",
+        "branches": null,
+        "station": "qnctr",
+        "order": 8,
+        "stops": {
+          "1": ["236-1-32001"],
+          "0": ["236-0-32001"]
+        }
+      }
+    ]
+  }
 }

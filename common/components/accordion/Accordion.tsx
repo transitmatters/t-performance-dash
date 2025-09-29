@@ -19,11 +19,11 @@ export const Accordion: React.FC<AccordionProps> = ({ contentList, size = 'md' }
             <Disclosure key={title} as={'div'}>
               {({ open }) => (
                 <>
-                  <Disclosure.Button className="flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium focus:outline-none focus-visible:ring focus-visible:ring-opacity-75">
+                  <Disclosure.Button className="focus-visible:ring-opacity-75 flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium focus:outline-none focus-visible:ring">
                     <span className={size === 'lg' ? 'text-lg' : 'text-md'}>{title}</span>
                     <ChevronUpIcon className={`${open ? 'rotate-180 transform' : ''} h-5 w-5`} />
                   </Disclosure.Button>
-                  <Disclosure.Panel className="px-4 pb-2 pt-4 text-sm text-gray-500">
+                  <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
                     {content}
                   </Disclosure.Panel>
                 </>

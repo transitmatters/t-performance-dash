@@ -1,107 +1,81 @@
 {
-    "120": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Orient Heights to Waldemar",
-                "branches": null,
-                "station": "orhw",
-                "order": 0,
-                "stops": {
-                    "1": [],
-                    "0": [
-                        "120-0-5879"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Orient Heights Station",
-                "branches": null,
-                "station": "orhgt",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "120-1-5880"
-                    ],
-                    "0": [
-                        "120-0-5880"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Wood Island Station",
-                "branches": null,
-                "station": "woodi",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "120-1-5666"
-                    ],
-                    "0": [
-                        "120-0-5666"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Central Square (East Boston)",
-                "branches": null,
-                "station": "cntle",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "120-1-5854"
-                    ],
-                    "0": [
-                        "120-0-5867"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Maverick to Jeffries",
-                "branches": null,
-                "station": "mavj",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "120-1-57400"
-                    ],
-                    "0": [
-                        "120-0-57400"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Jeffries Point Loop @ Maverick Street",
-                "branches": null,
-                "station": "jefpt",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "120-1-5862"
-                    ],
-                    "0": [
-                        "120-0-5862"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Maverick Square (East Boston)",
-                "branches": null,
-                "station": "mavck",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "120-1-5740"
-                    ],
-                    "0": [
-                        "120-0-5740"
-                    ]
-                }
-            }
-        ]
-    }
+  "120": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Orient Heights to Waldemar",
+        "branches": null,
+        "station": "orhw",
+        "order": 0,
+        "stops": {
+          "1": [],
+          "0": ["120-0-5879"]
+        }
+      },
+      {
+        "stop_name": "Orient Heights Station",
+        "branches": null,
+        "station": "orhgt",
+        "order": 1,
+        "stops": {
+          "1": ["120-1-5880"],
+          "0": ["120-0-5880"]
+        }
+      },
+      {
+        "stop_name": "Wood Island Station",
+        "branches": null,
+        "station": "woodi",
+        "order": 2,
+        "stops": {
+          "1": ["120-1-5666"],
+          "0": ["120-0-5666"]
+        }
+      },
+      {
+        "stop_name": "Central Square (East Boston)",
+        "branches": null,
+        "station": "cntle",
+        "order": 3,
+        "stops": {
+          "1": ["120-1-5854"],
+          "0": ["120-0-5867"]
+        }
+      },
+      {
+        "stop_name": "Maverick to Jeffries",
+        "branches": null,
+        "station": "mavj",
+        "order": 4,
+        "stops": {
+          "1": ["120-1-57400"],
+          "0": ["120-0-57400"]
+        }
+      },
+      {
+        "stop_name": "Jeffries Point Loop @ Maverick Street",
+        "branches": null,
+        "station": "jefpt",
+        "order": 5,
+        "stops": {
+          "1": ["120-1-5862"],
+          "0": ["120-0-5862"]
+        }
+      },
+      {
+        "stop_name": "Maverick Square (East Boston)",
+        "branches": null,
+        "station": "mavck",
+        "order": 6,
+        "stops": {
+          "1": ["120-1-5740"],
+          "0": ["120-0-5740"]
+        }
+      }
+    ]
+  }
 }

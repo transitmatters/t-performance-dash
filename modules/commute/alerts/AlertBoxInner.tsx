@@ -33,7 +33,7 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
         setShowModal(!showModal);
       }}
       className={classNames(
-        'flex cursor-pointer flex-col gap-y-2 rounded-md border-2 border-white border-opacity-10 bg-white bg-opacity-5 py-1 pl-1 pr-4 shadow-sm hover:bg-opacity-0',
+        'border-opacity-10 bg-opacity-5 hover:bg-opacity-0 flex cursor-pointer flex-col gap-y-2 rounded-md border-2 border-white bg-white py-1 pr-4 pl-1 shadow-sm',
         _noShrink ? 'w-full whitespace-normal' : 'whitespace-nowrap'
       )}
     >
@@ -49,7 +49,7 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
       )}
       {/* doubled divs here. */}
       <div className="flex w-full flex-row items-center">
-        <Icon className="ml-2 mr-4 h-10 w-10" aria-hidden="true" />
+        <Icon className="mr-4 ml-2 h-10 w-10" aria-hidden="true" />
         <div className="flex w-full flex-col items-center justify-center text-stone-100">
           <div
             className={classNames(

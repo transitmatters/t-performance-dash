@@ -1,123 +1,91 @@
 {
-    "112": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Wellington Station",
-                "branches": null,
-                "station": "welst",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "112-1-52716"
-                    ],
-                    "0": [
-                        "112-0-52720"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Sweester Circle",
-                "branches": null,
-                "station": "sweet",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "112-1-5565"
-                    ],
-                    "0": [
-                        "112-0-5560"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Everett Square",
-                "branches": null,
-                "station": "evrtc",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "112-1-5695"
-                    ],
-                    "0": [
-                        "112-0-5496"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Washington Avenue @ Revere Beach Parkway",
-                "branches": null,
-                "station": "warbp",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "112-1-5597"
-                    ],
-                    "0": [
-                        "112-0-5597"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Market Basket (former Mystic Mall)",
-                "branches": null,
-                "station": "mysml",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "112-1-5045"
-                    ],
-                    "0": [
-                        "112-0-5045"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Admiral's Hill @ Commandants Way",
-                "branches": null,
-                "station": "admhl",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "112-1-15047"
-                    ],
-                    "0": [
-                        "112-0-15047"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Bellingham Square (Chelsea)",
-                "branches": null,
-                "station": "belsq",
-                "order": 7,
-                "stops": {
-                    "1": [
-                        "112-1-5605"
-                    ],
-                    "0": [
-                        "112-0-5615"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Wood Island Station",
-                "branches": null,
-                "station": "woodi",
-                "order": 8,
-                "stops": {
-                    "1": [
-                        "112-1-5666"
-                    ],
-                    "0": [
-                        "112-0-5666"
-                    ]
-                }
-            }
-        ]
-    }
+  "112": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Wellington Station",
+        "branches": null,
+        "station": "welst",
+        "order": 1,
+        "stops": {
+          "1": ["112-1-52716"],
+          "0": ["112-0-52720"]
+        }
+      },
+      {
+        "stop_name": "Sweester Circle",
+        "branches": null,
+        "station": "sweet",
+        "order": 2,
+        "stops": {
+          "1": ["112-1-5565"],
+          "0": ["112-0-5560"]
+        }
+      },
+      {
+        "stop_name": "Everett Square",
+        "branches": null,
+        "station": "evrtc",
+        "order": 3,
+        "stops": {
+          "1": ["112-1-5695"],
+          "0": ["112-0-5496"]
+        }
+      },
+      {
+        "stop_name": "Washington Avenue @ Revere Beach Parkway",
+        "branches": null,
+        "station": "warbp",
+        "order": 4,
+        "stops": {
+          "1": ["112-1-5597"],
+          "0": ["112-0-5597"]
+        }
+      },
+      {
+        "stop_name": "Market Basket (former Mystic Mall)",
+        "branches": null,
+        "station": "mysml",
+        "order": 5,
+        "stops": {
+          "1": ["112-1-5045"],
+          "0": ["112-0-5045"]
+        }
+      },
+      {
+        "stop_name": "Admiral's Hill @ Commandants Way",
+        "branches": null,
+        "station": "admhl",
+        "order": 6,
+        "stops": {
+          "1": ["112-1-15047"],
+          "0": ["112-0-15047"]
+        }
+      },
+      {
+        "stop_name": "Bellingham Square (Chelsea)",
+        "branches": null,
+        "station": "belsq",
+        "order": 7,
+        "stops": {
+          "1": ["112-1-5605"],
+          "0": ["112-0-5615"]
+        }
+      },
+      {
+        "stop_name": "Wood Island Station",
+        "branches": null,
+        "station": "woodi",
+        "order": 8,
+        "stops": {
+          "1": ["112-1-5666"],
+          "0": ["112-0-5666"]
+        }
+      }
+    ]
+  }
 }

@@ -1,193 +1,121 @@
 {
-    "131/132": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Melrose Highlands",
-                "branches": [
-                    "131"
-                ],
-                "station": "mrose",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "131-1-9071"
-                    ],
-                    "0": [
-                        "131-0-9071"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Redstone Shopping Plaza",
-                "branches": [
-                    "132"
-                ],
-                "station": "rdstn",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "132-1-25989"
-                    ],
-                    "0": [
-                        "132-0-15989"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Franklin Square",
-                "branches": [
-                    "131"
-                ],
-                "station": "fklin",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "131-1-9196"
-                    ],
-                    "0": [
-                        "131-0-9233"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Stoneham Square",
-                "branches": [
-                    "132"
-                ],
-                "station": "stone",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "132-1-15992"
-                    ],
-                    "0": [
-                        "132-0-15986"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Main & Porter",
-                "branches": [
-                    "131"
-                ],
-                "station": "mport",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "131-1-9077"
-                    ],
-                    "0": [
-                        "131-0-9230"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Wyoming Square",
-                "branches": [
-                    "132"
-                ],
-                "station": "wyomc",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "132-1-5980"
-                    ],
-                    "0": [
-                        "132-0-15975"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Oak Grove Station",
-                "branches": [
-                    "131",
-                    "132"
-                ],
-                "station": "okgrv",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "131-1-9328",
-                        "132-1-5991"
-                    ],
-                    "0": [
-                        "131-0-9328",
-                        "132-0-9326"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Upham & Waverly",
-                "branches": [
-                    "131"
-                ],
-                "station": "upwav",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "131-1-9085"
-                    ],
-                    "0": [
-                        "131-0-5921"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Common Park",
-                "branches": [
-                    "131"
-                ],
-                "station": "compk",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "131-1-9091"
-                    ],
-                    "0": [
-                        "131-0-5916"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Malden Center Station",
-                "branches": [
-                    "131",
-                    "132"
-                ],
-                "station": "malst",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "131-1-5327",
-                        "132-1-5072"
-                    ],
-                    "0": [
-                        "131-0-5327",
-                        "132-0-5072"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Main & Grove",
-                "branches": [
-                    "131"
-                ],
-                "station": "mgrov",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "131-1-9100"
-                    ],
-                    "0": [
-                        "131-0-9226"
-                    ]
-                }
-            }
-        ]
-    }
+  "131/132": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Melrose Highlands",
+        "branches": ["131"],
+        "station": "mrose",
+        "order": 1,
+        "stops": {
+          "1": ["131-1-9071"],
+          "0": ["131-0-9071"]
+        }
+      },
+      {
+        "stop_name": "Redstone Shopping Plaza",
+        "branches": ["132"],
+        "station": "rdstn",
+        "order": 1,
+        "stops": {
+          "1": ["132-1-25989"],
+          "0": ["132-0-15989"]
+        }
+      },
+      {
+        "stop_name": "Franklin Square",
+        "branches": ["131"],
+        "station": "fklin",
+        "order": 2,
+        "stops": {
+          "1": ["131-1-9196"],
+          "0": ["131-0-9233"]
+        }
+      },
+      {
+        "stop_name": "Stoneham Square",
+        "branches": ["132"],
+        "station": "stone",
+        "order": 2,
+        "stops": {
+          "1": ["132-1-15992"],
+          "0": ["132-0-15986"]
+        }
+      },
+      {
+        "stop_name": "Main & Porter",
+        "branches": ["131"],
+        "station": "mport",
+        "order": 3,
+        "stops": {
+          "1": ["131-1-9077"],
+          "0": ["131-0-9230"]
+        }
+      },
+      {
+        "stop_name": "Wyoming Square",
+        "branches": ["132"],
+        "station": "wyomc",
+        "order": 3,
+        "stops": {
+          "1": ["132-1-5980"],
+          "0": ["132-0-15975"]
+        }
+      },
+      {
+        "stop_name": "Oak Grove Station",
+        "branches": ["131", "132"],
+        "station": "okgrv",
+        "order": 4,
+        "stops": {
+          "1": ["131-1-9328", "132-1-5991"],
+          "0": ["131-0-9328", "132-0-9326"]
+        }
+      },
+      {
+        "stop_name": "Upham & Waverly",
+        "branches": ["131"],
+        "station": "upwav",
+        "order": 4,
+        "stops": {
+          "1": ["131-1-9085"],
+          "0": ["131-0-5921"]
+        }
+      },
+      {
+        "stop_name": "Common Park",
+        "branches": ["131"],
+        "station": "compk",
+        "order": 5,
+        "stops": {
+          "1": ["131-1-9091"],
+          "0": ["131-0-5916"]
+        }
+      },
+      {
+        "stop_name": "Malden Center Station",
+        "branches": ["131", "132"],
+        "station": "malst",
+        "order": 5,
+        "stops": {
+          "1": ["131-1-5327", "132-1-5072"],
+          "0": ["131-0-5327", "132-0-5072"]
+        }
+      },
+      {
+        "stop_name": "Main & Grove",
+        "branches": ["131"],
+        "station": "mgrov",
+        "order": 6,
+        "stops": {
+          "1": ["131-1-9100"],
+          "0": ["131-0-9226"]
+        }
+      }
+    ]
+  }
 }

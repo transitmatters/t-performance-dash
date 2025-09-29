@@ -27,7 +27,7 @@ export const RangeSelectionTab: React.FC<RangeSelectionTabProps> = ({ range, set
                 className={classNames(
                   lineColorBackground[line ?? 'DEFAULT'],
                   selected
-                    ? 'bg-opacity-100 text-white text-opacity-90'
+                    ? 'bg-opacity-100 text-opacity-90 text-white'
                     : `bg-opacity-0 ${lineColorText[line ?? 'DEFAULT']}`,
                   'border py-2 text-sm',
                   index === 0 ? 'rounded-tl-lg' : 'rounded-tr-lg',

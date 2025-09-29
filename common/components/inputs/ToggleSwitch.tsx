@@ -36,7 +36,7 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, setEnabled,
       <div
         onClick={() => setEnabled(!enabled)}
         className={classNames(
-          'cursor-pointer self-center whitespace-nowrap text-sm text-design-subtitleGrey'
+          'text-design-subtitleGrey cursor-pointer self-center text-sm whitespace-nowrap'
         )}
       >
         &nbsp;

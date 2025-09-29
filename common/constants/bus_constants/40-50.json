@@ -1,167 +1,101 @@
 {
-    "40/50": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Cleary Square",
-                "branches": [
-                    "40",
-                    "50"
-                ],
-                "station": "clsq",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "40-1-36466",
-                        "50-1-36466"
-                    ],
-                    "0": [
-                        "40-0-26531",
-                        "50-0-2819"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Georgetowne",
-                "branches": [
-                    "40"
-                ],
-                "station": "gtown",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "40-1-1618"
-                    ],
-                    "0": [
-                        "40-0-11618",
-                        "40-0-1618"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Washington Street @ West Boundary Road",
-                "branches": [
-                    "40"
-                ],
-                "station": "wawbw",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "40-1-625"
-                    ],
-                    "0": [
-                        "40-0-11613"
-                    ]
-                }
-            },
-            {
-                "stop_name": "West @ Deforest Street",
-                "branches": [
-                    "50"
-                ],
-                "station": "wdfst",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "50-1-2789"
-                    ],
-                    "0": [
-                        "50-0-2812"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Poplar Street @ Metropolitan Avenue",
-                "branches": [
-                    "40",
-                    "50"
-                ],
-                "station": "pomet",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "40-1-2796",
-                        "50-1-2796"
-                    ],
-                    "0": [
-                        "50-0-2805"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Washington Street @ LaGrange Street",
-                "branches": [
-                    "40"
-                ],
-                "station": "walag",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "40-1-628"
-                    ],
-                    "0": [
-                        "40-0-609"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Roslindale Square",
-                "branches": [
-                    "40",
-                    "50"
-                ],
-                "station": "rossq",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "40-1-636",
-                        "50-1-636"
-                    ],
-                    "0": [
-                        "40-0-6022",
-                        "50-0-6022"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Washington Street @ Metropolitan Avenue",
-                "branches": [
-                    "40"
-                ],
-                "station": "wamet",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "40-1-633"
-                    ],
-                    "0": [
-                        "40-0-604"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Forest Hills Busway",
-                "branches": [
-                    "40",
-                    "50"
-                ],
-                "station": "fhill",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "40-1-10642",
-                        "50-1-10642"
-                    ],
-                    "0": [
-                        "40-0-10642",
-                        "50-0-10642"
-                    ]
-                }
-            }
-        ]
-    }
+  "40/50": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Cleary Square",
+        "branches": ["40", "50"],
+        "station": "clsq",
+        "order": 1,
+        "stops": {
+          "1": ["40-1-36466", "50-1-36466"],
+          "0": ["40-0-26531", "50-0-2819"]
+        }
+      },
+      {
+        "stop_name": "Georgetowne",
+        "branches": ["40"],
+        "station": "gtown",
+        "order": 1,
+        "stops": {
+          "1": ["40-1-1618"],
+          "0": ["40-0-11618", "40-0-1618"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ West Boundary Road",
+        "branches": ["40"],
+        "station": "wawbw",
+        "order": 2,
+        "stops": {
+          "1": ["40-1-625"],
+          "0": ["40-0-11613"]
+        }
+      },
+      {
+        "stop_name": "West @ Deforest Street",
+        "branches": ["50"],
+        "station": "wdfst",
+        "order": 2,
+        "stops": {
+          "1": ["50-1-2789"],
+          "0": ["50-0-2812"]
+        }
+      },
+      {
+        "stop_name": "Poplar Street @ Metropolitan Avenue",
+        "branches": ["40", "50"],
+        "station": "pomet",
+        "order": 3,
+        "stops": {
+          "1": ["40-1-2796", "50-1-2796"],
+          "0": ["50-0-2805"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ LaGrange Street",
+        "branches": ["40"],
+        "station": "walag",
+        "order": 3,
+        "stops": {
+          "1": ["40-1-628"],
+          "0": ["40-0-609"]
+        }
+      },
+      {
+        "stop_name": "Roslindale Square",
+        "branches": ["40", "50"],
+        "station": "rossq",
+        "order": 4,
+        "stops": {
+          "1": ["40-1-636", "50-1-636"],
+          "0": ["40-0-6022", "50-0-6022"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ Metropolitan Avenue",
+        "branches": ["40"],
+        "station": "wamet",
+        "order": 4,
+        "stops": {
+          "1": ["40-1-633"],
+          "0": ["40-0-604"]
+        }
+      },
+      {
+        "stop_name": "Forest Hills Busway",
+        "branches": ["40", "50"],
+        "station": "fhill",
+        "order": 5,
+        "stops": {
+          "1": ["40-1-10642", "50-1-10642"],
+          "0": ["40-0-10642", "50-0-10642"]
+        }
+      }
+    ]
+  }
 }

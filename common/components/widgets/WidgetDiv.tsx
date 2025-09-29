@@ -8,7 +8,7 @@ interface WidgetDivProps {
 
 export const WidgetDiv: React.FC<WidgetDivProps> = ({ children, className }) => {
   return (
-    <div className={classNames(className, 'h-full rounded-lg bg-white p-3 shadow-dataBox sm:p-4')}>
+    <div className={classNames(className, 'shadow-dataBox h-full rounded-lg bg-white p-3 sm:p-4')}>
       {children}
     </div>
   );

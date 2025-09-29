@@ -33,19 +33,19 @@ export const WidgetTitle: React.FC<WidgetTitle> = ({
     <div className="flex w-full flex-col items-baseline justify-between gap-x-4 gap-y-1 pb-1 text-base md:flex-row md:text-xl">
       <div className="flex w-full flex-col md:w-auto">
         <div className="flex w-full flex-row items-baseline justify-between">
-          <h2 className="whitespace-nowrap leading-tight text-stone-800">{title}</h2>
-          {isMobile && <p className="text-xs italic text-stone-700">{date}</p>}
+          <h2 className="leading-tight whitespace-nowrap text-stone-800">{title}</h2>
+          {isMobile && <p className="text-xs text-stone-700 italic">{date}</p>}
         </div>
         {subtitle && (
           <h2
-            className={classNames('whitespace-nowrap text-sm italic leading-tight text-stone-600')}
+            className={classNames('text-sm leading-tight whitespace-nowrap text-stone-600 italic')}
           >
             {subtitle}
           </h2>
         )}
       </div>
       <div className="flex w-full flex-shrink flex-col overflow-hidden md:items-end">
-        {!isMobile && <p className="text-xs italic text-stone-700">{date}</p>}
+        {!isMobile && <p className="text-xs text-stone-700 italic">{date}</p>}
         {location && line && <LocationTitle location={location} line={line} both={both} />}
       </div>
     </div>

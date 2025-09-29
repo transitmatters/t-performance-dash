@@ -1,111 +1,81 @@
 {
-    "59": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Needham Junction",
-                "branches": null,
-                "station": "needj",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "59-1-91852"
-                    ],
-                    "0": [
-                        "59-0-91852"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Needham Heights",
-                "branches": null,
-                "station": "ndhts",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "59-1-81441"
-                    ],
-                    "0": [
-                        "59-0-82140"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Newton Upper Falls",
-                "branches": null,
-                "station": "nwtup",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "59-1-8146",
-                        "59-1-81463"
-                    ],
-                    "0": [
-                        "59-0-82034",
-                        "59-0-8213"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Needham Street @ Columbia Street",
-                "branches": null,
-                "station": "nedhm",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "59-1-82049"
-                    ],
-                    "0": [
-                        "59-0-82039"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Newton Highlands",
-                "branches": null,
-                "station": "nwthl",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "59-1-8155"
-                    ],
-                    "0": [
-                        "59-0-8203"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Newtonville",
-                "branches": null,
-                "station": "nwtvl",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "59-1-8166"
-                    ],
-                    "0": [
-                        "59-0-82853"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Watertown Square",
-                "branches": null,
-                "station": "wtrsq",
-                "order": 7,
-                "stops": {
-                    "1": [
-                        "59-1-8178"
-                    ],
-                    "0": [
-                        "59-0-8178"
-                    ]
-                }
-            }
-        ]
-    }
+  "59": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Needham Junction",
+        "branches": null,
+        "station": "needj",
+        "order": 1,
+        "stops": {
+          "1": ["59-1-91852"],
+          "0": ["59-0-91852"]
+        }
+      },
+      {
+        "stop_name": "Needham Heights",
+        "branches": null,
+        "station": "ndhts",
+        "order": 2,
+        "stops": {
+          "1": ["59-1-81441"],
+          "0": ["59-0-82140"]
+        }
+      },
+      {
+        "stop_name": "Newton Upper Falls",
+        "branches": null,
+        "station": "nwtup",
+        "order": 3,
+        "stops": {
+          "1": ["59-1-8146", "59-1-81463"],
+          "0": ["59-0-82034", "59-0-8213"]
+        }
+      },
+      {
+        "stop_name": "Needham Street @ Columbia Street",
+        "branches": null,
+        "station": "nedhm",
+        "order": 4,
+        "stops": {
+          "1": ["59-1-82049"],
+          "0": ["59-0-82039"]
+        }
+      },
+      {
+        "stop_name": "Newton Highlands",
+        "branches": null,
+        "station": "nwthl",
+        "order": 5,
+        "stops": {
+          "1": ["59-1-8155"],
+          "0": ["59-0-8203"]
+        }
+      },
+      {
+        "stop_name": "Newtonville",
+        "branches": null,
+        "station": "nwtvl",
+        "order": 6,
+        "stops": {
+          "1": ["59-1-8166"],
+          "0": ["59-0-82853"]
+        }
+      },
+      {
+        "stop_name": "Watertown Square",
+        "branches": null,
+        "station": "wtrsq",
+        "order": 7,
+        "stops": {
+          "1": ["59-1-8178"],
+          "0": ["59-0-8178"]
+        }
+      }
+    ]
+  }
 }

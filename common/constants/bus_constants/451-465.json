@@ -1,123 +1,81 @@
 {
-    "451/465": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "North Beverly",
-                "branches": [
-                    "451"
-                ],
-                "station": "nobev",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "451-1-17102"
-                    ],
-                    "0": [
-                        "451-0-17102"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Dodge Street @ Cabot Street",
-                "branches": [
-                    "451"
-                ],
-                "station": "dodge",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "451-1-7107"
-                    ],
-                    "0": [
-                        "451-0-7190"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Tozer Road (Beverly)",
-                "branches": [
-                    "451"
-                ],
-                "station": "tozer",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "451-1-8323"
-                    ],
-                    "0": [
-                        "451-0-18351"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Cummings Center",
-                "branches": [
-                    "451"
-                ],
-                "station": "cumpk",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "451-1-47170"
-                    ],
-                    "0": [
-                        "451-0-47170"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Beverly Square",
-                "branches": [
-                    "451"
-                ],
-                "station": "bevsq",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "451-1-7131"
-                    ],
-                    "0": [
-                        "451-0-17170"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Salem Center",
-                "branches": [
-                    "451"
-                ],
-                "station": "slmct",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "451-1-6181"
-                    ],
-                    "0": [
-                        "451-0-6103"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Salem Depot",
-                "branches": [
-                    "451"
-                ],
-                "station": "salem",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "451-1-37150"
-                    ],
-                    "0": [
-                        "451-0-37150"
-                    ]
-                }
-            }
-        ]
-    }
+  "451/465": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "North Beverly",
+        "branches": ["451"],
+        "station": "nobev",
+        "order": 1,
+        "stops": {
+          "1": ["451-1-17102"],
+          "0": ["451-0-17102"]
+        }
+      },
+      {
+        "stop_name": "Dodge Street @ Cabot Street",
+        "branches": ["451"],
+        "station": "dodge",
+        "order": 2,
+        "stops": {
+          "1": ["451-1-7107"],
+          "0": ["451-0-7190"]
+        }
+      },
+      {
+        "stop_name": "Tozer Road (Beverly)",
+        "branches": ["451"],
+        "station": "tozer",
+        "order": 2,
+        "stops": {
+          "1": ["451-1-8323"],
+          "0": ["451-0-18351"]
+        }
+      },
+      {
+        "stop_name": "Cummings Center",
+        "branches": ["451"],
+        "station": "cumpk",
+        "order": 3,
+        "stops": {
+          "1": ["451-1-47170"],
+          "0": ["451-0-47170"]
+        }
+      },
+      {
+        "stop_name": "Beverly Square",
+        "branches": ["451"],
+        "station": "bevsq",
+        "order": 4,
+        "stops": {
+          "1": ["451-1-7131"],
+          "0": ["451-0-17170"]
+        }
+      },
+      {
+        "stop_name": "Salem Center",
+        "branches": ["451"],
+        "station": "slmct",
+        "order": 5,
+        "stops": {
+          "1": ["451-1-6181"],
+          "0": ["451-0-6103"]
+        }
+      },
+      {
+        "stop_name": "Salem Depot",
+        "branches": ["451"],
+        "station": "salem",
+        "order": 6,
+        "stops": {
+          "1": ["451-1-37150"],
+          "0": ["451-0-37150"]
+        }
+      }
+    ]
+  }
 }

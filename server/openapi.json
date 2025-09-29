@@ -14,9 +14,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     },
     "/api/headways/{user_date}": {
@@ -33,9 +31,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       },
       "parameters": [
         {
@@ -62,9 +58,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       },
       "parameters": [
         {
@@ -91,9 +85,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       },
       "parameters": [
         {
@@ -120,9 +112,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       },
       "parameters": [
         {
@@ -149,9 +139,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     },
     "/api/aggregate/traveltimes2": {
@@ -168,9 +156,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     },
     "/api/aggregate/headways": {
@@ -187,9 +173,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     },
     "/api/aggregate/dwells": {
@@ -206,9 +190,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     },
     "/api/git_id": {
@@ -225,9 +207,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     },
     "/api/alerts": {
@@ -244,9 +224,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     },
     "/api/linedelays": {
@@ -272,9 +250,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     },
     "/api/tripmetrics": {
@@ -300,9 +276,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     },
     "/api/scheduledservice": {
@@ -328,9 +302,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     },
     "/api/ridership": {
@@ -356,9 +328,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     },
     "/api/facilities": {
@@ -375,9 +345,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     },
     "/api/speed_restrictions": {
@@ -403,9 +371,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     },
     "/api/service_hours": {
@@ -431,9 +397,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     },
     "/api/time_predictions": {
@@ -450,9 +414,7 @@
             }
           }
         },
-        "tags": [
-          "/api"
-        ]
+        "tags": ["/api"]
       }
     }
   },
@@ -497,9 +459,7 @@
             "title": "Failed Checks"
           }
         },
-        "required": [
-          "status"
-        ],
+        "required": ["status"],
         "title": "HealthcheckResponse",
         "type": "object"
       },
@@ -512,9 +472,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "headways"
-        ],
+        "required": ["headways"],
         "title": "HeadwayResponse",
         "type": "object"
       },
@@ -527,9 +485,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "dwells"
-        ],
+        "required": ["dwells"],
         "title": "DwellResponse",
         "type": "object"
       },
@@ -542,9 +498,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "travel_times"
-        ],
+        "required": ["travel_times"],
         "title": "TravelTimeResponse",
         "type": "object"
       },
@@ -560,9 +514,7 @@
             "type": "array"
           }
         },
-        "required": [
-          "alerts"
-        ],
+        "required": ["alerts"],
         "title": "AlertsRouteResponse",
         "type": "object"
       },
@@ -575,9 +527,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "TravelTimeAggregateResponse",
         "type": "object"
       },
@@ -590,9 +540,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "HeadwaysAggregateResponse",
         "type": "object"
       },
@@ -605,9 +553,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "DwellsAggregateResponse",
         "type": "object"
       },
@@ -618,9 +564,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "git_id"
-        ],
+        "required": ["git_id"],
         "title": "GitIdResponse",
         "type": "object"
       },
@@ -655,11 +599,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "start_date",
-          "end_date",
-          "line"
-        ],
+        "required": ["start_date", "end_date", "line"],
         "title": "AlertDelaysByLineParams",
         "type": "object"
       },
@@ -672,9 +612,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "LineDelaysResponse",
         "type": "object"
       },
@@ -713,12 +651,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "start_date",
-          "end_date",
-          "agg",
-          "line"
-        ],
+        "required": ["start_date", "end_date", "agg", "line"],
         "title": "TripMetricsByLineParams",
         "type": "object"
       },
@@ -731,9 +664,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "TripMetricsResponse",
         "type": "object"
       },
@@ -766,11 +697,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "start_date",
-          "end_date",
-          "agg"
-        ],
+        "required": ["start_date", "end_date", "agg"],
         "title": "ScheduledServiceParams",
         "type": "object"
       },
@@ -831,10 +758,7 @@
             "title": "Line Id"
           }
         },
-        "required": [
-          "start_date",
-          "end_date"
-        ],
+        "required": ["start_date", "end_date"],
         "title": "RidershipParams",
         "type": "object"
       },
@@ -849,9 +773,7 @@
             "type": "array"
           }
         },
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "RidershipResponse",
         "type": "object"
       },
@@ -871,11 +793,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "id",
-          "type",
-          "attributes"
-        ],
+        "required": ["id", "type", "attributes"],
         "title": "Facility",
         "type": "object"
       },
@@ -890,10 +808,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "line_id",
-          "on_date"
-        ],
+        "required": ["line_id", "on_date"],
         "title": "SpeedRestrictionsParams",
         "type": "object"
       },
@@ -929,9 +844,7 @@
             "title": "Zones"
           }
         },
-        "required": [
-          "available"
-        ],
+        "required": ["available"],
         "title": "SpeedRestrictionsResponse",
         "type": "object"
       },
@@ -964,11 +877,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "start_date",
-          "end_date",
-          "agg"
-        ],
+        "required": ["start_date", "end_date", "agg"],
         "title": "ServiceHoursParams",
         "type": "object"
       },
@@ -981,9 +890,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "title": "ServiceHoursResponse",
         "type": "object"
       },
@@ -996,9 +903,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "predictions"
-        ],
+        "required": ["predictions"],
         "title": "TimePredictionResponse",
         "type": "object"
       },
@@ -1016,10 +921,7 @@
             "type": "array"
           }
         },
-        "required": [
-          "date",
-          "service_levels"
-        ],
+        "required": ["date", "service_levels"],
         "title": "ByDayKindServiceLevels",
         "type": "object"
       },
@@ -1035,11 +937,7 @@
             "$ref": "#/components/schemas/ByDayKindServiceLevels"
           }
         },
-        "required": [
-          "weekday",
-          "saturday",
-          "sunday"
-        ],
+        "required": ["weekday", "saturday", "sunday"],
         "title": "ServiceLevelsByDayKind",
         "type": "object"
       },
@@ -1054,10 +952,7 @@
             "type": "integer"
           }
         },
-        "required": [
-          "date",
-          "count"
-        ],
+        "required": ["date", "count"],
         "title": "RidershipEntry",
         "type": "object"
       }

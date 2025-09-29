@@ -40,10 +40,10 @@ export const PokeySchleppieAwardBanner: React.FunctionComponent<PokeySchleppieAw
           <FontAwesomeIcon
             icon={faTrophy}
             size={'2x'}
-            className="text-white shadow-gray-500 text-shadow"
+            className="text-shadow text-white shadow-gray-500"
           />
           <div className="flex w-full items-center justify-between">
-            <p className="text-md w-full leading-6 text-white shadow-gray-500 text-shadow">
+            <p className="text-md text-shadow w-full leading-6 text-white shadow-gray-500">
               "Winner" of the {year}{' '}
               {pokey && schleppie
                 ? 'Pokey and Schleppie'

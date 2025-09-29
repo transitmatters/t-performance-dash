@@ -42,7 +42,7 @@ export const HomescreenWidgetTitle: React.FC<HomescreenWidgetTitle> = ({ title, 
           />
         </div>
       </Link>
-      <p className="text-xs italic text-stone-700">{date}</p>
+      <p className="text-xs text-stone-700 italic">{date}</p>
     </div>
   );
 };

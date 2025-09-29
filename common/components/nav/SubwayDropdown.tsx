@@ -14,7 +14,7 @@ export const SubwayDropdown: React.FC<SubwayDropdownProps> = ({ line, close }) =
   return (
     <div
       className={classNames(
-        'flex flex-col gap-[2px] rounded-b-md border border-opacity-50 bg-neutral-800 px-1 py-[4px]',
+        'border-opacity-50 flex flex-col gap-[2px] rounded-b-md border bg-neutral-800 px-1 py-[4px]',
         lineColorBorder[line ?? 'DEFAULT']
       )}
       role={'navigation'}

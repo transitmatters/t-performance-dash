@@ -1,239 +1,141 @@
 {
-    "62/76": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Wadsworth Road",
-                "branches": [
-                    "76"
-                ],
-                "station": "wadsw",
-                "order": 0,
-                "stops": {
-                    "1": [],
-                    "0": [
-                        "76-0-2464"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Lincoln Lab",
-                "branches": [
-                    "76"
-                ],
-                "station": "lnlab",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "76-1-85231"
-                    ],
-                    "0": [
-                        "76-0-85231"
-                    ]
-                }
-            },
-            {
-                "stop_name": "VA Hospital",
-                "branches": [
-                    "62"
-                ],
-                "station": "vahsp",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "62-1-8471"
-                    ],
-                    "0": [
-                        "62-0-8471"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Bedford Center",
-                "branches": [
-                    "62"
-                ],
-                "station": "bdfrd",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "62-1-7883"
-                    ],
-                    "0": [
-                        "62-0-8466"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Five Forks",
-                "branches": [
-                    "62",
-                    "76"
-                ],
-                "station": "fvfrk",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "62-1-8629",
-                        "76-1-8629"
-                    ],
-                    "0": [
-                        "62-0-8608",
-                        "76-0-8608"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Bedford Street @ Hartwell Avenue",
-                "branches": [
-                    "62"
-                ],
-                "station": "hrtwl",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "62-1-7898",
-                        "62-1-78981"
-                    ],
-                    "0": [
-                        "62-0-78988",
-                        "62-0-8451"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Lexington Center",
-                "branches": [
-                    "62",
-                    "76"
-                ],
-                "station": "lxcnt",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "62-1-18636",
-                        "76-1-18636"
-                    ],
-                    "0": [
-                        "62-0-7878",
-                        "76-0-7878"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Arlmont Village",
-                "branches": [
-                    "76"
-                ],
-                "station": "almnt",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "76-1-2495"
-                    ],
-                    "0": []
-                }
-            },
-            {
-                "stop_name": "Massachusetts Avenue @ Pleasant Street",
-                "branches": [
-                    "62",
-                    "76"
-                ],
-                "station": "maspl",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "62-1-8647",
-                        "76-1-8647"
-                    ],
-                    "0": [
-                        "62-0-8436",
-                        "76-0-8436"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Arlington Heights",
-                "branches": [
-                    "62"
-                ],
-                "station": "arlht",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "62-1-7922"
-                    ],
-                    "0": [
-                        "62-0-7922"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Pleasant Street",
-                "branches": [
-                    "62",
-                    "76"
-                ],
-                "station": "plsnt",
-                "order": 7,
-                "stops": {
-                    "1": [
-                        "62-1-2331",
-                        "76-1-2331"
-                    ],
-                    "0": [
-                        "62-0-2353",
-                        "76-0-2353"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Acorn Park Drive @ Route 2",
-                "branches": [
-                    "62",
-                    "76"
-                ],
-                "station": "acorn",
-                "order": 8,
-                "stops": {
-                    "1": [
-                        "62-1-24791",
-                        "76-1-24791"
-                    ],
-                    "0": [
-                        "62-0-12480",
-                        "76-0-12480"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Alewife Station",
-                "branches": [
-                    "62",
-                    "76"
-                ],
-                "station": "alewf",
-                "order": 9,
-                "stops": {
-                    "1": [
-                        "62-1-141",
-                        "62-1-14118",
-                        "76-1-141",
-                        "76-1-14118"
-                    ],
-                    "0": [
-                        "62-0-141",
-                        "62-0-14122",
-                        "76-0-141",
-                        "76-0-14123"
-                    ]
-                }
-            }
-        ]
-    }
+  "62/76": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Wadsworth Road",
+        "branches": ["76"],
+        "station": "wadsw",
+        "order": 0,
+        "stops": {
+          "1": [],
+          "0": ["76-0-2464"]
+        }
+      },
+      {
+        "stop_name": "Lincoln Lab",
+        "branches": ["76"],
+        "station": "lnlab",
+        "order": 1,
+        "stops": {
+          "1": ["76-1-85231"],
+          "0": ["76-0-85231"]
+        }
+      },
+      {
+        "stop_name": "VA Hospital",
+        "branches": ["62"],
+        "station": "vahsp",
+        "order": 1,
+        "stops": {
+          "1": ["62-1-8471"],
+          "0": ["62-0-8471"]
+        }
+      },
+      {
+        "stop_name": "Bedford Center",
+        "branches": ["62"],
+        "station": "bdfrd",
+        "order": 2,
+        "stops": {
+          "1": ["62-1-7883"],
+          "0": ["62-0-8466"]
+        }
+      },
+      {
+        "stop_name": "Five Forks",
+        "branches": ["62", "76"],
+        "station": "fvfrk",
+        "order": 2,
+        "stops": {
+          "1": ["62-1-8629", "76-1-8629"],
+          "0": ["62-0-8608", "76-0-8608"]
+        }
+      },
+      {
+        "stop_name": "Bedford Street @ Hartwell Avenue",
+        "branches": ["62"],
+        "station": "hrtwl",
+        "order": 3,
+        "stops": {
+          "1": ["62-1-7898", "62-1-78981"],
+          "0": ["62-0-78988", "62-0-8451"]
+        }
+      },
+      {
+        "stop_name": "Lexington Center",
+        "branches": ["62", "76"],
+        "station": "lxcnt",
+        "order": 4,
+        "stops": {
+          "1": ["62-1-18636", "76-1-18636"],
+          "0": ["62-0-7878", "76-0-7878"]
+        }
+      },
+      {
+        "stop_name": "Arlmont Village",
+        "branches": ["76"],
+        "station": "almnt",
+        "order": 5,
+        "stops": {
+          "1": ["76-1-2495"],
+          "0": []
+        }
+      },
+      {
+        "stop_name": "Massachusetts Avenue @ Pleasant Street",
+        "branches": ["62", "76"],
+        "station": "maspl",
+        "order": 5,
+        "stops": {
+          "1": ["62-1-8647", "76-1-8647"],
+          "0": ["62-0-8436", "76-0-8436"]
+        }
+      },
+      {
+        "stop_name": "Arlington Heights",
+        "branches": ["62"],
+        "station": "arlht",
+        "order": 6,
+        "stops": {
+          "1": ["62-1-7922"],
+          "0": ["62-0-7922"]
+        }
+      },
+      {
+        "stop_name": "Pleasant Street",
+        "branches": ["62", "76"],
+        "station": "plsnt",
+        "order": 7,
+        "stops": {
+          "1": ["62-1-2331", "76-1-2331"],
+          "0": ["62-0-2353", "76-0-2353"]
+        }
+      },
+      {
+        "stop_name": "Acorn Park Drive @ Route 2",
+        "branches": ["62", "76"],
+        "station": "acorn",
+        "order": 8,
+        "stops": {
+          "1": ["62-1-24791", "76-1-24791"],
+          "0": ["62-0-12480", "76-0-12480"]
+        }
+      },
+      {
+        "stop_name": "Alewife Station",
+        "branches": ["62", "76"],
+        "station": "alewf",
+        "order": 9,
+        "stops": {
+          "1": ["62-1-141", "62-1-14118", "76-1-141", "76-1-14118"],
+          "0": ["62-0-141", "62-0-14122", "76-0-141", "76-0-14123"]
+        }
+      }
+    ]
+  }
 }

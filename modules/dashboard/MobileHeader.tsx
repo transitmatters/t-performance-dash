@@ -21,7 +21,7 @@ export const MobileHeader: React.FC = () => {
   return (
     <div
       className={classNames(
-        'sticky top-12 z-10 mb-2 flex flex-row justify-between gap-x-6 rounded-b-sm text-white text-opacity-95 shadow-md',
+        'text-opacity-95 sticky top-12 z-10 mb-2 flex flex-row justify-between gap-x-6 rounded-b-sm text-white shadow-md',
         lineColorBackground[line ?? 'DEFAULT']
       )}
     >
@@ -29,7 +29,7 @@ export const MobileHeader: React.FC = () => {
         <div className="flex shrink-0 flex-row items-baseline pl-2">
           <h3 className="text-lg">{getLineName()}</h3>
           <span className="px-1 text-lg">•</span>
-          <h2 className="select-none text-lg">
+          <h2 className="text-lg select-none">
             <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
           </h2>
         </div>

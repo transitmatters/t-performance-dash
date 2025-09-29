@@ -1,139 +1,91 @@
 {
-    "78/84": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Wadsworth Road",
-                "branches": [
-                    "78"
-                ],
-                "station": "wadsw",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "78-1-2464"
-                    ],
-                    "0": [
-                        "78-0-2464"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Park Circle",
-                "branches": [
-                    "78"
-                ],
-                "station": "parkc",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "78-1-2361"
-                    ],
-                    "0": [
-                        "78-0-2361"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Pleasant Street",
-                "branches": [
-                    "78"
-                ],
-                "station": "plsnt",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "78-1-2331"
-                    ],
-                    "0": [
-                        "78-0-12352"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Blanchard & Concord",
-                "branches": [
-                    "78"
-                ],
-                "station": "blcon",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "78-1-2148"
-                    ],
-                    "0": [
-                        "78-0-2187"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Fresh Pond Parkway @ Concord Street",
-                "branches": [
-                    "78"
-                ],
-                "station": "fpond",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "78-1-2154"
-                    ],
-                    "0": [
-                        "78-0-2181"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Huron Avenue",
-                "branches": [
-                    "78"
-                ],
-                "station": "huron",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "78-1-2159"
-                    ],
-                    "0": [
-                        "78-0-2176"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Cambridge Common Loop",
-                "branches": [
-                    "78"
-                ],
-                "station": "hloop",
-                "order": 7,
-                "stops": {
-                    "1": [
-                        "78-1-12614"
-                    ],
-                    "0": [
-                        "78-0-2170"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Harvard Bus Tunnels",
-                "branches": [
-                    "78"
-                ],
-                "station": "bally",
-                "order": 8,
-                "stops": {
-                    "1": [
-                        "78-1-32549"
-                    ],
-                    "0": [
-                        "78-0-76126"
-                    ]
-                }
-            }
-        ]
-    }
+  "78/84": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Wadsworth Road",
+        "branches": ["78"],
+        "station": "wadsw",
+        "order": 1,
+        "stops": {
+          "1": ["78-1-2464"],
+          "0": ["78-0-2464"]
+        }
+      },
+      {
+        "stop_name": "Park Circle",
+        "branches": ["78"],
+        "station": "parkc",
+        "order": 2,
+        "stops": {
+          "1": ["78-1-2361"],
+          "0": ["78-0-2361"]
+        }
+      },
+      {
+        "stop_name": "Pleasant Street",
+        "branches": ["78"],
+        "station": "plsnt",
+        "order": 3,
+        "stops": {
+          "1": ["78-1-2331"],
+          "0": ["78-0-12352"]
+        }
+      },
+      {
+        "stop_name": "Blanchard & Concord",
+        "branches": ["78"],
+        "station": "blcon",
+        "order": 4,
+        "stops": {
+          "1": ["78-1-2148"],
+          "0": ["78-0-2187"]
+        }
+      },
+      {
+        "stop_name": "Fresh Pond Parkway @ Concord Street",
+        "branches": ["78"],
+        "station": "fpond",
+        "order": 5,
+        "stops": {
+          "1": ["78-1-2154"],
+          "0": ["78-0-2181"]
+        }
+      },
+      {
+        "stop_name": "Huron Avenue",
+        "branches": ["78"],
+        "station": "huron",
+        "order": 6,
+        "stops": {
+          "1": ["78-1-2159"],
+          "0": ["78-0-2176"]
+        }
+      },
+      {
+        "stop_name": "Cambridge Common Loop",
+        "branches": ["78"],
+        "station": "hloop",
+        "order": 7,
+        "stops": {
+          "1": ["78-1-12614"],
+          "0": ["78-0-2170"]
+        }
+      },
+      {
+        "stop_name": "Harvard Bus Tunnels",
+        "branches": ["78"],
+        "station": "bally",
+        "order": 8,
+        "stops": {
+          "1": ["78-1-32549"],
+          "0": ["78-0-76126"]
+        }
+      }
+    ]
+  }
 }

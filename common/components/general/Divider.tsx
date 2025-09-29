@@ -18,7 +18,7 @@ export const Divider: React.FC<DividerProps> = ({ title, line }) => {
         <span
           className={classNames(
             lineColorBackground[line ?? 'DEFAULT'],
-            'pr-3 text-base font-semibold leading-6 text-white md:px-3'
+            'pr-3 text-base leading-6 font-semibold text-white md:px-3'
           )}
         >
           {title}

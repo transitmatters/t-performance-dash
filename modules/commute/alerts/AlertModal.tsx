@@ -36,7 +36,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="bg-opacity-75 fixed inset-0 bg-gray-500 transition-opacity" />
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -50,7 +50,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
                 <div>
                   <div
                     className={classNames(
@@ -63,7 +63,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
                   <div className="mt-3 text-center sm:mt-5">
                     <Dialog.Title
                       as="h3"
-                      className="text-base font-semibold leading-6 text-gray-900"
+                      className="text-base leading-6 font-semibold text-gray-900"
                     >
                       {AlertNames[type]}
                     </Dialog.Title>
@@ -77,7 +77,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
                   <button
                     type="button"
                     className={classNames(
-                      'inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
+                      'hover:bg-opacity-90 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
                       lineColorBackground[line ?? 'DEFAULT']
                     )}
                     onClick={() => setShowModal(false)}

@@ -51,10 +51,10 @@ export const ButtonGroup: <T extends string, K extends string>(
                     index > 0 && '-ml-px border-l',
                     lineColorBorder[line ?? 'DEFAULT'],
                     selected
-                      ? `${lineColorBackground[line ?? 'DEFAULT']} text-white hover:bg-opacity-90`
+                      ? `${lineColorBackground[line ?? 'DEFAULT']} hover:bg-opacity-90 text-white`
                       : `hover:${
                           lineColorBackground[line ?? 'DEFAULT']
-                        } bg-white text-stone-900 hover:bg-opacity-70`
+                        } hover:bg-opacity-70 bg-white text-stone-900`
                   )}
                 >
                   <p className="leading-none">{option[1]}</p>

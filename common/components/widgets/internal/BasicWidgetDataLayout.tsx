@@ -39,7 +39,7 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
                 usePercentChange={layoutKind === 'delta-and-percent-change'}
               />
             )}
-            <p className={classNames('truncate text-xs text-design-subtitleGrey sm:text-sm')}>
+            <p className={classNames('text-design-subtitleGrey truncate text-xs sm:text-sm')}>
               {analysis}
             </p>
           </div>

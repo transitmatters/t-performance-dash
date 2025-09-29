@@ -1,155 +1,111 @@
 {
-    "238": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Holbrook/Randolph Commuter Rail Depot",
-                "branches": null,
-                "station": "hrand",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "238-1-4255"
-                    ],
-                    "0": [
-                        "238-0-4255"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Crawford Square (Randolph)",
-                "branches": null,
-                "station": "crwsq",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "238-1-4258",
-                        "238-1-4277"
-                    ],
-                    "0": [
-                        "238-0-4058",
-                        "238-0-4277"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Isabell Circle",
-                "branches": null,
-                "station": "isabl",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "238-1-4076"
-                    ],
-                    "0": [
-                        "238-0-4042"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Braintree Five Corners",
-                "branches": null,
-                "station": "five",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "238-1-4017"
-                    ],
-                    "0": [
-                        "238-0-4024"
-                    ]
-                }
-            },
-            {
-                "stop_name": "South Shore Plaza",
-                "branches": null,
-                "station": "ssplz",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "238-1-4020"
-                    ],
-                    "0": [
-                        "238-0-4020"
-                    ]
-                }
-            },
-            {
-                "stop_name": "West & Willard Streets",
-                "branches": null,
-                "station": "wwlrd",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "238-1-4093"
-                    ],
-                    "0": [
-                        "238-0-1643"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Quincy Adams Station (Busway)",
-                "branches": null,
-                "station": "qadam",
-                "order": 7,
-                "stops": {
-                    "1": [
-                        "238-1-3946",
-                        "238-1-41031"
-                    ],
-                    "0": [
-                        "238-0-3852",
-                        "238-0-41031"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Franklin Street @ Water Street",
-                "branches": null,
-                "station": "frkwa",
-                "order": 8,
-                "stops": {
-                    "1": [
-                        "238-1-3418"
-                    ],
-                    "0": [
-                        "238-0-3330"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Hancock Street @ Cottage Avenue",
-                "branches": null,
-                "station": "hncot",
-                "order": 9,
-                "stops": {
-                    "1": [
-                        "238-1-3423"
-                    ],
-                    "0": [
-                        "238-0-3326"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Quincy Center",
-                "branches": null,
-                "station": "qnctr",
-                "order": 10,
-                "stops": {
-                    "1": [
-                        "238-1-32003"
-                    ],
-                    "0": [
-                        "238-0-32003"
-                    ]
-                }
-            }
-        ]
-    }
+  "238": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Holbrook/Randolph Commuter Rail Depot",
+        "branches": null,
+        "station": "hrand",
+        "order": 1,
+        "stops": {
+          "1": ["238-1-4255"],
+          "0": ["238-0-4255"]
+        }
+      },
+      {
+        "stop_name": "Crawford Square (Randolph)",
+        "branches": null,
+        "station": "crwsq",
+        "order": 2,
+        "stops": {
+          "1": ["238-1-4258", "238-1-4277"],
+          "0": ["238-0-4058", "238-0-4277"]
+        }
+      },
+      {
+        "stop_name": "Isabell Circle",
+        "branches": null,
+        "station": "isabl",
+        "order": 3,
+        "stops": {
+          "1": ["238-1-4076"],
+          "0": ["238-0-4042"]
+        }
+      },
+      {
+        "stop_name": "Braintree Five Corners",
+        "branches": null,
+        "station": "five",
+        "order": 4,
+        "stops": {
+          "1": ["238-1-4017"],
+          "0": ["238-0-4024"]
+        }
+      },
+      {
+        "stop_name": "South Shore Plaza",
+        "branches": null,
+        "station": "ssplz",
+        "order": 5,
+        "stops": {
+          "1": ["238-1-4020"],
+          "0": ["238-0-4020"]
+        }
+      },
+      {
+        "stop_name": "West & Willard Streets",
+        "branches": null,
+        "station": "wwlrd",
+        "order": 6,
+        "stops": {
+          "1": ["238-1-4093"],
+          "0": ["238-0-1643"]
+        }
+      },
+      {
+        "stop_name": "Quincy Adams Station (Busway)",
+        "branches": null,
+        "station": "qadam",
+        "order": 7,
+        "stops": {
+          "1": ["238-1-3946", "238-1-41031"],
+          "0": ["238-0-3852", "238-0-41031"]
+        }
+      },
+      {
+        "stop_name": "Franklin Street @ Water Street",
+        "branches": null,
+        "station": "frkwa",
+        "order": 8,
+        "stops": {
+          "1": ["238-1-3418"],
+          "0": ["238-0-3330"]
+        }
+      },
+      {
+        "stop_name": "Hancock Street @ Cottage Avenue",
+        "branches": null,
+        "station": "hncot",
+        "order": 9,
+        "stops": {
+          "1": ["238-1-3423"],
+          "0": ["238-0-3326"]
+        }
+      },
+      {
+        "stop_name": "Quincy Center",
+        "branches": null,
+        "station": "qnctr",
+        "order": 10,
+        "stops": {
+          "1": ["238-1-32003"],
+          "0": ["238-0-32003"]
+        }
+      }
+    ]
+  }
 }

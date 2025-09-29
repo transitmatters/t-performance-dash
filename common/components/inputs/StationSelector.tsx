@@ -46,13 +46,13 @@ export const StationSelector: React.FC<StationSelector> = ({
       {({ open }) => (
         <div className="w-fit flex-grow overflow-hidden">
           {open && !mdBreakpoint && (
-            <div className="fixed left-0 top-0 m-0 h-screen w-screen bg-white bg-opacity-50 p-0" />
+            <div className="bg-opacity-50 fixed top-0 left-0 m-0 h-screen w-screen bg-white p-0" />
           )}
           <Listbox.Button className="flex h-10 w-full md:h-7">
             <Button additionalClasses="justify-between w-full">
               <p
                 className={classNames(
-                  `items-center gap-x-1 truncate text-sm font-semibold text-white text-opacity-90`,
+                  `text-opacity-90 items-center gap-x-1 truncate text-sm font-semibold text-white`,
                   line && buttonHighlightFocus[line]
                 )}
               >
@@ -70,7 +70,7 @@ export const StationSelector: React.FC<StationSelector> = ({
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Listbox.Options className="md:max-w-screen absolute bottom-8 left-0 right-0 top-auto m-auto max-h-[60vh] max-w-xs overflow-auto rounded-md border border-stone-200 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-auto md:right-auto md:top-auto md:mt-1 md:max-h-[66vh] md:-translate-x-1/2 md:border-none">
+            <Listbox.Options className="ring-opacity-5 absolute top-auto right-0 bottom-8 left-0 m-auto max-h-[60vh] max-w-xs overflow-auto rounded-md border border-stone-200 bg-white shadow-lg ring-1 ring-black focus:outline-none md:top-auto md:right-auto md:bottom-auto md:left-auto md:mt-1 md:max-h-[66vh] md:max-w-screen md:-translate-x-1/2 md:border-none">
               <div className="py-1">
                 {stationOptions?.map((station, stationIndex) => (
                   <Listbox.Option
@@ -84,7 +84,7 @@ export const StationSelector: React.FC<StationSelector> = ({
                     }
                     className={({ active, selected, disabled }) =>
                       classNames(
-                        'relative select-none items-center px-4 py-2 lg:py-1 lg:text-sm',
+                        'relative items-center px-4 py-2 select-none lg:py-1 lg:text-sm',
                         active ? lineColorLightBackground[line ?? 'DEFAULT'] : 'text-gray-900',
                         selected
                           ? `bg-opacity-20 font-semibold ${lineColorBackground[line ?? 'DEFAULT']}`

@@ -74,7 +74,7 @@ export function SlowZonesDetails() {
           <Link
             href="https://transitmatters.org/blog/slowzonesupdate"
             target="_blank"
-            className="whitespace-nowrap text-sm italic text-stone-600"
+            className="text-sm whitespace-nowrap text-stone-600 italic"
           >
             Time over Baseline across Line
           </Link>
@@ -114,7 +114,7 @@ export function SlowZonesDetails() {
           </div>
         </WidgetDiv>
         {/* Not Using WidgetDiv here - removed the padding so the chart goes to the edge of the widget on mobile. */}
-        <div className="h-full rounded-lg bg-white p-0 shadow-dataBox sm:p-4">
+        <div className="shadow-dataBox h-full rounded-lg bg-white p-0 sm:p-4">
           <div className="flex flex-col p-4 sm:p-0 lg:flex-row">
             <WidgetTitle title={`${DirectionObject[direction]} segments`} />
             <div className="lg:ml-2">

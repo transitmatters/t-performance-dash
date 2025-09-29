@@ -29,7 +29,7 @@ export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
         className={classNames(
           lineColorBorder[line],
           lineColorBackground[line],
-          'flex h-24 w-24 cursor-pointer items-center justify-center rounded-full border-2 bg-opacity-80 group-hover:bg-opacity-100 lg:h-32 lg:w-32'
+          'bg-opacity-80 group-hover:bg-opacity-100 flex h-24 w-24 cursor-pointer items-center justify-center rounded-full border-2 lg:h-32 lg:w-32'
         )}
       >
         {children}

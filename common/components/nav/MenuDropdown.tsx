@@ -58,14 +58,14 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ line, route, childre
             'flex w-full flex-row items-center gap-2 rounded-t-md py-1 pl-1 text-sm',
             `${lineColorBackground[line ?? 'DEFAULT']}`,
             selected
-              ? `bg-opacity-100 text-white text-opacity-95`
-              : `bg-opacity-0 hover:rounded-md hover:bg-opacity-30`
+              ? `bg-opacity-100 text-opacity-95 text-white`
+              : `bg-opacity-0 hover:bg-opacity-30 hover:rounded-md`
           )}
         >
           <div
             className={classNames(
               lineColorBackground[line ?? 'DEFAULT'],
-              'flex h-8 w-8 items-center justify-center rounded-full bg-opacity-75'
+              'bg-opacity-75 flex h-8 w-8 items-center justify-center rounded-full'
             )}
           >
             <FontAwesomeIcon icon={icon} size="lg" />

@@ -1,231 +1,141 @@
 {
-    "426/428": {
-        "type": "bus",
-        "direction": {
-            "0": "outbound",
-            "1": "inbound"
-        },
-        "stations": [
-            {
-                "stop_name": "Central Square, Lynn (Busway)",
-                "branches": [
-                    "426"
-                ],
-                "station": "censq",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "426-1-16653"
-                    ],
-                    "0": [
-                        "426-0-14748"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Oaklandvale",
-                "branches": [
-                    "428"
-                ],
-                "station": "oakvl",
-                "order": 1,
-                "stops": {
-                    "1": [
-                        "428-1-7582"
-                    ],
-                    "0": [
-                        "428-0-7486"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Market Square (Lynn)",
-                "branches": [
-                    "426"
-                ],
-                "station": "mktsq",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "426-1-4451"
-                    ],
-                    "0": [
-                        "426-0-4525"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Saugus Center",
-                "branches": [
-                    "428"
-                ],
-                "station": "saug",
-                "order": 2,
-                "stops": {
-                    "1": [
-                        "428-1-7506"
-                    ],
-                    "0": [
-                        "428-0-7474"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Western Avenue & Burns Street (Swing Off)",
-                "branches": [
-                    "426"
-                ],
-                "station": "wasum",
-                "order": 3,
-                "stops": {
-                    "1": [
-                        "426-1-7376"
-                    ],
-                    "0": [
-                        "426-0-7452"
-                    ]
-                }
-            },
-            {
-                "stop_name": "East Saugus",
-                "branches": [
-                    "426",
-                    "428"
-                ],
-                "station": "esaug",
-                "order": 4,
-                "stops": {
-                    "1": [
-                        "426-1-7394",
-                        "428-1-7394"
-                    ],
-                    "0": [
-                        "426-0-7435",
-                        "428-0-7435"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Cliftondale Square (Saugus)",
-                "branches": [
-                    "426",
-                    "428"
-                ],
-                "station": "clift",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "426-1-7401",
-                        "428-1-7401"
-                    ],
-                    "0": [
-                        "426-0-7429",
-                        "428-0-7429"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Kennedy Dr (Granada)",
-                "branches": [
-                    "428"
-                ],
-                "station": "grana",
-                "order": 5,
-                "stops": {
-                    "1": [
-                        "428-1-8336"
-                    ],
-                    "0": [
-                        "428-0-8336"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Linden Square (Malden)",
-                "branches": [
-                    "426",
-                    "428"
-                ],
-                "station": "lindn",
-                "order": 6,
-                "stops": {
-                    "1": [
-                        "426-1-74121",
-                        "428-1-74121"
-                    ],
-                    "0": [
-                        "426-0-7417",
-                        "428-0-7417"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Brown Circle",
-                "branches": [
-                    "426"
-                ],
-                "station": "brown",
-                "order": 7,
-                "stops": {
-                    "1": [
-                        "426-1-4498"
-                    ],
-                    "0": [
-                        "426-0-4515"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Haymarket",
-                "branches": [
-                    "426",
-                    "428"
-                ],
-                "station": "hayms",
-                "order": 7,
-                "stops": {
-                    "1": [
-                        "426-1-117",
-                        "428-1-117"
-                    ],
-                    "0": [
-                        "426-0-117",
-                        "428-0-117"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Bell Circle",
-                "branches": [
-                    "426"
-                ],
-                "station": "bell",
-                "order": 8,
-                "stops": {
-                    "1": [
-                        "426-1-14717"
-                    ],
-                    "0": [
-                        "426-0-4733"
-                    ]
-                }
-            },
-            {
-                "stop_name": "Wonderland Station West",
-                "branches": [
-                    "426"
-                ],
-                "station": "wondw",
-                "order": 9,
-                "stops": {
-                    "1": [
-                        "426-1-15799"
-                    ],
-                    "0": [
-                        "426-0-15799"
-                    ]
-                }
-            }
-        ]
-    }
+  "426/428": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Central Square, Lynn (Busway)",
+        "branches": ["426"],
+        "station": "censq",
+        "order": 1,
+        "stops": {
+          "1": ["426-1-16653"],
+          "0": ["426-0-14748"]
+        }
+      },
+      {
+        "stop_name": "Oaklandvale",
+        "branches": ["428"],
+        "station": "oakvl",
+        "order": 1,
+        "stops": {
+          "1": ["428-1-7582"],
+          "0": ["428-0-7486"]
+        }
+      },
+      {
+        "stop_name": "Market Square (Lynn)",
+        "branches": ["426"],
+        "station": "mktsq",
+        "order": 2,
+        "stops": {
+          "1": ["426-1-4451"],
+          "0": ["426-0-4525"]
+        }
+      },
+      {
+        "stop_name": "Saugus Center",
+        "branches": ["428"],
+        "station": "saug",
+        "order": 2,
+        "stops": {
+          "1": ["428-1-7506"],
+          "0": ["428-0-7474"]
+        }
+      },
+      {
+        "stop_name": "Western Avenue & Burns Street (Swing Off)",
+        "branches": ["426"],
+        "station": "wasum",
+        "order": 3,
+        "stops": {
+          "1": ["426-1-7376"],
+          "0": ["426-0-7452"]
+        }
+      },
+      {
+        "stop_name": "East Saugus",
+        "branches": ["426", "428"],
+        "station": "esaug",
+        "order": 4,
+        "stops": {
+          "1": ["426-1-7394", "428-1-7394"],
+          "0": ["426-0-7435", "428-0-7435"]
+        }
+      },
+      {
+        "stop_name": "Cliftondale Square (Saugus)",
+        "branches": ["426", "428"],
+        "station": "clift",
+        "order": 5,
+        "stops": {
+          "1": ["426-1-7401", "428-1-7401"],
+          "0": ["426-0-7429", "428-0-7429"]
+        }
+      },
+      {
+        "stop_name": "Kennedy Dr (Granada)",
+        "branches": ["428"],
+        "station": "grana",
+        "order": 5,
+        "stops": {
+          "1": ["428-1-8336"],
+          "0": ["428-0-8336"]
+        }
+      },
+      {
+        "stop_name": "Linden Square (Malden)",
+        "branches": ["426", "428"],
+        "station": "lindn",
+        "order": 6,
+        "stops": {
+          "1": ["426-1-74121", "428-1-74121"],
+          "0": ["426-0-7417", "428-0-7417"]
+        }
+      },
+      {
+        "stop_name": "Brown Circle",
+        "branches": ["426"],
+        "station": "brown",
+        "order": 7,
+        "stops": {
+          "1": ["426-1-4498"],
+          "0": ["426-0-4515"]
+        }
+      },
+      {
+        "stop_name": "Haymarket",
+        "branches": ["426", "428"],
+        "station": "hayms",
+        "order": 7,
+        "stops": {
+          "1": ["426-1-117", "428-1-117"],
+          "0": ["426-0-117", "428-0-117"]
+        }
+      },
+      {
+        "stop_name": "Bell Circle",
+        "branches": ["426"],
+        "station": "bell",
+        "order": 8,
+        "stops": {
+          "1": ["426-1-14717"],
+          "0": ["426-0-4733"]
+        }
+      },
+      {
+        "stop_name": "Wonderland Station West",
+        "branches": ["426"],
+        "station": "wondw",
+        "order": 9,
+        "stops": {
+          "1": ["426-1-15799"],
+          "0": ["426-0-15799"]
+        }
+      }
+    ]
+  }
 }
