@@ -5,6 +5,7 @@ import { faHouse, faUsers, faWarning } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
 import { SubwaySection } from '../../common/components/nav/SubwaySection';
 import { BusSection } from '../../common/components/nav/BusSection';
+import { TheRideSection } from '../../common/components/nav/TheRideSection';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CommuterRailSection } from '../../common/components/nav/CommuterRailSection';
 
@@ -60,6 +61,7 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({ close }) => {
         <SubwaySection close={close} />
         <BusSection close={close} />
         <CommuterRailSection close={close} />
+        <TheRideSection close={close} />
       </ul>
     </nav>
   );

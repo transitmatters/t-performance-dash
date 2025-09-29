@@ -15,7 +15,12 @@ export type LineKind =
 export type ServiceDay = 'weekday' | 'saturday' | 'sunday';
 export type ServiceRegime = 'peak' | 'current';
 
-export type RidershipKey = Exclude<Line, 'line-bus'> | BusRouteId | CommuterRailRoute | 'DEFAULT';
+export type RidershipKey =
+  | Exclude<Line, 'line-bus'>
+  | BusRouteId
+  | CommuterRailRoute
+  | 'line-RIDE'
+  | 'DEFAULT';
 
 export type TripsPerHour = readonly number[] & { length: 24 };
 

@@ -11,6 +11,7 @@ export const PEAK_SCHEDULED_SERVICE: { [key in Line | 'DEFAULT']: number } = {
   'line-commuter-rail': 0,
   'line-bus': 0,
   'line-ferry': 0,
+  'line-RIDE': 0,
   DEFAULT: 0,
 };
 
@@ -23,6 +24,7 @@ export const PEAK_SPEED: { [key in Line | 'DEFAULT']: number } = {
   'line-commuter-rail': 0,
   'line-bus': 0,
   'line-ferry': 0,
+  'line-RIDE': 0,
   DEFAULT: 0,
 };
 
@@ -165,6 +167,7 @@ export const PEAK_RIDERSHIP: {
   'CR-Providence': 25728,
   'line-commuter-rail': 126755,
   'line-ferry': 0,
+  'line-RIDE': 34102,
   DEFAULT: 520580,
 };
 

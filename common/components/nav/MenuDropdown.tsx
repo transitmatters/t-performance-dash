@@ -29,6 +29,8 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ line, route, childre
     switch (line) {
       case 'line-bus':
         return faBus;
+      case 'line-RIDE':
+        return faBus;
       case 'line-green':
       case 'line-mattapan':
         return faTrainTram;
