@@ -480,21 +480,14 @@ export enum OverviewRangeTypes {
 }
 
 export const RANGE_DATE_KEYS = Object.fromEntries(
-  [
-    ...Object.values(RANGE_RAPID_PRESETS),
-    ...Object.values(RANGE_BUS_PRESETS),
-    ...Object.values(RANGE_FERRY_PRESETS),
-  ].map((rangePreset) => [
-    `${rangePreset.input.startDate}${rangePreset.input.endDate}`,
-    rangePreset.key,
-  ])
+  [...Object.values(RANGE_RAPID_PRESETS), ...Object.values(RANGE_FERRY_PRESETS)].map(
+    (rangePreset) => [`${rangePreset.input.startDate}${rangePreset.input.endDate}`, rangePreset.key]
+  )
 );
 export const SINGLE_DATE_KEYS = Object.fromEntries(
-  [
-    ...Object.values(SINGLE_RAPID_PRESETS),
-    ...Object.values(SINGLE_BUS_PRESETS),
-    ...Object.values(SINGLE_FERRY_PRESETS),
-  ].map((singlePreset) => [singlePreset.input.date, singlePreset.key])
+  [...Object.values(SINGLE_RAPID_PRESETS), ...Object.values(SINGLE_FERRY_PRESETS)].map(
+    (singlePreset) => [singlePreset.input.date, singlePreset.key]
+  )
 );
 
 export const todayOrDate = (date: dayjs.Dayjs) => {
