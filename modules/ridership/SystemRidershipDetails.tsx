@@ -10,7 +10,7 @@ import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 
-export function systemServiceAndRidershipDetails() {
+export function SystemServiceAndRidershipDetails() {
   const {
     query: { startDate, endDate },
   } = useDelimitatedRoute();
@@ -31,7 +31,6 @@ export function systemServiceAndRidershipDetails() {
       <ChartPageDiv>
         <WidgetDiv>
           <WidgetTitle title="Weekday ridership" />
-
           {ridership.data && ridershipDataReady ? (
             <RidershipGraphWrapper
               data={ridership.data}
