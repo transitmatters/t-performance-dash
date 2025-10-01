@@ -47,6 +47,8 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ line, route, childre
         return `/bus/trips/single?busRoute=1&date=${BUS_DEFAULTS.singleTripConfig.date}`;
       case 'line-commuter-rail':
         return `/commuter-rail/trips/single?crRoute=CR-Fairmount&date=${COMMUTER_RAIL_DEFAULTS.singleTripConfig.date}`;
+      case 'line-RIDE':
+        return '/the-ride/ridership';
       default:
         return getLineSelectionItemHref(line, route);
     }
