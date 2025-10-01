@@ -134,9 +134,8 @@ export const LineCard = (props: Props) => {
 
   return (
     <CardFrame title={title} topRight={renderStatusBadge()} details={renderDetails()}>
-      {renderSectionLabel('Daily service levels', tabs)}
+      {renderSectionLabel('Current service levels', tabs)}
       <TphChart
-        lineTitle={`${title}, ${serviceDay}`}
         baselineTph={serviceRegimes.baseline[serviceDay].tripsPerHour!}
         currentTph={serviceRegimes.current[serviceDay].tripsPerHour!}
         color={color}

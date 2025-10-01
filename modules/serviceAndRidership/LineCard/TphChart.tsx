@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Chart, Filler, Legend } from 'chart.js';
 import Color from 'chartjs-color';
-import { Line as LineChart } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 
 Chart.register(Filler, Legend);
 
@@ -20,11 +20,12 @@ type Props = {
 };
 
 export const TphChart = (props: Props) => {
-  const { color, baselineTph, currentTph } = props;
+  const { color, baselineTph, currentTph, highestTph } = props;
   const currentColor = Color(color).alpha(0.4).rgbaString();
 
   const data = useMemo(
     () => ({
+      labels: hourLabels,
       datasets: [
         {
           label: 'Pre-COVID trips per hour',
@@ -34,6 +35,7 @@ export const TphChart = (props: Props) => {
           borderWidth: 2,
           fill: true,
           backgroundColor: 'rgba(0,0,0,0)',
+          pointRadius: 0,
         },
         {
           label: 'Current trips per hour',
@@ -43,6 +45,7 @@ export const TphChart = (props: Props) => {
           borderColor: 'rgba(0,0,0,0)',
           fill: true,
           backgroundColor: currentColor,
+          pointRadius: 0,
         },
       ],
     }),
@@ -74,12 +77,23 @@ export const TphChart = (props: Props) => {
           },
         },
       },
+      scales: {
+        x: {
+          ticks: {
+            maxRotation: 0,
+          },
+        },
+        y: {
+          min: 0,
+          max: highestTph + 1,
+        },
+      },
     };
-  }, [datasets]);
+  }, [datasets, highestTph]);
 
   return (
     <div className={styles.tphChartContainer}>
-      <LineChart redraw height={'120px'} data={data} options={chartJsOptions} />
+      <Line height={100} redraw data={data} options={chartJsOptions} />
     </div>
   );
 };

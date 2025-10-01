@@ -1,15 +1,17 @@
 import React, { useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
-import Lottie from 'react-lottie-player';
 import Image from 'next/image';
 
 import classNames from 'classnames';
+import dynamic from 'next/dynamic';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Layout } from '../../common/layouts/layoutTypes';
 import HeroLottie from '../../public/Animations/hero.lottie.json';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { LandingCharts } from './LandingCharts';
 import { LineSelectionLanding } from './LineSelectionLanding';
+
+const Lottie = dynamic(() => import('react-lottie-player'), { ssr: false });
 
 export function Landing() {
   const md = useBreakpoint('md');
@@ -58,9 +60,7 @@ export function Landing() {
         className="fixed left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
         style={{ height: md ? '100vh' : '140vw', width: md ? '100vh' : '140vw' }}
       >
-        {typeof document !== 'undefined' && (
-          <Lottie loop animationData={HeroLottie} play style={{}} />
-        )}
+        <Lottie loop animationData={HeroLottie} play style={{}} />
       </div>
     </PageWrapper>
   );

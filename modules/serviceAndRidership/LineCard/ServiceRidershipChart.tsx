@@ -16,8 +16,6 @@ type Props = {
   lineId: string;
 };
 
-const dateFormatter = new Intl.DateTimeFormat('en-US');
-
 const getRidershipNoun = (lineId: string) => {
   if (['line-Red', 'line-Orange', 'line-Blue', 'line-Green'].includes(lineId)) {
     return 'faregate validations';
@@ -49,7 +47,9 @@ const getNormalizedData = (
 };
 
 export const ServiceRidershipChart = (props: Props) => {
-  const { color, serviceHistory, ridershipHistory, startDate, endDate, lineTitle, lineId } = props;
+  const { color, serviceHistory, ridershipHistory, startDate, endDate, lineId } = props;
+
+  console.log({ color });
 
   const data = useMemo((): Dataset[] => {
     const service: Dataset = {
@@ -81,29 +81,8 @@ export const ServiceRidershipChart = (props: Props) => {
     return [service];
   }, [serviceHistory, startDate, endDate, ridershipHistory, lineId]);
 
-  //   const columns = useMemo(() => {
-  //     const ridershipNoun = getRidershipNoun(lineId);
-  //     return [
-  //       { title: 'Date', values: dateStrings },
-  //       ridershipHistory && {
-  //         title: `Ridership (${ridershipNoun}/day)`,
-  //         values: ridershipHistory,
-  //       },
-  //       ridershipPercentage && {
-  //         title: 'Ridership (percentage)',
-  //         values: ridershipPercentage.map(asPercentString),
-  //       },
-  //       serviceHistory && { title: 'Service levels (trips/day)', values: serviceHistory },
-  //       servicePercentage && {
-  //         title: 'Service levels (percentage)',
-  //         values: servicePercentage.map(asPercentString),
-  //       },
-  //     ].filter((x) => x);
-  //   }, [dateStrings, ridershipHistory, ridershipPercentage, serviceHistory, servicePercentage]);
-
   return (
     <div className={styles.serviceAndRidershipChartContainer}>
-      {/* <DataTable columns={columns} caption={`Service levels and ridership (${lineTitle})`} /> */}
       <TimeSeriesChart
         data={data}
         valueAxis={{ renderTickLabel: asPercentString, min: 0 }}

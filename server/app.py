@@ -283,7 +283,11 @@ def get_time_predictions():
     return json.dumps(response)
 
 
-@app.route("/api/service_ridership_dashboard", cors=cors_config)
+@app.route(
+    "/api/service_ridership_dashboard",
+    cors=cors_config,
+    docs=Docs(response=models.ServiceRidershipDashboardResponse),
+)
 def get_service_ridership_dashboard():
     response = service_ridership_dashboard.get_service_ridership_dash_json()
     return response

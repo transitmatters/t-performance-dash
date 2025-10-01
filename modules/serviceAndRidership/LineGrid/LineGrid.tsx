@@ -9,6 +9,7 @@ import { sortFunctions } from './sorting';
 
 type Props = {
   lineData: Record<string, LineData>;
+  // eslint-disable-next-line react/no-unused-prop-types -- we'll use this eventually
   summaryData: SummaryData;
   filter?: (r: LineData) => boolean;
 };
@@ -59,6 +60,7 @@ const matchesLineKindOption = (lineData: LineData, option: LineKindOption) => {
   return lineKind !== 'regional-rail' && lineKind !== 'bus' && lineKind !== 'boat'; // Sorry
 };
 
+// TODO(idr): Migrate sorting from CRD
 const isRidershipSort = (sort: '' | Sort) => {
   return (
     sort === 'lowestRidershipFraction' ||
@@ -70,17 +72,20 @@ const isRidershipSort = (sort: '' | Sort) => {
 
 const getTailwindClassForDisplayOption = (display: DisplayOption) => {
   return display === 'grid'
-    ? 'w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8'
-    : 'w-full flex flex-col gap-8';
+    ? 'w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4'
+    : 'w-full flex flex-col gap-4';
 };
 
 export const LineGrid = (props: Props) => {
-  const { lineData: lineData, summaryData, filter = defaultFilter } = props;
+  const { lineData: lineData, filter = defaultFilter } = props;
   const [limit, setLimit] = useState(pagination);
-  const [query, setQuery] = useState('');
-  const [sort, setSort] = useState<Sort | ''>('');
-  const [display, setDisplay] = useState<DisplayOption>('grid');
-  const [kindOption, setKindOption] = useState<LineKindOption>('all');
+
+  // NOTE(idr): These are migrated from the Covid Recovery Dash and are unused at the moment
+  // but we could eventually add controls for them.
+  const [query] = useState('');
+  const [sort] = useState<Sort | ''>('');
+  const [display] = useState<DisplayOption>('grid');
+  const [kindOption] = useState<LineKindOption>('all');
 
   const availableItems = useMemo(() => {
     return sortOnKey(
@@ -93,6 +98,7 @@ export const LineGrid = (props: Props) => {
       sortFunctions[sort || 'kind']
     );
   }, [lineData, filter, query, kindOption, sort]);
+
   const shownItems = useMemo(() => availableItems.slice(0, limit), [availableItems, limit]);
 
   useInfiniteScroll({

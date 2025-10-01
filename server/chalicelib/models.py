@@ -177,6 +177,12 @@ class SpeedRestrictionsResponse(BaseModel):
     zones: Dict | None = None
 
 
+# Service/Ridership Dashboard
+class ServiceRidershipDashboardResponse(BaseModel):
+    summaryData: dict[str, Any]
+    lineData: dict[str, Any]
+
+
 # Misc Endpoints
 class GitIdResponse(BaseModel):
     git_id: str
