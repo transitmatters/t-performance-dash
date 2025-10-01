@@ -10,7 +10,7 @@ import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 
-export function SystemServiceAndRidershipDetails() {
+export function SystemRidershipDetails() {
   const {
     query: { startDate, endDate },
   } = useDelimitatedRoute();
