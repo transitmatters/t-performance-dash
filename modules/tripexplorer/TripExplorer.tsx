@@ -14,15 +14,16 @@ import { GobbleDataNotice } from '../../common/components/notices/GobbleDataNoti
 import { BetaDataNotice } from '../../common/components/notices/BetaDataNotice';
 import { PokeySchleppieAwardBanner } from '../../common/components/notices/PokeySchleppieAwardBanner';
 import { CommuterRailDataNotice } from '../../common/components/notices/CommuterRailDataNotice';
+import { BnrdBanner } from '../../common/components/notices/BnrdBanner';
 import { useAlertStore } from './AlertStore';
 import { TripGraphs } from './TripGraphs';
 
 export const TripExplorer = () => {
   const {
     lineShort,
-    query: { to, from, date, busRoute },
+    query: { to, from, date, busRoute, crRoute },
   } = useDelimitatedRoute();
-  const { data: alerts } = useHistoricalAlertsData(date, lineShort, busRoute);
+  const { data: alerts } = useHistoricalAlertsData(date, lineShort, busRoute, crRoute);
 
   const fromStation = from ? getParentStationForStopId(from, lineShort) : undefined;
   const toStation = to ? getParentStationForStopId(to, lineShort) : undefined;
@@ -44,6 +45,7 @@ export const TripExplorer = () => {
         <BetaDataNotice />
         {alertsForModal?.length ? <AlertNotice /> : null}
         <PokeySchleppieAwardBanner busRoute={busRoute} />
+        <BnrdBanner busRoute={busRoute} />
         <TripGraphs fromStation={fromStation} toStation={toStation} />
         <div>
           <GobbleDataNotice />

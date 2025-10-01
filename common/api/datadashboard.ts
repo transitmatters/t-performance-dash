@@ -61,7 +61,7 @@ export const fetchAggregateData = async (
     throw new Error('network request failed');
   }
   const responseJson = await response.json();
-  return name === QueryNameKeys.traveltimes ? responseJson : { by_date: responseJson };
+  return name === QueryNameKeys.traveltimes ? responseJson : { by_date: responseJson, by_time: [] };
 };
 
 // Object to contain name of each aggregate query and the parameters/keys it takes.

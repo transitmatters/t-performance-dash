@@ -1,6 +1,6 @@
 {
   "name": "t-performance-dash",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "private": true,
   "homepage": ".",
   "scripts": {
@@ -19,6 +19,7 @@
     "lint": "npm run lint-frontend && npm run lint-backend",
     "lint-backend": "cd server && poetry run flake8 && poetry run black . --check",
     "lint-frontend": "tsc --noEmit && eslint . && next lint",
+    "lint-frontend-fix": "tsc --noEmit && eslint . --fix && next lint --fix",
     "serve-static": "npm run build && serve out",
     "start": "concurrently npm:start-python npm:start-react",
     "start-python": "cd server && poetry run chalice local --port=5000",
@@ -46,12 +47,12 @@
     "@headlessui/react": "^1.7.19",
     "@heroicons/react": "^2.2.0",
     "@svgr/webpack": "^8.1.0",
-    "@tanstack/react-query": "^5.64.2",
-    "@tanstack/react-query-devtools": "^5.64.2",
+    "@tanstack/react-query": "^5.76.2",
+    "@tanstack/react-query-devtools": "^5.76.2",
     "@tippyjs/react": "^4.2.6",
-    "@transitmatters/stripmap": "^0.1.12",
+    "@transitmatters/stripmap": "^0.1.14",
     "bezier-js": "^6.1.4",
-    "chart.js": "4.4.7",
+    "chart.js": "4.4.9",
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-color": "^2.4.1",
     "chartjs-plugin-annotation": "^3.1.0",
@@ -67,9 +68,9 @@
     "flowbite-react": "^0.10.2",
     "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.9.2",
-    "next": "15.1.6",
+    "next": "15.3.3",
     "next-goatcounter": "^1.0.6",
-    "oss-attribution-generator": "^1.7.1",
+    "npm-attribution-generator": "^2.0.0",
     "patternomaly": "^1.3.2",
     "react": "18.3.1",
     "react-chartjs-2": "^5.2.0",
@@ -111,22 +112,22 @@
     "autoprefixer": "^10.4.20",
     "babel-plugin-inline-react-svg": "^2.0.2",
     "eslint": "^8.57.0",
-    "eslint-config-next": "15.1.6",
-    "eslint-config-prettier": "^10.0.1",
+    "eslint-config-next": "15.3.3",
+    "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-prettier": "^5.2.3",
-    "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-prettier": "^5.4.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-storybook": "^0.11.1",
     "eslint-plugin-unicorn": "^56.0.1",
     "eslint-plugin-unused-imports": "^4.1.4",
-    "postcss": "^8.5.1",
-    "prettier": "^3.4.2",
+    "postcss": "^8.5.3",
+    "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "serve": "^14.2.4",
+    "serve": "^14.2.5",
     "storybook": "^8.5.1",
     "tailwindcss": "^3.4.15",
-    "typescript": "~5.7.3"
+    "typescript": "~5.8.3"
   },
   "engines": {
     "node": ">=20.12.0",
@@ -135,5 +136,8 @@
   "overrides": {
     "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.0c3f3b7.0"
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:5000",
+  "volta": {
+    "node": "20.19.0"
+  }
 }

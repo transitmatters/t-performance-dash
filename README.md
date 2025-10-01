@@ -6,18 +6,20 @@
 ![deploy](https://github.com/transitmatters/t-performance-dash/workflows/deploy/badge.svg?branch=main)
 ![healthcheck](https://github.com/transitmatters/t-performance-dash/workflows/healthcheck/badge.svg)
 
-This is the repository for the TransitMatters Data Dashboard. Client code is written in Typescript with React and Next.js, and the backend is written in Python with Chalice.
+This is the repository for the [TransitMatters Data Dashboard](https://dashboard.transitmatters.org/). Client code is written in Typescript with React and Next.js, and the backend is written in Python with Chalice.
 
-## Requirements to develop locally
+---
+
+## 🧰 Requirements to Develop Locally
 
 - node 20.x and npm 9.x+ required
   - With `nvm` installed, use `nvm install && nvm use`
   - verify with `node -v`
-- Python 3.12 with recent poetry (1.7.0 or later)
+- Python 3.12 with recent poetry (2.0.0 or later)
   - Verify with `python --version && poetry --version`
   - `poetry self update` to update poetry
 
-## Development Instructions
+## 🧪 Local Development
 
 1. Add `MBTA_V3_API_KEY` to your shell environment:
    - `export MBTA_V3_API_KEY='KEY'` in ~/.bashrc or ~/.zshrc
@@ -25,16 +27,18 @@ This is the repository for the TransitMatters Data Dashboard. Client code is wri
 3. Run `npm start` to start both the JavaScript development server and the Python backend at the same time.
 4. Navigate to [http://localhost:3000](http://localhost:3000) (or the url provided after running `npm start`)
 
-### AWS Setup
+You may need an AWS account set up to access certain charts and data, in that case follow the next section to set up AWS.
 
-If you have access to AWS credentials, add them to your local setup for a better development experience
+## ☁️ AWS Setup
+
+If you have access to AWS credentials, add them to your local setup for a better development experience. If you don't yet have TransitMatters AWS credentials, reach out in [slack](https://transitmatters.slack.com/archives/GSJ6F35DW).
 
 1. Add your AWS credentials (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) to your shell environment, OR add them to a .boto config file with awscli command `aws configure`.
 2. Ensure that AWS is set to read from/to `us-east-1` via `export AWS_DEFAULT_REGION=us-east-1` or with an aws config
 
-AWS access is not required for development, but may be required for certain charts and data to appear
+AWS access is not strictly required for development, but may be required for certain charts and data to appear
 
-## Deployment Instructions
+## 🚀 Deployment Instructions
 
 1. Configure AWS CLI 1.x or 2.x with your AWS access key ID and secret under the profile name `transitmatters`.
 2. Configure shell environment variables for AWS ACM domain certificates.
@@ -49,7 +53,7 @@ Additional notes:
 - If you're on a platform with a non-GNU `sed`, deploy.sh might fail. On macOS, this is fixed by `brew install gnu-sed` and adding it to your PATH.
 - If you get an unexplained error, check the CloudFormation stack status in AWS Console. Good luck!
 
-### Linting
+## ✨ Linting and Code Style
 
 To lint frontend and backend code, run `npm run lint` in the root directory
 
@@ -61,10 +65,12 @@ To lint just backend code, run `npm run lint-backend`
 
 If you're using VSCode, `.vscode` contains a based default workspace setup. It also includes recommended extentions that will improve the dev experience. This config is meant to be as small as possible to enable an "out of the box" easy experience for handling eslint.
 
-### Updating backend data
+## 🗂️ Data Maintenance
 
-See `server/rapid/gen_latest_rapid_data.sh` and `server/bus/gen_latest_bus_data.sh` for instructions.
+### Updating historical backend data
 
-## Support TransitMatters
+See `server/bus/gen_latest_bus_data.sh` for instructions.
+
+## ❤️ Support TransitMatters
 
 If you've found this app helpful or interesting, please consider [donating](https://transitmatters.org/donate) to TransitMatters to help support our mission to provide data-driven advocacy for a more reliable, sustainable, and equitable transit system in Metropolitan Boston.

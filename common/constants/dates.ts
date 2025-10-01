@@ -1,14 +1,17 @@
 import dayjs from 'dayjs';
 
-import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import type { DateTimePickerProps } from 'react-flatpickr';
 import type {
   DateParams,
   DateSelectionDefaultOptions,
   SingleDateParams,
 } from '../components/inputs/DateSelection/types/DateSelectionTypes';
+
+import type { BusRoute, CommuterRailRoute } from '../types/lines';
 import type { Tab } from '../types/router';
+import { getMinMaxDatesForRoute } from '../utils/stations';
 import type { Page } from './pages';
 
 dayjs.extend(utc);
@@ -36,7 +39,7 @@ export const THREE_MONTHS_AGO_STRING = TODAY.subtract(90, 'days').format(DATE_FO
 export const OVERVIEW_TRAIN_MIN_DATE = '2016-02-01';
 const TRAIN_MIN_DATE = '2016-01-15';
 const BUS_MIN_DATE = '2018-08-01';
-export const BUS_MAX_DATE = '2024-06-30';
+export const BUS_MAX_DATE = '2025-08-31';
 export const BUS_MAX_DAY = dayjs(BUS_MAX_DATE);
 export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
   .subtract(7, 'days')
@@ -50,22 +53,63 @@ export const getESTDayjs = (date: string) => {
   return dayjs(date).tz(est);
 };
 
-export const getDatePickerOptions = (tab: Tab, page?: Page) => {
+export const isDateValid = (
+  dateStr: string | undefined,
+  minDate: string | undefined,
+  maxDate: string | undefined
+) => {
+  if (!dateStr) return true;
+  const dateObj = dayjs(dateStr);
+
+  if (minDate && dateObj.isBefore(minDate)) {
+    return false;
+  }
+
+  if (maxDate && dateObj.isAfter(maxDate)) {
+    return false;
+  }
+
+  return true;
+};
+
+export const getValidDateForRange = (
+  currentDate: string | undefined,
+  minDate: string | undefined,
+  maxDate: string | undefined,
+  fallbackToToday = true
+) => {
+  if (!currentDate || !isDateValid(currentDate, minDate, maxDate)) {
+    return maxDate || minDate || (fallbackToToday ? TODAY_STRING : undefined);
+  }
+  return currentDate;
+};
+
+export const getDatePickerOptions = (
+  tab: Tab,
+  page?: Page,
+  route?: CommuterRailRoute | BusRoute
+) => {
+  const { minDate, maxDate } = getMinMaxDatesForRoute(tab, route);
+
   if (tab === 'Commuter Rail') {
     if (page === 'ridership') {
       return {
         ...FLAT_PICKER_OPTIONS[tab],
-        minDate: COMMUTER_RAIL_RIDERSHIP_MIN_DATE,
-        maxDate: TODAY_STRING,
+        minDate: minDate ?? COMMUTER_RAIL_RIDERSHIP_MIN_DATE,
+        maxDate: maxDate ?? TODAY_STRING,
       };
     }
   }
 
-  return FLAT_PICKER_OPTIONS[tab];
+  return {
+    ...FLAT_PICKER_OPTIONS[tab],
+    minDate: minDate ?? FLAT_PICKER_OPTIONS[tab].minDate,
+    maxDate: maxDate ?? FLAT_PICKER_OPTIONS[tab].maxDate,
+  };
 };
 
 const FLAT_PICKER_OPTIONS: {
-  [key in Tab]: DateTimePickerProps['options'];
+  [key in Tab]: DateTimePickerProps['options'] & { minDate: string; maxDate: string };
 } = {
   Subway: {
     enableTime: false,
@@ -94,6 +138,14 @@ const FLAT_PICKER_OPTIONS: {
   'Commuter Rail': {
     enableTime: false,
     minDate: COMMUTER_RAIL_DATA_MIN_DATE,
+    maxDate: TODAY_STRING,
+    altInput: true,
+    altFormat: 'M j, Y',
+    dateFormat: 'Y-m-d',
+  },
+  Ferry: {
+    enableTime: false,
+    minDate: BUS_MIN_DATE,
     maxDate: TODAY_STRING,
     altInput: true,
     altFormat: 'M j, Y',
@@ -171,6 +223,7 @@ export const SINGLE_PRESETS: {
   Bus: SINGLE_RAPID_PRESETS,
   System: SINGLE_RAPID_PRESETS,
   'Commuter Rail': SINGLE_RAPID_PRESETS,
+  Ferry: SINGLE_RAPID_PRESETS,
 };
 
 const RANGE_RAPID_PRESETS: {
@@ -294,6 +347,7 @@ export const RANGE_PRESETS: {
   Bus: RANGE_RAPID_PRESETS,
   System: RANGE_RAPID_PRESETS,
   'Commuter Rail': RANGE_RAPID_PRESETS,
+  Ferry: RANGE_RAPID_PRESETS,
 };
 
 export type DatePresetKey =

@@ -1,0 +1,56 @@
+{
+    "Boat-F4": {
+        "type": "ferry",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Long Wharf (South)",
+                "station": "Boat-Long-South",
+                "branches": null,
+                "order": 1,
+                "stops": {
+                    "0": [
+                        "Boat-Long-South"
+                    ],
+                    "1": [
+                        "Boat-Long-South"
+                    ]
+                },
+                "terminus": true
+            },
+            {
+                "stop_name": "Central Wharf (South)",
+                "station": "Boat-Aquarium",
+                "branches": null,
+                "order": 1,
+                "stops": {
+                    "0": [
+                        "Boat-Aquarium"
+                    ],
+                    "1": [
+                        "Boat-Aquarium"
+                    ]
+                },
+                "terminus": true
+            },
+            {
+                "stop_name": "Charlestown Navy Yard",
+                "station": "Boat-Charlestown",
+                "branches": null,
+                "order": 2,
+                "stops": {
+                    "0": [
+                        "Boat-Charlestown"
+                    ],
+                    "1": [
+                        "Boat-Charlestown"
+                    ]
+                },
+                "terminus": true
+            }
+        ]
+    }
+}

@@ -1,3 +1,5 @@
+import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from './lines';
+
 interface Direction {
   0: string;
   1: string;
@@ -20,12 +22,22 @@ export interface Station {
   short?: string;
 }
 
-export const isLineMap = (obj: LineMap | Station[]): obj is LineMap => {
-  return (obj as LineMap).stations !== undefined;
+export const isLineMap = (obj: any): obj is LineMap => {
+  return obj && typeof obj === 'object' && 'stations' in obj && Array.isArray(obj.stations);
 };
 
 export interface LineMap {
   type: string;
   direction: Direction;
   stations: Station[];
+  service_start?: string;
+  service_end?: string;
 }
+
+export type StationMap = {
+  [key in LineShort]:
+    | LineMap
+    | { [key in CommuterRailRoute]: LineMap }
+    | { [key in BusRoute]: LineMap }
+    | { [key in FerryRoute]: LineMap };
+};

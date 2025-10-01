@@ -102,29 +102,31 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
       id={`timeline-slow-zones-${linePath}`}
       data={{
         labels: routes,
-        datasets: Object.entries(lineSegmentDataByColor).map(([color, data]) => {
-          const datasetObject: ChartDataset<'bar', LineSegmentData[]> = {
-            borderWidth: 2,
-            borderColor: COLORS.mbta[color.toLowerCase()],
-            backgroundColor: (context) => {
-              return hexWithAlpha(
-                COLORS.mbta[color.toLowerCase()],
-                getSlowZoneOpacity(data[context.dataIndex]?.delay)
-              );
-            },
-            label: color,
-            borderSkipped: false,
-            data,
-          };
+        datasets: Object.entries(lineSegmentDataByColor).map(
+          ([color, data]: [string, LineSegmentData[]]) => {
+            const datasetObject: ChartDataset<'bar', LineSegmentData[]> = {
+              borderWidth: 2,
+              borderColor: COLORS.mbta[color.toLowerCase() as keyof typeof COLORS.mbta],
+              backgroundColor: (context) => {
+                return hexWithAlpha(
+                  COLORS.mbta[color.toLowerCase() as keyof typeof COLORS.mbta],
+                  getSlowZoneOpacity(data[context.dataIndex]?.delay)
+                );
+              },
+              label: color,
+              borderSkipped: false,
+              data,
+            };
 
-          // If we're in system mode
-          if (Object.entries(lineSegmentDataByColor).length > 1) {
-            datasetObject.barPercentage = 50;
-            datasetObject.categoryPercentage = 0.05;
+            // If we're in system mode
+            if (Object.entries(lineSegmentDataByColor).length > 1) {
+              datasetObject.barPercentage = 50;
+              datasetObject.categoryPercentage = 0.05;
+            }
+
+            return datasetObject;
           }
-
-          return datasetObject;
-        }),
+        ),
       }}
       plugins={[ChartjsPluginWatermark]}
       options={{

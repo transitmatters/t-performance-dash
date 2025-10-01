@@ -1,0 +1,194 @@
+{
+    "210/211/212": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Quincy Center",
+                "branches": [
+                    "210",
+                    "211"
+                ],
+                "station": "qnctr",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "210-1-32005",
+                        "211-1-32005"
+                    ],
+                    "0": [
+                        "210-0-32005",
+                        "211-0-32005"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Newport Avenue @ Beale Street (Wollaston Station)",
+                "branches": [
+                    "211"
+                ],
+                "station": "newbl",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "211-1-3476"
+                    ],
+                    "0": [
+                        "211-0-3191"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Quincy Bus Garage",
+                "branches": [
+                    "210"
+                ],
+                "station": "quncy",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "210-1-3045"
+                    ],
+                    "0": [
+                        "210-0-3032"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Hancock @ Beale/Beach",
+                "branches": [
+                    "210"
+                ],
+                "station": "hanbe",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "210-1-3051"
+                    ],
+                    "0": [
+                        "210-0-3026"
+                    ]
+                }
+            },
+            {
+                "stop_name": "North Quincy",
+                "branches": [
+                    "210",
+                    "211"
+                ],
+                "station": "nqncy",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "210-1-3125",
+                        "211-1-3125"
+                    ],
+                    "0": [
+                        "210-0-3125",
+                        "211-0-3125"
+                    ]
+                }
+            },
+            {
+                "stop_name": "East Squantum Street @ Newbury Avenue (North Quincy High School)",
+                "branches": [
+                    "211"
+                ],
+                "station": "esqnb",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "211-1-3128"
+                    ],
+                    "0": [
+                        "211-0-3165"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Neponset Circle",
+                "branches": [
+                    "210"
+                ],
+                "station": "nepon",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "210-1-8803"
+                    ],
+                    "0": [
+                        "210-0-3075"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Wollaston Beach",
+                "branches": [
+                    "211"
+                ],
+                "station": "wobch",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "211-1-3136"
+                    ],
+                    "0": [
+                        "211-0-3157"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Neponset Avenue @ Adams Street",
+                "branches": [
+                    "210"
+                ],
+                "station": "nepad",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "210-1-3087"
+                    ],
+                    "0": [
+                        "210-0-3067"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Squantum",
+                "branches": [
+                    "211"
+                ],
+                "station": "sqntm",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "211-1-13142",
+                        "211-1-3151"
+                    ],
+                    "0": [
+                        "211-0-13142"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Fields Corner",
+                "branches": [
+                    "210"
+                ],
+                "station": "fldcr",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "210-1-323"
+                    ],
+                    "0": [
+                        "210-0-323"
+                    ]
+                }
+            }
+        ]
+    }
+}

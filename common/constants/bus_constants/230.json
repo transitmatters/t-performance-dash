@@ -1,0 +1,151 @@
+{
+    "230": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Montello Commuter Rail Station",
+                "branches": null,
+                "station": "mntlo",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "230-1-39870"
+                    ],
+                    "0": [
+                        "230-0-39870"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Brockton/Holbrook Line",
+                "branches": null,
+                "station": "brhlb",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "230-1-3990"
+                    ],
+                    "0": [
+                        "230-0-3986"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Holbrook Square",
+                "branches": null,
+                "station": "hlbsq",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "230-1-4010"
+                    ],
+                    "0": [
+                        "230-0-3966"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Washington & South Streets",
+                "branches": null,
+                "station": "wshso",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "230-1-3911"
+                    ],
+                    "0": [
+                        "230-0-3887"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Braintree Station",
+                "branches": null,
+                "station": "brnst",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "230-1-38671"
+                    ],
+                    "0": [
+                        "230-0-38671"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Independence Avenue @ Washington Street (Braintree)",
+                "branches": null,
+                "station": "indws",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "230-1-3943"
+                    ],
+                    "0": [
+                        "230-0-3855"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Franklin Street @ Water Street",
+                "branches": null,
+                "station": "frkwa",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "230-1-3959"
+                    ],
+                    "0": [
+                        "230-0-3330"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Hancock Street (Quincy)",
+                "branches": null,
+                "station": "hnock",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "230-1-3422"
+                    ],
+                    "0": [
+                        "230-0-3327"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Hancock Street @ Cottage Avenue",
+                "branches": null,
+                "station": "hncot",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "230-1-3423"
+                    ],
+                    "0": [
+                        "230-0-3326"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Quincy Center",
+                "branches": null,
+                "station": "qnctr",
+                "order": 10,
+                "stops": {
+                    "1": [
+                        "230-1-32003"
+                    ],
+                    "0": [
+                        "230-0-32003"
+                    ]
+                }
+            }
+        ]
+    }
+}

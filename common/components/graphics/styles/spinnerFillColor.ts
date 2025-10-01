@@ -8,4 +8,5 @@ export const spinnerFillColor: StyleMap = {
   'line-mattapan': 'fill-mbta-red',
   'line-bus': 'fill-mbta-bus',
   'line-commuter-rail': 'fill-mbta-commuterRail',
+  'line-ferry': 'fill-mbta-ferry',
 };

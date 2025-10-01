@@ -1,0 +1,110 @@
+{
+    "429": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Northgate Shopping Center",
+                "branches": null,
+                "station": "ngate",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "429-1-6267"
+                    ],
+                    "0": [
+                        "429-0-6267"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Linden Square (Malden)",
+                "branches": null,
+                "station": "lindn",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "429-1-7417"
+                    ],
+                    "0": [
+                        "429-0-74121"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Cliftondale Square (Saugus)",
+                "branches": null,
+                "station": "clift",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "429-1-7428"
+                    ],
+                    "0": [
+                        "429-0-7566"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Sqaure One Mall",
+                "branches": null,
+                "station": "sqone",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "429-1-7529"
+                    ],
+                    "0": [
+                        "429-0-7529"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Saugus Plaza",
+                "branches": null,
+                "station": "saugpl",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "429-1-67202"
+                    ],
+                    "0": [
+                        "429-0-6719"
+                    ]
+                }
+            },
+            {
+                "stop_name": "O'Callaghan Way & Kings",
+                "branches": null,
+                "station": "kings",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "429-1-6701",
+                        "429-1-6746"
+                    ],
+                    "0": [
+                        "429-0-6700"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Central Square, Lynn (Busway)",
+                "branches": null,
+                "station": "censq",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "429-1-14748"
+                    ],
+                    "0": [
+                        "429-0-14748"
+                    ]
+                }
+            }
+        ]
+    }
+}
