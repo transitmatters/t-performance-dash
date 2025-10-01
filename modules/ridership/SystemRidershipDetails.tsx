@@ -1,8 +1,6 @@
 import React from 'react';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useRidershipData } from '../../common/api/hooks/ridership';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
-import { Layout } from '../../common/layouts/layoutTypes';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
@@ -27,26 +25,22 @@ export function SystemRidershipDetails() {
   const ridershipDataReady = !ridership.isError && startDate && endDate;
 
   return (
-    <PageWrapper pageTitle={'Ridership'}>
-      <ChartPageDiv>
-        <WidgetDiv>
-          <WidgetTitle title="Weekday ridership" />
-          {ridership.data && ridershipDataReady ? (
-            <RidershipGraphWrapper
-              data={ridership.data}
-              config={config}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          ) : (
-            <div className="relative flex h-full">
-              <ChartPlaceHolder query={ridership} />
-            </div>
-          )}
-        </WidgetDiv>
-      </ChartPageDiv>
-    </PageWrapper>
+    <ChartPageDiv>
+      <WidgetDiv>
+        <WidgetTitle title="Weekday ridership" />
+        {ridership.data && ridershipDataReady ? (
+          <RidershipGraphWrapper
+            data={ridership.data}
+            config={config}
+            startDate={startDate}
+            endDate={endDate}
+          />
+        ) : (
+          <div className="relative flex h-full">
+            <ChartPlaceHolder query={ridership} />
+          </div>
+        )}
+      </WidgetDiv>
+    </ChartPageDiv>
   );
 }
-
-systemServiceAndRidershipDetails.Layout = Layout.Dashboard;

@@ -49,8 +49,6 @@ const getNormalizedData = (
 export const ServiceRidershipChart = (props: Props) => {
   const { color, serviceHistory, ridershipHistory, startDate, endDate, lineId } = props;
 
-  console.log({ color });
-
   const data = useMemo((): Dataset[] => {
     const service: Dataset = {
       label: 'Service levels',
