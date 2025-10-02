@@ -129,7 +129,7 @@ export const LineCard = (props: Props) => {
   };
 
   return (
-    <CardFrame title={title} details={renderDetails()} href={href}>
+    <CardFrame title={title} details={renderDetails()} titleHref={href}>
       {renderSectionLabel('Current service levels')}
       <ButtonGroup
         options={serviceDayItems.map((item) => [item.value, item.label])}

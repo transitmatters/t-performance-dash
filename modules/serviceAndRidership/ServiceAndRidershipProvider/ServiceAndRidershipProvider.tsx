@@ -14,7 +14,7 @@ export const ServiceAndRidershipProvider = (props: Props) => {
     return null;
   }
 
-  const { startDate = null, endDate = null } = query as Record<string, string>;
+  const { startDate, endDate } = query as Record<string, string>;
 
   return (
     <ServiceAndRidershipContext.Provider value={{ startDate, endDate }}>
