@@ -128,7 +128,7 @@
     "typescript": "~5.8.3"
   },
   "engines": {
-    "node": ">=20.12.0",
+    "node": ">=20.15.0",
     "npm": ">=10.2.0"
   },
   "overrides": {
@@ -136,6 +136,6 @@
   },
   "proxy": "http://localhost:5000",
   "volta": {
-    "node": "20.19.0"
+    "node": "20.19.5"
   }
 }
