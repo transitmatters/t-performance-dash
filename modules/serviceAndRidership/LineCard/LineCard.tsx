@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react';
 
 import { CardFrame } from '../CardFrame';
-import { TabPicker } from '../TabPicker';
 import { useServiceAndRidershipContext } from '../useServiceAndRidershipContext';
 import type { LineData, ServiceDay } from '../types';
 
+import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
 import { lineKindColors } from './colors';
 import { TphChart } from './TphChart';
 import { ServiceRidershipChart } from './ServiceRidershipChart';
@@ -84,20 +84,15 @@ export const LineCard = (props: Props) => {
     return null;
   };
 
-  const tabs = (
-    <TabPicker
-      className={styles.tabs}
-      value={serviceDay}
-      items={serviceDayItems}
-      onSelectValue={(d) => setServiceDay(d as any)}
-      baseId={`line-day-selector-${id}`}
-      aria-label="Select day of service"
-    />
-  );
-
   return (
     <CardFrame title={title} details={renderDetails()}>
-      {renderSectionLabel('Current service levels', tabs)}
+      {renderSectionLabel('Current service levels')}
+      <ButtonGroup
+        options={serviceDayItems.map((item) => [item.value, item.label])}
+        pressFunction={setServiceDay}
+        selectedIndex={serviceDayItems.findIndex((item) => item.value === serviceDay)}
+        additionalDivClass="mb-2"
+      />
       <TphChart
         baselineTph={serviceRegimes.baseline[serviceDay].tripsPerHour!}
         currentTph={serviceRegimes.current[serviceDay].tripsPerHour!}

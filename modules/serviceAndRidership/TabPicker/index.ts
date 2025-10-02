@@ -1,1 +1,0 @@
-export { TabPicker } from './TabPicker';
