@@ -57,6 +57,6 @@ export type DashboardData = {
 };
 
 export type ServiceAndRidershipContext = {
-  startDate: null | string;
-  endDate: null | string;
+  startDate: string | undefined;
+  endDate: string | undefined;
 };

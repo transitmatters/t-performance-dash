@@ -10,8 +10,8 @@ type Props = {
   ridershipHistory: LineData['ridershipHistory'];
   serviceHistory: LineData['serviceHistory'];
   color: string;
-  startDate: null | string;
-  endDate: null | string;
+  startDate: undefined | string;
+  endDate: undefined | string;
   lineTitle: string;
   lineId: string;
 };
@@ -27,8 +27,8 @@ const asPercentString = (p: number) => Math.round(100 * p).toString() + '%';
 
 const getNormalizedData = (
   data: Record<string, number>,
-  startDate: null | string,
-  endDate: null | string
+  startDate: undefined | string,
+  endDate: undefined | string
 ) => {
   const dateStringsWithinRange = Object.keys(data)
     .filter((date) => {

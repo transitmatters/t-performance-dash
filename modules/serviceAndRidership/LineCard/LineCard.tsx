@@ -5,6 +5,14 @@ import { useServiceAndRidershipContext } from '../useServiceAndRidershipContext'
 import type { LineData, ServiceDay } from '../types';
 
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
+import { useGenerateHref } from '../../../common/utils/router';
+import { ALL_PAGES } from '../../../common/constants/pages';
+import {
+  BUS_ROUTES,
+  COMMUTER_RAIL_ROUTES,
+  type BusRoute,
+  type CommuterRailRoute,
+} from '../../../common/types/lines';
 import { lineKindColors } from './colors';
 import { TphChart } from './TphChart';
 import { ServiceRidershipChart } from './ServiceRidershipChart';
@@ -57,12 +65,48 @@ export const LineCard = (props: Props) => {
   const { lineData } = props;
   const { id, ridershipHistory, lineKind, serviceHistory, serviceRegimes, shortName, longName } =
     lineData;
-
   const color = lineKindColors[lineKind] || 'black';
   const [serviceDay, setServiceDay] = useState<ServiceDay>('weekday');
   const highestTph = useMemo(() => getHighestTphValue(lineData), [lineData]);
   const title = shortName || longName;
   const { startDate, endDate } = useServiceAndRidershipContext();
+
+  const generateHref = useGenerateHref();
+  const href = useMemo(() => {
+    // Navigate to the overview page for subway lines
+    if (['red', 'blue', 'green', 'orange', 'mattapan'].includes(lineKind)) {
+      return generateHref(
+        ALL_PAGES.overview,
+        'serviceAndRidership',
+        {},
+        lineKind as 'red' | 'blue' | 'green' | 'orange' | 'mattapan'
+      );
+    }
+    if (lineKind === 'regional-rail') {
+      const crRoute = id.replace('line-', 'CR-') as CommuterRailRoute;
+      if (COMMUTER_RAIL_ROUTES.includes(crRoute)) {
+        return generateHref(
+          ALL_PAGES.singleTrips,
+          'serviceAndRidership',
+          {
+            crRoute: id.replace('line-', 'CR-') as CommuterRailRoute,
+            startDate,
+            endDate,
+          },
+          'commuter-rail'
+        );
+      }
+    }
+    if (lineKind === 'bus' && BUS_ROUTES.includes(shortName as BusRoute)) {
+      return generateHref(
+        ALL_PAGES.singleTrips,
+        'serviceAndRidership',
+        { busRoute: shortName as BusRoute, startDate, endDate },
+        'bus'
+      );
+    }
+    return null;
+  }, [generateHref, id, lineKind, shortName, startDate, endDate]);
 
   const ridershipAndFrequencyLabel = ridershipHistory
     ? 'Weekday ridership and service levels'
@@ -85,7 +129,7 @@ export const LineCard = (props: Props) => {
   };
 
   return (
-    <CardFrame title={title} details={renderDetails()}>
+    <CardFrame title={title} details={renderDetails()} href={href}>
       {renderSectionLabel('Current service levels')}
       <ButtonGroup
         options={serviceDayItems.map((item) => [item.value, item.label])}
