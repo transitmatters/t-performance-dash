@@ -54,8 +54,9 @@ export const TphChart = (props: Props) => {
 
   const { datasets } = data;
 
-  const chartJsOptions = useMemo(() => {
+  const chartJsOptions: React.ComponentProps<typeof Line>['options'] = useMemo(() => {
     return {
+      maintainAspectRatio: false,
       plugins: {
         datalabels: {
           display: false,
