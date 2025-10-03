@@ -166,8 +166,14 @@ export const PEAK_RIDERSHIP: {
   'CR-NewBedford': 6863, // Using same value as former Middleborough
   'CR-Providence': 25728,
   'line-commuter-rail': 126755,
-  'line-ferry': 0,
   'line-RIDE': 34102,
+  'line-ferry': 41782,
+  'Boat-F1': 16281,
+  'Boat-F4': 11861,
+  'Boat-F6': 1761,
+  'Boat-F7': 1610,
+  'Boat-EastBoston': 7757,
+  'Boat-Lynn': 2512,
   DEFAULT: 520580,
 };
 

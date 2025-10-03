@@ -68,6 +68,8 @@ const getTab = (path: LinePath) => {
     return 'Commuter Rail';
   } else if (path === 'the-ride') {
     return 'The RIDE';
+  } else if (path === 'ferry') {
+    return 'Ferry';
   } else {
     return 'System';
   }
@@ -213,6 +215,25 @@ export const getCommuterRailRouteSelectionItemHref = (newRoute: string, route: R
   return href;
 };
 
+export const getFerryRouteSelectionItemHref = (newRoute: string, route: Route): string => {
+  const { query, page } = route;
+  const currentPage = ALL_PAGES[page] ?? ALL_PAGES['singleTrips'];
+  const currentPath = currentPage.path;
+  const validPage = currentPage.lines.includes('line-ferry');
+  if (newRoute === route.query.ferryRoute || !validPage) {
+    return `/ferry/trips/single?ferryRoute=${newRoute}`;
+  }
+  delete query.from;
+  delete query.to;
+  const queryParams = query
+    ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'ferryRoute'))
+    : new URLSearchParams();
+  queryParams.append('ferryRoute', newRoute);
+  let href = `/ferry${currentPath}`;
+  href += `?${queryParams.toString() ?? ''}`;
+  return href;
+};
+
 export const useGenerateHref = () => {
   const dateStore = useDateStore();
   const stationStore = useStationStore();
@@ -279,6 +300,10 @@ const getCRRouteQueryParam = (query: QueryParams) => {
   if (query.crRoute) return { crRoute: query.crRoute };
 };
 
+const getFerryRouteQueryParam = (query: QueryParams) => {
+  if (query.ferryRoute) return { ferryRoute: query.ferryRoute };
+};
+
 const getStationQueryParams = (
   currentPage: PageMetadata | undefined,
   newPage: PageMetadata,
@@ -304,6 +329,7 @@ const getQueryParams = (
     ...getDateQueryParams(currentPage, newPage, query, dateStore),
     ...getBusRouteQueryParam(query),
     ...getCRRouteQueryParam(query),
+    ...getFerryRouteQueryParam(query),
   };
 };
 

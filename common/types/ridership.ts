@@ -1,4 +1,4 @@
-import type { BusRouteId, CommuterRailRoute, Line } from './lines';
+import type { BusRouteId, CommuterRailRoute, FerryRoute, Line } from './lines';
 
 export type Time = number;
 
@@ -20,6 +20,7 @@ export type RidershipKey =
   | BusRouteId
   | CommuterRailRoute
   | 'line-RIDE'
+  | FerryRoute
   | 'DEFAULT';
 
 export type TripsPerHour = readonly number[] & { length: 24 };

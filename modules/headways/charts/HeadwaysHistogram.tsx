@@ -67,7 +67,8 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
               datasets: [
                 {
                   backgroundColor: LINE_COLORS[line ?? 'default'],
-                  label: lineShort !== 'Bus' ? 'Trains' : 'Buses',
+                  label:
+                    lineShort === 'Bus' ? 'Buses' : lineShort === 'Ferry' ? 'Ferries' : 'Trains',
                   data: dataObject,
                 },
               ],
@@ -95,7 +96,8 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
                 y: {
                   title: {
                     display: true,
-                    text: lineShort !== 'Bus' ? 'Trains' : 'Buses',
+                    text:
+                      lineShort === 'Bus' ? 'Buses' : lineShort === 'Ferry' ? 'Ferries' : 'Trains',
                     color: COLORS.design.subtitleGrey,
                   },
                   ticks: {
@@ -120,10 +122,18 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
                       const tooltip = [`${min} - ${max} min.`];
 
                       const tooltipData = headwayBucketPercentages[x.toString()];
-                      tooltip.push(`${tooltipData.pct_trains}% of trains`);
-                      tooltip.push(
-                        `Benchmark: ${getFormattedTimeString(benchmarkTime, 'seconds')}`
-                      );
+                      const vehicleType =
+                        lineShort === 'Bus'
+                          ? 'buses'
+                          : lineShort === 'Ferry'
+                            ? 'ferries'
+                            : 'trains';
+                      tooltip.push(`${tooltipData.pct_trains}% of ${vehicleType}`);
+                      if (!Number.isNaN(benchmarkTime) && benchmarkTime > 0) {
+                        tooltip.push(
+                          `Benchmark: ${getFormattedTimeString(benchmarkTime, 'seconds')}`
+                        );
+                      }
                       return tooltip;
                     },
                   },
@@ -142,6 +152,6 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
         </ChartDiv>
       </ChartBorder>
     );
-  }, [dataObject, isMobile, line, linePath, lineShort]);
+  }, [dataObject, isMobile, line, linePath, lineShort, benchmarkTime, headwayBucketPercentages]);
   return histogram;
 };
