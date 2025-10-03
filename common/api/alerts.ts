@@ -1,5 +1,5 @@
 import type { AlertsResponse, OldAlert } from '../types/alerts';
-import type { BusRoute, CommuterRailRoute, LineShort } from '../types/lines';
+import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from '../types/lines';
 import { getStationKeysFromStations } from '../utils/stations';
 import { apiFetch } from './utils/fetch';
 
@@ -72,13 +72,16 @@ export const fetchHistoricalAlerts = async (
   date: string | undefined,
   line: LineShort,
   busRoute?: BusRoute,
-  crRoute?: CommuterRailRoute
+  crRoute?: CommuterRailRoute,
+  ferryRoute?: FerryRoute
 ): Promise<OldAlert[]> => {
   const options = { route: '' };
   if (line === 'Bus' && busRoute) {
     options['route'] = busRoute;
   } else if (line === 'Commuter Rail' && crRoute) {
     options['route'] = crRoute;
+  } else if (line === 'Ferry' && ferryRoute) {
+    options['route'] = ferryRoute;
   } else {
     options['route'] = line;
   }

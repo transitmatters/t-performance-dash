@@ -38,16 +38,16 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
   const {
     line,
     linePath,
-    query: { busRoute, crRoute },
+    query: { busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const isMobile = !useBreakpoint('md');
   const ref = useRef();
 
   const chart = useMemo(() => {
-    const routeIndex = (
-      busRoute ? busRoute.replaceAll('/', '') : (crRoute ?? line)
-    ) as RidershipKey;
+    const routeIndex = (crRoute ??
+      ferryRoute ??
+      (busRoute ? busRoute.replaceAll('/', '') : line)) as RidershipKey;
     const labels = data.map((point) => point.date);
     const lineColor = LINE_COLORS[line ?? 'default'];
 
@@ -218,6 +218,8 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
     );
   }, [
     busRoute,
+    crRoute,
+    ferryRoute,
     line,
     data,
     isMobile,
