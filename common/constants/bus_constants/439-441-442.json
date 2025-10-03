@@ -1,0 +1,196 @@
+{
+    "439/441/442": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Bass Point (Nahant)",
+                "branches": [
+                    "439"
+                ],
+                "station": "baspt",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "439-1-6613"
+                    ],
+                    "0": [
+                        "439-0-6613"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Marblehead",
+                "branches": [
+                    "441",
+                    "442"
+                ],
+                "station": "marbl",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "441-1-4807",
+                        "442-1-4807"
+                    ],
+                    "0": [
+                        "441-0-4807",
+                        "442-0-4807"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Little Nahant Road",
+                "branches": [
+                    "439"
+                ],
+                "station": "ltnah",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "439-1-6646"
+                    ],
+                    "0": [
+                        "439-0-6611"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Phillips Beach (Swampscott)",
+                "branches": [
+                    "442"
+                ],
+                "station": "philp",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "442-1-4901"
+                    ],
+                    "0": [
+                        "442-0-4825"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Salem & Humphrey (Swampscott)",
+                "branches": [
+                    "441"
+                ],
+                "station": "slmhp",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "441-1-4865"
+                    ],
+                    "0": [
+                        "441-0-4777"
+                    ]
+                }
+            },
+            {
+                "stop_name": "New Ocean Street & Eastern Avenue",
+                "branches": [
+                    "441",
+                    "442"
+                ],
+                "station": "newoc",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "441-1-4886",
+                        "442-1-4886"
+                    ],
+                    "0": [
+                        "441-0-4755",
+                        "442-0-4755"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Vinnin Square",
+                "branches": [
+                    "441"
+                ],
+                "station": "vinsq",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "441-1-4872"
+                    ],
+                    "0": [
+                        "441-0-4771"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Central Square, Lynn (Busway)",
+                "branches": [
+                    "439",
+                    "441",
+                    "442"
+                ],
+                "station": "censq",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "439-1-14748",
+                        "441-1-14748",
+                        "442-1-14748",
+                        "442-1-16653"
+                    ],
+                    "0": [
+                        "439-0-14748",
+                        "441-0-14748",
+                        "442-0-14748"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Point of Pines",
+                "branches": [
+                    "439",
+                    "441",
+                    "442"
+                ],
+                "station": "pines",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "439-1-4709",
+                        "441-1-4709",
+                        "442-1-4709"
+                    ],
+                    "0": [
+                        "439-0-4709",
+                        "441-0-4709",
+                        "442-0-4709"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Wonderland Station West",
+                "branches": [
+                    "439",
+                    "441",
+                    "442"
+                ],
+                "station": "wondw",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "439-1-15798",
+                        "441-1-15798",
+                        "442-1-15798"
+                    ],
+                    "0": [
+                        "439-0-15798",
+                        "441-0-15798",
+                        "442-0-15798"
+                    ]
+                }
+            }
+        ]
+    }
+}

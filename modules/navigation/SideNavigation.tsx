@@ -7,6 +7,7 @@ import { SubwaySection } from '../../common/components/nav/SubwaySection';
 import { BusSection } from '../../common/components/nav/BusSection';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CommuterRailSection } from '../../common/components/nav/CommuterRailSection';
+import { FerrySection } from '../../common/components/nav/FerrySection';
 
 interface SideNavigationProps {
   close?: () => void;
@@ -46,7 +47,7 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({ close }) => {
         <Link
           href="/system/ridership"
           className={classNames(
-            page === 'systemRidership' ? 'bg-opacity-75' : 'bg-opacity-0',
+            page === 'systemServiceAndRidership' ? 'bg-opacity-75' : 'bg-opacity-0',
             'flex flex-row items-center gap-2 rounded-md bg-black bg-opacity-0 pl-1 hover:bg-opacity-25 hover:text-white'
           )}
           onClick={() => (close ? close() : undefined)}
@@ -54,12 +55,13 @@ export const SideNavigation: React.FC<SideNavigationProps> = ({ close }) => {
           <div className="flex h-8 w-8 items-center justify-center rounded-full">
             <FontAwesomeIcon icon={faUsers} size="lg" />
           </div>
-          <h2>Ridership</h2>
+          <h2>Service & Ridership</h2>
         </Link>
         <hr className="border-stone-600" />
         <SubwaySection close={close} />
         <BusSection close={close} />
         <CommuterRailSection close={close} />
+        <FerrySection close={close} />
       </ul>
     </nav>
   );

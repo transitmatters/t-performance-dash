@@ -1,0 +1,117 @@
+{
+    "201/202": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Puritan Mall",
+                "branches": [
+                    "201"
+                ],
+                "station": "pmall",
+                "order": 0,
+                "stops": {
+                    "1": [],
+                    "0": [
+                        "201-0-8341"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Adams & Gallivan Boulevard",
+                "branches": [
+                    "201",
+                    "202"
+                ],
+                "station": "adgal",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "201-1-3078"
+                    ],
+                    "0": [
+                        "201-0-3078",
+                        "202-0-8687"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Keystone Apartments",
+                "branches": [
+                    "201",
+                    "202"
+                ],
+                "station": "keyst",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "201-1-38813",
+                        "202-1-38813"
+                    ],
+                    "0": [
+                        "201-0-38813",
+                        "202-0-38813"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Neponset Circle",
+                "branches": [
+                    "201",
+                    "202"
+                ],
+                "station": "nepon",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "202-1-8803"
+                    ],
+                    "0": [
+                        "201-0-3075"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Neponset Avenue @ Adams Street",
+                "branches": [
+                    "201",
+                    "202"
+                ],
+                "station": "nepad",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "201-1-8809",
+                        "202-1-3087"
+                    ],
+                    "0": [
+                        "201-0-3067",
+                        "202-0-8326"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Fields Corner",
+                "branches": [
+                    "201",
+                    "202"
+                ],
+                "station": "fldcr",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "201-1-323",
+                        "202-1-323"
+                    ],
+                    "0": [
+                        "201-0-323",
+                        "202-0-323"
+                    ]
+                }
+            }
+        ]
+    }
+}

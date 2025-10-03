@@ -1,4 +1,3 @@
-/* eslint-disable import/max-dependencies */
 import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from '../types/lines';
 import { COMMUTER_RAIL_ROUTES } from '../types/lines';
 import type { LineMap, StationMap } from '../types/stations';
@@ -18,6 +17,7 @@ import bus_18 from './bus_constants/18.json';
 import bus_21 from './bus_constants/21.json';
 import bus_22 from './bus_constants/22.json';
 import bus_23 from './bus_constants/23.json';
+import bus_24_27_33 from './bus_constants/24-27-33.json';
 import bus_26 from './bus_constants/26.json';
 import bus_28 from './bus_constants/28.json';
 import bus_29 from './bus_constants/29.json';
@@ -36,14 +36,21 @@ import bus_43 from './bus_constants/43.json';
 import bus_44 from './bus_constants/44.json';
 import bus_45 from './bus_constants/45.json';
 import bus_47 from './bus_constants/47.json';
+import bus_40_50 from './bus_constants/40-50.json';
+import bus_52_59 from './bus_constants/52-59.json';
 import bus_51 from './bus_constants/51.json';
 import bus_55 from './bus_constants/55.json';
 import bus_57 from './bus_constants/57.json';
+import bus_60_65 from './bus_constants/60-65.json';
+import bus_62_76 from './bus_constants/62-76.json';
 import bus_66 from './bus_constants/66.json';
+import bus_67_69 from './bus_constants/67-79.json';
 import bus_69 from './bus_constants/69.json';
 import bus_71 from './bus_constants/71.json';
+import bus_72_74_75 from './bus_constants/72-74-75.json';
 import bus_73 from './bus_constants/73.json';
 import bus_77 from './bus_constants/77.json';
+import bus_78_84 from './bus_constants/78-84.json';
 import bus_80 from './bus_constants/80.json';
 import bus_83 from './bus_constants/83.json';
 import bus_85 from './bus_constants/85.json';
@@ -60,17 +67,56 @@ import bus_95 from './bus_constants/95.json';
 import bus_96 from './bus_constants/96.json';
 import bus_97 from './bus_constants/97.json';
 import bus_99 from './bus_constants/99.json';
+import bus_100 from './bus_constants/100.json';
+import bus_101 from './bus_constants/101.json';
+import bus_104 from './bus_constants/104.json';
+import bus_105 from './bus_constants/105.json';
+import bus_106 from './bus_constants/106.json';
+import bus_108 from './bus_constants/108.json';
+import bus_109 from './bus_constants/109.json';
+import bus_110 from './bus_constants/110.json';
 import bus_111 from './bus_constants/111.json';
+import bus_112 from './bus_constants/112.json';
+import bus_116 from './bus_constants/116.json';
+import bus_119 from './bus_constants/119.json';
+import bus_120_121 from './bus_constants/120-121.json';
+import bus_131_132 from './bus_constants/131-132.json';
+import bus_134 from './bus_constants/134.json';
+import bus_136_137 from './bus_constants/136-137.json';
+import bus_201_202 from './bus_constants/201-202.json';
+import bus_210_211_212 from './bus_constants/210-211-212.json';
+import bus_214_216 from './bus_constants/214-216.json';
+import bus_215 from './bus_constants/215.json';
+import bus_217_245 from './bus_constants/217-245.json';
+import bus_225_226 from './bus_constants/225-226.json';
+import bus_230 from './bus_constants/230.json';
+import bus_236 from './bus_constants/236.json';
+import bus_238 from './bus_constants/238.json';
+import bus_240 from './bus_constants/240.json';
+import bus_350_351 from './bus_constants/350-351.json';
+import bus_354 from './bus_constants/354.json';
+import bus_411_430 from './bus_constants/411-430.json';
+import bus_424_450_456 from './bus_constants/424-450-456.json';
+import bus_426_428 from './bus_constants/426-428.json';
+import bus_429 from './bus_constants/429.json';
+import bus_434_435_436 from './bus_constants/434-435-436.json';
+import bus_439_441_442 from './bus_constants/439-441-442.json';
+import bus_451_465 from './bus_constants/451-465.json';
+import bus_455 from './bus_constants/455.json';
+import bus_501_503 from './bus_constants/501-503.json';
+import bus_502_504 from './bus_constants/502-504.json';
+import bus_505_553_554 from './bus_constants/505-553-554.json';
+import bus_556_558 from './bus_constants/556-558.json';
+import bus_712_713 from './bus_constants/712-713.json';
 import bus_104_109 from './bus_constants/104-109.json';
 import bus_61_70_170 from './bus_constants/61-70-170.json';
 import bus_114_116_117 from './bus_constants/114-116-117.json';
 import bus_220_221_222 from './bus_constants/220-221-222.json';
-import bus_110 from './bus_constants/110.json';
-import bus_104 from './bus_constants/104.json';
-import bus_109 from './bus_constants/109.json';
-import bus_116 from './bus_constants/116.json';
+import bus_ct2 from './bus_constants/CT2.json';
+import bus_ct3_171 from './bus_constants/CT3-171.json';
+import bus_SL1SL2SL3SLW from './bus_constants/SL1-SL2-SL3-SLW.json';
+import bus_SL4SL5 from './bus_constants/SL4-5.json';
 import legacy_86 from './bus_constants/86-legacy.json';
-
 import cr_lowell from './cr_constants/cr-lowell.json';
 import cr_fitchburg from './cr_constants/cr-fitchburg.json';
 import cr_franklin from './cr_constants/cr-franklin.json';
@@ -112,6 +158,7 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_21,
   ...bus_22,
   ...bus_23,
+  ...bus_24_27_33,
   ...bus_26,
   ...bus_28,
   ...bus_29,
@@ -130,14 +177,22 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_44,
   ...bus_45,
   ...bus_47,
+  ...bus_40_50,
   ...bus_51,
+  ...bus_52_59,
   ...bus_55,
   ...bus_57,
+  ...bus_60_65,
+  ...bus_61_70_170,
+  ...bus_62_76,
   ...bus_66,
+  ...bus_67_69,
   ...bus_69,
   ...bus_71,
+  ...bus_72_74_75,
   ...bus_73,
   ...bus_77,
+  ...bus_78_84,
   ...bus_80,
   ...bus_83,
   ...bus_85,
@@ -156,15 +211,54 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_96,
   ...bus_97,
   ...bus_99,
-  ...bus_111,
-  ...bus_104_109,
-  ...bus_61_70_170,
-  ...bus_114_116_117,
-  ...bus_220_221_222,
-  ...bus_110,
+  ...bus_100,
+  ...bus_101,
   ...bus_104,
+  ...bus_104_109,
+  ...bus_105,
+  ...bus_106,
+  ...bus_108,
   ...bus_109,
+  ...bus_110,
+  ...bus_111,
+  ...bus_112,
+  ...bus_114_116_117,
   ...bus_116,
+  ...bus_119,
+  ...bus_120_121,
+  ...bus_131_132,
+  ...bus_134,
+  ...bus_136_137,
+  ...bus_201_202,
+  ...bus_210_211_212,
+  ...bus_214_216,
+  ...bus_215,
+  ...bus_217_245,
+  ...bus_220_221_222,
+  ...bus_225_226,
+  ...bus_230,
+  ...bus_236,
+  ...bus_238,
+  ...bus_240,
+  ...bus_350_351,
+  ...bus_354,
+  ...bus_411_430,
+  ...bus_424_450_456,
+  ...bus_426_428,
+  ...bus_429,
+  ...bus_434_435_436,
+  ...bus_439_441_442,
+  ...bus_451_465,
+  ...bus_455,
+  ...bus_501_503,
+  ...bus_502_504,
+  ...bus_505_553_554,
+  ...bus_556_558,
+  ...bus_712_713,
+  ...bus_ct2,
+  ...bus_ct3_171,
+  ...bus_SL1SL2SL3SLW,
+  ...bus_SL4SL5,
 };
 
 export const crStations: { [key in CommuterRailRoute]: LineMap } = {
