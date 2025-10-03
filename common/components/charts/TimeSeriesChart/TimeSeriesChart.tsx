@@ -74,6 +74,7 @@ interface Props<Data extends Dataset[]> {
   style?: Partial<DisplayStyle<Data[number]['data'][number]>>;
   timeAxis?: Partial<ProvidedTimeAxis>;
   valueAxis: ValueAxis;
+  height?: number;
 }
 
 export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
@@ -86,6 +87,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     blocks = [],
     grid = { zIndex: 0 },
     legend = { visible: true },
+    height,
   } = props;
 
   const isMobile = !useBreakpoint('md');
@@ -175,12 +177,13 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         max: valueAxis.max,
         display: true,
         title: {
-          display: true,
-          text: valueAxis.label,
+          display: !!valueAxis.label,
+          text: valueAxis.label ?? '',
           color: COLORS.design.subtitleGrey,
         },
         ticks: {
           color: COLORS.design.subtitleGrey,
+          callback: valueAxis.renderTickLabel,
         },
         grid: {
           z: grid.zIndex,
@@ -255,7 +258,8 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         },
         legend: {
           display: legend.visible,
-          position: 'bottom' as const,
+          position: legend.position ?? ('bottom' as const),
+          align: legend.align ?? ('center' as const),
           labels: {
             boxWidth: 15,
           },
@@ -265,7 +269,17 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         },
       },
     };
-  }, [scales, data, benchmarks, blocks, timeAxis.granularity, legend.visible, appliedStyles]);
+  }, [
+    scales,
+    data,
+    benchmarks,
+    blocks,
+    timeAxis.granularity,
+    legend.align,
+    legend.position,
+    legend.visible,
+    appliedStyles,
+  ]);
 
   const chartJsPlugins = useMemo(() => {
     return [Annotation, ChartjsPluginWatermark];
@@ -275,13 +289,13 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     return (
       <LineChart
         redraw
-        height={isMobile ? 200 : 240}
+        height={height ?? (isMobile ? 200 : 240)}
         data={chartJsData}
         options={chartJsOptions}
         plugins={chartJsPlugins}
       />
     );
-  }, [isMobile, chartJsData, chartJsOptions, chartJsPlugins]);
+  }, [height, isMobile, chartJsData, chartJsOptions, chartJsPlugins]);
 
   return <ChartDiv isMobile={isMobile}>{chart}</ChartDiv>;
 };
