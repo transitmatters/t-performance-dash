@@ -1,14 +1,19 @@
 ci/cd:
-  - changed-files: ['.github/**/*', 'deploy.sh']
+  - changed-files:
+      - any-glob-to-any-file: ['.github/**/*', 'deploy.sh']
 
 dependencies:
-  - changed-files: ['package.json', 'package-lock.json', 'server/poetry.lock']
+  - changed-files:
+      - any-glob-to-any-file: ['package.json', 'package-lock.json', 'server/poetry.lock']
 
 backend:
-  - changed-files: ['**/*.py', 'server/**/*', '.flake8']
+  - changed-files:
+      - any-glob-to-any-file: ['**/*.py', 'server/**/*', '.flake8']
 
 frontend:
-  - changed-files: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx']
+  - changed-files:
+      - any-glob-to-any-file: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx']
 
 documentation:
-  - changed-files: ['README.md', 'LICENSE']
+  - changed-files:
+      - any-glob-to-any-file: ['README.md', 'LICENSE']
