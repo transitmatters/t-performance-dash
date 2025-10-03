@@ -3,7 +3,7 @@ import {
   BUS_PATH,
   COMMUTER_RAIL_PATH,
   THE_RIDE_PATH,
-  FERRY_PATH
+  FERRY_PATH,
 } from '../../common/types/lines';
 import { RidershipDetails } from '../../modules/ridership/RidershipDetails';
 
