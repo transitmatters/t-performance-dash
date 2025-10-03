@@ -1,23 +1,28 @@
 ci/cd:
-- .github/**/*
-- deploy.sh
+  - changed-files:
+      - .github/**/*
+      - deploy.sh
 
 dependencies:
-- package.json
-- package-lock.json
-- server/poetry.lock
+  - changed-files:
+      - package.json
+      - package-lock.json
+      - server/poetry.lock
 
 backend:
-- '**/*.py'
-- server/**/*
-- .flake8
+  - changed-files:
+      - '**/*.py'
+      - server/**/*
+      - .flake8
 
 frontend:
-- '**/*.js'
-- '**/*.jsx'
-- '**/*.ts'
-- '**/*.tsx'
+  - changed-files:
+      - '**/*.js'
+      - '**/*.jsx'
+      - '**/*.ts'
+      - '**/*.tsx'
 
 documentation:
-- README.md
-- LICENSE
+  - changed-files:
+      - README.md
+      - LICENSE
