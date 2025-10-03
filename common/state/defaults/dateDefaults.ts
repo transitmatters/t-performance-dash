@@ -7,6 +7,8 @@ import {
   TODAY_STRING,
   YESTERDAY_STRING,
   TODAY_SERVICE_STARTED,
+  FERRY_MAX_DATE,
+  FERRY_MAX_DATE_MINUS_ONE_WEEK,
 } from '../../constants/dates';
 import type { WithOptional } from '../../types/general';
 
@@ -52,13 +54,13 @@ export const FERRY_DEFAULTS: WithOptional<
   DateStoreConfiguration,
   'systemConfig' | 'overviewPreset'
 > = {
-  lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
+  lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: FERRY_MAX_DATE },
   multiTripConfig: {
-    startDate: ONE_WEEK_AGO_STRING,
-    endDate: TODAY_STRING,
+    startDate: FERRY_MAX_DATE_MINUS_ONE_WEEK,
+    endDate: FERRY_MAX_DATE,
   },
   singleTripConfig: {
-    date: TODAY_SERVICE_STARTED ? TODAY_STRING : YESTERDAY_STRING,
+    date: FERRY_MAX_DATE,
   },
 };
 
@@ -71,7 +73,7 @@ const TAB_DATE_MAP: { [key in Tab]: Partial<DateStoreConfiguration> } = {
   Bus: BUS_DEFAULTS,
   System: SYSTEM_DEFAULTS,
   'Commuter Rail': COMMUTER_RAIL_DEFAULTS,
-  Ferry: BUS_DEFAULTS,
+  Ferry: FERRY_DEFAULTS,
 };
 
 export const getDefaultDates = (dateStoreSection: DateStoreSection, tab: Tab) => {
