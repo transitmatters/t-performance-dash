@@ -5,7 +5,7 @@ import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { PercentageWidgetValue, RidersWidgetValue } from '../../common/types/basicWidgets';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
-import type { BusRoute, CommuterRailRoute, Line } from '../../common/types/lines';
+import type { BusRoute, CommuterRailRoute, FerryRoute, Line } from '../../common/types/lines';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { getRidershipWidgetValues } from './utils/utils';
 import { RidershipGraph } from './RidershipGraph';
@@ -15,6 +15,7 @@ interface RidershipGraphWrapperProps {
   line?: Line;
   busRoute?: BusRoute | undefined;
   crRoute?: CommuterRailRoute | undefined;
+  ferryRoute?: FerryRoute | undefined;
   config: ParamsType;
   startDate: string;
   endDate: string;
@@ -25,12 +26,19 @@ export const RidershipGraphWrapper: React.FC<RidershipGraphWrapperProps> = ({
   line,
   busRoute,
   crRoute,
+  ferryRoute,
   config,
   startDate,
   endDate,
 }) => {
   if (!data.some((datapoint) => datapoint.count !== null)) return <NoDataNotice isLineMetric />;
-  const { average, percentage, peak } = getRidershipWidgetValues(data, line, busRoute, crRoute);
+  const { average, percentage, peak } = getRidershipWidgetValues(
+    data,
+    line,
+    busRoute,
+    crRoute,
+    ferryRoute
+  );
 
   return (
     <CarouselGraphDiv>

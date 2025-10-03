@@ -9,12 +9,18 @@
     {
       "Action": ["s3:ListBucket"],
       "Effect": "Allow",
-      "Resource": ["arn:aws:s3:::tm-mbta-performance"]
+      "Resource": [
+        "arn:aws:s3:::tm-mbta-performance",
+        "arn:aws:s3:::tm-service-ridership-dashboard"
+      ]
     },
     {
       "Action": ["s3:GetObject"],
       "Effect": "Allow",
-      "Resource": ["arn:aws:s3:::tm-mbta-performance/*"]
+      "Resource": [
+        "arn:aws:s3:::tm-mbta-performance/*",
+        "arn:aws:s3:::tm-service-ridership-dashboard/*"
+      ]
     },
     {
       "Action": ["dynamodb:Query"],

@@ -149,6 +149,13 @@ export const useTripExplorerQueries: UseQueriesOverload = (
     };
   }
 
+  if (routeType === 'ferry') {
+    return {
+      [QueryNameKeys.traveltimes]: requests[0],
+      [QueryNameKeys.headways]: requests[1],
+    };
+  }
+
   return {
     [QueryNameKeys.traveltimes]: requests[0],
     [QueryNameKeys.headways]: requests[1],

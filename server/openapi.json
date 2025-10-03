@@ -454,6 +454,25 @@
           "/api"
         ]
       }
+    },
+    "/api/service_ridership_dashboard": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceRidershipDashboardResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ]
+      }
     }
   },
   "info": {
@@ -1000,6 +1019,26 @@
           "predictions"
         ],
         "title": "TimePredictionResponse",
+        "type": "object"
+      },
+      "ServiceRidershipDashboardResponse": {
+        "properties": {
+          "summaryData": {
+            "additionalProperties": true,
+            "title": "Summarydata",
+            "type": "object"
+          },
+          "lineData": {
+            "additionalProperties": true,
+            "title": "Linedata",
+            "type": "object"
+          }
+        },
+        "required": [
+          "summaryData",
+          "lineData"
+        ],
+        "title": "ServiceRidershipDashboardResponse",
         "type": "object"
       },
       "ByDayKindServiceLevels": {
