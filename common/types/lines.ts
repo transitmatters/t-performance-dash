@@ -6,7 +6,8 @@ export type Line =
   | 'line-mattapan'
   | 'line-bus'
   | 'line-commuter-rail'
-  | 'line-ferry';
+  | 'line-ferry'
+  | 'line-RIDE';
 
 export type LineShort =
   | 'Red'
@@ -16,7 +17,8 @@ export type LineShort =
   | 'Mattapan'
   | 'Bus'
   | 'Commuter Rail'
-  | 'Ferry';
+  | 'Ferry'
+  | 'The RIDE';
 
 export type LinePath =
   | 'red'
@@ -26,7 +28,8 @@ export type LinePath =
   | 'mattapan'
   | 'bus'
   | 'commuter-rail'
-  | 'ferry';
+  | 'ferry'
+  | 'the-ride';
 
 export type FerryRoute =
   | 'Boat-F1'
@@ -272,6 +275,7 @@ export const RIDERSHIP_KEYS = {
   'line-blue': 'line-Blue',
   'line-green': 'line-Green',
   'line-mattapan': 'line-Mattapan',
+  'line-RIDE': 'line-RIDE',
 };
 
 export const GTFS_COLOR_LINE_IDS = [
@@ -482,5 +486,11 @@ export const COMMUTER_RAIL_PATH = {
 export const FERRY_PATH = {
   params: {
     line: 'ferry',
+  },
+};
+
+export const THE_RIDE_PATH = {
+  params: {
+    line: 'the-ride',
   },
 };

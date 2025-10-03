@@ -139,7 +139,7 @@ import ferry_eastboston from './ferry_constants/ferry_eastboston.json';
 import ferry_lynn from './ferry_constants/ferry_lynn.json';
 
 export const rtStations: {
-  [key in Exclude<LineShort, 'Bus' | 'Commuter Rail' | 'Ferry'>]: LineMap;
+  [key in Exclude<LineShort, 'Bus' | 'Commuter Rail' | 'Ferry' | 'The RIDE'>]: LineMap;
 } = stations_json;
 
 export const busStations: { [key in BusRoute]: LineMap } = {

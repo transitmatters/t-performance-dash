@@ -9,6 +9,7 @@ export const lineColorBackground: DefaultStyleMap = {
   'line-bus': `bg-mbta-bus`,
   'line-commuter-rail': `bg-mbta-commuterRail`,
   'line-ferry': `bg-mbta-ferry`,
+  'line-RIDE': `bg-mbta-bus`,
   DEFAULT: `bg-stone-800`,
 };
 
@@ -21,6 +22,7 @@ export const lineColorLightBorder: DefaultStyleMap = {
   'line-bus': `border-mbta-lightBus`,
   'line-commuter-rail': `border-mbta-lightCommuterRail`,
   'line-ferry': `border-mbta-lightFerry`,
+  'line-RIDE': `border-mbta-lightBus`,
   DEFAULT: `border-stone-900`,
 };
 
@@ -33,6 +35,7 @@ export const mbtaTextConfig: DefaultStyleMap = {
   'line-bus': `text-mbta-bus`,
   'line-commuter-rail': `text-mbta-commuterRail`,
   'line-ferry': `text-mbta-ferry`,
+  'line-RIDE': `text-mbta-bus`,
   DEFAULT: `text-black`,
 };
 
@@ -45,6 +48,7 @@ export const lineColorLightBackground: DefaultStyleMap = {
   'line-bus': `bg-mbta-lightBus`,
   'line-commuter-rail': `bg-mbta-lightCommuterRail`,
   'line-ferry': `bg-mbta-lightFerry`,
+  'line-RIDE': `bg-mbta-lightBus`,
   DEFAULT: `bg-stone-900`,
 };
 
@@ -57,6 +61,7 @@ export const lineColorDarkBackground: DefaultStyleMap = {
   'line-bus': `bg-mbta-darkBus`,
   'line-commuter-rail': `bg-mbta-darkCommuterRail`,
   'line-ferry': `bg-mbta-darkFerry`,
+  'line-RIDE': `bg-mbta-darkBus`,
   DEFAULT: `bg-stone-900`,
 };
 
@@ -69,6 +74,7 @@ export const buttonHighlightFocus: DefaultStyleMap = {
   'line-bus': `focus:ring-mbta-bus`,
   'line-commuter-rail': `focus:ring-mbta-commuterRail`,
   'line-ferry': `focus:ring-mbta-ferry`,
+  'line-RIDE': `focus:ring-mbta-bus`,
   DEFAULT: `focus:ring-stone-800`,
 };
 
@@ -81,6 +87,7 @@ export const lineColorTextHover: DefaultStyleMap = {
   'line-bus': `hover:text-mbta-bus`,
   'line-commuter-rail': `hover:text-mbta-commuterRail`,
   'line-ferry': `hover:text-mbta-ferry`,
+  'line-RIDE': `hover:text-mbta-bus`,
   DEFAULT: `hover:text-stone-800`,
 };
 
@@ -93,6 +100,7 @@ export const lineColorDarkBorder: DefaultStyleMap = {
   'line-bus': `border-mbta-darkBus`,
   'line-commuter-rail': `border-mbta-darkCommuterRail`,
   'line-ferry': `border-mbta-darkFerry`,
+  'line-RIDE': `border-mbta-darkBus`,
   DEFAULT: `border-stone-900`,
 };
 
@@ -105,6 +113,7 @@ export const lineColorBorder: DefaultStyleMap = {
   'line-bus': `border-mbta-bus`,
   'line-commuter-rail': `border-mbta-commuterRail`,
   'line-ferry': `border-mbta-ferry`,
+  'line-RIDE': `border-mbta-bus`,
   DEFAULT: `border-stone-800`,
 };
 
@@ -117,6 +126,7 @@ export const lineColorText: DefaultStyleMap = {
   'line-bus': `text-mbta-bus`,
   'line-commuter-rail': `text-mbta-commuterRail`,
   'line-ferry': `text-mbta-ferry`,
+  'line-RIDE': `text-mbta-bus`,
   DEFAULT: `text-stone-800`,
 };
 
@@ -129,5 +139,6 @@ export const lineColorRing: DefaultStyleMap = {
   'line-bus': `ring-mbta-bus`,
   'line-commuter-rail': `ring-mbta-commuterRail`,
   'line-ferry': `ring-mbta-ferry`,
+  'line-RIDE': `ring-mbta-bus`,
   DEFAULT: `ring-stone-800`,
 };

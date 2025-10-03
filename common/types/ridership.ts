@@ -19,6 +19,7 @@ export type RidershipKey =
   | Exclude<Line, 'line-bus'>
   | BusRouteId
   | CommuterRailRoute
+  | 'line-RIDE'
   | FerryRoute
   | 'DEFAULT';
 

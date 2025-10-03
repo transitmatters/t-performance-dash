@@ -177,6 +177,7 @@ export const ALL_PAGES: PageMap = {
       'line-bus',
       'line-commuter-rail',
       'line-ferry',
+      'line-RIDE',
     ],
     icon: faUsers,
     dateStoreSection: 'line',
@@ -191,6 +192,8 @@ export const BUS_OVERVIEW = [ALL_PAGES.ridership];
 export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.ridership];
 
 export const FERRY_OVERVIEW = [ALL_PAGES.ridership];
+
+export const RIDE_OVERVIEW = [ALL_PAGES.ridership];
 
 export const OVERVIEW_PAGE = [ALL_PAGES.overview];
 
