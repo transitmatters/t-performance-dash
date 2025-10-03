@@ -1,7 +1,7 @@
 .directionIndicator {
-    width: 0;
-    height: 0;
-    border-left: 1px solid transparent;
-    border-right: 1px solid transparent;
-    border-top: 2px solid;
+  width: 0;
+  height: 0;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
+  border-top: 2px solid;
 }

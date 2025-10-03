@@ -128,14 +128,14 @@
     "typescript": "~5.8.3"
   },
   "engines": {
-    "node": ">=20.12.0",
-    "npm": ">=10.2.0"
+    "node": ">=20.15.0",
+    "npm": ">=10.3.0"
   },
   "overrides": {
     "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.0c3f3b7.0"
   },
   "proxy": "http://localhost:5000",
   "volta": {
-    "node": "20.19.0"
+    "node": "20.19.5"
   }
 }

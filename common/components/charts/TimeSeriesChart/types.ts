@@ -35,7 +35,7 @@ export type DisplayStyle<Point extends DataPoint, Applied extends boolean = fals
 export type AppliedDisplayStyle<Point extends DataPoint> = DisplayStyle<Point, true>;
 
 export type Granularity = 'time' | 'day' | 'week' | 'month';
-export type AxisUnit = 'day' | 'month' | 'year';
+type AxisUnit = 'day' | 'month' | 'year';
 
 export type ProvidedTimeAxis = {
   label: string;
@@ -57,13 +57,16 @@ export type ResolvedTimeAxis = {
 };
 
 export type ValueAxis = {
-  label: string;
+  renderTickLabel?: (value: number) => string;
+  label?: null | string;
   min?: number;
   max?: number;
 };
 
 export type LegendOptions = {
   visible: boolean;
+  position?: 'top' | 'bottom';
+  align?: 'start' | 'center' | 'end';
 };
 
 export type GridOptions = {

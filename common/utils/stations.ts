@@ -1,16 +1,25 @@
-import type { BusRoute, CommuterRailRoute, Line, LineShort } from '../types/lines';
+import type { BusRoute, CommuterRailRoute, Line, LineShort, FerryRoute } from '../types/lines';
 import { type Station } from '../types/stations';
 import type { Location } from '../types/charts';
 import type { Direction, Distance } from '../types/dataPoints';
-import { stations, rtStations, busStations, crStations } from '../constants/stations';
+import {
+  stations,
+  rtStations,
+  busStations,
+  crStations,
+  ferryStations,
+} from '../constants/stations';
 import { station_distances } from '../constants/station_distances';
 import type { Tab } from '../types/router';
 
 // Type guards for line types
 const isBusLine = (line: LineShort): line is 'Bus' => line === 'Bus';
 const isCommuterRailLine = (line: LineShort): line is 'Commuter Rail' => line === 'Commuter Rail';
-const isRapidTransitLine = (line: LineShort): line is Exclude<LineShort, 'Bus' | 'Commuter Rail'> =>
-  !isBusLine(line) && !isCommuterRailLine(line);
+const isFerryLine = (line: LineShort): line is 'Ferry' => line === 'Ferry';
+const isRapidTransitLine = (
+  line: LineShort
+): line is Exclude<LineShort, 'Bus' | 'Commuter Rail' | 'Ferry'> =>
+  !isBusLine(line) && !isCommuterRailLine(line) && !isFerryLine(line);
 
 // Helper function to safely get stations for a line
 const getStationsForLine = (
@@ -38,13 +47,14 @@ export const optionsForField = (
   line: LineShort,
   fromStation: Station | null,
   busRoute?: BusRoute,
-  crRoute?: CommuterRailRoute
+  crRoute?: CommuterRailRoute,
+  ferryRoute?: FerryRoute
 ) => {
   if (type === 'from') {
-    return optionsStation(line, busRoute, crRoute);
+    return optionsStation(line, busRoute, crRoute, ferryRoute);
   }
   if (type === 'to') {
-    return optionsStation(line, busRoute, crRoute)?.filter((entry) => {
+    return optionsStation(line, busRoute, crRoute, ferryRoute)?.filter((entry) => {
       if (fromStation && fromStation.branches && entry.branches) {
         return entry.branches.some((entryBranch) => fromStation.branches?.includes(entryBranch));
       }
@@ -56,7 +66,8 @@ export const optionsForField = (
 export const optionsStation = (
   line: LineShort,
   busRoute?: BusRoute,
-  crRoute?: CommuterRailRoute
+  crRoute?: CommuterRailRoute,
+  ferryRoute?: FerryRoute
 ): Station[] | undefined => {
   if (!line || !stations[line]) {
     return undefined;
@@ -83,29 +94,41 @@ export const optionsStation = (
     return rtStations[line].stations.sort((a, b) => a.order - b.order);
   }
 
+  if (isFerryLine(line)) {
+    if (!ferryRoute || !ferryStations[ferryRoute]) {
+      return undefined;
+    }
+
+    return ferryStations[ferryRoute].stations.sort((a, b) => a.order - b.order);
+  }
+
   return undefined;
 };
 
 const createStationIndex = () => {
   const index: Record<string, Station> = {};
-  Object.values({ ...rtStations, ...busStations, ...crStations }).forEach((line) => {
-    line.stations.forEach((station) => {
-      index[station.station] = station;
-    });
-  });
+  Object.values({ ...rtStations, ...busStations, ...crStations, ...ferryStations }).forEach(
+    (line) => {
+      line.stations.forEach((station) => {
+        index[station.station] = station;
+      });
+    }
+  );
   return index;
 };
 
 const createParentStationIndex = () => {
   const index: Record<string, Station> = {};
-  Object.values({ ...rtStations, ...busStations, ...crStations }).forEach((line) => {
-    line.stations.forEach((station) => {
-      const allStopIds = [...(station.stops['0'] || []), ...(station.stops['1'] || [])];
-      allStopIds.forEach((stopId) => {
-        index[stopId] = station;
+  Object.values({ ...rtStations, ...busStations, ...crStations, ...ferryStations }).forEach(
+    (line) => {
+      line.stations.forEach((station) => {
+        const allStopIds = [...(station.stops['0'] || []), ...(station.stops['1'] || [])];
+        allStopIds.forEach((stopId) => {
+          index[stopId] = station;
+        });
       });
-    });
-  });
+    }
+  );
   return index;
 };
 
@@ -149,16 +172,54 @@ export const getStationDistance = (fromStationId: string, toStationId: string) =
   return stationDistanceIndex[fromStationId][toStationId];
 };
 
-export const getStationForInvalidFromSelection = (line: Line, busRoute?: BusRoute): Station => {
+export const getStationForInvalidFromSelection = (
+  line: Line,
+  busRoute?: BusRoute,
+  ferryRoute?: FerryRoute
+): Station => {
   if (line === 'line-green') return getParentStationForStopId('70202'); // Gov. Center
   if (line === 'line-red') return getParentStationForStopId('70076'); // Park St.
   if (line === 'line-bus') {
     if (busRoute === '17/19') return getParentStationForStopId('17-1-323');
-    if (busRoute === '220/221/222') return getParentStationForStopId('222-1-32004');
-    if (busRoute === '61/70/170') return getParentStationForStopId('70-0-88333');
-    if (busRoute === '104/109') return getParentStationForStopId('104-1-5560');
+    if (busRoute === '24/27/33') return getParentStationForStopId('24-1-185'); // Mattapan Station
+    if (busRoute === '40/50') return getParentStationForStopId('40-1-36466'); // Cleary Square
+    // 52/59 have no overlaps
+    if (busRoute === '60/65') return getParentStationForStopId('65-1-1555'); // Brookline Village
+    if (busRoute === '61/70/170') return getParentStationForStopId('70-1-86944'); // Moody & Carter Streets (Central Square, Waltham)
+    if (busRoute === '62/76') return getParentStationForStopId('76-1-8629'); // Five Forks
+    // 67/79 79 does not appear in manifest
+    if (busRoute === '72/74/75') return getParentStationForStopId('75-1-2137'); // Belmont Center Station
+    // 78/84 84 does not appear in manifest
+    if (busRoute === '104/109') return getParentStationForStopId('109-1-5488'); // Glendale Square
+    if (busRoute === '114/116/117') return getParentStationForStopId('116-1-5740'); // Maverick Square (East Boston)
+    if (busRoute === '120/121') return getParentStationForStopId('121-1-5666'); // Wood Island Station
+    if (busRoute === '131/132') return getParentStationForStopId('131-1-9328'); // Oak Grove Station
+    // 136/137 137 does not appear in manifest
+    if (busRoute === '201/202') return getParentStationForStopId('201-1-3078'); // Adams & Gallivan Boulevard
+    if (busRoute === '210/211/212') return getParentStationForStopId('210-1-32005'); //Quincy Center
+    // 214/216 216 does not appear in manifest
+    if (busRoute === '217/245') return getParentStationForStopId('217-1-32005'); // Quincy Center
+    if (busRoute === '220/221/222') return getParentStationForStopId('221-1-3616'); // Bicknell Square
+    if (busRoute === '225/226') return getParentStationForStopId('226-1-3824'); // Weymouth Landing
+    if (busRoute === '350/351') return getParentStationForStopId('350-1-49848'); // Third Avenue (Burlington)
+    if (busRoute === '411/430') return getParentStationForStopId('411-1-8336'); // Kennedy Dr (Granada)
+    if (busRoute === '426/428') return getParentStationForStopId('426-1-7394'); // East Saugus
+    if (busRoute === '434/435/436') return getParentStationForStopId('424-1-14748'); // Central Square, Lynn (Busway)
+    if (busRoute === '439/441/442') return getParentStationForStopId('439-1-14748'); // Central Square, Lynn (Busway)
+    // 451/465 465 does not appear in manifest
+    // 501/503 503 does not appear in manifest
+    // 502/504 502 does not appear in manifest
+    if (busRoute === '505/553/554') return getParentStationForStopId('505-1-903'); // Newton Corner
+    if (busRoute === '556/558') return getParentStationForStopId('556-1-903'); // Newton Corner
+    if (busRoute === '712/713') return getParentStationForStopId('712-1-109853'); //Point Shirley
+    if (busRoute === 'CT3/171') return getParentStationForStopId('CT3-1-13'); //Andrew
     if (busRoute === 'SL1/SL2/SL3/SLW') return getParentStationForStopId('SL1-1-74617'); // South Station (Silver Line)
     if (busRoute === 'SL4/SL5') return getParentStationForStopId('SL4-1-64'); // Nubian Station
+  }
+  if (line === 'line-ferry' && ferryRoute) {
+    // Return the first ferry station for the route
+    const { stations } = ferryStations[ferryRoute];
+    return stations[0];
   }
   throw new Error('There should be no other lines with invalid from station selections.');
 };
@@ -213,6 +274,16 @@ export const getStationKeysFromStations = (
 
 export const findValidDefaultStations = (stations: Station[] | undefined) => {
   if (!stations?.length) return { defaultFrom: undefined, defaultTo: undefined };
+
+  if (stations.length === 2) {
+    const defaultFrom = stations[0];
+    const defaultTo = stations[1];
+
+    //if defaultFrom && defaultTo are not null and defaultFrom is not equal to defaultTo
+    if (defaultFrom && defaultTo && defaultFrom.station !== defaultTo.station) {
+      return { defaultFrom, defaultTo };
+    }
+  }
 
   for (const dir of ['1', '0']) {
     const validStations = stations.filter((s) => s.stops[dir]?.length > 0);
