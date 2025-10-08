@@ -156,12 +156,14 @@ def headways_over_time(start_date: datetime.date, end_date: datetime.date, stops
     df["headway_ratio"] = df["headway_time_sec"] / df["benchmark_headway_time_sec"]
 
     # Calculate the count of trips under 0.5 (bunched) per service_date
-    bunched = grouped.apply(lambda x: (x["headway_ratio"] <= 0.5).sum())
+    bunched = grouped.apply(lambda x: (x["headway_ratio"] <= 0.5).sum(), include_groups=False)
     bunched.name = "bunched"
     summary_stats_final = summary_stats_final.merge(bunched, on="service_date", how="left")
 
     # Calculate the count of trips between 0.75 and 1.25 (on-time) per service_date
-    on_time = grouped.apply(lambda x: ((x["headway_ratio"] < 1.25) & (x["headway_ratio"] > 0.75)).sum())
+    on_time = grouped.apply(
+        lambda x: ((x["headway_ratio"] < 1.25) & (x["headway_ratio"] > 0.75)).sum(), include_groups=False
+    )
     on_time.name = "on_time"
     summary_stats_final = summary_stats_final.merge(on_time, on="service_date", how="left")
 

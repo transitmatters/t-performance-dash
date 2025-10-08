@@ -7,18 +7,18 @@ license = "MIT"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "~3.12"
+python = "~3.13"
 json-api-doc = "0.15.0"
-requests = "^2.32.4"
+requests = "^2.32.5"
 pytz = "2025.2"
-boto3 = "~1.38.33"
-numpy = "1.26.4"
-pandas = "~2.2.3"
-datadog_lambda = "~6.111.0"
+boto3 = "~1.40.47"
+numpy = "~2.3.3"
+pandas = "~2.3.3"
+datadog_lambda = "~8.114.0"
 dynamodb-json = "^1.4.2"
 chalice-spec = "^0.7.0"
-pydantic = "^2.11.7"
-apispec = "^6.8.2"
+pydantic = "^2.12.0"
+apispec = "^6.8.4"
 
 [tool.poetry.group.dev.dependencies]
 pip = ">=24.1"
@@ -31,7 +31,7 @@ poetry-plugin-export = "^1.9.0"
 
 [tool.black]
 line-length = 120
-target-version = ['py312']
+target-version = ['py312', 'py313']
 
 [build-system]
 requires = ["poetry-core>=2.0.0"]

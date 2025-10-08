@@ -3,7 +3,7 @@ name: deploy
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 1 * *' # Runs at 00:00 on the first day of every month
+    - cron: "0 0 1 * *" # Runs at 00:00 on the first day of every month
   push:
     branches:
       - main
@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ['20']
-        python-version: ['3.12']
+        node-version: ["20"]
+        python-version: ["3.13"]
     env:
       AWS_PROFILE: transitmatters
       AWS_DEFAULT_REGION: us-east-1
