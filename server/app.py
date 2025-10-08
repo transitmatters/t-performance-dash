@@ -5,7 +5,6 @@ from chalice import CORSConfig, ConflictError, Response, ConvertToMiddleware
 from chalice_spec import ChaliceWithSpec, PydanticPlugin, Docs
 from apispec import APISpec
 from datetime import date
-from datadog_lambda.wrapper import datadog_lambda_wrapper
 from chalicelib import (
     aggregation,
     data_funcs,
@@ -36,7 +35,10 @@ TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", localhost)
 
 cors_config = CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600)
 
+# Only import and register DataDog for non-local environments
 if TM_FRONTEND_HOST != localhost:
+    from datadog_lambda.wrapper import datadog_lambda_wrapper
+
     app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
 
 
