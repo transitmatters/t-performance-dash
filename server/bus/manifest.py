@@ -64,7 +64,11 @@ def create_manifest(df, routes, checkpoint_file):
     )
     tpts["order_guess"] = tpts["time_point_id"].map(orders).fillna(0).astype(int)
 
-    stop_objs = tpts.groupby("time_point_id", dropna=False).apply(lambda x: emit_stop_obj(x, len(routes) > 1), include_groups=False).dropna()
+    stop_objs = (
+        tpts.groupby("time_point_id", dropna=False)
+        .apply(lambda x: emit_stop_obj(x, len(routes) > 1), include_groups=False)
+        .dropna()
+    )
 
     manifest = {
         output_route_name: {
