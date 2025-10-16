@@ -1,11 +1,16 @@
 import React, { useMemo } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
-import type { AggregateDataResponse, TravelTimesUnit } from '../../../common/types/charts';
+import type {
+  AggregateDataResponse,
+  TravelTimesUnit,
+  DayFilter,
+} from '../../../common/types/charts';
 import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { getLocationDetails } from '../../../common/utils/stations';
+import { isWeekendOrHolidayFromData } from '../../../common/utils/date';
 
 interface TravelTimesAggregateChartProps {
   traveltimes: AggregateDataResponse;
@@ -13,14 +18,16 @@ interface TravelTimesAggregateChartProps {
   fromStation: Station;
   timeUnit?: TravelTimesUnit;
   peakTime?: boolean;
+  dayFilter?: DayFilter;
 }
 
 export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps> = ({
   traveltimes,
   toStation,
   fromStation,
-  timeUnit,
+  timeUnit = 'by_date',
   peakTime = true,
+  dayFilter = 'all',
 }) => {
   const {
     query: { startDate, endDate },
@@ -29,9 +36,19 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
   const chart = useMemo(() => {
     const timeUnitByDate = timeUnit === 'by_date';
 
-    const traveltimesData = timeUnitByDate
+    let traveltimesData = timeUnitByDate
       ? traveltimes.by_date.filter((datapoint) => datapoint.peak === 'all')
       : traveltimes.by_time.filter((datapoint) => datapoint.is_peak_day === peakTime);
+
+    // Apply day filter only for by_date data
+    if (timeUnitByDate && dayFilter !== 'all') {
+      traveltimesData = traveltimesData.filter((datapoint) => {
+        if (!datapoint.service_date) return true;
+        const isWeekendOrHolidayDate = isWeekendOrHolidayFromData(datapoint);
+        return dayFilter === 'weekend' ? isWeekendOrHolidayDate : !isWeekendOrHolidayDate;
+      });
+    }
+
     return (
       <AggregateLineChart
         chartId={`travel_times_agg_${timeUnitByDate ? 'by_date' : 'by_time'}`}
@@ -47,11 +64,11 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
         fillColor={timeUnitByDate ? CHART_COLORS.FILL : CHART_COLORS.FILL_HOURLY}
         location={getLocationDetails(fromStation, toStation)}
         includeBothStopsForLocation={true}
-        fname="traveltimes"
+        fname={'traveltimes'}
         yUnit="Minutes"
       />
     );
-  }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime]);
+  }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime, dayFilter]);
 
   return chart;
 };

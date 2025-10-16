@@ -97,6 +97,11 @@ def calc_travel_times_by_date(df: pd.DataFrame):
     # combine summary stats
     summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
 
+    # Add holiday information from the original dataframe
+    holiday_info = df.groupby("service_date")["holiday"].first()
+    holiday_info.name = "holiday"
+    summary_stats_final = summary_stats_final.merge(holiday_info, on="service_date", how="left")
+
     return summary_stats_final
 
 
@@ -165,6 +170,11 @@ def headways_over_time(start_date: datetime.date, end_date: datetime.date, stops
     on_time.name = "on_time"
     summary_stats_final = summary_stats_final.merge(on_time, on="service_date", how="left")
 
+    # Add holiday information from the original dataframe
+    holiday_info = df.groupby("service_date")["holiday"].first()
+    holiday_info.name = "holiday"
+    summary_stats_final = summary_stats_final.merge(holiday_info, on="service_date", how="left")
+
     # filter peak status
     results = summary_stats_final.loc[summary_stats_final["peak"] == "all"]
     # convert to dictionary
@@ -196,6 +206,11 @@ def dwells_over_time(start_date: str | datetime.date, end_date: str | datetime.d
 
     # combine summary stats
     summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
+
+    # Add holiday information from the original dataframe
+    holiday_info = df.groupby("service_date")["holiday"].first()
+    holiday_info.name = "holiday"
+    summary_stats_final = summary_stats_final.merge(holiday_info, on="service_date", how="left")
 
     # filter peak status
     results = summary_stats_final.loc[summary_stats_final["peak"] == "all"]
