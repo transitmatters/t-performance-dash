@@ -35,6 +35,7 @@ export interface AggregateDataPoint {
   is_peak_day?: boolean;
   peak?: string;
   holiday?: boolean;
+  weekend?: boolean;
 }
 
 export interface AggregateDataResponse {

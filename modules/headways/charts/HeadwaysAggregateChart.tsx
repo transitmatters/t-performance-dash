@@ -6,7 +6,6 @@ import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { getLocationDetails } from '../../../common/utils/stations';
-import { isWeekendOrHolidayFromData } from '../../../common/utils/date';
 
 interface HeadwaysAggregateChartProps {
   headways: AggregateDataResponse;
@@ -33,7 +32,7 @@ export const HeadwaysAggregateChart: React.FC<HeadwaysAggregateChartProps> = ({
     if (dayFilter !== 'all') {
       filteredData = filteredData.filter((datapoint) => {
         if (!datapoint.service_date) return true; // Include data without service_date
-        const isWeekendOrHolidayDate = isWeekendOrHolidayFromData(datapoint);
+        const isWeekendOrHolidayDate = datapoint.holiday || datapoint.weekend;
         return dayFilter === 'weekend' ? isWeekendOrHolidayDate : !isWeekendOrHolidayDate;
       });
     }

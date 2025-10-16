@@ -9,7 +9,6 @@ import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDi
 import { getAggDataWidgets } from '../../common/utils/widgets';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { isWeekendOrHolidayFromData } from '../../common/utils/date';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 
 interface DwellsAggregateWrapperProps {
@@ -34,7 +33,7 @@ export const DwellsAggregateWrapper: React.FC<DwellsAggregateWrapperProps> = ({
   if (dayFilter !== 'all') {
     dwellsData = dwellsData.filter((datapoint) => {
       if (!datapoint.service_date) return true;
-      const isWeekendOrHolidayDate = isWeekendOrHolidayFromData(datapoint);
+      const isWeekendOrHolidayDate = datapoint.holiday || datapoint.weekend;
       return dayFilter === 'weekend' ? isWeekendOrHolidayDate : !isWeekendOrHolidayDate;
     });
   }

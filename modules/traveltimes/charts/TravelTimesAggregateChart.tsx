@@ -10,7 +10,6 @@ import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { getLocationDetails } from '../../../common/utils/stations';
-import { isWeekendOrHolidayFromData } from '../../../common/utils/date';
 
 interface TravelTimesAggregateChartProps {
   traveltimes: AggregateDataResponse;
@@ -44,7 +43,7 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
     if (timeUnitByDate && dayFilter !== 'all') {
       traveltimesData = traveltimesData.filter((datapoint) => {
         if (!datapoint.service_date) return true;
-        const isWeekendOrHolidayDate = isWeekendOrHolidayFromData(datapoint);
+        const isWeekendOrHolidayDate = datapoint.holiday || datapoint.weekend;
         return dayFilter === 'weekend' ? isWeekendOrHolidayDate : !isWeekendOrHolidayDate;
       });
     }

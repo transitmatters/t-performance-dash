@@ -97,10 +97,17 @@ def calc_travel_times_by_date(df: pd.DataFrame):
     # combine summary stats
     summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
 
-    # Add holiday information from the original dataframe
-    holiday_info = df.groupby("service_date")["holiday"].first()
-    holiday_info.name = "holiday"
-    summary_stats_final = summary_stats_final.merge(holiday_info, on="service_date", how="left")
+    cal = USFederalHolidayCalendar()
+    holidays = cal.holidays(
+        start=summary_stats_final["service_date"].min(), end=summary_stats_final["service_date"].max()
+    )
+    # pandas has a bug where sometimes empty holidays returns an Index and we need DateTimeIndex
+    holidays = pd.to_datetime(holidays)
+    summary_stats_final["holiday"] = summary_stats_final["service_date"].isin(holidays.date)
+
+    # Calculate Weekend
+    # Convert service_date back to datetime to use .dt accessor
+    summary_stats_final["weekend"] = pd.to_datetime(summary_stats_final["service_date"]).dt.dayofweek.isin([5, 6])
 
     return summary_stats_final
 
@@ -170,10 +177,17 @@ def headways_over_time(start_date: datetime.date, end_date: datetime.date, stops
     on_time.name = "on_time"
     summary_stats_final = summary_stats_final.merge(on_time, on="service_date", how="left")
 
-    # Add holiday information from the original dataframe
-    holiday_info = df.groupby("service_date")["holiday"].first()
-    holiday_info.name = "holiday"
-    summary_stats_final = summary_stats_final.merge(holiday_info, on="service_date", how="left")
+    cal = USFederalHolidayCalendar()
+    holidays = cal.holidays(
+        start=summary_stats_final["service_date"].min(), end=summary_stats_final["service_date"].max()
+    )
+    # pandas has a bug where sometimes empty holidays returns an Index and we need DateTimeIndex
+    holidays = pd.to_datetime(holidays)
+    summary_stats_final["holiday"] = summary_stats_final["service_date"].isin(holidays.date)
+
+    # Calculate Weekend
+    # Convert service_date back to datetime to use .dt accessor
+    summary_stats_final["weekend"] = pd.to_datetime(summary_stats_final["service_date"]).dt.dayofweek.isin([5, 6])
 
     # filter peak status
     results = summary_stats_final.loc[summary_stats_final["peak"] == "all"]
@@ -207,11 +221,18 @@ def dwells_over_time(start_date: str | datetime.date, end_date: str | datetime.d
     # combine summary stats
     summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
 
-    # Add holiday information from the original dataframe
-    holiday_info = df.groupby("service_date")["holiday"].first()
-    holiday_info.name = "holiday"
-    summary_stats_final = summary_stats_final.merge(holiday_info, on="service_date", how="left")
+    # Calculate Holiday
+    cal = USFederalHolidayCalendar()
+    holidays = cal.holidays(
+        start=summary_stats_final["service_date"].min(), end=summary_stats_final["service_date"].max()
+    )
+    # pandas has a bug where sometimes empty holidays returns an Index and we need DateTimeIndex
+    holidays = pd.to_datetime(holidays)
+    summary_stats_final["holiday"] = summary_stats_final["service_date"].isin(holidays.date)
 
+    # Calculate Weekend
+    # Convert service_date back to datetime to use .dt accessor
+    summary_stats_final["weekend"] = pd.to_datetime(summary_stats_final["service_date"]).dt.dayofweek.isin([5, 6])
     # filter peak status
     results = summary_stats_final.loc[summary_stats_final["peak"] == "all"]
     # convert to dictionary

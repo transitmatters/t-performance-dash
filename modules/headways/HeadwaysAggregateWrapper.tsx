@@ -9,7 +9,6 @@ import { MiniWidgetCreator } from '../../common/components/widgets/MiniWidgetCre
 import { getAggHeadwayDataWidgets } from '../../common/utils/widgets';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { isWeekendOrHolidayFromData } from '../../common/utils/date';
 import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
 
 interface HeadwaysAggregateWrapperProps {
@@ -34,7 +33,7 @@ export const HeadwaysAggregateWrapper: React.FC<HeadwaysAggregateWrapperProps> =
   if (dayFilter !== 'all') {
     headwaysData = headwaysData.filter((datapoint) => {
       if (!datapoint.service_date) return true;
-      const isWeekendOrHolidayDate = isWeekendOrHolidayFromData(datapoint);
+      const isWeekendOrHolidayDate = datapoint.holiday || datapoint.weekend;
       return dayFilter === 'weekend' ? isWeekendOrHolidayDate : !isWeekendOrHolidayDate;
     });
   }
