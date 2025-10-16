@@ -98,9 +98,8 @@ def calc_travel_times_by_date(df: pd.DataFrame):
     summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
 
     cal = USFederalHolidayCalendar()
-    holidays = cal.holidays(
-        start=summary_stats_final["service_date"].min(), end=summary_stats_final["service_date"].max()
-    )
+    service_dates = pd.to_datetime(summary_stats_final["service_date"].dropna(), errors="coerce")
+    holidays = cal.holidays(start=service_dates.min(), end=service_dates.max())
     # pandas has a bug where sometimes empty holidays returns an Index and we need DateTimeIndex
     holidays = pd.to_datetime(holidays)
     summary_stats_final["holiday"] = summary_stats_final["service_date"].isin(holidays.date)
@@ -178,9 +177,8 @@ def headways_over_time(start_date: datetime.date, end_date: datetime.date, stops
     summary_stats_final = summary_stats_final.merge(on_time, on="service_date", how="left")
 
     cal = USFederalHolidayCalendar()
-    holidays = cal.holidays(
-        start=summary_stats_final["service_date"].min(), end=summary_stats_final["service_date"].max()
-    )
+    service_dates = pd.to_datetime(summary_stats_final["service_date"].dropna(), errors="coerce")
+    holidays = cal.holidays(start=service_dates.min(), end=service_dates.max())
     # pandas has a bug where sometimes empty holidays returns an Index and we need DateTimeIndex
     holidays = pd.to_datetime(holidays)
     summary_stats_final["holiday"] = summary_stats_final["service_date"].isin(holidays.date)
@@ -223,9 +221,8 @@ def dwells_over_time(start_date: str | datetime.date, end_date: str | datetime.d
 
     # Calculate Holiday
     cal = USFederalHolidayCalendar()
-    holidays = cal.holidays(
-        start=summary_stats_final["service_date"].min(), end=summary_stats_final["service_date"].max()
-    )
+    service_dates = pd.to_datetime(summary_stats_final["service_date"].dropna(), errors="coerce")
+    holidays = cal.holidays(start=service_dates.min(), end=service_dates.max())
     # pandas has a bug where sometimes empty holidays returns an Index and we need DateTimeIndex
     holidays = pd.to_datetime(holidays)
     summary_stats_final["holiday"] = summary_stats_final["service_date"].isin(holidays.date)
