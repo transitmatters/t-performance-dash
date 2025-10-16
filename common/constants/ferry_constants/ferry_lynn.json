@@ -10,7 +10,7 @@
         "stop_name": "Long Wharf (North)",
         "station": "Boat-Long",
         "branches": null,
-        "order": 1,
+        "order": 2,
         "stops": {
           "0": ["Boat-Lynn|0|Boat-Long"],
           "1": ["Boat-Lynn|1|Boat-Long"]
@@ -21,7 +21,7 @@
         "stop_name": "Blossom Street Pier",
         "station": "Boat-Blossom",
         "branches": null,
-        "order": 2,
+        "order": 1,
         "stops": {
           "0": ["Boat-Lynn|0|Boat-Blossom"],
           "1": ["Boat-Lynn|1|Boat-Blossom"]

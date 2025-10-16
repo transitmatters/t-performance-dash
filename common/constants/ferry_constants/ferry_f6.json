@@ -10,7 +10,7 @@
         "stop_name": "Winthrop Landing",
         "station": "Boat-Winthrop",
         "branches": null,
-        "order": 1,
+        "order": 5,
         "stops": {
           "0": ["Boat-F6|0|Boat-Winthrop"],
           "1": ["Boat-F6|1|Boat-Winthrop"]
@@ -21,7 +21,7 @@
         "stop_name": "Logan Airport Ferry Terminal",
         "station": "Boat-Logan",
         "branches": null,
-        "order": 2,
+        "order": 4,
         "stops": {
           "0": ["Boat-F6|0|Boat-Logan"],
           "1": ["Boat-F6|1|Boat-Logan"]
@@ -41,7 +41,7 @@
         "stop_name": "Seaport/Fan Pier",
         "station": "Boat-Fan",
         "branches": null,
-        "order": 4,
+        "order": 2,
         "stops": {
           "0": ["Boat-F6|0|Boat-Fan"],
           "1": ["Boat-F6|1|Boat-Fan"]
@@ -51,7 +51,7 @@
         "stop_name": "Logan Airport Ferry Terminal",
         "station": "Boat-Logan",
         "branches": null,
-        "order": 5,
+        "order": 1,
         "stops": {
           "0": ["Boat-F6|0|Boat-Logan"],
           "1": ["Boat-F6|1|Boat-Logan"]
