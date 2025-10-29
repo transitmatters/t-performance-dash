@@ -23,7 +23,7 @@ def resample_and_aggregate(
     df.set_index("date", inplace=True)
 
     if agg == "monthly":
-        df_agg = df.resample("M")
+        df_agg = df.resample("ME")
     else:
         df_agg = df.resample("W-SUN")
 
