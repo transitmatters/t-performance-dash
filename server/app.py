@@ -20,6 +20,7 @@ from chalicelib import (
     ridership,
     service_ridership_dashboard,
     models,
+    cache,
 )
 
 
@@ -93,14 +94,28 @@ def healthcheck():
 def headways_route(user_date):
     date = parse_user_date(user_date)
     stops = app.current_request.query_params.getlist("stop")
-    return data_funcs.headways(date, stops)
+
+    cache_max_age = cache.get_cache_max_age({"date": user_date})
+    data = data_funcs.headways(date, stops)
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
 
 
 @app.route("/api/dwells/{user_date}", cors=cors_config, docs=Docs(response=models.DwellResponse))
 def dwells_route(user_date):
     date = parse_user_date(user_date)
     stops = app.current_request.query_params.getlist("stop")
-    return data_funcs.dwells(date, stops)
+
+    cache_max_age = cache.get_cache_max_age({"date": user_date})
+    data = data_funcs.dwells(date, stops)
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
 
 
 @app.route("/api/traveltimes/{user_date}", cors=cors_config, docs=Docs(response=models.TravelTimeResponse))
@@ -108,55 +123,92 @@ def traveltime_route(user_date):
     date = parse_user_date(user_date)
     from_stops = app.current_request.query_params.getlist("from_stop")
     to_stops = app.current_request.query_params.getlist("to_stop")
-    return data_funcs.travel_times(date, from_stops, to_stops)
+
+    cache_max_age = cache.get_cache_max_age({"date": user_date})
+    data = data_funcs.travel_times(date, from_stops, to_stops)
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
 
 
 @app.route("/api/alerts/{user_date}", cors=cors_config, docs=Docs(response=models.AlertsRouteResponse))
 def alerts_route(user_date):
     date = parse_user_date(user_date)
-    return json.dumps(data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params)))
+    cache_max_age = cache.get_cache_max_age({"date": user_date})
+    data = data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params))
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
 
 
 @app.route("/api/aggregate/traveltimes", cors=cors_config, docs=Docs(response=models.TravelTimeAggregateResponse))
 def traveltime_aggregate_route():
-    start_date = parse_user_date(app.current_request.query_params["start_date"])
-    end_date = parse_user_date(app.current_request.query_params["end_date"])
-    from_stops = app.current_request.query_params.getlist("from_stop")
-    to_stops = app.current_request.query_params.getlist("to_stop")
+    query_params = app.current_request.query_params or {}
+    start_date = parse_user_date(query_params["start_date"])
+    end_date = parse_user_date(query_params["end_date"])
+    from_stops = query_params.getlist("from_stop")
+    to_stops = query_params.getlist("to_stop")
 
-    response = aggregation.travel_times_over_time(start_date, end_date, from_stops, to_stops)
-    return json.dumps(response, indent=4, sort_keys=True, default=str)
+    cache_max_age = cache.get_cache_max_age(query_params)
+    data = aggregation.travel_times_over_time(start_date, end_date, from_stops, to_stops)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True, default=str),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
 
 
 @app.route("/api/aggregate/traveltimes2", cors=cors_config, docs=Docs(response=models.TravelTimeAggregateResponse))
 def traveltime_aggregate_route_2():
-    start_date = parse_user_date(app.current_request.query_params["start_date"])
-    end_date = parse_user_date(app.current_request.query_params["end_date"])
-    from_stop = app.current_request.query_params.getlist("from_stop")
-    to_stop = app.current_request.query_params.getlist("to_stop")
+    query_params = app.current_request.query_params or {}
+    start_date = parse_user_date(query_params["start_date"])
+    end_date = parse_user_date(query_params["end_date"])
+    from_stop = query_params.getlist("from_stop")
+    to_stop = query_params.getlist("to_stop")
 
-    response = aggregation.travel_times_all(start_date, end_date, from_stop, to_stop)
-    return json.dumps(response, indent=4, sort_keys=True, default=str)
+    cache_max_age = cache.get_cache_max_age(query_params)
+    data = aggregation.travel_times_all(start_date, end_date, from_stop, to_stop)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True, default=str),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
 
 
 @app.route("/api/aggregate/headways", cors=cors_config, docs=Docs(response=models.HeadwaysAggregateResponse))
 def headways_aggregate_route():
-    start_date = parse_user_date(app.current_request.query_params["start_date"])
-    end_date = parse_user_date(app.current_request.query_params["end_date"])
-    stops = app.current_request.query_params.getlist("stop")
+    query_params = app.current_request.query_params or {}
+    start_date = parse_user_date(query_params["start_date"])
+    end_date = parse_user_date(query_params["end_date"])
+    stops = query_params.getlist("stop")
 
-    response = aggregation.headways_over_time(start_date, end_date, stops)
-    return json.dumps(response, indent=4, sort_keys=True, default=str)
+    cache_max_age = cache.get_cache_max_age(query_params)
+    data = aggregation.headways_over_time(start_date, end_date, stops)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True, default=str),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
 
 
 @app.route("/api/aggregate/dwells", cors=cors_config, docs=Docs(response=models.DwellsAggregateResponse))
 def dwells_aggregate_route():
-    start_date = parse_user_date(app.current_request.query_params["start_date"])
-    end_date = parse_user_date(app.current_request.query_params["end_date"])
-    stops = app.current_request.query_params.getlist("stop")
+    query_params = app.current_request.query_params or {}
+    start_date = parse_user_date(query_params["start_date"])
+    end_date = parse_user_date(query_params["end_date"])
+    stops = query_params.getlist("stop")
 
-    response = aggregation.dwells_over_time(start_date, end_date, stops)
-    return json.dumps(response, indent=4, sort_keys=True, default=str)
+    cache_max_age = cache.get_cache_max_age(query_params)
+    data = aggregation.dwells_over_time(start_date, end_date, stops)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True, default=str),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
 
 
 @app.route("/api/git_id", cors=cors_config, docs=Docs(response=models.GitIdResponse))
@@ -171,8 +223,12 @@ def get_git_id():
 
 @app.route("/api/alerts", cors=cors_config, docs=Docs(response=models.AlertsRouteResponse))
 def get_alerts():
-    response = mbta_v3.getAlerts(app.current_request.query_params)
-    return json.dumps(response, indent=4, sort_keys=True, default=str)
+    data = mbta_v3.getAlerts(app.current_request.query_params)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True, default=str),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache.FIFTEEN_MINUTES}"},
+    )
 
 
 @app.route(
@@ -181,8 +237,14 @@ def get_alerts():
     docs=Docs(request=models.AlertDelaysByLineParams, response=models.LineDelaysResponse),
 )
 def get_delays_by_line():
-    response = delays.delay_time_by_line(app.current_request.query_params)
-    return json.dumps(response, indent=4, sort_keys=True)
+    query_params = app.current_request.query_params or {}
+    cache_max_age = cache.get_cache_max_age(query_params)
+    data = delays.delay_time_by_line(query_params)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
 
 
 @app.route(
@@ -191,8 +253,14 @@ def get_delays_by_line():
     docs=Docs(request=models.TripMetricsByLineParams, response=models.TripMetricsResponse),
 )
 def get_trips_by_line():
-    response = speed.trip_metrics_by_line(app.current_request.query_params)
-    return json.dumps(response, indent=4, sort_keys=True)
+    query_params = app.current_request.query_params or {}
+    cache_max_age = cache.get_cache_max_age(query_params)
+    data = speed.trip_metrics_by_line(query_params)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
 
 
 @app.route(
@@ -201,40 +269,56 @@ def get_trips_by_line():
     docs=Docs(request=models.ScheduledServiceParams, response=models.GetScheduledServiceResponse),
 )
 def get_scheduled_service():
-    query = app.current_request.query_params
-    start_date = parse_user_date(query["start_date"])
-    end_date = parse_user_date(query["end_date"])
-    route_id = query.get("route_id")
-    agg = query["agg"]
-    response = scheduled_service.get_scheduled_service_counts(
+    query_params = app.current_request.query_params or {}
+    start_date = parse_user_date(query_params["start_date"])
+    end_date = parse_user_date(query_params["end_date"])
+    route_id = query_params.get("route_id")
+    agg = query_params["agg"]
+
+    cache_max_age = cache.get_cache_max_age(query_params)
+    data = scheduled_service.get_scheduled_service_counts(
         start_date=start_date,
         end_date=end_date,
         route_id=route_id,
         agg=agg,
     )
-    return json.dumps(response)
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
 
 
 @app.route(
     "/api/ridership", cors=cors_config, docs=Docs(request=models.RidershipParams, response=models.RidershipResponse)
 )
 def get_ridership():
-    query = app.current_request.query_params
-    start_date = parse_user_date(query["start_date"])
-    end_date = parse_user_date(query["end_date"])
-    line_id = query.get("line_id")
-    response = ridership.get_ridership(
+    query_params = app.current_request.query_params or {}
+    start_date = parse_user_date(query_params["start_date"])
+    end_date = parse_user_date(query_params["end_date"])
+    line_id = query_params.get("line_id")
+
+    cache_max_age = cache.get_cache_max_age(query_params)
+    data = ridership.get_ridership(
         start_date=start_date,
         end_date=end_date,
         line_id=line_id,
     )
-    return json.dumps(response)
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
 
 
 @app.route("/api/facilities", cors=cors_config, docs=Docs(response=models.Facility))
 def get_facilities():
-    response = mbta_v3.getV3("facilities", app.current_request.query_params)
-    return json.dumps(response, indent=4, sort_keys=True, default=str)
+    data = mbta_v3.getV3("facilities", app.current_request.query_params)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True, default=str),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache.FIFTEEN_MINUTES}"},
+    )
 
 
 @app.route(
@@ -243,14 +327,20 @@ def get_facilities():
     docs=Docs(request=models.SpeedRestrictionsParams, response=models.SpeedRestrictionsResponse),
 )
 def get_speed_restrictions():
-    query = app.current_request.query_params
-    on_date = query["date"]
-    line_id = query["line_id"]
-    response = speed_restrictions.query_speed_restrictions(
+    query_params = app.current_request.query_params or {}
+    on_date = query_params["date"]
+    line_id = query_params["line_id"]
+
+    cache_max_age = cache.get_cache_max_age(query_params)
+    data = speed_restrictions.query_speed_restrictions(
         line_id=line_id,
         on_date=on_date,
     )
-    return json.dumps(response)
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
 
 
 @app.route(
@@ -259,28 +349,38 @@ def get_speed_restrictions():
     docs=Docs(request=models.ServiceHoursParams, response=models.ServiceHoursResponse),
 )
 def get_service_hours():
-    query = app.current_request.query_params
-    line_id = query.get("line_id")
-    start_date = parse_user_date(query["start_date"])
-    end_date = parse_user_date(query["end_date"])
-    agg = query["agg"]
-    response = service_hours.get_service_hours(
+    query_params = app.current_request.query_params or {}
+    line_id = query_params.get("line_id")
+    start_date = parse_user_date(query_params["start_date"])
+    end_date = parse_user_date(query_params["end_date"])
+    agg = query_params["agg"]
+
+    cache_max_age = cache.get_cache_max_age(query_params)
+    data = service_hours.get_service_hours(
         single_route_id=line_id,
         start_date=start_date,
         end_date=end_date,
         agg=agg,
     )
-    return json.dumps(response)
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
 
 
 @app.route("/api/time_predictions", cors=cors_config, docs=Docs(response=models.TimePredictionResponse))
 def get_time_predictions():
     query = app.current_request.query_params
     route_id = query["route_id"]
-    response = predictions.query_time_predictions(
+    data = predictions.query_time_predictions(
         route_id=route_id,
     )
-    return json.dumps(response)
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache.ONE_HOUR}"},
+    )
 
 
 @app.route(
@@ -289,5 +389,9 @@ def get_time_predictions():
     docs=Docs(response=models.ServiceRidershipDashboardResponse),
 )
 def get_service_ridership_dashboard():
-    response = service_ridership_dashboard.get_service_ridership_dash_json()
-    return response
+    data = service_ridership_dashboard.get_service_ridership_dash_json()
+
+    return Response(
+        body=data,
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache.ONE_HOUR}"},
+    )
