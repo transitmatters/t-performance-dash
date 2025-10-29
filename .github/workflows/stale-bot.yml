@@ -1,0 +1,25 @@
+name: Mark issues and PRs as stale
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # every day at midnight
+
+jobs:
+  stale:
+    permissions:
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Stale Action
+        uses: actions/stale@v9
+        with:
+          stale-issue-label: 'stale'
+          stale-pr-label: 'stale'
+          days-before-stale: 180
+          days-before-close: -1
+          stale-issue-message: >
+            This issue has been automatically marked as stale because it has not had activity within 180 days.
+          stale-pr-message: >
+            This pull request has been automatically marked as stale because it has not had activity within 180 days.
+          operations-per-run: 100
