@@ -25,4 +25,8 @@ export const DASHBOARD_TABS: {
     path: '/ferry/trips/single',
     query: { ferryRoute: 'Boat-F1', date: FERRY_DEFAULTS.singleTripConfig.date },
   },
+  'The RIDE': {
+    name: 'The RIDE',
+    path: '/the-ride/ridership',
+  },
 };
