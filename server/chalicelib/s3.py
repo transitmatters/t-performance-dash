@@ -39,6 +39,10 @@ def is_cr(stop_id: str):
     return stop_id.startswith("CR-")
 
 
+def is_ferry(stop_id: str):
+    return stop_id.startswith("Boat-")
+
+
 def get_gobble_folder(stop_id: str):
     if is_bus(stop_id):
         return "daily-bus-data"
@@ -52,13 +56,16 @@ def get_lamp_folder():
     return "daily-data"
 
 
-def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False):
+def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, route_context=None):
     """As advertised: single event file from s3"""
     year, month, day = date.year, date.month, date.day
 
     if is_cr(stop_id):
         folder = get_gobble_folder(stop_id)
         key = f"Events-live/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
+    if is_ferry(stop_id):
+        folder = "monthly-ferry-data"
+        key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
     # if current date is newer than the max monthly data date, use LAMP
     elif date.date() > date_utils.get_max_monthly_data_date():
         # if we've asked to use gobble data or bus data, check gobble
