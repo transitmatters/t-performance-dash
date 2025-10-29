@@ -39,6 +39,7 @@ export const THREE_MONTHS_AGO_STRING = TODAY.subtract(90, 'days').format(DATE_FO
 export const OVERVIEW_TRAIN_MIN_DATE = '2016-02-01';
 const TRAIN_MIN_DATE = '2016-01-15';
 const BUS_MIN_DATE = '2018-08-01';
+const RIDE_MIN_DATE = '2017-02-16';
 const FERRY_MIN_DATE = '2018-11-01';
 export const FERRY_MAX_DATE = '2025-07-31';
 export const FERRY_MAX_DAY = dayjs(FERRY_MAX_DATE);
@@ -55,6 +56,8 @@ export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
 export const COMMUTER_RAIL_RIDERSHIP_MIN_DATE = '2022-06-22';
 export const COMMUTER_RAIL_DATA_MIN_DATE = '2024-01-01';
 
+export const RIDE_MAX_DATE = '2025-08-31';
+export const RIDE_MAX_DAY = dayjs(RIDE_MAX_DATE);
 export const getESTDayjs = (date: string) => {
   return dayjs(date).tz(est);
 };
@@ -157,6 +160,14 @@ const FLAT_PICKER_OPTIONS: {
     altFormat: 'M j, Y',
     dateFormat: 'Y-m-d',
   },
+  'The RIDE': {
+    enableTime: false,
+    minDate: RIDE_MIN_DATE,
+    maxDate: RIDE_MAX_DATE,
+    altInput: true,
+    altFormat: 'M j, Y',
+    dateFormat: 'Y-m-d',
+  },
 };
 
 const SINGLE_RAPID_PRESETS: {
@@ -241,7 +252,7 @@ const SINGLE_FERRY_PRESETS: {
     key: 'firstOfYear',
     name: `First of ${FERRY_MAX_DAY.startOf('year').format('YYYY')}`,
     input: {
-      date: FERRY_MAX_DAY.startOf('month').startOf('year').format(DATE_FORMAT),
+      date: FERRY_MAX_DAY.startOf('month').format(DATE_FORMAT),
     },
   },
   firstOfPrevYear: {
@@ -249,6 +260,37 @@ const SINGLE_FERRY_PRESETS: {
     name: `First of ${FERRY_MAX_DAY.subtract(1, 'year').startOf('year').format('YYYY')}`,
     input: {
       date: FERRY_MAX_DAY.subtract(1, 'year').startOf('year').format(DATE_FORMAT),
+    },
+  },
+};
+
+const SINGLE_RIDE_PRESETS: {
+  [key in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams>;
+} = {
+  mostRecent: {
+    key: 'mostRecent',
+    name: `${RIDE_MAX_DAY.format(PRETTY_DATE_FORMAT)}`,
+    input: { date: BUS_MAX_DATE },
+  },
+  firstOfMonth: {
+    key: 'firstOfMonth',
+    name: `${RIDE_MAX_DAY.startOf('month').format(PRETTY_DATE_FORMAT)}`,
+    input: {
+      date: RIDE_MAX_DAY.startOf('month').format(DATE_FORMAT),
+    },
+  },
+  firstOfYear: {
+    key: 'firstOfYear',
+    name: `First of ${RIDE_MAX_DAY.startOf('year').format('YYYY')}`,
+    input: {
+      date: RIDE_MAX_DAY.startOf('month').format(DATE_FORMAT),
+    },
+  },
+  firstOfPrevYear: {
+    key: 'firstOfPrevYear',
+    name: `First of ${RIDE_MAX_DAY.subtract(1, 'year').startOf('year').format('YYYY')}`,
+    input: {
+      date: RIDE_MAX_DAY.subtract(1, 'year').startOf('year').format(DATE_FORMAT),
     },
   },
 };
@@ -261,6 +303,7 @@ export const SINGLE_PRESETS: {
   System: SINGLE_RAPID_PRESETS,
   'Commuter Rail': SINGLE_RAPID_PRESETS,
   Ferry: SINGLE_FERRY_PRESETS,
+  'The RIDE': SINGLE_RIDE_PRESETS,
 };
 
 const RANGE_RAPID_PRESETS: {
@@ -371,7 +414,7 @@ const RANGE_BUS_PRESETS: {
     key: 'all',
     name: 'All time',
     input: {
-      startDate: dayjs(BUS_MIN_DATE).format(DATE_FORMAT),
+      startDate: dayjs(RIDE_MIN_DATE).format(DATE_FORMAT),
       endDate: BUS_MAX_DATE,
     },
   },
@@ -422,6 +465,51 @@ const RANGE_FERRY_PRESETS: {
   },
 };
 
+const RANGE_RIDE_PRESETS: {
+  [key in DatePresetKey]?: DateSelectionDefaultOptions<DateParams>;
+} = {
+  thisMonth: {
+    key: 'thisMonth',
+    name: RIDE_MAX_DAY.format('MMMM YYYY'),
+    input: {
+      startDate: RIDE_MAX_DAY.startOf('month').format(DATE_FORMAT),
+      endDate: RIDE_MAX_DATE,
+    },
+  },
+  lastMonth: {
+    key: 'lastMonth',
+    name: RIDE_MAX_DAY.subtract(1, 'month').format('MMMM YYYY'),
+    input: {
+      startDate: RIDE_MAX_DAY.subtract(1, 'month').startOf('month').format(DATE_FORMAT),
+      endDate: RIDE_MAX_DAY.subtract(1, 'month').endOf('month').format(DATE_FORMAT),
+    },
+  },
+  thisYear: {
+    key: 'thisYear',
+    name: RIDE_MAX_DAY.format('YYYY'),
+    input: {
+      startDate: RIDE_MAX_DAY.startOf('year').format(DATE_FORMAT),
+      endDate: RIDE_MAX_DATE,
+    },
+  },
+  lastYear: {
+    key: 'lastYear',
+    name: RIDE_MAX_DAY.subtract(1, 'year').format('YYYY'),
+    input: {
+      startDate: RIDE_MAX_DAY.startOf('year').subtract(1, 'year').format(DATE_FORMAT),
+      endDate: RIDE_MAX_DAY.endOf('year').subtract(1, 'year').format(DATE_FORMAT),
+    },
+  },
+  all: {
+    key: 'all',
+    name: 'All time',
+    input: {
+      startDate: dayjs(RIDE_MIN_DATE).format(DATE_FORMAT),
+      endDate: RIDE_MAX_DATE,
+    },
+  },
+};
+
 export const RANGE_PRESETS: {
   [key in Tab]: { [key in DatePresetKey]?: DateSelectionDefaultOptions<DateParams> };
 } = {
@@ -429,7 +517,8 @@ export const RANGE_PRESETS: {
   Bus: RANGE_RAPID_PRESETS,
   System: RANGE_RAPID_PRESETS,
   'Commuter Rail': RANGE_RAPID_PRESETS,
-  Ferry: RANGE_FERRY_PRESETS,
+  Ferry: RANGE_RAPID_PRESETS,
+  'The RIDE': RANGE_RIDE_PRESETS,
 };
 
 export type DatePresetKey =
@@ -480,14 +569,21 @@ export enum OverviewRangeTypes {
 }
 
 export const RANGE_DATE_KEYS = Object.fromEntries(
-  [...Object.values(RANGE_RAPID_PRESETS), ...Object.values(RANGE_FERRY_PRESETS)].map(
-    (rangePreset) => [`${rangePreset.input.startDate}${rangePreset.input.endDate}`, rangePreset.key]
-  )
+  [
+    ...Object.values(RANGE_RAPID_PRESETS),
+    ...Object.values(RANGE_FERRY_PRESETS),
+    ...Object.values(RANGE_RIDE_PRESETS),
+  ].map((rangePreset) => [
+    `${rangePreset.input.startDate}${rangePreset.input.endDate}`,
+    rangePreset.key,
+  ])
 );
 export const SINGLE_DATE_KEYS = Object.fromEntries(
-  [...Object.values(SINGLE_RAPID_PRESETS), ...Object.values(SINGLE_FERRY_PRESETS)].map(
-    (singlePreset) => [singlePreset.input.date, singlePreset.key]
-  )
+  [
+    ...Object.values(SINGLE_RAPID_PRESETS),
+    ...Object.values(SINGLE_FERRY_PRESETS),
+    ...Object.values(SINGLE_RIDE_PRESETS),
+  ].map((singlePreset) => [singlePreset.input.date, singlePreset.key])
 );
 
 export const todayOrDate = (date: dayjs.Dayjs) => {

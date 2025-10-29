@@ -11,6 +11,7 @@ export const COLORS = {
     bus: '#FFC72C',
     commuterRail: '#80276c',
     ferry: '#008EAA',
+    theRide: '#FFC72C',
   },
   charts: {
     fillBackgroundColor: '#bfc8d680',
@@ -56,6 +57,7 @@ export const LINE_COLORS: { [key in Line | 'default']: string } = {
   'line-mattapan': COLORS.mbta.mattapan,
   'line-commuter-rail': COLORS.mbta.commuterRail,
   'line-ferry': COLORS.mbta.ferry,
+  'line-RIDE': COLORS.mbta.bus,
   default: '#303030',
 };
 
@@ -70,5 +72,6 @@ export const LINE_COLORS_LEVELS: {
   'line-bus': { 0: '#ffc72c', 1: '#ffce46', 2: '#ffd55f', 3: '#ffdb79' },
   'line-commuter-rail': { 0: '#80276c', 1: '#8f2f7e', 2: '#9e3790', 3: '#ad41a2' },
   'line-ferry': { 0: '#008EAA', 1: '#1a9bb5', 2: '#33a8c0', 3: '#4db5cb' },
+  'line-RIDE': { 0: '#ffc72c', 1: '#ffce46', 2: '#ffd55f', 3: '#ffdb79' },
   default: '#303030',
 };

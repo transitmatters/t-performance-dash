@@ -29,4 +29,4 @@ export type QueryParams = {
 
 export type QueryTypeOptions = 'single' | 'range';
 
-export type Tab = 'Bus' | 'Subway' | 'Commuter Rail' | 'System' | 'Ferry';
+export type Tab = 'Bus' | 'Subway' | 'Commuter Rail' | 'System' | 'Ferry' | 'The RIDE';

@@ -165,6 +165,11 @@
     border-color: #a95896 !important;
 }
 
+.selected-date-line-RIDE {
+    background: #FFE395 !important;
+    border-color: #FFE395 !important;
+}
+
 .selected-date-line-ferry {
     background: #008EAA !important;
     border-color: #008EAA !important;
