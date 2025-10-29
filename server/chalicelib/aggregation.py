@@ -13,10 +13,20 @@ def add_holidays(
     df: pd.DataFrame,
     holiday_col_name: str = "holiday",
     service_date_col_name: str = "service_date",
-    dep_date_col_name: str = "dep_dt",
 ) -> pd.DataFrame:
+    """
+    This function adds a boolean marker for whether or not the specified date is a holiday to a Pandas DataFrame in place.
+
+    Args:
+        df (DataFrame): The first parameter, an integer value.
+        holiday (str): The field name for the holiday column.
+        service_date_col_name (str): The field name for the service_date column, this is also the date value to check if it is a holiday.
+
+    Returns:
+        DataFrame: Returns the modified dataframe.
+    """
     cal = USFederalHolidayCalendar()
-    holidays = cal.holidays(start=df[dep_date_col_name].min(), end=df[dep_date_col_name].max())
+    holidays = cal.holidays(start=df[service_date_col_name].min(), end=df[service_date_col_name].max())
     # pandas has a bug where sometimes empty holidays returns an Index and we need DateTimeIndex
     holidays = pd.to_datetime(holidays)
     df[holiday_col_name] = df[service_date_col_name].isin(holidays.date)
@@ -24,7 +34,7 @@ def add_holidays(
 
 
 def train_peak_status(df: pd.DataFrame):
-    add_holidays(df)
+    df = add_holidays(df)
 
     # Peak Hours: non-holiday weekdays 6:30-9am; 3:30-6:30pm
     is_peak_day = (~df["holiday"]) & (df["weekday"] < 5)
@@ -107,7 +117,7 @@ def calc_travel_times_by_date(df: pd.DataFrame):
     # combine summary stats
     summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
 
-    add_holidays(summary_stats_final)
+    summary_stats_final = add_holidays(summary_stats_final)
 
     # Calculate Weekend
     # Convert service_date back to datetime to use .dt accessor
@@ -181,7 +191,7 @@ def headways_over_time(start_date: datetime.date, end_date: datetime.date, stops
     on_time.name = "on_time"
     summary_stats_final = summary_stats_final.merge(on_time, on="service_date", how="left")
 
-    add_holidays(summary_stats_final)
+    summary_stats_final = add_holidays(summary_stats_final)
 
     # Calculate Weekend
     # Convert service_date back to datetime to use .dt accessor
@@ -219,7 +229,7 @@ def dwells_over_time(start_date: str | datetime.date, end_date: str | datetime.d
     # combine summary stats
     summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
 
-    add_holidays(summary_stats_final)
+    summary_stats_final = add_holidays(summary_stats_final)
 
     # Calculate Weekend
     # Convert service_date back to datetime to use .dt accessor
