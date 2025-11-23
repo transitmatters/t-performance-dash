@@ -34,6 +34,8 @@ export interface AggregateDataPoint {
   dep_time_from_epoch?: string;
   is_peak_day?: boolean;
   peak?: string;
+  holiday?: boolean;
+  weekend?: boolean;
 }
 
 export interface AggregateDataResponse {
@@ -48,6 +50,8 @@ export interface Location {
 }
 
 export type TravelTimesUnit = 'by_date' | 'by_time';
+
+export type DayFilter = 'all' | 'weekday' | 'weekend';
 
 type Direction = 'northbound' | 'southbound' | 'eastbound' | 'westbound' | 'inbound' | 'outbound';
 
