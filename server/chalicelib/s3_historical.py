@@ -3,6 +3,7 @@ from chalicelib import s3
 from chalicelib.constants import EVENT_ARRIVAL, EVENT_DEPARTURE
 
 import itertools
+import math
 from chalicelib import date_utils
 
 
@@ -144,7 +145,8 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
         try:
             # sched values may be None or ''
             benchmark = float(sched_arr) - float(sched_dep)
-            if benchmark < 1:
+            # Check for NaN, Infinity, or invalid values
+            if math.isnan(benchmark) or math.isinf(benchmark) or benchmark < 1:
                 benchmark = None
         except (TypeError, ValueError):
             benchmark = None
