@@ -25,6 +25,7 @@ interface TotalDelayGraphProps {
   startDate: string;
   endDate: string;
   showTitle?: boolean;
+  agg?: 'daily' | 'weekly';
 }
 
 export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
@@ -32,6 +33,7 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
   startDate,
   endDate,
   showTitle = false,
+  agg = 'weekly',
 }) => {
   const { line, linePath } = useDelimitatedRoute();
   const ref = useRef();
@@ -92,7 +94,7 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
                 position: 'nearest',
                 callbacks: {
                   title: (context) => {
-                    return `Week of ${context[0].label}`;
+                    return agg === 'weekly' ? `Week of ${context[0].label}` : `${context[0].label}`;
                   },
                   label: (tooltipItem) => {
                     return `${tooltipItem.dataset.label}: ${getFormattedTimeString(

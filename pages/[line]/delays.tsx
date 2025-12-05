@@ -1,4 +1,4 @@
-import { ALL_LINE_PATHS } from '../../common/types/lines';
+import { ALL_LINE_PATHS, COMMUTER_RAIL_PATH } from '../../common/types/lines';
 import { DelaysDetails } from '../../modules/delays/DelaysDetails';
 
 export async function getStaticProps() {
@@ -7,7 +7,7 @@ export async function getStaticProps() {
 
 export async function getStaticPaths() {
   return {
-    paths: ALL_LINE_PATHS,
+    paths: [...ALL_LINE_PATHS, COMMUTER_RAIL_PATH],
     fallback: false,
   };
 }
