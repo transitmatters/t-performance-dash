@@ -9,19 +9,16 @@ import {
 import type { DataPoint } from '../types/dataPoints';
 
 const getAverage = (data: (number | undefined)[]) => {
-  const { length } = data;
-  if (data && length >= 1) {
-    const totalSum = data.reduce((a, b) => {
-      if (a !== undefined && b !== undefined) {
-        return a + b;
-      } else {
-        return a;
-      }
-    }, 0);
-    return (totalSum || 0) / length;
-  } else {
-    return 0;
+  // Filter out undefined, null, NaN, and non-finite values
+  const validData = data.filter(
+    (val) => val !== undefined && val !== null && typeof val === 'number' && Number.isFinite(val)
+  ) as number[];
+
+  if (validData.length >= 1) {
+    const totalSum = validData.reduce((a, b) => a + b, 0);
+    return totalSum / validData.length;
   }
+  return 0;
 };
 
 const getBunchedPercentage = (data: SingleDayDataPoint[]) => {
@@ -49,16 +46,23 @@ const getOnTimePercentage = (data: SingleDayDataPoint[]) => {
 };
 
 const getPeaks = (data: (number | undefined)[]) => {
-  data.sort((a, b) => {
-    if (b !== undefined && a !== undefined) return a - b;
-    return 0;
-  });
+  // Filter out undefined, null, NaN, and non-finite values
+  const validData = data.filter(
+    (val) => val !== undefined && val !== null && typeof val === 'number' && Number.isFinite(val)
+  ) as number[];
+
+  validData.sort((a, b) => a - b);
+
+  if (validData.length === 0) {
+    return { min: undefined, max: undefined, median: undefined, p10: undefined, p90: undefined };
+  }
+
   return {
-    min: data[0],
-    max: data[data.length - 1],
-    median: data[Math.round(data.length / 2)],
-    p10: data[Math.floor(data.length / 10)],
-    p90: data[Math.floor(9 * (data.length / 10))],
+    min: validData[0],
+    max: validData[validData.length - 1],
+    median: validData[Math.round(validData.length / 2)],
+    p10: validData[Math.floor(validData.length / 10)],
+    p90: validData[Math.floor(9 * (validData.length / 10))],
   };
 };
 
