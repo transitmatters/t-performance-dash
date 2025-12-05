@@ -262,12 +262,13 @@ export type LineMetadata = {
 export type LineObject = { [key in Line]: LineMetadata };
 
 export type LineRouteId =
-  | Exclude<LineShort, 'Bus' | 'Green'>
+  | Exclude<LineShort, 'Bus' | 'Green' | 'Commuter Rail'>
   | 'bus'
   | 'Green-B'
   | 'Green-C'
   | 'Green-D'
-  | 'Green-E';
+  | 'Green-E'
+  | CommuterRailRoute;
 
 export const RIDERSHIP_KEYS = {
   'line-red': 'line-Red',
