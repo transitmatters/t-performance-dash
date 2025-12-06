@@ -1,6 +1,6 @@
 * @mathcolo @idreyn @skaplan-dev @devinmatte @PatrickCleary
 .github @mathcolo @nathan-weinberg
-.flake8 @mathcolo @nathan-weinberg
+ruff.toml @mathcolo @nathan-weinberg
 deploy.sh @mathcolo @nathan-weinberg
 server @austinjpaul @idreyn
 server/cloudformation.json @mathcolo @nathan-weinberg

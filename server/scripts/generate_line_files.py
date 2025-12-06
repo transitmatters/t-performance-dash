@@ -9,8 +9,7 @@ from chalicelib.s3 import get_all_s3_objects
 """
 To run, run as
 
-poetry shell
-python -m scripts.generate_line_files
+uv run python -m scripts.generate_line_files
 """
 
 MBTA_V3_API_KEY = os.environ.get("MBTA_V3_API_KEY", "")
