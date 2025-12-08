@@ -1,3 +1,4 @@
+/* eslint-disable import/max-dependencies */
 import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from '../types/lines';
 import { COMMUTER_RAIL_ROUTES } from '../types/lines';
 import type { LineMap, StationMap } from '../types/stations';

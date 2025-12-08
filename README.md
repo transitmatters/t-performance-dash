@@ -15,9 +15,9 @@ This is the repository for the [TransitMatters Data Dashboard](https://dashboard
 - node 20.x and npm 9.x+ required
   - With `nvm` installed, use `nvm install && nvm use`
   - verify with `node -v`
-- Python 3.12 with recent poetry (2.0.0 or later)
-  - Verify with `python --version && poetry --version`
-  - `poetry self update` to update poetry
+- Python 3.12 with recent uv (0.9.8 or later)
+  - Verify with `python --version && uv --version`
+  - `uv self update` to update uv
 
 ## 🧪 Local Development
 
