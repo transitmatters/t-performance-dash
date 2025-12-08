@@ -76,6 +76,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+    '@typescript-eslint/triple-slash-reference': 'off',
     '@typescript-eslint/consistent-type-imports': [
       'error',
       {
