@@ -89,7 +89,7 @@ echo "CloudFormation stack name: $CF_STACK_NAME"
 npm run build
 
 pushd server/ > /dev/null
-uv export --no-hashes --no-dev > ingestor/requirements.txt
+uv export --no-hashes --no-dev > requirements.txt
 uv run chalice package --stage $CHALICE_STAGE --merge-template cloudformation.json cfn/
 aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUCKET --output-template-file cfn/packaged.yaml
 aws cloudformation deploy --template-file cfn/packaged.yaml --s3-bucket $BACKEND_BUCKET --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM \
