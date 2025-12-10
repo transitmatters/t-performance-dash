@@ -88,7 +88,15 @@ def headways(stop_ids: list, start_date: date, end_date: date):
             continue
 
         benchmark_headway = this.get("scheduled_headway")
-        if benchmark_headway == "":
+        if benchmark_headway:
+            try:
+                benchmark_headway = float(benchmark_headway)
+                # Check for NaN or Infinity
+                if math.isnan(benchmark_headway) or math.isinf(benchmark_headway):
+                    benchmark_headway = None
+            except (ValueError, TypeError):
+                benchmark_headway = None
+        else:
             benchmark_headway = None
 
         # not every vehicle will have vehicle_consist
