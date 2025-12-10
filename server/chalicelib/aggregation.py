@@ -25,6 +25,11 @@ def add_holidays(
     Returns:
         DataFrame: Returns the modified dataframe.
     """
+    # Handle empty DataFrame or missing dates
+    if df.empty or df[service_date_col_name].isna().all():
+        df[holiday_col_name] = False
+        return df
+
     cal = USFederalHolidayCalendar()
     holidays = cal.holidays(start=df[service_date_col_name].min(), end=df[service_date_col_name].max())
     # pandas has a bug where sometimes empty holidays returns an Index and we need DateTimeIndex
