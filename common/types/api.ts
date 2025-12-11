@@ -56,6 +56,7 @@ export type FetchAlertDelaysByLineOptions = {
   start_date?: string;
   end_date?: string;
   line?: LineRouteId;
+  agg?: 'daily' | 'weekly';
 };
 
 export enum FetchDeliveredTripMetricsParams {
@@ -69,6 +70,7 @@ export enum FetchAlertDelaysByLineParams {
   startDate = 'start_date',
   endDate = 'end_date',
   line = 'line',
+  agg = 'agg',
 }
 
 export enum FetchSpeedsParams {

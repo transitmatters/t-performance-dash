@@ -26,6 +26,7 @@ interface DelayBreakdownGraphProps {
   startDate: string;
   endDate: string;
   showTitle?: boolean;
+  agg?: 'daily' | 'weekly';
 }
 
 export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
@@ -33,6 +34,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
   startDate,
   endDate,
   showTitle = false,
+  agg = 'weekly',
 }) => {
   const { line, linePath } = useDelimitatedRoute();
   const ref = useRef();
@@ -216,7 +218,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.fire),
               },
               {
-                label: `Other`,
+                label: `Other/No Reason Given`,
                 borderColor: '#6b7280',
                 backgroundColor: hexWithAlpha('#6b7280', 0.8),
                 pointRadius: 0,
@@ -247,7 +249,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 position: 'nearest',
                 callbacks: {
                   title: (context) => {
-                    return `Week of ${context[0].label}`;
+                    return agg === 'weekly' ? `Week of ${context[0].label}` : `${context[0].label}`;
                   },
                   label: (tooltipItem) => {
                     if (tooltipItem.parsed.y === 0) return '';
