@@ -34,7 +34,8 @@
         "arn:aws:dynamodb:*:*:table/Ridership",
         "arn:aws:dynamodb:*:*:table/SpeedRestrictions",
         "arn:aws:dynamodb:*:*:table/TimePredictions",
-        "arn:aws:dynamodb:*:*:table/AlertDelaysWeekly"
+        "arn:aws:dynamodb:*:*:table/AlertDelaysWeekly",
+        "arn:aws:dynamodb:*:*:table/AlertDelaysDaily"
       ]
     }
   ]
