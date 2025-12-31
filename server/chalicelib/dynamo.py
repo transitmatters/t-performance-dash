@@ -5,9 +5,17 @@ from dynamodb_json import json_util as ddb_json
 from chalicelib import constants
 from typing import List
 import concurrent.futures
+import os
 
-# Create a DynamoDB resource
-dynamodb = boto3.resource("dynamodb")
+
+# DynamoDB resource - initialized to None. This will be set by app.py
+dynamodb = None
+
+def set_dynamodb_resource():
+    global dynamodb
+
+    region = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
+    dynamodb = boto3.resource("dynamodb", region_name=region)
 
 
 def query_daily_trips_on_route(table_name: str, route, start_date: str | date, end_date: str | date):
