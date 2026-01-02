@@ -1,10 +1,11 @@
 from decimal import Decimal
 import json
 from urllib.parse import urlencode
-import os
 import requests
 import pytz
 from datetime import datetime, timedelta
+
+from chalicelib import config
 
 bos_tz = pytz.timezone("America/New_York")
 now = datetime.now(tz=bos_tz)
@@ -137,7 +138,7 @@ def getAlerts(params={}):
 def getV3(command, params={}):
     """Make a GET request against the MBTA v3 API"""
     url = BASE_URL_V3.format(command=command, parameters=format_parameters(params))
-    api_key = os.environ.get("MBTA_V3_API_KEY", "")
+    api_key = config.MBTA_V3_API_KEY
     headers = {"x-api-key": api_key} if api_key else {}
     response = requests.get(url, headers=headers)
     try:
