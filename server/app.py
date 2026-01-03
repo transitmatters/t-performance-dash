@@ -12,6 +12,7 @@ from chalicelib import (
     config,
     data_funcs,
     delays,
+    dynamo,
     mbta_v3,
     models,
     predictions,
@@ -23,8 +24,6 @@ from chalicelib import (
     speed_restrictions,
     static_data,
 )
-from chalicelib import dynamo
-from chalicelib import speed_restrictions
 
 
 spec = APISpec(
@@ -44,7 +43,7 @@ if TM_FRONTEND_HOST != localhost:
     app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
 
 # Initialize DynamoDB resource based on backend source
-if config.BACKEND_SOURCE != "static":
+if config.BACKEND_SOURCE == "aws":
     dynamo.set_dynamodb_resource()
     speed_restrictions.set_speed_restrictions_table()
     predictions.set_time_predictions_table()
