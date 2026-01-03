@@ -3,7 +3,14 @@ from dynamodb_json import json_util as ddb_json
 
 from .dynamo import dynamodb
 
-SpeedRestrictions = dynamodb.Table("SpeedRestrictions")
+# SpeedRestrictions table - initialized to None. This will be set by app.py
+
+SpeedRestrictions = None
+
+def set_speed_restrictions_table():
+    """Get SpeedRestrictions table, creating it lazily if needed."""
+    global SpeedRestrictions
+    SpeedRestrictions = dynamodb.Table("SpeedRestrictions")
 
 
 def get_boundary_date(line_id: str, first: bool):
