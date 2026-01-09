@@ -12,6 +12,7 @@ from chalicelib import (
     config,
     data_funcs,
     delays,
+    dynamo,
     mbta_v3,
     models,
     predictions,
@@ -41,6 +42,11 @@ cors_config = CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=360
 if TM_FRONTEND_HOST != localhost:
     app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
 
+# Initialize DynamoDB resource based on backend source
+if config.BACKEND_SOURCE == "aws":
+    dynamo.set_dynamodb_resource()
+    speed_restrictions.set_speed_restrictions_table()
+    predictions.set_time_predictions_table()
 
 def parse_user_date(user_date: str):
     date_split = user_date.split("-")
