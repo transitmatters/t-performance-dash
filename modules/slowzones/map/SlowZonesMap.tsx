@@ -88,40 +88,70 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
   );
 
   const getSegmentsForSlowZones = ({ isHorizontal }: { isHorizontal: boolean }) => {
-    return segments.map((segment) => {
-      return {
-        location: segment.segmentLocation,
-        labels: [
-          {
-            mapSide: '0' as const,
-            boundingSize: isHorizontal ? 15 : 20,
-            ...getSegmentLabelOverrides(segment.segmentLocation, isHorizontal),
-            content: (size: { width: number; height: number }) => (
-              <SlowSegmentLabel
-                isHorizontal={isHorizontal}
-                segment={segment}
-                line={line}
-                {...size}
-              />
-            ),
-          },
-        ],
-        strokes: Object.entries(segment.slowZones).map(([direction, zones]) => {
-          const offset = direction === '0' ? 1 : -1;
-          const isToday = endDate === TODAY_STRING;
-          const totalDelay = zones.reduce(
-            (sum, zone) => sum + (isToday && zone.latest_delay ? zone.latest_delay : zone.delay),
-            0
-          );
-          return {
-            offset,
-            stroke: line.color,
-            strokeWidth: 2,
-            opacity: getSlowZoneOpacity(totalDelay),
-          };
-        }),
-      };
-    });
+    return segments
+      .filter((segment) => {
+        // Include segments that have slow zones OR speed restrictions in any direction
+        const hasSlowZones = segment.slowZones['0'].length > 0 || segment.slowZones['1'].length > 0;
+        const hasSpeedRestrictions =
+          segment.speedRestrictions['0'].length > 0 || segment.speedRestrictions['1'].length > 0;
+        return hasSlowZones || hasSpeedRestrictions;
+      })
+      .map((segment) => {
+        // Build strokes for each direction that has either slow zones or speed restrictions
+        const strokes: { offset: number; stroke: string; strokeWidth: number; opacity: number }[] =
+          [];
+
+        for (const direction of ['0', '1'] as const) {
+          const zones = segment.slowZones[direction];
+          const restrictions = segment.speedRestrictions[direction];
+
+          if (zones.length > 0 || restrictions.length > 0) {
+            const offset = direction === '0' ? 1 : -1;
+            const isToday = endDate === TODAY_STRING;
+
+            if (zones.length > 0) {
+              // We have a detected slow zone - use delay-based opacity
+              const getDelay = (zone: (typeof zones)[0]) =>
+                isToday && zone.latest_delay ? zone.latest_delay : zone.delay;
+              const totalDelay = zones.reduce((sum, zone) => sum + getDelay(zone), 0);
+              strokes.push({
+                offset,
+                stroke: line.color,
+                strokeWidth: 2,
+                opacity: getSlowZoneOpacity(totalDelay),
+              });
+            } else {
+              // Speed restriction only (no detected slow zone) - use a fixed opacity with dashed style indication
+              strokes.push({
+                offset,
+                stroke: line.color,
+                strokeWidth: 2,
+                opacity: 0.5,
+              });
+            }
+          }
+        }
+
+        return {
+          location: segment.segmentLocation,
+          labels: [
+            {
+              mapSide: '0' as const,
+              boundingSize: isHorizontal ? 15 : 20,
+              ...getSegmentLabelOverrides(segment.segmentLocation, isHorizontal),
+              content: (size: { width: number; height: number }) => (
+                <SlowSegmentLabel
+                  isHorizontal={isHorizontal}
+                  segment={segment}
+                  line={line}
+                  {...size}
+                />
+              ),
+            },
+          ],
+          strokes,
+        };
+      });
   };
 
   const renderSlowZonesTooltip = (options: {
