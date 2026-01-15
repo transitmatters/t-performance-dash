@@ -11,6 +11,7 @@ import os
 # DynamoDB resource - initialized to None. This will be set by app.py
 dynamodb = None
 
+
 def set_dynamodb_resource():
     global dynamodb
 

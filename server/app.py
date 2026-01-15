@@ -48,6 +48,7 @@ if config.BACKEND_SOURCE == "aws":
     speed_restrictions.set_speed_restrictions_table()
     predictions.set_time_predictions_table()
 
+
 def parse_user_date(user_date: str):
     date_split = user_date.split("-")
     [year, month, day] = [int(x) for x in date_split[0:3]]
