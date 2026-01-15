@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import type { TooltipSide } from '@transitmatters/stripmap';
 
-import { getParentStationForStopId } from '../../../common/utils/stations';
+import { getParentStationForStopId, getStationById } from '../../../common/utils/stations';
 
 import { BasicWidgetDataLayout } from '../../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { DeltaTimeWidgetValue } from '../../../common/types/basicWidgets';
@@ -23,7 +23,10 @@ interface SlowZonesTooltipProps {
   side: TooltipSide;
 }
 
-const getOrderedStationNames = (slowZones: ByDirection<SlowZoneResponse[]>) => {
+const getOrderedStationNames = (
+  slowZones: ByDirection<SlowZoneResponse[]>,
+  speedRestrictions: ByDirection<SpeedRestriction[]>
+) => {
   const {
     ['0']: [zeroSide],
     ['1']: [oneSide],
@@ -42,6 +45,32 @@ const getOrderedStationNames = (slowZones: ByDirection<SlowZoneResponse[]>) => {
       toStationName: getParentStationForStopId(fr_id).stop_name,
     };
   }
+  // Fall back to speed restrictions if no slow zones
+  // Note: Speed restrictions use parent station IDs, so we use getStationById
+  const {
+    ['0']: [zeroSideRestriction],
+    ['1']: [oneSideRestriction],
+  } = speedRestrictions;
+  if (zeroSideRestriction && zeroSideRestriction.fromStopId && zeroSideRestriction.toStopId) {
+    const fromStation = getStationById(zeroSideRestriction.fromStopId);
+    const toStation = getStationById(zeroSideRestriction.toStopId);
+    if (fromStation && toStation) {
+      return {
+        fromStationName: fromStation.stop_name,
+        toStationName: toStation.stop_name,
+      };
+    }
+  }
+  if (oneSideRestriction && oneSideRestriction.fromStopId && oneSideRestriction.toStopId) {
+    const fromStation = getStationById(oneSideRestriction.toStopId);
+    const toStation = getStationById(oneSideRestriction.fromStopId);
+    if (fromStation && toStation) {
+      return {
+        fromStationName: fromStation.stop_name,
+        toStationName: toStation.stop_name,
+      };
+    }
+  }
   return {};
 };
 
@@ -58,8 +87,8 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
   const isHorizontal = side === 'top';
 
   const { fromStationName, toStationName } = useMemo(
-    () => getOrderedStationNames(slowZones),
-    [slowZones]
+    () => getOrderedStationNames(slowZones, speedRestrictions),
+    [slowZones, speedRestrictions]
   );
 
   if (!fromStationName || !toStationName) {
@@ -103,7 +132,14 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
 
     const [slowZone] = slowZones[direction];
     const speedRestrictionsForDirection = speedRestrictions[direction];
+
+    // Show nothing if there's neither a slow zone nor speed restrictions for this direction
+    if (!slowZone && speedRestrictionsForDirection.length === 0) {
+      return null;
+    }
+
     if (slowZone) {
+      // We have a detected slow zone - show full delay info
       const delayVal = isToday && slowZone.latest_delay ? slowZone.latest_delay : slowZone.delay;
       return (
         <div className={styles.direction}>
@@ -128,7 +164,28 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
         </div>
       );
     }
-    return null;
+
+    // Speed restriction only (no detected slow zone)
+    return (
+      <div className={styles.direction}>
+        <div className="flex flex-col items-start p-2">
+          <div className={styles.directionTitle}>
+            <DirectionIndicator
+              color={color}
+              size={10}
+              isHorizontal={isHorizontal}
+              direction={direction}
+            />
+            {direction === '0' ? 'Southbound' : 'Northbound'}
+          </div>
+          <div className={classNames('mb-1 max-w-[200px] text-xs italic text-stone-500')}>
+            TransitMatters has not detected a slow zone for this segment despite the MBTA having an
+            official speed restriction within it.
+          </div>
+        </div>
+        {renderSpeedRestrictions(speedRestrictionsForDirection)}
+      </div>
+    );
   };
 
   return (
