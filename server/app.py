@@ -8,19 +8,21 @@ from datetime import date
 from datadog_lambda.wrapper import datadog_lambda_wrapper
 from chalicelib import (
     aggregation,
+    cache,
+    config,
     data_funcs,
-    secrets,
     delays,
+    dynamo,
     mbta_v3,
-    speed,
-    speed_restrictions,
-    scheduled_service,
-    service_hours,
+    models,
     predictions,
     ridership,
+    scheduled_service,
+    service_hours,
     service_ridership_dashboard,
-    models,
-    cache,
+    speed,
+    speed_restrictions,
+    static_data,
 )
 
 
@@ -40,6 +42,12 @@ cors_config = CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=360
 if TM_FRONTEND_HOST != localhost:
     app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
 
+# Initialize DynamoDB resource based on backend source
+if config.BACKEND_SOURCE == "aws":
+    dynamo.set_dynamodb_resource()
+    speed_restrictions.set_speed_restrictions_table()
+    predictions.set_time_predictions_table()
+
 
 def parse_user_date(user_date: str):
     date_split = user_date.split("-")
@@ -58,7 +66,7 @@ def mutlidict_to_dict(mutlidict):
 def healthcheck():
     # These functions must return True or False :-)
     checks = {
-        "API Key Present": (lambda: len(secrets.MBTA_V3_API_KEY) > 0),
+        "API Key Present": (lambda: len(config.MBTA_V3_API_KEY) > 0),
         "S3 Headway Fetching": (
             lambda: "2020-11-07T10:33:40"
             in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))
@@ -73,7 +81,7 @@ def healthcheck():
                 failed_checks[check] = "Check failed :("
         except Exception as e:
             e_str = str(e)
-            for secret in secrets.HEALTHCHECK_HIDE_SECRETS:
+            for secret in config.HEALTHCHECK_HIDE_SECRETS:
                 e_str.replace(secret, "HIDDEN")
             failed_checks[check] = f"Check threw an exception: {e_str}"
 
@@ -92,11 +100,16 @@ def healthcheck():
 
 @app.route("/api/headways/{user_date}", cors=cors_config, docs=Docs(response=models.HeadwayResponse))
 def headways_route(user_date):
-    date = parse_user_date(user_date)
     stops = app.current_request.query_params.getlist("stop")
-
     cache_max_age = cache.get_cache_max_age({"date": user_date})
-    data = data_funcs.headways(date, stops)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_headways(user_date, stops)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request(f"/api/headways/{user_date}", {"stop": stops})
+    else:
+        date = parse_user_date(user_date)
+        data = data_funcs.headways(date, stops)
 
     return Response(
         body=json.dumps(data),
@@ -106,11 +119,16 @@ def headways_route(user_date):
 
 @app.route("/api/dwells/{user_date}", cors=cors_config, docs=Docs(response=models.DwellResponse))
 def dwells_route(user_date):
-    date = parse_user_date(user_date)
     stops = app.current_request.query_params.getlist("stop")
-
     cache_max_age = cache.get_cache_max_age({"date": user_date})
-    data = data_funcs.dwells(date, stops)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_dwells(user_date, stops)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request(f"/api/dwells/{user_date}", {"stop": stops})
+    else:
+        date = parse_user_date(user_date)
+        data = data_funcs.dwells(date, stops)
 
     return Response(
         body=json.dumps(data),
@@ -120,12 +138,19 @@ def dwells_route(user_date):
 
 @app.route("/api/traveltimes/{user_date}", cors=cors_config, docs=Docs(response=models.TravelTimeResponse))
 def traveltime_route(user_date):
-    date = parse_user_date(user_date)
     from_stops = app.current_request.query_params.getlist("from_stop")
     to_stops = app.current_request.query_params.getlist("to_stop")
-
     cache_max_age = cache.get_cache_max_age({"date": user_date})
-    data = data_funcs.travel_times(date, from_stops, to_stops)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_traveltimes(user_date, from_stops, to_stops)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request(
+            f"/api/traveltimes/{user_date}", {"from_stop": from_stops, "to_stop": to_stops}
+        )
+    else:
+        date = parse_user_date(user_date)
+        data = data_funcs.travel_times(date, from_stops, to_stops)
 
     return Response(
         body=json.dumps(data),
@@ -135,9 +160,16 @@ def traveltime_route(user_date):
 
 @app.route("/api/alerts/{user_date}", cors=cors_config, docs=Docs(response=models.AlertsRouteResponse))
 def alerts_route(user_date):
-    date = parse_user_date(user_date)
+    query_params = mutlidict_to_dict(app.current_request.query_params)
     cache_max_age = cache.get_cache_max_age({"date": user_date})
-    data = data_funcs.alerts(date, mutlidict_to_dict(app.current_request.query_params))
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_alerts(user_date, query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request(f"/api/alerts/{user_date}", query_params)
+    else:
+        date = parse_user_date(user_date)
+        data = data_funcs.alerts(date, query_params)
 
     return Response(
         body=json.dumps(data),
@@ -148,13 +180,18 @@ def alerts_route(user_date):
 @app.route("/api/aggregate/traveltimes", cors=cors_config, docs=Docs(response=models.TravelTimeAggregateResponse))
 def traveltime_aggregate_route():
     query_params = app.current_request.query_params or {}
-    start_date = parse_user_date(query_params["start_date"])
-    end_date = parse_user_date(query_params["end_date"])
-    from_stops = query_params.getlist("from_stop")
-    to_stops = query_params.getlist("to_stop")
-
     cache_max_age = cache.get_cache_max_age(query_params)
-    data = aggregation.travel_times_over_time(start_date, end_date, from_stops, to_stops)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_aggregate_traveltimes(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/aggregate/traveltimes", query_params)
+    else:
+        start_date = parse_user_date(query_params["start_date"])
+        end_date = parse_user_date(query_params["end_date"])
+        from_stops = query_params.getlist("from_stop")
+        to_stops = query_params.getlist("to_stop")
+        data = aggregation.travel_times_over_time(start_date, end_date, from_stops, to_stops)
 
     return Response(
         body=json.dumps(data, indent=4, sort_keys=True, default=str),
@@ -165,13 +202,18 @@ def traveltime_aggregate_route():
 @app.route("/api/aggregate/traveltimes2", cors=cors_config, docs=Docs(response=models.TravelTimeAggregateResponse))
 def traveltime_aggregate_route_2():
     query_params = app.current_request.query_params or {}
-    start_date = parse_user_date(query_params["start_date"])
-    end_date = parse_user_date(query_params["end_date"])
-    from_stop = query_params.getlist("from_stop")
-    to_stop = query_params.getlist("to_stop")
-
     cache_max_age = cache.get_cache_max_age(query_params)
-    data = aggregation.travel_times_all(start_date, end_date, from_stop, to_stop)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_aggregate_traveltimes(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/aggregate/traveltimes2", query_params)
+    else:
+        start_date = parse_user_date(query_params["start_date"])
+        end_date = parse_user_date(query_params["end_date"])
+        from_stop = query_params.getlist("from_stop")
+        to_stop = query_params.getlist("to_stop")
+        data = aggregation.travel_times_all(start_date, end_date, from_stop, to_stop)
 
     return Response(
         body=json.dumps(data, indent=4, sort_keys=True, default=str),
@@ -182,12 +224,17 @@ def traveltime_aggregate_route_2():
 @app.route("/api/aggregate/headways", cors=cors_config, docs=Docs(response=models.HeadwaysAggregateResponse))
 def headways_aggregate_route():
     query_params = app.current_request.query_params or {}
-    start_date = parse_user_date(query_params["start_date"])
-    end_date = parse_user_date(query_params["end_date"])
-    stops = query_params.getlist("stop")
-
     cache_max_age = cache.get_cache_max_age(query_params)
-    data = aggregation.headways_over_time(start_date, end_date, stops)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_aggregate_headways(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/aggregate/headways", query_params)
+    else:
+        start_date = parse_user_date(query_params["start_date"])
+        end_date = parse_user_date(query_params["end_date"])
+        stops = query_params.getlist("stop")
+        data = aggregation.headways_over_time(start_date, end_date, stops)
 
     return Response(
         body=json.dumps(data, indent=4, sort_keys=True, default=str),
@@ -198,12 +245,17 @@ def headways_aggregate_route():
 @app.route("/api/aggregate/dwells", cors=cors_config, docs=Docs(response=models.DwellsAggregateResponse))
 def dwells_aggregate_route():
     query_params = app.current_request.query_params or {}
-    start_date = parse_user_date(query_params["start_date"])
-    end_date = parse_user_date(query_params["end_date"])
-    stops = query_params.getlist("stop")
-
     cache_max_age = cache.get_cache_max_age(query_params)
-    data = aggregation.dwells_over_time(start_date, end_date, stops)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_aggregate_dwells(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/aggregate/dwells", query_params)
+    else:
+        start_date = parse_user_date(query_params["start_date"])
+        end_date = parse_user_date(query_params["end_date"])
+        stops = query_params.getlist("stop")
+        data = aggregation.dwells_over_time(start_date, end_date, stops)
 
     return Response(
         body=json.dumps(data, indent=4, sort_keys=True, default=str),
@@ -239,7 +291,13 @@ def get_alerts():
 def get_delays_by_line():
     query_params = app.current_request.query_params or {}
     cache_max_age = cache.get_cache_max_age(query_params)
-    data = delays.delay_time_by_line(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_line_delays(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/linedelays", query_params)
+    else:
+        data = delays.delay_time_by_line(query_params)
 
     return Response(
         body=json.dumps(data, indent=4, sort_keys=True),
@@ -255,7 +313,13 @@ def get_delays_by_line():
 def get_trips_by_line():
     query_params = app.current_request.query_params or {}
     cache_max_age = cache.get_cache_max_age(query_params)
-    data = speed.trip_metrics_by_line(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_trip_metrics(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/tripmetrics", query_params)
+    else:
+        data = speed.trip_metrics_by_line(query_params)
 
     return Response(
         body=json.dumps(data, indent=4, sort_keys=True),
@@ -270,18 +334,23 @@ def get_trips_by_line():
 )
 def get_scheduled_service():
     query_params = app.current_request.query_params or {}
-    start_date = parse_user_date(query_params["start_date"])
-    end_date = parse_user_date(query_params["end_date"])
-    route_id = query_params.get("route_id")
-    agg = query_params["agg"]
-
     cache_max_age = cache.get_cache_max_age(query_params)
-    data = scheduled_service.get_scheduled_service_counts(
-        start_date=start_date,
-        end_date=end_date,
-        route_id=route_id,
-        agg=agg,
-    )
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_scheduled_service(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/scheduledservice", query_params)
+    else:
+        start_date = parse_user_date(query_params["start_date"])
+        end_date = parse_user_date(query_params["end_date"])
+        route_id = query_params.get("route_id")
+        agg = query_params["agg"]
+        data = scheduled_service.get_scheduled_service_counts(
+            start_date=start_date,
+            end_date=end_date,
+            route_id=route_id,
+            agg=agg,
+        )
 
     return Response(
         body=json.dumps(data),
@@ -294,16 +363,21 @@ def get_scheduled_service():
 )
 def get_ridership():
     query_params = app.current_request.query_params or {}
-    start_date = parse_user_date(query_params["start_date"])
-    end_date = parse_user_date(query_params["end_date"])
-    line_id = query_params.get("line_id")
-
     cache_max_age = cache.get_cache_max_age(query_params)
-    data = ridership.get_ridership(
-        start_date=start_date,
-        end_date=end_date,
-        line_id=line_id,
-    )
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_ridership(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/ridership", query_params)
+    else:
+        start_date = parse_user_date(query_params["start_date"])
+        end_date = parse_user_date(query_params["end_date"])
+        line_id = query_params.get("line_id")
+        data = ridership.get_ridership(
+            start_date=start_date,
+            end_date=end_date,
+            line_id=line_id,
+        )
 
     return Response(
         body=json.dumps(data),
@@ -328,14 +402,19 @@ def get_facilities():
 )
 def get_speed_restrictions():
     query_params = app.current_request.query_params or {}
-    on_date = query_params["date"]
-    line_id = query_params["line_id"]
-
     cache_max_age = cache.get_cache_max_age(query_params)
-    data = speed_restrictions.query_speed_restrictions(
-        line_id=line_id,
-        on_date=on_date,
-    )
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_speed_restrictions(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/speed_restrictions", query_params)
+    else:
+        on_date = query_params["date"]
+        line_id = query_params["line_id"]
+        data = speed_restrictions.query_speed_restrictions(
+            line_id=line_id,
+            on_date=on_date,
+        )
 
     return Response(
         body=json.dumps(data),
@@ -350,18 +429,23 @@ def get_speed_restrictions():
 )
 def get_service_hours():
     query_params = app.current_request.query_params or {}
-    line_id = query_params.get("line_id")
-    start_date = parse_user_date(query_params["start_date"])
-    end_date = parse_user_date(query_params["end_date"])
-    agg = query_params["agg"]
-
     cache_max_age = cache.get_cache_max_age(query_params)
-    data = service_hours.get_service_hours(
-        single_route_id=line_id,
-        start_date=start_date,
-        end_date=end_date,
-        agg=agg,
-    )
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_service_hours(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/service_hours", query_params)
+    else:
+        line_id = query_params.get("line_id")
+        start_date = parse_user_date(query_params["start_date"])
+        end_date = parse_user_date(query_params["end_date"])
+        agg = query_params["agg"]
+        data = service_hours.get_service_hours(
+            single_route_id=line_id,
+            start_date=start_date,
+            end_date=end_date,
+            agg=agg,
+        )
 
     return Response(
         body=json.dumps(data),
@@ -371,11 +455,17 @@ def get_service_hours():
 
 @app.route("/api/time_predictions", cors=cors_config, docs=Docs(response=models.TimePredictionResponse))
 def get_time_predictions():
-    query = app.current_request.query_params
-    route_id = query["route_id"]
-    data = predictions.query_time_predictions(
-        route_id=route_id,
-    )
+    query_params = app.current_request.query_params or {}
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_time_predictions(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/time_predictions", query_params)
+    else:
+        route_id = query_params["route_id"]
+        data = predictions.query_time_predictions(
+            route_id=route_id,
+        )
 
     return Response(
         body=json.dumps(data),
@@ -389,7 +479,12 @@ def get_time_predictions():
     docs=Docs(response=models.ServiceRidershipDashboardResponse),
 )
 def get_service_ridership_dashboard():
-    data = service_ridership_dashboard.get_service_ridership_dash_json()
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_service_ridership_dashboard()
+    elif config.BACKEND_SOURCE == "prod":
+        data = json.dumps(static_data.proxy_request("/api/service_ridership_dashboard", {}))
+    else:
+        data = service_ridership_dashboard.get_service_ridership_dash_json()
 
     return Response(
         body=data,
