@@ -50,7 +50,16 @@ export function DelaysDetails() {
     return daysDiff <= 90 ? 'daily' : 'weekly';
   }, [startDate, endDate]);
 
-  const enabled = Boolean(startDate && endDate && line);
+  const rangeInfo = React.useMemo(() => {
+    if (!startDate || !endDate) {
+      return { daysDiff: 0, maxDays: 0, tooLong: false };
+    }
+    const daysDiff = dayjs(endDate).diff(dayjs(startDate), 'day');
+    const maxDays = agg === 'daily' ? 150 : 1050;
+    return { daysDiff, maxDays, tooLong: daysDiff > maxDays };
+  }, [startDate, endDate, agg]);
+
+  const enabled = Boolean(startDate && endDate && line && !rangeInfo.tooLong);
   const alertDelays = useAlertDelays(
     {
       start_date: startDate,
@@ -60,16 +69,27 @@ export function DelaysDetails() {
     },
     enabled
   );
+  const widgetReady = rangeInfo.tooLong ? true : alertDelays;
   const delaysReady = alertDelays && line && !alertDelays.isError && alertDelays.data;
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
   }
+  const rangeTooLongNotice = rangeInfo.tooLong ? (
+    <div className="flex h-full flex-col items-center justify-center rounded-lg bg-white p-4 text-center shadow-dataBox">
+      <p>Date range too long for delay data.</p>
+      <p>
+        Max {rangeInfo.maxDays} days; selected {rangeInfo.daysDiff} days.
+      </p>
+    </div>
+  ) : null;
 
   return (
     <PageWrapper pageTitle={'Delays'}>
       <ChartPageDiv>
-        <Widget title="Total Time Delayed" ready={[alertDelays]}>
-          {delaysReady ? (
+        <Widget title="Total Time Delayed" ready={[widgetReady]}>
+          {rangeInfo.tooLong ? (
+            rangeTooLongNotice
+          ) : delaysReady ? (
             <TotalDelayGraph
               data={alertDelays.data}
               startDate={startDate}
@@ -83,8 +103,10 @@ export function DelaysDetails() {
           )}
           {greenBranchToggle}
         </Widget>
-        <Widget title="Delay Time by Reason" ready={[alertDelays]}>
-          {delaysReady ? (
+        <Widget title="Delay Time by Reason" ready={[widgetReady]}>
+          {rangeInfo.tooLong ? (
+            rangeTooLongNotice
+          ) : delaysReady ? (
             <DelayBreakdownGraph
               data={alertDelays.data}
               startDate={startDate}
@@ -98,8 +120,10 @@ export function DelaysDetails() {
           )}
           {greenBranchToggle}
         </Widget>
-        <Widget title="Delay Time by Reason" ready={[alertDelays]}>
-          {delaysReady ? (
+        <Widget title="Delay Time by Reason" ready={[widgetReady]}>
+          {rangeInfo.tooLong ? (
+            rangeTooLongNotice
+          ) : delaysReady ? (
             <DelayByCategoryGraph data={alertDelays.data} />
           ) : (
             <div className="relative flex h-full">
