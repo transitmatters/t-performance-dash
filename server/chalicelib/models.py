@@ -194,3 +194,41 @@ class APIDocsResponse(BaseModel):
     info: Dict[str, Any]
     paths: Dict[str, Any]
     components: Dict[str, Any]
+
+
+# Route Manifest Endpoints
+class RoutesResponse(BaseModel):
+    """Response for /api/routes - lists all available routes by category."""
+
+    rapid_transit: List[str]
+    bus: List[str]
+    commuter_rail: List[str]
+    ferry: List[str]
+
+
+class StationStop(BaseModel):
+    """A station/stop along a route."""
+
+    model_config = ConfigDict(extra="allow")
+    stop_name: str
+    branches: List[str] | None
+    station: str
+    order: int
+    stops: Dict[str, List[str]]
+    accessible: bool | None = None
+    pedal_park: bool | None = None
+    enclosed_bike_parking: bool | None = None
+    terminus: bool | None = None
+    disabled: bool | None = None
+    short: str | None = None
+
+
+class StopsResponse(BaseModel):
+    """Response for /api/stops/{route_id} - station/stop info for a route."""
+
+    model_config = ConfigDict(extra="allow")
+    type: str
+    direction: Dict[str, str]
+    stations: List[StationStop]
+    service_start: str | None = None
+    service_end: str | None = None
