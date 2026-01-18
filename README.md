@@ -27,7 +27,28 @@ This is the repository for the [TransitMatters Data Dashboard](https://dashboard
 3. Run `npm start` to start both the JavaScript development server and the Python backend at the same time.
 4. Navigate to [http://localhost:3000](http://localhost:3000) (or the url provided after running `npm start`)
 
-You may need an AWS account set up to access certain charts and data, in that case follow the next section to set up AWS.
+### Backend Data Source
+
+The backend supports three data source modes, controlled by the `TM_BACKEND_SOURCE` environment variable:
+
+| Mode     | Description                                                                                       |
+| -------- | ------------------------------------------------------------------------------------------------- |
+| `aws`    | Use local AWS credentials to query DynamoDB/S3 directly (default if AWS credentials are detected) |
+| `prod`   | Proxy requests to the production API (live data, no AWS credentials needed)                       |
+| `static` | Use cached sample data (offline development, default if no AWS credentials)                       |
+
+**For external contributors (no AWS access):**
+No configuration needed! The backend auto-detects missing AWS credentials and falls back to cached sample data. For live data without AWS credentials:
+
+```bash
+export TM_BACKEND_SOURCE=prod
+```
+
+**For TransitMatters members (with AWS access):**
+
+```bash
+export TM_BACKEND_SOURCE=aws
+```
 
 ## ☁️ AWS Setup
 
@@ -36,11 +57,11 @@ If you have access to AWS credentials, add them to your local setup for a better
 1. Add your AWS credentials (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) to your shell environment, OR add them to a .boto config file with awscli command `aws configure`.
 2. Ensure that AWS is set to read from/to `us-east-1` via `export AWS_DEFAULT_REGION=us-east-1` or with an aws config
 
-AWS access is not strictly required for development, but may be required for certain charts and data to appear
+AWS access is not strictly required for development - see "Backend Data Source" above for alternatives
 
 ## 🚀 Deployment Instructions
 
-1. Configure AWS CLI 1.x or 2.x with your AWS access key ID and secret under the profile name `transitmatters`.
+1. Configure AWS CLI 2.x with your AWS access key ID and secret under the profile name `transitmatters`.
 2. Configure shell environment variables for AWS ACM domain certificates.
    - `TM_FRONTEND_CERT_ARN`
    - `TM_LABS_WILDCARD_CERT_ARN`
