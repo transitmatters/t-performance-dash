@@ -199,6 +199,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 position: 'nearest',
                 callbacks: {
                   label: (tooltipItem) => {
+                    if (!tooltipItem.parsed.y) return '';
                     return `${tooltipItem.dataset.label}: ${
                       yUnit === 'Minutes'
                         ? getFormattedTimeString(tooltipItem.parsed.y, 'minutes')
