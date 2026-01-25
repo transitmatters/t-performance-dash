@@ -104,6 +104,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                   callbacks: {
                     ...callbacks,
                     label: (context) => {
+                      if (!context.parsed.y) return '';
                       return `${context.parsed.y.toLocaleString('en-us')} (${(
                         (100 * context.parsed.y) /
                         PEAK_RIDERSHIP[routeIndex ?? 'DEFAULT']

@@ -97,6 +97,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 callbacks: {
                   ...callbacks,
                   label: (context) => {
+                    if (!context.parsed.y) return '';
                     return `${context.parsed.y} (${((100 * context.parsed.y) / peak).toFixed(
                       1
                     )}% of historical maximum)`;

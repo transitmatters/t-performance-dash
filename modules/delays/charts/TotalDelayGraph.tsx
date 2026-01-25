@@ -97,6 +97,7 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
                     return agg === 'weekly' ? `Week of ${context[0].label}` : `${context[0].label}`;
                   },
                   label: (tooltipItem) => {
+                    if (!tooltipItem.parsed.y) return '';
                     return `${tooltipItem.dataset.label}: ${getFormattedTimeString(
                       tooltipItem.parsed.y,
                       'minutes'

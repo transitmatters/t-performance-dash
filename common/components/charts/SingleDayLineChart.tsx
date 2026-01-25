@@ -181,8 +181,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 callbacks: {
                   label: (tooltipItem) => {
                     if (
-                      tooltipItem.parsed.y === 0 &&
-                      tooltipItem.dataset.label === 'Benchmark MBTA'
+                      !tooltipItem.parsed.y ||
+                      (tooltipItem.parsed.y === 0 && tooltipItem.dataset.label === 'Benchmark MBTA')
                     ) {
                       return '';
                     }
@@ -197,8 +197,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
 
                     // Add departure from normal information
                     const departureInfo = departureFromNormalString(
-                      tooltipItems[0].parsed.y,
-                      tooltipItems[1]?.parsed.y,
+                      tooltipItems[0].parsed.y ?? 0,
+                      tooltipItems[1]?.parsed.y ?? 0,
                       showUnderRatio
                     );
                     if (departureInfo) {

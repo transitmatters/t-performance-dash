@@ -36,7 +36,6 @@ module.exports = {
     'import',
     'unused-imports',
     'prettier',
-    'unicorn',
   ],
   rules: {
     'import/named': 'warn',
@@ -70,7 +69,6 @@ module.exports = {
     'unused-imports/no-unused-imports': 'error',
     'no-console': 'error',
     'no-empty': 'error',
-    'unicorn/no-empty-file': 'error',
     '@typescript-eslint/no-unused-vars': 'warn',
     '@typescript-eslint/ban-ts-comment': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',
