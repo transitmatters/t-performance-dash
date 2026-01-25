@@ -14,6 +14,7 @@ from chalicelib import (
     delays,
     dynamo,
     mbta_v3,
+    route_manifest,
     models,
     predictions,
     ridership,
@@ -489,4 +490,39 @@ def get_service_ridership_dashboard():
     return Response(
         body=data,
         headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache.ONE_HOUR}"},
+    )
+
+
+@app.route("/api/routes", cors=cors_config, docs=Docs(response=models.RoutesResponse))
+def get_routes():
+    """
+    Get a manifest of all available routes supported in the dashboard.
+    Returns route IDs grouped by category: rapid_transit, bus, commuter_rail, ferry.
+    """
+    data = route_manifest.get_all_routes_manifest()
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache.ONE_DAY}"},
+    )
+
+
+@app.route("/api/stops/{route_id}", cors=cors_config, docs=Docs(response=models.StopsResponse))
+def get_stops(route_id):
+    """
+    Get the stop information for a specific route.
+    Returns the station/stop data including names, IDs, and directions.
+    """
+    data = route_manifest.get_route_stops(route_id)
+
+    if data is None:
+        return Response(
+            body=json.dumps({"error": f"Route '{route_id}' not found"}),
+            status_code=404,
+            headers={"Content-Type": "application/json"},
+        )
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache.ONE_DAY}"},
     )

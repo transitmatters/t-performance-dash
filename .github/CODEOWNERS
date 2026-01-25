@@ -1,7 +1,7 @@
 * @mathcolo @idreyn @skaplan-dev @devinmatte @ankoure @transitmatters/labs-leads
-.github @mathcolo @nathan-weinberg
-ruff.toml @mathcolo @nathan-weinberg
-deploy.sh @mathcolo @nathan-weinberg
-server @austinjpaul @idreyn
-server/cloudformation.json @mathcolo @nathan-weinberg
-server/.chalice @mathcolo @nathan-weinberg
+.github @mathcolo @nathan-weinberg @devinmatte @transitmatters/labs-leads
+ruff.toml @mathcolo @nathan-weinberg @devinmatte @transitmatters/labs-leads
+deploy.sh @mathcolo @nathan-weinberg @devinmatte @transitmatters/labs-leads
+server @austinjpaul @idreyn @devinmatte @transitmatters/labs-leads
+server/cloudformation.json @mathcolo @nathan-weinberg @devinmatte @transitmatters/labs-leads
+server/.chalice @mathcolo @nathan-weinberg @devinmatte @transitmatters/labs-leads

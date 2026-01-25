@@ -6,6 +6,7 @@ EASTERN_TIME = ZoneInfo("US/Eastern")
 # Cache duration constants (in seconds)
 FIFTEEN_MINUTES = 900
 ONE_HOUR = 3600
+ONE_DAY = 86400
 THREE_MONTHS = 7776000  # 90 days
 
 
