@@ -3,6 +3,7 @@ deployment.zip
 server/requirements.txt
 server/.chalice/deployments
 server/chalicelib/__pycache__
+server/common
 cfn/
 public/static/
 Pipfile
