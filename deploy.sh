@@ -88,6 +88,13 @@ echo "CloudFormation stack name: $CF_STACK_NAME"
 # build frontend
 npm run build
 
+# Copy constants directory into server for deployment
+# This ensures the route manifest JSON files are included in the Lambda package
+echo "Copying constants directory into server for deployment..."
+rm -rf server/common
+mkdir -p server/common
+cp -r common/constants server/common/
+
 pushd server/ > /dev/null
 uv export --no-hashes --no-dev > requirements.txt
 uv run chalice package --stage $CHALICE_STAGE --merge-template cloudformation.json cfn/
@@ -108,6 +115,11 @@ aws cloudformation deploy --template-file cfn/packaged.yaml --s3-bucket $BACKEND
     DDTags=$DD_TAGS
 
 popd > /dev/null
+
+# Clean up copied constants directory
+echo "Cleaning up copied constants directory..."
+rm -rf server/common
+
 aws s3 sync out/ s3://$FRONTEND_HOSTNAME \
   --cache-control "public, max-age=31536000, immutable"
 aws s3 cp out/index.html s3://$FRONTEND_HOSTNAME/index.html \
