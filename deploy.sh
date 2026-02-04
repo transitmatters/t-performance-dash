@@ -88,12 +88,17 @@ echo "CloudFormation stack name: $CF_STACK_NAME"
 # build frontend
 npm run build
 
-# Copy constants directory into server for deployment
+# Copy constants JSON files into server/chalicelib for deployment
 # This ensures the route manifest JSON files are included in the Lambda package
-echo "Copying constants directory into server for deployment..."
-rm -rf server/common
-mkdir -p server/common
-cp -r common/constants server/common/
+# chalicelib is always packaged by Chalice, unlike other directories
+# Only copy JSON files to avoid TypeScript compilation issues
+echo "Copying constants JSON files into server/chalicelib for deployment..."
+rm -rf server/chalicelib/common
+mkdir -p server/chalicelib/common/constants
+cp common/constants/*.json server/chalicelib/common/constants/ 2>/dev/null || true
+cp -r common/constants/bus_constants server/chalicelib/common/constants/
+cp -r common/constants/cr_constants server/chalicelib/common/constants/
+cp -r common/constants/ferry_constants server/chalicelib/common/constants/
 
 pushd server/ > /dev/null
 uv export --no-hashes --no-dev > requirements.txt
@@ -118,7 +123,7 @@ popd > /dev/null
 
 # Clean up copied constants directory
 echo "Cleaning up copied constants directory..."
-rm -rf server/common
+rm -rf server/chalicelib/common
 
 aws s3 sync out/ s3://$FRONTEND_HOSTNAME \
   --cache-control "public, max-age=31536000, immutable"
