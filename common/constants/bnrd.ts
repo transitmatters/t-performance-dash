@@ -1,4 +1,13 @@
-export const BNRD = {
+export const BNRD: Record<
+  number,
+  {
+    url: string;
+    date: Date;
+    new_routes: number[];
+    changed_routes: number[];
+    legacy_routes: string[];
+  }
+> = {
   1: {
     url: 'https://www.mbta.com/projects/bus-network-redesign/phase-1-service-changes',
     date: new Date('12-15-2024'),
