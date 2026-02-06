@@ -24,9 +24,13 @@ def _check_aws_credentials():
 
 
 def get_backend_source():
-    """
-    Determine the backend data source.
+    """Determine the backend data source.
     Returns: 'prod', 'aws', or 'static'
+
+    Args:
+
+    Returns:
+
     """
     source = os.environ.get("TM_BACKEND_SOURCE", "").lower()
     if source in ("prod", "aws", "static"):

@@ -8,6 +8,14 @@ from chalicelib import date_utils
 
 
 def pairwise(iterable):
+    """
+
+    Args:
+      iterable: 
+
+    Returns:
+
+    """
     # an itertools recipe from the docs
     # "s -> (s0,s1), (s1,s2), (s2, s3), ..."
     a, b = itertools.tee(iterable)
@@ -16,6 +24,15 @@ def pairwise(iterable):
 
 
 def unique_everseen(iterable, key=None):
+    """
+
+    Args:
+      iterable: 
+      key:  (Default value = None)
+
+    Returns:
+
+    """
     # an itertools recipe from the docs
     # "List unique elements, preserving order. Remember all elements ever seen."
     # unique_everseen('AAAABBBCCDAABBB') --> A B C D
@@ -35,6 +52,16 @@ def unique_everseen(iterable, key=None):
 
 
 def dwells(stop_ids: list, start_date: date, end_date: date):
+    """
+
+    Args:
+      stop_ids: list: 
+      start_date: date: 
+      end_date: date: 
+
+    Returns:
+
+    """
     rows_by_time = s3.download_events(start_date, end_date, stop_ids)
 
     dwells = []
@@ -67,6 +94,16 @@ def dwells(stop_ids: list, start_date: date, end_date: date):
 
 
 def headways(stop_ids: list, start_date: date, end_date: date):
+    """
+
+    Args:
+      stop_ids: list: 
+      start_date: date: 
+      end_date: date: 
+
+    Returns:
+
+    """
     rows_by_time = s3.download_events(start_date, end_date, stop_ids)
 
     only_departures = filter(lambda row: row["event_type"] in EVENT_DEPARTURE, rows_by_time)
@@ -118,6 +155,17 @@ def headways(stop_ids: list, start_date: date, end_date: date):
 
 
 def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date):
+    """
+
+    Args:
+      stops_a: list: 
+      stops_b: list: 
+      start_date: date: 
+      end_date: date: 
+
+    Returns:
+
+    """
     rows_by_time_a = s3.download_events(start_date, end_date, stops_a)
     rows_by_time_b = s3.download_events(start_date, end_date, stops_b)
 

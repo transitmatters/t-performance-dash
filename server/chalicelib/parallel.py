@@ -7,12 +7,31 @@ from chalicelib import date_utils
 
 
 def make_parallel(single_func, THREAD_COUNT=5):
+    """
+
+    Args:
+      single_func: 
+      THREAD_COUNT:  (Default value = 5)
+
+    Returns:
+
+    """
     # This function will wrap another function
     # (similar to a decorator, but we don't want to overwrite the original)
     # e.g. parallel_func = make_parallel(singleton_func)
     # singleton_func's first parameter must be the var to multiplex on
     # and parallel_func will take an iterable in its stead
     def parallel_func(iterable, *args, **kwargs):
+        """
+
+        Args:
+          iterable: 
+          *args: 
+          **kwargs: 
+
+        Returns:
+
+        """
         futures = []
         with ThreadPoolExecutor(max_workers=THREAD_COUNT) as executor:
             for i in iterable:
@@ -25,14 +44,30 @@ def make_parallel(single_func, THREAD_COUNT=5):
 
 
 def date_range(start: str, end: str):
+    """
+
+    Args:
+      start: str: 
+      end: str: 
+
+    Returns:
+
+    """
     return pd.date_range(start, end)
 
 
 def s3_date_range(start: date, end: date, stops: list[str]):
-    """
-    Generates a date range, meant for s3 data
+    """Generates a date range, meant for s3 data
     For all dates that we have monthly datasets for, return 1 date of the month
     For all dates that we have daily datasets for, return all dates
+
+    Args:
+      start: date: 
+      end: date: 
+      stops: list[str]: 
+
+    Returns:
+
     """
     month_end = end
     if date_utils.get_max_monthly_data_date() < end and date_utils.get_max_monthly_data_date() > start:

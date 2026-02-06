@@ -13,6 +13,7 @@ AGG_TO_CONFIG_MAP = {
 
 
 class AlertDelaysByLineParams(TypedDict):
+    """ """
     start_date: str | date
     end_date: str | date
     line: str
@@ -20,13 +21,30 @@ class AlertDelaysByLineParams(TypedDict):
 
 
 def is_invalid_range(start_date, end_date, max_delta):
-    """Check if number of requested entries is more than maximum for the table"""
+    """Check if number of requested entries is more than maximum for the table
+
+    Args:
+      start_date: 
+      end_date: 
+      max_delta: 
+
+    Returns:
+
+    """
     start_datetime = datetime.strptime(start_date, DATE_FORMAT_BACKEND)
     end_datetime = datetime.strptime(end_date, DATE_FORMAT_BACKEND)
     return start_datetime + timedelta(days=max_delta) < end_datetime
 
 
 def delay_time_by_line(params: AlertDelaysByLineParams):
+    """
+
+    Args:
+      params: AlertDelaysByLineParams: 
+
+    Returns:
+
+    """
     try:
         start_date = params["start_date"]
         end_date = params["end_date"]

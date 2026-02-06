@@ -27,12 +27,23 @@ SINGLE_ROUTE_IDS_BY_LINE_KEY = {
 
 
 class ServiceHoursEntry(TypedDict):
+    """ """
     date: str
     scheduled: int
     delivered: int
 
 
 def get_delivered_service_times(response_dicts: List[Dict[str, any]], agg: AggType):
+    """
+
+    Args:
+      response_dicts: List[Dict[str: 
+      any]]: 
+      agg: AggType: 
+
+    Returns:
+
+    """
     df = pd.DataFrame.from_records(response_dicts)
     service_hours = {}
     # unique service_dates
@@ -60,6 +71,17 @@ def get_service_hours(
     end_date: date,
     agg: AggType,
 ) -> List[ServiceHoursEntry]:
+    """
+
+    Args:
+      single_route_id: str: 
+      start_date: date: 
+      end_date: date: 
+      agg: AggType: 
+
+    Returns:
+
+    """
     responses = []
     route_ids = ROUTE_IDS_BY_LINE[single_route_id]
     single_route_id = SINGLE_ROUTE_IDS_BY_LINE_KEY[single_route_id]

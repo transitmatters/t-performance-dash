@@ -12,13 +12,19 @@ MAX_MONTH_DATA_DATE = "2025-10-31"
 
 
 def get_max_monthly_data_date():
-    """
-    Returns the most recent date for which we have monthly data
-    """
+    """Returns the most recent date for which we have monthly data"""
     return datetime.strptime(MAX_MONTH_DATA_DATE, "%Y-%m-%d").date()
 
 
 def parse_event_date(date_str: str):
+    """
+
+    Args:
+      date_str: str: 
+
+    Returns:
+
+    """
     if len(date_str) == 19:
         return datetime.strptime(date_str, DATE_FORMAT_MASSDOT).replace(tzinfo=EASTERN_TIME)
     else:
@@ -26,4 +32,12 @@ def parse_event_date(date_str: str):
 
 
 def return_formatted_date(date: datetime):
+    """
+
+    Args:
+      date: datetime: 
+
+    Returns:
+
+    """
     return date.strftime(DATE_FORMAT_OUT)

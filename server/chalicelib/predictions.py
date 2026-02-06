@@ -15,6 +15,14 @@ def set_time_predictions_table():
 
 
 def query_time_predictions(route_id: str):
+    """
+
+    Args:
+      route_id: str: 
+
+    Returns:
+
+    """
     condition = Key("routeId").eq(route_id)
     response = TimePredictions.query(KeyConditionExpression=condition)
     response_items = ddb_json.loads(response["Items"])

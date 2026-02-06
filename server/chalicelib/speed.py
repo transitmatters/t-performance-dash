@@ -8,6 +8,7 @@ from chalicelib.constants import DATE_FORMAT_BACKEND
 
 
 class TripMetricsByLineParams(TypedDict):
+    """ """
     start_date: str | date
     end_date: str | date
     agg: str
@@ -23,6 +24,16 @@ AGG_TO_CONFIG_MAP = {
 
 
 def aggregate_actual_trips(actual_trips, agg, start_date):
+    """
+
+    Args:
+      actual_trips: 
+      agg: 
+      start_date: 
+
+    Returns:
+
+    """
     flat_data = [entry for sublist in actual_trips for entry in sublist]
     # Create a DataFrame from the flattened data
     df = pd.DataFrame(flat_data)
@@ -51,9 +62,14 @@ def aggregate_actual_trips(actual_trips, agg, start_date):
 
 
 def trip_metrics_by_line(params: TripMetricsByLineParams):
-    """
-    Get trip metrics grouped by line. The weekly and monthly dbs are already aggregated by line.
+    """Get trip metrics grouped by line. The weekly and monthly dbs are already aggregated by line.
     The daily db is not, and gets aggregated on the fly.
+
+    Args:
+      params: TripMetricsByLineParams: 
+
+    Returns:
+
     """
     try:
         start_date = params["start_date"]
@@ -76,7 +92,16 @@ def trip_metrics_by_line(params: TripMetricsByLineParams):
 
 
 def is_invalid_range(start_date, end_date, max_delta):
-    """Check if number of requested entries is more than maximum for the table"""
+    """Check if number of requested entries is more than maximum for the table
+
+    Args:
+      start_date: 
+      end_date: 
+      max_delta: 
+
+    Returns:
+
+    """
     start_datetime = datetime.strptime(start_date, DATE_FORMAT_BACKEND)
     end_datetime = datetime.strptime(end_date, DATE_FORMAT_BACKEND)
     return start_datetime + timedelta(days=max_delta) < end_datetime

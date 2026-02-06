@@ -16,6 +16,16 @@ s3 = boto3.client("s3", config=botocore.client.Config(max_pool_connections=15))
 
 # General downloading/uploading
 def download(key, encoding="utf8", compressed=True):
+    """
+
+    Args:
+      key: 
+      encoding:  (Default value = "utf8")
+      compressed:  (Default value = True)
+
+    Returns:
+
+    """
     obj = s3.get_object(Bucket=BUCKET, Key=key)
     s3_data = obj["Body"].read()
     if not compressed:
@@ -26,24 +36,66 @@ def download(key, encoding="utf8", compressed=True):
 
 
 def upload(key, bytes, compress=True):
+    """
+
+    Args:
+      key: 
+      bytes: 
+      compress:  (Default value = True)
+
+    Returns:
+
+    """
     if compress:
         bytes = zlib.compress(bytes)
     s3.put_object(Bucket=BUCKET, Key=key, Body=bytes)
 
 
 def is_bus(stop_id: str):
+    """
+
+    Args:
+      stop_id: str: 
+
+    Returns:
+
+    """
     return ("-0-" in stop_id) or ("-1-" in stop_id)
 
 
 def is_cr(stop_id: str):
+    """
+
+    Args:
+      stop_id: str: 
+
+    Returns:
+
+    """
     return stop_id.startswith("CR-")
 
 
 def is_ferry(stop_id: str):
+    """
+
+    Args:
+      stop_id: str: 
+
+    Returns:
+
+    """
     return stop_id.startswith("Boat-")
 
 
 def get_gobble_folder(stop_id: str):
+    """
+
+    Args:
+      stop_id: str: 
+
+    Returns:
+
+    """
     if is_bus(stop_id):
         return "daily-bus-data"
     elif is_cr(stop_id):
@@ -53,11 +105,22 @@ def get_gobble_folder(stop_id: str):
 
 
 def get_lamp_folder():
+    """ """
     return "daily-data"
 
 
 def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, route_context=None):
-    """As advertised: single event file from s3"""
+    """As advertised: single event file from s3
+
+    Args:
+      date: pd.Timestamp: 
+      stop_id: str: 
+      use_gobble:  (Default value = False)
+      route_context:  (Default value = None)
+
+    Returns:
+
+    """
     year, month, day = date.year, date.month, date.day
 
     if is_cr(stop_id):
@@ -105,11 +168,29 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, 
 
 @parallel.make_parallel
 def parallel_download_events(datestop: itertools.product):
+    """
+
+    Args:
+      datestop: itertools.product: 
+
+    Returns:
+
+    """
     (date, stop) = datestop
     return download_one_event_file(date, stop)
 
 
 def download_events(start_date: date, end_date: date, stops: list):
+    """
+
+    Args:
+      start_date: date: 
+      end_date: date: 
+      stops: list: 
+
+    Returns:
+
+    """
     datestops = itertools.product(parallel.s3_date_range(start_date, end_date, stops), stops)
     result = parallel_download_events(datestops)
     result = filter(
@@ -119,6 +200,15 @@ def download_events(start_date: date, end_date: date, stops: list):
 
 
 def get_all_s3_objects(s3, **base_kwargs):
+    """
+
+    Args:
+      s3: 
+      **base_kwargs: 
+
+    Returns:
+
+    """
     continuation_token = None
     while True:
         list_kwargs = dict(MaxKeys=1000, **base_kwargs)

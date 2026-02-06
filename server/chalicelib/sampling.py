@@ -10,6 +10,20 @@ def resample_and_aggregate(
     agg: Literal["daily", "weekly", "monthly"],
     avg_type=Literal["mean", "median"],
 ):
+    """
+
+    Args:
+      values: Dict[str: 
+      any]: 
+      # Keys should be date stringsagg: Literal["daily": 
+      "weekly": 
+      "monthly"]: 
+      avg_type:  (Default value = Literal["mean")
+      "median"]: 
+
+    Returns:
+
+    """
     # parse start_date and end_date to pandas datetime64
     start_date = pd.to_datetime(min(values.keys()))
     end_date = pd.to_datetime(max(values.keys()))
@@ -56,6 +70,21 @@ def resample_list_of_values_with_range(
     agg: Literal["daily", "weekly", "monthly"],
     avg_type=Literal["mean", "median"],
 ):
+    """
+
+    Args:
+      values: List[any]: 
+      start_date: date: 
+      end_date: date: 
+      agg: Literal["daily": 
+      "weekly": 
+      "monthly"]: 
+      avg_type:  (Default value = Literal["mean")
+      "median"]: 
+
+    Returns:
+
+    """
     if agg == "daily":
         return agg
     dates = date_range(start_date, end_date)

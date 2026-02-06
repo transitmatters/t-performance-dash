@@ -14,16 +14,15 @@ def add_holidays(
     holiday_col_name: str = "holiday",
     service_date_col_name: str = "service_date",
 ) -> pd.DataFrame:
-    """
-    This function adds a boolean marker for whether or not the specified date is a holiday to a Pandas DataFrame in place.
+    """Add a boolean column indicating whether each row's date is a US federal holiday.
 
     Args:
-        df (DataFrame): The first parameter, an integer value.
-        holiday (str): The field name for the holiday column.
-        service_date_col_name (str): The field name for the service_date column, this is also the date value to check if it is a holiday.
+        df: DataFrame containing a date column to check against holidays.
+        holiday_col_name: Name of the boolean column to add. Defaults to "holiday".
+        service_date_col_name: Name of the existing date column to check. Defaults to "service_date".
 
     Returns:
-        DataFrame: Returns the modified dataframe.
+        The input DataFrame with an added boolean holiday column.
     """
     # Handle empty DataFrame or missing dates
     if df.empty or df[service_date_col_name].isna().all():
@@ -39,6 +38,17 @@ def add_holidays(
 
 
 def train_peak_status(df: pd.DataFrame):
+    """Classify each trip as AM peak, PM peak, or off-peak based on departure time.
+
+    Peak hours are defined as non-holiday weekdays 6:30-9:00 AM (am_peak) and
+    3:30-6:30 PM (pm_peak). All other times are labeled off_peak.
+
+    Args:
+        df: DataFrame with "dep_time" and "weekday" columns.
+
+    Returns:
+        The input DataFrame with added "holiday", "is_peak_day", and "peak" columns.
+    """
     df = add_holidays(df)
 
     # Peak Hours: non-holiday weekdays 6:30-9am; 3:30-6:30pm
@@ -54,6 +64,18 @@ def train_peak_status(df: pd.DataFrame):
 
 
 def faster_describe(grouped: DataFrameGroupBy):
+    """Compute descriptive statistics for a grouped DataFrame, optimized for speed.
+
+    Equivalent to pandas DataFrame.describe() but up to 25x faster. Computes count,
+    mean, min, median (as "50%"), max, sum, std (population), 25th, and 75th percentiles.
+    Filters out groups with 4 or fewer observations to reduce outlier noise.
+
+    Args:
+        grouped: A grouped single-column DataFrame to compute statistics on.
+
+    Returns:
+        DataFrame with descriptive statistics per group, excluding groups with count <= 4.
+    """
     # This does the same thing as pandas.DataFrame.describe(), but is up to 25x faster!
     # also, we can specify population std instead of sample.
     stats = grouped.aggregate(["count", "mean", "min", "median", "max", "sum"])
@@ -81,6 +103,20 @@ def faster_describe(grouped: DataFrameGroupBy):
 
 
 def aggregate_traveltime_data(start_date: datetime.date, end_date: datetime.date, from_stops, to_stops):
+    """Fetch and prepare travel time data for aggregation.
+
+    Retrieves raw travel time records, converts them to a DataFrame, and enriches
+    with service date, weekday, and peak status columns.
+
+    Args:
+        start_date: Start of the date range (inclusive).
+        end_date: End of the date range (inclusive).
+        from_stops: Origin stop ID(s) for the travel time query.
+        to_stops: Destination stop ID(s) for the travel time query.
+
+    Returns:
+        Enriched DataFrame with travel time data, or None if no data is available.
+    """
     all_data = data_funcs.travel_times(start_date, from_stops, to_stops, end_date)
     if not all_data:
         return None
@@ -100,6 +136,18 @@ def aggregate_traveltime_data(start_date: datetime.date, end_date: datetime.date
 
 
 def calc_travel_times_by_time(df: pd.DataFrame):
+    """Aggregate travel times into 30-minute time-of-day buckets, split by peak day status.
+
+    Converts departure times to epoch-relative datetimes for resampling, then computes
+    descriptive statistics for each 30-minute interval.
+
+    Args:
+        df: DataFrame from aggregate_traveltime_data with "dep_time", "is_peak_day",
+            and "travel_time_sec" columns.
+
+    Returns:
+        DataFrame with travel time statistics per 30-minute bucket and peak day status.
+    """
     # convert time of day to a consistent datetime relative to epoch
     timedeltas = pd.to_timedelta(df["dep_time"].astype(str))
     timedeltas.loc[timedeltas < SERVICE_HR_OFFSET] += datetime.timedelta(days=1)
@@ -112,6 +160,19 @@ def calc_travel_times_by_time(df: pd.DataFrame):
 
 
 def calc_travel_times_by_date(df: pd.DataFrame):
+    """Aggregate travel times by service date, with overall and per-peak-period breakdowns.
+
+    Computes descriptive statistics grouped by service date for all trips combined
+    (peak="all") and separately by peak status (am_peak, pm_peak, off_peak).
+    Adds holiday and weekend flags to the results.
+
+    Args:
+        df: DataFrame from aggregate_traveltime_data with "service_date", "peak",
+            and "travel_time_sec" columns.
+
+    Returns:
+        DataFrame with travel time statistics per service date and peak period.
+    """
     # get summary stats
     summary_stats = faster_describe(df.groupby("service_date")["travel_time_sec"])
     summary_stats["peak"] = "all"
@@ -132,6 +193,18 @@ def calc_travel_times_by_date(df: pd.DataFrame):
 
 
 def travel_times_all(start_date: datetime.date, end_date: datetime.date, from_stops, to_stops):
+    """Return travel time aggregations both by date and by time of day.
+
+    Args:
+        start_date: Start of the date range (inclusive).
+        end_date: End of the date range (inclusive).
+        from_stops: Origin stop ID(s).
+        to_stops: Destination stop ID(s).
+
+    Returns:
+        Dict with "by_date" and "by_time" keys, each containing a list of records.
+        Returns empty lists for both if no data is available.
+    """
     df = aggregate_traveltime_data(start_date, end_date, from_stops, to_stops)
     if df is None:
         return {"by_date": [], "by_time": []}
@@ -145,6 +218,19 @@ def travel_times_all(start_date: datetime.date, end_date: datetime.date, from_st
 
 
 def travel_times_over_time(start_date: datetime.date, end_date: datetime.date, from_stops, to_stops):
+    """Return travel time statistics by date for all peak periods combined.
+
+    Legacy endpoint that returns only the by-date aggregation filtered to peak="all".
+
+    Args:
+        start_date: Start of the date range (inclusive).
+        end_date: End of the date range (inclusive).
+        from_stops: Origin stop ID(s).
+        to_stops: Destination stop ID(s).
+
+    Returns:
+        List of record dicts with daily travel time statistics, or empty list if no data.
+    """
     df = aggregate_traveltime_data(start_date, end_date, from_stops, to_stops)
     if df is None:
         return []
@@ -156,6 +242,21 @@ def travel_times_over_time(start_date: datetime.date, end_date: datetime.date, f
 # HEADWAYS
 ####################
 def headways_over_time(start_date: datetime.date, end_date: datetime.date, stops):
+    """Compute daily headway statistics with bunching and on-time metrics.
+
+    Fetches headway data, computes descriptive statistics by service date, and
+    calculates bunched (headway ratio <= 0.5) and on-time (ratio between 0.75
+    and 1.25) trip counts relative to benchmark headways. Results are filtered
+    to the "all" peak category and include holiday/weekend flags.
+
+    Args:
+        start_date: Start of the date range (inclusive).
+        end_date: End of the date range (inclusive).
+        stops: Stop ID(s) to query headways for.
+
+    Returns:
+        List of record dicts with daily headway statistics, or empty list if no data.
+    """
     all_data = data_funcs.headways(start_date, stops, end_date)
     if not all_data:
         return []
@@ -209,6 +310,20 @@ def headways_over_time(start_date: datetime.date, end_date: datetime.date, stops
 
 
 def dwells_over_time(start_date: str | datetime.date, end_date: str | datetime.date, stops):
+    """Compute daily dwell time statistics over a date range.
+
+    Fetches dwell time data, computes descriptive statistics by service date for
+    all trips and by peak period, then returns results filtered to the "all"
+    peak category with holiday and weekend flags.
+
+    Args:
+        start_date: Start of the date range (inclusive).
+        end_date: End of the date range (inclusive).
+        stops: Stop ID(s) to query dwell times for.
+
+    Returns:
+        List of record dicts with daily dwell time statistics, or empty list if no data.
+    """
     all_data = data_funcs.dwells(start_date, stops, end_date)
     if not all_data:
         return []
