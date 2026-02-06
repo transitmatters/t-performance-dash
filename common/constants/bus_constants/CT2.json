@@ -5,6 +5,7 @@
             "0": "outbound",
             "1": "inbound"
         },
+        "service_end": "2026-04-04",
         "stations": [
             {
                 "stop_name": "Sullivan Square",
