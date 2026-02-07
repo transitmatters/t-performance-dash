@@ -8,9 +8,9 @@ from pathlib import Path
 from functools import lru_cache
 
 # Path to the common/constants directory
-# When deployed, the constants are copied into server/common/constants
+# When deployed, the constants are copied into server/chalicelib/common/constants
 # When running locally, they're in the parent common/constants directory
-CONSTANTS_DIR_DEPLOYED = Path(__file__).parent.parent / "common" / "constants"
+CONSTANTS_DIR_DEPLOYED = Path(__file__).parent / "common" / "constants"
 CONSTANTS_DIR_LOCAL = Path(__file__).parent.parent.parent / "common" / "constants"
 
 # Use deployed path if it exists, otherwise use local path
