@@ -17,6 +17,8 @@ dependencies = [
     "chalice-spec~=0.7.0",
     "pydantic~=2.11.7",
     "apispec~=6.8.2",
+    "mkdocstrings[python]>=1.0.3",
+    "mkdocs-material>=9.7.1",
 ]
 
 [dependency-groups]
