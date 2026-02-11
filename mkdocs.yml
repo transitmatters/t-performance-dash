@@ -1,0 +1,90 @@
+site_name: TransitMatters Data Dashboard
+site_description: Developer documentation for the TransitMatters Data Dashboard
+site_url: https://transitmatters.github.io/t-performance-dash/
+
+repo_name: transitmatters/t-performance-dash
+repo_url: https://github.com/transitmatters/t-performance-dash
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: custom
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: custom
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - content.code.copy
+    - toc.follow
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            show_root_heading: true
+            heading_level: 2
+
+nav:
+  - Home: index.md
+  - Architecture:
+      - Overview: architecture/overview.md
+      - Data Flow: architecture/data-flow.md
+      - Deployment: architecture/deployment.md
+  - Frontend:
+      - Overview: frontend/index.md
+      - Pages & Routing: frontend/pages.md
+      - Feature Modules: frontend/modules.md
+      - Shared Components: frontend/components.md
+      - API Layer & Hooks: frontend/api-layer.md
+      - State Management: frontend/state-management.md
+      - Type Definitions: frontend/types.md
+      - Styling & Theming: frontend/styling.md
+  - Backend:
+      - Overview: backend/index.md
+      - API Routes: backend/api-routes.md
+      - Data Models: backend/data-models.md
+      - Data Access Layer: backend/data-access.md
+      - Data Processing: backend/processing.md
+      - External APIs: backend/external-apis.md
+      - Configuration: backend/configuration.md
+  - Development:
+      - Getting Started: development/getting-started.md
+      - Code Style: development/code-style.md
+      - Testing: development/testing.md
