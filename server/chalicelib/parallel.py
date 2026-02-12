@@ -33,6 +33,7 @@ def make_parallel(single_func, THREAD_COUNT=5):
         all_events = parallel_download(date_list, stop_id)
         ```
     """
+
     def parallel_func(iterable, *args, **kwargs):
         """Execute single_func in parallel for each item in iterable.
 

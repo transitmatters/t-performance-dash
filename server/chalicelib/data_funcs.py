@@ -17,10 +17,10 @@ def bucket_by(
     """
 
     Args:
-      items: List[any]: 
-      key_getter: Union[str: 
-      Callable[[Any]: 
-      str]]: 
+      items: List[any]:
+      key_getter: Union[str:
+      Callable[[Any]:
+      str]]:
 
     Returns:
 
@@ -40,10 +40,10 @@ def index_by(items: List[any], key_getter: Union[str, Callable[[Any], str]]):
     """
 
     Args:
-      items: List[any]: 
-      key_getter: Union[str: 
-      Callable[[Any]: 
-      str]]: 
+      items: List[any]:
+      key_getter: Union[str:
+      Callable[[Any]:
+      str]]:
 
     Returns:
 
@@ -62,8 +62,8 @@ def date_range(start_date: date, end_date: date):
     """
 
     Args:
-      start_date: date: 
-      end_date: date: 
+      start_date: date:
+      end_date: date:
 
     Returns:
 
@@ -78,7 +78,7 @@ def stamp_to_dt(stamp):
     """
 
     Args:
-      stamp: 
+      stamp:
 
     Returns:
 
@@ -92,7 +92,7 @@ def is_bus(stops):
     """
 
     Args:
-      stops: 
+      stops:
 
     Returns:
 
@@ -104,7 +104,7 @@ def is_cr(stops):
     """
 
     Args:
-      stops: 
+      stops:
 
     Returns:
 
@@ -116,7 +116,7 @@ def use_S3(date, bus=False):
     """
 
     Args:
-      date: 
+      date:
       bus:  (Default value = False)
 
     Returns:
@@ -130,8 +130,8 @@ def headways(start_date: date, stops, end_date: date | None = None):
     """
 
     Args:
-      start_date: date: 
-      stops: 
+      start_date: date:
+      stops:
       end_date: date | None:  (Default value = None)
 
     Returns:
@@ -158,9 +158,9 @@ def travel_times(start_date: date, from_stops, to_stops, end_date: date | None =
     """
 
     Args:
-      start_date: date: 
-      from_stops: 
-      to_stops: 
+      start_date: date:
+      from_stops:
+      to_stops:
       end_date: date | None:  (Default value = None)
 
     Returns:
@@ -176,8 +176,8 @@ def dwells(start_date, stops, end_date: date | None = None):
     """
 
     Args:
-      start_date: 
-      stops: 
+      start_date:
+      stops:
       end_date: date | None:  (Default value = None)
 
     Returns:
@@ -193,8 +193,8 @@ def alerts(day: date, params):
     """
 
     Args:
-      day: date: 
-      params: 
+      day: date:
+      params:
 
     Returns:
 

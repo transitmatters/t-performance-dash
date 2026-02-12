@@ -7,7 +7,7 @@ def routes_for_alert(alert):
     """
 
     Args:
-      alert: 
+      alert:
 
     Returns:
 
@@ -37,7 +37,7 @@ def key(day, v3: bool = False):
     """
 
     Args:
-      day: 
+      day:
       v3: bool:  (Default value = False)
 
     Returns:
@@ -52,8 +52,8 @@ def get_v2_alerts(day: date, routes):
     """
 
     Args:
-      day: date: 
-      routes: 
+      day: date:
+      routes:
 
     Returns:
 
@@ -65,7 +65,7 @@ def get_v2_alerts(day: date, routes):
         """
 
         Args:
-          alert: 
+          alert:
 
         Returns:
 
@@ -80,8 +80,8 @@ def get_v3_alerts(day: date, routes: list[str]):
     """
 
     Args:
-      day: date: 
-      routes: list[str]: 
+      day: date:
+      routes: list[str]:
 
     Returns:
 
@@ -93,7 +93,7 @@ def get_v3_alerts(day: date, routes: list[str]):
         """
 
         Args:
-          alert: 
+          alert:
 
         Returns:
 

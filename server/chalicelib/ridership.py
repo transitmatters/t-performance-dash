@@ -6,6 +6,7 @@ from .dynamo import query_ridership
 
 class RidershipEntry(TypedDict):
     """ """
+
     date: str
     count: int
 
@@ -18,9 +19,9 @@ def get_ridership(
     """
 
     Args:
-      line_id: str: 
-      start_date: date: 
-      end_date: date: 
+      line_id: str:
+      start_date: date:
+      end_date: date:
 
     Returns:
 

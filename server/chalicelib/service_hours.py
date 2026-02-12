@@ -40,6 +40,7 @@ class ServiceHoursEntry(TypedDict):
         scheduled: Scheduled service hours for the day.
         delivered: Delivered service hours for the day.
     """
+
     date: str
     scheduled: int
     delivered: int

@@ -19,7 +19,7 @@ def _load_static_json(relative_path: str):
     """Load a JSON file from the static data directory.
 
     Args:
-      relative_path: str: 
+      relative_path: str:
 
     Returns:
 
@@ -35,7 +35,7 @@ def proxy_request(path: str, query_params: dict = None):
     """Proxy a request to the production API.
 
     Args:
-      path: str: 
+      path: str:
       query_params: dict:  (Default value = None)
 
     Returns:
@@ -54,7 +54,7 @@ def get_trip_metrics(query_params: dict):
     """Get trip metrics from static cache.
 
     Args:
-      query_params: dict: 
+      query_params: dict:
 
     Returns:
 
@@ -73,7 +73,7 @@ def get_scheduled_service(query_params: dict):
     """Get scheduled service from static cache.
 
     Args:
-      query_params: dict: 
+      query_params: dict:
 
     Returns:
 
@@ -88,7 +88,7 @@ def get_ridership(query_params: dict):
     """Get ridership data from static cache.
 
     Args:
-      query_params: dict: 
+      query_params: dict:
 
     Returns:
 
@@ -103,7 +103,7 @@ def get_line_delays(query_params: dict):
     """Get line delays from static cache.
 
     Args:
-      query_params: dict: 
+      query_params: dict:
 
     Returns:
 
@@ -119,7 +119,7 @@ def get_speed_restrictions(query_params: dict):
     """Get speed restrictions from static cache.
 
     Args:
-      query_params: dict: 
+      query_params: dict:
 
     Returns:
 
@@ -136,7 +136,7 @@ def get_time_predictions(query_params: dict):
     """Get time predictions from static cache.
 
     Args:
-      query_params: dict: 
+      query_params: dict:
 
     Returns:
 
@@ -151,7 +151,7 @@ def get_service_hours(query_params: dict):
     """Get service hours from static cache.
 
     Args:
-      query_params: dict: 
+      query_params: dict:
 
     Returns:
 
@@ -166,7 +166,7 @@ def get_aggregate_traveltimes(query_params: dict):
     """Get aggregate travel times from static cache.
 
     Args:
-      query_params: dict: 
+      query_params: dict:
 
     Returns:
 
@@ -179,7 +179,7 @@ def get_aggregate_headways(query_params: dict):
     """Get aggregate headways from static cache.
 
     Args:
-      query_params: dict: 
+      query_params: dict:
 
     Returns:
 
@@ -192,7 +192,7 @@ def get_aggregate_dwells(query_params: dict):
     """Get aggregate dwells from static cache.
 
     Args:
-      query_params: dict: 
+      query_params: dict:
 
     Returns:
 
@@ -206,8 +206,8 @@ def get_headways(date: str, stops: list):
     """Get headways for a single day from static cache.
 
     Args:
-      date: str: 
-      stops: list: 
+      date: str:
+      stops: list:
 
     Returns:
 
@@ -220,8 +220,8 @@ def get_dwells(date: str, stops: list):
     """Get dwells for a single day from static cache.
 
     Args:
-      date: str: 
-      stops: list: 
+      date: str:
+      stops: list:
 
     Returns:
 
@@ -234,9 +234,9 @@ def get_traveltimes(date: str, from_stops: list, to_stops: list):
     """Get travel times for a single day from static cache.
 
     Args:
-      date: str: 
-      from_stops: list: 
-      to_stops: list: 
+      date: str:
+      from_stops: list:
+      to_stops: list:
 
     Returns:
 
@@ -249,8 +249,8 @@ def get_alerts(date: str, query_params: dict):
     """Get alerts for a single day from static cache.
 
     Args:
-      date: str: 
-      query_params: dict: 
+      date: str:
+      query_params: dict:
 
     Returns:
 

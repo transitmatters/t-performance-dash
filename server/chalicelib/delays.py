@@ -27,6 +27,7 @@ class AlertDelaysByLineParams(TypedDict):
         line: Line identifier (e.g., ``Red``, ``Green-B``, ``CR-Fairmount``).
         agg: Aggregation level — ``"daily"`` or ``"weekly"``.
     """
+
     start_date: str | date
     end_date: str | date
     line: str

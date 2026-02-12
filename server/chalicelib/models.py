@@ -21,6 +21,7 @@ class AlertDelaysByLineParams(BaseModel):
         end_date: End of date range (YYYY-MM-DD).
         line: Line identifier (e.g., `Red`, `Orange`, `Green-B`).
     """
+
     start_date: Union[str, date]
     end_date: Union[str, date]
     line: str
@@ -35,6 +36,7 @@ class TripMetricsByLineParams(BaseModel):
         agg: Aggregation level — `daily`, `weekly`, or `monthly`.
         line: Line identifier (e.g., `Red`, `Green-B`).
     """
+
     start_date: Union[str, date]
     end_date: Union[str, date]
     agg: str
@@ -50,6 +52,7 @@ class ScheduledServiceParams(BaseModel):
         route_id: Optional route filter. `None` returns all routes.
         agg: Aggregation level — `daily`, `weekly`, or `monthly`.
     """
+
     start_date: date
     end_date: date
     route_id: str | None = None
@@ -64,6 +67,7 @@ class RidershipParams(BaseModel):
         end_date: End of date range.
         line_id: Optional line filter. `None` returns all lines.
     """
+
     start_date: date
     end_date: date
     line_id: str | None = None
@@ -76,6 +80,7 @@ class SpeedRestrictionsParams(BaseModel):
         line_id: Line identifier (e.g., `Red`, `Orange`).
         on_date: Date to query (YYYY-MM-DD).
     """
+
     line_id: str
     on_date: str
 
@@ -89,6 +94,7 @@ class ServiceHoursParams(BaseModel):
         end_date: End of date range.
         agg: Aggregation level — `daily`, `weekly`, or `monthly`.
     """
+
     single_route_id: str | None = None
     start_date: date
     end_date: date
@@ -109,6 +115,7 @@ class HealthcheckResponse(BaseModel):
         failed_checks_sum: Number of failed checks, if any.
         failed_checks: Map of check name to failure detail.
     """
+
     status: str
     failed_checks_sum: int | None = None
     failed_checks: Dict[str, str] | None = None
@@ -123,6 +130,7 @@ class Facility(BaseModel):
         type: Facility type (e.g., `ELEVATOR`, `ESCALATOR`).
         attributes: Raw facility attributes from the MBTA API.
     """
+
     model_config = ConfigDict(arbitrary_types_allowed=True)
     id: str
     type: str
@@ -137,6 +145,7 @@ class Alert(BaseModel):
         valid_to: ISO timestamp when the alert expires.
         text: Human-readable alert description.
     """
+
     valid_from: str
     valid_to: str
     text: str
@@ -148,6 +157,7 @@ class AlertsRouteResponse(BaseModel):
     Attributes:
         alerts: List of alert objects with type, active periods, stops, and routes.
     """
+
     model_config = ConfigDict(extra="allow")
     alerts: List[Dict[str, Any]]
 
@@ -159,6 +169,7 @@ class HeadwayResponse(BaseModel):
     Attributes:
         headways: Headway data keyed by stop ID.
     """
+
     model_config = ConfigDict(extra="allow")
     headways: Dict[str, Any]
 
@@ -169,6 +180,7 @@ class DwellResponse(BaseModel):
     Attributes:
         dwells: Dwell time data keyed by stop ID.
     """
+
     model_config = ConfigDict(extra="allow")
     dwells: Dict[str, Any]
 
@@ -179,6 +191,7 @@ class TravelTimeResponse(BaseModel):
     Attributes:
         travel_times: Travel time data keyed by origin-destination stop pair.
     """
+
     model_config = ConfigDict(extra="allow")
     travel_times: Dict[str, Any]
 
@@ -192,6 +205,7 @@ class TravelTimeAggregateResponse(BaseModel):
     Attributes:
         data: Aggregated travel time statistics.
     """
+
     model_config = ConfigDict(extra="allow")
     data: Dict[str, Any]
 
@@ -204,6 +218,7 @@ class HeadwaysAggregateResponse(BaseModel):
     Attributes:
         data: Aggregated headway statistics by date.
     """
+
     model_config = ConfigDict(extra="allow")
     data: Dict[str, Any]
 
@@ -214,6 +229,7 @@ class DwellsAggregateResponse(BaseModel):
     Attributes:
         data: Aggregated dwell time statistics by date.
     """
+
     model_config = ConfigDict(extra="allow")
     data: Dict[str, Any]
 
@@ -225,6 +241,7 @@ class LineDelaysResponse(BaseModel):
     Attributes:
         data: Delay data, daily or weekly depending on the `agg` parameter.
     """
+
     model_config = ConfigDict(extra="allow")
     data: Dict[str, Any]
 
@@ -235,6 +252,7 @@ class TripMetricsResponse(BaseModel):
     Attributes:
         data: Trip metrics at the requested aggregation level.
     """
+
     model_config = ConfigDict(extra="allow")
     data: Dict[str, Any]
 
@@ -245,6 +263,7 @@ class ServiceHoursResponse(BaseModel):
     Attributes:
         data: Service hours comparison data.
     """
+
     model_config = ConfigDict(extra="allow")
     data: Dict[str, Any]
 
@@ -256,6 +275,7 @@ class TimePredictionResponse(BaseModel):
     Attributes:
         predictions: Prediction model data for a route.
     """
+
     model_config = ConfigDict(extra="allow")
     predictions: Dict[str, Any]
 
@@ -268,6 +288,7 @@ class RidershipEntry(BaseModel):
         date: Date string (YYYY-MM-DD).
         count: Ridership count for the day.
     """
+
     date: str
     count: int
 
@@ -278,6 +299,7 @@ class RidershipResponse(BaseModel):
     Attributes:
         data: List of daily ridership entries.
     """
+
     model_config = ConfigDict(extra="allow")
     data: List[RidershipEntry]
 
@@ -291,6 +313,7 @@ class ServiceHoursEntry(BaseModel):
         scheduled: Scheduled service hours.
         delivered: Delivered service hours.
     """
+
     date: str
     scheduled: int
     delivered: int
@@ -302,6 +325,7 @@ class ByHourServiceLevels(BaseModel):
     Attributes:
         service_levels: Service count by hour (24 entries, index 0 = midnight).
     """
+
     service_levels: List[int]
 
 
@@ -312,6 +336,7 @@ class ByDayKindServiceLevels(BaseModel):
         date: Reference date (YYYY-MM-DD).
         service_levels: Service count by hour (24 entries, index 0 = midnight).
     """
+
     date: str
     service_levels: List[int]
 
@@ -324,6 +349,7 @@ class ServiceLevelsByDayKind(BaseModel):
         saturday: Saturday service breakdown.
         sunday: Sunday service breakdown.
     """
+
     weekday: ByDayKindServiceLevels
     saturday: ByDayKindServiceLevels
     sunday: ByDayKindServiceLevels
@@ -338,6 +364,7 @@ class GetScheduledServiceResponse(BaseModel):
         counts: Scheduled trip counts keyed by date string.
         service_hours: Service hours keyed by date string.
     """
+
     start_date_service_levels: ServiceLevelsByDayKind
     end_date_service_levels: ServiceLevelsByDayKind
     counts: Dict[str, int]
@@ -353,6 +380,7 @@ class SpeedRestrictionsResponse(BaseModel):
         date: Actual date of the data (may differ from requested date).
         zones: Speed restriction zone details, if available.
     """
+
     available: bool
     date: str | None = None
     zones: Dict | None = None
@@ -366,6 +394,7 @@ class ServiceRidershipDashboardResponse(BaseModel):
         summaryData: System-wide summary metrics.
         lineData: Per-line metrics.
     """
+
     summaryData: dict[str, Any]
     lineData: dict[str, Any]
 
@@ -377,6 +406,7 @@ class GitIdResponse(BaseModel):
     Attributes:
         git_id: Git commit hash of the deployed code.
     """
+
     git_id: str
 
 
@@ -389,6 +419,7 @@ class APIDocsResponse(BaseModel):
         paths: API endpoint definitions.
         components: Reusable schema components.
     """
+
     model_config = ConfigDict(extra="allow")
     openapi: str
     info: Dict[str, Any]
@@ -406,6 +437,7 @@ class RoutesResponse(BaseModel):
         commuter_rail: Commuter rail route IDs (e.g., `CR-Fairmount`).
         ferry: Ferry route IDs (e.g., `Boat-F1`).
     """
+
     rapid_transit: List[str]
     bus: List[str]
     commuter_rail: List[str]
@@ -428,6 +460,7 @@ class StationStop(BaseModel):
         disabled: Whether this stop is currently disabled.
         short: Short display name.
     """
+
     model_config = ConfigDict(extra="allow")
     stop_name: str
     branches: List[str] | None
@@ -452,6 +485,7 @@ class StopsResponse(BaseModel):
         service_start: Service start date, if applicable.
         service_end: Service end date, if applicable.
     """
+
     model_config = ConfigDict(extra="allow")
     type: str
     direction: Dict[str, str]

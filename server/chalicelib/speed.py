@@ -23,6 +23,7 @@ class TripMetricsByLineParams(TypedDict):
         agg: Aggregation level — ``"daily"``, ``"weekly"``, or ``"monthly"``.
         line: Line identifier (e.g., ``line-red``, ``line-green``).
     """
+
     start_date: str | date
     end_date: str | date
     agg: str

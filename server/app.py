@@ -56,7 +56,7 @@ def parse_user_date(user_date: str):
     Args:
       user_date: str:
       user_date: str:
-      user_date: str: 
+      user_date: str:
 
     Returns:
 
@@ -70,7 +70,7 @@ def mutlidict_to_dict(mutlidict):
     """
 
     Args:
-      mutlidict: 
+      mutlidict:
 
     Returns:
 
@@ -123,7 +123,7 @@ def headways_route(user_date):
     """
 
     Args:
-      user_date: 
+      user_date:
 
     Returns:
 
@@ -150,7 +150,7 @@ def dwells_route(user_date):
     """
 
     Args:
-      user_date: 
+      user_date:
 
     Returns:
 
@@ -177,7 +177,7 @@ def traveltime_route(user_date):
     """
 
     Args:
-      user_date: 
+      user_date:
 
     Returns:
 
@@ -207,7 +207,7 @@ def alerts_route(user_date):
     """
 
     Args:
-      user_date: 
+      user_date:
 
     Returns:
 
@@ -583,7 +583,7 @@ def get_stops(route_id):
     Returns the station/stop data including names, IDs, and directions.
 
     Args:
-      route_id: 
+      route_id:
 
     Returns:
 

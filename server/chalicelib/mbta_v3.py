@@ -33,8 +33,8 @@ def shuttle_alert(attributes, id):
     """Format alerts for shuttling
 
     Args:
-      attributes: 
-      id: 
+      attributes:
+      id:
 
     Returns:
 
@@ -56,8 +56,8 @@ def delay_alert(attributes, id):
     """Format alerts for delays
 
     Args:
-      attributes: 
-      id: 
+      attributes:
+      id:
 
     Returns:
 
@@ -83,8 +83,8 @@ def accessibility_alert(attributes, id):
     """Format alerts for escalators
 
     Args:
-      attributes: 
-      id: 
+      attributes:
+      id:
 
     Returns:
 
@@ -107,7 +107,7 @@ def format_alerts_response(alerts_data):  # TODO: separate logic for bus to avoi
     """
 
     Args:
-      alerts_data: 
+      alerts_data:
 
     Returns:
 
@@ -133,11 +133,11 @@ def get_active(alert_period):
     """Append a field to each time period on the alert to determine:
     1) If the period is current (ongoing or starts today)
     2) If the period is upcoming (affects a day beyond today)
-    
+
     These two things are not mutually exclusive.
 
     Args:
-      alert_period: 
+      alert_period:
 
     Returns:
 
@@ -175,7 +175,7 @@ def format_active_alerts(alert_active_period):
     """
 
     Args:
-      alert_active_period: 
+      alert_active_period:
 
     Returns:
 
@@ -200,7 +200,7 @@ def getV3(command, params={}):
     """Make a GET request against the MBTA v3 API
 
     Args:
-      command: 
+      command:
       params:  (Default value = {})
 
     Returns:

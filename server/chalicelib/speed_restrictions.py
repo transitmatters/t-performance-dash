@@ -18,8 +18,8 @@ def get_boundary_date(line_id: str, first: bool):
     """
 
     Args:
-      line_id: str: 
-      first: bool: 
+      line_id: str:
+      first: bool:
 
     Returns:
 
@@ -37,8 +37,8 @@ def query_speed_restrictions(line_id: str, on_date: str):
     """
 
     Args:
-      line_id: str: 
-      on_date: str: 
+      line_id: str:
+      on_date: str:
 
     Returns:
 

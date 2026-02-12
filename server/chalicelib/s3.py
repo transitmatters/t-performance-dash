@@ -19,7 +19,7 @@ def download(key, encoding="utf8", compressed=True):
     """
 
     Args:
-      key: 
+      key:
       encoding:  (Default value = "utf8")
       compressed:  (Default value = True)
 
@@ -39,8 +39,8 @@ def upload(key, bytes, compress=True):
     """
 
     Args:
-      key: 
-      bytes: 
+      key:
+      bytes:
       compress:  (Default value = True)
 
     Returns:
@@ -55,7 +55,7 @@ def is_bus(stop_id: str):
     """
 
     Args:
-      stop_id: str: 
+      stop_id: str:
 
     Returns:
 
@@ -67,7 +67,7 @@ def is_cr(stop_id: str):
     """
 
     Args:
-      stop_id: str: 
+      stop_id: str:
 
     Returns:
 
@@ -79,7 +79,7 @@ def is_ferry(stop_id: str):
     """
 
     Args:
-      stop_id: str: 
+      stop_id: str:
 
     Returns:
 
@@ -91,7 +91,7 @@ def get_gobble_folder(stop_id: str):
     """
 
     Args:
-      stop_id: str: 
+      stop_id: str:
 
     Returns:
 
@@ -113,8 +113,8 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, 
     """As advertised: single event file from s3
 
     Args:
-      date: pd.Timestamp: 
-      stop_id: str: 
+      date: pd.Timestamp:
+      stop_id: str:
       use_gobble:  (Default value = False)
       route_context:  (Default value = None)
 
@@ -171,7 +171,7 @@ def parallel_download_events(datestop: itertools.product):
     """
 
     Args:
-      datestop: itertools.product: 
+      datestop: itertools.product:
 
     Returns:
 
@@ -184,9 +184,9 @@ def download_events(start_date: date, end_date: date, stops: list):
     """
 
     Args:
-      start_date: date: 
-      end_date: date: 
-      stops: list: 
+      start_date: date:
+      end_date: date:
+      stops: list:
 
     Returns:
 
@@ -203,8 +203,8 @@ def get_all_s3_objects(s3, **base_kwargs):
     """
 
     Args:
-      s3: 
-      **base_kwargs: 
+      s3:
+      **base_kwargs:
 
     Returns:
 

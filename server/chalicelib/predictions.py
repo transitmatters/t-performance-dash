@@ -18,7 +18,7 @@ def query_time_predictions(route_id: str):
     """
 
     Args:
-      route_id: str: 
+      route_id: str:
 
     Returns:
 

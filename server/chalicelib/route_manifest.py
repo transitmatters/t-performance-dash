@@ -21,7 +21,7 @@ def _load_json(file_path: Path):
     """Load a JSON file.
 
     Args:
-      file_path: Path: 
+      file_path: Path:
 
     Returns:
 
@@ -114,7 +114,7 @@ def get_route_stops(route_id: str):
     Returns the LineMap data for the route, or None if not found.
 
     Args:
-      route_id: str: 
+      route_id: str:
 
     Returns:
 

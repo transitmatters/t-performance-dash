@@ -13,12 +13,14 @@ ScheduledService = List[Dict]
 
 class ByDayKindServiceLevels(TypedDict):
     """ """
+
     date: str
     service_levels: ByHourServiceLevels
 
 
 class ByDayKindServiceLevels(TypedDict):
     """ """
+
     weekday: ByDayKindServiceLevels
     saturday: ByDayKindServiceLevels
     sunday: ByDayKindServiceLevels
@@ -26,6 +28,7 @@ class ByDayKindServiceLevels(TypedDict):
 
 class GetScheduledServiceResponse(TypedDict):
     """ """
+
     start_date_service_levels: ByDayKindServiceLevels
     end_date_service_levels: ByDayKindServiceLevels
     counts: Dict[str, int]
@@ -39,17 +42,18 @@ def get_next_day_kind_service_levels(
     """
 
     Args:
-      scheduled_service: ScheduledService: 
-      day_kind: DayKind: 
+      scheduled_service: ScheduledService:
+      day_kind: DayKind:
 
     Returns:
 
     """
+
     def predicate(scheduled_service_day):
         """
 
         Args:
-          scheduled_service_day: 
+          scheduled_service_day:
 
         Returns:
 
@@ -79,8 +83,8 @@ def get_service_levels(
     """
 
     Args:
-      scheduled_service: ScheduledService: 
-      search_from_end: bool: 
+      scheduled_service: ScheduledService:
+      search_from_end: bool:
 
     Returns:
 
@@ -103,9 +107,9 @@ def get_scheduled_service(
     """
 
     Args:
-      start_date: date: 
-      end_date: date: 
-      agg: AggTypes: 
+      start_date: date:
+      end_date: date:
+      agg: AggTypes:
       route_id: str:  (Default value = None)
 
     Returns:
@@ -151,9 +155,9 @@ def get_scheduled_service_counts(
     """
 
     Args:
-      start_date: date: 
-      end_date: date: 
-      agg: AggTypes: 
+      start_date: date:
+      end_date: date:
+      agg: AggTypes:
       route_id: str:  (Default value = None)
 
     Returns:
@@ -183,9 +187,9 @@ def get_scheduled_service_hours(
     """
 
     Args:
-      start_date: date: 
-      end_date: date: 
-      agg: AggTypes: 
+      start_date: date:
+      end_date: date:
+      agg: AggTypes:
       route_id: str:  (Default value = None)
 
     Returns:

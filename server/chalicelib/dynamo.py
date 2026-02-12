@@ -24,10 +24,10 @@ def query_daily_trips_on_route(table_name: str, route, start_date: str | date, e
     """
 
     Args:
-      table_name: str: 
-      route: 
-      start_date: str | date: 
-      end_date: str | date: 
+      table_name: str:
+      route:
+      start_date: str | date:
+      end_date: str | date:
 
     Returns:
 
@@ -41,10 +41,10 @@ def query_daily_trips_on_line(table_name: str, line: str, start_date: str | date
     """
 
     Args:
-      table_name: str: 
-      line: str: 
-      start_date: str | date: 
-      end_date: str | date: 
+      table_name: str:
+      line: str:
+      start_date: str | date:
+      end_date: str | date:
 
     Returns:
 
@@ -72,8 +72,8 @@ def query_scheduled_service(start_date: date, end_date: date, route_id: str = No
     """
 
     Args:
-      start_date: date: 
-      end_date: date: 
+      start_date: date:
+      end_date: date:
       route_id: str:  (Default value = None)
 
     Returns:
@@ -91,8 +91,8 @@ def query_ridership(start_date: date, end_date: date, line_id: str = None):
     """
 
     Args:
-      start_date: date: 
-      end_date: date: 
+      start_date: date:
+      end_date: date:
       line_id: str:  (Default value = None)
 
     Returns:
@@ -110,9 +110,9 @@ def query_agg_trip_metrics(start_date: str | date, end_date: str | date, table_n
     """
 
     Args:
-      start_date: str | date: 
-      end_date: str | date: 
-      table_name: str: 
+      start_date: str | date:
+      end_date: str | date:
+      table_name: str:
       line: str:  (Default value = None)
 
     Returns:
@@ -134,9 +134,9 @@ def query_extended_trip_metrics(
     """
 
     Args:
-      start_date: date: 
-      end_date: date: 
-      route_ids: List[str]: 
+      start_date: date:
+      end_date: date:
+      route_ids: List[str]:
 
     Returns:
 
