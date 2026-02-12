@@ -1,4 +1,5 @@
 """Application configuration: API keys, AWS credentials, and backend source selection."""
+
 import os
 
 import boto3

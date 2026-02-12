@@ -1,4 +1,5 @@
 """Client for the MBTA v3 API: alert retrieval, formatting, and general v3 queries."""
+
 from decimal import Decimal
 import json
 from urllib.parse import urlencode
