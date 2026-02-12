@@ -1,3 +1,9 @@
+"""Parallel execution utilities for concurrent data fetching.
+
+Provides a wrapper to parallelize single-item functions using ``ThreadPoolExecutor``,
+and helper functions for generating date ranges used in S3 queries.
+"""
+
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date
 import pandas as pd
@@ -7,12 +13,37 @@ from chalicelib import date_utils
 
 
 def make_parallel(single_func, THREAD_COUNT=5):
-    # This function will wrap another function
-    # (similar to a decorator, but we don't want to overwrite the original)
-    # e.g. parallel_func = make_parallel(singleton_func)
-    # singleton_func's first parameter must be the var to multiplex on
-    # and parallel_func will take an iterable in its stead
+    """Wrap a single-item function to process an iterable in parallel.
+
+    Creates a new function that calls ``single_func`` concurrently for each
+    item in an iterable using a thread pool. The wrapped function's first
+    parameter must be the value to multiplex on.
+
+    Args:
+        single_func: Function whose first parameter is the item to parallelize over.
+        THREAD_COUNT: Maximum number of concurrent threads. Defaults to 5.
+
+    Returns:
+        A function that accepts an iterable as its first argument and returns
+        a flat list of all results.
+
+    Example:
+        ```python
+        parallel_download = make_parallel(download_one_event_file)
+        all_events = parallel_download(date_list, stop_id)
+        ```
+    """
     def parallel_func(iterable, *args, **kwargs):
+        """Execute single_func in parallel for each item in iterable.
+
+        Args:
+            iterable: Items to process in parallel.
+            *args: Additional positional arguments passed to single_func.
+            **kwargs: Additional keyword arguments passed to single_func.
+
+        Returns:
+            Flat list of all results from each invocation.
+        """
         futures = []
         with ThreadPoolExecutor(max_workers=THREAD_COUNT) as executor:
             for i in iterable:
@@ -25,14 +56,33 @@ def make_parallel(single_func, THREAD_COUNT=5):
 
 
 def date_range(start: str, end: str):
+    """Generate a daily date range between two dates.
+
+    Args:
+        start: Start date string (YYYY-MM-DD).
+        end: End date string (YYYY-MM-DD).
+
+    Returns:
+        ``pandas.DatetimeIndex`` with one entry per day.
+    """
     return pd.date_range(start, end)
 
 
 def s3_date_range(start: date, end: date, stops: list[str]):
-    """
-    Generates a date range, meant for s3 data
-    For all dates that we have monthly datasets for, return 1 date of the month
-    For all dates that we have daily datasets for, return all dates
+    """Generate an optimized date range for S3 event file queries.
+
+    For dates covered by monthly archives, returns the 1st of each month
+    (fewer files to download). For dates after the monthly archive cutoff,
+    returns every individual date. Commuter rail stops always use daily
+    files since they have no monthly archives.
+
+    Args:
+        start: Start date of the range.
+        end: End date of the range.
+        stops: Stop IDs to query — used to detect commuter rail stops.
+
+    Returns:
+        ``pandas.DatetimeIndex`` with the optimized set of dates to query.
     """
     month_end = end
     if date_utils.get_max_monthly_data_date() < end and date_utils.get_max_monthly_data_date() > start:

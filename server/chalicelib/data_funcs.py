@@ -14,6 +14,17 @@ def bucket_by(
     items: List[any],
     key_getter: Union[str, Callable[[Any], str]],
 ) -> Dict[str, List[any]]:
+    """
+
+    Args:
+      items: List[any]: 
+      key_getter: Union[str: 
+      Callable[[Any]: 
+      str]]: 
+
+    Returns:
+
+    """
     res = {}
     if isinstance(key_getter, str):
         key_getter_as_str = key_getter
@@ -26,6 +37,17 @@ def bucket_by(
 
 
 def index_by(items: List[any], key_getter: Union[str, Callable[[Any], str]]):
+    """
+
+    Args:
+      items: List[any]: 
+      key_getter: Union[str: 
+      Callable[[Any]: 
+      str]]: 
+
+    Returns:
+
+    """
     res = {}
     if isinstance(key_getter, str):
         key_getter_as_str = key_getter
@@ -37,6 +59,15 @@ def index_by(items: List[any], key_getter: Union[str, Callable[[Any], str]]):
 
 
 def date_range(start_date: date, end_date: date):
+    """
+
+    Args:
+      start_date: date: 
+      end_date: date: 
+
+    Returns:
+
+    """
     now = start_date
     while now <= end_date:
         yield now
@@ -44,25 +75,68 @@ def date_range(start_date: date, end_date: date):
 
 
 def stamp_to_dt(stamp):
+    """
+
+    Args:
+      stamp: 
+
+    Returns:
+
+    """
     stamp = int(stamp)
     dt = datetime.datetime.fromtimestamp(stamp, pytz.timezone("America/New_York"))
     return dt.strftime(DATE_FORMAT)
 
 
 def is_bus(stops):
+    """
+
+    Args:
+      stops: 
+
+    Returns:
+
+    """
     return all(map(s3.is_bus, stops))
 
 
 def is_cr(stops):
+    """
+
+    Args:
+      stops: 
+
+    Returns:
+
+    """
     return all(map(s3.is_cr, stops))
 
 
 def use_S3(date, bus=False):
+    """
+
+    Args:
+      date: 
+      bus:  (Default value = False)
+
+    Returns:
+
+    """
     archival = (date.today() - date).days >= 90
     return archival or bus
 
 
 def headways(start_date: date, stops, end_date: date | None = None):
+    """
+
+    Args:
+      start_date: date: 
+      stops: 
+      end_date: date | None:  (Default value = None)
+
+    Returns:
+
+    """
     if end_date is None:
         return s3_historical.headways(stops, start_date, start_date)
 
@@ -71,6 +145,7 @@ def headways(start_date: date, stops, end_date: date | None = None):
 
 # Transit days run 3:30am-3:30am local time
 def current_transit_day():
+    """ """
     bos_tz = pytz.timezone("America/New_York")
     now = bos_tz.localize(datetime.datetime.now())
     today = now.date()
@@ -80,6 +155,17 @@ def current_transit_day():
 
 
 def travel_times(start_date: date, from_stops, to_stops, end_date: date | None = None):
+    """
+
+    Args:
+      start_date: date: 
+      from_stops: 
+      to_stops: 
+      end_date: date | None:  (Default value = None)
+
+    Returns:
+
+    """
     if end_date is None:
         return s3_historical.travel_times(from_stops, to_stops, start_date, start_date)
 
@@ -87,6 +173,16 @@ def travel_times(start_date: date, from_stops, to_stops, end_date: date | None =
 
 
 def dwells(start_date, stops, end_date: date | None = None):
+    """
+
+    Args:
+      start_date: 
+      stops: 
+      end_date: date | None:  (Default value = None)
+
+    Returns:
+
+    """
     if end_date is None:
         return s3_historical.dwells(stops, start_date, start_date)
 
@@ -94,6 +190,15 @@ def dwells(start_date, stops, end_date: date | None = None):
 
 
 def alerts(day: date, params):
+    """
+
+    Args:
+      day: date: 
+      params: 
+
+    Returns:
+
+    """
     try:
         # Use the API for today and yesterday's transit day, otherwise us.
         if day >= WE_HAVE_V2_ALERTS_SINCE and day <= WE_HAVE_V3_ALERTS_SINCE:

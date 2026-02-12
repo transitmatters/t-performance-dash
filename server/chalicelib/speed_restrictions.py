@@ -15,6 +15,15 @@ def set_speed_restrictions_table():
 
 
 def get_boundary_date(line_id: str, first: bool):
+    """
+
+    Args:
+      line_id: str: 
+      first: bool: 
+
+    Returns:
+
+    """
     response = SpeedRestrictions.query(
         KeyConditionExpression=Key("lineId").eq(line_id),
         ScanIndexForward=first,
@@ -25,6 +34,15 @@ def get_boundary_date(line_id: str, first: bool):
 
 
 def query_speed_restrictions(line_id: str, on_date: str):
+    """
+
+    Args:
+      line_id: str: 
+      on_date: str: 
+
+    Returns:
+
+    """
     first_sr_date = get_boundary_date(line_id=line_id, first=True)
     latest_sr_date = get_boundary_date(line_id=line_id, first=False)
     if on_date < first_sr_date:

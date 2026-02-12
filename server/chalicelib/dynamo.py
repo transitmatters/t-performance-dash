@@ -13,6 +13,7 @@ dynamodb = None
 
 
 def set_dynamodb_resource():
+    """ """
     global dynamodb
 
     region = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
@@ -20,12 +21,34 @@ def set_dynamodb_resource():
 
 
 def query_daily_trips_on_route(table_name: str, route, start_date: str | date, end_date: str | date):
+    """
+
+    Args:
+      table_name: str: 
+      route: 
+      start_date: str | date: 
+      end_date: str | date: 
+
+    Returns:
+
+    """
     table = dynamodb.Table(table_name)
     response = table.query(KeyConditionExpression=Key("route").eq(route) & Key("date").between(start_date, end_date))
     return ddb_json.loads(response["Items"])
 
 
 def query_daily_trips_on_line(table_name: str, line: str, start_date: str | date, end_date: str | date):
+    """
+
+    Args:
+      table_name: str: 
+      line: str: 
+      start_date: str | date: 
+      end_date: str | date: 
+
+    Returns:
+
+    """
     route_keys = constants.LINE_TO_ROUTE_MAP[line]
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
         futures = [
@@ -46,6 +69,16 @@ def query_daily_trips_on_line(table_name: str, line: str, start_date: str | date
 
 
 def query_scheduled_service(start_date: date, end_date: date, route_id: str = None):
+    """
+
+    Args:
+      start_date: date: 
+      end_date: date: 
+      route_id: str:  (Default value = None)
+
+    Returns:
+
+    """
     table = dynamodb.Table("ScheduledServiceDaily")
     line_condition = Key("routeId").eq(route_id)
     date_condition = Key("date").between(start_date.isoformat(), end_date.isoformat())
@@ -55,6 +88,16 @@ def query_scheduled_service(start_date: date, end_date: date, route_id: str = No
 
 
 def query_ridership(start_date: date, end_date: date, line_id: str = None):
+    """
+
+    Args:
+      start_date: date: 
+      end_date: date: 
+      line_id: str:  (Default value = None)
+
+    Returns:
+
+    """
     table = dynamodb.Table("Ridership")
     line_condition = Key("lineId").eq(line_id)
     date_condition = Key("date").between(start_date.isoformat(), end_date.isoformat())
@@ -64,6 +107,17 @@ def query_ridership(start_date: date, end_date: date, line_id: str = None):
 
 
 def query_agg_trip_metrics(start_date: str | date, end_date: str | date, table_name: str, line: str = None):
+    """
+
+    Args:
+      start_date: str | date: 
+      end_date: str | date: 
+      table_name: str: 
+      line: str:  (Default value = None)
+
+    Returns:
+
+    """
     table = dynamodb.Table(table_name)
     line_condition = Key("line").eq(line)
     date_condition = Key("date").between(start_date, end_date)
@@ -77,6 +131,16 @@ def query_extended_trip_metrics(
     end_date: date,
     route_ids: List[str],
 ):
+    """
+
+    Args:
+      start_date: date: 
+      end_date: date: 
+      route_ids: List[str]: 
+
+    Returns:
+
+    """
     table = dynamodb.Table("DeliveredTripMetricsExtended")
     start_date_str = start_date.strftime("%Y-%m-%d")
     end_date_str = end_date.strftime("%Y-%m-%d")

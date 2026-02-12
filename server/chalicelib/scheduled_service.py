@@ -12,17 +12,20 @@ ScheduledService = List[Dict]
 
 
 class ByDayKindServiceLevels(TypedDict):
+    """ """
     date: str
     service_levels: ByHourServiceLevels
 
 
 class ByDayKindServiceLevels(TypedDict):
+    """ """
     weekday: ByDayKindServiceLevels
     saturday: ByDayKindServiceLevels
     sunday: ByDayKindServiceLevels
 
 
 class GetScheduledServiceResponse(TypedDict):
+    """ """
     start_date_service_levels: ByDayKindServiceLevels
     end_date_service_levels: ByDayKindServiceLevels
     counts: Dict[str, int]
@@ -33,7 +36,24 @@ def get_next_day_kind_service_levels(
     scheduled_service: ScheduledService,
     day_kind: DayKind,
 ) -> ByDayKindServiceLevels:
+    """
+
+    Args:
+      scheduled_service: ScheduledService: 
+      day_kind: DayKind: 
+
+    Returns:
+
+    """
     def predicate(scheduled_service_day):
+        """
+
+        Args:
+          scheduled_service_day: 
+
+        Returns:
+
+        """
         day_of_week = datetime.fromisoformat(scheduled_service_day["date"]).weekday()
         if day_kind == "weekday":
             return day_of_week < 5
@@ -56,6 +76,15 @@ def get_service_levels(
     scheduled_service: ScheduledService,
     search_from_end: bool,
 ) -> ByDayKindServiceLevels:
+    """
+
+    Args:
+      scheduled_service: ScheduledService: 
+      search_from_end: bool: 
+
+    Returns:
+
+    """
     if search_from_end:
         scheduled_service = list(reversed(scheduled_service))
     return {
@@ -71,6 +100,17 @@ def get_scheduled_service(
     agg: AggTypes,
     route_id: str = None,
 ) -> GetScheduledServiceResponse:
+    """
+
+    Args:
+      start_date: date: 
+      end_date: date: 
+      agg: AggTypes: 
+      route_id: str:  (Default value = None)
+
+    Returns:
+
+    """
     scheduled_service = query_scheduled_service(
         start_date=start_date,
         end_date=end_date,
@@ -108,6 +148,17 @@ def get_scheduled_service_counts(
     agg: AggTypes,
     route_id: str = None,
 ):
+    """
+
+    Args:
+      start_date: date: 
+      end_date: date: 
+      agg: AggTypes: 
+      route_id: str:  (Default value = None)
+
+    Returns:
+
+    """
     result = get_scheduled_service(
         start_date=start_date,
         end_date=end_date,
@@ -129,6 +180,17 @@ def get_scheduled_service_hours(
     agg: AggTypes,
     route_id: str = None,
 ):
+    """
+
+    Args:
+      start_date: date: 
+      end_date: date: 
+      agg: AggTypes: 
+      route_id: str:  (Default value = None)
+
+    Returns:
+
+    """
     result = get_scheduled_service(
         start_date=start_date,
         end_date=end_date,

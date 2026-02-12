@@ -1,3 +1,9 @@
+"""Alert-based delay calculations for transit lines.
+
+Queries DynamoDB for daily or weekly alert delay data and validates
+request parameters and date ranges.
+"""
+
 from typing import TypedDict
 from chalice import BadRequestError, ForbiddenError
 from chalicelib import dynamo
@@ -13,6 +19,14 @@ AGG_TO_CONFIG_MAP = {
 
 
 class AlertDelaysByLineParams(TypedDict):
+    """Parameters for alert delay queries.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        line: Line identifier (e.g., ``Red``, ``Green-B``, ``CR-Fairmount``).
+        agg: Aggregation level — ``"daily"`` or ``"weekly"``.
+    """
     start_date: str | date
     end_date: str | date
     line: str
@@ -20,13 +34,37 @@ class AlertDelaysByLineParams(TypedDict):
 
 
 def is_invalid_range(start_date, end_date, max_delta):
-    """Check if number of requested entries is more than maximum for the table"""
+    """Check if a date range exceeds the maximum allowed number of entries.
+
+    Args:
+        start_date: Start date string (YYYY-MM-DD).
+        end_date: End date string (YYYY-MM-DD).
+        max_delta: Maximum number of days allowed in the range.
+
+    Returns:
+        ``True`` if the range exceeds ``max_delta`` days.
+    """
     start_datetime = datetime.strptime(start_date, DATE_FORMAT_BACKEND)
     end_datetime = datetime.strptime(end_date, DATE_FORMAT_BACKEND)
     return start_datetime + timedelta(days=max_delta) < end_datetime
 
 
 def delay_time_by_line(params: AlertDelaysByLineParams):
+    """Fetch alert-based delay data for a transit line.
+
+    Validates the line identifier and date range, then queries the appropriate
+    DynamoDB table (daily or weekly) for delay data.
+
+    Args:
+        params: Query parameters including start_date, end_date, line, and agg.
+
+    Returns:
+        List of delay records from DynamoDB.
+
+    Raises:
+        BadRequestError: If the line or aggregation type is invalid, or parameters are missing.
+        ForbiddenError: If the date range exceeds the maximum allowed entries (150).
+    """
     try:
         start_date = params["start_date"]
         end_date = params["end_date"]
