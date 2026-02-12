@@ -16,15 +16,15 @@ s3 = boto3.client("s3", config=botocore.client.Config(max_pool_connections=15))
 
 # General downloading/uploading
 def download(key, encoding="utf8", compressed=True):
-    """
+    """Download and decode a file from the S3 performance data bucket.
 
     Args:
-      key:
-      encoding:  (Default value = "utf8")
-      compressed:  (Default value = True)
+      key: S3 object key to download.
+      encoding: Character encoding for decoding. (Default value = "utf8")
+      compressed: Whether the file is gzip/zlib compressed. (Default value = True)
 
     Returns:
-
+      str: The decoded file contents as a string.
     """
     obj = s3.get_object(Bucket=BUCKET, Key=key)
     s3_data = obj["Body"].read()
@@ -36,15 +36,12 @@ def download(key, encoding="utf8", compressed=True):
 
 
 def upload(key, bytes, compress=True):
-    """
+    """Upload data to the S3 performance data bucket.
 
     Args:
-      key:
-      bytes:
-      compress:  (Default value = True)
-
-    Returns:
-
+      key: S3 object key to write to.
+      bytes: Raw bytes to upload.
+      compress: Whether to zlib-compress before uploading. (Default value = True)
     """
     if compress:
         bytes = zlib.compress(bytes)
@@ -52,49 +49,49 @@ def upload(key, bytes, compress=True):
 
 
 def is_bus(stop_id: str):
-    """
+    """Check if a stop ID belongs to a bus route based on its naming convention.
 
     Args:
-      stop_id: str:
+      stop_id: str: The stop identifier.
 
     Returns:
-
+      bool: True if the stop ID matches bus stop patterns ("-0-" or "-1-").
     """
     return ("-0-" in stop_id) or ("-1-" in stop_id)
 
 
 def is_cr(stop_id: str):
-    """
+    """Check if a stop ID belongs to a commuter rail route.
 
     Args:
-      stop_id: str:
+      stop_id: str: The stop identifier.
 
     Returns:
-
+      bool: True if the stop ID starts with "CR-".
     """
     return stop_id.startswith("CR-")
 
 
 def is_ferry(stop_id: str):
-    """
+    """Check if a stop ID belongs to a ferry route.
 
     Args:
-      stop_id: str:
+      stop_id: str: The stop identifier.
 
     Returns:
-
+      bool: True if the stop ID starts with "Boat-".
     """
     return stop_id.startswith("Boat-")
 
 
 def get_gobble_folder(stop_id: str):
-    """
+    """Return the S3 folder name for Gobble-ingested data based on the stop's mode.
 
     Args:
-      stop_id: str:
+      stop_id: str: The stop identifier.
 
     Returns:
-
+      str: One of "daily-bus-data", "daily-cr-data", or "daily-rapid-data".
     """
     if is_bus(stop_id):
         return "daily-bus-data"
@@ -105,21 +102,25 @@ def get_gobble_folder(stop_id: str):
 
 
 def get_lamp_folder():
-    """ """
+    """Return the S3 folder name for LAMP-ingested data."""
     return "daily-data"
 
 
 def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, route_context=None):
-    """As advertised: single event file from s3
+    """Download and parse a single day's event CSV for a stop from S3.
+
+    Selects the appropriate S3 path based on the stop's mode (bus, CR, ferry, rapid
+    transit) and data recency (monthly archives vs. daily LAMP/Gobble feeds). Falls
+    back to Gobble data if the LAMP key is not found.
 
     Args:
-      date: pd.Timestamp:
-      stop_id: str:
-      use_gobble:  (Default value = False)
-      route_context:  (Default value = None)
+      date: pd.Timestamp: The date to fetch events for.
+      stop_id: str: The stop identifier.
+      use_gobble: Force using Gobble data instead of LAMP. (Default value = False)
+      route_context: Unused, reserved for future use. (Default value = None)
 
     Returns:
-
+      list[dict]: Rows of event data sorted by event_time, or empty list if unavailable.
     """
     year, month, day = date.year, date.month, date.day
 
@@ -168,28 +169,31 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, 
 
 @parallel.make_parallel
 def parallel_download_events(datestop: itertools.product):
-    """
+    """Download event data for a single (date, stop) pair. Parallelized via @make_parallel.
 
     Args:
-      datestop: itertools.product:
+      datestop: A (date, stop_id) tuple from an itertools.product iterator.
 
     Returns:
-
+      list[dict]: Event rows for the given date and stop.
     """
     (date, stop) = datestop
     return download_one_event_file(date, stop)
 
 
 def download_events(start_date: date, end_date: date, stops: list):
-    """
+    """Download event data for multiple stops over a date range, in parallel.
+
+    Fetches all combinations of dates and stops, then filters to the exact date range
+    and sorts by event time.
 
     Args:
-      start_date: date:
-      end_date: date:
-      stops: list:
+      start_date: date: Start of the date range (inclusive).
+      end_date: date: End of the date range (inclusive).
+      stops: list: List of stop IDs to fetch data for.
 
     Returns:
-
+      list[dict]: All event rows sorted by event_time.
     """
     datestops = itertools.product(parallel.s3_date_range(start_date, end_date, stops), stops)
     result = parallel_download_events(datestops)
@@ -200,14 +204,14 @@ def download_events(start_date: date, end_date: date, stops: list):
 
 
 def get_all_s3_objects(s3, **base_kwargs):
-    """
+    """Paginate through all objects in an S3 bucket/prefix, yielding each object metadata.
 
     Args:
-      s3:
-      **base_kwargs:
+      s3: A boto3 S3 client.
+      **base_kwargs: Arguments passed to s3.list_objects_v2 (e.g., Bucket, Prefix).
 
-    Returns:
-
+    Yields:
+      dict: Individual object metadata dicts from the S3 listing.
     """
     continuation_token = None
     while True:
