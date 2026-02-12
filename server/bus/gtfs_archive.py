@@ -1,3 +1,4 @@
+"""Download and process GTFS archives to compute scheduled headways for bus routes."""
 import datetime
 import pandas as pd
 import pathlib

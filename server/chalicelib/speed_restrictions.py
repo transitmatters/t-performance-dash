@@ -1,3 +1,4 @@
+"""Speed restriction data queries from DynamoDB."""
 from boto3.dynamodb.conditions import Key
 from dynamodb_json import json_util as ddb_json
 

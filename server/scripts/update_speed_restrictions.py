@@ -1,3 +1,4 @@
+"""Fetch and process MBTA speed restriction data into DynamoDB."""
 import requests
 import json
 import csv

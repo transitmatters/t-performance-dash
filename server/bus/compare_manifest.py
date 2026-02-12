@@ -1,3 +1,4 @@
+"""Compare bus route manifests to detect changes in stop configurations."""
 import json
 import sys
 

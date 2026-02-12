@@ -1,3 +1,4 @@
+"""Cache duration calculation based on data recency."""
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 

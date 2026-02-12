@@ -1,3 +1,4 @@
+"""Chalice application defining the Data Dashboard REST API endpoints."""
 import json
 import os
 import subprocess

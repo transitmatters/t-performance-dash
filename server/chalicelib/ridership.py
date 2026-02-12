@@ -1,3 +1,4 @@
+"""Ridership data retrieval from DynamoDB."""
 from datetime import date
 from typing import List, TypedDict
 

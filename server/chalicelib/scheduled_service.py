@@ -1,3 +1,4 @@
+"""Scheduled service data aggregation and day-kind service level lookups."""
 from datetime import date, datetime
 from typing import List, Dict, TypedDict, Union, Literal
 

@@ -1,3 +1,4 @@
+"""Retrieval and filtering of v2 and v3 transit alert data from S3."""
 from datetime import date
 import json
 from chalicelib import s3

@@ -1,3 +1,4 @@
+"""Convert raw bus event data into train-style event format for processing."""
 import argparse
 import pathlib
 import pandas as pd

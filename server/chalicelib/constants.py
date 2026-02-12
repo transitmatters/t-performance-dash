@@ -1,3 +1,4 @@
+"""Shared constants for event types, date formats, and line-to-route mappings."""
 EVENT_ARRIVAL = ["ARR", "PRA"]
 EVENT_DEPARTURE = ["DEP", "PRD"]
 

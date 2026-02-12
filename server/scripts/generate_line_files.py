@@ -1,3 +1,9 @@
+"""Generate per-line static data files from S3 and the MBTA v3 API.
+
+To run, run as
+
+uv run python -m scripts.generate_line_files
+"""
 import json
 import os
 import requests
@@ -5,12 +11,6 @@ import boto3
 import botocore
 
 from chalicelib.s3 import get_all_s3_objects
-
-"""
-To run, run as
-
-uv run python -m scripts.generate_line_files
-"""
 
 MBTA_V3_API_KEY = os.environ.get("MBTA_V3_API_KEY", "")
 BUCKET = "tm-mbta-performance"

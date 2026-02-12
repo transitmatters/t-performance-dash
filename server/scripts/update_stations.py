@@ -1,3 +1,4 @@
+"""Fetch and update station data from the MBTA v3 API."""
 import json
 import requests
 

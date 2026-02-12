@@ -1,3 +1,4 @@
+"""S3 data access layer for downloading and uploading transit event data."""
 from datetime import date
 import boto3
 import botocore

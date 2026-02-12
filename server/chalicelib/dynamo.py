@@ -1,3 +1,4 @@
+"""DynamoDB access layer for querying trip metrics, scheduled service, and ridership data."""
 from datetime import date
 from boto3.dynamodb.conditions import Key
 import boto3
