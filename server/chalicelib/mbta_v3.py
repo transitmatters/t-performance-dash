@@ -1,3 +1,5 @@
+"""Client for the MBTA v3 API: alert retrieval, formatting, and general v3 queries."""
+
 from decimal import Decimal
 import json
 from urllib.parse import urlencode
@@ -14,6 +16,14 @@ BASE_URL_V3 = "https://api-v3.mbta.com/{command}?{parameters}"
 
 
 def format_parameters(params={}):
+    """
+
+    Args:
+      params:  (Default value = {})
+
+    Returns:
+
+    """
     formatted_params = {}
     for key, value in params.items():
         formatted_key = f"filter[{key}]"  # This is how the mbta api expects the parameters
@@ -22,7 +32,15 @@ def format_parameters(params={}):
 
 
 def shuttle_alert(attributes, id):
-    """Format alerts for shuttling"""
+    """Format alerts for shuttling
+
+    Args:
+      attributes:
+      id:
+
+    Returns:
+
+    """
     stops = set()  # Eliminate duplicates (bus alerts sometimes have entries for multiple routes for one stop.)
     for entity in attributes["informed_entity"]:
         if entity.get("stop") and not entity["stop"].isdigit():  # Only get `place-<name>` stop types - no numbers.
@@ -37,7 +55,15 @@ def shuttle_alert(attributes, id):
 
 
 def delay_alert(attributes, id):
-    """Format alerts for delays"""
+    """Format alerts for delays
+
+    Args:
+      attributes:
+      id:
+
+    Returns:
+
+    """
     routes = []
     stops = set()  # Eliminate duplicates (bus alerts sometimes have entries for multiple routes for one stop.)
     for entity in attributes["informed_entity"]:
@@ -56,7 +82,15 @@ def delay_alert(attributes, id):
 
 
 def accessibility_alert(attributes, id):
-    """Format alerts for escalators"""
+    """Format alerts for escalators
+
+    Args:
+      attributes:
+      id:
+
+    Returns:
+
+    """
     stops = set()  # Eliminate duplicates (bus alerts sometimes have entries for multiple routes for one stop.)
     for entity in attributes["informed_entity"]:
         if entity.get("stop") and not entity["stop"].isdigit():  # Only get `place-<name>` stop types - no numbers.
@@ -72,6 +106,14 @@ def accessibility_alert(attributes, id):
 
 
 def format_alerts_response(alerts_data):  # TODO: separate logic for bus to avoid repeat stops.
+    """
+
+    Args:
+      alerts_data:
+
+    Returns:
+
+    """
     alerts_filtered = []
     for alert in alerts_data:
         attributes = alert["attributes"]
@@ -90,12 +132,17 @@ def format_alerts_response(alerts_data):  # TODO: separate logic for bus to avoi
 
 
 def get_active(alert_period):
-    """
-    Append a field to each time period on the alert to determine:
+    """Append a field to each time period on the alert to determine:
     1) If the period is current (ongoing or starts today)
     2) If the period is upcoming (affects a day beyond today)
 
     These two things are not mutually exclusive.
+
+    Args:
+      alert_period:
+
+    Returns:
+
     """
     if alert_period["end"] is None:
         alert_period["current"] = True
@@ -127,16 +174,40 @@ def get_active(alert_period):
 
 
 def format_active_alerts(alert_active_period):
+    """
+
+    Args:
+      alert_active_period:
+
+    Returns:
+
+    """
     return list(map(get_active, alert_active_period))
 
 
 def getAlerts(params={}):
+    """
+
+    Args:
+      params:  (Default value = {})
+
+    Returns:
+
+    """
     response = getV3("alerts", params)
     return format_alerts_response(response["data"])
 
 
 def getV3(command, params={}):
-    """Make a GET request against the MBTA v3 API"""
+    """Make a GET request against the MBTA v3 API
+
+    Args:
+      command:
+      params:  (Default value = {})
+
+    Returns:
+
+    """
     url = BASE_URL_V3.format(command=command, parameters=format_parameters(params))
     api_key = config.MBTA_V3_API_KEY
     headers = {"x-api-key": api_key} if api_key else {}
