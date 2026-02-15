@@ -45,6 +45,7 @@ export interface DayDelayTotals {
   Orange: number;
   Red: number;
   Green: number;
+  Mattapan: number;
 }
 
 export type Direction = 'northbound' | 'southbound';

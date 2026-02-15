@@ -12,6 +12,21 @@ export const ServiceBaseline = <p className={BASELINE_STYLE}>Compared to histori
 
 export const RidershipBaseline = <p className={BASELINE_STYLE}>Compared to historical maximums</p>;
 
+export const SlowZonesBaseline = (
+  <p className={BASELINE_STYLE}>Total slow zone delay in minutes per line</p>
+);
+
+const SlowZonesDescription = (
+  <p className={DESCRIPTION_STYLE}>
+    How many slow zones are adding delays?
+    <br />
+    <span className="text-sm text-stone-800">
+      Slow zones are track segments where trains must operate below normal speed due to
+      infrastructure issues. Less delay means faster, more reliable service.
+    </span>
+  </p>
+);
+
 const SpeedDescription = (
   <p className={DESCRIPTION_STYLE}>
     How quickly can riders move through Boston?
@@ -49,4 +64,5 @@ export const LandingChartCopyMap: { [key in LandingCharts]: React.JSX.Element } 
   Service: ServiceDescription,
   Speed: SpeedDescription,
   Ridership: RidershipDescription,
+  'Slow Zones': SlowZonesDescription,
 };

@@ -57,6 +57,7 @@ def delay_time_by_line(params: AlertDelaysByLineParams):
             "CR-Needham",
             "CR-Newburyport",
             "CR-Providence",
+            "line-commuter-rail",
         ]
         if line not in valid_lines:
             raise BadRequestError("Invalid Line key.")

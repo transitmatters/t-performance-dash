@@ -21,7 +21,7 @@ CACHE_MARKER_FILE = OUTPUT_DIR / ".last_fetched"
 # Configuration for what data to fetch
 RAPID_TRANSIT_LINES = ["line-red", "line-blue", "line-orange", "line-green", "line-mattapan"]
 ROUTE_IDS = ["Red", "Blue", "Orange", "Green-B", "Green-C", "Green-D", "Green-E", "Mattapan"]
-DELAY_LINES = ["Red", "Blue", "Orange", "Green-B", "Green-C", "Green-D", "Green-E", "Mattapan"]
+DELAY_LINES = ["Red", "Blue", "Orange", "Green-B", "Green-C", "Green-D", "Green-E", "Mattapan", "line-commuter-rail"]
 AGG_TYPES = ["daily", "weekly", "monthly"]
 
 # Date ranges for sample data (last 90 days)

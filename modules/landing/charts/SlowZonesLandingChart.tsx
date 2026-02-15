@@ -1,12 +1,10 @@
 import React, { useMemo } from 'react';
-
 import { Line } from 'react-chartjs-2';
 import type { ChartDataset } from 'chart.js';
 import dayjs from 'dayjs';
 
 import 'chartjs-adapter-date-fns';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import { enUS } from 'date-fns/locale';
 import { COLORS } from '../../../common/constants/colors';
@@ -16,18 +14,22 @@ import {
   TODAY_STRING,
 } from '../../../common/constants/dates';
 import { SPEED_RANGE_PARAM_MAP } from '../../speed/constants/speeds';
-import { DATA_LABELS_LANDING, watermarkLayout } from '../../../common/constants/charts';
+import { watermarkLayout } from '../../../common/constants/charts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 
-interface LandingPageChartsProps {
+const LINE_NAMES = ['Red Line', 'Orange Line', 'Blue Line', 'Green Line'];
+
+interface SlowZonesLandingChartProps {
   datasets: ChartDataset<'line'>[];
   labels: string[];
   id: string;
 }
-// Add padding for datalabels.
-const CHART_PADDING = 48;
 
-export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, labels, id }) => {
+export const SlowZonesLandingChart: React.FC<SlowZonesLandingChartProps> = ({
+  datasets,
+  labels,
+  id,
+}) => {
   const isMobile = !useBreakpoint('md');
 
   const chart = useMemo(() => {
@@ -40,33 +42,29 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
           redraw={true}
           data={{
             labels,
-            datasets: datasets,
+            datasets,
           }}
           options={{
-            layout: {
-              padding: { right: CHART_PADDING },
-            },
             responsive: true,
             maintainAspectRatio: false,
             interaction: {
               intersect: false,
-              mode: 'point',
+              mode: 'index',
             },
             // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: { ...watermarkLayoutValues, x: watermarkLayoutValues.x - CHART_PADDING }, // Adjust x to match the padding.
+            watermark: watermarkLayoutValues,
             plugins: {
-              datalabels: DATA_LABELS_LANDING,
+              datalabels: {
+                display: false,
+              },
               tooltip: {
                 position: 'nearest',
                 callbacks: {
                   label: (value) =>
-                    `${value.formattedValue}% of historical maximum (${value.dataset.label})`,
+                    `${value.formattedValue} min (${LINE_NAMES[value.datasetIndex]})`,
                   title: (value) => {
                     const startDay = dayjs(value[0].label);
-                    const endDay = startDay.add(6, 'days');
-                    return `${startDay.format(PRETTY_DATE_FORMAT)} - ${endDay.format(
-                      PRETTY_DATE_FORMAT
-                    )}`;
+                    return startDay.format(PRETTY_DATE_FORMAT);
                   },
                 },
               },
@@ -76,16 +74,15 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
             },
             scales: {
               y: {
-                suggestedMax: 100,
                 display: true,
                 grid: { display: false },
                 ticks: {
                   color: COLORS.design.darkGrey,
-                  callback: (value) => `${value}%`,
+                  callback: (value) => `${value} min`,
                 },
                 title: {
                   display: true,
-                  text: 'Percentage of historical maximum',
+                  text: 'Total delay (minutes)',
                   color: COLORS.design.darkGrey,
                 },
               },
@@ -107,14 +104,10 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
                   },
                 },
                 display: true,
-                title: {
-                  display: false,
-                  text: ``,
-                },
               },
             },
           }}
-          plugins={[ChartjsPluginWatermark, ChartDataLabels]}
+          plugins={[ChartjsPluginWatermark]}
         />
       </div>
     );
