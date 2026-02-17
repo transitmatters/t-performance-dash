@@ -60,9 +60,20 @@ const RidershipDescription = (
   </p>
 );
 
+const FleetAgeDescription = (
+  <p className={DESCRIPTION_STYLE}>
+    How old are the vehicles in the system?
+    <br />
+    <span className="text-sm text-stone-800">
+      We measure fleet age by the average age of the vehicles in the system.
+    </span>
+  </p>
+);
+
 export const LandingChartCopyMap: { [key in LandingCharts]: React.JSX.Element } = {
   Service: ServiceDescription,
   Speed: SpeedDescription,
   Ridership: RidershipDescription,
   'Slow Zones': SlowZonesDescription,
+  'Fleet Age': FleetAgeDescription,
 };

@@ -5,6 +5,7 @@ import { OverallSpeedChartWrapper } from './charts/OverallSpeedChartWrapper';
 import { OverallServiceChartWrapper } from './charts/OverallServiceChartWrapper';
 import { OverallRidershipChartWrapper } from './charts/OverallRidershipChartWrapper';
 import { OverallSlowZonesChartWrapper } from './charts/OverallSlowZonesChartWrapper';
+import { OverallFleetAgeChartWrapper } from './charts/OverallFleetAgeChartWrapper';
 import { LandingChartWidget } from './LandingChartWidget';
 import { LineReportCard } from './LineReportCard';
 
@@ -33,6 +34,9 @@ export const LandingCharts: React.FC = () => {
           </LandingChartWidget>
           <LandingChartWidget title="Slow Zones" compact>
             <OverallSlowZonesChartWrapper />
+          </LandingChartWidget>
+          <LandingChartWidget title="Fleet Age" compact>
+            <OverallFleetAgeChartWrapper />
           </LandingChartWidget>
         </div>
       </div>

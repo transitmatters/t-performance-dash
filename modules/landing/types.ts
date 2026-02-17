@@ -1,1 +1,1 @@
-export type LandingCharts = 'Speed' | 'Service' | 'Ridership' | 'Slow Zones';
+export type LandingCharts = 'Speed' | 'Service' | 'Ridership' | 'Slow Zones' | 'Fleet Age';

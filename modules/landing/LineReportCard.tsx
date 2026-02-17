@@ -1,14 +1,18 @@
 import React, { useMemo } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { useTripMetricsForLanding } from '../../common/api/hooks/tripmetrics';
 import { useRidershipDataLanding } from '../../common/api/hooks/ridership';
 import { useSlowzoneDelayTotalData } from '../../common/api/hooks/slowzones';
 import { useServiceAndRidershipDashboard } from '../../common/api/hooks/serviceAndRidership';
 import { useLandingLineDelays } from '../../common/api/hooks/landingGrades';
+import { useAlertsData } from '../../common/api/hooks/alerts';
 import { LoadingSpinner } from '../../common/components/graphics/LoadingSpinner';
+import type { Line } from '../../common/types/lines';
+import type { AlertsResponse } from '../../common/types/alerts';
+import type { DashboardData, LineData } from '../serviceAndRidership/types';
 import { SUBWAY_LINES, SECONDARY_LINES, computeLineGrade } from './grading';
 import type { LineGradeResult, ScheduledServiceData } from './grading';
-import type { Line } from '../../common/types/lines';
-import type { DashboardData, LineData } from '../serviceAndRidership/types';
 import { LineGradeCard } from './LineGradeCard';
 
 const LINE_KIND_MAP: Partial<Record<Line, string>> = {
@@ -49,7 +53,7 @@ function getScheduledServiceForMode(
     .sort((a, b) => a - b);
   const baseline =
     nonZero.length > 0
-      ? nonZero[Math.min(Math.floor(nonZero.length * 0.9), nonZero.length - 1)]
+      ? nonZero[Math.min(Math.floor(nonZero.length * 0.99), nonZero.length - 1)]
       : 0;
 
   if (baseline === 0) return undefined;
@@ -75,6 +79,13 @@ export const LineReportCard: React.FC = () => {
   const greenDelays = useLandingLineDelays('line-green');
   const mattapanDelays = useLandingLineDelays('line-mattapan');
   const commuterRailDelays = useLandingLineDelays('line-commuter-rail');
+
+  // Fetch current alerts for each line
+  const redAlerts = useAlertsData('Red');
+  const orangeAlerts = useAlertsData('Orange');
+  const blueAlerts = useAlertsData('Blue');
+  const greenAlerts = useAlertsData('Green');
+  const mattapanAlerts = useAlertsData('Mattapan');
 
   const isLoading =
     tripMetrics.isLoading ||
@@ -106,6 +117,17 @@ export const LineReportCard: React.FC = () => {
       commuterRailDelays.data,
     ]
   );
+
+  const alertsByLine = useMemo(() => {
+    const alertData: Record<string, AlertsResponse[] | undefined> = {
+      'line-red': redAlerts.data,
+      'line-orange': orangeAlerts.data,
+      'line-blue': blueAlerts.data,
+      'line-green': greenAlerts.data,
+      'line-mattapan': mattapanAlerts.data,
+    };
+    return alertData;
+  }, [redAlerts.data, orangeAlerts.data, blueAlerts.data, greenAlerts.data, mattapanAlerts.data]);
 
   const grades = useMemo(() => {
     if (!tripMetrics.data || !ridership.data || !slowZones.data) {
@@ -143,19 +165,32 @@ export const LineReportCard: React.FC = () => {
     <div className="flex w-full max-w-5xl flex-col gap-4 px-4 md:px-8 lg:px-12">
       <h2 className="text-3xl font-thin text-stone-900 lg:text-4xl">How is your line doing?</h2>
       <p className="text-sm text-stone-600">
-        Composite grades based on service, speed, slow zones, delays, and ridership compared to
-        historical peaks and what TransitMatters considers a baseline for each line.
-        The grade is calculated using data from the last 3 months, and is recalculated every week.
+        Composite scores based on service, speed, slow zones, delays, and ridership compared to
+        historical peaks and what TransitMatters considers a baseline for each line. Scores are
+        calculated using data from the last 3 months and recalculated every week. Trend arrows show
+        whether each metric is improving or declining over the last 2 weeks.
       </p>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         {SUBWAY_LINES.map((line) => (
-          <LineGradeCard key={line} line={line} grade={grades[line]} />
+          <LineGradeCard key={line} line={line} grade={grades[line]} alerts={alertsByLine[line]} />
         ))}
       </div>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         {SECONDARY_LINES.map((line) => (
-          <LineGradeCard key={line} line={line} grade={grades[line]} />
+          <LineGradeCard key={line} line={line} grade={grades[line]} alerts={alertsByLine[line]} />
         ))}
+      </div>
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-stone-400">
+        <span>
+          <FontAwesomeIcon icon={faTriangleExclamation} className="mr-1 text-[9px]" />
+          Biggest area for improvement
+        </span>
+        <span>
+          <span className="mr-1 text-green-600">↑</span> Improving
+        </span>
+        <span>
+          <span className="mr-1 text-red-500">↓</span> Declining
+        </span>
       </div>
     </div>
   );

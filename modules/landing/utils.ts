@@ -180,4 +180,26 @@ const getLabels = () => {
   return labels;
 };
 
+export const convertToFleetAgeDataset = (
+  data: { [key in Line]?: DeliveredTripMetrics[] },
+  labels: string[]
+) => {
+  return (Object.keys(data) as Line[]).map((line: Line) => {
+    if (line === 'line-mattapan') {
+      return { data: [] };
+    }
+
+    const datasetOptions = getDatasetOptions(line);
+    return {
+      ...datasetOptions,
+      data:
+        labels?.map((label) => {
+          const datapoint = data[line]?.find((datapoint) => datapoint.date === label);
+          if (!datapoint?.avg_car_age) return null;
+          return round(datapoint.avg_car_age, 1);
+        }) ?? [],
+    };
+  });
+};
+
 export const LANDING_CHART_LABELS = getLabels();

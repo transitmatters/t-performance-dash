@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { ONE_HOUR } from '../../constants/time';
-import { FetchAlertDelaysByLineParams } from '../../types/api';
 import type { LineDelays } from '../../types/delays';
-import type { Line } from '../../types/lines';
+import type { Line, LineRouteId } from '../../types/lines';
 import { fetchLineDelaysByLine } from '../delays';
 
 const DELAY_LINE_IDS: Partial<Record<Line, string[]>> = {
@@ -11,7 +10,7 @@ const DELAY_LINE_IDS: Partial<Record<Line, string[]>> = {
   'line-blue': ['Blue'],
   'line-green': ['Green-B', 'Green-C', 'Green-D', 'Green-E'],
   'line-mattapan': ['Mattapan'],
-  'line-commuter-rail': ['line-commuter-rail'],
+  'line-commuter-rail': ['CommuterRail'],
 };
 
 function getLandingDateRange(): { startDate: string; endDate: string } {
@@ -27,10 +26,10 @@ function getLandingDateRange(): { startDate: string; endDate: string } {
 async function fetchDelaysForLineId(lineId: string): Promise<LineDelays[]> {
   const { startDate, endDate } = getLandingDateRange();
   return fetchLineDelaysByLine({
-    [FetchAlertDelaysByLineParams.startDate]: startDate,
-    [FetchAlertDelaysByLineParams.endDate]: endDate,
-    [FetchAlertDelaysByLineParams.line]: lineId,
-    [FetchAlertDelaysByLineParams.agg]: 'weekly',
+    start_date: startDate,
+    end_date: endDate,
+    line: lineId as LineRouteId,
+    agg: 'weekly',
   });
 }
 

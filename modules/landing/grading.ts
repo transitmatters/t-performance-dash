@@ -32,6 +32,15 @@ const SLOW_ZONE_LINE_TO_SHORT: Record<SlowZoneLineKey, keyof DayDelayTotals> = {
   'line-mattapan': 'Mattapan',
 };
 
+// Hardcoded electrification percentage by line (0-100). Only applies to commuter rail for now.
+const ELECTRIFICATION_PCT: Partial<Record<Line, number>> = {
+  'line-commuter-rail': 0,
+};
+
+// The raw score ceiling. A metric must exceed its peak by this ratio to score 100.
+// At 110, hitting 100% of peak scores ~91. At 125, hitting 100% of peak scores 80.
+const RAW_CEILING = 125;
+
 // Shared slow zone reference (seconds). Any line at or above this level scores 0 for slow zones.
 // Using a shared reference means lines with historically low slow zones aren't unfairly penalized.
 const SLOW_ZONE_REFERENCE_MAX = 1000;
@@ -40,21 +49,34 @@ const SLOW_ZONE_REFERENCE_MAX = 1000;
 // its weight is redistributed proportionally across the remaining metrics.
 const BASE_WEIGHTS: Record<string, number> = {
   service: 0.3,
+  scheduledService: 0.1,
   speed: 0.25,
   slowZones: 0.25,
   delays: 0.1,
   ridership: 0.1,
+  fleetAge: 0.15,
+  electrification: 0.05,
 };
+
+export type Trend = 'up' | 'down' | 'stable';
+
+export interface ComponentScore {
+  score: number;
+  trend: Trend;
+}
 
 export interface LineGradeResult {
   score: number;
-  letter: string;
+  rating: string;
+  trend: Trend;
   components: {
-    service: number;
-    speed: number;
-    slowZones: number;
-    delays: number;
-    ridership: number;
+    service: ComponentScore;
+    speed: ComponentScore;
+    slowZones: ComponentScore;
+    delays: ComponentScore;
+    ridership: ComponentScore;
+    fleetAge: ComponentScore;
+    electrification: ComponentScore;
   };
 }
 
@@ -75,34 +97,27 @@ export interface GradeInput {
 function normalizePositive(current: number, peak: number): number {
   if (peak <= 0) return 0;
   const pct = (current / peak) * 100;
-  return Math.min(110, Math.max(0, pct));
+  return Math.min(RAW_CEILING, Math.max(0, pct));
+}
+
+/** Quadratic curve for fleet age: gentle penalty 10-20 years, steep 20-30. ≤10 = ceiling, ≥30 = 0. */
+function scoreFleetAge(age: number): number {
+  const t = age <= 10 ? 0 : age >= 30 ? 1 : (age - 10) / 20;
+  return RAW_CEILING * (1 - t * t);
 }
 
 function normalizeInverted(current: number, peakBad: number): number {
-  if (peakBad <= 0) return 110;
-  return Math.max(0, 110 - (current / peakBad) * 110);
+  if (peakBad <= 0) return RAW_CEILING;
+  return Math.max(0, RAW_CEILING - (current / peakBad) * RAW_CEILING);
 }
 
-export function scoreToLetter(score: number): string {
-  if (score >= 93) return 'A';
-  if (score >= 90) return 'A-';
-  if (score >= 87) return 'B+';
-  if (score >= 83) return 'B';
-  if (score >= 80) return 'B-';
-  if (score >= 77) return 'C+';
-  if (score >= 73) return 'C';
-  if (score >= 70) return 'C-';
-  if (score >= 67) return 'D+';
-  if (score >= 63) return 'D';
-  if (score >= 50) return 'D-';
-  return 'F';
-}
-
-function percentile90(values: number[]): number {
-  if (values.length === 0) return 0;
-  const sorted = [...values].sort((a, b) => a - b);
-  const idx = Math.floor(sorted.length * 0.9);
-  return sorted[Math.min(idx, sorted.length - 1)];
+export function scoreToRating(score: number): string {
+  if (score >= 95) return 'World Class';
+  if (score >= 85) return 'Good';
+  if (score >= 75) return 'Almost Good';
+  if (score >= 60) return 'Needs Work';
+  if (score >= 40) return 'Poor';
+  return 'Failing';
 }
 
 function hasData<T>(arr?: T[]): arr is T[] {
@@ -125,6 +140,27 @@ function findLatestNonZero<T>(arr: T[], getValue: (item: T) => number): T | unde
 }
 
 /**
+ * Compute a trend by comparing recent data (last 2 entries) against the full period.
+ * Returns 'up' if recent > full by more than 5 points, 'down' if less by more than 5, else 'stable'.
+ */
+function computeTrend(fullScore: number, recentScore: number): Trend {
+  const diff = recentScore - fullScore;
+  if (diff > 5) return 'up';
+  if (diff < -5) return 'down';
+  return 'stable';
+}
+
+function noComponent(): ComponentScore {
+  return { score: -1, trend: 'stable' };
+}
+
+function makeComponent(fullRaw: number, recentRaw: number): ComponentScore {
+  const score = Math.round((fullRaw / RAW_CEILING) * 100);
+  const recentScore = Math.round((recentRaw / RAW_CEILING) * 100);
+  return { score, trend: computeTrend(score, recentScore) };
+}
+
+/**
  * Compute a line's composite grade from all available data.
  * Metrics without data are excluded and their weights redistributed proportionally.
  * Component scores use -1 to indicate "not applicable".
@@ -135,17 +171,28 @@ export function computeLineGrade(input: GradeInput): LineGradeResult {
 
   // Compute raw scores for available metrics
   const rawScores: Record<string, number> = {};
+  const recentRawScores: Record<string, number> = {};
   const available: string[] = [];
+  // Track which weight key to use for service
+  let serviceWeightKey = 'service';
 
   // Service: prefer actual trip metrics, fall back to scheduled service data
   if (hasData(tripMetrics) && PEAK_SCHEDULED_SERVICE[line] > 0) {
     const latest = findLatestNonZero(tripMetrics, (d) => d.count);
     if (latest) {
       rawScores.service = normalizePositive(latest.count, PEAK_SCHEDULED_SERVICE[line]);
+      // Recent: use last 2 entries
+      const recentEntries = tripMetrics.slice(-2);
+      const recentLatest = findLatestNonZero(recentEntries, (d) => d.count);
+      recentRawScores.service = recentLatest
+        ? normalizePositive(recentLatest.count, PEAK_SCHEDULED_SERVICE[line])
+        : rawScores.service;
       available.push('service');
     }
   } else if (scheduledService && scheduledService.baseline > 0) {
     rawScores.service = normalizePositive(scheduledService.current, scheduledService.baseline);
+    recentRawScores.service = rawScores.service; // scheduled service is a single snapshot, no trend
+    serviceWeightKey = 'scheduledService';
     available.push('service');
   }
 
@@ -154,6 +201,15 @@ export function computeLineGrade(input: GradeInput): LineGradeResult {
     if (latest && latest.miles_covered && latest.total_time) {
       const speed = latest.miles_covered / (latest.total_time / 3600);
       rawScores.speed = normalizePositive(speed, PEAK_SPEED[line]);
+      // Recent: use last 2 entries
+      const recentEntries = tripMetrics.slice(-2);
+      const recentLatest = findLatestNonZero(recentEntries, (d) => d.miles_covered);
+      if (recentLatest && recentLatest.miles_covered && recentLatest.total_time) {
+        const recentSpeed = recentLatest.miles_covered / (recentLatest.total_time / 3600);
+        recentRawScores.speed = normalizePositive(recentSpeed, PEAK_SPEED[line]);
+      } else {
+        recentRawScores.speed = rawScores.speed;
+      }
       available.push('speed');
     }
   }
@@ -166,8 +222,16 @@ export function computeLineGrade(input: GradeInput): LineGradeResult {
     // Any slow zones at all incur a minimum 10-point penalty (capped at 100 instead of 110)
     rawScores.slowZones =
       slowZoneDelay > 0
-        ? Math.min(100, normalizeInverted(slowZoneDelay, SLOW_ZONE_REFERENCE_MAX))
-        : 110;
+        ? Math.min(RAW_CEILING - 10, normalizeInverted(slowZoneDelay, SLOW_ZONE_REFERENCE_MAX))
+        : RAW_CEILING;
+    // Recent: last 2 entries
+    const recentEntries = slowZoneTotals.slice(-2);
+    const recentLatest = recentEntries[recentEntries.length - 1];
+    const recentDelay = (recentLatest[shortName] as number) || 0;
+    recentRawScores.slowZones =
+      recentDelay > 0
+        ? Math.min(RAW_CEILING - 10, normalizeInverted(recentDelay, SLOW_ZONE_REFERENCE_MAX))
+        : RAW_CEILING;
     available.push('slowZones');
   }
 
@@ -178,7 +242,32 @@ export function computeLineGrade(input: GradeInput): LineGradeResult {
     const avgDelay = totals.reduce((sum, t) => sum + t, 0) / totals.length;
     const reference = Math.max(...totals) * 1.2;
     rawScores.delays = normalizeInverted(avgDelay, reference);
+    // Recent: last 2 entries
+    const recentTotals = delayData.slice(-2).map((d) => d.total_delay_time);
+    const recentAvg = recentTotals.reduce((sum, t) => sum + t, 0) / recentTotals.length;
+    recentRawScores.delays = normalizeInverted(recentAvg, reference);
     available.push('delays');
+  }
+
+  // Fleet Age (from trip metrics avg_car_age field, rapid transit only)
+  // ≤10 years = perfect, ≥30 years = 0, linear between
+  if (hasData(tripMetrics)) {
+    const latest = findLatestNonZero(tripMetrics, (d) => d.avg_car_age ?? 0);
+    if (latest?.avg_car_age != null) {
+      const age = latest.avg_car_age;
+      const ageScore = scoreFleetAge(age);
+      rawScores.fleetAge = ageScore;
+      // Recent: last 2 entries
+      const recentEntries = tripMetrics.slice(-2);
+      const recentLatest = findLatestNonZero(recentEntries, (d) => d.avg_car_age ?? 0);
+      if (recentLatest?.avg_car_age != null) {
+        const recentAge = recentLatest.avg_car_age;
+        recentRawScores.fleetAge = scoreFleetAge(recentAge);
+      } else {
+        recentRawScores.fleetAge = rawScores.fleetAge;
+      }
+      available.push('fleetAge');
+    }
   }
 
   // Ridership (average all non-zero weeks to smooth out seasonal gaps)
@@ -187,39 +276,102 @@ export function computeLineGrade(input: GradeInput): LineGradeResult {
     if (nonZeroCounts.length > 0) {
       const avgRidership = nonZeroCounts.reduce((sum, c) => sum + c, 0) / nonZeroCounts.length;
       rawScores.ridership = normalizePositive(avgRidership, PEAK_RIDERSHIP[line]);
+      // Recent: last 2 entries
+      const recentCounts = ridershipData
+        .slice(-2)
+        .map((d) => d.count)
+        .filter((c) => c > 0);
+      if (recentCounts.length > 0) {
+        const recentAvg = recentCounts.reduce((sum, c) => sum + c, 0) / recentCounts.length;
+        recentRawScores.ridership = normalizePositive(recentAvg, PEAK_RIDERSHIP[line]);
+      } else {
+        recentRawScores.ridership = rawScores.ridership;
+      }
       available.push('ridership');
     }
+  }
+
+  // Electrification (hardcoded percentage, currently only commuter rail)
+  if (line in ELECTRIFICATION_PCT) {
+    const pct = ELECTRIFICATION_PCT[line]!;
+    rawScores.electrification = (pct / 100) * RAW_CEILING;
+    recentRawScores.electrification = rawScores.electrification;
+    available.push('electrification');
   }
 
   // No data at all — return empty grade
   if (available.length === 0) {
     return {
       score: 0,
-      letter: 'F',
-      components: { service: -1, speed: -1, slowZones: -1, delays: -1, ridership: -1 },
+      rating: 'Failing',
+      trend: 'stable',
+      components: {
+        service: noComponent(),
+        speed: noComponent(),
+        slowZones: noComponent(),
+        delays: noComponent(),
+        ridership: noComponent(),
+        fleetAge: noComponent(),
+        electrification: noComponent(),
+      },
     };
   }
 
   // Redistribute weights proportionally across available metrics
-  const totalBaseWeight = available.reduce((sum, key) => sum + BASE_WEIGHTS[key], 0);
+  // Use the correct weight key for service (scheduledService has lower weight)
+  const totalBaseWeight = available.reduce((sum, key) => {
+    const weightKey = key === 'service' ? serviceWeightKey : key;
+    return sum + BASE_WEIGHTS[weightKey];
+  }, 0);
   let weightedAverage = 0;
+  let recentWeightedAverage = 0;
   for (const key of available) {
-    const normalizedWeight = BASE_WEIGHTS[key] / totalBaseWeight;
+    const weightKey = key === 'service' ? serviceWeightKey : key;
+    const normalizedWeight = BASE_WEIGHTS[weightKey] / totalBaseWeight;
     weightedAverage += rawScores[key] * normalizedWeight;
+    recentWeightedAverage += (recentRawScores[key] ?? rawScores[key]) * normalizedWeight;
   }
 
-  const finalScore = Math.round((weightedAverage / 110) * 100);
+  const finalScore = Math.round((weightedAverage / RAW_CEILING) * 100);
   const clampedScore = Math.max(0, Math.min(100, finalScore));
+  const recentFinalScore = Math.round((recentWeightedAverage / RAW_CEILING) * 100);
+  const recentClamped = Math.max(0, Math.min(100, recentFinalScore));
+  const overallTrend: Trend =
+    recentClamped > clampedScore ? 'up' : recentClamped < clampedScore ? 'down' : 'stable';
 
   return {
     score: clampedScore,
-    letter: scoreToLetter(clampedScore),
+    rating: scoreToRating(clampedScore),
+    trend: overallTrend,
     components: {
-      service: 'service' in rawScores ? Math.round((rawScores.service / 110) * 100) : -1,
-      speed: 'speed' in rawScores ? Math.round((rawScores.speed / 110) * 100) : -1,
-      slowZones: 'slowZones' in rawScores ? Math.round((rawScores.slowZones / 110) * 100) : -1,
-      delays: 'delays' in rawScores ? Math.round((rawScores.delays / 110) * 100) : -1,
-      ridership: 'ridership' in rawScores ? Math.round((rawScores.ridership / 110) * 100) : -1,
+      service:
+        'service' in rawScores
+          ? makeComponent(rawScores.service, recentRawScores.service)
+          : noComponent(),
+      speed:
+        'speed' in rawScores
+          ? makeComponent(rawScores.speed, recentRawScores.speed)
+          : noComponent(),
+      slowZones:
+        'slowZones' in rawScores
+          ? makeComponent(rawScores.slowZones, recentRawScores.slowZones)
+          : noComponent(),
+      delays:
+        'delays' in rawScores
+          ? makeComponent(rawScores.delays, recentRawScores.delays)
+          : noComponent(),
+      ridership:
+        'ridership' in rawScores
+          ? makeComponent(rawScores.ridership, recentRawScores.ridership)
+          : noComponent(),
+      fleetAge:
+        'fleetAge' in rawScores
+          ? makeComponent(rawScores.fleetAge, recentRawScores.fleetAge)
+          : noComponent(),
+      electrification:
+        'electrification' in rawScores
+          ? makeComponent(rawScores.electrification, recentRawScores.electrification)
+          : noComponent(),
     },
   };
 }
