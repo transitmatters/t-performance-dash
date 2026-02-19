@@ -91,7 +91,7 @@ export const getClockFormattedTimeString = (
     hours = 0;
   const minutesToAdd = Math.floor(seconds / 60);
   seconds = seconds % 60;
-  minutes = minutes += minutesToAdd;
+  minutes = minutes + minutesToAdd;
   const hoursToAdd = Math.floor(minutes / 60);
   minutes = minutes % 60;
   hours += hoursToAdd;
