@@ -567,12 +567,10 @@ def get_service_ridership_dashboard():
 @app.route("/api/routes", cors=cors_config, docs=Docs(response=models.RoutesResponse))
 def get_routes():
     """Get a manifest of all available routes supported in the dashboard.
-    Returns route IDs grouped by category: rapid_transit, bus, commuter_rail, ferry.
-
-    Args:
 
     Returns:
-
+        Response: JSON response containing route IDs grouped by category
+            (rapid_transit, bus, commuter_rail, ferry), cached for one day.
     """
     data = route_manifest.get_all_routes_manifest()
 
@@ -585,13 +583,13 @@ def get_routes():
 @app.route("/api/stops/{route_id}", cors=cors_config, docs=Docs(response=models.StopsResponse))
 def get_stops(route_id):
     """Get the stop information for a specific route.
-    Returns the station/stop data including names, IDs, and directions.
 
     Args:
-      route_id:
+        route_id: The route ID to look up stops for.
 
     Returns:
-
+        Response: JSON response containing station/stop data including names, IDs,
+            and directions, or a 404 response if the route is not found.
     """
     data = route_manifest.get_route_stops(route_id)
 
