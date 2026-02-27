@@ -279,6 +279,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     legend.position,
     legend.visible,
     appliedStyles,
+    isMobile,
   ]);
 
   const chartJsPlugins = useMemo(() => {
