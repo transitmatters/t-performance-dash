@@ -6,6 +6,8 @@ import type { Dataset } from '../../../common/components/charts/TimeSeriesChart'
 import { TimeSeriesChart } from '../../../common/components/charts/TimeSeriesChart';
 import styles from './LineCard.module.css';
 
+type BaselineMode = 'start' | 'max';
+
 type Props = {
   ridershipHistory: LineData['ridershipHistory'];
   serviceHistory: LineData['serviceHistory'];
@@ -14,6 +16,7 @@ type Props = {
   endDate: undefined | string;
   lineTitle: string;
   lineId: string;
+  baselineMode?: BaselineMode;
 };
 
 const getRidershipNoun = (lineId: string) => {
@@ -25,10 +28,27 @@ const getRidershipNoun = (lineId: string) => {
 
 const asPercentString = (p: number) => Math.round(100 * p).toString() + '%';
 
+const getBaselineKey = (data: Record<string, number>, baselineMode: BaselineMode) => {
+  const keys = Object.keys(data);
+  if (baselineMode === 'max') {
+    let highestValue = -Infinity;
+    let highestKey = keys[0];
+    Object.entries(data).forEach(([key, value]) => {
+      if (value > highestValue) {
+        highestValue = value;
+        highestKey = key;
+      }
+    });
+    return highestKey;
+  }
+  return keys[0];
+};
+
 const getNormalizedData = (
   data: Record<string, number>,
   startDate: undefined | string,
-  endDate: undefined | string
+  endDate: undefined | string,
+  baselineMode: BaselineMode
 ) => {
   const dateStringsWithinRange = Object.keys(data)
     .filter((date) => {
@@ -38,7 +58,8 @@ const getNormalizedData = (
       return date >= startDate && date <= endDate;
     })
     .sort();
-  const baseline = data[dateStringsWithinRange[0]];
+  const baselineKey = getBaselineKey(data, baselineMode);
+  const baseline = data[baselineKey];
   return dateStringsWithinRange.map((date) => ({
     date,
     value: data[date] / baseline,
@@ -47,12 +68,20 @@ const getNormalizedData = (
 };
 
 export const ServiceRidershipChart = (props: Props) => {
-  const { color, serviceHistory, ridershipHistory, startDate, endDate, lineId } = props;
+  const {
+    color,
+    serviceHistory,
+    ridershipHistory,
+    startDate,
+    endDate,
+    lineId,
+    baselineMode = 'max',
+  } = props;
 
   const data = useMemo((): Dataset[] => {
     const service: Dataset = {
       label: 'Service levels',
-      data: getNormalizedData(serviceHistory, startDate, endDate),
+      data: getNormalizedData(serviceHistory, startDate, endDate, baselineMode),
       style: {
         fillPattern: 'striped' as const,
         tooltipLabel(point) {
@@ -66,7 +95,7 @@ export const ServiceRidershipChart = (props: Props) => {
         service,
         {
           label: 'Ridership',
-          data: getNormalizedData(ridershipHistory, startDate, endDate),
+          data: getNormalizedData(ridershipHistory, startDate, endDate, baselineMode),
           style: {
             tooltipLabel(point) {
               const { actualValue } = point as unknown as { actualValue: number };
@@ -77,7 +106,7 @@ export const ServiceRidershipChart = (props: Props) => {
       ];
     }
     return [service];
-  }, [serviceHistory, startDate, endDate, ridershipHistory, lineId]);
+  }, [serviceHistory, startDate, endDate, ridershipHistory, lineId, baselineMode]);
 
   return (
     <div className={styles.serviceAndRidershipChartContainer}>

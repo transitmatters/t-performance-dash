@@ -1,10 +1,11 @@
-import { useState, useMemo } from 'react';
-import { ModeKind, SummaryData, WeeklyMedianTimeseries } from '../types';
+import React, { useState, useMemo } from 'react';
+import type { ModeKind, SummaryData } from '../types';
 
 import { CardFrame } from '../CardFrame';
 import { ServiceRidershipChart } from '../LineCard/ServiceRidershipChart';
 import { useServiceAndRidershipContext } from '../useServiceAndRidershipContext';
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
+import { CHART_COLORS, COLORS } from '../../../common/constants/colors';
 
 type Props = {
   summaryData: SummaryData;
@@ -13,13 +14,20 @@ type Props = {
 
 type Selection = 'total' | ModeKind;
 
-const COLOR = '#165c96';
+const DEFAULT_COLOR = '#165c96';
 
 const SelectionLabels: Partial<Record<Selection, string>> = {
   total: 'All Lines',
   'rapid-transit': 'Rapid Transit',
   'regional-rail': 'Regional Rail',
   bus: 'Bus',
+};
+
+const colorsBySelection: Partial<Record<Selection, string>> = {
+  total: DEFAULT_COLOR,
+  'rapid-transit': CHART_COLORS.BLUE,
+  'regional-rail': COLORS.mbta.commuterRail,
+  bus: COLORS.mbta.bus,
 };
 
 export const SummaryCard = (props: Props) => {
@@ -51,7 +59,7 @@ export const SummaryCard = (props: Props) => {
         />
       </div>
       <ServiceRidershipChart
-        color={COLOR}
+        color={colorsBySelection[selection] ?? DEFAULT_COLOR}
         lineTitle="Total"
         lineId="total"
         serviceHistory={serviceHistory}
