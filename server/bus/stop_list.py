@@ -1,3 +1,5 @@
+"""Generate stop ID lists for bus routes from GTFS checkpoint data."""
+
 import argparse
 import json
 import pandas as pd

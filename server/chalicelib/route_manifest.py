@@ -18,7 +18,14 @@ CONSTANTS_DIR = CONSTANTS_DIR_DEPLOYED if CONSTANTS_DIR_DEPLOYED.exists() else C
 
 
 def _load_json(file_path: Path):
-    """Load a JSON file."""
+    """Load a JSON file.
+
+    Args:
+      file_path: Path:
+
+    Returns:
+
+    """
     if not file_path.exists():
         return None
     with open(file_path, "r") as f:
@@ -81,9 +88,13 @@ def _get_ferry_routes():
 
 @lru_cache(maxsize=1)
 def get_all_routes_manifest():
-    """
-    Get a manifest of all available routes in the dashboard.
+    """Get a manifest of all available routes in the dashboard.
     Returns a dictionary with route categories and their available route IDs.
+
+    Args:
+
+    Returns:
+
     """
     rapid_transit = _get_rapid_transit_routes()
     bus = _get_bus_routes()
@@ -99,9 +110,14 @@ def get_all_routes_manifest():
 
 
 def get_route_stops(route_id: str):
-    """
-    Get the stop information for a specific route.
+    """Get the stop information for a specific route.
     Returns the LineMap data for the route, or None if not found.
+
+    Args:
+      route_id: str:
+
+    Returns:
+
     """
     # Check rapid transit routes first
     rapid_transit = _get_rapid_transit_routes()

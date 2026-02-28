@@ -1,3 +1,5 @@
+"""Generate bus route manifest JSON files from GTFS checkpoint data."""
+
 import argparse
 import pandas as pd
 import json

@@ -1,9 +1,19 @@
+"""Retrieval and filtering of v2 and v3 transit alert data from S3."""
+
 from datetime import date
 import json
 from chalicelib import s3
 
 
 def routes_for_alert(alert):
+    """
+
+    Args:
+      alert:
+
+    Returns:
+
+    """
     routes = set()
 
     if "alert_versions" in alert:
@@ -26,16 +36,42 @@ def routes_for_alert(alert):
 
 
 def key(day, v3: bool = False):
+    """
+
+    Args:
+      day:
+      v3: bool:  (Default value = False)
+
+    Returns:
+
+    """
     if v3:
         return f"Alerts/v3/{str(day)}.json.gz"
     return f"Alerts/{str(day)}.json.gz"
 
 
 def get_v2_alerts(day: date, routes):
+    """
+
+    Args:
+      day: date:
+      routes:
+
+    Returns:
+
+    """
     alerts_str = s3.download(key(day), "utf8")
     alerts = json.loads(alerts_str)[0]["past_alerts"]
 
     def matches_route(alert):
+        """
+
+        Args:
+          alert:
+
+        Returns:
+
+        """
         targets = routes_for_alert(alert)
         return any(r in targets for r in routes)
 
@@ -43,10 +79,27 @@ def get_v2_alerts(day: date, routes):
 
 
 def get_v3_alerts(day: date, routes: list[str]):
+    """
+
+    Args:
+      day: date:
+      routes: list[str]:
+
+    Returns:
+
+    """
     alerts_str = s3.download(key(day, v3=True), "utf8")
     alerts = json.loads(alerts_str)
 
     def matches_route(alert):
+        """
+
+        Args:
+          alert:
+
+        Returns:
+
+        """
         targets = routes_for_alert(alert)
         return any(r in targets for r in routes)
 
