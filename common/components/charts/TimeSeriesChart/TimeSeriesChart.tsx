@@ -19,7 +19,6 @@ import {
 import Annotation from 'chartjs-plugin-annotation';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import 'chartjs-adapter-date-fns';
-import type { ChartData } from 'chart.js';
 
 import { enUS } from 'date-fns/locale';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
@@ -42,7 +41,6 @@ import type {
 } from './types';
 import {
   mergeAndApplyStyles,
-  getLabelsForData,
   getFillProps,
   getGranularityForAgg,
   getDefaultTimeAxis,
@@ -101,11 +99,13 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     return styles;
   }, [data, globalStyle]);
 
-  const chartJsData: ChartData<'line', number[], string> = useMemo(() => {
-    const labels = getLabelsForData(data);
+  const chartJsData = useMemo(() => {
     const datasets = data.map((dataset) => {
       const style = appliedStyles.get(dataset)!;
-      const data = dataset.data.map((point) => point.value);
+      const pointData = dataset.data.map((point) => ({
+        x: 'date' in point ? point.date : point.time,
+        y: point.value,
+      }));
       const { color, width, pointRadius, pointHitRadius, stepped, tension } = style;
       return {
         label: dataset.label,
@@ -115,7 +115,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         pointHitRadius: pointHitRadius,
         stepped,
         tension,
-        data,
+        data: pointData,
         pointBorderWidth: 0,
         pointHoverBorderWidth: 0,
         ...getFillProps(style),
@@ -127,10 +127,10 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         label: benchmark.label,
         backgroundColor: 'transparent',
         borderColor: color,
-        data: null as unknown as number[],
+        data: null as unknown as { x: string; y: number }[],
       };
     });
-    return { labels, datasets: [...datasets, ...benchmarkDummyDatasets] };
+    return { datasets: [...datasets, ...benchmarkDummyDatasets] };
   }, [data, benchmarks, appliedStyles]);
 
   const timeAxis = useMemo((): ResolvedTimeAxis => {
@@ -279,6 +279,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     legend.position,
     legend.visible,
     appliedStyles,
+    isMobile,
   ]);
 
   const chartJsPlugins = useMemo(() => {
