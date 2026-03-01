@@ -186,8 +186,13 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
         dep_dt, arr_dt, travel_time_sec, benchmark_travel_time_sec,
         vehicle_consist, and vehicle_label.
     """
-    rows_by_time_a = s3.download_events(start_date, end_date, stops_a)
-    rows_by_time_b = s3.download_events(start_date, end_date, stops_b)
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        fut_a = executor.submit(s3.download_events, start_date, end_date, stops_a)
+        fut_b = executor.submit(s3.download_events, start_date, end_date, stops_b)
+        rows_by_time_a = fut_a.result()
+        rows_by_time_b = fut_b.result()
 
     departures = filter(lambda event: event["event_type"] in EVENT_DEPARTURE, rows_by_time_a)
     # we reverse arrivals so that if the same train arrives twice (this can happen),
