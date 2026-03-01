@@ -109,7 +109,7 @@ Optional:
 - ESLint with Prettier integration
 - Import ordering enforced (external, then internal, alphabetized)
 - Prefer type imports (`import type { Foo }`)
-- Max ~20 imports per file
+- Ideally max of ~20 imports per file
 
 ### Python
 
