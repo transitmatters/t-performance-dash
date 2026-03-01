@@ -56,6 +56,17 @@ def parse_user_date(user_date: str):
     return date(year=year, month=month, day=day)
 
 
+TWO_YEARS_DAYS = 730
+
+
+def is_large_date_range(query_params):
+    start = query_params.get("start_date")
+    end = query_params.get("end_date")
+    if not start or not end:
+        return False
+    return (parse_user_date(end) - parse_user_date(start)).days > TWO_YEARS_DAYS
+
+
 def mutlidict_to_dict(mutlidict):
     res_dict = {}
     for key in mutlidict.keys():
@@ -194,8 +205,9 @@ def traveltime_aggregate_route():
         to_stops = query_params.getlist("to_stop")
         data = aggregation.travel_times_over_time(start_date, end_date, from_stops, to_stops)
 
+    indent = None if is_large_date_range(query_params) else 4
     return Response(
-        body=json.dumps(data, indent=4, sort_keys=True, default=str),
+        body=json.dumps(data, indent=indent, sort_keys=True, default=str),
         headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
     )
 
@@ -216,8 +228,9 @@ def traveltime_aggregate_route_2():
         to_stop = query_params.getlist("to_stop")
         data = aggregation.travel_times_all(start_date, end_date, from_stop, to_stop)
 
+    indent = None if is_large_date_range(query_params) else 4
     return Response(
-        body=json.dumps(data, indent=4, sort_keys=True, default=str),
+        body=json.dumps(data, indent=indent, sort_keys=True, default=str),
         headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
     )
 
@@ -237,8 +250,9 @@ def headways_aggregate_route():
         stops = query_params.getlist("stop")
         data = aggregation.headways_over_time(start_date, end_date, stops)
 
+    indent = None if is_large_date_range(query_params) else 4
     return Response(
-        body=json.dumps(data, indent=4, sort_keys=True, default=str),
+        body=json.dumps(data, indent=indent, sort_keys=True, default=str),
         headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
     )
 
@@ -258,8 +272,9 @@ def dwells_aggregate_route():
         stops = query_params.getlist("stop")
         data = aggregation.dwells_over_time(start_date, end_date, stops)
 
+    indent = None if is_large_date_range(query_params) else 4
     return Response(
-        body=json.dumps(data, indent=4, sort_keys=True, default=str),
+        body=json.dumps(data, indent=indent, sort_keys=True, default=str),
         headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
     )
 
