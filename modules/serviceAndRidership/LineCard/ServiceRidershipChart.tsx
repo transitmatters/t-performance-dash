@@ -58,8 +58,9 @@ const getNormalizedData = (
       return date >= startDate && date <= endDate;
     })
     .sort();
-  const baselineKey = getBaselineKey(data, baselineMode);
-  const baseline = data[baselineKey];
+  const filteredData = Object.fromEntries(dateStringsWithinRange.map((date) => [date, data[date]]));
+  const baselineKey = getBaselineKey(filteredData, baselineMode);
+  const baseline = filteredData[baselineKey];
   return dateStringsWithinRange.map((date) => ({
     date,
     value: data[date] / baseline,
