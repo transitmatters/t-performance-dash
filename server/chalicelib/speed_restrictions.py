@@ -17,14 +17,14 @@ def set_speed_restrictions_table():
 
 
 def get_boundary_date(line_id: str, first: bool):
-    """Get the earliest or latest date for which speed restriction data exists for a line.
+    """Get the earliest or latest date with speed restriction data for a line.
 
     Args:
         line_id: The transit line identifier to query.
-        first: If True, returns the earliest date; if False, returns the latest date.
+        first: If True, return the earliest date; if False, return the latest.
 
     Returns:
-        str: The boundary date string for the given line.
+        str: The boundary date in ISO format (e.g. '2023-01-15').
     """
     response = SpeedRestrictions.query(
         KeyConditionExpression=Key("lineId").eq(line_id),
@@ -38,16 +38,16 @@ def get_boundary_date(line_id: str, first: bool):
 def query_speed_restrictions(line_id: str, on_date: str):
     """Query speed restriction zones for a line on a given date.
 
-    If the requested date is before the earliest available data, returns unavailable.
-    If the requested date is after the latest available data, clamps to the latest date.
+    If on_date is before the earliest available data, returns unavailable.
+    If on_date is after the latest available data, clamps to the latest date.
 
     Args:
         line_id: The transit line identifier to query.
-        on_date: The date string (ISO format) for which to retrieve speed restrictions.
+        on_date: The date to query in ISO format (e.g. '2023-01-15').
 
     Returns:
-        dict: A dict with an ``available`` key. If available, also includes ``date``
-            (the resolved query date) and ``zones`` (the speed restriction zone data).
+        dict: With key 'available' (bool). If available, also includes 'date'
+              (str, the date used) and 'zones' (dict of speed restriction zones).
     """
     first_sr_date = get_boundary_date(line_id=line_id, first=True)
     latest_sr_date = get_boundary_date(line_id=line_id, first=False)

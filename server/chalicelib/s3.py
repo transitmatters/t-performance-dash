@@ -13,7 +13,7 @@ from chalicelib import parallel
 from chalicelib import date_utils
 
 BUCKET = "tm-mbta-performance"
-s3 = boto3.client("s3", config=botocore.client.Config(max_pool_connections=15))
+s3 = boto3.client("s3", config=botocore.client.Config(max_pool_connections=20))
 
 
 # General downloading/uploading
