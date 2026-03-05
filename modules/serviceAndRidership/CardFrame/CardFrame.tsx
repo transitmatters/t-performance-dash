@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { WidgetDiv } from '../../../common/components/widgets';
 
 type Props = {
-  titleHref: null | LinkProps['href'];
+  titleHref?: null | LinkProps['href'];
   title: React.ReactNode;
   topRight?: React.ReactNode;
   children: React.ReactNode;

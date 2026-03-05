@@ -1,3 +1,9 @@
+"""CSV event parsing into performance metrics (headways, dwells, travel times).
+
+Processes raw arrival/departure event files downloaded from S3 into
+structured metric records used by the aggregation layer.
+"""
+
 from datetime import date
 from chalicelib import s3
 from chalicelib.constants import EVENT_ARRIVAL, EVENT_DEPARTURE
@@ -8,18 +14,33 @@ from chalicelib import date_utils
 
 
 def pairwise(iterable):
-    # an itertools recipe from the docs
-    # "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+    """Yield consecutive overlapping pairs from an iterable.
+
+    An itertools recipe: ``s -> (s0, s1), (s1, s2), (s2, s3), ...``
+
+    Args:
+        iterable: Any iterable to pair up.
+
+    Returns:
+        Iterator of 2-tuples of consecutive elements.
+    """
     a, b = itertools.tee(iterable)
     next(b, None)
     return zip(a, b)
 
 
 def unique_everseen(iterable, key=None):
-    # an itertools recipe from the docs
-    # "List unique elements, preserving order. Remember all elements ever seen."
-    # unique_everseen('AAAABBBCCDAABBB') --> A B C D
-    # unique_everseen('ABBCcAD', str.lower) --> A B C D
+    """Yield unique elements preserving first-seen order.
+
+    An itertools recipe: ``unique_everseen('AAAABBBCCDAABBB') --> A B C D``
+
+    Args:
+        iterable: Any iterable to deduplicate.
+        key: Optional function to compute the uniqueness key for each element.
+
+    Yields:
+        Elements from the iterable, skipping duplicates.
+    """
     seen = set()
     seen_add = seen.add
     if key is None:
@@ -35,6 +56,20 @@ def unique_everseen(iterable, key=None):
 
 
 def dwells(stop_ids: list, start_date: date, end_date: date):
+    """Calculate dwell times from raw arrival/departure event pairs.
+
+    Matches consecutive ARR/DEP events for the same trip_id and computes
+    the time difference as dwell time in seconds.
+
+    Args:
+        stop_ids: Stop IDs to fetch event data for.
+        start_date: Start of date range (inclusive).
+        end_date: End of date range (inclusive).
+
+    Returns:
+        List of dwell time records, each containing route_id, direction,
+        arr_dt, dep_dt, dwell_time_sec, vehicle_consist, and vehicle_label.
+    """
     rows_by_time = s3.download_events(start_date, end_date, stop_ids)
 
     dwells = []
@@ -67,6 +102,22 @@ def dwells(stop_ids: list, start_date: date, end_date: date):
 
 
 def headways(stop_ids: list, start_date: date, end_date: date):
+    """Calculate headways from consecutive departure events.
+
+    Computes the time between consecutive departures at a stop. Skips
+    duplicate departures from the same trip and filters out headways
+    exceeding 120 minutes (except for commuter rail).
+
+    Args:
+        stop_ids: Stop IDs to fetch event data for.
+        start_date: Start of date range (inclusive).
+        end_date: End of date range (inclusive).
+
+    Returns:
+        List of headway records, each containing route_id, direction,
+        current_dep_dt, headway_time_sec, benchmark_headway_time_sec,
+        vehicle_consist, and vehicle_label.
+    """
     rows_by_time = s3.download_events(start_date, end_date, stop_ids)
 
     only_departures = filter(lambda row: row["event_type"] in EVENT_DEPARTURE, rows_by_time)
@@ -118,8 +169,30 @@ def headways(stop_ids: list, start_date: date, end_date: date):
 
 
 def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date):
-    rows_by_time_a = s3.download_events(start_date, end_date, stops_a)
-    rows_by_time_b = s3.download_events(start_date, end_date, stops_b)
+    """Calculate travel times between two sets of stops.
+
+    Matches departure events at origin stops to arrival events at destination
+    stops for the same trip_id, computing the elapsed time. Negative travel
+    times are discarded. Includes benchmark (scheduled) travel times when available.
+
+    Args:
+        stops_a: Origin stop IDs.
+        stops_b: Destination stop IDs.
+        start_date: Start of date range (inclusive).
+        end_date: End of date range (inclusive).
+
+    Returns:
+        List of travel time records, each containing route_id, direction,
+        dep_dt, arr_dt, travel_time_sec, benchmark_travel_time_sec,
+        vehicle_consist, and vehicle_label.
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        fut_a = executor.submit(s3.download_events, start_date, end_date, stops_a)
+        fut_b = executor.submit(s3.download_events, start_date, end_date, stops_b)
+        rows_by_time_a = fut_a.result()
+        rows_by_time_b = fut_b.result()
 
     departures = filter(lambda event: event["event_type"] in EVENT_DEPARTURE, rows_by_time_a)
     # we reverse arrivals so that if the same train arrives twice (this can happen),

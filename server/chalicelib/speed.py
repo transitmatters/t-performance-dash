@@ -1,3 +1,10 @@
+"""Trip metrics aggregation for transit lines.
+
+Queries DynamoDB for delivered trip metrics (count, time, miles) at
+daily, weekly, or monthly granularity. Daily data is aggregated
+on-the-fly from per-route records; weekly/monthly use pre-aggregated tables.
+"""
+
 from typing import TypedDict
 from chalice import BadRequestError, ForbiddenError
 from chalicelib import dynamo
@@ -8,6 +15,15 @@ from chalicelib.constants import DATE_FORMAT_BACKEND
 
 
 class TripMetricsByLineParams(TypedDict):
+    """Parameters for trip metrics queries.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        agg: Aggregation level — ``"daily"``, ``"weekly"``, or ``"monthly"``.
+        line: Line identifier (e.g., ``line-red``, ``line-green``).
+    """
+
     start_date: str | date
     end_date: str | date
     agg: str
@@ -23,6 +39,20 @@ AGG_TO_CONFIG_MAP = {
 
 
 def aggregate_actual_trips(actual_trips, agg, start_date):
+    """Aggregate per-route daily trip metrics into per-line totals.
+
+    Flattens branch-level records, handles NaN propagation for miles_covered,
+    and groups by date to produce one record per day per line.
+
+    Args:
+        actual_trips: List of lists of trip metric records (one list per route).
+        agg: Aggregation level (used for context, not for resampling here).
+        start_date: Start date of the query range.
+
+    Returns:
+        List of aggregated record dicts with date, miles_covered, total_time,
+        count, and line fields.
+    """
     flat_data = [entry for sublist in actual_trips for entry in sublist]
     # Create a DataFrame from the flattened data
     df = pd.DataFrame(flat_data)
@@ -51,9 +81,21 @@ def aggregate_actual_trips(actual_trips, agg, start_date):
 
 
 def trip_metrics_by_line(params: TripMetricsByLineParams):
-    """
-    Get trip metrics grouped by line. The weekly and monthly dbs are already aggregated by line.
-    The daily db is not, and gets aggregated on the fly.
+    """Fetch trip metrics for a transit line at the requested aggregation level.
+
+    For daily data, queries per-route records from ``DeliveredTripMetrics``
+    and aggregates on-the-fly. For weekly/monthly, returns pre-aggregated
+    records directly from DynamoDB.
+
+    Args:
+        params: Query parameters including start_date, end_date, agg, and line.
+
+    Returns:
+        List of trip metric records.
+
+    Raises:
+        BadRequestError: If the line key is invalid or parameters are missing.
+        ForbiddenError: If the date range exceeds the maximum allowed entries (150).
     """
     try:
         start_date = params["start_date"]
@@ -76,7 +118,16 @@ def trip_metrics_by_line(params: TripMetricsByLineParams):
 
 
 def is_invalid_range(start_date, end_date, max_delta):
-    """Check if number of requested entries is more than maximum for the table"""
+    """Check if a date range exceeds the maximum allowed number of entries.
+
+    Args:
+        start_date: Start date string (YYYY-MM-DD).
+        end_date: End date string (YYYY-MM-DD).
+        max_delta: Maximum number of days allowed in the range.
+
+    Returns:
+        ``True`` if the range exceeds ``max_delta`` days.
+    """
     start_datetime = datetime.strptime(start_date, DATE_FORMAT_BACKEND)
     end_datetime = datetime.strptime(end_date, DATE_FORMAT_BACKEND)
     return start_datetime + timedelta(days=max_delta) < end_datetime
