@@ -20,11 +20,8 @@ type GetCsvFilenameOptions = {
   includeBothStopsForLocation?: boolean | undefined;
 };
 
-export function getCsvFilename(options: GetCsvFilenameOptions) {
+function getBaseFilename(options: GetCsvFilenameOptions) {
   const { datasetName, startDate, endDate, line, location, includeBothStopsForLocation } = options;
-  // CharlesMGH-SB_dwells_20210315.csv
-  // CentralSquareCambridge-MelneaCassWashington_traveltimesByHour-weekday_20200101-20201231.csv
-  // BostonUniversityWest-EB_headways_20161226-20170328.csv
   const fromStop = location?.from.replace(/[^A-z]/g, '');
   const toStop = location?.to.replace(/[^A-z]/g, '');
   const dir = location && directionAbbrs[location.direction];
@@ -36,7 +33,18 @@ export function getCsvFilename(options: GetCsvFilenameOptions) {
   const date2 = endDate ? `-${endDate.replaceAll('-', '')}` : '';
   const when = `${date1}${date2}`;
 
-  return `${where}_${what}_${when}.csv`;
+  return `${where}_${what}_${when}`;
+}
+
+export function getCsvFilename(options: GetCsvFilenameOptions) {
+  // CharlesMGH-SB_dwells_20210315.csv
+  // CentralSquareCambridge-MelneaCassWashington_traveltimesByHour-weekday_20200101-20201231.csv
+  // BostonUniversityWest-EB_headways_20161226-20170328.csv
+  return `${getBaseFilename(options)}.csv`;
+}
+
+export function getImageFilename(options: GetCsvFilenameOptions) {
+  return `${getBaseFilename(options)}.png`;
 }
 
 export const addAccuracyPercentageToData = (data: TimePredictionWeek[]) => {
