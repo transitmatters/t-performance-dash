@@ -1,3 +1,5 @@
+"""Cache duration calculation based on data recency."""
+
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
@@ -11,18 +13,29 @@ THREE_MONTHS = 7776000  # 90 days
 
 
 def get_cache_max_age(query_params: dict) -> int:
-    """
-    Determine cache duration based on the date range in query parameters.
+    """Determine cache duration based on the date range in query parameters.
 
-    For data from today, cache for 15 minutes (still updating).
-    For recent data (within 6 months), cache for 1 hour.
-    For historical data (more than 6 months old), cache for 3 months.
+    Looks for a date in the query params (checking ``end_date``, ``date``, and
+    ``to_date`` in that order) and selects a cache lifetime based on how recent
+    that date is relative to today in US/Eastern time:
+
+    - **Today**: 15 minutes — data is still being actively updated.
+    - **Within the last 6 months**: 1 hour — data is settled but corrections
+      may still arrive.
+    - **Older than 6 months**: 90 days — historical data that is unlikely to
+      change.
+
+    Falls back to a 1-hour default when no recognised date parameter is present
+    or the date string cannot be parsed.
 
     Args:
-        query_params: Dictionary of query parameters from the request
+      query_params: Dictionary of query parameters from the request.  Expected
+          to contain one of ``end_date``, ``date``, or ``to_date`` with a
+          value in ``YYYY-MM-DD`` format.
 
     Returns:
-        Cache max-age in seconds
+      int: Cache max-age in seconds.
+
     """
     cache_max_age = ONE_HOUR  # Default: 1 hour
 

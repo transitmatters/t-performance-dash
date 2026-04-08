@@ -12,7 +12,7 @@ from chalicelib import s3
 from chalicelib import date_utils
 
 
-def make_parallel(single_func, THREAD_COUNT=5):
+def make_parallel(single_func, THREAD_COUNT=10):
     """Wrap a single-item function to process an iterable in parallel.
 
     Creates a new function that calls ``single_func`` concurrently for each
@@ -21,7 +21,7 @@ def make_parallel(single_func, THREAD_COUNT=5):
 
     Args:
         single_func: Function whose first parameter is the item to parallelize over.
-        THREAD_COUNT: Maximum number of concurrent threads. Defaults to 5.
+        THREAD_COUNT: Maximum number of concurrent threads. Defaults to 10.
 
     Returns:
         A function that accepts an iterable as its first argument and returns
@@ -33,7 +33,6 @@ def make_parallel(single_func, THREAD_COUNT=5):
         all_events = parallel_download(date_list, stop_id)
         ```
     """
-
     def parallel_func(iterable, *args, **kwargs):
         """Execute single_func in parallel for each item in iterable.
 
@@ -100,7 +99,7 @@ def s3_date_range(start: date, end: date, stops: list[str]):
     if date_utils.get_max_monthly_data_date() > start and not cr_data:
         dates = pd.date_range(start, month_end, freq="1D", inclusive="both")
         series = pd.Series(0, index=dates)
-        date_range = series.resample("1M").sum().index
+        date_range = series.resample("1ME").sum().index
 
     # all dates between month_end and end if month_end is less than end
     if pd.to_datetime(month_end) < pd.to_datetime(end):

@@ -11,6 +11,7 @@ import type { SingleDayLineProps } from '../../types/charts';
 import { getAlertAnnotations } from '../../../modules/service/utils/graphUtils';
 import { prettyDate } from '../../utils/date';
 import { DownloadButton } from '../buttons/DownloadButton';
+import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
@@ -99,6 +100,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   units,
   showLegend = true,
   showUnderRatio = false,
+  chartTitle,
 }) => {
   const ref = useRef();
   const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);
@@ -317,13 +319,23 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
             <div className="w-full" />
           )}
           {date && (
-            <DownloadButton
-              data={data}
-              datasetName={fname}
-              location={location}
-              includeBothStopsForLocation={includeBothStopsForLocation}
-              startDate={date}
-            />
+            <>
+              <SaveChartImageButton
+                chartRef={ref}
+                datasetName={fname}
+                location={location}
+                includeBothStopsForLocation={includeBothStopsForLocation}
+                startDate={date}
+                chartTitle={chartTitle}
+              />
+              <DownloadButton
+                data={data}
+                datasetName={fname}
+                location={location}
+                includeBothStopsForLocation={includeBothStopsForLocation}
+                startDate={date}
+              />
+            </>
           )}
         </div>
       </div>
