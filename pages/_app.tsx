@@ -30,6 +30,7 @@ import { Layout } from '../common/layouts/PrimaryLayout';
 import { PRODUCTION } from '../common/utils/constants';
 import { NavLayout } from '../common/layouts/NavLayout';
 import { LoadPresetsLayout } from '../common/layouts/LoadPresetsLayout';
+import { DynamicMetaTags } from '../common/components/DynamicMetaTags';
 
 config.autoAddCss = false;
 
@@ -76,7 +77,7 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     setLoaded(true);
   }, []);
-  if (!loaded) return null;
+  if (!loaded) return <DynamicMetaTags />;
 
   return (
     <Layout>
