@@ -9,6 +9,7 @@ import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts'
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../constants/colors';
 import { DownloadButton } from '../buttons/DownloadButton';
+import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
@@ -73,6 +74,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   showLegend = true,
   byTime = false,
   yUnit = 'Minutes',
+  chartTitle,
 }) => {
   const ref = useRef();
   const hourly = timeUnit === 'hour';
@@ -199,6 +201,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 position: 'nearest',
                 callbacks: {
                   label: (tooltipItem) => {
+                    if (!tooltipItem.parsed.y) return '';
                     return `${tooltipItem.dataset.label}: ${
                       yUnit === 'Minutes'
                         ? getFormattedTimeString(tooltipItem.parsed.y, 'minutes')
@@ -230,13 +233,24 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           />
         )}
         {startDate && (
-          <DownloadButton
-            data={data}
-            datasetName={fname}
-            location={location}
-            includeBothStopsForLocation={includeBothStopsForLocation}
-            startDate={startDate}
-          />
+          <>
+            <SaveChartImageButton
+              chartRef={ref}
+              datasetName={fname}
+              location={location}
+              includeBothStopsForLocation={includeBothStopsForLocation}
+              startDate={startDate}
+              endDate={endDate}
+              chartTitle={chartTitle}
+            />
+            <DownloadButton
+              data={data}
+              datasetName={fname}
+              location={location}
+              includeBothStopsForLocation={includeBothStopsForLocation}
+              startDate={startDate}
+            />
+          </>
         )}
       </div>
     </ChartBorder>

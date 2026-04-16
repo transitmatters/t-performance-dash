@@ -39,6 +39,8 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ line, route, childre
     switch (line) {
       case 'line-bus':
         return faBus;
+      case 'line-RIDE':
+        return faBus;
       case 'line-green':
       case 'line-mattapan':
         return faTrainTram;
@@ -57,6 +59,8 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ line, route, childre
         return `/bus/trips/single?busRoute=1&date=${BUS_DEFAULTS.singleTripConfig.date}`;
       case 'line-commuter-rail':
         return `/commuter-rail/trips/single?crRoute=CR-Fairmount&date=${COMMUTER_RAIL_DEFAULTS.singleTripConfig.date}`;
+      case 'line-RIDE':
+        return '/the-ride/ridership';
       case 'line-ferry':
         return `/ferry/trips/single?ferryRoute=Boat-F6&date=${FERRY_DEFAULTS.singleTripConfig.date}`;
       default:

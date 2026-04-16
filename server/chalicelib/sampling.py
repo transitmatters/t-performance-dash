@@ -1,3 +1,9 @@
+"""Resampling utilities for converting daily data to weekly or monthly aggregates.
+
+Provides functions to resample time-series data at different aggregation levels
+(daily, weekly, monthly) using pandas resampling.
+"""
+
 from datetime import date
 from typing import Dict, List, Literal
 import pandas as pd
@@ -10,6 +16,20 @@ def resample_and_aggregate(
     agg: Literal["daily", "weekly", "monthly"],
     avg_type=Literal["mean", "median"],
 ):
+    """Resample date-keyed values to a coarser time granularity.
+
+    For daily aggregation, returns the input unchanged. For weekly or monthly,
+    resamples using pandas, drops incomplete leading periods, and adjusts
+    weekly dates to show the week start (Sunday) rather than the end.
+
+    Args:
+        values: Dictionary mapping date strings (YYYY-MM-DD) to numeric values.
+        agg: Aggregation level — ``"daily"``, ``"weekly"``, or ``"monthly"``.
+        avg_type: Averaging method — ``"mean"`` or ``"median"``.
+
+    Returns:
+        Dictionary mapping date strings to resampled values.
+    """
     # parse start_date and end_date to pandas datetime64
     start_date = pd.to_datetime(min(values.keys()))
     end_date = pd.to_datetime(max(values.keys()))
@@ -56,6 +76,21 @@ def resample_list_of_values_with_range(
     agg: Literal["daily", "weekly", "monthly"],
     avg_type=Literal["mean", "median"],
 ):
+    """Resample a positional list of values over a date range.
+
+    Converts the list into a date-keyed dictionary, resamples it via
+    ``resample_and_aggregate``, and returns the resampled values as a list.
+
+    Args:
+        values: List of numeric values, one per day in the date range.
+        start_date: Start of the date range.
+        end_date: End of the date range.
+        agg: Aggregation level — ``"daily"``, ``"weekly"``, or ``"monthly"``.
+        avg_type: Averaging method — ``"mean"`` or ``"median"``.
+
+    Returns:
+        List of resampled values, or the ``agg`` string if aggregation is daily.
+    """
     if agg == "daily":
         return agg
     dates = date_range(start_date, end_date)

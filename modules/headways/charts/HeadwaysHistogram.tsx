@@ -117,6 +117,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
                       }
                       const item = items[0];
                       const { x } = item.parsed;
+                      if (!x) return '';
                       const min = x - 0.5;
                       const max = x + 0.5;
                       const tooltip = [`${min} - ${max} min.`];

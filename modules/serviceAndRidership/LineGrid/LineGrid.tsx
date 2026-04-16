@@ -72,7 +72,7 @@ const isRidershipSort = (sort: '' | Sort) => {
 
 const getTailwindClassForDisplayOption = (display: DisplayOption) => {
   return display === 'grid'
-    ? 'w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4'
+    ? 'w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4'
     : 'w-full flex flex-col gap-4';
 };
 

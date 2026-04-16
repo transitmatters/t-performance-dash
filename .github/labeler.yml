@@ -4,11 +4,11 @@ ci/cd:
 
 dependencies:
   - changed-files:
-      - any-glob-to-any-file: ['package.json', 'package-lock.json', 'server/poetry.lock']
+      - any-glob-to-any-file: ['package.json', 'package-lock.json', 'server/uv.lock']
 
 backend:
   - changed-files:
-      - any-glob-to-any-file: ['**/*.py', 'server/**/*', '.flake8']
+      - any-glob-to-any-file: ['**/*.py', 'server/**/*', 'ruff.toml']
 
 frontend:
   - changed-files:

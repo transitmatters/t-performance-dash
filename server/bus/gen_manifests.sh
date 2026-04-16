@@ -6,6 +6,6 @@ for route in 1 4 7 8 9 10 11 14 15 16 17 18 19 21 22 23 26 28 29 30 31 32 34 35 
 
     for f in $(find data/input/ -name *.csv); do
         month=$(echo $f | cut -d/ -f4 | cut -d. -f1)
-        poetry run python manifest.py $f "data/output/manifests/$route/$route_$month.json" --checkpoints "data/input/MBTA_GTFS/checkpoints.txt" -r $route
+        uv run python manifest.py $f "data/output/manifests/$route/$route_$month.json" --checkpoints "data/input/MBTA_GTFS/checkpoints.txt" -r $route
     done
 done

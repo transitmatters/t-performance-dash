@@ -7,11 +7,10 @@ import {
 } from '../../styles/general';
 import { useDelimitatedRoute } from '../../utils/router';
 
-interface ButtonProps
-  extends React.DetailedHTMLProps<
-    React.ButtonHTMLAttributes<HTMLButtonElement>,
-    HTMLButtonElement
-  > {
+interface ButtonProps extends React.DetailedHTMLProps<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+> {
   children: React.ReactNode;
   additionalClasses?: string;
 }

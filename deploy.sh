@@ -88,9 +88,21 @@ echo "CloudFormation stack name: $CF_STACK_NAME"
 # build frontend
 npm run build
 
+# Copy constants JSON files into server/chalicelib for deployment
+# This ensures the route manifest JSON files are included in the Lambda package
+# chalicelib is always packaged by Chalice, unlike other directories
+# Only copy JSON files to avoid TypeScript compilation issues
+echo "Copying constants JSON files into server/chalicelib for deployment..."
+rm -rf server/chalicelib/common
+mkdir -p server/chalicelib/common/constants
+cp common/constants/*.json server/chalicelib/common/constants/ 2>/dev/null || true
+cp -r common/constants/bus_constants server/chalicelib/common/constants/
+cp -r common/constants/cr_constants server/chalicelib/common/constants/
+cp -r common/constants/ferry_constants server/chalicelib/common/constants/
+
 pushd server/ > /dev/null
-poetry export --without-hashes --output requirements.txt
-poetry run chalice package --stage $CHALICE_STAGE --merge-template cloudformation.json cfn/
+uv export --no-hashes --no-dev > requirements.txt
+uv run chalice package --stage $CHALICE_STAGE --merge-template cloudformation.json cfn/
 aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUCKET --output-template-file cfn/packaged.yaml
 aws cloudformation deploy --template-file cfn/packaged.yaml --s3-bucket $BACKEND_BUCKET --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM \
     --tags service=t-performance-dash env=$ENV_TAG version=$GIT_VERSION \
@@ -108,6 +120,11 @@ aws cloudformation deploy --template-file cfn/packaged.yaml --s3-bucket $BACKEND
     DDTags=$DD_TAGS
 
 popd > /dev/null
+
+# Clean up copied constants directory
+echo "Cleaning up copied constants directory..."
+rm -rf server/chalicelib/common
+
 aws s3 sync out/ s3://$FRONTEND_HOSTNAME \
   --cache-control "public, max-age=31536000, immutable"
 aws s3 cp out/index.html s3://$FRONTEND_HOSTNAME/index.html \

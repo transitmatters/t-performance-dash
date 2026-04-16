@@ -6,7 +6,8 @@ export type Line =
   | 'line-mattapan'
   | 'line-bus'
   | 'line-commuter-rail'
-  | 'line-ferry';
+  | 'line-ferry'
+  | 'line-RIDE';
 
 export type LineShort =
   | 'Red'
@@ -16,7 +17,8 @@ export type LineShort =
   | 'Mattapan'
   | 'Bus'
   | 'Commuter Rail'
-  | 'Ferry';
+  | 'Ferry'
+  | 'The RIDE';
 
 export type LinePath =
   | 'red'
@@ -26,7 +28,8 @@ export type LinePath =
   | 'mattapan'
   | 'bus'
   | 'commuter-rail'
-  | 'ferry';
+  | 'ferry'
+  | 'the-ride';
 
 export type FerryRoute =
   | 'Boat-F1'
@@ -80,6 +83,7 @@ export type BusRoute =
   | '60/65'
   | '61/70/170'
   | '62/76'
+  | '64/68'
   | '66'
   | '67/79'
   | '69'
@@ -165,6 +169,7 @@ export type BusRouteId =
       | '60/65'
       | '61/70/170'
       | '62/76'
+      | '64/68'
       | '67/79'
       | '72/74/75'
       | '78/84'
@@ -203,6 +208,7 @@ export type BusRouteId =
   | '6065'
   | '6170170'
   | '6276'
+  | '6468'
   | '6779'
   | '727475'
   | '7884'
@@ -259,12 +265,13 @@ export type LineMetadata = {
 export type LineObject = { [key in Line]: LineMetadata };
 
 export type LineRouteId =
-  | Exclude<LineShort, 'Bus' | 'Green'>
+  | Exclude<LineShort, 'Bus' | 'Green' | 'Commuter Rail'>
   | 'bus'
   | 'Green-B'
   | 'Green-C'
   | 'Green-D'
-  | 'Green-E';
+  | 'Green-E'
+  | CommuterRailRoute;
 
 export const RIDERSHIP_KEYS = {
   'line-red': 'line-Red',
@@ -272,6 +279,7 @@ export const RIDERSHIP_KEYS = {
   'line-blue': 'line-Blue',
   'line-green': 'line-Green',
   'line-mattapan': 'line-Mattapan',
+  'line-RIDE': 'line-RIDE',
 };
 
 export const GTFS_COLOR_LINE_IDS = [
@@ -336,6 +344,7 @@ export const BUS_ROUTES: BusRoute[] = [
   '57',
   '61/70/170',
   '62/76',
+  '64/68',
   '66',
   '67/79',
   '69',
@@ -482,5 +491,11 @@ export const COMMUTER_RAIL_PATH = {
 export const FERRY_PATH = {
   params: {
     line: 'ferry',
+  },
+};
+
+export const THE_RIDE_PATH = {
+  params: {
+    line: 'the-ride',
   },
 };

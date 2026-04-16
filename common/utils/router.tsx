@@ -25,6 +25,7 @@ const linePathToKeyMap: Record<LinePath, Line> = {
   bus: 'line-bus',
   'commuter-rail': 'line-commuter-rail',
   ferry: 'line-ferry',
+  'the-ride': 'line-RIDE',
 };
 
 const getParams = (params: ParsedUrlQuery | QueryParams) => {
@@ -65,6 +66,8 @@ const getTab = (path: LinePath) => {
     return 'Bus';
   } else if (path === 'commuter-rail') {
     return 'Commuter Rail';
+  } else if (path === 'the-ride') {
+    return 'The RIDE';
   } else if (path === 'ferry') {
     return 'Ferry';
   } else {

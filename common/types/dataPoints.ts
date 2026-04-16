@@ -23,7 +23,7 @@ export interface HeadwayPoint extends DataPoint {
   current_dep_dt: string;
   previous_dep_dt: string;
   headway_time_sec: number;
-  benchmark_headway_time_sec: number;
+  benchmark_headway_time_sec: number | null;
   threshold_flag_1?: string;
   threshold_flag_2?: string;
   threshold_flag_3?: string;

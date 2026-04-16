@@ -35,7 +35,7 @@ export interface LineMap {
 }
 
 export type StationMap = {
-  [key in LineShort]:
+  [key in Exclude<LineShort, 'The RIDE'>]:
     | LineMap
     | { [key in CommuterRailRoute]: LineMap }
     | { [key in BusRoute]: LineMap }

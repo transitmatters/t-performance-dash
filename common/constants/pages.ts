@@ -137,7 +137,14 @@ export const ALL_PAGES: PageMap = {
     key: 'delays',
     path: '/delays',
     name: 'Delays',
-    lines: ['line-red', 'line-orange', 'line-blue', 'line-green', 'line-mattapan'],
+    lines: [
+      'line-red',
+      'line-orange',
+      'line-blue',
+      'line-green',
+      'line-mattapan',
+      'line-commuter-rail',
+    ],
     icon: faCalendarXmark,
     dateStoreSection: 'line',
   },
@@ -177,6 +184,7 @@ export const ALL_PAGES: PageMap = {
       'line-bus',
       'line-commuter-rail',
       'line-ferry',
+      'line-RIDE',
     ],
     icon: faUsers,
     dateStoreSection: 'line',
@@ -191,6 +199,8 @@ export const BUS_OVERVIEW = [ALL_PAGES.ridership];
 export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.ridership];
 
 export const FERRY_OVERVIEW = [ALL_PAGES.ridership];
+
+export const RIDE_OVERVIEW = [ALL_PAGES.ridership];
 
 export const OVERVIEW_PAGE = [ALL_PAGES.overview];
 

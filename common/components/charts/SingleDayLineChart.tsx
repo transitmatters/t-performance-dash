@@ -11,6 +11,7 @@ import type { SingleDayLineProps } from '../../types/charts';
 import { getAlertAnnotations } from '../../../modules/service/utils/graphUtils';
 import { prettyDate } from '../../utils/date';
 import { DownloadButton } from '../buttons/DownloadButton';
+import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
@@ -29,8 +30,18 @@ const pointColors = (
 ) => {
   return data.map((point: DataPoint) => {
     if (benchmark_field) {
-      const ratio = point[metric_field] / point[benchmark_field];
-      if (point[benchmark_field] === null) {
+      const benchmarkValue = point[benchmark_field];
+      // Check for null, undefined, NaN, or other invalid values
+      if (
+        benchmarkValue === null ||
+        benchmarkValue === undefined ||
+        typeof benchmarkValue !== 'number' ||
+        !Number.isFinite(benchmarkValue)
+      ) {
+        return CHART_COLORS.GREY;
+      }
+      const ratio = point[metric_field] / benchmarkValue;
+      if (!Number.isFinite(ratio)) {
         return CHART_COLORS.GREY;
       } else if (ratio <= 0.05 && showUnderRatio) {
         // Not actually 100% off, but we want to show it as an extreme
@@ -55,6 +66,10 @@ const pointColors = (
 };
 
 const departureFromNormalString = (metric: number, benchmark: number, showUnderRatio?: boolean) => {
+  // Handle invalid benchmark values
+  if (!benchmark || typeof benchmark !== 'number' || !Number.isFinite(benchmark)) {
+    return '';
+  }
   const ratio = metric / benchmark;
   if (showUnderRatio && ratio <= 0.5) {
     return '50%+ under schedule';
@@ -85,6 +100,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   units,
   showLegend = true,
   showUnderRatio = false,
+  chartTitle,
 }) => {
   const ref = useRef();
   const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);
@@ -93,9 +109,14 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
 
   // Format benchmark data if it exists.
-  const benchmarkData = data.map((datapoint) =>
-    benchmarkField && datapoint[benchmarkField] ? datapoint[benchmarkField] : null
-  );
+  const benchmarkData = data.map((datapoint) => {
+    const value = benchmarkField && datapoint[benchmarkField];
+    // Handle NaN, null, undefined, and other falsy values
+    if (!value || typeof value !== 'number' || !Number.isFinite(value)) {
+      return null;
+    }
+    return value;
+  });
   const displayBenchmarkData = benchmarkData.some((datapoint) => datapoint !== null);
 
   const multiplier = units === 'Minutes' ? 1 / 60 : 1;
@@ -162,8 +183,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 callbacks: {
                   label: (tooltipItem) => {
                     if (
-                      tooltipItem.parsed.y === 0 &&
-                      tooltipItem.dataset.label === 'Benchmark MBTA'
+                      !tooltipItem.parsed.y ||
+                      (tooltipItem.parsed.y === 0 && tooltipItem.dataset.label === 'Benchmark MBTA')
                     ) {
                       return '';
                     }
@@ -178,8 +199,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
 
                     // Add departure from normal information
                     const departureInfo = departureFromNormalString(
-                      tooltipItems[0].parsed.y,
-                      tooltipItems[1]?.parsed.y,
+                      tooltipItems[0].parsed.y ?? 0,
+                      tooltipItems[1]?.parsed.y ?? 0,
                       showUnderRatio
                     );
                     if (departureInfo) {
@@ -298,13 +319,23 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
             <div className="w-full" />
           )}
           {date && (
-            <DownloadButton
-              data={data}
-              datasetName={fname}
-              location={location}
-              includeBothStopsForLocation={includeBothStopsForLocation}
-              startDate={date}
-            />
+            <>
+              <SaveChartImageButton
+                chartRef={ref}
+                datasetName={fname}
+                location={location}
+                includeBothStopsForLocation={includeBothStopsForLocation}
+                startDate={date}
+                chartTitle={chartTitle}
+              />
+              <DownloadButton
+                data={data}
+                datasetName={fname}
+                location={location}
+                includeBothStopsForLocation={includeBothStopsForLocation}
+                startDate={date}
+              />
+            </>
           )}
         </div>
       </div>

@@ -16,6 +16,7 @@ import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { PEAK_SPEED } from '../../../common/constants/baselines';
 import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
+import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { addMPHToSpeedData } from '../../../common/utils/csv';
 import type { ParamsType } from '../constants/speeds';
 
@@ -97,6 +98,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 callbacks: {
                   ...callbacks,
                   label: (context) => {
+                    if (!context.parsed.y) return '';
                     return `${context.parsed.y} (${((100 * context.parsed.y) / peak).toFixed(
                       1
                     )}% of historical maximum)`;
@@ -197,13 +199,22 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
       </ChartDiv>
       <div className="flex flex-row items-end justify-end gap-4">
         {startDate && (
-          <DownloadButton
-            data={dataWithMPH}
-            datasetName="speed"
-            includeBothStopsForLocation={false}
-            startDate={startDate}
-            endDate={endDate}
-          />
+          <>
+            <SaveChartImageButton
+              chartRef={ref}
+              datasetName="speed"
+              includeBothStopsForLocation={false}
+              startDate={startDate}
+              endDate={endDate}
+            />
+            <DownloadButton
+              data={dataWithMPH}
+              datasetName="speed"
+              includeBothStopsForLocation={false}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          </>
         )}
       </div>
     </ChartBorder>

@@ -17,6 +17,7 @@ Arguments:
     output_file - Optional path where to save the OpenAPI JSON file.
                   Defaults to "./openapi.json"
 """
+
 import json
 import sys
 import os

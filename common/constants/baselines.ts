@@ -11,6 +11,7 @@ export const PEAK_SCHEDULED_SERVICE: { [key in Line | 'DEFAULT']: number } = {
   'line-commuter-rail': 0,
   'line-bus': 0,
   'line-ferry': 0,
+  'line-RIDE': 0,
   DEFAULT: 0,
 };
 
@@ -23,6 +24,7 @@ export const PEAK_SPEED: { [key in Line | 'DEFAULT']: number } = {
   'line-commuter-rail': 0,
   'line-bus': 0,
   'line-ferry': 0,
+  'line-RIDE': 0,
   DEFAULT: 0,
 };
 
@@ -77,6 +79,7 @@ export const PEAK_RIDERSHIP: {
   '6065': 3873,
   '6170170': 6988,
   '6276': 2741,
+  '6468': 2896,
   '66': 14505,
   '6779': 972,
   '69': 3019,
@@ -164,6 +167,7 @@ export const PEAK_RIDERSHIP: {
   'CR-NewBedford': 6863, // Using same value as former Middleborough
   'CR-Providence': 25728,
   'line-commuter-rail': 126755,
+  'line-RIDE': 34102,
   'line-ferry': 41782,
   'Boat-F1': 16281,
   'Boat-F4': 11861,

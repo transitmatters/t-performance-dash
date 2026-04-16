@@ -9,4 +9,5 @@ export const spinnerFillColor: StyleMap = {
   'line-bus': 'fill-mbta-bus',
   'line-commuter-rail': 'fill-mbta-commuterRail',
   'line-ferry': 'fill-mbta-ferry',
+  'line-RIDE': 'fill-mbta-bus',
 };
