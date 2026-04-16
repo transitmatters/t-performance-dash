@@ -20,6 +20,7 @@ CACHE_MARKER_FILE = OUTPUT_DIR / ".last_fetched"
 
 # Configuration for what data to fetch
 RAPID_TRANSIT_LINES = ["line-red", "line-blue", "line-orange", "line-green", "line-mattapan"]
+RAPID_TRANSIT_LINES_RIDERSHIP = ["line-Red", "line-Blue", "line-Orange", "line-Green", "line-Mattapan"]
 ROUTE_IDS = ["Red", "Blue", "Orange", "Green-B", "Green-C", "Green-D", "Green-E", "Mattapan"]
 DELAY_LINES = ["Red", "Blue", "Orange", "Green-B", "Green-C", "Green-D", "Green-E", "Mattapan"]
 AGG_TYPES = ["daily", "weekly", "monthly"]
@@ -80,7 +81,7 @@ def fetch_scheduled_service():
 def fetch_ridership():
     """Fetch ridership data for all lines."""
     print("\n=== Fetching Ridership ===")
-    for line in RAPID_TRANSIT_LINES:
+    for line in RAPID_TRANSIT_LINES_RIDERSHIP:
         params = {
             "line_id": line,
             "start_date": START_DATE.isoformat(),

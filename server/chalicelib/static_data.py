@@ -100,7 +100,7 @@ def get_ridership(query_params: dict):
     Returns:
         A list of ridership records, or an empty list if no data is found.
     """
-    line_id = query_params.get("line_id", "line-red")
+    line_id = query_params.get("line_id", "line-Red")
     data = _load_static_json(f"ridership/{line_id}.json")
     return data or []
 
