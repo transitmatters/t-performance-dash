@@ -94,6 +94,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   metricField,
   pointField,
   benchmarkField,
+  tmBenchmarkField,
   fname,
   includeBothStopsForLocation = false,
   location,
@@ -123,6 +124,37 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const benchmarkDataFormatted = benchmarkData
     .map((datapoint) => (datapoint ? (datapoint * multiplier).toFixed(2) : null))
     .filter((datapoint) => datapoint !== null);
+
+  // TransitMatters benchmark: per-point min(tm_historic, mbta_benchmark). When
+  // the MBTA wins, lines overlap (intentional — we can't ask for better than
+  // what the T already schedules). When tm_historic is absent, show nothing
+  // for that point so the line hides for non-rapid-transit routes.
+  const tmBenchmarkData = data.map((datapoint, idx) => {
+    const raw = tmBenchmarkField && datapoint[tmBenchmarkField];
+    if (!raw || typeof raw !== 'number' || !Number.isFinite(raw)) {
+      return null;
+    }
+    const mbta = benchmarkData[idx];
+    const effective = typeof mbta === 'number' && Number.isFinite(mbta) ? Math.min(raw, mbta) : raw;
+    return effective;
+  });
+  const displayTmBenchmarkData = tmBenchmarkData.some((d) => d !== null);
+  const tmBenchmarkDataFormatted = tmBenchmarkData.map((d) =>
+    d !== null ? (d * multiplier).toFixed(2) : null
+  );
+
+  // "Beat both" = actual beat BOTH the MBTA and the TM benchmark, when both
+  // are available for the point. These points get a shiny pulsing ring to
+  // celebrate trips that outperformed every benchmark we have.
+  const beatBothMask = data.map((datapoint, idx) => {
+    const actual = datapoint[metricField];
+    const mbta = benchmarkData[idx];
+    const tm = tmBenchmarkData[idx];
+    if (typeof actual !== 'number' || !Number.isFinite(actual)) return false;
+    if (typeof mbta !== 'number' || !Number.isFinite(mbta)) return false;
+    if (typeof tm !== 'number' || !Number.isFinite(tm)) return false;
+    return actual < mbta && actual < tm;
+  });
 
   const convertedData = data.map((datapoint) =>
     ((datapoint[metricField] as number) * multiplier).toFixed(2)
@@ -156,18 +188,33 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   benchmarkField,
                   showUnderRatio
                 ),
+                pointBorderColor: beatBothMask.map((beat) =>
+                  beat ? 'rgba(16, 185, 129, 0.6)' : 'rgba(0,0,0,0.1)'
+                ),
+                pointBorderWidth: 1,
                 pointRadius: 3,
                 pointHitRadius: 10,
                 data: convertedData,
               },
               {
-                label: `Benchmark MBTA`,
+                label: `MBTA Benchmark`,
                 backgroundColor: '#a0a0a030',
                 data: benchmarkDataFormatted,
                 pointRadius: 0,
                 pointHoverRadius: 3,
                 fill: true,
                 hidden: !displayBenchmarkData,
+              },
+              {
+                label: `TransitMatters Benchmark`,
+                borderColor: `${CHART_COLORS.RED}80`,
+                borderDash: [6, 4],
+                borderWidth: 2,
+                data: tmBenchmarkDataFormatted,
+                pointRadius: 0,
+                pointHoverRadius: 3,
+                fill: false,
+                hidden: !displayTmBenchmarkData,
               },
             ],
           }}
@@ -182,10 +229,10 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 position: 'nearest',
                 callbacks: {
                   label: (tooltipItem) => {
-                    if (
-                      !tooltipItem.parsed.y ||
-                      (tooltipItem.parsed.y === 0 && tooltipItem.dataset.label === 'Benchmark MBTA')
-                    ) {
+                    const isBenchmark =
+                      tooltipItem.dataset.label === 'MBTA Benchmark' ||
+                      tooltipItem.dataset.label === 'TransitMatters Benchmark';
+                    if (!tooltipItem.parsed.y || (tooltipItem.parsed.y === 0 && isBenchmark)) {
                       return '';
                     }
                     return `${tooltipItem.dataset.label}: ${
@@ -197,10 +244,13 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   afterBody: (tooltipItems) => {
                     const result: string[] = [];
 
-                    // Add departure from normal information
+                    // Departure from normal is measured against the MBTA benchmark.
+                    const mbtaBenchmarkItem = tooltipItems.find(
+                      (t) => t.dataset.label === 'MBTA Benchmark'
+                    );
                     const departureInfo = departureFromNormalString(
                       tooltipItems[0].parsed.y ?? 0,
-                      tooltipItems[1]?.parsed.y ?? 0,
+                      mbtaBenchmarkItem?.parsed.y ?? 0,
                       showUnderRatio
                     );
                     if (departureInfo) {
@@ -306,6 +356,50 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 }
               },
             },
+            {
+              // Pulsing gold ring around points that beat both benchmarks.
+              // Self-schedules via requestAnimationFrame when there's anything
+              // to animate, so idle charts pay no cost.
+              id: 'shinyPoints',
+              afterDatasetsDraw: (chart) => {
+                const meta = chart.getDatasetMeta(0);
+                if (!meta || !meta.data) return;
+                const { ctx } = chart;
+                // Cycle: ~1.6s pulse, ~2s rest. During the rest phase we skip
+                // drawing entirely (no ring visible) but still tick so the
+                // next pulse fires.
+                const cycleMs = 3600;
+                const pulseMs = 1600;
+                const t = performance.now() % cycleMs;
+                const inPulse = t < pulseMs;
+                const pulse = inPulse ? Math.sin((t / pulseMs) * Math.PI) : 0;
+                let anyShiny = false;
+                if (inPulse) {
+                  meta.data.forEach((point, idx) => {
+                    if (!beatBothMask[idx]) return;
+                    anyShiny = true;
+                    const { x, y } = point as { x: number; y: number };
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4.5 + pulse * 2, 0, 2 * Math.PI);
+                    ctx.strokeStyle = `rgba(16, 185, 129, ${pulse * 0.25})`;
+                    ctx.lineWidth = 1.25;
+                    ctx.stroke();
+                    ctx.restore();
+                  });
+                } else {
+                  anyShiny = beatBothMask.some(Boolean);
+                }
+                if (anyShiny) {
+                  // During pulse: ~12fps redraw. During rest: wake up when the
+                  // next pulse starts instead of ticking uselessly.
+                  const delay = inPulse ? 80 : Math.max(cycleMs - t, 50);
+                  setTimeout(() => {
+                    if (chart.ctx) chart.draw();
+                  }, delay);
+                }
+              },
+            },
             ChartjsPluginWatermark,
           ]}
         />
@@ -314,7 +408,10 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
         {alerts && <AlertsDisclaimer alerts={alerts} />}
         <div className="flex flex-row items-end gap-4">
           {showLegend && benchmarkField ? (
-            <LegendSingleDay showUnderRatio={showUnderRatio} />
+            <LegendSingleDay
+              showUnderRatio={showUnderRatio}
+              showTmBenchmark={!!tmBenchmarkField && displayTmBenchmarkData}
+            />
           ) : (
             <div className="w-full" />
           )}

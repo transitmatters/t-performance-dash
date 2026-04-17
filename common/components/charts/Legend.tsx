@@ -6,6 +6,7 @@ import { useDelimitatedRoute } from '../../utils/router';
 
 interface LegendProps {
   showUnderRatio?: boolean;
+  showTmBenchmark?: boolean;
 }
 
 interface LegendLongTermProps {
@@ -13,7 +14,7 @@ interface LegendLongTermProps {
   onToggleTrendline: () => void;
 }
 
-export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio }) => {
+export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio, showTmBenchmark }) => {
   const { line } = useDelimitatedRoute();
   return (
     <Disclosure>
@@ -31,7 +32,7 @@ export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio }) => {
                 'grid w-full grid-cols-2 items-baseline p-1 px-4 text-left text-xs lg:flex lg:flex-row lg:gap-4'
               }
             >
-              <LegendSingle showUnderRatio={showUnderRatio} />
+              <LegendSingle showUnderRatio={showUnderRatio} showTmBenchmark={showTmBenchmark} />
             </div>
 
             <div
@@ -54,7 +55,10 @@ export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio }) => {
   );
 };
 
-const LegendSingle: React.FC<LegendProps> = ({ showUnderRatio = false }) => {
+const LegendSingle: React.FC<LegendProps> = ({
+  showUnderRatio = false,
+  showTmBenchmark = false,
+}) => {
   return (
     <>
       <div className="col-span-2 flex flex-row items-baseline gap-2 pb-1 italic lg:pb-0">
@@ -84,6 +88,18 @@ const LegendSingle: React.FC<LegendProps> = ({ showUnderRatio = false }) => {
         ></span>{' '}
         {'100%+ off'}
       </p>
+      {showTmBenchmark && (
+        <>
+          <p>
+            <span className="mr-1 inline-block h-0 w-3 border-t-2 border-dashed border-[#c3314980] align-middle"></span>{' '}
+            TransitMatters benchmark
+          </p>
+          <p>
+            <span className="mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[rgba(16,185,129,0.6)] bg-[#64b96a] shadow-[0_0_4px_rgba(16,185,129,0.7)]"></span>{' '}
+            Beat both benchmarks
+          </p>
+        </>
+      )}
     </>
   );
 };

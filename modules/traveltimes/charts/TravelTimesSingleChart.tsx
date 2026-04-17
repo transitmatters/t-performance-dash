@@ -37,6 +37,7 @@ export const TravelTimesSingleChart: React.FC<TravelTimesSingleChartProps> = ({
         metricField={MetricFieldKeys.travelTimeSec}
         pointField={PointFieldKeys.depDt}
         benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
+        tmBenchmarkField={BenchmarkFieldKeys.tmBenchmarkTravelTimeSec}
         includeBothStopsForLocation={true}
         units="Minutes"
         location={getLocationDetails(fromStation, toStation)}
