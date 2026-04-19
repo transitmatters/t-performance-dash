@@ -1,4 +1,4 @@
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faChevronUp, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Disclosure } from '@headlessui/react';
 import React from 'react';
@@ -6,7 +6,7 @@ import { useDelimitatedRoute } from '../../utils/router';
 
 interface LegendProps {
   showUnderRatio?: boolean;
-  showTmBenchmark?: boolean;
+  usingTmBenchmark?: boolean;
 }
 
 interface LegendLongTermProps {
@@ -14,7 +14,7 @@ interface LegendLongTermProps {
   onToggleTrendline: () => void;
 }
 
-export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio, showTmBenchmark }) => {
+export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio, usingTmBenchmark }) => {
   const { line } = useDelimitatedRoute();
   return (
     <Disclosure>
@@ -32,7 +32,7 @@ export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio, showTmB
                 'grid w-full grid-cols-2 items-baseline p-1 px-4 text-left text-xs lg:flex lg:flex-row lg:gap-4'
               }
             >
-              <LegendSingle showUnderRatio={showUnderRatio} showTmBenchmark={showTmBenchmark} />
+              <LegendSingle showUnderRatio={showUnderRatio} usingTmBenchmark={usingTmBenchmark} />
             </div>
 
             <div
@@ -57,7 +57,7 @@ export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio, showTmB
 
 const LegendSingle: React.FC<LegendProps> = ({
   showUnderRatio = false,
-  showTmBenchmark = false,
+  usingTmBenchmark = false,
 }) => {
   return (
     <>
@@ -65,7 +65,16 @@ const LegendSingle: React.FC<LegendProps> = ({
         <p>
           Compare to{' '}
           <span className="top-[1px] inline-block h-2.5 w-2.5 items-center border-t-2 border-[#bbb] bg-[#ddd] shadow-sm"></span>{' '}
-          MBTA benchmark:
+          benchmark:
+          {usingTmBenchmark && (
+            <span
+              className="ml-2 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium not-italic text-emerald-700 ring-1 ring-emerald-200"
+              title="Where we have enough historical data (>= 1 year of trips), the benchmark uses the TransitMatters value — a reasonable floor derived from 10+ years of p50 travel times, capped at the MBTA's scheduled time. Otherwise we fall back to the MBTA benchmark."
+            >
+              <FontAwesomeIcon icon={faCircleInfo} />
+              TransitMatters benchmark in use
+            </span>
+          )}
         </p>
       </div>
       <p>
@@ -88,18 +97,6 @@ const LegendSingle: React.FC<LegendProps> = ({
         ></span>{' '}
         {'100%+ off'}
       </p>
-      {showTmBenchmark && (
-        <>
-          <p>
-            <span className="mr-1 inline-block h-0 w-3 border-t-2 border-dashed border-[#c3314980] align-middle"></span>{' '}
-            TransitMatters benchmark
-          </p>
-          <p>
-            <span className="mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[rgba(16,185,129,0.6)] bg-[#64b96a] shadow-[0_0_4px_rgba(16,185,129,0.7)]"></span>{' '}
-            Beat both benchmarks
-          </p>
-        </>
-      )}
     </>
   );
 };
