@@ -1,4 +1,4 @@
-import { faChevronDown, faChevronUp, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Disclosure } from '@headlessui/react';
 import React from 'react';
@@ -65,16 +65,7 @@ const LegendSingle: React.FC<LegendProps> = ({
         <p>
           Compare to{' '}
           <span className="top-[1px] inline-block h-2.5 w-2.5 items-center border-t-2 border-[#bbb] bg-[#ddd] shadow-sm"></span>{' '}
-          benchmark:
-          {usingTmBenchmark && (
-            <span
-              className="ml-2 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium not-italic text-emerald-700 ring-1 ring-emerald-200"
-              title="Where we have enough historical data (>= 1 year of trips), the benchmark uses the TransitMatters value — a reasonable floor derived from 10+ years of p50 travel times, capped at the MBTA's scheduled time. Otherwise we fall back to the MBTA benchmark."
-            >
-              <FontAwesomeIcon icon={faCircleInfo} />
-              TransitMatters benchmark in use
-            </span>
-          )}
+          {usingTmBenchmark ? 'TransitMatters' : 'MBTA'} benchmark:
         </p>
       </div>
       <p>

@@ -61,24 +61,29 @@ const pointColors = (
   });
 };
 
-const departureFromNormalString = (metric: number, benchmark: number, showUnderRatio?: boolean) => {
+const departureFromNormalString = (
+  metric: number,
+  benchmark: number,
+  showUnderRatio?: boolean,
+  referenceWord: 'schedule' | 'benchmark' = 'schedule'
+) => {
   // Handle invalid benchmark values
   if (!benchmark || typeof benchmark !== 'number' || !Number.isFinite(benchmark)) {
     return '';
   }
   const ratio = metric / benchmark;
   if (showUnderRatio && ratio <= 0.5) {
-    return '50%+ under schedule';
+    return `50%+ under ${referenceWord}`;
   } else if (showUnderRatio && ratio <= 0.75) {
-    return '25%+ under schedule';
+    return `25%+ under ${referenceWord}`;
   } else if (!isFinite(ratio) || ratio <= 1.25) {
     return '';
   } else if (ratio <= 1.5) {
-    return '25%+ over schedule';
+    return `25%+ over ${referenceWord}`;
   } else if (ratio <= 2.0) {
-    return '50%+ over schedule';
+    return `50%+ over ${referenceWord}`;
   } else if (ratio > 2.0) {
-    return '100%+ over schedule';
+    return `100%+ over ${referenceWord}`;
   }
   return '';
 };
@@ -175,7 +180,10 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 data: convertedData,
               },
               {
-                label: `Benchmark`,
+                // Dataset label switches based on whether any point on this
+                // chart uses the TM value. The tooltip overrides this per
+                // point to get the exact name right for each hover.
+                label: usingTmBenchmark ? `TransitMatters Benchmark` : `MBTA Benchmark`,
                 backgroundColor: '#a0a0a030',
                 data: effectiveBenchmarkFormatted,
                 pointRadius: 0,
@@ -196,11 +204,22 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 position: 'nearest',
                 callbacks: {
                   label: (tooltipItem) => {
-                    const isBenchmark = tooltipItem.dataset.label === 'Benchmark';
+                    const datasetLabel = tooltipItem.dataset.label ?? '';
+                    const isBenchmark =
+                      datasetLabel === 'MBTA Benchmark' ||
+                      datasetLabel === 'TransitMatters Benchmark';
                     if (!tooltipItem.parsed.y || (tooltipItem.parsed.y === 0 && isBenchmark)) {
                       return '';
                     }
-                    return `${tooltipItem.dataset.label}: ${
+                    // Per-point label: a chart in "TM mode" can still have
+                    // individual points that fell back to MBTA; name each
+                    // point's benchmark source honestly.
+                    const displayLabel = isBenchmark
+                      ? tmBenchmarkData[tooltipItem.dataIndex] != null
+                        ? 'TransitMatters Benchmark'
+                        : 'MBTA Benchmark'
+                      : datasetLabel;
+                    return `${displayLabel}: ${
                       units === 'Minutes'
                         ? getFormattedTimeString(tooltipItem.parsed.y, 'minutes')
                         : `${tooltipItem.parsed.y} ${units}`
@@ -209,11 +228,16 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   afterBody: (tooltipItems) => {
                     const result: string[] = [];
 
-                    const benchmarkItem = tooltipItems.find((t) => t.dataset.label === 'Benchmark');
+                    const benchmarkItem = tooltipItems.find(
+                      (t) =>
+                        t.dataset.label === 'MBTA Benchmark' ||
+                        t.dataset.label === 'TransitMatters Benchmark'
+                    );
                     const departureInfo = departureFromNormalString(
                       tooltipItems[0].parsed.y ?? 0,
                       benchmarkItem?.parsed.y ?? 0,
-                      showUnderRatio
+                      showUnderRatio,
+                      usingTmBenchmark ? 'benchmark' : 'schedule'
                     );
                     if (departureInfo) {
                       result.push(departureInfo);
