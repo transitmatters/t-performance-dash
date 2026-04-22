@@ -9,6 +9,10 @@ import { CHART_COLORS, COLORS } from '../../constants/colors';
 import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
 import type { SingleDayLineProps } from '../../types/charts';
 import { getAlertAnnotations } from '../../../modules/service/utils/graphUtils';
+import { getWeatherAnnotations } from '../../../modules/weather/utils/weatherAnnotations';
+import { useWeatherData } from '../../api/hooks/weather';
+import { useWeatherStore } from '../../../modules/weather/WeatherStore';
+import { WeatherDisclaimer } from '../../../modules/weather/WeatherDisclaimer';
 import { prettyDate } from '../../utils/date';
 import { DownloadButton } from '../buttons/DownloadButton';
 import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
@@ -105,6 +109,14 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const ref = useRef();
   const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);
   const alertAnnotations = date && alerts ? getAlertAnnotations(alerts, date) : [];
+  const weatherEnabled = useWeatherStore((s) => s.enabled);
+  const { data: weather, isLoading: isWeatherLoading } = useWeatherData(
+    { start_date: date, end_date: date },
+    Boolean(date)
+  );
+  const weatherAnnotations = weatherEnabled
+    ? getWeatherAnnotations(weather ?? [], { granularity: 'hourly' })
+    : [];
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
 
@@ -243,7 +255,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               },
               annotation: {
                 // Add your annotations here
-                annotations: alertAnnotations,
+                annotations: [...alertAnnotations, ...weatherAnnotations],
               },
             },
             scales: {
@@ -312,6 +324,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
       </ChartDiv>
       <div className="flex flex-col">
         {alerts && <AlertsDisclaimer alerts={alerts} />}
+        {date && <WeatherDisclaimer hours={weather} isLoading={isWeatherLoading} />}
         <div className="flex flex-row items-end gap-4">
           {showLegend && benchmarkField ? (
             <LegendSingleDay showUnderRatio={showUnderRatio} />

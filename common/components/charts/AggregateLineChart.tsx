@@ -14,6 +14,10 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
 import { getFormattedTimeString } from '../../utils/time';
+import { getWeatherAnnotations } from '../../../modules/weather/utils/weatherAnnotations';
+import { useWeatherData } from '../../api/hooks/weather';
+import { useWeatherStore } from '../../../modules/weather/WeatherStore';
+import { WeatherDisclaimer } from '../../../modules/weather/WeatherDisclaimer';
 import { LegendLongTerm } from './Legend';
 import { ChartBorder } from './ChartBorder';
 import { ChartDiv } from './ChartDiv';
@@ -78,6 +82,13 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
 }) => {
   const ref = useRef();
   const hourly = timeUnit === 'hour';
+  const weatherEnabled = useWeatherStore((s) => s.enabled);
+  const { data: weather, isLoading: isWeatherLoading } = useWeatherData(
+    { start_date: startDate, end_date: endDate },
+    !hourly && Boolean(startDate && endDate)
+  );
+  const weatherBlocks =
+    hourly || !weatherEnabled ? [] : getWeatherAnnotations(weather ?? [], { granularity: 'daily' });
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const [isTrendlineVisible, setIsTrendlineVisible] = useState(false);
@@ -193,6 +204,9 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
             },
             watermark: watermarkLayout(isMobile),
             plugins: {
+              annotation: {
+                annotations: weatherBlocks,
+              },
               legend: {
                 display: false,
               },
@@ -225,33 +239,38 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           ]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end gap-4">
-        {showLegend && (
-          <LegendLongTerm
-            isTrendlineVisible={isTrendlineVisible}
-            onToggleTrendline={() => setIsTrendlineVisible(!isTrendlineVisible)}
-          />
+      <div className="flex flex-col">
+        {!hourly && startDate && endDate && (
+          <WeatherDisclaimer hours={weather} isLoading={isWeatherLoading} />
         )}
-        {startDate && (
-          <>
-            <SaveChartImageButton
-              chartRef={ref}
-              datasetName={fname}
-              location={location}
-              includeBothStopsForLocation={includeBothStopsForLocation}
-              startDate={startDate}
-              endDate={endDate}
-              chartTitle={chartTitle}
+        <div className="flex flex-row items-end gap-4">
+          {showLegend && (
+            <LegendLongTerm
+              isTrendlineVisible={isTrendlineVisible}
+              onToggleTrendline={() => setIsTrendlineVisible(!isTrendlineVisible)}
             />
-            <DownloadButton
-              data={data}
-              datasetName={fname}
-              location={location}
-              includeBothStopsForLocation={includeBothStopsForLocation}
-              startDate={startDate}
-            />
-          </>
-        )}
+          )}
+          {startDate && (
+            <>
+              <SaveChartImageButton
+                chartRef={ref}
+                datasetName={fname}
+                location={location}
+                includeBothStopsForLocation={includeBothStopsForLocation}
+                startDate={startDate}
+                endDate={endDate}
+                chartTitle={chartTitle}
+              />
+              <DownloadButton
+                data={data}
+                datasetName={fname}
+                location={location}
+                includeBothStopsForLocation={includeBothStopsForLocation}
+                startDate={startDate}
+              />
+            </>
+          )}
+        </div>
       </div>
     </ChartBorder>
   );

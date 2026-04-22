@@ -101,6 +101,18 @@ class ServiceHoursParams(BaseModel):
     agg: str
 
 
+class WeatherParams(BaseModel):
+    """Parameters for the `/api/weather` endpoint.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+    """
+
+    start_date: date
+    end_date: date
+
+
 #################################################
 # API Response Models
 #################################################
@@ -302,6 +314,37 @@ class RidershipResponse(BaseModel):
 
     model_config = ConfigDict(extra="allow")
     data: List[RidershipEntry]
+
+
+# Weather
+class WeatherHourlyEntry(BaseModel):
+    """A single hour's weather observation.
+
+    Attributes:
+        timestamp: Local-time ISO hour string (America/New_York, no offset),
+            e.g. "2026-04-22T14:00".
+        temperature_f: Air temperature in °F.
+        weather_code: Raw WMO weather code from Open-Meteo.
+        condition: Coarse label — one of clear, cloudy, fog, rain, snow, storm, unknown.
+        precipitation_in: Precipitation in inches for the hour.
+        humidity_pct: Relative humidity at 2m (0–100).
+        wind_mph: Wind speed at 10m in mph.
+    """
+
+    timestamp: str
+    temperature_f: float | None = None
+    weather_code: int | None = None
+    condition: str | None = None
+    precipitation_in: float | None = None
+    humidity_pct: int | None = None
+    wind_mph: float | None = None
+
+
+class WeatherResponse(BaseModel):
+    """Response for `/api/weather` — flat list of hourly observations sorted by timestamp."""
+
+    model_config = ConfigDict(extra="allow")
+    data: List[WeatherHourlyEntry]
 
 
 # Service and Scheduling
