@@ -146,6 +146,7 @@ export const useTripExplorerQueries: UseQueriesOverload = (
     return {
       [QueryNameKeys.traveltimes]: requests[0],
       [QueryNameKeys.headways]: requests[1],
+      [QueryNameKeys.dwells]: requests[2],
     };
   }
 
