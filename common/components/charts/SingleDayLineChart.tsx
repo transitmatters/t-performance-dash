@@ -9,6 +9,14 @@ import { CHART_COLORS, COLORS } from '../../constants/colors';
 import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
 import type { SingleDayLineProps } from '../../types/charts';
 import { getAlertAnnotations } from '../../../modules/service/utils/graphUtils';
+import { getWeatherAnnotations } from '../../../modules/weather/utils/weatherAnnotations';
+import {
+  TEMPERATURE_LINE_COLOR,
+  getHourlyTemperatureSeries,
+} from '../../../modules/weather/utils/temperatureDataset';
+import { useWeatherData } from '../../api/hooks/weather';
+import { useWeatherStore } from '../../../modules/weather/WeatherStore';
+import { WeatherDisclaimer } from '../../../modules/weather/WeatherDisclaimer';
 import { prettyDate } from '../../utils/date';
 import { DownloadButton } from '../buttons/DownloadButton';
 import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
@@ -105,6 +113,19 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const ref = useRef();
   const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);
   const alertAnnotations = date && alerts ? getAlertAnnotations(alerts, date) : [];
+  const weatherEnabled = useWeatherStore((s) => s.enabled);
+  const tempEnabled = useWeatherStore((s) => s.temperatureEnabled);
+  const { data: weather, isLoading: isWeatherLoading } = useWeatherData(
+    { start_date: date, end_date: date },
+    Boolean(date)
+  );
+  const weatherAnnotations = weatherEnabled
+    ? getWeatherAnnotations(weather ?? [], { granularity: 'hourly' })
+    : [];
+  const temperaturePoints = useMemo(
+    () => (tempEnabled && weather ? getHourlyTemperatureSeries(weather) : []),
+    [tempEnabled, weather]
+  );
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
 
@@ -128,6 +149,45 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
     ((datapoint[metricField] as number) * multiplier).toFixed(2)
   );
 
+  const datasets: Array<Record<string, unknown>> = [
+    {
+      label: `Actual`,
+      fill: false,
+      borderColor: '#a0a0a030',
+      pointBackgroundColor: pointColors(data, metricField, benchmarkField, showUnderRatio),
+      pointHoverRadius: 3,
+      pointHoverBackgroundColor: pointColors(data, metricField, benchmarkField, showUnderRatio),
+      pointRadius: 3,
+      pointHitRadius: 10,
+      data: convertedData,
+    },
+    {
+      label: `Benchmark MBTA`,
+      backgroundColor: '#a0a0a030',
+      data: benchmarkDataFormatted,
+      pointRadius: 0,
+      pointHoverRadius: 3,
+      fill: true,
+      hidden: !displayBenchmarkData,
+    },
+  ];
+
+  if (temperaturePoints.length > 0) {
+    datasets.push({
+      label: 'Temperature',
+      data: temperaturePoints,
+      yAxisID: 'yTemp',
+      borderColor: TEMPERATURE_LINE_COLOR,
+      borderWidth: 2,
+      pointRadius: 0,
+      pointHoverRadius: 3,
+      pointHoverBackgroundColor: TEMPERATURE_LINE_COLOR,
+      fill: false,
+      tension: 0.3,
+      spanGaps: true,
+    });
+  }
+
   return (
     <ChartBorder>
       <ChartDiv isMobile={isMobile}>
@@ -138,38 +198,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
           redraw={true}
           data={{
             labels,
-            datasets: [
-              {
-                label: `Actual`,
-                fill: false,
-                borderColor: '#a0a0a030',
-                pointBackgroundColor: pointColors(
-                  data,
-                  metricField,
-                  benchmarkField,
-                  showUnderRatio
-                ),
-                pointHoverRadius: 3,
-                pointHoverBackgroundColor: pointColors(
-                  data,
-                  metricField,
-                  benchmarkField,
-                  showUnderRatio
-                ),
-                pointRadius: 3,
-                pointHitRadius: 10,
-                data: convertedData,
-              },
-              {
-                label: `Benchmark MBTA`,
-                backgroundColor: '#a0a0a030',
-                data: benchmarkDataFormatted,
-                pointRadius: 0,
-                pointHoverRadius: 3,
-                fill: true,
-                hidden: !displayBenchmarkData,
-              },
-            ],
+            // @ts-expect-error mixed data shapes (string[] and {x,y}[]) in one chart
+            datasets,
           }}
           options={{
             responsive: true,
@@ -188,6 +218,9 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                     ) {
                       return '';
                     }
+                    if ((tooltipItem.dataset as { yAxisID?: string }).yAxisID === 'yTemp') {
+                      return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y} °F`;
+                    }
                     return `${tooltipItem.dataset.label}: ${
                       units === 'Minutes'
                         ? getFormattedTimeString(tooltipItem.parsed.y, 'minutes')
@@ -198,9 +231,13 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                     const result: string[] = [];
 
                     // Add departure from normal information
+                    const actualItem = tooltipItems.find((t) => t.dataset.label === 'Actual');
+                    const benchmarkItem = tooltipItems.find(
+                      (t) => t.dataset.label === 'Benchmark MBTA'
+                    );
                     const departureInfo = departureFromNormalString(
-                      tooltipItems[0].parsed.y ?? 0,
-                      tooltipItems[1]?.parsed.y ?? 0,
+                      actualItem?.parsed.y ?? 0,
+                      benchmarkItem?.parsed.y ?? 0,
                       showUnderRatio
                     );
                     if (departureInfo) {
@@ -208,7 +245,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                     }
 
                     // Add vehicle consist information if available
-                    const { dataIndex } = tooltipItems[0];
+                    const { dataIndex } = actualItem ?? tooltipItems[0];
                     const dataPoint = data[dataIndex];
                     if (dataPoint?.vehicle_consist) {
                       const arrNums = dataPoint.vehicle_consist.split('|').map(Number);
@@ -243,7 +280,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               },
               annotation: {
                 // Add your annotations here
-                annotations: alertAnnotations,
+                annotations: [...alertAnnotations, ...weatherAnnotations],
               },
             },
             scales: {
@@ -261,6 +298,19 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   display: true,
                   text: units,
                   color: COLORS.design.subtitleGrey,
+                },
+              },
+              yTemp: {
+                type: 'linear',
+                position: 'right',
+                display: tempEnabled,
+                title: {
+                  display: true,
+                  text: '°F',
+                  color: COLORS.design.subtitleGrey,
+                },
+                grid: {
+                  drawOnChartArea: false,
                 },
               },
               x: {
@@ -312,6 +362,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
       </ChartDiv>
       <div className="flex flex-col">
         {alerts && <AlertsDisclaimer alerts={alerts} />}
+        {date && <WeatherDisclaimer hours={weather} isLoading={isWeatherLoading} />}
         <div className="flex flex-row items-end gap-4">
           {showLegend && benchmarkField ? (
             <LegendSingleDay showUnderRatio={showUnderRatio} />
