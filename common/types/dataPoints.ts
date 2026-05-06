@@ -45,6 +45,7 @@ export interface DayDelayTotals {
   Orange: number;
   Red: number;
   Green: number;
+  Mattapan: number;
 }
 
 export type Direction = 'northbound' | 'southbound';
@@ -105,6 +106,7 @@ export interface DeliveredTripMetrics {
   total_time: number;
   count: number;
   miles_per_hour?: string;
+  avg_car_age?: number;
 }
 
 export type LineSegmentData = {
