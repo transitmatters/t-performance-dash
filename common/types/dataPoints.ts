@@ -11,6 +11,7 @@ export interface TravelTimePoint extends DataPoint {
   arr_dt: string;
   travel_time_sec: number;
   benchmark_travel_time_sec: number;
+  tm_benchmark_travel_time_sec?: number | null;
   threshold_flag_1?: string;
   threshold_flag_2?: string;
   threshold_flag_3?: string;

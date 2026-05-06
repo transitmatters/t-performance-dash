@@ -10,7 +10,7 @@ from chalicelib.constants import EVENT_ARRIVAL, EVENT_DEPARTURE
 
 import itertools
 import math
-from chalicelib import date_utils
+from chalicelib import date_utils, tm_benchmarks
 
 
 def pairwise(iterable):
@@ -234,6 +234,9 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
 
         # not every vehicle will have vehicle_consist
         vehicle_consist = departure.get("vehicle_consist")
+        tm_benchmark = tm_benchmarks.get_travel_time_benchmark(
+            departure["route_id"], departure["stop_id"], arrival["stop_id"]
+        )
         travel_times.append(
             {
                 "route_id": departure["route_id"],
@@ -242,6 +245,7 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
                 "arr_dt": date_utils.return_formatted_date(arr_dt),
                 "travel_time_sec": travel_time_sec,
                 "benchmark_travel_time_sec": benchmark,
+                "tm_benchmark_travel_time_sec": tm_benchmark,
                 "vehicle_consist": vehicle_consist,
                 "vehicle_label": departure["vehicle_label"],
             }
