@@ -15,6 +15,8 @@ import { ChartBorder } from '../../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { PEAK_SPEED } from '../../../common/constants/baselines';
 import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
+import { getWeatherAnnotations } from '../../weather/utils/weatherAnnotations';
+import { useWeatherData } from '../../../common/api/hooks/weather';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { addMPHToSpeedData } from '../../../common/utils/csv';
@@ -42,6 +44,11 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   const shuttlingBlocks = getShuttlingBlockAnnotations(data);
+  const { data: weather } = useWeatherData(
+    { start_date: startDate, end_date: endDate },
+    Boolean(startDate && endDate)
+  );
+  const weatherBlocks = getWeatherAnnotations(weather ?? [], { granularity: 'daily' });
   const dataWithMPH = addMPHToSpeedData(data);
 
   return (
@@ -129,6 +136,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                     borderWidth: 2,
                   },
                   ...shuttlingBlocks,
+                  ...weatherBlocks,
                 ],
               },
             },

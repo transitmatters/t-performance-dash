@@ -26,6 +26,7 @@ from chalicelib import (
     speed,
     speed_restrictions,
     static_data,
+    weather,
 )
 
 
@@ -460,6 +461,31 @@ def get_ridership():
             end_date=end_date,
             line_id=line_id,
         )
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
+    "/api/weather",
+    cors=cors_config,
+    docs=Docs(request=models.WeatherParams, response=models.WeatherResponse),
+)
+def get_weather():
+    """Retrieve hourly weather observations for a date range (downtown Boston)."""
+    query_params = app.current_request.query_params or {}
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_weather(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/weather", query_params)
+    else:
+        start_date = parse_user_date(query_params["start_date"])
+        end_date = parse_user_date(query_params["end_date"])
+        data = weather.get_weather(start_date=start_date, end_date=end_date)
 
     return Response(
         body=json.dumps(data),
