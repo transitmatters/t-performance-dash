@@ -139,9 +139,11 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const usingTmBenchmark = tmBenchmarkData.some((d) => d !== null);
 
   const multiplier = units === 'Minutes' ? 1 / 60 : 1;
-  const effectiveBenchmarkFormatted = effectiveBenchmarkData
-    .map((d) => (d !== null ? (d * multiplier).toFixed(2) : null))
-    .filter((d) => d !== null);
+  // Keep nulls in place so Chart.js renders gaps at those points rather than
+  // compressing the array and misaligning the benchmark line against labels.
+  const effectiveBenchmarkFormatted = effectiveBenchmarkData.map((d) =>
+    d !== null ? (d * multiplier).toFixed(2) : null
+  );
 
   const convertedData = data.map((datapoint) =>
     ((datapoint[metricField] as number) * multiplier).toFixed(2)

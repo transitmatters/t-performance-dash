@@ -64,3 +64,26 @@ def get_travel_time_benchmark(route_id: str, from_stop: str, to_stop: str) -> Op
     if color is None:
         return None
     return _benchmarks_for_color(color).get(f"{from_stop}|{to_stop}")
+
+
+def resolve_travel_time_benchmark(from_stops: list[str], to_stops: list[str]) -> Optional[int]:
+    """Look up the TM travel-time benchmark for a station-level (from, to) pair.
+
+    Stations like Park Street westbound have multiple stop IDs, one per Green
+    Line branch platform (70196-70199). The TM benchmarks archive is keyed per
+    individual stop ID, typically the canonical one used by slow-zones. To
+    smooth over these sibling platforms, we try every combination of the
+    provided from/to stop IDs against every rapid-transit color file and take
+    the first match. Returns None if nothing matches.
+    """
+    if not from_stops or not to_stops:
+        return None
+    colors = set(ROUTE_ID_TO_COLOR.values())
+    for color in colors:
+        benchmarks = _benchmarks_for_color(color)
+        for fr in from_stops:
+            for to in to_stops:
+                value = benchmarks.get(f"{fr}|{to}")
+                if value is not None:
+                    return value
+    return None
