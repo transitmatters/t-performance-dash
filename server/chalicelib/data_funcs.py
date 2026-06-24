@@ -197,19 +197,20 @@ def alerts(day: date, params):
 
     Args:
       day: date: The date to fetch alerts for.
-      params: Dict containing "route" key with route ID(s).
+      params: Dict optionally containing "route" key with route ID(s). Omitting it returns all alerts.
 
     Returns:
       list[dict] | None: Flattened alert entries, or None if no data is available.
     """
     try:
         # Use the API for today and yesterday's transit day, otherwise us.
+        routes = params.get("route")
         if day >= WE_HAVE_V2_ALERTS_SINCE and day <= WE_HAVE_V3_ALERTS_SINCE:
             # This is stupid because we're emulating MBTA-performance ick
-            alert_items = s3_alerts.get_v2_alerts(day, params["route"])
+            alert_items = s3_alerts.get_v2_alerts(day, routes)
         elif day >= WE_HAVE_V3_ALERTS_SINCE:
             # fetch s3 v3 data
-            alert_items = s3_alerts.get_v3_alerts(day, params["route"])
+            alert_items = s3_alerts.get_v3_alerts(day, routes)
         else:
             return None
 

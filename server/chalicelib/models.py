@@ -20,11 +20,13 @@ class AlertDelaysByLineParams(BaseModel):
         start_date: Start of date range (YYYY-MM-DD).
         end_date: End of date range (YYYY-MM-DD).
         line: Line identifier (e.g., `Red`, `Orange`, `Green-B`).
+        agg: Aggregation level — `daily` or `weekly`. Defaults to `weekly`.
     """
 
     start_date: Union[str, date]
     end_date: Union[str, date]
     line: str
+    agg: str = "weekly"
 
 
 class TripMetricsByLineParams(BaseModel):
@@ -73,29 +75,39 @@ class RidershipParams(BaseModel):
     line_id: str | None = None
 
 
+class TimePredictionParams(BaseModel):
+    """Parameters for the `/api/time_predictions` endpoint.
+
+    Attributes:
+        route_id: Route identifier (e.g., `Red`, `CR-Fairmount`).
+    """
+
+    route_id: str
+
+
 class SpeedRestrictionsParams(BaseModel):
     """Parameters for the `/api/speed_restrictions` endpoint.
 
     Attributes:
         line_id: Line identifier (e.g., `Red`, `Orange`).
-        on_date: Date to query (YYYY-MM-DD).
+        date: Date to query (YYYY-MM-DD).
     """
 
     line_id: str
-    on_date: str
+    date: str
 
 
 class ServiceHoursParams(BaseModel):
     """Parameters for the `/api/service_hours` endpoint.
 
     Attributes:
-        single_route_id: Optional route filter. `None` returns all routes.
+        line_id: Optional line filter. `None` returns all lines.
         start_date: Start of date range.
         end_date: End of date range.
         agg: Aggregation level — `daily`, `weekly`, or `monthly`.
     """
 
-    single_route_id: str | None = None
+    line_id: str | None = None
     start_date: date
     end_date: date
     agg: str
