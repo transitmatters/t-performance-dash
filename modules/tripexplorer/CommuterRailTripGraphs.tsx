@@ -11,6 +11,8 @@ import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregate
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
 import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
+import { DwellsAggregateWrapper } from '../dwells/DwellsAggregateWrapper';
+import { DwellsSingleWrapper } from '../dwells/DwellsSingleWrapper';
 import { WidgetTitle } from '../../common/components/widgets';
 
 interface CommuterRailTripGraphsProps {
@@ -32,7 +34,7 @@ export const CommuterRailTripGraphs: React.FC<CommuterRailTripGraphsProps> = ({
 }) => {
   const [peakTime, setPeakTime] = React.useState<'weekday' | 'weekend'>('weekday');
 
-  const { traveltimes, headways } = useTripExplorerQueries(
+  const { traveltimes, headways, dwells } = useTripExplorerQueries(
     'cr',
     parameters,
     // @ts-expect-error The overloading doesn't seem to handle this const
@@ -69,6 +71,19 @@ export const CommuterRailTripGraphs: React.FC<CommuterRailTripGraphsProps> = ({
 
             <HeadwaysAggregateWrapper
               query={headways}
+              fromStation={fromStation}
+              toStation={toStation}
+            />
+          </WidgetDiv>
+          <WidgetDiv>
+            <WidgetTitle
+              title="Dwells"
+              subtitle="Time spent at station"
+              location={location}
+              line={line}
+            />
+            <DwellsAggregateWrapper
+              query={dwells}
               fromStation={fromStation}
               toStation={toStation}
             />
@@ -126,6 +141,15 @@ export const CommuterRailTripGraphs: React.FC<CommuterRailTripGraphsProps> = ({
               toStation={toStation}
               fromStation={fromStation}
             />
+          </WidgetDiv>
+          <WidgetDiv>
+            <WidgetTitle
+              title="Dwells"
+              subtitle="Time spent at station"
+              location={location}
+              line={line}
+            />
+            <DwellsSingleWrapper query={dwells} toStation={toStation} fromStation={fromStation} />
           </WidgetDiv>
         </>
       )}

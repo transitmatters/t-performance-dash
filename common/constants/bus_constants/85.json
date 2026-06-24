@@ -5,35 +5,118 @@
       "0": "outbound",
       "1": "inbound"
     },
+    "service_start": "2026-04-05",
     "stations": [
       {
-        "stop_name": "Bow Street (Somerville)",
+        "stop_name": "Ruggles",
         "branches": null,
-        "station": "bwsvl",
+        "station": "rugg",
         "order": 1,
         "stops": {
-          "1": ["85-1-2574", "85-1-2519"],
-          "0": ["85-0-2574", "85-0-2519"]
+          "1": [
+            "85-1-17871"
+          ],
+          "0": [
+            "85-0-17871"
+          ]
         }
       },
       {
-        "stop_name": "Union Square",
+        "stop_name": "Boston Children's Hospital on Longwood Avenue",
         "branches": null,
-        "station": "unsqu",
+        "station": "child",
         "order": 2,
         "stops": {
-          "1": ["85-1-2510"],
-          "0": ["85-0-2528"]
+          "1": [
+            "85-1-1780"
+          ],
+          "0": [
+            "85-0-11803"
+          ]
+        }
+      },
+      {
+        "stop_name": "Fenway Station",
+        "branches": null,
+        "station": "fenwy",
+        "order": 3,
+        "stops": {
+          "1": [
+            "85-1-9434"
+          ],
+          "0": [
+            "85-0-1807"
+          ]
+        }
+      },
+      {
+        "stop_name": "Vassar @ Memorial Drive",
+        "branches": null,
+        "station": "vasme",
+        "order": 4,
+        "stops": {
+          "1": [
+            "85-1-22173"
+          ],
+          "0": [
+            "85-0-21772"
+          ]
         }
       },
       {
         "stop_name": "Kendall Station (Busway)",
         "branches": null,
         "station": "kndl",
-        "order": 3,
+        "order": 5,
         "stops": {
-          "1": ["85-1-2231"],
-          "0": ["85-0-2231"]
+          "1": [
+            "85-1-34579"
+          ],
+          "0": [
+            "85-0-12231"
+          ]
+        }
+      },
+      {
+        "stop_name": "Union Square",
+        "branches": null,
+        "station": "unsqu",
+        "order": 6,
+        "stops": {
+          "1": [
+            "85-1-2612"
+          ],
+          "0": [
+            "85-0-2531"
+          ]
+        }
+      },
+      {
+        "stop_name": "Sullivan Square",
+        "branches": null,
+        "station": "sull",
+        "order": 7,
+        "stops": {
+          "1": [
+            "85-1-29005"
+          ],
+          "0": [
+            "85-0-29013"
+          ]
+        }
+      },
+      {
+        "stop_name": "Assembly Mall & Row",
+        "branches": null,
+        "station": "amall",
+        "order": 8,
+        "stops": {
+          "1": [
+            "85-1-28746"
+          ],
+          "0": [
+            "85-0-28745"
+          ]
         }
       }
     ]
