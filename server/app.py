@@ -508,7 +508,7 @@ def get_facilities():
 def get_speed_restrictions():
     """Retrieve speed restriction data for a line on a given date."""
     query_params = app.current_request.query_params or {}
-    validate_query_params(query_params, ["on_date", "line_id"])
+    validate_query_params(query_params, ["date", "line_id"])
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -516,7 +516,7 @@ def get_speed_restrictions():
     elif config.BACKEND_SOURCE == "prod":
         data = static_data.proxy_request("/api/speed_restrictions", query_params)
     else:
-        on_date = query_params["on_date"]
+        on_date = query_params["date"]
         line_id = query_params["line_id"]
         data = speed_restrictions.query_speed_restrictions(
             line_id=line_id,

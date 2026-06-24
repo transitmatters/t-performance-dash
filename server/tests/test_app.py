@@ -162,10 +162,10 @@ class TestSpeedRestrictionsValidation:
         assert result.status_code == 400
 
     def test_missing_line_id_returns_400(self, client):
-        result = client.http.get("/api/speed_restrictions?on_date=2024-01-01")
+        result = client.http.get("/api/speed_restrictions?date=2024-01-01")
         assert result.status_code == 400
 
-    def test_missing_on_date_returns_400(self, client):
+    def test_missing_date_returns_400(self, client):
         result = client.http.get("/api/speed_restrictions?line_id=Red")
         assert result.status_code == 400
 

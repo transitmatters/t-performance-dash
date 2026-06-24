@@ -1007,20 +1007,20 @@
         "type": "object"
       },
       "SpeedRestrictionsParams": {
-        "description": "Parameters for the `/api/speed_restrictions` endpoint.\n\nAttributes:\n    line_id: Line identifier (e.g., `Red`, `Orange`).\n    on_date: Date to query (YYYY-MM-DD).",
+        "description": "Parameters for the `/api/speed_restrictions` endpoint.\n\nAttributes:\n    line_id: Line identifier (e.g., `Red`, `Orange`).\n    date: Date to query (YYYY-MM-DD).",
         "properties": {
           "line_id": {
             "title": "Line Id",
             "type": "string"
           },
-          "on_date": {
-            "title": "On Date",
+          "date": {
+            "title": "Date",
             "type": "string"
           }
         },
         "required": [
           "line_id",
-          "on_date"
+          "date"
         ],
         "title": "SpeedRestrictionsParams",
         "type": "object"

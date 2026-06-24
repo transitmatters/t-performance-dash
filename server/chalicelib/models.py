@@ -90,11 +90,11 @@ class SpeedRestrictionsParams(BaseModel):
 
     Attributes:
         line_id: Line identifier (e.g., `Red`, `Orange`).
-        on_date: Date to query (YYYY-MM-DD).
+        date: Date to query (YYYY-MM-DD).
     """
 
     line_id: str
-    on_date: str
+    date: str
 
 
 class ServiceHoursParams(BaseModel):
