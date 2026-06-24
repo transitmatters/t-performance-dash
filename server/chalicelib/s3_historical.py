@@ -10,7 +10,7 @@ from chalicelib.constants import EVENT_ARRIVAL, EVENT_DEPARTURE
 
 import itertools
 import math
-from chalicelib import date_utils
+from chalicelib import date_utils, tm_benchmarks
 
 
 def pairwise(iterable):
@@ -194,6 +194,14 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
         rows_by_time_a = fut_a.result()
         rows_by_time_b = fut_b.result()
 
+    # Resolve the TM benchmark ONCE for this request using the station-level
+    # stop lists. Multi-platform stations (Park St westbound has 70196-70199)
+    # mean a single chart can contain trips recorded at different platforms;
+    # looking up per-trip would leave non-canonical-platform trips without a
+    # TM value and produce a jagged benchmark band that zig-zags between the
+    # TM floor and the per-trip MBTA fallback.
+    tm_benchmark = tm_benchmarks.resolve_travel_time_benchmark(stops_a, stops_b)
+
     departures = filter(lambda event: event["event_type"] in EVENT_DEPARTURE, rows_by_time_a)
     # we reverse arrivals so that if the same train arrives twice (this can happen),
     # we get the earlier time.
@@ -242,6 +250,7 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
                 "arr_dt": date_utils.return_formatted_date(arr_dt),
                 "travel_time_sec": travel_time_sec,
                 "benchmark_travel_time_sec": benchmark,
+                "tm_benchmark_travel_time_sec": tm_benchmark,
                 "vehicle_consist": vehicle_consist,
                 "vehicle_label": departure["vehicle_label"],
             }
