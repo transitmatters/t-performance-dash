@@ -31,9 +31,9 @@ _ROUTE_ID_DESC = (
 )
 
 _LINE_ID_DESC = (
-    "Line identifier. "
-    "Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. "
-    "Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. "
+    "GTFS line identifier. "
+    "Rapid transit: `line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`. "
+    "Commuter rail: `line-Fairmount`, `line-Lowell`, etc. "
     "Use `/api/routes` to list all valid values."
 )
 
@@ -142,7 +142,13 @@ class AlertDelaysByLineParams(BaseModel):
 
     start_date: Union[str, date] = Field(description=_DATE_RANGE_START_DESC)
     end_date: Union[str, date] = Field(description=_DATE_RANGE_END_DESC)
-    line: str = Field(description=_LINE_ID_DESC)
+    line: str = Field(
+        description=(
+            "MBTA line identifier. "
+            "Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. "
+            "Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc."
+        )
+    )
     agg: str = Field(default="weekly", description="Aggregation period: `daily` or `weekly`.")
 
 
@@ -153,7 +159,7 @@ class TripMetricsByLineParams(BaseModel):
         start_date: Start of date range (YYYY-MM-DD).
         end_date: End of date range (YYYY-MM-DD).
         agg: Aggregation level — `daily`, `weekly`, or `monthly`.
-        line: Line identifier (e.g., `Red`, `Green-B`).
+        line: GTFS line identifier (e.g., `line-red`, `line-green`).
     """
 
     start_date: Union[str, date] = Field(description=_DATE_RANGE_START_DESC)
@@ -216,13 +222,13 @@ class SpeedRestrictionsParams(BaseModel):
     """Parameters for the `/api/speed_restrictions` endpoint.
 
     Attributes:
-        line_id: Line identifier (e.g., `Red`, `Orange`).
+        line_id: GTFS line identifier (e.g., `line-red`, `line-orange`).
         date: Date to query (YYYY-MM-DD).
     """
 
     line_id: str = Field(
         description=(
-            "Rapid transit line identifier: `Red`, `Orange`, `Blue`, or `Green`. "
+            "GTFS rapid transit line identifier: `line-red`, `line-orange`, `line-blue`, or `line-green`. "
             "Speed restriction data is only available for rapid transit lines."
         )
     )

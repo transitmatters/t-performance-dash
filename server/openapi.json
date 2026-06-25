@@ -589,7 +589,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values."
+            "description": "MBTA line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc."
           },
           {
             "in": "query",
@@ -673,7 +673,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values."
+            "description": "GTFS line identifier. Rapid transit: `line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`. Commuter rail: `line-Fairmount`, `line-Lowell`, etc. Use `/api/routes` to list all valid values."
           }
         ]
       }
@@ -839,7 +839,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Rapid transit line identifier: `Red`, `Orange`, `Blue`, or `Green`. Speed restriction data is only available for rapid transit lines."
+            "description": "GTFS rapid transit line identifier: `line-red`, `line-orange`, `line-blue`, or `line-green`. Speed restriction data is only available for rapid transit lines."
           },
           {
             "in": "query",
@@ -881,7 +881,7 @@
               "nullable": true,
               "type": "string"
             },
-            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values. Omit to aggregate all lines."
+            "description": "GTFS line identifier. Rapid transit: `line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`. Commuter rail: `line-Fairmount`, `line-Lowell`, etc. Use `/api/routes` to list all valid values. Omit to aggregate all lines."
           },
           {
             "in": "query",
@@ -1393,7 +1393,7 @@
             "title": "End Date"
           },
           "line": {
-            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values.",
+            "description": "MBTA line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc.",
             "title": "Line",
             "type": "string"
           },
@@ -1429,7 +1429,7 @@
         "type": "object"
       },
       "TripMetricsByLineParams": {
-        "description": "Parameters for the `/api/tripmetrics` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.\n    line: Line identifier (e.g., `Red`, `Green-B`).",
+        "description": "Parameters for the `/api/tripmetrics` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.\n    line: GTFS line identifier (e.g., `line-red`, `line-green`).",
         "properties": {
           "start_date": {
             "anyOf": [
@@ -1463,7 +1463,7 @@
             "type": "string"
           },
           "line": {
-            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values.",
+            "description": "GTFS line identifier. Rapid transit: `line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`. Commuter rail: `line-Fairmount`, `line-Lowell`, etc. Use `/api/routes` to list all valid values.",
             "title": "Line",
             "type": "string"
           }
@@ -1636,10 +1636,10 @@
         "type": "object"
       },
       "SpeedRestrictionsParams": {
-        "description": "Parameters for the `/api/speed_restrictions` endpoint.\n\nAttributes:\n    line_id: Line identifier (e.g., `Red`, `Orange`).\n    date: Date to query (YYYY-MM-DD).",
+        "description": "Parameters for the `/api/speed_restrictions` endpoint.\n\nAttributes:\n    line_id: GTFS line identifier (e.g., `line-red`, `line-orange`).\n    date: Date to query (YYYY-MM-DD).",
         "properties": {
           "line_id": {
-            "description": "Rapid transit line identifier: `Red`, `Orange`, `Blue`, or `Green`. Speed restriction data is only available for rapid transit lines.",
+            "description": "GTFS rapid transit line identifier: `line-red`, `line-orange`, `line-blue`, or `line-green`. Speed restriction data is only available for rapid transit lines.",
             "title": "Line Id",
             "type": "string"
           },
@@ -1688,7 +1688,7 @@
         "properties": {
           "line_id": {
             "default": null,
-            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values. Omit to aggregate all lines.",
+            "description": "GTFS line identifier. Rapid transit: `line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`. Commuter rail: `line-Fairmount`, `line-Lowell`, etc. Use `/api/routes` to list all valid values. Omit to aggregate all lines.",
             "title": "Line Id",
             "nullable": true,
             "type": "string"
