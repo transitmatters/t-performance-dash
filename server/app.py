@@ -142,7 +142,7 @@ def healthcheck():
     )
 
 
-@app.route("/api/headways/{user_date}", cors=cors_config, docs=Docs(response=models.HeadwayResponse))
+@app.route("/api/headways/{user_date}", cors=cors_config, docs=Docs(request=models.HeadwayParams, response=models.HeadwayResponse))
 def headways_route(user_date):
     """Retrieve headway data for the given date and stop(s).
 
@@ -171,7 +171,7 @@ def headways_route(user_date):
     )
 
 
-@app.route("/api/dwells/{user_date}", cors=cors_config, docs=Docs(response=models.DwellResponse))
+@app.route("/api/dwells/{user_date}", cors=cors_config, docs=Docs(request=models.DwellParams, response=models.DwellResponse))
 def dwells_route(user_date):
     """Retrieve dwell time data for the given date and stop(s).
 
@@ -200,7 +200,7 @@ def dwells_route(user_date):
     )
 
 
-@app.route("/api/traveltimes/{user_date}", cors=cors_config, docs=Docs(response=models.TravelTimeResponse))
+@app.route("/api/traveltimes/{user_date}", cors=cors_config, docs=Docs(request=models.TravelTimeParams, response=models.TravelTimeResponse))
 def traveltime_route(user_date):
     """Retrieve travel time data between stop pairs for the given date.
 
@@ -233,7 +233,7 @@ def traveltime_route(user_date):
     )
 
 
-@app.route("/api/alerts/{user_date}", cors=cors_config, docs=Docs(response=models.AlertsRouteResponse))
+@app.route("/api/alerts/{user_date}", cors=cors_config, docs=Docs(request=models.AlertsByDateParams, response=models.AlertsRouteResponse))
 def alerts_route(user_date):
     """Retrieve transit alerts for the given date and route(s).
 
@@ -261,7 +261,7 @@ def alerts_route(user_date):
     )
 
 
-@app.route("/api/aggregate/traveltimes", cors=cors_config, docs=Docs(response=models.TravelTimeAggregateResponse))
+@app.route("/api/aggregate/traveltimes", cors=cors_config, docs=Docs(request=models.AggregateTravelTimesParams, response=models.TravelTimeAggregateResponse))
 def traveltime_aggregate_route():
     """Retrieve aggregated travel time data over a date range, grouped by date."""
     query_params = app.current_request.query_params or {}
@@ -286,7 +286,7 @@ def traveltime_aggregate_route():
     )
 
 
-@app.route("/api/aggregate/traveltimes2", cors=cors_config, docs=Docs(response=models.TravelTimeAggregateResponse))
+@app.route("/api/aggregate/traveltimes2", cors=cors_config, docs=Docs(request=models.AggregateTravelTimesParams, response=models.TravelTimeAggregateResponse))
 def traveltime_aggregate_route_2():
     """Retrieve aggregated travel time data with by-time-of-day and by-date breakdowns."""
     query_params = app.current_request.query_params or {}
@@ -311,7 +311,7 @@ def traveltime_aggregate_route_2():
     )
 
 
-@app.route("/api/aggregate/headways", cors=cors_config, docs=Docs(response=models.HeadwaysAggregateResponse))
+@app.route("/api/aggregate/headways", cors=cors_config, docs=Docs(request=models.AggregateHeadwaysParams, response=models.HeadwaysAggregateResponse))
 def headways_aggregate_route():
     """Retrieve aggregated headway data over a date range for the given stop(s)."""
     query_params = app.current_request.query_params or {}
@@ -335,7 +335,7 @@ def headways_aggregate_route():
     )
 
 
-@app.route("/api/aggregate/dwells", cors=cors_config, docs=Docs(response=models.DwellsAggregateResponse))
+@app.route("/api/aggregate/dwells", cors=cors_config, docs=Docs(request=models.AggregateDwellsParams, response=models.DwellsAggregateResponse))
 def dwells_aggregate_route():
     """Retrieve aggregated dwell time data over a date range for the given stop(s)."""
     query_params = app.current_request.query_params or {}

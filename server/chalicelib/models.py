@@ -13,6 +13,92 @@ from pydantic import BaseModel, ConfigDict
 #################################################
 
 
+class HeadwayParams(BaseModel):
+    """Query parameters for `/api/headways/{user_date}`.
+
+    Attributes:
+        stop: One or more stop IDs to retrieve headway data for.
+    """
+
+    stop: List[str] = []
+
+
+class DwellParams(BaseModel):
+    """Query parameters for `/api/dwells/{user_date}`.
+
+    Attributes:
+        stop: One or more stop IDs to retrieve dwell data for.
+    """
+
+    stop: List[str] = []
+
+
+class TravelTimeParams(BaseModel):
+    """Query parameters for `/api/traveltimes/{user_date}`.
+
+    Attributes:
+        from_stop: One or more origin stop IDs.
+        to_stop: One or more destination stop IDs.
+    """
+
+    from_stop: List[str] = []
+    to_stop: List[str] = []
+
+
+class AlertsByDateParams(BaseModel):
+    """Query parameters for `/api/alerts/{user_date}`.
+
+    Attributes:
+        route: One or more route IDs to filter alerts by.
+    """
+
+    route: List[str] = []
+
+
+class AggregateTravelTimesParams(BaseModel):
+    """Query parameters for `/api/aggregate/traveltimes` and `/api/aggregate/traveltimes2`.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        from_stop: One or more origin stop IDs.
+        to_stop: One or more destination stop IDs.
+    """
+
+    start_date: date
+    end_date: date
+    from_stop: List[str] = []
+    to_stop: List[str] = []
+
+
+class AggregateHeadwaysParams(BaseModel):
+    """Query parameters for `/api/aggregate/headways`.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        stop: One or more stop IDs.
+    """
+
+    start_date: date
+    end_date: date
+    stop: List[str] = []
+
+
+class AggregateDwellsParams(BaseModel):
+    """Query parameters for `/api/aggregate/dwells`.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        stop: One or more stop IDs.
+    """
+
+    start_date: date
+    end_date: date
+    stop: List[str] = []
+
+
 class AlertDelaysByLineParams(BaseModel):
     """Parameters for the `/api/linedelays` endpoint.
 
