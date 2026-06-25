@@ -106,6 +106,55 @@ def update_refs_in_schema(obj, parent_schema_name):
         traceback.print_exc()
 
 
+def convert_get_requestbody_to_params(openapi_spec):
+    """Convert requestBody to query parameters for GET endpoints.
+
+    chalice-spec emits requestBody for all Docs(request=...) regardless of HTTP method.
+    GET endpoints must use parameters instead, so we post-process here.
+    """
+    schemas = openapi_spec.get("components", {}).get("schemas", {})
+    converted = 0
+
+    for path, path_item in openapi_spec.get("paths", {}).items():
+        get_op = path_item.get("get", {})
+        if "requestBody" not in get_op:
+            continue
+
+        content = get_op["requestBody"].get("content", {}).get("application/json", {})
+        schema_ref = content.get("schema", {}).get("$ref", "")
+        if not schema_ref:
+            continue
+
+        schema_name = schema_ref.rsplit("/", 1)[-1]
+        schema = schemas.get(schema_name, {})
+        properties = schema.get("properties", {})
+        required_fields = set(schema.get("required", []))
+
+        new_params = []
+        for prop_name, prop_schema in properties.items():
+            param_schema = {k: v for k, v in prop_schema.items() if k != "title"}
+            param = {
+                "in": "query",
+                "name": prop_name,
+                "required": prop_name in required_fields,
+                "schema": param_schema,
+            }
+            if param_schema.get("type") == "array":
+                param["style"] = "form"
+                param["explode"] = True
+            new_params.append(param)
+
+        del get_op["requestBody"]
+        existing_params = get_op.get("parameters", [])
+        get_op["parameters"] = existing_params + new_params
+        converted += 1
+
+    if converted:
+        print(f"Converted requestBody to query parameters on {converted} GET endpoint(s)")
+
+    return openapi_spec
+
+
 def generate_openapi_json(output_path="openapi.json"):
     """
     Generate OpenAPI JSON file from the application.
@@ -130,15 +179,19 @@ def generate_openapi_json(output_path="openapi.json"):
         except ImportError:
             # Fallback: try to load from existing file if available
             if os.path.exists(output_path):
-                print(f"ℹ️ Could not import from app, loading from {output_path} instead")
+                print(f"Could not import from app, loading from {output_path} instead")
                 with open(output_path, "r") as f:
                     openapi_spec = json.load(f)
             else:
                 raise ImportError("Could not import spec from app and no existing openapi.json found")
 
         # Fix nested schemas
-        print("ℹ️ Processing schema definitions...")
+        print("Processing schema definitions...")
         openapi_spec = extract_nested_schemas(openapi_spec)
+
+        # Convert GET requestBody to query parameters
+        print("Converting GET requestBody to query parameters...")
+        openapi_spec = convert_get_requestbody_to_params(openapi_spec)
 
         # Ensure the directory exists
         output_dir = os.path.dirname(output_path)
