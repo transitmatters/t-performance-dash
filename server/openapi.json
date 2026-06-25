@@ -64,7 +64,8 @@
           "schema": {
             "type": "string"
           },
-          "required": true
+          "required": true,
+          "description": "Date in `YYYY-MM-DD` format."
         }
       ]
     },
@@ -112,7 +113,8 @@
           "schema": {
             "type": "string"
           },
-          "required": true
+          "required": true,
+          "description": "Date in `YYYY-MM-DD` format."
         }
       ]
     },
@@ -175,7 +177,8 @@
           "schema": {
             "type": "string"
           },
-          "required": true
+          "required": true,
+          "description": "Date in `YYYY-MM-DD` format."
         }
       ]
     },
@@ -223,7 +226,8 @@
           "schema": {
             "type": "string"
           },
-          "required": true
+          "required": true,
+          "description": "Date in `YYYY-MM-DD` format."
         }
       ]
     },
@@ -1010,7 +1014,8 @@
           "schema": {
             "type": "string"
           },
-          "required": true
+          "required": true,
+          "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs."
         }
       ]
     }
@@ -2010,5 +2015,15 @@
         "type": "object"
       }
     }
-  }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Local development server"
+    },
+    {
+      "url": "https://dashboard.transitmatters.org",
+      "description": "Production"
+    }
+  ]
 }

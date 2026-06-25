@@ -106,6 +106,34 @@ def update_refs_in_schema(obj, parent_schema_name):
         traceback.print_exc()
 
 
+_PATH_PARAM_DESCRIPTIONS = {
+    "route_id": (
+        "MBTA route ID. "
+        "Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`–`Green-E`, `Mattapan`. "
+        "Bus: numeric string (e.g. `1`, `66`). "
+        "Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). "
+        "Ferry: `Boat-F1`, `Boat-F4`, etc. "
+        "Use `/api/routes` to list all valid route IDs."
+    ),
+    "user_date": "Date in `YYYY-MM-DD` format.",
+}
+
+
+def annotate_path_params(openapi_spec):
+    """Add descriptions to path parameters using known param-name mappings."""
+    annotated = 0
+    for path_item in openapi_spec.get("paths", {}).values():
+        for param in path_item.get("parameters", []):
+            if param.get("in") == "path" and "description" not in param:
+                desc = _PATH_PARAM_DESCRIPTIONS.get(param["name"])
+                if desc:
+                    param["description"] = desc
+                    annotated += 1
+    if annotated:
+        print(f"Annotated {annotated} path parameter(s) with descriptions")
+    return openapi_spec
+
+
 def convert_get_requestbody_to_params(openapi_spec):
     """Convert requestBody to query parameters for GET endpoints.
 
@@ -231,9 +259,19 @@ def generate_openapi_json(output_path="openapi.json"):
         print("Converting GET requestBody to query parameters...")
         openapi_spec = convert_get_requestbody_to_params(openapi_spec)
 
+        # Annotate path parameters with descriptions
+        print("Annotating path parameters...")
+        openapi_spec = annotate_path_params(openapi_spec)
+
         # Fix Pydantic v2 nullable types for OpenAPI 3.0 compatibility
         print("Fixing nullable types...")
         openapi_spec = fix_nullable_types(openapi_spec)
+
+        # Add server definitions so Swagger UI knows where to send requests
+        openapi_spec["servers"] = [
+            {"url": "http://localhost:5000", "description": "Local development server"},
+            {"url": "https://dashboard.transitmatters.org", "description": "Production"},
+        ]
 
         # Ensure the directory exists
         output_dir = os.path.dirname(output_path)
