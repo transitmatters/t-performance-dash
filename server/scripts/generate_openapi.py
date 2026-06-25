@@ -106,6 +106,121 @@ def update_refs_in_schema(obj, parent_schema_name):
         traceback.print_exc()
 
 
+_PATH_PARAM_DESCRIPTIONS = {
+    "route_id": (
+        "MBTA route ID. "
+        "Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`–`Green-E`, `Mattapan`. "
+        "Bus: numeric string (e.g. `1`, `66`). "
+        "Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). "
+        "Ferry: `Boat-F1`, `Boat-F4`, etc. "
+        "Use `/api/routes` to list all valid route IDs."
+    ),
+    "user_date": "Date in `YYYY-MM-DD` format.",
+}
+
+
+def annotate_path_params(openapi_spec):
+    """Add descriptions to path parameters using known param-name mappings."""
+    annotated = 0
+    for path_item in openapi_spec.get("paths", {}).values():
+        for param in path_item.get("parameters", []):
+            if param.get("in") == "path" and "description" not in param:
+                desc = _PATH_PARAM_DESCRIPTIONS.get(param["name"])
+                if desc:
+                    param["description"] = desc
+                    annotated += 1
+    if annotated:
+        print(f"Annotated {annotated} path parameter(s) with descriptions")
+    return openapi_spec
+
+
+def convert_get_requestbody_to_params(openapi_spec):
+    """Convert requestBody to query parameters for GET endpoints.
+
+    chalice-spec emits requestBody for all Docs(request=...) regardless of HTTP method.
+    GET endpoints must use parameters instead, so we post-process here.
+    """
+    schemas = openapi_spec.get("components", {}).get("schemas", {})
+    converted = 0
+
+    for path, path_item in openapi_spec.get("paths", {}).items():
+        get_op = path_item.get("get", {})
+        if "requestBody" not in get_op:
+            continue
+
+        content = get_op["requestBody"].get("content", {}).get("application/json", {})
+        schema_ref = content.get("schema", {}).get("$ref", "")
+        if not schema_ref:
+            continue
+
+        schema_name = schema_ref.rsplit("/", 1)[-1]
+        schema = schemas.get(schema_name, {})
+        properties = schema.get("properties", {})
+        required_fields = set(schema.get("required", []))
+
+        new_params = []
+        for prop_name, prop_schema in properties.items():
+            # Strip display-only fields from the schema; hoist description to param level
+            param_schema = {k: v for k, v in prop_schema.items() if k not in ("title", "description")}
+            param = {
+                "in": "query",
+                "name": prop_name,
+                "required": prop_name in required_fields,
+                "schema": param_schema,
+            }
+            if "description" in prop_schema:
+                param["description"] = prop_schema["description"]
+            if param_schema.get("type") == "array":
+                param["style"] = "form"
+                param["explode"] = True
+            new_params.append(param)
+
+        del get_op["requestBody"]
+        existing_params = get_op.get("parameters", [])
+        get_op["parameters"] = existing_params + new_params
+        converted += 1
+
+    if converted:
+        print(f"Converted requestBody to query parameters on {converted} GET endpoint(s)")
+
+    return openapi_spec
+
+
+def fix_nullable_types(obj):
+    """Convert Pydantic v2 anyOf null entries to OpenAPI 3.0 nullable: true.
+
+    Pydantic v2 emits {"type": "null"} for Optional fields, but "null" is not a
+    valid OpenAPI 3.0 type value. The correct encoding is nullable: true on the
+    parent schema, with the null entry removed from anyOf.
+    """
+    if isinstance(obj, list):
+        return [fix_nullable_types(item) for item in obj]
+
+    if not isinstance(obj, dict):
+        return obj
+
+    obj = {k: fix_nullable_types(v) for k, v in obj.items()}
+
+    if "anyOf" not in obj:
+        return obj
+
+    any_of = obj["anyOf"]
+    null_entries = [x for x in any_of if x == {"type": "null"}]
+    if not null_entries:
+        return obj
+
+    non_null = [x for x in any_of if x != {"type": "null"}]
+    result = {k: v for k, v in obj.items() if k != "anyOf"}
+    result["nullable"] = True
+
+    if len(non_null) == 1:
+        result.update(non_null[0])
+    elif non_null:
+        result["anyOf"] = non_null
+
+    return result
+
+
 def generate_openapi_json(output_path="openapi.json"):
     """
     Generate OpenAPI JSON file from the application.
@@ -130,15 +245,33 @@ def generate_openapi_json(output_path="openapi.json"):
         except ImportError:
             # Fallback: try to load from existing file if available
             if os.path.exists(output_path):
-                print(f"ℹ️ Could not import from app, loading from {output_path} instead")
+                print(f"Could not import from app, loading from {output_path} instead")
                 with open(output_path, "r") as f:
                     openapi_spec = json.load(f)
             else:
                 raise ImportError("Could not import spec from app and no existing openapi.json found")
 
         # Fix nested schemas
-        print("ℹ️ Processing schema definitions...")
+        print("Processing schema definitions...")
         openapi_spec = extract_nested_schemas(openapi_spec)
+
+        # Convert GET requestBody to query parameters
+        print("Converting GET requestBody to query parameters...")
+        openapi_spec = convert_get_requestbody_to_params(openapi_spec)
+
+        # Annotate path parameters with descriptions
+        print("Annotating path parameters...")
+        openapi_spec = annotate_path_params(openapi_spec)
+
+        # Fix Pydantic v2 nullable types for OpenAPI 3.0 compatibility
+        print("Fixing nullable types...")
+        openapi_spec = fix_nullable_types(openapi_spec)
+
+        # Add server definitions so Swagger UI knows where to send requests
+        openapi_spec["servers"] = [
+            {"url": "http://localhost:5000", "description": "Local development server"},
+            {"url": "https://dashboard.transitmatters.org", "description": "Production"},
+        ]
 
         # Ensure the directory exists
         output_dir = os.path.dirname(output_path)
