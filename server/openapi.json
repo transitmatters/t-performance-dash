@@ -51,6 +51,7 @@
               },
               "type": "array"
             },
+            "description": "MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "style": "form",
             "explode": true
           }
@@ -98,6 +99,7 @@
               },
               "type": "array"
             },
+            "description": "MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "style": "form",
             "explode": true
           }
@@ -145,6 +147,7 @@
               },
               "type": "array"
             },
+            "description": "Origin MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "style": "form",
             "explode": true
           },
@@ -159,6 +162,7 @@
               },
               "type": "array"
             },
+            "description": "Destination MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "style": "form",
             "explode": true
           }
@@ -206,6 +210,7 @@
               },
               "type": "array"
             },
+            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs.",
             "style": "form",
             "explode": true
           }
@@ -248,7 +253,8 @@
             "schema": {
               "format": "date",
               "type": "string"
-            }
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -257,7 +263,8 @@
             "schema": {
               "format": "date",
               "type": "string"
-            }
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -270,6 +277,7 @@
               },
               "type": "array"
             },
+            "description": "Origin MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "style": "form",
             "explode": true
           },
@@ -284,6 +292,7 @@
               },
               "type": "array"
             },
+            "description": "Destination MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "style": "form",
             "explode": true
           }
@@ -316,7 +325,8 @@
             "schema": {
               "format": "date",
               "type": "string"
-            }
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -325,7 +335,8 @@
             "schema": {
               "format": "date",
               "type": "string"
-            }
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -338,6 +349,7 @@
               },
               "type": "array"
             },
+            "description": "Origin MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "style": "form",
             "explode": true
           },
@@ -352,6 +364,7 @@
               },
               "type": "array"
             },
+            "description": "Destination MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "style": "form",
             "explode": true
           }
@@ -384,7 +397,8 @@
             "schema": {
               "format": "date",
               "type": "string"
-            }
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -393,7 +407,8 @@
             "schema": {
               "format": "date",
               "type": "string"
-            }
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -406,6 +421,7 @@
               },
               "type": "array"
             },
+            "description": "MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "style": "form",
             "explode": true
           }
@@ -438,7 +454,8 @@
             "schema": {
               "format": "date",
               "type": "string"
-            }
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -447,7 +464,8 @@
             "schema": {
               "format": "date",
               "type": "string"
-            }
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -460,6 +478,7 @@
               },
               "type": "array"
             },
+            "description": "MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "style": "form",
             "explode": true
           }
@@ -539,7 +558,8 @@
                   "type": "string"
                 }
               ]
-            }
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -555,7 +575,8 @@
                   "type": "string"
                 }
               ]
-            }
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -563,7 +584,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values."
           },
           {
             "in": "query",
@@ -572,7 +594,8 @@
             "schema": {
               "default": "weekly",
               "type": "string"
-            }
+            },
+            "description": "Aggregation period: `daily` or `weekly`."
           }
         ]
       }
@@ -610,7 +633,8 @@
                   "type": "string"
                 }
               ]
-            }
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -626,7 +650,8 @@
                   "type": "string"
                 }
               ]
-            }
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -634,7 +659,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`."
           },
           {
             "in": "query",
@@ -642,7 +668,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values."
           }
         ]
       }
@@ -673,7 +700,8 @@
             "schema": {
               "format": "date",
               "type": "string"
-            }
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -682,7 +710,8 @@
             "schema": {
               "format": "date",
               "type": "string"
-            }
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -698,7 +727,8 @@
                 }
               ],
               "default": null
-            }
+            },
+            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs. Omit to return all routes."
           },
           {
             "in": "query",
@@ -706,7 +736,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`."
           }
         ]
       }
@@ -737,7 +768,8 @@
             "schema": {
               "format": "date",
               "type": "string"
-            }
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -746,7 +778,8 @@
             "schema": {
               "format": "date",
               "type": "string"
-            }
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -762,7 +795,8 @@
                 }
               ],
               "default": null
-            }
+            },
+            "description": "Line identifier for ridership data. Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. Bus: `line-{route}` (e.g. `line-1`, `line-66`). Commuter rail: `line-{line}` (e.g. `line-Fairmount`). Ferry: `line-F1`, `line-F4`, etc. Omit to return all lines."
           }
         ]
       }
@@ -812,7 +846,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Rapid transit line identifier: `Red`, `Orange`, `Blue`, or `Green`. Speed restriction data is only available for rapid transit lines."
           },
           {
             "in": "query",
@@ -820,7 +855,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Date to query (YYYY-MM-DD)."
           }
         ]
       }
@@ -858,7 +894,8 @@
                 }
               ],
               "default": null
-            }
+            },
+            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values. Omit to aggregate all lines."
           },
           {
             "in": "query",
@@ -867,7 +904,8 @@
             "schema": {
               "format": "date",
               "type": "string"
-            }
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -876,7 +914,8 @@
             "schema": {
               "format": "date",
               "type": "string"
-            }
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -884,7 +923,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`."
           }
         ]
       }
@@ -914,7 +954,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs."
           }
         ]
       }
@@ -1045,6 +1086,7 @@
         "properties": {
           "stop": {
             "default": [],
+            "description": "MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "items": {
               "type": "string"
             },
@@ -1076,6 +1118,7 @@
         "properties": {
           "stop": {
             "default": [],
+            "description": "MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "items": {
               "type": "string"
             },
@@ -1107,6 +1150,7 @@
         "properties": {
           "from_stop": {
             "default": [],
+            "description": "Origin MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "items": {
               "type": "string"
             },
@@ -1115,6 +1159,7 @@
           },
           "to_stop": {
             "default": [],
+            "description": "Destination MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "items": {
               "type": "string"
             },
@@ -1146,6 +1191,7 @@
         "properties": {
           "route": {
             "default": [],
+            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs.",
             "items": {
               "type": "string"
             },
@@ -1179,17 +1225,20 @@
         "description": "Query parameters for `/api/aggregate/traveltimes` and `/api/aggregate/traveltimes2`.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    from_stop: One or more origin stop IDs.\n    to_stop: One or more destination stop IDs.",
         "properties": {
           "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
             "format": "date",
             "title": "Start Date",
             "type": "string"
           },
           "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
             "format": "date",
             "title": "End Date",
             "type": "string"
           },
           "from_stop": {
             "default": [],
+            "description": "Origin MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "items": {
               "type": "string"
             },
@@ -1198,6 +1247,7 @@
           },
           "to_stop": {
             "default": [],
+            "description": "Destination MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "items": {
               "type": "string"
             },
@@ -1232,17 +1282,20 @@
         "description": "Query parameters for `/api/aggregate/headways`.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    stop: One or more stop IDs.",
         "properties": {
           "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
             "format": "date",
             "title": "Start Date",
             "type": "string"
           },
           "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
             "format": "date",
             "title": "End Date",
             "type": "string"
           },
           "stop": {
             "default": [],
+            "description": "MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "items": {
               "type": "string"
             },
@@ -1277,17 +1330,20 @@
         "description": "Query parameters for `/api/aggregate/dwells`.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    stop: One or more stop IDs.",
         "properties": {
           "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
             "format": "date",
             "title": "Start Date",
             "type": "string"
           },
           "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
             "format": "date",
             "title": "End Date",
             "type": "string"
           },
           "stop": {
             "default": [],
+            "description": "MBTA stop ID. Rapid transit: 5-digit numeric (e.g. `70061`). Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). Use `/api/stops/{route_id}` to look up valid stop IDs for a route.",
             "items": {
               "type": "string"
             },
@@ -1345,6 +1401,7 @@
                 "type": "string"
               }
             ],
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
             "title": "Start Date"
           },
           "end_date": {
@@ -1357,14 +1414,17 @@
                 "type": "string"
               }
             ],
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
             "title": "End Date"
           },
           "line": {
+            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values.",
             "title": "Line",
             "type": "string"
           },
           "agg": {
             "default": "weekly",
+            "description": "Aggregation period: `daily` or `weekly`.",
             "title": "Agg",
             "type": "string"
           }
@@ -1406,6 +1466,7 @@
                 "type": "string"
               }
             ],
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
             "title": "Start Date"
           },
           "end_date": {
@@ -1418,13 +1479,16 @@
                 "type": "string"
               }
             ],
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
             "title": "End Date"
           },
           "agg": {
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`.",
             "title": "Agg",
             "type": "string"
           },
           "line": {
+            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values.",
             "title": "Line",
             "type": "string"
           }
@@ -1458,11 +1522,13 @@
         "description": "Parameters for the `/api/scheduledservice` endpoint.\n\nAttributes:\n    start_date: Start of date range.\n    end_date: End of date range.\n    route_id: Optional route filter. `None` returns all routes.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
         "properties": {
           "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
             "format": "date",
             "title": "Start Date",
             "type": "string"
           },
           "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
             "format": "date",
             "title": "End Date",
             "type": "string"
@@ -1477,9 +1543,11 @@
               }
             ],
             "default": null,
+            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs. Omit to return all routes.",
             "title": "Route Id"
           },
           "agg": {
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`.",
             "title": "Agg",
             "type": "string"
           }
@@ -1529,11 +1597,13 @@
         "description": "Parameters for the `/api/ridership` endpoint.\n\nAttributes:\n    start_date: Start of date range.\n    end_date: End of date range.\n    line_id: Optional line filter. `None` returns all lines.",
         "properties": {
           "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
             "format": "date",
             "title": "Start Date",
             "type": "string"
           },
           "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
             "format": "date",
             "title": "End Date",
             "type": "string"
@@ -1548,6 +1618,7 @@
               }
             ],
             "default": null,
+            "description": "Line identifier for ridership data. Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. Bus: `line-{route}` (e.g. `line-1`, `line-66`). Commuter rail: `line-{line}` (e.g. `line-Fairmount`). Ferry: `line-F1`, `line-F4`, etc. Omit to return all lines.",
             "title": "Line Id"
           }
         },
@@ -1605,10 +1676,12 @@
         "description": "Parameters for the `/api/speed_restrictions` endpoint.\n\nAttributes:\n    line_id: Line identifier (e.g., `Red`, `Orange`).\n    date: Date to query (YYYY-MM-DD).",
         "properties": {
           "line_id": {
+            "description": "Rapid transit line identifier: `Red`, `Orange`, `Blue`, or `Green`. Speed restriction data is only available for rapid transit lines.",
             "title": "Line Id",
             "type": "string"
           },
           "date": {
+            "description": "Date to query (YYYY-MM-DD).",
             "title": "Date",
             "type": "string"
           }
@@ -1672,19 +1745,23 @@
               }
             ],
             "default": null,
+            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values. Omit to aggregate all lines.",
             "title": "Line Id"
           },
           "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
             "format": "date",
             "title": "Start Date",
             "type": "string"
           },
           "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
             "format": "date",
             "title": "End Date",
             "type": "string"
           },
           "agg": {
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`.",
             "title": "Agg",
             "type": "string"
           }
@@ -1717,6 +1794,7 @@
         "description": "Parameters for the `/api/time_predictions` endpoint.\n\nAttributes:\n    route_id: Route identifier (e.g., `Red`, `CR-Fairmount`).",
         "properties": {
           "route_id": {
+            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs.",
             "title": "Route Id",
             "type": "string"
           }

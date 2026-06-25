@@ -132,13 +132,16 @@ def convert_get_requestbody_to_params(openapi_spec):
 
         new_params = []
         for prop_name, prop_schema in properties.items():
-            param_schema = {k: v for k, v in prop_schema.items() if k != "title"}
+            # Strip display-only fields from the schema; hoist description to param level
+            param_schema = {k: v for k, v in prop_schema.items() if k not in ("title", "description")}
             param = {
                 "in": "query",
                 "name": prop_name,
                 "required": prop_name in required_fields,
                 "schema": param_schema,
             }
+            if "description" in prop_schema:
+                param["description"] = prop_schema["description"]
             if param_schema.get("type") == "array":
                 param["style"] = "form"
                 param["explode"] = True
