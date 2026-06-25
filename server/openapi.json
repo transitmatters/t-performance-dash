@@ -210,7 +210,7 @@
               },
               "type": "array"
             },
-            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs.",
+            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs.",
             "style": "form",
             "explode": true
           }
@@ -585,7 +585,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values."
+            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values."
           },
           {
             "in": "query",
@@ -669,7 +669,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values."
+            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values."
           }
         ]
       }
@@ -728,7 +728,7 @@
               ],
               "default": null
             },
-            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs. Omit to return all routes."
+            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs. Omit to return all routes."
           },
           {
             "in": "query",
@@ -895,7 +895,7 @@
               ],
               "default": null
             },
-            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values. Omit to aggregate all lines."
+            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values. Omit to aggregate all lines."
           },
           {
             "in": "query",
@@ -955,7 +955,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs."
+            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs."
           }
         ]
       }
@@ -1191,7 +1191,7 @@
         "properties": {
           "route": {
             "default": [],
-            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs.",
+            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs.",
             "items": {
               "type": "string"
             },
@@ -1418,7 +1418,7 @@
             "title": "End Date"
           },
           "line": {
-            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values.",
+            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values.",
             "title": "Line",
             "type": "string"
           },
@@ -1488,7 +1488,7 @@
             "type": "string"
           },
           "line": {
-            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values.",
+            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values.",
             "title": "Line",
             "type": "string"
           }
@@ -1543,7 +1543,7 @@
               }
             ],
             "default": null,
-            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs. Omit to return all routes.",
+            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs. Omit to return all routes.",
             "title": "Route Id"
           },
           "agg": {
@@ -1745,7 +1745,7 @@
               }
             ],
             "default": null,
-            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values. Omit to aggregate all lines.",
+            "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values. Omit to aggregate all lines.",
             "title": "Line Id"
           },
           "start_date": {
@@ -1794,7 +1794,7 @@
         "description": "Parameters for the `/api/time_predictions` endpoint.\n\nAttributes:\n    route_id: Route identifier (e.g., `Red`, `CR-Fairmount`).",
         "properties": {
           "route_id": {
-            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs.",
+            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs.",
             "title": "Route Id",
             "type": "string"
           }
