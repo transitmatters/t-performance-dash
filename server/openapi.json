@@ -38,7 +38,23 @@
           "/api"
         ],
         "summary": "Retrieve headway data for the given date and stop(s).",
-        "description": "Args:\n  user_date: Date string in \"YYYY-MM-DD\" format.\n  Query params - stop: One or more stop IDs.\n\nReturns:\n  Response: JSON response containing headway event data."
+        "description": "Args:\n  user_date: Date string in \"YYYY-MM-DD\" format.\n  Query params - stop: One or more stop IDs.\n\nReturns:\n  Response: JSON response containing headway event data.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "stop",
+            "required": false,
+            "schema": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "style": "form",
+            "explode": true
+          }
+        ]
       },
       "parameters": [
         {
@@ -69,7 +85,23 @@
           "/api"
         ],
         "summary": "Retrieve dwell time data for the given date and stop(s).",
-        "description": "Args:\n  user_date: Date string in \"YYYY-MM-DD\" format.\n  Query params - stop: One or more stop IDs.\n\nReturns:\n  Response: JSON response containing dwell time event data."
+        "description": "Args:\n  user_date: Date string in \"YYYY-MM-DD\" format.\n  Query params - stop: One or more stop IDs.\n\nReturns:\n  Response: JSON response containing dwell time event data.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "stop",
+            "required": false,
+            "schema": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "style": "form",
+            "explode": true
+          }
+        ]
       },
       "parameters": [
         {
@@ -100,7 +132,37 @@
           "/api"
         ],
         "summary": "Retrieve travel time data between stop pairs for the given date.",
-        "description": "Args:\n  user_date: Date string in \"YYYY-MM-DD\" format.\n  Query params - from_stop: One or more origin stop IDs.\n  Query params - to_stop: One or more destination stop IDs.\n\nReturns:\n  Response: JSON response containing travel time event data."
+        "description": "Args:\n  user_date: Date string in \"YYYY-MM-DD\" format.\n  Query params - from_stop: One or more origin stop IDs.\n  Query params - to_stop: One or more destination stop IDs.\n\nReturns:\n  Response: JSON response containing travel time event data.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "from_stop",
+            "required": false,
+            "schema": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "in": "query",
+            "name": "to_stop",
+            "required": false,
+            "schema": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "style": "form",
+            "explode": true
+          }
+        ]
       },
       "parameters": [
         {
@@ -131,7 +193,23 @@
           "/api"
         ],
         "summary": "Retrieve transit alerts for the given date and route(s).",
-        "description": "Args:\n  user_date: Date string in \"YYYY-MM-DD\" format.\n  Query params - route: One or more route IDs.\n\nReturns:\n  Response: JSON response containing alert data."
+        "description": "Args:\n  user_date: Date string in \"YYYY-MM-DD\" format.\n  Query params - route: One or more route IDs.\n\nReturns:\n  Response: JSON response containing alert data.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "route",
+            "required": false,
+            "schema": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "style": "form",
+            "explode": true
+          }
+        ]
       },
       "parameters": [
         {
@@ -161,7 +239,55 @@
         "tags": [
           "/api"
         ],
-        "summary": "Retrieve aggregated travel time data over a date range, grouped by date."
+        "summary": "Retrieve aggregated travel time data over a date range, grouped by date.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from_stop",
+            "required": false,
+            "schema": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "in": "query",
+            "name": "to_stop",
+            "required": false,
+            "schema": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "style": "form",
+            "explode": true
+          }
+        ]
       }
     },
     "/api/aggregate/traveltimes2": {
@@ -181,7 +307,55 @@
         "tags": [
           "/api"
         ],
-        "summary": "Retrieve aggregated travel time data with by-time-of-day and by-date breakdowns."
+        "summary": "Retrieve aggregated travel time data with by-time-of-day and by-date breakdowns.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from_stop",
+            "required": false,
+            "schema": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "in": "query",
+            "name": "to_stop",
+            "required": false,
+            "schema": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "style": "form",
+            "explode": true
+          }
+        ]
       }
     },
     "/api/aggregate/headways": {
@@ -201,7 +375,41 @@
         "tags": [
           "/api"
         ],
-        "summary": "Retrieve aggregated headway data over a date range for the given stop(s)."
+        "summary": "Retrieve aggregated headway data over a date range for the given stop(s).",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "stop",
+            "required": false,
+            "schema": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "style": "form",
+            "explode": true
+          }
+        ]
       }
     },
     "/api/aggregate/dwells": {
@@ -221,7 +429,41 @@
         "tags": [
           "/api"
         ],
-        "summary": "Retrieve aggregated dwell time data over a date range for the given stop(s)."
+        "summary": "Retrieve aggregated dwell time data over a date range for the given stop(s).",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "stop",
+            "required": false,
+            "schema": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "style": "form",
+            "explode": true
+          }
+        ]
       }
     },
     "/api/git_id": {
@@ -266,15 +508,6 @@
     },
     "/api/linedelays": {
       "get": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AlertDelaysByLineParams"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Success",
@@ -290,20 +523,62 @@
         "tags": [
           "/api"
         ],
-        "summary": "Retrieve alert-based delay data aggregated by line over a date range."
+        "summary": "Retrieve alert-based delay data aggregated by line over a date range.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "format": "date",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "format": "date",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "line",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "agg",
+            "required": false,
+            "schema": {
+              "default": "weekly",
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/api/tripmetrics": {
       "get": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TripMetricsByLineParams"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Success",
@@ -319,20 +594,61 @@
         "tags": [
           "/api"
         ],
-        "summary": "Retrieve trip metrics (speed, travel time, etc.) aggregated by line over a date range."
+        "summary": "Retrieve trip metrics (speed, travel time, etc.) aggregated by line over a date range.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "format": "date",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "format": "date",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "agg",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "line",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/api/scheduledservice": {
       "get": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ScheduledServiceParams"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Success",
@@ -348,20 +664,55 @@
         "tags": [
           "/api"
         ],
-        "summary": "Retrieve scheduled service counts for a route over a date range."
+        "summary": "Retrieve scheduled service counts for a route over a date range.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "route_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          },
+          {
+            "in": "query",
+            "name": "agg",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/api/ridership": {
       "get": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RidershipParams"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Success",
@@ -377,7 +728,43 @@
         "tags": [
           "/api"
         ],
-        "summary": "Retrieve ridership data for a line over a date range."
+        "summary": "Retrieve ridership data for a line over a date range.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "line_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          }
+        ]
       }
     },
     "/api/facilities": {
@@ -402,15 +789,6 @@
     },
     "/api/speed_restrictions": {
       "get": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SpeedRestrictionsParams"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Success",
@@ -426,20 +804,29 @@
         "tags": [
           "/api"
         ],
-        "summary": "Retrieve speed restriction data for a line on a given date."
+        "summary": "Retrieve speed restriction data for a line on a given date.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "line_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/api/service_hours": {
       "get": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ServiceHoursParams"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Success",
@@ -455,20 +842,55 @@
         "tags": [
           "/api"
         ],
-        "summary": "Retrieve delivered service hours for a line over a date range."
+        "summary": "Retrieve delivered service hours for a line over a date range.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "line_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          },
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "agg",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/api/time_predictions": {
       "get": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TimePredictionParams"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Success",
@@ -484,7 +906,17 @@
         "tags": [
           "/api"
         ],
-        "summary": "Retrieve time prediction accuracy data for a route."
+        "summary": "Retrieve time prediction accuracy data for a route.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "route_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/api/service_ridership_dashboard": {
@@ -608,6 +1040,21 @@
         "title": "HealthcheckResponse",
         "type": "object"
       },
+      "HeadwayParams": {
+        "description": "Query parameters for `/api/headways/{user_date}`.\n\nAttributes:\n    stop: One or more stop IDs to retrieve headway data for.",
+        "properties": {
+          "stop": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Stop",
+            "type": "array"
+          }
+        },
+        "title": "HeadwayParams",
+        "type": "object"
+      },
       "HeadwayResponse": {
         "additionalProperties": true,
         "description": "Response for `/api/headways/{date}` \u2014 raw headway events for a single day.\n\nAttributes:\n    headways: Headway data keyed by stop ID.",
@@ -622,6 +1069,21 @@
           "headways"
         ],
         "title": "HeadwayResponse",
+        "type": "object"
+      },
+      "DwellParams": {
+        "description": "Query parameters for `/api/dwells/{user_date}`.\n\nAttributes:\n    stop: One or more stop IDs to retrieve dwell data for.",
+        "properties": {
+          "stop": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Stop",
+            "type": "array"
+          }
+        },
+        "title": "DwellParams",
         "type": "object"
       },
       "DwellResponse": {
@@ -640,6 +1102,29 @@
         "title": "DwellResponse",
         "type": "object"
       },
+      "TravelTimeParams": {
+        "description": "Query parameters for `/api/traveltimes/{user_date}`.\n\nAttributes:\n    from_stop: One or more origin stop IDs.\n    to_stop: One or more destination stop IDs.",
+        "properties": {
+          "from_stop": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "From Stop",
+            "type": "array"
+          },
+          "to_stop": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "To Stop",
+            "type": "array"
+          }
+        },
+        "title": "TravelTimeParams",
+        "type": "object"
+      },
       "TravelTimeResponse": {
         "additionalProperties": true,
         "description": "Response for `/api/traveltimes/{date}` \u2014 raw travel time events for a single day.\n\nAttributes:\n    travel_times: Travel time data keyed by origin-destination stop pair.",
@@ -654,6 +1139,21 @@
           "travel_times"
         ],
         "title": "TravelTimeResponse",
+        "type": "object"
+      },
+      "AlertsByDateParams": {
+        "description": "Query parameters for `/api/alerts/{user_date}`.\n\nAttributes:\n    route: One or more route IDs to filter alerts by.",
+        "properties": {
+          "route": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Route",
+            "type": "array"
+          }
+        },
+        "title": "AlertsByDateParams",
         "type": "object"
       },
       "AlertsRouteResponse": {
@@ -675,6 +1175,43 @@
         "title": "AlertsRouteResponse",
         "type": "object"
       },
+      "AggregateTravelTimesParams": {
+        "description": "Query parameters for `/api/aggregate/traveltimes` and `/api/aggregate/traveltimes2`.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    from_stop: One or more origin stop IDs.\n    to_stop: One or more destination stop IDs.",
+        "properties": {
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "from_stop": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "From Stop",
+            "type": "array"
+          },
+          "to_stop": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "To Stop",
+            "type": "array"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "AggregateTravelTimesParams",
+        "type": "object"
+      },
       "TravelTimeAggregateResponse": {
         "additionalProperties": true,
         "description": "Response for `/api/aggregate/traveltimes` and `/api/aggregate/traveltimes2`.\n\nContains `by_date` and/or `by_time` sub-objects with statistical summaries.\n\nAttributes:\n    data: Aggregated travel time statistics.",
@@ -691,6 +1228,35 @@
         "title": "TravelTimeAggregateResponse",
         "type": "object"
       },
+      "AggregateHeadwaysParams": {
+        "description": "Query parameters for `/api/aggregate/headways`.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    stop: One or more stop IDs.",
+        "properties": {
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "stop": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Stop",
+            "type": "array"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "AggregateHeadwaysParams",
+        "type": "object"
+      },
       "HeadwaysAggregateResponse": {
         "additionalProperties": true,
         "description": "Response for `/api/aggregate/headways`.\n\nIncludes standard statistics plus bunching ratio and on-time percentage.\n\nAttributes:\n    data: Aggregated headway statistics by date.",
@@ -705,6 +1271,35 @@
           "data"
         ],
         "title": "HeadwaysAggregateResponse",
+        "type": "object"
+      },
+      "AggregateDwellsParams": {
+        "description": "Query parameters for `/api/aggregate/dwells`.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    stop: One or more stop IDs.",
+        "properties": {
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "stop": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Stop",
+            "type": "array"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "AggregateDwellsParams",
         "type": "object"
       },
       "DwellsAggregateResponse": {
