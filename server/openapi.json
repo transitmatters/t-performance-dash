@@ -718,15 +718,9 @@
             "name": "route_id",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "default": null
+              "default": null,
+              "nullable": true,
+              "type": "string"
             },
             "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs. Omit to return all routes."
           },
@@ -786,15 +780,9 @@
             "name": "line_id",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "default": null
+              "default": null,
+              "nullable": true,
+              "type": "string"
             },
             "description": "Line identifier for ridership data. Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. Bus: `line-{route}` (e.g. `line-1`, `line-66`). Commuter rail: `line-{line}` (e.g. `line-Fairmount`). Ferry: `line-F1`, `line-F4`, etc. Omit to return all lines."
           }
@@ -885,15 +873,9 @@
             "name": "line_id",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "default": null
+              "default": null,
+              "nullable": true,
+              "type": "string"
             },
             "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values. Omit to aggregate all lines."
           },
@@ -1048,31 +1030,19 @@
             "type": "string"
           },
           "failed_checks_sum": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
-            "title": "Failed Checks Sum"
+            "title": "Failed Checks Sum",
+            "nullable": true,
+            "type": "integer"
           },
           "failed_checks": {
-            "anyOf": [
-              {
-                "additionalProperties": {
-                  "type": "string"
-                },
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
-            "title": "Failed Checks"
+            "title": "Failed Checks",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
           }
         },
         "required": [
@@ -1534,17 +1504,11 @@
             "type": "string"
           },
           "route_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
             "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs. Omit to return all routes.",
-            "title": "Route Id"
+            "title": "Route Id",
+            "nullable": true,
+            "type": "string"
           },
           "agg": {
             "description": "Aggregation period: `daily`, `weekly`, or `monthly`.",
@@ -1609,17 +1573,11 @@
             "type": "string"
           },
           "line_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
             "description": "Line identifier for ridership data. Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. Bus: `line-{route}` (e.g. `line-1`, `line-66`). Commuter rail: `line-{line}` (e.g. `line-Fairmount`). Ferry: `line-F1`, `line-F4`, etc. Omit to return all lines.",
-            "title": "Line Id"
+            "title": "Line Id",
+            "nullable": true,
+            "type": "string"
           }
         },
         "required": [
@@ -1701,29 +1659,17 @@
             "type": "boolean"
           },
           "date": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
-            "title": "Date"
+            "title": "Date",
+            "nullable": true,
+            "type": "string"
           },
           "zones": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
-            "title": "Zones"
+            "title": "Zones",
+            "nullable": true,
+            "additionalProperties": true,
+            "type": "object"
           }
         },
         "required": [
@@ -1736,17 +1682,11 @@
         "description": "Parameters for the `/api/service_hours` endpoint.\n\nAttributes:\n    line_id: Optional line filter. `None` returns all lines.\n    start_date: Start of date range.\n    end_date: End of date range.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
         "properties": {
           "line_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
             "description": "Line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. Use `/api/routes` to list all valid values. Omit to aggregate all lines.",
-            "title": "Line Id"
+            "title": "Line Id",
+            "nullable": true,
+            "type": "string"
           },
           "start_date": {
             "description": "Start of the date range, inclusive (YYYY-MM-DD).",
@@ -1906,28 +1846,16 @@
             "type": "array"
           },
           "service_start": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
-            "title": "Service Start"
+            "title": "Service Start",
+            "nullable": true,
+            "type": "string"
           },
           "service_end": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
-            "title": "Service End"
+            "title": "Service End",
+            "nullable": true,
+            "type": "string"
           }
         },
         "required": [
@@ -2009,18 +1937,12 @@
             "type": "string"
           },
           "branches": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Branches"
+            "title": "Branches",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
           },
           "station": {
             "title": "Station",
@@ -2041,76 +1963,40 @@
             "type": "object"
           },
           "accessible": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
-            "title": "Accessible"
+            "title": "Accessible",
+            "nullable": true,
+            "type": "boolean"
           },
           "pedal_park": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
-            "title": "Pedal Park"
+            "title": "Pedal Park",
+            "nullable": true,
+            "type": "boolean"
           },
           "enclosed_bike_parking": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
-            "title": "Enclosed Bike Parking"
+            "title": "Enclosed Bike Parking",
+            "nullable": true,
+            "type": "boolean"
           },
           "terminus": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
-            "title": "Terminus"
+            "title": "Terminus",
+            "nullable": true,
+            "type": "boolean"
           },
           "disabled": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
-            "title": "Disabled"
+            "title": "Disabled",
+            "nullable": true,
+            "type": "boolean"
           },
           "short": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
             "default": null,
-            "title": "Short"
+            "title": "Short",
+            "nullable": true,
+            "type": "string"
           }
         },
         "required": [

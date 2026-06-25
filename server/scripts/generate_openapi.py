@@ -158,6 +158,41 @@ def convert_get_requestbody_to_params(openapi_spec):
     return openapi_spec
 
 
+def fix_nullable_types(obj):
+    """Convert Pydantic v2 anyOf null entries to OpenAPI 3.0 nullable: true.
+
+    Pydantic v2 emits {"type": "null"} for Optional fields, but "null" is not a
+    valid OpenAPI 3.0 type value. The correct encoding is nullable: true on the
+    parent schema, with the null entry removed from anyOf.
+    """
+    if isinstance(obj, list):
+        return [fix_nullable_types(item) for item in obj]
+
+    if not isinstance(obj, dict):
+        return obj
+
+    obj = {k: fix_nullable_types(v) for k, v in obj.items()}
+
+    if "anyOf" not in obj:
+        return obj
+
+    any_of = obj["anyOf"]
+    null_entries = [x for x in any_of if x == {"type": "null"}]
+    if not null_entries:
+        return obj
+
+    non_null = [x for x in any_of if x != {"type": "null"}]
+    result = {k: v for k, v in obj.items() if k != "anyOf"}
+    result["nullable"] = True
+
+    if len(non_null) == 1:
+        result.update(non_null[0])
+    elif non_null:
+        result["anyOf"] = non_null
+
+    return result
+
+
 def generate_openapi_json(output_path="openapi.json"):
     """
     Generate OpenAPI JSON file from the application.
@@ -195,6 +230,10 @@ def generate_openapi_json(output_path="openapi.json"):
         # Convert GET requestBody to query parameters
         print("Converting GET requestBody to query parameters...")
         openapi_spec = convert_get_requestbody_to_params(openapi_spec)
+
+        # Fix Pydantic v2 nullable types for OpenAPI 3.0 compatibility
+        print("Fixing nullable types...")
+        openapi_spec = fix_nullable_types(openapi_spec)
 
         # Ensure the directory exists
         output_dir = os.path.dirname(output_path)
