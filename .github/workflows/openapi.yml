@@ -1,0 +1,35 @@
+name: openapi
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-spec:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.12']
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Install dependencies
+        run: cd server && uv sync --group dev
+      - name: Regenerate OpenAPI spec
+        run: cd server && uv run python -m scripts.generate_openapi
+      - name: Check for uncommitted spec changes
+        run: |
+          if ! git diff --exit-code server/openapi.json; then
+            echo "::error::server/openapi.json is out of date. Run 'npm run generate-openapi' and commit the result."
+            exit 1
+          fi
