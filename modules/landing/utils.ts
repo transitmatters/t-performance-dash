@@ -7,6 +7,7 @@ import {
   PEAK_SPEED,
 } from '../../common/constants/baselines';
 import { LINE_COLORS } from '../../common/constants/colors';
+import { LINE_OBJECTS } from '../../common/constants/lines';
 import type { RidershipCount, DeliveredTripMetrics } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 import type { AggregateDataPoint, SingleDayDataPoint } from '../../common/types/charts';
@@ -15,6 +16,7 @@ import { DATE_FORMAT } from '../../common/constants/dates';
 
 const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
   return {
+    label: LINE_OBJECTS[line]?.name ?? line,
     pointRadius: 4,
     pointHitRadius: 8,
     borderColor: LINE_COLORS[line ?? 'default'],
@@ -176,6 +178,28 @@ const getLabels = () => {
     labels.push(latestDate.subtract(i, 'weeks').format(DATE_FORMAT));
   }
   return labels;
+};
+
+export const convertToFleetAgeDataset = (
+  data: { [key in Line]?: DeliveredTripMetrics[] },
+  labels: string[]
+) => {
+  return (Object.keys(data) as Line[]).map((line: Line) => {
+    if (line === 'line-mattapan') {
+      return { data: [] };
+    }
+
+    const datasetOptions = getDatasetOptions(line);
+    return {
+      ...datasetOptions,
+      data:
+        labels?.map((label) => {
+          const datapoint = data[line]?.find((datapoint) => datapoint.date === label);
+          if (!datapoint?.avg_car_age) return null;
+          return round(datapoint.avg_car_age, 1);
+        }) ?? [],
+    };
+  });
 };
 
 export const LANDING_CHART_LABELS = getLabels();
