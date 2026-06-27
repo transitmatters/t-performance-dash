@@ -105,6 +105,17 @@ def get_ridership(query_params: dict):
     return data or []
 
 
+# Weather static data
+def get_weather(query_params: dict):
+    """Return empty weather data in static mode.
+
+    Weather annotations are advisory visuals layered over other charts; rendering
+    no annotations in static mode is acceptable degradation. A real fixture can be
+    added later if needed.
+    """
+    return []
+
+
 # Line delays static data
 def get_line_delays(query_params: dict):
     """Get line delays from static cache.
