@@ -12,6 +12,7 @@ export interface SingleDayDataPoint {
   dwell_time_sec?: number;
   benchmark_travel_time_sec?: number;
   benchmark_headway_time_sec?: number | null;
+  tm_benchmark_travel_time_sec?: number | null;
   threshold_flag_1?: string;
   speed_mph?: number;
   benchmark_speed_mph?: number;
@@ -73,6 +74,7 @@ export enum BenchmarkFieldKeys {
   benchmarkTravelTimeSec = 'benchmark_travel_time_sec',
   benchmarkHeadwayTimeSec = 'benchmark_headway_time_sec',
   benchmarkSpeedMph = 'benchmark_speed_mph',
+  tmBenchmarkTravelTimeSec = 'tm_benchmark_travel_time_sec',
 }
 
 export type PointField = PointFieldKeys;
@@ -113,6 +115,7 @@ export interface SingleDayLineProps extends LineProps {
   metricField: MetricField;
   date: string | undefined;
   benchmarkField?: BenchmarkField;
+  tmBenchmarkField?: BenchmarkField;
   units: 'Minutes' | 'MPH';
 }
 
