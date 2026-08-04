@@ -17,6 +17,7 @@ import { HeadwaysHistogramWrapper } from '../headways/charts/HeadwaysHistogramWr
 import { SpeedBetweenStationsSingleWrapper } from '../speed/SpeedBetweenStationsGraphWrapper';
 import { SpeedBetweenStationsAggregateWrapper } from '../speed/SpeedBetweenStationsAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
+import { BunchingByHourWrapper } from '../bunching/BunchingByHourWrapper';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -227,6 +228,19 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               line={line}
             />
             <HeadwaysHistogramWrapper
+              query={headways}
+              toStation={toStation}
+              fromStation={fromStation}
+            />
+          </WidgetDiv>
+          <WidgetDiv>
+            <WidgetTitle
+              title="Bunching by hour"
+              subtitle="Percentage of bunched, on-time, and gapped trips"
+              location={location}
+              line={line}
+            />
+            <BunchingByHourWrapper
               query={headways}
               toStation={toStation}
               fromStation={fromStation}
