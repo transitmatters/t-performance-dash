@@ -167,6 +167,7 @@ export const PEAK_RIDERSHIP: {
   'CR-Newburyport': 14972,
   'CR-NewBedford': 6863, // Using same value as former Middleborough
   'CR-Providence': 25728,
+  'CR-CapeFlyer': 0,
   'line-commuter-rail': 126755,
   'line-RIDE': 34102,
   'line-ferry': 41782,
