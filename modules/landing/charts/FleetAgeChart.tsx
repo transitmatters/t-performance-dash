@@ -19,15 +19,15 @@ import { SPEED_RANGE_PARAM_MAP } from '../../speed/constants/speeds';
 import { DATA_LABELS_LANDING, watermarkLayout } from '../../../common/constants/charts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 
-interface LandingPageChartsProps {
+interface FleetAgeChartProps {
   datasets: ChartDataset<'line'>[];
   labels: string[];
   id: string;
 }
-// Add padding for datalabels.
+
 const CHART_PADDING = 48;
 
-export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, labels, id }) => {
+export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({ datasets, labels, id }) => {
   const isMobile = !useBreakpoint('md');
 
   const chart = useMemo(() => {
@@ -53,14 +53,16 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
               mode: 'point',
             },
             // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: { ...watermarkLayoutValues, x: watermarkLayoutValues.x - CHART_PADDING }, // Adjust x to match the padding.
+            watermark: { ...watermarkLayoutValues, x: watermarkLayoutValues.x - CHART_PADDING },
             plugins: {
-              datalabels: DATA_LABELS_LANDING,
+              datalabels: {
+                ...DATA_LABELS_LANDING,
+                formatter: (value: number) => `${value}y`,
+              },
               tooltip: {
                 position: 'nearest',
                 callbacks: {
-                  label: (value) =>
-                    `${value.formattedValue}% of historical maximum (${value.dataset.label})`,
+                  label: (value) => `${value.formattedValue} years (${value.dataset.label})`,
                   title: (value) => {
                     const startDay = dayjs(value[0].label);
                     const endDay = startDay.add(6, 'days');
@@ -76,16 +78,18 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
             },
             scales: {
               y: {
-                suggestedMax: 100,
+                reverse: true,
+                suggestedMin: 0,
+                suggestedMax: 40,
                 display: true,
                 grid: { display: false },
                 ticks: {
                   color: COLORS.design.darkGrey,
-                  callback: (value) => `${value}%`,
+                  callback: (value) => `${value}y`,
                 },
                 title: {
                   display: true,
-                  text: 'Percentage of historical maximum',
+                  text: 'Average car age (years)',
                   color: COLORS.design.darkGrey,
                 },
               },

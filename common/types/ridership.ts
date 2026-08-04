@@ -16,7 +16,7 @@ export type ServiceDay = 'weekday' | 'saturday' | 'sunday';
 export type ServiceRegime = 'peak' | 'current';
 
 export type RidershipKey =
-  | Exclude<Line, 'line-bus'>
+  | Line
   | BusRouteId
   | CommuterRailRoute
   | 'line-RIDE'
