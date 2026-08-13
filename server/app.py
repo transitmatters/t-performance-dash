@@ -3,7 +3,7 @@
 import json
 import os
 import subprocess
-from chalice import CORSConfig, ConflictError, Response, ConvertToMiddleware
+from chalice import BadRequestError, CORSConfig, ConflictError, Response, ConvertToMiddleware
 from chalice_spec import ChaliceWithSpec, PydanticPlugin, Docs
 from apispec import APISpec
 from datetime import date
@@ -61,9 +61,19 @@ def parse_user_date(user_date: str):
     Returns:
       date: A datetime.date object.
     """
-    date_split = user_date.split("-")
-    [year, month, day] = [int(x) for x in date_split[0:3]]
-    return date(year=year, month=month, day=day)
+    try:
+        date_split = user_date.split("-")
+        [year, month, day] = [int(x) for x in date_split[0:3]]
+        return date(year=year, month=month, day=day)
+    except (ValueError, IndexError):
+        raise BadRequestError(f"Invalid date '{user_date}'. Expected format: YYYY-MM-DD.")
+
+
+def validate_query_params(query_params, required: list[str]):
+    """Raise BadRequestError with a descriptive message if any required params are absent."""
+    missing = [p for p in required if p not in (query_params or {})]
+    if missing:
+        raise BadRequestError(f"Missing required query parameter(s): {', '.join(missing)}")
 
 
 TWO_YEARS_DAYS = 730
@@ -86,6 +96,8 @@ def mutlidict_to_dict(mutlidict):
     Returns:
       dict: A dict mapping each key to a list of its values.
     """
+    if not mutlidict:
+        return {}
     res_dict = {}
     for key in mutlidict.keys():
         res_dict[key] = mutlidict.getlist(key)
@@ -99,8 +111,9 @@ def healthcheck():
     checks = {
         "API Key Present": (lambda: len(config.MBTA_V3_API_KEY) > 0),
         "S3 Headway Fetching": (
-            lambda: "2020-11-07T10:33:40"
-            in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))
+            lambda: (
+                "2020-11-07T10:33:40" in json.dumps(data_funcs.headways(date(year=2020, month=11, day=7), ["70061"]))
+            )
         ),
     }
 
@@ -140,7 +153,8 @@ def headways_route(user_date):
     Returns:
       Response: JSON response containing headway event data.
     """
-    stops = app.current_request.query_params.getlist("stop")
+    qp = app.current_request.query_params
+    stops = qp.getlist("stop") if qp else []
     cache_max_age = cache.get_cache_max_age({"date": user_date})
 
     if config.BACKEND_SOURCE == "static":
@@ -168,7 +182,8 @@ def dwells_route(user_date):
     Returns:
       Response: JSON response containing dwell time event data.
     """
-    stops = app.current_request.query_params.getlist("stop")
+    qp = app.current_request.query_params
+    stops = qp.getlist("stop") if qp else []
     cache_max_age = cache.get_cache_max_age({"date": user_date})
 
     if config.BACKEND_SOURCE == "static":
@@ -197,8 +212,9 @@ def traveltime_route(user_date):
     Returns:
       Response: JSON response containing travel time event data.
     """
-    from_stops = app.current_request.query_params.getlist("from_stop")
-    to_stops = app.current_request.query_params.getlist("to_stop")
+    qp = app.current_request.query_params
+    from_stops = qp.getlist("from_stop") if qp else []
+    to_stops = qp.getlist("to_stop") if qp else []
     cache_max_age = cache.get_cache_max_age({"date": user_date})
 
     if config.BACKEND_SOURCE == "static":
@@ -249,6 +265,7 @@ def alerts_route(user_date):
 def traveltime_aggregate_route():
     """Retrieve aggregated travel time data over a date range, grouped by date."""
     query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date"])
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -273,6 +290,7 @@ def traveltime_aggregate_route():
 def traveltime_aggregate_route_2():
     """Retrieve aggregated travel time data with by-time-of-day and by-date breakdowns."""
     query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date"])
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -297,6 +315,7 @@ def traveltime_aggregate_route_2():
 def headways_aggregate_route():
     """Retrieve aggregated headway data over a date range for the given stop(s)."""
     query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date"])
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -320,6 +339,7 @@ def headways_aggregate_route():
 def dwells_aggregate_route():
     """Retrieve aggregated dwell time data over a date range for the given stop(s)."""
     query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date"])
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -353,7 +373,7 @@ def get_git_id():
 @app.route("/api/alerts", cors=cors_config, docs=Docs(response=models.AlertsRouteResponse))
 def get_alerts():
     """Fetch current live alerts from the MBTA v3 API."""
-    data = mbta_v3.getAlerts(app.current_request.query_params)
+    data = mbta_v3.getAlerts(app.current_request.query_params or {})
 
     return Response(
         body=json.dumps(data, indent=4, sort_keys=True, default=str),
@@ -415,6 +435,7 @@ def get_trips_by_line():
 def get_scheduled_service():
     """Retrieve scheduled service counts for a route over a date range."""
     query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date", "agg"])
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -445,6 +466,7 @@ def get_scheduled_service():
 def get_ridership():
     """Retrieve ridership data for a line over a date range."""
     query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date"])
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -470,7 +492,7 @@ def get_ridership():
 @app.route("/api/facilities", cors=cors_config, docs=Docs(response=models.Facility))
 def get_facilities():
     """Fetch facility data (elevators, escalators) from the MBTA v3 API."""
-    data = mbta_v3.getV3("facilities", app.current_request.query_params)
+    data = mbta_v3.getV3("facilities", app.current_request.query_params or {})
 
     return Response(
         body=json.dumps(data, indent=4, sort_keys=True, default=str),
@@ -486,6 +508,7 @@ def get_facilities():
 def get_speed_restrictions():
     """Retrieve speed restriction data for a line on a given date."""
     query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["date", "line_id"])
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -514,6 +537,7 @@ def get_speed_restrictions():
 def get_service_hours():
     """Retrieve delivered service hours for a line over a date range."""
     query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date", "agg"])
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -538,10 +562,15 @@ def get_service_hours():
     )
 
 
-@app.route("/api/time_predictions", cors=cors_config, docs=Docs(response=models.TimePredictionResponse))
+@app.route(
+    "/api/time_predictions",
+    cors=cors_config,
+    docs=Docs(request=models.TimePredictionParams, response=models.TimePredictionResponse),
+)
 def get_time_predictions():
     """Retrieve time prediction accuracy data for a route."""
     query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["route_id"])
 
     if config.BACKEND_SOURCE == "static":
         data = static_data.get_time_predictions(query_params)

@@ -16,7 +16,8 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Run API health checks and return pass/fail status with details on any failures."
       }
     },
     "/api/headways/{user_date}": {
@@ -35,7 +36,9 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve headway data for the given date and stop(s).",
+        "description": "Args:\n  user_date: Date string in \"YYYY-MM-DD\" format.\n  Query params - stop: One or more stop IDs.\n\nReturns:\n  Response: JSON response containing headway event data."
       },
       "parameters": [
         {
@@ -64,7 +67,9 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve dwell time data for the given date and stop(s).",
+        "description": "Args:\n  user_date: Date string in \"YYYY-MM-DD\" format.\n  Query params - stop: One or more stop IDs.\n\nReturns:\n  Response: JSON response containing dwell time event data."
       },
       "parameters": [
         {
@@ -93,7 +98,9 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve travel time data between stop pairs for the given date.",
+        "description": "Args:\n  user_date: Date string in \"YYYY-MM-DD\" format.\n  Query params - from_stop: One or more origin stop IDs.\n  Query params - to_stop: One or more destination stop IDs.\n\nReturns:\n  Response: JSON response containing travel time event data."
       },
       "parameters": [
         {
@@ -122,7 +129,9 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve transit alerts for the given date and route(s).",
+        "description": "Args:\n  user_date: Date string in \"YYYY-MM-DD\" format.\n  Query params - route: One or more route IDs.\n\nReturns:\n  Response: JSON response containing alert data."
       },
       "parameters": [
         {
@@ -151,7 +160,8 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve aggregated travel time data over a date range, grouped by date."
       }
     },
     "/api/aggregate/traveltimes2": {
@@ -170,7 +180,8 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve aggregated travel time data with by-time-of-day and by-date breakdowns."
       }
     },
     "/api/aggregate/headways": {
@@ -189,7 +200,8 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve aggregated headway data over a date range for the given stop(s)."
       }
     },
     "/api/aggregate/dwells": {
@@ -208,7 +220,8 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve aggregated dwell time data over a date range for the given stop(s)."
       }
     },
     "/api/git_id": {
@@ -227,7 +240,8 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Return the current git commit ID. Only available on localhost."
       }
     },
     "/api/alerts": {
@@ -246,7 +260,8 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Fetch current live alerts from the MBTA v3 API."
       }
     },
     "/api/linedelays": {
@@ -274,7 +289,8 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve alert-based delay data aggregated by line over a date range."
       }
     },
     "/api/tripmetrics": {
@@ -302,7 +318,8 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve trip metrics (speed, travel time, etc.) aggregated by line over a date range."
       }
     },
     "/api/scheduledservice": {
@@ -330,7 +347,8 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve scheduled service counts for a route over a date range."
       }
     },
     "/api/ridership": {
@@ -358,7 +376,8 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve ridership data for a line over a date range."
       }
     },
     "/api/facilities": {
@@ -377,7 +396,8 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Fetch facility data (elevators, escalators) from the MBTA v3 API."
       }
     },
     "/api/speed_restrictions": {
@@ -405,7 +425,8 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve speed restriction data for a line on a given date."
       }
     },
     "/api/service_hours": {
@@ -433,11 +454,21 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve delivered service hours for a line over a date range."
       }
     },
     "/api/time_predictions": {
       "get": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TimePredictionParams"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success",
@@ -452,7 +483,8 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve time prediction accuracy data for a route."
       }
     },
     "/api/service_ridership_dashboard": {
@@ -471,8 +503,61 @@
         },
         "tags": [
           "/api"
-        ]
+        ],
+        "summary": "Retrieve combined service and ridership data for the overview dashboard."
       }
+    },
+    "/api/routes": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoutesResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Get a manifest of all available routes supported in the dashboard.",
+        "description": "Returns:\n    Response: JSON response containing route IDs grouped by category\n        (rapid_transit, bus, commuter_rail, ferry), cached for one day."
+      }
+    },
+    "/api/stops/{route_id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Get the stop information for a specific route.",
+        "description": "Args:\n    route_id: The route ID to look up stops for.\n\nReturns:\n    Response: JSON response containing station/stop data including names, IDs,\n        and directions, or a 404 response if the route is not found."
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "route_id",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }
+      ]
     }
   },
   "info": {
@@ -483,6 +568,7 @@
   "components": {
     "schemas": {
       "HealthcheckResponse": {
+        "description": "Response for `/api/healthcheck`.\n\nAttributes:\n    status: `\"pass\"` or `\"fail\"`.\n    failed_checks_sum: Number of failed checks, if any.\n    failed_checks: Map of check name to failure detail.",
         "properties": {
           "status": {
             "title": "Status",
@@ -524,6 +610,7 @@
       },
       "HeadwayResponse": {
         "additionalProperties": true,
+        "description": "Response for `/api/headways/{date}` \u2014 raw headway events for a single day.\n\nAttributes:\n    headways: Headway data keyed by stop ID.",
         "properties": {
           "headways": {
             "additionalProperties": true,
@@ -539,6 +626,7 @@
       },
       "DwellResponse": {
         "additionalProperties": true,
+        "description": "Response for `/api/dwells/{date}` \u2014 raw dwell time events for a single day.\n\nAttributes:\n    dwells: Dwell time data keyed by stop ID.",
         "properties": {
           "dwells": {
             "additionalProperties": true,
@@ -554,6 +642,7 @@
       },
       "TravelTimeResponse": {
         "additionalProperties": true,
+        "description": "Response for `/api/traveltimes/{date}` \u2014 raw travel time events for a single day.\n\nAttributes:\n    travel_times: Travel time data keyed by origin-destination stop pair.",
         "properties": {
           "travel_times": {
             "additionalProperties": true,
@@ -569,6 +658,7 @@
       },
       "AlertsRouteResponse": {
         "additionalProperties": true,
+        "description": "Response for alert endpoints (`/api/alerts` and `/api/alerts/{date}`).\n\nAttributes:\n    alerts: List of alert objects with type, active periods, stops, and routes.",
         "properties": {
           "alerts": {
             "items": {
@@ -587,6 +677,7 @@
       },
       "TravelTimeAggregateResponse": {
         "additionalProperties": true,
+        "description": "Response for `/api/aggregate/traveltimes` and `/api/aggregate/traveltimes2`.\n\nContains `by_date` and/or `by_time` sub-objects with statistical summaries.\n\nAttributes:\n    data: Aggregated travel time statistics.",
         "properties": {
           "data": {
             "additionalProperties": true,
@@ -602,6 +693,7 @@
       },
       "HeadwaysAggregateResponse": {
         "additionalProperties": true,
+        "description": "Response for `/api/aggregate/headways`.\n\nIncludes standard statistics plus bunching ratio and on-time percentage.\n\nAttributes:\n    data: Aggregated headway statistics by date.",
         "properties": {
           "data": {
             "additionalProperties": true,
@@ -617,6 +709,7 @@
       },
       "DwellsAggregateResponse": {
         "additionalProperties": true,
+        "description": "Response for `/api/aggregate/dwells`.\n\nAttributes:\n    data: Aggregated dwell time statistics by date.",
         "properties": {
           "data": {
             "additionalProperties": true,
@@ -631,6 +724,7 @@
         "type": "object"
       },
       "GitIdResponse": {
+        "description": "Response for `/api/git_id` \u2014 current deployment's git commit.\n\nAttributes:\n    git_id: Git commit hash of the deployed code.",
         "properties": {
           "git_id": {
             "title": "Git Id",
@@ -644,6 +738,7 @@
         "type": "object"
       },
       "AlertDelaysByLineParams": {
+        "description": "Parameters for the `/api/linedelays` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    line: Line identifier (e.g., `Red`, `Orange`, `Green-B`).\n    agg: Aggregation level \u2014 `daily` or `weekly`. Defaults to `weekly`.",
         "properties": {
           "start_date": {
             "anyOf": [
@@ -672,6 +767,11 @@
           "line": {
             "title": "Line",
             "type": "string"
+          },
+          "agg": {
+            "default": "weekly",
+            "title": "Agg",
+            "type": "string"
           }
         },
         "required": [
@@ -684,6 +784,7 @@
       },
       "LineDelaysResponse": {
         "additionalProperties": true,
+        "description": "Response for `/api/linedelays` \u2014 alert-based delay data for a transit line.\n\nAttributes:\n    data: Delay data, daily or weekly depending on the `agg` parameter.",
         "properties": {
           "data": {
             "additionalProperties": true,
@@ -698,6 +799,7 @@
         "type": "object"
       },
       "TripMetricsByLineParams": {
+        "description": "Parameters for the `/api/tripmetrics` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.\n    line: Line identifier (e.g., `Red`, `Green-B`).",
         "properties": {
           "start_date": {
             "anyOf": [
@@ -743,6 +845,7 @@
       },
       "TripMetricsResponse": {
         "additionalProperties": true,
+        "description": "Response for `/api/tripmetrics` \u2014 trip count, time, and miles for a line.\n\nAttributes:\n    data: Trip metrics at the requested aggregation level.",
         "properties": {
           "data": {
             "additionalProperties": true,
@@ -757,6 +860,7 @@
         "type": "object"
       },
       "ScheduledServiceParams": {
+        "description": "Parameters for the `/api/scheduledservice` endpoint.\n\nAttributes:\n    start_date: Start of date range.\n    end_date: End of date range.\n    route_id: Optional route filter. `None` returns all routes.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
         "properties": {
           "start_date": {
             "format": "date",
@@ -794,6 +898,7 @@
         "type": "object"
       },
       "GetScheduledServiceResponse": {
+        "description": "Response for `/api/scheduledservice` \u2014 scheduled service counts and hours.\n\nAttributes:\n    start_date_service_levels: Service levels at the start of the date range.\n    end_date_service_levels: Service levels at the end of the date range.\n    counts: Scheduled trip counts keyed by date string.\n    service_hours: Service hours keyed by date string.",
         "properties": {
           "start_date_service_levels": {
             "$ref": "#/components/schemas/ServiceLevelsByDayKind"
@@ -826,6 +931,7 @@
         "type": "object"
       },
       "RidershipParams": {
+        "description": "Parameters for the `/api/ridership` endpoint.\n\nAttributes:\n    start_date: Start of date range.\n    end_date: End of date range.\n    line_id: Optional line filter. `None` returns all lines.",
         "properties": {
           "start_date": {
             "format": "date",
@@ -859,6 +965,7 @@
       },
       "RidershipResponse": {
         "additionalProperties": true,
+        "description": "Response for `/api/ridership` \u2014 daily ridership counts.\n\nAttributes:\n    data: List of daily ridership entries.",
         "properties": {
           "data": {
             "items": {
@@ -875,6 +982,7 @@
         "type": "object"
       },
       "Facility": {
+        "description": "An MBTA facility (elevator, escalator, etc.) from the v3 API.\n\nAttributes:\n    id: Facility identifier.\n    type: Facility type (e.g., `ELEVATOR`, `ESCALATOR`).\n    attributes: Raw facility attributes from the MBTA API.",
         "properties": {
           "id": {
             "title": "Id",
@@ -899,24 +1007,26 @@
         "type": "object"
       },
       "SpeedRestrictionsParams": {
+        "description": "Parameters for the `/api/speed_restrictions` endpoint.\n\nAttributes:\n    line_id: Line identifier (e.g., `Red`, `Orange`).\n    date: Date to query (YYYY-MM-DD).",
         "properties": {
           "line_id": {
             "title": "Line Id",
             "type": "string"
           },
-          "on_date": {
-            "title": "On Date",
+          "date": {
+            "title": "Date",
             "type": "string"
           }
         },
         "required": [
           "line_id",
-          "on_date"
+          "date"
         ],
         "title": "SpeedRestrictionsParams",
         "type": "object"
       },
       "SpeedRestrictionsResponse": {
+        "description": "Response for `/api/speed_restrictions` \u2014 speed restriction zones.\n\nAttributes:\n    available: Whether speed restriction data exists for this date.\n    date: Actual date of the data (may differ from requested date).\n    zones: Speed restriction zone details, if available.",
         "properties": {
           "available": {
             "title": "Available",
@@ -955,8 +1065,9 @@
         "type": "object"
       },
       "ServiceHoursParams": {
+        "description": "Parameters for the `/api/service_hours` endpoint.\n\nAttributes:\n    line_id: Optional line filter. `None` returns all lines.\n    start_date: Start of date range.\n    end_date: End of date range.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
         "properties": {
-          "single_route_id": {
+          "line_id": {
             "anyOf": [
               {
                 "type": "string"
@@ -966,7 +1077,7 @@
               }
             ],
             "default": null,
-            "title": "Single Route Id"
+            "title": "Line Id"
           },
           "start_date": {
             "format": "date",
@@ -993,6 +1104,7 @@
       },
       "ServiceHoursResponse": {
         "additionalProperties": true,
+        "description": "Response for `/api/service_hours` \u2014 scheduled vs. delivered service hours.\n\nAttributes:\n    data: Service hours comparison data.",
         "properties": {
           "data": {
             "additionalProperties": true,
@@ -1006,8 +1118,23 @@
         "title": "ServiceHoursResponse",
         "type": "object"
       },
+      "TimePredictionParams": {
+        "description": "Parameters for the `/api/time_predictions` endpoint.\n\nAttributes:\n    route_id: Route identifier (e.g., `Red`, `CR-Fairmount`).",
+        "properties": {
+          "route_id": {
+            "title": "Route Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "route_id"
+        ],
+        "title": "TimePredictionParams",
+        "type": "object"
+      },
       "TimePredictionResponse": {
         "additionalProperties": true,
+        "description": "Response for `/api/time_predictions` \u2014 time prediction model data.\n\nAttributes:\n    predictions: Prediction model data for a route.",
         "properties": {
           "predictions": {
             "additionalProperties": true,
@@ -1022,6 +1149,7 @@
         "type": "object"
       },
       "ServiceRidershipDashboardResponse": {
+        "description": "Response for `/api/service_ridership_dashboard` \u2014 system-wide summary.\n\nAttributes:\n    summaryData: System-wide summary metrics.\n    lineData: Per-line metrics.",
         "properties": {
           "summaryData": {
             "additionalProperties": true,
@@ -1041,7 +1169,104 @@
         "title": "ServiceRidershipDashboardResponse",
         "type": "object"
       },
+      "RoutesResponse": {
+        "description": "Response for `/api/routes` \u2014 lists all available routes by transit mode.\n\nAttributes:\n    rapid_transit: Rapid transit route IDs (e.g., `Red`, `Orange`, `Green-B`).\n    bus: Bus route IDs.\n    commuter_rail: Commuter rail route IDs (e.g., `CR-Fairmount`).\n    ferry: Ferry route IDs (e.g., `Boat-F1`).",
+        "properties": {
+          "rapid_transit": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Rapid Transit",
+            "type": "array"
+          },
+          "bus": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Bus",
+            "type": "array"
+          },
+          "commuter_rail": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Commuter Rail",
+            "type": "array"
+          },
+          "ferry": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Ferry",
+            "type": "array"
+          }
+        },
+        "required": [
+          "rapid_transit",
+          "bus",
+          "commuter_rail",
+          "ferry"
+        ],
+        "title": "RoutesResponse",
+        "type": "object"
+      },
+      "StopsResponse": {
+        "additionalProperties": true,
+        "description": "Response for `/api/stops/{route_id}` \u2014 station/stop info for a route.\n\nAttributes:\n    type: Route type (e.g., `rapid_transit`, `bus`, `commuter_rail`).\n    direction: Map of direction ID to direction name (e.g., `{\"0\": \"Southbound\"}`).\n    stations: Ordered list of stations/stops along the route.\n    service_start: Service start date, if applicable.\n    service_end: Service end date, if applicable.",
+        "properties": {
+          "type": {
+            "title": "Type",
+            "type": "string"
+          },
+          "direction": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Direction",
+            "type": "object"
+          },
+          "stations": {
+            "items": {
+              "$ref": "#/components/schemas/StationStop"
+            },
+            "title": "Stations",
+            "type": "array"
+          },
+          "service_start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Service Start"
+          },
+          "service_end": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Service End"
+          }
+        },
+        "required": [
+          "type",
+          "direction",
+          "stations"
+        ],
+        "title": "StopsResponse",
+        "type": "object"
+      },
       "ByDayKindServiceLevels": {
+        "description": "Service levels for a specific day type (weekday, Saturday, or Sunday).\n\nAttributes:\n    date: Reference date (YYYY-MM-DD).\n    service_levels: Service count by hour (24 entries, index 0 = midnight).",
         "properties": {
           "date": {
             "title": "Date",
@@ -1063,6 +1288,7 @@
         "type": "object"
       },
       "ServiceLevelsByDayKind": {
+        "description": "Service levels grouped by day type.\n\nAttributes:\n    weekday: Weekday service breakdown.\n    saturday: Saturday service breakdown.\n    sunday: Sunday service breakdown.",
         "properties": {
           "weekday": {
             "$ref": "#/components/schemas/ByDayKindServiceLevels"
@@ -1083,6 +1309,7 @@
         "type": "object"
       },
       "RidershipEntry": {
+        "description": "A single day's ridership count.\n\nAttributes:\n    date: Date string (YYYY-MM-DD).\n    count: Ridership count for the day.",
         "properties": {
           "date": {
             "title": "Date",
@@ -1098,6 +1325,129 @@
           "count"
         ],
         "title": "RidershipEntry",
+        "type": "object"
+      },
+      "StationStop": {
+        "additionalProperties": true,
+        "description": "A station or stop along a route.\n\nAttributes:\n    stop_name: Display name of the station.\n    branches: Branch identifiers (used for Green Line), or `None`.\n    station: Station identifier (e.g., `place-alfcl`).\n    order: Position in route order (0-indexed).\n    stops: Map of direction ID to list of stop IDs.\n    accessible: Whether the station is ADA accessible.\n    pedal_park: Whether the station has bike parking.\n    enclosed_bike_parking: Whether the station has enclosed bike storage.\n    terminus: Whether this is a terminal station.\n    disabled: Whether this stop is currently disabled.\n    short: Short display name.",
+        "properties": {
+          "stop_name": {
+            "title": "Stop Name",
+            "type": "string"
+          },
+          "branches": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Branches"
+          },
+          "station": {
+            "title": "Station",
+            "type": "string"
+          },
+          "order": {
+            "title": "Order",
+            "type": "integer"
+          },
+          "stops": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "title": "Stops",
+            "type": "object"
+          },
+          "accessible": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Accessible"
+          },
+          "pedal_park": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Pedal Park"
+          },
+          "enclosed_bike_parking": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Enclosed Bike Parking"
+          },
+          "terminus": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Terminus"
+          },
+          "disabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Disabled"
+          },
+          "short": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Short"
+          }
+        },
+        "required": [
+          "stop_name",
+          "branches",
+          "station",
+          "order",
+          "stops"
+        ],
+        "title": "StationStop",
         "type": "object"
       }
     }
