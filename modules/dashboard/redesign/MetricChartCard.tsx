@@ -14,14 +14,13 @@ import { useScheduledService } from '../../../common/api/hooks/service';
 import { useRidershipData } from '../../../common/api/hooks/ridership';
 import { getRidershipLineId } from '../../../common/utils/ridership';
 import { useSlowzoneDelayTotalData } from '../../../common/api/hooks/slowzones';
-import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../../common/constants/dates';
+import { TODAY_STRING } from '../../../common/constants/dates';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { getSpeedGraphConfig } from '../../speed/constants/speeds';
 import { SpeedGraph } from '../../speed/charts/SpeedGraph';
 import { ServiceGraph } from '../../service/ServiceGraph';
 import { TotalSlowTime } from '../../slowzones/charts/TotalSlowTime';
 import { RidershipGraph } from '../../ridership/RidershipGraph';
-import type { LineShort } from '../../../common/types/lines';
 import type { MetricKey } from './types';
 
 interface MetricChartCardProps {
@@ -29,19 +28,22 @@ interface MetricChartCardProps {
 }
 
 const METRIC_COPY: Record<MetricKey, { title: string; subtitle: string }> = {
-  speed: { title: 'Speed', subtitle: 'Daily average, past month' },
-  service: { title: 'Service delivered', subtitle: 'Daily round trips, past month' },
-  slowzones: { title: 'Slow zones', subtitle: 'Time lost to slow zones, past month' },
-  ridership: { title: 'Ridership', subtitle: 'Fare validations, past month' },
+  speed: { title: 'Speed', subtitle: 'Daily average, last 30 days' },
+  service: { title: 'Service delivered', subtitle: 'Daily round trips, last 30 days' },
+  slowzones: { title: 'Slow zones', subtitle: 'Time lost to slow zones, last 30 days' },
+  ridership: { title: 'Ridership', subtitle: 'Fare validations, last 30 days' },
 };
 
 /** The single chart the scorecard drives — clicking a row swaps which metric renders here. */
 export const MetricChartCard: React.FC<MetricChartCardProps> = ({ metric }) => {
   const { line, lineShort } = useDelimitatedRoute();
-  const { startDate } = OVERVIEW_OPTIONS.month;
   const endDate = TODAY_STRING;
+  const startDate = dayjs(endDate).subtract(60, 'day').format('YYYY-MM-DD');
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const enabled = Boolean(line);
+
+  const windowStart = (lastDate: string) =>
+    dayjs(lastDate).subtract(30, 'day').format('YYYY-MM-DD');
 
   const tripMetrics = useDeliveredTripMetrics(
     { start_date: startDate, end_date: endDate, agg: config.agg, line },
@@ -66,12 +68,17 @@ export const MetricChartCard: React.FC<MetricChartCardProps> = ({ metric }) => {
   const renderChart = () => {
     if (metric === 'speed') {
       if (!tripMetrics.data) return <ChartPlaceHolder query={tripMetrics} />;
+      // Trim trailing days with no data (the feed lags a couple days) so the chart doesn't end in a
+      // grey "No data" slab; clip the axis to the last reported day.
+      const lastIdx = tripMetrics.data.map((p) => !!p.miles_covered).lastIndexOf(true);
+      const data = lastIdx >= 0 ? tripMetrics.data.slice(0, lastIdx + 1) : tripMetrics.data;
+      const chartEnd = data[data.length - 1]?.date ?? endDate;
       return (
         <SpeedGraph
-          data={tripMetrics.data}
+          data={data}
           config={config}
-          startDate={startDate}
-          endDate={endDate}
+          startDate={windowStart(chartEnd)}
+          endDate={chartEnd}
           peakLineDashed
         />
       );
@@ -79,36 +86,45 @@ export const MetricChartCard: React.FC<MetricChartCardProps> = ({ metric }) => {
     if (metric === 'service') {
       if (!tripMetrics.data || !predictedService.data)
         return <ChartPlaceHolder query={tripMetrics.isError ? tripMetrics : predictedService} />;
+      const lastIdx = tripMetrics.data.map((p) => !!p.miles_covered).lastIndexOf(true);
+      const data = lastIdx >= 0 ? tripMetrics.data.slice(0, lastIdx + 1) : tripMetrics.data;
+      const chartEnd = data[data.length - 1]?.date ?? endDate;
       return (
         <ServiceGraph
-          data={tripMetrics.data}
+          data={data}
           predictedData={predictedService.data}
           config={config}
-          startDate={startDate}
-          endDate={endDate}
+          startDate={windowStart(chartEnd)}
+          endDate={chartEnd}
         />
       );
     }
     if (metric === 'slowzones') {
       if (!delayTotals.data || !line || !lineShort) return <ChartPlaceHolder query={delayTotals} />;
+      if (lineShort === 'Bus' || lineShort === 'Commuter Rail') return <ChartPlaceHolder query={delayTotals} />;
+      const totals = delayTotals.data.data;
+      const slowEnd = totals.length
+        ? dayjs.utc(totals[totals.length - 1].date)
+        : dayjs.utc(endDate);
       return (
         <TotalSlowTime
-          data={delayTotals.data.data}
-          startDateUTC={dayjs.utc(startDate)}
-          endDateUTC={dayjs.utc(endDate)}
+          data={totals}
+          startDateUTC={slowEnd.subtract(30, 'day')}
+          endDateUTC={slowEnd}
           line={line}
-          lineShort={lineShort as Exclude<LineShort, 'Bus' | 'Commuter Rail'>}
+          lineShort={lineShort}
           showTitle={false}
         />
       );
     }
     if (!ridership.data) return <ChartPlaceHolder query={ridership} />;
+    const ridershipEnd = ridership.data[ridership.data.length - 1]?.date ?? endDate;
     return (
       <RidershipGraph
         data={ridership.data}
         config={config}
-        startDate={startDate}
-        endDate={endDate}
+        startDate={windowStart(ridershipEnd)}
+        endDate={ridershipEnd}
       />
     );
   };

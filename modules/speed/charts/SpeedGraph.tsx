@@ -7,6 +7,8 @@ import { enUS } from 'date-fns/locale';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import { HERO_LINE_WIDTH } from '../../../common/utils/chartTheme';
+import { hexWithAlpha } from '../../../common/utils/general';
 import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
@@ -59,8 +61,10 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
             datasets: [
               {
                 label: `MPH`,
-                backgroundColor: COLORS.design.background,
+                fill: true,
+                backgroundColor: hexWithAlpha(LINE_COLORS[line ?? 'default'], 0.8),
                 borderColor: LINE_COLORS[line ?? 'default'],
+                borderWidth: HERO_LINE_WIDTH,
                 pointRadius: 0,
                 pointBorderWidth: 0,
                 stepped: true,

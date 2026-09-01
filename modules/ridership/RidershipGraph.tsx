@@ -10,6 +10,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { RidershipCount } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
+import { HERO_LINE_WIDTH } from '../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
 import { PEAK_RIDERSHIP } from '../../common/constants/baselines';
@@ -66,6 +67,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                 {
                   label: `Fare validations`,
                   borderColor: lineColor,
+                  borderWidth: HERO_LINE_WIDTH,
                   backgroundColor: hexWithAlpha(lineColor, 0.8),
                   pointRadius: 0,
                   pointBorderWidth: 0,

@@ -9,6 +9,8 @@ import {
   CardContent,
 } from '../../../common/components/ui/card';
 import { Badge } from '../../../common/components/ui/badge';
+import { Button } from '../../../common/components/ui/button';
+import { Skeleton } from '../../../common/components/ui/skeleton';
 import { useAccessibilityAlertsData } from '../../../common/api/hooks/alerts';
 import { getRelevantAlerts } from '../../commute/alerts/AlertBox';
 import { AlertEffect } from '../../../common/types/alerts';
@@ -23,15 +25,21 @@ interface AccessibilityCardProps {
 
 export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort }) => {
   const accessibilityAlerts = useAccessibilityAlertsData(lineShort);
+  const notTracked = lineShort === 'Commuter Rail' || lineShort === 'Bus';
+  const isLoading = !notTracked && accessibilityAlerts.isLoading;
+  const isError = !notTracked && accessibilityAlerts.isError;
   const current =
-    lineShort === 'Commuter Rail' || lineShort === 'Bus'
+    notTracked || !accessibilityAlerts.data
       ? []
-      : accessibilityAlerts.data
-        ? getRelevantAlerts(accessibilityAlerts.data, 'current')
-        : [];
+      : getRelevantAlerts(accessibilityAlerts.data, 'current');
 
   const lineStations =
     lineShort === 'Commuter Rail' || lineShort === 'Bus' ? [] : rtStations[lineShort].stations;
+
+  const affectedStops = new Set(current.flatMap((alert) => alert.stops));
+  const affectedStationCount = lineStations.filter((station) =>
+    affectedStops.has(station.station)
+  ).length;
 
   return (
     <Card className="flex flex-col">
@@ -39,16 +47,54 @@ export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort 
         <div className="flex flex-col gap-1">
           <CardTitle>Accessibility</CardTitle>
           <CardDescription>
-            {current.length
-              ? `${current.length} of ${lineStations.length} stations have equipment out of service`
-              : 'All stations fully accessible'}
+            {notTracked
+              ? 'Elevator status not tracked for this line'
+              : isLoading
+                ? 'Checking elevator & escalator status…'
+                : isError
+                  ? "Couldn't load accessibility status."
+                  : affectedStationCount
+                    ? `${affectedStationCount} of ${lineStations.length} stations have equipment out of service`
+                    : 'All stations fully accessible'}
           </CardDescription>
         </div>
-        <Badge variant={current.length ? 'warning' : 'success'} className="shrink-0">
-          {current.length ? `${current.length} open` : 'All clear'}
+        <Badge
+          variant={
+            notTracked || isLoading
+              ? 'outline'
+              : isError
+                ? 'destructive'
+                : affectedStationCount
+                  ? 'warning'
+                  : 'success'
+          }
+          className="shrink-0"
+        >
+          {notTracked
+            ? 'N/A'
+            : isLoading
+              ? 'Checking…'
+              : isError
+                ? 'Unavailable'
+                : affectedStationCount
+                  ? `${affectedStationCount} affected`
+                  : 'All clear'}
         </Badge>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col divide-y">
+        {isLoading && (
+          <div className="flex flex-col gap-3 py-1">
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+          </div>
+        )}
+        {isError && (
+          <div className="py-2">
+            <Button variant="outline" size="sm" onClick={() => accessibilityAlerts.refetch()}>
+              Try again
+            </Button>
+          </div>
+        )}
         {current.slice(0, 4).map((alert) => {
           const start = alert.relevantTimes[0]?.start;
           const days = start ? dayjs().diff(start, 'day') : null;
@@ -73,7 +119,7 @@ export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort 
             </div>
           );
         })}
-        {!current.length && (
+        {!notTracked && !isLoading && !isError && !current.length && (
           <p className="text-muted-foreground py-2 text-sm">No open accessibility alerts.</p>
         )}
       </CardContent>

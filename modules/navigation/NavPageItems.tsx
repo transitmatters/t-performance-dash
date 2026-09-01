@@ -64,6 +64,7 @@ export const NavPageItems: React.FC<NavPageItemsProps> = ({ pages, close }) => {
             >
               <Link
                 href={generateHref(tab, page, query, linePath)}
+                aria-current={selected ? 'page' : undefined}
                 onClick={() => {
                   handlePageConfig(tab);
                   close?.();

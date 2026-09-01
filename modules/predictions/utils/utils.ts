@@ -77,6 +77,55 @@ const calcValues = (predictions: TimePredictionWeek[]) => {
   };
 };
 
-export const getDetailsPredictiondWidgetValues = (datapoints: TimePredictionWeek[]) => {
-  return calcValues(datapoints);
+const weeklyAccuracy = (week: TimePredictionWeek) => {
+  const accurate = week.prediction.reduce(
+    (sum, pred) =>
+      !isNaN(pred.num_accurate_predictions) ? sum + pred.num_accurate_predictions : sum,
+    0
+  );
+  const total = week.prediction.reduce(
+    (sum, pred) => (!isNaN(pred.num_predictions) ? sum + pred.num_predictions : sum),
+    0
+  );
+  return { accurate, total };
+};
+
+const mean = (values: number[]) =>
+  values.length ? values.reduce((sum, v) => sum + v, 0) / values.length : NaN;
+
+/**
+ * Headline KPIs for the Predictions page's summary cards, derived entirely from the already-fetched
+ * prediction data (no extra requests). The accuracy delta compares the trailing half of the weeks
+ * against the leading half — a "trending up/down over this window" signal. Higher accuracy is good.
+ */
+export const getPredictionStats = (data: TimePredictionWeek[]) => {
+  const perWeek = data
+    .map(weeklyAccuracy)
+    .filter(({ total }) => total > 0)
+    .map(({ accurate, total }) => accurate / total);
+
+  const totals = data.reduce(
+    (acc, week) => {
+      const { accurate, total } = weeklyAccuracy(week);
+      return { accurate: acc.accurate + accurate, total: acc.total + total };
+    },
+    { accurate: 0, total: 0 }
+  );
+  const overallAccuracy = totals.total ? totals.accurate / totals.total : NaN;
+
+  const mid = Math.floor(perWeek.length / 2);
+  const leading = perWeek.slice(0, mid);
+  const trailing = perWeek.slice(mid);
+  const accuracyDelta = leading.length && trailing.length ? mean(trailing) - mean(leading) : NaN;
+
+  const { peak, worst } = calcValues(data);
+
+  return {
+    overallAccuracy,
+    accuracyDelta,
+    peakAccuracy: peak.num_accurate_predictions / peak.num_predictions,
+    peakDate: peak.weekly,
+    worstAccuracy: worst.num_accurate_predictions / worst.num_predictions,
+    worstDate: worst.weekly,
+  };
 };

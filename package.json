@@ -21,14 +21,14 @@
     "lint-backend-fix": "cd server && uv run ruff check . --fix && uv run ruff format .",
     "lint-frontend": "tsc --noEmit && eslint .",
     "lint-frontend-fix": "tsc --noEmit && eslint . --fix",
-    "postinstall": "cd server && uv sync",
     "serve-static": "npm run build && serve out",
     "start": "concurrently npm:start-python npm:start-react",
     "start-python": "cd server && uv run chalice local --port=5000",
     "start-react": "npm run get-data && next dev",
     "storybook": "storybook dev -p 6006",
     "test": "react-scripts test",
-    "ui-add": "shadcn add"
+    "ui-add": "shadcn add",
+    "dev": "next dev"
   },
   "browserslist": {
     "production": [

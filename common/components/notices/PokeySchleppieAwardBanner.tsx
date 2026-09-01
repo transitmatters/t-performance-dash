@@ -34,36 +34,32 @@ export const PokeySchleppieAwardBanner: React.FunctionComponent<PokeySchleppieAw
     return (
       <div
         key={year}
-        className="flex items-center overflow-hidden rounded-sm bg-linear-to-r from-[#f5B400] to-[#fcefcb] px-6 py-2.5"
+        className="bg-card text-card-foreground ring-foreground/10 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl px-4 py-3 ring-1"
       >
-        <div className="flex w-full gap-x-4 gap-y-2">
-          <FontAwesomeIcon
-            icon={faTrophy}
-            size={'2x'}
-            className="text-shadow text-white shadow-gray-500"
-          />
-          <div className="flex w-full items-center justify-between">
-            <p className="text-md text-shadow w-full leading-6 text-white shadow-gray-500">
-              "Winner" of the {year}{' '}
-              {pokey && schleppie
-                ? 'Pokey and Schleppie'
-                : pokey
-                  ? 'Pokey'
-                  : schleppie
-                    ? 'Schleppie'
-                    : null}{' '}
-              Award{pokey && schleppie ? 's' : ''}!
-            </p>
-            <a
-              href="https://drive.google.com/file/d/1QFTVg0N3-uQeVoMqlOE6QLPqcoCtifzp/view"
-              target="_blank"
-              className="flex-none rounded-full bg-gray-900 px-3.5 py-1 text-sm font-semibold text-white shadow-xs hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 focus-visible:outline-solid"
-              rel="noreferrer"
-            >
-              Read more <span aria-hidden="true">&rarr;</span>
-            </a>
-          </div>
-        </div>
+        <FontAwesomeIcon
+          icon={faTrophy}
+          className="mt-0.5 h-4 w-4 shrink-0 self-start text-amber-500"
+          aria-hidden
+        />
+        <p className="min-w-0 flex-1 text-sm">
+          &ldquo;Winner&rdquo; of the {year}{' '}
+          {pokey && schleppie
+            ? 'Pokey and Schleppie'
+            : pokey
+              ? 'Pokey'
+              : schleppie
+                ? 'Schleppie'
+                : null}{' '}
+          Award{pokey && schleppie ? 's' : ''}!
+        </p>
+        <a
+          href="https://drive.google.com/file/d/1QFTVg0N3-uQeVoMqlOE6QLPqcoCtifzp/view"
+          target="_blank"
+          rel="noreferrer"
+          className="ring-foreground/15 hover:bg-foreground/5 focus-visible:ring-ring flex-none rounded-full px-3 py-1 text-sm font-medium ring-1 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+        >
+          Read more <span aria-hidden="true">&rarr;</span>
+        </a>
       </div>
     );
   });

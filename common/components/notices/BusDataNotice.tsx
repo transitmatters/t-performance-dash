@@ -1,24 +1,21 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLocationCrosshairs } from '@fortawesome/free-solid-svg-icons';
 import { useDelimitatedRoute } from '../../utils/router';
 
+/**
+ * Bus coverage note. Renders as plain prose for the "About this data"
+ * accordion (see TripDataNotes).
+ */
 export const BusDataNotice: React.FC = () => {
   const { line, linePath } = useDelimitatedRoute();
 
-  if (line === 'line-bus' || linePath === 'bus') {
-    return (
-      <div className={'flex items-center'}>
-        <FontAwesomeIcon icon={faLocationCrosshairs} size={'lg'} />
-        <div className={'mx-3 my-2 text-sm italic'}>
-          <p>
-            Due to data collection issues, bus data is not guaranteed to be complete for any stop or
-            date.
-          </p>
-          <p>This may lead to inaccuracy, particularly in headway calculations.</p>
-        </div>
-      </div>
-    );
+  if (line !== 'line-bus' && linePath !== 'bus') {
+    return null;
   }
-  return null;
+
+  return (
+    <p>
+      Bus data isn&apos;t guaranteed to be complete for any stop or date, which may affect headway
+      figures in particular.
+    </p>
+  );
 };

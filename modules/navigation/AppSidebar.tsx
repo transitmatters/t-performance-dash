@@ -20,10 +20,7 @@ export const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...
   }, [isMobile, setOpenMobile]);
 
   return (
-    // No collapsible mode and no SidebarRail: the original sidebar was fixed, and the rail's
-    // resize/collapse hit-target along the whole right edge was catching stray clicks near the
-    // footer, hiding the donate button behind a collapsed state nobody meant to trigger.
-    <Sidebar collapsible="none" {...props}>
+    <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader className="overflow-hidden px-3 py-3">
         <Link href="/" onClick={close} className="flex h-6 items-center">
           <Image
