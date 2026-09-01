@@ -13,7 +13,7 @@ export const SmallDelta: React.FC<SmallDeltaProps> = ({ analysis, widgetValue })
   return (
     <div className="flex flex-row items-end justify-between">
       <p
-        className={classNames('truncate text-xs leading-tight text-design-subtitleGrey sm:text-sm')}
+        className={classNames('text-design-subtitleGrey truncate text-xs leading-tight sm:text-sm')}
       >
         {analysis}
       </p>

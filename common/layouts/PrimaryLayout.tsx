@@ -2,6 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React from 'react';
 
+import { TooltipProvider } from '@/common/components/ui/tooltip';
+
 interface LayoutProps {
   children?: React.ReactNode;
 }
@@ -19,10 +21,12 @@ const queryClient = new QueryClient({
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools buttonPosition="top-left" />
-      <div className="flex h-screen flex-col">
-        <main className="relative h-full">{children}</main>
-      </div>
+      <ReactQueryDevtools buttonPosition="bottom-right" />
+      <TooltipProvider>
+        <div className="flex h-screen flex-col">
+          <main className="relative h-full">{children}</main>
+        </div>
+      </TooltipProvider>
     </QueryClientProvider>
   );
 };

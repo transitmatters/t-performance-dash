@@ -12,7 +12,7 @@ export const StopClosure: React.FC<StopClosureProps> = ({ alert, type }) => {
   return (
     <AlertBoxInner
       header={alert.header}
-      Icon={() => <p className={classNames('m-0.5 pl-2 pr-2 text-4xl')}>🚧</p>}
+      Icon={() => <p className={classNames('m-0.5 pr-2 pl-2 text-4xl')}>🚧</p>}
       alert={alert}
       type={type}
     >

@@ -1,7 +1,5 @@
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Disclosure } from '@headlessui/react';
 import React from 'react';
+import { CHART_COLORS } from '../../constants/colors';
 import { useDelimitatedRoute } from '../../utils/router';
 
 interface LegendProps {
@@ -16,74 +14,45 @@ interface LegendLongTermProps {
 export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio }) => {
   const { line } = useDelimitatedRoute();
   return (
-    <Disclosure>
-      {({ open }) => (
-        <div className="flex w-full flex-col rounded-md border border-stone-100 text-stone-700 shadow-sm">
-          <Disclosure.Button className="">
-            <div className="flex flex-row items-center justify-between px-4 py-1">
-              <p className="text-xs italic">Legend</p>
-              <FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} className="" />
-            </div>
-          </Disclosure.Button>
-          <Disclosure.Panel>
-            <div
-              className={
-                'grid w-full grid-cols-2 items-baseline p-1 px-4 text-left text-xs lg:flex lg:flex-row lg:gap-4'
-              }
-            >
-              <LegendSingle showUnderRatio={showUnderRatio} />
-            </div>
-
-            <div
-              className={
-                'mx-1 mb-1 grid w-full grid-cols-2 items-baseline p-1 px-4 text-left text-xs text-gray-500 lg:flex lg:flex-row lg:gap-4'
-              }
-            >
-              {line === 'line-commuter-rail' && (
-                <p>
-                  Due to how we collect data for Commuter Rail, we may occasionally miss trips or
-                  stops. This can lead to inaccuracies in headways numbers and gaps in travel time
-                  data. Confirm data you see here with official MBTA sources when possible.
-                </p>
-              )}
-            </div>
-          </Disclosure.Panel>
-        </div>
+    <div className="flex min-w-0 flex-col gap-y-1 text-stone-600">
+      <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+        <LegendSingle showUnderRatio={showUnderRatio} />
+      </div>
+      {line === 'line-commuter-rail' && (
+        <p className="text-xs text-stone-500">
+          Due to how we collect data for Commuter Rail, we may occasionally miss trips or stops.
+          This can lead to inaccuracies in headways numbers and gaps in travel time data. Confirm
+          data you see here with official MBTA sources when possible.
+        </p>
       )}
-    </Disclosure>
+    </div>
   );
 };
 
-const LegendSingle: React.FC<LegendProps> = ({ showUnderRatio = false }) => {
+const SEVERITY_LEGEND = [
+  { label: 'On time', color: CHART_COLORS.GREEN },
+  { label: '25%+ off', color: CHART_COLORS.YELLOW },
+  { label: '50%+ off', color: CHART_COLORS.RED },
+  { label: '100%+ off', color: CHART_COLORS.PURPLE },
+];
+
+const LegendSingle: React.FC<LegendProps> = () => {
   return (
     <>
-      <div className="col-span-2 flex flex-row items-baseline gap-2 pb-1 italic lg:pb-0">
-        <p>
-          Compare to{' '}
-          <span className="top-[1px] inline-block h-2.5 w-2.5 items-center border-t-2 border-[#bbb] bg-[#ddd] shadow-sm"></span>{' '}
-          MBTA benchmark:
+      <p className="flex flex-row items-center gap-x-1 italic">
+        Compare to
+        <span className="inline-block h-0 w-3 border-t-2 border-[#bbb] align-middle" />
+        MBTA benchmark:
+      </p>
+      {SEVERITY_LEGEND.map(({ label, color }) => (
+        <p key={label} className="flex flex-row items-center gap-x-1.5">
+          <span
+            className="inline-block h-2.5 w-2.5 rounded-full ring-1 ring-black/20"
+            style={{ backgroundColor: color }}
+          />
+          {label}
         </p>
-      </div>
-      <p>
-        <span className="mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#57945B] bg-[#64b96a]"></span>
-        {'On time'}
-      </p>
-      <p>
-        <span className="mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#D9D31E] bg-[#f5ed00]"></span>
-        {'25%+ off'}
-      </p>
-      <p>
-        <span
-          className={`mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#A1384A] bg-[#c33149]`}
-        ></span>{' '}
-        {'50%+ off'}
-      </p>
-      <p>
-        <span
-          className={`mr-1 inline-block h-2.5 w-2.5 rounded-full border border-[#925396] bg-[#bb5cc1]`}
-        ></span>{' '}
-        {'100%+ off'}
-      </p>
+      ))}
     </>
   );
 };
@@ -98,7 +67,7 @@ export const LegendLongTerm: React.FC<LegendLongTermProps> = ({
         <span className={'mr-1 inline-block h-2.5 w-2.5 rounded-full bg-[#000]'}></span> Median
       </p>
       <p>
-        <span className={'mr-1 inline-block h-2.5 w-2.5 rounded-sm bg-[#C8CCD2]'}></span>{' '}
+        <span className={'mr-1 inline-block h-2.5 w-2.5 rounded-xs bg-[#C8CCD2]'}></span>{' '}
         Interquartile range
       </p>
       <button onClick={onToggleTrendline} className="flex items-center hover:opacity-80">

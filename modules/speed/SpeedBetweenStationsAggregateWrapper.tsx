@@ -5,7 +5,7 @@ import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
-import { MiniWidgetCreator } from '../../common/components/widgets/MiniWidgetCreator';
+import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { getAggDataWidgets } from '../../common/utils/widgets';
 import { convertToAggregateStationSpeedDataset } from '../landing/utils';
 import { SpeedBetweenStationsAggregateChart } from './charts/SpeedBetweenStationsAggregateChart';
@@ -36,7 +36,7 @@ export const SpeedBetweenStationsAggregateWrapper: React.FC<
         fromStation={fromStation}
         timeUnit={'by_date'}
       />
-      <MiniWidgetCreator widgetObjects={widgetObjects} />
+      <StatStrip widgetObjects={widgetObjects} />
     </CarouselGraphDiv>
   );
 };

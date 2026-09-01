@@ -1,4 +1,19 @@
+import type { CSSProperties } from 'react';
+import { LINE_COLORS, LINE_COLORS_DARK } from '../constants/colors';
+import type { Line } from '../types/lines';
 import type { DefaultStyleMap } from '../types/styles';
+
+/**
+ * Tailwind v4 removed the `*-opacity-*` utilities, so a dynamic line color can no longer be paired
+ * with a separate opacity class. Exposing the line color as a CSS variable lets any component ask
+ * for it at any alpha: `bg-(--line-color)/75`, `hover:border-(--line-color)/50`, and so on.
+ * The variable inherits, so setting it on a container covers its children.
+ */
+export const lineColorVar = (line?: Line | null): CSSProperties =>
+  ({
+    '--line-color': LINE_COLORS[line ?? 'default'],
+    '--line-color-dark': LINE_COLORS_DARK[line ?? 'default'],
+  }) as CSSProperties;
 
 export const lineColorBackground: DefaultStyleMap = {
   'line-red': `bg-mbta-red`,

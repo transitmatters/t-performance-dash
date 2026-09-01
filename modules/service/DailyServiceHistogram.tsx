@@ -1,20 +1,19 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
 import type { DayKind, ScheduledService } from '../../common/types/dataPoints';
 import { ByHourHistogram } from '../../common/components/charts/ByHourHistogram';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { prettyDate } from '../../common/utils/date';
-import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 
 interface Props {
   scheduledService: ScheduledService;
+  dayKind: DayKind;
 }
 
 export const DailyServiceHistogram: React.FC<Props> = (props) => {
-  const { scheduledService } = props;
-  const [dayKind, setDayKind] = useState<DayKind>('weekday');
-  const { color, line } = useDelimitatedRoute();
+  const { scheduledService, dayKind } = props;
+  const { color } = useDelimitatedRoute();
 
   const data = useMemo(() => {
     const {
@@ -48,19 +47,6 @@ export const DailyServiceHistogram: React.FC<Props> = (props) => {
           datasetRoundTrips
         />
       </CarouselGraphDiv>
-      <div className={'flex w-full justify-center pt-2'}>
-        <ButtonGroup
-          line={line}
-          pressFunction={setDayKind}
-          options={[
-            ['weekday', 'Weekday'],
-            ['saturday', 'Saturday'],
-            ['sunday', 'Sunday'],
-          ]}
-          additionalDivClass="md:w-auto"
-          additionalButtonClass="md:w-fit"
-        />
-      </div>
     </>
   );
 };

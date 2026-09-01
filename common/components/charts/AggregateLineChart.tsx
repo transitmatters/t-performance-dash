@@ -15,7 +15,7 @@ import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
 import { getFormattedTimeString } from '../../utils/time';
 import { LegendLongTerm } from './Legend';
-import { ChartBorder } from './ChartBorder';
+import { ChartStack } from './ChartStack';
 import { ChartDiv } from './ChartDiv';
 
 const xAxisLabel = (startDate: string, endDate: string, hourly: boolean) => {
@@ -132,7 +132,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   ];
 
   return (
-    <ChartBorder>
+    <ChartStack>
       <ChartDiv isMobile={isMobile}>
         <Line
           id={chartId}
@@ -253,6 +253,6 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           </>
         )}
       </div>
-    </ChartBorder>
+    </ChartStack>
   );
 };

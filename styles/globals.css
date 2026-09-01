@@ -1,8 +1,66 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+/*
+  ---break---
+*/
+@custom-variant dark (&:is(.dark *));
+
+@config '../tailwind.config.js';
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  /*
+    @tailwindcss/forms base-styles every input, including a blue focus ring. shadcn components
+    bring their own focus treatment, so clear the plugin's for them; utilities still layer on top.
+  */
+  [data-slot='command-input'],
+  [data-slot='input-group-control'] {
+    border: 0;
+    background-color: transparent;
+  }
+
+  [data-slot='command-input']:focus,
+  [data-slot='input']:focus,
+  [data-slot='textarea']:focus,
+  [data-slot='select-trigger']:focus,
+  [data-slot='input-group-control']:focus {
+    border-color: transparent;
+    box-shadow: none;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
 
 :root {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   --transitmatters-red: #d31a2b;
   --red-line: #da291c;
   --orange-line: #ed8b00;
@@ -18,14 +76,55 @@
   --swap-white: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125'><path fill='white' transform='rotate(90 50 62)' style='text-indent:0;text-transform:none;block-progression:tb' d='M42 10a2 2 0 00-2 1l-8 9a2 2 0 000 3l9 10a2 2 0 103-3l-6-7h27c10 0 15 7 15 13s-5 12-15 12H35c-12 0-19 8-19 16 0 9 7 17 19 17h27l-5 5a2 2 0 103 3l8-9a2 2 0 000-3l-9-10a2 2 0 10-3 3l6 7H35c-10 0-15-6-15-13 0-6 5-12 15-12h30c12 0 19-8 19-16s-7-17-19-17H38l5-5a2 2 0 00-1-4z' fill-rule='evenodd' overflow='visible'/></svg>");
   --swap-black: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125'><path fill='black' transform='rotate(90 50 62)' style='text-indent:0;text-transform:none;block-progression:tb' d='M42 10a2 2 0 00-2 1l-8 9a2 2 0 000 3l9 10a2 2 0 103-3l-6-7h27c10 0 15 7 15 13s-5 12-15 12H35c-12 0-19 8-19 16 0 9 7 17 19 17h27l-5 5a2 2 0 103 3l8-9a2 2 0 000-3l-9-10a2 2 0 10-3 3l6 7H35c-10 0-15-6-15-13 0-6 5-12 15-12h30c12 0 19-8 19-16s-7-17-19-17H38l5-5a2 2 0 00-1-4z' fill-rule='evenodd' overflow='visible'/></svg>");
   --download-icon: url("data:image/svg+xml,<svg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M9 17L15 17' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round'/><path d='M12 6V13M12 13L15.5 9.5M12 13L8.5 9.5' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  /* The original TM charcoal nav (#2e2d2c), restored — not the Nova preset's light default. */
+  --sidebar: #2e2d2c;
+  --sidebar-foreground: #e7e5e4;
+  --sidebar-primary: #f5f5f4;
+  --sidebar-primary-foreground: #2e2d2c;
+  --sidebar-accent: #46453f;
+  --sidebar-accent-foreground: #fafaf9;
+  --sidebar-border: #46453f;
+  --sidebar-ring: #a8a29e;
+
+  /* transitions-dev motion tokens (subset actually in use — see
+     /Users/sethkaplan/.claude/skills/transitions-dev). Add more of the
+     shared scale here if a future transition needs it. */
+  --duration-quick: 150ms; /* modal/dropdown close */
+  --duration-fast: 250ms; /* modal/dropdown open, tabs sliding */
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1); /* modal/dropdown open + close */
+  --tabs-dur: 250ms;
+  --tabs-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
-    Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: var(--font-sans);
 }
 
 a {
@@ -48,4 +147,85 @@ a {
 
 .mb-safe {
   margin-bottom: env(safe-area-inset-bottom);
+}
+/*
+  ---break---
+*/
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+/*
+  ---break---
+*/
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
 }

@@ -14,7 +14,7 @@ import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { getTimeUnitSlowzones } from '../../../common/utils/slowZoneUtils';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
-import { ChartBorder } from '../../../common/components/charts/ChartBorder';
+import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { getFormattedTimeString } from '../../../common/utils/time';
 
@@ -99,7 +99,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
         },
       ];
   return (
-    <ChartBorder>
+    <ChartStack>
       <ChartDiv isMobile={isMobile}>
         <Line
           ref={ref}
@@ -199,6 +199,6 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
           ]}
         />
       </ChartDiv>
-    </ChartBorder>
+    </ChartStack>
   );
 };

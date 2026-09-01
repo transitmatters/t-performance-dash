@@ -30,7 +30,7 @@ export const SmallData: React.FC<SmallDataProps> = ({ analysis, widgetValue, com
 
   return (
     <div className="flex flex-row items-end justify-between">
-      <p className={classNames('truncate text-sm leading-tight text-design-subtitleGrey')}>
+      <p className={classNames('text-design-subtitleGrey truncate text-sm leading-tight')}>
         {analysis}
       </p>
       <div className="flex flex-row items-baseline gap-x-1">

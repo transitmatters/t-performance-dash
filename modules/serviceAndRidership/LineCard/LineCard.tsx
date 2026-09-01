@@ -1,6 +1,12 @@
 import React, { useMemo, useState } from 'react';
 
-import { CardFrame } from '../CardFrame';
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from '../../../common/components/ui/accordion';
+import { Widget } from '../../../common/components/widgets/Widget';
 import { useServiceAndRidershipContext } from '../useServiceAndRidershipContext';
 import type { LineData, ServiceDay } from '../types';
 
@@ -44,21 +50,25 @@ const getHighestTphValue = (lineData: LineData) => {
 };
 
 const regionalRailCaveats = (
-  <details>
-    <summary>Caveats on Commuter Rail data</summary>
-    <div className={styles.detailsExpanded}>
-      The MBTA doesn't provide us daily Commuter Rail ridership from before June 2020. We estimate a
-      baseline (100%) value for February 2020 based on{' '}
-      <a
-        href="https://mbta-massdot.opendata.arcgis.com/datasets/MassDOT::mbta-commuter-rail-ridership-by-trip-season-route-line-and-stop/explore"
-        target="_blank"
-        rel="noreferrer"
-      >
-        2018 per-line ridership values
-      </a>
-      .
-    </div>
-  </details>
+  <Accordion type="single" collapsible>
+    <AccordionItem value="caveats" className="border-b-0">
+      <AccordionTrigger className="py-1 text-sm font-normal text-stone-500 hover:no-underline">
+        Caveats on Commuter Rail data
+      </AccordionTrigger>
+      <AccordionContent className="text-stone-500">
+        The MBTA doesn't provide us daily Commuter Rail ridership from before June 2020. We estimate
+        a baseline (100%) value for February 2020 based on{' '}
+        <a
+          href="https://mbta-massdot.opendata.arcgis.com/datasets/MassDOT::mbta-commuter-rail-ridership-by-trip-season-route-line-and-stop/explore"
+          target="_blank"
+          rel="noreferrer"
+        >
+          2018 per-line ridership values
+        </a>
+        .
+      </AccordionContent>
+    </AccordionItem>
+  </Accordion>
 );
 
 export const LineCard = (props: Props) => {
@@ -129,7 +139,7 @@ export const LineCard = (props: Props) => {
   };
 
   return (
-    <CardFrame title={title} details={renderDetails()} titleHref={href}>
+    <Widget title={title} titleHref={href} details={renderDetails()} className="pb-16">
       {renderSectionLabel('Current service levels')}
       <ButtonGroup
         options={serviceDayItems.map((item) => [item.value, item.label])}
@@ -153,6 +163,6 @@ export const LineCard = (props: Props) => {
         serviceHistory={serviceHistory}
         color={color}
       />
-    </CardFrame>
+    </Widget>
   );
 };

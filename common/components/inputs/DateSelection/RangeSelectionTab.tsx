@@ -1,9 +1,11 @@
 import React from 'react';
-import { Tab } from '@headlessui/react';
 import classNames from 'classnames';
-import { lineColorBackground, lineColorBorder, lineColorText } from '../../../styles/general';
+import { Tabs, TabsList, TabsTrigger } from '../../ui/tabs';
+import { lineColorVar } from '../../../styles/general';
 import { useDelimitatedRoute } from '../../../utils/router';
 import { RANGE_OPTIONS } from '../../../constants/dates';
+import { LINE_COLORS } from '../../../constants/colors';
+import { readableOn } from '../../../utils/general';
 
 interface RangeSelectionTabProps {
   range: boolean;
@@ -12,34 +14,31 @@ interface RangeSelectionTabProps {
 
 export const RangeSelectionTab: React.FC<RangeSelectionTabProps> = ({ range, setRange }) => {
   const { line } = useDelimitatedRoute();
+  const needsDarkText = readableOn(LINE_COLORS[line ?? 'default']) === 'dark';
+
   return (
-    <Tab.Group
-      onChange={(value) => {
-        setRange(Boolean(value));
-      }}
-      selectedIndex={range ? 1 : 0}
+    <Tabs
+      value={RANGE_OPTIONS[range ? 1 : 0]}
+      onValueChange={(value) => setRange(value === RANGE_OPTIONS[1])}
+      style={lineColorVar(line)}
+      className="w-full"
     >
-      <Tab.List className="flex w-full flex-row justify-center">
-        {RANGE_OPTIONS.map((option, index) => (
-          <Tab key={index} className="w-1/2 items-center shadow-sm">
-            {({ selected }) => (
-              <div
-                className={classNames(
-                  lineColorBackground[line ?? 'DEFAULT'],
-                  selected
-                    ? 'bg-opacity-100 text-white text-opacity-90'
-                    : `bg-opacity-0 ${lineColorText[line ?? 'DEFAULT']}`,
-                  'border py-2 text-sm',
-                  index === 0 ? 'rounded-tl-lg' : 'rounded-tr-lg',
-                  lineColorBorder[line ?? 'DEFAULT']
-                )}
-              >
-                <p>{option}</p>
-              </div>
+      <TabsList className="w-full rounded-b-none">
+        {RANGE_OPTIONS.map((option) => (
+          <TabsTrigger
+            key={option}
+            value={option}
+            className={classNames(
+              'w-1/2 text-sm',
+              needsDarkText
+                ? 'data-[state=active]:text-stone-900'
+                : 'data-[state=active]:text-white'
             )}
-          </Tab>
+          >
+            {option}
+          </TabsTrigger>
         ))}
-      </Tab.List>
-    </Tab.Group>
+      </TabsList>
+    </Tabs>
   );
 };

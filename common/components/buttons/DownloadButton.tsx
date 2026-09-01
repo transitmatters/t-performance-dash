@@ -29,9 +29,13 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
   return (
     <div className={classNames('flex')} title="Download data as CSV">
       <CSVLink
-        className={'csv-link'}
+        className={classNames(
+          'csv-link flex items-center text-stone-500',
+          line && lineColorTextHover[line]
+        )}
         data={data}
         title={'Download data as CSV'}
+        aria-label="Download data as CSV"
         filename={getCsvFilename({
           datasetName,
           includeBothStopsForLocation,
@@ -41,10 +45,7 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
           endDate,
         })}
       >
-        <FontAwesomeIcon
-          icon={faFileArrowDown}
-          className={classNames('text-stone-600', line && lineColorTextHover[line])}
-        />
+        <FontAwesomeIcon icon={faFileArrowDown} className="size-3" />
       </CSVLink>
     </div>
   );

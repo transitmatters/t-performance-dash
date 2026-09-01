@@ -10,7 +10,7 @@ import type { HeadwayPoint } from '../../../common/types/dataPoints';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
-import { ChartBorder } from '../../../common/components/charts/ChartBorder';
+import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { getFormattedTimeString } from '../../../common/utils/time';
 
 export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) => {
@@ -56,7 +56,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
 
   const histogram = useMemo(() => {
     return (
-      <ChartBorder>
+      <ChartStack>
         <ChartDiv isMobile={isMobile}>
           <Bar
             id={`headways-histogram-${linePath}`}
@@ -151,7 +151,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
             plugins={[ChartjsPluginWatermark]}
           />
         </ChartDiv>
-      </ChartBorder>
+      </ChartStack>
     );
   }, [dataObject, isMobile, line, linePath, lineShort, benchmarkTime, headwayBucketPercentages]);
   return histogram;

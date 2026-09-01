@@ -21,7 +21,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
     dateStoreSection && (line || tab === 'System') && dateStoreSection !== 'today';
 
   return (
-    <div className="flex flex-1 flex-col pb-24 md:pb-0 md:pl-64">
+    <div className="flex flex-1 flex-col pb-24 md:pb-0">
       <CIPBanner />
       <main className="flex-1">
         {isMobile ? <MobileHeader /> : <DesktopHeader />}

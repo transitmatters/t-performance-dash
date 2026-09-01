@@ -24,7 +24,7 @@ export const NoDataNotice: React.FC<NoDataNoticeProps> = ({
       <div
         className={classNames(
           'flex h-full flex-col content-center items-center justify-center rounded-lg text-center',
-          isWidget ? 'bg-white p-2 shadow-dataBox' : ''
+          isWidget ? 'shadow-dataBox bg-white p-2' : ''
         )}
       >
         <FontAwesomeIcon size={'3x'} icon={faTriangleExclamation} className={color} />

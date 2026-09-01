@@ -178,7 +178,7 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
             />
             {direction === '0' ? 'Southbound' : 'Northbound'}
           </div>
-          <div className={classNames('mb-1 max-w-[200px] text-xs italic text-stone-500')}>
+          <div className={classNames('mb-1 max-w-[200px] text-xs text-stone-500 italic')}>
             TransitMatters has not detected a slow zone for this segment despite the MBTA having an
             official speed restriction within it.
           </div>

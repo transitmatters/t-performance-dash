@@ -1,30 +1,28 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { AggregateDataResponse, DayFilter } from '../../common/types/charts';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
-import { MiniWidgetCreator } from '../../common/components/widgets/MiniWidgetCreator';
+import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { filterByDayType, getAggDataWidgets, getComparisonData } from '../../common/utils/widgets';
-import { ButtonGroup } from '../../common/components/general/ButtonGroup';
-import { useDelimitatedRoute } from '../../common/utils/router';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
 interface TravelTimesAggregateWrapperProps {
   query: UseQueryResult<AggregateDataResponse>;
   toStation: Station;
   fromStation: Station;
+  /** Owned by the parent, whose card header renders the day-filter control. */
+  dayFilter: DayFilter;
 }
 
 export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperProps> = ({
   query,
   toStation,
   fromStation,
+  dayFilter,
 }) => {
-  const { line } = useDelimitatedRoute();
-  const [dayFilter, setDayFilter] = useState<DayFilter>('all');
-
   const allData = useMemo(
     () => query.data?.by_date.filter((datapoint) => datapoint.peak === 'all') ?? [],
     [query.data]
@@ -54,21 +52,8 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
           timeUnit={'by_date'}
           dayFilter={dayFilter}
         />
-        <MiniWidgetCreator widgetObjects={widgetObjects} />
+        <StatStrip widgetObjects={widgetObjects} />
       </CarouselGraphDiv>
-      <div className={'flex w-full justify-center pt-2'}>
-        <ButtonGroup
-          line={line}
-          pressFunction={setDayFilter}
-          options={[
-            ['all', 'All days'],
-            ['weekday', 'Weekdays only'],
-            ['weekend', 'Weekends & holidays'],
-          ]}
-          additionalDivClass="md:w-auto"
-          additionalButtonClass="md:w-fit"
-        />
-      </div>
     </>
   );
 };

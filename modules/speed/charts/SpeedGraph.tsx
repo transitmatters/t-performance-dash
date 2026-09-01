@@ -11,7 +11,7 @@ import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
-import { ChartBorder } from '../../../common/components/charts/ChartBorder';
+import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { PEAK_SPEED } from '../../../common/constants/baselines';
 import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
@@ -26,6 +26,7 @@ interface SpeedGraphProps {
   startDate: string;
   endDate: string;
   showTitle?: boolean;
+  peakLineDashed?: boolean;
 }
 
 export const SpeedGraph: React.FC<SpeedGraphProps> = ({
@@ -34,6 +35,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
   startDate,
   endDate,
   showTitle = false,
+  peakLineDashed = false,
 }) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
@@ -45,7 +47,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
   const dataWithMPH = addMPHToSpeedData(data);
 
   return (
-    <ChartBorder>
+    <ChartStack>
       <ChartDiv isMobile={isMobile}>
         <Line
           id={`speed-${linePath}`}
@@ -127,6 +129,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                     // corresponds to null dataset index.
                     display: (ctx) => ctx.chart.isDatasetVisible(1),
                     borderWidth: 2,
+                    borderDash: peakLineDashed ? [6, 6] : undefined,
                   },
                   ...shuttlingBlocks,
                 ],
@@ -217,6 +220,6 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
           </>
         )}
       </div>
-    </ChartBorder>
+    </ChartStack>
   );
 };

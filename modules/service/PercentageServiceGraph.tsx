@@ -14,7 +14,7 @@ import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import type { ParamsType } from '../speed/constants/speeds';
-import { ChartBorder } from '../../common/components/charts/ChartBorder';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { getShuttlingBlockAnnotations } from './utils/graphUtils';
 
@@ -49,7 +49,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
     const shuttlingBlocks = getShuttlingBlockAnnotations(data);
     const compareToScheduled = comparison === 'Scheduled';
     return (
-      <ChartBorder>
+      <ChartStack>
         <ChartDiv isMobile={isMobile}>
           <Line
             id={`service-percentage-${linePath}`}
@@ -209,7 +209,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
             ]}
           />
         </ChartDiv>
-      </ChartBorder>
+      </ChartStack>
     );
   }, [
     data,

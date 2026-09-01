@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -10,6 +10,7 @@ import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { Widget } from '../../common/components/widgets';
+import { useChartToggle } from '../../common/hooks/useChartToggle';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';
 import { PercentageServiceGraphWrapper } from './PercentageServiceGraphWrapper';
 import { ServiceHoursGraph } from './ServiceHoursGraph';
@@ -23,7 +24,15 @@ export function ServiceDetails() {
     lineShort,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
-  const [comparison, setComparison] = useState<'Historical Maximum' | 'Scheduled'>('Scheduled');
+  const { value: comparison, control: comparisonControl } = useChartToggle('Scheduled' as const, [
+    ['Scheduled', 'Scheduled'],
+    ['Historical Maximum', 'Historical Maximum'],
+  ]);
+  const { value: dayKind, control: dayKindControl } = useChartToggle('weekday' as const, [
+    ['weekday', 'Weekday'],
+    ['saturday', 'Saturday'],
+    ['sunday', 'Sunday'],
+  ]);
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const enabled = Boolean(startDate && endDate && line && config.agg);
   const tripsData = useDeliveredTripMetrics(
@@ -78,6 +87,7 @@ export function ServiceDetails() {
           title="Service delivered"
           subtitle={`Compared to ${comparison}`}
           ready={[tripsData, scheduledData]}
+          action={comparisonControl}
         >
           <PercentageServiceGraphWrapper
             data={tripsData.data!}
@@ -86,7 +96,6 @@ export function ServiceDetails() {
             startDate={startDate}
             endDate={endDate}
             comparison={comparison}
-            setComparison={setComparison}
           />
         </Widget>
         {showServiceHours && (
@@ -99,8 +108,13 @@ export function ServiceDetails() {
             />
           </Widget>
         )}
-        <Widget title="Scheduled service by hour" subtitle="Round trips" ready={[scheduledData]}>
-          <DailyServiceHistogram scheduledService={scheduledData!} />
+        <Widget
+          title="Scheduled service by hour"
+          subtitle="Round trips"
+          ready={[scheduledData]}
+          action={dayKindControl}
+        >
+          <DailyServiceHistogram scheduledService={scheduledData!} dayKind={dayKind} />
         </Widget>
       </ChartPageDiv>
     </PageWrapper>

@@ -37,7 +37,9 @@ export const CHART_COLORS = {
   GREY: '#1c1c1c',
   BLUE: '#0096FF',
   GREEN: '#64b96a',
-  YELLOW: '#f5ed00',
+  // Darkened from #f5ed00, which sat at 1.24:1 against the white plot surface (below the 2:1
+  // floor) and read as invisible. #d9a400 clears it at 2.27:1 and stays in the same amber family.
+  YELLOW: '#d9a400',
   RED: '#c33149',
   PURPLE: '#bb5cc1',
   FILL: '#bfc8d680',
@@ -59,6 +61,20 @@ export const LINE_COLORS: { [key in Line | 'default']: string } = {
   'line-ferry': COLORS.mbta.ferry,
   'line-RIDE': COLORS.mbta.bus,
   default: '#303030',
+};
+
+// Darker line shades, mirroring the `mbta.dark*` colors in tailwind.config.js.
+export const LINE_COLORS_DARK: { [key in Line | 'default']: string } = {
+  'line-red': '#bc2020',
+  'line-orange': '#e08300',
+  'line-blue': '#19376B',
+  'line-green': '#0E5E3D',
+  'line-bus': '#E6A800',
+  'line-mattapan': '#bc2020',
+  'line-commuter-rail': '#6c215c',
+  'line-ferry': '#006B82',
+  'line-RIDE': '#E6A800',
+  default: '#292524',
 };
 
 export const LINE_COLORS_LEVELS: {

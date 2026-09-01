@@ -6,7 +6,7 @@ export const AlertNotice: React.FC = () => {
   return (
     <>
       <div
-        className="pb-safe fixed bottom-24 right-2 z-10 cursor-pointer md:right-4 lg:bottom-4"
+        className="pb-safe fixed right-2 bottom-24 z-10 cursor-pointer md:right-4 lg:bottom-4"
         onClick={() => setAlertsOpen(!alertsOpen)}
         title="Alerts"
       >

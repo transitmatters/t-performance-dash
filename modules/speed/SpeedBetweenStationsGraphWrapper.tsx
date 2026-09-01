@@ -5,7 +5,7 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import type { SingleDayDataPoint } from '../../common/types/charts';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
-import { MiniWidgetCreator } from '../../common/components/widgets/MiniWidgetCreator';
+import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { getSingleDayWidgets } from '../../common/utils/widgets';
 import { convertToStationSpeedDataset } from '../landing/utils';
 import { SpeedBetweenStationsSingleChart } from './charts/SpeedBetweenStationsSingleChart';
@@ -37,7 +37,7 @@ export const SpeedBetweenStationsSingleWrapper: React.FC<
         toStation={toStation}
         fromStation={fromStation}
       />
-      <MiniWidgetCreator widgetObjects={widgetObjects} />
+      <StatStrip widgetObjects={widgetObjects} />
     </CarouselGraphDiv>
   );
 };

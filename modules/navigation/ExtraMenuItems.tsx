@@ -1,42 +1,36 @@
 import Link from 'next/link';
 import React from 'react';
 import { DonateButton } from '../../common/components/buttons/DonateButton';
+import { SidebarSeparator } from '../../common/components/ui/sidebar';
 
+const LINKS = [
+  { name: 'About', href: 'https://transitmatters.org/transitmatters-labs' },
+  { name: 'Join us', href: 'https://transitmatters.org/join' },
+  { name: 'Feedback', href: 'https://forms.gle/SKYtxgKSyCrYxM1v7' },
+  { name: 'Source', href: 'https://github.com/transitmatters/t-performance-dash' },
+  { name: 'Attributions', href: '/opensource' },
+];
+
+/**
+ * Utility links are secondary to the nav, so they wrap inline rather than taking a row each —
+ * stacked, they cost enough vertical space to push lines below the fold.
+ */
 export const ExtraMenuItems: React.FC = () => {
   return (
-    <div className="flex flex-col gap-2 py-2 text-sm">
-      <Link
-        href="https://transitmatters.org/transitmatters-labs"
-        className="flex flex-row items-center gap-2 pl-3 text-white hover:text-blue-500"
-      >
-        About
-      </Link>
-      <Link
-        href="https://transitmatters.org/join"
-        className="flex flex-row items-center gap-2 pl-3 text-white hover:text-blue-500"
-      >
-        Join us
-      </Link>
-      <Link
-        href="https://forms.gle/SKYtxgKSyCrYxM1v7"
-        className="flex flex-row items-center gap-2 pl-3 text-white hover:text-blue-500"
-      >
-        Feedback
-      </Link>
-      <Link
-        href="https://github.com/transitmatters/t-performance-dash"
-        className="flex flex-row items-center gap-2 pl-3 text-white hover:text-blue-500"
-      >
-        Source code
-      </Link>
-      <Link
-        href="/opensource"
-        className="flex flex-row items-center gap-2 pl-3 text-white hover:text-blue-500"
-      >
-        Attributions
-      </Link>
-      <hr className="border-stone-600" />
-
+    <div className="flex flex-col gap-2 pb-1">
+      <SidebarSeparator className="mx-0" />
+      <ul className="flex flex-wrap gap-x-3 gap-y-1 px-2 text-xs">
+        {LINKS.map((link) => (
+          <li key={link.name}>
+            <Link
+              href={link.href}
+              className="text-sidebar-foreground/60 hover:text-sidebar-foreground hover:underline"
+            >
+              {link.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
       <DonateButton />
     </div>
   );

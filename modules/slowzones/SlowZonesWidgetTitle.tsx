@@ -21,7 +21,7 @@ export const SlowZonesWidgetTitle: React.FC<SlowZonesWidgetTitle> = () => {
           <h2
             className={classNames(
               'font-semibold',
-              'whitespace-nowrap leading-tight text-stone-800'
+              'leading-tight whitespace-nowrap text-stone-800'
             )}
           >
             Line map
@@ -29,7 +29,7 @@ export const SlowZonesWidgetTitle: React.FC<SlowZonesWidgetTitle> = () => {
           {isMobile && <Date date={date} />}
         </div>
       </div>
-      <div className="flex w-full flex-shrink flex-col overflow-hidden md:items-end">
+      <div className="flex w-full shrink flex-col overflow-hidden md:items-end">
         {!isMobile && <Date date={date} />}
       </div>
     </div>
@@ -37,5 +37,5 @@ export const SlowZonesWidgetTitle: React.FC<SlowZonesWidgetTitle> = () => {
 };
 
 const Date = ({ date }: { date?: string }) => {
-  return <p className="rounded-md bg-stone-500 px-3 py-1 text-xs italic text-stone-100">{date}</p>;
+  return <p className="rounded-md bg-stone-500 px-3 py-1 text-xs text-stone-100 italic">{date}</p>;
 };

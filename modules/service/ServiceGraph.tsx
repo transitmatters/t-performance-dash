@@ -4,7 +4,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/baselines';
 import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
-import { ChartBorder } from '../../common/components/charts/ChartBorder';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
 import { indexByProperty } from '../../common/utils/array';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
@@ -86,7 +86,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
   }, [data, peak]);
 
   return (
-    <ChartBorder>
+    <ChartStack>
       <ScheduledAndDeliveredGraph
         valueAxisLabel="Round trips"
         scheduled={scheduled}
@@ -109,6 +109,6 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
           />
         )}
       </div>
-    </ChartBorder>
+    </ChartStack>
   );
 };

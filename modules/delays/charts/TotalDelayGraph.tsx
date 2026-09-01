@@ -12,7 +12,7 @@ import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
-import { ChartBorder } from '../../../common/components/charts/ChartBorder';
+import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import type { LineDelays } from '../../../common/types/delays';
 import { getFormattedTimeString } from '../../../common/utils/time';
@@ -52,7 +52,7 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
   );
 
   return (
-    <ChartBorder>
+    <ChartStack>
       <ChartDiv isMobile={isMobile}>
         <Line
           id={`totaldelay-${linePath}`}
@@ -184,6 +184,6 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
           ]}
         />
       </ChartDiv>
-    </ChartBorder>
+    </ChartStack>
   );
 };

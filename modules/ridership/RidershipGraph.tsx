@@ -15,7 +15,7 @@ import type { ParamsType } from '../speed/constants/speeds';
 import { PEAK_RIDERSHIP } from '../../common/constants/baselines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
-import { ChartBorder } from '../../common/components/charts/ChartBorder';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../common/components/buttons/SaveChartImageButton';
@@ -53,7 +53,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
     const lineColor = LINE_COLORS[line ?? 'default'];
 
     return (
-      <ChartBorder>
+      <ChartStack>
         <ChartDiv isMobile={isMobile}>
           <Line
             id={`ridership-${linePath}`}
@@ -225,7 +225,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
             </>
           )}
         </div>
-      </ChartBorder>
+      </ChartStack>
     );
   }, [
     busRoute,

@@ -1,10 +1,8 @@
 import React, { useMemo } from 'react';
-import type { SetStateAction } from 'react';
 import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { PercentageWidgetValue } from '../../common/types/basicWidgets';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
-import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import type { ParamsType } from '../speed/constants/speeds';
@@ -19,7 +17,6 @@ interface PercentageServiceGraphWrapperProps {
   startDate: string;
   endDate: string;
   comparison: 'Scheduled' | 'Historical Maximum';
-  setComparison: React.Dispatch<SetStateAction<'Scheduled' | 'Historical Maximum'>>;
 }
 
 export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapperProps> = ({
@@ -29,7 +26,6 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
   startDate,
   endDate,
   comparison,
-  setComparison,
 }) => {
   // TODO: Add 1 or 2 widgets to percentage service graph.
   const { line } = useDelimitatedRoute();
@@ -69,18 +65,6 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
           comparison={comparison}
         />
       </CarouselGraphDiv>
-      <div className={'flex w-full justify-center pt-2'}>
-        <ButtonGroup
-          line={line}
-          options={[
-            ['Scheduled', 'Scheduled'],
-            ['Historical Maximum', 'Historical Maximum'],
-          ]}
-          pressFunction={setComparison}
-          additionalDivClass="md:w-auto"
-          additionalButtonClass="md:w-fit"
-        />
-      </div>
     </>
   );
 };

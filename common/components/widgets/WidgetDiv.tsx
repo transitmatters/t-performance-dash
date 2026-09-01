@@ -8,7 +8,12 @@ interface WidgetDivProps {
 
 export const WidgetDiv: React.FC<WidgetDivProps> = ({ children, className }) => {
   return (
-    <div className={classNames(className, 'h-full rounded-lg bg-white p-3 shadow-dataBox sm:p-4')}>
+    <div
+      className={classNames(
+        className,
+        'bg-card text-card-foreground ring-foreground/10 h-full rounded-xl p-3 ring-1 sm:p-4'
+      )}
+    >
       {children}
     </div>
   );

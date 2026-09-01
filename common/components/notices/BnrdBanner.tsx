@@ -56,21 +56,21 @@ export const BnrdBanner: React.FunctionComponent<BnrdBannerProps> = ({ busRoute 
 
   if (isBNRDRoute(busRoute)) {
     return (
-      <div className="flex items-center overflow-hidden rounded bg-gradient-to-r from-gray-600 to-gray-500 px-6 py-2.5">
+      <div className="flex items-center overflow-hidden rounded-sm bg-linear-to-r from-gray-600 to-gray-500 px-6 py-2.5">
         <div className="flex w-full gap-x-4 gap-y-2">
           <FontAwesomeIcon
             icon={faCircleExclamation}
             size={'2x'}
-            className="text-white shadow-gray-500 text-shadow"
+            className="text-shadow text-white shadow-gray-500"
           />
           <div className="flex w-full items-center justify-between">
-            <p className="text-md w-full leading-6 text-white shadow-gray-500 text-shadow">
+            <p className="text-md text-shadow w-full leading-6 text-white shadow-gray-500">
               {getText()}
             </p>
             <a
               href={getUrl()}
               target="_blank"
-              className="flex-none rounded-full bg-gray-900 px-3.5 py-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+              className="flex-none rounded-full bg-gray-900 px-3.5 py-1 text-sm font-semibold text-white shadow-xs hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 focus-visible:outline-solid"
               rel="noreferrer"
             >
               Read more <span aria-hidden="true">&rarr;</span>

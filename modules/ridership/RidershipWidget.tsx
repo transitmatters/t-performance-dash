@@ -5,7 +5,7 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
-import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
+import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { useRidershipData } from '../../common/api/hooks/ridership';
 import { getRidershipLineId } from '../../common/utils/ridership';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
@@ -25,7 +25,7 @@ export const RidershipWidget: React.FC = () => {
 
   return (
     <WidgetDiv>
-      <HomescreenWidgetTitle title="Weekday ridership" tab="ridership" />
+      <WidgetTitle title="Weekday ridership" tab="ridership" line={line} />
       {ridership.data && serviceReady ? (
         <RidershipGraphWrapper
           line={line}

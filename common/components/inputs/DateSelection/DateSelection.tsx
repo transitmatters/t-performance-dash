@@ -1,12 +1,12 @@
-import { Popover, Transition } from '@headlessui/react';
 import classNames from 'classnames';
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay, faCalendarWeek } from '@fortawesome/free-solid-svg-icons';
 import {
   buttonHighlightFocus,
   lineColorDarkBackground,
   lineColorLightBorder,
+  lineColorVar,
 } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import type { DatePresetKey } from '../../../constants/dates';
@@ -14,6 +14,7 @@ import { RANGE_PRESETS, SINGLE_PRESETS } from '../../../constants/dates';
 import { useDatePresetStore } from '../../../state/datePresetStore';
 import { checkForPreset, useSelectedPreset } from '../../../state/utils/datePresetUtils';
 import { ALL_PAGES } from '../../../constants/pages';
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 import { DatePickers } from './DatePickers';
 import { DatePickerPresets } from './DatePickerPresets';
 import { RangeSelectionTab } from './RangeSelectionTab';
@@ -25,6 +26,7 @@ interface DateSelectionProps {
 export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) => {
   const { line, page, tab, query } = useDelimitatedRoute();
   const [range, setRange] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
   const { dateStoreSection } = ALL_PAGES[page];
   const setDatePreset = useDatePresetStore((state) => state.setDatePreset);
   const datePreset = useSelectedPreset();
@@ -59,14 +61,11 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
         lineColorLightBorder[line ?? 'DEFAULT']
       )}
     >
-      <Popover
-        className={classNames(
-          'relative flex h-10 w-full self-stretch overflow-visible text-left md:h-7'
-        )}
-      >
-        <Popover.Button
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger
+          style={lineColorVar(line)}
           className={classNames(
-            'flex h-10 w-full items-center justify-center self-stretch rounded-l-[.25rem] px-3 py-1 text-white text-opacity-95 hover:bg-opacity-70 focus:bg-opacity-70 focus:outline-none md:h-7',
+            'flex h-10 w-full items-center justify-center self-stretch rounded-l-[.25rem] px-3 py-1 text-white/95 hover:bg-(--line-color-dark)/70 focus:bg-(--line-color-dark)/70 focus:outline-hidden md:h-7',
             line && buttonHighlightFocus[line],
             lineColorDarkBackground[line ?? 'DEFAULT']
           )}
@@ -78,31 +77,24 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
           <p className="truncate">
             {datePreset && presets[datePreset] ? presets[datePreset].name : 'Custom'}
           </p>
-        </Popover.Button>
+        </PopoverTrigger>
 
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
+        <PopoverContent
+          align="start"
+          // Wide enough to fully clear a card's own header controls when this opens over them —
+          // a narrower box left a few px of the row peeking past its right edge (odd notch).
+          className="w-56 overflow-hidden p-0"
         >
-          <Popover.Panel className="absolute bottom-full left-0 z-50 mb-2 origin-bottom-left overflow-visible rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:bottom-auto md:left-0 md:top-full md:mb-0 md:mt-2 md:origin-top-left">
-            {({ close }) => (
-              <div className="flex w-screen max-w-[160px] flex-col overflow-hidden rounded-md bg-white leading-6 shadow-lg ring-1 ring-gray-900/5">
-                {type === 'combo' && <RangeSelectionTab range={range} setRange={setRange} />}
-                <DatePickerPresets
-                  preset={datePreset}
-                  selectedOptions={presetDateArray}
-                  handleSelection={handleSelection}
-                  close={close}
-                />
-              </div>
-            )}
-          </Popover.Panel>
-        </Transition>
+          <div className="flex flex-col overflow-hidden leading-6">
+            {type === 'combo' && <RangeSelectionTab range={range} setRange={setRange} />}
+            <DatePickerPresets
+              preset={datePreset}
+              selectedOptions={presetDateArray}
+              handleSelection={handleSelection}
+              close={() => setOpen(false)}
+            />
+          </div>
+        </PopoverContent>
       </Popover>
       <DatePickers clearPreset={clearPreset} setRange={setRange} range={range} type={type} />
     </div>

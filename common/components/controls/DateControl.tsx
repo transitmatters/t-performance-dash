@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { DateSelection } from '../inputs/DateSelection/DateSelection';
 import { OverviewDateSelection } from '../inputs/DateSelection/OverviewDateSelection';
 import type { DateStoreSection } from '../../constants/pages';
@@ -10,6 +11,10 @@ interface DateControlProps {
 }
 
 export const DateControl: React.FC<DateControlProps> = ({ dateStoreSection, queryType }) => {
+  const router = useRouter();
+  // The redesigned Overview (see modules/dashboard/redesign/) is fixed to the last month and
+  // has its own metric-driven chart — the Week/Month/Year/All-time toggle wouldn't do anything.
+  if (router.query.redesign === '1') return null;
   if (
     dateStoreSection === 'singleTrips' ||
     dateStoreSection === 'line' ||

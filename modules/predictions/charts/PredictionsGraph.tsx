@@ -13,7 +13,7 @@ import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
-import { ChartBorder } from '../../../common/components/charts/ChartBorder';
+import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { PEAK_SPEED } from '../../../common/constants/baselines';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
@@ -73,7 +73,7 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
   const dataWithPercentage = addAccuracyPercentageToData(data);
 
   return (
-    <ChartBorder>
+    <ChartStack>
       <ChartDiv isMobile={isMobile}>
         <Line
           id={`speed-${linePath}`}
@@ -239,6 +239,6 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
           </>
         )}
       </div>
-    </ChartBorder>
+    </ChartStack>
   );
 };

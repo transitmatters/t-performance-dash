@@ -4,8 +4,12 @@ import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
-import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
+import {
+  DAY_FILTER_OPTIONS,
+  PEAK_TIME_OPTIONS,
+  useChartToggle,
+} from '../../common/hooks/useChartToggle';
 import { getLocationDetails } from '../../common/utils/stations';
 import type { Line } from '../../common/types/lines';
 import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
@@ -35,9 +39,28 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
   enabled,
   line,
 }) => {
-  const [peakTime, setPeakTime] = React.useState<'weekday' | 'weekend'>('weekday');
-  const [travelTimeDisplay, setTravelTimeDisplay] = React.useState<'speeds' | 'traveltimes'>(
-    'traveltimes'
+  const { value: peakTime, control: peakTimeControl } = useChartToggle(
+    'weekday' as const,
+    PEAK_TIME_OPTIONS
+  );
+  const { value: travelTimeDisplay, control: travelTimeControl } = useChartToggle(
+    'traveltimes' as const,
+    [
+      ['traveltimes', 'Travel times'],
+      ['speeds', 'Speeds'],
+    ]
+  );
+  const { value: travelTimesDayFilter, control: travelTimesDayFilterControl } = useChartToggle(
+    'all' as const,
+    DAY_FILTER_OPTIONS
+  );
+  const { value: headwaysDayFilter, control: headwaysDayFilterControl } = useChartToggle(
+    'all' as const,
+    DAY_FILTER_OPTIONS
+  );
+  const { value: dwellsDayFilter, control: dwellsDayFilterControl } = useChartToggle(
+    'all' as const,
+    DAY_FILTER_OPTIONS
   );
 
   const { traveltimes, headways, dwells } = useTripExplorerQueries(
@@ -62,6 +85,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
                   location={location}
                   line={line}
                   both
+                  action={travelTimeControl}
                 />
                 <SpeedBetweenStationsAggregateWrapper
                   query={traveltimes}
@@ -77,26 +101,21 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
                   location={location}
                   line={line}
                   both
+                  action={
+                    <div className="flex flex-row items-center gap-x-2">
+                      {travelTimeControl}
+                      {travelTimesDayFilterControl}
+                    </div>
+                  }
                 />
                 <TravelTimesAggregateWrapper
                   query={traveltimes}
                   fromStation={fromStation}
                   toStation={toStation}
+                  dayFilter={travelTimesDayFilter}
                 />
               </>
             )}
-            <div className={'flex w-full justify-center pt-2'}>
-              <ButtonGroup
-                line={line}
-                pressFunction={setTravelTimeDisplay}
-                options={[
-                  ['traveltimes', 'Travel times'],
-                  ['speeds', 'Speeds'],
-                ]}
-                additionalDivClass="md:w-auto"
-                additionalButtonClass="md:w-fit"
-              />
-            </div>
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
@@ -104,12 +123,14 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               subtitle="Time between trains"
               location={location}
               line={line}
+              action={headwaysDayFilterControl}
             />
 
             <HeadwaysAggregateWrapper
               query={headways}
               fromStation={fromStation}
               toStation={toStation}
+              dayFilter={headwaysDayFilter}
             />
           </WidgetDiv>
           <WidgetDiv>
@@ -118,15 +139,23 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               subtitle="Time spent at station"
               location={location}
               line={line}
+              action={dwellsDayFilterControl}
             />
             <DwellsAggregateWrapper
               query={dwells}
               fromStation={fromStation}
               toStation={toStation}
+              dayFilter={dwellsDayFilter}
             />
           </WidgetDiv>
           <WidgetDiv className="flex flex-col justify-center">
-            <WidgetTitle title="Travel times by hour" location={location} line={line} both />
+            <WidgetTitle
+              title="Travel times by hour"
+              location={location}
+              line={line}
+              both
+              action={peakTimeControl}
+            />
             <AggregateChartWrapper
               query={traveltimes}
               toStation={toStation}
@@ -135,18 +164,6 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
               timeUnit={'by_time'}
               peakTime={peakTime === 'weekday' ? true : false}
             />
-            <div className={'flex w-full justify-center pt-2'}>
-              <ButtonGroup
-                line={line}
-                pressFunction={setPeakTime}
-                options={[
-                  ['weekday', 'Weekday'],
-                  ['weekend', 'Weekend/holiday'],
-                ]}
-                additionalDivClass="md:w-auto"
-                additionalButtonClass="md:w-fit"
-              />
-            </div>
           </WidgetDiv>
         </>
       ) : (
@@ -160,6 +177,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
                   location={location}
                   line={line}
                   both
+                  action={travelTimeControl}
                 />
                 <SpeedBetweenStationsSingleWrapper
                   query={traveltimes}
@@ -175,6 +193,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
                   location={location}
                   line={line}
                   both
+                  action={travelTimeControl}
                 />
                 <TravelTimesSingleWrapper
                   query={traveltimes}
@@ -183,18 +202,6 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
                 />
               </>
             )}
-            <div className={'flex w-full justify-center pt-2'}>
-              <ButtonGroup
-                line={line}
-                pressFunction={setTravelTimeDisplay}
-                options={[
-                  ['traveltimes', 'Travel times'],
-                  ['speeds', 'Speeds'],
-                ]}
-                additionalDivClass="md:w-auto"
-                additionalButtonClass="md:w-fit"
-              />
-            </div>
           </WidgetDiv>
 
           <WidgetDiv>

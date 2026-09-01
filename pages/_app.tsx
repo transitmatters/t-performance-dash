@@ -51,6 +51,21 @@ ChartJS.register(
   Legend
 );
 
+// Vertical gridlines add noise without helping anyone compare values, so drop them for every
+// chart at once rather than per-config — the x axis is a time or category scale throughout.
+(['time', 'timeseries', 'category'] as const).forEach((scaleType) => {
+  const scale = ChartJS.defaults.scales[scaleType];
+  if (scale) scale.grid = { ...scale.grid, display: false };
+});
+
+// Keep the remaining horizontal rules recessive.
+if (ChartJS.defaults.scales.linear) {
+  ChartJS.defaults.scales.linear.grid = {
+    ...ChartJS.defaults.scales.linear.grid,
+    color: 'rgba(0,0,0,0.06)',
+  };
+}
+
 // ChartDataLabels plugin defaults to displaying on every chart.
 if (ChartJS.defaults.plugins.datalabels?.display)
   ChartJS.defaults.plugins.datalabels.display = false;

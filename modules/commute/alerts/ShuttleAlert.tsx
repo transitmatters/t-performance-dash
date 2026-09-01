@@ -18,7 +18,7 @@ export const ShuttleAlert: React.FC<ShuttleAlertProps> = ({ alert, lineShort, ty
   return (
     <AlertBoxInner
       header={alert.header}
-      Icon={() => <p className={classNames('m-0.5 pl-2 pr-2 text-4xl')}>🚌</p>}
+      Icon={() => <p className={classNames('m-0.5 pr-2 pl-2 text-4xl')}>🚌</p>}
       type={type}
       alert={alert}
       noShrink={noShrink}

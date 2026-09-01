@@ -20,7 +20,7 @@ import { AlertsDisclaimer } from '../general/AlertsDisclaimer';
 import { FIVE_MINUTES } from '../../constants/time';
 import { LegendSingleDay } from './Legend';
 import { ChartDiv } from './ChartDiv';
-import { ChartBorder } from './ChartBorder';
+import { ChartStack } from './ChartStack';
 
 const pointColors = (
   data: DataPoint[],
@@ -129,7 +129,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   );
 
   return (
-    <ChartBorder>
+    <ChartStack>
       <ChartDiv isMobile={isMobile}>
         <Line
           id={chartId}
@@ -249,6 +249,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
             scales: {
               y: {
                 display: true,
+                border: { display: false },
+                grid: { color: 'rgba(0,0,0,0.06)' },
                 ticks: {
                   color: COLORS.design.subtitleGrey,
                   callback: (value) => {
@@ -265,6 +267,9 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               },
               x: {
                 type: 'time',
+                // Vertical rules add noise without helping readers compare values.
+                grid: { display: false },
+                border: { color: 'rgba(0,0,0,0.10)' },
                 time: {
                   unit: 'hour',
                   tooltipFormat: 'h:mm:ss a', // locale time with seconds
@@ -312,14 +317,14 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
       </ChartDiv>
       <div className="flex flex-col">
         {alerts && <AlertsDisclaimer alerts={alerts} />}
-        <div className="flex flex-row items-end gap-4">
+        <div className="flex flex-row flex-wrap items-end justify-between gap-x-6 gap-y-2">
           {showLegend && benchmarkField ? (
             <LegendSingleDay showUnderRatio={showUnderRatio} />
           ) : (
             <div className="w-full" />
           )}
           {date && (
-            <>
+            <div className="ml-auto flex shrink-0 flex-row items-center gap-x-4 whitespace-nowrap">
               <SaveChartImageButton
                 chartRef={ref}
                 datasetName={fname}
@@ -335,10 +340,10 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 includeBothStopsForLocation={includeBothStopsForLocation}
                 startDate={date}
               />
-            </>
+            </div>
           )}
         </div>
       </div>
-    </ChartBorder>
+    </ChartStack>
   );
 };

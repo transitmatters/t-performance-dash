@@ -165,10 +165,14 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
   }
   delete query.from;
   delete query.to;
-  // Get queryParams but exclude busRoute and crRoute
+  // Get queryParams but exclude busRoute, crRoute, and view (a per-line preset selection, e.g. the
+  // Overview page's date range — carrying it to a different line makes that line's page open on
+  // whatever range was last picked instead of its own default).
   const queryParams = query
     ? new URLSearchParams(
-        Object.entries(query).filter(([key]) => key !== 'busRoute' && key !== 'crRoute')
+        Object.entries(query).filter(
+          ([key]) => key !== 'busRoute' && key !== 'crRoute' && key !== 'view'
+        )
       )
     : new URLSearchParams();
   href += currentPath ? `${currentPath}` : '';

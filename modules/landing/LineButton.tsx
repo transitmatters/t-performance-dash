@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import classNames from 'classnames';
 import type { Line } from '../../common/types/lines';
-import { lineColorBackground, lineColorBorder } from '../../common/styles/general';
+import { lineColorBorder, lineColorVar } from '../../common/styles/general';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { BUS_DEFAULTS, COMMUTER_RAIL_DEFAULTS } from '../../common/state/defaults/dateDefaults';
 
@@ -26,10 +26,10 @@ export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
       className="group flex cursor-pointer flex-row items-center gap-x-8 gap-y-4 md:flex-col"
     >
       <div
+        style={lineColorVar(line)}
         className={classNames(
           lineColorBorder[line],
-          lineColorBackground[line],
-          'flex h-24 w-24 cursor-pointer items-center justify-center rounded-full border-2 bg-opacity-80 group-hover:bg-opacity-100 lg:h-32 lg:w-32'
+          'flex h-24 w-24 cursor-pointer items-center justify-center rounded-full border-2 bg-(--line-color)/80 group-hover:bg-(--line-color) lg:h-32 lg:w-32'
         )}
       >
         {children}

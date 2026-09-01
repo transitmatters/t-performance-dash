@@ -38,7 +38,7 @@ export const WidgetForCarousel: React.FC<WidgetForCarouselProps> = ({
             )}
             <p
               className={classNames(
-                'truncate text-xs leading-tight text-design-subtitleGrey sm:text-sm'
+                'text-design-subtitleGrey truncate text-xs leading-tight sm:text-sm'
               )}
             >
               {analysis}

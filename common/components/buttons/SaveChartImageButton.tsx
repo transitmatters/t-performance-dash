@@ -57,13 +57,16 @@ export const SaveChartImageButton: React.FC<SaveChartImageButtonProps> = ({
   ]);
 
   return (
-    <div className={classNames('flex')} title="Save chart as image">
-      <button onClick={handleClick} className="cursor-pointer">
-        <FontAwesomeIcon
-          icon={faFileImage}
-          className={classNames('text-stone-600', line && lineColorTextHover[line])}
-        />
-      </button>
-    </div>
+    <button
+      onClick={handleClick}
+      title="Save chart as image"
+      aria-label="Save chart as image"
+      className={classNames(
+        'flex cursor-pointer items-center text-stone-500',
+        line && lineColorTextHover[line]
+      )}
+    >
+      <FontAwesomeIcon icon={faFileImage} className="size-3" />
+    </button>
   );
 };

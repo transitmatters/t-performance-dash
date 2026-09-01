@@ -3,9 +3,11 @@ import classNames from 'classnames';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ALL_PAGES } from '../../common/constants/pages';
-import { ControlPanel } from '../../common/components/controls/ControlPanel';
+import { PrimaryControls, StationControls } from '../../common/components/controls/ControlPanel';
 import { lineColorBackground } from '../../common/styles/general';
 import { COMMUTER_RAIL_LINE_NAMES, FERRY_LINE_NAMES } from '../../common/types/lines';
+import { LINE_COLORS } from '../../common/constants/colors';
+import { readableOn } from '../../common/utils/general';
 
 export const DesktopHeader: React.FC = () => {
   const {
@@ -27,31 +29,35 @@ export const DesktopHeader: React.FC = () => {
     if (tab === 'System') return 'System';
   };
 
+  // Bus yellow and the other light line colors can't carry white text.
+  const needsDarkText = readableOn(LINE_COLORS[line ?? 'default']) === 'dark';
+  const controlProps = {
+    dateStoreSection: dateStoreSection!,
+    line,
+    busRoute,
+    crRoute,
+    ferryRoute,
+  };
+
   return (
     <div
       className={classNames(
-        'sticky top-0 z-10 mx-3 mb-2 flex flex-row justify-between gap-x-6 rounded-bl-none rounded-br-md border-gray-200 text-white shadow-md md:mx-0 md:mr-4 md:border-l-0',
+        'sticky top-0 z-10 mb-2 flex flex-col gap-y-3 px-5 py-3 shadow-md',
+        needsDarkText ? 'text-stone-900' : 'text-white',
         lineColorBackground[line ?? 'DEFAULT']
       )}
     >
-      <div className={classNames('flex h-14 shrink-0 flex-col justify-center pt-2')}>
-        <div className="flex shrink-0 flex-row items-baseline pl-3">
-          <h3 className="text-xl">{getLineName()}</h3>
-          <span className="px-1 text-xl">•</span>
-          <h2 className="select-none text-xl">
+      <div className="flex flex-row flex-wrap items-center justify-between gap-x-5 gap-y-2">
+        <div className="flex shrink-0 flex-row items-baseline gap-x-2">
+          <h3 className="text-xl font-bold">{getLineName()}</h3>
+          <span className={needsDarkText ? 'text-stone-900/50' : 'text-white/60'}>•</span>
+          <h2 className="text-xl select-none">
             <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
           </h2>
         </div>
+        {showControls && <PrimaryControls {...controlProps} />}
       </div>
-      {showControls && (
-        <ControlPanel
-          dateStoreSection={dateStoreSection}
-          line={line}
-          busRoute={busRoute}
-          crRoute={crRoute}
-          ferryRoute={ferryRoute}
-        />
-      )}
+      {showControls && <StationControls {...controlProps} />}
     </div>
   );
 };
