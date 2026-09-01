@@ -4,21 +4,13 @@ import { useMemo } from 'react';
 import { useDeliveredTripMetrics } from '../../../common/api/hooks/tripmetrics';
 import { useRidershipData } from '../../../common/api/hooks/ridership';
 import { getRidershipLineId } from '../../../common/utils/ridership';
-import { useSlowzoneAllData, useSlowzoneDelayTotalData } from '../../../common/api/hooks/slowzones';
-import {
-  PEAK_SPEED,
-  PEAK_SCHEDULED_SERVICE,
-  PEAK_RIDERSHIP,
-} from '../../../common/constants/baselines';
+import { useSlowzoneAllData } from '../../../common/api/hooks/slowzones';
 import { LINE_COLORS } from '../../../common/constants/colors';
 import { TODAY_STRING } from '../../../common/constants/dates';
-import { getFormattedTimeString } from '../../../common/utils/time';
-import { getWorstSlowZoneSegment, getStationPairName } from '../../../common/utils/slowZoneUtils';
+import { filterAllSlow } from '../../../common/utils/slowZoneUtils';
 import type { DatedValue } from '../../../common/utils/dateAggregation';
-import { getMonthlyDelta, getMonthlyTrend } from '../../../common/utils/dateAggregation';
+import { getTrailingWindowDelta, getMonthlyTrend } from '../../../common/utils/dateAggregation';
 import type { Line, LineShort } from '../../../common/types/lines';
-import type { DayDelayTotals } from '../../../common/types/dataPoints';
-import type { RidershipKey } from '../../../common/types/ridership';
 import type { ScorecardRow, DeltaSentiment, MetricKey } from './types';
 
 /** The scorecard is calendar-month-shaped, so it fetches its own fixed trailing window
@@ -49,30 +41,30 @@ const buildRow = (params: {
   reducer: 'avg' | 'sum';
   unit: string;
   formatValue: (value: number) => string;
-  benchmark: number | null;
-  benchmarkFormatted: (benchmark: number) => string;
   negligibleDelta: number;
   higherIsBetter: boolean;
   color: string;
 }): ScorecardRow | null => {
-  const { thisMonth, delta } = getMonthlyDelta(params.points, params.reducer);
-  if (!Number.isFinite(thisMonth)) return null;
+  const { current, delta } = getTrailingWindowDelta(params.points, params.reducer, 30);
+  if (!Number.isFinite(current)) return null;
   const trend = getMonthlyTrend(params.points, params.reducer);
   const sentiment = deltaSentimentFor(delta, params.negligibleDelta, params.higherIsBetter);
-  const percentOfBenchmark = params.benchmark ? thisMonth / params.benchmark : null;
 
   return {
     key: params.key,
     label: params.label,
     subtitle: params.subtitle,
-    formattedCurrent: params.formatValue(thisMonth),
+    formattedCurrent: params.formatValue(current),
+    currentValue: current,
+    formatValue: params.formatValue,
     unit: params.unit,
-    benchmarkLabel: params.benchmark ? params.benchmarkFormatted(params.benchmark) : '—',
-    percentOfBenchmark: percentOfBenchmark === null ? null : Math.min(percentOfBenchmark, 1),
     deltaLabel:
       delta === null
         ? 'Not enough data'
         : `${delta > 0 ? '+' : ''}${params.formatValue(delta)} · ${sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse'}`,
+    // Compact form for narrow (mobile) columns: just the signed change — the badge color already
+    // carries better/worse, so the word is redundant where space is tight.
+    deltaValueLabel: delta === null ? '—' : `${delta > 0 ? '+' : ''}${params.formatValue(delta)}`,
     deltaSentiment: sentiment,
     trend,
     color: params.color,
@@ -94,7 +86,6 @@ export const useScorecardRows = (line: Line | undefined, lineShort: LineShort | 
     },
     enabled
   );
-  const delayTotals = useSlowzoneDelayTotalData();
   const allSlow = useSlowzoneAllData();
 
   const rows = useMemo(() => {
@@ -117,8 +108,6 @@ export const useScorecardRows = (line: Line | undefined, lineShort: LineShort | 
         reducer: 'avg',
         unit: 'mph',
         formatValue: (v) => v.toFixed(1),
-        benchmark: PEAK_SPEED[line] || null,
-        benchmarkFormatted: (b) => `${b.toFixed(1)} mph`,
         negligibleDelta: 0.1,
         higherIsBetter: true,
         color,
@@ -136,8 +125,6 @@ export const useScorecardRows = (line: Line | undefined, lineShort: LineShort | 
         reducer: 'avg',
         unit: '/day',
         formatValue: (v) => Math.round(v).toString(),
-        benchmark: PEAK_SCHEDULED_SERVICE[line] || null,
-        benchmarkFormatted: (b) => `${Math.round(b)} trips`,
         negligibleDelta: 1,
         higherIsBetter: true,
         color,
@@ -158,8 +145,6 @@ export const useScorecardRows = (line: Line | undefined, lineShort: LineShort | 
         reducer: 'avg',
         unit: '/day',
         formatValue: formatCompact,
-        benchmark: PEAK_RIDERSHIP[line as RidershipKey] || null,
-        benchmarkFormatted: (b) => `${formatCompact(b)}`,
         negligibleDelta: 50,
         higherIsBetter: true,
         color,
@@ -167,55 +152,69 @@ export const useScorecardRows = (line: Line | undefined, lineShort: LineShort | 
       if (ridershipRow) built.push(ridershipRow);
     }
 
-    if (delayTotals.data && lineShort && lineShort in { Red: 1, Orange: 1, Blue: 1, Green: 1 }) {
-      const key = lineShort as keyof Omit<DayDelayTotals, 'date'>;
-      const windowStartUTC = dayjs.utc(WINDOW_START);
-      const slowPoints: DatedValue[] = delayTotals.data.data
-        .filter((t) => dayjs.utc(t.date).isAfter(windowStartUTC))
-        .map((t) => ({ date: t.date, value: t[key] }));
-      // Cumulative time lost — summing each day's "extra time added to a trip" snapshot answers
-      // "riding this line daily, how much time would slow zones have cost you this month," which
-      // is the more meaningful rider-facing number than an averaged daily severity reading.
-      // "Worst on record" is the worst monthly cumulative total in the window.
-      const worstOnRecord = Math.max(
-        ...getMonthlyTrend(slowPoints, 'sum').filter(Number.isFinite),
-        1
+    if (allSlow.data && lineShort && lineShort in { Red: 1, Orange: 1, Blue: 1, Green: 1 }) {
+      const now = dayjs.utc();
+      const zones = allSlow.data.data;
+      // Anchor "this month" to the data's latest coverage, not today: the feed lags a few days, so
+      // on the 1st of a month the current calendar month is empty and would read a false "0 active".
+      // This mirrors the other rows, whose getMonthlyDelta uses the last month that has data.
+      const coverageEnd = zones.reduce(
+        (max, z) => {
+          const end = dayjs.utc(z.end);
+          return end.isValid() && end.isAfter(max) && end.isBefore(now) ? end : max;
+        },
+        now.subtract(1, 'month')
       );
-      const worstSegment = allSlow.data
-        ? getWorstSlowZoneSegment(
-            allSlow.data.data,
-            dayjs.utc().subtract(30, 'day'),
-            dayjs.utc(),
-            lineShort
-          )
-        : null;
-      const slowRow = buildRow({
+      // Count distinct slow zones active in each of the trailing 13 calendar months for this line.
+      // A zone spanning multiple months is counted in each month it was active — this is "how many
+      // slow zones there were," not time lost. filterAllSlow keeps zones overlapping the window.
+      const monthlyCounts = Array.from({ length: 13 }, (_, i) => {
+        const month = coverageEnd.subtract(12 - i, 'month');
+        return filterAllSlow(zones, month.startOf('month'), month.endOf('month'), lineShort).length;
+      });
+      // Headline + delta are trailing 30-day windows (last 30 days vs the previous 30), anchored to
+      // the coverage end — consistent with the other rows and stable across month boundaries. The
+      // monthlyCounts above stay as the 12-month trend sparkline.
+      const currentCount = filterAllSlow(
+        zones,
+        coverageEnd.subtract(30, 'day'),
+        coverageEnd,
+        lineShort
+      ).length;
+      const priorCount = filterAllSlow(
+        zones,
+        coverageEnd.subtract(60, 'day'),
+        coverageEnd.subtract(30, 'day'),
+        lineShort
+      ).length;
+      const delta = currentCount - priorCount;
+      const sentiment = deltaSentimentFor(delta, 0, false);
+
+      built.push({
         key: 'slowzones',
         label: 'Slow zones',
-        subtitle: worstSegment
-          ? `Worst: ${getStationPairName(worstSegment.from, worstSegment.to, true)}`
-          : 'No active slow zones',
-        points: slowPoints,
-        reducer: 'sum',
-        unit: 'lost',
-        // DayDelayTotals values are seconds (see modules/slowzones/charts/TotalSlowTime.tsx,
-        // which divides by 60 before plotting) — not minutes.
-        formatValue: (v) => getFormattedTimeString(v, 'seconds'),
-        benchmark: worstOnRecord,
-        benchmarkFormatted: (b) => `${getFormattedTimeString(b, 'seconds')} worst month in window`,
-        negligibleDelta: 60,
-        higherIsBetter: false,
+        subtitle: 'Speed-restricted segments',
+        formattedCurrent: `${currentCount}`,
+        currentValue: currentCount,
+        // "zones" (a plain count noun under the "This month" column), not "active" — the count is a
+        // monthly figure, and "active" would imply a live/right-now reading.
+        formatValue: (v) => Math.round(v).toString(),
+        unit: 'zones',
+        deltaLabel:
+          delta === 0
+            ? 'No change · flat'
+            : `${delta > 0 ? '+' : ''}${delta} · ${sentiment === 'good' ? 'better' : 'worse'}`,
+        deltaValueLabel: delta === 0 ? '0' : `${delta > 0 ? '+' : ''}${delta}`,
+        deltaSentiment: sentiment,
+        trend: monthlyCounts,
         color,
       });
-      if (slowRow) built.push(slowRow);
     }
 
     return built;
-  }, [line, lineShort, tripMetrics.data, ridership.data, delayTotals.data, allSlow.data]);
+  }, [line, lineShort, tripMetrics.data, ridership.data, allSlow.data]);
 
-  const isLoading =
-    enabled &&
-    (tripMetrics.isLoading || ridership.isLoading || delayTotals.isLoading || allSlow.isLoading);
+  const isLoading = enabled && (tripMetrics.isLoading || ridership.isLoading || allSlow.isLoading);
 
   return { rows, isLoading };
 };

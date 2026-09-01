@@ -31,6 +31,7 @@ import { PRODUCTION } from '../common/utils/constants';
 import { NavLayout } from '../common/layouts/NavLayout';
 import { LoadPresetsLayout } from '../common/layouts/LoadPresetsLayout';
 import { DynamicMetaTags } from '../common/components/DynamicMetaTags';
+import { useApplyTheme } from '../common/hooks/useApplyTheme';
 
 config.autoAddCss = false;
 
@@ -58,11 +59,12 @@ ChartJS.register(
   if (scale) scale.grid = { ...scale.grid, display: false };
 });
 
-// Keep the remaining horizontal rules recessive.
+// Keep the remaining horizontal rules recessive. A neutral gray at low alpha reads on both the
+// light and dark grounds — a near-black rule vanishes on the dark theme.
 if (ChartJS.defaults.scales.linear) {
   ChartJS.defaults.scales.linear.grid = {
     ...ChartJS.defaults.scales.linear.grid,
-    color: 'rgba(0,0,0,0.06)',
+    color: 'rgba(128,128,128,0.16)',
   };
 }
 
@@ -77,6 +79,8 @@ interface AppProps {
 
 export default function App({ Component, pageProps }: AppProps) {
   const isProd = typeof window !== 'undefined' && window.location.hostname === PRODUCTION;
+
+  useApplyTheme();
 
   const [loaded, setLoaded] = useState(false);
 

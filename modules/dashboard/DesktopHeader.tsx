@@ -8,6 +8,7 @@ import { lineColorBackground } from '../../common/styles/general';
 import { COMMUTER_RAIL_LINE_NAMES, FERRY_LINE_NAMES } from '../../common/types/lines';
 import { LINE_COLORS } from '../../common/constants/colors';
 import { readableOn } from '../../common/utils/general';
+import { RouteBullet } from '../../common/components/transit/RouteBullet';
 
 export const DesktopHeader: React.FC = () => {
   const {
@@ -50,7 +51,13 @@ export const DesktopHeader: React.FC = () => {
       <div className="flex flex-row flex-wrap items-center justify-between gap-x-5 gap-y-2">
         <div className="flex shrink-0 flex-row items-baseline gap-x-2">
           <h3 className="text-xl font-bold">{getLineName()}</h3>
-          <span className={needsDarkText ? 'text-stone-900/50' : 'text-white/60'}>•</span>
+          <RouteBullet
+            size="sm"
+            className={classNames(
+              'self-center',
+              needsDarkText ? 'text-stone-900/60' : 'text-white/70'
+            )}
+          />
           <h2 className="text-xl select-none">
             <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
           </h2>

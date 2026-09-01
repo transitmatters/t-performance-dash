@@ -2,12 +2,17 @@ import type { Line } from '../types/lines';
 import { hexWithAlpha } from '../utils/general';
 
 export const COLORS = {
+  // Canonical MBTA brand hex — the true line colors. These drive the graphic/swatch roles via
+  // `--line-color` (route bullets, the header fill, chart series, sparklines, station nodes), where
+  // the color is a fill and contrast isn't a text concern. The AA-adjusted variants used for
+  // text/UI/focus roles live in the `[data-line]` token blocks in styles/globals.css — see the
+  // note there. Keep these EXACT (brand commitment in PRODUCT.md); adjust only the token variants.
   mbta: {
-    red: '#D13434',
-    mattapan: '#D13434',
+    red: '#da291c',
+    mattapan: '#da291c',
     orange: '#ed8b00',
     blue: '#003da5',
-    green: '#00834d',
+    green: '#00843d',
     bus: '#FFC72C',
     commuterRail: '#80276c',
     ferry: '#008EAA',
@@ -45,7 +50,9 @@ export const CHART_COLORS = {
   FILL: '#bfc8d680',
   FILL_HOURLY: '#88aee680',
   DARK_LINE: '#303030a0',
-  ANNOTATIONS: hexWithAlpha('#202020', 0.4),
+  // Neutral gray so baseline/benchmark lines (e.g. the historical-max rule) stay visible on both
+  // the light and dark plot surfaces; a near-black annotation disappeared in dark mode.
+  ANNOTATIONS: hexWithAlpha('#808080', 0.85),
   BLOCKS: hexWithAlpha('#202020', 0.2),
   BLOCKS_SOLID: '#d2d2d2',
 };

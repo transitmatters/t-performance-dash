@@ -18,6 +18,7 @@ interface TotalSlowTimeWrapperProps {
   line: Line;
   lineShort: Exclude<LineShort, 'Bus' | 'Commuter Rail'>;
   showTitle?: boolean;
+  showWidgetValue?: boolean;
 }
 
 export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
@@ -27,24 +28,27 @@ export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
   line,
   lineShort,
   showTitle = false,
+  showWidgetValue = true,
 }) => {
   const filteredDelayTotals = useFilteredDelayTotals(data, startDateUTC, endDateUTC);
   const delayDelta = getSlowZoneDelayDelta(filteredDelayTotals, lineShort);
 
   return (
     <CarouselGraphDiv>
-      <WidgetCarousel isSingleWidget>
-        <WidgetForCarousel
-          widgetValue={
-            new TimeWidgetValue(
-              filteredDelayTotals[filteredDelayTotals.length - 1]?.[lineShort],
-              delayDelta
-            )
-          }
-          layoutKind="no-delta"
-          analysis={`Current (${todayOrDate(endDateUTC)})`}
-        />
-      </WidgetCarousel>
+      {showWidgetValue && (
+        <WidgetCarousel isSingleWidget>
+          <WidgetForCarousel
+            widgetValue={
+              new TimeWidgetValue(
+                filteredDelayTotals[filteredDelayTotals.length - 1]?.[lineShort],
+                delayDelta
+              )
+            }
+            layoutKind="no-delta"
+            analysis={`Current (${todayOrDate(endDateUTC)})`}
+          />
+        </WidgetCarousel>
+      )}
       <TotalSlowTime
         // Pass all data and not filtered because we can filter using the X axis of the graph.
         data={data}

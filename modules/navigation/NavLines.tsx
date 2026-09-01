@@ -41,6 +41,7 @@ import {
 import { lineColorVar } from '../../common/styles/general';
 import type { Line } from '../../common/types/lines';
 import { getLineSelectionItemHref, useDelimitatedRoute } from '../../common/utils/router';
+import { RouteBullet } from '../../common/components/transit/RouteBullet';
 import { NavPageItems } from './NavPageItems';
 
 const NAV_LINES: Line[] = [
@@ -131,11 +132,18 @@ export const NavLines: React.FC<NavLinesProps> = ({ close }) => {
                     style={lineColorVar(line)}
                     className={classNames(
                       'hover:bg-transparent',
-                      isActive && 'font-semibold text-stone-900'
+                      // Active line reads full-strength + bold on its tinted row; inactive lines
+                      // recede (opacity, not a text-color utility — that lost to the component's
+                      // base color in tailwind-merge). Hover restores an inactive line to full.
+                      isActive ? 'font-semibold' : 'opacity-60 hover:opacity-100'
                     )}
                   >
-                    <Link href={hrefForLine(line, route)} onClick={() => close?.()}>
-                      <span className="size-2.5 shrink-0 rounded-full bg-(--line-color)" />
+                    <Link
+                      href={hrefForLine(line, route)}
+                      aria-current={isActive ? true : undefined}
+                      onClick={() => close?.()}
+                    >
+                      <RouteBullet size="sm" className="text-(--line-color)" />
                       <span className="truncate">{lineObject.name}</span>
                       <FontAwesomeIcon
                         icon={faChevronRight}
@@ -145,7 +153,7 @@ export const NavLines: React.FC<NavLinesProps> = ({ close }) => {
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
-                  <SidebarMenuSub className="mx-0 border-0 pr-1 pl-6">
+                  <SidebarMenuSub className="mx-0 ml-[1.05rem] border-l border-(--line-color)/40 pr-1 pl-4">
                     <NavPageItems pages={pagesForLine(line)} close={close} />
                   </SidebarMenuSub>
                 </CollapsibleContent>

@@ -9,10 +9,13 @@ import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useAlertDelays } from '../../common/api/hooks/delays';
 import { Widget, WidgetDiv } from '../../common/components/widgets';
+import { StatCard, type StatSentiment } from '../../common/components/widgets/StatCard';
 import { BranchSelector } from '../../common/components/inputs/BranchSelector';
 import { lineToDefaultRouteId } from '../predictions/utils/utils';
 import type { LineRouteId } from '../../common/types/lines';
 import { Accordion } from '../../common/components/accordion/Accordion';
+import { getFormattedTimeString } from '../../common/utils/time';
+import { getDelayStats } from './utils';
 import { DelayByCategoryGraph } from './charts/DelayByCategoryGraph';
 import { DelayBreakdownGraph } from './charts/DelayBreakdownGraph';
 import { TotalDelayGraph } from './charts/TotalDelayGraph';
@@ -61,9 +64,40 @@ export function DelaysDetails() {
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
   }
+
+  const stats = delaysReady ? getDelayStats(alertDelays.data, agg) : null;
+
+  const deltaFor = (delta: number) => {
+    if (!Number.isFinite(delta)) return undefined;
+    const sentiment: StatSentiment = Math.abs(delta) <= 1 ? 'flat' : delta < 0 ? 'good' : 'bad';
+    const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
+    const sign = delta > 0 ? '+' : delta < 0 ? '-' : '';
+    return { label: `${sign}${getFormattedTimeString(delta, 'minutes')} · ${word}`, sentiment };
+  };
+
   return (
     <PageWrapper pageTitle={'Delays'}>
       <ChartPageDiv>
+        {stats && Number.isFinite(stats.avgDelay) && (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <StatCard
+              label="Total time delayed"
+              value={getFormattedTimeString(stats.totalDelay, 'minutes')}
+            />
+            <StatCard
+              label={`Avg per ${stats.agg === 'weekly' ? 'week' : 'day'}`}
+              value={getFormattedTimeString(stats.avgDelay, 'minutes')}
+              delta={deltaFor(stats.avgDelayDelta)}
+            />
+            {stats.topReasonLabel && stats.topReasonShare != null && (
+              <StatCard
+                label={stats.topReasonLabel}
+                value={`${Math.round(stats.topReasonShare * 100)}%`}
+                unit="of delay time"
+              />
+            )}
+          </div>
+        )}
         <Widget title="Total Time Delayed" ready={[alertDelays]}>
           {delaysReady ? (
             <TotalDelayGraph

@@ -1,7 +1,6 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlassChart } from '@fortawesome/free-solid-svg-icons';
 import type { Station } from '../../types/stations';
+import { Notice } from './Notice';
 
 interface TerminusNoticeProps {
   toStation?: Station;
@@ -10,19 +9,15 @@ interface TerminusNoticeProps {
 
 export const TerminusNotice: React.FC<TerminusNoticeProps> = ({ toStation, fromStation }) => {
   const isTerminus = toStation?.terminus || fromStation?.terminus;
-  if (isTerminus) {
-    return (
-      <div className={'flex items-center'}>
-        <FontAwesomeIcon icon={faMagnifyingGlassChart} size={'lg'} />
-        <div className={'mx-3 my-2 text-sm italic'}>
-          <p>
-            Due to data collection issues at terminus stations, data is not guaranteed to be
-            complete.
-          </p>
-          <p>This may lead to inaccuracy, particularly in travel time & dwell calculations.</p>
-        </div>
-      </div>
-    );
+
+  if (!isTerminus) {
+    return null;
   }
-  return null;
+
+  return (
+    <Notice variant="warning">
+      Data collection at terminus stations can be incomplete, which may affect travel time and dwell
+      figures in particular.
+    </Notice>
+  );
 };

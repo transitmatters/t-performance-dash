@@ -118,6 +118,105 @@
   --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1); /* modal/dropdown open + close */
   --tabs-dur: 250ms;
   --tabs-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* "The Living Map" arrival: content settles in like a train pulling into a stop.
+     --duration-reveal is the per-element travel; --stagger-step is the gap between
+     successive stops so a list arrives station-by-station rather than all at once. */
+  --duration-reveal: 420ms;
+  --stagger-step: 60ms;
+}
+
+/*
+  Per-line theming ("The Living Map"): a `data-line` attribute on the app shell remaps the
+  shadcn semantic tokens to the active MBTA line's color, so every component built on
+  --primary / --accent / --ring / --sidebar-* answers in that line. One rule set covers light
+  AND dark: --primary/--ring are the brand hue in both; --accent is mixed against the live
+  --background so it adapts per theme; and each line carries the foreground that meets AA on
+  its own color (orange / bus / The RIDE take dark text, the rest take white).
+
+  Intentional exception to the canonical MBTA hex: a few hues here are darkened from the true
+  brand color (red #da291c → #d13434, green #00843d → #00834d, bus #ffc72c → #f5b400) so that
+  --primary/--ring clear AA contrast in their TEXT/UI/focus roles. The graphic/swatch roles
+  (route bullets, header fill, chart series) still use the exact brand hex via --line-color /
+  LINE_COLORS (see common/constants/colors.ts). Text safety here; brand truth there.
+*/
+[data-line='line-red'],
+[data-line='line-mattapan'] {
+  --primary: #d13434;
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: #d13434;
+  --accent: color-mix(in oklch, #d13434 15%, var(--background));
+  --accent-foreground: var(--foreground);
+  --sidebar-primary: #d13434;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-ring: #d13434;
+  --chart-1: #d13434;
+}
+[data-line='line-orange'] {
+  --primary: #ed8b00;
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: #ed8b00;
+  --accent: color-mix(in oklch, #ed8b00 15%, var(--background));
+  --accent-foreground: var(--foreground);
+  --sidebar-primary: #ed8b00;
+  --sidebar-primary-foreground: oklch(0.205 0 0);
+  --sidebar-ring: #ed8b00;
+  --chart-1: #ed8b00;
+}
+[data-line='line-blue'] {
+  --primary: #003da5;
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: #003da5;
+  --accent: color-mix(in oklch, #003da5 15%, var(--background));
+  --accent-foreground: var(--foreground);
+  --sidebar-primary: #003da5;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-ring: #003da5;
+  --chart-1: #003da5;
+}
+[data-line='line-green'] {
+  --primary: #00834d;
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: #00834d;
+  --accent: color-mix(in oklch, #00834d 15%, var(--background));
+  --accent-foreground: var(--foreground);
+  --sidebar-primary: #00834d;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-ring: #00834d;
+  --chart-1: #00834d;
+}
+[data-line='line-bus'],
+[data-line='line-RIDE'] {
+  --primary: #f5b400;
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: #f5b400;
+  --accent: color-mix(in oklch, #f5b400 18%, var(--background));
+  --accent-foreground: var(--foreground);
+  --sidebar-primary: #f5b400;
+  --sidebar-primary-foreground: oklch(0.205 0 0);
+  --sidebar-ring: #f5b400;
+  --chart-1: #f5b400;
+}
+[data-line='line-commuter-rail'] {
+  --primary: #80276c;
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: #80276c;
+  --accent: color-mix(in oklch, #80276c 15%, var(--background));
+  --accent-foreground: var(--foreground);
+  --sidebar-primary: #80276c;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-ring: #80276c;
+  --chart-1: #80276c;
+}
+[data-line='line-ferry'] {
+  --primary: #008eaa;
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: #008eaa;
+  --accent: color-mix(in oklch, #008eaa 15%, var(--background));
+  --accent-foreground: var(--foreground);
+  --sidebar-primary: #008eaa;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-ring: #008eaa;
+  --chart-1: #008eaa;
 }
 
 html,
@@ -220,12 +319,41 @@ a {
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
+  /* Keep the warm TM charcoal identity in dark too (not the neutral shadcn dark sidebar). */
+  --sidebar: #2e2d2c;
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent: #3a3836;
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+/*
+  Motion grammar — the arrival. Elements that carry fresh data (scorecard rows, cards) rise a
+  few pixels and fade in on mount, staggered so a list arrives station-by-station. Set
+  --reveal-index on each item for its place in the sequence. One rule, honored everywhere.
+*/
+@keyframes tm-reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.tm-reveal {
+  animation: tm-reveal-up var(--duration-reveal) var(--ease-smooth-out) both;
+  animation-delay: calc(var(--reveal-index, 0) * var(--stagger-step));
+}
+
+/* Respect the rider who asked for calm: no travel, no stagger, just the final state. */
+@media (prefers-reduced-motion: reduce) {
+  .tm-reveal {
+    animation: none;
+  }
 }

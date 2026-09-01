@@ -61,7 +61,7 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
   );
 
   return (
-    <div className="flex flex-col gap-4">
+    <>
       {aggregate ? (
         <>
           <WidgetDiv>
@@ -146,6 +146,6 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
           </WidgetDiv>
         </>
       )}
-    </div>
+    </>
   );
 };

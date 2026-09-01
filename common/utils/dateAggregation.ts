@@ -59,3 +59,37 @@ export const getMonthlyDelta = (points: DatedValue[], reducer: Reducer): Monthly
 /** One reduced value per calendar month, oldest to newest — sparkline input. */
 export const getMonthlyTrend = (points: DatedValue[], reducer: Reducer): number[] =>
   bucketByCalendarMonth(points).map((bucket) => reduce(bucket.values, reducer));
+
+export interface WindowDelta {
+  current: number;
+  prior: number | null;
+  delta: number | null;
+  percentChange: number | null;
+}
+
+export const getTrailingWindowDelta = (
+  points: DatedValue[],
+  reducer: Reducer,
+  days = 30
+): WindowDelta => {
+  const dated = points.filter((point) => Number.isFinite(point.value));
+  if (!dated.length) return { current: NaN, prior: null, delta: null, percentChange: null };
+
+  const end = dayjs(
+    dated.reduce((max, point) => (point.date > max ? point.date : max), dated[0].date)
+  );
+  const currentStart = end.subtract(days, 'day');
+  const priorStart = end.subtract(days * 2, 'day');
+  const between = (point: DatedValue, from: dayjs.Dayjs, to: dayjs.Dayjs) => {
+    const d = dayjs(point.date);
+    return d.isAfter(from) && (d.isSame(to, 'day') || d.isBefore(to));
+  };
+
+  const currentValues = dated.filter((p) => between(p, currentStart, end)).map((p) => p.value);
+  const priorValues = dated.filter((p) => between(p, priorStart, currentStart)).map((p) => p.value);
+  const current = reduce(currentValues, reducer);
+  const prior = priorValues.length ? reduce(priorValues, reducer) : null;
+  const delta = prior === null ? null : current - prior;
+  const percentChange = prior ? (current - prior) / prior : null;
+  return { current, prior, delta, percentChange };
+};

@@ -1,6 +1,5 @@
 import React from 'react';
 import { CHART_COLORS } from '../../constants/colors';
-import { useDelimitatedRoute } from '../../utils/router';
 
 interface LegendProps {
   showUnderRatio?: boolean;
@@ -11,20 +10,14 @@ interface LegendLongTermProps {
   onToggleTrendline: () => void;
 }
 
+// The Commuter Rail data caveat lives once at the page level (BetaDataNotice),
+// so it is intentionally not repeated inside every chart legend here.
 export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio }) => {
-  const { line } = useDelimitatedRoute();
   return (
     <div className="flex min-w-0 flex-col gap-y-1 text-stone-600">
       <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-1 text-xs">
         <LegendSingle showUnderRatio={showUnderRatio} />
       </div>
-      {line === 'line-commuter-rail' && (
-        <p className="text-xs text-stone-500">
-          Due to how we collect data for Commuter Rail, we may occasionally miss trips or stops.
-          This can lead to inaccuracies in headways numbers and gaps in travel time data. Confirm
-          data you see here with official MBTA sources when possible.
-        </p>
-      )}
     </div>
   );
 };

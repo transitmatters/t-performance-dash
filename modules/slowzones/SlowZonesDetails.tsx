@@ -15,6 +15,8 @@ import {
   useSpeedRestrictionData,
 } from '../../common/api/hooks/slowzones';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import { StatCard, type StatSentiment } from '../../common/components/widgets/StatCard';
+import { getFormattedTimeString } from '../../common/utils/time';
 import type { Direction } from '../../common/types/dataPoints';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
@@ -27,6 +29,7 @@ import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
 import { DirectionObject } from './constants/constants';
 import { SlowZonesWidgetTitle } from './SlowZonesWidgetTitle';
+import { getSlowZoneStats } from './utils';
 
 dayjs.extend(utc);
 
@@ -65,10 +68,66 @@ export function SlowZonesDetails() {
     );
   }
 
+  const stats =
+    totalSlowTimeReady &&
+    segmentsReady &&
+    delayTotals.data &&
+    allSlow.data &&
+    lineShort !== 'Commuter Rail' &&
+    lineShort !== 'Bus'
+      ? getSlowZoneStats(
+          delayTotals.data.data,
+          isArray(allSlow.data) ? allSlow.data : allSlow.data.data,
+          startDateUTC,
+          endDateUTC,
+          lineShort
+        )
+      : null;
+
+  const timeDeltaBadge = (deltaSeconds: number) => {
+    if (!Number.isFinite(deltaSeconds)) return undefined;
+    const sentiment: StatSentiment =
+      Math.abs(deltaSeconds) < 60 ? 'flat' : deltaSeconds < 0 ? 'good' : 'bad';
+    const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
+    const sign = deltaSeconds > 0 ? '+' : deltaSeconds < 0 ? '−' : '';
+    return {
+      label: `${sign}${getFormattedTimeString(Math.abs(deltaSeconds))} · ${word}`,
+      sentiment,
+    };
+  };
+  const zonesDeltaBadge = (delta: number) => {
+    if (!Number.isFinite(delta)) return undefined;
+    const sentiment: StatSentiment = delta === 0 ? 'flat' : delta < 0 ? 'good' : 'bad';
+    const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
+    return { label: `${delta > 0 ? '+' : ''}${delta} · ${word}`, sentiment };
+  };
+
   return (
     <PageWrapper pageTitle={'Slow zones'}>
       <ChartPageDiv>
         <BetaSlowZoneDataNotice />
+        {stats && Number.isFinite(stats.currentSlowTime) && (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <StatCard
+              label="Current slow time"
+              value={getFormattedTimeString(stats.currentSlowTime)}
+              delta={timeDeltaBadge(stats.slowTimeDelta)}
+            />
+            <StatCard
+              label="Active slow zones"
+              value={`${stats.activeZones}`}
+              unit="zones"
+              delta={zonesDeltaBadge(stats.zonesDelta)}
+            />
+            <StatCard
+              label="Worst segment"
+              value={stats.worstSegment ? stats.worstSegment.title : '—'}
+              unit={
+                stats.worstSegment ? getFormattedTimeString(stats.worstSegment.delay) : undefined
+              }
+            />
+          </div>
+        )}
         <WidgetDiv>
           <WidgetTitle title="Total slow time" />
           <Link
@@ -87,6 +146,7 @@ export function SlowZonesDetails() {
                 endDateUTC={endDateUTC}
                 line={line}
                 lineShort={lineShort}
+                showWidgetValue={false}
               />
             ) : (
               <div className="relative flex h-full">

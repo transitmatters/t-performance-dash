@@ -2,6 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 import { DonateButton } from '../../common/components/buttons/DonateButton';
 import { SidebarSeparator } from '../../common/components/ui/sidebar';
+import { ThemeToggle } from '../../common/components/nav/ThemeToggle';
 
 const LINKS = [
   { name: 'About', href: 'https://transitmatters.org/transitmatters-labs' },
@@ -31,6 +32,7 @@ export const ExtraMenuItems: React.FC = () => {
           </li>
         ))}
       </ul>
+      <ThemeToggle />
       <DonateButton />
     </div>
   );

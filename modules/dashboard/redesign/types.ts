@@ -7,10 +7,11 @@ export interface ScorecardRow {
   label: string;
   subtitle: string;
   formattedCurrent: string;
+  currentValue: number;
+  formatValue: (value: number) => string;
   unit: string;
-  benchmarkLabel: string;
-  percentOfBenchmark: number | null;
   deltaLabel: string;
+  deltaValueLabel: string;
   deltaSentiment: DeltaSentiment;
   trend: number[];
   color: string;

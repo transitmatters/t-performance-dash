@@ -1,13 +1,9 @@
 import React from 'react';
 import type { RidershipCount } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
-import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
-import { PercentageWidgetValue, RidersWidgetValue } from '../../common/types/basicWidgets';
-import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import type { BusRoute, CommuterRailRoute, FerryRoute, Line } from '../../common/types/lines';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
-import { getRidershipWidgetValues } from './utils/utils';
 import { RidershipGraph } from './RidershipGraph';
 
 interface RidershipGraphWrapperProps {
@@ -21,47 +17,18 @@ interface RidershipGraphWrapperProps {
   endDate: string;
 }
 
+// The average/percentage/peak KPIs now live in the page's stat-card row (see RidershipDetails), so
+// the chart no longer carries an in-plot carousel value — just the graph.
 export const RidershipGraphWrapper: React.FC<RidershipGraphWrapperProps> = ({
   data,
-  line,
-  busRoute,
-  crRoute,
-  ferryRoute,
   config,
   startDate,
   endDate,
 }) => {
   if (!data.some((datapoint) => datapoint.count !== null)) return <NoDataNotice isLineMetric />;
-  const { average, percentage, peak } = getRidershipWidgetValues(
-    data,
-    line,
-    busRoute,
-    crRoute,
-    ferryRoute
-  );
 
   return (
     <CarouselGraphDiv>
-      <WidgetCarousel>
-        <WidgetForCarousel
-          widgetValue={new RidersWidgetValue(average)}
-          sentimentDirection={'positiveOnIncrease'}
-          analysis={`Average`}
-          layoutKind="no-delta"
-        />
-        <WidgetForCarousel
-          analysis={'of Historical Maximum'}
-          sentimentDirection={'positiveOnIncrease'}
-          layoutKind="no-delta"
-          widgetValue={new PercentageWidgetValue(percentage)}
-        />
-        <WidgetForCarousel
-          layoutKind="no-delta"
-          sentimentDirection={'positiveOnIncrease'}
-          analysis={`Max - ${config.getWidgetTitle(peak.date)}`}
-          widgetValue={new RidersWidgetValue(peak ? peak.count : undefined)}
-        />
-      </WidgetCarousel>
       <RidershipGraph config={config} data={data} startDate={startDate} endDate={endDate} />
     </CarouselGraphDiv>
   );

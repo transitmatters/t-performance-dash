@@ -9,11 +9,9 @@ import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getParentStationForStopId } from '../../common/utils/stations';
-import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
-import { GobbleDataNotice } from '../../common/components/notices/GobbleDataNotice';
-import { BetaDataNotice } from '../../common/components/notices/BetaDataNotice';
+import { TripDataNotes } from '../../common/components/notices/TripDataNotes';
+import { CrBetaAccuracyNotice } from '../../common/components/notices/CrBetaAccuracyNotice';
 import { PokeySchleppieAwardBanner } from '../../common/components/notices/PokeySchleppieAwardBanner';
-import { CommuterRailDataNotice } from '../../common/components/notices/CommuterRailDataNotice';
 import { BnrdBanner } from '../../common/components/notices/BnrdBanner';
 import { useAlertStore } from './AlertStore';
 import { TripGraphs } from './TripGraphs';
@@ -42,18 +40,18 @@ export const TripExplorer = () => {
   return (
     <PageWrapper pageTitle={'Trips'}>
       <ChartPageDiv>
-        <BetaDataNotice />
         {alertsForModal?.length ? <AlertNotice /> : null}
         <PokeySchleppieAwardBanner busRoute={busRoute} />
         <BnrdBanner busRoute={busRoute} />
-        <TripGraphs fromStation={fromStation} toStation={toStation} />
-        <div>
-          <GobbleDataNotice />
-          <BusDataNotice />
-          <CommuterRailDataNotice />
+        {/* Urgent, per-view accuracy warnings stay visible with the charts. */}
+        <div className="flex flex-col gap-2 empty:hidden">
+          <CrBetaAccuracyNotice />
           <SameDayNotice />
           <TerminusNotice toStation={toStation} fromStation={fromStation} />
         </div>
+        <TripGraphs fromStation={fromStation} toStation={toStation} />
+        {/* Provenance / context, collapsed by default. */}
+        <TripDataNotes />
       </ChartPageDiv>
     </PageWrapper>
   );

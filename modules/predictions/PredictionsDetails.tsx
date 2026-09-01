@@ -12,9 +12,11 @@ import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { usePredictionData } from '../../common/api/hooks/predictions';
 import type { LineRouteId } from '../../common/types/lines';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import { StatCard, type StatSentiment } from '../../common/components/widgets/StatCard';
 import { Accordion } from '../../common/components/accordion/Accordion';
 import { BranchSelector } from '../../common/components/inputs/BranchSelector';
-import { lineToDefaultRouteId } from './utils/utils';
+import { prettyDate } from '../../common/utils/date';
+import { getPredictionStats, lineToDefaultRouteId } from './utils/utils';
 import { PredictionsGraphWrapper } from './charts/PredictionsGraphWrapper';
 import { PredictionsBinsGraphWrapper } from './charts/PredictionsBinsGraphWrapper';
 
@@ -47,9 +49,47 @@ export function PredictionsDetails() {
     return <p>Select a date range to load graphs.</p>;
   }
 
+  const stats =
+    predictionsReady && predictions.data.length ? getPredictionStats(predictions.data) : null;
+  const accuracyDelta = (delta: number) => {
+    if (!Number.isFinite(delta)) return undefined;
+    const negligible = 0.005;
+    const sentiment: StatSentiment =
+      Math.abs(delta) <= negligible ? 'flat' : delta > 0 ? 'good' : 'bad';
+    const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
+    return { label: `${delta > 0 ? '+' : ''}${Math.round(delta * 100)}pp · ${word}`, sentiment };
+  };
+
   return (
     <PageWrapper pageTitle={'Predictions'}>
       <ChartPageDiv>
+        {stats && Number.isFinite(stats.overallAccuracy) && (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <StatCard
+              label="Prediction accuracy"
+              value={`${Math.round(stats.overallAccuracy * 100)}%`}
+              delta={accuracyDelta(stats.accuracyDelta)}
+            />
+            <StatCard
+              label="Best week"
+              value={
+                Number.isFinite(stats.peakAccuracy)
+                  ? `${Math.round(stats.peakAccuracy * 100)}%`
+                  : '—'
+              }
+              unit={prettyDate(stats.peakDate, false)}
+            />
+            <StatCard
+              label="Worst week"
+              value={
+                Number.isFinite(stats.worstAccuracy)
+                  ? `${Math.round(stats.worstAccuracy * 100)}%`
+                  : '—'
+              }
+              unit={prettyDate(stats.worstDate, false)}
+            />
+          </div>
+        )}
         <WidgetDiv>
           {predictionsReady ? (
             <PredictionsGraphWrapper
