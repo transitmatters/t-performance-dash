@@ -2,8 +2,8 @@ import React from 'react';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
-import { PctNewTrainsChart } from './charts/PctNewTrainsChart';
 import type { ParamsType } from '../speed/constants/speeds';
+import { PctNewTrainsChart } from './charts/PctNewTrainsChart';
 
 interface PctNewTrainsGraphWrapperProps {
   data: DeliveredTripMetrics[];
