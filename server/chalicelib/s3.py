@@ -103,17 +103,25 @@ def get_gobble_folder(stop_id: str):
         return "daily-rapid-data"
 
 
-def get_lamp_folder():
-    """Return the S3 folder name for LAMP-ingested data."""
-    return "daily-data"
+def get_lamp_folder(stop_id: str):
+    """Return the S3 folder name for LAMP-ingested data based on the stop's mode.
+
+    Args:
+      stop_id: str: The stop identifier.
+
+    Returns:
+      str: "bus-daily-data" for bus stops, "daily-data" for rapid transit.
+    """
+    return "bus-daily-data" if is_bus(stop_id) else "daily-data"
 
 
 def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, route_context=None):
     """Download and parse a single day's event CSV for a stop from S3.
 
     Selects the appropriate S3 path based on the stop's mode (bus, CR, ferry, rapid
-    transit) and data recency (monthly archives vs. daily LAMP/Gobble feeds). Falls
-    back to Gobble data if the LAMP key is not found.
+    transit) and data recency (monthly archives vs. daily LAMP/Gobble feeds). Bus
+    stops use LAMP for dates on/after ``LAMP_BUS_START_DATE`` and Gobble before that.
+    Falls back to Gobble data if the LAMP key is not found.
 
     Args:
       date: pd.Timestamp: The date to fetch events for.
@@ -134,12 +142,13 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, 
         key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
     # if current date is newer than the max monthly data date, use LAMP
     elif date.date() > date_utils.get_max_monthly_data_date():
-        # if we've asked to use gobble data or bus data, check gobble
-        if use_gobble or is_bus(stop_id):
+        # bus dates before LAMP_BUS_START_DATE still come from Gobble
+        bus_pre_lamp = is_bus(stop_id) and date.date() < date_utils.get_lamp_bus_start_date()
+        if use_gobble or bus_pre_lamp:
             folder = get_gobble_folder(stop_id)
             key = f"Events-live/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
         else:
-            folder = get_lamp_folder()
+            folder = get_lamp_folder(stop_id)
             key = f"Events-lamp/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv"
     else:
         folder = "monthly-bus-data" if is_bus(stop_id) else "monthly-data"
@@ -153,7 +162,7 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, 
         if ex.response["Error"]["Code"] == "NoSuchKey":
             # raise Exception(f"Data not available on S3 for key {key} ") from None
             print(f"WARNING: No data available on S3 for key: {key}")
-            if not use_gobble and not is_bus(stop_id):
+            if not use_gobble:
                 return download_one_event_file(date, stop_id, use_gobble=True)
             return []
         else:
