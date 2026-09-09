@@ -4,13 +4,14 @@ import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
+import { Widget } from '../../common/components/widgets';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
-import { FleetDetailsWrapper } from './FleetDetailsWrapper';
+import { FleetAgeGraphWrapper } from './FleetAgeGraphWrapper';
+import { PctNewTrainsGraphWrapper } from './PctNewTrainsGraphWrapper';
 
 dayjs.extend(utc);
 
@@ -30,8 +31,7 @@ export function FleetDetails() {
     },
     enabled
   );
-  const fleetMetricsReady =
-    fleetMetrics && line && config && !fleetMetrics.isError && fleetMetrics.data;
+
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
   }
@@ -39,18 +39,26 @@ export function FleetDetails() {
   return (
     <PageWrapper pageTitle={'Fleet'}>
       <ChartPageDiv>
-        {fleetMetricsReady ? (
-          <FleetDetailsWrapper
-            data={fleetMetrics.data}
+        <Widget title="% of trips run by new trains" ready={[fleetMetrics]}>
+          <PctNewTrainsGraphWrapper
+            data={fleetMetrics.data!}
             config={config}
             startDate={startDate}
             endDate={endDate}
           />
-        ) : (
-          <div className="relative flex h-full">
-            <ChartPlaceHolder query={fleetMetrics} />
-          </div>
-        )}
+        </Widget>
+        <Widget title="Average car age" ready={[fleetMetrics]}>
+          <FleetAgeGraphWrapper
+            data={fleetMetrics.data!}
+            config={config}
+            startDate={startDate}
+            endDate={endDate}
+          />
+        </Widget>
+        <p className="text-sm text-stone-500">
+          Based on a representative sample of trips per day, not a full census of the line, so
+          expect some day-to-day noise.
+        </p>
       </ChartPageDiv>
     </PageWrapper>
   );
