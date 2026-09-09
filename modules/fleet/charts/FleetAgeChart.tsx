@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Line } from 'react-chartjs-2';
+import { round } from 'lodash';
 
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
@@ -83,7 +84,7 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
                   ...callbacks,
                   label: (context) => {
                     if (context.parsed.y === null || context.parsed.y === undefined) return '';
-                    return `${context.parsed.y} years`;
+                    return `${round(context.parsed.y, 2)} years`;
                   },
                 },
               },
