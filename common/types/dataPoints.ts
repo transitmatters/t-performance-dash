@@ -106,6 +106,8 @@ export interface DeliveredTripMetrics {
   total_time: number;
   count: number;
   miles_per_hour?: string;
+  avg_car_age?: number;
+  pct_new_trips?: number;
 }
 
 export type LineSegmentData = {
