@@ -1,0 +1,93 @@
+{
+  "CR-CapeFlyer": {
+    "type": "commuter-rail",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Hyannis",
+        "station": "place-CM-0790",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": ["CapeFlyer_0_CM-0790-S"],
+          "1": ["CapeFlyer_1_CM-0790-S"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Bourne",
+        "station": "place-CM-0564",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["CapeFlyer_0_CM-0564-S"],
+          "1": ["CapeFlyer_1_CM-0564-S"]
+        }
+      },
+      {
+        "stop_name": "Buzzards Bay",
+        "station": "place-CM-0547",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": ["CapeFlyer_0_CM-0547-S"],
+          "1": ["CapeFlyer_1_CM-0547-S"]
+        }
+      },
+      {
+        "stop_name": "Wareham Village",
+        "station": "place-CM-0493",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": ["CapeFlyer_0_CM-0493-S"],
+          "1": ["CapeFlyer_1_CM-0493-S"]
+        }
+      },
+      {
+        "stop_name": "Lakeville",
+        "station": "place-MM-0356",
+        "branches": null,
+        "order": 5,
+        "stops": {
+          "0": ["CapeFlyer_0_MM-0356-S"],
+          "1": ["CapeFlyer_1_MM-0356-S"]
+        }
+      },
+      {
+        "stop_name": "Brockton",
+        "station": "place-MM-0200",
+        "branches": null,
+        "order": 6,
+        "stops": {
+          "0": ["CapeFlyer_0_MM-0200-S"],
+          "1": ["CapeFlyer_1_MM-0200-CS"]
+        }
+      },
+      {
+        "stop_name": "Braintree",
+        "station": "place-brntn",
+        "branches": null,
+        "order": 7,
+        "stops": {
+          "0": ["CapeFlyer_0_MM-0109-S"],
+          "1": ["CapeFlyer_1_MM-0109-S"]
+        }
+      },
+      {
+        "stop_name": "South Station",
+        "station": "place-sstat",
+        "branches": null,
+        "order": 8,
+        "stops": {
+          "0": ["CapeFlyer_0_NEC-2287"],
+          "1": []
+        },
+        "terminus": true
+      }
+    ]
+  }
+}
