@@ -12,6 +12,7 @@ interface ControlPanelProps {
   crRoute: CommuterRailRoute | undefined;
   line: Line | undefined;
   ferryRoute: FerryRoute | undefined;
+  hasStationStore?: boolean;
 }
 
 export const ControlPanel: React.FC<ControlPanelProps> = ({
@@ -20,6 +21,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   busRoute,
   crRoute,
   ferryRoute,
+  hasStationStore,
 }) => {
   const getControls = () => {
     if ((dateStoreSection === 'singleTrips' || dateStoreSection === 'multiTrips') && line) {
@@ -29,12 +31,17 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             dateStoreSection={dateStoreSection}
             queryType={dateStoreSection === 'singleTrips' ? 'single' : 'range'}
           />
-          <StationSelectorWidget
-            line={line}
-            busRoute={busRoute}
-            crRoute={crRoute}
-            ferryRoute={ferryRoute}
-          />
+          {/* Pages can share the single-date section without being about a pair of stops —
+              the bus speed map covers the whole network — so the picker follows the page's
+              own hasStationStore rather than the section it stores dates under. */}
+          {hasStationStore && (
+            <StationSelectorWidget
+              line={line}
+              busRoute={busRoute}
+              crRoute={crRoute}
+              ferryRoute={ferryRoute}
+            />
+          )}
         </>
       );
     }

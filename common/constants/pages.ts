@@ -10,6 +10,7 @@ import {
   faStopwatch20,
   faCalendarDays,
   faCalendarXmark,
+  faMap,
 } from '@fortawesome/free-solid-svg-icons';
 import type { Line } from '../types/lines';
 
@@ -28,6 +29,9 @@ export enum PAGES {
   ridership = 'ridership',
   singleTrips = 'singleTrips',
   multiTrips = 'multiTrips',
+  // Must stay identical to the URL segment: getPage() in common/utils/router.tsx returns
+  // the raw path segment for a top-level page, and ALL_PAGES is indexed by the result.
+  speedmap = 'speedmap',
 }
 
 export type DateStoreSection =
@@ -189,12 +193,23 @@ export const ALL_PAGES: PageMap = {
     icon: faUsers,
     dateStoreSection: 'line',
   },
+  speedmap: {
+    key: 'speedmap',
+    path: '/speedmap',
+    name: 'Speed map',
+    title: 'Bus speed map',
+    lines: ['line-bus'],
+    icon: faMap,
+    // 'singleTrips' is the only section whose stored selection is a single date, and
+    // sharing it means the chosen service date carries over to and from the trips pages.
+    dateStoreSection: 'singleTrips',
+  },
 };
 
 /* Groups of pages for tab sections */
 export const TRIP_PAGES = [ALL_PAGES.singleTrips, ALL_PAGES.multiTrips];
 
-export const BUS_OVERVIEW = [ALL_PAGES.ridership];
+export const BUS_OVERVIEW = [ALL_PAGES.ridership, ALL_PAGES.speedmap];
 
 export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.ridership];
 

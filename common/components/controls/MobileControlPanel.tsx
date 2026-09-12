@@ -12,6 +12,7 @@ interface MobileControlPanelProps {
   crRoute: CommuterRailRoute | undefined;
   line: Line | undefined;
   ferryRoute: FerryRoute | undefined;
+  hasStationStore?: boolean;
 }
 
 export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
@@ -20,6 +21,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   busRoute,
   crRoute,
   ferryRoute,
+  hasStationStore,
 }) => {
   const singleDate = dateStoreSection === 'singleTrips';
   const getControls = () => {
@@ -32,19 +34,22 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
               queryType={singleDate ? 'single' : 'range'}
             />
           </div>
-          <div
-            className={classNames(
-              'flex flex-row items-center justify-center',
-              lineColorBackground[line ?? 'DEFAULT']
-            )}
-          >
-            <StationSelectorWidget
-              line={line}
-              busRoute={busRoute}
-              crRoute={crRoute}
-              ferryRoute={ferryRoute}
-            />
-          </div>
+          {/* See ControlPanel: a single-date page isn't necessarily a stop-to-stop page. */}
+          {hasStationStore && (
+            <div
+              className={classNames(
+                'flex flex-row items-center justify-center',
+                lineColorBackground[line ?? 'DEFAULT']
+              )}
+            >
+              <StationSelectorWidget
+                line={line}
+                busRoute={busRoute}
+                crRoute={crRoute}
+                ferryRoute={ferryRoute}
+              />
+            </div>
+          )}
         </>
       );
     }
