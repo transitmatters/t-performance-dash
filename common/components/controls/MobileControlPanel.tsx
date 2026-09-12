@@ -16,6 +16,7 @@ interface MobileControlPanelProps {
   crRoute: CommuterRailRoute | undefined;
   line: Line | undefined;
   ferryRoute: FerryRoute | undefined;
+  hasStationStore?: boolean;
 }
 
 export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
@@ -24,6 +25,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   busRoute,
   crRoute,
   ferryRoute,
+  hasStationStore,
 }) => {
   const singleDate = dateStoreSection === 'singleTrips';
   // Bus yellow and the other light line colors can't carry white text.
@@ -34,25 +36,30 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
         <>
           <div className="flex flex-row flex-wrap items-center gap-x-2 gap-y-2 p-1 pb-0">
             <RouteSelector />
-            <TripModeToggle />
+            {/* See ControlPanel: pages that merely borrow the singleTrips section for date
+                storage (like the bus speed map) aren't part of the single/multi trips flow. */}
+            {hasStationStore && <TripModeToggle />}
             <DateControl
               dateStoreSection={dateStoreSection}
               queryType={singleDate ? 'single' : 'range'}
             />
           </div>
-          <div
-            className={classNames(
-              'flex flex-row items-center justify-center',
-              lineColorBackground[line ?? 'DEFAULT']
-            )}
-          >
-            <StationSelectorWidget
-              line={line}
-              busRoute={busRoute}
-              crRoute={crRoute}
-              ferryRoute={ferryRoute}
-            />
-          </div>
+          {/* See ControlPanel: a single-date page isn't necessarily a stop-to-stop page. */}
+          {hasStationStore && (
+            <div
+              className={classNames(
+                'flex flex-row items-center justify-center',
+                lineColorBackground[line ?? 'DEFAULT']
+              )}
+            >
+              <StationSelectorWidget
+                line={line}
+                busRoute={busRoute}
+                crRoute={crRoute}
+                ferryRoute={ferryRoute}
+              />
+            </div>
+          )}
         </>
       );
     }

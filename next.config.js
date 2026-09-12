@@ -11,6 +11,13 @@ if (process.env.NODE_ENV === 'development') {
     source: '/api/:path*',
     destination: `${apiProxy}/api/:path*`,
   });
+  // Bus speed segments are static objects served by CloudFront off the performance bucket,
+  // not by the Chalice API, so there is nothing local to point at. Proxying beta keeps the
+  // path identical to production and avoids needing CORS on the bucket.
+  rewrites.push({
+    source: '/businsights/:path*',
+    destination: 'https://dashboard-beta.labs.transitmatters.org/businsights/:path*',
+  });
 }
 
 const nextConfig = {
