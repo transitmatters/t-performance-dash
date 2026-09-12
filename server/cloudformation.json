@@ -197,6 +197,29 @@
             "ViewerProtocolPolicy": "redirect-to-https"
           },
           "DefaultRootObject": "index.html",
+          "CacheBehaviors": [
+            {
+              "PathPattern": "/businsights/*",
+              "TargetOriginId": "businsights-origin",
+              "ViewerProtocolPolicy": "redirect-to-https",
+              "AllowedMethods": ["GET", "HEAD"],
+              "Compress": false,
+              "ForwardedValues": {
+                "QueryString": "false"
+              },
+              "DefaultTTL": 86400,
+              "MinTTL": 0,
+              "MaxTTL": 31536000,
+              "FunctionAssociations": [
+                {
+                  "EventType": "viewer-request",
+                  "FunctionARN": {
+                    "Fn::GetAtt": ["BusInsightsRewriteFunction", "FunctionARN"]
+                  }
+                }
+              ]
+            }
+          ],
           "Origins": [
             {
               "CustomOriginConfig": {
@@ -211,6 +234,16 @@
                 ]
               },
               "Id": "only-origin"
+            },
+            {
+              "DomainName": "tm-mbta-performance.s3.us-east-1.amazonaws.com",
+              "Id": "businsights-origin",
+              "S3OriginConfig": {
+                "OriginAccessIdentity": ""
+              },
+              "OriginAccessControlId": {
+                "Fn::GetAtt": ["BusInsightsOAC", "Id"]
+              }
             }
           ],
           "CustomErrorResponses": [
@@ -234,6 +267,30 @@
             "Value": "t-performance-dash"
           }
         ]
+      }
+    },
+    "BusInsightsOAC": {
+      "Type": "AWS::CloudFront::OriginAccessControl",
+      "Properties": {
+        "OriginAccessControlConfig": {
+          "Name": { "Fn::Sub": "${AWS::StackName}-businsights" },
+          "Description": "Reads bus speed segments from the performance bucket without making it public.",
+          "OriginAccessControlOriginType": "s3",
+          "SigningBehavior": "always",
+          "SigningProtocol": "sigv4"
+        }
+      }
+    },
+    "BusInsightsRewriteFunction": {
+      "Type": "AWS::CloudFront::Function",
+      "Properties": {
+        "Name": { "Fn::Sub": "${AWS::StackName}-businsights-rewrite" },
+        "AutoPublish": true,
+        "FunctionConfig": {
+          "Comment": "Strip the /businsights prefix before hitting the performance bucket.",
+          "Runtime": "cloudfront-js-2.0"
+        },
+        "FunctionCode": "function handler(event) {\n  var request = event.request;\n  request.uri = request.uri.replace(/^\\/businsights/, '');\n  return request;\n}\n"
       }
     }
   },
