@@ -53,6 +53,38 @@ def key(day, v3: bool = False):
     return f"Alerts/{str(day)}.json.gz"
 
 
+def lamp_key(day):
+    """Constructs the S3 object key for a given day's LAMP-derived alert data.
+
+    Args:
+        day: The date for which to retrieve alerts.
+
+    Returns:
+        str: The S3 key path for the alert file (e.g. ``Alerts/lamp/2024-01-01.json.gz``).
+    """
+    return f"Alerts/lamp/{str(day)}.json.gz"
+
+
+def _filter_by_route(alerts, routes):
+    """Filters an iterable of alert objects down to those touching any of ``routes``.
+
+    Args:
+        alerts: Iterable of alert objects (v2, v3, or LAMP -- routes_for_alert handles both shapes).
+        routes: Route IDs to filter by; no filtering is applied if falsy.
+
+    Returns:
+        list[dict]: Alerts that affect at least one route in ``routes``, or all of them if ``routes`` is falsy.
+    """
+
+    def matches_route(alert):
+        if not routes:
+            return True
+        targets = routes_for_alert(alert)
+        return any(r in targets for r in routes)
+
+    return list(filter(matches_route, alerts))
+
+
 def get_v2_alerts(day: date, routes):
     """Downloads and filters v2 alerts from S3 for a given day and set of routes.
 
@@ -65,23 +97,7 @@ def get_v2_alerts(day: date, routes):
     """
     alerts_str = s3.download(key(day), "utf8")
     alerts = json.loads(alerts_str)[0]["past_alerts"]
-
-    def matches_route(alert):
-        """Checks whether an alert applies to any of the target routes.
-
-        Args:
-            alert (dict): A single alert object.
-
-        Returns:
-            bool: True if the alert affects at least one route in ``routes``,
-            or True if ``routes`` is None (no filter applied).
-        """
-        if not routes:
-            return True
-        targets = routes_for_alert(alert)
-        return any(r in targets for r in routes)
-
-    return list(filter(matches_route, alerts))
+    return _filter_by_route(alerts, routes)
 
 
 def get_v3_alerts(day: date, routes: list[str]):
@@ -96,20 +112,23 @@ def get_v3_alerts(day: date, routes: list[str]):
     """
     alerts_str = s3.download(key(day, v3=True), "utf8")
     alerts = json.loads(alerts_str)
+    return _filter_by_route(alerts.values(), routes)
 
-    def matches_route(alert):
-        """Checks whether an alert applies to any of the target routes.
 
-        Args:
-            alert (dict): A single alert object.
+def get_lamp_alerts(day: date, routes: list[str]):
+    """Downloads and filters LAMP-derived alerts from S3 for a given day and set of routes.
 
-        Returns:
-            bool: True if the alert affects at least one route in ``routes``,
-            or True if ``routes`` is None (no filter applied).
-        """
-        if not routes:
-            return True
-        targets = routes_for_alert(alert)
-        return any(r in targets for r in routes)
+    The file is v3-JSON:API-shaped (a dict of alert id -> object with an
+    ``attributes`` key), identical to get_v3_alerts, so it shares the same
+    filtering logic and routes_for_alert branch.
 
-    return list(filter(matches_route, alerts.values()))
+    Args:
+        day (date): The date for which to retrieve alerts.
+        routes (list[str]): Route IDs to filter by.
+
+    Returns:
+        list[dict]: Alerts derived from LAMP that affect at least one of the given routes.
+    """
+    alerts_str = s3.download(lamp_key(day), "utf8")
+    alerts = json.loads(alerts_str)
+    return _filter_by_route(alerts.values(), routes)
