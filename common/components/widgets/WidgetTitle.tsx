@@ -12,6 +12,7 @@ import type { Page } from '../../constants/pages';
 import { ALL_PAGES } from '../../constants/pages';
 import { mbtaTextConfig } from '../../styles/general';
 import { LocationTitle } from '../../../modules/dashboard/LocationTitle';
+import { CardDescription, CardHeader, CardTitle } from '../ui/card';
 
 interface WidgetTitle {
   title: React.ReactNode;
@@ -27,7 +28,8 @@ interface WidgetTitle {
   titleHref?: null | LinkProps['href'];
 }
 
-const titleClassName = 'text-lg leading-tight font-semibold whitespace-nowrap md:text-xl';
+/** Type comes from CardTitle; only the wrapping behaviour is ours. */
+const titleClassName = 'text-balance md:whitespace-nowrap';
 
 export const WidgetTitle: React.FC<WidgetTitle> = ({
   title,
@@ -56,11 +58,12 @@ export const WidgetTitle: React.FC<WidgetTitle> = ({
       href={linkHref}
       className="flex items-center"
     >
-      <h3
+      <CardTitle
+        as="h2"
         className={classNames(titleClassName, line ? mbtaTextConfig[line] : 'text-card-foreground')}
       >
         {title}
-      </h3>
+      </CardTitle>
       <FontAwesomeIcon
         icon={faChevronRight}
         style={line ? { color: LINE_COLORS[line] } : undefined}
@@ -68,25 +71,31 @@ export const WidgetTitle: React.FC<WidgetTitle> = ({
       />
     </Link>
   ) : (
-    <h3 className={classNames(titleClassName, 'text-card-foreground')}>{title}</h3>
+    <CardTitle as="h2" className={classNames(titleClassName, 'text-card-foreground')}>
+      {title}
+    </CardTitle>
   );
 
   return (
-    <div className="flex w-full flex-col items-baseline justify-between gap-x-4 gap-y-1 pb-2 md:flex-row">
-      <div className="flex w-full flex-col md:w-auto">
+    // CardHeader supplies the slot and the horizontal padding token; the grid it ships with places
+    // an action in a fixed second column, which cannot wrap, so the layout stays flex here.
+    <CardHeader className="flex w-full flex-col items-baseline justify-between gap-x-4 gap-y-1 px-0 md:flex-row">
+      <div className="flex w-full flex-col gap-0.5 md:w-auto">
         {titleElement}
         {subtitle && (
-          <p className="text-muted-foreground text-[13px] leading-tight whitespace-nowrap">
+          <CardDescription className="text-[13px] leading-tight md:whitespace-nowrap">
             {subtitle}
-          </p>
+          </CardDescription>
         )}
       </div>
-      <div className="flex w-full shrink flex-col gap-y-1 overflow-hidden md:items-end">
-        <div className="flex w-full flex-row items-center gap-x-3 md:justify-end">
-          {action && <div className="min-w-0 shrink-0">{action}</div>}
-        </div>
+      <div className="flex w-full min-w-0 shrink flex-col gap-y-1 md:items-end">
+        {action && (
+          <div className="flex w-full min-w-0 flex-row flex-wrap items-center gap-x-2 gap-y-1 md:justify-end">
+            {action}
+          </div>
+        )}
         {location && <LocationTitle location={location} both={both} />}
       </div>
-    </div>
+    </CardHeader>
   );
 };

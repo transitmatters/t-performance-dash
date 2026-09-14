@@ -10,7 +10,11 @@ import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { Widget } from '../../common/components/widgets';
-import { StatCard, type StatSentiment } from '../../common/components/widgets/StatCard';
+import {
+  StatCard,
+  StatCardGrid,
+  type StatSentiment,
+} from '../../common/components/widgets/StatCard';
 import { useChartToggle } from '../../common/hooks/useChartToggle';
 import { getServiceStats } from './utils/utils';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';
@@ -93,7 +97,7 @@ export function ServiceDetails() {
     <PageWrapper pageTitle={'Service'}>
       <ChartPageDiv>
         {stats && Number.isFinite(stats.avgRoundTrips) && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <StatCardGrid>
             <StatCard
               label="Round trips / day"
               value={`${Math.round(stats.avgRoundTrips)}`}
@@ -110,7 +114,7 @@ export function ServiceDetails() {
               value={stats.peakCount != null ? `${Math.round(stats.peakCount)}` : '—'}
               unit="round trips"
             />
-          </div>
+          </StatCardGrid>
         )}
         <Widget title="Daily round trips" ready={[tripsData, scheduledData]}>
           <ServiceGraphWrapper

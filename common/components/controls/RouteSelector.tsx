@@ -73,7 +73,7 @@ export const RouteSelector: React.FC = () => {
           type="button"
           aria-expanded={open}
           aria-label="Select route"
-          className="focus-visible:border-ring focus-visible:ring-ring/50 flex h-7 w-44 items-center justify-between gap-x-2 rounded-md border border-transparent bg-white px-3 text-sm text-stone-900 outline-none hover:bg-stone-50 focus-visible:ring-3"
+          className="focus-visible:border-ring focus-visible:ring-ring/50 flex h-7 w-44 min-w-0 items-center justify-between gap-x-2 rounded-md border border-transparent bg-white px-3 text-sm text-stone-900 outline-none hover:bg-stone-50 focus-visible:ring-3"
         >
           <span className="truncate">{selected?.label ?? 'Select route'}</span>
           <FontAwesomeIcon icon={faChevronDown} className="size-3 shrink-0 text-stone-500" />

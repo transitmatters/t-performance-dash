@@ -101,7 +101,8 @@ export const MetricChartCard: React.FC<MetricChartCardProps> = ({ metric }) => {
     }
     if (metric === 'slowzones') {
       if (!delayTotals.data || !line || !lineShort) return <ChartPlaceHolder query={delayTotals} />;
-      if (lineShort === 'Bus' || lineShort === 'Commuter Rail') return <ChartPlaceHolder query={delayTotals} />;
+      if (lineShort === 'Bus' || lineShort === 'Commuter Rail')
+        return <ChartPlaceHolder query={delayTotals} />;
       const totals = delayTotals.data.data;
       const slowEnd = totals.length
         ? dayjs.utc(totals[totals.length - 1].date)

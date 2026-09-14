@@ -6,7 +6,7 @@ import type { LineShort, Line } from '../../common/types/lines';
 import { getSlowZoneDelayDelta, useFilteredDelayTotals } from '../../common/utils/slowZoneUtils';
 
 import { todayOrDate } from '../../common/constants/dates';
-import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { TotalSlowTime } from './charts/TotalSlowTime';
@@ -34,7 +34,7 @@ export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
   const delayDelta = getSlowZoneDelayDelta(filteredDelayTotals, lineShort);
 
   return (
-    <CarouselGraphDiv>
+    <ChartStack>
       {showWidgetValue && (
         <WidgetCarousel isSingleWidget>
           <WidgetForCarousel
@@ -58,6 +58,6 @@ export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
         lineShort={lineShort}
         showTitle={showTitle}
       />
-    </CarouselGraphDiv>
+    </ChartStack>
   );
 };

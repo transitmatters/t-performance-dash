@@ -2,11 +2,10 @@ import { CSVLink } from 'react-csv';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileArrowDown } from '@fortawesome/free-solid-svg-icons';
-import classNames from 'classnames';
 import type { Location } from '../../types/charts';
-import { lineColorTextHover } from '../../styles/general';
 import { useDelimitatedRoute } from '../../utils/router';
 import { getCsvFilename } from '../../utils/csv';
+import { buttonVariants } from '../ui/button';
 
 interface DownloadButtonProps {
   datasetName: string;
@@ -27,26 +26,21 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
 }) => {
   const { line } = useDelimitatedRoute();
   return (
-    <div className={classNames('flex')} title="Download data as CSV">
-      <CSVLink
-        className={classNames(
-          'csv-link flex items-center text-stone-500',
-          line && lineColorTextHover[line]
-        )}
-        data={data}
-        title={'Download data as CSV'}
-        aria-label="Download data as CSV"
-        filename={getCsvFilename({
-          datasetName,
-          includeBothStopsForLocation,
-          startDate,
-          line,
-          location,
-          endDate,
-        })}
-      >
-        <FontAwesomeIcon icon={faFileArrowDown} className="size-3" />
-      </CSVLink>
-    </div>
+    <CSVLink
+      className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'csv-link' })}
+      data={data}
+      aria-label="Download this chart's data as CSV"
+      filename={getCsvFilename({
+        datasetName,
+        includeBothStopsForLocation,
+        startDate,
+        line,
+        location,
+        endDate,
+      })}
+    >
+      <FontAwesomeIcon icon={faFileArrowDown} aria-hidden />
+      CSV
+    </CSVLink>
   );
 };

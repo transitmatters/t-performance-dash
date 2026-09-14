@@ -1,8 +1,6 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { useDelimitatedRoute } from '../../utils/router';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
+import { DataNotes } from './DataNotes';
 import { BetaDataNotice } from './BetaDataNotice';
 import { GobbleDataNotice } from './GobbleDataNotice';
 import { BusDataNotice } from './BusDataNotice';
@@ -24,24 +22,10 @@ export const TripDataNotes: React.FC = () => {
   }
 
   return (
-    <Accordion
-      type="single"
-      collapsible
-      className="bg-card ring-foreground/10 rounded-xl px-4 ring-1"
-    >
-      <AccordionItem value="about-this-data">
-        <AccordionTrigger className="text-muted-foreground">
-          <span className="flex items-center gap-2">
-            <FontAwesomeIcon icon={faCircleInfo} className="size-4" aria-hidden />
-            About this data
-          </span>
-        </AccordionTrigger>
-        <AccordionContent className="text-muted-foreground">
-          <BetaDataNotice />
-          <GobbleDataNotice />
-          <BusDataNotice />
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+    <DataNotes>
+      <BetaDataNotice />
+      <GobbleDataNotice />
+      <BusDataNotice />
+    </DataNotes>
   );
 };

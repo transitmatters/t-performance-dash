@@ -3,12 +3,13 @@ import 'chartjs-adapter-date-fns';
 import React, { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import { LINE_COLORS } from '../../../common/constants/colors';
 import type { HeadwayTooltipData, HeadwaysChartProps } from '../../../common/types/charts';
 import { MetricFieldKeys } from '../../../common/types/charts';
 import type { HeadwayPoint } from '../../../common/types/dataPoints';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
+import { useChartTheme } from '../../../common/utils/chartTheme';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { getFormattedTimeString } from '../../../common/utils/time';
@@ -17,6 +18,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
   const { line, linePath, lineShort } = useDelimitatedRoute();
 
   const ref = useRef();
+  const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
 
   const benchmarkTime =
@@ -82,26 +84,28 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
                   offset: false,
                   grid: {
                     offset: false,
+                    color: chartTheme.grid,
                   },
                   ticks: {
                     stepSize: 1,
-                    color: COLORS.design.subtitleGrey,
+                    color: chartTheme.tick,
                   },
                   title: {
                     display: true,
                     text: `Minutes`,
-                    color: COLORS.design.subtitleGrey,
+                    color: chartTheme.tick,
                   },
                 },
                 y: {
+                  grid: { color: chartTheme.grid },
                   title: {
                     display: true,
                     text:
                       lineShort === 'Bus' ? 'Buses' : lineShort === 'Ferry' ? 'Ferries' : 'Trains',
-                    color: COLORS.design.subtitleGrey,
+                    color: chartTheme.tick,
                   },
                   ticks: {
-                    color: COLORS.design.subtitleGrey,
+                    color: chartTheme.tick,
                   },
                 },
               },
@@ -153,6 +157,15 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
         </ChartDiv>
       </ChartStack>
     );
-  }, [dataObject, isMobile, line, linePath, lineShort, benchmarkTime, headwayBucketPercentages]);
+  }, [
+    dataObject,
+    isMobile,
+    line,
+    linePath,
+    lineShort,
+    benchmarkTime,
+    headwayBucketPercentages,
+    chartTheme,
+  ]);
   return histogram;
 };

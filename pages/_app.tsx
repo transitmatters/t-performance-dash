@@ -100,6 +100,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <Layout>
+      <DynamicMetaTags />
       <LoadPresetsLayout>
         <NavLayout>
           <SecondaryLayout>

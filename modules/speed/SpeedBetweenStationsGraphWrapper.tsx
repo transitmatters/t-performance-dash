@@ -2,7 +2,7 @@ import React from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import type { SingleDayDataPoint } from '../../common/types/charts';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
@@ -31,13 +31,13 @@ export const SpeedBetweenStationsSingleWrapper: React.FC<
 
   const widgetObjects = getSingleDayWidgets(convertedData, 'speeds');
   return (
-    <CarouselGraphDiv>
+    <ChartStack>
       <SpeedBetweenStationsSingleChart
         traveltimes={convertedData}
         toStation={toStation}
         fromStation={fromStation}
       />
       <StatStrip widgetObjects={widgetObjects} />
-    </CarouselGraphDiv>
+    </ChartStack>
   );
 };

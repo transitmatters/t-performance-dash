@@ -18,6 +18,11 @@ const badgeVariantFor = (sentiment: StatSentiment) =>
       ? ('destructive' as const)
       : ('outline' as const);
 
+/** The row of headline numbers at the top of a page. One grid, so every page's stats line up the same way. */
+export const StatCardGrid: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">{children}</div>
+);
+
 export const StatCard: React.FC<StatCardProps> = ({ label, value, unit, delta }) => (
   <Card>
     <CardHeader>

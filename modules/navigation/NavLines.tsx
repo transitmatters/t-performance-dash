@@ -30,8 +30,8 @@ import {
   COMMUTER_RAIL_OVERVIEW,
   FERRY_OVERVIEW,
   LINE_PAGES,
+  NAV_TRIP_PAGES,
   OVERVIEW_PAGE,
-  TRIP_PAGES,
 } from '../../common/constants/pages';
 import {
   BUS_DEFAULTS,
@@ -78,15 +78,15 @@ const pagesForLine = (line: Line): PageMetadata[] => {
   const forThisLine = LINE_PAGES.filter((page) => page.lines.includes(line));
   switch (line) {
     case 'line-bus':
-      return [...BUS_OVERVIEW, ...TRIP_PAGES];
+      return [...BUS_OVERVIEW, ...NAV_TRIP_PAGES];
     case 'line-commuter-rail':
-      return [...COMMUTER_RAIL_OVERVIEW, ...forThisLine, ...TRIP_PAGES];
+      return [...COMMUTER_RAIL_OVERVIEW, ...forThisLine, ...NAV_TRIP_PAGES];
     case 'line-ferry':
-      return [...FERRY_OVERVIEW, ...TRIP_PAGES];
+      return [...FERRY_OVERVIEW, ...NAV_TRIP_PAGES];
     case 'line-RIDE':
       return forThisLine;
     default:
-      return [...OVERVIEW_PAGE, ...forThisLine, ...TRIP_PAGES];
+      return [...OVERVIEW_PAGE, ...forThisLine, ...NAV_TRIP_PAGES];
   }
 };
 
@@ -130,13 +130,7 @@ export const NavLines: React.FC<NavLinesProps> = ({ close }) => {
                     asChild
                     tooltip={lineObject.name}
                     style={lineColorVar(line)}
-                    className={classNames(
-                      'hover:bg-transparent',
-                      // Active line reads full-strength + bold on its tinted row; inactive lines
-                      // recede (opacity, not a text-color utility — that lost to the component's
-                      // base color in tailwind-merge). Hover restores an inactive line to full.
-                      isActive ? 'font-semibold' : 'opacity-60 hover:opacity-100'
-                    )}
+                    className={classNames('hover:bg-transparent', isActive && 'font-semibold')}
                   >
                     <Link
                       href={hrefForLine(line, route)}

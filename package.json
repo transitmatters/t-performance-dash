@@ -23,7 +23,7 @@
     "lint-frontend-fix": "tsc --noEmit && eslint . --fix",
     "serve-static": "npm run build && serve out",
     "start": "concurrently npm:start-python npm:start-react",
-    "start-python": "cd server && uv run chalice local --port=5000",
+    "start-python": "cd server && DD_TRACE_ENABLED=false DD_PROFILING_ENABLED=false uv run chalice local --port=5000",
     "start-react": "npm run get-data && next dev",
     "storybook": "storybook dev -p 6006",
     "test": "react-scripts test",

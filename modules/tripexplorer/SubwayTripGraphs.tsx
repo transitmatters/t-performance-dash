@@ -41,26 +41,32 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
 }) => {
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
-    PEAK_TIME_OPTIONS
+    PEAK_TIME_OPTIONS,
+    { paramKey: 'peak' }
   );
   const { value: travelTimeDisplay, control: travelTimeControl } = useChartToggle(
     'traveltimes' as const,
     [
       ['traveltimes', 'Travel times'],
       ['speeds', 'Speeds'],
-    ]
+    ],
+    // Dropdown, matching the Service card's comparison selector, rather than a segmented toggle.
+    { variant: 'select', paramKey: 'ttView' }
   );
   const { value: travelTimesDayFilter, control: travelTimesDayFilterControl } = useChartToggle(
     'all' as const,
-    DAY_FILTER_OPTIONS
+    DAY_FILTER_OPTIONS,
+    { paramKey: 'ttDays' }
   );
   const { value: headwaysDayFilter, control: headwaysDayFilterControl } = useChartToggle(
     'all' as const,
-    DAY_FILTER_OPTIONS
+    DAY_FILTER_OPTIONS,
+    { paramKey: 'hwDays' }
   );
   const { value: dwellsDayFilter, control: dwellsDayFilterControl } = useChartToggle(
     'all' as const,
-    DAY_FILTER_OPTIONS
+    DAY_FILTER_OPTIONS,
+    { paramKey: 'dwDays' }
   );
 
   const { traveltimes, headways, dwells } = useTripExplorerQueries(
@@ -102,10 +108,10 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
                   line={line}
                   both
                   action={
-                    <div className="flex flex-row items-center gap-x-2">
+                    <>
                       {travelTimeControl}
                       {travelTimesDayFilterControl}
-                    </div>
+                    </>
                   }
                 />
                 <TravelTimesAggregateWrapper

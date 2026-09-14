@@ -65,7 +65,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
         <PopoverTrigger
           style={lineColorVar(line)}
           className={classNames(
-            'flex h-10 w-full items-center justify-center self-stretch rounded-l-[.25rem] px-3 py-1 text-white/95 hover:bg-(--line-color-dark)/70 focus:bg-(--line-color-dark)/70 focus:outline-hidden md:h-7',
+            'flex h-10 w-full items-center justify-center self-stretch rounded-l-[.25rem] px-3 py-1 text-white/95 hover:bg-(--line-color-dark)/70 focus-visible:bg-(--line-color-dark)/70 focus-visible:ring-2 focus-visible:outline-hidden md:h-7',
             line && buttonHighlightFocus[line],
             lineColorDarkBackground[line ?? 'DEFAULT']
           )}

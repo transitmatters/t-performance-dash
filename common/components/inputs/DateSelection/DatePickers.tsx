@@ -13,7 +13,7 @@ import {
 } from '../../../constants/dates';
 import { ALL_PAGES } from '../../../constants/pages';
 import { getDefaultDates } from '../../../state/defaults/dateDefaults';
-import { buttonHighlightFocus } from '../../../styles/general';
+import { FOCUS_RING_ON_SURFACE } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { getMinMaxDatesForRoute } from '../../../utils/stations';
 import { DateField } from './DateField';
@@ -138,8 +138,8 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
   }, [tab, page, startDate, endDate, updateQueryParams, date, busRoute, range]);
 
   const fieldClassName = classNames(
-    'flex w-27 cursor-pointer border-none bg-transparent px-2 py-0 text-center text-sm text-stone-900 focus:ring-0',
-    line && buttonHighlightFocus[line]
+    'flex w-27 cursor-pointer border-none bg-transparent px-2 py-0 text-center text-sm text-stone-900',
+    FOCUS_RING_ON_SURFACE
   );
 
   return (

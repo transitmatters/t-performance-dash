@@ -81,7 +81,7 @@ export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort 
                   : 'All clear'}
         </Badge>
       </CardHeader>
-      <CardContent className="flex flex-1 flex-col divide-y">
+      <CardContent className="flex min-h-0 flex-1 flex-col">
         {isLoading && (
           <div className="flex flex-col gap-3 py-1">
             <Skeleton className="h-4 w-3/4" />
@@ -95,30 +95,42 @@ export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort 
             </Button>
           </div>
         )}
-        {current.slice(0, 4).map((alert) => {
-          const start = alert.relevantTimes[0]?.start;
-          const days = start ? dayjs().diff(start, 'day') : null;
-          const stopsText = alert.stops
-            .map((stop) => lineStations.find((station) => station.station === stop)?.stop_name)
-            .filter(Boolean)
-            .join(', ');
-          const Icon = alert.type === AlertEffect.ESCALATOR_CLOSURE ? EscalatorIcon : ElevatorIcon;
-          return (
-            <div key={alert.id} className="flex items-start gap-3 py-3 first:pt-0">
-              <Icon className="text-muted-foreground mt-0.5 size-4 shrink-0" />
-              <div className="flex flex-1 flex-col gap-1">
-                <span className="text-sm font-medium">
-                  {alert.type === AlertEffect.ESCALATOR_CLOSURE ? 'Escalator' : 'Elevator'} out of
-                  service · <span className="font-semibold">{stopsText}</span>
-                </span>
-                <span className="text-muted-foreground text-xs">
-                  {days !== null ? `${days} day${days === 1 ? '' : 's'} · ` : ''}
-                  {start ? `since ${dayjs(start).format('MMM D, YYYY')}` : ''}
-                </span>
-              </div>
-            </div>
-          );
-        })}
+        {current.length > 0 && (
+          // Busy lines (Red has 15+ outages) outgrow the card, so the list scrolls. Focusable so
+          // keyboard users can scroll it too, and labelled for screen readers.
+          <div
+            role="region"
+            aria-label="Out-of-service elevators and escalators"
+            tabIndex={0}
+            className="focus-visible:ring-ring -mx-1 flex max-h-80 flex-col divide-y overflow-y-auto overscroll-contain rounded-md px-1 focus-visible:ring-2 focus-visible:outline-hidden"
+          >
+            {current.map((alert) => {
+              const start = alert.relevantTimes[0]?.start;
+              const days = start ? dayjs().diff(start, 'day') : null;
+              const stopsText = alert.stops
+                .map((stop) => lineStations.find((station) => station.station === stop)?.stop_name)
+                .filter(Boolean)
+                .join(', ');
+              const Icon =
+                alert.type === AlertEffect.ESCALATOR_CLOSURE ? EscalatorIcon : ElevatorIcon;
+              return (
+                <div key={alert.id} className="flex items-start gap-3 py-3 first:pt-0">
+                  <Icon className="text-muted-foreground mt-0.5 size-4 shrink-0" />
+                  <div className="flex flex-1 flex-col gap-1">
+                    <span className="text-sm font-medium">
+                      {alert.type === AlertEffect.ESCALATOR_CLOSURE ? 'Escalator' : 'Elevator'} out
+                      of service · <span className="font-semibold">{stopsText}</span>
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      {days !== null ? `${days} day${days === 1 ? '' : 's'} · ` : ''}
+                      {start ? `since ${dayjs(start).format('MMM D, YYYY')}` : ''}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
         {!notTracked && !isLoading && !isError && !current.length && (
           <p className="text-muted-foreground py-2 text-sm">No open accessibility alerts.</p>
         )}

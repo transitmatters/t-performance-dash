@@ -4,6 +4,7 @@ import type { DateStoreSection } from '../../constants/pages';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
 import { RouteSelector } from './RouteSelector';
+import { TripModeToggle } from './TripModeToggle';
 
 interface ControlPanelProps {
   dateStoreSection: DateStoreSection;
@@ -27,8 +28,9 @@ export const PrimaryControls: React.FC<ControlPanelProps> = ({ dateStoreSection,
   if (!hasDateControl(dateStoreSection)) return null;
   const queryType = dateStoreSection === 'singleTrips' ? 'single' : 'range';
   return (
-    <div className="flex shrink-0 flex-row items-center gap-x-2 overflow-visible">
+    <div className="flex shrink-0 flex-row flex-wrap items-center gap-x-2 gap-y-2 overflow-visible">
       <RouteSelector />
+      {isTripsSection(dateStoreSection) && <TripModeToggle />}
       {line || dateStoreSection === 'system' ? (
         <DateControl dateStoreSection={dateStoreSection} queryType={queryType} />
       ) : null}

@@ -12,14 +12,14 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ isWidget }) => {
     <div
       role={'status'}
       className={`absolute top-0 right-0 bottom-0 left-0 flex h-auto w-auto items-center justify-center rounded-md ${
-        isWidget && 'bg-white/90'
+        isWidget ? 'bg-card/90' : ''
       }`}
     >
       <svg
         aria-hidden="true"
-        className={`mr-2 h-8 w-8 animate-spin ${
-          line ? spinnerFillColor[line] : 'fill-gray-900'
-        } text-gray-200 dark:text-gray-600`}
+        className={`text-muted mr-2 h-8 w-8 animate-spin ${
+          line ? spinnerFillColor[line] : 'fill-foreground'
+        }`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

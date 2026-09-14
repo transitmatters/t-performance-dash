@@ -1,5 +1,4 @@
 import { Line } from 'react-chartjs-2';
-import type { Chart as ChartJS } from 'chart.js';
 
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
@@ -10,9 +9,10 @@ import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../constants/colors';
 import { DownloadButton } from '../buttons/DownloadButton';
 import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
+import { CopyLinkButton } from '../buttons/CopyLinkButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
-import { writeError } from '../../utils/chartError';
+import { useChartTheme } from '../../utils/chartTheme';
 import { getFormattedTimeString } from '../../utils/time';
 import { LegendLongTerm } from './Legend';
 import { ChartStack } from './ChartStack';
@@ -77,6 +77,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   chartTitle,
 }) => {
   const ref = useRef();
+  const chartTheme = useChartTheme();
   const hourly = timeUnit === 'hour';
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
@@ -102,10 +103,10 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
       label: seriesName,
       fill: false,
       tension: 0.1,
-      borderColor: byTime ? CHART_COLORS.DARK_LINE : undefined,
-      pointBackgroundColor: CHART_COLORS.GREY,
+      borderColor: byTime ? chartTheme.medianLine : undefined,
+      pointBackgroundColor: chartTheme.neutralPoint,
       pointHoverRadius: 3,
-      pointHoverBackgroundColor: CHART_COLORS.GREY,
+      pointHoverBackgroundColor: chartTheme.neutralPoint,
       pointRadius: byTime ? 0 : 3,
       pointHitRadius: 10,
       stepped: byTime,
@@ -147,11 +148,15 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           options={{
             scales: {
               y: {
+                grid: { color: chartTheme.grid },
+                border: { display: false },
                 title: {
                   display: true,
                   text: yUnit,
+                  color: chartTheme.tick,
                 },
                 ticks: {
+                  color: chartTheme.tick,
                   precision: 1,
                   callback: (value) => {
                     return yUnit === 'Minutes' && typeof value === 'number'
@@ -163,6 +168,9 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 suggestedMax: suggestedYMax,
               },
               x: {
+                grid: { display: false },
+                border: { color: chartTheme.axisBorder },
+                ticks: { color: chartTheme.tick },
                 time: {
                   unit: timeUnit,
                   // @ts-expect-error The typing expectations are wrong
@@ -181,6 +189,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 title: {
                   display: true,
                   text: xAxisLabel(startDate ?? '', endDate ?? '', hourly),
+                  color: chartTheme.tick,
                 },
               },
             },
@@ -212,20 +221,10 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
               },
             },
           }}
-          plugins={[
-            {
-              id: 'customTitleAggregate',
-              afterDraw: (chart: ChartJS) => {
-                if (startDate === undefined || endDate === undefined || data.length === 0) {
-                  writeError(chart);
-                }
-              },
-            },
-            ChartjsPluginWatermark,
-          ]}
+          plugins={[ChartjsPluginWatermark]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end gap-4">
+      <div className="flex flex-row flex-wrap items-end gap-x-4 gap-y-2">
         {showLegend && (
           <LegendLongTerm
             isTrendlineVisible={isTrendlineVisible}
@@ -233,7 +232,8 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           />
         )}
         {startDate && (
-          <>
+          <div className="-mr-2.5 ml-auto flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
+            <CopyLinkButton />
             <SaveChartImageButton
               chartRef={ref}
               datasetName={fname}
@@ -250,7 +250,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
               includeBothStopsForLocation={includeBothStopsForLocation}
               startDate={startDate}
             />
-          </>
+          </div>
         )}
       </div>
     </ChartStack>

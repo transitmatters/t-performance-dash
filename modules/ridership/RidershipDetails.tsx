@@ -3,12 +3,14 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { useRidershipData } from '../../common/api/hooks/ridership';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Layout } from '../../common/layouts/layoutTypes';
-import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
-import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { StatCard, type StatSentiment } from '../../common/components/widgets/StatCard';
+import { Widget } from '../../common/components/widgets';
+import {
+  StatCard,
+  StatCardGrid,
+  type StatSentiment,
+} from '../../common/components/widgets/StatCard';
 import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
-import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { getRidershipLineId } from '../../common/utils/ridership';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 import { getRidershipStats } from './utils/utils';
@@ -30,7 +32,6 @@ export function RidershipDetails() {
     },
     enabled
   );
-  const ridershipDataReady = !ridership.isError && startDate && endDate && line && lineId;
 
   const stats = ridership.data
     ? getRidershipStats(ridership.data, line, busRoute, crRoute, ferryRoute)
@@ -50,7 +51,7 @@ export function RidershipDetails() {
     <PageWrapper pageTitle={'Ridership'}>
       <ChartPageDiv>
         {stats && Number.isFinite(stats.average) && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <StatCardGrid>
             <StatCard
               label="Average weekday riders"
               value={`${Math.round(stats.average).toLocaleString('en-us')}`}
@@ -73,28 +74,20 @@ export function RidershipDetails() {
               }
               unit="riders"
             />
-          </div>
+          </StatCardGrid>
         )}
-        <WidgetDiv>
-          <WidgetTitle title="Weekday ridership" />
-
-          {ridership.data && ridershipDataReady ? (
-            <RidershipGraphWrapper
-              data={ridership.data}
-              config={config}
-              startDate={startDate}
-              endDate={endDate}
-              line={line}
-              busRoute={busRoute}
-              crRoute={crRoute}
-              ferryRoute={ferryRoute}
-            />
-          ) : (
-            <div className="relative flex h-full">
-              <ChartPlaceHolder query={ridership} />
-            </div>
-          )}
-        </WidgetDiv>
+        <Widget title="Weekday ridership" ready={[ridership, startDate, endDate, lineId]}>
+          <RidershipGraphWrapper
+            data={ridership.data!}
+            config={config}
+            startDate={startDate!}
+            endDate={endDate!}
+            line={line}
+            busRoute={busRoute}
+            crRoute={crRoute}
+            ferryRoute={ferryRoute}
+          />
+        </Widget>
       </ChartPageDiv>
     </PageWrapper>
   );

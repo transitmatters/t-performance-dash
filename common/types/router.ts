@@ -25,7 +25,20 @@ export type QueryParams = {
   view?: OverviewDatePresetKey;
   to?: string;
   from?: string;
+  /**
+   * Per-chart view and filter state. These ride in the URL so a copied link reproduces what the
+   * sender was actually looking at — a "weekdays only" chart shared as "all days" is a different
+   * claim. Each is omitted while it sits at its default, so ordinary links stay short.
+   */
+  ttView?: string;
+  ttDays?: string;
+  hwDays?: string;
+  dwDays?: string;
+  peak?: string;
 };
+
+/** Query keys that carry chart view state rather than identifying the trip itself. */
+export const CHART_PARAMS = ['ttView', 'ttDays', 'hwDays', 'dwDays', 'peak'];
 
 export type QueryTypeOptions = 'single' | 'range';
 

@@ -84,6 +84,25 @@ export const LINE_COLORS_DARK: { [key in Line | 'default']: string } = {
   default: '#292524',
 };
 
+/**
+ * Line colors lifted for use as text on a dark ground — the exported chart image, chiefly. The
+ * canonical hues are tuned to sit on white: blue lands at 1.9:1 and Commuter Rail at 2.1:1 against
+ * a dark card, so those two in particular have to be raised to stay readable. Every value here
+ * clears 4.5:1 on #171717.
+ */
+export const LINE_COLORS_ON_DARK: { [key in Line | 'default']: string } = {
+  'line-red': '#f1554a',
+  'line-orange': '#ed8b00',
+  'line-blue': '#5b8def',
+  'line-green': '#2fb56e',
+  'line-bus': '#ffc72c',
+  'line-mattapan': '#f1554a',
+  'line-commuter-rail': '#c05fa8',
+  'line-ferry': '#3fbbd6',
+  'line-RIDE': '#ffc72c',
+  default: '#d6d3d1',
+};
+
 export const LINE_COLORS_LEVELS: {
   [key in Line | 'default']: { [num in number]: string } | string;
 } = {

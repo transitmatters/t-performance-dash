@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
-import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import type { ParamsType } from '../speed/constants/speeds';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
@@ -36,7 +36,7 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
   if (!data.some((datapoint) => datapoint.miles_covered)) return <NoDataNotice isLineMetric />;
 
   return (
-    <CarouselGraphDiv>
+    <ChartStack>
       <PercentageServiceGraph
         config={config}
         data={data}
@@ -45,6 +45,6 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
         endDate={endDate}
         comparison={comparison}
       />
-    </CarouselGraphDiv>
+    </ChartStack>
   );
 };

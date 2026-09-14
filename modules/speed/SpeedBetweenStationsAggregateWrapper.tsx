@@ -3,7 +3,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import type { AggregateDataResponse } from '../../common/types/charts';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { getAggDataWidgets } from '../../common/utils/widgets';
@@ -29,7 +29,7 @@ export const SpeedBetweenStationsAggregateWrapper: React.FC<
   if (traveltimesData.length < 1) return <NoDataNotice />;
   const widgetObjects = getAggDataWidgets(traveltimesData, 'speeds');
   return (
-    <CarouselGraphDiv>
+    <ChartStack>
       <SpeedBetweenStationsAggregateChart
         traveltimes={query.data}
         toStation={toStation}
@@ -37,6 +37,6 @@ export const SpeedBetweenStationsAggregateWrapper: React.FC<
         timeUnit={'by_date'}
       />
       <StatStrip widgetObjects={widgetObjects} />
-    </CarouselGraphDiv>
+    </ChartStack>
   );
 };
