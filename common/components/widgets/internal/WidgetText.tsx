@@ -7,6 +7,8 @@ export interface WidgetTextProps {
 }
 export const WidgetText: React.FC<WidgetTextProps> = ({ text, isLarge = false }) => {
   return (
-    <span className={classNames('text-gray-900', isLarge ? 'text-2xl' : 'text-sm')}>{text}</span>
+    <span className={classNames('text-card-foreground', isLarge ? 'text-2xl' : 'text-sm')}>
+      {text}
+    </span>
   );
 };

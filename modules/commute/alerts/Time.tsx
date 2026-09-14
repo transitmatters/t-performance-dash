@@ -38,7 +38,7 @@ export const CurrentTime: React.FC<TimeProps> = ({ times }) => {
   // TODO: If timestrings length is more than 1 -> Add visual indicator to expand to see all times (uncommon).
   return (
     <>
-      <FontAwesomeIcon icon={faClock} size={'sm'} className={'m-0 mr-1 h-4 w-4 rounded-sm'} />
+      <FontAwesomeIcon icon={faClock} size={'sm'} className={'m-0 mr-1 h-4 w-4 rounded-xs'} />
       <p className="w-auto">{timeStrings[0]}</p>
     </>
   );

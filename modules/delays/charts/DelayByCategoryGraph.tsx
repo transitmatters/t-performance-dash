@@ -10,7 +10,7 @@ import { COLORS } from '../../../common/constants/colors';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
-import { ChartBorder } from '../../../common/components/charts/ChartBorder';
+import { ChartStack } from '../../../common/components/charts/ChartStack';
 import type { LineDelays } from '../../../common/types/delays';
 import { getFormattedTimeString } from '../../../common/utils/time';
 import { filterOutZeroValues } from './utils';
@@ -67,7 +67,7 @@ export const DelayByCategoryGraph: React.FC<DelayByCategoryGraphProps> = ({
   );
 
   return (
-    <ChartBorder>
+    <ChartStack>
       <div className={classNames('h-72', 'flex w-full flex-row')}>
         <Bar
           id={`delayByCategory-${linePath}`}
@@ -172,6 +172,6 @@ export const DelayByCategoryGraph: React.FC<DelayByCategoryGraphProps> = ({
           ]}
         />
       </div>
-    </ChartBorder>
+    </ChartStack>
   );
 };

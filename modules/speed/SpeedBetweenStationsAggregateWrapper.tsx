@@ -3,9 +3,9 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import type { AggregateDataResponse } from '../../common/types/charts';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
-import { MiniWidgetCreator } from '../../common/components/widgets/MiniWidgetCreator';
+import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { getAggDataWidgets } from '../../common/utils/widgets';
 import { convertToAggregateStationSpeedDataset } from '../landing/utils';
 import { SpeedBetweenStationsAggregateChart } from './charts/SpeedBetweenStationsAggregateChart';
@@ -29,14 +29,14 @@ export const SpeedBetweenStationsAggregateWrapper: React.FC<
   if (traveltimesData.length < 1) return <NoDataNotice />;
   const widgetObjects = getAggDataWidgets(traveltimesData, 'speeds');
   return (
-    <CarouselGraphDiv>
+    <ChartStack>
       <SpeedBetweenStationsAggregateChart
         traveltimes={query.data}
         toStation={toStation}
         fromStation={fromStation}
         timeUnit={'by_date'}
       />
-      <MiniWidgetCreator widgetObjects={widgetObjects} />
-    </CarouselGraphDiv>
+      <StatStrip widgetObjects={widgetObjects} />
+    </ChartStack>
   );
 };

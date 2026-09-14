@@ -7,9 +7,9 @@ interface LandingLayoutProps {
 
 export const LandingLayout: React.FC<LandingLayoutProps> = ({ children }) => {
   return (
-    <div className="flex flex-1 flex-col md:pl-64">
+    <div className="flex flex-1 flex-col">
       <CIPBanner />
-      <main className="flex-1">{children}</main>
+      <div className="flex-1">{children}</div>
     </div>
   );
 };

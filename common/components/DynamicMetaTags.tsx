@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import type { Line, LinePath } from '../types/lines';
 import { LINE_OBJECTS } from '../constants/lines';
+import { getParentStationForStopId } from '../utils/stations';
 
 const BASE_URL = 'https://dashboard.transitmatters.org';
 const DEFAULT_DESCRIPTION =
@@ -40,6 +41,37 @@ function getPageName(pathname: string): string | undefined {
   return PAGE_DISPLAY_NAMES[lastSegment];
 }
 
+/** `startCase(toLower(...))` of the path segment, matching how useDelimitatedRoute derives it. */
+function lineShortFor(linePath: string | undefined) {
+  if (!linePath) return undefined;
+  const words = linePath.replace('-', ' ').toLowerCase().split(' ');
+  return words.map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+/** "Davis to Porter", when both stops resolve. Stop ids alone would say nothing to a reader. */
+function getTripSummary(query: Record<string, unknown>, lineShort: string | undefined) {
+  const from = typeof query.from === 'string' ? query.from : undefined;
+  const to = typeof query.to === 'string' ? query.to : undefined;
+  if (!from || !to) return undefined;
+  try {
+    const fromStation = getParentStationForStopId(from, lineShort as never);
+    const toStation = getParentStationForStopId(to, lineShort as never);
+    if (!fromStation?.stop_name || !toStation?.stop_name) return undefined;
+    return `${fromStation.stop_name} to ${toStation.stop_name}`;
+  } catch {
+    return undefined;
+  }
+}
+
+function dateSummary(query: Record<string, unknown>) {
+  const { date, startDate, endDate } = query;
+  if (typeof date === 'string') return ` on ${date}`;
+  if (typeof startDate === 'string' && typeof endDate === 'string')
+    return ` from ${startDate} to ${endDate}`;
+  if (typeof startDate === 'string') return ` since ${startDate}`;
+  return '';
+}
+
 export const DynamicMetaTags: React.FC = () => {
   const router = useRouter();
   const linePath = router.query.line as LinePath | undefined;
@@ -48,16 +80,19 @@ export const DynamicMetaTags: React.FC = () => {
 
   const pageName = getPageName(router.pathname);
 
-  const title = [lineName, pageName, 'Data Dashboard'].filter(Boolean).join(' | ');
-  const description = lineName
-    ? `${lineName} ${pageName?.toLowerCase() ?? 'performance'} data on the TransitMatters Data Dashboard.`
-    : DEFAULT_DESCRIPTION;
+  const trip = getTripSummary(router.query, lineShortFor(linePath));
+  const title = [lineName, trip ?? pageName, 'Data Dashboard'].filter(Boolean).join(' | ');
+  const description = trip
+    ? `${trip}${dateSummary(router.query)} on the ${lineName ?? 'MBTA'}, from the TransitMatters Data Dashboard.`
+    : lineName
+      ? `${lineName} ${pageName?.toLowerCase() ?? 'performance'} data on the TransitMatters Data Dashboard.`
+      : DEFAULT_DESCRIPTION;
 
-  const path = linePath ? `/${linePath}/` : router.pathname === '/' ? '/' : `${router.asPath}`;
-  const canonicalUrl = `${BASE_URL}${path}`;
+  const canonicalUrl = `${BASE_URL}${router.asPath === '/' ? '/' : router.asPath}`;
 
   return (
     <Head>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:type" content="website" />

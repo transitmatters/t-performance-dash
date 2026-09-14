@@ -2,10 +2,9 @@ import React, { useCallback } from 'react';
 import type { Chart } from 'chart.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileImage } from '@fortawesome/free-solid-svg-icons';
-import classNames from 'classnames';
 import type { Location } from '../../types/charts';
-import { lineColorTextHover } from '../../styles/general';
 import { useDelimitatedRoute } from '../../utils/router';
+import { Button } from '../ui/button';
 import { getImageFilename } from '../../utils/csv';
 import { downloadChartAsImage } from '../../utils/image';
 
@@ -57,13 +56,9 @@ export const SaveChartImageButton: React.FC<SaveChartImageButtonProps> = ({
   ]);
 
   return (
-    <div className={classNames('flex')} title="Save chart as image">
-      <button onClick={handleClick} className="cursor-pointer">
-        <FontAwesomeIcon
-          icon={faFileImage}
-          className={classNames('text-stone-600', line && lineColorTextHover[line])}
-        />
-      </button>
-    </div>
+    <Button variant="ghost" size="sm" onClick={handleClick} aria-label="Save chart as an image">
+      <FontAwesomeIcon icon={faFileImage} aria-hidden />
+      PNG
+    </Button>
   );
 };

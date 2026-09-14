@@ -1,4 +1,19 @@
+import type { CSSProperties } from 'react';
+import { LINE_COLORS, LINE_COLORS_DARK } from '../constants/colors';
+import type { Line } from '../types/lines';
 import type { DefaultStyleMap } from '../types/styles';
+
+/**
+ * Tailwind v4 removed the `*-opacity-*` utilities, so a dynamic line color can no longer be paired
+ * with a separate opacity class. Exposing the line color as a CSS variable lets any component ask
+ * for it at any alpha: `bg-(--line-color)/75`, `hover:border-(--line-color)/50`, and so on.
+ * The variable inherits, so setting it on a container covers its children.
+ */
+export const lineColorVar = (line?: Line | null): CSSProperties =>
+  ({
+    '--line-color': LINE_COLORS[line ?? 'default'],
+    '--line-color-dark': LINE_COLORS_DARK[line ?? 'default'],
+  }) as CSSProperties;
 
 export const lineColorBackground: DefaultStyleMap = {
   'line-red': `bg-mbta-red`,
@@ -65,18 +80,32 @@ export const lineColorDarkBackground: DefaultStyleMap = {
   DEFAULT: `bg-stone-900`,
 };
 
+/**
+ * Focus ring for controls sitting ON the line-colored header band. These used to ring in the line's
+ * own color — `focus:ring-mbta-red` on a `bg-mbta-red` header, i.e. 1.00:1, an indicator that could
+ * not be seen at all. The ring has to contrast with the band behind it and with the control's own
+ * darker fill, so it resolves to white or near-black by the same rule that picks the label color.
+ * Every pair below clears 3:1 against both.
+ */
 export const buttonHighlightFocus: DefaultStyleMap = {
-  'line-red': `focus:ring-mbta-red`,
-  'line-orange': `focus:ring-mbta-orange`,
-  'line-green': `focus:ring-mbta-green`,
-  'line-blue': `focus:ring-mbta-blue`,
-  'line-mattapan': `focus:ring-mbta-red`,
-  'line-bus': `focus:ring-mbta-bus`,
-  'line-commuter-rail': `focus:ring-mbta-commuterRail`,
-  'line-ferry': `focus:ring-mbta-ferry`,
-  'line-RIDE': `focus:ring-mbta-bus`,
-  DEFAULT: `focus:ring-stone-800`,
+  'line-red': `focus-visible:ring-white`,
+  'line-orange': `focus-visible:ring-stone-900`,
+  'line-green': `focus-visible:ring-white`,
+  'line-blue': `focus-visible:ring-white`,
+  'line-mattapan': `focus-visible:ring-white`,
+  'line-bus': `focus-visible:ring-stone-900`,
+  'line-commuter-rail': `focus-visible:ring-white`,
+  'line-ferry': `focus-visible:ring-white`,
+  'line-RIDE': `focus-visible:ring-stone-900`,
+  DEFAULT: `focus-visible:ring-white`,
 };
+
+/**
+ * Focus ring for controls on a plain card or white ground, where a line color cannot be trusted —
+ * bus yellow rings at 1.8:1 on white. Neutral, and flipped for the dark theme.
+ */
+export const FOCUS_RING_ON_SURFACE =
+  'focus-visible:ring-2 focus-visible:ring-stone-900 dark:focus-visible:ring-stone-100 focus-visible:outline-hidden';
 
 export const lineColorTextHover: DefaultStyleMap = {
   'line-red': `hover:text-mbta-red`,

@@ -1,11 +1,15 @@
 /** @type {import('next').NextConfig} */
 
 let rewrites = [];
-// If running locally rewrite requests to server port (proxy).
+// If running locally, proxy /api requests to a backend.
+// Defaults to the local Chalice backend on :5000. To develop the frontend
+// against a real backend without running one locally, set TM_API_PROXY, e.g.
+//   TM_API_PROXY=https://dashboard-api.labs.transitmatters.org npm run start-react
 if (process.env.NODE_ENV === 'development') {
+  const apiProxy = process.env.TM_API_PROXY || 'http://127.0.0.1:5000';
   rewrites.push({
     source: '/api/:path*',
-    destination: 'http://127.0.0.1:5000/api/:path*',
+    destination: `${apiProxy}/api/:path*`,
   });
 }
 

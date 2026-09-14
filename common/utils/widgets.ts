@@ -46,6 +46,25 @@ const getOnTimePercentage = (data: SingleDayDataPoint[]) => {
   return onTimePoints.reduce((a, b) => a + b, 0) / data.length;
 };
 
+/**
+ * Share of trips running no more than 25% over their scheduled travel time — the same threshold the
+ * chart legend uses for its "25%+ off" band. Running early isn't a failure here, so only the upper
+ * bound counts. Returns undefined when the line has no benchmark data to compare against.
+ */
+const getOnTimeTravelPercentage = (data: SingleDayDataPoint[]) => {
+  const comparable = data.filter((point: DataPoint) => {
+    const benchmark = point[BenchmarkFieldKeys.benchmarkTravelTimeSec];
+    return Boolean(benchmark) && Number.isFinite(point[MetricFieldKeys.travelTimeSec]);
+  });
+  if (comparable.length === 0) return undefined;
+  const onTime = comparable.filter((point: DataPoint) => {
+    const ratio =
+      point[MetricFieldKeys.travelTimeSec] / point[BenchmarkFieldKeys.benchmarkTravelTimeSec];
+    return ratio <= 1.25;
+  });
+  return onTime.length / comparable.length;
+};
+
 const getPeaks = (data: (number | undefined)[]) => {
   // Filter out undefined, null, NaN, and non-finite values
   const validData = data.filter(
@@ -124,7 +143,7 @@ export const getAggDataWidgets = (
 
   return [
     {
-      text: 'Avg',
+      text: 'Average',
       widgetValue: getWidget(type, average),
       type: 'data',
       comparison: comp ? makeComparison(average, comp.average, label, 'time') : undefined,
@@ -173,7 +192,7 @@ export const getAggHeadwayDataWidgets = (
 
   return [
     {
-      text: 'Avg',
+      text: 'Average',
       widgetValue: getWidget(type, average),
       type: 'data',
       comparison: comp ? makeComparison(average, comp.average, label, 'time') : undefined,
@@ -262,13 +281,24 @@ export const getSingleDayWidgets = (
     getSingleDayPointsOfInterest(data, type);
 
   const widgets: MiniWidgetObject[] = [
-    { text: 'Avg', widgetValue: getWidget(type, average), type: 'data' },
+    { text: 'Average', widgetValue: getWidget(type, average), type: 'data' },
     { text: 'Median', widgetValue: getWidget(type, median), type: 'data' },
     { text: '10%', widgetValue: getWidget(type, p10), type: 'data' },
     { text: '90%', widgetValue: getWidget(type, p90), type: 'data' },
     { text: 'Min', widgetValue: getWidget(type, min), type: 'data' },
     { text: 'Max', widgetValue: getWidget(type, max), type: 'data' },
   ];
+
+  if (type === 'traveltimes') {
+    const onTimeTravel = getOnTimeTravelPercentage(data);
+    if (onTimeTravel !== undefined) {
+      widgets.push({
+        text: 'On Time',
+        widgetValue: new PercentageWidgetValue(onTimeTravel),
+        type: 'data',
+      });
+    }
+  }
 
   if (type === 'headways') {
     widgets.push({

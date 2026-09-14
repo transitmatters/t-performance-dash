@@ -8,6 +8,7 @@ import { BusTripGraphs } from './BusTripGraphs';
 import { SubwayTripGraphs } from './SubwayTripGraphs';
 import { CommuterRailTripGraphs } from './CommuterRailTripGraphs';
 import { FerryTripGraphs } from './FerryTripGraphs';
+import { TripSetupNotice } from './TripSetupNotice';
 
 interface TripGraphsProps {
   fromStation: Station;
@@ -19,6 +20,7 @@ export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }
     query: { startDate, endDate, date },
     tab,
     line,
+    page,
   } = useDelimitatedRoute();
 
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
@@ -38,6 +40,14 @@ export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }
         [SingleDayAPIParams.toStop]: toStopIds,
         [SingleDayAPIParams.date]: date,
       };
+  if (!enabled) {
+    // Without this the queries below stay permanently pending: React Query does not fetch a
+    // disabled query, so `data` is undefined and `isError` is false, and every wrapper's
+    // placeholder renders a spinner that never resolves.
+    if (!(fromStopIds && toStopIds)) return <TripSetupNotice missing="stations" />;
+    return <TripSetupNotice missing={page === 'multiTrips' ? 'dateRange' : 'date'} />;
+  }
+
   if (tab === 'Bus')
     return (
       <BusTripGraphs

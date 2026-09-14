@@ -1,22 +1,23 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-import { Tooltip } from 'flowbite-react';
+
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/common/components/ui/tooltip';
 
 interface InfoTooltipProps {
   info: string;
-  size?: number;
+  className?: string;
 }
 
-export const InfoTooltip: React.FC<InfoTooltipProps> = ({ info, size = 6 }) => {
-  const textComponent = <p className="max-w-xs">{info}</p>;
+export const InfoTooltip: React.FC<InfoTooltipProps> = ({ info, className }) => {
   return (
-    <Tooltip content={textComponent}>
-      <FontAwesomeIcon
-        icon={faCircleInfo}
-        size={'sm'}
-        className={`h-${size} w-${size} rounded-sm text-white`}
-      />
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button type="button" aria-label={info} className={className}>
+          <FontAwesomeIcon icon={faCircleInfo} size="sm" className="rounded-sm" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent className="max-w-xs">{info}</TooltipContent>
     </Tooltip>
   );
 };
