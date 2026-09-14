@@ -11,6 +11,7 @@ export interface TravelTimePoint extends DataPoint {
   arr_dt: string;
   travel_time_sec: number;
   benchmark_travel_time_sec: number;
+  tm_benchmark_travel_time_sec?: number | null;
   threshold_flag_1?: string;
   threshold_flag_2?: string;
   threshold_flag_3?: string;
@@ -105,6 +106,8 @@ export interface DeliveredTripMetrics {
   total_time: number;
   count: number;
   miles_per_hour?: string;
+  avg_car_age?: number;
+  pct_new_trips?: number;
 }
 
 export type LineSegmentData = {

@@ -51,7 +51,7 @@ def aggregate_actual_trips(actual_trips, agg, start_date):
 
     Returns:
         List of aggregated record dicts with date, miles_covered, total_time,
-        count, and line fields.
+        count, line, and (when present) avg_car_age/pct_new_trips fields.
     """
     flat_data = [entry for sublist in actual_trips for entry in sublist]
     # Create a DataFrame from the flattened data
@@ -63,18 +63,18 @@ def aggregate_actual_trips(actual_trips, agg, start_date):
             ["count", "total_time", "miles_covered"],
         ] = np.nan
     # Group each branch into one entry. Keep NaN entries as NaN
-    df_grouped = (
-        df.groupby("date")
-        .agg(
-            {
-                "miles_covered": "sum",
-                "total_time": "sum",
-                "count": "sum",
-                "line": "first",
-            }
-        )
-        .reset_index()
-    )
+    agg_dict = {
+        "miles_covered": "sum",
+        "total_time": "sum",
+        "count": "sum",
+        "line": "first",
+    }
+    # Fleet age metrics (see data-ingestion's car_ages.py) are computed once per line and
+    # copied onto every branch's record, so "first" recovers the line-level value untouched.
+    for col in ("avg_car_age", "pct_new_trips"):
+        if col in df.columns:
+            agg_dict[col] = "first"
+    df_grouped = df.groupby("date").agg(agg_dict).reset_index()
     # set index to use datetime object.
     df_grouped.set_index(pd.to_datetime(df_grouped["date"]), inplace=True)
     return df_grouped.to_dict(orient="records")
