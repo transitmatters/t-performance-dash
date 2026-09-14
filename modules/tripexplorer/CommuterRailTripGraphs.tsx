@@ -38,19 +38,23 @@ export const CommuterRailTripGraphs: React.FC<CommuterRailTripGraphsProps> = ({
 }) => {
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
-    PEAK_TIME_OPTIONS
+    PEAK_TIME_OPTIONS,
+    { paramKey: 'peak' }
   );
   const { value: travelTimesDayFilter, control: travelTimesDayFilterControl } = useChartToggle(
     'all' as const,
-    DAY_FILTER_OPTIONS
+    DAY_FILTER_OPTIONS,
+    { paramKey: 'ttDays' }
   );
   const { value: headwaysDayFilter, control: headwaysDayFilterControl } = useChartToggle(
     'all' as const,
-    DAY_FILTER_OPTIONS
+    DAY_FILTER_OPTIONS,
+    { paramKey: 'hwDays' }
   );
   const { value: dwellsDayFilter, control: dwellsDayFilterControl } = useChartToggle(
     'all' as const,
-    DAY_FILTER_OPTIONS
+    DAY_FILTER_OPTIONS,
+    { paramKey: 'dwDays' }
   );
 
   const { traveltimes, headways, dwells } = useTripExplorerQueries(

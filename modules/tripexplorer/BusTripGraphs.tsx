@@ -49,15 +49,18 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
   const busRouteLabel = query.busRoute ? `Route ${query.busRoute}` : undefined;
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
-    PEAK_TIME_OPTIONS
+    PEAK_TIME_OPTIONS,
+    { paramKey: 'peak' }
   );
   const { value: travelTimesDayFilter, control: travelTimesDayFilterControl } = useChartToggle(
     'all' as const,
-    DAY_FILTER_OPTIONS
+    DAY_FILTER_OPTIONS,
+    { paramKey: 'ttDays' }
   );
   const { value: headwaysDayFilter, control: headwaysDayFilterControl } = useChartToggle(
     'all' as const,
-    DAY_FILTER_OPTIONS
+    DAY_FILTER_OPTIONS,
+    { paramKey: 'hwDays' }
   );
 
   return (

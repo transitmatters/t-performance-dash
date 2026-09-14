@@ -1,7 +1,7 @@
 import React from 'react';
 import type { RidershipCount } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
-import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import type { BusRoute, CommuterRailRoute, FerryRoute, Line } from '../../common/types/lines';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { RidershipGraph } from './RidershipGraph';
@@ -28,8 +28,8 @@ export const RidershipGraphWrapper: React.FC<RidershipGraphWrapperProps> = ({
   if (!data.some((datapoint) => datapoint.count !== null)) return <NoDataNotice isLineMetric />;
 
   return (
-    <CarouselGraphDiv>
+    <ChartStack>
       <RidershipGraph config={config} data={data} startDate={startDate} endDate={endDate} />
-    </CarouselGraphDiv>
+    </ChartStack>
   );
 };

@@ -5,7 +5,7 @@ import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
-import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import { filterByDayType, getAggDataWidgets, getComparisonData } from '../../common/utils/widgets';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 
@@ -44,7 +44,7 @@ export const DwellsAggregateWrapper: React.FC<DwellsAggregateWrapperProps> = ({
 
   return (
     <>
-      <CarouselGraphDiv>
+      <ChartStack>
         <DwellsAggregateChart
           dwells={query.data}
           toStation={toStation}
@@ -52,7 +52,7 @@ export const DwellsAggregateWrapper: React.FC<DwellsAggregateWrapperProps> = ({
           dayFilter={dayFilter}
         />
         <StatStrip widgetObjects={widgetObjects} />
-      </CarouselGraphDiv>
+      </ChartStack>
     </>
   );
 };

@@ -4,7 +4,7 @@ import type { DayKind, ScheduledService } from '../../common/types/dataPoints';
 import { ByHourHistogram } from '../../common/components/charts/ByHourHistogram';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { prettyDate } from '../../common/utils/date';
-import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 
 interface Props {
   scheduledService: ScheduledService;
@@ -39,14 +39,14 @@ export const DailyServiceHistogram: React.FC<Props> = (props) => {
 
   return (
     <>
-      <CarouselGraphDiv>
+      <ChartStack>
         <ByHourHistogram
           data={data}
           style={{ color }}
           valueAxis={{ title: 'Scheduled round trips', tooltipItemLabel: 'round trips' }}
           datasetRoundTrips
         />
-      </CarouselGraphDiv>
+      </ChartStack>
     </>
   );
 };

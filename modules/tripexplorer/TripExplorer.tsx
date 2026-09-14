@@ -15,12 +15,23 @@ import { PokeySchleppieAwardBanner } from '../../common/components/notices/Pokey
 import { BnrdBanner } from '../../common/components/notices/BnrdBanner';
 import { useAlertStore } from './AlertStore';
 import { TripGraphs } from './TripGraphs';
+import { TripSetupNotice } from './TripSetupNotice';
+import { TripGraphsBoundary } from './TripGraphsBoundary';
+
+const describeDates = (date?: string, startDate?: string, endDate?: string) => {
+  if (date) return ` on ${date}`;
+  if (startDate && endDate) return ` from ${startDate} to ${endDate}`;
+  if (startDate) return ` since ${startDate}`;
+  return '';
+};
 
 export const TripExplorer = () => {
   const {
     lineShort,
-    query: { to, from, date, busRoute, crRoute, ferryRoute },
+    page,
+    query: { to, from, date, startDate, endDate, busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
+  const pageTitle = page === 'multiTrips' ? 'Trips over a date range' : 'Trips on a single day';
   const { data: alerts } = useHistoricalAlertsData(date, lineShort, busRoute, crRoute, ferryRoute);
 
   const fromStation = from ? getParentStationForStopId(from, lineShort) : undefined;
@@ -33,25 +44,34 @@ export const TripExplorer = () => {
     setAlerts(alertsForModal);
   }, [alertsForModal, setAlerts]);
 
-  if (!(fromStation && toStation)) {
-    return null;
-  }
-
   return (
-    <PageWrapper pageTitle={'Trips'}>
+    <PageWrapper pageTitle={pageTitle}>
       <ChartPageDiv>
-        {alertsForModal?.length ? <AlertNotice /> : null}
-        <PokeySchleppieAwardBanner busRoute={busRoute} />
-        <BnrdBanner busRoute={busRoute} />
-        {/* Urgent, per-view accuracy warnings stay visible with the charts. */}
-        <div className="flex flex-col gap-2 empty:hidden">
-          <CrBetaAccuracyNotice />
-          <SameDayNotice />
-          <TerminusNotice toStation={toStation} fromStation={fromStation} />
-        </div>
-        <TripGraphs fromStation={fromStation} toStation={toStation} />
-        {/* Provenance / context, collapsed by default. */}
-        <TripDataNotes />
+        {fromStation && toStation ? (
+          <>
+            {/* Changing a station or a date silently swaps every chart on the page. This is the
+                only thing that says so to a screen reader. */}
+            <div aria-live="polite" className="sr-only">
+              {`Showing ${fromStation.stop_name} to ${toStation.stop_name}${describeDates(date, startDate, endDate)}.`}
+            </div>
+            {alertsForModal?.length ? <AlertNotice count={alertsForModal.length} /> : null}
+            <PokeySchleppieAwardBanner busRoute={busRoute} />
+            <BnrdBanner busRoute={busRoute} />
+            {/* Urgent, per-view accuracy warnings stay visible with the charts. */}
+            <div className="flex flex-col gap-2 empty:hidden">
+              <CrBetaAccuracyNotice />
+              <SameDayNotice />
+              <TerminusNotice toStation={toStation} fromStation={fromStation} />
+            </div>
+            <TripGraphsBoundary>
+              <TripGraphs fromStation={fromStation} toStation={toStation} />
+            </TripGraphsBoundary>
+            {/* Provenance / context, collapsed by default. */}
+            <TripDataNotes />
+          </>
+        ) : (
+          <TripSetupNotice missing="stations" />
+        )}
       </ChartPageDiv>
     </PageWrapper>
   );

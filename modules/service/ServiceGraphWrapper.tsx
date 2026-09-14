@@ -1,7 +1,7 @@
 import React from 'react';
 import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
-import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { ServiceGraph } from './ServiceGraph';
 
@@ -25,7 +25,7 @@ export const ServiceGraphWrapper: React.FC<ServiceGraphWrapperProps> = ({
   if (!data.some((datapoint) => datapoint.miles_covered)) return <NoDataNotice isLineMetric />;
 
   return (
-    <CarouselGraphDiv>
+    <ChartStack>
       <ServiceGraph
         config={config}
         data={data}
@@ -33,6 +33,6 @@ export const ServiceGraphWrapper: React.FC<ServiceGraphWrapperProps> = ({
         endDate={endDate}
         predictedData={predictedData}
       />
-    </CarouselGraphDiv>
+    </ChartStack>
   );
 };

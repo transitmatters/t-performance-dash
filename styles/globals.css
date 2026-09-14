@@ -1,6 +1,6 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 /*
   ---break---
 */
@@ -59,8 +59,9 @@
 }
 
 :root {
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
   --transitmatters-red: #d31a2b;
   --red-line: #da291c;
   --orange-line: #ed8b00;
@@ -87,7 +88,7 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: oklch(0.54 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
@@ -110,35 +111,15 @@
   --sidebar-border: #46453f;
   --sidebar-ring: #a8a29e;
 
-  /* transitions-dev motion tokens (subset actually in use — see
-     /Users/sethkaplan/.claude/skills/transitions-dev). Add more of the
-     shared scale here if a future transition needs it. */
   --duration-quick: 150ms; /* modal/dropdown close */
   --duration-fast: 250ms; /* modal/dropdown open, tabs sliding */
   --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1); /* modal/dropdown open + close */
   --tabs-dur: 250ms;
   --tabs-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  /* "The Living Map" arrival: content settles in like a train pulling into a stop.
-     --duration-reveal is the per-element travel; --stagger-step is the gap between
-     successive stops so a list arrives station-by-station rather than all at once. */
   --duration-reveal: 420ms;
   --stagger-step: 60ms;
 }
 
-/*
-  Per-line theming ("The Living Map"): a `data-line` attribute on the app shell remaps the
-  shadcn semantic tokens to the active MBTA line's color, so every component built on
-  --primary / --accent / --ring / --sidebar-* answers in that line. One rule set covers light
-  AND dark: --primary/--ring are the brand hue in both; --accent is mixed against the live
-  --background so it adapts per theme; and each line carries the foreground that meets AA on
-  its own color (orange / bus / The RIDE take dark text, the rest take white).
-
-  Intentional exception to the canonical MBTA hex: a few hues here are darkened from the true
-  brand color (red #da291c → #d13434, green #00843d → #00834d, bus #ffc72c → #f5b400) so that
-  --primary/--ring clear AA contrast in their TEXT/UI/focus roles. The graphic/swatch roles
-  (route bullets, header fill, chart series) still use the exact brand hex via --line-color /
-  LINE_COLORS (see common/constants/colors.ts). Text safety here; brand truth there.
-*/
 [data-line='line-red'],
 [data-line='line-mattapan'] {
   --primary: #d13434;
@@ -349,11 +330,4 @@ a {
 .tm-reveal {
   animation: tm-reveal-up var(--duration-reveal) var(--ease-smooth-out) both;
   animation-delay: calc(var(--reveal-index, 0) * var(--stagger-step));
-}
-
-/* Respect the rider who asked for calm: no travel, no stagger, just the final state. */
-@media (prefers-reduced-motion: reduce) {
-  .tm-reveal {
-    animation: none;
-  }
 }

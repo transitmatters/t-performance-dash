@@ -1,8 +1,7 @@
 import React from 'react';
-import { CarouselGraphDiv } from '../../../common/components/charts/CarouselGraphDiv';
+import { ChartStack } from '../../../common/components/charts/ChartStack';
 import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
-import { WidgetTitle } from '../../../common/components/widgets/WidgetTitle';
 import { PredictionsGraph } from './PredictionsGraph';
 
 interface PredictionsGraphWrapperProps {
@@ -20,11 +19,8 @@ export const PredictionsGraphWrapper: React.FC<PredictionsGraphWrapperProps> = (
 }) => {
   if (data.length < 1) return <NoDataNotice isLineMetric />;
   return (
-    <>
-      <WidgetTitle title="Arrival Predictions" />
-      <CarouselGraphDiv>
-        <PredictionsGraph data={data} startDate={startDate} endDate={endDate} />
-      </CarouselGraphDiv>
-    </>
+    <ChartStack>
+      <PredictionsGraph data={data} startDate={startDate} endDate={endDate} />
+    </ChartStack>
   );
 };

@@ -49,8 +49,8 @@ export const DesktopHeader: React.FC = () => {
       )}
     >
       <div className="flex flex-row flex-wrap items-center justify-between gap-x-5 gap-y-2">
-        <div className="flex shrink-0 flex-row items-baseline gap-x-2">
-          <h3 className="text-xl font-bold">{getLineName()}</h3>
+        <h1 className="flex shrink-0 flex-row items-baseline gap-x-2 text-xl">
+          <span className="font-bold">{getLineName()}</span>
           <RouteBullet
             size="sm"
             className={classNames(
@@ -58,10 +58,10 @@ export const DesktopHeader: React.FC = () => {
               needsDarkText ? 'text-stone-900/60' : 'text-white/70'
             )}
           />
-          <h2 className="text-xl select-none">
-            <span>{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
-          </h2>
-        </div>
+          <span className="font-normal select-none">
+            {ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}
+          </span>
+        </h1>
         {showControls && <PrimaryControls {...controlProps} />}
       </div>
       {showControls && <StationControls {...controlProps} />}

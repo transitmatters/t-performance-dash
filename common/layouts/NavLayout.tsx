@@ -15,9 +15,15 @@ export const NavLayout: React.FC<NavLayoutProps> = ({ children }) => {
   return (
     <SidebarProvider data-line={line ?? undefined}>
       <AppSidebar />
-      <SidebarInset className="min-w-0 bg-stone-100">
-        {/* The sidebar becomes a sheet below md, so it needs a trigger of its own. */}
-        <header className="bg-sidebar text-sidebar-foreground sticky top-0 z-20 flex items-center gap-2 border-b px-2 py-1.5 md:hidden">
+      {/* The content ground sits one step back from the cards so they lift off it. `bg-stone-100`
+          alone pinned that ground to light in both themes, which left every translucent surface on
+          top of it (the amber notices especially) compositing against a near-white backdrop in dark
+          mode. Pair it with the dark token so the ground flips with the theme. */}
+      <SidebarInset className="dark:bg-background min-w-0 bg-stone-100">
+        {/* The sidebar becomes a sheet below md, so it needs a trigger of its own.
+            h-12 is load-bearing: MobileHeader (modules/dashboard/MobileHeader.tsx) stacks its own
+            sticky header at top-12, so this one must be exactly 48px or a gap opens between them. */}
+        <header className="bg-sidebar text-sidebar-foreground sticky top-0 z-20 flex h-12 items-center gap-2 border-b px-2 md:hidden">
           <SidebarTrigger />
           <Link href="/" className="flex items-center">
             <Image src="/TMLogo.png" alt="TransitMatters" width={208} height={19.5} />

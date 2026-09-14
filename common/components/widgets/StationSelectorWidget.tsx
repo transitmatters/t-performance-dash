@@ -116,8 +116,9 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
         toStation={toStation}
         setStation={(newStation) => updateStations('from', newStation)}
       />
-      <div className="flex h-4 w-4 items-center justify-center">
-        <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" />
+      <div className="flex h-4 w-4 shrink-0 items-center justify-center">
+        <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" aria-hidden />
+        <span className="sr-only">to</span>
       </div>
       <StationSelector
         type={'to'}
@@ -127,10 +128,11 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
       />
       <Button
         onClick={() => updateStations('swap')}
-        title={'Swap Stations'}
+        title={'Swap stations'}
+        aria-label={`Swap direction: show ${toStation.stop_name} to ${fromStation.stop_name}`}
         additionalClasses={'shrink-0 w-fit'}
       >
-        <FontAwesomeIcon icon={faRightLeft} className={'h-4 w-4'} />
+        <FontAwesomeIcon icon={faRightLeft} className={'h-4 w-4'} aria-hidden />
       </Button>
     </div>
   );

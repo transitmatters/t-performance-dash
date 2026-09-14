@@ -8,6 +8,7 @@ import { readableOn } from '../../utils/general';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
 import { RouteSelector } from './RouteSelector';
+import { TripModeToggle } from './TripModeToggle';
 
 interface MobileControlPanelProps {
   dateStoreSection: DateStoreSection;
@@ -31,8 +32,9 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
     if (line && (dateStoreSection === 'singleTrips' || dateStoreSection === 'multiTrips')) {
       return (
         <>
-          <div className="flex flex-row items-center gap-x-2 p-1 pb-0">
+          <div className="flex flex-row flex-wrap items-center gap-x-2 gap-y-2 p-1 pb-0">
             <RouteSelector />
+            <TripModeToggle />
             <DateControl
               dateStoreSection={dateStoreSection}
               queryType={singleDate ? 'single' : 'range'}

@@ -20,7 +20,7 @@ export const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...
   }, [isMobile, setOpenMobile]);
 
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible="offcanvas" className="border-sidebar-border" {...props}>
       <SidebarHeader className="overflow-hidden px-3 py-3">
         <Link href="/" onClick={close} className="flex h-6 items-center">
           <Image

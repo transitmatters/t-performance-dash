@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '../components/ui/select';
 import { lineColorVar } from '../styles/general';
-import { useDelimitatedRoute } from '../utils/router';
+import { useDelimitatedRoute, useSetQueryParam } from '../utils/router';
 
 interface UseChartToggleOptions {
   /**
@@ -18,6 +18,12 @@ interface UseChartToggleOptions {
    * a dropdown does.
    */
   variant?: 'toggle' | 'select';
+  /**
+   * Query-string key to keep this control's value in. Supply one and the control becomes part of
+   * the shareable URL; leave it off and the value stays local component state. Only the non-default
+   * value is written, so a link to an untouched chart carries no extra params.
+   */
+  paramKey?: string;
 }
 
 /**
@@ -28,10 +34,30 @@ interface UseChartToggleOptions {
 export const useChartToggle = <K extends string, T extends string>(
   initial: K,
   options: [K, T][],
-  { variant }: UseChartToggleOptions = {}
+  { variant, paramKey }: UseChartToggleOptions = {}
 ): { value: K; control: React.ReactNode } => {
-  const { line } = useDelimitatedRoute();
-  const [value, setValue] = React.useState<K>(initial);
+  const { line, query } = useDelimitatedRoute();
+  const setQueryParam = useSetQueryParam();
+  const [localValue, setLocalValue] = React.useState<K>(initial);
+
+  // An unrecognised param value (a hand-edited or stale link) falls back to the default rather
+  // than putting the chart into a state its control cannot display.
+  const fromQuery = paramKey ? query[paramKey] : undefined;
+  const value = paramKey
+    ? ((options.some(([key]) => key === fromQuery) ? fromQuery : initial) as K)
+    : localValue;
+
+  const setValue = React.useCallback(
+    (next: K) => {
+      if (paramKey) {
+        setQueryParam(paramKey, next === initial ? undefined : next);
+      } else {
+        setLocalValue(next);
+      }
+    },
+    [paramKey, setQueryParam, initial]
+  );
+
   const resolvedVariant = variant ?? (options.length > 2 ? 'select' : 'toggle');
 
   if (resolvedVariant === 'select') {

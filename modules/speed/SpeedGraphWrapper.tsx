@@ -1,5 +1,5 @@
 import React from 'react';
-import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { SpeedGraph } from './charts/SpeedGraph';
@@ -21,8 +21,8 @@ export const SpeedGraphWrapper: React.FC<SpeedGraphWrapperProps> = ({
   const dataNoNulls = data.filter((datapoint) => datapoint.miles_covered);
   if (dataNoNulls.length < 1) return <NoDataNotice isLineMetric />;
   return (
-    <CarouselGraphDiv>
+    <ChartStack>
       <SpeedGraph config={config} data={data} startDate={startDate} endDate={endDate} />
-    </CarouselGraphDiv>
+    </ChartStack>
   );
 };

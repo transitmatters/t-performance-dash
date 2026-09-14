@@ -1,8 +1,45 @@
 import type { Chart } from 'chart.js';
 import dayjs from 'dayjs';
 import type { Location } from '../types/charts';
-import { LINE_COLORS } from '../constants/colors';
+import { LINE_COLORS, LINE_COLORS_ON_DARK } from '../constants/colors';
 import { SMALL_DATE_FORMAT } from '../constants/dates';
+import { useThemeStore } from '../state/themeStore';
+
+/**
+ * The chart is copied out of a canvas Chart.js has already painted, using whichever theme was
+ * active. Composited onto a fixed white sheet, a dark-theme plot arrived with ~2.3:1 axis labels
+ * and gridlines that had vanished entirely — a broken image the author only finds out about from a
+ * reader. The sheet follows the theme instead, so what gets exported is what was on screen.
+ */
+interface ImageTheme {
+  background: string;
+  title: string;
+  subtitle: string;
+  meta: string;
+  footer: string;
+  lineColors: typeof LINE_COLORS;
+}
+
+const IMAGE_LIGHT: ImageTheme = {
+  background: '#ffffff',
+  title: '#1c1917',
+  subtitle: '#57534e',
+  meta: '#44403c',
+  footer: '#78716c',
+  lineColors: LINE_COLORS,
+};
+
+const IMAGE_DARK: ImageTheme = {
+  background: '#171717',
+  title: '#fafaf9',
+  subtitle: '#a8a29e',
+  meta: '#d6d3d1',
+  footer: '#a8a29e',
+  lineColors: LINE_COLORS_ON_DARK,
+};
+
+const getImageTheme = (): ImageTheme =>
+  useThemeStore.getState().theme === 'dark' ? IMAGE_DARK : IMAGE_LIGHT;
 
 const CHART_TITLES: Record<string, string> = {
   headways: 'Headways',
@@ -88,36 +125,38 @@ export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, f
   const ctx = offscreen.getContext('2d');
   if (!ctx) return;
 
-  // White background
-  ctx.fillStyle = '#ffffff';
+  const theme = getImageTheme();
+
+  ctx.fillStyle = theme.background;
   ctx.fillRect(0, 0, offscreen.width, offscreen.height);
 
   // --- Header: Left side (title + subtitle) ---
   const title = chartTitle ?? getChartTitle(datasetName);
   const subtitle = getChartSubtitle(datasetName);
 
-  ctx.fillStyle = '#1c1917'; // stone-900
+  ctx.fillStyle = theme.title;
   ctx.font = `bold ${titleFontSize}px system-ui, sans-serif`;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
   ctx.fillText(title, headerPadding, headerPadding);
 
   if (subtitle) {
-    ctx.fillStyle = '#57534e'; // stone-600
+    ctx.fillStyle = theme.subtitle;
     ctx.font = `italic ${subtitleFontSize}px system-ui, sans-serif`;
     ctx.fillText(subtitle, headerPadding, headerPadding + titleFontSize + 4 * dpr);
   }
 
   // --- Header: Right side (date + location) ---
   const dateStr = formatDateForImage(startDate, endDate);
-  ctx.fillStyle = '#44403c'; // stone-700
+  ctx.fillStyle = theme.meta;
   ctx.font = `${dateFontSize}px system-ui, sans-serif`;
   ctx.textAlign = 'right';
   ctx.textBaseline = 'top';
   ctx.fillText(dateStr, width - headerPadding, headerPadding);
 
   if (location) {
-    const lineColor = LINE_COLORS[line as keyof typeof LINE_COLORS] ?? LINE_COLORS.default;
+    const lineColor =
+      theme.lineColors[line as keyof typeof LINE_COLORS] ?? theme.lineColors.default;
     const locationY = headerPadding + dateFontSize + 4 * dpr;
     const rightEdge = width - headerPadding;
 
@@ -139,7 +178,7 @@ export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, f
 
       // Draw " to " (normal weight, dark)
       ctx.font = `${locationFontSize}px system-ui, sans-serif`;
-      ctx.fillStyle = '#44403c';
+      ctx.fillStyle = theme.meta;
       ctx.fillText(toText, rightEdge - toStationWidth - toTextWidth, locationY);
 
       // Draw "from" station (bold, line color)
@@ -155,7 +194,7 @@ export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, f
 
       // Draw direction (normal weight, dark)
       ctx.font = `${locationFontSize}px system-ui, sans-serif`;
-      ctx.fillStyle = '#44403c';
+      ctx.fillStyle = theme.meta;
       ctx.textAlign = 'left';
       ctx.fillText(` ${location.direction}`, rightEdge - dirWidth, locationY);
 
@@ -171,7 +210,7 @@ export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, f
 
   // --- Footer: URL ---
   const url = window.location.href;
-  ctx.fillStyle = '#78716c'; // stone-500
+  ctx.fillStyle = theme.footer;
   ctx.font = `${footerFontSize}px system-ui, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';

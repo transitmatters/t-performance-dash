@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import classNames from 'classnames';
 import type { PageMetadata } from '../../common/constants/pages';
+import { PAGES } from '../../common/constants/pages';
 import { SidebarMenuSubButton, SidebarMenuSubItem } from '../../common/components/ui/sidebar';
 import { LINE_COLORS } from '../../common/constants/colors';
 import { lineColorVar } from '../../common/styles/general';
@@ -31,7 +32,9 @@ export const NavPageItems: React.FC<NavPageItemsProps> = ({ pages, close }) => {
     <>
       {pages.map((tab) => {
         const enabled = line ? tab.lines.includes(line) : true;
-        const selected = page === tab.key;
+        // Multi-day trips has no sidebar item of its own, so it lights up Trips.
+        const selected =
+          page === tab.key || (tab.key === PAGES.singleTrips && page === PAGES.multiTrips);
 
         if (!enabled) {
           return (
@@ -52,14 +55,13 @@ export const NavPageItems: React.FC<NavPageItemsProps> = ({ pages, close }) => {
               asChild
               style={lineColorVar(line)}
               className={classNames(
-                selected
-                  ? classNames(
-                      'bg-(--line-color) font-semibold hover:bg-(--line-color)',
-                      needsDarkText
-                        ? 'text-stone-900 hover:text-stone-900'
-                        : 'text-white hover:text-white'
-                    )
-                  : 'text-sidebar-foreground/70'
+                selected &&
+                  classNames(
+                    'bg-(--line-color) font-semibold hover:bg-(--line-color)',
+                    needsDarkText
+                      ? 'text-stone-900 hover:text-stone-900'
+                      : 'text-white hover:text-white'
+                  )
               )}
             >
               <Link

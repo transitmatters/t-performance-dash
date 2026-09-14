@@ -56,14 +56,13 @@ export const StationSelector: React.FC<StationSelector> = ({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <div className="w-fit grow overflow-hidden">
-          <Button additionalClasses="justify-between w-full h-10 md:h-7">
-            <p className="items-center gap-x-1 truncate text-sm font-semibold">
-              {station.stop_name}
-            </p>
-            <FontAwesomeIcon icon={faChevronDown} className="h-4 w-4 pl-2" />
-          </Button>
-        </div>
+        <Button
+          additionalClasses="justify-between grow min-w-0 overflow-hidden h-10 md:h-7"
+          aria-label={`${type === 'from' ? 'Start' : 'End'} station: ${station.stop_name}. Change it.`}
+        >
+          <p className="items-center gap-x-1 truncate text-sm font-semibold">{station.stop_name}</p>
+          <FontAwesomeIcon icon={faChevronDown} className="h-4 w-4 pl-2" aria-hidden />
+        </Button>
       </PopoverTrigger>
       <PopoverContent align="start" style={lineColorVar(line)} className="w-[min(22rem,90vw)] p-0">
         <Command>
@@ -90,7 +89,7 @@ export const StationSelector: React.FC<StationSelector> = ({
                     <div className="flex flex-row items-baseline justify-start">
                       <div
                         className={classNames(
-                          'flex flex-row gap-px text-xs text-stone-500',
+                          'text-muted-foreground flex flex-row gap-px text-xs',
                           branchLabelWidth[line ?? 'DEFAULT'] ?? ''
                         )}
                       >

@@ -4,15 +4,19 @@ import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
-import { StatCard, type StatSentiment } from '../../common/components/widgets/StatCard';
+import { Widget } from '../../common/components/widgets';
+import {
+  StatCard,
+  StatCardGrid,
+  type StatSentiment,
+} from '../../common/components/widgets/StatCard';
 import { getSpeedGraphConfig } from './constants/speeds';
 import { getSpeedStats } from './utils/utils';
-import { SpeedDetailsWrapper } from './SpeedDetailsWrapper';
+import { SpeedGraphWrapper } from './SpeedGraphWrapper';
 
 dayjs.extend(utc);
 
@@ -32,7 +36,6 @@ export function SpeedDetails() {
     },
     enabled
   );
-  const speedReady = speeds && line && config && !speeds.isError && speeds.data;
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
   }
@@ -52,7 +55,7 @@ export function SpeedDetails() {
     <PageWrapper pageTitle={'Speed'}>
       <ChartPageDiv>
         {stats && Number.isFinite(stats.avgSpeed) && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <StatCardGrid>
             <StatCard
               label="Average speed"
               value={stats.avgSpeed.toFixed(1)}
@@ -73,20 +76,16 @@ export function SpeedDetails() {
               }
               delta={deltaFor(stats.percentOfMaxDelta, 0.005, 'pp')}
             />
-          </div>
+          </StatCardGrid>
         )}
-        {speedReady ? (
-          <SpeedDetailsWrapper
-            data={speeds.data}
+        <Widget title="Speed" subtitle="Average across the line" ready={[speeds]}>
+          <SpeedGraphWrapper
+            data={speeds.data!}
             config={config}
             startDate={startDate}
             endDate={endDate}
           />
-        ) : (
-          <div className="relative flex h-full">
-            <ChartPlaceHolder query={speeds} />
-          </div>
-        )}
+        </Widget>
       </ChartPageDiv>
     </PageWrapper>
   );

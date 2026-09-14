@@ -3,7 +3,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import type { AggregateDataResponse, DayFilter } from '../../common/types/charts';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { filterByDayType, getAggDataWidgets, getComparisonData } from '../../common/utils/widgets';
@@ -44,7 +44,7 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
 
   return (
     <>
-      <CarouselGraphDiv>
+      <ChartStack>
         <TravelTimesAggregateChart
           traveltimes={query.data}
           toStation={toStation}
@@ -53,7 +53,7 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
           dayFilter={dayFilter}
         />
         <StatStrip widgetObjects={widgetObjects} />
-      </CarouselGraphDiv>
+      </ChartStack>
     </>
   );
 };

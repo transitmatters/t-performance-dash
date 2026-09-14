@@ -2,48 +2,54 @@ import dayjs from 'dayjs';
 import React, { useMemo, useState } from 'react';
 
 import Link from 'next/link';
-import { isArray } from 'lodash';
 import {
   useSlowzoneAllData,
   useSlowzoneDelayTotalData,
   useSpeedRestrictionData,
 } from '../../common/api/hooks/slowzones';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
+import { Widget } from '../../common/components/widgets';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { filterAllSlow, formatSegments } from '../../common/utils/slowZoneUtils';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
+import { useChartToggle } from '../../common/hooks/useChartToggle';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
+import { formatDateTodayCheck } from '../../common/state/utils/dateStoreUtils';
 import type { Direction } from '../../common/types/dataPoints';
-import type { Line, LineShort } from '../../common/types/lines';
+import type { Line } from '../../common/types/lines';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 import { LineSegments } from './charts/LineSegments';
 import { DirectionObject } from './constants/constants';
-import { SlowZonesWidgetTitle } from './SlowZonesWidgetTitle';
 import { SlowZonesMap } from './map';
+import type { SlowZonesLineName } from './types';
 
 interface SystemSlowZonesDetailsProps {
   showTitle?: boolean;
 }
 
+const DIRECTION_OPTIONS = Object.entries(DirectionObject) as [Direction, string][];
+const LINE_OPTIONS: [SlowZonesLineName, string][] = [
+  ['Red', 'Red'],
+  ['Orange', 'Orange'],
+  ['Blue', 'Blue'],
+  ['Green', 'Green'],
+  ['Mattapan', 'Mattapan'],
+];
+
 export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDetailsProps) {
   const delayTotals = useSlowzoneDelayTotalData();
   const allData = useSlowzoneAllData();
   const isMobile = !useBreakpoint('sm');
-  const [direction, setDirection] = useState<Direction>('northbound');
+  const { value: direction, control: directionControl } = useChartToggle(
+    'northbound' as Direction,
+    DIRECTION_OPTIONS
+  );
 
-  const [lineShort, setLineShort] = useState<LineShort>('Red');
+  const [lineShort, setLineShort] = useState<SlowZonesLineName>('Red');
   const line = `line-${lineShort.toLowerCase()}` as Line;
-  const canShowSlowZonesMap =
-    lineShort === 'Red' ||
-    lineShort === 'Blue' ||
-    lineShort === 'Orange' ||
-    lineShort === 'Green' ||
-    lineShort === 'Mattapan';
   const isDesktop = useBreakpoint('lg');
 
   const {
@@ -55,12 +61,10 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
   const startDateUTC = startDate ? dayjs.utc(startDate).startOf('day') : undefined;
   const endDateUTC = endDate ? dayjs.utc(endDate).startOf('day') : undefined;
 
-  const totalSlowTimeReady = !delayTotals.isError && delayTotals.data && startDateUTC && endDateUTC;
-  const lineSegmentsReady = !allData.isError && allData.data && startDateUTC && endDateUTC;
   const graphData = useMemo(() => {
     if (allData.data && startDateUTC && endDateUTC) {
       const fitleredData = filterAllSlow(
-        isArray(allData.data) ? allData.data : allData.data.data,
+        Array.isArray(allData.data) ? allData.data : allData.data.data,
         startDateUTC,
         endDateUTC
       );
@@ -70,98 +74,79 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
 
   const stationPairs = new Set(graphData.map((dataPoint) => dataPoint.id));
 
+  if (!endDateUTC || !startDateUTC) {
+    return <p>Select a date range to load graphs.</p>;
+  }
+
   return (
     <PageWrapper pageTitle={'Slow zones'}>
       <ChartPageDiv>
-        <WidgetDiv>
-          <WidgetTitle title="Total slow time" />
-          <Link
-            target="_blank"
-            href="https://transitmatters.org/blog/slowzonesupdate"
-            className="text-sm whitespace-nowrap text-stone-600 italic"
-          >
-            Time over Baseline across Line
-          </Link>
-          <div className="relative flex flex-col">
-            {totalSlowTimeReady ? (
-              <TotalSlowTime
-                data={isArray(delayTotals.data) ? delayTotals.data : delayTotals.data.data}
-                startDateUTC={startDateUTC}
-                endDateUTC={endDateUTC}
-                showTitle={showTitle}
-              />
-            ) : (
-              <div className="relative flex h-full">
-                <ChartPlaceHolder query={delayTotals} />
-              </div>
-            )}
-          </div>
-        </WidgetDiv>
-        <WidgetDiv>
-          <SlowZonesWidgetTitle />
-          <div className="relative flex flex-col">
-            {allData.data && speedRestrictions.data && canShowSlowZonesMap ? (
-              <SlowZonesMap
-                key={lineShort}
-                slowZones={allData.data}
-                speedRestrictions={speedRestrictions.data}
-                lineName={lineShort}
-                direction={isDesktop ? 'horizontal' : 'vertical'}
-              />
-            ) : (
-              <div className="relative flex h-full">
-                <ChartPlaceHolder query={delayTotals} />
-              </div>
-            )}
-          </div>
-          <ButtonGroup
-            line={line}
-            pressFunction={setLineShort}
-            options={Object.entries({
-              Red: 'Red',
-              Orange: 'Orange',
-              Blue: 'Blue',
-              Green: 'Green',
-              Mattapan: 'Mattapan',
-            })}
+        <Widget
+          title="Total slow time"
+          subtitle={
+            <Link href="https://transitmatters.org/blog/slowzonesupdate" target="_blank">
+              Time over baseline across the line
+            </Link>
+          }
+          ready={[delayTotals]}
+        >
+          <TotalSlowTime
+            data={Array.isArray(delayTotals.data) ? delayTotals.data : delayTotals.data!.data}
+            startDateUTC={startDateUTC}
+            endDateUTC={endDateUTC}
+            showTitle={showTitle}
           />
-        </WidgetDiv>
-        <div className="shadow-dataBox h-full rounded-lg bg-white p-3 sm:p-4">
-          <div className="flex flex-col p-4 sm:p-0 lg:flex-row">
-            <WidgetTitle title={`${DirectionObject[direction]} segments`} />
-            <div className="lg:ml-2">
-              <ButtonGroup pressFunction={setDirection} options={Object.entries(DirectionObject)} />
-            </div>
-          </div>
-          <div className="relative flex flex-col">
-            <div className="pb-4 pl-4 sm:pb-0 sm:pl-0">
-              <div className="flex flex-col gap-y-1 pt-2">
-                {lineSegmentsReady ? (
-                  <div className="w-full overflow-x-auto overflow-y-hidden">
-                    <div
-                      style={
-                        isMobile
-                          ? { width: stationPairs.size * 64, height: 480 }
-                          : { height: stationPairs.size * 40 }
-                      }
-                    >
-                      <LineSegments
-                        data={graphData}
-                        startDateUTC={startDateUTC}
-                        endDateUTC={endDateUTC}
-                        direction={direction}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative flex h-full">
-                    <ChartPlaceHolder query={delayTotals} />
-                  </div>
-                )}
+        </Widget>
+        <Widget
+          title="Line map"
+          subtitle={`As of ${formatDateTodayCheck(endDate!)}`}
+          action={
+            <ButtonGroup
+              line={line}
+              pressFunction={setLineShort}
+              selectedIndex={LINE_OPTIONS.findIndex(([key]) => key === lineShort)}
+              options={LINE_OPTIONS}
+              additionalDivClass="w-auto"
+              additionalButtonClass="px-3"
+            />
+          }
+          ready={[allData, speedRestrictions]}
+        >
+          <SlowZonesMap
+            key={lineShort}
+            slowZones={allData.data!}
+            speedRestrictions={speedRestrictions.data!}
+            lineName={lineShort}
+            direction={isDesktop ? 'horizontal' : 'vertical'}
+          />
+        </Widget>
+        <Widget
+          title={`${DirectionObject[direction]} segments`}
+          subtitle="Time over baseline, by segment"
+          action={directionControl}
+          ready={[allData]}
+        >
+          <ChartStack>
+            {/* On mobile the strip scrolls sideways, so it bleeds to the card edge rather than
+                stopping at the padding. */}
+            <div className="-mx-3 overflow-x-auto overflow-y-hidden px-3 sm:mx-0 sm:px-0">
+              <div
+                style={
+                  isMobile
+                    ? { width: stationPairs.size * 64, height: 480 }
+                    : { height: stationPairs.size * 40 }
+                }
+              >
+                <LineSegments
+                  data={graphData}
+                  startDateUTC={startDateUTC}
+                  endDateUTC={endDateUTC}
+                  direction={direction}
+                />
               </div>
             </div>
-          </div>
-        </div>
+          </ChartStack>
+        </Widget>
       </ChartPageDiv>
     </PageWrapper>
   );

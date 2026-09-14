@@ -24,7 +24,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <ReactQueryDevtools buttonPosition="bottom-right" />
       <TooltipProvider>
         <div className="flex h-screen flex-col">
-          <main className="relative h-full">{children}</main>
+          <div className="relative h-full">{children}</div>
         </div>
       </TooltipProvider>
     </QueryClientProvider>
