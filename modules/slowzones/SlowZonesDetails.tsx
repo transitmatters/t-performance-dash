@@ -133,9 +133,11 @@ export function SlowZonesDetails() {
           }
           ready={[delayTotals, line]}
         >
-          {isRapidTransit && line ? (
+          {/* Children are built before Widget checks `ready`, so guard the data here too —
+              `delayTotals.data!` alone throws on the first client render. */}
+          {isRapidTransit && line && delayTotals.data ? (
             <TotalSlowTimeWrapper
-              data={delayTotals.data!.data}
+              data={delayTotals.data.data}
               startDateUTC={startDateUTC}
               endDateUTC={endDateUTC}
               line={line}
@@ -169,14 +171,16 @@ export function SlowZonesDetails() {
           action={directionControl}
           ready={[allSlow]}
         >
-          <SlowZonesSegmentsWrapper
-            data={Array.isArray(allSlow.data) ? allSlow.data : allSlow.data!.data}
-            lineShort={lineShort}
-            linePath={linePath}
-            endDateUTC={endDateUTC}
-            startDateUTC={startDateUTC}
-            direction={direction}
-          />
+          {allSlow.data && (
+            <SlowZonesSegmentsWrapper
+              data={Array.isArray(allSlow.data) ? allSlow.data : allSlow.data.data}
+              lineShort={lineShort}
+              linePath={linePath}
+              endDateUTC={endDateUTC}
+              startDateUTC={startDateUTC}
+              direction={direction}
+            />
+          )}
         </Widget>
       </ChartPageDiv>
     </PageWrapper>

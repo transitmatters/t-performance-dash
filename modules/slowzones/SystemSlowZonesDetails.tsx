@@ -90,12 +90,14 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
           }
           ready={[delayTotals]}
         >
-          <TotalSlowTime
-            data={Array.isArray(delayTotals.data) ? delayTotals.data : delayTotals.data!.data}
-            startDateUTC={startDateUTC}
-            endDateUTC={endDateUTC}
-            showTitle={showTitle}
-          />
+          {delayTotals.data && (
+            <TotalSlowTime
+              data={Array.isArray(delayTotals.data) ? delayTotals.data : delayTotals.data.data}
+              startDateUTC={startDateUTC}
+              endDateUTC={endDateUTC}
+              showTitle={showTitle}
+            />
+          )}
         </Widget>
         <Widget
           title="Line map"
