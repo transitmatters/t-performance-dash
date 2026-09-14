@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useBusSpeedSegmentsUrl } from '../../common/api/hooks/busSpeedSegments';
@@ -33,7 +33,6 @@ export function BusSpeedMapDetails() {
   } = useDelimitatedRoute();
 
   const [timeBand, setTimeBand] = useState<TimeBand>(DEFAULT_TIME_BAND);
-  const [routeFilter, setRouteFilter] = useState<string>('');
   // Populated progressively from loaded vector tiles rather than known up front — see
   // BusSpeedMapView's onIdle handler.
   const [routeIds, setRouteIds] = useState<string[]>([]);
@@ -41,12 +40,11 @@ export function BusSpeedMapDetails() {
   const segments = useBusSpeedSegmentsUrl({ date }, Boolean(date));
   const { data: pmtilesUrl } = segments;
 
-  // Arriving from the sidebar route picker should land on that route. The picker's list is
-  // curated and includes composites like '17/19' that no route_id will ever match, so this
-  // only takes effect once the dataset is confirmed to actually have that route.
-  useEffect(() => {
-    if (busRoute && routeIds.includes(busRoute)) setRouteFilter(busRoute);
-  }, [busRoute, routeIds]);
+  // Driven by the sidebar route picker / URL rather than an in-page control. The picker's
+  // list is curated and includes composites like '17/19' that no route_id will ever match,
+  // so this only takes effect once the dataset is confirmed to actually have that route --
+  // otherwise it falls back to the full network view.
+  const routeFilter = busRoute && routeIds.includes(busRoute) ? busRoute : undefined;
 
   const bandLabel = TIME_BANDS.find((band) => band.key === timeBand);
 
@@ -66,7 +64,7 @@ export function BusSpeedMapDetails() {
           <BusSpeedMapView
             pmtilesUrl={pmtilesUrl}
             timeBand={timeBand}
-            routeFilter={routeFilter || undefined}
+            routeFilter={routeFilter}
             onRouteIdsDiscovered={setRouteIds}
           />
         </ErrorBoundary>
@@ -84,13 +82,7 @@ export function BusSpeedMapDetails() {
             subtitle={bandLabel && `${bandLabel.label} · ${bandLabel.hours}`}
           />
           <div className="flex flex-col gap-3">
-            <BusSpeedMapControls
-              timeBand={timeBand}
-              setTimeBand={setTimeBand}
-              routeFilter={routeFilter}
-              setRouteFilter={setRouteFilter}
-              routeIds={routeIds}
-            />
+            <BusSpeedMapControls timeBand={timeBand} setTimeBand={setTimeBand} />
             {renderBody()}
             <BusSpeedLegend />
           </div>

@@ -6,25 +6,17 @@ import type { TimeBand } from '../types';
 interface BusSpeedMapControlsProps {
   timeBand: TimeBand;
   setTimeBand: React.Dispatch<React.SetStateAction<TimeBand>>;
-  routeFilter: string;
-  setRouteFilter: (route: string) => void;
-  routeIds: string[];
 }
-
-const ALL_ROUTES = '';
 
 export const BusSpeedMapControls: React.FC<BusSpeedMapControlsProps> = ({
   timeBand,
   setTimeBand,
-  routeFilter,
-  setRouteFilter,
-  routeIds,
 }) => {
   const bandOptions = TIME_BANDS.map((band) => [band.key, band.label] as [TimeBand, string]);
   const selectedIndex = TIME_BANDS.findIndex((band) => band.key === timeBand);
 
   return (
-    <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+    <>
       {/* Six buttons don't fit on a phone, so the same choice is a select there. */}
       <div className="hidden lg:block">
         <ButtonGroup
@@ -48,22 +40,6 @@ export const BusSpeedMapControls: React.FC<BusSpeedMapControlsProps> = ({
           ))}
         </select>
       </label>
-
-      <label className="flex items-center gap-2 text-sm">
-        <span className="whitespace-nowrap text-stone-600">Route</span>
-        <select
-          className="flex-1 rounded-md border border-stone-300 px-2 py-1.5 text-sm lg:flex-none"
-          value={routeFilter}
-          onChange={(event) => setRouteFilter(event.target.value)}
-        >
-          <option value={ALL_ROUTES}>All routes</option>
-          {routeIds.map((routeId) => (
-            <option key={routeId} value={routeId}>
-              {routeId}
-            </option>
-          ))}
-        </select>
-      </label>
-    </div>
+    </>
   );
 };
