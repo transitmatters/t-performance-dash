@@ -45,6 +45,34 @@ class TripMetricsByLineParams(BaseModel):
     line: str
 
 
+class BusTripMetricsParams(BaseModel):
+    """Parameters for the `/api/bustripmetrics` endpoint.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        route: Bus route_id (e.g. `1`, `57`, `111`).
+    """
+
+    start_date: Union[str, date]
+    end_date: Union[str, date]
+    route: str
+
+
+class BusSpeedLeaderboardParams(BaseModel):
+    """Parameters for the `/api/busspeedleaderboard` endpoint.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        limit: Maximum number of routes to return (default 10).
+    """
+
+    start_date: Union[str, date]
+    end_date: Union[str, date]
+    limit: int = 10
+
+
 class ScheduledServiceParams(BaseModel):
     """Parameters for the `/api/scheduledservice` endpoint.
 
@@ -263,6 +291,28 @@ class TripMetricsResponse(BaseModel):
 
     Attributes:
         data: Trip metrics at the requested aggregation level.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    data: Dict[str, Any]
+
+
+class BusTripMetricsResponse(BaseModel):
+    """Response for `/api/bustripmetrics` — daily speed/trip metrics for a bus route.
+
+    Attributes:
+        data: Daily trip metric records for the route.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    data: Dict[str, Any]
+
+
+class BusSpeedLeaderboardResponse(BaseModel):
+    """Response for `/api/busspeedleaderboard` — slowest bus routes over a date range.
+
+    Attributes:
+        data: Ranked route summaries, slowest first.
     """
 
     model_config = ConfigDict(extra="allow")

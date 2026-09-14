@@ -117,7 +117,7 @@ export const ALL_PAGES: PageMap = {
     key: 'speed',
     path: '/speed',
     name: 'Speed',
-    lines: ['line-red', 'line-orange', 'line-blue', 'line-green', 'line-mattapan'],
+    lines: ['line-red', 'line-orange', 'line-blue', 'line-green', 'line-mattapan', 'line-bus'],
     icon: faGaugeHigh,
     dateStoreSection: 'line',
   },
@@ -209,7 +209,7 @@ export const ALL_PAGES: PageMap = {
 /* Groups of pages for tab sections */
 export const TRIP_PAGES = [ALL_PAGES.singleTrips, ALL_PAGES.multiTrips];
 
-export const BUS_OVERVIEW = [ALL_PAGES.ridership, ALL_PAGES.speedmap];
+export const BUS_OVERVIEW = [ALL_PAGES.ridership, ALL_PAGES.speed, ALL_PAGES.speedmap];
 
 export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.ridership];
 

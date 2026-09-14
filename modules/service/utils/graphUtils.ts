@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AlertForModal } from '../../../common/types/alerts';
 import { hexWithAlpha } from '../../../common/utils/general';
-import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
+import type { SpeedTripMetrics } from '../../../common/types/dataPoints';
 import { TODAY, OVERVIEW_TRAIN_MIN_DATE } from '../../../common/constants/dates';
 
 const shuttlingAnnotationBlockStyle = {
@@ -28,7 +28,7 @@ const alertAnnotationBlockStyle = {
  * We use datapoint.value as the determination as to whether there is data. It is set to null when shuttling occurs throughout a day.
  */
 export const getShuttlingBlockAnnotations = (
-  data: DeliveredTripMetrics[]
+  data: SpeedTripMetrics[]
 ): AnnotationOptions<keyof AnnotationTypeRegistry>[] => {
   let xMin: string | undefined;
   let xMax: string | undefined;

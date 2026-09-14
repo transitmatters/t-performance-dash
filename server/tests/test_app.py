@@ -146,6 +146,36 @@ class TestScheduledServiceValidation:
         assert result.status_code == 400
 
 
+class TestBusTripMetricsValidation:
+    def test_missing_all_returns_400(self, client):
+        result = client.http.get("/api/bustripmetrics")
+        assert result.status_code == 400
+
+    def test_missing_route_returns_400(self, client):
+        result = client.http.get("/api/bustripmetrics?start_date=2024-01-01&end_date=2024-01-31")
+        assert result.status_code == 400
+
+    def test_missing_dates_returns_400(self, client):
+        result = client.http.get("/api/bustripmetrics?route=1")
+        assert result.status_code == 400
+
+
+class TestBusSpeedLeaderboardValidation:
+    def test_missing_all_returns_400(self, client):
+        result = client.http.get("/api/busspeedleaderboard")
+        assert result.status_code == 400
+
+    def test_missing_end_date_returns_400(self, client):
+        result = client.http.get("/api/busspeedleaderboard?start_date=2024-01-01")
+        assert result.status_code == 400
+
+    def test_invalid_limit_returns_400(self, client):
+        result = client.http.get(
+            "/api/busspeedleaderboard?start_date=2024-01-01&end_date=2024-01-02&limit=not-a-number"
+        )
+        assert result.status_code == 400
+
+
 class TestRidershipValidation:
     def test_missing_dates_returns_400(self, client):
         result = client.http.get("/api/ridership")
@@ -192,6 +222,15 @@ class TestTimePredictionsValidation:
 
 
 class TestHappyPaths:
+    def test_busspeedleaderboard_returns_200(self, client):
+        result = client.http.get("/api/busspeedleaderboard?start_date=2026-09-07&end_date=2026-09-11")
+        assert result.status_code == 200
+
+    def test_busspeedleaderboard_response_is_a_list(self, client):
+        result = client.http.get("/api/busspeedleaderboard?start_date=2026-09-07&end_date=2026-09-11")
+        body = json.loads(result.body)
+        assert isinstance(body, list)
+
     def test_routes_returns_200(self, client):
         result = client.http.get("/api/routes")
         assert result.status_code == 200

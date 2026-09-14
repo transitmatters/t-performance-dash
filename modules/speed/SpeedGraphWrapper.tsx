@@ -3,14 +3,14 @@ import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDi
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { MPHWidgetValue } from '../../common/types/basicWidgets';
-import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
+import type { SpeedTripMetrics } from '../../common/types/dataPoints';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { SpeedGraph } from './charts/SpeedGraph';
 import { getDetailsSpeedWidgetValues } from './utils/utils';
 import type { ParamsType } from './constants/speeds';
 
 interface SpeedGraphWrapperProps {
-  data: DeliveredTripMetrics[];
+  data: SpeedTripMetrics[];
   config: ParamsType;
   startDate: string;
   endDate: string;
