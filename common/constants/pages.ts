@@ -10,6 +10,7 @@ import {
   faStopwatch20,
   faCalendarDays,
   faCalendarXmark,
+  faTrain,
 } from '@fortawesome/free-solid-svg-icons';
 import type { Line } from '../types/lines';
 
@@ -19,6 +20,7 @@ export enum PAGES {
   landing = 'landing',
   overview = 'overview',
   speed = 'speed',
+  fleet = 'fleet',
   predictions = 'predictions',
   delays = 'delays',
   service = 'service',
@@ -117,6 +119,14 @@ export const ALL_PAGES: PageMap = {
     icon: faGaugeHigh,
     dateStoreSection: 'line',
   },
+  fleet: {
+    key: 'fleet',
+    path: '/fleet',
+    name: 'Fleet',
+    lines: ['line-red', 'line-orange', 'line-blue', 'line-green', 'line-mattapan'],
+    icon: faTrain,
+    dateStoreSection: 'line',
+  },
   predictions: {
     key: 'predictions',
     path: '/predictions',
@@ -208,6 +218,7 @@ export const LINE_PAGES = [
   ALL_PAGES.service,
   ALL_PAGES.slowzones,
   ALL_PAGES.speed,
+  ALL_PAGES.fleet,
   ALL_PAGES.predictions,
   ALL_PAGES.delays,
   ALL_PAGES.ridership,
