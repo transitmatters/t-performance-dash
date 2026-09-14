@@ -1,12 +1,12 @@
 import React from 'react';
 import { ChartStack } from '../../common/components/charts/ChartStack';
-import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
+import type { SpeedTripMetrics } from '../../common/types/dataPoints';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { SpeedGraph } from './charts/SpeedGraph';
 import type { ParamsType } from './constants/speeds';
 
 interface SpeedGraphWrapperProps {
-  data: DeliveredTripMetrics[];
+  data: SpeedTripMetrics[];
   config: ParamsType;
   startDate: string;
   endDate: string;

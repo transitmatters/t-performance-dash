@@ -113,7 +113,7 @@ export const ALL_PAGES: PageMap = {
     key: 'speed',
     path: '/speed',
     name: 'Speed',
-    lines: ['line-red', 'line-orange', 'line-blue', 'line-green', 'line-mattapan'],
+    lines: ['line-red', 'line-orange', 'line-blue', 'line-green', 'line-mattapan', 'line-bus'],
     icon: faGaugeHigh,
     dateStoreSection: 'line',
   },
@@ -216,7 +216,7 @@ export const TRIP_PAGES = [ALL_PAGES.singleTrips, ALL_PAGES.multiTrips];
 /* Multi-day trips is reached from the in-page TripModeToggle, not the sidebar */
 export const NAV_TRIP_PAGES = [ALL_PAGES.singleTrips];
 
-export const BUS_OVERVIEW = [ALL_PAGES.ridership, ALL_PAGES.speedmap];
+export const BUS_OVERVIEW = [ALL_PAGES.ridership, ALL_PAGES.speed, ALL_PAGES.speedmap];
 
 export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.ridership];
 
