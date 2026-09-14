@@ -3,6 +3,7 @@ import { CHART_COLORS } from '../../constants/colors';
 
 interface LegendProps {
   showUnderRatio?: boolean;
+  usingTmBenchmark?: boolean;
 }
 
 interface LegendLongTermProps {
@@ -12,11 +13,11 @@ interface LegendLongTermProps {
 
 // The Commuter Rail data caveat lives once at the page level (BetaDataNotice),
 // so it is intentionally not repeated inside every chart legend here.
-export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio }) => {
+export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio, usingTmBenchmark }) => {
   return (
     <div className="text-muted-foreground flex min-w-0 flex-col gap-y-1">
       <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-1 text-xs">
-        <LegendSingle showUnderRatio={showUnderRatio} />
+        <LegendSingle showUnderRatio={showUnderRatio} usingTmBenchmark={usingTmBenchmark} />
       </div>
     </div>
   );
@@ -29,13 +30,13 @@ const SEVERITY_LEGEND = [
   { label: '100%+ off', color: CHART_COLORS.PURPLE },
 ];
 
-const LegendSingle: React.FC<LegendProps> = () => {
+const LegendSingle: React.FC<LegendProps> = ({ usingTmBenchmark = false }) => {
   return (
     <>
       <p className="flex flex-row items-center gap-x-1 italic">
         Compare to
         <span className="border-muted-foreground inline-block h-0 w-3 border-t-2 align-middle" />
-        MBTA benchmark:
+        {usingTmBenchmark ? 'TransitMatters' : 'MBTA'} benchmark:
       </p>
       {SEVERITY_LEGEND.map(({ label, color }) => (
         <p key={label} className="flex flex-row items-center gap-x-1.5">
