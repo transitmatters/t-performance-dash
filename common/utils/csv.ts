@@ -1,6 +1,6 @@
 import { flatten } from 'lodash';
 import type { Location } from '../types/charts';
-import type { DeliveredTripMetrics, TimePredictionWeek } from '../types/dataPoints';
+import type { SpeedTripMetrics, TimePredictionWeek } from '../types/dataPoints';
 
 const directionAbbrs = {
   northbound: 'NB',
@@ -58,7 +58,7 @@ export const addAccuracyPercentageToData = (data: TimePredictionWeek[]) => {
   return newData;
 };
 
-export const addMPHToSpeedData = (data: DeliveredTripMetrics[]) => {
+export const addMPHToSpeedData = (data: SpeedTripMetrics[]) => {
   const newData = data.map((item) => {
     const hours = item.total_time / 3600;
     const mph = item.miles_covered / hours;

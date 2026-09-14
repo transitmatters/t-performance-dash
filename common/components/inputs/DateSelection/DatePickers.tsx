@@ -43,7 +43,10 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
   const { startDate, endDate, date, busRoute } = query;
   const endDateObject = dayjs(endDate);
   const startDateObject = dayjs(startDate ?? date);
-  const isSingleDate = page === 'singleTrips';
+  // Keyed off the picker's own mode rather than a page name, so any single-date page
+  // writes `date` instead of `startDate`. Equivalent today: `type` is only 'single' where
+  // the section is 'singleTrips'.
+  const isSingleDate = type === 'single';
 
   const handleRangeToggle = () => {
     if (range) {

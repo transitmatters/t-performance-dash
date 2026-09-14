@@ -50,6 +50,7 @@ export const DesktopHeader: React.FC = () => {
           busRoute={busRoute}
           crRoute={crRoute}
           ferryRoute={ferryRoute}
+          hasStationStore={ALL_PAGES[page]?.hasStationStore}
         />
       )}
     </div>
