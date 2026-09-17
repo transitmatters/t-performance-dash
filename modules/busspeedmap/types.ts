@@ -1,5 +1,8 @@
 export type TimeBand = 'early_am' | 'am_peak' | 'midday' | 'pm_peak' | 'evening' | 'late_night';
 
+/** 'both' overlays inbound and outbound segments, matching the map's original behaviour. */
+export type DirectionFilter = 'both' | 'inbound' | 'outbound';
+
 /**
  * Properties read off a rendered vector-tile feature. Deliberately a small subset of the
  * GeoParquet schema: `p50_speed_mph` is arrival-to-arrival and includes dwell at the

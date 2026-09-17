@@ -15,7 +15,7 @@ import {
   PMTILES_SOURCE_LAYER,
   SPEED_COLOR_STOPS,
 } from '../constants';
-import type { BusSpeedSegmentProperties, TimeBand } from '../types';
+import type { BusSpeedSegmentProperties, DirectionFilter, TimeBand } from '../types';
 
 // Registered once at module scope, onto the shared maplibre-gl module. This file is only
 // ever reached through BusSpeedMapDetails' `dynamic(..., { ssr: false })` import, so it
@@ -77,6 +77,7 @@ interface HoveredSegment {
 interface BusSpeedMapViewProps {
   pmtilesUrl: string;
   timeBand: TimeBand;
+  direction: DirectionFilter;
   routeFilter?: string;
   /** Called with the full set of route_ids discovered so far, whenever it grows. */
   onRouteIdsDiscovered?: (routeIds: string[]) => void;
@@ -85,6 +86,7 @@ interface BusSpeedMapViewProps {
 export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
   pmtilesUrl,
   timeBand,
+  direction,
   routeFilter,
   onRouteIdsDiscovered,
 }) => {
@@ -108,8 +110,12 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
       ['==', ['get', 'time_band'], timeBand],
     ];
     if (routeFilter) clauses.push(['==', ['get', 'route_id'], routeFilter]);
+    // GTFS direction_id: 0 is outbound, 1 is inbound -- matches the hover popup below.
+    if (direction !== 'both') {
+      clauses.push(['==', ['get', 'direction_id'], direction === 'inbound' ? 1 : 0]);
+    }
     return ['all', ...clauses] as unknown as FilterSpecification;
-  }, [timeBand, routeFilter]);
+  }, [timeBand, routeFilter, direction]);
 
   const onMouseMove = (event: MapLayerMouseEvent) => {
     const feature = event.features?.[0];

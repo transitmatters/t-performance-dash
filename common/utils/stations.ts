@@ -313,8 +313,8 @@ export const getMinMaxDatesForRoute = (
   route?: BusRoute | CommuterRailRoute
 ): { minDate: string | undefined; maxDate: string | undefined } => {
   if ((tab === 'Commuter Rail' || tab === 'Bus') && route) {
-    const minDate = stations[tab][route].service_start;
-    const maxDate = stations[tab][route].service_end;
+    const minDate = stations[tab][route]?.service_start;
+    const maxDate = stations[tab][route]?.service_end;
     return { minDate, maxDate };
   }
   return { minDate: undefined, maxDate: undefined };

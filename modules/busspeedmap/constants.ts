@@ -1,4 +1,4 @@
-import type { TimeBand } from './types';
+import type { DirectionFilter, TimeBand } from './types';
 
 /**
  * Buckets thinner than this are dropped before anything is drawn. The median row covers
@@ -17,6 +17,18 @@ export const TIME_BANDS: { key: TimeBand; label: string; hours: string }[] = [
 ];
 
 export const DEFAULT_TIME_BAND: TimeBand = 'am_peak';
+
+/**
+ * GTFS direction_id: 0 is outbound, 1 is inbound. Matches the hover popup's labelling in
+ * BusSpeedMapView.
+ */
+export const DIRECTIONS: { key: DirectionFilter; label: string }[] = [
+  { key: 'both', label: 'Both' },
+  { key: 'inbound', label: 'Inbound' },
+  { key: 'outbound', label: 'Outbound' },
+];
+
+export const DEFAULT_DIRECTION: DirectionFilter = 'both';
 
 /**
  * Speed ramp in mph, low (slow) to high. Red-yellow-blue rather than red-green so it stays
