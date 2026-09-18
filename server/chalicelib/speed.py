@@ -7,8 +7,11 @@ on-the-fly from per-route records; weekly/monthly use pre-aggregated tables.
 
 from typing import TypedDict
 from chalice import BadRequestError, ForbiddenError
-from chalicelib import dynamo
+from chalicelib import dynamo, s3, cache
 from datetime import date, datetime, timedelta
+from botocore.exceptions import ClientError
+import json
+import time
 import pandas as pd
 import numpy as np
 from chalicelib.constants import DATE_FORMAT_BACKEND
@@ -171,6 +174,34 @@ def trip_metrics_by_bus_route(params: BusTripMetricsParams):
     return dynamo.query_daily_trips_on_route(BUS_TRIP_METRICS_TABLE, route, start_date, end_date)
 
 
+def _leaderboard_cache_key(start_date: str | date, end_date: str | date) -> str:
+    """S3 key for a cached leaderboard, scoped to a date range only (not limit).
+
+    The full ranked list is cached once per range and sliced to `limit` on every
+    read, since the scan/aggregation work is identical regardless of how many
+    rows the caller asked for.
+    """
+    return f"bus-speed-leaderboard/{start_date}_{end_date}.json"
+
+
+def _read_cached_leaderboard(start_date: str | date, end_date: str | date):
+    """Return the cached ranked list for a date range, or None on a miss/stale/corrupt entry."""
+    key = _leaderboard_cache_key(start_date, end_date)
+    try:
+        cached = json.loads(s3.download(key))
+    except ClientError as ex:
+        if ex.response["Error"]["Code"] not in ("NoSuchKey", "404"):
+            raise
+        return None
+    except (json.JSONDecodeError, KeyError):
+        return None
+
+    max_age = cache.get_cache_max_age({"end_date": end_date})
+    if time.time() - cached["computed_at"] >= max_age:
+        return None
+    return cached["data"]
+
+
 def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: int = 10):
     """Rank bus routes by average speed over a date range, slowest first.
 
@@ -178,8 +209,10 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
     mph = miles_covered / (total_time / 3600) formula used everywhere else on the
     dashboard -- rather than averaging each day's speed naively, so the ranking isn't
     skewed by lighter-traffic days. Requires a full table scan (see
-    dynamo.scan_trip_metrics_in_range for why); fine at today's table size, but this
-    should stay cached and may need a different approach if the table grows much larger.
+    dynamo.scan_trip_metrics_in_range for why), so the ranked list is cached to S3 per
+    date range (see _leaderboard_cache_key) -- the first request for a given range pays
+    for the scan, later requests for the same range read the cached JSON back until it
+    goes stale (cache.get_cache_max_age, keyed on how recent end_date is).
 
     Args:
         start_date: Start of date range (YYYY-MM-DD).
@@ -197,22 +230,29 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
         raise ForbiddenError(
             f"Date range too long. The maximum number of requested values is {BUS_TRIP_METRICS_MAX_DAYS}."
         )
-    rows = dynamo.scan_trip_metrics_in_range(BUS_TRIP_METRICS_TABLE, start_date, end_date)
 
-    totals = {}
-    for row in rows:
-        entry = totals.setdefault(
-            row["route"],
-            {"route": row["route"], "miles_covered": 0, "total_time": 0, "count": 0, "n_traversals": 0},
-        )
-        entry["miles_covered"] += row.get("miles_covered", 0)
-        entry["total_time"] += row.get("total_time", 0)
-        entry["count"] += row.get("count", 0)
-        entry["n_traversals"] += row.get("n_traversals", 0)
+    ranked = _read_cached_leaderboard(start_date, end_date)
+    if ranked is None:
+        rows = dynamo.scan_trip_metrics_in_range(BUS_TRIP_METRICS_TABLE, start_date, end_date)
 
-    # Routes with no recorded time have no usable speed and would divide by zero below.
-    ranked = [entry for entry in totals.values() if entry["total_time"] > 0]
-    ranked.sort(key=lambda entry: entry["miles_covered"] / (entry["total_time"] / 3600))
+        totals = {}
+        for row in rows:
+            entry = totals.setdefault(
+                row["route"],
+                {"route": row["route"], "miles_covered": 0, "total_time": 0, "count": 0, "n_traversals": 0},
+            )
+            entry["miles_covered"] += row.get("miles_covered", 0)
+            entry["total_time"] += row.get("total_time", 0)
+            entry["count"] += row.get("count", 0)
+            entry["n_traversals"] += row.get("n_traversals", 0)
+
+        # Routes with no recorded time have no usable speed and would divide by zero below.
+        ranked = [entry for entry in totals.values() if entry["total_time"] > 0]
+        ranked.sort(key=lambda entry: entry["miles_covered"] / (entry["total_time"] / 3600))
+
+        key = _leaderboard_cache_key(start_date, end_date)
+        s3.upload(key, json.dumps({"computed_at": time.time(), "data": ranked}).encode())
+
     return ranked[:limit]
 
 
