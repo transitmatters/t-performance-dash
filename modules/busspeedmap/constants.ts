@@ -1,4 +1,4 @@
-import type { DirectionFilter, TimeBand } from './types';
+import type { DayType, DirectionFilter, Period, TimeBand } from './types';
 
 /**
  * Buckets thinner than this are dropped before anything is drawn. The median row covers
@@ -23,12 +23,33 @@ export const DEFAULT_TIME_BAND: TimeBand = 'am_peak';
  * BusSpeedMapView.
  */
 export const DIRECTIONS: { key: DirectionFilter; label: string }[] = [
-  { key: 'both', label: 'Both' },
   { key: 'inbound', label: 'Inbound' },
   { key: 'outbound', label: 'Outbound' },
 ];
 
-export const DEFAULT_DIRECTION: DirectionFilter = 'both';
+export const DEFAULT_DIRECTION: DirectionFilter = 'inbound';
+
+export const PERIODS: { key: Period; label: string }[] = [
+  { key: 'daily', label: 'Day' },
+  { key: 'weekly', label: 'Week' },
+  { key: 'monthly', label: 'Month' },
+];
+
+export const DEFAULT_PERIOD: Period = 'daily';
+
+/**
+ * Only meaningful for weekly/monthly periods -- a daily file's features carry no `day_type`
+ * at all, since a single day is already wholly one type. Labels match the equivalent split
+ * used for multi-day Trips (DAY_FILTER_OPTIONS in common/hooks/useChartToggle.tsx) --
+ * "Weekdays" / "Weekends & holidays" -- minus its "All days" option, which has no equivalent
+ * here: a weekly/monthly tile's `day_type` is always one or the other, never combined.
+ */
+export const DAY_TYPES: { key: DayType; label: string }[] = [
+  { key: 'business_day', label: 'Weekdays' },
+  { key: 'weekend_or_holiday', label: 'Weekends & holidays' },
+];
+
+export const DEFAULT_DAY_TYPE: DayType = 'business_day';
 
 /**
  * Speed ramp in mph, low (slow) to high. Red-yellow-blue rather than red-green so it stays
@@ -46,10 +67,18 @@ export const SPEED_COLOR_STOPS: [number, string][] = [
   [24, '#313695'],
 ];
 
-/** Served same-origin: CloudFront maps this prefix onto the private performance bucket. */
-export const BUS_SPEED_SEGMENTS_BASE_PATH = '/businsights/BusSpeedSegments/daily';
+/**
+ * Served same-origin: CloudFront maps this prefix onto the private performance bucket.
+ * `daily`/`weekly`/`monthly` sit below it -- see `busSpeedSegmentsPath` in
+ * common/api/busSpeedSegments.ts.
+ */
+export const BUS_SPEED_SEGMENTS_BASE_PATH = '/businsights/BusSpeedSegments';
 
-/** The single layer tippecanoe writes every segment into. */
+/**
+ * The single layer tippecanoe writes every segment into, for every period -- daily, weekly,
+ * and monthly files alike. Weekly/monthly's business-day/weekend split lives in a `day_type`
+ * feature property within this same layer (see DAY_TYPES), not a separate layer.
+ */
 export const PMTILES_SOURCE_LAYER = 'segments';
 
 export const BOSTON_CENTER: { longitude: number; latitude: number; zoom: number } = {

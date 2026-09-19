@@ -1,6 +1,9 @@
 import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
 import { BUS_SPEED_SEGMENTS_BASE_PATH } from '../../modules/busspeedmap/constants';
-import type { FetchBusSpeedSegmentsOptions } from '../../modules/busspeedmap/types';
+import type { FetchBusSpeedSegmentsOptions, Period } from '../../modules/busspeedmap/types';
+
+dayjs.extend(isoWeek);
 
 /**
  * Thrown when a service date simply has no file — before coverage starts, during the
@@ -15,12 +18,25 @@ export class BusSpeedDataUnavailableError extends Error {
 }
 
 /**
- * Month and day are not zero-padded, matching the Events-lamp/ and Events/ key layouts the
- * rest of the performance bucket already uses.
+ * Year/month/day/week numbers are not zero-padded, matching the Events-lamp/ and Events/ key
+ * layouts the rest of the performance bucket already uses.
+ *
+ * Weekly files are keyed by ISO week (Monday-start, and the year that ISO week belongs to --
+ * not necessarily `date`'s calendar year for the last/first few days of December). Workday
+ * vs. weekend vs. holiday is not part of the path: each period's file is a single pmtiles
+ * archive carrying all three as separate source-layers (see `sourceLayerFor` in
+ * modules/busspeedmap/constants.ts), selected client-side rather than fetched separately.
  */
-export const busSpeedSegmentsPath = (date: string): string => {
+export const busSpeedSegmentsPath = (date: string, period: Period): string => {
   const day = dayjs(date);
-  return `${BUS_SPEED_SEGMENTS_BASE_PATH}/Year=${day.year()}/Month=${day.month() + 1}/Day=${day.date()}/segments.pmtiles`;
+  switch (period) {
+    case 'daily':
+      return `${BUS_SPEED_SEGMENTS_BASE_PATH}/daily/Year=${day.year()}/Month=${day.month() + 1}/Day=${day.date()}/segments.pmtiles`;
+    case 'weekly':
+      return `${BUS_SPEED_SEGMENTS_BASE_PATH}/weekly/Year=${day.isoWeekYear()}/Week=${day.isoWeek()}/segments.pmtiles`;
+    case 'monthly':
+      return `${BUS_SPEED_SEGMENTS_BASE_PATH}/monthly/Year=${day.year()}/Month=${day.month() + 1}/segments.pmtiles`;
+  }
 };
 
 /**
@@ -31,10 +47,11 @@ export const busSpeedSegmentsPath = (date: string): string => {
  */
 export const fetchBusSpeedSegmentsUrl = async ({
   date,
+  period,
 }: FetchBusSpeedSegmentsOptions): Promise<string> => {
   if (!date) throw new Error('A service date is required to load bus speed segments.');
 
-  const url = new URL(busSpeedSegmentsPath(date), window.location.origin);
+  const url = new URL(busSpeedSegmentsPath(date, period), window.location.origin);
   const response = await fetch(url.toString(), { method: 'HEAD' });
 
   // A missing object is served as the site's own HTML 404 page, so the status has to be

@@ -23,7 +23,7 @@ export const BusSpeedLegend: React.FC = () => {
         </div>
         <span className="text-xs text-stone-600">Faster</span>
       </div>
-      <p className="text-xs italic text-stone-600">
+      <p className="text-xs text-stone-600 italic">
         Median speed from stop to stop, including time spent waiting at the stop — what a rider on
         board experiences.
       </p>

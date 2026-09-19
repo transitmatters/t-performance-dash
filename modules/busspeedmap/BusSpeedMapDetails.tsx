@@ -17,8 +17,16 @@ import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BusSpeedMapControls } from './controls/BusSpeedMapControls';
 import { BusSpeedLegend } from './map/BusSpeedLegend';
-import { DEFAULT_DIRECTION, DEFAULT_TIME_BAND, TIME_BANDS } from './constants';
-import type { DirectionFilter, TimeBand } from './types';
+import {
+  DAY_TYPES,
+  DEFAULT_DAY_TYPE,
+  DEFAULT_DIRECTION,
+  DEFAULT_PERIOD,
+  DEFAULT_TIME_BAND,
+  TIME_BANDS,
+} from './constants';
+import type { DayType, DirectionFilter, Period, TimeBand } from './types';
+import { isPeriodInProgress, periodLabel } from './utils';
 
 // MapLibre reaches for WebGL as soon as it loads, so it must stay out of the static export's
 // Node prerender. This also keeps the ~230KB library in a chunk only this page pulls down.
@@ -32,13 +40,15 @@ export function BusSpeedMapDetails() {
     query: { date, busRoute },
   } = useDelimitatedRoute();
 
+  const [period, setPeriod] = useState<Period>(DEFAULT_PERIOD);
+  const [dayType, setDayType] = useState<DayType>(DEFAULT_DAY_TYPE);
   const [timeBand, setTimeBand] = useState<TimeBand>(DEFAULT_TIME_BAND);
   const [direction, setDirection] = useState<DirectionFilter>(DEFAULT_DIRECTION);
   // Populated progressively from loaded vector tiles rather than known up front — see
   // BusSpeedMapView's onIdle handler.
   const [routeIds, setRouteIds] = useState<string[]>([]);
 
-  const segments = useBusSpeedSegmentsUrl({ date }, Boolean(date));
+  const segments = useBusSpeedSegmentsUrl({ date, period }, Boolean(date));
   const { data: pmtilesUrl } = segments;
 
   // Driven by the sidebar route picker / URL rather than an in-page control. The picker's
@@ -48,6 +58,14 @@ export function BusSpeedMapDetails() {
   const routeFilter = busRoute && routeIds.includes(busRoute) ? busRoute : undefined;
 
   const bandLabel = TIME_BANDS.find((band) => band.key === timeBand);
+  const dayTypeLabel = period !== 'daily' ? DAY_TYPES.find((dt) => dt.key === dayType) : undefined;
+  const subtitle = [
+    periodLabel(date, period),
+    dayTypeLabel?.label,
+    bandLabel && `${bandLabel.label} · ${bandLabel.hours}`,
+  ]
+    .filter(Boolean)
+    .join(' · ');
 
   const renderBody = () => {
     if (!date) return <p>Select a date to load the bus speed map.</p>;
@@ -64,6 +82,8 @@ export function BusSpeedMapDetails() {
         <ErrorBoundary fallbackRender={() => <ErrorNotice />}>
           <BusSpeedMapView
             pmtilesUrl={pmtilesUrl}
+            period={period}
+            dayType={dayType}
             timeBand={timeBand}
             direction={direction}
             routeFilter={routeFilter}
@@ -79,17 +99,24 @@ export function BusSpeedMapDetails() {
       <ChartPageDiv>
         <BusDataNotice />
         <WidgetDiv>
-          <WidgetTitle
-            title="Bus speeds"
-            subtitle={bandLabel && `${bandLabel.label} · ${bandLabel.hours}`}
-          />
+          <WidgetTitle title="Bus speeds" subtitle={subtitle || undefined} />
           <div className="flex flex-col gap-3">
             <BusSpeedMapControls
+              period={period}
+              setPeriod={setPeriod}
+              dayType={dayType}
+              setDayType={setDayType}
               timeBand={timeBand}
               setTimeBand={setTimeBand}
               direction={direction}
               setDirection={setDirection}
             />
+            {isPeriodInProgress(date, period) && (
+              <p className="text-xs text-stone-500">
+                This {period === 'weekly' ? 'week' : 'month'} is still in progress — figures reflect
+                service so far, not the full period.
+              </p>
+            )}
             {renderBody()}
             <BusSpeedLegend />
           </div>

@@ -15,7 +15,13 @@ import {
   PMTILES_SOURCE_LAYER,
   SPEED_COLOR_STOPS,
 } from '../constants';
-import type { BusSpeedSegmentProperties, DirectionFilter, TimeBand } from '../types';
+import type {
+  BusSpeedSegmentProperties,
+  DayType,
+  DirectionFilter,
+  Period,
+  TimeBand,
+} from '../types';
 
 // Registered once at module scope, onto the shared maplibre-gl module. This file is only
 // ever reached through BusSpeedMapDetails' `dynamic(..., { ssr: false })` import, so it
@@ -76,6 +82,8 @@ interface HoveredSegment {
 
 interface BusSpeedMapViewProps {
   pmtilesUrl: string;
+  period: Period;
+  dayType: DayType;
   timeBand: TimeBand;
   direction: DirectionFilter;
   routeFilter?: string;
@@ -85,6 +93,8 @@ interface BusSpeedMapViewProps {
 
 export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
   pmtilesUrl,
+  period,
+  dayType,
   timeBand,
   direction,
   routeFilter,
@@ -109,13 +119,14 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
       ['>=', ['get', 'n_traversals'], MIN_TRAVERSALS],
       ['==', ['get', 'time_band'], timeBand],
     ];
+    // Daily features carry no `day_type` at all (a single day is already wholly one type),
+    // so this clause only applies to weekly/monthly tiles.
+    if (period !== 'daily') clauses.push(['==', ['get', 'day_type'], dayType]);
     if (routeFilter) clauses.push(['==', ['get', 'route_id'], routeFilter]);
     // GTFS direction_id: 0 is outbound, 1 is inbound -- matches the hover popup below.
-    if (direction !== 'both') {
-      clauses.push(['==', ['get', 'direction_id'], direction === 'inbound' ? 1 : 0]);
-    }
+    clauses.push(['==', ['get', 'direction_id'], direction === 'inbound' ? 1 : 0]);
     return ['all', ...clauses] as unknown as FilterSpecification;
-  }, [timeBand, routeFilter, direction]);
+  }, [timeBand, period, dayType, routeFilter, direction]);
 
   const onMouseMove = (event: MapLayerMouseEvent) => {
     const feature = event.features?.[0];
@@ -290,6 +301,7 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
             </p>
             <p className="text-stone-600">
               Median of {hovered.properties.n_traversals} trips
+              {period !== 'daily' && ` this ${period === 'weekly' ? 'week' : 'month'}`}
               {hovered.properties.n_interpolated > 0 &&
                 `, ${hovered.properties.n_interpolated} with an interpolated stop time`}
             </p>
