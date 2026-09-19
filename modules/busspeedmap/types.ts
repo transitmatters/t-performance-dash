@@ -39,3 +39,45 @@ export interface FetchBusSpeedSegmentsOptions {
   date: string | undefined;
   period: Period;
 }
+
+/**
+ * A leaderboard row -- a narrower cut of BusSpeedSegmentProperties with no stop_id or
+ * geometry. `time_band`/`day_type` aren't repeated per row: they're the key you looked the
+ * row array up under (see BusSpeedSegmentLeaderboardResponse), same as they're absent from
+ * daily pmtiles features. Already sorted slowest-first and capped server-side.
+ */
+export interface BusSpeedSegmentLeaderboardEntry {
+  route_id: string;
+  direction_id: number;
+  from_stop_name: string;
+  to_stop_name: string;
+  p50_speed_mph: number;
+  n_traversals: number;
+  n_interpolated: number;
+}
+
+/** A daily leaderboard file, keyed straight by time_band. */
+export type BusSpeedSegmentLeaderboardByBand = Partial<
+  Record<TimeBand, BusSpeedSegmentLeaderboardEntry[]>
+>;
+
+/**
+ * A weekly/monthly leaderboard file, nested one level deeper by day_type first. A
+ * still-in-progress week/month can be missing a day_type key entirely if no matching day has
+ * happened yet.
+ */
+export type BusSpeedSegmentLeaderboardByDayType = Partial<
+  Record<DayType, BusSpeedSegmentLeaderboardByBand>
+>;
+
+export type BusSpeedSegmentLeaderboardResponse =
+  | BusSpeedSegmentLeaderboardByBand
+  | BusSpeedSegmentLeaderboardByDayType;
+
+/**
+ * Which grain the merged leaderboard page ranks by -- routes (an arbitrary date range, summed
+ * across the whole thing) or segments (one precomputed day/week/month slice). Both share the
+ * same period control, but only 'route' mode ever cares about keyRoutesOnly, and only
+ * 'segment' mode cares about day type/time band.
+ */
+export type LeaderboardViewMode = 'route' | 'segment';

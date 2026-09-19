@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import dynamic from 'next/dynamic';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useBusSpeedSegmentsUrl } from '../../common/api/hooks/busSpeedSegments';
 import { BusSpeedDataUnavailableError } from '../../common/api/busSpeedSegments';
@@ -17,6 +16,7 @@ import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BusSpeedMapControls } from './controls/BusSpeedMapControls';
 import { BusSpeedLegend } from './map/BusSpeedLegend';
+import { BusSpeedMapViewLazy as BusSpeedMapView } from './map/BusSpeedMapViewLazy';
 import {
   DAY_TYPES,
   DEFAULT_DAY_TYPE,
@@ -27,13 +27,6 @@ import {
 } from './constants';
 import type { DayType, DirectionFilter, Period, TimeBand } from './types';
 import { isPeriodInProgress, periodLabel } from './utils';
-
-// MapLibre reaches for WebGL as soon as it loads, so it must stay out of the static export's
-// Node prerender. This also keeps the ~230KB library in a chunk only this page pulls down.
-const BusSpeedMapView = dynamic(
-  () => import('./map/BusSpeedMapView').then((module) => module.BusSpeedMapView),
-  { ssr: false, loading: () => <ChartPlaceHolder /> }
-);
 
 export function BusSpeedMapDetails() {
   const {

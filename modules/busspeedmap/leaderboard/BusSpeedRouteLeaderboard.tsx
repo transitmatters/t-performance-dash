@@ -1,13 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
-import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
-import { getBusRouteSelectionItemHref, useDelimitatedRoute } from '../../common/utils/router';
+import type { BusSpeedLeaderboardEntry } from '../../../common/types/dataPoints';
+import { getBusRouteSelectionItemHref, useDelimitatedRoute } from '../../../common/utils/router';
 
-interface BusSpeedLeaderboardProps {
+interface BusSpeedRouteLeaderboardProps {
   data: BusSpeedLeaderboardEntry[];
 }
 
-export const BusSpeedLeaderboard: React.FC<BusSpeedLeaderboardProps> = ({ data }) => {
+export const BusSpeedRouteLeaderboard: React.FC<BusSpeedRouteLeaderboardProps> = ({ data }) => {
   const route = useDelimitatedRoute();
 
   return (

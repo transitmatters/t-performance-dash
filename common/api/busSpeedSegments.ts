@@ -1,7 +1,11 @@
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { BUS_SPEED_SEGMENTS_BASE_PATH } from '../../modules/busspeedmap/constants';
-import type { FetchBusSpeedSegmentsOptions, Period } from '../../modules/busspeedmap/types';
+import type {
+  BusSpeedSegmentLeaderboardResponse,
+  FetchBusSpeedSegmentsOptions,
+  Period,
+} from '../../modules/busspeedmap/types';
 
 dayjs.extend(isoWeek);
 
@@ -23,21 +27,27 @@ export class BusSpeedDataUnavailableError extends Error {
  *
  * Weekly files are keyed by ISO week (Monday-start, and the year that ISO week belongs to --
  * not necessarily `date`'s calendar year for the last/first few days of December). Workday
- * vs. weekend vs. holiday is not part of the path: each period's file is a single pmtiles
- * archive carrying all three as separate source-layers (see `sourceLayerFor` in
- * modules/busspeedmap/constants.ts), selected client-side rather than fetched separately.
+ * vs. weekend vs. holiday is not part of the path: it's a property/key within each period's
+ * single file (a pmtiles source-layer, or a leaderboard.json top-level key), selected
+ * client-side rather than fetched separately.
  */
-export const busSpeedSegmentsPath = (date: string, period: Period): string => {
+const periodDirectory = (date: string, period: Period): string => {
   const day = dayjs(date);
   switch (period) {
     case 'daily':
-      return `${BUS_SPEED_SEGMENTS_BASE_PATH}/daily/Year=${day.year()}/Month=${day.month() + 1}/Day=${day.date()}/segments.pmtiles`;
+      return `daily/Year=${day.year()}/Month=${day.month() + 1}/Day=${day.date()}`;
     case 'weekly':
-      return `${BUS_SPEED_SEGMENTS_BASE_PATH}/weekly/Year=${day.isoWeekYear()}/Week=${day.isoWeek()}/segments.pmtiles`;
+      return `weekly/Year=${day.isoWeekYear()}/Week=${day.isoWeek()}`;
     case 'monthly':
-      return `${BUS_SPEED_SEGMENTS_BASE_PATH}/monthly/Year=${day.year()}/Month=${day.month() + 1}/segments.pmtiles`;
+      return `monthly/Year=${day.year()}/Month=${day.month() + 1}`;
   }
 };
+
+export const busSpeedSegmentsPath = (date: string, period: Period): string =>
+  `${BUS_SPEED_SEGMENTS_BASE_PATH}/${periodDirectory(date, period)}/segments.pmtiles`;
+
+export const busSpeedSegmentLeaderboardPath = (date: string, period: Period): string =>
+  `${BUS_SPEED_SEGMENTS_BASE_PATH}/${periodDirectory(date, period)}/leaderboard.json`;
 
 /**
  * PMTiles are read byte-range by byte-range straight from the browser as the map pans and
@@ -64,4 +74,29 @@ export const fetchBusSpeedSegmentsUrl = async ({
   }
 
   return url.toString();
+};
+
+/**
+ * Unlike the pmtiles archive, the leaderboard file is small (~90-120KB) and meant to be
+ * fetched and parsed whole -- a plain GET + response.json(), not a byte-range read. It's
+ * served as ordinary application/json, not gzip/zlib-wrapped.
+ */
+export const fetchBusSpeedSegmentLeaderboard = async ({
+  date,
+  period,
+}: FetchBusSpeedSegmentsOptions): Promise<BusSpeedSegmentLeaderboardResponse> => {
+  if (!date)
+    throw new Error('A service date is required to load the bus speed segment leaderboard.');
+
+  const url = new URL(busSpeedSegmentLeaderboardPath(date, period), window.location.origin);
+  const response = await fetch(url.toString());
+
+  if (response.status === 403 || response.status === 404) {
+    throw new BusSpeedDataUnavailableError(date);
+  }
+  if (!response.ok) {
+    throw new Error(`Failed to load the bus speed segment leaderboard for ${date}.`);
+  }
+
+  return response.json();
 };

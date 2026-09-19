@@ -220,8 +220,15 @@ export const ALL_PAGES: PageMap = {
     title: 'Bus speed leaderboard',
     lines: ['line-bus'],
     icon: faRankingStar,
+    // Ranks across every route or segment at once, so there's no single route to
+    // parameterize the page with.
     hasRouteSelector: false,
-    dateStoreSection: 'line',
+    // Single date rather than a range: the "by segment" view's day/week/month files are
+    // precomputed alongside the speed map's pmtiles from the same generation step, and only
+    // cover those same materialized periods, not an arbitrary range. The "by route" view
+    // derives its own start/end range from this same single date + period (periodDateRange in
+    // modules/busspeedmap/utils.ts) rather than getting a second, mismatched date control.
+    dateStoreSection: 'singleTrips',
   },
 };
 

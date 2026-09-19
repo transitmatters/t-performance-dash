@@ -10,8 +10,17 @@ interface BusSpeedMapControlsProps {
   setDayType: React.Dispatch<React.SetStateAction<DayType>>;
   timeBand: TimeBand;
   setTimeBand: React.Dispatch<React.SetStateAction<TimeBand>>;
-  direction: DirectionFilter;
-  setDirection: React.Dispatch<React.SetStateAction<DirectionFilter>>;
+  // Omitted by consumers with no notion of direction -- the segment leaderboard shows both
+  // directions at once (direction_id is just a per-row label there), so it leaves these out
+  // rather than wiring up a filter it doesn't use.
+  direction?: DirectionFilter;
+  setDirection?: React.Dispatch<React.SetStateAction<DirectionFilter>>;
+  // The merged leaderboard page reuses this same period/day-type/time-band control set for
+  // its "by route" view too, which has no notion of day type or time-of-day bucketing at all
+  // (the route API just sums over a date range) -- both default true so the map page, which
+  // always wants every control, doesn't have to pass them.
+  showDayType?: boolean;
+  showTimeBand?: boolean;
 }
 
 export const BusSpeedMapControls: React.FC<BusSpeedMapControlsProps> = ({
@@ -23,6 +32,8 @@ export const BusSpeedMapControls: React.FC<BusSpeedMapControlsProps> = ({
   setTimeBand,
   direction,
   setDirection,
+  showDayType = true,
+  showTimeBand = true,
 }) => {
   const periodOptions = PERIODS.map((option) => [option.key, option.label] as [Period, string]);
   const selectedPeriodIndex = PERIODS.findIndex((option) => option.key === period);
@@ -70,7 +81,7 @@ export const BusSpeedMapControls: React.FC<BusSpeedMapControlsProps> = ({
 
         {/* Daily features carry no day_type at all -- a single day is already wholly one
             type -- so this only makes sense once a week or month is selected. */}
-        {period !== 'daily' && (
+        {showDayType && period !== 'daily' && (
           <>
             <div className="hidden shrink-0 lg:block">
               <ButtonGroup
@@ -106,54 +117,64 @@ export const BusSpeedMapControls: React.FC<BusSpeedMapControlsProps> = ({
         )}
       </div>
 
-      <div className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-start lg:justify-between">
-        {/* Six buttons don't fit on a phone, so the same choice is a select there. */}
-        <div className="hidden lg:block">
-          <ButtonGroup
-            options={bandOptions}
-            pressFunction={setTimeBand}
-            selectedIndex={selectedBandIndex}
-            line="line-bus"
-          />
-        </div>
-        <label className="flex items-center gap-2 text-sm lg:hidden">
-          <span className="text-stone-600">Time of day</span>
-          <select
-            className="flex-1 rounded-md border border-stone-300 px-2 py-1.5 text-sm"
-            value={timeBand}
-            onChange={(event) => setTimeBand(event.target.value as TimeBand)}
-          >
-            {TIME_BANDS.map((band) => (
-              <option key={band.key} value={band.key}>
-                {band.label} ({band.hours})
-              </option>
-            ))}
-          </select>
-        </label>
+      {(showTimeBand || (direction && setDirection)) && (
+        <div className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-start lg:justify-between">
+          {showTimeBand && (
+            <>
+              {/* Six buttons don't fit on a phone, so the same choice is a select there. */}
+              <div className="hidden lg:block">
+                <ButtonGroup
+                  options={bandOptions}
+                  pressFunction={setTimeBand}
+                  selectedIndex={selectedBandIndex}
+                  line="line-bus"
+                />
+              </div>
+              <label className="flex items-center gap-2 text-sm lg:hidden">
+                <span className="text-stone-600">Time of day</span>
+                <select
+                  className="flex-1 rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+                  value={timeBand}
+                  onChange={(event) => setTimeBand(event.target.value as TimeBand)}
+                >
+                  {TIME_BANDS.map((band) => (
+                    <option key={band.key} value={band.key}>
+                      {band.label} ({band.hours})
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </>
+          )}
 
-        <div className="hidden lg:block">
-          <ButtonGroup
-            options={directionOptions}
-            pressFunction={setDirection}
-            selectedIndex={selectedDirectionIndex}
-            line="line-bus"
-          />
+          {direction && setDirection && (
+            <>
+              <div className="hidden lg:block">
+                <ButtonGroup
+                  options={directionOptions}
+                  pressFunction={setDirection}
+                  selectedIndex={selectedDirectionIndex}
+                  line="line-bus"
+                />
+              </div>
+              <label className="flex items-center gap-2 text-sm lg:hidden">
+                <span className="text-stone-600">Direction</span>
+                <select
+                  className="flex-1 rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+                  value={direction}
+                  onChange={(event) => setDirection?.(event.target.value as DirectionFilter)}
+                >
+                  {DIRECTIONS.map((option) => (
+                    <option key={option.key} value={option.key}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </>
+          )}
         </div>
-        <label className="flex items-center gap-2 text-sm lg:hidden">
-          <span className="text-stone-600">Direction</span>
-          <select
-            className="flex-1 rounded-md border border-stone-300 px-2 py-1.5 text-sm"
-            value={direction}
-            onChange={(event) => setDirection(event.target.value as DirectionFilter)}
-          >
-            {DIRECTIONS.map((option) => (
-              <option key={option.key} value={option.key}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
+      )}
     </div>
   );
 };

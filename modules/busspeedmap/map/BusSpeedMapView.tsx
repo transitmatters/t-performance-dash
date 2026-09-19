@@ -80,6 +80,11 @@ interface HoveredSegment {
   properties: BusSpeedSegmentProperties;
 }
 
+interface SegmentStops {
+  from: string;
+  to: string;
+}
+
 interface BusSpeedMapViewProps {
   pmtilesUrl: string;
   period: Period;
@@ -87,6 +92,12 @@ interface BusSpeedMapViewProps {
   timeBand: TimeBand;
   direction: DirectionFilter;
   routeFilter?: string;
+  /**
+   * Narrows routeFilter+direction down to exactly one segment -- used by the leaderboard's
+   * single-segment dialog, which has no route/direction toggles of its own and just pins
+   * these straight from the clicked row. Requires routeFilter to also be set.
+   */
+  segmentStops?: SegmentStops;
   /** Called with the full set of route_ids discovered so far, whenever it grows. */
   onRouteIdsDiscovered?: (routeIds: string[]) => void;
 }
@@ -98,6 +109,7 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
   timeBand,
   direction,
   routeFilter,
+  segmentStops,
   onRouteIdsDiscovered,
 }) => {
   const [hovered, setHovered] = useState<HoveredSegment | undefined>();
@@ -123,10 +135,14 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
     // so this clause only applies to weekly/monthly tiles.
     if (period !== 'daily') clauses.push(['==', ['get', 'day_type'], dayType]);
     if (routeFilter) clauses.push(['==', ['get', 'route_id'], routeFilter]);
+    if (segmentStops) {
+      clauses.push(['==', ['get', 'from_stop_name'], segmentStops.from]);
+      clauses.push(['==', ['get', 'to_stop_name'], segmentStops.to]);
+    }
     // GTFS direction_id: 0 is outbound, 1 is inbound -- matches the hover popup below.
     clauses.push(['==', ['get', 'direction_id'], direction === 'inbound' ? 1 : 0]);
     return ['all', ...clauses] as unknown as FilterSpecification;
-  }, [timeBand, period, dayType, routeFilter, direction]);
+  }, [timeBand, period, dayType, routeFilter, segmentStops, direction]);
 
   const onMouseMove = (event: MapLayerMouseEvent) => {
     const feature = event.features?.[0];
@@ -167,20 +183,23 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
 
   const isFirstRender = useRef(true);
 
-  // Pans/zooms to the selected route on every change, and back out to the network overview
-  // when the filter is cleared. Skipped on mount: the initial view is already correct, and
-  // firing here too would flash a redundant animation to the same spot.
-  useEffect(() => {
-    // Flipped unconditionally on the very first invocation, before the map-readiness check
-    // below -- the map instance isn't attached to the ref yet on initial mount, so gating
-    // this on `map` being truthy would leave isFirstRender stuck true until whatever
-    // routeFilter change happens to be the first one after the map finishes loading,
-    // silently swallowing that pan/zoom instead of skipping only the true initial render.
-    const skippingInitialRender = isFirstRender.current;
-    isFirstRender.current = false;
+  // Cancels whatever fly-to retry is still pending from the previous call to runFocusFlight,
+  // if any -- shared across all its call sites (see below) so a stale retry can never land
+  // after a newer one has already taken over.
+  const cancelPendingFlightRef = useRef<() => void>(() => {});
+
+  // Pans/zooms to the selected route (or, in segment-focus mode, the one selected segment), and
+  // back out to the network overview when the filter is cleared. A plain function rather than
+  // the effect itself: segment-focus mode needs a second trigger for it (the map's own onLoad,
+  // wired up below) to cover the case where the effect first runs before react-map-gl has
+  // attached the underlying maplibre-gl instance to the ref -- in which case this silently
+  // no-ops via the guard just below, and, for a dialog whose segment is fixed for its whole
+  // lifetime, nothing else would ever come along to retry it.
+  const runFocusFlight = useCallback(() => {
+    cancelPendingFlightRef.current();
 
     const map = mapRef.current?.getMap();
-    if (!map || skippingInitialRender) return;
+    if (!map) return;
 
     if (!routeFilter) {
       map.easeTo({
@@ -191,12 +210,20 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
       return;
     }
 
-    const routeFilterExpression: FilterSpecification = ['==', ['get', 'route_id'], routeFilter];
+    const focusFilterClauses: FilterSpecification[] = [['==', ['get', 'route_id'], routeFilter]];
+    if (segmentStops) {
+      focusFilterClauses.push(
+        ['==', ['get', 'from_stop_name'], segmentStops.from],
+        ['==', ['get', 'to_stop_name'], segmentStops.to],
+        ['==', ['get', 'direction_id'], direction === 'inbound' ? 1 : 0]
+      );
+    }
+    const focusFilterExpression = ['all', ...focusFilterClauses] as unknown as FilterSpecification;
 
-    const boundsOfLoadedRoute = (): LngLatBounds | undefined => {
+    const boundsOfLoadedFocus = (): LngLatBounds | undefined => {
       const features = map.querySourceFeatures(SOURCE_ID, {
         sourceLayer: PMTILES_SOURCE_LAYER,
-        filter: routeFilterExpression,
+        filter: focusFilterExpression,
       }) as MapGeoJSONFeature[];
       if (!features.length) return undefined;
 
@@ -211,27 +238,60 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
     };
 
     let cancelled = false;
-    // Bounded to one retry: a route's tiles may not be loaded yet if the user was panned
-    // somewhere else, so jump (no animation) to the low zoom that covers the whole network --
-    // per PMTILES_SOURCE_LAYER's zoom range, that's guaranteed to have every route's geometry
-    // -- and try again once those tiles are in. If a route still has nothing after that, its
-    // segments are missing at all zooms and there's nothing sensible left to fly to.
+    cancelPendingFlightRef.current = () => {
+      cancelled = true;
+    };
+
+    // Bounded to one retry: tiles for the focus may not be loaded yet if the user (or, on
+    // first mount in segment-focus mode, the default view) was somewhere else, so jump (no
+    // animation) to the low zoom that covers the whole network -- per PMTILES_SOURCE_LAYER's
+    // zoom range, that's guaranteed to have every route's geometry -- and try again once those
+    // tiles are in. If the focus still has nothing after that, it's missing at all zooms and
+    // there's nothing sensible left to fly to.
     const attempt = (isRetry: boolean) => {
       if (cancelled) return;
-      const bounds = boundsOfLoadedRoute();
+      const bounds = boundsOfLoadedFocus();
       if (bounds) {
-        map.fitBounds(bounds, { padding: 48, duration: 800, maxZoom: 15 });
+        // A single segment is often just one short block -- a much tighter maxZoom than a
+        // whole route so the dialog map actually reads at street level instead of stopping at
+        // the same zoom a multi-mile route would.
+        map.fitBounds(bounds, { padding: 48, duration: 800, maxZoom: segmentStops ? 18 : 15 });
       } else if (!isRetry) {
         map.once('idle', () => attempt(true));
         map.jumpTo({ center: [BOSTON_CENTER.longitude, BOSTON_CENTER.latitude], zoom: 8 });
       }
     };
     attempt(false);
+  }, [routeFilter, segmentStops, direction]);
 
-    return () => {
-      cancelled = true;
-    };
-  }, [routeFilter]);
+  // What the effect below reacts to. For an ordinary route selection that's just the route id
+  // -- direction is a display toggle there, not part of what to fly to. In segment-focus mode
+  // direction and the stop names are folded in too, since together with the route they pin
+  // down one exact line rather than a whole route's worth of them. Keeping this a plain route
+  // id in the ordinary case (rather than always including direction) matters: it means
+  // toggling direction on the full map never re-triggers a fly-to, preserving today's
+  // "direction is just a filter, not a fly-to" feel.
+  const focusKey = segmentStops
+    ? `${routeFilter ?? ''}|${direction}|${segmentStops.from}|${segmentStops.to}`
+    : routeFilter;
+
+  // Re-runs the fly-to on every focus change, and back out to the network overview when the
+  // filter is cleared. Skipped on mount for an ordinary route selection: the initial view is
+  // already correct, and firing here too would flash a redundant animation to the same spot.
+  // Segment-focus mode has no such "already correct" default, so it flies in on mount too
+  // (backstopped by the map's own onLoad below, in case the map isn't attached yet at this
+  // point).
+  useEffect(() => {
+    const skippingInitialRender = isFirstRender.current && !segmentStops;
+    isFirstRender.current = false;
+    if (skippingInitialRender) return;
+
+    runFocusFlight();
+    return () => cancelPendingFlightRef.current();
+    // runFocusFlight is recreated only when focusKey's own inputs (routeFilter, direction,
+    // segmentStops) change, so it's redundant here -- focusKey is the one true dependency.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusKey]);
 
   return (
     <Map
@@ -245,6 +305,13 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
       onMouseMove={onMouseMove}
       onMouseLeave={() => setHovered(undefined)}
       onIdle={onIdle}
+      // Backstops the focus effect above for the case it ran before react-map-gl had
+      // attached the underlying maplibre-gl instance to the ref (runFocusFlight's own `!map`
+      // guard makes that a silent no-op there). Most relevant to segment-focus mode, whose
+      // dialog mounts with its focus already fixed and so gets no later focusKey change to
+      // retry on; harmless for the ordinary route page, where this just re-eases to the same
+      // default view nothing has moved from yet.
+      onLoad={runFocusFlight}
     >
       <NavigationControl position="top-right" showCompass={false} />
       <Source id={SOURCE_ID} type="vector" url={`pmtiles://${pmtilesUrl}`}>
