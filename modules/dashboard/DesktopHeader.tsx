@@ -39,6 +39,7 @@ export const DesktopHeader: React.FC = () => {
     crRoute,
     ferryRoute,
     hasStationStore: ALL_PAGES[page]?.hasStationStore,
+    hasRouteSelector: ALL_PAGES[page]?.hasRouteSelector,
   };
 
   return (

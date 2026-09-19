@@ -66,3 +66,27 @@ export const LINE_OBJECTS: LineObject = {
     color: COLORS.mbta.ferry,
   },
 };
+
+/**
+ * MBTA's "Key Bus Routes" -- the system's highest-ridership routes, held to more frequent
+ * service standards. These are raw GTFS route_ids, the granularity bus trip-metrics data
+ * (e.g. the speed leaderboard) is keyed by -- NOT the dashboard's curated BusRoute labels,
+ * which group some of these into composites (114/116/117 rather than 114, 116, 117).
+ */
+export const KEY_BUS_ROUTE_IDS: string[] = [
+  '1',
+  '15',
+  '22',
+  '23',
+  '28',
+  '32',
+  '39',
+  '57',
+  '66',
+  '71',
+  '73',
+  '77',
+  '111',
+  '116',
+  '117',
+];

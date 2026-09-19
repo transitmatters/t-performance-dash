@@ -13,6 +13,7 @@ interface ControlPanelProps {
   line: Line | undefined;
   ferryRoute: FerryRoute | undefined;
   hasStationStore?: boolean;
+  hasRouteSelector?: boolean;
 }
 
 const isTripsSection = (dateStoreSection: DateStoreSection) =>
@@ -29,12 +30,13 @@ export const PrimaryControls: React.FC<ControlPanelProps> = ({
   dateStoreSection,
   line,
   hasStationStore,
+  hasRouteSelector = true,
 }) => {
   if (!hasDateControl(dateStoreSection)) return null;
   const queryType = dateStoreSection === 'singleTrips' ? 'single' : 'range';
   return (
     <div className="flex shrink-0 flex-row flex-wrap items-center gap-x-2 gap-y-2 overflow-visible">
-      <RouteSelector />
+      {hasRouteSelector && <RouteSelector />}
       {/* The toggle switches between the two trips pages, so pages that merely borrow the
           singleTrips section for date storage (like the bus speed map) shouldn't show it. */}
       {isTripsSection(dateStoreSection) && hasStationStore && <TripModeToggle />}

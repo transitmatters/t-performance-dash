@@ -462,7 +462,10 @@ def get_bus_speed_leaderboard():
     validate_query_params(query_params, ["start_date", "end_date"])
     cache_max_age = cache.get_cache_max_age(query_params)
     try:
-        limit = min(max(int(query_params.get("limit", 10)), 1), 50)
+        # 200 comfortably covers every route the dashboard tracks (~115 as of writing), so a
+        # "show all" request never gets truncated. The full ranked list is already cached in S3
+        # regardless of limit (see bus_speed_leaderboard), so a larger slice costs nothing extra.
+        limit = min(max(int(query_params.get("limit", 10)), 1), 200)
     except ValueError:
         raise BadRequestError("Invalid limit parameter.")
 

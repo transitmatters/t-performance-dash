@@ -352,15 +352,18 @@ const getChartQueryParams = (
   );
 };
 
-const getBusRouteQueryParam = (query: QueryParams) => {
+const getBusRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
+  if (newPage.hasRouteSelector === false) return;
   if (query.busRoute) return { busRoute: query.busRoute };
 };
 
-const getCRRouteQueryParam = (query: QueryParams) => {
+const getCRRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
+  if (newPage.hasRouteSelector === false) return;
   if (query.crRoute) return { crRoute: query.crRoute };
 };
 
-const getFerryRouteQueryParam = (query: QueryParams) => {
+const getFerryRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
+  if (newPage.hasRouteSelector === false) return;
   if (query.ferryRoute) return { ferryRoute: query.ferryRoute };
 };
 
@@ -388,9 +391,9 @@ const getQueryParams = (
     ...getStationQueryParams(currentPage, newPage, query, stationStore),
     ...getDateQueryParams(currentPage, newPage, query, dateStore),
     ...getChartQueryParams(currentPage, newPage, query),
-    ...getBusRouteQueryParam(query),
-    ...getCRRouteQueryParam(query),
-    ...getFerryRouteQueryParam(query),
+    ...getBusRouteQueryParam(newPage, query),
+    ...getCRRouteQueryParam(newPage, query),
+    ...getFerryRouteQueryParam(newPage, query),
   };
 };
 

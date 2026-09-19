@@ -1,9 +1,8 @@
+import { KEY_BUS_ROUTE_IDS } from '../../../common/constants/lines';
 import type { LineData } from '../types';
 
 const colorLines = ['red', 'green', 'blue', 'orange', 'silver'];
-const keyBusRoutes = new Set(
-  [1, 15, 22, 23, 28, 32, 39, 57, 66, 71, 73, 77, 111, 116, 117].map(String)
-);
+const keyBusRoutes = new Set(KEY_BUS_ROUTE_IDS);
 
 const kind = (line: LineData) => {
   if (colorLines.includes(line.lineKind)) {

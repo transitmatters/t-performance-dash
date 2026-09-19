@@ -12,6 +12,7 @@ import {
   faCalendarXmark,
   faTrain,
   faMap,
+  faRankingStar,
 } from '@fortawesome/free-solid-svg-icons';
 import type { Line } from '../types/lines';
 
@@ -34,6 +35,7 @@ export enum PAGES {
   // Must stay identical to the URL segment: getPage() in common/utils/router.tsx returns
   // the raw path segment for a top-level page, and ALL_PAGES is indexed by the result.
   speedmap = 'speedmap',
+  leaderboard = 'leaderboard',
 }
 
 export type DateStoreSection =
@@ -46,6 +48,9 @@ export type PageMetadata = {
   lines: Line[];
   icon: IconDefinition;
   hasStationStore?: boolean;
+  // Defaults to true. The leaderboard ranks across all routes at once, so it has no single
+  // route to parameterize the page with.
+  hasRouteSelector?: boolean;
   dateStoreSection: DateStoreSection;
   title?: string;
 };
@@ -208,6 +213,16 @@ export const ALL_PAGES: PageMap = {
     // sharing it means the chosen service date carries over to and from the trips pages.
     dateStoreSection: 'singleTrips',
   },
+  leaderboard: {
+    key: 'leaderboard',
+    path: '/leaderboard',
+    name: 'Leaderboard',
+    title: 'Bus speed leaderboard',
+    lines: ['line-bus'],
+    icon: faRankingStar,
+    hasRouteSelector: false,
+    dateStoreSection: 'line',
+  },
 };
 
 /* Groups of pages for tab sections */
@@ -216,7 +231,12 @@ export const TRIP_PAGES = [ALL_PAGES.singleTrips, ALL_PAGES.multiTrips];
 /* Multi-day trips is reached from the in-page TripModeToggle, not the sidebar */
 export const NAV_TRIP_PAGES = [ALL_PAGES.singleTrips];
 
-export const BUS_OVERVIEW = [ALL_PAGES.ridership, ALL_PAGES.speed, ALL_PAGES.speedmap];
+export const BUS_OVERVIEW = [
+  ALL_PAGES.ridership,
+  ALL_PAGES.speed,
+  ALL_PAGES.speedmap,
+  ALL_PAGES.leaderboard,
+];
 
 export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.ridership];
 
