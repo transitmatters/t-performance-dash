@@ -1,4 +1,5 @@
 import React from 'react';
+import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import type { BusSpeedSegmentLeaderboardEntry } from '../types';
 
 interface BusSpeedSegmentLeaderboardProps {
@@ -25,7 +26,9 @@ export const BusSpeedSegmentLeaderboard: React.FC<BusSpeedSegmentLeaderboardProp
               <span className="w-5 shrink-0 text-right text-stone-400">{index + 1}</span>
               <span className="flex flex-col">
                 <span>
-                  <span className="font-semibold text-stone-900">Route {entry.route_id}</span>
+                  <span className="font-semibold text-stone-900">
+                    Route {getBusRouteDisplayName(entry.route_id)}
+                  </span>
                   <span className="text-stone-600">
                     {' '}
                     · {entry.direction_id === 1 ? 'Inbound' : 'Outbound'}

@@ -8,6 +8,7 @@ import type {
   FilterSpecification,
   MapGeoJSONFeature,
 } from 'maplibre-gl';
+import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import {
   BOSTON_CENTER,
   MAP_MAX_BOUNDS,
@@ -354,7 +355,7 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
         >
           <div className="text-xs text-stone-900">
             <p className="font-semibold">
-              Route {hovered.properties.route_id}
+              Route {getBusRouteDisplayName(hovered.properties.route_id)}
               <span className="font-normal text-stone-600">
                 {' '}
                 · {hovered.properties.direction_id === 1 ? 'Inbound' : 'Outbound'}

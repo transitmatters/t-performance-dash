@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../../../common/components/ui/dialog';
+import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import { BusSpeedMapViewLazy } from '../map/BusSpeedMapViewLazy';
 import type { BusSpeedSegmentLeaderboardEntry, DayType, Period, TimeBand } from '../types';
 
@@ -79,7 +80,7 @@ export const BusSpeedSegmentMapDialog: React.FC<BusSpeedSegmentMapDialogProps> =
           <>
             <DialogHeader>
               <DialogTitle>
-                Route {lastEntry.route_id}
+                Route {getBusRouteDisplayName(lastEntry.route_id)}
                 <span className="font-normal text-stone-600">
                   {' '}
                   · {lastEntry.direction_id === 1 ? 'Inbound' : 'Outbound'}
