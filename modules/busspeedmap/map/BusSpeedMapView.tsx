@@ -74,6 +74,11 @@ const zoomWidth = (
 
 const lineWidth = zoomWidth(1.5, 3.5, 6);
 const casingWidth = zoomWidth(3.5, 5.5, 8);
+const hoverHaloWidth = zoomWidth(7, 11, 16);
+
+/** MBTA bus brand yellow (COLORS.mbta.bus) -- stands out against the speed ramp and the
+ * basemap alike, and reads as "bus" rather than an arbitrary selection color. */
+const HOVER_HALO_COLOR = '#FFC72C';
 
 interface HoveredSegment {
   longitude: number;
@@ -144,6 +149,21 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
     clauses.push(['==', ['get', 'direction_id'], direction === 'inbound' ? 1 : 0]);
     return ['all', ...clauses] as unknown as FilterSpecification;
   }, [timeBand, period, dayType, routeFilter, segmentStops, direction]);
+
+  // Identifies the exact hovered feature so the halo layer below can single it out -- the
+  // same route_id/direction_id/from/to tuple used as a segment's natural key elsewhere (e.g.
+  // BusSpeedSegmentLeaderboard's list key).
+  const hoveredFilter = useMemo<FilterSpecification | undefined>(() => {
+    if (!hovered) return undefined;
+    const { route_id, direction_id, from_stop_name, to_stop_name } = hovered.properties;
+    return [
+      'all',
+      ['==', ['get', 'route_id'], route_id],
+      ['==', ['get', 'direction_id'], direction_id],
+      ['==', ['get', 'from_stop_name'], from_stop_name],
+      ['==', ['get', 'to_stop_name'], to_stop_name],
+    ] as unknown as FilterSpecification;
+  }, [hovered]);
 
   const onMouseMove = (event: MapLayerMouseEvent) => {
     const feature = event.features?.[0];
@@ -316,6 +336,18 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
     >
       <NavigationControl position="top-right" showCompass={false} />
       <Source id={SOURCE_ID} type="vector" url={`pmtiles://${pmtilesUrl}`}>
+        {/* Sits beneath the casing and line below, so it reads as a glow around the hovered
+            segment rather than covering it. */}
+        {hoveredFilter && (
+          <Layer
+            id="bus-speed-hover-halo"
+            type="line"
+            source-layer={PMTILES_SOURCE_LAYER}
+            filter={hoveredFilter}
+            layout={{ 'line-cap': 'round', 'line-join': 'round' }}
+            paint={{ 'line-color': HOVER_HALO_COLOR, 'line-width': hoverHaloWidth }}
+          />
+        )}
         {/* A dark casing under the ramp. Positron is nearly white, so the pale middle of
             the speed scale would otherwise disappear into the basemap. */}
         <Layer
@@ -352,6 +384,11 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
           closeButton={false}
           closeOnClick={false}
           maxWidth="280px"
+          // Pinned to the same side every time rather than letting MapLibre auto-flip the
+          // anchor near viewport edges -- that default placed the box right over the cursor
+          // (and the segment it's describing) more often than not.
+          anchor="left"
+          offset={16}
         >
           <div className="text-xs text-stone-900">
             <p className="font-semibold">
