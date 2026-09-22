@@ -9,10 +9,10 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/first-interaction@v1
+      - uses: actions/first-interaction@v3
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          pr-message: |
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_message: |
             Hello! Thank you for your contribution.
 
             TransitMatters is a volunteer-run organization, so if you haven't yet we'd appreciate you filling out our volunteer form: https://transitmatters.org/volunteer

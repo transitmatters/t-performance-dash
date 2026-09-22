@@ -95,6 +95,7 @@ export type BusRoute =
   | '80'
   | '83'
   | '85'
+  | '85-legacy'
   | '86'
   | '86-legacy'
   | '87'

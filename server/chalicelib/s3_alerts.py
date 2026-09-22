@@ -73,8 +73,11 @@ def get_v2_alerts(day: date, routes):
             alert (dict): A single alert object.
 
         Returns:
-            bool: True if the alert affects at least one route in ``routes``.
+            bool: True if the alert affects at least one route in ``routes``,
+            or True if ``routes`` is None (no filter applied).
         """
+        if not routes:
+            return True
         targets = routes_for_alert(alert)
         return any(r in targets for r in routes)
 
@@ -101,8 +104,11 @@ def get_v3_alerts(day: date, routes: list[str]):
             alert (dict): A single alert object.
 
         Returns:
-            bool: True if the alert affects at least one route in ``routes``.
+            bool: True if the alert affects at least one route in ``routes``,
+            or True if ``routes`` is None (no filter applied).
         """
+        if not routes:
+            return True
         targets = routes_for_alert(alert)
         return any(r in targets for r in routes)
 

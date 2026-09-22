@@ -117,6 +117,7 @@ import bus_ct2 from './bus_constants/CT2.json';
 import bus_ct3_171 from './bus_constants/CT3-171.json';
 import bus_SL1SL2SL3SLW from './bus_constants/SL1-SL2-SL3-SLW.json';
 import bus_SL4SL5 from './bus_constants/SL4-5.json';
+import legacy_85 from './bus_constants/85-legacy.json';
 import legacy_86 from './bus_constants/86-legacy.json';
 import cr_lowell from './cr_constants/cr-lowell.json';
 import cr_fitchburg from './cr_constants/cr-fitchburg.json';
@@ -198,7 +199,8 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_80,
   ...bus_83,
   ...bus_85,
-  // 86 changed during BNRD
+  ...legacy_85,
+  // 85, 86 changed during BNRD
   ...bus_86,
   ...legacy_86,
   ...bus_87,
