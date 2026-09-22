@@ -37,7 +37,12 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
   const ref = useRef();
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
-  const shuttlingBlocks = getShuttlingBlockAnnotations(data);
+  // Keyed off the fleet metric, not miles_covered: a partial shutdown zeroes the line's
+  // service metrics while cars still ran (and were sampled) on the remaining branches.
+  const shuttlingBlocks = getShuttlingBlockAnnotations(
+    data,
+    (datapoint) => datapoint.avg_car_age !== undefined && datapoint.avg_car_age !== null
+  );
 
   return (
     <ChartBorder>

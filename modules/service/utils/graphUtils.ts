@@ -26,21 +26,28 @@ const alertAnnotationBlockStyle = {
  * This function return ChartJS annotations for date ranges where we do not have data.
  * The range is the datapoint before and after the dates we do not have data, since that makes the block align visually.
  * We use datapoint.value as the determination as to whether there is data. It is set to null when shuttling occurs throughout a day.
+ *
+ * `hasData` defaults to miles_covered, which is the right signal for service and speed.
+ * Charts of a different metric should pass their own: a partial shutdown zeroes the
+ * line's service metrics while other metrics may still have been measured on the
+ * branches that kept running.
  */
 export const getShuttlingBlockAnnotations = (
-  data: DeliveredTripMetrics[]
+  data: DeliveredTripMetrics[],
+  hasData: (datapoint: DeliveredTripMetrics) => boolean = (datapoint) =>
+    Boolean(datapoint.miles_covered)
 ): AnnotationOptions<keyof AnnotationTypeRegistry>[] => {
   let xMin: string | undefined;
   let xMax: string | undefined;
   let insideShuttlingBlock = false;
   const dateBlocks: AnnotationOptions<keyof AnnotationTypeRegistry>[] = [];
   data.forEach((datapoint, index) => {
-    if (!datapoint.miles_covered) {
+    if (!hasData(datapoint)) {
       if (!insideShuttlingBlock) xMin = index > 0 ? data[index - 1].date : undefined;
       xMax = index + 1 < data.length ? data[index + 1].date : undefined;
       insideShuttlingBlock = true;
     }
-    if (insideShuttlingBlock && (datapoint.miles_covered || index + 1 === data.length)) {
+    if (insideShuttlingBlock && (hasData(datapoint) || index + 1 === data.length)) {
       dateBlocks.push({
         type: 'box',
         xMin: xMin,
