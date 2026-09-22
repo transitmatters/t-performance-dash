@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import type { BusSpeedLeaderboardEntry } from '../../../common/types/dataPoints';
-import { getBusRouteSelectionItemHref, useDelimitatedRoute } from '../../../common/utils/router';
+import { getBusSpeedMapRouteHref, useDelimitatedRoute } from '../../../common/utils/router';
 
 interface BusSpeedRouteLeaderboardProps {
   data: BusSpeedLeaderboardEntry[];
@@ -18,7 +18,7 @@ export const BusSpeedRouteLeaderboard: React.FC<BusSpeedRouteLeaderboardProps> =
         return (
           <li key={entry.route}>
             <Link
-              href={getBusRouteSelectionItemHref(entry.route, route)}
+              href={getBusSpeedMapRouteHref(entry.route, route)}
               className="flex items-center justify-between gap-4 py-2 text-sm hover:bg-stone-50"
             >
               <span className="flex items-center gap-3">

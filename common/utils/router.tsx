@@ -231,6 +231,23 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   return href;
 };
 
+/**
+ * Unlike getBusRouteSelectionItemHref, this deliberately navigates rather than reparameterizing
+ * the current page -- the leaderboard's "by route" view has no filtered view of its own to land
+ * on, only the speed map does (via the same `busRoute` param, resolved there against the loaded
+ * tileset's route_ids -- see BusSpeedMapDetails).
+ */
+export const getBusSpeedMapRouteHref = (newRoute: string, route: Route): string => {
+  const { query } = route;
+  delete query.from;
+  delete query.to;
+  const queryParams = query
+    ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
+    : new URLSearchParams();
+  queryParams.append('busRoute', newRoute);
+  return `/bus/speedmap?${queryParams.toString()}`;
+};
+
 export const getCommuterRailRouteSelectionItemHref = (newRoute: string, route: Route): string => {
   const { query, page } = route;
   const currentPage = ALL_PAGES[page] ?? ALL_PAGES['singleTrips'];
