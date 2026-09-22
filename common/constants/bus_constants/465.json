@@ -1,0 +1,42 @@
+{
+  "465": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "service_start": "2026-09-06",
+    "stations": [
+      {
+        "stop_name": "Salem Depot",
+        "branches": null,
+        "station": "salem",
+        "order": 1,
+        "stops": {
+          "1": ["465-1-37150"],
+          "0": ["465-0-37150"]
+        }
+      },
+      {
+        "stop_name": "Liberty Tree Mall",
+        "branches": null,
+        "station": "libtr",
+        "order": 2,
+        "stops": {
+          "1": ["465-1-7270"],
+          "0": ["465-0-7270"]
+        }
+      },
+      {
+        "stop_name": "Danvers Square",
+        "branches": null,
+        "station": "danvr",
+        "order": 3,
+        "stops": {
+          "1": ["465-1-7278"],
+          "0": ["465-0-7278"]
+        }
+      }
+    ]
+  }
+}
