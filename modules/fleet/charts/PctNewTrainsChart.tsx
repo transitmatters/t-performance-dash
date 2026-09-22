@@ -15,6 +15,7 @@ import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartBorder } from '../../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
+import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
 import type { ParamsType } from '../../speed/constants/speeds';
 
 interface PctNewTrainsChartProps {
@@ -38,6 +39,7 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   const lineColor = LINE_COLORS[line ?? 'default'];
+  const shuttlingBlocks = getShuttlingBlockAnnotations(data);
 
   return (
     <ChartBorder>
@@ -99,6 +101,9 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
                 // empty title to set font and leave room for drawTitle fn
                 display: showTitle,
                 text: '',
+              },
+              annotation: {
+                annotations: [...shuttlingBlocks],
               },
             },
             scales: {
