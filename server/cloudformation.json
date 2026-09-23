@@ -199,7 +199,7 @@
           "DefaultRootObject": "index.html",
           "CacheBehaviors": [
             {
-              "PathPattern": "/businsights/*",
+              "PathPattern": "/businsights/BusSpeedSegments/*",
               "TargetOriginId": "businsights-origin",
               "ViewerProtocolPolicy": "redirect-to-https",
               "AllowedMethods": ["GET", "HEAD"],
@@ -287,7 +287,7 @@
         "Name": { "Fn::Sub": "${AWS::StackName}-businsights-rewrite" },
         "AutoPublish": true,
         "FunctionConfig": {
-          "Comment": "Strip the /businsights prefix before hitting the performance bucket.",
+          "Comment": "Strip the /businsights prefix so /businsights/BusSpeedSegments/* maps to BusSpeedSegments/* in the bucket.",
           "Runtime": "cloudfront-js-2.0"
         },
         "FunctionCode": "function handler(event) {\n  var request = event.request;\n  request.uri = request.uri.replace(/^\\/businsights/, '');\n  return request;\n}\n"
