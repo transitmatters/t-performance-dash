@@ -36,7 +36,7 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
   agg = 'weekly',
 }) => {
   const { line, linePath } = useDelimitatedRoute();
-  const ref = useRef();
+  const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
 

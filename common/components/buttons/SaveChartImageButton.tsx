@@ -9,7 +9,7 @@ import { getImageFilename } from '../../utils/csv';
 import { downloadChartAsImage } from '../../utils/image';
 
 interface SaveChartImageButtonProps {
-  chartRef: React.MutableRefObject<Chart | undefined>;
+  chartRef: React.RefObject<Chart | null>;
   datasetName: string;
   startDate: string;
   includeBothStopsForLocation?: boolean;

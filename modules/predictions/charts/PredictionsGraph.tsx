@@ -37,7 +37,7 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
 }) => {
   const { line, linePath } = useDelimitatedRoute();
   const peak = PEAK_SPEED[line ?? 'DEFAULT'];
-  const ref = useRef();
+  const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.week);
   const remainingBlocks = getRemainingBlockAnnotation(

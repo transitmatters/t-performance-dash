@@ -66,7 +66,7 @@ export const ByHourHistogram: React.FC<Props> = (props) => {
     () => stripZeroHoursAndRotateMidnightToEnd(dataWithZeros),
     [dataWithZeros]
   );
-  const ref = useRef();
+  const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
 
   const tooltipFormat = React.useCallback(

@@ -1,4 +1,3 @@
-import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import typescriptEslint from 'typescript-eslint';
 import importX from 'eslint-plugin-import-x';
@@ -7,11 +6,8 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import unusedImports from 'eslint-plugin-unused-imports';
 import prettier from 'eslint-plugin-prettier';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
 import globals from 'globals';
-
-const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-});
 
 export default typescriptEslint.config(
   // Global ignores
@@ -22,7 +18,7 @@ export default typescriptEslint.config(
   // Base configs
   js.configs.recommended,
   ...typescriptEslint.configs.recommended,
-  ...compat.extends('next/core-web-vitals'),
+  ...nextCoreWebVitals,
   eslintConfigPrettier,
 
   // Main config
@@ -90,6 +86,14 @@ export default typescriptEslint.config(
       'react/no-unescaped-entities': 'off',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
+      // eslint-plugin-react-hooks v7 adds a batch of new React Compiler
+      // readiness rules; downgraded to warn for now so existing patterns
+      // don't fail CI while they get addressed incrementally.
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/immutability': 'warn',
+      'react-hooks/refs': 'warn',
+      'react-hooks/static-components': 'warn',
+      'react-hooks/preserve-manual-memoization': 'warn',
       'react/react-in-jsx-scope': 'error',
       'react/no-unused-prop-types': 'warn',
       'unused-imports/no-unused-imports': 'error',
