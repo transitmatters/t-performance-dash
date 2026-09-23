@@ -12,6 +12,7 @@ from datetime import date, datetime, timedelta
 from botocore.exceptions import ClientError
 import json
 import time
+import zlib
 import pandas as pd
 import numpy as np
 from chalicelib.constants import DATE_FORMAT_BACKEND
@@ -240,17 +241,23 @@ def _read_cached_leaderboard(start_date: str | date, end_date: str | date):
     key = _leaderboard_cache_key(start_date, end_date)
     try:
         cached = json.loads(s3.download(key))
+        computed_at = float(cached["computed_at"])
+        data = cached["data"]
     except ClientError as ex:
         if ex.response["Error"]["Code"] not in ("NoSuchKey", "404"):
             raise
         return None
-    except (json.JSONDecodeError, KeyError):
+    # Anything unreadable -- not zlib, not UTF-8, not JSON, or not the expected shape -- is
+    # treated as a miss so the caller rescans and overwrites it, rather than 500ing forever.
+    except (zlib.error, UnicodeDecodeError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+        return None
+    if not isinstance(data, list):
         return None
 
     max_age = cache.get_cache_max_age({"end_date": end_date})
-    if time.time() - cached["computed_at"] >= max_age:
+    if time.time() - computed_at >= max_age:
         return None
-    return cached["data"]
+    return data
 
 
 def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: int = 10):

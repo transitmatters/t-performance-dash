@@ -2,6 +2,7 @@
 
 import json
 import time
+import zlib
 
 import pytest
 from botocore.exceptions import ClientError
@@ -116,6 +117,28 @@ class TestBusSpeedLeaderboardCache:
 
         assert len(scan_calls) == 1
         assert [entry["route"] for entry in result] == ["66", "1"]
+
+    @pytest.mark.parametrize(
+        "download_error, stored",
+        [
+            (zlib.error("incorrect header check"), None),
+            (UnicodeDecodeError("utf-8", b"\xff", 0, 1, "invalid start byte"), None),
+            (None, json.dumps({"data": []})),  # missing computed_at
+            (None, json.dumps({"computed_at": "yesterday", "data": []})),
+            (None, json.dumps({"computed_at": time.time(), "data": "nope"})),
+            (None, json.dumps(["not", "a", "dict"])),
+        ],
+    )
+    def test_unreadable_cache_recomputes(self, monkeypatch, download_error, stored):
+        fake_s3 = FakeS3(initial=stored, download_error=download_error)
+        monkeypatch.setattr(speed.s3, "download", fake_s3.download)
+        monkeypatch.setattr(speed.s3, "upload", fake_s3.upload)
+        monkeypatch.setattr(speed.dynamo, "scan_trip_metrics_in_range", lambda table, start, end: ROWS)
+
+        result = speed.bus_speed_leaderboard(START_DATE, END_DATE, limit=10)
+
+        assert [entry["route"] for entry in result] == ["66", "1"]
+        assert len(fake_s3.upload_calls) == 1
 
     def test_unrelated_client_error_propagates(self, monkeypatch):
         fake_s3 = FakeS3(download_error=ClientError({"Error": {"Code": "AccessDenied"}}, "GetObject"))
