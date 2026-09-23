@@ -94,7 +94,21 @@ def query_daily_trips_on_line(table_name: str, line: str, start_date: str | date
     Returns:
       list[list[dict]]: A list of result lists, one per route on the line.
     """
-    route_keys = constants.LINE_TO_ROUTE_MAP[line]
+    return query_daily_trips_on_routes(table_name, constants.LINE_TO_ROUTE_MAP[line], start_date, end_date)
+
+
+def query_daily_trips_on_routes(table_name: str, route_keys, start_date: str | date, end_date: str | date):
+    """Query daily trip metrics for several routes, in parallel.
+
+    Args:
+      table_name: str: The DynamoDB table name to query.
+      route_keys: Iterable of route IDs (partition keys).
+      start_date: str | date: Start of date range (inclusive).
+      end_date: str | date: End of date range (inclusive).
+
+    Returns:
+      list[list[dict]]: A list of result lists, one per route.
+    """
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
         futures = [
             executor.submit(

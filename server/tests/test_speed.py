@@ -198,3 +198,28 @@ class TestBusTripMetricsByRoute:
         with pytest.raises(speed.BadRequestError):
             speed.trip_metrics_by_bus_route(self.params(agg="hourly"))
 
+    def test_grouped_routes_summed_per_day(self, monkeypatch):
+        calls = []
+
+        def fake_query_routes(table, routes, start, end):
+            calls.append(list(routes))
+            return [
+                [{"route": "114", "date": "2026-01-05", "miles_covered": 1, "total_time": 60, "count": 1}],
+                [
+                    {"route": "116", "date": "2026-01-05", "miles_covered": 2, "total_time": 120, "count": 2},
+                    {"route": "116", "date": "2026-01-06", "miles_covered": 3, "total_time": 180, "count": 3},
+                ],
+            ]
+
+        monkeypatch.setattr(speed.dynamo, "query_daily_trips_on_routes", fake_query_routes)
+        result = speed.trip_metrics_by_bus_route(self.params(route="114, 116"))
+
+        assert calls == [["114", "116"]]
+        assert [(row["date"], row["miles_covered"], row["route"]) for row in result] == [
+            ("2026-01-05", 3, "114,116"),
+            ("2026-01-06", 3, "114,116"),
+        ]
+
+    def test_blank_route_rejected(self, query_calls):
+        with pytest.raises(speed.BadRequestError):
+            speed.trip_metrics_by_bus_route(self.params(route=" , "))

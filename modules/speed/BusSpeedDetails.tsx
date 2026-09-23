@@ -6,6 +6,7 @@ import { useBusTripMetrics } from '../../common/api/hooks/busTripMetrics';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { Widget } from '../../common/components/widgets';
+import { getBusRouteIds } from '../../common/constants/lines';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -27,7 +28,8 @@ export function BusSpeedDetails() {
     {
       start_date: startDate,
       end_date: endDate,
-      route: busRoute,
+      // Grouped labels (e.g. 114/116/117) are summed server-side across their route_ids.
+      route: busRoute ? getBusRouteIds(busRoute).join(',') : undefined,
       agg: config.agg,
     },
     enabled

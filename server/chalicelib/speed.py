@@ -23,7 +23,8 @@ class BusTripMetricsParams(TypedDict):
     Attributes:
         start_date: Start of date range (YYYY-MM-DD).
         end_date: End of date range (YYYY-MM-DD).
-        route: Bus route_id, e.g. ``"1"``, ``"57"``, ``"111"``.
+        route: Bus route_id, e.g. ``"1"``, ``"57"``, ``"111"``, or a comma-separated list
+            (``"114,116,117"``) for the dashboard's grouped routes, which are summed per period.
         agg: Optional aggregation level (``"daily"``, ``"weekly"``, ``"monthly"``). Defaults to daily.
     """
 
@@ -186,14 +187,22 @@ def trip_metrics_by_bus_route(params: BusTripMetricsParams):
         raise ForbiddenError(
             f"Date range too long. The maximum number of requested values is {BUS_TRIP_METRICS_MAX_DAYS}."
         )
-    rows = dynamo.query_daily_trips_on_route(BUS_TRIP_METRICS_TABLE, route, start_date, end_date)
-    if agg == "daily":
-        return rows
-    return _rollup_bus_trip_metrics(rows, agg)
+    route_ids = [route_id.strip() for route_id in route.split(",") if route_id.strip()]
+    if not route_ids:
+        raise BadRequestError("Missing or invalid parameters.")
+    if len(route_ids) == 1:
+        rows = dynamo.query_daily_trips_on_route(BUS_TRIP_METRICS_TABLE, route_ids[0], start_date, end_date)
+        if agg == "daily":
+            return rows
+    else:
+        per_route = dynamo.query_daily_trips_on_routes(BUS_TRIP_METRICS_TABLE, route_ids, start_date, end_date)
+        rows = [row for route_rows in per_route for row in route_rows]
+    return _rollup_bus_trip_metrics(rows, agg, route=",".join(route_ids))
 
 
-def _rollup_bus_trip_metrics(rows: list[dict], agg: str) -> list[dict]:
-    """Sum daily bus rows into ISO weeks (dated by their Monday) or calendar months (dated the 1st).
+def _rollup_bus_trip_metrics(rows: list[dict], agg: str, route: str) -> list[dict]:
+    """Sum daily bus rows (from one or more routes) per day, ISO week (dated by its Monday),
+    or calendar month (dated the 1st).
 
     Per-day medians/means can't be combined by summing, so rolled-up rows carry only the
     summed fields plus date and route.
@@ -201,10 +210,15 @@ def _rollup_bus_trip_metrics(rows: list[dict], agg: str) -> list[dict]:
     buckets = {}
     for row in rows:
         day = datetime.strptime(row["date"], DATE_FORMAT_BACKEND).date()
-        period_start = day - timedelta(days=day.weekday()) if agg == "weekly" else day.replace(day=1)
+        if agg == "weekly":
+            period_start = day - timedelta(days=day.weekday())
+        elif agg == "monthly":
+            period_start = day.replace(day=1)
+        else:
+            period_start = day
         entry = buckets.setdefault(
             period_start,
-            {"date": period_start.isoformat(), "route": row["route"], **{field: 0 for field in BUS_SUMMED_FIELDS}},
+            {"date": period_start.isoformat(), "route": route, **{field: 0 for field in BUS_SUMMED_FIELDS}},
         )
         for field in BUS_SUMMED_FIELDS:
             entry[field] += row.get(field) or 0

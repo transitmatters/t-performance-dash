@@ -108,3 +108,14 @@ export const BUS_ROUTE_ID_TO_DISPLAY_NAME: Record<string, string> = {
 
 export const getBusRouteDisplayName = (routeId: string): string =>
   BUS_ROUTE_ID_TO_DISPLAY_NAME[routeId] ?? routeId;
+
+const BUS_DISPLAY_NAME_TO_ROUTE_ID: Record<string, string> = Object.fromEntries(
+  Object.entries(BUS_ROUTE_ID_TO_DISPLAY_NAME).map(([routeId, name]) => [name, routeId])
+);
+
+/**
+ * Raw GTFS route_ids behind a curated BusRoute label, e.g. '114/116/117' -> ['114', '116', '117']
+ * and 'SL1/SL2/SL3/SLW' -> ['741', '742', '743', '746']. Trip-metrics data is keyed by these.
+ */
+export const getBusRouteIds = (busRoute: string): string[] =>
+  busRoute.split('/').map((name) => BUS_DISPLAY_NAME_TO_ROUTE_ID[name] ?? name);
