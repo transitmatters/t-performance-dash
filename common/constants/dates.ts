@@ -114,9 +114,10 @@ export const getDatePickerBounds = (
 ): { minDate: string; maxDate: string } => {
   const { minDate, maxDate } = getMinMaxDatesForRoute(tab, route);
 
-  // The speed map reads the LAMP-derived segment files, which cover a different (and much
-  // shorter) window than the rest of the bus data, and are published a day in arrears.
-  if (page === 'speedmap') {
+  // The speed map and the leaderboard's segment view read the LAMP-derived segment files,
+  // which cover a different (and much shorter) window than the rest of the bus data, and are
+  // published a day in arrears. The leaderboard's route view shares the same date control.
+  if (page === 'speedmap' || page === 'leaderboard') {
     return {
       minDate: BUS_SPEED_MAP_MIN_DATE,
       maxDate: YESTERDAY_STRING,
