@@ -1,6 +1,4 @@
-import { PEAK_SCHEDULED_SERVICE } from '../../../common/constants/baselines';
 import type { DeliveredTripMetrics, ScheduledService } from '../../../common/types/dataPoints';
-import type { Line } from '../../../common/types/lines';
 
 export const getServiceWidgetValues = (
   deliveredTripMetrics: DeliveredTripMetrics[],
@@ -37,7 +35,7 @@ export const getServiceWidgetValues = (
 export const getPercentageData = (
   data: DeliveredTripMetrics[],
   predictedData: ScheduledService,
-  line?: Line
+  peakService: number
 ) => {
   const scheduled = data.map((datapoint, index) => {
     return datapoint.miles_covered && predictedData.counts[index]
@@ -45,9 +43,7 @@ export const getPercentageData = (
       : Number.NaN;
   });
   const peak = data.map((datapoint) =>
-    datapoint.miles_covered
-      ? (100 * datapoint.count) / PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
-      : Number.NaN
+    datapoint.miles_covered ? (100 * datapoint.count) / peakService : Number.NaN
   );
   return { scheduled: scheduled, peak };
 };
