@@ -41,7 +41,9 @@ import bus_52_59 from './bus_constants/52-59.json';
 import bus_51 from './bus_constants/51.json';
 import bus_55 from './bus_constants/55.json';
 import bus_57 from './bus_constants/57.json';
-import bus_60_65 from './bus_constants/60-65.json';
+import bus_60 from './bus_constants/60.json';
+import bus_65 from './bus_constants/65.json';
+import legacy_60_65 from './bus_constants/60-65-legacy.json';
 import bus_64_68 from './bus_constants/64-68.json';
 import bus_62_76 from './bus_constants/62-76.json';
 import bus_66 from './bus_constants/66.json';
@@ -101,8 +103,10 @@ import bus_424_450_456 from './bus_constants/424-450-456.json';
 import bus_426_428 from './bus_constants/426-428.json';
 import bus_429 from './bus_constants/429.json';
 import bus_434_435_436 from './bus_constants/434-435-436.json';
+import legacy_434_435_436 from './bus_constants/434-435-436-legacy.json';
 import bus_439_441_442 from './bus_constants/439-441-442.json';
-import bus_451_465 from './bus_constants/451-465.json';
+import bus_451 from './bus_constants/451.json';
+import bus_465 from './bus_constants/465.json';
 import bus_455 from './bus_constants/455.json';
 import bus_501_503 from './bus_constants/501-503.json';
 import bus_502_504 from './bus_constants/502-504.json';
@@ -113,6 +117,7 @@ import bus_104_109 from './bus_constants/104-109.json';
 import bus_61_70_170 from './bus_constants/61-70-170.json';
 import bus_114_116_117 from './bus_constants/114-116-117.json';
 import bus_220_221_222 from './bus_constants/220-221-222.json';
+import legacy_220_221_222 from './bus_constants/220-221-222-legacy.json';
 import bus_ct2 from './bus_constants/CT2.json';
 import bus_ct3_171 from './bus_constants/CT3-171.json';
 import bus_SL1SL2SL3SLW from './bus_constants/SL1-SL2-SL3-SLW.json';
@@ -184,7 +189,10 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_52_59,
   ...bus_55,
   ...bus_57,
-  ...bus_60_65,
+  ...bus_60,
+  ...bus_65,
+  // 65 changed during the Fall 2026 Better Bus Network changes; 60/65 was previously one combined route
+  ...legacy_60_65,
   ...bus_61_70_170,
   ...bus_62_76,
   ...bus_64_68,
@@ -239,6 +247,8 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_215,
   ...bus_217_245,
   ...bus_220_221_222,
+  // 220, 222 changed during the Fall 2026 Better Bus Network changes
+  ...legacy_220_221_222,
   ...bus_225_226,
   ...bus_230,
   ...bus_236,
@@ -251,8 +261,12 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_426_428,
   ...bus_429,
   ...bus_434_435_436,
+  // 435 changed during the Fall 2026 Better Bus Network changes
+  ...legacy_434_435_436,
   ...bus_439_441_442,
-  ...bus_451_465,
+  ...bus_451,
+  // 465 restored as a pilot route during the Fall 2026 Better Bus Network changes; previously combined with 451
+  ...bus_465,
   ...bus_455,
   ...bus_501_503,
   ...bus_502_504,
