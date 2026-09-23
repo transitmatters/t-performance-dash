@@ -71,7 +71,10 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
       dateStoreSection === 'system'
     ) {
       return (
-        <div className="p-1">
+        <div className="flex flex-row flex-wrap items-center gap-x-2 gap-y-2 p-1">
+          {/* Matches desktop PrimaryControls; RouteSelector renders nothing for lines without
+              routes (rail, System), so this only shows on bus/CR/ferry pages. */}
+          {hasRouteSelector && <RouteSelector />}
           <DateControl dateStoreSection={dateStoreSection} queryType={'range'} />
         </div>
       );
