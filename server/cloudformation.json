@@ -207,7 +207,7 @@
               "ForwardedValues": {
                 "QueryString": "false"
               },
-              "DefaultTTL": 86400,
+              "DefaultTTL": 3600,
               "MinTTL": 0,
               "MaxTTL": 31536000,
               "FunctionAssociations": [
@@ -251,7 +251,7 @@
               "ErrorCode": "404",
               "ResponsePagePath": "/404.html",
               "ResponseCode": "404",
-              "ErrorCachingMinTTL": "86400"
+              "ErrorCachingMinTTL": "300"
             }
           ],
           "PriceClass": "PriceClass_100",
