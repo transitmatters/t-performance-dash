@@ -10,34 +10,13 @@ export type Line =
   | 'line-RIDE';
 
 export type LineShort =
-  | 'Red'
-  | 'Orange'
-  | 'Green'
-  | 'Blue'
-  | 'Mattapan'
-  | 'Bus'
-  | 'Commuter Rail'
-  | 'Ferry'
-  | 'The RIDE';
+  'Red' | 'Orange' | 'Green' | 'Blue' | 'Mattapan' | 'Bus' | 'Commuter Rail' | 'Ferry' | 'The RIDE';
 
 export type LinePath =
-  | 'red'
-  | 'orange'
-  | 'green'
-  | 'blue'
-  | 'mattapan'
-  | 'bus'
-  | 'commuter-rail'
-  | 'ferry'
-  | 'the-ride';
+  'red' | 'orange' | 'green' | 'blue' | 'mattapan' | 'bus' | 'commuter-rail' | 'ferry' | 'the-ride';
 
 export type FerryRoute =
-  | 'Boat-F1'
-  | 'Boat-F4'
-  | 'Boat-F6'
-  | 'Boat-F7'
-  | 'Boat-EastBoston'
-  | 'Boat-Lynn';
+  'Boat-F1' | 'Boat-F4' | 'Boat-F6' | 'Boat-F7' | 'Boat-EastBoston' | 'Boat-Lynn';
 
 /** All currently available Bus Routes */
 export type BusRoute =

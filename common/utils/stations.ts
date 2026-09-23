@@ -136,7 +136,7 @@ const createStationDistanceIndex = () => {
   const index: Record<string, Distance> = {};
 
   for (const [key, value] of Object.entries(station_distances)) {
-    index[key] = value as Distance;
+    index[key] = value;
   }
 
   return index;

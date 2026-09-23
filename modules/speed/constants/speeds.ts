@@ -19,8 +19,7 @@ export type ParamsType = {
   unit: 'day' | 'month' | 'year';
   getWidgetTitle: (date: string) => string;
   callbacks?:
-    | DeepPartial<TooltipCallbacks<'line', TooltipModel<'line'>, TooltipItem<'line'>>>
-    | undefined;
+    DeepPartial<TooltipCallbacks<'line', TooltipModel<'line'>, TooltipItem<'line'>>> | undefined;
 };
 
 export const getSpeedGraphConfig = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) => {

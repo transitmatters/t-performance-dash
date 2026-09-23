@@ -44,7 +44,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
   const allData = useSlowzoneAllData();
   const isMobile = !useBreakpoint('sm');
   const { value: direction, control: directionControl } = useChartToggle(
-    'northbound' as Direction,
+    'northbound',
     DIRECTION_OPTIONS
   );
 

@@ -514,10 +514,10 @@ export const OVERVIEW_OPTIONS: {
 export type OverviewDatePresetKey = keyof typeof OverviewRangeTypes;
 
 export enum OverviewRangeTypes {
-  'week' = 'Past week',
-  'month' = 'Past month',
-  'year' = 'Past year',
-  'all' = 'All time',
+  week = 'Past week',
+  month = 'Past month',
+  year = 'Past year',
+  all = 'All time',
 }
 
 export const RANGE_DATE_KEYS = Object.fromEntries(
