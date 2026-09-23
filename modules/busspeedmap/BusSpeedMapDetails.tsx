@@ -37,18 +37,9 @@ export function BusSpeedMapDetails() {
   const [dayType, setDayType] = useState<DayType>(DEFAULT_DAY_TYPE);
   const [timeBand, setTimeBand] = useState<TimeBand>(DEFAULT_TIME_BAND);
   const [direction, setDirection] = useState<DirectionFilter>(DEFAULT_DIRECTION);
-  // Populated progressively from loaded vector tiles rather than known up front — see
-  // BusSpeedMapView's onIdle handler.
-  const [routeIds, setRouteIds] = useState<string[]>([]);
 
   const segments = useBusSpeedSegmentsUrl({ date, period }, Boolean(date));
   const { data: pmtilesUrl } = segments;
-
-  // Driven by the sidebar route picker / URL rather than an in-page control. The picker's
-  // list is curated and includes composites like '17/19' that no route_id will ever match,
-  // so this only takes effect once the dataset is confirmed to actually have that route --
-  // otherwise it falls back to the full network view.
-  const routeFilter = busRoute && routeIds.includes(busRoute) ? busRoute : undefined;
 
   const bandLabel = TIME_BANDS.find((band) => band.key === timeBand);
   const dayTypeLabel = period !== 'daily' ? DAY_TYPES.find((dt) => dt.key === dayType) : undefined;
@@ -79,8 +70,8 @@ export function BusSpeedMapDetails() {
             dayType={dayType}
             timeBand={timeBand}
             direction={direction}
-            routeFilter={routeFilter}
-            onRouteIdsDiscovered={setRouteIds}
+            // Driven by the sidebar route picker / URL rather than an in-page control.
+            routeFilter={busRoute}
           />
         </ErrorBoundary>
       </div>

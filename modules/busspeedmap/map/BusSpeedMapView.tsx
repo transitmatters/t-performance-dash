@@ -8,7 +8,7 @@ import type {
   FilterSpecification,
   MapGeoJSONFeature,
 } from 'maplibre-gl';
-import { getBusRouteDisplayName } from '../../../common/constants/lines';
+import { getBusRouteDisplayName, getBusRouteIds } from '../../../common/constants/lines';
 import {
   BOSTON_CENTER,
   MAP_MAX_BOUNDS,
@@ -97,6 +97,10 @@ interface BusSpeedMapViewProps {
   dayType: DayType;
   timeBand: TimeBand;
   direction: DirectionFilter;
+  /**
+   * A raw route_id or a curated BusRoute label; composites like 114/116/117 or
+   * SL1/SL2/SL3/SLW show every route_id behind them (see getBusRouteIds).
+   */
   routeFilter?: string;
   /**
    * Narrows routeFilter+direction down to exactly one segment -- used by the leaderboard's
@@ -104,8 +108,6 @@ interface BusSpeedMapViewProps {
    * these straight from the clicked row. Requires routeFilter to also be set.
    */
   segmentStops?: SegmentStops;
-  /** Called with the full set of route_ids discovered so far, whenever it grows. */
-  onRouteIdsDiscovered?: (routeIds: string[]) => void;
 }
 
 export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
@@ -116,21 +118,20 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
   direction,
   routeFilter,
   segmentStops,
-  onRouteIdsDiscovered,
 }) => {
   const [hovered, setHovered] = useState<HoveredSegment | undefined>();
   const mapRef = useRef<MapRef>(null);
-  const knownRouteIds = useRef<Set<string>>(new Set());
-
-  // A new date means a new tileset, so any routes discovered under the old one no longer
-  // apply.
-  useEffect(() => {
-    knownRouteIds.current = new Set();
-    onRouteIdsDiscovered?.([]);
-    // Only on pmtilesUrl change: onRouteIdsDiscovered is a fresh setState callback every
-    // render and must not retrigger this reset.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pmtilesUrl]);
+  const routeFilterClause = useMemo<FilterSpecification | undefined>(
+    () =>
+      routeFilter
+        ? ([
+            'in',
+            ['get', 'route_id'],
+            ['literal', getBusRouteIds(routeFilter)],
+          ] as unknown as FilterSpecification)
+        : undefined,
+    [routeFilter]
+  );
 
   const filter = useMemo<FilterSpecification>(() => {
     const clauses: FilterSpecification[] = [
@@ -140,7 +141,7 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
     // Daily features carry no `day_type` at all (a single day is already wholly one type),
     // so this clause only applies to weekly/monthly tiles.
     if (period !== 'daily') clauses.push(['==', ['get', 'day_type'], dayType]);
-    if (routeFilter) clauses.push(['==', ['get', 'route_id'], routeFilter]);
+    if (routeFilterClause) clauses.push(routeFilterClause);
     if (segmentStops) {
       clauses.push(['==', ['get', 'from_stop_name'], segmentStops.from]);
       clauses.push(['==', ['get', 'to_stop_name'], segmentStops.to]);
@@ -148,7 +149,7 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
     // GTFS direction_id: 0 is outbound, 1 is inbound -- matches the hover popup below.
     clauses.push(['==', ['get', 'direction_id'], direction === 'inbound' ? 1 : 0]);
     return ['all', ...clauses] as unknown as FilterSpecification;
-  }, [timeBand, period, dayType, routeFilter, segmentStops, direction]);
+  }, [timeBand, period, dayType, routeFilterClause, segmentStops, direction]);
 
   // Identifies the exact hovered feature so the halo layer below can single it out -- the
   // same route_id/direction_id/from/to tuple used as a segment's natural key elsewhere (e.g.
@@ -178,30 +179,6 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
     });
   };
 
-  // Vector tiles arrive tile-by-tile, so the full set of routes present in the file is only
-  // knowable once everything currently in view has loaded — re-scanned on every idle (the
-  // initial load and after each pan/zoom) so the route filter fills in as more of the
-  // network comes into view, rather than needing a separate manifest from the ingest job.
-  const onIdle = useCallback(() => {
-    const map = mapRef.current?.getMap();
-    if (!map?.getSource(SOURCE_ID)) return;
-
-    const features = map.querySourceFeatures(SOURCE_ID, { sourceLayer: PMTILES_SOURCE_LAYER });
-    let grew = false;
-    for (const feature of features) {
-      const routeId = feature.properties?.route_id;
-      if (typeof routeId === 'string' && !knownRouteIds.current.has(routeId)) {
-        knownRouteIds.current.add(routeId);
-        grew = true;
-      }
-    }
-    if (grew) {
-      onRouteIdsDiscovered?.(
-        [...knownRouteIds.current].sort((a, b) => a.localeCompare(b, 'en', { numeric: true }))
-      );
-    }
-  }, [onRouteIdsDiscovered]);
-
   const isFirstRender = useRef(true);
 
   // Cancels whatever fly-to retry is still pending from the previous call to runFocusFlight,
@@ -222,7 +199,7 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
     const map = mapRef.current?.getMap();
     if (!map) return;
 
-    if (!routeFilter) {
+    if (!routeFilterClause) {
       map.easeTo({
         center: [BOSTON_CENTER.longitude, BOSTON_CENTER.latitude],
         zoom: BOSTON_CENTER.zoom,
@@ -231,7 +208,7 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
       return;
     }
 
-    const focusFilterClauses: FilterSpecification[] = [['==', ['get', 'route_id'], routeFilter]];
+    const focusFilterClauses: FilterSpecification[] = [routeFilterClause];
     if (segmentStops) {
       focusFilterClauses.push(
         ['==', ['get', 'from_stop_name'], segmentStops.from],
@@ -283,7 +260,7 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
       }
     };
     attempt(false);
-  }, [routeFilter, segmentStops, direction]);
+  }, [routeFilterClause, segmentStops, direction]);
 
   // What the effect below reacts to. For an ordinary route selection that's just the route id
   // -- direction is a display toggle there, not part of what to fly to. In segment-focus mode
@@ -297,11 +274,10 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
     : routeFilter;
 
   // Re-runs the fly-to on every focus change, and back out to the network overview when the
-  // filter is cleared. Skipped on mount for an ordinary route selection: the initial view is
-  // already correct, and firing here too would flash a redundant animation to the same spot.
-  // Segment-focus mode has no such "already correct" default, so it flies in on mount too
-  // (backstopped by the map's own onLoad below, in case the map isn't attached yet at this
-  // point).
+  // filter is cleared. Skipped on mount for an ordinary route selection: the map's own onLoad
+  // below flies to a route that's already selected on mount, and firing here too would race it.
+  // Segment-focus mode flies in on mount too (backstopped by onLoad, in case the map isn't
+  // attached yet at this point).
   useEffect(() => {
     const skippingInitialRender = isFirstRender.current && !segmentStops;
     isFirstRender.current = false;
@@ -325,13 +301,12 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
       cursor={hovered ? 'pointer' : 'grab'}
       onMouseMove={onMouseMove}
       onMouseLeave={() => setHovered(undefined)}
-      onIdle={onIdle}
       // Backstops the focus effect above for the case it ran before react-map-gl had
       // attached the underlying maplibre-gl instance to the ref (runFocusFlight's own `!map`
       // guard makes that a silent no-op there). Most relevant to segment-focus mode, whose
       // dialog mounts with its focus already fixed and so gets no later focusKey change to
-      // retry on; harmless for the ordinary route page, where this just re-eases to the same
-      // default view nothing has moved from yet.
+      // retry on. On the ordinary route page it flies to a route selected via the URL (e.g. from
+      // the leaderboard), or just re-eases to the default view nothing has moved from yet.
       onLoad={runFocusFlight}
     >
       <NavigationControl position="top-right" showCompass={false} />
