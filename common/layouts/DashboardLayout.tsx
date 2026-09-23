@@ -39,6 +39,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           crRoute={crRoute}
           ferryRoute={ferryRoute}
           hasStationStore={ALL_PAGES[page]?.hasStationStore}
+          hasRouteSelector={ALL_PAGES[page]?.hasRouteSelector}
         />
       )}
     </div>

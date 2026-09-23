@@ -17,6 +17,7 @@ interface MobileControlPanelProps {
   line: Line | undefined;
   ferryRoute: FerryRoute | undefined;
   hasStationStore?: boolean;
+  hasRouteSelector?: boolean;
 }
 
 export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
@@ -26,6 +27,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   crRoute,
   ferryRoute,
   hasStationStore,
+  hasRouteSelector = true,
 }) => {
   const singleDate = dateStoreSection === 'singleTrips';
   // Bus yellow and the other light line colors can't carry white text.
@@ -35,7 +37,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
       return (
         <>
           <div className="flex flex-row flex-wrap items-center gap-x-2 gap-y-2 p-1 pb-0">
-            <RouteSelector />
+            {hasRouteSelector && <RouteSelector />}
             {/* See ControlPanel: pages that merely borrow the singleTrips section for date
                 storage (like the bus speed map) aren't part of the single/multi trips flow. */}
             {hasStationStore && <TripModeToggle />}
