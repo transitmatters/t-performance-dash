@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import dayjs from 'dayjs';
+import React, { useMemo } from 'react';
 import { useBusTripMetrics } from '../../common/api/hooks/busTripMetrics';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
@@ -8,20 +9,27 @@ import { Widget } from '../../common/components/widgets';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { SPEED_RANGE_PARAM_MAP } from './constants/speeds';
+import { getSpeedGraphConfig } from './constants/speeds';
 import { SpeedGraphWrapper } from './SpeedGraphWrapper';
-
-// Bus trip metrics are daily-only -- there's no weekly/monthly rollup table like rail's --
-// so the graph is always configured for day-level granularity, regardless of range length.
-const config = SPEED_RANGE_PARAM_MAP.day;
 
 export function BusSpeedDetails() {
   const {
     query: { startDate, endDate, busRoute },
   } = useDelimitatedRoute();
+  // Same day/week/month thresholds as rail. Bus has no weekly/monthly tables, so the API
+  // rolls daily rows up server-side when agg isn't daily.
+  const config = useMemo(
+    () => getSpeedGraphConfig(dayjs(startDate), dayjs(endDate)),
+    [startDate, endDate]
+  );
   const enabled = Boolean(startDate && endDate && busRoute);
   const speeds = useBusTripMetrics(
-    { start_date: startDate, end_date: endDate, route: busRoute },
+    {
+      start_date: startDate,
+      end_date: endDate,
+      route: busRoute,
+      agg: config.agg,
+    },
     enabled
   );
 

@@ -5,7 +5,7 @@ daily, weekly, or monthly granularity. Daily data is aggregated
 on-the-fly from per-route records; weekly/monthly use pre-aggregated tables.
 """
 
-from typing import TypedDict
+from typing import NotRequired, TypedDict
 from chalice import BadRequestError, ForbiddenError
 from chalicelib import dynamo, s3, cache
 from datetime import date, datetime, timedelta
@@ -24,16 +24,26 @@ class BusTripMetricsParams(TypedDict):
         start_date: Start of date range (YYYY-MM-DD).
         end_date: End of date range (YYYY-MM-DD).
         route: Bus route_id, e.g. ``"1"``, ``"57"``, ``"111"``.
+        agg: Optional aggregation level (``"daily"``, ``"weekly"``, ``"monthly"``). Defaults to daily.
     """
 
     start_date: str | date
     end_date: str | date
     route: str
+    agg: NotRequired[str]
 
 
 BUS_TRIP_METRICS_TABLE = "DeliveredTripMetricsBus"
 # Matches the daily rail delta above -- an approximate limit of 150 entries per table.
 BUS_TRIP_METRICS_MAX_DAYS = 150
+# Bus has no pre-aggregated weekly/monthly tables, so longer ranges are rolled up from the
+# daily table on the fly. Limits mirror the rail deltas in AGG_TO_CONFIG_MAP (~150 values).
+BUS_AGG_MAX_DAYS = {
+    "daily": BUS_TRIP_METRICS_MAX_DAYS,
+    "weekly": 7 * BUS_TRIP_METRICS_MAX_DAYS,
+    "monthly": 30 * BUS_TRIP_METRICS_MAX_DAYS,
+}
+BUS_SUMMED_FIELDS = ("miles_covered", "total_time", "count", "n_traversals")
 
 
 class TripMetricsByLineParams(TypedDict):
@@ -145,21 +155,23 @@ def trip_metrics_by_line(params: TripMetricsByLineParams):
 
 
 def trip_metrics_by_bus_route(params: BusTripMetricsParams):
-    """Fetch daily speed/trip metrics for a single bus route.
+    """Fetch speed/trip metrics for a single bus route, daily or rolled up by week/month.
 
     Bus routes are independent of one another (no line/branch grouping like rail), and
-    the source table only holds daily granularity, so this is a direct per-route query
-    with no fan-out or on-the-fly aggregation.
+    the source table only holds daily granularity, so weekly/monthly requests query the
+    daily rows and sum them per ISO week (Monday start) or calendar month here. Summing
+    miles_covered and total_time keeps mph = miles_covered / (total_time / 3600) weighted
+    by distance, the same as the rest of the dashboard.
 
     Args:
-        params: Query parameters including start_date, end_date, and route.
+        params: Query parameters including start_date, end_date, route, and optional agg.
 
     Returns:
-        List of daily trip metric records for the route.
+        List of trip metric records for the route, one per day/week/month.
 
     Raises:
-        BadRequestError: If required parameters are missing.
-        ForbiddenError: If the date range exceeds the maximum allowed entries (150).
+        BadRequestError: If required parameters are missing or agg is unrecognized.
+        ForbiddenError: If the date range exceeds the maximum allowed for the agg level.
     """
     try:
         start_date = params["start_date"]
@@ -167,11 +179,36 @@ def trip_metrics_by_bus_route(params: BusTripMetricsParams):
         route = params["route"]
     except KeyError:
         raise BadRequestError("Missing or invalid parameters.")
-    if is_invalid_range(start_date, end_date, BUS_TRIP_METRICS_MAX_DAYS):
+    agg = params.get("agg", "daily")
+    if agg not in BUS_AGG_MAX_DAYS:
+        raise BadRequestError(f"Invalid agg parameter. Expected one of: {', '.join(BUS_AGG_MAX_DAYS)}.")
+    if is_invalid_range(start_date, end_date, BUS_AGG_MAX_DAYS[agg]):
         raise ForbiddenError(
             f"Date range too long. The maximum number of requested values is {BUS_TRIP_METRICS_MAX_DAYS}."
         )
-    return dynamo.query_daily_trips_on_route(BUS_TRIP_METRICS_TABLE, route, start_date, end_date)
+    rows = dynamo.query_daily_trips_on_route(BUS_TRIP_METRICS_TABLE, route, start_date, end_date)
+    if agg == "daily":
+        return rows
+    return _rollup_bus_trip_metrics(rows, agg)
+
+
+def _rollup_bus_trip_metrics(rows: list[dict], agg: str) -> list[dict]:
+    """Sum daily bus rows into ISO weeks (dated by their Monday) or calendar months (dated the 1st).
+
+    Per-day medians/means can't be combined by summing, so rolled-up rows carry only the
+    summed fields plus date and route.
+    """
+    buckets = {}
+    for row in rows:
+        day = datetime.strptime(row["date"], DATE_FORMAT_BACKEND).date()
+        period_start = day - timedelta(days=day.weekday()) if agg == "weekly" else day.replace(day=1)
+        entry = buckets.setdefault(
+            period_start,
+            {"date": period_start.isoformat(), "route": row["route"], **{field: 0 for field in BUS_SUMMED_FIELDS}},
+        )
+        for field in BUS_SUMMED_FIELDS:
+            entry[field] += row.get(field) or 0
+    return [buckets[period_start] for period_start in sorted(buckets)]
 
 
 def _leaderboard_cache_key(start_date: str | date, end_date: str | date) -> str:

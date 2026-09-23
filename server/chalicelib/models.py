@@ -5,7 +5,7 @@ and API documentation via `chalice-spec`.
 """
 
 from datetime import date
-from typing import List, Dict, Union, Any
+from typing import List, Dict, Optional, Union, Any
 from pydantic import BaseModel, ConfigDict
 
 #################################################
@@ -52,11 +52,13 @@ class BusTripMetricsParams(BaseModel):
         start_date: Start of date range (YYYY-MM-DD).
         end_date: End of date range (YYYY-MM-DD).
         route: Bus route_id (e.g. `1`, `57`, `111`).
+        agg: Optional aggregation level (`daily`, `weekly`, `monthly`); defaults to `daily`.
     """
 
     start_date: Union[str, date]
     end_date: Union[str, date]
     route: str
+    agg: Optional[str] = None
 
 
 class BusSpeedLeaderboardParams(BaseModel):

@@ -35,8 +35,18 @@ def query_daily_trips_on_route(table_name: str, route, start_date: str | date, e
       list[dict]: Deserialized trip metric records.
     """
     table = dynamodb.Table(table_name)
-    response = table.query(KeyConditionExpression=Key("route").eq(route) & Key("date").between(start_date, end_date))
-    return ddb_json.loads(response["Items"])
+    # Paginate: long bus ranges (rolled up to weekly/monthly in speed.py) can exceed a single
+    # 1MB query page for one route.
+    query_kwargs = {"KeyConditionExpression": Key("route").eq(route) & Key("date").between(start_date, end_date)}
+    items = []
+    while True:
+        response = table.query(**query_kwargs)
+        items.extend(ddb_json.loads(response["Items"]))
+        last_evaluated_key = response.get("LastEvaluatedKey")
+        if not last_evaluated_key:
+            break
+        query_kwargs["ExclusiveStartKey"] = last_evaluated_key
+    return items
 
 
 def scan_trip_metrics_in_range(table_name: str, start_date: str | date, end_date: str | date) -> List[dict]:
