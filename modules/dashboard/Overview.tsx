@@ -1,3 +1,4 @@
+import React from 'react';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { useRewriteV3Route } from '../../common/utils/middleware';
