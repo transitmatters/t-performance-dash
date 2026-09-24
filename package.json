@@ -44,11 +44,7 @@
     ]
   },
   "overrides": {
-    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.0c3f3b7.0",
-    "@transitmatters/stripmap": {
-      "react": "$react",
-      "react-dom": "$react-dom"
-    }
+    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.0c3f3b7.0"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -61,7 +57,7 @@
     "@tanstack/react-query": "^5.90.20",
     "@tanstack/react-query-devtools": "^5.91.2",
     "@tippyjs/react": "^4.2.6",
-    "@transitmatters/stripmap": "^0.1.15",
+    "@transitmatters/stripmap": "^0.1.16",
     "bezier-js": "^6.1.4",
     "chart.js": "4.5.1",
     "chartjs-adapter-date-fns": "^3.0.0",
