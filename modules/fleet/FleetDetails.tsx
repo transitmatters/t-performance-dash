@@ -12,6 +12,8 @@ import { Widget } from '../../common/components/widgets';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { FleetAgeGraphWrapper } from './FleetAgeGraphWrapper';
 import { PctNewTrainsGraphWrapper } from './PctNewTrainsGraphWrapper';
+import { FleetMixGraphWrapper } from './FleetMixGraphWrapper';
+import { FLEET_TYPES } from './constants/fleetTypes';
 
 dayjs.extend(utc);
 
@@ -31,6 +33,8 @@ export function FleetDetails() {
     },
     enabled
   );
+
+  const fleetTypes = line ? FLEET_TYPES[line] : undefined;
 
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
@@ -55,6 +59,17 @@ export function FleetDetails() {
             endDate={endDate}
           />
         </Widget>
+        {fleetTypes && (
+          <Widget title="Fleet mix (share of cars by type)" ready={[fleetMetrics]}>
+            <FleetMixGraphWrapper
+              data={fleetMetrics.data!}
+              types={fleetTypes}
+              config={config}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          </Widget>
+        )}
         <p className="text-sm text-stone-500">
           Based on a representative sample of trips per day, not a full census of the line, so
           expect some day-to-day noise.

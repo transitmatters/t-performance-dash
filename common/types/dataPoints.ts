@@ -108,6 +108,8 @@ export interface DeliveredTripMetrics {
   miles_per_hour?: string;
   avg_car_age?: number;
   pct_new_trips?: number;
+  // Share of car-trips by car type, e.g. fleet_mix_type8 (see modules/fleet/constants/fleetTypes.ts)
+  [key: `fleet_mix_${string}`]: number | undefined;
 }
 
 export type LineSegmentData = {
