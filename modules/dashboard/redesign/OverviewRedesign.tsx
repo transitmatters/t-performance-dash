@@ -18,7 +18,6 @@ export const OverviewRedesign: React.FC = () => {
   if (tab !== 'Subway' || !lineShort) return null;
 
   return (
-
     <div className="flex w-full flex-col gap-6 md:gap-8">
       <div className="flex flex-col gap-4">
         <MetricsScorecard
@@ -29,9 +28,7 @@ export const OverviewRedesign: React.FC = () => {
         />
         <MetricChartCard metric={selectedMetric} />
       </div>
-      <div
-        className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2"
-      >
+      <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
         <ServiceAlertsCard lineShort={lineShort} />
         <AccessibilityCard lineShort={lineShort} />
       </div>

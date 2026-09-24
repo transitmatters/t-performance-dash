@@ -4,7 +4,6 @@ import { useRewriteV3Route } from '../../common/utils/middleware';
 import { OverviewRedesign } from './redesign/OverviewRedesign';
 
 export function Overview() {
-
   useRewriteV3Route();
 
   return (
