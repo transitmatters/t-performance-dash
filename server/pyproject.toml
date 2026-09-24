@@ -3,14 +3,14 @@ name = "t-performance-dash"
 version = "4.0.0"
 description = "TransitMatters performance visualizer for the MBTA"
 authors = [{ name = "TransitMatters Labs Team" }]
-requires-python = ">=3.12,<3.13"
+requires-python = ">=3.13,<3.14"
 license = "MIT"
 dependencies = [
     "json-api-doc==0.15.0",
     "requests~=2.32.5",
     "pytz~=2025.2",
     "boto3~=1.39.0",
-    "numpy~=1.26.4",
+    "numpy~=2.3.5",
     "pandas~=2.2.3",
     "datadog_lambda~=8.118.0",
     "dynamodb-json~=1.4.2",

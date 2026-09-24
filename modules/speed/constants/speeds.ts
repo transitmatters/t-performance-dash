@@ -1,7 +1,16 @@
 import type { TooltipCallbacks, TooltipItem, TooltipModel } from 'chart.js';
-import type { _DeepPartialObject } from 'chart.js/dist/types/utils';
 import dayjs from 'dayjs';
 import { todayOrDate } from '../../../common/constants/dates';
+
+// chart.js does not publicly export its internal `_DeepPartialObject` helper type;
+// mirrors chart.js's own DeepPartial implementation (dist/types/utils.d.ts).
+type DeepPartial<T> = T extends (...args: never[]) => unknown
+  ? T
+  : T extends Array<infer U>
+    ? Array<DeepPartial<U>>
+    : T extends object
+      ? { [P in keyof T]?: DeepPartial<T[P]> }
+      : T | undefined;
 
 export type AggType = 'daily' | 'weekly' | 'monthly';
 export type ParamsType = {
@@ -10,8 +19,7 @@ export type ParamsType = {
   unit: 'day' | 'month' | 'year';
   getWidgetTitle: (date: string) => string;
   callbacks?:
-    | _DeepPartialObject<TooltipCallbacks<'line', TooltipModel<'line'>, TooltipItem<'line'>>>
-    | undefined;
+    DeepPartial<TooltipCallbacks<'line', TooltipModel<'line'>, TooltipItem<'line'>>> | undefined;
 };
 
 export const getSpeedGraphConfig = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) => {

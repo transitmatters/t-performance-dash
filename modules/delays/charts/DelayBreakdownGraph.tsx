@@ -37,7 +37,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
   agg = 'weekly',
 }) => {
   const { line, linePath } = useDelimitatedRoute();
-  const ref = useRef();
+  const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
 

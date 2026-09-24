@@ -85,16 +85,15 @@ export default function App({ Component, pageProps }: AppProps) {
   const [loaded, setLoaded] = useState(false);
 
   const SecondaryLayout:
-    | (typeof Layouts)[keyof typeof Layouts]
-    | React.FC<{ children?: React.ReactNode }>
-    | undefined = React.useMemo(() => {
-    if (Component.Layout) {
-      return Layouts[Component.Layout];
-    }
+    (typeof Layouts)[keyof typeof Layouts] | React.FC<{ children?: React.ReactNode }> | undefined =
+    React.useMemo(() => {
+      if (Component.Layout) {
+        return Layouts[Component.Layout];
+      }
 
-    const PassThroughLayout = ({ children }: { children?: React.ReactNode }) => <>{children}</>;
-    return PassThroughLayout;
-  }, [Component.Layout]);
+      const PassThroughLayout = ({ children }: { children?: React.ReactNode }) => <>{children}</>;
+      return PassThroughLayout;
+    }, [Component.Layout]);
 
   // Don't load on the server. This prevents hydration errors between mobile/desktop layouts.
   useEffect(() => {

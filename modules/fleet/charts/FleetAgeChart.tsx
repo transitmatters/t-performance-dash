@@ -37,7 +37,7 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
 }) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
-  const ref = useRef();
+  const ref = useRef(null);
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);

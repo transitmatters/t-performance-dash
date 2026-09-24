@@ -39,7 +39,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
   line,
   showTitle,
 }) => {
-  const ref = useRef();
+  const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((item) => dayjs.utc(item.date).format('YYYY-MM-DD'));
   const unit = getTimeUnitSlowzones(startDateUTC, endDateUTC);

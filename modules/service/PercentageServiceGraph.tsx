@@ -41,7 +41,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
   const { tooltipFormat, unit, callbacks } = config;
 
   const isMobile = !useBreakpoint('md');
-  const ref = useRef();
+  const ref = useRef(null);
 
   const chart = useMemo(() => {
     const labels = data.map((point) => point.date);

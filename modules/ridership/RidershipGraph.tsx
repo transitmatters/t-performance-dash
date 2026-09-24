@@ -44,7 +44,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
   } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const isMobile = !useBreakpoint('md');
-  const ref = useRef();
+  const ref = useRef(null);
 
   const chart = useMemo(() => {
     const routeIndex = (crRoute ??

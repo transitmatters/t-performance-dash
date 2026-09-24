@@ -39,7 +39,7 @@ const DIRECTION_OPTIONS = Object.entries(DirectionObject) as [Direction, string]
 
 export function SlowZonesDetails() {
   const { value: direction, control: directionControl } = useChartToggle(
-    'northbound' as Direction,
+    'northbound',
     DIRECTION_OPTIONS
   );
 

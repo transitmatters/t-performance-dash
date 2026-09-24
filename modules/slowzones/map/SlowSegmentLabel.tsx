@@ -129,7 +129,7 @@ export const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
         return (
           <SlowZoneLabel
             key={direction}
-            direction={direction as SlowZoneDirection}
+            direction={direction}
             slowZone={zone}
             color={line.color}
             isHorizontal={isHorizontal}

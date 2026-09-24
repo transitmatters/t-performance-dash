@@ -33,13 +33,7 @@ export enum PAGES {
 }
 
 export type DateStoreSection =
-  | 'landing'
-  | 'today'
-  | 'line'
-  | 'overview'
-  | 'singleTrips'
-  | 'multiTrips'
-  | 'system';
+  'landing' | 'today' | 'line' | 'overview' | 'singleTrips' | 'multiTrips' | 'system';
 
 export type PageMetadata = {
   key: string;

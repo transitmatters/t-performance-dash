@@ -3,7 +3,9 @@ import { DashboardLayout } from './DashboardLayout';
 import { LandingLayout } from './LandingLayout';
 import type { LayoutNames } from './layoutTypes';
 
-export const Layouts: { [key in LayoutNames]: ({ children }) => ReactNode } = {
+export const Layouts: {
+  [key in LayoutNames]: ({ children }: { children: ReactNode }) => ReactNode | Promise<ReactNode>;
+} = {
   Landing: LandingLayout,
   Dashboard: DashboardLayout,
 };

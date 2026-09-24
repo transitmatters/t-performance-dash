@@ -76,7 +76,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   yUnit = 'Minutes',
   chartTitle,
 }) => {
-  const ref = useRef();
+  const ref = useRef(null);
   const chartTheme = useChartTheme();
   const hourly = timeUnit === 'hour';
   const isMobile = !useBreakpoint('md');

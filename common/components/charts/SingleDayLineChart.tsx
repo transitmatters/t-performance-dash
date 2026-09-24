@@ -106,7 +106,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   showUnderRatio = false,
   chartTitle,
 }) => {
-  const ref = useRef();
+  const ref = useRef(null);
   const chartTheme = useChartTheme();
   const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);
   const alertAnnotations = date && alerts ? getAlertAnnotations(alerts, date) : [];

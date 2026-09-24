@@ -95,7 +95,7 @@ export const ButtonGroup: <T extends string, K extends string>(
       />
       <ToggleGroup
         type="single"
-        value={selected as string}
+        value={selected}
         onValueChange={(value) => {
           // Radix clears the value when the active item is pressed again; keep the current selection.
           if (!value) return;

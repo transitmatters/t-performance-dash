@@ -39,7 +39,7 @@ export const RollingNumber: React.FC<RollingNumberProps> = ({
   // never a transient "0". The effect's `from === value` guard then no-ops on mount; only a later
   // change to `value` animates, rolling from the previously shown (real) figure to the new one.
   const currentRef = useRef(value);
-  const frameRef = useRef<number>();
+  const frameRef = useRef<number>(undefined);
 
   useEffect(() => {
     const node = spanRef.current;

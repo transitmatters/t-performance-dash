@@ -48,7 +48,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
   endDateUTC,
   direction,
 }) => {
-  const ref = useRef();
+  const ref = useRef(null);
   const chartRange = endDateUTC.diff(startDateUTC, 'day');
   const breakpoint = [
     { active: useBreakpoint('xl'), value: chartRange / 36 },

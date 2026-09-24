@@ -17,7 +17,7 @@ import { getFormattedTimeString } from '../../../common/utils/time';
 export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) => {
   const { line, linePath, lineShort } = useDelimitatedRoute();
 
-  const ref = useRef();
+  const ref = useRef(null);
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
 
