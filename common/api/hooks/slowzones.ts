@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchAllSlow, fetchDelayTotals, fetchSpeedRestrictions } from '../slowzones';
 import { ONE_HOUR } from '../../constants/time';
 import type { FetchSpeedRestrictionsOptions } from '../../types/api';
+import type { SpeedRestriction } from '../../types/dataPoints';
 
 export const useSlowzoneAllData = () => {
   return useQuery({ queryKey: ['allSlow'], queryFn: fetchAllSlow, staleTime: ONE_HOUR });
@@ -18,11 +19,18 @@ export const useSlowzoneDelayTotalData = () => {
 // 4-month-stale restrictions as current. Disabled here pending a reply from
 // the T on whether the dataset moved; restore `options.date !== undefined`
 // once it's live again.
+//
+// `initialData: []` keeps this query in a resolved state (isLoading: false,
+// data: []) instead of stuck pending forever -- SlowZonesDetails and
+// SystemSlowZonesDetails pass this straight into <Widget ready={...}>, which
+// treats a disabled, never-fetched query as perpetually "waiting" and never
+// renders the map. This was shipped broken in #1180.
 export const useSpeedRestrictionData = (options: FetchSpeedRestrictionsOptions) => {
   return useQuery({
     queryKey: ['speedRestrictions', options],
     queryFn: () => fetchSpeedRestrictions(options),
     enabled: false,
+    initialData: [] as SpeedRestriction[],
     staleTime: ONE_HOUR,
   });
 };
