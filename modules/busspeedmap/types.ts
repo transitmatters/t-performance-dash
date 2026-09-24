@@ -71,8 +71,7 @@ export type BusSpeedSegmentLeaderboardByDayType = Partial<
 >;
 
 export type BusSpeedSegmentLeaderboardResponse =
-  | BusSpeedSegmentLeaderboardByBand
-  | BusSpeedSegmentLeaderboardByDayType;
+  BusSpeedSegmentLeaderboardByBand | BusSpeedSegmentLeaderboardByDayType;
 
 /**
  * Which grain the merged leaderboard page ranks by -- routes (an arbitrary date range, summed
