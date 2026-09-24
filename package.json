@@ -97,10 +97,6 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.6",
-    "@babel/preset-env": "^7.28.6",
-    "@babel/preset-react": "^7.28.5",
-    "@babel/preset-typescript": "^7.28.5",
     "@eslint/js": "^9.39.5",
     "@storybook/addon-docs": "^10.2.0",
     "@storybook/addon-links": "^10.2.0",
@@ -147,5 +143,10 @@
   "volta": {
     "node": "26.8.2"
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:5000",
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "unrs-resolver@1.12.2": true,
+    "core-js-pure": false
+  }
 }
