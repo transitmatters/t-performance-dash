@@ -39,7 +39,11 @@ export function FleetDetails() {
   return (
     <PageWrapper pageTitle={'Fleet'}>
       <ChartPageDiv>
-        <Widget title="% of trips run by new trains" ready={[fleetMetrics]}>
+        <Widget
+          title="% of trips run by new trains"
+          subtitle="Share of trips across the line"
+          ready={[fleetMetrics]}
+        >
           <PctNewTrainsGraphWrapper
             data={fleetMetrics.data!}
             config={config}
@@ -47,7 +51,7 @@ export function FleetDetails() {
             endDate={endDate}
           />
         </Widget>
-        <Widget title="Average car age" ready={[fleetMetrics]}>
+        <Widget title="Average car age" subtitle="Average across the line" ready={[fleetMetrics]}>
           <FleetAgeGraphWrapper
             data={fleetMetrics.data!}
             config={config}
@@ -55,7 +59,7 @@ export function FleetDetails() {
             endDate={endDate}
           />
         </Widget>
-        <p className="text-sm text-stone-500">
+        <p className="text-muted-foreground text-sm">
           Based on a representative sample of trips per day, not a full census of the line, so
           expect some day-to-day noise.
         </p>

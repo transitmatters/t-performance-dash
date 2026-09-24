@@ -1,8 +1,16 @@
 import type { LabelOptions } from 'chartjs-plugin-datalabels/types/options';
 
 export const watermarkLayout = (isMobile: boolean) => {
+  // The charcoal wordmark vanishes against a dark plot surface, so pick the white one to match the
+  // theme. Read from the `dark` class rather than the store: this runs inside Chart.js options,
+  // outside React's render.
+  const isDark =
+    typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
   return {
-    image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
+    image: new URL(
+      isDark ? '/Logo_wordmark_white.png' : '/Logo_wordmark.png',
+      window.location.origin
+    ).toString(),
     x: 10,
     y: 10,
     opacity: 0.2,

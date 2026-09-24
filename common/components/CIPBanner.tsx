@@ -10,7 +10,7 @@ export const CIPBanner: React.FC = () => {
       href="https://secure.everyaction.com/DKcTW8SPr06sCMwjIo44UA2"
       target="_blank"
       rel="noopener noreferrer"
-      className="relative z-10 block bg-tm-red px-4 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-mbta-darkRed md:py-4 md:text-base"
+      className="bg-tm-red hover:bg-mbta-darkRed relative z-10 block px-4 py-3 text-center text-sm font-semibold text-white transition-colors md:py-4 md:text-base"
     >
       🚨 The MBTA&apos;s 5-year Capital Investment Plan needs your input — Take action now!
     </a>

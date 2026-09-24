@@ -11,7 +11,7 @@ export default function OpenSource() {
       if (license.licenseText.length > 1) {
         return {
           title: library,
-          content: <p className={'whitespace-pre-line text-xs'}>{license.licenseText}</p>,
+          content: <p className={'text-xs whitespace-pre-line'}>{license.licenseText}</p>,
         };
       }
     })

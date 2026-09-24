@@ -10,12 +10,13 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { RidershipCount } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
+import { HERO_LINE_WIDTH } from '../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
 import { PEAK_RIDERSHIP } from '../../common/constants/baselines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
-import { ChartBorder } from '../../common/components/charts/ChartBorder';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../common/components/buttons/SaveChartImageButton';
@@ -53,7 +54,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
     const lineColor = LINE_COLORS[line ?? 'default'];
 
     return (
-      <ChartBorder>
+      <ChartStack>
         <ChartDiv isMobile={isMobile}>
           <Line
             id={`ridership-${linePath}`}
@@ -66,6 +67,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                 {
                   label: `Fare validations`,
                   borderColor: lineColor,
+                  borderWidth: HERO_LINE_WIDTH,
                   backgroundColor: hexWithAlpha(lineColor, 0.8),
                   pointRadius: 0,
                   pointBorderWidth: 0,
@@ -225,7 +227,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
             </>
           )}
         </div>
-      </ChartBorder>
+      </ChartStack>
     );
   }, [
     busRoute,

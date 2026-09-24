@@ -1,5 +1,5 @@
 import React from 'react';
-import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
+import { ChartStack } from '../../common/components/charts/ChartStack';
 import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import type { ParamsType } from '../speed/constants/speeds';
@@ -22,8 +22,8 @@ export const PctNewTrainsGraphWrapper: React.FC<PctNewTrainsGraphWrapperProps> =
     return <NoDataNotice isLineMetric />;
   }
   return (
-    <CarouselGraphDiv>
+    <ChartStack>
       <PctNewTrainsChart config={config} data={data} startDate={startDate} endDate={endDate} />
-    </CarouselGraphDiv>
+    </ChartStack>
   );
 };

@@ -96,6 +96,21 @@ export const getRoutes = (direction: Direction, data: SlowZone[], isMobile: bool
   return [...new Set(routes)];
 };
 
+/** The single most time-costly segment among currently-active slow zones, for headlining. */
+export const getWorstSlowZoneSegment = (
+  data: SlowZoneResponse[],
+  startDateUTC: dayjs.Dayjs,
+  endDateUTC: dayjs.Dayjs,
+  lineShort: LineShort
+): SlowZone | null => {
+  const active = filterAllSlow(data, startDateUTC, endDateUTC, lineShort).filter(
+    (sz) => sz.latest_delay !== null
+  );
+  if (!active.length) return null;
+  const worst = active.reduce((max, sz) => (sz.delay > max.delay ? sz : max), active[0]);
+  return formatSlowZones([worst])[0];
+};
+
 export const getSlowZoneDelayDelta = (
   totals: DayDelayTotals[],
   lineShort: Exclude<LineShort, 'Bus' | 'Commuter Rail'>

@@ -75,6 +75,11 @@ def aggregate_actual_trips(actual_trips, agg, start_date):
         if col in df.columns:
             agg_dict[col] = "first"
     df_grouped = df.groupby("date").agg(agg_dict).reset_index()
+    # Dates with no fleet data come out of "first" as NaN, which json.dumps writes as a bare `NaN` —
+    # invalid JSON that makes the whole response unparseable in the browser. Send null instead.
+    for col in ("avg_car_age", "pct_new_trips"):
+        if col in df_grouped.columns:
+            df_grouped[col] = df_grouped[col].astype(object).where(df_grouped[col].notna(), None)
     # set index to use datetime object.
     df_grouped.set_index(pd.to_datetime(df_grouped["date"]), inplace=True)
     return df_grouped.to_dict(orient="records")

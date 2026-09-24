@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
+import type { LinkProps } from 'next/link';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import type { Line } from '../../types/lines';
+import type { Page } from '../../constants/pages';
 import { ChartPlaceHolder } from '../graphics/ChartPlaceHolder';
 import { WidgetDiv } from './WidgetDiv';
 import { WidgetTitle } from './WidgetTitle';
@@ -13,6 +16,16 @@ interface Props {
   ready?: ReadyDependency | ReadyDependency[];
   title: React.ReactNode;
   subtitle?: React.ReactNode;
+  /** A control that acts on this card's chart — a view switch or a filter. */
+  action?: React.ReactNode;
+  /** When set, the title becomes a chevron link to this page, colored by line. */
+  tab?: Page;
+  /** A pre-resolved chevron-link href, for cases where `tab` can't express the target (e.g. a route/date-specific link). */
+  titleHref?: null | LinkProps['href'];
+  line?: Line;
+  /** Content rendered between the title and the ready-gated children, always shown. */
+  details?: React.ReactNode;
+  className?: string;
   children: React.ReactNode;
 }
 
@@ -43,7 +56,18 @@ const getReadyState = (ready: ReadyDependency | ReadyDependency[]) => {
 };
 
 export const Widget: React.FC<Props> = (props) => {
-  const { title, subtitle, children, ready: readyDependencies } = props;
+  const {
+    title,
+    subtitle,
+    action,
+    tab,
+    titleHref,
+    line,
+    details,
+    className,
+    children,
+    ready: readyDependencies,
+  } = props;
   const [hasError, setHasError] = useState<boolean>();
 
   const readyState = hasError
@@ -53,8 +77,16 @@ export const Widget: React.FC<Props> = (props) => {
       : 'ready';
 
   return (
-    <WidgetDiv>
-      <WidgetTitle title={title} subtitle={subtitle} />
+    <WidgetDiv className={className}>
+      <WidgetTitle
+        title={title}
+        subtitle={subtitle}
+        action={action}
+        tab={tab}
+        titleHref={titleHref}
+        line={line}
+      />
+      {details}
       {readyState === 'ready' ? (
         <ErrorBoundary onError={() => setHasError(true)} fallbackRender={() => null}>
           {children}

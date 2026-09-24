@@ -7,14 +7,17 @@ import { enUS } from 'date-fns/locale';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import { LINE_COLORS } from '../../../common/constants/colors';
 import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
+import { HERO_LINE_WIDTH, useChartTheme } from '../../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
-import { ChartBorder } from '../../../common/components/charts/ChartBorder';
+import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
+import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
+import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import type { ParamsType } from '../../speed/constants/speeds';
 
 interface PctNewTrainsChartProps {
@@ -35,12 +38,13 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef();
+  const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   const lineColor = LINE_COLORS[line ?? 'default'];
 
   return (
-    <ChartBorder>
+    <ChartStack>
       <ChartDiv isMobile={isMobile}>
         <Line
           id={`fleet-pct-new-${linePath}`}
@@ -52,14 +56,15 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
             datasets: [
               {
                 label: '% of trips run by new trains',
+                fill: true,
+                backgroundColor: hexWithAlpha(lineColor, 0.8),
                 borderColor: lineColor,
+                borderWidth: HERO_LINE_WIDTH,
                 pointRadius: 0,
                 pointHoverRadius: 6,
                 pointBorderWidth: 0,
                 stepped: true,
-                fill: true,
                 pointHoverBackgroundColor: lineColor,
-                backgroundColor: hexWithAlpha(lineColor, 0.8),
                 data: data.map((datapoint) => datapoint.pct_new_trips ?? null),
               },
             ],
@@ -89,11 +94,9 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
                   },
                 },
               },
+              // A single series, already named by the card title.
               legend: {
-                position: 'bottom',
-                labels: {
-                  boxWidth: 15,
-                },
+                display: false,
               },
               title: {
                 // empty title to set font and leave room for drawTitle fn
@@ -106,20 +109,25 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
                 min: 0,
                 max: 100,
                 display: true,
+                border: { display: false },
+                grid: { color: chartTheme.grid },
                 ticks: {
-                  color: COLORS.design.subtitleGrey,
+                  color: chartTheme.tick,
                   callback: (value) => `${value}%`,
                 },
                 title: {
                   display: true,
                   text: 'Trips run by new trains',
-                  color: COLORS.design.subtitleGrey,
+                  color: chartTheme.tick,
                 },
               },
               x: {
                 min: startDate,
                 max: endDate,
                 type: 'time',
+                // Vertical rules add noise without helping readers compare values.
+                grid: { display: false },
+                border: { color: chartTheme.axisBorder },
                 time: {
                   unit: unit,
                   tooltipFormat: tooltipFormat,
@@ -128,7 +136,7 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
                   },
                 },
                 ticks: {
-                  color: COLORS.design.subtitleGrey,
+                  color: chartTheme.tick,
                 },
                 adapters: {
                   date: {
@@ -147,19 +155,6 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
             {
               id: 'customTitle',
               afterDraw: (chart) => {
-                if (!data) {
-                  const { ctx } = chart;
-                  const { width } = chart;
-                  const { height } = chart;
-                  chart.clear();
-
-                  ctx.save();
-                  ctx.textAlign = 'center';
-                  ctx.textBaseline = 'middle';
-                  ctx.font = "16px normal 'Helvetica Nueue'";
-                  ctx.fillText('No data to display', width / 2, height / 2);
-                  ctx.restore();
-                }
                 if (showTitle) drawSimpleTitle(`% new trains`, chart);
               },
             },
@@ -167,6 +162,26 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
           ]}
         />
       </ChartDiv>
-    </ChartBorder>
+      <div className="flex flex-row items-end justify-end gap-4">
+        {startDate && (
+          <>
+            <SaveChartImageButton
+              chartRef={ref}
+              datasetName="fleet-pct-new-trains"
+              includeBothStopsForLocation={false}
+              startDate={startDate}
+              endDate={endDate}
+            />
+            <DownloadButton
+              data={data}
+              datasetName="fleet-pct-new-trains"
+              includeBothStopsForLocation={false}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          </>
+        )}
+      </div>
+    </ChartStack>
   );
 };

@@ -2,9 +2,13 @@ import React from 'react';
 import classNames from 'classnames';
 import type { BusRoute, CommuterRailRoute, Line, FerryRoute } from '../../types/lines';
 import type { DateStoreSection } from '../../constants/pages';
+import { LINE_COLORS } from '../../constants/colors';
 import { lineColorBackground } from '../../styles/general';
+import { readableOn } from '../../utils/general';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
+import { RouteSelector } from './RouteSelector';
+import { TripModeToggle } from './TripModeToggle';
 
 interface MobileControlPanelProps {
   dateStoreSection: DateStoreSection;
@@ -22,11 +26,15 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   ferryRoute,
 }) => {
   const singleDate = dateStoreSection === 'singleTrips';
+  // Bus yellow and the other light line colors can't carry white text.
+  const needsDarkText = readableOn(LINE_COLORS[line ?? 'default']) === 'dark';
   const getControls = () => {
     if (line && (dateStoreSection === 'singleTrips' || dateStoreSection === 'multiTrips')) {
       return (
         <>
-          <div className="p-1 pb-0">
+          <div className="flex flex-row flex-wrap items-center gap-x-2 gap-y-2 p-1 pb-0">
+            <RouteSelector />
+            <TripModeToggle />
             <DateControl
               dateStoreSection={dateStoreSection}
               queryType={singleDate ? 'single' : 'range'}
@@ -65,6 +73,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
     <div
       className={classNames(
         'pb-safe fixed bottom-0 flex w-full flex-col justify-center rounded-t-sm',
+        needsDarkText ? 'text-stone-900' : 'text-white',
         lineColorBackground[line ?? 'DEFAULT']
       )}
     >

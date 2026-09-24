@@ -7,7 +7,7 @@ import { useScheduledService } from '../../common/api/hooks/service';
 import { OVERVIEW_OPTIONS, TODAY_STRING } from '../../common/constants/dates';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
-import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
+import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';
 
 export const ServiceWidget: React.FC = () => {
@@ -36,7 +36,7 @@ export const ServiceWidget: React.FC = () => {
 
   return (
     <WidgetDiv>
-      <HomescreenWidgetTitle title="Service" tab="service" />
+      <WidgetTitle title="Service" tab="service" line={line} />
       {serviceReady ? (
         <ServiceGraphWrapper
           data={tripsData.data}

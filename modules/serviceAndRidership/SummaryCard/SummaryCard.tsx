@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import type { ModeKind, SummaryData } from '../types';
 
-import { CardFrame } from '../CardFrame';
+import { Widget } from '../../../common/components/widgets/Widget';
 import { ServiceRidershipChart } from '../LineCard/ServiceRidershipChart';
 import { useServiceAndRidershipContext } from '../useServiceAndRidershipContext';
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
@@ -50,8 +50,8 @@ export const SummaryCard = (props: Props) => {
   }, [selection, summaryData, modeData]);
 
   return (
-    <CardFrame title="Summary">
-      <div className="pb-1 pt-2">
+    <Widget title="Summary" className="pb-16">
+      <div className="pt-2 pb-1">
         <ButtonGroup
           options={Object.entries(SelectionLabels).map(([key, value]) => [key, value])}
           pressFunction={setSelection}
@@ -67,6 +67,6 @@ export const SummaryCard = (props: Props) => {
         startDate={startDate}
         endDate={endDate}
       />
-    </CardFrame>
+    </Widget>
   );
 };

@@ -27,7 +27,7 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
       <div className={classNames('relative flex')}>
         {widgetValue.value === undefined && <LoadingSpinner isWidget />}
         <div className={classNames('flex flex-col items-start p-2')}>
-          <p className={classNames('text-base text-gray-500', 'text-base')}>{title}</p>
+          <p className={classNames('text-muted-foreground text-base')}>{title}</p>
           <div className="flex flex-row items-baseline gap-x-1">
             {widgetValue.getFormattedValue(true)}
           </div>
@@ -39,7 +39,7 @@ export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
                 usePercentChange={layoutKind === 'delta-and-percent-change'}
               />
             )}
-            <p className={classNames('truncate text-xs text-design-subtitleGrey sm:text-sm')}>
+            <p className={classNames('text-design-subtitleGrey truncate text-xs sm:text-sm')}>
               {analysis}
             </p>
           </div>

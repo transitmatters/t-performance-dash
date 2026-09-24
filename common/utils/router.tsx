@@ -5,11 +5,16 @@ import { useCallback } from 'react';
 import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route, Tab } from '../types/router';
-import { DATE_PARAMS } from '../types/router';
+import { CHART_PARAMS, DATE_PARAMS } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
 import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
 import { LINE_OBJECTS } from '../constants/lines';
-import { saveDateStoreSection, getDateStoreSection } from '../state/utils/dateStoreUtils';
+import {
+  saveDateStoreSection,
+  getDateStoreSection,
+  getTripHopDates,
+  TRIP_SECTIONS,
+} from '../state/utils/dateStoreUtils';
 import type { StationStore } from '../state/stationStore';
 import { useStationStore } from '../state/stationStore';
 import { useDateStore } from '../state/dateStore';
@@ -151,6 +156,32 @@ export const useUpdateQuery = () => {
   return updateQueryParams;
 };
 
+/**
+ * Write one query param without disturbing the rest of the URL. Passing `undefined` removes the key,
+ * which is how a control at its default value keeps itself out of the query string.
+ */
+export const useSetQueryParam = () => {
+  const router = useRouter();
+
+  return useCallback(
+    (key: string, value: string | undefined) => {
+      if (!router.isReady) return;
+      const newQuery = { ...router.query };
+      if (value === undefined) {
+        delete newQuery[key];
+      } else {
+        newQuery[key] = value;
+      }
+      if (!isEqual(router.query, newQuery)) {
+        router.replace({ pathname: router.pathname, query: newQuery }, undefined, {
+          shallow: true,
+        });
+      }
+    },
+    [router]
+  );
+};
+
 export const getLineSelectionItemHref = (newLine: Line, route: Route): string => {
   const { page, line, query } = route;
   const { path, key } = LINE_OBJECTS[newLine];
@@ -165,10 +196,14 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
   }
   delete query.from;
   delete query.to;
-  // Get queryParams but exclude busRoute and crRoute
+  // Get queryParams but exclude busRoute, crRoute, and view (a per-line preset selection, e.g. the
+  // Overview page's date range — carrying it to a different line makes that line's page open on
+  // whatever range was last picked instead of its own default).
   const queryParams = query
     ? new URLSearchParams(
-        Object.entries(query).filter(([key]) => key !== 'busRoute' && key !== 'crRoute')
+        Object.entries(query).filter(
+          ([key]) => key !== 'busRoute' && key !== 'crRoute' && key !== 'view'
+        )
       )
     : new URLSearchParams();
   href += currentPath ? `${currentPath}` : '';
@@ -288,8 +323,33 @@ const getDateQueryParams = (
     return Object.fromEntries(Object.entries(query).filter(([key]) => DATE_PARAMS.includes(key)));
   }
   if (currentPage.dateStoreSection !== newPage.dateStoreSection) {
+    // Between the two trip views, what is on screen beats what is in the store.
+    const hopDates = getTripHopDates(currentPage.dateStoreSection, newPage.dateStoreSection, query);
+    if (hopDates) return hopDates;
     return getDateStoreSection(newPage.dateStoreSection, dateStore);
   }
+};
+
+/**
+ * Chart view state survives the single/multi hop — the two views share these controls, and a day
+ * filter means the same thing on both. It is dropped anywhere else, so it can't follow the user
+ * onto pages that never asked for it.
+ */
+const getChartQueryParams = (
+  currentPage: PageMetadata | undefined,
+  newPage: PageMetadata,
+  query: QueryParams
+) => {
+  if (!currentPage) return undefined;
+  if (
+    !TRIP_SECTIONS.includes(currentPage.dateStoreSection) ||
+    !TRIP_SECTIONS.includes(newPage.dateStoreSection)
+  ) {
+    return undefined;
+  }
+  return Object.fromEntries(
+    Object.entries(query).filter(([key, value]) => CHART_PARAMS.includes(key) && value)
+  );
 };
 
 const getBusRouteQueryParam = (query: QueryParams) => {
@@ -327,6 +387,7 @@ const getQueryParams = (
   return {
     ...getStationQueryParams(currentPage, newPage, query, stationStore),
     ...getDateQueryParams(currentPage, newPage, query, dateStore),
+    ...getChartQueryParams(currentPage, newPage, query),
     ...getBusRouteQueryParam(query),
     ...getCRRouteQueryParam(query),
     ...getFerryRouteQueryParam(query),

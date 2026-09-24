@@ -8,7 +8,9 @@ interface UnitTextProps {
 
 export const UnitText: React.FC<UnitTextProps> = ({ text, isLarge = false }) => {
   return (
-    <span className={classNames('text-design-subtitleGrey', isLarge ? 'text-md' : 'text-sm')}>
+    // The unit rides alongside a figure that uses the card foreground, so it takes the muted
+    // foreground token rather than a fixed grey that only reads on a light surface.
+    <span className={classNames('text-muted-foreground', isLarge ? 'text-md' : 'text-sm')}>
       {text}
     </span>
   );

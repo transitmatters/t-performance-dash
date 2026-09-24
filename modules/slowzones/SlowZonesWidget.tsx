@@ -3,7 +3,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { HomescreenWidgetTitle } from '../dashboard/HomescreenWidgetTitle';
+import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { useSlowzoneDelayTotalData } from '../../common/api/hooks/slowzones';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
@@ -29,7 +29,7 @@ export const SlowZonesWidget: React.FC = () => {
   return (
     <>
       <WidgetDiv className="relative">
-        <HomescreenWidgetTitle title="Slow zones" tab="slowzones" />
+        <WidgetTitle title="Slow zones" tab="slowzones" line={line} />
         {totalSlowTimeReady && lineShort !== 'Commuter Rail' && lineShort !== 'Bus' ? (
           <TotalSlowTimeWrapper
             data={delayTotals.data.data}

@@ -204,6 +204,9 @@ export const ALL_PAGES: PageMap = {
 /* Groups of pages for tab sections */
 export const TRIP_PAGES = [ALL_PAGES.singleTrips, ALL_PAGES.multiTrips];
 
+/* Multi-day trips is reached from the in-page TripModeToggle, not the sidebar */
+export const NAV_TRIP_PAGES = [ALL_PAGES.singleTrips];
+
 export const BUS_OVERVIEW = [ALL_PAGES.ridership];
 
 export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.ridership];

@@ -13,7 +13,7 @@ export const SmallDelta: React.FC<SmallDeltaProps> = ({ analysis, widgetValue })
   return (
     <div className="flex flex-row items-end justify-between">
       <p
-        className={classNames('truncate text-xs leading-tight text-design-subtitleGrey sm:text-sm')}
+        className={classNames('text-design-subtitleGrey truncate text-xs leading-tight sm:text-sm')}
       >
         {analysis}
       </p>
@@ -26,7 +26,7 @@ export const SmallDelta: React.FC<SmallDeltaProps> = ({ analysis, widgetValue })
             />
           )}
           <p className="flex flex-row">
-            <span className="pr-1 font-bold text-gray-900">
+            <span className="text-card-foreground pr-1 font-bold">
               {widgetValue.value < 0 ? '-' : '+'}
             </span>
             {widgetValue.getFormattedValue()}

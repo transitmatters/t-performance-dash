@@ -5,59 +5,61 @@ import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { DataPoint } from '../../types/dataPoints';
-import { CHART_COLORS, COLORS } from '../../constants/colors';
 import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
 import type { SingleDayLineProps } from '../../types/charts';
 import { getAlertAnnotations } from '../../../modules/service/utils/graphUtils';
 import { prettyDate } from '../../utils/date';
 import { DownloadButton } from '../buttons/DownloadButton';
 import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
+import { CopyLinkButton } from '../buttons/CopyLinkButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
-import { writeError } from '../../utils/chartError';
+import { SEVERITY_COLORS, useChartTheme } from '../../utils/chartTheme';
 import { getFormattedTimeString } from '../../utils/time';
 import { AlertsDisclaimer } from '../general/AlertsDisclaimer';
 import { FIVE_MINUTES } from '../../constants/time';
 import { LegendSingleDay } from './Legend';
 import { ChartDiv } from './ChartDiv';
-import { ChartBorder } from './ChartBorder';
+import { ChartStack } from './ChartStack';
 
 const pointColors = (
   data: DataPoint[],
   metric_field: string,
+  neutralColor: string,
   effectiveBenchmark: (number | null)[],
   showUnderRatio?: boolean
 ) => {
   return data.map((point: DataPoint, idx: number) => {
     const benchmarkValue = effectiveBenchmark[idx];
+    // Check for null, undefined, NaN, or other invalid values
     if (
       benchmarkValue === null ||
       benchmarkValue === undefined ||
       typeof benchmarkValue !== 'number' ||
       !Number.isFinite(benchmarkValue)
     ) {
-      return CHART_COLORS.GREY;
+      return neutralColor;
     }
     const ratio = point[metric_field] / benchmarkValue;
     if (!Number.isFinite(ratio)) {
-      return CHART_COLORS.GREY;
+      return neutralColor;
     } else if (ratio <= 0.05 && showUnderRatio) {
       // Not actually 100% off, but we want to show it as an extreme
-      return CHART_COLORS.PURPLE;
+      return SEVERITY_COLORS.off100;
     } else if (ratio <= 0.5 && showUnderRatio) {
-      return CHART_COLORS.RED;
+      return SEVERITY_COLORS.off50;
     } else if (ratio <= 0.75 && showUnderRatio) {
-      return CHART_COLORS.YELLOW;
+      return SEVERITY_COLORS.off25;
     } else if (ratio <= 1.25) {
-      return CHART_COLORS.GREEN;
+      return SEVERITY_COLORS.onTime;
     } else if (ratio <= 1.5) {
-      return CHART_COLORS.YELLOW;
+      return SEVERITY_COLORS.off25;
     } else if (ratio <= 2.0) {
-      return CHART_COLORS.RED;
+      return SEVERITY_COLORS.off50;
     } else if (ratio > 2.0) {
-      return CHART_COLORS.PURPLE;
+      return SEVERITY_COLORS.off100;
     }
-    return CHART_COLORS.GREY;
+    return neutralColor; // no benchmark to judge this point against
   });
 };
 
@@ -105,6 +107,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   chartTitle,
 }) => {
   const ref = useRef();
+  const chartTheme = useChartTheme();
   const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);
   const alertAnnotations = date && alerts ? getAlertAnnotations(alerts, date) : [];
   const isMobile = !useBreakpoint('md');
@@ -150,7 +153,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   );
 
   return (
-    <ChartBorder>
+    <ChartStack>
       <ChartDiv isMobile={isMobile}>
         <Line
           id={chartId}
@@ -163,10 +166,11 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               {
                 label: `Actual`,
                 fill: false,
-                borderColor: '#a0a0a030',
+                borderColor: chartTheme.benchmarkLine,
                 pointBackgroundColor: pointColors(
                   data,
                   metricField,
+                  chartTheme.neutralPoint,
                   effectiveBenchmarkData,
                   showUnderRatio
                 ),
@@ -174,6 +178,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 pointHoverBackgroundColor: pointColors(
                   data,
                   metricField,
+                  chartTheme.neutralPoint,
                   effectiveBenchmarkData,
                   showUnderRatio
                 ),
@@ -186,7 +191,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 // chart uses the TM value. The tooltip overrides this per
                 // point to get the exact name right for each hover.
                 label: usingTmBenchmark ? `TransitMatters Benchmark` : `MBTA Benchmark`,
-                backgroundColor: '#a0a0a030',
+                backgroundColor: chartTheme.benchmarkFill,
                 data: effectiveBenchmarkFormatted,
                 pointRadius: 0,
                 pointHoverRadius: 3,
@@ -287,8 +292,10 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
             scales: {
               y: {
                 display: true,
+                border: { display: false },
+                grid: { color: chartTheme.grid },
                 ticks: {
-                  color: COLORS.design.subtitleGrey,
+                  color: chartTheme.tick,
                   callback: (value) => {
                     return units === 'Minutes' && typeof value === 'number'
                       ? getFormattedTimeString(value, 'minutes')
@@ -298,17 +305,20 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 title: {
                   display: true,
                   text: units,
-                  color: COLORS.design.subtitleGrey,
+                  color: chartTheme.tick,
                 },
               },
               x: {
                 type: 'time',
+                // Vertical rules add noise without helping readers compare values.
+                grid: { display: false },
+                border: { color: chartTheme.axisBorder },
                 time: {
                   unit: 'hour',
                   tooltipFormat: 'h:mm:ss a', // locale time with seconds
                 },
                 ticks: {
-                  color: COLORS.design.subtitleGrey,
+                  color: chartTheme.tick,
                 },
                 adapters: {
                   date: {
@@ -319,7 +329,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 title: {
                   display: true,
                   text: date ? prettyDate(date, true) : 'No date selected',
-                  color: COLORS.design.subtitleGrey,
+                  color: chartTheme.tick,
                 },
                 afterDataLimits: (axis) => {
                   const today = new Date(`${date}T00:00:00`);
@@ -335,29 +345,20 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               },
             },
           }}
-          plugins={[
-            {
-              id: 'customTitle',
-              afterDraw: (chart) => {
-                if (date === undefined || date.length === 0 || data.length === 0) {
-                  writeError(chart);
-                }
-              },
-            },
-            ChartjsPluginWatermark,
-          ]}
+          plugins={[ChartjsPluginWatermark]}
         />
       </ChartDiv>
       <div className="flex flex-col">
         {alerts && <AlertsDisclaimer alerts={alerts} />}
-        <div className="flex flex-row items-end gap-4">
+        <div className="flex flex-row flex-wrap items-end justify-between gap-x-6 gap-y-2">
           {showLegend && benchmarkField ? (
             <LegendSingleDay showUnderRatio={showUnderRatio} usingTmBenchmark={usingTmBenchmark} />
           ) : (
             <div className="w-full" />
           )}
           {date && (
-            <>
+            <div className="-mr-2.5 ml-auto flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
+              <CopyLinkButton />
               <SaveChartImageButton
                 chartRef={ref}
                 datasetName={fname}
@@ -373,10 +374,10 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 includeBothStopsForLocation={includeBothStopsForLocation}
                 startDate={date}
               />
-            </>
+            </div>
           )}
         </div>
       </div>
-    </ChartBorder>
+    </ChartStack>
   );
 };

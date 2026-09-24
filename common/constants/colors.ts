@@ -2,12 +2,17 @@ import type { Line } from '../types/lines';
 import { hexWithAlpha } from '../utils/general';
 
 export const COLORS = {
+  // Canonical MBTA brand hex — the true line colors. These drive the graphic/swatch roles via
+  // `--line-color` (route bullets, the header fill, chart series, sparklines, station nodes), where
+  // the color is a fill and contrast isn't a text concern. The AA-adjusted variants used for
+  // text/UI/focus roles live in the `[data-line]` token blocks in styles/globals.css — see the
+  // note there. Keep these EXACT (brand commitment in PRODUCT.md); adjust only the token variants.
   mbta: {
-    red: '#D13434',
-    mattapan: '#D13434',
+    red: '#da291c',
+    mattapan: '#da291c',
     orange: '#ed8b00',
     blue: '#003da5',
-    green: '#00834d',
+    green: '#00843d',
     bus: '#FFC72C',
     commuterRail: '#80276c',
     ferry: '#008EAA',
@@ -37,13 +42,17 @@ export const CHART_COLORS = {
   GREY: '#1c1c1c',
   BLUE: '#0096FF',
   GREEN: '#64b96a',
-  YELLOW: '#f5ed00',
+  // Darkened from #f5ed00, which sat at 1.24:1 against the white plot surface (below the 2:1
+  // floor) and read as invisible. #d9a400 clears it at 2.27:1 and stays in the same amber family.
+  YELLOW: '#d9a400',
   RED: '#c33149',
   PURPLE: '#bb5cc1',
   FILL: '#bfc8d680',
   FILL_HOURLY: '#88aee680',
   DARK_LINE: '#303030a0',
-  ANNOTATIONS: hexWithAlpha('#202020', 0.4),
+  // Neutral gray so baseline/benchmark lines (e.g. the historical-max rule) stay visible on both
+  // the light and dark plot surfaces; a near-black annotation disappeared in dark mode.
+  ANNOTATIONS: hexWithAlpha('#808080', 0.85),
   BLOCKS: hexWithAlpha('#202020', 0.2),
   BLOCKS_SOLID: '#d2d2d2',
 };
@@ -59,6 +68,39 @@ export const LINE_COLORS: { [key in Line | 'default']: string } = {
   'line-ferry': COLORS.mbta.ferry,
   'line-RIDE': COLORS.mbta.bus,
   default: '#303030',
+};
+
+// Darker line shades, mirroring the `mbta.dark*` colors in tailwind.config.js.
+export const LINE_COLORS_DARK: { [key in Line | 'default']: string } = {
+  'line-red': '#bc2020',
+  'line-orange': '#e08300',
+  'line-blue': '#19376B',
+  'line-green': '#0E5E3D',
+  'line-bus': '#E6A800',
+  'line-mattapan': '#bc2020',
+  'line-commuter-rail': '#6c215c',
+  'line-ferry': '#006B82',
+  'line-RIDE': '#E6A800',
+  default: '#292524',
+};
+
+/**
+ * Line colors lifted for use as text on a dark ground — the exported chart image, chiefly. The
+ * canonical hues are tuned to sit on white: blue lands at 1.9:1 and Commuter Rail at 2.1:1 against
+ * a dark card, so those two in particular have to be raised to stay readable. Every value here
+ * clears 4.5:1 on #171717.
+ */
+export const LINE_COLORS_ON_DARK: { [key in Line | 'default']: string } = {
+  'line-red': '#f1554a',
+  'line-orange': '#ed8b00',
+  'line-blue': '#5b8def',
+  'line-green': '#2fb56e',
+  'line-bus': '#ffc72c',
+  'line-mattapan': '#f1554a',
+  'line-commuter-rail': '#c05fa8',
+  'line-ferry': '#3fbbd6',
+  'line-RIDE': '#ffc72c',
+  default: '#d6d3d1',
 };
 
 export const LINE_COLORS_LEVELS: {

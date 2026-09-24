@@ -2,7 +2,6 @@ import dayjs from 'dayjs';
 
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import type { DateTimePickerProps } from 'react-flatpickr';
 import type {
   DateParams,
   DateSelectionDefaultOptions,
@@ -93,81 +92,34 @@ export const getValidDateForRange = (
   return currentDate;
 };
 
-export const getDatePickerOptions = (
+/** The selectable range for a tab's date picker — the calendar disables everything outside it. */
+export const getDatePickerBounds = (
   tab: Tab,
   page?: Page,
   route?: CommuterRailRoute | BusRoute
-) => {
+): { minDate: string; maxDate: string } => {
   const { minDate, maxDate } = getMinMaxDatesForRoute(tab, route);
 
-  if (tab === 'Commuter Rail') {
-    if (page === 'ridership') {
-      return {
-        ...FLAT_PICKER_OPTIONS[tab],
-        minDate: minDate ?? COMMUTER_RAIL_RIDERSHIP_MIN_DATE,
-        maxDate: maxDate ?? TODAY_STRING,
-      };
-    }
+  if (tab === 'Commuter Rail' && page === 'ridership') {
+    return {
+      minDate: minDate ?? COMMUTER_RAIL_RIDERSHIP_MIN_DATE,
+      maxDate: maxDate ?? TODAY_STRING,
+    };
   }
 
   return {
-    ...FLAT_PICKER_OPTIONS[tab],
-    minDate: minDate ?? FLAT_PICKER_OPTIONS[tab].minDate,
-    maxDate: maxDate ?? FLAT_PICKER_OPTIONS[tab].maxDate,
+    minDate: minDate ?? DATE_BOUNDS[tab].minDate,
+    maxDate: maxDate ?? DATE_BOUNDS[tab].maxDate,
   };
 };
 
-const FLAT_PICKER_OPTIONS: {
-  [key in Tab]: DateTimePickerProps['options'] & { minDate: string; maxDate: string };
-} = {
-  Subway: {
-    enableTime: false,
-    minDate: TRAIN_MIN_DATE,
-    maxDate: TODAY_STRING,
-    altInput: true,
-    altFormat: 'M j, Y',
-    dateFormat: 'Y-m-d',
-  },
-  Bus: {
-    enableTime: false,
-    minDate: BUS_MIN_DATE,
-    maxDate: TODAY_STRING,
-    altInput: true,
-    altFormat: 'M j, Y',
-    dateFormat: 'Y-m-d',
-  },
-  System: {
-    enableTime: false,
-    minDate: TRAIN_MIN_DATE,
-    maxDate: TODAY_STRING,
-    altInput: true,
-    altFormat: 'M j, Y',
-    dateFormat: 'Y-m-d',
-  },
-  'Commuter Rail': {
-    enableTime: false,
-    minDate: COMMUTER_RAIL_DATA_MIN_DATE,
-    maxDate: TODAY_STRING,
-    altInput: true,
-    altFormat: 'M j, Y',
-    dateFormat: 'Y-m-d',
-  },
-  Ferry: {
-    enableTime: false,
-    minDate: FERRY_MIN_DATE,
-    maxDate: FERRY_MAX_DATE,
-    altInput: true,
-    altFormat: 'M j, Y',
-    dateFormat: 'Y-m-d',
-  },
-  'The RIDE': {
-    enableTime: false,
-    minDate: RIDE_MIN_DATE,
-    maxDate: RIDE_MAX_DATE,
-    altInput: true,
-    altFormat: 'M j, Y',
-    dateFormat: 'Y-m-d',
-  },
+const DATE_BOUNDS: { [key in Tab]: { minDate: string; maxDate: string } } = {
+  Subway: { minDate: TRAIN_MIN_DATE, maxDate: TODAY_STRING },
+  Bus: { minDate: BUS_MIN_DATE, maxDate: TODAY_STRING },
+  System: { minDate: TRAIN_MIN_DATE, maxDate: TODAY_STRING },
+  'Commuter Rail': { minDate: COMMUTER_RAIL_DATA_MIN_DATE, maxDate: TODAY_STRING },
+  Ferry: { minDate: FERRY_MIN_DATE, maxDate: FERRY_MAX_DATE },
+  'The RIDE': { minDate: RIDE_MIN_DATE, maxDate: RIDE_MAX_DATE },
 };
 
 const SINGLE_RAPID_PRESETS: {
