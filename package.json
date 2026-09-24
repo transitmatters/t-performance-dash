@@ -16,6 +16,7 @@
     "get-speed-restrictions": "cd server && uv run python -m scripts.update_speed_restrictions && cd ..",
     "get-sz-totals": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/slowzones/delay_totals.json",
     "get-szs": "wget -N -x -nH -P public https://dashboard.transitmatters.org/static/slowzones/all_slow.json",
+    "postinstall": "cd server && uv sync",
     "lint": "npm run lint-frontend && npm run lint-backend",
     "lint-backend": "cd server && uv run ruff check . && uv run ruff format . --check",
     "lint-backend-fix": "cd server && uv run ruff check . --fix && uv run ruff format .",
