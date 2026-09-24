@@ -12,6 +12,12 @@ jobs:
       - uses: actions/first-interaction@v3
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_message: |
+            Hello! Thank you for your contribution.
+
+            TransitMatters is a volunteer-run organization, so if you haven't yet we'd appreciate you filling out our volunteer form: https://transitmatters.org/volunteer
+
+            If you have already filled out the form, but have not yet heard back please let us know on this issue and we'll follow up with you!
           pr_message: |
             Hello! Thank you for your contribution.
 
