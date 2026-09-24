@@ -7,6 +7,7 @@ import { WidgetForCarousel } from '../../common/components/widgets/internal/Widg
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import { useDelimitatedRoute } from '../../common/utils/router';
+import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
 import type { ParamsType } from '../speed/constants/speeds';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { PercentageServiceGraph } from './PercentageServiceGraph';
@@ -33,10 +34,11 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
 }) => {
   // TODO: Add 1 or 2 widgets to percentage service graph.
   const { line } = useDelimitatedRoute();
+  const peakService = useScheduledServiceBaseline(line);
 
   const { scheduled, peak } = useMemo(
-    () => getPercentageData(data, predictedData, line),
-    [data, predictedData, line]
+    () => getPercentageData(data, predictedData, peakService),
+    [data, predictedData, peakService]
   );
 
   const { scheduledAverage, peakAverage } = useMemo(() => {
