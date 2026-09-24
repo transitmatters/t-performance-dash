@@ -11,10 +11,11 @@ export interface FleetType {
 // Car types per line, oldest to newest. Only lines with more than one type get a fleet mix chart.
 export const FLEET_TYPES: Partial<Record<Line, FleetType[]>> = {
   'line-red': [
-    { key: 'red1', label: '#1', years: '1969–70' },
-    { key: 'red2', label: '#2', years: '1987–89' },
-    { key: 'red3', label: '#3', years: '1993–94' },
-    { key: 'red4', label: '#4', years: '2019–' },
+    // Named by builder, the way riders usually refer to them ("the CRRC cars")
+    { key: 'red1', label: 'Pullman-Standard', years: '1969–70' },
+    { key: 'red2', label: 'UTDC', years: '1987–89' },
+    { key: 'red3', label: 'Bombardier', years: '1993–94' },
+    { key: 'red4', label: 'CRRC', years: '2019–' },
   ],
   'line-green': [
     { key: 'type7', label: 'Type 7', years: '1986–97' },
