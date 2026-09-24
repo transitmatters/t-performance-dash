@@ -23,6 +23,12 @@ export const BnrdBanner: React.FunctionComponent<BnrdBannerProps> = ({ busRoute 
       case '87':
       case '350/351':
         return BNRD[2].url;
+      case '65':
+      case '60/65-legacy':
+      case '220/221/222':
+      case '434/435/436':
+      case '465':
+        return BNRD[3].url;
       default:
         return BNRD[1].url;
     }
@@ -49,6 +55,20 @@ export const BnrdBanner: React.FunctionComponent<BnrdBannerProps> = ({ busRoute 
         return 'This route now combines former Routes 116/117 with improved frequency, running every 15 minutes or better.';
       case '350/351':
         return 'All Route 350 trips will now serve Burlington Mall Rd.';
+      case '65':
+        return 'Route 65 was restructured to run between Brighton Center and Ruggles via the Longwood Medical Area, replacing its former Kenmore terminus, with improved frequency and span of service.';
+      case '60/65-legacy':
+        return 'Routes 60 and 65 were previously combined for display here. Route 65 was restructured to run between Brighton Center and Ruggles via the Longwood Medical Area; Route 60 is now shown separately.';
+      case '220/221/222':
+        return 'Route 220 now serves only Hingham Depot (the Hingham Center pattern was discontinued) and Route 222 now serves only Lovell Corners (the East Weymouth pattern was discontinued), both with improved frequency.';
+      case '220/221/222-legacy':
+        return 'This reflects the combined Route 220/221/222 pattern before Sept. 6, 2026. Route 220 dropped its Hingham Center pattern and Route 222 dropped its East Weymouth pattern; see the current Route 220/221/222 for the present-day pattern.';
+      case '434/435/436':
+        return 'Outbound Route 435 trips now end at Liberty Tree Mall instead of continuing to Salem Depot.';
+      case '434/435/436-legacy':
+        return 'This reflects the combined Route 434/435/436 pattern before Sept. 6, 2026, when Route 435 still continued past Liberty Tree Mall to Salem Depot; see the current Route 434/435/436 for the present-day pattern.';
+      case '465':
+        return 'Route 465 was restored as a pilot route between Salem Depot and Danvers Square via Liberty Tree Mall.';
       default:
         return BNRD_TEXT;
     }
