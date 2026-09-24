@@ -14,7 +14,7 @@ import {
   faMap,
   faRankingStar,
 } from '@fortawesome/free-solid-svg-icons';
-import type { Line } from '../types/lines';
+import type { BusRoute, Line } from '../types/lines';
 
 export type Page = keyof typeof PAGES;
 
@@ -51,6 +51,9 @@ export type PageMetadata = {
   // Defaults to true. The leaderboard ranks across all routes at once, so it has no single
   // route to parameterize the page with.
   hasRouteSelector?: boolean;
+  // Route to open on when navigating in without one already selected, e.g. from the
+  // leaderboard, which carries no busRoute of its own.
+  defaultBusRoute?: BusRoute;
   dateStoreSection: DateStoreSection;
   title?: string;
 };
@@ -209,6 +212,8 @@ export const ALL_PAGES: PageMap = {
     title: 'Bus speed map',
     lines: ['line-bus'],
     icon: faMap,
+    // Route 1, same as the rest of the bus pages' entry points.
+    defaultBusRoute: '1',
     // 'singleTrips' is the only section whose stored selection is a single date, and
     // sharing it means the chosen service date carries over to and from the trips pages.
     dateStoreSection: 'singleTrips',

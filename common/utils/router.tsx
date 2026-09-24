@@ -372,6 +372,7 @@ const getChartQueryParams = (
 const getBusRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
   if (newPage.hasRouteSelector === false) return;
   if (query.busRoute) return { busRoute: query.busRoute };
+  if (newPage.defaultBusRoute) return { busRoute: newPage.defaultBusRoute };
 };
 
 const getCRRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
