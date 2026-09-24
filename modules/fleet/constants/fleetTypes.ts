@@ -8,7 +8,8 @@ export interface FleetType {
   years: string;
 }
 
-// Car types per line, oldest to newest. Only lines with more than one type get a fleet mix chart.
+// Car types per line, oldest to newest. Only lines with more than one type (now or historically)
+// get a fleet mix chart.
 export const FLEET_TYPES: Partial<Record<Line, FleetType[]>> = {
   'line-red': [
     // Named by builder, the way riders usually refer to them ("the CRRC cars")
@@ -16,6 +17,11 @@ export const FLEET_TYPES: Partial<Record<Line, FleetType[]>> = {
     { key: 'red2', label: 'UTDC', years: '1987–89' },
     { key: 'red3', label: 'Bombardier', years: '1993–94' },
     { key: 'red4', label: 'CRRC', years: '2019–' },
+  ],
+  // Single-type today, but the Hawker Siddeley #12s ran alongside the CRRCs until Aug 2022
+  'line-orange': [
+    { key: 'orange12', label: 'Hawker Siddeley', years: '1979–81' },
+    { key: 'orange14', label: 'CRRC', years: '2018–25' },
   ],
   'line-green': [
     { key: 'type7', label: 'Type 7', years: '1986–97' },
