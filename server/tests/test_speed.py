@@ -21,7 +21,6 @@ def test_fleet_fields_survive_branch_merge():
 
     [record] = aggregate_actual_trips(trips, "daily", "2026-09-21")
 
-    # Line-level fleet values are copied onto each branch row, so they're taken once, not summed
     assert record["fleet_mix_red1"] == 4.1
     assert record["fleet_mix_red4"] == 95.9
     assert record["avg_car_age"] == 24.5

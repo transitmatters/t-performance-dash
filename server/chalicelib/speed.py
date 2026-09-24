@@ -78,8 +78,7 @@ def aggregate_actual_trips(actual_trips, agg, start_date):
     # set index to use datetime object.
     df_grouped.set_index(pd.to_datetime(df_grouped["date"]), inplace=True)
     records = df_grouped.to_dict(orient="records")
-    # Omit fleet fields on days with no fleet data. Left as NaN they'd serialize as bare
-    # `NaN`, which isn't valid JSON and makes the whole response fail to parse client-side.
+    # Drop NaN fleet fields: json.dumps writes them as bare NaN, which isn't valid JSON
     for record in records:
         for col in fleet_cols:
             if pd.isna(record[col]):

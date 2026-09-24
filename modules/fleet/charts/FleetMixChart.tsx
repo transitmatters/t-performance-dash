@@ -57,7 +57,6 @@ export const FleetMixChart: React.FC<FleetMixChartProps> = ({
           redraw={true}
           data={{
             labels,
-            // Oldest type at the bottom of the stack, fading in to the full line color for the newest
             datasets: types.map((type, index) => {
               const color = hexWithAlpha(lineColor, 0.25 + (0.75 * index) / (types.length - 1));
               return {
@@ -68,7 +67,7 @@ export const FleetMixChart: React.FC<FleetMixChartProps> = ({
                 pointHoverRadius: 6,
                 pointBorderWidth: 0,
                 stepped: true,
-                // Fill down to the layer below, not to zero, or the top layer hides the rest
+                // Fill to the layer below; filling to zero lets the top layer cover the rest
                 fill: index === 0 ? 'origin' : '-1',
                 pointHoverBackgroundColor: lineColor,
                 backgroundColor: color,
