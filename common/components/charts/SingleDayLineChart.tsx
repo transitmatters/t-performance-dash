@@ -8,6 +8,14 @@ import type { DataPoint } from '../../types/dataPoints';
 import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
 import type { SingleDayLineProps } from '../../types/charts';
 import { getAlertAnnotations } from '../../../modules/service/utils/graphUtils';
+import { getWeatherAnnotations } from '../../../modules/weather/utils/weatherAnnotations';
+import {
+  TEMPERATURE_LINE_COLOR,
+  getHourlyTemperatureSeries,
+} from '../../../modules/weather/utils/temperatureDataset';
+import { useWeatherData } from '../../api/hooks/weather';
+import { useWeatherStore } from '../../../modules/weather/WeatherStore';
+import { WeatherDisclaimer } from '../../../modules/weather/WeatherDisclaimer';
 import { prettyDate } from '../../utils/date';
 import { DownloadButton } from '../buttons/DownloadButton';
 import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
@@ -110,6 +118,19 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const chartTheme = useChartTheme();
   const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);
   const alertAnnotations = date && alerts ? getAlertAnnotations(alerts, date) : [];
+  const weatherEnabled = useWeatherStore((s) => s.enabled);
+  const tempEnabled = useWeatherStore((s) => s.temperatureEnabled);
+  const { data: weather, isLoading: isWeatherLoading } = useWeatherData(
+    { start_date: date, end_date: date },
+    Boolean(date)
+  );
+  const weatherAnnotations = weatherEnabled
+    ? getWeatherAnnotations(weather ?? [], { granularity: 'hourly' })
+    : [];
+  const temperaturePoints = useMemo(
+    () => (tempEnabled && weather ? getHourlyTemperatureSeries(weather) : []),
+    [tempEnabled, weather]
+  );
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
 
@@ -152,6 +173,60 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
     ((datapoint[metricField] as number) * multiplier).toFixed(2)
   );
 
+  const datasets: Array<Record<string, unknown>> = [
+    {
+      label: `Actual`,
+      fill: false,
+      borderColor: chartTheme.benchmarkLine,
+      pointBackgroundColor: pointColors(
+        data,
+        metricField,
+        chartTheme.neutralPoint,
+        effectiveBenchmarkData,
+        showUnderRatio
+      ),
+      pointHoverRadius: 3,
+      pointHoverBackgroundColor: pointColors(
+        data,
+        metricField,
+        chartTheme.neutralPoint,
+        effectiveBenchmarkData,
+        showUnderRatio
+      ),
+      pointRadius: 3,
+      pointHitRadius: 10,
+      data: convertedData,
+    },
+    {
+      // Dataset label switches based on whether any point on this
+      // chart uses the TM value. The tooltip overrides this per
+      // point to get the exact name right for each hover.
+      label: usingTmBenchmark ? `TransitMatters Benchmark` : `MBTA Benchmark`,
+      backgroundColor: chartTheme.benchmarkFill,
+      data: effectiveBenchmarkFormatted,
+      pointRadius: 0,
+      pointHoverRadius: 3,
+      fill: true,
+      hidden: !displayBenchmarkData,
+    },
+  ];
+
+  if (temperaturePoints.length > 0) {
+    datasets.push({
+      label: 'Temperature',
+      data: temperaturePoints,
+      yAxisID: 'yTemp',
+      borderColor: TEMPERATURE_LINE_COLOR,
+      borderWidth: 2,
+      pointRadius: 0,
+      pointHoverRadius: 3,
+      pointHoverBackgroundColor: TEMPERATURE_LINE_COLOR,
+      fill: false,
+      tension: 0.3,
+      spanGaps: true,
+    });
+  }
+
   return (
     <ChartStack>
       <ChartDiv isMobile={isMobile}>
@@ -162,43 +237,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
           redraw={true}
           data={{
             labels,
-            datasets: [
-              {
-                label: `Actual`,
-                fill: false,
-                borderColor: chartTheme.benchmarkLine,
-                pointBackgroundColor: pointColors(
-                  data,
-                  metricField,
-                  chartTheme.neutralPoint,
-                  effectiveBenchmarkData,
-                  showUnderRatio
-                ),
-                pointHoverRadius: 3,
-                pointHoverBackgroundColor: pointColors(
-                  data,
-                  metricField,
-                  chartTheme.neutralPoint,
-                  effectiveBenchmarkData,
-                  showUnderRatio
-                ),
-                pointRadius: 3,
-                pointHitRadius: 10,
-                data: convertedData,
-              },
-              {
-                // Dataset label switches based on whether any point on this
-                // chart uses the TM value. The tooltip overrides this per
-                // point to get the exact name right for each hover.
-                label: usingTmBenchmark ? `TransitMatters Benchmark` : `MBTA Benchmark`,
-                backgroundColor: chartTheme.benchmarkFill,
-                data: effectiveBenchmarkFormatted,
-                pointRadius: 0,
-                pointHoverRadius: 3,
-                fill: true,
-                hidden: !displayBenchmarkData,
-              },
-            ],
+            // @ts-expect-error mixed data shapes (string[] and {x,y}[]) in one chart
+            datasets,
           }}
           options={{
             responsive: true,
@@ -218,6 +258,9 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                     if (!tooltipItem.parsed.y || (tooltipItem.parsed.y === 0 && isBenchmark)) {
                       return '';
                     }
+                    if ((tooltipItem.dataset as { yAxisID?: string }).yAxisID === 'yTemp') {
+                      return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y} °F`;
+                    }
                     // Per-point label: a chart in "TM mode" can still have
                     // individual points that fell back to MBTA; name each
                     // point's benchmark source honestly.
@@ -235,13 +278,15 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   afterBody: (tooltipItems) => {
                     const result: string[] = [];
 
+                    // Add departure from normal information
+                    const actualItem = tooltipItems.find((t) => t.dataset.label === 'Actual');
                     const benchmarkItem = tooltipItems.find(
                       (t) =>
                         t.dataset.label === 'MBTA Benchmark' ||
                         t.dataset.label === 'TransitMatters Benchmark'
                     );
                     const departureInfo = departureFromNormalString(
-                      tooltipItems[0].parsed.y ?? 0,
+                      actualItem?.parsed.y ?? 0,
                       benchmarkItem?.parsed.y ?? 0,
                       showUnderRatio,
                       usingTmBenchmark ? 'benchmark' : 'schedule'
@@ -251,7 +296,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                     }
 
                     // Add vehicle consist information if available
-                    const { dataIndex } = tooltipItems[0];
+                    const { dataIndex } = actualItem ?? tooltipItems[0];
                     const dataPoint = data[dataIndex];
                     if (dataPoint?.vehicle_consist) {
                       const arrNums = dataPoint.vehicle_consist.split('|').map(Number);
@@ -286,7 +331,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
               },
               annotation: {
                 // Add your annotations here
-                annotations: alertAnnotations,
+                annotations: [...alertAnnotations, ...weatherAnnotations],
               },
             },
             scales: {
@@ -306,6 +351,19 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                   display: true,
                   text: units,
                   color: chartTheme.tick,
+                },
+              },
+              yTemp: {
+                type: 'linear',
+                position: 'right',
+                display: tempEnabled,
+                title: {
+                  display: true,
+                  text: '°F',
+                  color: chartTheme.tick,
+                },
+                grid: {
+                  drawOnChartArea: false,
                 },
               },
               x: {
@@ -350,6 +408,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
       </ChartDiv>
       <div className="flex flex-col">
         {alerts && <AlertsDisclaimer alerts={alerts} />}
+        {date && <WeatherDisclaimer hours={weather} isLoading={isWeatherLoading} />}
         <div className="flex flex-row flex-wrap items-end justify-between gap-x-6 gap-y-2">
           {showLegend && benchmarkField ? (
             <LegendSingleDay showUnderRatio={showUnderRatio} usingTmBenchmark={usingTmBenchmark} />

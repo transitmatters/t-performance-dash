@@ -14,6 +14,15 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { useChartTheme } from '../../utils/chartTheme';
 import { getFormattedTimeString } from '../../utils/time';
+import { getWeatherAnnotations } from '../../../modules/weather/utils/weatherAnnotations';
+import {
+  TEMPERATURE_BAND_COLOR,
+  TEMPERATURE_LINE_COLOR,
+  getDailyTemperatureSeries,
+} from '../../../modules/weather/utils/temperatureDataset';
+import { useWeatherData } from '../../api/hooks/weather';
+import { useWeatherStore } from '../../../modules/weather/WeatherStore';
+import { WeatherDisclaimer } from '../../../modules/weather/WeatherDisclaimer';
 import { LegendLongTerm } from './Legend';
 import { ChartStack } from './ChartStack';
 import { ChartDiv } from './ChartDiv';
@@ -79,6 +88,18 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const hourly = timeUnit === 'hour';
+  const weatherEnabled = useWeatherStore((s) => s.enabled);
+  const tempEnabled = useWeatherStore((s) => s.temperatureEnabled);
+  const { data: weather, isLoading: isWeatherLoading } = useWeatherData(
+    { start_date: startDate, end_date: endDate },
+    !hourly && (weatherEnabled || tempEnabled) && Boolean(startDate && endDate)
+  );
+  const weatherBlocks =
+    hourly || !weatherEnabled ? [] : getWeatherAnnotations(weather ?? [], { granularity: 'daily' });
+  const temperatureSeries = useMemo(
+    () => (!hourly && tempEnabled && weather ? getDailyTemperatureSeries(weather) : null),
+    [hourly, tempEnabled, weather]
+  );
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const [isTrendlineVisible, setIsTrendlineVisible] = useState(false);
@@ -89,7 +110,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
     return calculateTrendline(data, pointField, multiplier);
   }, [data, pointField, multiplier, isTrendlineVisible]);
 
-  const datasets = [
+  const datasets: Array<Record<string, unknown>> = [
     {
       label: 'Trend',
       fill: false,
@@ -132,6 +153,43 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
     },
   ];
 
+  if (temperatureSeries && temperatureSeries.mean.length > 0) {
+    const minIndex = datasets.length;
+    datasets.push({
+      label: 'Daily low',
+      data: temperatureSeries.min,
+      yAxisID: 'yTemp',
+      borderColor: 'transparent',
+      pointRadius: 0,
+      pointHitRadius: 0,
+      fill: false,
+      tension: 0.3,
+    });
+    datasets.push({
+      label: 'Daily high',
+      data: temperatureSeries.max,
+      yAxisID: 'yTemp',
+      borderColor: 'transparent',
+      backgroundColor: TEMPERATURE_BAND_COLOR,
+      pointRadius: 0,
+      pointHitRadius: 0,
+      fill: { target: minIndex },
+      tension: 0.3,
+    });
+    datasets.push({
+      label: 'Daily mean',
+      data: temperatureSeries.mean,
+      yAxisID: 'yTemp',
+      borderColor: TEMPERATURE_LINE_COLOR,
+      borderWidth: 2,
+      pointRadius: 0,
+      pointHoverRadius: 3,
+      pointHoverBackgroundColor: TEMPERATURE_LINE_COLOR,
+      fill: false,
+      tension: 0.3,
+    });
+  }
+
   return (
     <ChartStack>
       <ChartDiv isMobile={isMobile}>
@@ -166,6 +224,18 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 },
                 suggestedMin: suggestedYMin,
                 suggestedMax: suggestedYMax,
+              },
+              yTemp: {
+                type: 'linear',
+                position: 'right',
+                display: !hourly && tempEnabled,
+                title: {
+                  display: true,
+                  text: '°F',
+                },
+                grid: {
+                  drawOnChartArea: false,
+                },
               },
               x: {
                 grid: { display: false },
@@ -202,6 +272,9 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
             },
             watermark: watermarkLayout(isMobile),
             plugins: {
+              annotation: {
+                annotations: weatherBlocks,
+              },
               legend: {
                 display: false,
               },
@@ -211,6 +284,11 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 callbacks: {
                   label: (tooltipItem) => {
                     if (!tooltipItem.parsed.y) return '';
+                    const isTemp =
+                      (tooltipItem.dataset as { yAxisID?: string }).yAxisID === 'yTemp';
+                    if (isTemp) {
+                      return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y} °F`;
+                    }
                     return `${tooltipItem.dataset.label}: ${
                       yUnit === 'Minutes'
                         ? getFormattedTimeString(tooltipItem.parsed.y, 'minutes')
@@ -224,34 +302,39 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           plugins={[ChartjsPluginWatermark]}
         />
       </ChartDiv>
-      <div className="flex flex-row flex-wrap items-end gap-x-4 gap-y-2">
-        {showLegend && (
-          <LegendLongTerm
-            isTrendlineVisible={isTrendlineVisible}
-            onToggleTrendline={() => setIsTrendlineVisible(!isTrendlineVisible)}
-          />
+      <div className="flex flex-col">
+        {!hourly && startDate && endDate && (
+          <WeatherDisclaimer hours={weather} isLoading={isWeatherLoading} />
         )}
-        {startDate && (
-          <div className="-mr-2.5 ml-auto flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
-            <CopyLinkButton />
-            <SaveChartImageButton
-              chartRef={ref}
-              datasetName={fname}
-              location={location}
-              includeBothStopsForLocation={includeBothStopsForLocation}
-              startDate={startDate}
-              endDate={endDate}
-              chartTitle={chartTitle}
+        <div className="flex flex-row flex-wrap items-end gap-x-4 gap-y-2">
+          {showLegend && (
+            <LegendLongTerm
+              isTrendlineVisible={isTrendlineVisible}
+              onToggleTrendline={() => setIsTrendlineVisible(!isTrendlineVisible)}
             />
-            <DownloadButton
-              data={data}
-              datasetName={fname}
-              location={location}
-              includeBothStopsForLocation={includeBothStopsForLocation}
-              startDate={startDate}
-            />
-          </div>
-        )}
+          )}
+          {startDate && (
+            <div className="-mr-2.5 ml-auto flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
+              <CopyLinkButton />
+              <SaveChartImageButton
+                chartRef={ref}
+                datasetName={fname}
+                location={location}
+                includeBothStopsForLocation={includeBothStopsForLocation}
+                startDate={startDate}
+                endDate={endDate}
+                chartTitle={chartTitle}
+              />
+              <DownloadButton
+                data={data}
+                datasetName={fname}
+                location={location}
+                includeBothStopsForLocation={includeBothStopsForLocation}
+                startDate={startDate}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </ChartStack>
   );
