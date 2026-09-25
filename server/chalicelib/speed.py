@@ -51,7 +51,7 @@ def aggregate_actual_trips(actual_trips, agg, start_date):
 
     Returns:
         List of aggregated record dicts with date, miles_covered, total_time,
-        count, line, and (when present) avg_car_age/pct_new_trips fields.
+        count, line, and (when present) avg_car_age/pct_new_trips/fleet_mix_* fields.
     """
     flat_data = [entry for sublist in actual_trips for entry in sublist]
     # Create a DataFrame from the flattened data
@@ -69,15 +69,21 @@ def aggregate_actual_trips(actual_trips, agg, start_date):
         "count": "sum",
         "line": "first",
     }
-    # Fleet age metrics (see data-ingestion's car_ages.py) are computed once per line and
+    # Fleet metrics (see data-ingestion's car_ages.py) are computed once per line and
     # copied onto every branch's record, so "first" recovers the line-level value untouched.
-    for col in ("avg_car_age", "pct_new_trips"):
-        if col in df.columns:
-            agg_dict[col] = "first"
+    fleet_cols = [col for col in df.columns if col in ("avg_car_age", "pct_new_trips") or col.startswith("fleet_mix_")]
+    for col in fleet_cols:
+        agg_dict[col] = "first"
     df_grouped = df.groupby("date").agg(agg_dict).reset_index()
     # set index to use datetime object.
     df_grouped.set_index(pd.to_datetime(df_grouped["date"]), inplace=True)
-    return df_grouped.to_dict(orient="records")
+    records = df_grouped.to_dict(orient="records")
+    # Drop NaN fleet fields: json.dumps writes them as bare NaN, which isn't valid JSON
+    for record in records:
+        for col in fleet_cols:
+            if pd.isna(record[col]):
+                del record[col]
+    return records
 
 
 def trip_metrics_by_line(params: TripMetricsByLineParams):
