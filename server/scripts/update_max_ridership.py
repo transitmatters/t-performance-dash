@@ -135,6 +135,7 @@ if __name__ == "__main__":
         "CR-Newburyport",
         "CR-NewBedford",
         "CR-Providence",
+        "CR-CapeFlyer",
         "line-commuter-rail",
     ]
     # Example usage with command line arguments
