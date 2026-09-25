@@ -9,7 +9,7 @@ import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { HERO_LINE_WIDTH } from '../../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../../common/utils/general';
-import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
+import type { SpeedTripMetrics } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
@@ -23,7 +23,7 @@ import { addMPHToSpeedData } from '../../../common/utils/csv';
 import type { ParamsType } from '../constants/speeds';
 
 interface SpeedGraphProps {
-  data: DeliveredTripMetrics[];
+  data: SpeedTripMetrics[];
   config: ParamsType;
   startDate: string;
   endDate: string;
@@ -76,12 +76,18 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                   (datapoint.miles_covered / (datapoint.total_time / 3600)).toFixed(1)
                 ),
               },
-              {
-                // This null dataset produces the entry in the legend for the baseline annotation.
-                label: `Historical Maximum (${peak} mph)`,
-                backgroundColor: CHART_COLORS.ANNOTATIONS,
-                data: null,
-              },
+              // No baseline is established for every line yet (PEAK_SPEED defaults to 0),
+              // so skip the null dataset that produces the baseline's legend entry rather
+              // than show a misleading "Historical Maximum (0 mph)".
+              ...(peak > 0
+                ? [
+                    {
+                      label: `Historical Maximum (${peak} mph)`,
+                      backgroundColor: CHART_COLORS.ANNOTATIONS,
+                      data: null,
+                    },
+                  ]
+                : []),
             ],
           }}
           options={{
@@ -125,16 +131,22 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
               annotation: {
                 // Add your annotations here
                 annotations: [
-                  {
-                    type: 'line',
-                    yMin: peak,
-                    yMax: peak,
-                    borderColor: CHART_COLORS.ANNOTATIONS,
-                    // corresponds to null dataset index.
-                    display: (ctx) => ctx.chart.isDatasetVisible(1),
-                    borderWidth: 2,
-                    borderDash: peakLineDashed ? [6, 6] : undefined,
-                  },
+                  // Kept in lockstep with the dataset above: index 1 is only the peak
+                  // dataset when peak > 0 added it.
+                  ...(peak > 0
+                    ? [
+                        {
+                          type: 'line' as const,
+                          yMin: peak,
+                          yMax: peak,
+                          borderColor: CHART_COLORS.ANNOTATIONS,
+                          // corresponds to null dataset index.
+                          display: (ctx) => ctx.chart.isDatasetVisible(1),
+                          borderWidth: 2,
+                          borderDash: peakLineDashed ? [6, 6] : undefined,
+                        },
+                      ]
+                    : []),
                   ...shuttlingBlocks,
                 ],
               },

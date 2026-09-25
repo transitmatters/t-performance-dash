@@ -231,6 +231,23 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   return href;
 };
 
+/**
+ * Unlike getBusRouteSelectionItemHref, this deliberately navigates rather than reparameterizing
+ * the current page -- the leaderboard's "by route" view has no filtered view of its own to land
+ * on, only the speed map does (via the same `busRoute` param, resolved there against the loaded
+ * tileset's route_ids -- see BusSpeedMapDetails).
+ */
+export const getBusSpeedMapRouteHref = (newRoute: string, route: Route): string => {
+  const { query } = route;
+  delete query.from;
+  delete query.to;
+  const queryParams = query
+    ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
+    : new URLSearchParams();
+  queryParams.append('busRoute', newRoute);
+  return `/bus/speedmap?${queryParams.toString()}`;
+};
+
 export const getCommuterRailRouteSelectionItemHref = (newRoute: string, route: Route): string => {
   const { query, page } = route;
   const currentPage = ALL_PAGES[page] ?? ALL_PAGES['singleTrips'];
@@ -352,15 +369,19 @@ const getChartQueryParams = (
   );
 };
 
-const getBusRouteQueryParam = (query: QueryParams) => {
+const getBusRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
+  if (newPage.hasRouteSelector === false) return;
   if (query.busRoute) return { busRoute: query.busRoute };
+  if (newPage.defaultBusRoute) return { busRoute: newPage.defaultBusRoute };
 };
 
-const getCRRouteQueryParam = (query: QueryParams) => {
+const getCRRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
+  if (newPage.hasRouteSelector === false) return;
   if (query.crRoute) return { crRoute: query.crRoute };
 };
 
-const getFerryRouteQueryParam = (query: QueryParams) => {
+const getFerryRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
+  if (newPage.hasRouteSelector === false) return;
   if (query.ferryRoute) return { ferryRoute: query.ferryRoute };
 };
 
@@ -388,9 +409,9 @@ const getQueryParams = (
     ...getStationQueryParams(currentPage, newPage, query, stationStore),
     ...getDateQueryParams(currentPage, newPage, query, dateStore),
     ...getChartQueryParams(currentPage, newPage, query),
-    ...getBusRouteQueryParam(query),
-    ...getCRRouteQueryParam(query),
-    ...getFerryRouteQueryParam(query),
+    ...getBusRouteQueryParam(newPage, query),
+    ...getCRRouteQueryParam(newPage, query),
+    ...getFerryRouteQueryParam(newPage, query),
   };
 };
 

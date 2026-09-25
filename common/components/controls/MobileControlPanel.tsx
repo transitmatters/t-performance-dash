@@ -16,6 +16,8 @@ interface MobileControlPanelProps {
   crRoute: CommuterRailRoute | undefined;
   line: Line | undefined;
   ferryRoute: FerryRoute | undefined;
+  hasStationStore?: boolean;
+  hasRouteSelector?: boolean;
 }
 
 export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
@@ -24,6 +26,8 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   busRoute,
   crRoute,
   ferryRoute,
+  hasStationStore,
+  hasRouteSelector = true,
 }) => {
   const singleDate = dateStoreSection === 'singleTrips';
   // Bus yellow and the other light line colors can't carry white text.
@@ -33,26 +37,31 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
       return (
         <>
           <div className="flex flex-row flex-wrap items-center gap-x-2 gap-y-2 p-1 pb-0">
-            <RouteSelector />
-            <TripModeToggle />
+            {hasRouteSelector && <RouteSelector />}
+            {/* See ControlPanel: pages that merely borrow the singleTrips section for date
+                storage (like the bus speed map) aren't part of the single/multi trips flow. */}
+            {hasStationStore && <TripModeToggle />}
             <DateControl
               dateStoreSection={dateStoreSection}
               queryType={singleDate ? 'single' : 'range'}
             />
           </div>
-          <div
-            className={classNames(
-              'flex flex-row items-center justify-center',
-              lineColorBackground[line ?? 'DEFAULT']
-            )}
-          >
-            <StationSelectorWidget
-              line={line}
-              busRoute={busRoute}
-              crRoute={crRoute}
-              ferryRoute={ferryRoute}
-            />
-          </div>
+          {/* See ControlPanel: a single-date page isn't necessarily a stop-to-stop page. */}
+          {hasStationStore && (
+            <div
+              className={classNames(
+                'flex flex-row items-center justify-center',
+                lineColorBackground[line ?? 'DEFAULT']
+              )}
+            >
+              <StationSelectorWidget
+                line={line}
+                busRoute={busRoute}
+                crRoute={crRoute}
+                ferryRoute={ferryRoute}
+              />
+            </div>
+          )}
         </>
       );
     }
@@ -62,7 +71,10 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
       dateStoreSection === 'system'
     ) {
       return (
-        <div className="p-1">
+        <div className="flex flex-row flex-wrap items-center gap-x-2 gap-y-2 p-1">
+          {/* Matches desktop PrimaryControls; RouteSelector renders nothing for lines without
+              routes (rail, System), so this only shows on bus/CR/ferry pages. */}
+          {hasRouteSelector && <RouteSelector />}
           <DateControl dateStoreSection={dateStoreSection} queryType={'range'} />
         </div>
       );

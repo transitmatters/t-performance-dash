@@ -47,6 +47,20 @@ export const FERRY_MAX_DATE_MINUS_ONE_WEEK = dayjs(FERRY_MAX_DATE)
   .format(DATE_FORMAT);
 export const BUS_MAX_DATE = '2025-10-31';
 export const BUS_MAX_DAY = dayjs(BUS_MAX_DATE);
+/**
+ * Mirrors LAMP_BUS_START_DATE in server/chalicelib/date_utils.py. From this date on, bus
+ * event downloads (headways/dwells/travel-times) are served from LAMP instead of the raw,
+ * uncleaned MBTA V3 stream -- see GobbleDataNotice. Distinct from BUS_SPEED_MAP_MIN_DATE
+ * below, which gates a separate, segment-level LAMP dataset built for the speed map.
+ */
+export const LAMP_BUS_START_DATE = '2026-01-01';
+export const LAMP_BUS_START_DAY = dayjs(LAMP_BUS_START_DATE);
+/**
+ * LAMP's bus history — and so the per-segment speed dataset built from it — starts here.
+ * Note this leaves a genuine gap: the monthly archive behind BUS_MAX_DATE ends 2025-10-31,
+ * and nothing covers 2025-11-01 through 2025-12-23 in either layout.
+ */
+export const BUS_SPEED_MAP_MIN_DATE = '2025-12-24';
 export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
   .subtract(7, 'days')
   .format(DATE_FORMAT);
@@ -99,6 +113,16 @@ export const getDatePickerBounds = (
   route?: CommuterRailRoute | BusRoute
 ): { minDate: string; maxDate: string } => {
   const { minDate, maxDate } = getMinMaxDatesForRoute(tab, route);
+
+  // The speed map and the leaderboard's segment view read the LAMP-derived segment files,
+  // which cover a different (and much shorter) window than the rest of the bus data, and are
+  // published a day in arrears. The leaderboard's route view shares the same date control.
+  if (page === 'speedmap' || page === 'leaderboard') {
+    return {
+      minDate: BUS_SPEED_MAP_MIN_DATE,
+      maxDate: YESTERDAY_STRING,
+    };
+  }
 
   if (tab === 'Commuter Rail' && page === 'ridership') {
     return {

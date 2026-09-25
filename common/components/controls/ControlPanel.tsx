@@ -12,6 +12,8 @@ interface ControlPanelProps {
   crRoute: CommuterRailRoute | undefined;
   line: Line | undefined;
   ferryRoute: FerryRoute | undefined;
+  hasStationStore?: boolean;
+  hasRouteSelector?: boolean;
 }
 
 const isTripsSection = (dateStoreSection: DateStoreSection) =>
@@ -24,13 +26,20 @@ const hasDateControl = (dateStoreSection: DateStoreSection) =>
   dateStoreSection === 'system';
 
 /** Route and date: the controls that sit on the title row. */
-export const PrimaryControls: React.FC<ControlPanelProps> = ({ dateStoreSection, line }) => {
+export const PrimaryControls: React.FC<ControlPanelProps> = ({
+  dateStoreSection,
+  line,
+  hasStationStore,
+  hasRouteSelector = true,
+}) => {
   if (!hasDateControl(dateStoreSection)) return null;
   const queryType = dateStoreSection === 'singleTrips' ? 'single' : 'range';
   return (
     <div className="flex shrink-0 flex-row flex-wrap items-center gap-x-2 gap-y-2 overflow-visible">
-      <RouteSelector />
-      {isTripsSection(dateStoreSection) && <TripModeToggle />}
+      {hasRouteSelector && <RouteSelector />}
+      {/* The toggle switches between the two trips pages, so pages that merely borrow the
+          singleTrips section for date storage (like the bus speed map) shouldn't show it. */}
+      {isTripsSection(dateStoreSection) && hasStationStore && <TripModeToggle />}
       {line || dateStoreSection === 'system' ? (
         <DateControl dateStoreSection={dateStoreSection} queryType={queryType} />
       ) : null}
@@ -45,8 +54,12 @@ export const StationControls: React.FC<ControlPanelProps> = ({
   busRoute,
   crRoute,
   ferryRoute,
+  hasStationStore,
 }) => {
-  if (!isTripsSection(dateStoreSection) || !line) return null;
+  // Pages can share the single-date section without being about a pair of stops — the bus
+  // speed map covers the whole network — so the picker follows the page's own hasStationStore
+  // rather than the section it stores dates under.
+  if (!isTripsSection(dateStoreSection) || !line || !hasStationStore) return null;
   return (
     <div className="flex w-full flex-row items-center overflow-visible">
       <StationSelectorWidget

@@ -428,6 +428,61 @@ def get_trips_by_line():
 
 
 @app.route(
+    "/api/bustripmetrics",
+    cors=cors_config,
+    docs=Docs(request=models.BusTripMetricsParams, response=models.BusTripMetricsResponse),
+)
+def get_bus_trip_metrics():
+    """Retrieve daily speed/trip metrics for a single bus route over a date range."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date", "route"])
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_bus_trip_metrics(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/bustripmetrics", query_params)
+    else:
+        data = speed.trip_metrics_by_bus_route(query_params)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
+    "/api/busspeedleaderboard",
+    cors=cors_config,
+    docs=Docs(request=models.BusSpeedLeaderboardParams, response=models.BusSpeedLeaderboardResponse),
+)
+def get_bus_speed_leaderboard():
+    """Retrieve the slowest bus routes (by average speed) over a date range."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date"])
+    cache_max_age = cache.get_cache_max_age(query_params)
+    try:
+        # 200 comfortably covers every route the dashboard tracks (~115 as of writing), so a
+        # "show all" request never gets truncated. The full ranked list is already cached in S3
+        # regardless of limit (see bus_speed_leaderboard), so a larger slice costs nothing extra.
+        limit = min(max(int(query_params.get("limit", 10)), 1), 200)
+    except ValueError:
+        raise BadRequestError("Invalid limit parameter.")
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_bus_speed_leaderboard(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/busspeedleaderboard", query_params)
+    else:
+        data = speed.bus_speed_leaderboard(query_params["start_date"], query_params["end_date"], limit)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
     "/api/scheduledservice",
     cors=cors_config,
     docs=Docs(request=models.ScheduledServiceParams, response=models.GetScheduledServiceResponse),

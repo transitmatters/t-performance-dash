@@ -99,8 +99,7 @@ export interface SpeedDataPoint {
   value: number;
 }
 
-export interface DeliveredTripMetrics {
-  line: Line;
+export interface SpeedTripMetrics {
   date: string;
   miles_covered: number;
   total_time: number;
@@ -108,6 +107,37 @@ export interface DeliveredTripMetrics {
   miles_per_hour?: string;
   avg_car_age?: number;
   pct_new_trips?: number;
+}
+
+export interface DeliveredTripMetrics extends SpeedTripMetrics {
+  line: Line;
+}
+
+/**
+ * Daily speed metrics for a single bus route, from the DeliveredTripMetricsBus table.
+ * Unlike rail, miles_covered/total_time are summed directly from observed segments
+ * rather than extrapolated, but the mph formula (miles_covered / (total_time / 3600))
+ * is the same.
+ */
+export interface DeliveredTripMetricsBus extends SpeedTripMetrics {
+  route: string;
+  n_traversals: number;
+  n_interpolated: number;
+  median_speed_mph: number;
+  mean_speed_mph: number;
+}
+
+/**
+ * One route's totals over a date range, as ranked by /api/busspeedleaderboard. mph is
+ * derived client-side the same way as everywhere else (miles_covered / (total_time / 3600))
+ * from figures summed across the range, not averaged day-by-day.
+ */
+export interface BusSpeedLeaderboardEntry {
+  route: string;
+  miles_covered: number;
+  total_time: number;
+  count: number;
+  n_traversals: number;
 }
 
 export type LineSegmentData = {

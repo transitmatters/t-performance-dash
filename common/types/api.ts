@@ -52,6 +52,26 @@ export type FetchDeliveredTripMetricsOptions = {
   line?: Line;
 };
 
+export type FetchBusTripMetricsOptions = {
+  start_date?: string;
+  end_date?: string;
+  route?: string;
+  agg?: AggType;
+};
+
+export enum FetchBusTripMetricsParams {
+  startDate = 'start_date',
+  endDate = 'end_date',
+  route = 'route',
+  agg = 'agg',
+}
+
+export type FetchBusSpeedLeaderboardOptions = {
+  start_date?: string;
+  end_date?: string;
+  limit?: number;
+};
+
 export type FetchAlertDelaysByLineOptions = {
   start_date?: string;
   end_date?: string;

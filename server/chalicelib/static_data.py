@@ -72,6 +72,31 @@ def get_trip_metrics(query_params: dict):
     return data or []
 
 
+# Bus trip metrics static data
+def get_bus_trip_metrics(query_params: dict):
+    """Get bus trip metrics from static cache.
+
+    Args:
+        query_params: Dict of query parameters. Recognized keys: ``route``.
+
+    Returns:
+        A list of daily trip metric records, or an empty list if no data is found.
+    """
+    route = query_params.get("route", "")
+    data = _load_static_json(f"bustripmetrics/{route}.json")
+    return data or []
+
+
+def get_bus_speed_leaderboard(query_params: dict):
+    """Get the bus speed leaderboard from static cache.
+
+    Returns:
+        A list of ranked route summaries, or an empty list if no data is found.
+    """
+    data = _load_static_json("bustripmetrics/leaderboard.json")
+    return data or []
+
+
 # Scheduled service static data
 def get_scheduled_service(query_params: dict):
     """Get scheduled service from static cache.

@@ -38,6 +38,8 @@ export const DesktopHeader: React.FC = () => {
     busRoute,
     crRoute,
     ferryRoute,
+    hasStationStore: ALL_PAGES[page]?.hasStationStore,
+    hasRouteSelector: ALL_PAGES[page]?.hasRouteSelector,
   };
 
   return (

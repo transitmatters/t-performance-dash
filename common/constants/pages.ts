@@ -11,8 +11,10 @@ import {
   faCalendarDays,
   faCalendarXmark,
   faTrain,
+  faMap,
+  faRankingStar,
 } from '@fortawesome/free-solid-svg-icons';
-import type { Line } from '../types/lines';
+import type { BusRoute, Line } from '../types/lines';
 
 export type Page = keyof typeof PAGES;
 
@@ -30,6 +32,10 @@ export enum PAGES {
   ridership = 'ridership',
   singleTrips = 'singleTrips',
   multiTrips = 'multiTrips',
+  // Must stay identical to the URL segment: getPage() in common/utils/router.tsx returns
+  // the raw path segment for a top-level page, and ALL_PAGES is indexed by the result.
+  speedmap = 'speedmap',
+  leaderboard = 'leaderboard',
 }
 
 export type DateStoreSection =
@@ -42,6 +48,12 @@ export type PageMetadata = {
   lines: Line[];
   icon: IconDefinition;
   hasStationStore?: boolean;
+  // Defaults to true. The leaderboard ranks across all routes at once, so it has no single
+  // route to parameterize the page with.
+  hasRouteSelector?: boolean;
+  // Route to open on when navigating in without one already selected, e.g. from the
+  // leaderboard, which carries no busRoute of its own.
+  defaultBusRoute?: BusRoute;
   dateStoreSection: DateStoreSection;
   title?: string;
 };
@@ -109,7 +121,7 @@ export const ALL_PAGES: PageMap = {
     key: 'speed',
     path: '/speed',
     name: 'Speed',
-    lines: ['line-red', 'line-orange', 'line-blue', 'line-green', 'line-mattapan'],
+    lines: ['line-red', 'line-orange', 'line-blue', 'line-green', 'line-mattapan', 'line-bus'],
     icon: faGaugeHigh,
     dateStoreSection: 'line',
   },
@@ -193,6 +205,36 @@ export const ALL_PAGES: PageMap = {
     icon: faUsers,
     dateStoreSection: 'line',
   },
+  speedmap: {
+    key: 'speedmap',
+    path: '/speedmap',
+    name: 'Speed map',
+    title: 'Bus speed map',
+    lines: ['line-bus'],
+    icon: faMap,
+    // Route 1, same as the rest of the bus pages' entry points.
+    defaultBusRoute: '1',
+    // 'singleTrips' is the only section whose stored selection is a single date, and
+    // sharing it means the chosen service date carries over to and from the trips pages.
+    dateStoreSection: 'singleTrips',
+  },
+  leaderboard: {
+    key: 'leaderboard',
+    path: '/leaderboard',
+    name: 'Leaderboard',
+    title: 'Bus speed leaderboard',
+    lines: ['line-bus'],
+    icon: faRankingStar,
+    // Ranks across every route or segment at once, so there's no single route to
+    // parameterize the page with.
+    hasRouteSelector: false,
+    // Single date rather than a range: the "by segment" view's day/week/month files are
+    // precomputed alongside the speed map's pmtiles from the same generation step, and only
+    // cover those same materialized periods, not an arbitrary range. The "by route" view
+    // derives its own start/end range from this same single date + period (periodDateRange in
+    // modules/busspeedmap/utils.ts) rather than getting a second, mismatched date control.
+    dateStoreSection: 'singleTrips',
+  },
 };
 
 /* Groups of pages for tab sections */
@@ -201,7 +243,12 @@ export const TRIP_PAGES = [ALL_PAGES.singleTrips, ALL_PAGES.multiTrips];
 /* Multi-day trips is reached from the in-page TripModeToggle, not the sidebar */
 export const NAV_TRIP_PAGES = [ALL_PAGES.singleTrips];
 
-export const BUS_OVERVIEW = [ALL_PAGES.ridership];
+export const BUS_OVERVIEW = [
+  ALL_PAGES.ridership,
+  ALL_PAGES.speed,
+  ALL_PAGES.speedmap,
+  ALL_PAGES.leaderboard,
+];
 
 export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.ridership];
 

@@ -1,7 +1,7 @@
 """DynamoDB access layer for querying trip metrics, scheduled service, and ridership data."""
 
 from datetime import date
-from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Attr, Key
 import boto3
 from dynamodb_json import json_util as ddb_json
 from chalicelib import constants
@@ -35,8 +35,48 @@ def query_daily_trips_on_route(table_name: str, route, start_date: str | date, e
       list[dict]: Deserialized trip metric records.
     """
     table = dynamodb.Table(table_name)
-    response = table.query(KeyConditionExpression=Key("route").eq(route) & Key("date").between(start_date, end_date))
-    return ddb_json.loads(response["Items"])
+    # Paginate: long bus ranges (rolled up to weekly/monthly in speed.py) can exceed a single
+    # 1MB query page for one route.
+    query_kwargs = {"KeyConditionExpression": Key("route").eq(route) & Key("date").between(start_date, end_date)}
+    items = []
+    while True:
+        response = table.query(**query_kwargs)
+        items.extend(ddb_json.loads(response["Items"]))
+        last_evaluated_key = response.get("LastEvaluatedKey")
+        if not last_evaluated_key:
+            break
+        query_kwargs["ExclusiveStartKey"] = last_evaluated_key
+    return items
+
+
+def scan_trip_metrics_in_range(table_name: str, start_date: str | date, end_date: str | date) -> List[dict]:
+    """Scan a delivered-trip-metrics table for every route's rows within a date range.
+
+    Date is the table's sort key, not its partition key, so there is no way to read across
+    every route for a range without a full scan -- unlike query(), a scan's cost scales with
+    the table's *total* size, not the size of the range requested, no matter how the
+    FilterExpression narrows the returned rows. Fine for a table this small; callers should
+    keep results cached and reconsider (e.g. a GSI keyed by date) if the table grows large.
+
+    Args:
+      table_name: str: The DynamoDB table name to scan.
+      start_date: str | date: Start of date range (inclusive).
+      end_date: str | date: End of date range (inclusive).
+
+    Returns:
+      list[dict]: Deserialized trip metric records within the range, across all routes.
+    """
+    table = dynamodb.Table(table_name)
+    items = []
+    scan_kwargs = {"FilterExpression": Attr("date").between(start_date, end_date)}
+    while True:
+        response = table.scan(**scan_kwargs)
+        items.extend(ddb_json.loads(response["Items"]))
+        last_evaluated_key = response.get("LastEvaluatedKey")
+        if not last_evaluated_key:
+            break
+        scan_kwargs["ExclusiveStartKey"] = last_evaluated_key
+    return items
 
 
 def query_daily_trips_on_line(table_name: str, line: str, start_date: str | date, end_date: str | date):
@@ -54,7 +94,21 @@ def query_daily_trips_on_line(table_name: str, line: str, start_date: str | date
     Returns:
       list[list[dict]]: A list of result lists, one per route on the line.
     """
-    route_keys = constants.LINE_TO_ROUTE_MAP[line]
+    return query_daily_trips_on_routes(table_name, constants.LINE_TO_ROUTE_MAP[line], start_date, end_date)
+
+
+def query_daily_trips_on_routes(table_name: str, route_keys, start_date: str | date, end_date: str | date):
+    """Query daily trip metrics for several routes, in parallel.
+
+    Args:
+      table_name: str: The DynamoDB table name to query.
+      route_keys: Iterable of route IDs (partition keys).
+      start_date: str | date: Start of date range (inclusive).
+      end_date: str | date: End of date range (inclusive).
+
+    Returns:
+      list[list[dict]]: A list of result lists, one per route.
+    """
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
         futures = [
             executor.submit(
