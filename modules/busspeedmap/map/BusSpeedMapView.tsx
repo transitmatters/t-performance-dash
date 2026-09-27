@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { addProtocol, LngLatBounds, setWorkerUrl } from 'maplibre-gl';
-import { Protocol } from 'pmtiles';
+import { PMTiles, Protocol } from 'pmtiles';
+import type { RangeResponse, Source as PMTilesSource } from 'pmtiles';
 import Map, { Layer, NavigationControl, Popup, Source } from 'react-map-gl/maplibre';
 import type { MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
 import type {
@@ -8,21 +9,29 @@ import type {
   FilterSpecification,
   MapGeoJSONFeature,
 } from 'maplibre-gl';
+import { useBusSpeedStops } from '../../../common/api/hooks/busSpeedSegments';
 import { getBusRouteDisplayName, getBusRouteIds } from '../../../common/constants/lines';
 import {
   BOSTON_CENTER,
+  BUS_SPEED_STOPS_PATH,
+  BUS_STOPS_SOURCE_LAYER,
   MAP_MAX_BOUNDS,
   MIN_TRAVERSALS,
   PMTILES_SOURCE_LAYER,
   SPEED_COLOR_STOPS,
+  STATION_LINES,
+  STATIONS_SOURCE_LAYER,
 } from '../constants';
 import type {
   BusSpeedSegmentProperties,
+  BusStopProperties,
   DayType,
   DirectionFilter,
   Period,
+  StationProperties,
   TimeBand,
 } from '../types';
+import { BusStopPopupContent, StationPopupContent } from './BusSpeedStopPopupContent';
 
 // Registered once at module scope, onto the shared maplibre-gl module. This file is only
 // ever reached through BusSpeedMapDetails' `dynamic(..., { ssr: false })` import, so it
@@ -40,12 +49,44 @@ addProtocol('pmtiles', protocol.tile);
 // into public/ on every install; this just points maplibre at them.
 setWorkerUrl('/maplibre-gl-worker.mjs');
 
+/** Serves an archive already held in memory, so maplibre never goes back to the network for it. */
+class ArrayBufferSource implements PMTilesSource {
+  constructor(
+    private readonly key: string,
+    private readonly buffer: ArrayBuffer
+  ) {}
+
+  getKey() {
+    return this.key;
+  }
+
+  async getBytes(offset: number, length: number): Promise<RangeResponse> {
+    return { data: this.buffer.slice(offset, offset + length) };
+  }
+}
+
+/**
+ * Hands the fetched stops archive to the pmtiles protocol under its real URL, and returns the
+ * pmtiles:// URL a Source can point at. The protocol resolves that URL to this in-memory
+ * instance instead of opening a fetch-backed one of its own.
+ */
+const registerStopsArchive = (buffer: ArrayBuffer): string => {
+  const key = new URL(BUS_SPEED_STOPS_PATH, window.location.origin).toString();
+  if (!protocol.get(key)) protocol.add(new PMTiles(new ArrayBufferSource(key, buffer)));
+  return `pmtiles://${key}`;
+};
+
 // CARTO's Positron. Free to use with attribution, and already the basemap TransitMatters
 // uses in otp-app, so there is no per-load billing to worry about here.
 const BASEMAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
 
 const SOURCE_ID = 'bus-speed-segments';
 const HITBOX_LAYER_ID = 'bus-speed-hitbox';
+const CASING_LAYER_ID = 'bus-speed-casing';
+const STOPS_SOURCE_ID = 'bus-speed-stops';
+const STATIONS_LAYER_ID = 'bus-speed-stations';
+const STATION_HITBOX_LAYER_ID = 'bus-speed-station-hitbox';
+const BUS_STOP_HITBOX_LAYER_ID = 'bus-speed-bus-stop-hitbox';
 
 const speedColor: DataDrivenPropertyValueSpecification<string> = [
   'interpolate',
@@ -76,15 +117,75 @@ const lineWidth = zoomWidth(1.5, 3.5, 6);
 const casingWidth = zoomWidth(3.5, 5.5, 8);
 const hoverHaloWidth = zoomWidth(7, 11, 16);
 
+/**
+ * Single-line stations take their line's colour. Stations on more than one line (`lines` is
+ * comma-joined, e.g. "Red,Green") are drawn white with a dark ring, the usual map convention
+ * for a transfer.
+ */
+const stationColor: DataDrivenPropertyValueSpecification<string> = [
+  'case',
+  ['in', ',', ['get', 'lines']],
+  '#ffffff',
+  [
+    'match',
+    ['get', 'lines'],
+    ...Object.entries(STATION_LINES).flatMap(([line, { color }]) => [line, color]),
+    '#6b7280',
+  ],
+] as unknown as DataDrivenPropertyValueSpecification<string>;
+
+const stationStrokeColor: DataDrivenPropertyValueSpecification<string> = [
+  'case',
+  ['in', ',', ['get', 'lines']],
+  '#1c1c1c',
+  '#ffffff',
+] as unknown as DataDrivenPropertyValueSpecification<string>;
+
+const zoomRadius = (
+  atZoom: number,
+  radius: number,
+  atHighZoom: number,
+  highRadius: number
+): DataDrivenPropertyValueSpecification<number> =>
+  [
+    'interpolate',
+    ['linear'],
+    ['zoom'],
+    atZoom,
+    radius,
+    atHighZoom,
+    highRadius,
+  ] as unknown as DataDrivenPropertyValueSpecification<number>;
+
+const stationRadius = zoomRadius(8, 2, 16, 7);
+const busStopRadius = zoomRadius(11, 1.5, 16, 4);
+// A few pixels past the drawn dot -- bus stops are only 3-8px across, too fine to hover.
+const stationHitRadius = zoomRadius(8, 6, 16, 11);
+const busStopHitRadius = zoomRadius(11, 5, 16, 8);
+// The hovered stop is redrawn above the segments, a little larger, so it isn't lost under them.
+const hoveredStationRadius = zoomRadius(8, 4, 16, 9);
+const hoveredBusStopRadius = zoomRadius(11, 4, 16, 6);
+
 /** MBTA bus brand yellow (COLORS.mbta.bus) -- stands out against the speed ramp and the
  * basemap alike, and reads as "bus" rather than an arbitrary selection color. */
 const HOVER_HALO_COLOR = '#FFC72C';
 
-interface HoveredSegment {
-  longitude: number;
-  latitude: number;
-  properties: BusSpeedSegmentProperties;
-}
+type Hovered = { longitude: number; latitude: number } & (
+  | { kind: 'segment'; properties: BusSpeedSegmentProperties }
+  | { kind: 'station'; properties: StationProperties }
+  | { kind: 'busStop'; properties: BusStopProperties }
+);
+
+/**
+ * Stops win over segments when both are under the cursor: every bus stop sits at a segment's
+ * end, inside the segment's fat hitbox, so segment-first would make stops unhoverable.
+ */
+const HOVER_PRIORITY: [string, Hovered['kind']][] = [
+  [STATION_HITBOX_LAYER_ID, 'station'],
+  [BUS_STOP_HITBOX_LAYER_ID, 'busStop'],
+  [HITBOX_LAYER_ID, 'segment'],
+];
+const INTERACTIVE_LAYER_IDS = HOVER_PRIORITY.map(([layerId]) => layerId);
 
 interface SegmentStops {
   from: string;
@@ -119,7 +220,7 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
   routeFilter,
   segmentStops,
 }) => {
-  const [hovered, setHovered] = useState<HoveredSegment | undefined>();
+  const [hovered, setHovered] = useState<Hovered | undefined>();
   const mapRef = useRef<MapRef>(null);
   const routeFilterClause = useMemo<FilterSpecification | undefined>(
     () =>
@@ -131,6 +232,32 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
           ] as unknown as FilterSpecification)
         : undefined,
     [routeFilter]
+  );
+
+  // Bus stops follow the route filter, so a selected route's stops aren't lost among every
+  // other route's. `routes` is a comma-joined string, and a bare `in` would let "1" match
+  // inside "111" -- comma-wrapping both sides makes it an exact match.
+  const busStopsFilter = useMemo<FilterSpecification | undefined>(
+    () =>
+      routeFilter
+        ? ([
+            'any',
+            ...getBusRouteIds(routeFilter).map((routeId) => [
+              'in',
+              `,${routeId},`,
+              ['concat', ',', ['get', 'routes'], ','],
+            ]),
+          ] as unknown as FilterSpecification)
+        : undefined,
+    [routeFilter]
+  );
+
+  // Undefined until the archive loads, and for good if it's missing or fails -- the stops are
+  // context only, so the map carries on without them.
+  const { data: stopsArchive } = useBusSpeedStops();
+  const stopsUrl = useMemo(
+    () => (stopsArchive ? registerStopsArchive(stopsArchive) : undefined),
+    [stopsArchive]
   );
 
   const filter = useMemo<FilterSpecification>(() => {
@@ -155,7 +282,7 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
   // same route_id/direction_id/from/to tuple used as a segment's natural key elsewhere (e.g.
   // BusSpeedSegmentLeaderboard's list key).
   const hoveredFilter = useMemo<FilterSpecification | undefined>(() => {
-    if (!hovered) return undefined;
+    if (hovered?.kind !== 'segment') return undefined;
     const { route_id, direction_id, from_stop_name, to_stop_name } = hovered.properties;
     return [
       'all',
@@ -167,17 +294,24 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
   }, [hovered]);
 
   const onMouseMove = (event: MapLayerMouseEvent) => {
-    const feature = event.features?.[0];
-    if (!feature) {
-      setHovered(undefined);
-      return;
+    const features = event.features ?? [];
+    for (const [layerId, kind] of HOVER_PRIORITY) {
+      const feature = features.find((candidate) => candidate.layer.id === layerId);
+      if (feature) {
+        setHovered({
+          kind,
+          longitude: event.lngLat.lng,
+          latitude: event.lngLat.lat,
+          properties: feature.properties,
+        } as Hovered);
+        return;
+      }
     }
-    setHovered({
-      longitude: event.lngLat.lng,
-      latitude: event.lngLat.lat,
-      properties: feature.properties as unknown as BusSpeedSegmentProperties,
-    });
+    setHovered(undefined);
   };
+
+  const hoveredStopId =
+    hovered && hovered.kind !== 'segment' ? hovered.properties.stop_id : undefined;
 
   const isFirstRender = useRef(true);
 
@@ -297,7 +431,9 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
       maxBounds={MAP_MAX_BOUNDS}
       mapStyle={BASEMAP_STYLE}
       style={{ width: '100%', height: '100%' }}
-      interactiveLayerIds={[HITBOX_LAYER_ID]}
+      // react-map-gl skips any not yet in the style, so the stop hitboxes can be listed before
+      // the stops archive has loaded.
+      interactiveLayerIds={INTERACTIVE_LAYER_IDS}
       cursor={hovered ? 'pointer' : 'grab'}
       onMouseMove={onMouseMove}
       onMouseLeave={() => setHovered(undefined)}
@@ -326,7 +462,7 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
         {/* A dark casing under the ramp. Positron is nearly white, so the pale middle of
             the speed scale would otherwise disappear into the basemap. */}
         <Layer
-          id="bus-speed-casing"
+          id={CASING_LAYER_ID}
           type="line"
           source-layer={PMTILES_SOURCE_LAYER}
           filter={filter}
@@ -352,6 +488,74 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
         />
       </Source>
 
+      {/* Declared after the segments so the casing exists to slot beneath: the archive loads
+          on its own schedule, and a layer added without a beforeId would land on top. Stations
+          sit above bus stops, both below every segment layer. */}
+      {stopsUrl && (
+        <Source id={STOPS_SOURCE_ID} type="vector" url={stopsUrl}>
+          <Layer
+            id={STATIONS_LAYER_ID}
+            type="circle"
+            source-layer={STATIONS_SOURCE_LAYER}
+            beforeId={CASING_LAYER_ID}
+            paint={{
+              'circle-color': stationColor,
+              'circle-radius': stationRadius,
+              'circle-stroke-color': stationStrokeColor,
+              'circle-stroke-width': 1.5,
+            }}
+          />
+          <Layer
+            id="bus-speed-bus-stops"
+            type="circle"
+            source-layer={BUS_STOPS_SOURCE_LAYER}
+            beforeId={STATIONS_LAYER_ID}
+            // Spread rather than passed as `filter={busStopsFilter}`: react-map-gl forwards an
+            // explicit `filter: undefined` to maplibre, which rejects the whole layer over it.
+            {...(busStopsFilter && { filter: busStopsFilter })}
+            paint={{
+              'circle-color': '#ffffff',
+              'circle-radius': busStopRadius,
+              'circle-stroke-color': '#78716c',
+              'circle-stroke-width': 1,
+            }}
+          />
+          {/* Invisible, and added without a beforeId so they sit on top -- harmless at zero
+              opacity. */}
+          <Layer
+            id={STATION_HITBOX_LAYER_ID}
+            type="circle"
+            source-layer={STATIONS_SOURCE_LAYER}
+            paint={{ 'circle-opacity': 0, 'circle-radius': stationHitRadius }}
+          />
+          <Layer
+            id={BUS_STOP_HITBOX_LAYER_ID}
+            type="circle"
+            source-layer={BUS_STOPS_SOURCE_LAYER}
+            {...(busStopsFilter && { filter: busStopsFilter })}
+            paint={{ 'circle-opacity': 0, 'circle-radius': busStopHitRadius }}
+          />
+          {/* Mounted on hover, so it lands on top of everything, segments included. */}
+          {hoveredStopId && (
+            <Layer
+              id="bus-speed-hovered-stop"
+              type="circle"
+              source-layer={
+                hovered?.kind === 'station' ? STATIONS_SOURCE_LAYER : BUS_STOPS_SOURCE_LAYER
+              }
+              filter={['==', ['get', 'stop_id'], hoveredStopId]}
+              paint={{
+                'circle-color': hovered?.kind === 'station' ? stationColor : '#ffffff',
+                'circle-radius':
+                  hovered?.kind === 'station' ? hoveredStationRadius : hoveredBusStopRadius,
+                'circle-stroke-color': HOVER_HALO_COLOR,
+                'circle-stroke-width': 3,
+              }}
+            />
+          )}
+        </Source>
+      )}
+
       {hovered && (
         <Popup
           longitude={hovered.longitude}
@@ -365,27 +569,31 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
           anchor="left"
           offset={16}
         >
-          <div className="text-xs text-stone-900">
-            <p className="font-semibold">
-              Route {getBusRouteDisplayName(hovered.properties.route_id)}
-              <span className="font-normal text-stone-600">
-                {' '}
-                · {hovered.properties.direction_id === 1 ? 'Inbound' : 'Outbound'}
-              </span>
-            </p>
-            <p className="text-stone-600">
-              {hovered.properties.from_stop_name} → {hovered.properties.to_stop_name}
-            </p>
-            <p className="mt-1 text-sm font-semibold">
-              {hovered.properties.p50_speed_mph.toFixed(1)} mph
-            </p>
-            <p className="text-stone-600">
-              Median of {hovered.properties.n_traversals} trips
-              {period !== 'daily' && ` this ${period === 'weekly' ? 'week' : 'month'}`}
-              {hovered.properties.n_interpolated > 0 &&
-                `, ${hovered.properties.n_interpolated} with an interpolated stop time`}
-            </p>
-          </div>
+          {hovered.kind === 'station' && <StationPopupContent station={hovered.properties} />}
+          {hovered.kind === 'busStop' && <BusStopPopupContent busStop={hovered.properties} />}
+          {hovered.kind === 'segment' && (
+            <div className="text-xs text-stone-900">
+              <p className="font-semibold">
+                Route {getBusRouteDisplayName(hovered.properties.route_id)}
+                <span className="font-normal text-stone-600">
+                  {' '}
+                  · {hovered.properties.direction_id === 1 ? 'Inbound' : 'Outbound'}
+                </span>
+              </p>
+              <p className="text-stone-600">
+                {hovered.properties.from_stop_name} → {hovered.properties.to_stop_name}
+              </p>
+              <p className="mt-1 text-sm font-semibold">
+                {hovered.properties.p50_speed_mph.toFixed(1)} mph
+              </p>
+              <p className="text-stone-600">
+                Median of {hovered.properties.n_traversals} trips
+                {period !== 'daily' && ` this ${period === 'weekly' ? 'week' : 'month'}`}
+                {hovered.properties.n_interpolated > 0 &&
+                  `, ${hovered.properties.n_interpolated} with an interpolated stop time`}
+              </p>
+            </div>
+          )}
         </Popup>
       )}
     </Map>
