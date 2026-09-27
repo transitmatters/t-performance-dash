@@ -1,3 +1,4 @@
+import { COLORS } from '../../common/constants/colors';
 import type { DayType, DirectionFilter, Period, TimeBand } from './types';
 
 /**
@@ -80,6 +81,32 @@ export const BUS_SPEED_SEGMENTS_BASE_PATH = '/businsights/BusSpeedSegments';
  * feature property within this same layer (see DAY_TYPES), not a separate layer.
  */
 export const PMTILES_SOURCE_LAYER = 'segments';
+
+/**
+ * Subway stations and bus stops, drawn under the segments as context. One fixed archive
+ * (~100KB) with no date in its path -- it's only regenerated when MBTA's GTFS feed changes.
+ */
+export const BUS_SPEED_STOPS_PATH = `${BUS_SPEED_SEGMENTS_BASE_PATH}/reference/stops.pmtiles`;
+
+/**
+ * Point layers inside the stops archive. Their minimum zooms (4 for stations, 11 for bus
+ * stops) are baked into the tiles, so the map layers need no minzoom of their own. All
+ * properties are strings; `lines`/`routes` are comma-joined lists.
+ */
+export const STATIONS_SOURCE_LAYER = 'stations';
+export const BUS_STOPS_SOURCE_LAYER = 'bus_stops';
+
+/**
+ * Every value a station's `lines` can hold, keyed as the tileset spells it. Drives both the
+ * station dot colours on the map and the line list in the station hover popup.
+ */
+export const STATION_LINES: Record<string, { label: string; color: string }> = {
+  Red: { label: 'Red Line', color: COLORS.mbta.red },
+  Mattapan: { label: 'Mattapan Line', color: COLORS.mbta.mattapan },
+  Orange: { label: 'Orange Line', color: COLORS.mbta.orange },
+  Blue: { label: 'Blue Line', color: COLORS.mbta.blue },
+  Green: { label: 'Green Line', color: COLORS.mbta.green },
+};
 
 export const BOSTON_CENTER: { longitude: number; latitude: number; zoom: number } = {
   longitude: -71.0789,

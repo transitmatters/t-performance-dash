@@ -1,7 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import type { FetchBusSpeedSegmentsOptions } from '../../../modules/busspeedmap/types';
 import { ONE_DAY } from '../../constants/time';
-import { fetchBusSpeedSegmentLeaderboard, fetchBusSpeedSegmentsUrl } from '../busSpeedSegments';
+import {
+  fetchBusSpeedSegmentLeaderboard,
+  fetchBusSpeedSegmentsUrl,
+  fetchBusSpeedStops,
+} from '../busSpeedSegments';
 
 export const useBusSpeedSegmentsUrl = (
   options: FetchBusSpeedSegmentsOptions,
@@ -28,5 +32,15 @@ export const useBusSpeedSegmentLeaderboard = (
     enabled: enabled,
     staleTime: ONE_DAY,
     gcTime: ONE_DAY,
+  });
+};
+
+export const useBusSpeedStops = () => {
+  return useQuery({
+    queryKey: ['busSpeedStops'],
+    queryFn: fetchBusSpeedStops,
+    // Only changes with MBTA's GTFS feed, so one fetch lasts the whole session.
+    staleTime: Infinity,
+    gcTime: Infinity,
   });
 };
