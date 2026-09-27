@@ -5,12 +5,12 @@ import { useBusSpeedLeaderboard } from '../../../common/api/hooks/busTripMetrics
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import { Button } from '../../../common/components/ui/button';
-import { KEY_BUS_ROUTE_IDS } from '../../../common/constants/lines';
+import { FREQUENT_BUS_ROUTE_IDS } from '../../../common/constants/lines';
 import type { Period } from '../types';
 import { periodDateRange } from '../utils';
 import { BusSpeedRouteLeaderboard } from './BusSpeedRouteLeaderboard';
 
-const KEY_BUS_ROUTES = new Set(KEY_BUS_ROUTE_IDS);
+const FREQUENT_BUS_ROUTES = new Set(FREQUENT_BUS_ROUTE_IDS);
 const LEADERBOARD_PREVIEW_SIZE = 25;
 // The backend caches the full ranked list regardless of the requested limit (see
 // bus_speed_leaderboard's docstring), so fetching its max up front is free -- it lets "Show
@@ -20,13 +20,13 @@ const LEADERBOARD_FETCH_LIMIT = 200;
 interface BusSpeedRouteLeaderboardSectionProps {
   date: string | undefined;
   period: Period;
-  keyRoutesOnly: boolean;
+  frequentRoutesOnly: boolean;
 }
 
 export const BusSpeedRouteLeaderboardSection: React.FC<BusSpeedRouteLeaderboardSectionProps> = ({
   date,
   period,
-  keyRoutesOnly,
+  frequentRoutesOnly,
 }) => {
   const [showAll, setShowAll] = useState(false);
 
@@ -39,8 +39,8 @@ export const BusSpeedRouteLeaderboardSection: React.FC<BusSpeedRouteLeaderboardS
   if (!date) return <p>Select a date to load the leaderboard.</p>;
   if (leaderboard.isError || !leaderboard.data) return <ChartPlaceHolder query={leaderboard} />;
 
-  const ranked = keyRoutesOnly
-    ? leaderboard.data.filter((entry) => KEY_BUS_ROUTES.has(entry.route))
+  const ranked = frequentRoutesOnly
+    ? leaderboard.data.filter((entry) => FREQUENT_BUS_ROUTES.has(entry.route))
     : leaderboard.data;
   if (ranked.length < 1) return <NoDataNotice isLineMetric />;
 
