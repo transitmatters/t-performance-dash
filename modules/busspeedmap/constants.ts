@@ -36,6 +36,7 @@ export const PERIODS: { key: Period; label: string }[] = [
 ];
 
 export const DEFAULT_PERIOD: Period = 'daily';
+export const DEFAULT_SPEED_MAP_PERIOD: Period = 'monthly';
 
 /**
  * Only meaningful for weekly/monthly periods -- a daily file's features carry no `day_type`

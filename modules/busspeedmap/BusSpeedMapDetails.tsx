@@ -21,7 +21,7 @@ import {
   DAY_TYPES,
   DEFAULT_DAY_TYPE,
   DEFAULT_DIRECTION,
-  DEFAULT_PERIOD,
+  DEFAULT_SPEED_MAP_PERIOD,
   DEFAULT_TIME_BAND,
   TIME_BANDS,
 } from './constants';
@@ -33,7 +33,7 @@ export function BusSpeedMapDetails() {
     query: { date, busRoute },
   } = useDelimitatedRoute();
 
-  const [period, setPeriod] = useState<Period>(DEFAULT_PERIOD);
+  const [period, setPeriod] = useState<Period>(DEFAULT_SPEED_MAP_PERIOD);
   const [dayType, setDayType] = useState<DayType>(DEFAULT_DAY_TYPE);
   const [timeBand, setTimeBand] = useState<TimeBand>(DEFAULT_TIME_BAND);
   const [direction, setDirection] = useState<DirectionFilter>(DEFAULT_DIRECTION);
