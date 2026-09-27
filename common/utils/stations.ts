@@ -1,4 +1,5 @@
 import type { BusRoute, CommuterRailRoute, Line, LineShort, FerryRoute } from '../types/lines';
+import { BUS_ROUTES } from '../types/lines';
 import { type Station } from '../types/stations';
 import type { Location } from '../types/charts';
 import type { Direction, Distance } from '../types/dataPoints';
@@ -10,6 +11,7 @@ import {
   ferryStations,
 } from '../constants/stations';
 import { station_distances } from '../constants/station_distances';
+import { getBusRouteDisplayName, getBusRouteIds } from '../constants/lines';
 import type { Tab } from '../types/router';
 
 // Type guards for line types
@@ -319,3 +321,21 @@ export const getMinMaxDatesForRoute = (
   }
   return { minDate: undefined, maxDate: undefined };
 };
+
+/**
+ * The curated BusRoute label a raw GTFS route_id is shown under on `date`, e.g. '751' -> 'SL4/SL5'.
+ * Bus trip-metrics data is keyed by raw route_ids, but everywhere else the dashboard presents
+ * the curated labels, so anything ranking or listing routes should group by this to stay
+ * consistent. A route_id can move between labels over time (BNRD split 104/109 into 104 and
+ * 109 on 2024-12-15), so only labels whose service window covers `date` count. Route_ids with
+ * no curated label fall back to their display name, which getBusRouteIds still resolves.
+ */
+export const getBusRouteGroup = (routeId: string, date: string): string =>
+  BUS_ROUTES.find((busRoute) => {
+    const { service_start, service_end } = stations.Bus[busRoute] ?? {};
+    return (
+      getBusRouteIds(busRoute).includes(routeId) &&
+      (!service_start || service_start <= date) &&
+      (!service_end || date <= service_end)
+    );
+  }) ?? getBusRouteDisplayName(routeId);
