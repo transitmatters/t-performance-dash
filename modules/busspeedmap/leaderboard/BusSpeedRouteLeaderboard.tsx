@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import type { BusSpeedLeaderboardEntry } from '../../../common/types/dataPoints';
 import { getBusSpeedMapRouteHref, useDelimitatedRoute } from '../../../common/utils/router';
 
@@ -23,9 +22,7 @@ export const BusSpeedRouteLeaderboard: React.FC<BusSpeedRouteLeaderboardProps> =
             >
               <span className="flex items-center gap-3">
                 <span className="w-5 text-right text-stone-400">{index + 1}</span>
-                <span className="font-semibold text-stone-900">
-                  Route {getBusRouteDisplayName(entry.route)}
-                </span>
+                <span className="font-semibold text-stone-900">Route {entry.route}</span>
               </span>
               <span className="font-semibold text-stone-900">{mph.toFixed(1)} mph</span>
             </Link>

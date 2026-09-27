@@ -5,16 +5,15 @@ import { useBusSpeedLeaderboard } from '../../../common/api/hooks/busTripMetrics
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import { Button } from '../../../common/components/ui/button';
-import { KEY_BUS_ROUTE_IDS } from '../../../common/constants/lines';
 import type { Period } from '../types';
-import { periodDateRange } from '../utils';
+import { groupLeaderboardByBusRoute, periodDateRange } from '../utils';
 import { BusSpeedRouteLeaderboard } from './BusSpeedRouteLeaderboard';
 
-const KEY_BUS_ROUTES = new Set(KEY_BUS_ROUTE_IDS);
 const LEADERBOARD_PREVIEW_SIZE = 25;
 // The backend caches the full ranked list regardless of the requested limit (see
 // bus_speed_leaderboard's docstring), so fetching its max up front is free -- it lets "Show
-// all" expand instantly from data already in hand instead of firing a second request.
+// all" expand instantly from data already in hand instead of firing a second request. It also
+// has to cover every raw route_id, since they're grouped into curated labels client-side.
 const LEADERBOARD_FETCH_LIMIT = 200;
 
 interface BusSpeedRouteLeaderboardSectionProps {
@@ -36,12 +35,11 @@ export const BusSpeedRouteLeaderboardSection: React.FC<BusSpeedRouteLeaderboardS
     Boolean(dateRange)
   );
 
-  if (!date) return <p>Select a date to load the leaderboard.</p>;
+  if (!date || !dateRange) return <p>Select a date to load the leaderboard.</p>;
   if (leaderboard.isError || !leaderboard.data) return <ChartPlaceHolder query={leaderboard} />;
 
-  const ranked = keyRoutesOnly
-    ? leaderboard.data.filter((entry) => KEY_BUS_ROUTES.has(entry.route))
-    : leaderboard.data;
+  const grouped = groupLeaderboardByBusRoute(leaderboard.data, dateRange.end_date);
+  const ranked = keyRoutesOnly ? grouped.filter((entry) => entry.isKeyRoute) : grouped;
   if (ranked.length < 1) return <NoDataNotice isLineMetric />;
 
   const hasMore = ranked.length > LEADERBOARD_PREVIEW_SIZE;
