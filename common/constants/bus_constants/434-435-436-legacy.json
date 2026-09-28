@@ -1,12 +1,28 @@
 {
-    "434/435/436": {
+    "434/435/436-legacy": {
         "type": "bus",
         "direction": {
             "0": "outbound",
             "1": "inbound"
         },
-        "service_start": "2026-09-06",
+        "service_end": "2026-09-05",
         "stations": [
+            {
+                "stop_name": "Salem Depot",
+                "branches": [
+                    "435"
+                ],
+                "station": "salem",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "435-1-37150"
+                    ],
+                    "0": [
+                        "435-0-37150"
+                    ]
+                }
+            },
             {
                 "stop_name": "Liberty Tree Mall",
                 "branches": [

@@ -157,7 +157,7 @@ export function SlowZonesDetails() {
             <SlowZonesMap
               key={lineShort}
               slowZones={allSlow.data!}
-              speedRestrictions={speedRestrictions.data!}
+              speedRestrictions={speedRestrictions.data}
               lineName={lineShort}
               direction={isDesktop ? 'horizontal' : 'vertical'}
             />

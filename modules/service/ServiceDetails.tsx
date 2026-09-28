@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useScheduledService, useServiceHours } from '../../common/api/hooks/service';
+import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
@@ -77,13 +78,16 @@ export function ServiceDetails() {
     },
     enabled
   );
+  const peakService = useScheduledServiceBaseline(line);
 
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
   }
 
   const stats =
-    tripsData.data && scheduledData ? getServiceStats(tripsData.data, scheduledData, line) : null;
+    tripsData.data && scheduledData
+      ? getServiceStats(tripsData.data, scheduledData, peakService)
+      : null;
   const deltaFor = (delta: number, negligible: number, unit: 'trips' | 'pp') => {
     if (!Number.isFinite(delta)) return undefined;
     const sentiment: StatSentiment =

@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { useDelimitatedRoute } from '../../common/utils/router';
+import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
 import type { ParamsType } from '../speed/constants/speeds';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { PercentageServiceGraph } from './PercentageServiceGraph';
@@ -27,10 +28,11 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
   comparison,
 }) => {
   const { line } = useDelimitatedRoute();
+  const peakService = useScheduledServiceBaseline(line);
 
   const { scheduled, peak } = useMemo(
-    () => getPercentageData(data, predictedData, line),
-    [data, predictedData, line]
+    () => getPercentageData(data, predictedData, peakService),
+    [data, predictedData, peakService]
   );
 
   if (!data.some((datapoint) => datapoint.miles_covered)) return <NoDataNotice isLineMetric />;

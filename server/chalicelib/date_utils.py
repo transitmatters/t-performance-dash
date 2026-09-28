@@ -14,7 +14,7 @@ DATE_FORMAT_OUT = "%Y-%m-%dT%H:%M:%S"
 EASTERN_TIME = ZoneInfo("US/Eastern")
 
 # The most recent date for which we have monthly data
-MAX_MONTH_DATA_DATE = "2025-10-31"
+MAX_MONTH_DATA_DATE = "2026-06-30"
 
 # The earliest date for which LAMP bus data is published
 LAMP_BUS_START_DATE = "2026-01-01"

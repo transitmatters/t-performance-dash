@@ -117,7 +117,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
           <SlowZonesMap
             key={lineShort}
             slowZones={allData.data!}
-            speedRestrictions={speedRestrictions.data!}
+            speedRestrictions={speedRestrictions.data}
             lineName={lineShort}
             direction={isDesktop ? 'horizontal' : 'vertical'}
           />
