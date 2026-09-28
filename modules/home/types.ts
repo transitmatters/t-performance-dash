@@ -64,21 +64,9 @@ export interface HeroStat {
   direction: Direction;
 }
 
-export type FactKind = 'win' | 'issue';
-
-export interface Fact {
-  kind: FactKind;
-  rowId: string;
-  metric: MetricId;
-  /** Template key; copy lives in copy.ts. */
-  key: 'status' | 'trend';
-  score: number;
-}
-
 export interface HomeData {
   schemaVersion: 1;
   generatedAt: string;
   rows: Row[];
   hero: HeroStat[];
-  facts: { wins: Fact[]; issues: Fact[] };
 }

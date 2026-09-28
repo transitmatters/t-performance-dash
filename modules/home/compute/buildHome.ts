@@ -29,7 +29,6 @@ import {
   sumHistories,
   tripMetricsSeries,
 } from './cells';
-import { buildFacts } from './facts';
 import { combineCoverage, goalCoverage, middayHeadway } from './frequency';
 import type { Point, Window } from './series';
 import { fromRecord, mean, median, takeWindow, trendOf } from './series';
@@ -463,6 +462,5 @@ export const buildHome = (src: HomeSources): HomeData => {
     generatedAt: src.now.toISOString(),
     rows,
     hero: buildHero(src),
-    facts: buildFacts(rows),
   };
 };

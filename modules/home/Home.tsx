@@ -5,7 +5,6 @@ import { Layout } from '../../common/layouts/layoutTypes';
 import { Card, CardContent, CardHeader, CardTitle } from '../../common/components/ui/card';
 import { Skeleton } from '../../common/components/ui/skeleton';
 import { LINE_OBJECTS } from '../../common/constants/lines';
-import { Callouts } from './components/Callouts';
 import { DonateCallout } from './components/DonateCallout';
 import { HomeHero, HomeTitle } from './components/HomeHero';
 import { Scoreboard } from './components/Scoreboard';
@@ -57,7 +56,6 @@ export function Home() {
         {data ? (
           <>
             <HomeHero stats={data.hero} />
-            <Callouts data={data} />
             <Scoreboard rows={data.rows} />
             <StatusLegend />
           </>
