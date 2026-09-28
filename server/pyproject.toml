@@ -10,7 +10,9 @@ dependencies = [
     "requests~=2.32.5",
     "pytz~=2025.2",
     "boto3~=1.39.0",
-    "numpy~=2.3.5",
+    # 2.3+ ships only manylinux_2_28 wheels, and Chalice only fetches manylinux2014 ones, so a
+    # newer numpy gets built from source on the deploying machine and won't run on Lambda.
+    "numpy~=2.2.6",
     "pandas~=2.2.3",
     "datadog_lambda~=8.118.0",
     "dynamodb-json~=1.4.2",
