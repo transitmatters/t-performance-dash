@@ -107,6 +107,7 @@ export interface SpeedTripMetrics {
   miles_per_hour?: string;
   avg_car_age?: number;
   pct_new_trips?: number;
+  [key: `fleet_mix_${string}`]: number | undefined;
 }
 
 export interface DeliveredTripMetrics extends SpeedTripMetrics {

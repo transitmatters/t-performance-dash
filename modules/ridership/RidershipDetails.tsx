@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useRidershipData } from '../../common/api/hooks/ridership';
+import { useRidershipBaseline } from '../../common/api/hooks/baselines';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
@@ -33,9 +34,8 @@ export function RidershipDetails() {
     enabled
   );
 
-  const stats = ridership.data
-    ? getRidershipStats(ridership.data, line, busRoute, crRoute, ferryRoute)
-    : null;
+  const peakRidership = useRidershipBaseline(line, busRoute, crRoute, ferryRoute);
+  const stats = ridership.data ? getRidershipStats(ridership.data, peakRidership) : null;
   const deltaFor = (delta: number, negligible: number) => {
     if (!Number.isFinite(delta)) return undefined;
     const sentiment: StatSentiment =

@@ -1,6 +1,4 @@
-import { PEAK_SCHEDULED_SERVICE } from '../../../common/constants/baselines';
 import type { DeliveredTripMetrics, ScheduledService } from '../../../common/types/dataPoints';
-import type { Line } from '../../../common/types/lines';
 
 export const getServiceWidgetValues = (
   deliveredTripMetrics: DeliveredTripMetrics[],
@@ -37,7 +35,7 @@ export const getServiceWidgetValues = (
 export const getPercentageData = (
   data: DeliveredTripMetrics[],
   predictedData: ScheduledService,
-  line?: Line
+  peakService: number
 ) => {
   const scheduled = data.map((datapoint, index) => {
     return datapoint.miles_covered && predictedData.counts[index]
@@ -45,9 +43,7 @@ export const getPercentageData = (
       : Number.NaN;
   });
   const peak = data.map((datapoint) =>
-    datapoint.miles_covered
-      ? (100 * datapoint.count) / PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
-      : Number.NaN
+    datapoint.miles_covered ? (100 * datapoint.count) / peakService : Number.NaN
   );
   return { scheduled: scheduled, peak };
 };
@@ -73,14 +69,16 @@ const halves = <T>(values: T[]): [T[], T[]] => {
 export const getServiceStats = (
   data: DeliveredTripMetrics[],
   predictedData: ScheduledService,
-  line?: Line
+  peakService: number
 ) => {
   const counts = data.filter((d) => d.miles_covered).map((d) => d.count);
   const [c1, c2] = halves(counts);
   const peak = data.reduce((max, d) => (d.count > max.count ? d : max), data[0]);
 
   // Per-day % delivered, same basis as the Service-delivered chart (getPercentageData / 100).
-  const pct = getPercentageData(data, predictedData, line).scheduled.filter((v) => !isNaN(v));
+  const pct = getPercentageData(data, predictedData, peakService).scheduled.filter(
+    (v) => !isNaN(v)
+  );
   const [p1, p2] = halves(pct);
 
   return {

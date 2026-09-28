@@ -10,7 +10,7 @@ import { useDelimitatedRoute } from '../../../common/utils/router';
 import { LINE_COLORS } from '../../../common/constants/colors';
 import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
-import { HERO_LINE_WIDTH, useChartTheme } from '../../../common/utils/chartTheme';
+import { useChartTheme } from '../../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
@@ -20,17 +20,21 @@ import { DownloadButton } from '../../../common/components/buttons/DownloadButto
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
 import type { ParamsType } from '../../speed/constants/speeds';
+import type { FleetType } from '../constants/fleetTypes';
+import { getFleetMixValue, hasFleetMix } from '../constants/fleetTypes';
 
-interface FleetAgeChartProps {
+interface FleetMixChartProps {
   data: DeliveredTripMetrics[];
+  types: FleetType[];
   config: ParamsType;
   startDate: string;
   endDate: string;
   showTitle?: boolean;
 }
 
-export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
+export const FleetMixChart: React.FC<FleetMixChartProps> = ({
   data,
+  types,
   config,
   startDate,
   endDate,
@@ -43,40 +47,37 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   const lineColor = LINE_COLORS[line ?? 'default'];
-  // Keyed off the fleet metric, not miles_covered: a partial shutdown zeroes the line's
-  // service metrics while cars still ran (and were sampled) on the remaining branches.
-  const shuttlingBlocks = getShuttlingBlockAnnotations(
-    data,
-    (datapoint) => datapoint.avg_car_age !== undefined && datapoint.avg_car_age !== null
+  const shuttlingBlocks = getShuttlingBlockAnnotations(data, (datapoint) =>
+    hasFleetMix(datapoint, types)
   );
 
   return (
     <ChartStack>
       <ChartDiv isMobile={isMobile}>
         <Line
-          id={`fleet-age-${linePath}`}
+          id={`fleet-mix-${linePath}`}
           height={isMobile ? 240 : 200}
           ref={ref}
           redraw={true}
           data={{
             labels,
-            datasets: [
-              {
-                label: 'Average car age (years)',
-                fill: true,
-                backgroundColor: hexWithAlpha(lineColor, 0.8),
+            datasets: types.map((type, index) => {
+              const color = hexWithAlpha(lineColor, 0.25 + (0.75 * index) / (types.length - 1));
+              return {
+                label: `${type.label} (${type.years})`,
                 borderColor: lineColor,
-                borderWidth: HERO_LINE_WIDTH,
+                borderWidth: 1,
                 pointRadius: 0,
+                pointHoverRadius: 6,
                 pointBorderWidth: 0,
                 stepped: true,
-                pointHoverRadius: 6,
-                spanGaps: false,
+                // Fill to the layer below; filling to zero lets the top layer cover the rest
+                fill: index === 0 ? 'origin' : '-1',
                 pointHoverBackgroundColor: lineColor,
-                pointBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.avg_car_age ?? null),
-              },
-            ],
+                backgroundColor: color,
+                data: data.map((datapoint) => getFleetMixValue(datapoint, type) ?? null),
+              };
+            }),
           }}
           options={{
             responsive: true,
@@ -99,13 +100,16 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
                   ...callbacks,
                   label: (context) => {
                     if (context.parsed.y === null || context.parsed.y === undefined) return '';
-                    return `${round(context.parsed.y, 2)} years`;
+                    return `${types[context.datasetIndex].label}: ${round(context.parsed.y, 1)}%`;
                   },
                 },
               },
-              // A single series, already named by the card title.
               legend: {
-                display: false,
+                position: 'bottom',
+                labels: {
+                  boxWidth: 15,
+                  color: chartTheme.tick,
+                },
               },
               title: {
                 // empty title to set font and leave room for drawTitle fn
@@ -118,16 +122,19 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
             },
             scales: {
               y: {
-                suggestedMin: 0,
+                stacked: true,
+                min: 0,
+                max: 100,
                 display: true,
                 border: { display: false },
                 grid: { color: chartTheme.grid },
                 ticks: {
                   color: chartTheme.tick,
+                  callback: (value) => `${value}%`,
                 },
                 title: {
                   display: true,
-                  text: 'Average car age (years)',
+                  text: 'Share of cars',
                   color: chartTheme.tick,
                 },
               },
@@ -165,7 +172,7 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
             {
               id: 'customTitle',
               afterDraw: (chart) => {
-                if (showTitle) drawSimpleTitle(`Average car age`, chart);
+                if (showTitle) drawSimpleTitle(`Fleet mix`, chart);
               },
             },
             ChartjsPluginWatermark,
@@ -177,14 +184,14 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
           <>
             <SaveChartImageButton
               chartRef={ref}
-              datasetName="fleet-car-age"
+              datasetName="fleet-mix"
               includeBothStopsForLocation={false}
               startDate={startDate}
               endDate={endDate}
             />
             <DownloadButton
               data={data}
-              datasetName="fleet-car-age"
+              datasetName="fleet-mix"
               includeBothStopsForLocation={false}
               startDate={startDate}
               endDate={endDate}
