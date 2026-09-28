@@ -12,11 +12,14 @@ import {
   CR_ELECTRIFIED_THRESHOLDS,
   FREQUENCY_GOALS,
   FREQUENT_BUS_LINE_IDS,
+  IN_SERVICE_SHARE,
   METRICS,
   METRIC_ORDER,
   ROWS,
+  SINGLE_TYPE_FLEETS,
   WINDOW_WEEKS,
 } from '../config';
+import { FLEET_TYPES, getFleetMixValue, hasFleetMix } from '../../fleet/constants/fleetTypes';
 import type { RowConfig, SubwayLine } from '../config';
 import type { Cell, HeroStat, HomeData, MetricId, Row } from '../types';
 import {
@@ -73,6 +76,25 @@ const slowZoneWindow = (delayTotals: SlowZoneDayTotalsResponse, keys: string[]):
     excluded: 0,
     asOf: days.at(-1)?.date,
   };
+};
+
+/**
+ * The oldest car type still carrying riders: at least IN_SERVICE_SHARE percent of cars over the
+ * last 4 weeks with fleet data. Lines with one car type have no mix, so that type is the oldest.
+ */
+const oldestInService = (line: SubwayLine, trips: DeliveredTripMetrics[] | undefined) => {
+  const single = SINGLE_TYPE_FLEETS[line];
+  if (single) return { type: single, share: null, builtFrom: parseInt(single.years, 10) };
+  const types = FLEET_TYPES[line];
+  if (!types) return null;
+  const recent = (trips ?? []).filter((d) => hasFleetMix(d, types)).slice(-4);
+  if (!recent.length) return null;
+  // FLEET_TYPES runs oldest to newest.
+  for (const type of types) {
+    const share = mean(recent.map((d) => getFleetMixValue(d, type) ?? 0));
+    if (share >= IN_SERVICE_SHARE) return { type, share, builtFrom: parseInt(type.years, 10) };
+  }
+  return null;
 };
 
 const subwayCells = (
@@ -156,21 +178,36 @@ const subwayCells = (
     tripMetricsSeries(trips, (d) => d.avg_car_age),
     false
   );
-  const recentAge = ageWindow.values.slice(-4);
+  const recentAge = mean(ageWindow.values.slice(-4));
   const newTrips = mean(
     (trips ?? [])
       .slice(-4)
       .map((d) => d.pct_new_trips ?? NaN)
       .filter(Number.isFinite)
   );
-  cells.fleet = judgedCell('fleet', recentAge.length ? mean(recentAge) : null, {
-    unit: 'years',
-    window: ageWindow,
-    now,
-    secondary: newTrips > 0 ? `${Math.round(newTrips)}% of trips on new trains` : undefined,
-    // Blue and Mattapan have no Fleet tab (one car type each), so their fleet links go nowhere new.
-    href: line === 'line-blue' || line === 'line-mattapan' ? row.href : lineHref(row, 'fleet'),
-  });
+  const oldest = oldestInService(line, trips);
+  const context = [
+    Number.isFinite(recentAge) ? `Average car age: ${Math.round(recentAge)} yr` : null,
+    newTrips > 0 ? `${Math.round(newTrips)}% of trips on new trains` : null,
+  ].filter(Boolean);
+  cells.fleet = {
+    ...judgedCell('fleet', oldest ? now.getFullYear() - oldest.builtFrom : null, {
+      unit: 'years',
+      window: ageWindow,
+      now,
+      secondary: oldest
+        ? `Oldest in service: ${oldest.type.label} (${oldest.type.years})${
+            oldest.share !== null ? `, ${Math.round(oldest.share)}% of cars` : ''
+          }`
+        : undefined,
+      baselineLabel: context.length ? context.join(' · ') : undefined,
+      // Blue and Mattapan have no Fleet tab (one car type each), so their fleet links go nowhere new.
+      href: line === 'line-blue' || line === 'line-mattapan' ? row.href : lineHref(row, 'fleet'),
+    }),
+    // A car type's age only moves once a year, so a 2-week trend says nothing here.
+    trend: null,
+    spark: undefined,
+  };
 
   return cells;
 };

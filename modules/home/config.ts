@@ -1,4 +1,5 @@
 import type { Line } from '../../common/types/lines';
+import type { FleetType } from '../fleet/constants/fleetTypes';
 import type { Direction, MetricId, Unit } from './types';
 
 export interface MetricMethod {
@@ -68,9 +69,9 @@ export const METRICS: Record<MetricId, MetricMethod> = {
     id: 'fleet',
     label: 'Fleet',
     definition:
-      'Average age of the cars in service over the last 4 weeks. Commuter Rail: share of service that is electrified.',
+      'Age of the oldest cars still in regular service (at least 1% of cars over the last 4 weeks), counted from when that type was first built. Riders feel the oldest trains, not the average. Commuter Rail: share of service that is electrified.',
     direction: 'lower',
-    thresholds: [10, 20, 30],
+    thresholds: [15, 25, 35],
     scoreUnit: 'years',
     staleDays: 21,
   },
@@ -84,6 +85,15 @@ export const METRIC_ORDER: MetricId[] = [
   'ridership',
   'fleet',
 ];
+
+/** Share of cars (percent, 4-week mean) a type needs to count as still in regular service. */
+export const IN_SERVICE_SHARE = 1;
+
+// Lines with a single car type publish no fleet mix, so their build years live here.
+export const SINGLE_TYPE_FLEETS: Partial<Record<Line, FleetType>> = {
+  'line-blue': { key: 'blue', label: 'Siemens', years: '2007–09' },
+  'line-mattapan': { key: 'pcc', label: 'PCC', years: '1945–46' },
+};
 
 // Commuter Rail fleet is judged on electrification, which runs the other way.
 export const CR_ELECTRIFIED_SHARE = 0;
