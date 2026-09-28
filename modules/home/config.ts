@@ -67,7 +67,7 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   },
   fleet: {
     id: 'fleet',
-    label: 'Fleet',
+    label: 'Vehicles',
     definition:
       'Age of the oldest cars still in regular service (at least 1% of cars over the last 4 weeks), counted from when that type was first built. Riders feel the oldest trains, not the average. Commuter Rail: share of service that is electrified.',
     direction: 'lower',
