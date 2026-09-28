@@ -1,5 +1,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
+import Image from 'next/image';
 import { RollingNumber } from '../../../common/components/motion/RollingNumber';
 import { cn } from '../../../common/utils/cn';
 import { trendSentiment } from '../compute/series';
@@ -44,29 +45,53 @@ const HeroTile: React.FC<{ stat: HeroStat; index: number }> = ({ stat, index }) 
   );
 };
 
-export const HomeHero: React.FC<{ stats: HeroStat[]; generatedAt: string }> = ({
-  stats,
-  generatedAt,
-}) => (
-  <section aria-labelledby="home-title" className="flex flex-col gap-4">
+/** The page title and brand, shown whether or not the data has loaded. */
+export const HomeTitle: React.FC<{ generatedAt?: string }> = ({ generatedAt }) => (
+  <header className="flex flex-col gap-4">
     <div className="flex h-1.5 overflow-hidden rounded-full" aria-hidden="true">
       {STRIPE.map((color) => (
         <span key={color} className="flex-1" style={{ backgroundColor: color }} />
       ))}
     </div>
     <div className="flex flex-col gap-1">
-      <h1 id="home-title" className="text-3xl font-bold tracking-tight sm:text-4xl">
-        How is the T doing?
+      <h1 className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        {/* The charcoal wordmark disappears on the dark background, so swap in the white one. */}
+        <Image
+          src="/Logo_wordmark.png"
+          alt="TransitMatters"
+          width={3204}
+          height={301}
+          priority
+          className="h-5 w-auto sm:h-6 dark:hidden"
+        />
+        <Image
+          src="/Logo_wordmark_white.png"
+          alt="TransitMatters"
+          width={3204}
+          height={301}
+          priority
+          className="hidden h-5 w-auto sm:h-6 dark:block"
+        />
+        <span className="text-muted-foreground text-sm font-semibold tracking-widest uppercase sm:text-base">
+          Data Dashboard
+        </span>
       </h1>
+      <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">How is the T doing?</p>
       <p className="text-muted-foreground max-w-2xl text-sm sm:text-base">
         Every line and mode, measured against the best it has done and the service riders need.
-        Updated {dayjs(generatedAt).format('MMMM D, YYYY')}.
+        {generatedAt && ` Updated ${dayjs(generatedAt).format('MMMM D, YYYY')}.`}
       </p>
     </div>
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
-      {stats.map((stat, index) => (
-        <HeroTile key={stat.id} stat={stat} index={index} />
-      ))}
-    </div>
+  </header>
+);
+
+export const HomeHero: React.FC<{ stats: HeroStat[] }> = ({ stats }) => (
+  <section
+    aria-label="The T at a glance"
+    className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5"
+  >
+    {stats.map((stat, index) => (
+      <HeroTile key={stat.id} stat={stat} index={index} />
+    ))}
   </section>
 );

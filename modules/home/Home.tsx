@@ -6,15 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../common/component
 import { Skeleton } from '../../common/components/ui/skeleton';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { Callouts } from './components/Callouts';
-import { HomeHero } from './components/HomeHero';
+import { DonateCallout } from './components/DonateCallout';
+import { HomeHero, HomeTitle } from './components/HomeHero';
 import { Scoreboard } from './components/Scoreboard';
 import { StatusLegend } from './components/StatusLegend';
 import { useHomeData } from './useHomeData';
 
 const HomeSkeleton = () => (
   <div className="flex flex-col gap-4" aria-busy="true" aria-label="Loading">
-    <Skeleton className="h-1.5 w-full rounded-full" />
-    <Skeleton className="h-10 w-72" />
     <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
       {Array.from({ length: 5 }).map((_, i) => (
         <Skeleton key={i} className="h-28 rounded-xl" />
@@ -54,9 +53,10 @@ export function Home() {
   return (
     <PageWrapper pageTitle="Home">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 md:px-6 md:py-8">
+        <HomeTitle generatedAt={data?.generatedAt} />
         {data ? (
           <>
-            <HomeHero stats={data.hero} generatedAt={data.generatedAt} />
+            <HomeHero stats={data.hero} />
             <Callouts data={data} />
             <Scoreboard rows={data.rows} />
             <StatusLegend />
@@ -66,6 +66,7 @@ export function Home() {
         ) : (
           <HomeUnavailable />
         )}
+        <DonateCallout />
       </div>
     </PageWrapper>
   );
