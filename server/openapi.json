@@ -322,6 +322,64 @@
         "summary": "Retrieve trip metrics (speed, travel time, etc.) aggregated by line over a date range."
       }
     },
+    "/api/bustripmetrics": {
+      "get": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BusTripMetricsParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusTripMetricsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve daily speed/trip metrics for a single bus route over a date range."
+      }
+    },
+    "/api/busspeedleaderboard": {
+      "get": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BusSpeedLeaderboardParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusSpeedLeaderboardResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve the slowest bus routes (by average speed) over a date range."
+      }
+    },
     "/api/scheduledservice": {
       "get": {
         "requestBody": {
@@ -378,6 +436,64 @@
           "/api"
         ],
         "summary": "Retrieve ridership data for a line over a date range."
+      }
+    },
+    "/api/reliability": {
+      "get": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReliabilityParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReliabilityResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve on-time performance counts for The RIDE or commuter rail over a date range."
+      }
+    },
+    "/api/weather": {
+      "get": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeatherParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeatherResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve hourly weather observations for a date range (downtown Boston)."
       }
     },
     "/api/facilities": {
@@ -859,6 +975,130 @@
         "title": "TripMetricsResponse",
         "type": "object"
       },
+      "BusTripMetricsParams": {
+        "description": "Parameters for the `/api/bustripmetrics` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    route: Bus route_id (e.g. `1`, `57`, `111`).\n    agg: Optional aggregation level (`daily`, `weekly`, `monthly`); defaults to `daily`.",
+        "properties": {
+          "start_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "format": "date",
+                "type": "string"
+              }
+            ],
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "format": "date",
+                "type": "string"
+              }
+            ],
+            "title": "End Date"
+          },
+          "route": {
+            "title": "Route",
+            "type": "string"
+          },
+          "agg": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Agg"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "route"
+        ],
+        "title": "BusTripMetricsParams",
+        "type": "object"
+      },
+      "BusTripMetricsResponse": {
+        "additionalProperties": true,
+        "description": "Response for `/api/bustripmetrics` \u2014 daily speed/trip metrics for a bus route.\n\nAttributes:\n    data: Daily trip metric records for the route.",
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "BusTripMetricsResponse",
+        "type": "object"
+      },
+      "BusSpeedLeaderboardParams": {
+        "description": "Parameters for the `/api/busspeedleaderboard` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    limit: Maximum number of routes to return (default 10).",
+        "properties": {
+          "start_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "format": "date",
+                "type": "string"
+              }
+            ],
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "format": "date",
+                "type": "string"
+              }
+            ],
+            "title": "End Date"
+          },
+          "limit": {
+            "default": 10,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "BusSpeedLeaderboardParams",
+        "type": "object"
+      },
+      "BusSpeedLeaderboardResponse": {
+        "additionalProperties": true,
+        "description": "Response for `/api/busspeedleaderboard` \u2014 slowest bus routes over a date range.\n\nAttributes:\n    data: Ranked route summaries, slowest first.",
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "BusSpeedLeaderboardResponse",
+        "type": "object"
+      },
       "ScheduledServiceParams": {
         "description": "Parameters for the `/api/scheduledservice` endpoint.\n\nAttributes:\n    start_date: Start of date range.\n    end_date: End of date range.\n    route_id: Optional route filter. `None` returns all routes.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
         "properties": {
@@ -979,6 +1219,94 @@
           "data"
         ],
         "title": "RidershipResponse",
+        "type": "object"
+      },
+      "ReliabilityParams": {
+        "description": "Parameters for the `/api/reliability` endpoint.\n\nAttributes:\n    route_id: `RIDE`, a commuter rail route (e.g. `CR-Worcester`), or `commuter-rail` for all of commuter rail.\n    start_date: Start of date range.\n    end_date: End of date range.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
+        "properties": {
+          "route_id": {
+            "title": "Route Id",
+            "type": "string"
+          },
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "agg": {
+            "title": "Agg",
+            "type": "string"
+          }
+        },
+        "required": [
+          "route_id",
+          "start_date",
+          "end_date",
+          "agg"
+        ],
+        "title": "ReliabilityParams",
+        "type": "object"
+      },
+      "ReliabilityResponse": {
+        "additionalProperties": true,
+        "description": "Response for `/api/reliability` \u2014 on-time performance counts over time.\n\nAttributes:\n    data: List of reliability entries, one per period.",
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ReliabilityEntry"
+            },
+            "title": "Data",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ReliabilityResponse",
+        "type": "object"
+      },
+      "WeatherParams": {
+        "description": "Parameters for the `/api/weather` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).",
+        "properties": {
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "WeatherParams",
+        "type": "object"
+      },
+      "WeatherResponse": {
+        "additionalProperties": true,
+        "description": "Response for `/api/weather` \u2014 flat list of hourly observations sorted by timestamp.",
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/WeatherHourlyEntry"
+            },
+            "title": "Data",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "WeatherResponse",
         "type": "object"
       },
       "Facility": {
@@ -1325,6 +1653,253 @@
           "count"
         ],
         "title": "RidershipEntry",
+        "type": "object"
+      },
+      "ReliabilityCounts": {
+        "description": "On-time and cancellation counts for one commuter rail time period.\n\nAttributes:\n    otpNumerator: Trips that ran on time.\n    otpDenominator: Trips measured for on-time performance.\n    cancelled: Cancelled trips.",
+        "properties": {
+          "otpNumerator": {
+            "title": "Otpnumerator",
+            "type": "integer"
+          },
+          "otpDenominator": {
+            "title": "Otpdenominator",
+            "type": "integer"
+          },
+          "cancelled": {
+            "title": "Cancelled",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "otpNumerator",
+          "otpDenominator",
+          "cancelled"
+        ],
+        "title": "ReliabilityCounts",
+        "type": "object"
+      },
+      "ReliabilityEntry": {
+        "description": "Summed on-time performance counts for one day, week, or month.\n\nAttributes:\n    date: Start of the period (YYYY-MM-DD).\n    days: Service days with data in the period.\n    completed: The RIDE completed trips.\n    onTime: The RIDE trips completed on time.\n    requests: The RIDE trip requests (from Sep 2025).\n    noShows: The RIDE rider no-shows (from Jan 2026).\n    missed: The RIDE missed trips (from Jan 2026).\n    otpNumerator: Commuter rail trips that ran on time.\n    otpDenominator: Commuter rail trips measured.\n    cancelled: Commuter rail cancelled trips.\n    peak: Commuter rail peak-period counts.\n    offPeak: Commuter rail off-peak counts.",
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "days": {
+            "title": "Days",
+            "type": "integer"
+          },
+          "completed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Completed"
+          },
+          "onTime": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Ontime"
+          },
+          "requests": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Requests"
+          },
+          "noShows": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Noshows"
+          },
+          "missed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Missed"
+          },
+          "otpNumerator": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Otpnumerator"
+          },
+          "otpDenominator": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Otpdenominator"
+          },
+          "cancelled": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Cancelled"
+          },
+          "peak": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReliabilityCounts"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "offPeak": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReliabilityCounts"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "date",
+          "days"
+        ],
+        "title": "ReliabilityEntry",
+        "type": "object"
+      },
+      "WeatherHourlyEntry": {
+        "description": "A single hour's weather observation.\n\nAttributes:\n    timestamp: Local-time ISO hour string (America/New_York, no offset),\n        e.g. \"2026-04-22T14:00\".\n    temperature_f: Air temperature in \u00b0F.\n    weather_code: Raw WMO weather code from Open-Meteo.\n    condition: Coarse label \u2014 one of clear, cloudy, fog, rain, snow, storm, unknown.\n    precipitation_in: Precipitation in inches for the hour.\n    humidity_pct: Relative humidity at 2m (0\u2013100).\n    wind_mph: Wind speed at 10m in mph.",
+        "properties": {
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "temperature_f": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Temperature F"
+          },
+          "weather_code": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Weather Code"
+          },
+          "condition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Condition"
+          },
+          "precipitation_in": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Precipitation In"
+          },
+          "humidity_pct": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Humidity Pct"
+          },
+          "wind_mph": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Wind Mph"
+          }
+        },
+        "required": [
+          "timestamp"
+        ],
+        "title": "WeatherHourlyEntry",
         "type": "object"
       },
       "StationStop": {
