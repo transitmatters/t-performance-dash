@@ -145,7 +145,7 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, 
     if is_cr(stop_id):
         folder = get_gobble_folder(stop_id)
         key = f"Events-live/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
-    if is_ferry(stop_id):
+    elif is_ferry(stop_id):
         folder = "monthly-ferry-data"
         key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
     # if current date is newer than the max monthly data date, use LAMP

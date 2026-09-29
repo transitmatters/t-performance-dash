@@ -85,3 +85,43 @@ def test_single_day_after_monthly_cutoff_is_unchanged(fake_s3):
     s3.download_events(date(2026, 9, 9), date(2026, 9, 9), ["70061"])
 
     assert requested == [lamp_recent]
+
+
+CR_STOP = "CR-Fairmount_0_DB-2205-01"
+
+
+def _cr_key(day):
+    return f"Events-live/daily-cr-data/{CR_STOP}/Year={day.year}/Month={day.month}/Day={day.day}/events.csv.gz"
+
+
+@pytest.mark.parametrize("day", [date(2024, 6, 12), date(2026, 9, 9)], ids=["before_cutoff", "after_cutoff"])
+def test_commuter_rail_always_reads_gobble(fake_s3, day):
+    files, requested = fake_s3
+    files[_cr_key(day)] = _csv(f"{day},CR-Fairmount,t1,0,DB-2205-01,DEP,{day} 07:01:50,1812")
+
+    rows = s3.download_events(day, day, [CR_STOP])
+
+    assert requested == [_cr_key(day)]
+    assert rows[0]["vehicle_label"] == "1812"
+
+
+def test_commuter_rail_range_before_cutoff_reads_each_day(fake_s3):
+    files, requested = fake_s3
+    days = [date(2024, 6, 11), date(2024, 6, 12)]
+    for day in days:
+        files[_cr_key(day)] = _csv(f"{day},CR-Fairmount,t1,0,DB-2205-01,DEP,{day} 07:01:50,1812")
+
+    rows = s3.download_events(days[0], days[1], [CR_STOP])
+
+    assert sorted(requested) == sorted(_cr_key(day) for day in days)
+    assert len(rows) == 2
+
+
+def test_ferry_is_unchanged(fake_s3):
+    files, requested = fake_s3
+    ferry_key = "Events/monthly-ferry-data/Boat-F1-0-Hingham/Year=2025/Month=3/events.csv.gz"
+    files[ferry_key] = _csv("2025-03-12,Boat-F1,t1,0,Boat-Hingham,DEP,2025-03-12 07:01:50,")
+
+    s3.download_events(date(2025, 3, 12), date(2025, 3, 12), ["Boat-F1-0-Hingham"])
+
+    assert requested == [ferry_key]
