@@ -193,6 +193,23 @@ def get_time_predictions(query_params: dict):
     return data or []
 
 
+# Reliability static data
+def get_reliability(query_params: dict):
+    """Get reliability data from static cache.
+
+    Args:
+        query_params: Dict of query parameters. Recognized keys:
+            ``route_id`` (default ``"RIDE"``) and ``agg`` (default ``"weekly"``).
+
+    Returns:
+        A list of reliability records, or an empty list if no data is found.
+    """
+    route_id = query_params.get("route_id", "RIDE")
+    agg = query_params.get("agg", "weekly")
+    data = _load_static_json(f"reliability/{route_id}_{agg}.json")
+    return data or []
+
+
 # Service hours static data
 def get_service_hours(query_params: dict):
     """Get service hours from static cache.

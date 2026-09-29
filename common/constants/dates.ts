@@ -69,6 +69,8 @@ export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
 export const COMMUTER_RAIL_RIDERSHIP_MIN_DATE = '2022-06-22';
 export const COMMUTER_RAIL_DATA_MIN_DATE = '2024-01-01';
 
+export const RIDE_RELIABILITY_MIN_DATE = '2014-07-01';
+export const COMMUTER_RAIL_RELIABILITY_MIN_DATE = '2016-01-01';
 export const RIDE_MAX_DATE = '2025-08-31';
 export const RIDE_MAX_DAY = dayjs(RIDE_MAX_DATE);
 export const getESTDayjs = (date: string) => {
@@ -121,6 +123,15 @@ export const getDatePickerBounds = (
     return {
       minDate: BUS_SPEED_MAP_MIN_DATE,
       maxDate: YESTERDAY_STRING,
+    };
+  }
+
+  // Reliability comes from the MBTA open data portal, which goes back further than our other
+  // commuter rail and RIDE data (and past RIDE_MAX_DATE, which bounds RIDE ridership).
+  if (page === 'reliability' && (tab === 'Commuter Rail' || tab === 'The RIDE')) {
+    return {
+      minDate: tab === 'The RIDE' ? RIDE_RELIABILITY_MIN_DATE : COMMUTER_RAIL_RELIABILITY_MIN_DATE,
+      maxDate: TODAY_STRING,
     };
   }
 
