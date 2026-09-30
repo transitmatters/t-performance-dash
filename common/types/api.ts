@@ -121,6 +121,17 @@ export enum FetchRidershipParams {
   endDate = 'end_date',
 }
 
+export type FetchReliabilityOptions = {
+  [key in FetchReliabilityParams]?: string;
+};
+
+export enum FetchReliabilityParams {
+  routeId = 'route_id',
+  startDate = 'start_date',
+  endDate = 'end_date',
+  agg = 'agg',
+}
+
 export type FetchWeatherOptions = {
   [key in FetchWeatherParams]?: string;
 };

@@ -13,6 +13,7 @@ import {
   faTrain,
   faMap,
   faRankingStar,
+  faCalendarCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import type { BusRoute, Line } from '../types/lines';
 
@@ -30,6 +31,7 @@ export enum PAGES {
   systemSlowzones = 'systemSlowzones',
   systemServiceAndRidership = 'systemServiceAndRidership',
   ridership = 'ridership',
+  reliability = 'reliability',
   singleTrips = 'singleTrips',
   multiTrips = 'multiTrips',
   // Must stay identical to the URL segment: getPage() in common/utils/router.tsx returns
@@ -207,6 +209,14 @@ export const ALL_PAGES: PageMap = {
     icon: faUsers,
     dateStoreSection: 'line',
   },
+  reliability: {
+    key: 'reliability',
+    path: '/reliability',
+    name: 'Reliability',
+    lines: ['line-commuter-rail', 'line-RIDE'],
+    icon: faCalendarCheck,
+    dateStoreSection: 'line',
+  },
   speedmap: {
     key: 'speedmap',
     path: '/speedmap',
@@ -268,6 +278,7 @@ export const LINE_PAGES = [
   ALL_PAGES.predictions,
   ALL_PAGES.delays,
   ALL_PAGES.ridership,
+  ALL_PAGES.reliability,
 ];
 
 export const SUB_PAGES_MAP = {

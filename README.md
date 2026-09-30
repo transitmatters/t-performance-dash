@@ -12,10 +12,10 @@ This is the repository for the [TransitMatters Data Dashboard](https://dashboard
 
 ## 🧰 Requirements to Develop Locally
 
-- node 20.x and npm 9.x+ required
+- node 26.x and npm 11.x+ required
   - With `nvm` installed, use `nvm install && nvm use`
   - verify with `node -v`
-- Python 3.12 with recent uv (0.9.8 or later)
+- Python 3.13 with recent uv (0.9.8 or later)
   - Verify with `python --version && uv --version`
   - `uv self update` to update uv
 

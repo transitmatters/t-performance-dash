@@ -186,6 +186,20 @@ class TestRidershipValidation:
         assert result.status_code == 400
 
 
+class TestReliabilityValidation:
+    def test_missing_params_returns_400(self, client):
+        result = client.http.get("/api/reliability?route_id=RIDE&start_date=2024-01-01")
+        assert result.status_code == 400
+
+    def test_invalid_agg_returns_400(self, client):
+        result = client.http.get("/api/reliability?route_id=RIDE&start_date=2024-01-01&end_date=2024-02-01&agg=hourly")
+        assert result.status_code == 400
+
+    def test_valid_request_returns_200(self, client):
+        result = client.http.get("/api/reliability?route_id=RIDE&start_date=2024-01-01&end_date=2024-02-01&agg=weekly")
+        assert result.status_code == 200
+
+
 class TestSpeedRestrictionsValidation:
     def test_missing_both_returns_400(self, client):
         result = client.http.get("/api/speed_restrictions")

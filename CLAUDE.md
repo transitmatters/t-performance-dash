@@ -24,11 +24,11 @@ TransitMatters Data Dashboard is a data visualization platform for Boston MBTA t
 
 ## Tech Stack
 
-- **Frontend**: Next.js 15 + React 18 + TypeScript
+- **Frontend**: Next.js 16 + React 19 + TypeScript
 - **State Management**: Zustand + TanStack React Query
 - **Styling**: Tailwind CSS
 - **Charts**: Chart.js
-- **Backend**: Python 3.12 + AWS Chalice (serverless)
+- **Backend**: Python 3.13 + AWS Chalice (serverless)
 - **Data**: AWS DynamoDB + S3
 - **Package Managers**: npm (frontend), uv (backend)
 
@@ -117,7 +117,7 @@ Optional:
 
 - Ruff for linting and formatting
 - 120 character line length
-- Python 3.12 features allowed
+- Python 3.13 features allowed
 
 ## MBTA Line Colors
 

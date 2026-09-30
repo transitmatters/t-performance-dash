@@ -19,6 +19,7 @@ from chalicelib import (
     route_manifest,
     models,
     predictions,
+    reliability,
     ridership,
     scheduled_service,
     service_hours,
@@ -537,6 +538,37 @@ def get_ridership():
             start_date=start_date,
             end_date=end_date,
             line_id=line_id,
+        )
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
+    "/api/reliability",
+    cors=cors_config,
+    docs=Docs(request=models.ReliabilityParams, response=models.ReliabilityResponse),
+)
+def get_reliability():
+    """Retrieve on-time performance counts for The RIDE or commuter rail over a date range."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["route_id", "start_date", "end_date", "agg"])
+    if query_params["agg"] not in reliability.AGGS:
+        raise BadRequestError(f"Invalid agg '{query_params['agg']}'. Expected one of: {', '.join(reliability.AGGS)}.")
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_reliability(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/reliability", query_params)
+    else:
+        data = reliability.get_reliability(
+            route_id=query_params["route_id"],
+            start_date=parse_user_date(query_params["start_date"]),
+            end_date=parse_user_date(query_params["end_date"]),
+            agg=query_params["agg"],
         )
 
     return Response(

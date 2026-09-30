@@ -215,3 +215,28 @@ export type RidershipCount = {
   date: string;
   count: number;
 };
+
+export type ReliabilityCounts = {
+  otpNumerator: number;
+  otpDenominator: number;
+  cancelled: number;
+};
+
+/** One day, week, or month of on-time performance counts; see server/chalicelib/reliability.py. */
+export type ReliabilityEntry = {
+  date: string;
+  // Service days with data in the period; partial periods and gaps in MBTA's data have fewer.
+  days: number;
+  // The RIDE. requests is recorded from Sep 2025, noShows and missed from Jan 2026.
+  completed?: number;
+  onTime?: number;
+  requests?: number;
+  noShows?: number;
+  missed?: number;
+  // Commuter rail
+  otpNumerator?: number;
+  otpDenominator?: number;
+  cancelled?: number;
+  peak?: ReliabilityCounts;
+  offPeak?: ReliabilityCounts;
+};

@@ -105,6 +105,22 @@ class RidershipParams(BaseModel):
     line_id: str | None = None
 
 
+class ReliabilityParams(BaseModel):
+    """Parameters for the `/api/reliability` endpoint.
+
+    Attributes:
+        route_id: `RIDE`, a commuter rail route (e.g. `CR-Worcester`), or `commuter-rail` for all of commuter rail.
+        start_date: Start of date range.
+        end_date: End of date range.
+        agg: Aggregation level — `daily`, `weekly`, or `monthly`.
+    """
+
+    route_id: str
+    start_date: date
+    end_date: date
+    agg: str
+
+
 class TimePredictionParams(BaseModel):
     """Parameters for the `/api/time_predictions` endpoint.
 
@@ -378,6 +394,64 @@ class RidershipResponse(BaseModel):
 
     model_config = ConfigDict(extra="allow")
     data: List[RidershipEntry]
+
+
+# Reliability
+class ReliabilityCounts(BaseModel):
+    """On-time and cancellation counts for one commuter rail time period.
+
+    Attributes:
+        otpNumerator: Trips that ran on time.
+        otpDenominator: Trips measured for on-time performance.
+        cancelled: Cancelled trips.
+    """
+
+    otpNumerator: int
+    otpDenominator: int
+    cancelled: int
+
+
+class ReliabilityEntry(BaseModel):
+    """Summed on-time performance counts for one day, week, or month.
+
+    Attributes:
+        date: Start of the period (YYYY-MM-DD).
+        days: Service days with data in the period.
+        completed: The RIDE completed trips.
+        onTime: The RIDE trips completed on time.
+        requests: The RIDE trip requests (from Sep 2025).
+        noShows: The RIDE rider no-shows (from Jan 2026).
+        missed: The RIDE missed trips (from Jan 2026).
+        otpNumerator: Commuter rail trips that ran on time.
+        otpDenominator: Commuter rail trips measured.
+        cancelled: Commuter rail cancelled trips.
+        peak: Commuter rail peak-period counts.
+        offPeak: Commuter rail off-peak counts.
+    """
+
+    date: str
+    days: int
+    completed: Optional[int] = None
+    onTime: Optional[int] = None
+    requests: Optional[int] = None
+    noShows: Optional[int] = None
+    missed: Optional[int] = None
+    otpNumerator: Optional[int] = None
+    otpDenominator: Optional[int] = None
+    cancelled: Optional[int] = None
+    peak: Optional[ReliabilityCounts] = None
+    offPeak: Optional[ReliabilityCounts] = None
+
+
+class ReliabilityResponse(BaseModel):
+    """Response for `/api/reliability` — on-time performance counts over time.
+
+    Attributes:
+        data: List of reliability entries, one per period.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    data: List[ReliabilityEntry]
 
 
 # Weather
