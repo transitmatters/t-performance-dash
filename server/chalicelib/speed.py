@@ -27,12 +27,16 @@ class BusTripMetricsParams(TypedDict):
         route: Bus route_id, e.g. ``"1"``, ``"57"``, ``"111"``, or a comma-separated list
             (``"114,116,117"``) for the dashboard's grouped routes, which are summed per period.
         agg: Optional aggregation level (``"daily"``, ``"weekly"``, ``"monthly"``). Defaults to daily.
+        time_band: Optional time band (one of ``BUS_TIME_BANDS``) to report in place of the whole day.
+        day_type: Optional day type (one of ``BUS_DAY_TYPES``) to keep, dropping every other day.
     """
 
     start_date: str | date
     end_date: str | date
     route: str
     agg: NotRequired[str]
+    time_band: NotRequired[str]
+    day_type: NotRequired[str]
 
 
 BUS_TRIP_METRICS_TABLE = "DeliveredTripMetricsBus"
@@ -46,6 +50,20 @@ BUS_AGG_MAX_DAYS = {
     "monthly": 30 * BUS_TRIP_METRICS_MAX_DAYS,
 }
 BUS_SUMMED_FIELDS = ("miles_covered", "total_time", "count", "n_traversals")
+# The departure windows a DeliveredTripMetricsBus row breaks its totals down by, in its `time_bands`
+# map -- TIME_BANDS in mbta-performance's chalicelib/lamp/bus/constants.py, the same bands the bus
+# speed map uses. The row's top-level fields are the all-day figure, so there is no "all_day" band:
+# leave time_band unset for that.
+BUS_TIME_BANDS = ("early_am", "am_peak", "midday", "pm_peak", "evening", "late_night")
+# A row's `day_type`, from MBTA's GTFS holiday calendar -- the split the bus speed map's weekly/monthly
+# tiles use. Deliberately not pandas' USFederalHolidayCalendar: that isn't MBTA's calendar, and any day
+# the two differ on would put the graph and the map at odds.
+BUS_DAY_TYPES = ("business_day", "weekend_or_holiday")
+# Everything a `time_bands` entry holds. Band counts don't add up to the row's `count` (a trip crossing
+# a band boundary counts in both), but each is still a straight sum across days.
+BUS_BAND_FIELDS = ("count", "n_traversals", "n_interpolated", "miles_covered", "total_time")
+# Only exist for the whole day: medians and means can't be split into bands or summed back together.
+BUS_ALL_DAY_ONLY_FIELDS = ("median_speed_mph", "mean_speed_mph")
 
 
 class TripMetricsByLineParams(TypedDict):
@@ -171,14 +189,20 @@ def trip_metrics_by_bus_route(params: BusTripMetricsParams):
     miles_covered and total_time keeps mph = miles_covered / (total_time / 3600) weighted
     by distance, the same as the rest of the dashboard.
 
+    time_band and day_type narrow each daily row before anything is summed (see
+    _filter_bus_rows). They filter the rows the query returns rather than the query itself,
+    so they don't change what's read from DynamoDB.
+
     Args:
-        params: Query parameters including start_date, end_date, route, and optional agg.
+        params: Query parameters including start_date, end_date, route, and optional agg,
+            time_band and day_type.
 
     Returns:
         List of trip metric records for the route, one per day/week/month.
 
     Raises:
-        BadRequestError: If required parameters are missing or agg is unrecognized.
+        BadRequestError: If required parameters are missing, or agg, time_band or day_type is
+            unrecognized.
         ForbiddenError: If the date range exceeds the maximum allowed for the agg level.
     """
     try:
@@ -190,6 +214,7 @@ def trip_metrics_by_bus_route(params: BusTripMetricsParams):
     agg = params.get("agg", "daily")
     if agg not in BUS_AGG_MAX_DAYS:
         raise BadRequestError(f"Invalid agg parameter. Expected one of: {', '.join(BUS_AGG_MAX_DAYS)}.")
+    time_band, day_type = validate_bus_trip_filters(params)
     if is_invalid_range(start_date, end_date, BUS_AGG_MAX_DAYS[agg]):
         raise ForbiddenError(
             f"Date range too long. The maximum number of requested values is {BUS_TRIP_METRICS_MAX_DAYS}."
@@ -199,12 +224,59 @@ def trip_metrics_by_bus_route(params: BusTripMetricsParams):
         raise BadRequestError("Missing or invalid parameters.")
     if len(route_ids) == 1:
         rows = dynamo.query_daily_trips_on_route(BUS_TRIP_METRICS_TABLE, route_ids[0], start_date, end_date)
+        rows = _filter_bus_rows(rows, time_band, day_type)
         if agg == "daily":
             return rows
     else:
         per_route = dynamo.query_daily_trips_on_routes(BUS_TRIP_METRICS_TABLE, route_ids, start_date, end_date)
-        rows = [row for route_rows in per_route for row in route_rows]
+        rows = _filter_bus_rows([row for route_rows in per_route for row in route_rows], time_band, day_type)
     return _rollup_bus_trip_metrics(rows, agg, route=",".join(route_ids))
+
+
+def validate_bus_trip_filters(params: dict) -> tuple[str | None, str | None]:
+    """Return the request's (time_band, day_type), each None when absent.
+
+    Raises:
+        BadRequestError: If either is set to something other than a known band or day type.
+    """
+    time_band = params.get("time_band")
+    if time_band is not None and time_band not in BUS_TIME_BANDS:
+        raise BadRequestError(
+            f"Invalid time_band parameter. Expected one of: {', '.join(BUS_TIME_BANDS)}. Omit it for the whole day."
+        )
+    day_type = params.get("day_type")
+    if day_type is not None and day_type not in BUS_DAY_TYPES:
+        raise BadRequestError(
+            f"Invalid day_type parameter. Expected one of: {', '.join(BUS_DAY_TYPES)}. Omit it for every day."
+        )
+    return time_band, day_type
+
+
+def _filter_bus_rows(rows: list[dict], time_band: str | None, day_type: str | None) -> list[dict]:
+    """Keep only day_type's days, and/or swap in time_band's totals for each row's all-day ones.
+
+    Done per daily row, per route_id, so a grouped label (114,116,117) still sums band-for-band
+    and a week or month rolls up from band totals exactly the way it does from all-day ones.
+
+    Rows written before the pipeline recorded `day_type`/`time_bands` (and fleet-only rows, and
+    the route "all" row) can't be placed: a day_type filter drops them, and a time band reads
+    them as zero -- a gap in the graph, rather than the all-day figure passed off as the band's.
+    """
+    if day_type is not None:
+        rows = [row for row in rows if row.get("day_type") == day_type]
+    if time_band is not None:
+        rows = [_band_row(row, time_band) for row in rows]
+    return rows
+
+
+def _band_row(row: dict, time_band: str) -> dict:
+    """The row with one band's totals in place of its all-day ones. A band absent from the
+    row's `time_bands` had no traversals that day."""
+    band = (row.get("time_bands") or {}).get(time_band) or {}
+    all_day_only = ("time_bands", *BUS_ALL_DAY_ONLY_FIELDS)
+    return {key: value for key, value in row.items() if key not in all_day_only} | {
+        field: band.get(field, 0) for field in BUS_BAND_FIELDS
+    }
 
 
 def _rollup_bus_trip_metrics(rows: list[dict], agg: str, route: str) -> list[dict]:

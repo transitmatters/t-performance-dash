@@ -438,6 +438,8 @@ def get_bus_trip_metrics():
     """Retrieve daily speed/trip metrics for a single bus route over a date range."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date", "route"])
+    # Checked here as well as in speed.py so every backend source rejects them alike.
+    speed.validate_bus_trip_filters(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
