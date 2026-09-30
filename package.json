@@ -29,7 +29,7 @@
     "start-python": "cd server && DD_TRACE_ENABLED=false DD_PROFILING_ENABLED=false uv run chalice local --port=5000",
     "start-react": "npm run get-data && next dev",
     "storybook": "storybook dev -p 6006",
-    "test": "react-scripts test",
+    "test": "vitest run",
     "ui-add": "shadcn add",
     "dev": "next dev"
   },
@@ -139,7 +139,9 @@
     "storybook": "^10.2.0",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.57.2"
+    "typescript-eslint": "^8.57.2",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
   },
   "engines": {
     "node": ">=26.8.2",
