@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useHistoricalBaselines } from '../../common/api/hooks/baselines';
-import { useRidershipDataLanding } from '../../common/api/hooks/ridership';
 import { useServiceAndRidershipDashboard } from '../../common/api/hooks/serviceAndRidership';
 import { useSlowzoneDelayTotalData } from '../../common/api/hooks/slowzones';
 import { useTripMetricsForLanding } from '../../common/api/hooks/tripmetrics';
@@ -13,34 +12,26 @@ import { buildHome } from './compute/buildHome';
  */
 export const useHomeData = () => {
   const tripMetrics = useTripMetricsForLanding();
-  const ridership = useRidershipDataLanding();
   const baselines = useHistoricalBaselines();
   const delayTotals = useSlowzoneDelayTotalData();
   const serviceAndRidership = useServiceAndRidershipDashboard();
 
-  const queries = [tripMetrics, ridership, baselines, delayTotals, serviceAndRidership];
+  const queries = [tripMetrics, baselines, delayTotals, serviceAndRidership];
   const isLoading = queries.some((q) => q.isLoading);
   const isError = queries.some((q) => q.isError);
 
   const data = useMemo(() => {
-    if (!tripMetrics.data || !ridership.data || !delayTotals.data || !serviceAndRidership.data) {
+    if (!tripMetrics.data || !delayTotals.data || !serviceAndRidership.data) {
       return undefined;
     }
     return buildHome({
       tripMetrics: tripMetrics.data,
-      ridership: ridership.data,
       baselines: baselines.data ?? null,
       delayTotals: delayTotals.data,
       serviceAndRidership: serviceAndRidership.data,
       now: new Date(),
     });
-  }, [
-    tripMetrics.data,
-    ridership.data,
-    baselines.data,
-    delayTotals.data,
-    serviceAndRidership.data,
-  ]);
+  }, [tripMetrics.data, baselines.data, delayTotals.data, serviceAndRidership.data]);
 
   return { data, isLoading, isError };
 };

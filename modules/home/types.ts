@@ -3,14 +3,14 @@ import type { Line } from '../../common/types/lines';
 // Shaped like the planned static/landing/home.json (schemaVersion 1) so the page can switch from
 // building this in the browser to fetching it once data-ingestion publishes it.
 
-export type MetricId = 'service' | 'frequency' | 'speed' | 'slowZones' | 'ridership' | 'fleet';
+export type MetricId = 'service' | 'frequency' | 'speed' | 'slowZones' | 'fleet';
 
 /** `insufficient`: should be measured but there isn't enough recent data. `na`: not measured. */
 export type Status = 'win' | 'good' | 'room' | 'problem' | 'insufficient' | 'na';
 
 export type Direction = 'higher' | 'lower';
 
-/** `count` is a raw count described by `Cell.unitLabel`, e.g. riders per weekday. */
+/** `count` is a raw count described by `Cell.unitLabel`, e.g. trips per day. */
 export type Unit = 'pct' | 'mph' | 'seconds' | 'years' | 'count';
 
 export interface Cell {

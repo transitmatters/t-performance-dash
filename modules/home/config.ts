@@ -55,16 +55,6 @@ export const METRICS: Record<MetricId, MetricMethod> = {
     scoreUnit: 'seconds',
     staleDays: 7,
   },
-  ridership: {
-    id: 'ridership',
-    label: 'Ridership',
-    definition:
-      'Average weekday riders over 12 weeks compared with the busiest 4-week stretch at least 3 years ago.',
-    direction: 'higher',
-    thresholds: [1, 0.85, 0.65],
-    scoreUnit: 'pct',
-    staleDays: 28,
-  },
   fleet: {
     id: 'fleet',
     label: 'Vehicles',
@@ -77,14 +67,7 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   },
 };
 
-export const METRIC_ORDER: MetricId[] = [
-  'service',
-  'frequency',
-  'speed',
-  'slowZones',
-  'ridership',
-  'fleet',
-];
+export const METRIC_ORDER: MetricId[] = ['service', 'frequency', 'speed', 'slowZones', 'fleet'];
 
 /** Share of cars (percent, 4-week mean) a type needs to count as still in regular service. */
 export const IN_SERVICE_SHARE = 1;
@@ -186,7 +169,7 @@ export const ROWS: RowConfig[] = [
     group: 'core',
     line: 'line-bus',
     href: '/bus/ridership',
-    // Frequency is the promise; service and ridership back it up.
+    // Frequency is the promise; service backs it up.
     minMeasured: 2,
   },
   {
@@ -195,7 +178,7 @@ export const ROWS: RowConfig[] = [
     group: 'core',
     line: 'line-bus',
     href: '/bus/ridership',
-    minMeasured: 3,
+    minMeasured: 2,
   },
   {
     id: 'mattapan',
@@ -211,7 +194,8 @@ export const ROWS: RowConfig[] = [
     group: 'also',
     line: 'line-ferry',
     href: '/ferry/ridership',
-    minMeasured: 2,
+    // Scheduled service is the only measure for ferries so far.
+    minMeasured: 1,
   },
 ];
 

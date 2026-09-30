@@ -31,7 +31,7 @@ export const formatValue = (value: number | null, unit: Unit | 'minutes'): strin
   }
 };
 
-/** The figure shown on a stop; `withUnit` adds the count's label (riders/weekday) for the detail. */
+/** The figure shown on a stop; `withUnit` adds the count's label (trips/day) for the detail. */
 export const formatCell = (cell: Cell, withUnit = false) => {
   if (cell.status === 'na') return 'n/a';
   const text = formatValue(cell.value, cell.unit);

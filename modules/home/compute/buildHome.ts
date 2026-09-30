@@ -1,7 +1,6 @@
 import type { HistoricalBaselines } from '../../../common/types/baselines';
 import type {
   DeliveredTripMetrics,
-  RidershipCount,
   SlowZoneDayTotalsResponse,
 } from '../../../common/types/dataPoints';
 import type { Line } from '../../../common/types/lines';
@@ -39,7 +38,6 @@ import { headlineFor } from './status';
 
 export interface HomeSources {
   tripMetrics: Partial<Record<Line, DeliveredTripMetrics[]>>;
-  ridership: Partial<Record<Line, RidershipCount[]>>;
   baselines: HistoricalBaselines | null;
   delayTotals: SlowZoneDayTotalsResponse;
   serviceAndRidership: DashboardData;
@@ -55,6 +53,9 @@ const SLOW_ZONE_KEYS: Record<SubwayLine, string> = {
 };
 
 const COMING_SOON = 'Coming to the home page soon.';
+
+// The four core lines; Mattapan sits under "Also running".
+const SUBWAY_FREQUENCY_LINE_IDS = ['line-Red', 'line-Orange', 'line-Blue', 'line-Green'];
 
 const lineHref = (row: RowConfig, page: string) =>
   row.href.includes('/', 1) ? row.href : `${row.href}/${page}`;
@@ -160,20 +161,6 @@ const subwayCells = (
     href: lineHref(row, 'slowzones'),
   });
 
-  const ridershipKey = lineSeriesId(line) ?? line;
-  cells.ridership = ratioCell(
-    'ridership',
-    (src.ridership[line] ?? []).map((d) => ({ date: d.date, value: d.count })),
-    baselineFor(baselines, 'ridership', [ridershipKey]),
-    {
-      now,
-      aggregate: 'mean',
-      unit: 'pct',
-      rawUnitLabel: 'riders/weekday',
-      href: lineHref(row, 'ridership'),
-    }
-  );
-
   const ageWindow = takeWindow(
     tripMetricsSeries(trips, (d) => d.avg_car_age),
     false
@@ -264,12 +251,6 @@ const buildCells = (row: RowConfig, src: HomeSources): Partial<Record<MetricId, 
           { now, asOf, href: row.href }
         ),
         speed: naCell('speed', 'mph', 'Not measured for Commuter Rail yet.'),
-        ridership: ratioCell(
-          'ridership',
-          fromRecord(srd.modeData['regional-rail']?.totalRidershipHistory),
-          baselineFor(baselines, 'ridership', ['line-commuter-rail']),
-          { now, aggregate: 'mean', unit: 'pct', rawUnitLabel: 'riders/weekday', href: row.href }
-        ),
         fleet: judgedCell('fleet', CR_ELECTRIFIED_SHARE, {
           unit: 'pct',
           window: { points: [], values: [1], excluded: 0, asOf },
@@ -287,11 +268,10 @@ const buildCells = (row: RowConfig, src: HomeSources): Partial<Record<MetricId, 
       const withService = lines.filter(
         (l) => baselineFor(baselines, 'scheduledService', [l.id]).value !== null
       );
-      const withRiders = lines.filter(
-        (l) => l.ridershipHistory && baselineFor(baselines, 'ridership', [l.id]).value !== null
-      );
-      const routeNote = (n: number) =>
-        n < lines.length ? [`${n} of ${lines.length} routes have a baseline.`] : [];
+      const routeNote =
+        withService.length < lines.length
+          ? [`${withService.length} of ${lines.length} routes have a baseline.`]
+          : [];
       return {
         service: ratioCell(
           'service',
@@ -307,7 +287,7 @@ const buildCells = (row: RowConfig, src: HomeSources): Partial<Record<MetricId, 
             unit: 'pct',
             rawUnitLabel: 'scheduled trips/day',
             href: row.href,
-            notes: routeNote(withService.length),
+            notes: routeNote,
           }
         ),
         frequency: frequencyCell(
@@ -321,26 +301,6 @@ const buildCells = (row: RowConfig, src: HomeSources): Partial<Record<MetricId, 
           }
         ),
         speed: naCell('speed', 'mph', COMING_SOON),
-        ridership: ratioCell(
-          'ridership',
-          sumHistories(withRiders.map((l) => l.ridershipHistory)),
-          baselineFor(
-            baselines,
-            'ridership',
-            withRiders.map((l) => l.id)
-          ),
-          {
-            now,
-            aggregate: 'mean',
-            unit: 'pct',
-            rawUnitLabel: 'riders/weekday',
-            href: row.href,
-            notes: [
-              ...routeNote(withRiders.length),
-              'Several routes changed in the Bus Network Redesign.',
-            ],
-          }
-        ),
         fleet: naCell('fleet', 'years', COMING_SOON),
       };
     }
@@ -354,12 +314,6 @@ const buildCells = (row: RowConfig, src: HomeSources): Partial<Record<MetricId, 
           { now, asOf, href: row.href }
         ),
         speed: naCell('speed', 'mph', COMING_SOON),
-        ridership: ratioCell(
-          'ridership',
-          (src.ridership['line-bus'] ?? []).map((d) => ({ date: d.date, value: d.count })),
-          baselineFor(baselines, 'ridership', ['line-bus']),
-          { now, aggregate: 'mean', unit: 'pct', rawUnitLabel: 'riders/weekday', href: row.href }
-        ),
         fleet: naCell('fleet', 'years', COMING_SOON),
       };
     }
@@ -368,12 +322,6 @@ const buildCells = (row: RowConfig, src: HomeSources): Partial<Record<MetricId, 
         service: modeServiceCell(row, src, 'boat', 'mode-boat'),
         frequency: naCell('frequency', 'pct', 'No frequency goal for ferries yet.'),
         speed: naCell('speed', 'mph', 'Not measured for ferries.'),
-        ridership: ratioCell(
-          'ridership',
-          fromRecord(srd.modeData.boat?.totalRidershipHistory),
-          baselineFor(baselines, 'ridership', ['line-ferry']),
-          { now, aggregate: 'mean', unit: 'pct', rawUnitLabel: 'riders/weekday', href: row.href }
-        ),
         fleet: naCell('fleet', 'years', 'Not measured for ferries.'),
       };
     default:
@@ -407,25 +355,9 @@ const buildRow = (config: RowConfig, src: HomeSources): Row => {
 
 const buildHero = (src: HomeSources): HeroStat[] => {
   const { baselines, serviceAndRidership: srd, delayTotals } = src;
-  // Riders: subway plus bus, against the sum of each line's own best.
-  const riderKeys: [Line, string][] = [
-    ['line-red', 'line-Red'],
-    ['line-orange', 'line-Orange'],
-    ['line-blue', 'line-Blue'],
-    ['line-green', 'line-Green'],
-    ['line-bus', 'line-bus'],
-  ];
-  const riderBest = baselineFor(
-    baselines,
-    'ridership',
-    riderKeys.map(([, key]) => key)
-  ).value;
-  const riderWindow = takeWindow(
-    sumHistories(
-      riderKeys.map(([line]) =>
-        Object.fromEntries((src.ridership[line] ?? []).map((d) => [d.date, d.count]))
-      )
-    )
+  const subwayLines = SUBWAY_FREQUENCY_LINE_IDS.map((id) => srd.lineData[id]).filter(Boolean);
+  const subway = combineCoverage(
+    subwayLines.map((line) => ({ coverage: goalCoverage(line, FREQUENCY_GOALS.subway) }))
   );
 
   const serviceWindow = takeWindow(fromRecord(srd.summaryData.totalServiceHistory));
@@ -444,13 +376,12 @@ const buildHero = (src: HomeSources): HeroStat[] => {
 
   return [
     {
-      id: 'riders',
-      label: 'Subway & bus riders',
-      value: riderBest && riderWindow.values.length ? mean(riderWindow.values) / riderBest : null,
+      id: 'subwayFrequency',
+      label: 'Subway',
+      value: subway,
       unit: 'pct',
-      detail: 'of the busiest weeks on record',
+      detail: `of service hours at every ${FREQUENCY_GOALS.subway} min or better`,
       direction: 'higher',
-      trend: trendOf(riderWindow),
     },
     {
       id: 'service',
