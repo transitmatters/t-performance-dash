@@ -33,7 +33,6 @@ const PAGE_DISPLAY_NAMES: Record<string, string> = {
 };
 
 const TM_RED = '#a31e1e';
-const FALLBACK_IMAGE = `${BASE_URL}/twitter-card.jpg`;
 export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
 
@@ -134,32 +133,26 @@ export function getMetaTags(
       ? `${lineName} ${pageName?.toLowerCase() ?? 'performance'} data on the TransitMatters Data Dashboard.`
       : DEFAULT_DESCRIPTION;
 
+  // Only prerendered paths have a card; 404s share the landing page's.
+  const hasCard = STATIC_PATHS.includes(pathname.endsWith('/') ? pathname : `${pathname}/`);
   return {
     title,
     description,
     canonicalUrl: `${BASE_URL}${pathname}${searchStr}`,
-    image: STATIC_PATHS.includes(pathname.endsWith('/') ? pathname : `${pathname}/`)
-      ? `${BASE_URL}/static/og/${ogImageSlug(pathname)}.png`
-      : FALLBACK_IMAGE,
+    image: `${BASE_URL}/static/og/${hasCard ? ogImageSlug(pathname) : 'index'}.png`,
   };
 }
 
 /** The social-card tags, as [attribute, key, content] triples, shared by React and the prerender. */
 export function getMetaTagEntries({ title, description, canonicalUrl, image }: MetaTags) {
-  const sized: (readonly ['property', 'og:image:width' | 'og:image:height', string])[] =
-    image === FALLBACK_IMAGE
-      ? []
-      : [
-          ['property', 'og:image:width', String(OG_IMAGE_WIDTH)],
-          ['property', 'og:image:height', String(OG_IMAGE_HEIGHT)],
-        ];
   return [
     ['property', 'og:title', title],
     ['property', 'og:description', description],
     ['property', 'og:type', 'website'],
     ['property', 'og:url', canonicalUrl],
     ['property', 'og:image', image],
-    ...sized,
+    ['property', 'og:image:width', String(OG_IMAGE_WIDTH)],
+    ['property', 'og:image:height', String(OG_IMAGE_HEIGHT)],
     ['property', 'og:image:alt', title],
     ['property', 'og:site_name', 'TransitMatters Data Dashboard'],
     ['name', 'twitter:card', 'summary_large_image'],

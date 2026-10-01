@@ -48,13 +48,12 @@ describe('og cards', () => {
     expect(content('og:image:height')).toBe('630');
   });
 
-  it('keeps the generic image for 404s and paths without a card', () => {
+  it("uses the landing page's card for 404s and paths without one", () => {
     for (const path of ['/404/', '/blue/leaderboard/']) {
       const entries = getMetaTagEntries(getMetaTags(path));
       expect(entries.find(([, k]) => k === 'og:image')?.[2]).toBe(
-        'https://dashboard.transitmatters.org/twitter-card.jpg'
+        'https://dashboard.transitmatters.org/static/og/index.png'
       );
-      expect(entries.some(([, k]) => k === 'og:image:width')).toBe(false);
     }
   });
 

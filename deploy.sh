@@ -138,9 +138,10 @@ popd > /dev/null
 echo "Cleaning up copied constants directory..."
 rm -rf server/chalicelib/common
 
-aws s3 sync out/ s3://$FRONTEND_HOSTNAME \
+# Every route has its own index.html, and each one must revalidate so a deploy reaches browsers
+aws s3 sync out/ s3://$FRONTEND_HOSTNAME --exclude "*.html" \
   --cache-control "public, max-age=31536000, immutable"
-aws s3 cp out/index.html s3://$FRONTEND_HOSTNAME/index.html \
+aws s3 sync out/ s3://$FRONTEND_HOSTNAME --exclude "*" --include "*.html" \
   --cache-control "no-cache, must-revalidate"
 
 # Band-aid the fact that v3 doesn't have trailing slashes on its path, but v4 does,
