@@ -8,6 +8,7 @@ import {
   SidebarHeader,
   useSidebar,
 } from '../../common/components/ui/sidebar';
+import { isBetaHost } from '../../common/utils/constants';
 import { NavLines } from './NavLines';
 import { NavSystem } from './NavSystem';
 import { ExtraMenuItems } from './ExtraMenuItems';
@@ -38,6 +39,11 @@ export const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...
         <NavLines close={close} />
       </SidebarContent>
       <SidebarFooter>
+        {isBetaHost() && (
+          <p className="text-sidebar-foreground/60 px-2 text-xs">
+            Beta: usage data collected via Datadog
+          </p>
+        )}
         <ExtraMenuItems />
       </SidebarFooter>
     </Sidebar>
