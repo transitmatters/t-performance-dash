@@ -114,6 +114,8 @@ cp -r common/constants/ferry_constants server/chalicelib/common/constants/
 pushd server/ > /dev/null
 uv export --no-hashes --no-dev > requirements.txt
 uv run chalice package --stage $CHALICE_STAGE --merge-template cloudformation.json cfn/
+source ../devops/helpers.sh
+check_package_size
 aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUCKET --output-template-file cfn/packaged.yaml
 aws cloudformation deploy --template-file cfn/packaged.yaml --s3-bucket $BACKEND_BUCKET --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM \
     --tags service=t-performance-dash env=$ENV_TAG version=$GIT_VERSION \
@@ -150,6 +152,15 @@ aws s3 cp v3_to_v4_slash_trick/trick.html s3://$FRONTEND_HOSTNAME/slowzones --no
 # Grab the cloudfront ID and invalidate its cache
 CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null] | [?contains(Aliases.Items, '$FRONTEND_HOSTNAME')].Id | [0]" --output text)
 aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths "/*"
+
+# Draw the link-preview cards for this build's pages now instead of at the next morning's run
+if OG_CARDS_FUNCTION=$(aws cloudformation describe-stack-resource --stack-name $CF_STACK_NAME \
+      --logical-resource-id RenderOgCards --query StackResourceDetail.PhysicalResourceId --output text) \
+    && aws lambda invoke --function-name $OG_CARDS_FUNCTION --invocation-type Event /dev/null > /dev/null; then
+    echo "Started $OG_CARDS_FUNCTION"
+else
+    echo "Warning: could not start the og card job; cards update at its next scheduled run" 1>&2
+fi
 
 echo
 echo
