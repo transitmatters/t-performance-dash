@@ -85,8 +85,19 @@ echo "Frontend hostname: $FRONTEND_HOSTNAME"
 echo "Backend hostname: $BACKEND_HOSTNAME"
 echo "CloudFormation stack name: $CF_STACK_NAME"
 
+# Datadog RUM is beta only, so prod builds never get the RUM IDs
+if $PRODUCTION; then
+    DD_RUM_APPLICATION_ID=""
+    DD_RUM_CLIENT_TOKEN=""
+elif [[ -z "$DD_RUM_APPLICATION_ID" || -z "$DD_RUM_CLIENT_TOKEN" ]]; then
+    echo "DD_RUM_APPLICATION_ID or DD_RUM_CLIENT_TOKEN not set; beta will deploy without RUM" 1>&2
+fi
+
 # build frontend
-npm run build
+NEXT_PUBLIC_GIT_VERSION=$GIT_VERSION \
+NEXT_PUBLIC_DD_RUM_APPLICATION_ID=$DD_RUM_APPLICATION_ID \
+NEXT_PUBLIC_DD_RUM_CLIENT_TOKEN=$DD_RUM_CLIENT_TOKEN \
+    npm run build
 
 # Copy constants JSON files into server/chalicelib for deployment
 # This ensures the route manifest JSON files are included in the Lambda package
