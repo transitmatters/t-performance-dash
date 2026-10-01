@@ -115,6 +115,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
               },
               label: color,
               borderSkipped: false,
+              maxBarThickness: 28,
               data,
             };
 
