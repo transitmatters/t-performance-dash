@@ -19,6 +19,8 @@ dependencies = [
     "chalice-spec~=0.7.0",
     "pydantic~=2.11.7",
     "apispec~=6.8.2",
+    # Draws the social cards. 12.3 dropped manylinux2014 wheels, which Chalice needs (see numpy).
+    "pillow~=12.2.0",
 ]
 
 [dependency-groups]

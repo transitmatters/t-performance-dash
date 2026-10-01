@@ -1,0 +1,36 @@
+name: package-size
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-package-size:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.13']
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.2.0
+      - name: Sync dependencies
+        run: cd server && uv sync --group dev
+      - name: Export requirements
+        run: cd server && uv export --no-hashes --no-dev > requirements.txt
+      - name: Package lambda
+        run: cd server && uv run chalice package --stage production --merge-template cloudformation.json cfn/
+      - name: Verify package size is under limit
+        run: |
+          cd server
+          source ../devops/helpers.sh
+          check_package_size

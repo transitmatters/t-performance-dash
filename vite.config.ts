@@ -30,7 +30,7 @@ const prerenderMetaTags = (): Plugin => ({
       runnerImport<typeof MetaTagsModule>('./common/utils/metaTags.ts', inlineConfig),
       runnerImport<typeof StaticRoutesModule>('./common/constants/staticRoutes.ts', inlineConfig),
     ]);
-    const { getMetaTagEntries, getMetaTags } = metaTags;
+    const { getMetaTagEntries, getMetaTags, getOgCard } = metaTags;
     const template = readFileSync(join(OUT_DIR, 'index.html'), 'utf8');
     const render = (pathname: string) => {
       const tags = getMetaTags(pathname);
@@ -49,6 +49,11 @@ const prerenderMetaTags = (): Plugin => ({
       mkdirSync(dirname(file), { recursive: true });
       writeFileSync(file, render(pathname));
     }
+    // The backend's daily og-card job reads this to know which cards to draw and how to label them.
+    writeFileSync(
+      join(OUT_DIR, 'og-cards.json'),
+      JSON.stringify(staticRoutes.STATIC_PATHS.map(getOgCard))
+    );
     const notFoundPage = render('/404/');
     writeFileSync(join(OUT_DIR, '404.html'), notFoundPage);
     mkdirSync(join(OUT_DIR, '404'), { recursive: true });

@@ -1,5 +1,6 @@
 import type { Line } from '../types/lines';
 import { LINE_OBJECTS } from '../constants/lines';
+import { STATIC_PATHS } from '../constants/staticRoutes';
 
 export const BASE_URL = 'https://dashboard.transitmatters.org';
 const DEFAULT_DESCRIPTION =
@@ -25,7 +26,16 @@ const PAGE_DISPLAY_NAMES: Record<string, string> = {
   slowzones: 'Slow Zones',
   ridership: 'Ridership',
   reliability: 'Reliability',
+  fleet: 'Fleet',
+  leaderboard: 'Leaderboard',
+  speedmap: 'Speed Map',
+  opensource: 'Open Source',
 };
+
+const TM_RED = '#a31e1e';
+const FALLBACK_IMAGE = `${BASE_URL}/twitter-card.jpg`;
+export const OG_IMAGE_WIDTH = 1200;
+export const OG_IMAGE_HEIGHT = 630;
 
 function getPageName(pathname: string): string | undefined {
   const segments = pathname.split('/').filter(Boolean);
@@ -58,6 +68,48 @@ export interface MetaTags {
   title: string;
   description: string;
   canonicalUrl: string;
+  image: string;
+}
+
+/** `/` -> `index`, `/red/` -> `red`, `/red/trips/single/` -> `red/trips/single`. */
+export function ogImageSlug(pathname: string) {
+  return pathname.split('/').filter(Boolean).join('/') || 'index';
+}
+
+/** The card the backend renders to `static/og/<slug>.png` for each prerendered path. */
+export interface OgCard {
+  slug: string;
+  path: string;
+  lineKey: Line | null;
+  /** The path below the line (`slowzones`, `trips/single`, `''` for the overview), or the whole path off a line. */
+  page: string;
+  heading: string;
+  subheading: string | null;
+  color: string;
+}
+
+export function getOgCard(pathname: string): OgCard {
+  const segments = pathname.split('/').filter(Boolean);
+  const lineKey = segments[0] ? (linePathToKey[segments[0]] ?? null) : null;
+  const lineName = lineKey ? LINE_OBJECTS[lineKey].name : undefined;
+  const pageName = getPageName(pathname);
+  const heading =
+    lineName ?? (segments[0] === 'system' ? 'Systemwide' : (pageName ?? 'Data Dashboard'));
+  const subheading =
+    lineName || segments[0] === 'system'
+      ? (pageName ?? 'Overview')
+      : segments.length
+        ? null
+        : 'MBTA subway, bus and commuter rail performance';
+  return {
+    slug: ogImageSlug(pathname),
+    path: pathname,
+    lineKey,
+    page: (lineKey ? segments.slice(1) : segments).join('/'),
+    heading,
+    subheading: subheading === heading ? null : subheading,
+    color: lineKey ? LINE_OBJECTS[lineKey].color : TM_RED,
+  };
 }
 
 /**
@@ -82,23 +134,40 @@ export function getMetaTags(
       ? `${lineName} ${pageName?.toLowerCase() ?? 'performance'} data on the TransitMatters Data Dashboard.`
       : DEFAULT_DESCRIPTION;
 
-  return { title, description, canonicalUrl: `${BASE_URL}${pathname}${searchStr}` };
+  return {
+    title,
+    description,
+    canonicalUrl: `${BASE_URL}${pathname}${searchStr}`,
+    image: STATIC_PATHS.includes(pathname.endsWith('/') ? pathname : `${pathname}/`)
+      ? `${BASE_URL}/static/og/${ogImageSlug(pathname)}.png`
+      : FALLBACK_IMAGE,
+  };
 }
 
 /** The social-card tags, as [attribute, key, content] triples, shared by React and the prerender. */
-export function getMetaTagEntries({ title, description, canonicalUrl }: MetaTags) {
+export function getMetaTagEntries({ title, description, canonicalUrl, image }: MetaTags) {
+  const sized: (readonly ['property', 'og:image:width' | 'og:image:height', string])[] =
+    image === FALLBACK_IMAGE
+      ? []
+      : [
+          ['property', 'og:image:width', String(OG_IMAGE_WIDTH)],
+          ['property', 'og:image:height', String(OG_IMAGE_HEIGHT)],
+        ];
   return [
     ['property', 'og:title', title],
     ['property', 'og:description', description],
     ['property', 'og:type', 'website'],
     ['property', 'og:url', canonicalUrl],
-    ['property', 'og:image', `${BASE_URL}/twitter-card.jpg`],
+    ['property', 'og:image', image],
+    ...sized,
+    ['property', 'og:image:alt', title],
     ['property', 'og:site_name', 'TransitMatters Data Dashboard'],
     ['name', 'twitter:card', 'summary_large_image'],
     ['name', 'twitter:site', '@transitmatters'],
     ['name', 'twitter:title', title],
     ['name', 'twitter:description', description],
-    ['name', 'twitter:image', `${BASE_URL}/twitter-card.jpg`],
+    ['name', 'twitter:image', image],
+    ['name', 'twitter:image:alt', title],
     ['name', 'description', description],
   ] as const;
 }
