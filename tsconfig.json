@@ -20,12 +20,7 @@
     "paths": {
       "@/*": ["./*"]
     },
-    "jsx": "react-jsx",
-    "plugins": [
-      {
-        "name": "typescript-plugin-css-modules"
-      }
-    ]
+    "jsx": "react-jsx"
   },
   "include": ["globals.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "out", "*.js"]
