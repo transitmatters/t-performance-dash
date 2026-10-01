@@ -7,28 +7,29 @@ requires-python = ">=3.13,<3.14"
 license = "MIT"
 dependencies = [
     "json-api-doc==0.15.0",
-    "requests~=2.32.5",
-    "pytz~=2025.2",
-    "boto3~=1.39.0",
-    # 2.3+ ships only manylinux_2_28 wheels, and Chalice only fetches manylinux2014 ones, so a
-    # newer numpy gets built from source on the deploying machine and won't run on Lambda.
-    "numpy~=2.2.6",
-    "pandas~=2.2.3",
-    "datadog_lambda~=8.118.0",
+    "requests~=2.34.2",
+    "pytz~=2026.4",
+    "boto3~=1.43.0",
+    # numpy, pandas and pillow ship only manylinux_2_28 wheels now; Chalice 1.33+ is needed to fetch them.
+    "numpy~=2.5.3",
+    "pandas~=2.3.3",
+    "datadog_lambda~=8.128.0",
     "dynamodb-json~=1.4.2",
     "chalice-spec~=0.7.0",
-    "pydantic~=2.11.7",
-    "apispec~=6.8.2",
-    # Draws the social cards. 12.3 dropped manylinux2014 wheels, which Chalice needs (see numpy).
-    "pillow~=12.2.0",
+    "pydantic~=2.13.5",
+    "apispec~=6.10.0",
+    # Draws the social cards.
+    "pillow~=12.3.0",
 ]
 
 [dependency-groups]
 dev = [
-    "chalice==1.32.0",
-    "ruff>=0.14.7",
-    "pytest~=9.0.2",
-    "pre-commit>=4.4.0",
+    "chalice==1.33.0",
+    # botocore needs crt for the `aws login` credential provider during local dev.
+    "boto3[crt]",
+    "ruff>=0.16.9",
+    "pytest~=9.1.1",
+    "pre-commit>=4.6.2",
 ]
 
 [tool.uv]
