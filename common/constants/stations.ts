@@ -137,6 +137,7 @@ import cr_newbedford from './cr_constants/cr-newbedford.json';
 import cr_newburyport from './cr_constants/cr-newburyport.json';
 import cr_needham from './cr_constants/cr-needham.json';
 import cr_providence from './cr_constants/cr-providence.json';
+import cr_capeflyer from './cr_constants/cr-capeflyer.json';
 
 import ferry_f1 from './ferry_constants/ferry_f1.json';
 import ferry_f4 from './ferry_constants/ferry_f4.json';
@@ -293,6 +294,7 @@ export const crStations: { [key in CommuterRailRoute]: LineMap } = {
   ...cr_newburyport,
   ...cr_needham,
   ...cr_providence,
+  ...cr_capeflyer,
 };
 
 export const ferryStations: { [key in FerryRoute]: LineMap } = {
