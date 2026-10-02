@@ -1,17 +1,14 @@
-import React, { useCallback } from 'react';
+import React, { Suspense, lazy, useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
-import Image from 'next/image';
 
 import classNames from 'classnames';
-import dynamic from 'next/dynamic';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
-import { Layout } from '../../common/layouts/layoutTypes';
 import HeroLottie from '../../public/Animations/hero.lottie.json';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { LandingCharts } from './LandingCharts';
 import { LineSelectionLanding } from './LineSelectionLanding';
 
-const Lottie = dynamic(() => import('react-lottie-player'), { ssr: false });
+const Lottie = lazy(() => import('react-lottie-player'));
 
 export function Landing() {
   const md = useBreakpoint('md');
@@ -28,7 +25,7 @@ export function Landing() {
         )}
       >
         <div className="relative z-10 flex w-5/6 flex-col items-center gap-y-4 rounded-lg bg-stone-900/60 px-4 py-8 backdrop-blur-xs md:p-8 md:py-12 lg:w-3/4 2xl:w-1/2">
-          <Image
+          <img
             src="/Logo_wordmark_white.png"
             className="w-48 sm:w-60 xl:w-[20rem]"
             width="3204"
@@ -60,10 +57,10 @@ export function Landing() {
         className="fixed top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
         style={{ height: md ? '100vh' : '140vw', width: md ? '100vh' : '140vw' }}
       >
-        <Lottie loop animationData={HeroLottie} play style={{}} />
+        <Suspense>
+          <Lottie loop animationData={HeroLottie} play style={{}} />
+        </Suspense>
       </div>
     </PageWrapper>
   );
 }
-
-Landing.Layout = Layout.Landing;

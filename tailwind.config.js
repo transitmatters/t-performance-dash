@@ -1,7 +1,8 @@
-const plugin = require('tailwindcss/plugin');
+import forms from '@tailwindcss/forms';
+import plugin from 'tailwindcss/plugin';
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     './app/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
@@ -107,7 +108,7 @@ module.exports = {
     },
   },
   plugins: [
-    require('@tailwindcss/forms'),
+    forms,
     plugin(function ({ matchUtilities, theme }) {
       matchUtilities(
         {

@@ -3,7 +3,6 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { useRidershipData } from '../../common/api/hooks/ridership';
 import { useRidershipBaseline } from '../../common/api/hooks/baselines';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
-import { Layout } from '../../common/layouts/layoutTypes';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Widget } from '../../common/components/widgets';
 import {
@@ -92,5 +91,3 @@ export function RidershipDetails() {
     </PageWrapper>
   );
 }
-
-RidershipDetails.Layout = Layout.Dashboard;

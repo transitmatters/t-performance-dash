@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBus,
@@ -10,6 +9,7 @@ import {
   faTrainTram,
 } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
+import { Link } from '../../common/components/general/Link';
 import {
   Collapsible,
   CollapsibleContent,

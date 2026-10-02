@@ -11,7 +11,6 @@ import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
-import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BusSpeedMapControls } from './controls/BusSpeedMapControls';
@@ -109,5 +108,3 @@ export function BusSpeedMapDetails() {
     </PageWrapper>
   );
 }
-
-BusSpeedMapDetails.Layout = Layout.Dashboard;

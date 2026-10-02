@@ -1,6 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import { Link } from '../../common/components/general/Link';
 import {
   Sidebar,
   SidebarContent,
@@ -24,12 +23,12 @@ export const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...
     <Sidebar collapsible="offcanvas" className="border-sidebar-border" {...props}>
       <SidebarHeader className="overflow-hidden px-3 py-3">
         <Link href="/" onClick={close} className="flex h-6 items-center">
-          <Image
+          <img
             src="/TMLogo.png"
             alt="TransitMatters"
             width={3189}
             height={299}
-            priority
+            fetchPriority="high"
             className="h-5 w-auto"
           />
         </Link>
