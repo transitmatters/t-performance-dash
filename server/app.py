@@ -50,6 +50,7 @@ DD_TRACE_HEADERS = [
     "x-datadog-sampling-priority",
     "traceparent",
     "tracestate",
+    "baggage",
 ]
 cors_config = CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", allow_headers=DD_TRACE_HEADERS, max_age=3600)
 
