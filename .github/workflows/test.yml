@@ -27,3 +27,27 @@ jobs:
         run: cd server && uv sync --group dev
       - name: Run backend tests
         run: cd server && uv run pytest tests/ -v
+  frontend:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['26']
+        python-version: ['3.13']
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      # npm ci's postinstall runs `uv sync` for the backend
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.2.0
+      - name: Set up Node ${{ matrix.node-version }}.x
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Run frontend tests
+        run: |
+          npm ci
+          npm test

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en" class="h-full font-sans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>Data Dashboard</title>
+    <!-- Set the theme class before first paint to avoid a flash (reads the persisted store). -->
+    <script>
+      try{var t=JSON.parse(localStorage.getItem('tm-theme')||'{}').state;if(t&&t.theme==='dark')document.documentElement.classList.add('dark')}catch(e){}
+    </script>
+  </head>
+  <body class="bg-tm-grey">
+    <div id="root"></div>
+    <script type="module" src="/main.tsx"></script>
+  </body>
+</html>

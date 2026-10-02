@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
-import type { LinkProps } from 'next/link';
 import { ErrorBoundary } from 'react-error-boundary';
+import type { Href } from '../general/Link';
 
 import type { Line } from '../../types/lines';
 import type { Page } from '../../constants/pages';
@@ -21,7 +21,7 @@ interface Props {
   /** When set, the title becomes a chevron link to this page, colored by line. */
   tab?: Page;
   /** A pre-resolved chevron-link href, for cases where `tab` can't express the target (e.g. a route/date-specific link). */
-  titleHref?: null | LinkProps['href'];
+  titleHref?: null | Href;
   line?: Line;
   /** Content rendered between the title and the ready-gated children, always shown. */
   details?: React.ReactNode;

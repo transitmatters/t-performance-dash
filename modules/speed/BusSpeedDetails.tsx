@@ -7,7 +7,6 @@ import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { Widget } from '../../common/components/widgets';
 import { getBusRouteIds } from '../../common/constants/lines';
-import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getSpeedGraphConfig } from './constants/speeds';
@@ -55,5 +54,3 @@ export function BusSpeedDetails() {
     </PageWrapper>
   );
 }
-
-BusSpeedDetails.Layout = Layout.Dashboard;
