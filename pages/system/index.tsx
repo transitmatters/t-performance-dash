@@ -1,3 +1,3 @@
-import { Landing } from '../../modules/landing/Landing';
+import { Home } from '../../modules/home/Home';
 
-export default Landing;
+export default Home;

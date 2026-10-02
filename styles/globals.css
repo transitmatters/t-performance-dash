@@ -331,3 +331,9 @@ a {
   animation: tm-reveal-up var(--duration-reveal) var(--ease-smooth-out) both;
   animation-delay: calc(var(--reveal-index, 0) * var(--stagger-step));
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .tm-reveal {
+    animation: none;
+  }
+}
