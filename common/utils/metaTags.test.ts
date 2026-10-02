@@ -48,11 +48,11 @@ describe('og cards', () => {
     expect(content('og:image:height')).toBe('630');
   });
 
-  it("uses the landing page's card for 404s and paths without one", () => {
+  it('uses the committed fallback card for 404s and paths without one', () => {
     for (const path of ['/404/', '/blue/leaderboard/']) {
       const entries = getMetaTagEntries(getMetaTags(path));
       expect(entries.find(([, k]) => k === 'og:image')?.[2]).toBe(
-        'https://dashboard.transitmatters.org/static/og/index.png'
+        'https://dashboard.transitmatters.org/og-card.png'
       );
     }
   });

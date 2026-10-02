@@ -95,6 +95,7 @@ fi
 
 # build frontend
 VITE_GIT_VERSION=$GIT_VERSION \
+VITE_FRONTEND_HOST=$FRONTEND_HOSTNAME \
 VITE_DD_RUM_APPLICATION_ID=$DD_RUM_APPLICATION_ID \
 VITE_DD_RUM_CLIENT_TOKEN=$DD_RUM_CLIENT_TOKEN \
     npm run build
@@ -154,14 +155,21 @@ aws s3 cp v3_to_v4_slash_trick/trick.html s3://$FRONTEND_HOSTNAME/slowzones --no
 CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null] | [?contains(Aliases.Items, '$FRONTEND_HOSTNAME')].Id | [0]" --output text)
 aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths "/*"
 
-# Draw the link-preview cards for this build's pages now instead of at the next morning's run
+# Draw the link-preview cards for this build's pages now instead of at the next morning's run.
+# Chalice's schedule handler only accepts an EventBridge-shaped event, hence the payload.
+OG_CARDS_RESULT=$(mktemp)
 if OG_CARDS_FUNCTION=$(aws cloudformation describe-stack-resource --stack-name $CF_STACK_NAME \
       --logical-resource-id RenderOgCards --query StackResourceDetail.PhysicalResourceId --output text) \
-    && aws lambda invoke --function-name $OG_CARDS_FUNCTION --invocation-type Event /dev/null > /dev/null; then
-    echo "Started $OG_CARDS_FUNCTION"
+    && OG_CARDS_ERROR=$(aws lambda invoke --function-name $OG_CARDS_FUNCTION \
+      --cli-binary-format raw-in-base64-out --payload file://devops/schedule-event.json \
+      --query FunctionError --output text $OG_CARDS_RESULT) \
+    && [ "$OG_CARDS_ERROR" = "None" ]; then
+    echo "Drew the link-preview cards with $OG_CARDS_FUNCTION"
 else
-    echo "Warning: could not start the og card job; cards update at its next scheduled run" 1>&2
+    echo "Warning: the og card job failed; cards update at its next scheduled run" 1>&2
+    cat $OG_CARDS_RESULT 1>&2
 fi
+rm -f $OG_CARDS_RESULT
 
 echo
 echo
