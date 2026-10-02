@@ -3,6 +3,10 @@ import { LINE_OBJECTS } from '../constants/lines';
 import { STATIC_PATHS } from '../constants/staticRoutes';
 
 export const BASE_URL = 'https://dashboard.transitmatters.org';
+// deploy.sh sets this so beta's link previews use beta's cards; prod and local builds use BASE_URL.
+const IMAGE_ORIGIN = import.meta.env.VITE_FRONTEND_HOST
+  ? `https://${import.meta.env.VITE_FRONTEND_HOST}`
+  : BASE_URL;
 const DEFAULT_DESCRIPTION =
   'Explore MBTA subway, commuter rail and bus performance data with the TransitMatters Data Dashboard.';
 
@@ -133,13 +137,16 @@ export function getMetaTags(
       ? `${lineName} ${pageName?.toLowerCase() ?? 'performance'} data on the TransitMatters Data Dashboard.`
       : DEFAULT_DESCRIPTION;
 
-  // Only prerendered paths have a card; 404s share the landing page's.
+  // Only prerendered paths get a generated card. 404s use the one in public/, which doesn't depend
+  // on the card job having run.
   const hasCard = STATIC_PATHS.includes(pathname.endsWith('/') ? pathname : `${pathname}/`);
   return {
     title,
     description,
     canonicalUrl: `${BASE_URL}${pathname}${searchStr}`,
-    image: `${BASE_URL}/static/og/${hasCard ? ogImageSlug(pathname) : 'index'}.png`,
+    image: hasCard
+      ? `${IMAGE_ORIGIN}/static/og/${ogImageSlug(pathname)}.png`
+      : `${IMAGE_ORIGIN}/og-card.png`,
   };
 }
 

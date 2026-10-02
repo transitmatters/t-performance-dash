@@ -157,3 +157,19 @@ def test_publish_writes_one_card_per_manifest_entry(monkeypatch):
     assert [put["Key"] for put in s3.puts] == ["static/og/red/speed.png", "static/og/index.png"]
     assert all(put["Bucket"] == "dashboard.example.org" for put in s3.puts)
     assert all(put["ContentType"] == "image/png" for put in s3.puts)
+
+
+def test_deploy_payload_reaches_the_schedule_handler(monkeypatch):
+    """deploy.sh invokes the job with devops/schedule-event.json; Chalice rejects events missing its keys."""
+    from pathlib import Path
+
+    from chalice.test import Client
+
+    import app as chalice_app
+
+    calls = []
+    monkeypatch.setattr(og_cards, "publish", lambda host, s3: calls.append(host) or 0)
+    event = json.loads((Path(__file__).parents[2] / "devops" / "schedule-event.json").read_text())
+    with Client(chalice_app.app) as client:
+        client.lambda_.invoke("render_og_cards", event)
+    assert calls == [chalice_app.TM_FRONTEND_HOST]
