@@ -2,6 +2,7 @@ import { FetchRidershipParams } from '../types/api';
 import type { FetchRidershipOptions } from '../types/api';
 import type { RidershipCount } from '../types/dataPoints';
 import { RIDERSHIP_KEYS, type Line } from '../types/lines';
+import { getRidershipWeekStart } from '../utils/ridership';
 import { apiFetch } from './utils/fetch';
 
 function sumByDate(arrays: RidershipCount[][]) {
@@ -20,24 +21,29 @@ function sumByDate(arrays: RidershipCount[][]) {
 export const fetchRidership = async (
   options: FetchRidershipOptions
 ): Promise<RidershipCount[] | undefined> => {
+  const startDate = options[FetchRidershipParams.startDate];
+  const params: FetchRidershipOptions = {
+    ...options,
+    ...(startDate && { [FetchRidershipParams.startDate]: getRidershipWeekStart(startDate) }),
+  };
+
   // If we don't have a lineId, return a systemwide merged total
-  if (!options[FetchRidershipParams.lineId]) {
+  if (!params[FetchRidershipParams.lineId]) {
     const ridershipCounts = await Promise.all(
-      Object.values(RIDERSHIP_KEYS).map((lineId) => {
-        options[FetchRidershipParams.lineId] = lineId;
-        return apiFetch({
+      Object.values(RIDERSHIP_KEYS).map((lineId) =>
+        apiFetch({
           path: '/api/ridership',
-          options,
+          options: { ...params, [FetchRidershipParams.lineId]: lineId },
           errorMessage: 'Failed to fetch ridership counts',
-        });
-      })
+        })
+      )
     );
     return sumByDate(ridershipCounts);
   }
 
   return await apiFetch({
     path: '/api/ridership',
-    options,
+    options: params,
     errorMessage: 'Failed to fetch ridership counts',
   });
 };
