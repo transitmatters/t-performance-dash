@@ -69,6 +69,20 @@
         "Type": "A"
       }
     },
+    "FrontendDNSRecordSetIPv6": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "Name": { "Ref": "TMFrontendHostname" },
+        "HostedZoneName": { "Fn::Sub": "${TMFrontendZone}." },
+        "AliasTarget": {
+          "HostedZoneId": "Z2FDTNDATAQYW2",
+          "DNSName": {
+            "Fn::GetAtt": ["FrontendCloudFront", "DomainName"]
+          }
+        },
+        "Type": "AAAA"
+      }
+    },
     "BackendDNSRecordSet": {
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
@@ -185,14 +199,11 @@
         "DistributionConfig": {
           "Aliases": [{ "Ref": "TMFrontendHostname" }],
           "Enabled": "true",
+          "HttpVersion": "http2and3",
+          "IPV6Enabled": true,
           "DefaultCacheBehavior": {
             "Compress": true,
-            "DefaultTTL": 86400,
-            "MinTTL": 0,
-            "MaxTTL": 31536000,
-            "ForwardedValues": {
-              "QueryString": "false"
-            },
+            "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
             "TargetOriginId": "only-origin",
             "ViewerProtocolPolicy": "redirect-to-https"
           },
