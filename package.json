@@ -50,6 +50,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
+    "@datadog/browser-rum": "^7.15.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",

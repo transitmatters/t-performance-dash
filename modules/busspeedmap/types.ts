@@ -109,7 +109,7 @@ export type BusSpeedSegmentLeaderboardResponse =
 /**
  * Which grain the merged leaderboard page ranks by -- routes (an arbitrary date range, summed
  * across the whole thing) or segments (one precomputed day/week/month slice). Both share the
- * same period control, but only 'route' mode ever cares about keyRoutesOnly, and only
+ * same period control, but only 'route' mode ever cares about frequentRoutesOnly, and only
  * 'segment' mode cares about day type/time band.
  */
 export type LeaderboardViewMode = 'route' | 'segment';
