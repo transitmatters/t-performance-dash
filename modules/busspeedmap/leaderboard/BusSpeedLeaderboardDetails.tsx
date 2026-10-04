@@ -7,7 +7,6 @@ import { ToggleSwitch } from '../../../common/components/inputs/ToggleSwitch';
 import { BusDataNotice } from '../../../common/components/notices/BusDataNotice';
 import { WidgetDiv } from '../../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../../../common/components/widgets/WidgetTitle';
-import { Layout } from '../../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../../common/layouts/PageWrapper';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { BusSpeedMapControls } from '../controls/BusSpeedMapControls';
@@ -143,5 +142,3 @@ export function BusSpeedLeaderboardDetails() {
     </PageWrapper>
   );
 }
-
-BusSpeedLeaderboardDetails.Layout = Layout.Dashboard;

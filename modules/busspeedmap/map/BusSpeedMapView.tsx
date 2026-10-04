@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { addProtocol, LngLatBounds, setWorkerUrl } from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 import { PMTiles, Protocol } from 'pmtiles';
 import type { RangeResponse, Source as PMTilesSource } from 'pmtiles';
 import Map, { Layer, NavigationControl, Popup, Source } from 'react-map-gl/maplibre';

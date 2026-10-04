@@ -6,7 +6,7 @@
 ![deploy](https://github.com/transitmatters/t-performance-dash/workflows/deploy/badge.svg?branch=main)
 ![healthcheck](https://github.com/transitmatters/t-performance-dash/workflows/healthcheck/badge.svg)
 
-This is the repository for the [TransitMatters Data Dashboard](https://dashboard.transitmatters.org/). Client code is written in Typescript with React and Next.js, and the backend is written in Python with Chalice.
+This is the repository for the [TransitMatters Data Dashboard](https://dashboard.transitmatters.org/). Client code is written in Typescript with React, Vite and TanStack Router, and the backend is written in Python with Chalice.
 
 ---
 
