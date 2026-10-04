@@ -142,7 +142,7 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, 
     year, month, day = date.year, date.month, date.day
 
     if prefer_lamp and is_rapid_transit(stop_id) and date.date() <= date_utils.get_max_monthly_data_date():
-        lamp_key = f"Events-lamp/{get_lamp_folder()}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv"
+        lamp_key = f"Events-lamp/{get_lamp_folder(stop_id)}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv"
         try:
             return _parse_events(download(lamp_key, "ascii", False))
         except ClientError as ex:

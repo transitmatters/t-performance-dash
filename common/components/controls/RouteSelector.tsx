@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from '@tanstack/react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from '../ui/command';
@@ -44,7 +44,7 @@ const optionsForLine = (line: Line): { key: string; label: string }[] => {
  */
 export const RouteSelector: React.FC = () => {
   const route = useDelimitatedRoute();
-  const router = useRouter();
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
 
   const { line } = route;
@@ -90,7 +90,7 @@ export const RouteSelector: React.FC = () => {
                 value={option.label}
                 onSelect={() => {
                   setOpen(false);
-                  if (option.key !== selectedKey) router.push(hrefFor(option.key));
+                  if (option.key !== selectedKey) navigate({ href: hrefFor(option.key) });
                 }}
               >
                 <FontAwesomeIcon

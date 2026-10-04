@@ -15,7 +15,7 @@ export const initBetaRum = async () => {
     site: 'datadoghq.com',
     service: 't-performance-dash',
     env: 'beta',
-    version: process.env.NEXT_PUBLIC_GIT_VERSION,
+    version: import.meta.env.VITE_GIT_VERSION,
     sessionSampleRate: 100,
     sessionReplaySampleRate: 0,
     trackUserInteractions: true,

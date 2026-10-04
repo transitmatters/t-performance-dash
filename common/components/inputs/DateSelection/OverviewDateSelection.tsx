@@ -1,25 +1,25 @@
 import React from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from '@tanstack/react-router';
 import { ButtonGroup } from '../../general/ButtonGroup';
 import { useDateStore } from '../../../state/dateStore';
 import { useDatePresetStore } from '../../../state/datePresetStore';
 import type { OverviewDatePresetKey } from '../../../constants/dates';
 import { OverviewRangeTypes } from '../../../constants/dates';
-import { useDelimitatedRoute } from '../../../utils/router';
+import { navigateToQuery, useDelimitatedRoute, useQueryParams } from '../../../utils/router';
 
 export const OverviewDateSelection = () => {
   const router = useRouter();
   const { line } = useDelimitatedRoute();
   const setDatePreset = useDatePresetStore((state) => state.setDatePreset);
-  const selectedView = router.query.view ?? 'year';
+  const selectedView = useQueryParams().view ?? 'year';
   const selectedIndex = Object.keys(OverviewRangeTypes).findIndex((view) => view === selectedView);
 
   const overviewPresetChange = useDateStore((state) => state.overviewPresetChange);
   const handlePresetSelection = (value: OverviewDatePresetKey) => {
     overviewPresetChange({ view: value });
     setDatePreset(value, 'line', true);
-    router.query.view = value;
-    router.push({ pathname: router.pathname, query: router.query }, undefined, { shallow: true });
+    const { pathname, search } = router.latestLocation;
+    navigateToQuery(router, pathname, { ...search, view: value }, false);
   };
 
   return (

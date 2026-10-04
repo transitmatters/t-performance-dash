@@ -1,6 +1,6 @@
 import React from 'react';
-import Link from 'next/link';
 import classNames from 'classnames';
+import { Link } from '../../common/components/general/Link';
 import type { Line } from '../../common/types/lines';
 import { lineColorBorder, lineColorVar } from '../../common/styles/general';
 import { LINE_OBJECTS } from '../../common/constants/lines';

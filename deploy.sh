@@ -94,9 +94,10 @@ elif [[ -z "$DD_RUM_APPLICATION_ID" || -z "$DD_RUM_CLIENT_TOKEN" ]]; then
 fi
 
 # build frontend
-NEXT_PUBLIC_GIT_VERSION=$GIT_VERSION \
-NEXT_PUBLIC_DD_RUM_APPLICATION_ID=$DD_RUM_APPLICATION_ID \
-NEXT_PUBLIC_DD_RUM_CLIENT_TOKEN=$DD_RUM_CLIENT_TOKEN \
+VITE_GIT_VERSION=$GIT_VERSION \
+VITE_FRONTEND_HOST=$FRONTEND_HOSTNAME \
+VITE_DD_RUM_APPLICATION_ID=$DD_RUM_APPLICATION_ID \
+VITE_DD_RUM_CLIENT_TOKEN=$DD_RUM_CLIENT_TOKEN \
     npm run build
 
 # Copy constants JSON files into server/chalicelib for deployment
@@ -114,6 +115,8 @@ cp -r common/constants/ferry_constants server/chalicelib/common/constants/
 pushd server/ > /dev/null
 uv export --no-hashes --no-dev > requirements.txt
 uv run chalice package --stage $CHALICE_STAGE --merge-template cloudformation.json cfn/
+source ../devops/helpers.sh
+check_package_size
 aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUCKET --output-template-file cfn/packaged.yaml
 aws cloudformation deploy --template-file cfn/packaged.yaml --s3-bucket $BACKEND_BUCKET --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM \
     --tags service=t-performance-dash env=$ENV_TAG version=$GIT_VERSION \
@@ -136,9 +139,10 @@ popd > /dev/null
 echo "Cleaning up copied constants directory..."
 rm -rf server/chalicelib/common
 
-aws s3 sync out/ s3://$FRONTEND_HOSTNAME \
+# Every route has its own index.html, and each one must revalidate so a deploy reaches browsers
+aws s3 sync out/ s3://$FRONTEND_HOSTNAME --exclude "*.html" \
   --cache-control "public, max-age=31536000, immutable"
-aws s3 cp out/index.html s3://$FRONTEND_HOSTNAME/index.html \
+aws s3 sync out/ s3://$FRONTEND_HOSTNAME --exclude "*" --include "*.html" \
   --cache-control "no-cache, must-revalidate"
 
 # Band-aid the fact that v3 doesn't have trailing slashes on its path, but v4 does,
@@ -150,6 +154,22 @@ aws s3 cp v3_to_v4_slash_trick/trick.html s3://$FRONTEND_HOSTNAME/slowzones --no
 # Grab the cloudfront ID and invalidate its cache
 CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null] | [?contains(Aliases.Items, '$FRONTEND_HOSTNAME')].Id | [0]" --output text)
 aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths "/*"
+
+# Draw the link-preview cards for this build's pages now instead of at the next morning's run.
+# Chalice's schedule handler only accepts an EventBridge-shaped event, hence the payload.
+OG_CARDS_RESULT=$(mktemp)
+if OG_CARDS_FUNCTION=$(aws cloudformation describe-stack-resource --stack-name $CF_STACK_NAME \
+      --logical-resource-id RenderOgCards --query StackResourceDetail.PhysicalResourceId --output text) \
+    && OG_CARDS_ERROR=$(aws lambda invoke --function-name $OG_CARDS_FUNCTION \
+      --cli-binary-format raw-in-base64-out --payload file://devops/schedule-event.json \
+      --query FunctionError --output text $OG_CARDS_RESULT) \
+    && [ "$OG_CARDS_ERROR" = "None" ]; then
+    echo "Drew the link-preview cards with $OG_CARDS_FUNCTION"
+else
+    echo "Warning: the og card job failed; cards update at its next scheduled run" 1>&2
+    cat $OG_CARDS_RESULT 1>&2
+fi
+rm -f $OG_CARDS_RESULT
 
 echo
 echo
