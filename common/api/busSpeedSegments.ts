@@ -1,6 +1,9 @@
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { BUS_SPEED_SEGMENTS_BASE_PATH } from '../../modules/busspeedmap/constants';
+import {
+  BUS_SPEED_SEGMENTS_BASE_PATH,
+  BUS_SPEED_STOPS_PATH,
+} from '../../modules/busspeedmap/constants';
 import type {
   BusSpeedSegmentLeaderboardResponse,
   FetchBusSpeedSegmentsOptions,
@@ -99,4 +102,27 @@ export const fetchBusSpeedSegmentLeaderboard = async ({
   }
 
   return response.json();
+};
+
+/** Every PMTiles v3 archive opens with these seven ASCII bytes. */
+const PMTILES_MAGIC = 'PMTiles';
+
+/**
+ * Unlike the per-period segment tiles, the stops reference archive is small (~100KB) and
+ * fixed, so it's fetched whole, once, and served to maplibre from memory for the rest of the
+ * session rather than read range by range.
+ *
+ * Resolves to undefined when the file isn't there (not yet uploaded, or served as the site's
+ * own HTML 404 page) -- the stops are context only, so the map just draws without them.
+ */
+export const fetchBusSpeedStops = async (): Promise<ArrayBuffer | undefined> => {
+  const url = new URL(BUS_SPEED_STOPS_PATH, window.location.origin);
+  const response = await fetch(url.toString());
+
+  if (response.status === 403 || response.status === 404) return undefined;
+  if (!response.ok) throw new Error('Failed to load bus speed map stops.');
+
+  const buffer = await response.arrayBuffer();
+  const magic = new TextDecoder().decode(new Uint8Array(buffer, 0, Math.min(7, buffer.byteLength)));
+  return magic === PMTILES_MAGIC ? buffer : undefined;
 };

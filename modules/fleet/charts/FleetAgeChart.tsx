@@ -18,6 +18,7 @@ import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
+import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
 import type { ParamsType } from '../../speed/constants/speeds';
 
 interface FleetAgeChartProps {
@@ -42,6 +43,12 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   const lineColor = LINE_COLORS[line ?? 'default'];
+  // Keyed off the fleet metric, not miles_covered: a partial shutdown zeroes the line's
+  // service metrics while cars still ran (and were sampled) on the remaining branches.
+  const shuttlingBlocks = getShuttlingBlockAnnotations(
+    data,
+    (datapoint) => datapoint.avg_car_age !== undefined && datapoint.avg_car_age !== null
+  );
 
   return (
     <ChartStack>
@@ -104,6 +111,9 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
                 // empty title to set font and leave room for drawTitle fn
                 display: showTitle,
                 text: '',
+              },
+              annotation: {
+                annotations: [...shuttlingBlocks],
               },
             },
             scales: {

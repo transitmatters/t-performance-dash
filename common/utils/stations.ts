@@ -1,4 +1,5 @@
 import type { BusRoute, CommuterRailRoute, Line, LineShort, FerryRoute } from '../types/lines';
+import { BUS_ROUTES } from '../types/lines';
 import { type Station } from '../types/stations';
 import type { Location } from '../types/charts';
 import type { Direction, Distance } from '../types/dataPoints';
@@ -10,6 +11,7 @@ import {
   ferryStations,
 } from '../constants/stations';
 import { station_distances } from '../constants/station_distances';
+import { getBusRouteDisplayName, getBusRouteIds } from '../constants/lines';
 import type { Tab } from '../types/router';
 
 // Type guards for line types
@@ -184,7 +186,7 @@ export const getStationForInvalidFromSelection = (
     if (busRoute === '24/27/33') return getParentStationForStopId('24-1-185'); // Mattapan Station
     if (busRoute === '40/50') return getParentStationForStopId('40-1-36466'); // Cleary Square
     // 52/59 have no overlaps
-    if (busRoute === '60/65') return getParentStationForStopId('65-1-1555'); // Brookline Village
+    if (busRoute === '60/65-legacy') return getParentStationForStopId('65-1-1555'); // Brookline Village
     if (busRoute === '61/70/170') return getParentStationForStopId('70-1-86944'); // Moody & Carter Streets (Central Square, Waltham)
     if (busRoute === '62/76') return getParentStationForStopId('76-1-8629'); // Five Forks
     // 67/79 79 does not appear in manifest
@@ -200,13 +202,14 @@ export const getStationForInvalidFromSelection = (
     // 214/216 216 does not appear in manifest
     if (busRoute === '217/245') return getParentStationForStopId('217-1-32005'); // Quincy Center
     if (busRoute === '220/221/222') return getParentStationForStopId('221-1-3616'); // Bicknell Square
+    if (busRoute === '220/221/222-legacy') return getParentStationForStopId('221-1-3616'); // Bicknell Square
     if (busRoute === '225/226') return getParentStationForStopId('226-1-3824'); // Weymouth Landing
     if (busRoute === '350/351') return getParentStationForStopId('350-1-49848'); // Third Avenue (Burlington)
     if (busRoute === '411/430') return getParentStationForStopId('411-1-8336'); // Kennedy Dr (Granada)
     if (busRoute === '426/428') return getParentStationForStopId('426-1-7394'); // East Saugus
     if (busRoute === '434/435/436') return getParentStationForStopId('424-1-14748'); // Central Square, Lynn (Busway)
+    if (busRoute === '434/435/436-legacy') return getParentStationForStopId('424-1-14748'); // Central Square, Lynn (Busway)
     if (busRoute === '439/441/442') return getParentStationForStopId('439-1-14748'); // Central Square, Lynn (Busway)
-    // 451/465 465 does not appear in manifest
     // 501/503 503 does not appear in manifest
     // 502/504 502 does not appear in manifest
     if (busRoute === '505/553/554') return getParentStationForStopId('505-1-903'); // Newton Corner
@@ -319,3 +322,21 @@ export const getMinMaxDatesForRoute = (
   }
   return { minDate: undefined, maxDate: undefined };
 };
+
+/**
+ * The curated BusRoute label a raw GTFS route_id is shown under on `date`, e.g. '751' -> 'SL4/SL5'.
+ * Bus trip-metrics data is keyed by raw route_ids, but everywhere else the dashboard presents
+ * the curated labels, so anything ranking or listing routes should group by this to stay
+ * consistent. A route_id can move between labels over time (BNRD split 104/109 into 104 and
+ * 109 on 2024-12-15), so only labels whose service window covers `date` count. Route_ids with
+ * no curated label fall back to their display name, which getBusRouteIds still resolves.
+ */
+export const getBusRouteGroup = (routeId: string, date: string): string =>
+  BUS_ROUTES.find((busRoute) => {
+    const { service_start, service_end } = stations.Bus[busRoute] ?? {};
+    return (
+      getBusRouteIds(busRoute).includes(routeId) &&
+      (!service_start || service_start <= date) &&
+      (!service_end || date <= service_end)
+    );
+  }) ?? getBusRouteDisplayName(routeId);

@@ -13,7 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../../../common/components/ui/select';
-import { getBusRouteDisplayName, FREQUENT_BUS_ROUTE_IDS } from '../../../common/constants/lines';
+import { FREQUENT_BUS_ROUTE_IDS } from '../../../common/constants/lines';
+import { getBusRouteGroup } from '../../../common/utils/stations';
 import type {
   BusSpeedSegmentLeaderboardByBand,
   BusSpeedSegmentLeaderboardByDayType,
@@ -51,18 +52,20 @@ export const BusSpeedSegmentLeaderboardSection: React.FC<
 
   // Every route with at least one segment in this date's file, across every day type/time
   // band rather than just the currently selected one, so the dropdown's options don't
-  // shuffle around as those change.
+  // shuffle around as those change. Options are curated BusRoute labels (SL4/SL5 rather than
+  // SL4 and SL5) to match the sidebar route picker; rows themselves stay per route_id, since
+  // per-branch segment medians can't be merged.
   const availableRoutes = useMemo(() => {
-    if (!leaderboard.data) return [];
+    if (!leaderboard.data || !date) return [];
     const allEntries: BusSpeedSegmentLeaderboardEntry[] =
       period === 'daily'
         ? Object.values(leaderboard.data as BusSpeedSegmentLeaderboardByBand).flat()
         : Object.values(leaderboard.data as BusSpeedSegmentLeaderboardByDayType).flatMap((byBand) =>
             Object.values(byBand).flat()
           );
-    const routeIds = new Set(allEntries.map((entry) => entry.route_id));
-    return [...routeIds].sort((a, b) => a.localeCompare(b, 'en', { numeric: true }));
-  }, [leaderboard.data, period]);
+    const routes = new Set(allEntries.map((entry) => getBusRouteGroup(entry.route_id, date)));
+    return [...routes].sort((a, b) => a.localeCompare(b, 'en', { numeric: true }));
+  }, [leaderboard.data, period, date]);
 
   const renderList = () => {
     if (!date) return <p>Select a date to load the leaderboard.</p>;
@@ -87,7 +90,9 @@ export const BusSpeedSegmentLeaderboardSection: React.FC<
     const entries =
       routeFilter === ALL_ROUTES
         ? frequentFiltered
-        : frequentFiltered.filter((entry) => entry.route_id === routeFilter);
+        : frequentFiltered.filter(
+            (entry) => getBusRouteGroup(entry.route_id, date) === routeFilter
+          );
     if (entries.length < 1) return <NoDataNotice isLineMetric />;
 
     const hasMore = entries.length > LEADERBOARD_PREVIEW_SIZE;
@@ -123,9 +128,9 @@ export const BusSpeedSegmentLeaderboardSection: React.FC<
             </SelectTrigger>
             <SelectContent>
               <SelectItem value={ALL_ROUTES}>All routes</SelectItem>
-              {availableRoutes.map((routeId) => (
-                <SelectItem key={routeId} value={routeId}>
-                  {getBusRouteDisplayName(routeId)}
+              {availableRoutes.map((busRoute) => (
+                <SelectItem key={busRoute} value={busRoute}>
+                  {busRoute}
                 </SelectItem>
               ))}
             </SelectContent>

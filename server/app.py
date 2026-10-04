@@ -19,6 +19,7 @@ from chalicelib import (
     route_manifest,
     models,
     predictions,
+    reliability,
     ridership,
     scheduled_service,
     service_hours,
@@ -26,6 +27,7 @@ from chalicelib import (
     speed,
     speed_restrictions,
     static_data,
+    weather,
 )
 
 
@@ -40,7 +42,17 @@ app = ChaliceWithSpec(app_name="data-dashboard", spec=spec, generate_default_doc
 localhost = "localhost:3000"
 TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", localhost)
 
-cors_config = CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600)
+# Beta RUM adds these headers to link browser requests to backend traces.
+DD_TRACE_HEADERS = [
+    "x-datadog-trace-id",
+    "x-datadog-parent-id",
+    "x-datadog-origin",
+    "x-datadog-sampling-priority",
+    "traceparent",
+    "tracestate",
+    "baggage",
+]
+cors_config = CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", allow_headers=DD_TRACE_HEADERS, max_age=3600)
 
 if TM_FRONTEND_HOST != localhost:
     app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
@@ -537,6 +549,62 @@ def get_ridership():
             end_date=end_date,
             line_id=line_id,
         )
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
+    "/api/reliability",
+    cors=cors_config,
+    docs=Docs(request=models.ReliabilityParams, response=models.ReliabilityResponse),
+)
+def get_reliability():
+    """Retrieve on-time performance counts for The RIDE or commuter rail over a date range."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["route_id", "start_date", "end_date", "agg"])
+    if query_params["agg"] not in reliability.AGGS:
+        raise BadRequestError(f"Invalid agg '{query_params['agg']}'. Expected one of: {', '.join(reliability.AGGS)}.")
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_reliability(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/reliability", query_params)
+    else:
+        data = reliability.get_reliability(
+            route_id=query_params["route_id"],
+            start_date=parse_user_date(query_params["start_date"]),
+            end_date=parse_user_date(query_params["end_date"]),
+            agg=query_params["agg"],
+        )
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
+    "/api/weather",
+    cors=cors_config,
+    docs=Docs(request=models.WeatherParams, response=models.WeatherResponse),
+)
+def get_weather():
+    """Retrieve hourly weather observations for a date range (downtown Boston)."""
+    query_params = app.current_request.query_params or {}
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_weather(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/weather", query_params)
+    else:
+        start_date = parse_user_date(query_params["start_date"])
+        end_date = parse_user_date(query_params["end_date"])
+        data = weather.get_weather(start_date=start_date, end_date=end_date)
 
     return Response(
         body=json.dumps(data),

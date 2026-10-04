@@ -12,10 +12,10 @@ This is the repository for the [TransitMatters Data Dashboard](https://dashboard
 
 ## 🧰 Requirements to Develop Locally
 
-- node 20.x and npm 9.x+ required
+- node 26.x and npm 11.x+ required
   - With `nvm` installed, use `nvm install && nvm use`
   - verify with `node -v`
-- Python 3.12 with recent uv (0.9.8 or later)
+- Python 3.13 with recent uv (0.9.8 or later)
   - Verify with `python --version && uv --version`
   - `uv self update` to update uv
 
@@ -66,6 +66,7 @@ AWS access is not strictly required for development - see "Backend Data Source" 
    - `TM_FRONTEND_CERT_ARN`
    - `TM_LABS_WILDCARD_CERT_ARN`
    - (You may also need to set `AWS_DEFAULT_REGION` in your shell to `us-east-1`. Maybe not! We're not sure.)
+   - For beta only, `DD_RUM_APPLICATION_ID` and `DD_RUM_CLIENT_TOKEN` enable Datadog RUM. Prod builds ignore them.
 3. Execute `./deploy.sh` (for beta) or `./deploy.sh -p` (for production). If deploying from a CI platform (such as GitHub Actions) you may also want to include the `-c` flag.
 
 Additional notes:

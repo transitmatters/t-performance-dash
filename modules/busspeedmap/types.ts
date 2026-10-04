@@ -35,6 +35,25 @@ export interface BusSpeedSegmentProperties {
   n_interpolated: number;
 }
 
+/**
+ * A rapid transit parent station from the stops reference tileset. All strings: `lines` is
+ * comma-joined with Green's branches collapsed ("Red,Green"); `routes` keeps them, in GTFS
+ * route_sort_order ("Red,Green-B,Green-C").
+ */
+export interface StationProperties {
+  stop_id: string;
+  stop_name: string;
+  lines: string;
+  routes: string;
+}
+
+/** A bus stop pole from the stops reference tileset. `routes` is comma-joined route_ids. */
+export interface BusStopProperties {
+  stop_id: string;
+  stop_name: string;
+  routes: string;
+}
+
 export interface FetchBusSpeedSegmentsOptions {
   date: string | undefined;
   period: Period;

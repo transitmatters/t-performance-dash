@@ -32,6 +32,8 @@ import { NavLayout } from '../common/layouts/NavLayout';
 import { LoadPresetsLayout } from '../common/layouts/LoadPresetsLayout';
 import { DynamicMetaTags } from '../common/components/DynamicMetaTags';
 import { useApplyTheme } from '../common/hooks/useApplyTheme';
+import { BetaRumNotice } from '../common/components/notices/BetaRumNotice';
+import { initBetaRum } from '../common/utils/rum';
 
 config.autoAddCss = false;
 
@@ -98,6 +100,7 @@ export default function App({ Component, pageProps }: AppProps) {
   // Don't load on the server. This prevents hydration errors between mobile/desktop layouts.
   useEffect(() => {
     setLoaded(true);
+    initBetaRum();
   }, []);
   if (!loaded) return <DynamicMetaTags />;
 
@@ -110,6 +113,7 @@ export default function App({ Component, pageProps }: AppProps) {
             {isProd && <GCScript siteUrl={'https://transitmatters-dd.goatcounter.com/count'} />}
             <Component {...pageProps} />
           </SecondaryLayout>
+          <BetaRumNotice />
         </NavLayout>
       </LoadPresetsLayout>
     </Layout>

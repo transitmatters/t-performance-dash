@@ -5,6 +5,7 @@
       "0": "outbound",
       "1": "inbound"
     },
+    "service_start": "2026-09-06",
     "stations": [
       {
         "stop_name": "Pleasant & Washington (Weymouth)",
@@ -14,16 +15,6 @@
         "stops": {
           "1": ["222-1-13844"],
           "0": ["222-0-13844"]
-        }
-      },
-      {
-        "stop_name": "East Weymouth",
-        "branches": ["222"],
-        "station": "ewymt",
-        "order": 2,
-        "stops": {
-          "1": ["222-1-3684"],
-          "0": ["222-0-3684"]
         }
       },
       {

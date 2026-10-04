@@ -22,6 +22,7 @@ import type { Direction } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 import { LineSegments } from './charts/LineSegments';
+import { getLineSegmentsContainerStyle } from './constants/chartConfig';
 import { DirectionObject } from './constants/constants';
 import { SlowZonesMap } from './map';
 import type { SlowZonesLineName } from './types';
@@ -117,7 +118,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
           <SlowZonesMap
             key={lineShort}
             slowZones={allData.data!}
-            speedRestrictions={speedRestrictions.data!}
+            speedRestrictions={speedRestrictions.data}
             lineName={lineShort}
             direction={isDesktop ? 'horizontal' : 'vertical'}
           />
@@ -132,13 +133,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
             {/* On mobile the strip scrolls sideways, so it bleeds to the card edge rather than
                 stopping at the padding. */}
             <div className="-mx-3 overflow-x-auto overflow-y-hidden px-3 sm:mx-0 sm:px-0">
-              <div
-                style={
-                  isMobile
-                    ? { width: stationPairs.size * 64, height: 480 }
-                    : { height: stationPairs.size * 40 }
-                }
-              >
+              <div style={getLineSegmentsContainerStyle(stationPairs.size, isMobile)}>
                 <LineSegments
                   data={graphData}
                   startDateUTC={startDateUTC}

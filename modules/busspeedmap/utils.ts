@@ -1,5 +1,8 @@
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import { FREQUENT_BUS_ROUTE_IDS } from '../../common/constants/lines';
+import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
+import { getBusRouteGroup } from '../../common/utils/stations';
 import type {
   BusSpeedSegmentLeaderboardByBand,
   BusSpeedSegmentLeaderboardByDayType,
@@ -75,4 +78,44 @@ export const selectSegmentLeaderboardEntries = (
     return (data as BusSpeedSegmentLeaderboardByBand)[timeBand] ?? [];
   }
   return (data as BusSpeedSegmentLeaderboardByDayType)[dayType]?.[timeBand] ?? [];
+};
+
+export interface GroupedBusSpeedLeaderboardEntry extends BusSpeedLeaderboardEntry {
+  /** Whether any raw route_id behind this curated label is a Frequent Bus Route. */
+  isFrequentRoute: boolean;
+}
+
+const FREQUENT_BUS_ROUTES = new Set(FREQUENT_BUS_ROUTE_IDS);
+
+/**
+ * The API ranks raw GTFS route_ids, but the rest of the dashboard shows curated BusRoute labels
+ * (SL4/SL5, 114/116/117, ...), so the leaderboard would otherwise list 751 and 749 as separate
+ * "SL4" and "SL5" rows. Summing miles_covered/total_time per label keeps the speed a true
+ * weighted average, same as the per-route speed page does for composites, then re-ranks
+ * slowest first. `date` picks which labels were in service (see getBusRouteGroup).
+ */
+export const groupLeaderboardByBusRoute = (
+  entries: BusSpeedLeaderboardEntry[],
+  date: string
+): GroupedBusSpeedLeaderboardEntry[] => {
+  const groups = new Map<string, GroupedBusSpeedLeaderboardEntry>();
+  for (const entry of entries) {
+    const route = getBusRouteGroup(entry.route, date);
+    const group = groups.get(route) ?? {
+      route,
+      miles_covered: 0,
+      total_time: 0,
+      count: 0,
+      n_traversals: 0,
+      isFrequentRoute: false,
+    };
+    group.miles_covered += entry.miles_covered;
+    group.total_time += entry.total_time;
+    group.count += entry.count;
+    group.n_traversals += entry.n_traversals;
+    group.isFrequentRoute ||= FREQUENT_BUS_ROUTES.has(entry.route);
+    groups.set(route, group);
+  }
+  const mph = (entry: BusSpeedLeaderboardEntry) => entry.miles_covered / (entry.total_time / 3600);
+  return [...groups.values()].sort((a, b) => mph(a) - mph(b));
 };
