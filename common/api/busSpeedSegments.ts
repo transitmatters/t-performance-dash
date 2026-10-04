@@ -7,7 +7,9 @@ import {
 import type {
   BusSpeedSegmentLeaderboardResponse,
   FetchBusSpeedSegmentsOptions,
+  FetchBusSpeedSegmentsUrlOptions,
   Period,
+  TimeBand,
 } from '../../modules/busspeedmap/types';
 
 dayjs.extend(isoWeek);
@@ -31,7 +33,7 @@ export class BusSpeedDataUnavailableError extends Error {
  * Weekly files are keyed by ISO week (Monday-start, and the year that ISO week belongs to --
  * not necessarily `date`'s calendar year for the last/first few days of December). Workday
  * vs. weekend vs. holiday is not part of the path: it's a property/key within each period's
- * single file (a pmtiles source-layer, or a leaderboard.json top-level key), selected
+ * files (a pmtiles feature property, or a leaderboard.json top-level key), selected
  * client-side rather than fetched separately.
  */
 const periodDirectory = (date: string, period: Period): string => {
@@ -46,8 +48,17 @@ const periodDirectory = (date: string, period: Period): string => {
   }
 };
 
-export const busSpeedSegmentsPath = (date: string, period: Period): string =>
-  `${BUS_SPEED_SEGMENTS_BASE_PATH}/${periodDirectory(date, period)}/segments.pmtiles`;
+/**
+ * The six time bands share segments.pmtiles; all_day sits beside it in an archive of its own,
+ * with the same layer and properties. In one archive, tippecanoe's drop-densest thinned every
+ * all_day feature (identical geometry to a band feature) out of zooms 4-11, and the map opens
+ * at 11.
+ */
+export const busSpeedSegmentsFile = (timeBand: TimeBand): string =>
+  timeBand === 'all_day' ? 'segments_all_day.pmtiles' : 'segments.pmtiles';
+
+export const busSpeedSegmentsPath = (date: string, period: Period, timeBand: TimeBand): string =>
+  `${BUS_SPEED_SEGMENTS_BASE_PATH}/${periodDirectory(date, period)}/${busSpeedSegmentsFile(timeBand)}`;
 
 export const busSpeedSegmentLeaderboardPath = (date: string, period: Period): string =>
   `${BUS_SPEED_SEGMENTS_BASE_PATH}/${periodDirectory(date, period)}/leaderboard.json`;
@@ -61,10 +72,11 @@ export const busSpeedSegmentLeaderboardPath = (date: string, period: Period): st
 export const fetchBusSpeedSegmentsUrl = async ({
   date,
   period,
-}: FetchBusSpeedSegmentsOptions): Promise<string> => {
+  timeBand,
+}: FetchBusSpeedSegmentsUrlOptions): Promise<string> => {
   if (!date) throw new Error('A service date is required to load bus speed segments.');
 
-  const url = new URL(busSpeedSegmentsPath(date, period), window.location.origin);
+  const url = new URL(busSpeedSegmentsPath(date, period, timeBand), window.location.origin);
   const response = await fetch(url.toString(), { method: 'HEAD' });
 
   // A missing object is served as the site's own HTML 404 page, so the status has to be

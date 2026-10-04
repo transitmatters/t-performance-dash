@@ -1,4 +1,10 @@
-export type TimeBand = 'early_am' | 'am_peak' | 'midday' | 'pm_peak' | 'evening' | 'late_night';
+/**
+ * The six departure windows, plus `all_day`: not a seventh window but every traversal the six
+ * cover, aggregated directly rather than combined from band medians. Its map features live in
+ * an archive of their own (see busSpeedSegmentsPath).
+ */
+export type TimeBand =
+  'early_am' | 'am_peak' | 'midday' | 'pm_peak' | 'evening' | 'late_night' | 'all_day';
 
 export type DirectionFilter = 'inbound' | 'outbound';
 
@@ -57,6 +63,14 @@ export interface BusStopProperties {
 export interface FetchBusSpeedSegmentsOptions {
   date: string | undefined;
   period: Period;
+}
+
+/**
+ * The pmtiles archive, unlike leaderboard.json, is split by time band: the six bands share one
+ * file and `all_day` has its own, so the band decides which URL to load.
+ */
+export interface FetchBusSpeedSegmentsUrlOptions extends FetchBusSpeedSegmentsOptions {
+  timeBand: TimeBand;
 }
 
 /**
