@@ -37,8 +37,8 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
   const peakService = useScheduledServiceBaseline(line);
 
   const { scheduled, peak } = useMemo(
-    () => getPercentageData(data, predictedData, peakService),
-    [data, predictedData, peakService]
+    () => getPercentageData(data, predictedData, peakService, config.agg),
+    [data, predictedData, peakService, config.agg]
   );
 
   const { scheduledAverage, peakAverage } = useMemo(() => {
