@@ -6,7 +6,7 @@ export type LineKind =
 export type ModeKind = 'rapid-transit' | 'regional-rail' | 'bus' | 'boat';
 
 export type ServiceDay = 'weekday' | 'saturday' | 'sunday';
-export type ServiceRegime = 'baseline' | 'current';
+export type ServiceRegime = 'baseline' | 'current' | 'oneYearAgo';
 
 export type TripsPerHour = readonly number[] & { length: 24 };
 

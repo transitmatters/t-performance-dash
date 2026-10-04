@@ -1,6 +1,4 @@
 'use client';
-import { Layout } from '../common/layouts/layoutTypes';
-import { Landing } from '../modules/landing/Landing';
+import { Home } from '../modules/home/Home';
 
-export default Landing;
-Landing.Layout = Layout.Landing;
+export default Home;
