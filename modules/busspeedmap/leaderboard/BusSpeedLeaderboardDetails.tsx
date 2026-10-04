@@ -38,7 +38,7 @@ export function BusSpeedLeaderboardDetails() {
   const [period, setPeriod] = useState<Period>(DEFAULT_PERIOD);
   const [dayType, setDayType] = useState<DayType>(DEFAULT_DAY_TYPE);
   const [timeBand, setTimeBand] = useState<TimeBand>(DEFAULT_TIME_BAND);
-  const [keyRoutesOnly, setKeyRoutesOnly] = useState(false);
+  const [frequentRoutesOnly, setFrequentRoutesOnly] = useState(false);
 
   const viewModeOptions = VIEW_MODES.map(
     (mode) => [mode.key, mode.label] as [LeaderboardViewMode, string]
@@ -69,9 +69,9 @@ export function BusSpeedLeaderboardDetails() {
             subtitle={subtitle || undefined}
             action={
               <ToggleSwitch
-                enabled={keyRoutesOnly}
-                setEnabled={setKeyRoutesOnly}
-                label="Key bus routes only"
+                enabled={frequentRoutesOnly}
+                setEnabled={setFrequentRoutesOnly}
+                label="Frequent bus routes only"
               />
             }
           />
@@ -125,7 +125,7 @@ export function BusSpeedLeaderboardDetails() {
               <BusSpeedRouteLeaderboardSection
                 date={date}
                 period={period}
-                keyRoutesOnly={keyRoutesOnly}
+                frequentRoutesOnly={frequentRoutesOnly}
               />
             ) : (
               <BusSpeedSegmentLeaderboardSection
@@ -133,7 +133,7 @@ export function BusSpeedLeaderboardDetails() {
                 period={period}
                 dayType={dayType}
                 timeBand={timeBand}
-                keyRoutesOnly={keyRoutesOnly}
+                frequentRoutesOnly={frequentRoutesOnly}
               />
             )}
           </div>

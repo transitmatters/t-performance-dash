@@ -44,11 +44,14 @@ export const BusSpeedSegmentMapDialog: React.FC<BusSpeedSegmentMapDialogProps> =
   const [lastEntry, setLastEntry] = useState(entry);
   if (entry && entry !== lastEntry) setLastEntry(entry);
 
-  const segments = useBusSpeedSegmentsUrl({ date, period }, open && Boolean(date));
+  const segments = useBusSpeedSegmentsUrl({ date, period, timeBand }, open && Boolean(date));
 
   const renderMap = () => {
     if (!lastEntry) return null;
-    if (segments.isLoading) return <ChartPlaceHolder />;
+    // The time band never changes while the dialog is open, so placeholder data here is only
+    // ever the other archive's URL left over from a previous open -- mounting on that would
+    // aim the segment fly-to at the wrong file.
+    if (segments.isLoading || segments.isPlaceholderData) return <ChartPlaceHolder />;
     // The same date/period that produced this leaderboard entry should always have a
     // matching pmtiles file too -- they're generated together -- but fall back to the
     // ordinary "no data" notice rather than assuming that can never fail.

@@ -24,7 +24,7 @@ export const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...
       <SidebarHeader className="overflow-hidden px-3 py-3">
         <Link href="/" onClick={close} className="flex h-6 items-center">
           <img
-            src="/TMLogo.png"
+            src="/TMLogo.svg"
             alt="TransitMatters"
             width={3189}
             height={299}

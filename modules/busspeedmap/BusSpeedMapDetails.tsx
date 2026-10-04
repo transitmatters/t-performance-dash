@@ -37,7 +37,7 @@ export function BusSpeedMapDetails() {
   const [timeBand, setTimeBand] = useState<TimeBand>(DEFAULT_TIME_BAND);
   const [direction, setDirection] = useState<DirectionFilter>(DEFAULT_DIRECTION);
 
-  const segments = useBusSpeedSegmentsUrl({ date, period }, Boolean(date));
+  const segments = useBusSpeedSegmentsUrl({ date, period, timeBand }, Boolean(date));
   const { data: pmtilesUrl } = segments;
 
   const bandLabel = TIME_BANDS.find((band) => band.key === timeBand);
