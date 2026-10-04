@@ -9,6 +9,14 @@ export default function Document() {
         <meta name="theme-color" content="#000000" />
         <link rel="icon" type="image/png" href={`/favicon.png`} />
         <link rel="manifest" href={`/manifest.json`} />
+        {/* The header logo is the LCP element but only renders client-side, so fetch it up front. */}
+        <link
+          rel="preload"
+          href="/TMLogo.svg"
+          as="image"
+          type="image/svg+xml"
+          fetchPriority="high"
+        />
         {/* Set the theme class before first paint to avoid a flash (reads the persisted store). */}
         <script
           dangerouslySetInnerHTML={{
