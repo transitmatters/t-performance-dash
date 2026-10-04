@@ -1,13 +1,13 @@
-import { KEY_BUS_ROUTE_IDS } from '../../../common/constants/lines';
+import { FREQUENT_BUS_ROUTE_IDS } from '../../../common/constants/lines';
 import type { LineData } from '../types';
 
 const colorLines = ['red', 'green', 'blue', 'orange', 'silver'];
-const keyBusRoutes = new Set(KEY_BUS_ROUTE_IDS);
+const frequentBusRoutes = new Set(FREQUENT_BUS_ROUTE_IDS);
 
 const kind = (line: LineData) => {
   if (colorLines.includes(line.lineKind)) {
     return line.lineKind === 'silver' ? 1 : 0;
-  } else if (line.routeIds.some((rid) => keyBusRoutes.has(rid))) {
+  } else if (line.routeIds.some((rid) => frequentBusRoutes.has(rid))) {
     return 100 + parseInt(line.routeIds[0]);
   } else if (line.lineKind === 'regional-rail') {
     return 200;

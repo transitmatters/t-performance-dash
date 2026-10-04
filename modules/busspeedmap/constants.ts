@@ -7,8 +7,14 @@ import type { DayType, DirectionFilter, Period, TimeBand } from './types';
  */
 export const MIN_TRAVERSALS = 3;
 
-/** Matches TIME_BANDS in mbta-performance's `chalicelib/lamp/bus/constants.py`. */
+/**
+ * The six windows match TIME_BANDS in mbta-performance's `chalicelib/lamp/bus/constants.py`;
+ * `all_day` matches ALL_DAY_BAND there, which is deliberately a separate constant because it
+ * overlaps every window rather than being one. It leads the list the way "All days" leads
+ * DAY_FILTER_OPTIONS, keeping the six windows in chronological order after it.
+ */
 export const TIME_BANDS: { key: TimeBand; label: string; hours: string }[] = [
+  { key: 'all_day', label: 'All day', hours: 'all service hours' },
   { key: 'early_am', label: 'Early AM', hours: 'before 7am' },
   { key: 'am_peak', label: 'AM peak', hours: '7-9am' },
   { key: 'midday', label: 'Midday', hours: '9am-4pm' },
@@ -17,6 +23,8 @@ export const TIME_BANDS: { key: TimeBand; label: string; hours: string }[] = [
   { key: 'late_night', label: 'Late night', hours: 'after 10pm' },
 ];
 
+// Not all_day: its archive only exists from the pipeline's all-day backfill onwards, so
+// defaulting to it would open older dates on "no data".
 export const DEFAULT_TIME_BAND: TimeBand = 'am_peak';
 
 /**
@@ -78,8 +86,9 @@ export const BUS_SPEED_SEGMENTS_BASE_PATH = '/businsights/BusSpeedSegments';
 
 /**
  * The single layer tippecanoe writes every segment into, for every period -- daily, weekly,
- * and monthly files alike. Weekly/monthly's business-day/weekend split lives in a `day_type`
- * feature property within this same layer (see DAY_TYPES), not a separate layer.
+ * and monthly files alike, and the all_day archive as well as the band one. Weekly/monthly's
+ * business-day/weekend split lives in a `day_type` feature property within this same layer
+ * (see DAY_TYPES), not a separate layer.
  */
 export const PMTILES_SOURCE_LAYER = 'segments';
 
