@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import React, { useMemo, useState } from 'react';
 
-import Link from 'next/link';
+import { Link } from '../../common/components/general/Link';
 import {
   useSlowzoneAllData,
   useSlowzoneDelayTotalData,
@@ -11,7 +11,6 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { Widget } from '../../common/components/widgets';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
-import { Layout } from '../../common/layouts/layoutTypes';
 import { filterAllSlow, formatSegments } from '../../common/utils/slowZoneUtils';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
@@ -148,5 +147,3 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
     </PageWrapper>
   );
 }
-
-SystemSlowZonesDetails.Layout = Layout.Dashboard;

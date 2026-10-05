@@ -1,4 +1,10 @@
-export type TimeBand = 'early_am' | 'am_peak' | 'midday' | 'pm_peak' | 'evening' | 'late_night';
+/**
+ * The six departure windows, plus `all_day`: not a seventh window but every traversal the six
+ * cover, aggregated directly rather than combined from band medians. Its map features live in
+ * an archive of their own (see busSpeedSegmentsPath).
+ */
+export type TimeBand =
+  'early_am' | 'am_peak' | 'midday' | 'pm_peak' | 'evening' | 'late_night' | 'all_day';
 
 export type DirectionFilter = 'inbound' | 'outbound';
 
@@ -60,6 +66,14 @@ export interface FetchBusSpeedSegmentsOptions {
 }
 
 /**
+ * The pmtiles archive, unlike leaderboard.json, is split by time band: the six bands share one
+ * file and `all_day` has its own, so the band decides which URL to load.
+ */
+export interface FetchBusSpeedSegmentsUrlOptions extends FetchBusSpeedSegmentsOptions {
+  timeBand: TimeBand;
+}
+
+/**
  * A leaderboard row -- a narrower cut of BusSpeedSegmentProperties with no stop_id or
  * geometry. `time_band`/`day_type` aren't repeated per row: they're the key you looked the
  * row array up under (see BusSpeedSegmentLeaderboardResponse), same as they're absent from
@@ -95,7 +109,7 @@ export type BusSpeedSegmentLeaderboardResponse =
 /**
  * Which grain the merged leaderboard page ranks by -- routes (an arbitrary date range, summed
  * across the whole thing) or segments (one precomputed day/week/month slice). Both share the
- * same period control, but only 'route' mode ever cares about keyRoutesOnly, and only
+ * same period control, but only 'route' mode ever cares about frequentRoutesOnly, and only
  * 'segment' mode cares about day type/time band.
  */
 export type LeaderboardViewMode = 'route' | 'segment';

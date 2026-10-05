@@ -4,7 +4,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
-import Link from 'next/link';
+import { Link } from '../../common/components/general/Link';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import {
   useSlowzoneAllData,
@@ -23,7 +23,6 @@ import type { Direction } from '../../common/types/dataPoints';
 import { useChartToggle } from '../../common/hooks/useChartToggle';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
-import { Layout } from '../../common/layouts/layoutTypes';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { formatDateTodayCheck } from '../../common/state/utils/dateStoreUtils';
 import { BetaSlowZoneDataNotice } from '../../common/components/notices/BetaSlowZoneDataNotice';
@@ -186,5 +185,3 @@ export function SlowZonesDetails() {
     </PageWrapper>
   );
 }
-
-SlowZonesDetails.Layout = Layout.Dashboard;

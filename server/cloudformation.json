@@ -114,6 +114,19 @@
         }
       }
     },
+    "RenderOgCards": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Description": "Redraws the link-preview cards in the frontend bucket's static/og/ each morning.",
+        "Environment": {
+          "Variables": {
+            "DD_API_KEY": { "Ref": "DDApiKey" },
+            "DD_VERSION": { "Ref": "GitVersion" },
+            "DD_TAGS": { "Ref": "DDTags" }
+          }
+        }
+      }
+    },
     "FrontendBucket": {
       "Type": "AWS::S3::Bucket",
       "Properties": {

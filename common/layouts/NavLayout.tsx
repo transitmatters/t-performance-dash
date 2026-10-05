@@ -1,6 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '../components/general/Link';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '../components/ui/sidebar';
 import { AppSidebar } from '../../modules/navigation/AppSidebar';
 import { useDelimitatedRoute } from '../utils/router';
@@ -26,7 +25,7 @@ export const NavLayout: React.FC<NavLayoutProps> = ({ children }) => {
         <header className="bg-sidebar text-sidebar-foreground sticky top-0 z-20 flex h-12 items-center gap-2 border-b px-2 md:hidden">
           <SidebarTrigger />
           <Link href="/" className="flex items-center">
-            <Image src="/TMLogo.png" alt="TransitMatters" width={208} height={19.5} />
+            <img src="/TMLogo.svg" alt="TransitMatters" width={208} height={19.5} />
           </Link>
         </header>
         {children}

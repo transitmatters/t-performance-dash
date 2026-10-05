@@ -17,7 +17,7 @@ export const isBetaHost = () => domain === BETA;
 // Datadog RUM runs on beta only. Prod uses GoatCounter so it needs no cookie notice.
 // deploy.sh sets these for beta builds.
 export const DD_RUM = {
-  applicationId: process.env.NEXT_PUBLIC_DD_RUM_APPLICATION_ID,
-  clientToken: process.env.NEXT_PUBLIC_DD_RUM_CLIENT_TOKEN,
+  applicationId: import.meta.env.VITE_DD_RUM_APPLICATION_ID,
+  clientToken: import.meta.env.VITE_DD_RUM_CLIENT_TOKEN,
   tracedApi: BETA_API,
 };

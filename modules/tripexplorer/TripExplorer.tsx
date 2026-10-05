@@ -6,7 +6,6 @@ import { SameDayNotice } from '../../common/components/notices/SameDayNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
-import { Layout } from '../../common/layouts/layoutTypes';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getParentStationForStopId } from '../../common/utils/stations';
 import { TripDataNotes } from '../../common/components/notices/TripDataNotes';
@@ -76,5 +75,3 @@ export const TripExplorer = () => {
     </PageWrapper>
   );
 };
-
-TripExplorer.Layout = Layout.Dashboard;
