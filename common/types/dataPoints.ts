@@ -124,8 +124,10 @@ export interface DeliveredTripMetricsBus extends SpeedTripMetrics {
   route: string;
   n_traversals: number;
   n_interpolated: number;
-  median_speed_mph: number;
-  mean_speed_mph: number;
+  // Whole-day, daily rows only: a median or mean can't be split by time band or summed into a
+  // week or month.
+  median_speed_mph?: number;
+  mean_speed_mph?: number;
 }
 
 /**
