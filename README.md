@@ -6,7 +6,7 @@
 ![deploy](https://github.com/transitmatters/t-performance-dash/workflows/deploy/badge.svg?branch=main)
 ![healthcheck](https://github.com/transitmatters/t-performance-dash/workflows/healthcheck/badge.svg)
 
-This is the repository for the [TransitMatters Data Dashboard](https://dashboard.transitmatters.org/). Client code is written in Typescript with React and Next.js, and the backend is written in Python with Chalice.
+This is the repository for the [TransitMatters Data Dashboard](https://dashboard.transitmatters.org/). Client code is written in Typescript with React, Vite and TanStack Router, and the backend is written in Python with Chalice.
 
 ---
 
@@ -66,6 +66,7 @@ AWS access is not strictly required for development - see "Backend Data Source" 
    - `TM_FRONTEND_CERT_ARN`
    - `TM_LABS_WILDCARD_CERT_ARN`
    - (You may also need to set `AWS_DEFAULT_REGION` in your shell to `us-east-1`. Maybe not! We're not sure.)
+   - For beta only, `DD_RUM_APPLICATION_ID` and `DD_RUM_CLIENT_TOKEN` enable Datadog RUM. Prod builds ignore them.
 3. Execute `./deploy.sh` (for beta) or `./deploy.sh -p` (for production). If deploying from a CI platform (such as GitHub Actions) you may also want to include the `-c` flag.
 
 Additional notes:

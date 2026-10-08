@@ -457,35 +457,3 @@ export const FERRY_LINE_NAMES: { [line in FerryRoute]: string } = {
   'Boat-EastBoston': 'East Boston Ferry',
   'Boat-Lynn': 'Lynn Ferry',
 };
-
-export const ALL_LINE_PATHS = RAIL_LINES.map((line) => {
-  return {
-    params: {
-      line: line,
-    },
-  };
-});
-
-export const BUS_PATH = {
-  params: {
-    line: 'bus',
-  },
-};
-
-export const COMMUTER_RAIL_PATH = {
-  params: {
-    line: 'commuter-rail',
-  },
-};
-
-export const FERRY_PATH = {
-  params: {
-    line: 'ferry',
-  },
-};
-
-export const THE_RIDE_PATH = {
-  params: {
-    line: 'the-ride',
-  },
-};

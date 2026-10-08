@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useRouter } from 'next/router';
+import { useQueryParams } from '../../../common/utils/router';
 import { ServiceAndRidershipContext } from './context';
 
 type Props = {
@@ -8,13 +8,7 @@ type Props = {
 
 export const ServiceAndRidershipProvider = (props: Props) => {
   const { children } = props;
-  const { query, isReady } = useRouter();
-
-  if (!isReady) {
-    return null;
-  }
-
-  const { startDate, endDate } = query as Record<string, string>;
+  const { startDate, endDate } = useQueryParams() as Record<string, string>;
 
   return (
     <ServiceAndRidershipContext.Provider value={{ startDate, endDate }}>

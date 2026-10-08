@@ -8,7 +8,6 @@ import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { Widget } from '../../common/components/widgets';
 import { getBusRouteIds } from '../../common/constants/lines';
 import { DAY_FILTER_OPTIONS, useChartToggle } from '../../common/hooks/useChartToggle';
-import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { TIME_BANDS } from '../busspeedmap/constants';
@@ -105,5 +104,3 @@ export function BusSpeedDetails() {
     </PageWrapper>
   );
 }
-
-BusSpeedDetails.Layout = Layout.Dashboard;

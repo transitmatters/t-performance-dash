@@ -3,7 +3,8 @@
 import json
 import os
 import subprocess
-from chalice import BadRequestError, CORSConfig, ConflictError, Response, ConvertToMiddleware
+import boto3
+from chalice import BadRequestError, CORSConfig, ConflictError, Cron, Response, ConvertToMiddleware
 from chalice_spec import ChaliceWithSpec, PydanticPlugin, Docs
 from apispec import APISpec
 from datetime import date
@@ -42,7 +43,17 @@ app = ChaliceWithSpec(app_name="data-dashboard", spec=spec, generate_default_doc
 localhost = "localhost:3000"
 TM_FRONTEND_HOST = os.environ.get("TM_FRONTEND_HOST", localhost)
 
-cors_config = CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600)
+# Beta RUM adds these headers to link browser requests to backend traces.
+DD_TRACE_HEADERS = [
+    "x-datadog-trace-id",
+    "x-datadog-parent-id",
+    "x-datadog-origin",
+    "x-datadog-sampling-priority",
+    "traceparent",
+    "tracestate",
+    "baggage",
+]
+cors_config = CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", allow_headers=DD_TRACE_HEADERS, max_age=3600)
 
 if TM_FRONTEND_HOST != localhost:
     app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
@@ -763,3 +774,13 @@ def get_stops(route_id):
         body=json.dumps(data),
         headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache.ONE_DAY}"},
     )
+
+
+@app.schedule(Cron(0, 11, "*", "*", "?", "*"), name="render_og_cards")
+def render_og_cards(event):
+    """Redraw the link-preview cards in static/og/ after data-ingestion's morning refresh."""
+    # Imported here so the API handler's cold start doesn't pay for Pillow.
+    from chalicelib import og_cards
+
+    count = og_cards.publish(TM_FRONTEND_HOST, boto3.client("s3"))
+    print(f"og cards: published {count} cards to {TM_FRONTEND_HOST}")

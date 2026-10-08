@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import React from 'react';
+import { Link } from '../../common/components/general/Link';
 import { DonateButton } from '../../common/components/buttons/DonateButton';
 import { SidebarSeparator } from '../../common/components/ui/sidebar';
 import { ThemeToggle } from '../../common/components/nav/ThemeToggle';

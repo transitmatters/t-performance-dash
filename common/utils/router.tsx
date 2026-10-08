@@ -1,6 +1,6 @@
 import type { ParsedUrlQuery } from 'querystring';
 import { isEqual, pickBy, startCase, toLower } from 'lodash';
-import { useRouter } from 'next/router';
+import { useLocation, useMatches, useRouter, useSearch } from '@tanstack/react-router';
 import { useCallback } from 'react';
 import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
@@ -20,6 +20,8 @@ import { useStationStore } from '../state/stationStore';
 import { useDateStore } from '../state/dateStore';
 import type { DateStore } from '../state/dateStore';
 import { LINE_COLORS } from '../constants/colors';
+import type { SearchObject } from './searchParams';
+import { stringifySearch } from './searchParams';
 
 const linePathToKeyMap: Record<LinePath, Line> = {
   red: 'line-red',
@@ -80,11 +82,21 @@ const getTab = (path: LinePath) => {
   }
 };
 
+/** True on a 404: a route rejected its params, or nothing matched the path (`_notFound`). */
+export const useIsNotFound = () =>
+  useMatches({
+    select: (matches) =>
+      matches.some((match) => match.status === 'notFound' || match._notFound === true),
+  });
+
+/** The current query string as plain strings; no route declares a search schema yet. */
+export const useQueryParams = (): SearchObject => useSearch({ strict: false });
+
 export const useDelimitatedRoute = (): Route => {
-  const router = useRouter();
-  const path = router.asPath.split('?');
-  const pathItems = path[0].split('/');
-  const queryParams = router.query;
+  const { pathname, search } = useLocation();
+  // Page detection expects Next's trailing-slash paths; a hand-typed `/red/speed` still has to work.
+  const pathItems = (pathname.endsWith('/') ? pathname : `${pathname}/`).split('/');
+  const queryParams = search as QueryParams;
   const tab = getTab((pathItems[1] as LinePath) ?? 'System');
   const page = getPage(pathItems, tab) as Page;
   const newParams = getParams(queryParams);
@@ -96,10 +108,21 @@ export const useDelimitatedRoute = (): Route => {
     lineShort: startCase(toLower(pathItems[1]).replace('-', ' ')) as LineShort, //TODO: Remove as
     page: page,
     tab,
-    query: router.isReady ? newParams : {},
+    query: newParams,
     color: LINE_COLORS[line ?? 'default'],
   };
 };
+
+/**
+ * Rewrite the query string in place. Query-only updates (a date or station change) keep the
+ * scroll position; the page itself isn't changing.
+ */
+export const navigateToQuery = (
+  router: ReturnType<typeof useRouter>,
+  pathname: string,
+  query: Record<string, unknown>,
+  replace: boolean
+) => router.navigate({ href: `${pathname}${stringifySearch(query)}`, replace, resetScroll: false });
 
 export const useUpdateQuery = () => {
   const router = useRouter();
@@ -107,7 +130,7 @@ export const useUpdateQuery = () => {
   const updateQueryParams = useCallback(
     (newQueryParams: QueryParams, range?: boolean, replace = true) => {
       if (!newQueryParams) return;
-      if (!router.isReady) return;
+      const { pathname, search } = router.latestLocation;
 
       const { startDate, endDate, to, from, date } = newQueryParams;
       const newTempQuery: Partial<QueryParams> = {};
@@ -137,17 +160,13 @@ export const useUpdateQuery = () => {
       }
 
       const newQuery = {
-        ...router.query,
+        ...search,
         ...newTempQuery,
       };
 
-      if (!isEqual(router.query, newQuery)) {
+      if (!isEqual(search, newQuery)) {
         const query = pickBy(newQuery, (attr) => attr !== undefined);
-        if (replace) {
-          router.replace({ pathname: router.pathname, query }, undefined, { shallow: true });
-        } else {
-          router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
-        }
+        navigateToQuery(router, pathname, query, replace);
       }
     },
     [router]
@@ -165,17 +184,15 @@ export const useSetQueryParam = () => {
 
   return useCallback(
     (key: string, value: string | undefined) => {
-      if (!router.isReady) return;
-      const newQuery = { ...router.query };
+      const { pathname, search } = router.latestLocation;
+      const newQuery: Record<string, unknown> = { ...search };
       if (value === undefined) {
         delete newQuery[key];
       } else {
         newQuery[key] = value;
       }
-      if (!isEqual(router.query, newQuery)) {
-        router.replace({ pathname: router.pathname, query: newQuery }, undefined, {
-          shallow: true,
-        });
+      if (!isEqual(search, newQuery)) {
+        navigateToQuery(router, pathname, newQuery, true);
       }
     },
     [router]

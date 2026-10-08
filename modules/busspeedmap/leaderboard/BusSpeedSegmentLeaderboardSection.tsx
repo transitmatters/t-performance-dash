@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../../../common/components/ui/select';
-import { KEY_BUS_ROUTE_IDS } from '../../../common/constants/lines';
+import { FREQUENT_BUS_ROUTE_IDS } from '../../../common/constants/lines';
 import { getBusRouteGroup } from '../../../common/utils/stations';
 import type {
   BusSpeedSegmentLeaderboardByBand,
@@ -27,7 +27,7 @@ import { selectSegmentLeaderboardEntries } from '../utils';
 import { BusSpeedSegmentLeaderboard } from './BusSpeedSegmentLeaderboard';
 import { BusSpeedSegmentMapDialog } from './BusSpeedSegmentMapDialog';
 
-const KEY_BUS_ROUTES = new Set(KEY_BUS_ROUTE_IDS);
+const FREQUENT_BUS_ROUTES = new Set(FREQUENT_BUS_ROUTE_IDS);
 const LEADERBOARD_PREVIEW_SIZE = 25;
 const ALL_ROUTES = 'all';
 
@@ -36,12 +36,12 @@ interface BusSpeedSegmentLeaderboardSectionProps {
   period: Period;
   dayType: DayType;
   timeBand: TimeBand;
-  keyRoutesOnly: boolean;
+  frequentRoutesOnly: boolean;
 }
 
 export const BusSpeedSegmentLeaderboardSection: React.FC<
   BusSpeedSegmentLeaderboardSectionProps
-> = ({ date, period, dayType, timeBand, keyRoutesOnly }) => {
+> = ({ date, period, dayType, timeBand, frequentRoutesOnly }) => {
   const [showAll, setShowAll] = useState(false);
   const [routeFilter, setRouteFilter] = useState(ALL_ROUTES);
   const [selectedSegment, setSelectedSegment] = useState<
@@ -84,13 +84,15 @@ export const BusSpeedSegmentLeaderboardSection: React.FC<
       dayType,
       timeBand
     );
-    const keyFiltered = keyRoutesOnly
-      ? bandEntries.filter((entry) => KEY_BUS_ROUTES.has(entry.route_id))
+    const frequentFiltered = frequentRoutesOnly
+      ? bandEntries.filter((entry) => FREQUENT_BUS_ROUTES.has(entry.route_id))
       : bandEntries;
     const entries =
       routeFilter === ALL_ROUTES
-        ? keyFiltered
-        : keyFiltered.filter((entry) => getBusRouteGroup(entry.route_id, date) === routeFilter);
+        ? frequentFiltered
+        : frequentFiltered.filter(
+            (entry) => getBusRouteGroup(entry.route_id, date) === routeFilter
+          );
     if (entries.length < 1) return <NoDataNotice isLineMetric />;
 
     const hasMore = entries.length > LEADERBOARD_PREVIEW_SIZE;

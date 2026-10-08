@@ -13,23 +13,13 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
-    "ignoreDeprecations": "6.0",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
     },
-    "jsx": "react-jsx",
-    "plugins": [
-      {
-        "name": "next"
-      },
-      {
-        "name": "typescript-plugin-css-modules"
-      }
-    ]
+    "jsx": "react-jsx"
   },
-  "include": ["next-env.d.ts", "globals.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "*.js"]
+  "include": ["globals.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "out", "*.js"]
 }

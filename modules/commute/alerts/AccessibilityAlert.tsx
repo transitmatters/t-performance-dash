@@ -1,8 +1,8 @@
 import React from 'react';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
 import { AlertEffect } from '../../../common/types/alerts';
-import EscalatorIcon from '../../../public/Icons/EscalatorIcon.svg';
-import ElevatorIcon from '../../../public/Icons/ElevatorIcon.svg';
+import EscalatorIcon from '../../../public/Icons/EscalatorIcon.svg?react';
+import ElevatorIcon from '../../../public/Icons/ElevatorIcon.svg?react';
 import { rtStations } from '../../../common/constants/stations';
 import type { LineShort } from '../../../common/types/lines';
 import { AlertBoxInner } from './AlertBoxInner';
