@@ -75,7 +75,7 @@ export function ServiceDetails() {
       line_id: line,
       agg: config.agg,
     },
-    enabled
+    enabled && showServiceHours
   );
   const peakService = useScheduledServiceBaseline(line);
 
