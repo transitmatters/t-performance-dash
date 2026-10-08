@@ -32,6 +32,8 @@ def get_boundary_date(line_id: str, first: bool):
         Limit=1,
     )
     loaded = ddb_json.loads(response["Items"])
+    if not loaded:
+        return None
     return loaded[0]["date"]
 
 
@@ -50,6 +52,8 @@ def query_speed_restrictions(line_id: str, on_date: str):
               (str, the date used) and 'zones' (dict of speed restriction zones).
     """
     first_sr_date = get_boundary_date(line_id=line_id, first=True)
+    if first_sr_date is None:
+        return {"available": False}
     latest_sr_date = get_boundary_date(line_id=line_id, first=False)
     if on_date < first_sr_date:
         return {"available": False}
@@ -59,8 +63,10 @@ def query_speed_restrictions(line_id: str, on_date: str):
     date_condition = Key("date").eq(on_date)
     condition = line_condition & date_condition
     response = SpeedRestrictions.query(KeyConditionExpression=condition, Limit=1)
-    response_item = ddb_json.loads(response["Items"])[0]
-    zones = response_item.get("zones", {}).get("zones", {})
+    items = ddb_json.loads(response["Items"])
+    if not items:
+        return {"available": False}
+    zones = items[0].get("zones", {}).get("zones", {})
     return {
         "available": True,
         "date": on_date,
