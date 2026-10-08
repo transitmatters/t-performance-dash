@@ -22,20 +22,31 @@ export const BNRD: Record<
     changed_routes: [85, 87, 350],
     legacy_routes: ['CT2', '40/50'],
   },
+  3: {
+    url: 'https://www.mbta.com/service-changes/fall-2026-better-bus-network-service-changes',
+    date: new Date('09-06-2026'),
+    new_routes: [465],
+    changed_routes: [65, 220, 222, 435],
+    legacy_routes: ['60/65-legacy', '220/221/222-legacy', '434/435/436-legacy'],
+  },
 };
 
+// A route string may be a single number ('65') or a combined display route
+// ('220/221/222'), so every slash-separated part is checked individually.
+const routeNums = (route: string) => route.split('/').map((part) => parseInt(part, 10));
+
 export const isNewBnrdRoute = (route: string) => {
-  const routeNum = parseInt(route, 10);
-  return BNRD[1].new_routes.includes(routeNum) || BNRD[2].new_routes.includes(routeNum);
+  const nums = routeNums(route);
+  return Object.values(BNRD).some((phase) => nums.some((n) => phase.new_routes.includes(n)));
 };
 
 export const isChangedBnrdRoute = (route: string) => {
-  const routeNum = parseInt(route, 10);
-  return BNRD[1].changed_routes.includes(routeNum) || BNRD[2].changed_routes.includes(routeNum);
+  const nums = routeNums(route);
+  return Object.values(BNRD).some((phase) => nums.some((n) => phase.changed_routes.includes(n)));
 };
 
 export const isLegacyBnrdRoute = (route: string) => {
-  return BNRD[1].legacy_routes.includes(route) || BNRD[2].legacy_routes.includes(route);
+  return Object.values(BNRD).some((phase) => phase.legacy_routes.includes(route));
 };
 
 export const isBNRDRoute = (route: string) => {
