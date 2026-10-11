@@ -5,7 +5,7 @@ and API documentation via `chalice-spec`.
 """
 
 from datetime import date
-from typing import List, Dict, Optional, Union, Any
+from typing import List, Dict, Literal, Optional, Union, Any
 from pydantic import BaseModel, ConfigDict
 
 #################################################
@@ -53,12 +53,19 @@ class BusTripMetricsParams(BaseModel):
         end_date: End of date range (YYYY-MM-DD).
         route: Bus route_id (e.g. `1`, `57`, `111`).
         agg: Optional aggregation level (`daily`, `weekly`, `monthly`); defaults to `daily`.
+        time_band: Optional time of day. Each figure is then that band's alone, and daily rows
+            drop `median_speed_mph`/`mean_speed_mph`, which have no per-band version. Omit it for
+            the whole day.
+        day_type: Optional. Keeps only business days, or only weekends and MBTA holidays. Omit it
+            for every day.
     """
 
     start_date: Union[str, date]
     end_date: Union[str, date]
     route: str
     agg: Optional[str] = None
+    time_band: Optional[Literal["early_am", "am_peak", "midday", "pm_peak", "evening", "late_night"]] = None
+    day_type: Optional[Literal["business_day", "weekend_or_holiday"]] = None
 
 
 class BusSpeedLeaderboardParams(BaseModel):

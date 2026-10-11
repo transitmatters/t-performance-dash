@@ -159,6 +159,18 @@ class TestBusTripMetricsValidation:
         result = client.http.get("/api/bustripmetrics?route=1")
         assert result.status_code == 400
 
+    @pytest.mark.parametrize("param", ["time_band=all_day", "time_band=rush", "day_type=weekday"])
+    def test_unknown_filter_returns_400(self, client, param):
+        result = client.http.get(f"/api/bustripmetrics?start_date=2024-01-01&end_date=2024-01-31&route=1&{param}")
+        assert result.status_code == 400
+        assert param.split("=")[0] in json.loads(result.body)["Message"]
+
+    def test_known_filters_accepted(self, client):
+        result = client.http.get(
+            "/api/bustripmetrics?start_date=2024-01-01&end_date=2024-01-31&route=1&time_band=am_peak&day_type=business_day"
+        )
+        assert result.status_code == 200
+
 
 class TestBusSpeedLeaderboardValidation:
     def test_missing_all_returns_400(self, client):
