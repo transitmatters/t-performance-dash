@@ -1,4 +1,4 @@
-import { flatten } from 'lodash';
+import { flatten } from '@lodash-utils';
 import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import type { Line, LineRouteId } from '../../../common/types/lines';
 

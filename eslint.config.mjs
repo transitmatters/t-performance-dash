@@ -66,13 +66,18 @@ export default typescriptEslint.config(
       'import-x/resolver': {
         typescript: true,
       },
+      // tsconfig path aliases that stand in for packages; they sort with the package imports.
+      'import-x/internal-regex': '^@(chartjs-components|chartjs-utils|lodash-utils)$',
     },
     rules: {
       'import-x/named': 'warn',
       'import-x/no-unresolved': 'warn',
       'import-x/no-self-import': 'error',
       'import-x/no-default-export': 'warn',
-      'import-x/order': 'error',
+      'import-x/order': [
+        'error',
+        { groups: ['builtin', ['external', 'internal'], 'parent', 'sibling', 'index'] },
+      ],
       'import-x/newline-after-import': 'error',
       // import-x/no-unused-modules is incompatible with flat config
       // See: https://github.com/un-ts/eslint-plugin-import-x/issues/75
@@ -129,6 +134,30 @@ export default typescriptEslint.config(
         },
       ],
       eqeqeq: ['error', 'smart'],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            { name: 'chart.js', message: "Import from '@chartjs-utils'.", allowTypeImports: true },
+            { name: 'react-chartjs-2', message: "Import from '@chartjs-components'." },
+            { name: 'lodash', message: "Import from '@lodash-utils'." },
+          ],
+          patterns: [{ group: ['lodash/*'], message: "Import from '@lodash-utils'." }],
+        },
+      ],
+    },
+  },
+
+  // Override: the wrappers behind the @chartjs-* and @lodash-utils aliases
+  {
+    files: [
+      'common/components/charts/chartjs.ts',
+      'common/utils/chartjs.ts',
+      'common/utils/setupCharts.ts',
+      'common/utils/lodash.ts',
+    ],
+    rules: {
+      'no-restricted-imports': 'off',
     },
   },
 
@@ -157,5 +186,5 @@ export default typescriptEslint.config(
       'react/prop-types': 'off',
       'import-x/max-dependencies': 'off',
     },
-  },
+  }
 );

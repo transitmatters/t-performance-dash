@@ -1,7 +1,7 @@
 import type { ParsedUrlQuery } from 'querystring';
-import { isEqual, pickBy, startCase, toLower } from 'lodash';
 import { useLocation, useMatches, useRouter, useSearch } from '@tanstack/react-router';
 import { useCallback } from 'react';
+import { isEqual, pickBy, startCase, toLower } from '@lodash-utils';
 import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route, Tab } from '../types/router';

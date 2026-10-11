@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import { Chart, Filler, Legend } from 'chart.js';
+import { Chart, Filler, Legend } from '@chartjs-utils';
 import Color from 'color';
-import { Line } from 'react-chartjs-2';
+import { Line } from '@chartjs-components';
 
 Chart.register(Filler, Legend);
 
