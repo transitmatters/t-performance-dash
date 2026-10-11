@@ -60,6 +60,8 @@ def get_delivered_service_times(response_dicts: List[Dict[str, any]], agg: AggTy
     Returns:
         Dictionary mapping date strings to delivered service hours.
     """
+    if not response_dicts:
+        return {}
     df = pd.DataFrame.from_records(response_dicts)
     service_hours = {}
     # unique service_dates
