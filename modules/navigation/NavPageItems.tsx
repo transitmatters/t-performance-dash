@@ -1,6 +1,6 @@
 import React from 'react';
-import Link from 'next/link';
 import classNames from 'classnames';
+import { Link } from '../../common/components/general/Link';
 import type { PageMetadata } from '../../common/constants/pages';
 import { PAGES } from '../../common/constants/pages';
 import { SidebarMenuSubButton, SidebarMenuSubItem } from '../../common/components/ui/sidebar';

@@ -123,13 +123,3 @@
 .alerts .incident-section {
     background: var(--incident-color);
 }
-
-.tippy-box {
-    background-color: var(--incident-tooltip-color);
-    box-shadow: var(--global-shadow);
-    color: black;
-}
-
-.tippy-box .tippy-arrow {
-    color: var(--incident-tooltip-color);
-}

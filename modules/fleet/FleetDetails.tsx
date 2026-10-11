@@ -4,7 +4,6 @@ import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
@@ -82,5 +81,3 @@ export function FleetDetails() {
     </PageWrapper>
   );
 }
-
-FleetDetails.Layout = Layout.Dashboard;

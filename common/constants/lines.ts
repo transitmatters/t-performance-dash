@@ -68,27 +68,40 @@ export const LINE_OBJECTS: LineObject = {
 };
 
 /**
- * MBTA's "Key Bus Routes" -- the system's highest-ridership routes, held to more frequent
- * service standards. These are raw GTFS route_ids, the granularity bus trip-metrics data
+ * MBTA's "Frequent Bus Routes" -- routes held to the frequent-service standard under the Bus
+ * Network Redesign. These are raw GTFS route_ids, the granularity bus trip-metrics data
  * (e.g. the speed leaderboard) is keyed by -- NOT the dashboard's curated BusRoute labels,
- * which group some of these into composites (114/116/117 rather than 114, 116, 117).
+ * which group some routes into composites. SL2 appears under its GTFS id, '742'.
  */
-export const KEY_BUS_ROUTE_IDS: string[] = [
-  '1',
-  '15',
-  '22',
-  '23',
-  '28',
-  '32',
-  '39',
-  '57',
-  '66',
-  '71',
-  '73',
-  '77',
+export const FREQUENT_BUS_ROUTE_IDS: string[] = [
+  '11',
+  '14',
+  '24',
+  '30',
+  '40',
+  '50',
+  '60',
+  '62',
+  '64',
+  '67',
+  '76',
+  '78',
+  '85',
+  '93',
+  '99',
+  '110',
   '111',
-  '116',
-  '117',
+  '112',
+  '222',
+  '236',
+  '245',
+  '411',
+  '428',
+  '429',
+  '430',
+  '441',
+  '442',
+  '742',
 ];
 
 /**

@@ -14,8 +14,8 @@ import { Skeleton } from '../../../common/components/ui/skeleton';
 import { useAccessibilityAlertsData } from '../../../common/api/hooks/alerts';
 import { getRelevantAlerts } from '../../commute/alerts/AlertBox';
 import { AlertEffect } from '../../../common/types/alerts';
-import EscalatorIcon from '../../../public/Icons/EscalatorIcon.svg';
-import ElevatorIcon from '../../../public/Icons/ElevatorIcon.svg';
+import EscalatorIcon from '../../../public/Icons/EscalatorIcon.svg?react';
+import ElevatorIcon from '../../../public/Icons/ElevatorIcon.svg?react';
 import { rtStations } from '../../../common/constants/stations';
 import type { LineShort } from '../../../common/types/lines';
 

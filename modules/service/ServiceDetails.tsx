@@ -5,7 +5,6 @@ import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useScheduledService, useServiceHours } from '../../common/api/hooks/service';
 import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
-import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
@@ -166,5 +165,3 @@ export function ServiceDetails() {
     </PageWrapper>
   );
 }
-
-ServiceDetails.Layout = Layout.Dashboard;

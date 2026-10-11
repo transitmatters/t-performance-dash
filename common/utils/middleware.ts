@@ -1,6 +1,5 @@
-import type { ReadonlyURLSearchParams } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/router';
+import type { ParsedLocation } from '@tanstack/react-router';
+import { redirect } from '@tanstack/react-router';
 import {
   type CommuterRailRoute,
   type BusRoute,
@@ -31,7 +30,7 @@ const getLineOrRoute = (
     return { type: 'ferry', value: lineString as FerryRoute };
 };
 
-export const configToQueryParams = (search: ReadonlyURLSearchParams | URLSearchParams) => {
+export const configToQueryParams = (search: URLSearchParams) => {
   if (!search.has('config')) return;
 
   const configArr = Array.isArray(search.get('config'))
@@ -91,36 +90,42 @@ export const configToQueryParams = (search: ReadonlyURLSearchParams | URLSearchP
   };
 };
 
-export const useRewriteV3Route = () => {
-  const search = useSearchParams();
+/** Where a v3 dashboard URL lives now, or undefined if this URL isn't a v3 one. */
+export const getV3RedirectHref = (pathname: string, search: URLSearchParams) => {
   const resultParams = configToQueryParams(search);
-  const router = useRouter();
 
   // handle v3 slowzones route
-  if (router.asPath.startsWith('/slowzones')) {
-    // `search` is read-only, so we have to clone it to modify
+  if (pathname.startsWith('/slowzones')) {
+    // Clone so the caller's params stay untouched.
     const newParams = new URLSearchParams(search.toString());
     // v3 permitted a slowzones view with no end date—we splice in an end date of today
     //   if needed
     if (newParams.has('startDate') && !newParams.has('endDate')) {
       newParams.set('endDate', TODAY_STRING);
     }
-    return router.push(`/system/slowzones/?${newParams.toString()}`);
+    return `/system/slowzones/?${newParams.toString()}`;
   }
 
   // handle v3 rapid transit route
-  if (resultParams && router.asPath.startsWith('/rapidtransit')) {
+  if (resultParams && pathname.startsWith('/rapidtransit')) {
     const { line, queryParams, tripSection } = resultParams;
-    return router.push(`/${line}/trips/${tripSection}/?${queryParams.toString()}`);
+    return `/${line}/trips/${tripSection}/?${queryParams.toString()}`;
   }
 
   // handle v3 bus route
   if (search.toString()) {
-    if (resultParams && router.asPath.startsWith('/bus')) {
+    if (resultParams && pathname.startsWith('/bus')) {
       const { queryParams, tripSection } = resultParams;
-      return router.push(`/bus/trips/${tripSection}/?${queryParams.toString()}`);
-    } else if (router.asPath.startsWith('/bus')) {
-      router.push('/bus/trips/single/?busRoute=1');
+      return `/bus/trips/${tripSection}/?${queryParams.toString()}`;
+    } else if (pathname.startsWith('/bus')) {
+      return '/bus/trips/single/?busRoute=1';
     }
   }
+};
+
+/** Route `beforeLoad` hook: forwards v3 URLs before the page renders. */
+export const redirectV3Route = ({ location }: { location: ParsedLocation }) => {
+  const href = getV3RedirectHref(location.pathname, new URLSearchParams(location.searchStr));
+  // Replace rather than push, so Back doesn't land on the v3 URL and bounce forward again.
+  if (href) throw redirect({ href, replace: true } as Parameters<typeof redirect>[0]);
 };

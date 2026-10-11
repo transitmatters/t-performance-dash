@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
-import Link from 'next/link';
-import type { LinkProps } from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { Link } from '../general/Link';
+import type { Href } from '../general/Link';
 import type { Location } from '../../types/charts';
 import type { Line } from '../../types/lines';
 import { useDelimitatedRoute, useGenerateHref, useHandleConfigStore } from '../../utils/router';
@@ -25,7 +25,7 @@ interface WidgetTitle {
   /** When set, the title becomes a chevron link to this page, colored by line — the homescreen card style. */
   tab?: Page;
   /** A pre-resolved chevron-link href, for targets `tab` can't express (e.g. a route/date-specific link). Takes precedence over `tab`. */
-  titleHref?: null | LinkProps['href'];
+  titleHref?: null | Href;
 }
 
 /** Type comes from CardTitle; only the wrapping behaviour is ours. */

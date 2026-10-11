@@ -1,6 +1,6 @@
 import React from 'react';
-import Link from 'next/link';
 import classNames from 'classnames';
+import { Link } from '../general/Link';
 import { TRIP_PAGES } from '../../constants/pages';
 import { LINE_COLORS, LINE_COLORS_DARK } from '../../constants/colors';
 import {

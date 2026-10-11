@@ -6,6 +6,7 @@ import { useFilteredAllSlow, useFormatSegments } from '../../common/utils/slowZo
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { LineSegments } from './charts/LineSegments';
+import { getLineSegmentsContainerStyle } from './constants/chartConfig';
 
 interface SlowZonesSegmentsWrapper {
   data: SlowZoneResponse[];
@@ -35,11 +36,7 @@ export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
       <div className="-mx-3 overflow-x-auto overflow-y-hidden px-3 sm:mx-0 sm:px-0">
         <div
           className="relative"
-          style={
-            isMobile
-              ? { width: stationPairs.size * 64, height: 480 }
-              : { height: stationPairs.size * 40 }
-          }
+          style={getLineSegmentsContainerStyle(stationPairs.size, isMobile)}
         >
           <LineSegments
             data={allSlowGraphData}

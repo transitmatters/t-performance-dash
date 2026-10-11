@@ -1,6 +1,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
-import Link from 'next/link';
+import { Link } from '../general/Link';
 import { useDelimitatedRoute } from '../../utils/router';
 import { BUS_MAX_DAY, LAMP_BUS_START_DAY } from '../../constants/dates';
 

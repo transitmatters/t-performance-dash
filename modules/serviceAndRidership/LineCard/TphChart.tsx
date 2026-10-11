@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Chart, Filler, Legend } from 'chart.js';
-import Color from 'chartjs-color';
+import Color from 'color';
 import { Line } from 'react-chartjs-2';
 
 Chart.register(Filler, Legend);
@@ -21,7 +21,7 @@ type Props = {
 
 export const TphChart = (props: Props) => {
   const { color, baselineTph, currentTph, highestTph } = props;
-  const currentColor = Color(color).alpha(0.4).rgbaString();
+  const currentColor = Color(color).alpha(0.4).rgb().string();
 
   const data = useMemo(
     () => ({

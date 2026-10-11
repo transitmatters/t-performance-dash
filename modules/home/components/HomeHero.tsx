@@ -1,6 +1,5 @@
 import React from 'react';
 import dayjs from 'dayjs';
-import Image from 'next/image';
 import { RollingNumber } from '../../../common/components/motion/RollingNumber';
 import { cn } from '../../../common/utils/cn';
 import { trendSentiment } from '../compute/series';
@@ -56,20 +55,20 @@ export const HomeTitle: React.FC<{ generatedAt?: string }> = ({ generatedAt }) =
     <div className="flex flex-col gap-1">
       <h1 className="flex flex-wrap items-center gap-x-3 gap-y-1">
         {/* The charcoal wordmark disappears on the dark background, so swap in the white one. */}
-        <Image
+        <img
           src="/Logo_wordmark.png"
           alt="TransitMatters"
           width={3204}
           height={301}
-          priority
+          fetchPriority="high"
           className="h-5 w-auto sm:h-6 dark:hidden"
         />
-        <Image
+        <img
           src="/Logo_wordmark_white.png"
           alt="TransitMatters"
           width={3204}
           height={301}
-          priority
+          fetchPriority="high"
           className="hidden h-5 w-auto sm:h-6 dark:block"
         />
         <span className="text-muted-foreground text-sm font-semibold tracking-widest uppercase sm:text-base">

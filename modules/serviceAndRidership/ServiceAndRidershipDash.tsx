@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useServiceAndRidershipDashboard } from '../../common/api/hooks/serviceAndRidership';
 
@@ -22,5 +21,3 @@ export function ServiceAndRidershipDash() {
     </PageWrapper>
   );
 }
-
-ServiceAndRidershipDash.Layout = Layout.Dashboard;

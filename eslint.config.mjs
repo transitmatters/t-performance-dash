@@ -6,7 +6,6 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import unusedImports from 'eslint-plugin-unused-imports';
 import prettier from 'eslint-plugin-prettier';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
 import globals from 'globals';
 
 export default typescriptEslint.config(
@@ -15,13 +14,20 @@ export default typescriptEslint.config(
     // *.mjs alongside *.js: public/maplibre-gl-worker.mjs and its siblings are vendored,
     // minified copies (scripts/copy-maplibre-worker.js), not source -- and postinstall
     // recreates them before every CI lint run, not just in a local checkout.
-    ignores: ['node_modules/**/*', 'build/**/*', 'out/**/*', '.next/**/*', '**/*.js', '**/*.mjs'],
+    ignores: [
+      'node_modules/**/*',
+      'build/**/*',
+      'out/**/*',
+      'storybook-static/**/*',
+      'routeTree.gen.ts',
+      '**/*.js',
+      '**/*.mjs',
+    ],
   },
 
   // Base configs
   js.configs.recommended,
   ...typescriptEslint.configs.recommended,
-  ...nextCoreWebVitals,
   eslintConfigPrettier,
 
   // Main config
@@ -126,9 +132,9 @@ export default typescriptEslint.config(
     },
   },
 
-  // Override: stories, pages, middleware — allow default exports
+  // Override: stories and tool configs — allow default exports
   {
-    files: ['**/*.stories.tsx', 'pages/**/*.tsx', 'middleware.ts'],
+    files: ['**/*.stories.tsx', 'vite.config.ts'],
     rules: {
       'import-x/no-default-export': 'off',
     },

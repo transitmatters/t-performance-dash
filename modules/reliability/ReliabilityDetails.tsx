@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useReliabilityData } from '../../common/api/hooks/reliability';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
-import { Layout } from '../../common/layouts/layoutTypes';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { DataNotes } from '../../common/components/notices/DataNotes';
 import { COMMUTER_RAIL_LINE_NAMES } from '../../common/types/lines';
@@ -72,5 +71,3 @@ export function ReliabilityDetails() {
     </PageWrapper>
   );
 }
-
-ReliabilityDetails.Layout = Layout.Dashboard;

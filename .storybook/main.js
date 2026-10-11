@@ -1,13 +1,13 @@
-module.exports = {
+export default {
   stories: [
-    '../@(common|modules|pages|src)/**/*.stories.mdx',
-    '../@(common|modules|pages|src)/**/*.stories.@(js|jsx|ts|tsx)',
+    '../@(common|modules|routes)/**/*.stories.mdx',
+    '../@(common|modules|routes)/**/*.stories.@(js|jsx|ts|tsx)',
   ],
 
   addons: ['@storybook/addon-links', '@storybook/addon-docs'],
 
   framework: {
-    name: '@storybook/nextjs',
+    name: '@storybook/react-vite',
     options: {},
   }
 };

@@ -3,7 +3,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { Layout } from '../../common/layouts/layoutTypes';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useAlertDelays } from '../../common/api/hooks/delays';
@@ -191,5 +190,3 @@ export function DelaysDetails() {
     </PageWrapper>
   );
 }
-
-DelaysDetails.Layout = Layout.Dashboard;

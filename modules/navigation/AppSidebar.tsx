@@ -1,6 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import { Link } from '../../common/components/general/Link';
 import {
   Sidebar,
   SidebarContent,
@@ -8,6 +7,7 @@ import {
   SidebarHeader,
   useSidebar,
 } from '../../common/components/ui/sidebar';
+import { isBetaHost } from '../../common/utils/constants';
 import { NavLines } from './NavLines';
 import { NavSystem } from './NavSystem';
 import { ExtraMenuItems } from './ExtraMenuItems';
@@ -23,12 +23,12 @@ export const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...
     <Sidebar collapsible="offcanvas" className="border-sidebar-border" {...props}>
       <SidebarHeader className="overflow-hidden px-3 py-3">
         <Link href="/" onClick={close} className="flex h-6 items-center">
-          <Image
-            src="/TMLogo.png"
+          <img
+            src="/TMLogo.svg"
             alt="TransitMatters"
             width={3189}
             height={299}
-            priority
+            fetchPriority="high"
             className="h-5 w-auto"
           />
         </Link>
@@ -38,6 +38,11 @@ export const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...
         <NavLines close={close} />
       </SidebarContent>
       <SidebarFooter>
+        {isBetaHost() && (
+          <p className="text-sidebar-foreground/60 px-2 text-xs">
+            Beta: usage data collected via Datadog
+          </p>
+        )}
         <ExtraMenuItems />
       </SidebarFooter>
     </Sidebar>

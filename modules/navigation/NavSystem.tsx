@@ -1,7 +1,7 @@
 import React from 'react';
-import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faUsers, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { Link } from '../../common/components/general/Link';
 import {
   SidebarGroup,
   SidebarGroupLabel,

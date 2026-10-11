@@ -24,7 +24,7 @@ TransitMatters Data Dashboard is a data visualization platform for Boston MBTA t
 
 ## Tech Stack
 
-- **Frontend**: Next.js 16 + React 19 + TypeScript
+- **Frontend**: Vite + React 19 + TanStack Router + TypeScript (static SPA, prerendered HTML per route)
 - **State Management**: Zustand + TanStack React Query
 - **Styling**: Tailwind CSS
 - **Charts**: Chart.js
@@ -35,7 +35,7 @@ TransitMatters Data Dashboard is a data visualization platform for Boston MBTA t
 ## Project Structure
 
 ```
-pages/              # Next.js pages (routing)
+routes/             # TanStack Router file routes (routeTree.gen.ts is generated)
 modules/            # Feature modules (alerts, delays, headways, slowzones, etc.)
 common/
   api/              # API client and hooks
@@ -96,7 +96,9 @@ Optional:
 - **Module-based organization**: Each feature (alerts, delays, slowzones) is self-contained in `modules/`
 - **API hooks**: Use hooks from `common/api/hooks/` for data fetching with React Query
 - **State stores**: Zustand stores in `common/state/` for date selection, station selection
-- **Layouts**: Pages use layout composition via `Layout` property
+- **Layouts**: Routes pick a secondary layout via `staticData: { layout: Layout.Dashboard }`; `routes/__root.tsx` applies it
+- **New pages**: add the route file, and for `/$line/...` pages add the page's lines to `common/constants/staticRoutes.ts` (drives 404s and the per-route prerendered HTML)
+- **Links/URL state**: use `common/components/general/Link` and the hooks in `common/utils/router.tsx`; query params stay plain strings
 
 ### Backend
 

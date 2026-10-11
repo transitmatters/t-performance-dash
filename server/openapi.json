@@ -976,7 +976,7 @@
         "type": "object"
       },
       "BusTripMetricsParams": {
-        "description": "Parameters for the `/api/bustripmetrics` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    route: Bus route_id (e.g. `1`, `57`, `111`).\n    agg: Optional aggregation level (`daily`, `weekly`, `monthly`); defaults to `daily`.",
+        "description": "Parameters for the `/api/bustripmetrics` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    route: Bus route_id (e.g. `1`, `57`, `111`).\n    agg: Optional aggregation level (`daily`, `weekly`, `monthly`); defaults to `daily`.\n    time_band: Optional time of day. Each figure is then that band's alone, and daily rows\n        drop `median_speed_mph`/`mean_speed_mph`, which have no per-band version. Omit it for\n        the whole day.\n    day_type: Optional. Keeps only business days, or only weekends and MBTA holidays. Omit it\n        for every day.",
         "properties": {
           "start_date": {
             "anyOf": [
@@ -1017,6 +1017,42 @@
             ],
             "default": null,
             "title": "Agg"
+          },
+          "time_band": {
+            "anyOf": [
+              {
+                "enum": [
+                  "early_am",
+                  "am_peak",
+                  "midday",
+                  "pm_peak",
+                  "evening",
+                  "late_night"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Time Band"
+          },
+          "day_type": {
+            "anyOf": [
+              {
+                "enum": [
+                  "business_day",
+                  "weekend_or_holiday"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Day Type"
           }
         },
         "required": [

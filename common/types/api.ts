@@ -1,3 +1,4 @@
+import type { DayType, TimeBand } from '../../modules/busspeedmap/types';
 import type { AggType } from '../../modules/speed/constants/speeds';
 import type { ServiceHours, SpeedRestriction } from './dataPoints';
 import type { Line, LineRouteId } from './lines';
@@ -57,6 +58,10 @@ export type FetchBusTripMetricsOptions = {
   end_date?: string;
   route?: string;
   agg?: AggType;
+  /** One band's figures in place of the whole day's. Left off for "All day". */
+  time_band?: Exclude<TimeBand, 'all_day'>;
+  /** Only business days, or only weekends and MBTA holidays. Left off for every day. */
+  day_type?: DayType;
 };
 
 export enum FetchBusTripMetricsParams {
@@ -64,6 +69,8 @@ export enum FetchBusTripMetricsParams {
   endDate = 'end_date',
   route = 'route',
   agg = 'agg',
+  timeBand = 'time_band',
+  dayType = 'day_type',
 }
 
 export type FetchBusSpeedLeaderboardOptions = {

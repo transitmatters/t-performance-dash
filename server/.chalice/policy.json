@@ -23,6 +23,14 @@
       ]
     },
     {
+      "Action": ["s3:GetObject"],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:s3:::dashboard.transitmatters.org/og-cards.json",
+        "arn:aws:s3:::dashboard-beta.labs.transitmatters.org/og-cards.json"
+      ]
+    },
+    {
       "Action": ["dynamodb:Query"],
       "Effect": "Allow",
       "Resource": [
@@ -51,7 +59,9 @@
       "Action": ["s3:PutObject"],
       "Effect": "Allow",
       "Resource": [
-        "arn:aws:s3:::tm-mbta-performance/bus-speed-leaderboard/*"
+        "arn:aws:s3:::tm-mbta-performance/bus-speed-leaderboard/*",
+        "arn:aws:s3:::dashboard.transitmatters.org/static/og/*",
+        "arn:aws:s3:::dashboard-beta.labs.transitmatters.org/static/og/*"
       ]
     }
   ]

@@ -19,13 +19,13 @@ const LEADERBOARD_FETCH_LIMIT = 200;
 interface BusSpeedRouteLeaderboardSectionProps {
   date: string | undefined;
   period: Period;
-  keyRoutesOnly: boolean;
+  frequentRoutesOnly: boolean;
 }
 
 export const BusSpeedRouteLeaderboardSection: React.FC<BusSpeedRouteLeaderboardSectionProps> = ({
   date,
   period,
-  keyRoutesOnly,
+  frequentRoutesOnly,
 }) => {
   const [showAll, setShowAll] = useState(false);
 
@@ -39,7 +39,7 @@ export const BusSpeedRouteLeaderboardSection: React.FC<BusSpeedRouteLeaderboardS
   if (leaderboard.isError || !leaderboard.data) return <ChartPlaceHolder query={leaderboard} />;
 
   const grouped = groupLeaderboardByBusRoute(leaderboard.data, dateRange.end_date);
-  const ranked = keyRoutesOnly ? grouped.filter((entry) => entry.isKeyRoute) : grouped;
+  const ranked = frequentRoutesOnly ? grouped.filter((entry) => entry.isFrequentRoute) : grouped;
   if (ranked.length < 1) return <NoDataNotice isLineMetric />;
 
   const hasMore = ranked.length > LEADERBOARD_PREVIEW_SIZE;

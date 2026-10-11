@@ -9,8 +9,11 @@
 // The fix is to serve fixed copies ourselves and point maplibre at them with
 // `setWorkerUrl()` (see BusSpeedMapView.tsx). This script vends those copies into public/ so
 // they're never bundled or transformed, matching how the worker expects to load itself.
-const { copyFileSync, existsSync, mkdirSync } = require('fs');
-const { join } = require('path');
+import { copyFileSync, existsSync, mkdirSync } from 'fs';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const SOURCE_DIR = join(__dirname, '..', 'node_modules', 'maplibre-gl', 'dist');
 const DEST_DIR = join(__dirname, '..', 'public');

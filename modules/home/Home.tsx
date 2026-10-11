@@ -1,7 +1,6 @@
 import React from 'react';
-import Link from 'next/link';
+import { Link } from '../../common/components/general/Link';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
-import { Layout } from '../../common/layouts/layoutTypes';
 import { Card, CardContent, CardHeader, CardTitle } from '../../common/components/ui/card';
 import { Skeleton } from '../../common/components/ui/skeleton';
 import { LINE_OBJECTS } from '../../common/constants/lines';
@@ -69,5 +68,3 @@ export function Home() {
     </PageWrapper>
   );
 }
-
-Home.Layout = Layout.Landing;

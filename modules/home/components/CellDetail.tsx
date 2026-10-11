@@ -1,6 +1,6 @@
 import React from 'react';
-import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { Link } from '../../../common/components/general/Link';
 import { CR_ELECTRIFIED_THRESHOLDS, METRICS } from '../config';
 import { STATUS_LABELS } from '../copy';
 import { formatCell, formatThresholds, formatTrend, STATUS_TONE } from '../format';

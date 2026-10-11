@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
+import { Link } from '../../../common/components/general/Link';
 import {
   Card,
   CardContent,

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { KEY_BUS_ROUTE_IDS } from '../../common/constants/lines';
+import { FREQUENT_BUS_ROUTE_IDS } from '../../common/constants/lines';
 import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
 import { getBusRouteGroup } from '../../common/utils/stations';
 import type {
@@ -81,11 +81,11 @@ export const selectSegmentLeaderboardEntries = (
 };
 
 export interface GroupedBusSpeedLeaderboardEntry extends BusSpeedLeaderboardEntry {
-  /** Whether any raw route_id behind this curated label is a Key Bus Route. */
-  isKeyRoute: boolean;
+  /** Whether any raw route_id behind this curated label is a Frequent Bus Route. */
+  isFrequentRoute: boolean;
 }
 
-const KEY_BUS_ROUTES = new Set(KEY_BUS_ROUTE_IDS);
+const FREQUENT_BUS_ROUTES = new Set(FREQUENT_BUS_ROUTE_IDS);
 
 /**
  * The API ranks raw GTFS route_ids, but the rest of the dashboard shows curated BusRoute labels
@@ -107,13 +107,13 @@ export const groupLeaderboardByBusRoute = (
       total_time: 0,
       count: 0,
       n_traversals: 0,
-      isKeyRoute: false,
+      isFrequentRoute: false,
     };
     group.miles_covered += entry.miles_covered;
     group.total_time += entry.total_time;
     group.count += entry.count;
     group.n_traversals += entry.n_traversals;
-    group.isKeyRoute ||= KEY_BUS_ROUTES.has(entry.route);
+    group.isFrequentRoute ||= FREQUENT_BUS_ROUTES.has(entry.route);
     groups.set(route, group);
   }
   const mph = (entry: BusSpeedLeaderboardEntry) => entry.miles_covered / (entry.total_time / 3600);

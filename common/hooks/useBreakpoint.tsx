@@ -1,7 +1,7 @@
 import { useMediaQuery } from 'react-responsive';
-import { theme } from '../../tailwind.config.js';
+import tailwindConfig from '../../tailwind.config.js';
 
-const breakpoints = theme.screens;
+const breakpoints = tailwindConfig.theme.screens;
 
 export function useBreakpoint(breakpointKey: string) {
   return useMediaQuery({

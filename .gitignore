@@ -44,8 +44,7 @@ yarn-error.log*
 *.pyc
 
 
-# next.js
-/.next/
+# build output
 /out/
 
 # vercel
@@ -53,7 +52,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
 
 # storybook
 storybook-static
