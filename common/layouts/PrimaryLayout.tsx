@@ -1,22 +1,13 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React from 'react';
 
+import { queryClient } from '../api/queryClient';
 import { TooltipProvider } from '@/common/components/ui/tooltip';
 
 interface LayoutProps {
   children?: React.ReactNode;
 }
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 0,
-      staleTime: 10000, // 10 seconds
-    },
-  },
-});
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (

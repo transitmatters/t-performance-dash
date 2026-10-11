@@ -1,6 +1,7 @@
 import type { HistoricalBaselines } from '../../../common/types/baselines';
 import type {
   DeliveredTripMetrics,
+  DeliveredTripMetricsBus,
   SlowZoneDayTotalsResponse,
 } from '../../../common/types/dataPoints';
 import type { Line } from '../../../common/types/lines';
@@ -11,6 +12,7 @@ import {
   CR_ELECTRIFIED_THRESHOLDS,
   FREQUENCY_GOALS,
   FREQUENT_BUS_LINE_IDS,
+  HERO,
   IN_SERVICE_SHARE,
   METRICS,
   METRIC_ORDER,
@@ -21,6 +23,7 @@ import {
 import { FLEET_TYPES, getFleetMixValue, hasFleetMix } from '../../fleet/constants/fleetTypes';
 import type { RowConfig, SubwayLine } from '../config';
 import type { Cell, HeroStat, HomeData, MetricId, Row } from '../types';
+import { busFleetCell } from './busFleet';
 import {
   baselineFor,
   frequencyCell,
@@ -41,6 +44,8 @@ export interface HomeSources {
   baselines: HistoricalBaselines | null;
   delayTotals: SlowZoneDayTotalsResponse;
   serviceAndRidership: DashboardData;
+  /** Daily system-wide bus fleet rows; null when they couldn't be loaded. */
+  busFleet: DeliveredTripMetricsBus[] | null;
   now: Date;
 }
 
@@ -314,7 +319,7 @@ const buildCells = (row: RowConfig, src: HomeSources): Partial<Record<MetricId, 
           { now, asOf, href: row.href }
         ),
         speed: naCell('speed', 'mph', COMING_SOON),
-        fleet: naCell('fleet', 'years', COMING_SOON),
+        fleet: busFleetCell(src.busFleet, { now, href: row.href }),
       };
     }
     case 'ferry':
@@ -374,53 +379,26 @@ const buildHero = (src: HomeSources): HeroStat[] => {
   const crWeekday = middayHeadway(crLines, 'weekday');
   const crSaturday = middayHeadway(crLines, 'saturday');
 
-  return [
-    {
-      id: 'subwayFrequency',
-      label: 'Subway',
-      value: subway,
-      unit: 'pct',
-      detail: `of service hours at every ${FREQUENCY_GOALS.subway} min or better`,
-      direction: 'higher',
-    },
-    {
-      id: 'service',
-      label: 'Scheduled service',
+  const values: Record<string, Pick<HeroStat, 'value' | 'trend' | 'note'>> = {
+    subwayFrequency: { value: subway },
+    service: {
       value: serviceBest ? median(serviceWindow.values) / serviceBest : null,
-      unit: 'pct',
-      detail: 'of the most trips ever scheduled',
-      direction: 'higher',
       trend: trendOf(serviceWindow),
     },
-    {
-      id: 'slowZones',
-      label: 'Slow zone delay',
+    slowZones: {
       value: slowZones.values.length ? mean(slowZones.values.slice(-1)) / 60 : null,
-      unit: 'minutes',
-      detail: 'added per day across the subway, last week',
-      direction: 'lower',
       trend: trendOf(slowZones),
     },
-    {
-      id: 'frequentBus',
-      label: 'Frequent Bus',
-      value: frequent,
-      unit: 'pct',
-      detail: `of service hours at every ${FREQUENCY_GOALS.frequentBus} min or better`,
-      direction: 'higher',
-    },
-    {
-      id: 'crHeadway',
-      label: 'Commuter Rail midday',
+    frequentBus: { value: frequent },
+    crHeadway: {
       value: crWeekday,
-      unit: 'minutes',
-      detail:
-        crSaturday !== null
-          ? `between trains on weekdays, ${Math.round(crSaturday)} on Saturdays`
-          : 'between trains on weekdays',
-      direction: 'lower',
+      note: crSaturday !== null ? `${Math.round(crSaturday)} min on Saturdays` : undefined,
     },
-  ];
+  };
+  return HERO.map((config) => {
+    const { value = null, trend, note } = values[config.id] ?? {};
+    return { ...config, value, trend, note };
+  });
 };
 
 export const buildHome = (src: HomeSources): HomeData => {

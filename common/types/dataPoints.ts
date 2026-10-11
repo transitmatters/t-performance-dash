@@ -128,6 +128,11 @@ export interface DeliveredTripMetricsBus extends SpeedTripMetrics {
   // week or month.
   median_speed_mph?: number;
   mean_speed_mph?: number;
+  // Fleet fields, daily rows only (the `fleet_mix_*` shares are on SpeedTripMetrics). Route `all`
+  // is the whole system and carries only these.
+  fleet_trips?: number;
+  pct_battery_trips?: number;
+  avg_bus_age?: number;
 }
 
 /**

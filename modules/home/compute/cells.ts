@@ -1,5 +1,9 @@
 import dayjs from 'dayjs';
-import type { BaselineMetric, HistoricalBaselines } from '../../../common/types/baselines';
+import type {
+  BaselineMetric,
+  BaselineSeries,
+  HistoricalBaselines,
+} from '../../../common/types/baselines';
 import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
 import type { LineData } from '../../serviceAndRidership/types';
 import { METRICS, MIN_WEEKS } from '../config';
@@ -12,7 +16,8 @@ import { statusFor } from './status';
 interface Baseline {
   value: number | null;
   label?: string;
-  heldBack?: string;
+  /** Why there's no baseline, when `value` is null. */
+  note?: string;
 }
 
 const HELD_BACK_NOTES: Record<string, string> = {
@@ -21,15 +26,39 @@ const HELD_BACK_NOTES: Record<string, string> = {
   notComparable: 'No baseline yet: service was counted differently before.',
 };
 
+const missingBaselineNote = (
+  baselines: HistoricalBaselines | null,
+  series: (BaselineSeries | undefined)[]
+) => {
+  const heldBack = series.find((s) => s?.heldBack)?.heldBack;
+  if (heldBack) {
+    const reason = baselines?.heldBackReasons?.[heldBack];
+    return (
+      HELD_BACK_NOTES[heldBack] ?? (reason ? `No baseline yet. ${reason}` : 'No baseline yet.')
+    );
+  }
+  const short = series.find((s) => s?.insufficientHistory && s.historyWindow);
+  if (baselines && short?.historyWindow) {
+    const { start, end } = short.historyWindow;
+    const years = baselines.lookbackYears ?? 3;
+    if (start > end) {
+      return `No baseline yet: records start ${dayjs(start).format('MMM YYYY')}, and baselines only use weeks at least ${years} years old.`;
+    }
+    if (baselines.minHistoryWeeks && short.historyWeeks !== undefined) {
+      return `No baseline yet: ${short.historyWeeks} weeks of records are at least ${years} years old, and a baseline needs ${baselines.minHistoryWeeks}.`;
+    }
+  }
+  return 'No baseline yet.';
+};
+
 export const baselineFor = (
   baselines: HistoricalBaselines | null,
   metric: BaselineMetric,
   seriesIds: string[]
 ): Baseline => {
   const series = seriesIds.map((id) => baselines?.metrics[metric]?.series[id]);
-  const heldBack = series.find((s) => s?.heldBack)?.heldBack;
-  if (heldBack || !series.length || series.some((s) => typeof s?.value !== 'number')) {
-    return { value: null, heldBack: heldBack ?? 'none' };
+  if (!series.length || series.some((s) => s?.heldBack || typeof s?.value !== 'number')) {
+    return { value: null, note: missingBaselineNote(baselines, series) };
   }
   const value = series.reduce((sum, s) => sum + (s?.value ?? 0), 0);
   const window = seriesIds.length === 1 ? series[0]?.bestWindow : null;
@@ -38,9 +67,6 @@ export const baselineFor = (
     label: window ? dayjs(window.start).format('MMM YYYY') : undefined,
   };
 };
-
-const noteForMissingBaseline = (baseline: Baseline) =>
-  HELD_BACK_NOTES[baseline.heldBack ?? ''] ?? 'No baseline yet.';
 
 export const naCell = (metric: MetricId, unit: Unit, note: string): Cell => ({
   metric,
@@ -92,6 +118,8 @@ export const judgedCell = (metric: MetricId, score: number | null, opts: CellOpt
     score,
     value: opts.value === undefined ? score : opts.value,
     unit: opts.unit,
+    direction: opts.direction,
+    thresholds: opts.thresholds,
     baselineLabel: opts.baselineLabel,
     trend: trendOf(window),
     secondary: opts.secondary,
@@ -132,7 +160,7 @@ export const ratioCell = (
       unitLabel: opts.rawUnitLabel,
       notes: [
         ...(opts.notes ?? []),
-        rawValue === null ? 'No recent data.' : noteForMissingBaseline(baseline),
+        rawValue === null ? 'No recent data.' : (baseline.note ?? 'No baseline yet.'),
       ],
     };
   }

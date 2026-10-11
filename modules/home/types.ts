@@ -22,6 +22,9 @@ export interface Cell {
   value: number | null;
   unit: Unit;
   unitLabel?: string;
+  /** Set when the cell is judged differently from its column (e.g. Commuter Rail electrification). */
+  direction?: Direction;
+  thresholds?: [number, number, number];
   /** What `value` is compared against, e.g. "Best: 24.9 mph (Oct 2019)". */
   baselineLabel?: string;
   /** Last 2 weeks vs the 12-week window, as a fraction (0.05 = 5% higher). */
@@ -61,6 +64,8 @@ export interface HeroStat {
   unit: Unit | 'minutes';
   detail?: string;
   trend?: number | null;
+  /** A second line under the figure, for a tile without a trend. */
+  note?: string;
   direction: Direction;
 }
 

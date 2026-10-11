@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from '../../../common/components/general/Link';
-import { CR_ELECTRIFIED_THRESHOLDS, METRICS } from '../config';
+import { METRICS } from '../config';
 import { STATUS_LABELS } from '../copy';
 import { formatCell, formatThresholds, formatTrend, STATUS_TONE } from '../format';
 import { trendSentiment } from '../compute/series';
@@ -18,11 +18,11 @@ interface CellDetailProps {
 export const CellDetail: React.FC<CellDetailProps> = ({ row, cell }) => {
   const method = METRICS[cell.metric];
   const trend = formatTrend(cell);
-  const sentiment = trendSentiment(cell.trend, method.direction);
-  const thresholds =
-    row.id === 'commuter-rail' && cell.metric === 'fleet'
-      ? formatThresholds(method, CR_ELECTRIFIED_THRESHOLDS, 'higher', 'pct')
-      : formatThresholds(method);
+  const direction = cell.direction ?? method.direction;
+  const sentiment = trendSentiment(cell.trend, direction);
+  const thresholds = cell.thresholds
+    ? formatThresholds(method, cell.thresholds, direction, cell.unit)
+    : formatThresholds(method);
 
   return (
     <div className="flex flex-col gap-2" data-line={row.line}>

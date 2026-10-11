@@ -1,6 +1,6 @@
 import type { Line } from '../../common/types/lines';
 import type { FleetType } from '../fleet/constants/fleetTypes';
-import type { Direction, MetricId, Unit } from './types';
+import type { Direction, HeroStat, MetricId, Unit } from './types';
 
 export interface MetricMethod {
   id: MetricId;
@@ -59,7 +59,7 @@ export const METRICS: Record<MetricId, MetricMethod> = {
     id: 'fleet',
     label: 'Vehicles',
     definition:
-      'Age of the oldest cars still in regular service (at least 1% of cars over the last 4 weeks), counted from when that type was first built. Riders feel the oldest trains, not the average. Commuter Rail: share of service that is electrified.',
+      'Age of the oldest cars still in regular service (at least 1% of cars over the last 4 weeks), counted from when that type was first built. Riders feel the oldest trains, not the average. Commuter Rail: share of service that is electrified. All Bus: share of trips on battery-electric or hybrid buses over the last 4 weeks.',
     direction: 'lower',
     thresholds: [15, 25, 35],
     scoreUnit: 'years',
@@ -81,6 +81,9 @@ export const SINGLE_TYPE_FLEETS: Partial<Record<Line, FleetType>> = {
 // Commuter Rail fleet is judged on electrification, which runs the other way.
 export const CR_ELECTRIFIED_SHARE = 0;
 export const CR_ELECTRIFIED_THRESHOLDS: [number, number, number] = [1, 0.5, 0.1];
+
+// Bus fleet is judged on the share of trips run by battery-electric or hybrid buses.
+export const BUS_FLEET_THRESHOLDS: [number, number, number] = [0.9, 0.75, 0.5];
 
 /** Headway goals in minutes. */
 export const FREQUENCY_GOALS = {
@@ -205,3 +208,44 @@ export const WINDOW_WEEKS = 12;
 export const MIN_WEEKS = 8;
 /** A trend smaller than this reads as flat. */
 export const NEGLIGIBLE_TREND = 0.02;
+
+export type HeroConfig = Omit<HeroStat, 'value' | 'trend' | 'note'>;
+
+/** The tiles across the top, known before any data loads. */
+export const HERO: HeroConfig[] = [
+  {
+    id: 'subwayFrequency',
+    label: 'Subway',
+    unit: 'pct',
+    detail: `of service hours at every ${FREQUENCY_GOALS.subway} min or better`,
+    direction: 'higher',
+  },
+  {
+    id: 'service',
+    label: 'Scheduled service',
+    unit: 'pct',
+    detail: 'of the most trips ever scheduled',
+    direction: 'higher',
+  },
+  {
+    id: 'slowZones',
+    label: 'Slow zone delay',
+    unit: 'minutes',
+    detail: 'added per day across the subway, last week',
+    direction: 'lower',
+  },
+  {
+    id: 'frequentBus',
+    label: 'Frequent Bus',
+    unit: 'pct',
+    detail: `of service hours at every ${FREQUENCY_GOALS.frequentBus} min or better`,
+    direction: 'higher',
+  },
+  {
+    id: 'crHeadway',
+    label: 'Commuter Rail midday',
+    unit: 'minutes',
+    detail: 'between trains on weekdays',
+    direction: 'lower',
+  },
+];

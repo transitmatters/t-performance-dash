@@ -116,6 +116,7 @@
   --tabs-dur: 250ms;
   --tabs-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-reveal: 420ms;
+  --duration-fade-in: 200ms;
   --stagger-step: 60ms;
 }
 
@@ -331,8 +332,20 @@ a {
   animation-delay: calc(var(--reveal-index, 0) * var(--stagger-step));
 }
 
+/* A value replacing its loading placeholder: fade only, so nothing moves under the reader. */
+@keyframes tm-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.tm-fade-in {
+  animation: tm-fade-in var(--duration-fade-in) var(--ease-smooth-out) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .tm-reveal {
+  .tm-reveal,
+  .tm-fade-in {
     animation: none;
   }
 }

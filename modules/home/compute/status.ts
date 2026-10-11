@@ -33,8 +33,9 @@ const SEVERITY: Record<Status, number> = {
 /** How far a score sits from "good", as a fraction of the good threshold. */
 const gapToGood = (cell: Cell, method: MetricMethod) => {
   if (cell.score === null) return 0;
-  const good = method.thresholds[1];
-  const gap = method.direction === 'higher' ? good - cell.score : cell.score - good;
+  const good = (cell.thresholds ?? method.thresholds)[1];
+  const direction = cell.direction ?? method.direction;
+  const gap = direction === 'higher' ? good - cell.score : cell.score - good;
   return Math.max(0, gap / Math.abs(good || 1));
 };
 
