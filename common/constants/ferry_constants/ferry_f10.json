@@ -1,0 +1,53 @@
+{
+  "Boat-F10": {
+    "type": "ferry",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Logan Airport Ferry Terminal",
+        "station": "Boat-Logan",
+        "branches": null,
+        "order": 4,
+        "stops": {
+          "0": ["Boat-F10|0|Boat-Logan"],
+          "1": ["Boat-F10|1|Boat-Logan"]
+        }
+      },
+      {
+        "stop_name": "Lovejoy Wharf",
+        "station": "Boat-Lovejoy",
+        "branches": null,
+        "order": 3,
+        "stops": {
+          "0": ["Boat-F10|0|Boat-Lovejoy"],
+          "1": ["Boat-F10|1|Boat-Lovejoy"]
+        },
+        "terminus": true
+      },
+      {
+        "stop_name": "Central Wharf (South)",
+        "station": "Boat-Aquarium",
+        "branches": null,
+        "order": 2,
+        "stops": {
+          "0": ["Boat-F10|0|Boat-Aquarium"],
+          "1": ["Boat-F10|1|Boat-Aquarium"]
+        }
+      },
+      {
+        "stop_name": "Seaport (Commonwealth Pier)",
+        "station": "Boat-Commonwealth",
+        "branches": null,
+        "order": 1,
+        "stops": {
+          "0": ["Boat-F10|0|Boat-Commonwealth"],
+          "1": ["Boat-F10|1|Boat-Commonwealth"]
+        },
+        "terminus": true
+      }
+    ]
+  }
+}
