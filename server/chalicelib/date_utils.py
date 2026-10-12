@@ -16,6 +16,7 @@ EASTERN_TIME = ZoneInfo("US/Eastern")
 
 # The most recent date for which we have monthly data
 MAX_MONTH_DATA_DATE = "2026-06-30"
+MAX_FERRY_MONTH_DATA_DATE = "2026-03-31"
 
 
 def get_max_monthly_data_date():
@@ -28,6 +29,11 @@ def get_max_monthly_data_date():
         ``datetime.date`` of the most recent monthly archive.
     """
     return datetime.strptime(MAX_MONTH_DATA_DATE, "%Y-%m-%d").date()
+
+
+def get_max_ferry_monthly_data_date():
+    """Return the cutoff date between monthly ferry archives and daily Gobble ferry data."""
+    return datetime.strptime(MAX_FERRY_MONTH_DATA_DATE, "%Y-%m-%d").date()
 
 
 def parse_event_date(date_str: str):

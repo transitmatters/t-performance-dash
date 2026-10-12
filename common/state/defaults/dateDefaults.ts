@@ -7,8 +7,6 @@ import {
   TODAY_STRING,
   YESTERDAY_STRING,
   TODAY_SERVICE_STARTED,
-  FERRY_MAX_DATE,
-  FERRY_MAX_DATE_MINUS_ONE_WEEK,
 } from '../../constants/dates';
 import type { WithOptional } from '../../types/general';
 
@@ -54,13 +52,13 @@ export const FERRY_DEFAULTS: WithOptional<
   DateStoreConfiguration,
   'systemConfig' | 'overviewPreset'
 > = {
-  lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: FERRY_MAX_DATE },
+  lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
   multiTripConfig: {
-    startDate: FERRY_MAX_DATE_MINUS_ONE_WEEK,
-    endDate: FERRY_MAX_DATE,
+    startDate: ONE_WEEK_AGO_STRING,
+    endDate: TODAY_STRING,
   },
   singleTripConfig: {
-    date: FERRY_MAX_DATE,
+    date: TODAY_SERVICE_STARTED ? TODAY_STRING : YESTERDAY_STRING,
   },
 };
 

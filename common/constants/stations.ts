@@ -139,9 +139,11 @@ import cr_needham from './cr_constants/cr-needham.json';
 import cr_providence from './cr_constants/cr-providence.json';
 
 import ferry_f1 from './ferry_constants/ferry_f1.json';
+import ferry_f2h from './ferry_constants/ferry_f2h.json';
 import ferry_f4 from './ferry_constants/ferry_f4.json';
 import ferry_f6 from './ferry_constants/ferry_f6.json';
 import ferry_f7 from './ferry_constants/ferry_f7.json';
+import ferry_f10 from './ferry_constants/ferry_f10.json';
 import ferry_eastboston from './ferry_constants/ferry_eastboston.json';
 import ferry_lynn from './ferry_constants/ferry_lynn.json';
 
@@ -297,9 +299,11 @@ export const crStations: { [key in CommuterRailRoute]: LineMap } = {
 
 export const ferryStations: { [key in FerryRoute]: LineMap } = {
   ...ferry_f1,
+  ...ferry_f2h,
   ...ferry_f4,
   ...ferry_f6,
   ...ferry_f7,
+  ...ferry_f10,
   ...ferry_eastboston,
   ...ferry_lynn,
 };

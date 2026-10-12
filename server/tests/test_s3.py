@@ -27,6 +27,7 @@ def fake_s3(monkeypatch):
 
     monkeypatch.setattr(s3, "download", download)
     monkeypatch.setattr(s3.date_utils, "MAX_MONTH_DATA_DATE", "2026-06-30")
+    monkeypatch.setattr(s3.date_utils, "MAX_FERRY_MONTH_DATA_DATE", "2026-03-31")
     return files, requested
 
 
@@ -117,11 +118,59 @@ def test_commuter_rail_range_before_cutoff_reads_each_day(fake_s3):
     assert len(rows) == 2
 
 
-def test_ferry_is_unchanged(fake_s3):
+FERRY_STOP = "Boat-F4|0|Boat-Long-South"
+
+
+def _ferry_monthly_key(day):
+    return f"Events/monthly-ferry-data/{FERRY_STOP}/Year={day.year}/Month={day.month}/events.csv.gz"
+
+
+def _ferry_daily_key(day):
+    return f"Events-live/daily-ferry-data/{FERRY_STOP}/Year={day.year}/Month={day.month}/Day={day.day}/events.csv.gz"
+
+
+def _ferry_row(day):
+    return f"{day},Boat-F4,t1,0,Boat-Long-South,DEP,{day} 06:31:18,RITA"
+
+
+def test_ferry_before_cutoff_reads_monthly(fake_s3):
     files, requested = fake_s3
-    ferry_key = "Events/monthly-ferry-data/Boat-F1-0-Hingham/Year=2025/Month=3/events.csv.gz"
-    files[ferry_key] = _csv("2025-03-12,Boat-F1,t1,0,Boat-Hingham,DEP,2025-03-12 07:01:50,")
+    day = date(2026, 3, 12)
+    files[_ferry_monthly_key(day)] = _csv(_ferry_row(day))
 
-    s3.download_events(date(2025, 3, 12), date(2025, 3, 12), ["Boat-F1-0-Hingham"])
+    rows = s3.download_events(day, day, [FERRY_STOP])
 
-    assert requested == [ferry_key]
+    assert requested == [_ferry_monthly_key(day)]
+    assert len(rows) == 1
+
+
+def test_ferry_after_cutoff_reads_gobble(fake_s3):
+    files, requested = fake_s3
+    day = date(2026, 10, 9)
+    files[_ferry_daily_key(day)] = _csv(_ferry_row(day))
+
+    rows = s3.download_events(day, day, [FERRY_STOP])
+
+    assert requested == [_ferry_daily_key(day)]
+    assert rows[0]["vehicle_label"] == "RITA"
+
+
+def test_ferry_range_across_cutoff_reads_monthly_then_daily(fake_s3):
+    files, requested = fake_s3
+    march, april = [date(2026, 3, 30), date(2026, 3, 31)], [date(2026, 4, 1), date(2026, 4, 2)]
+    files[_ferry_monthly_key(march[0])] = _csv(*[_ferry_row(day) for day in march])
+    for day in april:
+        files[_ferry_daily_key(day)] = _csv(_ferry_row(day))
+
+    rows = s3.download_events(march[0], april[-1], [FERRY_STOP])
+
+    assert sorted(requested) == sorted([_ferry_monthly_key(march[0]), *[_ferry_daily_key(day) for day in april]])
+    assert [r["service_date"] for r in rows] == [str(day) for day in march + april]
+
+
+def test_missing_ferry_day_is_requested_once(fake_s3):
+    _, requested = fake_s3
+    day = date(2026, 6, 1)
+
+    assert s3.download_events(day, day, [FERRY_STOP]) == []
+    assert requested == [_ferry_daily_key(day)]

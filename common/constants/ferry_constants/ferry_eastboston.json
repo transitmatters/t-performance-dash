@@ -12,8 +12,8 @@
         "branches": null,
         "order": 2,
         "stops": {
-          "0": ["Boat-EastBoston|0|Boat-Long"],
-          "1": ["Boat-EastBoston|1|Boat-Long"]
+          "0": ["Boat-EastBoston|0|Boat-Long", "Boat-EastBoston|0|Boat-Long-North-5B"],
+          "1": ["Boat-EastBoston|1|Boat-Long", "Boat-EastBoston|1|Boat-Long-North-5B"]
         },
         "terminus": true
       },
