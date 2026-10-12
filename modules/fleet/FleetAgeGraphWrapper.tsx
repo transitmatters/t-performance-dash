@@ -1,12 +1,16 @@
 import React from 'react';
 import { ChartStack } from '../../common/components/charts/ChartStack';
-import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
+import type { FleetMetrics } from '../../common/types/dataPoints';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import type { ParamsType } from '../speed/constants/speeds';
 import { FleetAgeChart } from './charts/FleetAgeChart';
+import type { FleetMetric } from './constants/fleetTypes';
+import { hasFleetMetric } from './constants/fleetTypes';
 
 interface FleetAgeGraphWrapperProps {
-  data: DeliveredTripMetrics[];
+  data: FleetMetrics[];
+  metric: FleetMetric;
+  showShuttling: boolean;
   config: ParamsType;
   startDate: string;
   endDate: string;
@@ -14,16 +18,25 @@ interface FleetAgeGraphWrapperProps {
 
 export const FleetAgeGraphWrapper: React.FC<FleetAgeGraphWrapperProps> = ({
   data,
+  metric,
+  showShuttling,
   config,
   startDate,
   endDate,
 }) => {
-  if (!data.some((datapoint) => datapoint.avg_car_age !== undefined)) {
+  if (!data.some((datapoint) => hasFleetMetric(datapoint, metric.field))) {
     return <NoDataNotice isLineMetric />;
   }
   return (
     <ChartStack>
-      <FleetAgeChart config={config} data={data} startDate={startDate} endDate={endDate} />
+      <FleetAgeChart
+        config={config}
+        data={data}
+        metric={metric}
+        showShuttling={showShuttling}
+        startDate={startDate}
+        endDate={endDate}
+      />
     </ChartStack>
   );
 };

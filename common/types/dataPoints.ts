@@ -99,15 +99,23 @@ export interface SpeedDataPoint {
   value: number;
 }
 
-export interface SpeedTripMetrics {
+/** Fleet stats from data-ingestion. Each mode fills in its own share and age fields. */
+export interface FleetMetrics {
   date: string;
+  fleet_trips?: number;
+  avg_car_age?: number;
+  pct_new_trips?: number;
+  avg_bus_age?: number;
+  pct_battery_trips?: number;
+  avg_cab_car_age?: number;
+  [key: `fleet_mix_${string}`]: number | undefined;
+}
+
+export interface SpeedTripMetrics extends FleetMetrics {
   miles_covered: number;
   total_time: number;
   count: number;
   miles_per_hour?: string;
-  avg_car_age?: number;
-  pct_new_trips?: number;
-  [key: `fleet_mix_${string}`]: number | undefined;
 }
 
 export interface DeliveredTripMetrics extends SpeedTripMetrics {
@@ -128,6 +136,11 @@ export interface DeliveredTripMetricsBus extends SpeedTripMetrics {
   // week or month.
   median_speed_mph?: number;
   mean_speed_mph?: number;
+}
+
+/** Commuter Rail cab-car fleet stats for one route, or `all`, from DeliveredTripMetricsCR. */
+export interface DeliveredTripMetricsCR extends FleetMetrics {
+  route: string;
 }
 
 /**

@@ -545,6 +545,30 @@ def get_bus_trip_metrics():
 
 
 @app.route(
+    "/api/crtripmetrics",
+    cors=cors_config,
+    docs=Docs(request=models.CrTripMetricsParams, response=models.CrTripMetricsResponse),
+)
+def get_cr_trip_metrics():
+    """Retrieve Commuter Rail fleet metrics for one route, or `all`, over a date range."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date", "route"])
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = []
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/crtripmetrics", query_params)
+    else:
+        data = speed.trip_metrics_by_cr_route(query_params)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
     "/api/busspeedleaderboard",
     cors=cors_config,
     docs=Docs(request=models.BusSpeedLeaderboardParams, response=models.BusSpeedLeaderboardResponse),

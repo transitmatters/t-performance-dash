@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChartStack } from '../../common/components/charts/ChartStack';
-import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
+import type { FleetMetrics } from '../../common/types/dataPoints';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import type { ParamsType } from '../speed/constants/speeds';
 import { FleetMixChart } from './charts/FleetMixChart';
@@ -8,8 +8,9 @@ import type { FleetType } from './constants/fleetTypes';
 import { hasFleetMix } from './constants/fleetTypes';
 
 interface FleetMixGraphWrapperProps {
-  data: DeliveredTripMetrics[];
+  data: FleetMetrics[];
   types: FleetType[];
+  showShuttling: boolean;
   config: ParamsType;
   startDate: string;
   endDate: string;
@@ -18,6 +19,7 @@ interface FleetMixGraphWrapperProps {
 export const FleetMixGraphWrapper: React.FC<FleetMixGraphWrapperProps> = ({
   data,
   types,
+  showShuttling,
   config,
   startDate,
   endDate,
@@ -31,6 +33,7 @@ export const FleetMixGraphWrapper: React.FC<FleetMixGraphWrapperProps> = ({
         config={config}
         data={data}
         types={types}
+        showShuttling={showShuttling}
         startDate={startDate}
         endDate={endDate}
       />

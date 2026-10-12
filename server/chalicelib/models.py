@@ -191,6 +191,22 @@ class BusTripMetricsParams(BaseModel):
     day_type: Optional[Literal["business_day", "weekend_or_holiday"]] = None
 
 
+class CrTripMetricsParams(BaseModel):
+    """Parameters for the `/api/crtripmetrics` endpoint.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        route: Commuter Rail route_id (e.g. `CR-Fairmount`), or `all` for the whole system.
+        agg: Optional aggregation level (`daily`, `weekly`, `monthly`); defaults to `daily`.
+    """
+
+    start_date: Union[str, date] = Field(description=_DATE_RANGE_START_DESC)
+    end_date: Union[str, date] = Field(description=_DATE_RANGE_END_DESC)
+    route: str = Field(description="Commuter Rail route_id (e.g. `CR-Fairmount`), or `all` for the whole system.")
+    agg: Optional[str] = Field(default=None, description=_AGG_DESC)
+
+
 class BusSpeedLeaderboardParams(BaseModel):
     """Parameters for the `/api/busspeedleaderboard` endpoint.
 
@@ -469,6 +485,17 @@ class TripMetricsResponse(BaseModel):
 
     Attributes:
         data: Trip metrics at the requested aggregation level.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    data: Dict[str, Any]
+
+
+class CrTripMetricsResponse(BaseModel):
+    """Response for `/api/crtripmetrics` — Commuter Rail cab-car fleet metrics.
+
+    Attributes:
+        data: Fleet metric records for the route, one per day/week/month.
     """
 
     model_config = ConfigDict(extra="allow")
