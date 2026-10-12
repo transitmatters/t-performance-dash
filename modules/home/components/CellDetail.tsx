@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from '../../../common/components/general/Link';
-import { METRICS } from '../config';
+import { METRICS, definitionFor } from '../config';
 import { STATUS_LABELS } from '../copy';
 import { formatCell, formatThresholds, formatTrend, STATUS_TONE } from '../format';
 import { trendSentiment } from '../compute/series';
@@ -19,6 +19,7 @@ export const CellDetail: React.FC<CellDetailProps> = ({ row, cell }) => {
   const method = METRICS[cell.metric];
   const trend = formatTrend(cell);
   const direction = cell.direction ?? method.direction;
+  const definition = definitionFor(cell.metric, row.id);
   const sentiment = trendSentiment(cell.trend, direction);
   const thresholds = cell.thresholds
     ? formatThresholds(method, cell.thresholds, direction, cell.unit)
@@ -61,7 +62,7 @@ export const CellDetail: React.FC<CellDetailProps> = ({ row, cell }) => {
           {note}
         </p>
       ))}
-      <p className="text-muted-foreground border-t pt-2 text-xs">{method.definition}</p>
+      {definition && <p className="text-muted-foreground border-t pt-2 text-xs">{definition}</p>}
       {cell.status !== 'na' && <p className="text-muted-foreground text-xs">{thresholds}</p>}
       {cell.href && (
         <Link
