@@ -18,11 +18,11 @@ export const NavLayout: React.FC<NavLayoutProps> = ({ children }) => {
           alone pinned that ground to light in both themes, which left every translucent surface on
           top of it (the amber notices especially) compositing against a near-white backdrop in dark
           mode. Pair it with the dark token so the ground flips with the theme. */}
-      <SidebarInset className="dark:bg-background min-w-0 bg-stone-100">
+      <SidebarInset className="min-w-0 bg-stone-100 dark:bg-background">
         {/* The sidebar becomes a sheet below md, so it needs a trigger of its own.
             h-12 is load-bearing: MobileHeader (modules/dashboard/MobileHeader.tsx) stacks its own
             sticky header at top-12, so this one must be exactly 48px or a gap opens between them. */}
-        <header className="bg-sidebar text-sidebar-foreground sticky top-0 z-20 flex h-12 items-center gap-2 border-b px-2 md:hidden">
+        <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b bg-sidebar px-2 text-sidebar-foreground md:hidden">
           <SidebarTrigger />
           <Link href="/" className="flex items-center">
             <img src="/TMLogo.svg" alt="TransitMatters" width={208} height={19.5} />

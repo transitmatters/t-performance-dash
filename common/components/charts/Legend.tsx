@@ -15,7 +15,7 @@ interface LegendLongTermProps {
 // so it is intentionally not repeated inside every chart legend here.
 export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio, usingTmBenchmark }) => {
   return (
-    <div className="text-muted-foreground flex min-w-0 flex-col gap-y-1">
+    <div className="flex min-w-0 flex-col gap-y-1 text-muted-foreground">
       <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-1 text-xs">
         <LegendSingle showUnderRatio={showUnderRatio} usingTmBenchmark={usingTmBenchmark} />
       </div>
@@ -35,13 +35,13 @@ const LegendSingle: React.FC<LegendProps> = ({ usingTmBenchmark = false }) => {
     <>
       <p className="flex flex-row items-center gap-x-1 italic">
         Compare to
-        <span className="border-muted-foreground inline-block h-0 w-3 border-t-2 align-middle" />
+        <span className="inline-block h-0 w-3 border-t-2 border-muted-foreground align-middle" />
         {usingTmBenchmark ? 'TransitMatters' : 'MBTA'} benchmark:
       </p>
       {SEVERITY_LEGEND.map(({ label, color }) => (
         <p key={label} className="flex flex-row items-center gap-x-1.5">
           <span
-            className="ring-foreground/25 inline-block h-2.5 w-2.5 rounded-full ring-1"
+            className="inline-block h-2.5 w-2.5 rounded-full ring-1 ring-foreground/25"
             style={{ backgroundColor: color }}
           />
           {label}
@@ -56,12 +56,12 @@ export const LegendLongTerm: React.FC<LegendLongTermProps> = ({
   onToggleTrendline,
 }) => {
   return (
-    <div className="text-muted-foreground flex w-full flex-row items-baseline gap-2 p-1 text-left text-xs sm:gap-4">
+    <div className="flex w-full flex-row items-baseline gap-2 p-1 text-left text-xs text-muted-foreground sm:gap-4">
       <p>
-        <span className={'bg-foreground mr-1 inline-block h-2.5 w-2.5 rounded-full'}></span> Median
+        <span className={'mr-1 inline-block h-2.5 w-2.5 rounded-full bg-foreground'}></span> Median
       </p>
       <p>
-        <span className={'bg-muted-foreground/50 mr-1 inline-block h-2.5 w-2.5 rounded-xs'}></span>{' '}
+        <span className={'mr-1 inline-block h-2.5 w-2.5 rounded-xs bg-muted-foreground/50'}></span>{' '}
         Interquartile range
       </p>
       <button onClick={onToggleTrendline} className="flex items-center hover:opacity-80">

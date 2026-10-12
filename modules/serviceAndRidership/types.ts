@@ -1,7 +1,14 @@
 export type Time = number;
 
 export type LineKind =
-  'red' | 'green' | 'orange' | 'blue' | 'silver' | 'regional-rail' | 'bus' | 'boat';
+  | 'red'
+  | 'green'
+  | 'orange'
+  | 'blue'
+  | 'silver'
+  | 'regional-rail'
+  | 'bus'
+  | 'boat';
 
 export type ModeKind = 'rapid-transit' | 'regional-rail' | 'bus' | 'boat';
 

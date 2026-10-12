@@ -41,7 +41,7 @@ export const NavPageItems: React.FC<NavPageItemsProps> = ({ pages, close }) => {
             <SidebarMenuSubItem key={tab.key}>
               <SidebarMenuSubButton
                 aria-disabled
-                className="text-sidebar-foreground/40 pointer-events-none"
+                className="pointer-events-none text-sidebar-foreground/40"
               >
                 <span className="truncate">{tab.name}</span>
               </SidebarMenuSubButton>

@@ -74,24 +74,24 @@ export const ServiceAlertsCard: React.FC<ServiceAlertsCardProps> = ({ lineShort 
         ) : (
           <>
             {upcoming.length > 0 && (
-              <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+              <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                 Upcoming · {upcoming.length}
               </div>
             )}
             <div className="flex flex-col divide-y">
               {[...current, ...upcoming].slice(0, 4).map((alert) => (
                 <div key={alert.id} className="flex items-start gap-3 py-3 first:pt-0">
-                  <TriangleAlert className="text-muted-foreground mt-0.5 size-4 shrink-0" />
+                  <TriangleAlert className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                   <div className="flex flex-1 flex-col gap-1">
                     <span className="text-sm font-medium">{alert.header}</span>
-                    <span className="text-muted-foreground flex items-center text-xs">
+                    <span className="flex items-center text-xs text-muted-foreground">
                       <UpcomingTime times={alert.relevantTimes} />
                     </span>
                   </div>
                 </div>
               ))}
               {!current.length && !upcoming.length && (
-                <p className="text-muted-foreground py-2 text-sm">
+                <p className="py-2 text-sm text-muted-foreground">
                   No alerts for the {lineShort} Line.
                 </p>
               )}

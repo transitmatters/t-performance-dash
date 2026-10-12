@@ -17,7 +17,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ isWidget }) => {
     >
       <svg
         aria-hidden="true"
-        className={`text-muted mr-2 h-8 w-8 animate-spin ${
+        className={`mr-2 h-8 w-8 animate-spin text-muted ${
           line ? spinnerFillColor[line] : 'fill-foreground'
         }`}
         viewBox="0 0 100 101"

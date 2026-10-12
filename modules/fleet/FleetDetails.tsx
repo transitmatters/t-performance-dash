@@ -73,7 +73,7 @@ export function FleetDetails() {
             />
           </Widget>
         )}
-        <p className="text-muted-foreground text-sm">
+        <p className="text-sm text-muted-foreground">
           Based on a representative sample of trips per day, not a full census of the line, so
           expect some day-to-day noise.
         </p>

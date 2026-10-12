@@ -26,7 +26,7 @@ export const SmallDelta: React.FC<SmallDeltaProps> = ({ analysis, widgetValue })
             />
           )}
           <p className="flex flex-row">
-            <span className="text-card-foreground pr-1 font-bold">
+            <span className="pr-1 font-bold text-card-foreground">
               {widgetValue.value < 0 ? '-' : '+'}
             </span>
             {widgetValue.getFormattedValue()}

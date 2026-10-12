@@ -28,8 +28,8 @@ interface StatCellProps {
 const StatCell: React.FC<StatCellProps> = ({ label, children, valueClassName }) => (
   // `bg-muted` rather than a fixed light grey: the figures inside inherit the card foreground, so a
   // cell pinned to stone-50 put near-white text on a near-white ground once the theme flipped.
-  <div className="bg-muted flex flex-col gap-y-1 px-3.5 py-2.5">
-    <span className="text-muted-foreground text-[10px] font-medium tracking-[0.06em] uppercase">
+  <div className="flex flex-col gap-y-1 bg-muted px-3.5 py-2.5">
+    <span className="text-[10px] font-medium tracking-[0.06em] text-muted-foreground uppercase">
       {label}
     </span>
     <span
@@ -122,7 +122,7 @@ export const StatStrip: React.FC<StatStripProps> = ({ widgetObjects }) => {
     <div
       // The container color shows through the 1px gaps as the hairlines between cells, so it has to
       // be a border token rather than a fixed black tint that vanishes on a dark card.
-      className="bg-border mt-3 grid gap-px overflow-hidden rounded-lg"
+      className="mt-3 grid gap-px overflow-hidden rounded-lg bg-border"
       style={{ gridTemplateColumns: `repeat(auto-fit, minmax(9rem, 1fr))` }}
     >
       {cells}

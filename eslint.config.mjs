@@ -154,5 +154,5 @@ export default typescriptEslint.config(
       'react/prop-types': 'off',
       'import-x/max-dependencies': 'off',
     },
-  },
+  }
 );

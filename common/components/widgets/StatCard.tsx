@@ -29,7 +29,7 @@ export const StatCard: React.FC<StatCardProps> = ({ label, value, unit, delta })
       <CardDescription>{label}</CardDescription>
       <CardTitle className="text-2xl font-semibold tabular-nums">
         {value}
-        {unit && <span className="text-muted-foreground text-sm font-normal"> {unit}</span>}
+        {unit && <span className="text-sm font-normal text-muted-foreground"> {unit}</span>}
       </CardTitle>
       {delta && (
         <CardAction>
