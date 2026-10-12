@@ -4,7 +4,6 @@ import importX from 'eslint-plugin-import-x';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import unusedImports from 'eslint-plugin-unused-imports';
-import prettier from 'eslint-plugin-prettier';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import globals from 'globals';
 
@@ -38,7 +37,6 @@ export default typescriptEslint.config(
       react,
       'react-hooks': reactHooks,
       'unused-imports': unusedImports,
-      prettier,
     },
     languageOptions: {
       globals: {
@@ -89,7 +87,6 @@ export default typescriptEslint.config(
           ignoreTypeImports: false,
         },
       ],
-      'prettier/prettier': 'error',
       'react/prop-types': 'warn',
       'react/jsx-no-target-blank': 'warn',
       'react/no-unescaped-entities': 'off',

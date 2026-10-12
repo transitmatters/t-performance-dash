@@ -1,0 +1,31 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "trailingComma": "es5",
+  "tabWidth": 2,
+  "singleQuote": true,
+  "printWidth": 100,
+  "sortPackageJson": false,
+  "sortTailwindcss": {
+    "stylesheet": "./styles/globals.css",
+    "functions": ["cn"]
+  },
+  "ignorePatterns": [
+    "public/",
+    "routeTree.gen.ts",
+    "common/constants/bus_constants/",
+    "common/constants/cr_constants/",
+    "common/constants/ferry_constants/",
+    "common/constants/licenses/",
+    "common/constants/stations.json",
+    "common/constants/station_distances.json",
+    "server/openapi.json"
+  ],
+  "overrides": [
+    {
+      "files": ["*.toml"],
+      "options": {
+        "tabWidth": 4
+      }
+    }
+  ]
+}

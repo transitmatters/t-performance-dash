@@ -33,7 +33,7 @@ jobs:
       - name: Check if package-lock.json is up to date
         run: |
           npx --yes package-lock-utd@1.1.0
-      - name: Lint frontend code with ESLint
+      - name: Lint frontend code with ESLint and oxfmt
         run: |
           npm ci
           npm run lint-frontend
