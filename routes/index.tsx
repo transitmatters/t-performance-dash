@@ -1,8 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Layout } from '../common/layouts/layoutTypes';
-import { Landing } from '../modules/landing/Landing';
+import { Home } from '../modules/home/Home';
+import { prefetchHomeData } from '../modules/home/queries';
 
 export const Route = createFileRoute('/')({
   staticData: { layout: Layout.Landing },
-  component: Landing,
+  // Not awaited: the page renders its shell straight away and fills in as the data lands.
+  loader: () => {
+    void prefetchHomeData();
+  },
+  component: Home,
 });

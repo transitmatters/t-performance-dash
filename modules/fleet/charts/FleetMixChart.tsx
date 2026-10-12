@@ -8,7 +8,7 @@ import { enUS } from 'date-fns/locale';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { LINE_COLORS } from '../../../common/constants/colors';
-import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
+import type { FleetMetrics } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../../common/utils/general';
@@ -24,8 +24,9 @@ import type { FleetType } from '../constants/fleetTypes';
 import { getFleetMixValue, hasFleetMix } from '../constants/fleetTypes';
 
 interface FleetMixChartProps {
-  data: DeliveredTripMetrics[];
+  data: FleetMetrics[];
   types: FleetType[];
+  showShuttling: boolean;
   config: ParamsType;
   startDate: string;
   endDate: string;
@@ -35,6 +36,7 @@ interface FleetMixChartProps {
 export const FleetMixChart: React.FC<FleetMixChartProps> = ({
   data,
   types,
+  showShuttling,
   config,
   startDate,
   endDate,
@@ -47,9 +49,9 @@ export const FleetMixChart: React.FC<FleetMixChartProps> = ({
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   const lineColor = LINE_COLORS[line ?? 'default'];
-  const shuttlingBlocks = getShuttlingBlockAnnotations(data, (datapoint) =>
-    hasFleetMix(datapoint, types)
-  );
+  const shuttlingBlocks = showShuttling
+    ? getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMix(datapoint, types))
+    : [];
 
   return (
     <ChartStack>
@@ -64,7 +66,7 @@ export const FleetMixChart: React.FC<FleetMixChartProps> = ({
             datasets: types.map((type, index) => {
               const color = hexWithAlpha(lineColor, 0.25 + (0.75 * index) / (types.length - 1));
               return {
-                label: `${type.label} (${type.years})`,
+                label: type.years ? `${type.label} (${type.years})` : type.label,
                 borderColor: lineColor,
                 borderWidth: 1,
                 pointRadius: 0,

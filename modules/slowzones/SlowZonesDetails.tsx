@@ -25,7 +25,7 @@ import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { formatDateTodayCheck } from '../../common/state/utils/dateStoreUtils';
-import { BetaSlowZoneDataNotice } from '../../common/components/notices/BetaSlowZoneDataNotice';
+import { GreenLineSlowZoneNotice } from '../../common/components/notices/GreenLineSlowZoneNotice';
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
@@ -100,7 +100,7 @@ export function SlowZonesDetails() {
   return (
     <PageWrapper pageTitle={'Slow zones'}>
       <ChartPageDiv>
-        <BetaSlowZoneDataNotice />
+        <GreenLineSlowZoneNotice />
         {stats && Number.isFinite(stats.currentSlowTime) && (
           <StatCardGrid>
             <StatCard

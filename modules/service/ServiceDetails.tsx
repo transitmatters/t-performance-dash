@@ -75,7 +75,7 @@ export function ServiceDetails() {
       line_id: line,
       agg: config.agg,
     },
-    enabled
+    enabled && showServiceHours
   );
   const peakService = useScheduledServiceBaseline(line);
 
@@ -85,7 +85,7 @@ export function ServiceDetails() {
 
   const stats =
     tripsData.data && scheduledData
-      ? getServiceStats(tripsData.data, scheduledData, peakService)
+      ? getServiceStats(tripsData.data, scheduledData, peakService, config.agg)
       : null;
   const deltaFor = (delta: number, negligible: number, unit: 'trips' | 'pp') => {
     if (!Number.isFinite(delta)) return undefined;

@@ -8,7 +8,7 @@ import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { round } from '@lodash-utils';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { LINE_COLORS } from '../../../common/constants/colors';
-import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
+import type { FleetMetrics } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { HERO_LINE_WIDTH, useChartTheme } from '../../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../../common/utils/general';
@@ -20,9 +20,12 @@ import { DownloadButton } from '../../../common/components/buttons/DownloadButto
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
 import type { ParamsType } from '../../speed/constants/speeds';
+import { hasFleetMetric, type FleetMetric } from '../constants/fleetTypes';
 
 interface FleetAgeChartProps {
-  data: DeliveredTripMetrics[];
+  data: FleetMetrics[];
+  metric: FleetMetric;
+  showShuttling: boolean;
   config: ParamsType;
   startDate: string;
   endDate: string;
@@ -31,6 +34,8 @@ interface FleetAgeChartProps {
 
 export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
   data,
+  metric,
+  showShuttling,
   config,
   startDate,
   endDate,
@@ -45,16 +50,15 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
   const lineColor = LINE_COLORS[line ?? 'default'];
   // Keyed off the fleet metric, not miles_covered: a partial shutdown zeroes the line's
   // service metrics while cars still ran (and were sampled) on the remaining branches.
-  const shuttlingBlocks = getShuttlingBlockAnnotations(
-    data,
-    (datapoint) => datapoint.avg_car_age !== undefined && datapoint.avg_car_age !== null
-  );
+  const shuttlingBlocks = showShuttling
+    ? getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMetric(datapoint, metric.field))
+    : [];
 
   return (
     <ChartStack>
       <ChartDiv isMobile={isMobile}>
         <Line
-          id={`fleet-age-${linePath}`}
+          id={`${metric.datasetName}-${linePath}`}
           height={isMobile ? 240 : 200}
           ref={ref}
           redraw={true}
@@ -62,7 +66,7 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
             labels,
             datasets: [
               {
-                label: 'Average car age (years)',
+                label: metric.axisLabel,
                 fill: true,
                 backgroundColor: hexWithAlpha(lineColor, 0.8),
                 borderColor: lineColor,
@@ -74,7 +78,7 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
                 spanGaps: false,
                 pointHoverBackgroundColor: lineColor,
                 pointBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.avg_car_age ?? null),
+                data: data.map((datapoint) => datapoint[metric.field] ?? null),
               },
             ],
           }}
@@ -127,7 +131,7 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Average car age (years)',
+                  text: metric.axisLabel,
                   color: chartTheme.tick,
                 },
               },
@@ -165,7 +169,7 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
             {
               id: 'customTitle',
               afterDraw: (chart) => {
-                if (showTitle) drawSimpleTitle(`Average car age`, chart);
+                if (showTitle) drawSimpleTitle(metric.title, chart);
               },
             },
             ChartjsPluginWatermark,
@@ -177,14 +181,14 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
           <>
             <SaveChartImageButton
               chartRef={ref}
-              datasetName="fleet-car-age"
+              datasetName={metric.datasetName}
               includeBothStopsForLocation={false}
               startDate={startDate}
               endDate={endDate}
             />
             <DownloadButton
               data={data}
-              datasetName="fleet-car-age"
+              datasetName={metric.datasetName}
               includeBothStopsForLocation={false}
               startDate={startDate}
               endDate={endDate}

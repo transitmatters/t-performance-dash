@@ -248,6 +248,118 @@ class TestBusTripMetricsByRoute:
             speed.trip_metrics_by_bus_route(self.params(route=" , "))
 
 
+FLEET_ROWS = [
+    {
+        "route": "all",
+        "date": "2026-01-05",
+        "fleet_trips": 300,
+        "pct_battery_trips": 10.0,
+        "avg_bus_age": 8.0,
+        "fleet_mix_diesel": 20.0,
+        "fleet_mix_hybrid": 70.0,
+        "fleet_mix_battery": 10.0,
+    },
+    {
+        "route": "all",
+        "date": "2026-01-06",
+        "fleet_trips": 100,
+        "pct_battery_trips": 30.0,
+        "avg_bus_age": 6.0,
+        "fleet_mix_diesel": 10.0,
+        "fleet_mix_hybrid": 60.0,
+        "fleet_mix_battery": 30.0,
+    },
+    # Speed-only row, from before fleet data: doesn't drag the averages toward zero.
+    {"route": "all", "date": "2026-01-07", "miles_covered": 4, "total_time": 3600, "count": 2},
+]
+
+
+class TestFleetRollup:
+    def test_weights_each_day_by_its_sampled_trips(self):
+        pooled = speed._rollup_fleet_fields(FLEET_ROWS)
+        assert pooled["fleet_trips"] == 400
+        assert pooled["pct_battery_trips"] == 15.0
+        assert pooled["avg_bus_age"] == 7.5
+        mix = [pooled[f"fleet_mix_{kind}"] for kind in ("diesel", "hybrid", "battery")]
+        assert mix == [17.5, 67.5, 15.0]
+        assert sum(mix) == pytest.approx(100)
+
+    def test_no_fleet_data_adds_nothing(self):
+        assert speed._rollup_fleet_fields(FLEET_ROWS[2:]) == {}
+
+    def test_bus_weekly_rollup_keeps_fleet_fields(self, monkeypatch):
+        monkeypatch.setattr(speed.dynamo, "query_daily_trips_on_route", lambda *args: FLEET_ROWS)
+        params = {"start_date": "2026-01-01", "end_date": "2026-01-31", "route": "all", "agg": "weekly"}
+        [week] = speed.trip_metrics_by_bus_route(params)
+        assert week["count"] == 2
+        assert week["pct_battery_trips"] == 15.0
+        assert week["fleet_trips"] == 400
+
+
+CR_ROWS = [
+    {
+        "route": "CR-Fairmount",
+        "date": "2026-01-05",
+        "fleet_trips": 30,
+        "avg_cab_car_age": 3.0,
+        "fleet_mix_rotem": 100.0,
+    },
+    {
+        "route": "CR-Fairmount",
+        "date": "2026-01-06",
+        "fleet_trips": 10,
+        "avg_cab_car_age": 35.0,
+        "fleet_mix_rotem": 50.0,
+        "fleet_mix_kawasaki": 50.0,
+    },
+]
+
+
+class TestCrTripMetricsByRoute:
+    @pytest.fixture
+    def query_calls(self, monkeypatch):
+        calls = []
+
+        def fake_query(table, route, start, end):
+            calls.append((table, route, start, end))
+            return CR_ROWS
+
+        monkeypatch.setattr(speed.dynamo, "query_daily_trips_on_route", fake_query)
+        return calls
+
+    def params(self, **extra):
+        return {"start_date": "2026-01-01", "end_date": "2026-01-31", "route": "CR-Fairmount"} | extra
+
+    def test_daily_rows_unchanged(self, query_calls):
+        assert speed.trip_metrics_by_cr_route(self.params()) == CR_ROWS
+        assert query_calls == [("DeliveredTripMetricsCR", "CR-Fairmount", "2026-01-01", "2026-01-31")]
+
+    def test_monthly_pools_fleet_without_bus_fields(self, query_calls):
+        [month] = speed.trip_metrics_by_cr_route(self.params(agg="monthly"))
+        assert month == {
+            "date": "2026-01-01",
+            "route": "CR-Fairmount",
+            "fleet_trips": 40,
+            "avg_cab_car_age": 11.0,
+            "fleet_mix_rotem": 87.5,
+            # Missing from the first day's row, so 0% that day.
+            "fleet_mix_kawasaki": 12.5,
+        }
+
+    def test_unknown_agg_rejected(self, query_calls):
+        with pytest.raises(speed.BadRequestError):
+            speed.trip_metrics_by_cr_route(self.params(agg="hourly"))
+
+    def test_long_daily_range_rejected(self, query_calls):
+        with pytest.raises(speed.ForbiddenError):
+            speed.trip_metrics_by_cr_route(self.params(start_date="2025-01-01", end_date="2026-01-01"))
+        assert query_calls == []
+
+    def test_blank_route_rejected(self, query_calls):
+        with pytest.raises(speed.BadRequestError):
+            speed.trip_metrics_by_cr_route(self.params(route=" "))
+
+
 def _bands(**bands):
     """A `time_bands` map: each band given as (count, n_traversals, n_interpolated, miles_covered, total_time)."""
     return {band: dict(zip(speed.BUS_BAND_FIELDS, values)) for band, values in bands.items()}

@@ -31,7 +31,6 @@ from chalicelib import (
     weather,
 )
 
-
 spec = APISpec(
     title="Data Dashboard API",
     version="1.0.0",
@@ -53,7 +52,11 @@ DD_TRACE_HEADERS = [
     "tracestate",
     "baggage",
 ]
-cors_config = CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", allow_headers=DD_TRACE_HEADERS, max_age=3600)
+cors_config = (
+    CORSConfig(allow_origin="*", allow_headers=DD_TRACE_HEADERS, max_age=3600)
+    if TM_FRONTEND_HOST == localhost
+    else CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", allow_headers=DD_TRACE_HEADERS, max_age=3600)
+)
 
 if TM_FRONTEND_HOST != localhost:
     app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
@@ -155,7 +158,11 @@ def healthcheck():
     )
 
 
-@app.route("/api/headways/{user_date}", cors=cors_config, docs=Docs(response=models.HeadwayResponse))
+@app.route(
+    "/api/headways/{user_date}",
+    cors=cors_config,
+    docs=Docs(request=models.HeadwayParams, response=models.HeadwayResponse),
+)
 def headways_route(user_date):
     """Retrieve headway data for the given date and stop(s).
 
@@ -180,11 +187,18 @@ def headways_route(user_date):
 
     return Response(
         body=json.dumps(data),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
     )
 
 
-@app.route("/api/dwells/{user_date}", cors=cors_config, docs=Docs(response=models.DwellResponse))
+@app.route(
+    "/api/dwells/{user_date}",
+    cors=cors_config,
+    docs=Docs(request=models.DwellParams, response=models.DwellResponse),
+)
 def dwells_route(user_date):
     """Retrieve dwell time data for the given date and stop(s).
 
@@ -209,11 +223,18 @@ def dwells_route(user_date):
 
     return Response(
         body=json.dumps(data),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
     )
 
 
-@app.route("/api/traveltimes/{user_date}", cors=cors_config, docs=Docs(response=models.TravelTimeResponse))
+@app.route(
+    "/api/traveltimes/{user_date}",
+    cors=cors_config,
+    docs=Docs(request=models.TravelTimeParams, response=models.TravelTimeResponse),
+)
 def traveltime_route(user_date):
     """Retrieve travel time data between stop pairs for the given date.
 
@@ -234,7 +255,8 @@ def traveltime_route(user_date):
         data = static_data.get_traveltimes(user_date, from_stops, to_stops)
     elif config.BACKEND_SOURCE == "prod":
         data = static_data.proxy_request(
-            f"/api/traveltimes/{user_date}", {"from_stop": from_stops, "to_stop": to_stops}
+            f"/api/traveltimes/{user_date}",
+            {"from_stop": from_stops, "to_stop": to_stops},
         )
     else:
         date = parse_user_date(user_date)
@@ -242,11 +264,18 @@ def traveltime_route(user_date):
 
     return Response(
         body=json.dumps(data),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
     )
 
 
-@app.route("/api/alerts/{user_date}", cors=cors_config, docs=Docs(response=models.AlertsRouteResponse))
+@app.route(
+    "/api/alerts/{user_date}",
+    cors=cors_config,
+    docs=Docs(request=models.AlertsByDateParams, response=models.AlertsRouteResponse),
+)
 def alerts_route(user_date):
     """Retrieve transit alerts for the given date and route(s).
 
@@ -270,11 +299,21 @@ def alerts_route(user_date):
 
     return Response(
         body=json.dumps(data),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
     )
 
 
-@app.route("/api/aggregate/traveltimes", cors=cors_config, docs=Docs(response=models.TravelTimeAggregateResponse))
+@app.route(
+    "/api/aggregate/traveltimes",
+    cors=cors_config,
+    docs=Docs(
+        request=models.AggregateTravelTimesParams,
+        response=models.TravelTimeAggregateResponse,
+    ),
+)
 def traveltime_aggregate_route():
     """Retrieve aggregated travel time data over a date range, grouped by date."""
     query_params = app.current_request.query_params or {}
@@ -295,11 +334,21 @@ def traveltime_aggregate_route():
     indent = None if is_large_date_range(query_params) else 4
     return Response(
         body=json.dumps(data, indent=indent, sort_keys=True, default=str),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
     )
 
 
-@app.route("/api/aggregate/traveltimes2", cors=cors_config, docs=Docs(response=models.TravelTimeAggregateResponse))
+@app.route(
+    "/api/aggregate/traveltimes2",
+    cors=cors_config,
+    docs=Docs(
+        request=models.AggregateTravelTimesParams,
+        response=models.TravelTimeAggregateResponse,
+    ),
+)
 def traveltime_aggregate_route_2():
     """Retrieve aggregated travel time data with by-time-of-day and by-date breakdowns."""
     query_params = app.current_request.query_params or {}
@@ -320,11 +369,21 @@ def traveltime_aggregate_route_2():
     indent = None if is_large_date_range(query_params) else 4
     return Response(
         body=json.dumps(data, indent=indent, sort_keys=True, default=str),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
     )
 
 
-@app.route("/api/aggregate/headways", cors=cors_config, docs=Docs(response=models.HeadwaysAggregateResponse))
+@app.route(
+    "/api/aggregate/headways",
+    cors=cors_config,
+    docs=Docs(
+        request=models.AggregateHeadwaysParams,
+        response=models.HeadwaysAggregateResponse,
+    ),
+)
 def headways_aggregate_route():
     """Retrieve aggregated headway data over a date range for the given stop(s)."""
     query_params = app.current_request.query_params or {}
@@ -344,11 +403,18 @@ def headways_aggregate_route():
     indent = None if is_large_date_range(query_params) else 4
     return Response(
         body=json.dumps(data, indent=indent, sort_keys=True, default=str),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
     )
 
 
-@app.route("/api/aggregate/dwells", cors=cors_config, docs=Docs(response=models.DwellsAggregateResponse))
+@app.route(
+    "/api/aggregate/dwells",
+    cors=cors_config,
+    docs=Docs(request=models.AggregateDwellsParams, response=models.DwellsAggregateResponse),
+)
 def dwells_aggregate_route():
     """Retrieve aggregated dwell time data over a date range for the given stop(s)."""
     query_params = app.current_request.query_params or {}
@@ -368,7 +434,10 @@ def dwells_aggregate_route():
     indent = None if is_large_date_range(query_params) else 4
     return Response(
         body=json.dumps(data, indent=indent, sort_keys=True, default=str),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
     )
 
 
@@ -390,7 +459,10 @@ def get_alerts():
 
     return Response(
         body=json.dumps(data, indent=4, sort_keys=True, default=str),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache.FIFTEEN_MINUTES}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache.FIFTEEN_MINUTES}",
+        },
     )
 
 
@@ -413,7 +485,10 @@ def get_delays_by_line():
 
     return Response(
         body=json.dumps(data, indent=4, sort_keys=True),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
     )
 
 
@@ -436,7 +511,10 @@ def get_trips_by_line():
 
     return Response(
         body=json.dumps(data, indent=4, sort_keys=True),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
     )
 
 
@@ -459,6 +537,30 @@ def get_bus_trip_metrics():
         data = static_data.proxy_request("/api/bustripmetrics", query_params)
     else:
         data = speed.trip_metrics_by_bus_route(query_params)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
+    "/api/crtripmetrics",
+    cors=cors_config,
+    docs=Docs(request=models.CrTripMetricsParams, response=models.CrTripMetricsResponse),
+)
+def get_cr_trip_metrics():
+    """Retrieve Commuter Rail fleet metrics for one route, or `all`, over a date range."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date", "route"])
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = []
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/crtripmetrics", query_params)
+    else:
+        data = speed.trip_metrics_by_cr_route(query_params)
 
     return Response(
         body=json.dumps(data, indent=4, sort_keys=True),
@@ -500,7 +602,10 @@ def get_bus_speed_leaderboard():
 @app.route(
     "/api/scheduledservice",
     cors=cors_config,
-    docs=Docs(request=models.ScheduledServiceParams, response=models.GetScheduledServiceResponse),
+    docs=Docs(
+        request=models.ScheduledServiceParams,
+        response=models.GetScheduledServiceResponse,
+    ),
 )
 def get_scheduled_service():
     """Retrieve scheduled service counts for a route over a date range."""
@@ -526,12 +631,17 @@ def get_scheduled_service():
 
     return Response(
         body=json.dumps(data),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
     )
 
 
 @app.route(
-    "/api/ridership", cors=cors_config, docs=Docs(request=models.RidershipParams, response=models.RidershipResponse)
+    "/api/ridership",
+    cors=cors_config,
+    docs=Docs(request=models.RidershipParams, response=models.RidershipResponse),
 )
 def get_ridership():
     """Retrieve ridership data for a line over a date range."""
@@ -555,7 +665,10 @@ def get_ridership():
 
     return Response(
         body=json.dumps(data),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
     )
 
 
@@ -622,14 +735,20 @@ def get_facilities():
 
     return Response(
         body=json.dumps(data, indent=4, sort_keys=True, default=str),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache.FIFTEEN_MINUTES}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache.FIFTEEN_MINUTES}",
+        },
     )
 
 
 @app.route(
     "/api/speed_restrictions",
     cors=cors_config,
-    docs=Docs(request=models.SpeedRestrictionsParams, response=models.SpeedRestrictionsResponse),
+    docs=Docs(
+        request=models.SpeedRestrictionsParams,
+        response=models.SpeedRestrictionsResponse,
+    ),
 )
 def get_speed_restrictions():
     """Retrieve speed restriction data for a line on a given date."""
@@ -651,7 +770,10 @@ def get_speed_restrictions():
 
     return Response(
         body=json.dumps(data),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
     )
 
 
@@ -684,7 +806,10 @@ def get_service_hours():
 
     return Response(
         body=json.dumps(data),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
     )
 
 
@@ -710,7 +835,10 @@ def get_time_predictions():
 
     return Response(
         body=json.dumps(data),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache.ONE_HOUR}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache.ONE_HOUR}",
+        },
     )
 
 
@@ -730,7 +858,10 @@ def get_service_ridership_dashboard():
 
     return Response(
         body=data,
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache.ONE_HOUR}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache.ONE_HOUR}",
+        },
     )
 
 
@@ -746,7 +877,10 @@ def get_routes():
 
     return Response(
         body=json.dumps(data),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache.ONE_DAY}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache.ONE_DAY}",
+        },
     )
 
 
@@ -772,7 +906,10 @@ def get_stops(route_id):
 
     return Response(
         body=json.dumps(data),
-        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache.ONE_DAY}"},
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache.ONE_DAY}",
+        },
     )
 
 

@@ -8,7 +8,7 @@ import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { round } from '@lodash-utils';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { LINE_COLORS } from '../../../common/constants/colors';
-import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
+import type { FleetMetrics } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { HERO_LINE_WIDTH, useChartTheme } from '../../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../../common/utils/general';
@@ -20,17 +20,22 @@ import { DownloadButton } from '../../../common/components/buttons/DownloadButto
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
 import type { ParamsType } from '../../speed/constants/speeds';
+import { hasFleetMetric, type FleetModeMetrics } from '../constants/fleetTypes';
 
-interface PctNewTrainsChartProps {
-  data: DeliveredTripMetrics[];
+interface FleetShareChartProps {
+  data: FleetMetrics[];
+  metric: NonNullable<FleetModeMetrics['share']>;
+  showShuttling: boolean;
   config: ParamsType;
   startDate: string;
   endDate: string;
   showTitle?: boolean;
 }
 
-export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
+export const FleetShareChart: React.FC<FleetShareChartProps> = ({
   data,
+  metric,
+  showShuttling,
   config,
   startDate,
   endDate,
@@ -45,18 +50,16 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
   const lineColor = LINE_COLORS[line ?? 'default'];
   // Keyed off the fleet metric, not miles_covered: a partial shutdown zeroes the line's
   // service metrics while cars still ran (and were sampled) on the remaining branches.
-  // Checked against null rather than truthiness -- 0% new trains is a real value on
-  // Blue and Mattapan, which have no new fleet at all.
-  const shuttlingBlocks = getShuttlingBlockAnnotations(
-    data,
-    (datapoint) => datapoint.pct_new_trips !== undefined && datapoint.pct_new_trips !== null
-  );
+  // Checked against null rather than truthiness -- 0% is a real value.
+  const shuttlingBlocks = showShuttling
+    ? getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMetric(datapoint, metric.field))
+    : [];
 
   return (
     <ChartStack>
       <ChartDiv isMobile={isMobile}>
         <Line
-          id={`fleet-pct-new-${linePath}`}
+          id={`${metric.datasetName}-${linePath}`}
           height={isMobile ? 240 : 200}
           ref={ref}
           redraw={true}
@@ -64,7 +67,7 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
             labels,
             datasets: [
               {
-                label: '% of trips run by new trains',
+                label: metric.title,
                 fill: true,
                 backgroundColor: hexWithAlpha(lineColor, 0.8),
                 borderColor: lineColor,
@@ -74,7 +77,7 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
                 pointBorderWidth: 0,
                 stepped: true,
                 pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.pct_new_trips ?? null),
+                data: data.map((datapoint) => datapoint[metric.field] ?? null),
               },
             ],
           }}
@@ -99,7 +102,7 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
                   ...callbacks,
                   label: (context) => {
                     if (context.parsed.y === null || context.parsed.y === undefined) return '';
-                    return `${round(context.parsed.y, 1)}% new trains`;
+                    return `${round(context.parsed.y, 1)}% ${metric.tooltipSuffix}`;
                   },
                 },
               },
@@ -119,7 +122,7 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
             scales: {
               y: {
                 min: 0,
-                max: 100,
+                max: metric.fixedScale ? 100 : undefined,
                 display: true,
                 border: { display: false },
                 grid: { color: chartTheme.grid },
@@ -129,7 +132,7 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Trips run by new trains',
+                  text: metric.axisLabel,
                   color: chartTheme.tick,
                 },
               },
@@ -167,7 +170,7 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
             {
               id: 'customTitle',
               afterDraw: (chart) => {
-                if (showTitle) drawSimpleTitle(`% new trains`, chart);
+                if (showTitle) drawSimpleTitle(metric.title, chart);
               },
             },
             ChartjsPluginWatermark,
@@ -179,14 +182,14 @@ export const PctNewTrainsChart: React.FC<PctNewTrainsChartProps> = ({
           <>
             <SaveChartImageButton
               chartRef={ref}
-              datasetName="fleet-pct-new-trains"
+              datasetName={metric.datasetName}
               includeBothStopsForLocation={false}
               startDate={startDate}
               endDate={endDate}
             />
             <DownloadButton
               data={data}
-              datasetName="fleet-pct-new-trains"
+              datasetName={metric.datasetName}
               includeBothStopsForLocation={false}
               startDate={startDate}
               endDate={endDate}

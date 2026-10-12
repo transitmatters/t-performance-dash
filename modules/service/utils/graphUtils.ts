@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AlertForModal } from '../../../common/types/alerts';
 import { hexWithAlpha } from '../../../common/utils/general';
-import type { SpeedTripMetrics } from '../../../common/types/dataPoints';
 import { TODAY, OVERVIEW_TRAIN_MIN_DATE } from '../../../common/constants/dates';
 
 const shuttlingAnnotationBlockStyle = {
@@ -32,10 +31,9 @@ const alertAnnotationBlockStyle = {
  * line's service metrics while other metrics may still have been measured on the
  * branches that kept running.
  */
-export const getShuttlingBlockAnnotations = (
-  data: SpeedTripMetrics[],
-  hasData: (datapoint: SpeedTripMetrics) => boolean = (datapoint) =>
-    Boolean(datapoint.miles_covered)
+export const getShuttlingBlockAnnotations = <T extends { date: string; miles_covered?: number }>(
+  data: T[],
+  hasData: (datapoint: T) => boolean = (datapoint) => Boolean(datapoint.miles_covered)
 ): AnnotationOptions<keyof AnnotationTypeRegistry>[] => {
   let xMin: string | undefined;
   let xMax: string | undefined;
