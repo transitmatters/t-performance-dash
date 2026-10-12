@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { queryOptions, useQuery } from '@tanstack/react-query';
 import { ONE_HOUR } from '../../constants/time';
 import { PEAK_RIDERSHIP, PEAK_SCHEDULED_SERVICE, PEAK_SPEED } from '../../constants/baselines';
 import type { BusRoute, CommuterRailRoute, FerryRoute, Line } from '../../types/lines';
@@ -7,13 +7,15 @@ import { getBaseline, lineSeriesId } from '../../utils/baselines';
 import { getRidershipLineId } from '../../utils/ridership';
 import { fetchHistoricalBaselines } from '../baselines';
 
+export const historicalBaselinesQuery = queryOptions({
+  queryKey: ['historicalBaselines'],
+  queryFn: fetchHistoricalBaselines,
+  staleTime: ONE_HOUR,
+  retry: false,
+});
+
 export const useHistoricalBaselines = () => {
-  return useQuery({
-    queryKey: ['historicalBaselines'],
-    queryFn: fetchHistoricalBaselines,
-    staleTime: ONE_HOUR,
-    retry: false,
-  });
+  return useQuery(historicalBaselinesQuery);
 };
 
 export const useSpeedBaseline = (line: Line | undefined) => {
