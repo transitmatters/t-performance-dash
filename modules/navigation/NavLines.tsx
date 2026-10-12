@@ -80,7 +80,11 @@ const pagesForLine = (line: Line): PageMetadata[] => {
     case 'line-bus':
       return [...BUS_OVERVIEW, ...NAV_TRIP_PAGES];
     case 'line-commuter-rail':
-      return [...COMMUTER_RAIL_OVERVIEW, ...forThisLine, ...NAV_TRIP_PAGES];
+      return [
+        ...COMMUTER_RAIL_OVERVIEW,
+        ...forThisLine.filter((page) => !COMMUTER_RAIL_OVERVIEW.includes(page)),
+        ...NAV_TRIP_PAGES,
+      ];
     case 'line-ferry':
       return [...FERRY_OVERVIEW, ...NAV_TRIP_PAGES];
     case 'line-RIDE':
