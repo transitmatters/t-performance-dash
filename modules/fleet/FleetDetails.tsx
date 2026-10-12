@@ -24,18 +24,6 @@ dayjs.extend(utc);
 // data-ingestion's system-wide row for bus and Commuter Rail.
 const SYSTEM_WIDE_ROUTE = 'all';
 
-// Commuter Rail calls its routes lines, as on the Reliability page.
-const scopeOptions = (isCommuterRail: boolean): ['all' | 'route', string][] =>
-  isCommuterRail
-    ? [
-        ['all', 'All lines'],
-        ['route', 'This line'],
-      ]
-    : [
-        ['all', 'All routes'],
-        ['route', 'This route'],
-      ];
-
 export function FleetDetails() {
   const {
     line,
@@ -46,12 +34,19 @@ export function FleetDetails() {
   const isCommuterRail = line === 'line-commuter-rail';
   const isRail = !isBus && !isCommuterRail;
   const selectedRoute = isBus ? busRoute : isCommuterRail ? crRoute : undefined;
+  const routeLabel = isBus
+    ? `Route ${busRoute}`
+    : (COMMUTER_RAIL_LINE_NAMES[crRoute!] ?? crRoute ?? '');
+  // Commuter Rail calls its routes lines, as on the Reliability page.
+  const allLabel = isCommuterRail ? 'All lines' : 'All routes';
+  // Follows the route picked in the header, like the other bus and CR pages.
   const { value: scope, control: scopeControl } = useChartToggle(
-    'all',
-    scopeOptions(isCommuterRail),
-    {
-      paramKey: 'fleetScope',
-    }
+    'route',
+    [
+      ['route', routeLabel],
+      ['all', allLabel],
+    ],
+    { paramKey: 'fleetScope' }
   );
   const byRoute = scope === 'route' && Boolean(selectedRoute);
   const route = byRoute ? selectedRoute : SYSTEM_WIDE_ROUTE;
@@ -78,11 +73,7 @@ export function FleetDetails() {
 
   const fleetTypes = line ? FLEET_TYPES[line] : undefined;
   const metrics = getFleetModeMetrics(line);
-  const scopeLabel = !byRoute
-    ? scopeOptions(isCommuterRail)[0][1]
-    : isBus
-      ? `Route ${busRoute}`
-      : (COMMUTER_RAIL_LINE_NAMES[crRoute!] ?? crRoute);
+  const scopeLabel = byRoute ? routeLabel : allLabel;
   const subtitle = (railSubtitle: string) => (isRail ? railSubtitle : scopeLabel);
   // Shuttle shading marks rail shutdowns; bus and CR gaps are just missing samples.
   const shuttling = isRail;
