@@ -68,6 +68,8 @@ export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
 // Commuter Rail earliest Ridership date
 export const COMMUTER_RAIL_RIDERSHIP_MIN_DATE = '2022-06-22';
 export const COMMUTER_RAIL_DATA_MIN_DATE = '2024-01-01';
+// The Regional Rail scorecard is computed from archived schedules, which go back further
+export const COMMUTER_RAIL_SCHEDULE_MIN_DATE = '2016-01-01';
 /**
  * From this date Gobble benchmarks each Commuter Rail event against its own train's schedule
  * (gobble#144). Earlier benchmarks were often another train's, so charts don't show them.
@@ -141,6 +143,10 @@ export const getDatePickerBounds = (
       minDate: tab === 'The RIDE' ? RIDE_RELIABILITY_MIN_DATE : COMMUTER_RAIL_RELIABILITY_MIN_DATE,
       maxDate: TODAY_STRING,
     };
+  }
+
+  if (tab === 'Commuter Rail' && page === 'service') {
+    return { minDate: COMMUTER_RAIL_SCHEDULE_MIN_DATE, maxDate: TODAY_STRING };
   }
 
   if (tab === 'Commuter Rail' && page === 'ridership') {

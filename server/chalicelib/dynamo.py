@@ -193,6 +193,34 @@ def query_reliability(route_id: str, start_date: date, end_date: date):
     return items
 
 
+def query_regional_rail_scorecard(route_id: str, start_date: date, end_date: date):
+    """Query scheduled Regional Rail metrics from the ScheduledServiceRegionalRail DynamoDB table.
+
+    Args:
+      route_id: str: The Commuter Rail route ID (``"CR-Worcester"``, ...).
+      start_date: date: Start of date range (inclusive).
+      end_date: date: End of date range (inclusive).
+
+    Returns:
+      list[dict]: Deserialized scorecard records, one per day.
+    """
+    table = dynamodb.Table("ScheduledServiceRegionalRail")
+    # Paginate: years of daily rows, with hourly counts, can exceed one 1MB page
+    query_kwargs = {
+        "KeyConditionExpression": Key("routeId").eq(route_id)
+        & Key("date").between(start_date.isoformat(), end_date.isoformat())
+    }
+    items = []
+    while True:
+        response = table.query(**query_kwargs)
+        items.extend(ddb_json.loads(response["Items"]))
+        last_evaluated_key = response.get("LastEvaluatedKey")
+        if not last_evaluated_key:
+            break
+        query_kwargs["ExclusiveStartKey"] = last_evaluated_key
+    return items
+
+
 def query_agg_trip_metrics(start_date: str | date, end_date: str | date, table_name: str, line: str = None):
     """Query aggregated trip metrics from a DynamoDB table, keyed by line and date.
 

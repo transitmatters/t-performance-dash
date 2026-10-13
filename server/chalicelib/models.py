@@ -277,6 +277,24 @@ class ReliabilityParams(BaseModel):
     agg: str
 
 
+class CrScorecardParams(BaseModel):
+    """Parameters for the `/api/crscorecard` endpoint.
+
+    Attributes:
+        route_id: A Commuter Rail route (e.g. `CR-Worcester`), or `commuter-rail` to compare every route.
+        start_date: Start of date range.
+        end_date: End of date range.
+        agg: Aggregation level — `daily`, `weekly`, or `monthly`. Ignored for `commuter-rail`.
+        day_kind: Which schedule to measure — `weekday`, `saturday`, or `sunday` — or `all` for every day.
+    """
+
+    route_id: str
+    start_date: date
+    end_date: date
+    agg: str
+    day_kind: Literal["weekday", "saturday", "sunday", "all"]
+
+
 class TimePredictionParams(BaseModel):
     """Parameters for the `/api/time_predictions` endpoint.
 
@@ -616,6 +634,22 @@ class ReliabilityEntry(BaseModel):
     cancelled: Optional[int] = None
     peak: Optional[ReliabilityCounts] = None
     offPeak: Optional[ReliabilityCounts] = None
+
+
+class CrScorecardResponse(BaseModel):
+    """Response for `/api/crscorecard` — scheduled Commuter Rail service against Regional Rail standards.
+
+    For a route, one entry per period with `date`, `days` (days averaged), `outbound` and `inbound`
+    (trips, firstTrip/lastTrip in seconds after midnight, maxGapMidday/maxGapEvening in minutes,
+    hoursAtTarget of 20, clockFaceShare, byHour), `peakTrips` and `reversePeakTrips`. For
+    `commuter-rail`, one entry per route with `routeId` in place of `date`.
+
+    Attributes:
+        data: Scorecard entries.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    data: List[Dict[str, Any]]
 
 
 class ReliabilityResponse(BaseModel):

@@ -20,6 +20,7 @@ from chalicelib import (
     route_manifest,
     models,
     predictions,
+    regional_rail,
     reliability,
     ridership,
     scheduled_service,
@@ -695,6 +696,42 @@ def get_reliability():
             start_date=parse_user_date(query_params["start_date"]),
             end_date=parse_user_date(query_params["end_date"]),
             agg=query_params["agg"],
+        )
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
+    "/api/crscorecard",
+    cors=cors_config,
+    docs=Docs(request=models.CrScorecardParams, response=models.CrScorecardResponse),
+)
+def get_cr_scorecard():
+    """Retrieve a Commuter Rail route's schedule measured against Regional Rail standards."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["route_id", "start_date", "end_date", "agg", "day_kind"])
+    if query_params["agg"] not in regional_rail.AGGS:
+        raise BadRequestError(f"Invalid agg '{query_params['agg']}'. Expected one of: {', '.join(regional_rail.AGGS)}.")
+    if query_params["day_kind"] not in regional_rail.DAY_KINDS:
+        raise BadRequestError(
+            f"Invalid day_kind '{query_params['day_kind']}'. Expected one of: {', '.join(regional_rail.DAY_KINDS)}."
+        )
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = []
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/crscorecard", query_params)
+    else:
+        data = regional_rail.get_scorecard(
+            route_id=query_params["route_id"],
+            start_date=parse_user_date(query_params["start_date"]),
+            end_date=parse_user_date(query_params["end_date"]),
+            agg=query_params["agg"],
+            kind=query_params["day_kind"],
         )
 
     return Response(
