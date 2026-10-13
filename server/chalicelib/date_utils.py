@@ -11,6 +11,8 @@ from zoneinfo import ZoneInfo
 
 DATE_FORMAT_MASSDOT = "%Y-%m-%d %H:%M:%S"
 DATE_FORMAT_TIMEZONE = "%Y-%m-%d %H:%M:%S%z"
+# Gobble's Commuter Rail terminal arrivals from 2026-10-04 carry microseconds
+DATE_FORMAT_TIMEZONE_FRACTIONAL = "%Y-%m-%d %H:%M:%S.%f%z"
 DATE_FORMAT_OUT = "%Y-%m-%dT%H:%M:%S"
 EASTERN_TIME = ZoneInfo("US/Eastern")
 
@@ -39,10 +41,11 @@ def get_max_ferry_monthly_data_date():
 def parse_event_date(date_str: str):
     """Parse a transit event timestamp string into a timezone-aware datetime.
 
-    Handles two formats:
+    Handles three formats:
 
     - 19-character strings (``YYYY-MM-DD HH:MM:SS``) — assumed Eastern Time.
     - Longer strings with timezone offset (``YYYY-MM-DD HH:MM:SS±HHMM``).
+    - The same with fractional seconds (``YYYY-MM-DD HH:MM:SS.ffffff±HHMM``).
 
     Args:
         date_str: Timestamp string from an event CSV.
@@ -52,6 +55,8 @@ def parse_event_date(date_str: str):
     """
     if len(date_str) == 19:
         return datetime.strptime(date_str, DATE_FORMAT_MASSDOT).replace(tzinfo=EASTERN_TIME)
+    elif "." in date_str:
+        return datetime.strptime(date_str, DATE_FORMAT_TIMEZONE_FRACTIONAL)
     else:
         return datetime.strptime(date_str, DATE_FORMAT_TIMEZONE)
 
