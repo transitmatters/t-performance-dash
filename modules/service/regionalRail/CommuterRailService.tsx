@@ -7,6 +7,7 @@ import { useCrScorecard } from '../../../common/api/hooks/crScorecard';
 import { PageWrapper } from '../../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../../common/components/charts/ChartPageDiv';
 import { ByHourHistogram } from '../../../common/components/charts/ByHourHistogram';
+import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { DataNotes } from '../../../common/components/notices/DataNotes';
 import { Widget } from '../../../common/components/widgets';
 import {
@@ -53,6 +54,8 @@ const WAIT_TARGET = {
   goodSide: 'below' as const,
 };
 
+const HOURLY_AXIS = { title: 'Scheduled trains', tooltipItemLabel: 'trains' };
+
 const DAY_LABELS: Record<DayKind, string> = {
   weekday: 'weekday',
   saturday: 'Saturday',
@@ -98,6 +101,17 @@ export function CommuterRailService() {
     Boolean(startDate && endDate)
   );
 
+  // Stable between renders: a new array each time makes the chart redraw and keep resizing
+  const hourly = React.useMemo(
+    () =>
+      DIRECTIONS.map(({ key, label }) => ({
+        label,
+        data: averageByHour(scorecard.data ?? [], key),
+        style: { color: DIRECTION_COLORS[key] },
+      })),
+    [scorecard.data]
+  );
+
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
   }
@@ -106,11 +120,16 @@ export function CommuterRailService() {
   const stats = byLine && scorecard.data ? getScorecardStats(scorecard.data) : null;
   const ready = [scorecard];
   const day = DAY_LABELS[dayKind];
-  const directionLines = (field: 'hoursAtTarget' | 'maxGapMidday' | 'maxGapEvening' | 'trips') =>
+  // Trains per day rarely changes from day to day, so short ranges read better as bars
+  const bars = agg === 'daily';
+  const directionLines = (
+    field: 'hoursAtTarget' | 'maxGapMidday' | 'maxGapEvening' | 'trips',
+    bar = false
+  ) =>
     DIRECTIONS.map(({ key, label }) => ({
       label,
       data: toPoints(data, (entry) => entry[key][field]),
-      style: { color: DIRECTION_COLORS[key] },
+      style: { color: DIRECTION_COLORS[key], bar },
     }));
   const graphProps = { agg, startDate, endDate };
 
@@ -226,11 +245,11 @@ export function CommuterRailService() {
               <ScorecardGraph
                 {...graphProps}
                 data={[
-                  ...directionLines('trips'),
+                  ...directionLines('trips', bars),
                   {
                     label: 'Reverse peak',
                     data: toPoints(data, (entry) => entry.reversePeakTrips),
-                    style: { color: CHART_COLORS.YELLOW, width: 1 },
+                    style: { color: CHART_COLORS.YELLOW, width: 1, bar: bars },
                   },
                 ]}
                 valueAxisLabel="Trains"
@@ -242,14 +261,9 @@ export function CommuterRailService() {
               subtitle={`Average ${day} in this range · Regional Rail runs at least 2 an hour`}
               ready={ready}
             >
-              <ByHourHistogram
-                data={DIRECTIONS.map(({ key, label }) => ({
-                  label,
-                  data: averageByHour(data, key),
-                  style: { color: DIRECTION_COLORS[key] },
-                }))}
-                valueAxis={{ title: 'Scheduled trains', tooltipItemLabel: 'trains' }}
-              />
+              <ChartStack>
+                <ByHourHistogram data={hourly} valueAxis={HOURLY_AXIS} />
+              </ChartStack>
             </Widget>
           </>
         ) : (

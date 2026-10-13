@@ -99,6 +99,8 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     return styles;
   }, [data, globalStyle]);
 
+  const hasBars = data.some((dataset) => appliedStyles.get(dataset)?.bar);
+
   const chartJsData = useMemo(() => {
     const datasets = data.map((dataset) => {
       const style = appliedStyles.get(dataset)!;
@@ -106,7 +108,17 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         x: 'date' in point ? point.date : point.time,
         y: point.value,
       }));
-      const { color, width, pointRadius, pointHitRadius, stepped, tension } = style;
+      const { color, width, pointRadius, pointHitRadius, stepped, tension, bar } = style;
+      if (bar) {
+        return {
+          type: 'bar' as const,
+          label: dataset.label,
+          backgroundColor: color,
+          borderColor: color,
+          borderWidth: 0,
+          data: pointData,
+        };
+      }
       return {
         label: dataset.label,
         borderColor: color,
@@ -159,6 +171,8 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         max: timeAxis.to,
         display: true,
         type: 'time' as const,
+        // Keeps the first and last bars whole instead of cut off at the axis edges
+        offset: hasBars,
         adapters: {
           date: {
             locale: enUS,
@@ -190,7 +204,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         },
       },
     };
-  }, [timeAxis, valueAxis, grid.zIndex]);
+  }, [timeAxis, valueAxis, grid.zIndex, hasBars]);
 
   const chartJsOptions = useMemo(() => {
     const benchmarkAnnotations = benchmarks.map((benchmark, index) => {

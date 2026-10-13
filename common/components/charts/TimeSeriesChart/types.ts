@@ -15,6 +15,7 @@ export type DisplayStyle<Point extends DataPoint, Applied extends boolean = fals
   color: string;
   width: number;
   fill?: boolean; // Use to fill with lineColor by default
+  bar?: boolean; // Draw as one bar per point instead of a line
   fillColor: null | string;
   fillPattern: FillPattern;
   pointColor: null | string | ResolvedFromDataPoint<Applied, Point>;
