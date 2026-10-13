@@ -12,7 +12,7 @@
         "branches": null,
         "order": 1,
         "stops": {
-          "0": [],
+          "0": ["CR-Worcester_0_WML-0442-CS"],
           "1": ["CR-Worcester_1_WML-0442-CS"]
         },
         "terminus": true
@@ -192,12 +192,13 @@
             "CR-Worcester_0_NEC-2287-05",
             "CR-Worcester_0_NEC-2287-06",
             "CR-Worcester_0_NEC-2287-07",
+            "CR-Worcester_0_NEC-2287-08",
             "CR-Worcester_0_NEC-2287-09",
             "CR-Worcester_0_NEC-2287-10",
             "CR-Worcester_0_NEC-2287-11",
             "CR-Worcester_0_NEC-2287-12"
           ],
-          "1": []
+          "1": ["CR-Worcester_1_NEC-2287"]
         },
         "terminus": true
       }

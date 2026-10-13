@@ -12,7 +12,7 @@
         "branches": null,
         "order": 1,
         "stops": {
-          "0": [],
+          "0": ["CR-Franklin_0_FB-0303-S"],
           "1": ["CR-Franklin_1_FB-0303-S"]
         },
         "terminus": true
@@ -43,7 +43,7 @@
         "branches": null,
         "order": 4,
         "stops": {
-          "0": [],
+          "0": ["CR-Franklin_0_FS-0049-S"],
           "1": ["CR-Franklin_1_FS-0049-S"]
         }
       },
@@ -186,9 +186,10 @@
             "CR-Franklin_0_NEC-2287-08",
             "CR-Franklin_0_NEC-2287-09",
             "CR-Franklin_0_NEC-2287-10",
-            "CR-Franklin_0_NEC-2287-11"
+            "CR-Franklin_0_NEC-2287-11",
+            "CR-Franklin_0_NEC-2287-12"
           ],
-          "1": []
+          "1": ["CR-Franklin_1_NEC-2287"]
         },
         "terminus": true
       }
