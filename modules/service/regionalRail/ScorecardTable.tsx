@@ -98,7 +98,7 @@ export const ScorecardTable: React.FC<ScorecardTableProps> = ({ data }) => {
           ))}
         </TableBody>
       </Table>
-      <p className="text-muted-foreground mt-3 text-xs leading-6">
+      <p className="mt-3 text-xs leading-6 text-muted-foreground">
         <Swatch tone="meets">Green</Swatch> meets Regional Rail: all {SPAN_HOURS} hours with a train
         every 30 minutes, no wait over 30 minutes, 90%+ of trains on a clock-face pattern.{' '}
         <Swatch tone="partway">Amber</Swatch> is partway: at least half the hours, hourly waits, or
