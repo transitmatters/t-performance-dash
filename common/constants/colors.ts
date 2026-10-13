@@ -55,6 +55,8 @@ export const CHART_COLORS = {
   ANNOTATIONS: hexWithAlpha('#808080', 0.85),
   BLOCKS: hexWithAlpha('#202020', 0.2),
   BLOCKS_SOLID: '#d2d2d2',
+  // Tints the side of a benchmark that meets the target; light enough for both plot surfaces
+  TARGET_ZONE: hexWithAlpha('#64b96a', 0.15),
 };
 
 export const LINE_COLORS: { [key in Line | 'default']: string } = {

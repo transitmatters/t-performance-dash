@@ -260,3 +260,31 @@ export type ReliabilityEntry = {
   peak?: ReliabilityCounts;
   offPeak?: ReliabilityCounts;
 };
+
+/** One direction's schedule, measured at its Boston terminal; see server/chalicelib/regional_rail.py. */
+export type ScorecardDirection = {
+  trips: number;
+  // Seconds after midnight; null on days without service
+  firstTrip: number | null;
+  lastTrip: number | null;
+  // Minutes
+  maxGapMidday: number;
+  maxGapEvening: number;
+  // Of the 20 hours from 5am to 1am, those with a train at least every 30 minutes
+  hoursAtTarget: number;
+  // Share of trains with another exactly an hour before or after; null with too few trains
+  clockFaceShare: number | null;
+  byHour: (number | null)[];
+};
+
+/** A period of one line's schedule (with `date`), or a line's summary over the range (with `routeId`). */
+export type CrScorecardEntry = {
+  date?: string;
+  routeId?: string;
+  // Days of the requested kind averaged into this entry
+  days: number;
+  outbound: ScorecardDirection;
+  inbound: ScorecardDirection;
+  peakTrips: number;
+  reversePeakTrips: number;
+};

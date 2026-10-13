@@ -15,6 +15,7 @@ export type DisplayStyle<Point extends DataPoint, Applied extends boolean = fals
   color: string;
   width: number;
   fill?: boolean; // Use to fill with lineColor by default
+  bar?: boolean; // Draw as one bar per point instead of a line
   fillColor: null | string;
   fillPattern: FillPattern;
   pointColor: null | string | ResolvedFromDataPoint<Applied, Point>;
@@ -83,6 +84,8 @@ export type Benchmark = {
   label: string;
   value: number;
   color?: string;
+  // Labels the line on the chart and tints the side of it that meets the target
+  goodSide?: 'above' | 'below';
 };
 
 export type Block = {

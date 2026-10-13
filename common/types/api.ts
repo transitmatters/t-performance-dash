@@ -178,3 +178,15 @@ export type FetchServiceHoursOptions = Partial<{
 }>;
 
 export type FetchServiceHoursResponse = ServiceHours[];
+
+export type FetchCrScorecardOptions = {
+  [key in FetchCrScorecardParams]?: string;
+};
+
+export enum FetchCrScorecardParams {
+  routeId = 'route_id',
+  startDate = 'start_date',
+  endDate = 'end_date',
+  agg = 'agg',
+  dayKind = 'day_kind',
+}

@@ -14,7 +14,7 @@ export const LINE_PAGE_LINES = {
   predictions: RAIL_LINES,
   reliability: ['commuter-rail', 'the-ride'],
   ridership: [...ALL_MODES, 'the-ride'],
-  service: RAIL_LINES,
+  service: [...RAIL_LINES, 'commuter-rail'],
   slowzones: RAIL_LINES,
   speed: [...RAIL_LINES, 'bus'],
   speedmap: ['bus'],
