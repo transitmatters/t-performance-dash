@@ -2,7 +2,7 @@ import type { BusRoute, CommuterRailRoute, Line, LineShort, FerryRoute } from '.
 import { BUS_ROUTES } from '../types/lines';
 import { type Station } from '../types/stations';
 import type { Location } from '../types/charts';
-import type { Direction, Distance } from '../types/dataPoints';
+import type { Direction } from '../types/dataPoints';
 import {
   stations,
   rtStations,
@@ -10,7 +10,6 @@ import {
   crStations,
   ferryStations,
 } from '../constants/stations';
-import { station_distances } from '../constants/station_distances';
 import { getBusRouteDisplayName, getBusRouteIds } from '../constants/lines';
 import type { Tab } from '../types/router';
 
@@ -134,19 +133,8 @@ const createParentStationIndex = () => {
   return index;
 };
 
-const createStationDistanceIndex = () => {
-  const index: Record<string, Distance> = {};
-
-  for (const [key, value] of Object.entries(station_distances)) {
-    index[key] = value;
-  }
-
-  return index;
-};
-
 const stationIndex = createStationIndex();
 const parentStationIndex = createParentStationIndex();
-const stationDistanceIndex = createStationDistanceIndex();
 
 export const getStationById = (stationStopId: string) => {
   return stationIndex[stationStopId];
@@ -168,10 +156,6 @@ export const getParentStationForStopId = (stopId: string, line?: LineShort) => {
   }
 
   return parentStationIndex[stopId];
-};
-
-export const getStationDistance = (fromStationId: string, toStationId: string) => {
-  return stationDistanceIndex[fromStationId][toStationId];
 };
 
 export const getStationForInvalidFromSelection = (

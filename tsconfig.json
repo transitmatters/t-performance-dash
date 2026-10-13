@@ -16,7 +16,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@chartjs-components": ["./common/components/charts/chartjs.ts"],
+      "@chartjs-utils": ["./common/utils/chartjs.ts"],
+      "@lodash-utils": ["./common/utils/lodash.ts"]
     },
     "jsx": "react-jsx"
   },

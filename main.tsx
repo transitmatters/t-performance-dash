@@ -6,7 +6,6 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import './styles/dashboard.css';
 import './styles/globals.css';
-import './common/utils/setupCharts';
 import type { Layout } from './common/layouts/layoutTypes';
 import { NotFound } from './common/components/NotFound';
 import { parseSearch, stringifySearch } from './common/utils/searchParams';

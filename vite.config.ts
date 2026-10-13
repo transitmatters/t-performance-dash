@@ -11,6 +11,7 @@ import type * as MetaTagsModule from './common/utils/metaTags.ts';
 import type * as StaticRoutesModule from './common/constants/staticRoutes.ts';
 
 const OUT_DIR = 'out';
+const ROOT = dirname(fileURLToPath(import.meta.url));
 
 const escapeHtml = (value: string) =>
   value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -77,7 +78,12 @@ export default defineConfig(() => {
       prerenderMetaTags(),
     ],
     resolve: {
-      alias: { '@': dirname(fileURLToPath(import.meta.url)) },
+      alias: {
+        '@': ROOT,
+        '@chartjs-components': join(ROOT, 'common/components/charts/chartjs.ts'),
+        '@chartjs-utils': join(ROOT, 'common/utils/chartjs.ts'),
+        '@lodash-utils': join(ROOT, 'common/utils/lodash.ts'),
+      },
     },
     build: {
       outDir: OUT_DIR,
@@ -86,6 +92,16 @@ export default defineConfig(() => {
           // lottie-web's expression engine uses eval; nothing we can change from here.
           if (log.code === 'EVAL' && log.id?.includes('lottie-web')) return;
           handler(level, log);
+        },
+        output: {
+          // Libraries that rarely change get their own files, so a deploy that only touches app
+          // code doesn't make returning visitors download them again.
+          codeSplitting: {
+            groups: [
+              { name: 'react', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/ },
+              { name: 'tanstack', test: /node_modules[\\/]@tanstack[\\/]/ },
+            ],
+          },
         },
       },
     },

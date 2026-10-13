@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import { Line } from 'react-chartjs-2';
+import { Line } from '@chartjs-components';
 import type { ChartDataset } from 'chart.js';
 import dayjs from 'dayjs';
 

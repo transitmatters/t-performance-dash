@@ -97,7 +97,7 @@ function TabsList({
       ref={listRef}
       data-slot="tabs-list"
       data-variant={variant}
-      className={cn('relative', tabsListVariants({ variant }), className)}
+      className={cn('relative isolate', tabsListVariants({ variant }), className)}
       {...props}
     >
       {variant === 'default' && (

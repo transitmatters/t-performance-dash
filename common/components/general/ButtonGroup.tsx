@@ -87,7 +87,7 @@ export const ButtonGroup: <T extends string, K extends string>(
   }, [movePill]);
 
   return (
-    <div ref={containerRef} className="relative" style={lineColorVar(line)}>
+    <div ref={containerRef} className="relative isolate" style={lineColorVar(line)}>
       <span
         ref={pillRef}
         aria-hidden="true"

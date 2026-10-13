@@ -1,6 +1,6 @@
 import type { ChartDataset } from 'chart.js';
-import { round } from 'lodash';
 import dayjs from 'dayjs';
+import { round } from '@lodash-utils';
 import {
   PEAK_RIDERSHIP,
   PEAK_SCHEDULED_SERVICE,
@@ -12,7 +12,7 @@ import { LINE_COLORS } from '../../common/constants/colors';
 import type { RidershipCount, DeliveredTripMetrics } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 import type { AggregateDataPoint, SingleDayDataPoint } from '../../common/types/charts';
-import { getStationDistance } from '../../common/utils/stations';
+import { getStationDistance } from '../../common/utils/stationDistances';
 import { DATE_FORMAT } from '../../common/constants/dates';
 
 const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {

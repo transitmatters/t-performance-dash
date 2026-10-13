@@ -41,7 +41,7 @@ function CardTitle({
   return (
     <Comp
       data-slot="card-title"
-      {...(Comp === 'div' ? { 'aria-level': 3 } : {})}
+      {...(Comp === 'div' ? { role: 'heading', 'aria-level': 3 } : {})}
       className={cn(
         'font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm',
         className

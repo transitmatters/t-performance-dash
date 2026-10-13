@@ -1,5 +1,4 @@
 import 'chartjs-adapter-date-fns';
-import { Bar } from 'react-chartjs-2';
 import React, { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -7,6 +6,7 @@ import minMax from 'dayjs/plugin/minMax';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import type { ChartDataset } from 'chart.js';
+import { Bar } from '@chartjs-components';
 import {
   DATE_FORMAT,
   YESTERDAY_MIDNIGHT,

@@ -20,8 +20,8 @@ import {
   SINGLE_TYPE_FLEETS,
   WINDOW_WEEKS,
 } from '../config';
-import { FLEET_TYPES, getFleetMixValue, hasFleetMix } from '../../fleet/constants/fleetTypes';
 import type { FleetType } from '../../fleet/constants/fleetTypes';
+import { FLEET_TYPES, getFleetMixValue, hasFleetMix } from '../../fleet/constants/fleetTypes';
 import type { RowConfig, SubwayLine } from '../config';
 import type { Cell, HeroStat, HomeData, MetricId, Row } from '../types';
 import { busFleetCell } from './busFleet';
@@ -181,28 +181,25 @@ const subwayCells = (
       .filter(Number.isFinite)
   );
   const oldest = oldestInService(line, trips);
+  const oldestAge = oldest?.builtFrom != null ? now.getFullYear() - oldest.builtFrom : null;
   const context = [
     Number.isFinite(recentAge) ? `Average car age: ${Math.round(recentAge)} yr` : null,
     newTrips > 0 ? `${Math.round(newTrips)}% of trips on new trains` : null,
   ].filter(Boolean);
   cells.fleet = {
-    ...judgedCell(
-      'fleet',
-      oldest?.builtFrom != null ? now.getFullYear() - oldest.builtFrom : null,
-      {
-        unit: 'years',
-        window: ageWindow,
-        now,
-        secondary: oldest
-          ? `Oldest in service: ${oldest.type.label} (${oldest.type.years})${
-              oldest.share !== null ? `, ${Math.round(oldest.share)}% of cars` : ''
-            }`
-          : undefined,
-        baselineLabel: context.length ? context.join(' · ') : undefined,
-        // Blue and Mattapan have no Fleet tab (one car type each), so their fleet links go nowhere new.
-        href: line === 'line-blue' || line === 'line-mattapan' ? row.href : lineHref(row, 'fleet'),
-      }
-    ),
+    ...judgedCell('fleet', oldestAge, {
+      unit: 'years',
+      window: ageWindow,
+      now,
+      secondary: oldest
+        ? `Oldest in service: ${oldest.type.label} (${oldest.type.years})${
+            oldest.share !== null ? `, ${Math.round(oldest.share)}% of cars` : ''
+          }`
+        : undefined,
+      baselineLabel: context.length ? context.join(' · ') : undefined,
+      // Blue and Mattapan have no Fleet tab (one car type each), so their fleet links go nowhere new.
+      href: line === 'line-blue' || line === 'line-mattapan' ? row.href : lineHref(row, 'fleet'),
+    }),
     // A car type's age only moves once a year, so a 2-week trend says nothing here.
     trend: null,
     spark: undefined,
