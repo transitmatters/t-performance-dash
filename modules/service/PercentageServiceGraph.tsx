@@ -1,12 +1,12 @@
 import React, { useMemo, useRef } from 'react';
-import { Line } from 'react-chartjs-2';
+import { Line } from '@chartjs-components';
 
-import { round } from 'lodash';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
+import { round } from '@lodash-utils';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { DeliveredTripMetrics } from '../../common/types/dataPoints';

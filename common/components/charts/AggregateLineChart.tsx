@@ -1,4 +1,4 @@
-import { Line } from 'react-chartjs-2';
+import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
