@@ -17,7 +17,7 @@ export const DataNotes: React.FC<DataNotesProps> = ({ title = 'About this data',
   <Accordion
     type="single"
     collapsible
-    className="bg-card ring-foreground/10 rounded-xl px-4 ring-1"
+    className="rounded-xl bg-card px-4 ring-1 ring-foreground/10"
   >
     <AccordionItem value="about-this-data">
       <AccordionTrigger className="text-muted-foreground">
@@ -26,7 +26,7 @@ export const DataNotes: React.FC<DataNotesProps> = ({ title = 'About this data',
           {title}
         </span>
       </AccordionTrigger>
-      <AccordionContent className="text-muted-foreground flex flex-col gap-3">
+      <AccordionContent className="flex flex-col gap-3 text-muted-foreground">
         {children}
       </AccordionContent>
     </AccordionItem>

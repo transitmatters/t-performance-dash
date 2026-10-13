@@ -83,9 +83,11 @@ To lint just frontend code, run `npm run lint-frontend`
 
 To lint just backend code, run `npm run lint-backend`
 
+Frontend formatting uses [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html). Run `npm run format` to format everything.
+
 #### VSCode
 
-If you're using VSCode, `.vscode` contains a based default workspace setup. It also includes recommended extentions that will improve the dev experience. This config is meant to be as small as possible to enable an "out of the box" easy experience for handling eslint.
+If you're using VSCode, `.vscode` contains a based default workspace setup. It also includes recommended extentions that will improve the dev experience. This config is meant to be as small as possible to enable an "out of the box" easy experience for handling eslint and oxfmt.
 
 ## 🗂️ Data Maintenance
 

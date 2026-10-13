@@ -12,7 +12,7 @@ export const Placeholder: React.FC<{ className?: string; pulse?: boolean }> = ({
   <span
     aria-hidden="true"
     className={cn(
-      'bg-muted inline-block rounded align-middle',
+      'inline-block rounded bg-muted align-middle',
       pulse && 'animate-pulse motion-reduce:animate-none',
       className
     )}

@@ -1,14 +1,14 @@
 version: 2
 updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
-  - package-ecosystem: "pip"
-    directory: "/"
+      interval: 'weekly'
+  - package-ecosystem: 'pip'
+    directory: '/'
     schedule:
-      interval: "weekly"
-  - package-ecosystem: "uv"
-    directory: "/"
+      interval: 'weekly'
+  - package-ecosystem: 'uv'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'

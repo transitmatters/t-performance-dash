@@ -132,7 +132,7 @@ export function FleetDetails() {
             />
           </Widget>
         )}
-        <p className="text-muted-foreground text-sm">
+        <p className="text-sm text-muted-foreground">
           {isBus &&
             'Based on the buses seen at one stop per direction on each route, so expect some day-to-day noise. '}
           {isCommuterRail &&

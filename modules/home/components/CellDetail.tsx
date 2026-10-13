@@ -43,7 +43,7 @@ export const CellDetail: React.FC<CellDetailProps> = ({ row, cell }) => {
       {cell.status !== 'na' && (
         <div className="text-2xl font-semibold tabular-nums">{formatCell(cell, true)}</div>
       )}
-      <div className="text-muted-foreground flex flex-col gap-0.5 text-xs">
+      <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
         {cell.secondary && <p>{cell.secondary}</p>}
         {cell.baselineLabel && <p>{cell.baselineLabel}</p>}
         {trend && (
@@ -62,12 +62,12 @@ export const CellDetail: React.FC<CellDetailProps> = ({ row, cell }) => {
           {note}
         </p>
       ))}
-      {definition && <p className="text-muted-foreground border-t pt-2 text-xs">{definition}</p>}
-      {cell.status !== 'na' && <p className="text-muted-foreground text-xs">{thresholds}</p>}
+      {definition && <p className="border-t pt-2 text-xs text-muted-foreground">{definition}</p>}
+      {cell.status !== 'na' && <p className="text-xs text-muted-foreground">{thresholds}</p>}
       {cell.href && (
         <Link
           href={cell.href}
-          className="text-primary inline-flex items-center gap-1 text-xs font-medium hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
         >
           See the details <ArrowRight className="size-3" aria-hidden />
         </Link>

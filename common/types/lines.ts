@@ -10,10 +10,26 @@ export type Line =
   | 'line-RIDE';
 
 export type LineShort =
-  'Red' | 'Orange' | 'Green' | 'Blue' | 'Mattapan' | 'Bus' | 'Commuter Rail' | 'Ferry' | 'The RIDE';
+  | 'Red'
+  | 'Orange'
+  | 'Green'
+  | 'Blue'
+  | 'Mattapan'
+  | 'Bus'
+  | 'Commuter Rail'
+  | 'Ferry'
+  | 'The RIDE';
 
 export type LinePath =
-  'red' | 'orange' | 'green' | 'blue' | 'mattapan' | 'bus' | 'commuter-rail' | 'ferry' | 'the-ride';
+  | 'red'
+  | 'orange'
+  | 'green'
+  | 'blue'
+  | 'mattapan'
+  | 'bus'
+  | 'commuter-rail'
+  | 'ferry'
+  | 'the-ride';
 
 export type FerryRoute =
   | 'Boat-F1'

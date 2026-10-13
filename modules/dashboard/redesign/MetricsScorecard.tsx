@@ -117,13 +117,13 @@ export const MetricsScorecard: React.FC<MetricsScorecardProps> = ({
                         <span className="pointer-events-none absolute top-1/2 left-6 flex w-3 -translate-x-1/2 -translate-y-1/2 justify-center">
                           <StationNode filled={isSelected} size={isSelected ? 'lg' : 'md'} />
                         </span>
-                        <div className="text-foreground flex flex-col gap-0.5">
+                        <div className="flex flex-col gap-0.5 text-foreground">
                           <span className="text-sm font-medium">{row.label}</span>
-                          <span className="text-muted-foreground hidden text-xs sm:block">
+                          <span className="hidden text-xs text-muted-foreground sm:block">
                             {row.subtitle}
                           </span>
                           {isSelected && (
-                            <span className="text-primary mt-1 inline-flex items-center gap-1 text-xs font-medium">
+                            <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-primary">
                               <ChevronDown className="size-3" aria-hidden />
                               Charted below
                             </span>
@@ -136,7 +136,7 @@ export const MetricsScorecard: React.FC<MetricsScorecardProps> = ({
                           format={row.formatValue}
                           className="text-xl font-semibold tabular-nums"
                         />{' '}
-                        <span className="text-muted-foreground text-xs">{row.unit}</span>
+                        <span className="text-xs text-muted-foreground">{row.unit}</span>
                       </TableCell>
                       <TableCell>
                         <Badge variant={badgeVariantFor(row.deltaSentiment)}>
@@ -154,7 +154,7 @@ export const MetricsScorecard: React.FC<MetricsScorecardProps> = ({
               <TableRow className="hover:bg-transparent">
                 <TableCell
                   colSpan={4}
-                  className="text-muted-foreground px-6 py-8 text-center text-sm"
+                  className="px-6 py-8 text-center text-sm text-muted-foreground"
                 >
                   No data available for this line.
                 </TableCell>

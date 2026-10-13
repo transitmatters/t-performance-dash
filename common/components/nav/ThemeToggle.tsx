@@ -14,7 +14,7 @@ export const ThemeToggle: React.FC = () => {
       size="sm"
       onClick={toggle}
       aria-label={`Switch to ${nextIsDark ? 'dark' : 'light'} theme`}
-      className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground w-full justify-start gap-2"
+      className="w-full justify-start gap-2 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
     >
       {nextIsDark ? <Moon /> : <Sun />}
       <span>{nextIsDark ? 'Dark mode' : 'Light mode'}</span>
