@@ -139,7 +139,7 @@ export const ALL_PAGES: PageMap = {
     name: 'Fleet',
     // Blue and Mattapan are hidden: each runs a single car type with no "new" fleet, so the
     // charts are flat. Add them back here if that changes.
-    lines: ['line-red', 'line-orange', 'line-green'],
+    lines: ['line-red', 'line-orange', 'line-green', 'line-bus', 'line-commuter-rail'],
     icon: faTrain,
     dateStoreSection: 'line',
   },
@@ -264,6 +264,7 @@ export const NAV_TRIP_PAGES = [ALL_PAGES.singleTrips];
 export const BUS_OVERVIEW = [
   ALL_PAGES.ridership,
   ALL_PAGES.speed,
+  ALL_PAGES.fleet,
   ALL_PAGES.speedmap,
   ALL_PAGES.leaderboard,
 ];

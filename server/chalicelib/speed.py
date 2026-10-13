@@ -39,6 +39,22 @@ class BusTripMetricsParams(TypedDict):
     day_type: NotRequired[str]
 
 
+class CrTripMetricsParams(TypedDict):
+    """Parameters for the Commuter Rail trip metrics query.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        route: Commuter Rail route_id (e.g. ``"CR-Fairmount"``), or ``"all"`` for the whole system.
+        agg: Optional aggregation level (``"daily"``, ``"weekly"``, ``"monthly"``). Defaults to daily.
+    """
+
+    start_date: str | date
+    end_date: str | date
+    route: str
+    agg: NotRequired[str]
+
+
 BUS_TRIP_METRICS_TABLE = "DeliveredTripMetricsBus"
 # Matches the daily rail delta above -- an approximate limit of 150 entries per table.
 BUS_TRIP_METRICS_MAX_DAYS = 150
@@ -64,6 +80,8 @@ BUS_DAY_TYPES = ("business_day", "weekend_or_holiday")
 BUS_BAND_FIELDS = ("count", "n_traversals", "n_interpolated", "miles_covered", "total_time")
 # Only exist for the whole day: medians and means can't be split into bands or summed back together.
 BUS_ALL_DAY_ONLY_FIELDS = ("median_speed_mph", "mean_speed_mph")
+
+CR_TRIP_METRICS_TABLE = "DeliveredTripMetricsCR"
 
 
 class TripMetricsByLineParams(TypedDict):
@@ -230,7 +248,35 @@ def trip_metrics_by_bus_route(params: BusTripMetricsParams):
     else:
         per_route = dynamo.query_daily_trips_on_routes(BUS_TRIP_METRICS_TABLE, route_ids, start_date, end_date)
         rows = _filter_bus_rows([row for route_rows in per_route for row in route_rows], time_band, day_type)
-    return _rollup_bus_trip_metrics(rows, agg, route=",".join(route_ids))
+    return _rollup_daily_route_rows(rows, agg, route=",".join(route_ids))
+
+
+def trip_metrics_by_cr_route(params: CrTripMetricsParams):
+    """Fetch Commuter Rail fleet metrics for one route (or `all`), daily or rolled up by week/month.
+
+    Raises:
+        BadRequestError: If required parameters are missing or agg is unrecognized.
+        ForbiddenError: If the date range exceeds the maximum allowed for the agg level.
+    """
+    try:
+        start_date = params["start_date"]
+        end_date = params["end_date"]
+        route = params["route"].strip()
+    except KeyError:
+        raise BadRequestError("Missing or invalid parameters.")
+    if not route:
+        raise BadRequestError("Missing or invalid parameters.")
+    agg = params.get("agg", "daily")
+    if agg not in BUS_AGG_MAX_DAYS:
+        raise BadRequestError(f"Invalid agg parameter. Expected one of: {', '.join(BUS_AGG_MAX_DAYS)}.")
+    if is_invalid_range(start_date, end_date, BUS_AGG_MAX_DAYS[agg]):
+        raise ForbiddenError(
+            f"Date range too long. The maximum number of requested values is {BUS_TRIP_METRICS_MAX_DAYS}."
+        )
+    rows = dynamo.query_daily_trips_on_route(CR_TRIP_METRICS_TABLE, route, start_date, end_date)
+    if agg == "daily":
+        return rows
+    return _rollup_daily_route_rows(rows, agg, route=route, summed_fields=())
 
 
 def validate_bus_trip_filters(params: dict) -> tuple[str | None, str | None]:
@@ -279,14 +325,14 @@ def _band_row(row: dict, time_band: str) -> dict:
     }
 
 
-def _rollup_bus_trip_metrics(rows: list[dict], agg: str, route: str) -> list[dict]:
-    """Sum daily bus rows (from one or more routes) per day, ISO week (dated by its Monday),
+def _rollup_daily_route_rows(rows: list[dict], agg: str, route: str, summed_fields=BUS_SUMMED_FIELDS) -> list[dict]:
+    """Roll daily rows (from one or more routes) up per day, ISO week (dated by its Monday),
     or calendar month (dated the 1st).
 
-    Per-day medians/means can't be combined by summing, so rolled-up rows carry only the
-    summed fields plus date and route.
+    summed_fields are summed. Fleet stats are pooled by _rollup_fleet_fields. Per-day
+    medians/means can't be combined, so they're dropped.
     """
-    buckets = {}
+    periods: dict[date, list[dict]] = {}
     for row in rows:
         day = datetime.strptime(row["date"], DATE_FORMAT_BACKEND).date()
         if agg == "weekly":
@@ -295,13 +341,46 @@ def _rollup_bus_trip_metrics(rows: list[dict], agg: str, route: str) -> list[dic
             period_start = day.replace(day=1)
         else:
             period_start = day
-        entry = buckets.setdefault(
-            period_start,
-            {"date": period_start.isoformat(), "route": route, **{field: 0 for field in BUS_SUMMED_FIELDS}},
-        )
-        for field in BUS_SUMMED_FIELDS:
-            entry[field] += row.get(field) or 0
-    return [buckets[period_start] for period_start in sorted(buckets)]
+        periods.setdefault(period_start, []).append(row)
+    return [
+        {
+            "date": period_start.isoformat(),
+            "route": route,
+            **{field: sum(row.get(field) or 0 for row in periods[period_start]) for field in summed_fields},
+            **_rollup_fleet_fields(periods[period_start]),
+        }
+        for period_start in sorted(periods)
+    ]
+
+
+def _is_fleet_stat(field: str) -> bool:
+    return (
+        field.startswith("fleet_mix_")
+        or (field.startswith("pct_") and field.endswith("_trips"))
+        or (field.startswith("avg_") and field.endswith("_age"))
+    )
+
+
+def _rollup_fleet_fields(rows: list[dict]) -> dict:
+    """Pool the fleet stats (shares and average ages) of several daily rows, weighting each
+    row by the trips it sampled (`fleet_trips`). Empty if no row has fleet data.
+
+    A mix type missing from a row counts as 0% that day, so the pooled mix still sums to 100.
+    A missing average age is left out instead.
+    """
+    fleet_rows = [row for row in rows if row.get("fleet_trips")]
+    if not fleet_rows:
+        return {}
+    fields = {field for row in fleet_rows for field in row if _is_fleet_stat(field)}
+    pooled = {"fleet_trips": sum(row["fleet_trips"] for row in fleet_rows)}
+    for field in sorted(fields):
+        default = 0 if field.startswith("fleet_mix_") else None
+        weighted = [
+            (float(value), row["fleet_trips"]) for row in fleet_rows if (value := row.get(field, default)) is not None
+        ]
+        if weighted:
+            pooled[field] = round(sum(value * trips for value, trips in weighted) / sum(t for _, t in weighted), 1)
+    return pooled
 
 
 def _leaderboard_cache_key(start_date: str | date, end_date: str | date) -> str:

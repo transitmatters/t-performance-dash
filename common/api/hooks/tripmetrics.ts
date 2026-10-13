@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { queryOptions, useQuery } from '@tanstack/react-query';
 import type { FetchDeliveredTripMetricsOptions } from '../../types/api';
 import { FIVE_MINUTES } from '../../constants/time';
 import { fetchActualTripsByLine, fetchLandingTripMetrics } from '../tripmetrics';
@@ -15,6 +15,11 @@ export const useDeliveredTripMetrics = (
   });
 };
 
+export const tripMetricsLandingQuery = queryOptions({
+  queryKey: ['landingTrips'],
+  queryFn: () => fetchLandingTripMetrics(),
+});
+
 export const useTripMetricsForLanding = () => {
-  return useQuery({ queryKey: ['landingTrips'], queryFn: () => fetchLandingTripMetrics() });
+  return useQuery(tripMetricsLandingQuery);
 };

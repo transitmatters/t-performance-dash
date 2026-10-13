@@ -782,6 +782,82 @@
         ]
       }
     },
+    "/api/crtripmetrics": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrTripMetricsResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve Commuter Rail fleet metrics for one route, or `all`, over a date range.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "format": "date",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "format": "date",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "route",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Commuter Rail route_id (e.g. `CR-Fairmount`), or `all` for the whole system."
+          },
+          {
+            "in": "query",
+            "name": "agg",
+            "required": false,
+            "schema": {
+              "default": null,
+              "nullable": true,
+              "type": "string"
+            },
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`."
+          }
+        ]
+      }
+    },
     "/api/busspeedleaderboard": {
       "get": {
         "responses": {
@@ -1840,6 +1916,72 @@
           "data"
         ],
         "title": "BusTripMetricsResponse",
+        "type": "object"
+      },
+      "CrTripMetricsParams": {
+        "description": "Parameters for the `/api/crtripmetrics` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    route: Commuter Rail route_id (e.g. `CR-Fairmount`), or `all` for the whole system.\n    agg: Optional aggregation level (`daily`, `weekly`, `monthly`); defaults to `daily`.",
+        "properties": {
+          "start_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "format": "date",
+                "type": "string"
+              }
+            ],
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "format": "date",
+                "type": "string"
+              }
+            ],
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
+            "title": "End Date"
+          },
+          "route": {
+            "description": "Commuter Rail route_id (e.g. `CR-Fairmount`), or `all` for the whole system.",
+            "title": "Route",
+            "type": "string"
+          },
+          "agg": {
+            "default": null,
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`.",
+            "title": "Agg",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "route"
+        ],
+        "title": "CrTripMetricsParams",
+        "type": "object"
+      },
+      "CrTripMetricsResponse": {
+        "additionalProperties": true,
+        "description": "Response for `/api/crtripmetrics` \u2014 Commuter Rail cab-car fleet metrics.\n\nAttributes:\n    data: Fleet metric records for the route, one per day/week/month.",
+        "properties": {
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "CrTripMetricsResponse",
         "type": "object"
       },
       "BusSpeedLeaderboardParams": {

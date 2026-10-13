@@ -73,6 +73,13 @@ export enum FetchBusTripMetricsParams {
   dayType = 'day_type',
 }
 
+export type FetchCrTripMetricsOptions = {
+  start_date?: string;
+  end_date?: string;
+  route?: string;
+  agg?: AggType;
+};
+
 export type FetchBusSpeedLeaderboardOptions = {
   start_date?: string;
   end_date?: string;
