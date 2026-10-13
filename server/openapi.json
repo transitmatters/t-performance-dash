@@ -1092,6 +1092,75 @@
         ]
       }
     },
+    "/api/crscorecard": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrScorecardResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve a Commuter Rail route's schedule measured against Regional Rail standards.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "route_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "agg",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "day_kind",
+            "required": true,
+            "schema": {
+              "enum": [
+                "weekday",
+                "saturday",
+                "sunday"
+              ],
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
     "/api/weather": {
       "get": {
         "responses": {
@@ -2204,6 +2273,66 @@
           "data"
         ],
         "title": "ReliabilityResponse",
+        "type": "object"
+      },
+      "CrScorecardParams": {
+        "description": "Parameters for the `/api/crscorecard` endpoint.\n\nAttributes:\n    route_id: A Commuter Rail route (e.g. `CR-Worcester`), or `commuter-rail` to compare every route.\n    start_date: Start of date range.\n    end_date: End of date range.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`. Ignored for `commuter-rail`.\n    day_kind: Which schedule to measure \u2014 `weekday`, `saturday`, or `sunday`.",
+        "properties": {
+          "route_id": {
+            "title": "Route Id",
+            "type": "string"
+          },
+          "start_date": {
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "agg": {
+            "title": "Agg",
+            "type": "string"
+          },
+          "day_kind": {
+            "enum": [
+              "weekday",
+              "saturday",
+              "sunday"
+            ],
+            "title": "Day Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "route_id",
+          "start_date",
+          "end_date",
+          "agg",
+          "day_kind"
+        ],
+        "title": "CrScorecardParams",
+        "type": "object"
+      },
+      "CrScorecardResponse": {
+        "additionalProperties": true,
+        "description": "Response for `/api/crscorecard` \u2014 scheduled Commuter Rail service against Regional Rail standards.\n\nFor a route, one entry per period with `date`, `days` (days averaged), `outbound` and `inbound`\n(trips, firstTrip/lastTrip in seconds after midnight, maxGapMidday/maxGapEvening in minutes,\nhoursAtTarget of 20, clockFaceShare, byHour), `peakTrips` and `reversePeakTrips`. For\n`commuter-rail`, one entry per route with `routeId` in place of `date`.\n\nAttributes:\n    data: Scorecard entries.",
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Data",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "CrScorecardResponse",
         "type": "object"
       },
       "WeatherParams": {

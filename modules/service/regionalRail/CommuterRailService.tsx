@@ -1,0 +1,222 @@
+'use client';
+
+import React from 'react';
+import dayjs from 'dayjs';
+import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useCrScorecard } from '../../../common/api/hooks/crScorecard';
+import { PageWrapper } from '../../../common/layouts/PageWrapper';
+import { ChartPageDiv } from '../../../common/components/charts/ChartPageDiv';
+import { ByHourHistogram } from '../../../common/components/charts/ByHourHistogram';
+import { DataNotes } from '../../../common/components/notices/DataNotes';
+import { Widget } from '../../../common/components/widgets';
+import { StatCard, StatCardGrid } from '../../../common/components/widgets/StatCard';
+import { CHART_COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import { useChartToggle } from '../../../common/hooks/useChartToggle';
+import type { DayKind } from '../../../common/types/dataPoints';
+import { COMMUTER_RAIL_LINE_NAMES } from '../../../common/types/lines';
+import { getSpeedGraphConfig } from '../../speed/constants/speeds';
+import { ScorecardGraph } from './ScorecardGraph';
+import { ScorecardTable } from './ScorecardTable';
+import {
+  DIRECTIONS,
+  SPAN_HOURS,
+  TARGET_HEADWAY_MINUTES,
+  averageByHour,
+  formatCount,
+  formatMinutes,
+  formatShare,
+  getScorecardStats,
+  toPoints,
+} from './utils';
+
+// "commuter-rail" asks the API for one summary per line
+const ALL_COMMUTER_RAIL = 'commuter-rail';
+
+const DIRECTION_COLORS = {
+  outbound: LINE_COLORS['line-commuter-rail'],
+  inbound: CHART_COLORS.BLUE,
+};
+
+const DAY_LABELS: Record<DayKind, string> = {
+  weekday: 'weekday',
+  saturday: 'Saturday',
+  sunday: 'Sunday',
+};
+
+/** Commuter Rail's scheduled service, measured against TransitMatters' Regional Rail standards. */
+export function CommuterRailService() {
+  const {
+    query: { startDate, endDate, crRoute },
+  } = useDelimitatedRoute();
+  const lineName = crRoute ? COMMUTER_RAIL_LINE_NAMES[crRoute] : undefined;
+  const { value: scope, control: scopeControl } = useChartToggle(
+    'route',
+    [
+      ['route', 'This line'],
+      ['all', 'All lines'],
+    ],
+    { paramKey: 'serviceScope' }
+  );
+  const { value: dayKind, control: dayKindControl } = useChartToggle(
+    'weekday' as const,
+    [
+      ['weekday', 'Weekday'],
+      ['saturday', 'Saturday'],
+      ['sunday', 'Sunday'],
+    ],
+    { paramKey: 'day' }
+  );
+  const byLine = scope === 'route' && Boolean(crRoute);
+  const { agg } = React.useMemo(
+    () => getSpeedGraphConfig(dayjs(startDate), dayjs(endDate)),
+    [startDate, endDate]
+  );
+  const scorecard = useCrScorecard(
+    {
+      route_id: byLine ? crRoute : ALL_COMMUTER_RAIL,
+      start_date: startDate,
+      end_date: endDate,
+      agg,
+      day_kind: dayKind,
+    },
+    Boolean(startDate && endDate)
+  );
+
+  if (!startDate || !endDate) {
+    return <p>Select a date range to load graphs.</p>;
+  }
+
+  const data = scorecard.data ?? [];
+  const stats = byLine && scorecard.data ? getScorecardStats(scorecard.data) : null;
+  const ready = [scorecard];
+  const day = DAY_LABELS[dayKind];
+  const directionLines = (field: 'hoursAtTarget' | 'maxGapMidday' | 'maxGapEvening' | 'trips') =>
+    DIRECTIONS.map(({ key, label }) => ({
+      label,
+      data: toPoints(data, (entry) => entry[key][field]),
+      style: { color: DIRECTION_COLORS[key] },
+    }));
+  const graphProps = { agg, startDate, endDate };
+
+  return (
+    <PageWrapper pageTitle={`Service · ${byLine ? lineName : 'All lines'}`}>
+      <ChartPageDiv>
+        <div className="flex flex-wrap justify-end gap-2">
+          {crRoute && scopeControl}
+          {dayKindControl}
+        </div>
+        {stats && (
+          <StatCardGrid>
+            <StatCard
+              label="Trains per day"
+              value={formatCount(stats.tripsPerDay)}
+              unit="both ways"
+            />
+            <StatCard
+              label="Hours with a train every 30 min"
+              value={formatCount(stats.hoursAtTarget)}
+              unit={`of ${SPAN_HOURS}`}
+            />
+            <StatCard label="Longest midday wait" value={formatMinutes(stats.maxGapMidday)} />
+            <StatCard label="Clock-face trains" value={formatShare(stats.clockFaceShare)} />
+          </StatCardGrid>
+        )}
+        {byLine ? (
+          <>
+            <Widget
+              title="Hours with a train every 30 minutes"
+              subtitle={`Of the ${SPAN_HOURS} hours from 5am to 1am, on a ${day}`}
+              ready={ready}
+            >
+              <ScorecardGraph
+                {...graphProps}
+                data={directionLines('hoursAtTarget')}
+                valueAxisLabel="Hours"
+                format={(v) => `${v.toFixed(1)} of ${SPAN_HOURS} hours`}
+                max={SPAN_HOURS}
+                benchmark={{ label: 'Regional Rail', value: SPAN_HOURS }}
+              />
+            </Widget>
+            <Widget
+              title="Longest midday wait"
+              subtitle={`Longest gap between trains, 10am to 3pm, on a ${day}`}
+              ready={ready}
+            >
+              <ScorecardGraph
+                {...graphProps}
+                data={directionLines('maxGapMidday')}
+                valueAxisLabel="Minutes"
+                format={formatMinutes}
+                benchmark={{ label: 'Regional Rail', value: TARGET_HEADWAY_MINUTES }}
+              />
+            </Widget>
+            <Widget
+              title="Longest evening wait"
+              subtitle={`Longest gap between trains, 7pm to midnight, on a ${day}`}
+              ready={ready}
+            >
+              <ScorecardGraph
+                {...graphProps}
+                data={directionLines('maxGapEvening')}
+                valueAxisLabel="Minutes"
+                format={formatMinutes}
+                benchmark={{ label: 'Regional Rail', value: TARGET_HEADWAY_MINUTES }}
+              />
+            </Widget>
+            <Widget title="Trains per day" subtitle={`On a ${day}`} ready={ready}>
+              <ScorecardGraph
+                {...graphProps}
+                data={[
+                  ...directionLines('trips'),
+                  {
+                    label: 'Reverse peak',
+                    data: toPoints(data, (entry) => entry.reversePeakTrips),
+                    style: { color: CHART_COLORS.YELLOW, width: 1 },
+                  },
+                ]}
+                valueAxisLabel="Trains"
+                format={(v) => `${Math.round(v)} trains`}
+              />
+            </Widget>
+            <Widget
+              title="Trains by hour"
+              subtitle={`Average ${day} in this range · Regional Rail runs at least 2 an hour`}
+              ready={ready}
+            >
+              <ByHourHistogram
+                data={DIRECTIONS.map(({ key, label }) => ({
+                  label,
+                  data: averageByHour(data, key),
+                  style: { color: DIRECTION_COLORS[key] },
+                }))}
+                valueAxis={{ title: 'Scheduled trains', tooltipItemLabel: 'trains' }}
+              />
+            </Widget>
+          </>
+        ) : (
+          <Widget
+            title="Lines against Regional Rail standards"
+            subtitle={`Average ${day} in this range · weaker direction`}
+            ready={ready}
+          >
+            <ScorecardTable data={data} />
+          </Widget>
+        )}
+        <DataNotes>
+          <p>
+            Built from the MBTA&apos;s published schedules, not trains actually run.
+            TransitMatters&apos; Regional Rail vision calls for a train at least every 30 minutes in
+            both directions, from 5am to 1am, on a repeating hourly pattern riders can memorize.
+          </p>
+          <p>
+            Each direction is measured at its Boston terminal: outbound trains when they leave,
+            inbound trains when they arrive. A wait spans the trains on either side of the window,
+            so a 7am train followed by a 4pm train counts as a 9-hour midday wait. Clock-face trains
+            have another train exactly an hour before or after, within two minutes. Holidays are
+            counted with the kind of day they fall on.
+          </p>
+        </DataNotes>
+      </ChartPageDiv>
+    </PageWrapper>
+  );
+}
