@@ -90,7 +90,7 @@ const slowZoneWindow = (delayTotals: SlowZoneDayTotalsResponse, keys: string[]):
  */
 const oldestInService = (line: SubwayLine, trips: DeliveredTripMetrics[] | undefined) => {
   const single = SINGLE_TYPE_FLEETS[line];
-  if (single) return { type: single, share: null, builtFrom: parseInt(single.years, 10) };
+  if (single) return { type: single, share: null, builtFrom: parseInt(single.years ?? '', 10) };
   const types = FLEET_TYPES[line];
   if (!types) return null;
   const recent = (trips ?? []).filter((d) => hasFleetMix(d, types)).slice(-4);
@@ -98,7 +98,8 @@ const oldestInService = (line: SubwayLine, trips: DeliveredTripMetrics[] | undef
   // FLEET_TYPES runs oldest to newest.
   for (const type of types) {
     const share = mean(recent.map((d) => getFleetMixValue(d, type) ?? 0));
-    if (share >= IN_SERVICE_SHARE) return { type, share, builtFrom: parseInt(type.years, 10) };
+    if (share >= IN_SERVICE_SHARE)
+      return { type, share, builtFrom: parseInt(type.years ?? '', 10) };
   }
   return null;
 };
