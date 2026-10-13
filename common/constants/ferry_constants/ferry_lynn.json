@@ -12,8 +12,8 @@
         "branches": null,
         "order": 2,
         "stops": {
-          "0": ["Boat-Lynn|0|Boat-Long"],
-          "1": ["Boat-Lynn|1|Boat-Long"]
+          "0": ["Boat-Lynn|0|Boat-Long", "Boat-Lynn|0|Boat-Long-North-5C"],
+          "1": ["Boat-Lynn|1|Boat-Long", "Boat-Lynn|1|Boat-Long-North-5C"]
         },
         "terminus": true
       },

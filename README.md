@@ -92,6 +92,8 @@ If you're using VSCode, `.vscode` contains a based default workspace setup. It a
 
 See `server/bus/gen_latest_bus_data.sh` for instructions.
 
+GTFS archives used by the bus scripts are downloaded to `data/gtfs_archives/` by default. Set `GTFS_DATA_DIR` to share them with other TransitMatters repos (they'll go in `$GTFS_DATA_DIR/gtfs_archives`).
+
 ## ❤️ Support TransitMatters
 
 If you've found this app helpful or interesting, please consider [donating](https://transitmatters.org/donate) to TransitMatters to help support our mission to provide data-driven advocacy for a more reliable, sustainable, and equitable transit system in Metropolitan Boston.
