@@ -5,6 +5,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarTrigger,
   useSidebar,
 } from '../../common/components/ui/sidebar';
 import { isBetaHost } from '../../common/utils/constants';
@@ -20,9 +21,13 @@ export const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...
   }, [isMobile, setOpenMobile]);
 
   return (
-    <Sidebar collapsible="offcanvas" className="border-sidebar-border" {...props}>
-      <SidebarHeader className="overflow-hidden px-3 py-3">
-        <Link href="/" onClick={close} className="flex h-6 items-center">
+    <Sidebar collapsible="icon" className="border-sidebar-border" {...props}>
+      <SidebarHeader className="flex-row items-center justify-between overflow-hidden px-3 py-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2">
+        <Link
+          href="/"
+          onClick={close}
+          className="flex h-6 items-center group-data-[collapsible=icon]:hidden"
+        >
           <img
             src="/TMLogo.svg"
             alt="TransitMatters"
@@ -32,12 +37,14 @@ export const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...
             className="h-5 w-auto"
           />
         </Link>
+        {/* Sheet on mobile has its own trigger in NavLayout's header. */}
+        <SidebarTrigger className="hidden shrink-0 md:inline-flex" />
       </SidebarHeader>
       <SidebarContent>
         <NavSystem close={close} />
         <NavLines close={close} />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="group-data-[collapsible=icon]:hidden">
         {isBetaHost() && (
           <p className="text-sidebar-foreground/60 px-2 text-xs">
             Beta: usage data collected via Datadog
