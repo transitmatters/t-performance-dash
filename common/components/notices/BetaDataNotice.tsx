@@ -37,6 +37,10 @@ export const BetaDataNotice: React.FC = () => {
         </Link>{' '}
         for technical details.
       </p>
+      <p>
+        Benchmarks start on October 4, 2026, when we began comparing each train to its own schedule.
+        Before then they were often another train&apos;s, so we don&apos;t show them.
+      </p>
     </>
   );
 };
