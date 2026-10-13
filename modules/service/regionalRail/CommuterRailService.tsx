@@ -100,6 +100,19 @@ export function CommuterRailService() {
     },
     Boolean(startDate && endDate)
   );
+  // Trains per day rarely changes from day to day, so short ranges read better as bars, and
+  // the bars show every day so weekend service sits next to weekday service
+  const bars = agg === 'daily';
+  const everyDay = useCrScorecard(
+    {
+      route_id: crRoute,
+      start_date: startDate,
+      end_date: endDate,
+      agg,
+      day_kind: 'all',
+    },
+    Boolean(startDate && endDate && byLine && bars)
+  );
 
   // Stable between renders: a new array each time makes the chart redraw and keep resizing
   const hourly = React.useMemo(
@@ -120,15 +133,15 @@ export function CommuterRailService() {
   const stats = byLine && scorecard.data ? getScorecardStats(scorecard.data) : null;
   const ready = [scorecard];
   const day = DAY_LABELS[dayKind];
-  // Trains per day rarely changes from day to day, so short ranges read better as bars
-  const bars = agg === 'daily';
+  const tripsData = bars ? (everyDay.data ?? []) : data;
   const directionLines = (
     field: 'hoursAtTarget' | 'maxGapMidday' | 'maxGapEvening' | 'trips',
+    source = data,
     bar = false
   ) =>
     DIRECTIONS.map(({ key, label }) => ({
       label,
-      data: toPoints(data, (entry) => entry[key][field]),
+      data: toPoints(source, (entry) => entry[key][field]),
       style: { color: DIRECTION_COLORS[key], bar },
     }));
   const graphProps = { agg, startDate, endDate };
@@ -241,14 +254,18 @@ export function CommuterRailService() {
                 benchmark={WAIT_TARGET}
               />
             </Widget>
-            <Widget title="Trains per day" subtitle={`On a ${day}`} ready={ready}>
+            <Widget
+              title="Trains per day"
+              subtitle={bars ? 'Every day' : `On a ${day}`}
+              ready={bars ? [everyDay] : ready}
+            >
               <ScorecardGraph
                 {...graphProps}
                 data={[
-                  ...directionLines('trips', bars),
+                  ...directionLines('trips', tripsData, bars),
                   {
                     label: 'Reverse peak',
-                    data: toPoints(data, (entry) => entry.reversePeakTrips),
+                    data: toPoints(tripsData, (entry) => entry.reversePeakTrips),
                     style: { color: CHART_COLORS.YELLOW, width: 1, bar: bars },
                   },
                 ]}

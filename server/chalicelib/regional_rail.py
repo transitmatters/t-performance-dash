@@ -7,7 +7,8 @@ from 5am to 1am with a train at least every 30 minutes, the share of trains on a
 pattern, and trains by hour. Peak and reverse-peak trip counts cover both directions.
 
 Weekdays, Saturdays and Sundays run different schedules, so each request covers one kind of day,
-and weekly or monthly values are averages over the days of that kind.
+and weekly or monthly values are averages over the days of that kind. Day-by-day views can ask
+for every day instead.
 """
 
 from datetime import date
@@ -17,7 +18,8 @@ from .dynamo import query_regional_rail_scorecard
 from .reliability import COMMUTER_RAIL_ROUTE_ID, COMMUTER_RAIL_ROUTES, bucket_start
 
 AGGS = ("daily", "weekly", "monthly")
-DAY_KINDS = ("weekday", "saturday", "sunday")
+# "all" mixes the schedules, for day-by-day views
+DAY_KINDS = ("weekday", "saturday", "sunday", "all")
 DIRECTIONS = ("outbound", "inbound")
 DIRECTION_FIELDS = (
     "trips",
@@ -84,7 +86,7 @@ def get_scorecard(route_id: str, start_date: date, end_date: date, agg: str, kin
         start_date: First date of the range (inclusive).
         end_date: Last date of the range (inclusive).
         agg: ``daily``, ``weekly``, or ``monthly``. Ignored for ``"commuter-rail"``.
-        kind: ``weekday``, ``saturday``, or ``sunday``: only days of this kind are included.
+        kind: ``weekday``, ``saturday``, or ``sunday`` to include only days of that kind, or ``all``.
 
     Returns:
         For a route, one entry per period with ``date`` (bucket start), ``days``, ``outbound``,
@@ -94,7 +96,7 @@ def get_scorecard(route_id: str, start_date: date, end_date: date, agg: str, kin
 
     def matching_days(route: str) -> List[Dict]:
         items = query_regional_rail_scorecard(route, start_date, end_date)
-        return [item for item in items if day_kind(date.fromisoformat(item["date"])) == kind]
+        return [item for item in items if kind == "all" or day_kind(date.fromisoformat(item["date"])) == kind]
 
     if route_id != COMMUTER_RAIL_ROUTE_ID:
         return aggregate(matching_days(route_id), agg)

@@ -88,3 +88,13 @@ def test_all_lines_summarizes_each_route_with_data(monkeypatch):
     assert [s["routeId"] for s in summaries] == ["CR-Fairmount", "CR-Worcester"]
     assert summaries[0]["days"] == 1
     assert summaries[1]["outbound"]["hoursAtTarget"] == 2
+
+
+def test_all_days_mixes_schedules(monkeypatch):
+    items = [
+        row("CR-Worcester", "2026-10-09", direction(20, 2, 120), direction(20, 2, 120)),  # Friday
+        row("CR-Worcester", "2026-10-10", direction(10, 0, 300), direction(10, 0, 300)),  # Saturday
+    ]
+    monkeypatch.setattr(regional_rail, "query_regional_rail_scorecard", lambda route, start, end: items)
+    days = regional_rail.get_scorecard("CR-Worcester", date(2026, 10, 1), date(2026, 10, 31), "daily", "all")
+    assert [(d["date"], d["outbound"]["trips"]) for d in days] == [("2026-10-09", 20), ("2026-10-10", 10)]

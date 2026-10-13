@@ -1153,7 +1153,8 @@
               "enum": [
                 "weekday",
                 "saturday",
-                "sunday"
+                "sunday",
+                "all"
               ],
               "type": "string"
             }
@@ -2276,7 +2277,7 @@
         "type": "object"
       },
       "CrScorecardParams": {
-        "description": "Parameters for the `/api/crscorecard` endpoint.\n\nAttributes:\n    route_id: A Commuter Rail route (e.g. `CR-Worcester`), or `commuter-rail` to compare every route.\n    start_date: Start of date range.\n    end_date: End of date range.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`. Ignored for `commuter-rail`.\n    day_kind: Which schedule to measure \u2014 `weekday`, `saturday`, or `sunday`.",
+        "description": "Parameters for the `/api/crscorecard` endpoint.\n\nAttributes:\n    route_id: A Commuter Rail route (e.g. `CR-Worcester`), or `commuter-rail` to compare every route.\n    start_date: Start of date range.\n    end_date: End of date range.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`. Ignored for `commuter-rail`.\n    day_kind: Which schedule to measure \u2014 `weekday`, `saturday`, or `sunday` \u2014 or `all` for every day.",
         "properties": {
           "route_id": {
             "title": "Route Id",
@@ -2300,7 +2301,8 @@
             "enum": [
               "weekday",
               "saturday",
-              "sunday"
+              "sunday",
+              "all"
             ],
             "title": "Day Kind",
             "type": "string"

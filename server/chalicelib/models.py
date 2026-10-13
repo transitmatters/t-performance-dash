@@ -285,14 +285,14 @@ class CrScorecardParams(BaseModel):
         start_date: Start of date range.
         end_date: End of date range.
         agg: Aggregation level — `daily`, `weekly`, or `monthly`. Ignored for `commuter-rail`.
-        day_kind: Which schedule to measure — `weekday`, `saturday`, or `sunday`.
+        day_kind: Which schedule to measure — `weekday`, `saturday`, or `sunday` — or `all` for every day.
     """
 
     route_id: str
     start_date: date
     end_date: date
     agg: str
-    day_kind: Literal["weekday", "saturday", "sunday"]
+    day_kind: Literal["weekday", "saturday", "sunday", "all"]
 
 
 class TimePredictionParams(BaseModel):
