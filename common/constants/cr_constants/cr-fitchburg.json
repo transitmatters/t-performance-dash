@@ -12,7 +12,7 @@
         "branches": null,
         "order": 1,
         "stops": {
-          "0": [],
+          "0": ["CR-Fitchburg_0_FR-3338-CS"],
           "1": ["CR-Fitchburg_1_FR-3338-CS"]
         },
         "terminus": true
@@ -195,7 +195,7 @@
             "CR-Fitchburg_0_BNT-0000-09",
             "CR-Fitchburg_0_BNT-0000-10"
           ],
-          "1": []
+          "1": ["CR-Fitchburg_1_BNT-0000"]
         },
         "terminus": true
       }

@@ -93,12 +93,14 @@ def get_gobble_folder(stop_id: str):
       stop_id: str: The stop identifier.
 
     Returns:
-      str: One of "daily-bus-data", "daily-cr-data", or "daily-rapid-data".
+      str: One of "daily-bus-data", "daily-cr-data", "daily-ferry-data", or "daily-rapid-data".
     """
     if is_bus(stop_id):
         return "daily-bus-data"
     elif is_cr(stop_id):
         return "daily-cr-data"
+    elif is_ferry(stop_id):
+        return "daily-ferry-data"
     else:
         return "daily-rapid-data"
 
@@ -154,8 +156,12 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, 
         folder = get_gobble_folder(stop_id)
         key = f"Events-live/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
     elif is_ferry(stop_id):
-        folder = "monthly-ferry-data"
-        key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
+        if date.date() > date_utils.get_max_ferry_monthly_data_date():
+            folder = get_gobble_folder(stop_id)
+            key = f"Events-live/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
+        else:
+            folder = "monthly-ferry-data"
+            key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
     # if current date is newer than the max monthly data date, use LAMP
     elif date.date() > date_utils.get_max_monthly_data_date():
         # bus dates before LAMP_BUS_START_DATE still come from Gobble
@@ -178,7 +184,8 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, 
         if ex.response["Error"]["Code"] == "NoSuchKey":
             # raise Exception(f"Data not available on S3 for key {key} ") from None
             print(f"WARNING: No data available on S3 for key: {key}")
-            if not use_gobble:
+            # Only rapid transit has a second source to try; CR and ferry would request the same key again
+            if not use_gobble and is_rapid_transit(stop_id):
                 return download_one_event_file(date, stop_id, use_gobble=True)
             return []
         else:
