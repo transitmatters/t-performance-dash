@@ -66,8 +66,6 @@ export default typescriptEslint.config(
       'import-x/resolver': {
         typescript: true,
       },
-      // tsconfig path aliases that stand in for packages; they sort with the package imports.
-      'import-x/internal-regex': '^@(chartjs-components|chartjs-utils|lodash-utils)$',
     },
     rules: {
       'import-x/named': 'warn',
@@ -76,7 +74,12 @@ export default typescriptEslint.config(
       'import-x/no-default-export': 'warn',
       'import-x/order': [
         'error',
-        { groups: ['builtin', ['external', 'internal'], 'parent', 'sibling', 'index'] },
+        {
+          // tsconfig path aliases that stand in for packages; they sort with the package imports.
+          pathGroups: [
+            { pattern: '@{chartjs-components,chartjs-utils,lodash-utils}', group: 'external' },
+          ],
+        },
       ],
       'import-x/newline-after-import': 'error',
       // import-x/no-unused-modules is incompatible with flat config
