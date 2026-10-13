@@ -83,6 +83,8 @@ export type Benchmark = {
   label: string;
   value: number;
   color?: string;
+  // Labels the line on the chart and tints the side of it that meets the target
+  goodSide?: 'above' | 'below';
 };
 
 export type Block = {

@@ -9,7 +9,11 @@ import { ChartPageDiv } from '../../../common/components/charts/ChartPageDiv';
 import { ByHourHistogram } from '../../../common/components/charts/ByHourHistogram';
 import { DataNotes } from '../../../common/components/notices/DataNotes';
 import { Widget } from '../../../common/components/widgets';
-import { StatCard, StatCardGrid } from '../../../common/components/widgets/StatCard';
+import {
+  StatCard,
+  StatCardGrid,
+  type StatSentiment,
+} from '../../../common/components/widgets/StatCard';
 import { CHART_COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { useChartToggle } from '../../../common/hooks/useChartToggle';
 import type { DayKind } from '../../../common/types/dataPoints';
@@ -22,12 +26,16 @@ import {
   SPAN_HOURS,
   TARGET_HEADWAY_MINUTES,
   averageByHour,
+  clockFaceTone,
   formatCount,
   formatMinutes,
   formatShare,
   getScorecardStats,
+  hoursTone,
   toPoints,
+  waitTone,
 } from './utils';
+import type { Tone } from './utils';
 
 // "commuter-rail" asks the API for one summary per line
 const ALL_COMMUTER_RAIL = 'commuter-rail';
@@ -35,6 +43,14 @@ const ALL_COMMUTER_RAIL = 'commuter-rail';
 const DIRECTION_COLORS = {
   outbound: LINE_COLORS['line-commuter-rail'],
   inbound: CHART_COLORS.BLUE,
+};
+
+const TONE_SENTIMENT: Record<Tone, StatSentiment> = { meets: 'good', partway: 'flat', far: 'bad' };
+
+const WAIT_TARGET = {
+  label: `Regional Rail: ${TARGET_HEADWAY_MINUTES} min`,
+  value: TARGET_HEADWAY_MINUTES,
+  goodSide: 'below' as const,
 };
 
 const DAY_LABELS: Record<DayKind, string> = {
@@ -116,16 +132,55 @@ export function CommuterRailService() {
               label="Hours with a train every 30 min"
               value={formatCount(stats.hoursAtTarget)}
               unit={`of ${SPAN_HOURS}`}
+              delta={
+                stats.hoursAtTarget != null
+                  ? {
+                      label:
+                        hoursTone(stats.hoursAtTarget) === 'meets'
+                          ? 'Meets Regional Rail'
+                          : `${SPAN_HOURS - Math.round(stats.hoursAtTarget)} hrs short`,
+                      sentiment: TONE_SENTIMENT[hoursTone(stats.hoursAtTarget)],
+                    }
+                  : undefined
+              }
             />
-            <StatCard label="Longest midday wait" value={formatMinutes(stats.maxGapMidday)} />
-            <StatCard label="Clock-face trains" value={formatShare(stats.clockFaceShare)} />
+            <StatCard
+              label="Longest midday wait"
+              value={formatMinutes(stats.maxGapMidday)}
+              delta={
+                stats.maxGapMidday != null
+                  ? {
+                      label:
+                        waitTone(stats.maxGapMidday) === 'meets'
+                          ? 'Meets Regional Rail'
+                          : `${formatMinutes(stats.maxGapMidday - TARGET_HEADWAY_MINUTES)} too long`,
+                      sentiment: TONE_SENTIMENT[waitTone(stats.maxGapMidday)],
+                    }
+                  : undefined
+              }
+            />
+            <StatCard
+              label="Clock-face trains"
+              value={formatShare(stats.clockFaceShare)}
+              delta={
+                stats.clockFaceShare != null
+                  ? {
+                      label:
+                        clockFaceTone(stats.clockFaceShare) === 'meets'
+                          ? 'Regular pattern'
+                          : 'Irregular pattern',
+                      sentiment: TONE_SENTIMENT[clockFaceTone(stats.clockFaceShare)],
+                    }
+                  : undefined
+              }
+            />
           </StatCardGrid>
         )}
         {byLine ? (
           <>
             <Widget
               title="Hours with a train every 30 minutes"
-              subtitle={`Of the ${SPAN_HOURS} hours from 5am to 1am, on a ${day}`}
+              subtitle={`Of the ${SPAN_HOURS} hours from 5am to 1am, on a ${day} · higher is better`}
               ready={ready}
             >
               <ScorecardGraph
@@ -134,12 +189,16 @@ export function CommuterRailService() {
                 valueAxisLabel="Hours"
                 format={(v) => `${v.toFixed(1)} of ${SPAN_HOURS} hours`}
                 max={SPAN_HOURS}
-                benchmark={{ label: 'Regional Rail', value: SPAN_HOURS }}
+                benchmark={{
+                  label: `Regional Rail: all ${SPAN_HOURS} hours`,
+                  value: SPAN_HOURS,
+                  goodSide: 'above',
+                }}
               />
             </Widget>
             <Widget
               title="Longest midday wait"
-              subtitle={`Longest gap between trains, 10am to 3pm, on a ${day}`}
+              subtitle={`Longest gap between trains, 10am to 3pm, on a ${day} · lower is better`}
               ready={ready}
             >
               <ScorecardGraph
@@ -147,12 +206,12 @@ export function CommuterRailService() {
                 data={directionLines('maxGapMidday')}
                 valueAxisLabel="Minutes"
                 format={formatMinutes}
-                benchmark={{ label: 'Regional Rail', value: TARGET_HEADWAY_MINUTES }}
+                benchmark={WAIT_TARGET}
               />
             </Widget>
             <Widget
               title="Longest evening wait"
-              subtitle={`Longest gap between trains, 7pm to midnight, on a ${day}`}
+              subtitle={`Longest gap between trains, 7pm to midnight, on a ${day} · lower is better`}
               ready={ready}
             >
               <ScorecardGraph
@@ -160,7 +219,7 @@ export function CommuterRailService() {
                 data={directionLines('maxGapEvening')}
                 valueAxisLabel="Minutes"
                 format={formatMinutes}
-                benchmark={{ label: 'Regional Rail', value: TARGET_HEADWAY_MINUTES }}
+                benchmark={WAIT_TARGET}
               />
             </Widget>
             <Widget title="Trains per day" subtitle={`On a ${day}`} ready={ready}>

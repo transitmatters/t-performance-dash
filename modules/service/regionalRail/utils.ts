@@ -85,3 +85,28 @@ export const formatCount = (value?: number) => (value == null ? '—' : `${Math.
 
 export const formatShare = (share?: number) =>
   share == null ? '—' : `${Math.round(share * 100)}%`;
+
+/** How close a value is to the Regional Rail standard. */
+export type Tone = 'meets' | 'partway' | 'far';
+
+// Judged on the rounded value, so a cell reading "30 min" or "20 of 20" always meets
+export const hoursTone = (hours: number): Tone => {
+  const rounded = Math.round(hours);
+  return rounded >= SPAN_HOURS ? 'meets' : rounded >= SPAN_HOURS / 2 ? 'partway' : 'far';
+};
+
+// Hourly service is partway to a train every 30 minutes
+export const waitTone = (minutes: number): Tone => {
+  const rounded = Math.round(minutes);
+  return rounded <= TARGET_HEADWAY_MINUTES ? 'meets' : rounded <= 60 ? 'partway' : 'far';
+};
+
+export const clockFaceTone = (share: number): Tone =>
+  share >= 0.9 ? 'meets' : share >= 0.5 ? 'partway' : 'far';
+
+// Tinted chips, as on the home scoreboard: amber and red text alone are hard to tell apart
+export const TONE_CHIP: Record<Tone, string> = {
+  meets: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
+  partway: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
+  far: 'bg-destructive/10 text-destructive dark:bg-destructive/20',
+};

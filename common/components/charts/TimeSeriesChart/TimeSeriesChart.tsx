@@ -195,14 +195,41 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
   const chartJsOptions = useMemo(() => {
     const benchmarkAnnotations = benchmarks.map((benchmark, index) => {
       const datasetIndex = data.length + index;
+      const color = benchmark.color || CHART_COLORS.ANNOTATIONS;
       return {
         type: 'line' as const,
         yMin: benchmark.value,
         yMax: benchmark.value,
-        borderColor: benchmark.color || CHART_COLORS.ANNOTATIONS,
+        borderColor: color,
         display: (ctx) => ctx.chart.isDatasetVisible(datasetIndex),
         borderWidth: 2,
+        label: {
+          display: Boolean(benchmark.goodSide),
+          content: benchmark.label,
+          position: 'start' as const,
+          backgroundColor: 'transparent',
+          color,
+          font: { size: 11, weight: 'bold' as const },
+          // Just under the line, so it stays inside the plot when the target is the axis max
+          yAdjust: 10,
+        },
       };
+    });
+    const targetZoneAnnotations = benchmarks.flatMap((benchmark, index) => {
+      if (!benchmark.goodSide) return [];
+      const datasetIndex = data.length + index;
+      return [
+        {
+          type: 'box' as const,
+          ...(benchmark.goodSide === 'below'
+            ? { yMax: benchmark.value }
+            : { yMin: benchmark.value }),
+          backgroundColor: CHART_COLORS.TARGET_ZONE,
+          borderWidth: 0,
+          drawTime: 'beforeDatasetsDraw' as const,
+          display: (ctx) => ctx.chart.isDatasetVisible(datasetIndex),
+        },
+      ];
     });
 
     const blockAnnotations = blocks.map((block) => {
@@ -265,7 +292,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
           },
         },
         annotation: {
-          annotations: [...benchmarkAnnotations, ...blockAnnotations],
+          annotations: [...targetZoneAnnotations, ...benchmarkAnnotations, ...blockAnnotations],
         },
       },
     };
