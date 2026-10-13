@@ -146,7 +146,7 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
   );
 
   return (
-    <div className="-ml-px flex h-10 flex-row justify-center self-stretch rounded-r-md bg-white md:h-7">
+    <div className="-ml-px flex h-10 flex-row justify-center self-stretch rounded-r-[calc(var(--radius-md)-1px)] bg-white md:h-7">
       <div className={classNames('flex h-full flex-row items-center self-stretch')}>
         <DateField
           value={startDate ?? date}
