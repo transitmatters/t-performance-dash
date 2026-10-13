@@ -1,10 +1,8 @@
 import { useMediaQuery } from 'react-responsive';
-import tailwindConfig from '../../tailwind.config.js';
+import { BREAKPOINTS } from '../constants/breakpoints';
 
-const breakpoints = tailwindConfig.theme.screens;
-
-export function useBreakpoint(breakpointKey: string) {
+export function useBreakpoint(breakpointKey: keyof typeof BREAKPOINTS) {
   return useMediaQuery({
-    query: `(min-width: ${breakpoints[breakpointKey]})`,
+    query: `(min-width: ${BREAKPOINTS[breakpointKey]})`,
   });
 }

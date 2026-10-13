@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import { Line } from 'react-chartjs-2';
-import { round } from 'lodash';
+import { Line } from '@chartjs-components';
+import { round } from '@lodash-utils';
 
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';

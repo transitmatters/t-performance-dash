@@ -20,6 +20,7 @@ import {
   SINGLE_TYPE_FLEETS,
   WINDOW_WEEKS,
 } from '../config';
+import type { FleetType } from '../../fleet/constants/fleetTypes';
 import { FLEET_TYPES, getFleetMixValue, hasFleetMix } from '../../fleet/constants/fleetTypes';
 import type { RowConfig, SubwayLine } from '../config';
 import type { Cell, HeroStat, HomeData, MetricId, Row } from '../types';
@@ -84,13 +85,15 @@ const slowZoneWindow = (delayTotals: SlowZoneDayTotalsResponse, keys: string[]):
   };
 };
 
+const builtFrom = (type: FleetType) => (type.years ? parseInt(type.years, 10) : null);
+
 /**
  * The oldest car type still carrying riders: at least IN_SERVICE_SHARE percent of cars over the
  * last 4 weeks with fleet data. Lines with one car type have no mix, so that type is the oldest.
  */
 const oldestInService = (line: SubwayLine, trips: DeliveredTripMetrics[] | undefined) => {
   const single = SINGLE_TYPE_FLEETS[line];
-  if (single) return { type: single, share: null, builtFrom: parseInt(single.years, 10) };
+  if (single) return { type: single, share: null, builtFrom: builtFrom(single) };
   const types = FLEET_TYPES[line];
   if (!types) return null;
   const recent = (trips ?? []).filter((d) => hasFleetMix(d, types)).slice(-4);
@@ -98,7 +101,7 @@ const oldestInService = (line: SubwayLine, trips: DeliveredTripMetrics[] | undef
   // FLEET_TYPES runs oldest to newest.
   for (const type of types) {
     const share = mean(recent.map((d) => getFleetMixValue(d, type) ?? 0));
-    if (share >= IN_SERVICE_SHARE) return { type, share, builtFrom: parseInt(type.years, 10) };
+    if (share >= IN_SERVICE_SHARE) return { type, share, builtFrom: builtFrom(type) };
   }
   return null;
 };
@@ -178,12 +181,13 @@ const subwayCells = (
       .filter(Number.isFinite)
   );
   const oldest = oldestInService(line, trips);
+  const oldestAge = oldest?.builtFrom != null ? now.getFullYear() - oldest.builtFrom : null;
   const context = [
     Number.isFinite(recentAge) ? `Average car age: ${Math.round(recentAge)} yr` : null,
     newTrips > 0 ? `${Math.round(newTrips)}% of trips on new trains` : null,
   ].filter(Boolean);
   cells.fleet = {
-    ...judgedCell('fleet', oldest ? now.getFullYear() - oldest.builtFrom : null, {
+    ...judgedCell('fleet', oldestAge, {
       unit: 'years',
       window: ageWindow,
       now,

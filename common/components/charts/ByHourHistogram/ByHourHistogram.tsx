@@ -1,6 +1,8 @@
 import React, { useMemo, useRef } from 'react';
-import { Bar as BarChart } from 'react-chartjs-2';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import Color from 'color';
+
+import type { Context } from 'chartjs-plugin-datalabels';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,10 +10,8 @@ import {
   BarElement,
   Tooltip,
   Legend,
-} from 'chart.js';
-import Color from 'color';
-
-import type { Context } from 'chartjs-plugin-datalabels';
+} from '@chartjs-utils';
+import { Bar as BarChart } from '@chartjs-components';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../../constants/charts';
 import type { ByHourDataset, DisplayStyle, ValueAxis as ValueAxis } from './types';

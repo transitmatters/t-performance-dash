@@ -1,6 +1,11 @@
 import React, { useMemo } from 'react';
-import { Line as LineChart } from 'react-chartjs-2';
+import { Line as LineChart } from '@chartjs-components';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import Annotation from 'chartjs-plugin-annotation';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import 'chartjs-adapter-date-fns';
+
+import { enUS } from 'date-fns/locale';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,12 +20,7 @@ import {
   BarElement,
   BarController,
   LineController,
-} from 'chart.js';
-import Annotation from 'chartjs-plugin-annotation';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-import 'chartjs-adapter-date-fns';
-
-import { enUS } from 'date-fns/locale';
+} from '@chartjs-utils';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { ChartDiv } from '../ChartDiv';
 import { CHART_COLORS, COLORS } from '../../../constants/colors';

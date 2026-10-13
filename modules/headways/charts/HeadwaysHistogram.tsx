@@ -1,4 +1,4 @@
-import { Bar } from 'react-chartjs-2';
+import { Bar } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import React, { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';

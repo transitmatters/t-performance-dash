@@ -1,4 +1,4 @@
-import { flatten } from 'lodash';
+import { flatten } from '@lodash-utils';
 import type { Location } from '../types/charts';
 import type { SpeedTripMetrics, TimePredictionWeek } from '../types/dataPoints';
 
