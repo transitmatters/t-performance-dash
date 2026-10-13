@@ -16,7 +16,7 @@ export const BetaDataNotice: React.FC = () => {
 
   return (
     <>
-      <p className="text-foreground font-medium">How Commuter Rail data is collected</p>
+      <p className="font-medium text-foreground">How Commuter Rail data is collected</p>
       <p>
         TransitMatters collects this data using the{' '}
         <Link

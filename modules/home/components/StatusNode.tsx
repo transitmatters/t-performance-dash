@@ -20,7 +20,7 @@ export const StatusNode: React.FC<StatusNodeProps> = ({ status, className }) => 
     return (
       <span
         aria-hidden="true"
-        className={cn('bg-muted-foreground/40 inline-block h-0.5 w-3 rounded-full', className)}
+        className={cn('inline-block h-0.5 w-3 rounded-full bg-muted-foreground/40', className)}
       />
     );
   }
@@ -32,9 +32,9 @@ export const StatusNode: React.FC<StatusNodeProps> = ({ status, className }) => 
         'relative inline-flex size-5 shrink-0 items-center justify-center rounded-full',
         status === 'win' && 'bg-current shadow-[0_0_0_4px] shadow-current/20',
         status === 'good' && 'bg-current',
-        status === 'room' && 'bg-background border-[3px] border-current',
-        status === 'problem' && 'bg-background border-2 border-dashed border-current',
-        status === 'insufficient' && 'bg-background border-2 border-current/40',
+        status === 'room' && 'border-[3px] border-current bg-background',
+        status === 'problem' && 'border-2 border-dashed border-current bg-background',
+        status === 'insufficient' && 'border-2 border-current/40 bg-background',
         className
       )}
       style={
@@ -46,7 +46,7 @@ export const StatusNode: React.FC<StatusNodeProps> = ({ status, className }) => 
           : undefined
       }
     >
-      {status === 'win' && <Star className="text-background size-3 fill-current" />}
+      {status === 'win' && <Star className="size-3 fill-current text-background" />}
       {status === 'problem' && <span className="text-[11px] leading-none font-bold">!</span>}
     </span>
   );

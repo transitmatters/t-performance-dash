@@ -45,12 +45,12 @@ const HeroTile: React.FC<{
   const sentiment = trendSentiment(stat?.trend ?? null, config.direction);
   return (
     <div
-      className="tm-reveal bg-card @container flex flex-col gap-1 rounded-xl border p-4"
+      className="tm-reveal @container flex flex-col gap-1 rounded-xl border bg-card p-4"
       style={{ '--reveal-index': index } as React.CSSProperties}
     >
-      <span className="text-muted-foreground text-xs font-medium">{config.label}</span>
+      <span className="text-xs font-medium text-muted-foreground">{config.label}</span>
       <HeroValue config={config} stat={stat} state={state} />
-      {config.detail && <span className="text-muted-foreground text-xs">{config.detail}</span>}
+      {config.detail && <span className="text-xs text-muted-foreground">{config.detail}</span>}
       {/* Kept even when empty, so a trend arriving with the data doesn't grow the tile. The trend
           wraps in a narrow tile, so it gets two lines there. */}
       <span
@@ -99,12 +99,12 @@ export const HomeTitle: React.FC<{ generatedAt?: string; failed?: boolean }> = (
           fetchPriority="high"
           className="hidden h-5 w-auto sm:h-6 dark:block"
         />
-        <span className="text-muted-foreground text-sm font-semibold tracking-widest uppercase sm:text-base">
+        <span className="text-sm font-semibold tracking-widest text-muted-foreground uppercase sm:text-base">
           Data Dashboard
         </span>
       </h1>
       <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">How is the T doing?</p>
-      <p className="text-muted-foreground max-w-2xl text-sm sm:text-base">
+      <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
         Every line and mode, measured against the best it has done and the service riders need.{' '}
         {generatedAt ? (
           <span className="tm-fade-in">Updated {dayjs(generatedAt).format('MMMM D, YYYY')}.</span>

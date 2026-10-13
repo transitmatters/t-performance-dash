@@ -69,7 +69,7 @@ const RowTitle: React.FC<{ line: ScoreboardLine; state: HomeState }> = ({
         ) : (
           <Placeholder className="h-[22px] w-20" pulse={state === 'loading'} />
         )}
-        <span className="text-muted-foreground min-h-4 text-xs lg:min-h-8">
+        <span className="min-h-4 text-xs text-muted-foreground lg:min-h-8">
           {row ? (
             heldBack && <span className="tm-fade-in">{heldBack}</span>
           ) : (
@@ -96,7 +96,7 @@ const Stop: React.FC<{ row: Row; cell: Cell; layout: 'column' | 'row' }> = ({
     <PopoverTrigger
       aria-label={cellLabel(row, cell)}
       className={cn(
-        'group focus-visible:ring-ring tm-fade-in flex rounded-md outline-none focus-visible:ring-2',
+        'group tm-fade-in flex rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring',
         layout === 'column'
           ? 'w-full flex-col items-center gap-1.5 px-1 py-0.5 text-center'
           : 'w-full items-center gap-3 py-2 text-left'
@@ -104,7 +104,7 @@ const Stop: React.FC<{ row: Row; cell: Cell; layout: 'column' | 'row' }> = ({
     >
       <span
         className={cn(
-          'text-primary relative z-10 flex transition-transform group-hover:scale-110',
+          'relative z-10 flex text-primary transition-transform group-hover:scale-110',
           layout === 'row' && 'w-5 justify-center'
         )}
       >
@@ -117,7 +117,7 @@ const Stop: React.FC<{ row: Row; cell: Cell; layout: 'column' | 'row' }> = ({
         <span
           className={cn(
             'text-sm font-semibold tabular-nums',
-            cell.status === 'na' && 'text-muted-foreground font-normal'
+            cell.status === 'na' && 'font-normal text-muted-foreground'
           )}
         >
           {formatCell(cell)}
@@ -153,12 +153,12 @@ const PendingStop: React.FC<{ metric: MetricId; layout: 'column' | 'row'; state:
       )}
     >
       <span
-        className={cn('text-primary relative z-10 flex', layout === 'row' && 'w-5 justify-center')}
+        className={cn('relative z-10 flex text-primary', layout === 'row' && 'w-5 justify-center')}
       >
         <span
           aria-hidden="true"
           className={cn(
-            'bg-card inline-block size-5 rounded-full border-2 border-current opacity-40',
+            'inline-block size-5 rounded-full border-2 border-current bg-card opacity-40',
             pulse && 'animate-pulse motion-reduce:animate-none'
           )}
         />
@@ -167,7 +167,7 @@ const PendingStop: React.FC<{ metric: MetricId; layout: 'column' | 'row'; state:
         <span className="flex-1 text-sm font-medium">{METRICS[metric].label}</span>
       )}
       <span className={cn('flex flex-col', layout === 'row' ? 'items-end' : 'items-center')}>
-        <span className="text-muted-foreground text-sm font-semibold">
+        <span className="text-sm font-semibold text-muted-foreground">
           {state === 'error' ? '—' : <Placeholder className="h-3.5 w-12" />}
         </span>
         <span className="text-[11px] leading-tight">
@@ -195,7 +195,7 @@ const GroupHeading: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     <th
       colSpan={METRIC_ORDER.length + 1}
       scope="colgroup"
-      className="text-muted-foreground px-6 pt-5 pb-1 text-left text-xs font-medium tracking-wide uppercase"
+      className="px-6 pt-5 pb-1 text-left text-xs font-medium tracking-wide text-muted-foreground uppercase"
     >
       {children}
     </th>
@@ -221,7 +221,7 @@ const DesktopTable: React.FC<{ lines: ScoreboardLine[]; state: HomeState }> = ({
           {/* The line runs through its stops; it starts and ends at the first and last one. */}
           <span
             className={cn(
-              'text-primary pointer-events-none absolute top-[22px] opacity-40',
+              'pointer-events-none absolute top-[22px] text-primary opacity-40',
               i === 0 ? 'left-1/2' : 'left-0',
               i === METRIC_ORDER.length - 1 ? 'right-1/2' : 'right-0'
             )}
@@ -244,7 +244,7 @@ const DesktopTable: React.FC<{ lines: ScoreboardLine[]; state: HomeState }> = ({
             <span className="sr-only">Line</span>
           </th>
           {METRIC_ORDER.map((metric) => (
-            <th scope="col" key={metric} className="text-muted-foreground pb-2 text-xs font-medium">
+            <th scope="col" key={metric} className="pb-2 text-xs font-medium text-muted-foreground">
               {METRICS[metric].label}
             </th>
           ))}
@@ -269,7 +269,7 @@ const MobileStrips: React.FC<{ lines: ScoreboardLine[]; state: HomeState }> = ({
         ? [
             <li
               key="also-running"
-              className="text-muted-foreground px-1 pt-2 text-xs font-medium tracking-wide uppercase"
+              className="px-1 pt-2 text-xs font-medium tracking-wide text-muted-foreground uppercase"
             >
               Also running
             </li>,
@@ -278,12 +278,12 @@ const MobileStrips: React.FC<{ lines: ScoreboardLine[]; state: HomeState }> = ({
       <li
         key={line.config.id}
         data-line={line.config.line}
-        className="tm-reveal bg-card rounded-xl border px-4 py-3"
+        className="tm-reveal rounded-xl border bg-card px-4 py-3"
         style={{ '--reveal-index': index } as React.CSSProperties}
       >
         <RowTitle line={line} state={state} />
         <div className="relative mt-2">
-          <span className="text-primary pointer-events-none absolute top-5 bottom-5 left-2.5 -translate-x-1/2 opacity-40">
+          <span className="pointer-events-none absolute top-5 bottom-5 left-2.5 -translate-x-1/2 text-primary opacity-40">
             <RouteLine orientation="vertical" />
           </span>
           <ul>
@@ -319,7 +319,7 @@ export const Scoreboard: React.FC<{ rows?: Row[]; state: HomeState; onRetry: () 
         {state === 'error' && (
           <div
             role="alert"
-            className="border-destructive/30 bg-destructive/5 mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm lg:mx-6"
+            className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm lg:mx-6"
           >
             <span>
               Couldn't load the latest numbers. Each line's own pages are still up to date.
