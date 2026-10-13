@@ -42,11 +42,11 @@ export const TripSetupNotice: React.FC<TripSetupNoticeProps> = ({ missing }) => 
         <FontAwesomeIcon
           size="2x"
           icon={icon}
-          className="text-muted-foreground/50 mb-1"
+          className="mb-1 text-muted-foreground/50"
           aria-hidden
         />
-        <p className="text-card-foreground text-base font-medium">{title}</p>
-        <p className="text-muted-foreground max-w-prose text-sm">{body}</p>
+        <p className="text-base font-medium text-card-foreground">{title}</p>
+        <p className="max-w-prose text-sm text-muted-foreground">{body}</p>
       </div>
     </WidgetDiv>
   );

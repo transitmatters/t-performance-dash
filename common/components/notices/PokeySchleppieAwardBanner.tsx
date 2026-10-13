@@ -34,7 +34,7 @@ export const PokeySchleppieAwardBanner: React.FunctionComponent<PokeySchleppieAw
     return (
       <div
         key={year}
-        className="bg-card text-card-foreground ring-foreground/10 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl px-4 py-3 ring-1"
+        className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl bg-card px-4 py-3 text-card-foreground ring-1 ring-foreground/10"
       >
         <FontAwesomeIcon
           icon={faTrophy}
@@ -56,7 +56,7 @@ export const PokeySchleppieAwardBanner: React.FunctionComponent<PokeySchleppieAw
           href="https://drive.google.com/file/d/1QFTVg0N3-uQeVoMqlOE6QLPqcoCtifzp/view"
           target="_blank"
           rel="noreferrer"
-          className="ring-foreground/15 hover:bg-foreground/5 focus-visible:ring-ring flex-none rounded-full px-3 py-1 text-sm font-medium ring-1 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+          className="flex-none rounded-full px-3 py-1 text-sm font-medium ring-1 ring-foreground/15 transition-colors hover:bg-foreground/5 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           Read more <span aria-hidden="true">&rarr;</span>
         </a>

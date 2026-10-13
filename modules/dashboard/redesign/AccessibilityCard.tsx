@@ -102,7 +102,7 @@ export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort 
             role="region"
             aria-label="Out-of-service elevators and escalators"
             tabIndex={0}
-            className="focus-visible:ring-ring -mx-1 flex max-h-80 flex-col divide-y overflow-y-auto overscroll-contain rounded-md px-1 focus-visible:ring-2 focus-visible:outline-hidden"
+            className="-mx-1 flex max-h-80 flex-col divide-y overflow-y-auto overscroll-contain rounded-md px-1 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
           >
             {current.map((alert) => {
               const start = alert.relevantTimes[0]?.start;
@@ -115,13 +115,13 @@ export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort 
                 alert.type === AlertEffect.ESCALATOR_CLOSURE ? EscalatorIcon : ElevatorIcon;
               return (
                 <div key={alert.id} className="flex items-start gap-3 py-3 first:pt-0">
-                  <Icon className="text-muted-foreground mt-0.5 size-4 shrink-0" />
+                  <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                   <div className="flex flex-1 flex-col gap-1">
                     <span className="text-sm font-medium">
                       {alert.type === AlertEffect.ESCALATOR_CLOSURE ? 'Escalator' : 'Elevator'} out
                       of service · <span className="font-semibold">{stopsText}</span>
                     </span>
-                    <span className="text-muted-foreground text-xs">
+                    <span className="text-xs text-muted-foreground">
                       {days !== null ? `${days} day${days === 1 ? '' : 's'} · ` : ''}
                       {start ? `since ${dayjs(start).format('MMM D, YYYY')}` : ''}
                     </span>
@@ -132,7 +132,7 @@ export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort 
           </div>
         )}
         {!notTracked && !isLoading && !isError && !current.length && (
-          <p className="text-muted-foreground py-2 text-sm">No open accessibility alerts.</p>
+          <p className="py-2 text-sm text-muted-foreground">No open accessibility alerts.</p>
         )}
       </CardContent>
     </Card>

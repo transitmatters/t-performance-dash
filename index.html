@@ -11,7 +11,10 @@
     <title>Data Dashboard</title>
     <!-- Set the theme class before first paint to avoid a flash (reads the persisted store). -->
     <script>
-      try{var t=JSON.parse(localStorage.getItem('tm-theme')||'{}').state;if(t&&t.theme==='dark')document.documentElement.classList.add('dark')}catch(e){}
+      try {
+        var t = JSON.parse(localStorage.getItem('tm-theme') || '{}').state;
+        if (t && t.theme === 'dark') document.documentElement.classList.add('dark');
+      } catch (e) {}
     </script>
   </head>
   <body class="bg-tm-grey">

@@ -76,10 +76,10 @@ export const BnrdBanner: React.FunctionComponent<BnrdBannerProps> = ({ busRoute 
 
   if (isBNRDRoute(busRoute)) {
     return (
-      <div className="bg-card text-card-foreground ring-foreground/10 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl px-4 py-3 ring-1">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl bg-card px-4 py-3 text-card-foreground ring-1 ring-foreground/10">
         <FontAwesomeIcon
           icon={faCircleExclamation}
-          className="text-muted-foreground mt-0.5 h-4 w-4 shrink-0 self-start"
+          className="mt-0.5 h-4 w-4 shrink-0 self-start text-muted-foreground"
           aria-hidden
         />
         <p className="min-w-0 flex-1 text-sm">{getText()}</p>
@@ -87,7 +87,7 @@ export const BnrdBanner: React.FunctionComponent<BnrdBannerProps> = ({ busRoute 
           href={getUrl()}
           target="_blank"
           rel="noreferrer"
-          className="ring-foreground/15 hover:bg-foreground/5 focus-visible:ring-ring flex-none rounded-full px-3 py-1 text-sm font-medium ring-1 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+          className="flex-none rounded-full px-3 py-1 text-sm font-medium ring-1 ring-foreground/15 transition-colors hover:bg-foreground/5 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           Read more <span aria-hidden="true">&rarr;</span>
         </a>

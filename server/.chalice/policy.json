@@ -52,9 +52,7 @@
     {
       "Action": ["dynamodb:Scan"],
       "Effect": "Allow",
-      "Resource": [
-        "arn:aws:dynamodb:*:*:table/DeliveredTripMetricsBus"
-      ]
+      "Resource": ["arn:aws:dynamodb:*:*:table/DeliveredTripMetricsBus"]
     },
     {
       "Action": ["s3:PutObject"],

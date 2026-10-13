@@ -4,7 +4,13 @@
  * an archive of their own (see busSpeedSegmentsPath).
  */
 export type TimeBand =
-  'early_am' | 'am_peak' | 'midday' | 'pm_peak' | 'evening' | 'late_night' | 'all_day';
+  | 'early_am'
+  | 'am_peak'
+  | 'midday'
+  | 'pm_peak'
+  | 'evening'
+  | 'late_night'
+  | 'all_day';
 
 export type DirectionFilter = 'inbound' | 'outbound';
 
@@ -104,7 +110,8 @@ export type BusSpeedSegmentLeaderboardByDayType = Partial<
 >;
 
 export type BusSpeedSegmentLeaderboardResponse =
-  BusSpeedSegmentLeaderboardByBand | BusSpeedSegmentLeaderboardByDayType;
+  | BusSpeedSegmentLeaderboardByBand
+  | BusSpeedSegmentLeaderboardByDayType;
 
 /**
  * Which grain the merged leaderboard page ranks by -- routes (an arbitrary date range, summed

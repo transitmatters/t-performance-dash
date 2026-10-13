@@ -66,6 +66,7 @@ npm run build
 # Linting
 npm run lint              # Both frontend and backend
 npm run lint-frontend-fix # Auto-fix frontend
+npm run format            # Format frontend files (oxfmt)
 npm run lint-backend-fix  # Auto-fix backend (ruff)
 
 # Fetch static data for local dev
@@ -110,7 +111,7 @@ Optional:
 
 ### TypeScript/JavaScript
 
-- ESLint with Prettier integration
+- oxfmt for formatting (`.oxfmtrc.json`), ESLint for linting
 - Import ordering enforced (external, then internal, alphabetized)
 - Prefer type imports (`import type { Foo }`)
 - Ideally max of ~20 imports per file

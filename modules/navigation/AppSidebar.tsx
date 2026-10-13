@@ -39,7 +39,7 @@ export const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...
       </SidebarContent>
       <SidebarFooter>
         {isBetaHost() && (
-          <p className="text-sidebar-foreground/60 px-2 text-xs">
+          <p className="px-2 text-xs text-sidebar-foreground/60">
             Beta: usage data collected via Datadog
           </p>
         )}

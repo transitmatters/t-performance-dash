@@ -15,15 +15,15 @@ export const LocationTitle: React.FC<LocationTitleProps> = ({ location, both }) 
   if (both) {
     return (
       <p className="flex w-full gap-1 overflow-hidden text-[13px] font-semibold md:justify-end">
-        <b className="text-tm-red truncate dark:text-red-400">{location['from']}</b>
+        <b className="truncate text-tm-red dark:text-red-400">{location['from']}</b>
         <span className="font-normal text-stone-500 dark:text-stone-400">to</span>
-        <b className="text-tm-red truncate dark:text-red-400">{location['to']}</b>
+        <b className="truncate text-tm-red dark:text-red-400">{location['to']}</b>
       </p>
     );
   }
   return (
     <p className="flex w-full gap-1 overflow-hidden text-[13px] font-semibold md:justify-end">
-      <b className="text-tm-red truncate dark:text-red-400">{location['from']}</b>
+      <b className="truncate text-tm-red dark:text-red-400">{location['from']}</b>
       <span className="font-normal text-stone-500 dark:text-stone-400">
         {location['direction']}
       </span>

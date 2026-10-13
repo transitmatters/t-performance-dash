@@ -4,7 +4,6 @@ about: Create a report to help us improve
 title: ''
 labels: bug
 assignees: ''
-
 ---
 
 **Describe the bug**
@@ -12,6 +11,7 @@ assignees: ''
 
 **To Reproduce**
 Steps to reproduce the behavior:
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
@@ -24,10 +24,11 @@ Steps to reproduce the behavior:
 <!-- If applicable, add screenshots to help explain your problem. -->
 
 **Device Info (please complete the following information):**
- - Device: [e.g. iPhone 6, Laptop]
- - OS: [e.g. iOS, Windows]
- - Browser: [e.g. Chrome, Safari]
- - Browser Version: [e.g. 22]
+
+- Device: [e.g. iPhone 6, Laptop]
+- OS: [e.g. iOS, Windows]
+- Browser: [e.g. Chrome, Safari]
+- Browser Version: [e.g. 22]
 
 **Additional context**
 <!-- Add any other context about the problem here. -->
