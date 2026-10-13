@@ -12,7 +12,7 @@
         "branches": null,
         "order": 1,
         "stops": {
-          "0": [],
+          "0": ["CR-Newburyport_0_GB-0353-S"],
           "1": ["CR-Newburyport_1_GB-0353-S"]
         },
         "terminus": true
@@ -73,7 +73,7 @@
         "branches": null,
         "order": 7,
         "stops": {
-          "0": [],
+          "0": ["CR-Newburyport_0_ER-0362-01"],
           "1": ["CR-Newburyport_1_ER-0362-01"]
         }
       },
@@ -209,7 +209,7 @@
             "CR-Newburyport_0_BNT-0000-09",
             "CR-Newburyport_0_BNT-0000-10"
           ],
-          "1": []
+          "1": ["CR-Newburyport_1_BNT-0000"]
         },
         "terminus": true
       }

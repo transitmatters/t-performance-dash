@@ -16,7 +16,14 @@ export type LinePath =
   'red' | 'orange' | 'green' | 'blue' | 'mattapan' | 'bus' | 'commuter-rail' | 'ferry' | 'the-ride';
 
 export type FerryRoute =
-  'Boat-F1' | 'Boat-F4' | 'Boat-F6' | 'Boat-F7' | 'Boat-EastBoston' | 'Boat-Lynn';
+  | 'Boat-F1'
+  | 'Boat-F2H'
+  | 'Boat-F4'
+  | 'Boat-F6'
+  | 'Boat-F7'
+  | 'Boat-F10'
+  | 'Boat-EastBoston'
+  | 'Boat-Lynn';
 
 /** All currently available Bus Routes */
 export type BusRoute =
@@ -410,9 +417,11 @@ export const BUS_ROUTES: BusRoute[] = [
 
 export const FERRY_ROUTES: FerryRoute[] = [
   'Boat-F1',
+  'Boat-F2H',
   'Boat-F4',
   'Boat-F6',
   'Boat-F7',
+  'Boat-F10',
   'Boat-EastBoston',
   'Boat-Lynn',
 ];
@@ -450,10 +459,12 @@ export const COMMUTER_RAIL_LINE_NAMES: { [line in CommuterRailRoute]: string } =
 };
 
 export const FERRY_LINE_NAMES: { [line in FerryRoute]: string } = {
-  'Boat-F1': 'Hingham/Hull Ferry',
+  'Boat-F1': 'Hingham Ferry',
+  'Boat-F2H': 'Hingham/Hull Ferry',
   'Boat-F4': 'Charlestown Ferry',
   'Boat-F6': 'Winthrop Ferry',
   'Boat-F7': 'Quincy Ferry',
+  'Boat-F10': 'Harbor Loop Ferry',
   'Boat-EastBoston': 'East Boston Ferry',
   'Boat-Lynn': 'Lynn Ferry',
 };
