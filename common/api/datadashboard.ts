@@ -13,6 +13,7 @@ import { APP_DATA_BASE_PATH } from '../utils/constants';
 import { getCurrentDate } from '../utils/date';
 import type { AggregateDataResponse, SingleDayDataPoint } from '../types/charts';
 import { ONE_MINUTE } from '../constants/time';
+import { hasReliableCommuterRailBenchmarks } from '../constants/dates';
 
 // Fetch data for all single day charts.
 export const fetchSingleDayData = async (
@@ -32,6 +33,14 @@ export const fetchSingleDayData = async (
   }
   return await response.json();
 };
+
+// Drops a day's benchmarks so charts and widgets treat it as having none
+const withoutBenchmarks = (data: SingleDayDataPoint[]): SingleDayDataPoint[] =>
+  data.map((point) => ({
+    ...point,
+    benchmark_travel_time_sec: undefined,
+    benchmark_headway_time_sec: null,
+  }));
 
 // Object to contain the name of each single day query and the parameters/keys it takes.
 const singleDayQueryDependencies: { [key in QueryNameOptions]: SingleDayAPIParams[] } = {
@@ -119,6 +128,13 @@ export const useTripExplorerQueries: UseQueriesOverload = (
     });
   });
 
+  const date = 'date' in parameters ? parameters.date : undefined;
+  const hideBenchmarks =
+    routeType === 'cr' &&
+    !aggregate &&
+    typeof date === 'string' &&
+    !hasReliableCommuterRailBenchmarks(date);
+
   // Create multiple queries.
   const requests = useQueries({
     queries: queryTypes.map((name) => {
@@ -128,6 +144,7 @@ export const useTripExplorerQueries: UseQueriesOverload = (
           aggregate
             ? fetchAggregateData(name, queries[name].params)
             : fetchSingleDayData(name, queries[name].params),
+        select: hideBenchmarks ? withoutBenchmarks : undefined,
         enabled,
         staleTime: ONE_MINUTE,
       };

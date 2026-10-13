@@ -300,7 +300,7 @@ export const getSingleDayWidgets = (
     }
   }
 
-  if (type === 'headways') {
+  if (type === 'headways' && data.some((point) => point.benchmark_headway_time_sec)) {
     widgets.push({
       text: 'On Time Trips',
       widgetValue: new PercentageWidgetValue(onTimePercentage),
