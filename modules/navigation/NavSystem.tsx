@@ -37,7 +37,10 @@ export const NavSystem: React.FC<NavSystemProps> = ({ close }) => {
           <SidebarMenuItem key={item.page}>
             <SidebarMenuButton asChild isActive={page === item.page} tooltip={item.name}>
               <Link href={item.href} onClick={() => close?.()}>
-                <FontAwesomeIcon icon={item.icon} className="size-4" />
+                <FontAwesomeIcon
+                  icon={item.icon}
+                  className="hidden size-4 group-data-[collapsible=icon]:block"
+                />
                 <span>{item.name}</span>
               </Link>
             </SidebarMenuButton>

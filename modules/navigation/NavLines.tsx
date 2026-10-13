@@ -2,7 +2,6 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBus,
-  faChevronRight,
   faShip,
   faTrain,
   faTrainSubway,
@@ -41,7 +40,6 @@ import {
 import { lineColorVar } from '../../common/styles/general';
 import type { Line } from '../../common/types/lines';
 import { getLineSelectionItemHref, useDelimitatedRoute } from '../../common/utils/router';
-import { RouteBullet } from '../../common/components/transit/RouteBullet';
 import { NavPageItems } from './NavPageItems';
 
 const NAV_LINES: Line[] = [
@@ -134,19 +132,24 @@ export const NavLines: React.FC<NavLinesProps> = ({ close }) => {
                     asChild
                     tooltip={lineObject.name}
                     style={lineColorVar(line)}
-                    className={classNames('hover:bg-transparent', isActive && 'font-semibold')}
+                    className={classNames(
+                      'group-data-[collapsible=icon]:justify-center hover:bg-transparent',
+                      isActive && 'font-semibold'
+                    )}
                   >
                     <Link
                       href={hrefForLine(line, route)}
                       aria-current={isActive ? true : undefined}
                       onClick={() => close?.()}
                     >
-                      <RouteBullet size="sm" className="text-(--line-color)" />
-                      <span className="truncate">{lineObject.name}</span>
+                      {/* Shown only in the rail, where there's no room for the line's name. */}
                       <FontAwesomeIcon
-                        icon={faChevronRight}
-                        className="ml-auto size-3 opacity-50 transition-transform duration-200 group-data-[state=open]/line:rotate-90"
+                        icon={lineIcon(line)}
+                        className="hidden size-4 text-(--line-color) group-data-[collapsible=icon]:block"
                       />
+                      <span className="truncate group-data-[collapsible=icon]:hidden">
+                        {lineObject.name}
+                      </span>
                     </Link>
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
