@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AggregateDataResponse, TravelTimesUnit } from '../../../common/types/charts';
@@ -19,6 +20,7 @@ interface SpeedBetweenStationsAggregateChartProps {
 export const SpeedBetweenStationsAggregateChart: React.FC<
   SpeedBetweenStationsAggregateChartProps
 > = ({ traveltimes, toStation, fromStation, timeUnit, peakTime = true }) => {
+  const { t } = useTranslation('speed');
   const {
     query: { startDate, endDate },
   } = useDelimitatedRoute();
@@ -43,18 +45,18 @@ export const SpeedBetweenStationsAggregateChart: React.FC<
         timeUnit={timeUnitByDate ? 'day' : 'hour'}
         byTime={!timeUnitByDate}
         timeFormat={timeUnitByDate ? 'MMM d yyyy' : 'h:mm aaaa'}
-        seriesName={'Median Speed'}
+        seriesName={t('betweenStations.median')}
         startDate={startDate}
         endDate={endDate}
         fillColor={timeUnitByDate ? CHART_COLORS.FILL : CHART_COLORS.FILL_HOURLY}
         location={getLocationDetails(fromStation, toStation)}
         includeBothStopsForLocation={true}
         fname="speeds"
-        chartTitle="Speeds"
+        chartTitle={t('betweenStations.title')}
         yUnit="mph"
       />
     );
-  }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime]);
+  }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime, t]);
 
   return chart;
 };

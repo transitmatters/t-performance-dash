@@ -1,0 +1,57 @@
+{
+  "widgets": {
+    "travelTimes": {
+      "title": "Travel times",
+      "subtitle": "Time between stops",
+      "byHour": "Travel times by hour"
+    },
+    "headways": {
+      "title": "Headways",
+      "subtitleTrains": "Time between trains",
+      "subtitleBuses": "Time between buses",
+      "subtitleFerries": "Time between ferries",
+      "distribution": "Headway distribution"
+    },
+    "dwells": {
+      "title": "Dwells",
+      "subtitle": "Time spent at station"
+    },
+    "speeds": {
+      "title": "Speeds",
+      "subtitle": "Average speed between stops"
+    }
+  },
+  "pageTitle": {
+    "single": "Trips on a single day",
+    "multi": "Trips over a date range"
+  },
+  "showing": {
+    "trip": "Showing {{from}} to {{to}}.",
+    "onDate": "Showing {{from}} to {{to}} on {{date}}.",
+    "dateRange": "Showing {{from}} to {{to}} from {{startDate}} to {{endDate}}.",
+    "since": "Showing {{from}} to {{to}} since {{startDate}}."
+  },
+  "setup": {
+    "stations": {
+      "title": "Choose a start and end station",
+      "body": {
+        "desktop": "Pick the two stops you want to travel between in the bar above, and this page will show travel times, headways and dwells for that trip.",
+        "mobile": "Pick the two stops you want to travel between in the panel at the bottom of the screen, and this page will show travel times, headways and dwells for that trip."
+      }
+    },
+    "dateRange": {
+      "title": "Choose a date range",
+      "body": {
+        "desktop": "Pick a start and end date in the bar above to see how this trip performed over time.",
+        "mobile": "Pick a start and end date in the panel at the bottom of the screen to see how this trip performed over time."
+      }
+    },
+    "date": {
+      "title": "Choose a date",
+      "body": {
+        "desktop": "Pick a date in the bar above to see every trip that ran between these two stations.",
+        "mobile": "Pick a date in the panel at the bottom of the screen to see every trip that ran between these two stations."
+      }
+    }
+  }
+}

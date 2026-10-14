@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { traversalSummary } from '../utils';
 import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import type { BusSpeedSegmentLeaderboardEntry } from '../types';
 
@@ -11,6 +13,7 @@ export const BusSpeedSegmentLeaderboard: React.FC<BusSpeedSegmentLeaderboardProp
   data,
   onSelectSegment,
 }) => {
+  const { t } = useTranslation(['busspeedmap', 'common']);
   return (
     <ol className="flex flex-col divide-y divide-stone-200">
       {data.map((entry, index) => (
@@ -27,25 +30,24 @@ export const BusSpeedSegmentLeaderboard: React.FC<BusSpeedSegmentLeaderboardProp
               <span className="flex flex-col">
                 <span>
                   <span className="font-semibold text-stone-900">
-                    Route {getBusRouteDisplayName(entry.route_id)}
+                    {t('common:routes.busRoute', { route: getBusRouteDisplayName(entry.route_id) })}
                   </span>
                   <span className="text-stone-600">
                     {' '}
-                    · {entry.direction_id === 1 ? 'Inbound' : 'Outbound'}
+                    ·{' '}
+                    {entry.direction_id === 1 ? t('directions.inbound') : t('directions.outbound')}
                   </span>
                 </span>
                 <span className="text-stone-600">
                   {entry.from_stop_name} → {entry.to_stop_name}
                 </span>
                 <span className="text-xs text-stone-400">
-                  Median of {entry.n_traversals} trips
-                  {entry.n_interpolated > 0 &&
-                    `, ${entry.n_interpolated} with an interpolated stop time`}
+                  {traversalSummary(entry.n_traversals, entry.n_interpolated)}
                 </span>
               </span>
             </span>
             <span className="shrink-0 font-semibold text-stone-900">
-              {entry.p50_speed_mph.toFixed(1)} mph
+              {t('mph', { value: entry.p50_speed_mph.toFixed(1) })}
             </span>
           </button>
         </li>

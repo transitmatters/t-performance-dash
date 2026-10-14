@@ -1,3 +1,4 @@
+import { i18n } from '../../common/i18n';
 import { COLORS } from '../../common/constants/colors';
 import type { DayType, DirectionFilter, Period, TimeBand } from './types';
 
@@ -14,13 +15,41 @@ export const MIN_TRAVERSALS = 3;
  * DAY_FILTER_OPTIONS, keeping the six windows in chronological order after it.
  */
 export const TIME_BANDS: { key: TimeBand; label: string; hours: string }[] = [
-  { key: 'all_day', label: 'All day', hours: 'all service hours' },
-  { key: 'early_am', label: 'Early AM', hours: 'before 7am' },
-  { key: 'am_peak', label: 'AM peak', hours: '7-9am' },
-  { key: 'midday', label: 'Midday', hours: '9am-4pm' },
-  { key: 'pm_peak', label: 'PM peak', hours: '4-6:30pm' },
-  { key: 'evening', label: 'Evening', hours: '6:30-10pm' },
-  { key: 'late_night', label: 'Late night', hours: 'after 10pm' },
+  {
+    key: 'all_day',
+    label: i18n.t('busspeedmap:timeBands.allDay.label'),
+    hours: i18n.t('busspeedmap:timeBands.allDay.hours'),
+  },
+  {
+    key: 'early_am',
+    label: i18n.t('busspeedmap:timeBands.earlyAm.label'),
+    hours: i18n.t('busspeedmap:timeBands.earlyAm.hours'),
+  },
+  {
+    key: 'am_peak',
+    label: i18n.t('busspeedmap:timeBands.amPeak.label'),
+    hours: i18n.t('busspeedmap:timeBands.amPeak.hours'),
+  },
+  {
+    key: 'midday',
+    label: i18n.t('busspeedmap:timeBands.midday.label'),
+    hours: i18n.t('busspeedmap:timeBands.midday.hours'),
+  },
+  {
+    key: 'pm_peak',
+    label: i18n.t('busspeedmap:timeBands.pmPeak.label'),
+    hours: i18n.t('busspeedmap:timeBands.pmPeak.hours'),
+  },
+  {
+    key: 'evening',
+    label: i18n.t('busspeedmap:timeBands.evening.label'),
+    hours: i18n.t('busspeedmap:timeBands.evening.hours'),
+  },
+  {
+    key: 'late_night',
+    label: i18n.t('busspeedmap:timeBands.lateNight.label'),
+    hours: i18n.t('busspeedmap:timeBands.lateNight.hours'),
+  },
 ];
 
 // Not all_day: its archive only exists from the pipeline's all-day backfill onwards, so
@@ -32,16 +61,16 @@ export const DEFAULT_TIME_BAND: TimeBand = 'am_peak';
  * BusSpeedMapView.
  */
 export const DIRECTIONS: { key: DirectionFilter; label: string }[] = [
-  { key: 'inbound', label: 'Inbound' },
-  { key: 'outbound', label: 'Outbound' },
+  { key: 'inbound', label: i18n.t('busspeedmap:directions.inbound') },
+  { key: 'outbound', label: i18n.t('busspeedmap:directions.outbound') },
 ];
 
 export const DEFAULT_DIRECTION: DirectionFilter = 'inbound';
 
 export const PERIODS: { key: Period; label: string }[] = [
-  { key: 'daily', label: 'Day' },
-  { key: 'weekly', label: 'Week' },
-  { key: 'monthly', label: 'Month' },
+  { key: 'daily', label: i18n.t('busspeedmap:periods.daily') },
+  { key: 'weekly', label: i18n.t('busspeedmap:periods.weekly') },
+  { key: 'monthly', label: i18n.t('busspeedmap:periods.monthly') },
 ];
 
 export const DEFAULT_PERIOD: Period = 'daily';
@@ -55,8 +84,8 @@ export const DEFAULT_SPEED_MAP_PERIOD: Period = 'monthly';
  * here: a weekly/monthly tile's `day_type` is always one or the other, never combined.
  */
 export const DAY_TYPES: { key: DayType; label: string }[] = [
-  { key: 'business_day', label: 'Weekdays' },
-  { key: 'weekend_or_holiday', label: 'Weekends & holidays' },
+  { key: 'business_day', label: i18n.t('dayFilter.weekdays') },
+  { key: 'weekend_or_holiday', label: i18n.t('dayFilter.weekendsHolidays') },
 ];
 
 export const DEFAULT_DAY_TYPE: DayType = 'business_day';
@@ -111,11 +140,11 @@ export const BUS_STOPS_SOURCE_LAYER = 'bus_stops';
  * station dot colours on the map and the line list in the station hover popup.
  */
 export const STATION_LINES: Record<string, { label: string; color: string }> = {
-  Red: { label: 'Red Line', color: COLORS.mbta.red },
-  Mattapan: { label: 'Mattapan Line', color: COLORS.mbta.mattapan },
-  Orange: { label: 'Orange Line', color: COLORS.mbta.orange },
-  Blue: { label: 'Blue Line', color: COLORS.mbta.blue },
-  Green: { label: 'Green Line', color: COLORS.mbta.green },
+  Red: { label: i18n.t('lines.red'), color: COLORS.mbta.red },
+  Mattapan: { label: i18n.t('lines.mattapan'), color: COLORS.mbta.mattapan },
+  Orange: { label: i18n.t('lines.orange'), color: COLORS.mbta.orange },
+  Blue: { label: i18n.t('lines.blue'), color: COLORS.mbta.blue },
+  Green: { label: i18n.t('lines.green'), color: COLORS.mbta.green },
 };
 
 export const BOSTON_CENTER: { longitude: number; latitude: number; zoom: number } = {

@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AggregateDataResponse, DayFilter } from '../../../common/types/charts';
@@ -21,6 +22,7 @@ export const DwellsAggregateChart: React.FC<DwellsAggregateChartProps> = ({
   fromStation,
   dayFilter = 'all',
 }) => {
+  const { t } = useTranslation('dwells');
   const {
     query: { startDate, endDate },
   } = useDelimitatedRoute();
@@ -45,7 +47,7 @@ export const DwellsAggregateChart: React.FC<DwellsAggregateChartProps> = ({
         pointField={PointFieldKeys.serviceDate}
         timeUnit={'day'}
         timeFormat={'MMM d yyyy'}
-        seriesName={'Median dwell time'}
+        seriesName={t('median')}
         startDate={startDate}
         endDate={endDate}
         fillColor={CHART_COLORS.FILL}
@@ -55,7 +57,7 @@ export const DwellsAggregateChart: React.FC<DwellsAggregateChartProps> = ({
         yUnit="minutes"
       />
     );
-  }, [dwells.by_date, startDate, endDate, fromStation, toStation, dayFilter]);
+  }, [dwells.by_date, startDate, endDate, fromStation, toStation, dayFilter, t]);
 
   return chart;
 };

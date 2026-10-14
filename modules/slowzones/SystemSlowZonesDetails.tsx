@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import { i18n } from '../../common/i18n';
 import { Link } from '../../common/components/general/Link';
 import {
   useSlowzoneAllData,
@@ -32,14 +34,15 @@ interface SystemSlowZonesDetailsProps {
 
 const DIRECTION_OPTIONS = Object.entries(DirectionObject) as [Direction, string][];
 const LINE_OPTIONS: [SlowZonesLineName, string][] = [
-  ['Red', 'Red'],
-  ['Orange', 'Orange'],
-  ['Blue', 'Blue'],
-  ['Green', 'Green'],
-  ['Mattapan', 'Mattapan'],
+  ['Red', i18n.t('slowzones:lineOptions.red')],
+  ['Orange', i18n.t('slowzones:lineOptions.orange')],
+  ['Blue', i18n.t('slowzones:lineOptions.blue')],
+  ['Green', i18n.t('slowzones:lineOptions.green')],
+  ['Mattapan', i18n.t('slowzones:lineOptions.mattapan')],
 ];
 
 export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDetailsProps) {
+  const { t } = useTranslation(['slowzones', 'common']);
   const delayTotals = useSlowzoneDelayTotalData();
   const allData = useSlowzoneAllData();
   const isMobile = !useBreakpoint('sm');
@@ -47,6 +50,8 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
     'northbound',
     DIRECTION_OPTIONS
   );
+  // Typed so the per-direction catalog keys resolve statically.
+  const segmentsDirection: Direction = direction;
 
   const [lineShort, setLineShort] = useState<SlowZonesLineName>('Red');
   const line = `line-${lineShort.toLowerCase()}` as Line;
@@ -75,17 +80,17 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
   const stationPairs = new Set(graphData.map((dataPoint) => dataPoint.id));
 
   if (!endDateUTC || !startDateUTC) {
-    return <p>Select a date range to load graphs.</p>;
+    return <p>{t('common:notices.selectDateRange')}</p>;
   }
 
   return (
-    <PageWrapper pageTitle={'Slow zones'}>
+    <PageWrapper pageTitle={t('common:pages.slowzones.name')}>
       <ChartPageDiv>
         <Widget
-          title="Total slow time"
+          title={t('totalSlowTime')}
           subtitle={
             <Link href="https://transitmatters.org/blog/slowzonesupdate" target="_blank">
-              Time over baseline across the line
+              {t('totalSlowTimeSubtitle')}
             </Link>
           }
           ready={[delayTotals]}
@@ -100,8 +105,8 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
           )}
         </Widget>
         <Widget
-          title="Line map"
-          subtitle={`As of ${formatDateTodayCheck(endDate!)}`}
+          title={t('lineMap')}
+          subtitle={t('asOf', { date: formatDateTodayCheck(endDate!) })}
           action={
             <ButtonGroup
               line={line}
@@ -123,8 +128,8 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
           />
         </Widget>
         <Widget
-          title={`${DirectionObject[direction]} segments`}
-          subtitle="Time over baseline, by segment"
+          title={t(`segments.title.${segmentsDirection}`)}
+          subtitle={t('segments.subtitle')}
           action={directionControl}
           ready={[allData]}
         >

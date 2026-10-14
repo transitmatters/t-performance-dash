@@ -1,0 +1,38 @@
+{
+  "stats": {
+    "accuracy": "Prediction accuracy",
+    "bestWeek": "Best week",
+    "worstWeek": "Worst week"
+  },
+  "widgets": {
+    "accuracy": {
+      "title": "Arrival predictions",
+      "subtitle": "Share of predictions that were accurate"
+    },
+    "bins": {
+      "title": "Arrival predictions by bin",
+      "subtitle": "Accuracy by how far out the prediction was made"
+    }
+  },
+  "notes": {
+    "method": "MBTA calculates and publishes prediction accuracy data for each line. Whenever the MBTA makes a prediction about a train or bus arrival, for example \"Alewife 4 mins\", their system records it and then checks back when that train it predicted would be there in 4 minutes actually arrived. The T categorizes these into 4 groups: \"0-3 min\", \"3-6 min\", \"6-12 min\", and \"12-30 min\". Each grouping has different thresholds for what count as \"accurate\":",
+    "thresholds": {
+      "0to3": "0-3 min: 60 seconds early to 60 seconds late",
+      "3to6": "3-6 min: 90 seconds early to 120 seconds late",
+      "6to12": "6-12 min: 150 seconds early to 210 seconds late",
+      "12to30": "12-30 min: 240 seconds early to 360 seconds late"
+    },
+    "source": "We receive this data in monthly batches from the <portal>MassDOT Open Data Portal</portal> — if recent data is missing, it's likely because it's not yet available."
+  },
+  "chart": {
+    "tooltip": "{{label}}: {{percent}}% accurate",
+    "axis": "Accuracy (%)",
+    "title": "Arrival Predictions",
+    "bins": {
+      "0to3": "0-3min predictions",
+      "3to6": "3-6min predictions",
+      "6to12": "6-12min predictions",
+      "12to30": "12-30min predictions"
+    }
+  }
+}

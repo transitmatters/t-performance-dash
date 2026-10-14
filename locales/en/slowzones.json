@@ -1,0 +1,49 @@
+{
+  "directions": {
+    "northbound": "Northbound",
+    "southbound": "Southbound"
+  },
+  "segments": {
+    "title": {
+      "northbound": "Northbound segments",
+      "southbound": "Southbound segments"
+    },
+    "subtitle": "Time over baseline, by segment"
+  },
+  "totalSlowTime": "Total slow time",
+  "totalSlowTimeSubtitle": "Time over baseline across the line",
+  "lineMap": "Line map",
+  "asOf": "As of {{date}}",
+  "stats": {
+    "currentSlowTime": "Current slow time",
+    "activeZones": "Active slow zones",
+    "zones": "zones",
+    "worstSegment": "Worst segment"
+  },
+  "lineOptions": {
+    "red": "Red",
+    "orange": "Orange",
+    "blue": "Blue",
+    "green": "Green",
+    "mattapan": "Mattapan"
+  },
+  "chart": {
+    "totalTooltip": "Total slow time: {{time}}",
+    "lineTooltip": "{{line}} slow time: {{time}}"
+  },
+  "segmentChart": {
+    "averageDelay": "Average Delay: {{seconds}} sec.",
+    "latestDelay": "Latest Delay: {{seconds}} sec",
+    "unknownDates": "Unknown dates",
+    "ongoing": "Ongoing"
+  },
+  "tooltip": {
+    "speedRestrictions": "MBTA speed restrictions",
+    "total": "<label>Total:</label> {{feet}} feet",
+    "slowest": "<label>Slowest:</label> {{mph}} mph",
+    "since": "<label>Since:</label> {{date}}",
+    "comparedToPeak": "compared to peak",
+    "undetected": "TransitMatters has not detected a slow zone for this segment despite the MBTA having an official speed restriction within it."
+  },
+  "current": "Current ({{date}})"
+}

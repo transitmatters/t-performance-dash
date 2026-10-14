@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { i18n } from '../../../common/i18n';
 import { ChartPageDiv } from '../../../common/components/charts/ChartPageDiv';
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
 import { ToggleSwitch } from '../../../common/components/inputs/ToggleSwitch';
@@ -23,13 +25,14 @@ import { BusSpeedRouteLeaderboardSection } from './BusSpeedRouteLeaderboardSecti
 import { BusSpeedSegmentLeaderboardSection } from './BusSpeedSegmentLeaderboardSection';
 
 const VIEW_MODES: { key: LeaderboardViewMode; label: string }[] = [
-  { key: 'route', label: 'By route' },
-  { key: 'segment', label: 'By segment' },
+  { key: 'route', label: i18n.t('busspeedmap:leaderboard.byRoute') },
+  { key: 'segment', label: i18n.t('busspeedmap:leaderboard.bySegment') },
 ];
 
 const DEFAULT_VIEW_MODE: LeaderboardViewMode = 'route';
 
 export function BusSpeedLeaderboardDetails() {
+  const { t } = useTranslation(['busspeedmap', 'common']);
   const {
     query: { date },
   } = useDelimitatedRoute();
@@ -52,7 +55,7 @@ export function BusSpeedLeaderboardDetails() {
       : undefined;
   const subtitle = [
     periodLabel(date, period),
-    viewMode === 'route' ? 'Ranked by average speed' : undefined,
+    viewMode === 'route' ? t('leaderboard.rankedBySpeed') : undefined,
     dayTypeLabel?.label,
     viewMode === 'segment' && bandLabel ? `${bandLabel.label} · ${bandLabel.hours}` : undefined,
   ]
@@ -60,18 +63,22 @@ export function BusSpeedLeaderboardDetails() {
     .join(' · ');
 
   return (
-    <PageWrapper pageTitle={'Bus speed leaderboard'}>
+    <PageWrapper pageTitle={t('common:pages.leaderboard.title')}>
       <ChartPageDiv>
         <BusDataNotice />
         <WidgetDiv>
           <WidgetTitle
-            title={viewMode === 'route' ? 'Slowest routes' : 'Slowest segments'}
+            title={
+              viewMode === 'route'
+                ? t('leaderboard.slowestRoutes')
+                : t('leaderboard.slowestSegments')
+            }
             subtitle={subtitle || undefined}
             action={
               <ToggleSwitch
                 enabled={frequentRoutesOnly}
                 setEnabled={setFrequentRoutesOnly}
-                label="Frequent bus routes only"
+                label={t('leaderboard.frequentOnly')}
               />
             }
           />
@@ -90,7 +97,7 @@ export function BusSpeedLeaderboardDetails() {
               />
             </div>
             <label className="flex items-center gap-2 text-sm lg:hidden">
-              <span className="text-stone-600">Rank by</span>
+              <span className="text-stone-600">{t('leaderboard.rankBy')}</span>
               <select
                 className="flex-1 rounded-md border border-stone-300 px-2 py-1.5 text-sm"
                 value={viewMode}
@@ -117,8 +124,7 @@ export function BusSpeedLeaderboardDetails() {
             />
             {isPeriodInProgress(date, period) && (
               <p className="text-xs text-stone-500">
-                This {period === 'weekly' ? 'week' : 'month'} is still in progress — figures reflect
-                service so far, not the full period.
+                {period === 'weekly' ? t('inProgress.week') : t('inProgress.month')}
               </p>
             )}
             {viewMode === 'route' ? (

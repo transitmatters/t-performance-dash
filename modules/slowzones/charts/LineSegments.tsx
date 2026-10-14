@@ -7,6 +7,7 @@ import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import type { ChartDataset } from 'chart.js';
 import { Bar } from '@chartjs-components';
+import { useTranslation } from 'react-i18next';
 import {
   DATE_FORMAT,
   YESTERDAY_MIDNIGHT,
@@ -48,6 +49,7 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
   endDateUTC,
   direction,
 }) => {
+  const { t } = useTranslation('slowzones');
   const ref = useRef(null);
   const chartRange = endDateUTC.diff(startDateUTC, 'day');
   const breakpoint = [
@@ -172,10 +174,14 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
             callbacks: {
               label: (context) => {
                 const slowzone = context.raw as LineSegmentData;
-                const delays = [` Average Delay: ${slowzone.delay.toFixed(0)} sec.`];
+                const delays = [
+                  ` ${t('segmentChart.averageDelay', { seconds: slowzone.delay.toFixed(0) })}`,
+                ];
 
                 if (slowzone.latest_delay !== null) {
-                  delays.push(` Latest Delay: ${slowzone.latest_delay.toFixed(0)} sec`);
+                  delays.push(
+                    ` ${t('segmentChart.latestDelay', { seconds: slowzone.latest_delay.toFixed(0) })}`
+                  );
                 }
                 return delays;
               },
@@ -185,12 +191,12 @@ export const LineSegments: React.FC<LineSegmentsProps> = ({
               beforeBody: (context) => {
                 const start = context[0].parsed._custom?.barStart;
                 const end = context[0].parsed._custom?.barEnd;
-                if (!(start && end)) return 'Unknown dates';
+                if (!(start && end)) return t('segmentChart.unknownDates');
                 const startUTC = dayjs.utc(start);
                 const endUTC = dayjs.utc(end);
                 return `${startUTC.format('MMM D, YYYY')} - ${
                   dayjs.utc(endUTC).isSame(YESTERDAY_MIDNIGHT)
-                    ? 'Ongoing'
+                    ? t('segmentChart.ongoing')
                     : dayjs(endUTC).format('MMM D, YYYY')
                 }`;
               },

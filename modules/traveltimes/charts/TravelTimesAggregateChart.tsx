@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type {
@@ -28,6 +29,7 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
   peakTime = true,
   dayFilter = 'all',
 }) => {
+  const { t } = useTranslation('traveltimes');
   const {
     query: { startDate, endDate },
   } = useDelimitatedRoute();
@@ -57,18 +59,18 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
         timeUnit={timeUnitByDate ? 'day' : 'hour'}
         byTime={!timeUnitByDate}
         timeFormat={timeUnitByDate ? 'MMM d yyyy' : 'h:mm aaaa'}
-        seriesName={'Median travel time'}
+        seriesName={t('median')}
         startDate={startDate}
         endDate={endDate}
         fillColor={timeUnitByDate ? CHART_COLORS.FILL : CHART_COLORS.FILL_HOURLY}
         location={getLocationDetails(fromStation, toStation)}
         includeBothStopsForLocation={true}
         fname={'traveltimes'}
-        chartTitle={timeUnitByDate ? 'Travel times' : 'Travel times by hour'}
+        chartTitle={timeUnitByDate ? t('chartTitle') : t('chartTitleByHour')}
         yUnit="minutes"
       />
     );
-  }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime, dayFilter]);
+  }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime, dayFilter, t]);
 
   return chart;
 };

@@ -1,0 +1,27 @@
+{
+  "delta": {
+    "flat": "{{delta}} · flat",
+    "faster": "{{delta}} · faster",
+    "slower": "{{delta}} · slower"
+  },
+  "units": {
+    "mph": "{{value}} mph",
+    "mphLabel": "mph"
+  },
+  "stats": {
+    "average": "Average speed",
+    "peak": "Peak speed",
+    "shareOfMax": "Share of historical max"
+  },
+  "lineAverage": "Average across the line",
+  "graph": {
+    "historicalMaximum": "Historical Maximum ({{peak}} mph)",
+    "tooltip": "{{value}} ({{percent}}% of historical maximum)",
+    "axis": "Miles per hour (mph)",
+    "series": "MPH"
+  },
+  "betweenStations": {
+    "median": "Median Speed",
+    "title": "Speeds"
+  }
+}

@@ -4,6 +4,7 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import { useTranslation } from 'react-i18next';
 import { getDateFnsLocale } from '../../../common/i18n/format';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
@@ -39,6 +40,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
   showTitle = false,
   peakLineDashed = false,
 }) => {
+  const { t } = useTranslation(['speed', 'common']);
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const peak = useSpeedBaseline(line);
@@ -60,7 +62,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
             labels,
             datasets: [
               {
-                label: `MPH`,
+                label: t('graph.series'),
                 fill: true,
                 backgroundColor: hexWithAlpha(LINE_COLORS[line ?? 'default'], 0.8),
                 borderColor: LINE_COLORS[line ?? 'default'],
@@ -82,7 +84,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
               ...(peak > 0
                 ? [
                     {
-                      label: `Historical Maximum (${peak} mph)`,
+                      label: t('graph.historicalMaximum', { peak }),
                       backgroundColor: CHART_COLORS.ANNOTATIONS,
                       data: null,
                     },
@@ -111,9 +113,10 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                   ...callbacks,
                   label: (context) => {
                     if (!context.parsed.y) return '';
-                    return `${context.parsed.y} (${((100 * context.parsed.y) / peak).toFixed(
-                      1
-                    )}% of historical maximum)`;
+                    return t('graph.tooltip', {
+                      value: context.parsed.y,
+                      percent: ((100 * context.parsed.y) / peak).toFixed(1),
+                    });
                   },
                 },
               },
@@ -160,7 +163,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Miles per hour (mph)',
+                  text: t('graph.axis'),
                   color: COLORS.design.subtitleGrey,
                 },
               },
@@ -206,10 +209,10 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                   ctx.textAlign = 'center';
                   ctx.textBaseline = 'middle';
                   ctx.font = "16px normal 'Helvetica Nueue'";
-                  ctx.fillText('No data to display', width / 2, height / 2);
+                  ctx.fillText(t('common:charts.noDataToDisplay'), width / 2, height / 2);
                   ctx.restore();
                 }
-                if (showTitle) drawSimpleTitle(`Speed`, chart);
+                if (showTitle) drawSimpleTitle(t('common:pages.speed.name'), chart);
               },
             },
             ChartjsPluginWatermark,

@@ -22,6 +22,12 @@ const TIME_WINDOWS: { key: TimeWindow; start: number; end: number }[] = [
 const windowFor = (hour: number) =>
   TIME_WINDOWS.find((window) => hour >= window.start && hour < window.end)?.key;
 
+interface Insight {
+  count: number;
+  /** The window holding a real share of the delays, if any. */
+  concentrated?: TimeWindow;
+}
+
 interface DelayInsightProps {
   data: SingleDayDataPoint[];
   metricField: MetricFieldKeys;
@@ -43,7 +49,7 @@ export const DelayInsight: React.FC<DelayInsightProps> = ({
   line,
 }) => {
   const { t } = useTranslation();
-  const insight = React.useMemo(() => {
+  const insight: Insight | undefined = React.useMemo(() => {
     const behind = data.filter((point) => {
       const benchmark = point[benchmarkField];
       const value = point[metricField];
@@ -65,8 +71,7 @@ export const DelayInsight: React.FC<DelayInsightProps> = ({
 
   if (!insight) return null;
 
-  const { count } = insight;
-  const concentrated: TimeWindow | undefined = insight.concentrated;
+  const { count, concentrated } = insight;
   const sentence = subject
     ? concentrated
       ? 'notices.delayInsight.subjectDuring'

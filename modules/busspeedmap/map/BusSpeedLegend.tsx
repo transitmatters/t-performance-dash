@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { SPEED_COLOR_STOPS } from '../constants';
 
 /**
@@ -9,10 +10,11 @@ import { SPEED_COLOR_STOPS } from '../constants';
  * which reads more than twice as high and describes nobody's actual trip.
  */
 export const BusSpeedLegend: React.FC = () => {
+  const { t } = useTranslation('busspeedmap');
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center gap-2">
-        <span className="text-xs text-stone-600">Slower</span>
+        <span className="text-xs text-stone-600">{t('legend.slower')}</span>
         <div className="flex overflow-hidden rounded-sm border border-stone-300">
           {SPEED_COLOR_STOPS.map(([speed, color]) => (
             <div key={speed} className="flex w-12 flex-col items-center">
@@ -21,12 +23,9 @@ export const BusSpeedLegend: React.FC = () => {
             </div>
           ))}
         </div>
-        <span className="text-xs text-stone-600">Faster</span>
+        <span className="text-xs text-stone-600">{t('legend.faster')}</span>
       </div>
-      <p className="text-xs text-stone-600 italic">
-        Median speed from stop to stop, including time spent waiting at the stop — what a rider on
-        board experiences.
-      </p>
+      <p className="text-xs text-stone-600 italic">{t('legend.description')}</p>
     </div>
   );
 };

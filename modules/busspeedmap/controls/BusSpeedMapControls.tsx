@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
 import { DAY_TYPES, DIRECTIONS, PERIODS, TIME_BANDS } from '../constants';
 import type { DayType, DirectionFilter, Period, TimeBand } from '../types';
@@ -35,6 +36,7 @@ export const BusSpeedMapControls: React.FC<BusSpeedMapControlsProps> = ({
   showDayType = true,
   showTimeBand = true,
 }) => {
+  const { t } = useTranslation('busspeedmap');
   const periodOptions = PERIODS.map((option) => [option.key, option.label] as [Period, string]);
   const selectedPeriodIndex = PERIODS.findIndex((option) => option.key === period);
 
@@ -65,7 +67,7 @@ export const BusSpeedMapControls: React.FC<BusSpeedMapControlsProps> = ({
           />
         </div>
         <label className="flex items-center gap-2 text-sm lg:hidden">
-          <span className="text-stone-600">Period</span>
+          <span className="text-stone-600">{t('controls.period')}</span>
           <select
             className="flex-1 rounded-md border border-stone-300 px-2 py-1.5 text-sm"
             value={period}
@@ -100,7 +102,7 @@ export const BusSpeedMapControls: React.FC<BusSpeedMapControlsProps> = ({
               />
             </div>
             <label className="flex items-center gap-2 text-sm lg:hidden">
-              <span className="text-stone-600">Day type</span>
+              <span className="text-stone-600">{t('controls.dayType')}</span>
               <select
                 className="flex-1 rounded-md border border-stone-300 px-2 py-1.5 text-sm"
                 value={dayType}
@@ -131,7 +133,7 @@ export const BusSpeedMapControls: React.FC<BusSpeedMapControlsProps> = ({
                 />
               </div>
               <label className="flex items-center gap-2 text-sm lg:hidden">
-                <span className="text-stone-600">Time of day</span>
+                <span className="text-stone-600">{t('controls.timeOfDay')}</span>
                 <select
                   className="flex-1 rounded-md border border-stone-300 px-2 py-1.5 text-sm"
                   value={timeBand}
@@ -158,7 +160,7 @@ export const BusSpeedMapControls: React.FC<BusSpeedMapControlsProps> = ({
                 />
               </div>
               <label className="flex items-center gap-2 text-sm lg:hidden">
-                <span className="text-stone-600">Direction</span>
+                <span className="text-stone-600">{t('controls.direction')}</span>
                 <select
                   className="flex-1 rounded-md border border-stone-300 px-2 py-1.5 text-sm"
                   value={direction}

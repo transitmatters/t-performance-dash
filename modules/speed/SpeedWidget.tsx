@@ -1,5 +1,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
@@ -10,6 +11,7 @@ import { getSpeedGraphConfig } from './constants/speeds';
 import { SpeedGraphWrapper } from './SpeedGraphWrapper';
 
 export const SpeedWidget: React.FC = () => {
+  const { t } = useTranslation();
   const { line, query } = useDelimitatedRoute();
   const { startDate } = OVERVIEW_OPTIONS[query.view ?? 'year'];
   const endDate = TODAY_STRING;
@@ -28,7 +30,7 @@ export const SpeedWidget: React.FC = () => {
 
   return (
     <WidgetDiv>
-      <WidgetTitle title="Speed" tab="speed" line={line} />
+      <WidgetTitle title={t('pages.speed.name')} tab="speed" line={line} />
       {speedReady ? (
         <SpeedGraphWrapper
           data={speeds.data}

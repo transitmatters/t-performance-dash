@@ -10,6 +10,8 @@ import type {
   FilterSpecification,
   MapGeoJSONFeature,
 } from 'maplibre-gl';
+import { useTranslation } from 'react-i18next';
+import { traversalSummary } from '../utils';
 import { useBusSpeedStops } from '../../../common/api/hooks/busSpeedSegments';
 import { getBusRouteDisplayName, getBusRouteIds } from '../../../common/constants/lines';
 import {
@@ -221,6 +223,7 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
   routeFilter,
   segmentStops,
 }) => {
+  const { t } = useTranslation(['busspeedmap', 'common']);
   const [hovered, setHovered] = useState<Hovered | undefined>();
   const mapRef = useRef<MapRef>(null);
   const routeFilterClause = useMemo<FilterSpecification | undefined>(
@@ -575,23 +578,29 @@ export const BusSpeedMapView: React.FC<BusSpeedMapViewProps> = ({
           {hovered.kind === 'segment' && (
             <div className="text-xs text-stone-900">
               <p className="font-semibold">
-                Route {getBusRouteDisplayName(hovered.properties.route_id)}
+                {t('common:routes.busRoute', {
+                  route: getBusRouteDisplayName(hovered.properties.route_id),
+                })}
                 <span className="font-normal text-stone-600">
                   {' '}
-                  · {hovered.properties.direction_id === 1 ? 'Inbound' : 'Outbound'}
+                  ·{' '}
+                  {hovered.properties.direction_id === 1
+                    ? t('directions.inbound')
+                    : t('directions.outbound')}
                 </span>
               </p>
               <p className="text-stone-600">
                 {hovered.properties.from_stop_name} → {hovered.properties.to_stop_name}
               </p>
               <p className="mt-1 text-sm font-semibold">
-                {hovered.properties.p50_speed_mph.toFixed(1)} mph
+                {t('mph', { value: hovered.properties.p50_speed_mph.toFixed(1) })}
               </p>
               <p className="text-stone-600">
-                Median of {hovered.properties.n_traversals} trips
-                {period !== 'daily' && ` this ${period === 'weekly' ? 'week' : 'month'}`}
-                {hovered.properties.n_interpolated > 0 &&
-                  `, ${hovered.properties.n_interpolated} with an interpolated stop time`}
+                {traversalSummary(
+                  hovered.properties.n_traversals,
+                  hovered.properties.n_interpolated,
+                  period
+                )}
               </p>
             </div>
           )}

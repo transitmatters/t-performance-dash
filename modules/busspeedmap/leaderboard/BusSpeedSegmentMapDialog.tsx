@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { traversalSummary } from '../utils';
 import { BusSpeedDataUnavailableError } from '../../../common/api/busSpeedSegments';
 import { useBusSpeedSegmentsUrl } from '../../../common/api/hooks/busSpeedSegments';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
@@ -34,6 +36,7 @@ export const BusSpeedSegmentMapDialog: React.FC<BusSpeedSegmentMapDialogProps> =
   timeBand,
   onClose,
 }) => {
+  const { t } = useTranslation(['busspeedmap', 'common']);
   const open = Boolean(entry);
 
   // Radix keeps the dialog mounted through its closing animation, but `entry` itself goes
@@ -83,10 +86,13 @@ export const BusSpeedSegmentMapDialog: React.FC<BusSpeedSegmentMapDialogProps> =
           <>
             <DialogHeader>
               <DialogTitle>
-                Route {getBusRouteDisplayName(lastEntry.route_id)}
+                {t('common:routes.busRoute', { route: getBusRouteDisplayName(lastEntry.route_id) })}
                 <span className="font-normal text-stone-600">
                   {' '}
-                  · {lastEntry.direction_id === 1 ? 'Inbound' : 'Outbound'}
+                  ·{' '}
+                  {lastEntry.direction_id === 1
+                    ? t('directions.inbound')
+                    : t('directions.outbound')}
                 </span>
               </DialogTitle>
               <p className="text-sm text-stone-600">
@@ -96,11 +102,9 @@ export const BusSpeedSegmentMapDialog: React.FC<BusSpeedSegmentMapDialogProps> =
             <div className="h-72 w-full overflow-hidden rounded-lg sm:h-96">{renderMap()}</div>
             <p className="text-sm text-stone-600">
               <span className="font-semibold text-stone-900">
-                {lastEntry.p50_speed_mph.toFixed(1)} mph
+                {t('mph', { value: lastEntry.p50_speed_mph.toFixed(1) })}
               </span>{' '}
-              · Median of {lastEntry.n_traversals} trips
-              {lastEntry.n_interpolated > 0 &&
-                `, ${lastEntry.n_interpolated} with an interpolated stop time`}
+              · {traversalSummary(lastEntry.n_traversals, lastEntry.n_interpolated)}
             </p>
           </>
         )}

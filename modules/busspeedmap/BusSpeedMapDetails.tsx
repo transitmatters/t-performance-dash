@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
 import { useBusSpeedSegmentsUrl } from '../../common/api/hooks/busSpeedSegments';
 import { BusSpeedDataUnavailableError } from '../../common/api/busSpeedSegments';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
@@ -28,6 +29,7 @@ import type { DayType, DirectionFilter, Period, TimeBand } from './types';
 import { isPeriodInProgress, periodLabel } from './utils';
 
 export function BusSpeedMapDetails() {
+  const { t } = useTranslation(['busspeedmap', 'common']);
   const {
     query: { date, busRoute },
   } = useDelimitatedRoute();
@@ -51,7 +53,7 @@ export function BusSpeedMapDetails() {
     .join(' · ');
 
   const renderBody = () => {
-    if (!date) return <p>Select a date to load the bus speed map.</p>;
+    if (!date) return <p>{t('map.selectDate')}</p>;
     if (segments.isLoading) return <ChartPlaceHolder />;
     // A date with no published file isn't a failure, it's just outside coverage.
     if (segments.error instanceof BusSpeedDataUnavailableError)
@@ -78,11 +80,11 @@ export function BusSpeedMapDetails() {
   };
 
   return (
-    <PageWrapper pageTitle={'Bus speed map'}>
+    <PageWrapper pageTitle={t('common:pages.speedmap.title')}>
       <ChartPageDiv>
         <BusDataNotice />
         <WidgetDiv>
-          <WidgetTitle title="Bus speeds" subtitle={subtitle || undefined} />
+          <WidgetTitle title={t('map.title')} subtitle={subtitle || undefined} />
           <div className="flex flex-col gap-3">
             <BusSpeedMapControls
               period={period}
@@ -96,8 +98,7 @@ export function BusSpeedMapDetails() {
             />
             {isPeriodInProgress(date, period) && (
               <p className="text-xs text-stone-500">
-                This {period === 'weekly' ? 'week' : 'month'} is still in progress — figures reflect
-                service so far, not the full period.
+                {period === 'weekly' ? t('inProgress.week') : t('inProgress.month')}
               </p>
             )}
             {renderBody()}

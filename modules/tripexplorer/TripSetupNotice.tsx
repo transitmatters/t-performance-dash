@@ -1,6 +1,7 @@
 import { faCalendarDay, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 
@@ -15,26 +16,30 @@ interface TripSetupNoticeProps {
  * first-time visitor is most likely to land in from a partial link.
  */
 export const TripSetupNotice: React.FC<TripSetupNoticeProps> = ({ missing }) => {
+  const { t } = useTranslation('tripexplorer');
   const isMobile = !useBreakpoint('md');
   // The controls live in the sticky header on desktop and in the docked panel on mobile, so point
   // at whichever one the reader is actually looking at.
-  const where = isMobile ? 'in the panel at the bottom of the screen' : 'in the bar above';
+  const where = isMobile ? 'mobile' : 'desktop';
 
   const { icon, title, body } =
     missing === 'stations'
       ? {
           icon: faLocationDot,
-          title: 'Choose a start and end station',
-          body: `Pick the two stops you want to travel between ${where}, and this page will show travel times, headways and dwells for that trip.`,
+          title: t('setup.stations.title'),
+          body: t(`setup.stations.body.${where}`),
         }
-      : {
-          icon: faCalendarDay,
-          title: missing === 'dateRange' ? 'Choose a date range' : 'Choose a date',
-          body:
-            missing === 'dateRange'
-              ? `Pick a start and end date ${where} to see how this trip performed over time.`
-              : `Pick a date ${where} to see every trip that ran between these two stations.`,
-        };
+      : missing === 'dateRange'
+        ? {
+            icon: faCalendarDay,
+            title: t('setup.dateRange.title'),
+            body: t(`setup.dateRange.body.${where}`),
+          }
+        : {
+            icon: faCalendarDay,
+            title: t('setup.date.title'),
+            body: t(`setup.date.body.${where}`),
+          };
 
   return (
     <WidgetDiv>

@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AggregateDataResponse, DayFilter } from '../../../common/types/charts';
@@ -21,6 +22,7 @@ export const HeadwaysAggregateChart: React.FC<HeadwaysAggregateChartProps> = ({
   fromStation,
   dayFilter = 'all',
 }) => {
+  const { t } = useTranslation('headways');
   const {
     query: { startDate, endDate },
   } = useDelimitatedRoute();
@@ -45,7 +47,7 @@ export const HeadwaysAggregateChart: React.FC<HeadwaysAggregateChartProps> = ({
         pointField={PointFieldKeys.serviceDate}
         timeUnit={'day'}
         timeFormat={'MMM d yyyy'}
-        seriesName={'Median headway'}
+        seriesName={t('median')}
         startDate={startDate}
         endDate={endDate}
         fillColor={CHART_COLORS.FILL}
@@ -55,7 +57,7 @@ export const HeadwaysAggregateChart: React.FC<HeadwaysAggregateChartProps> = ({
         yUnit="minutes"
       />
     );
-  }, [headways.by_date, startDate, endDate, fromStation, toStation, dayFilter]);
+  }, [headways.by_date, startDate, endDate, fromStation, toStation, dayFilter, t]);
 
   return chart;
 };

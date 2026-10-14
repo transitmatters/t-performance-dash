@@ -3,6 +3,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { useTranslation } from 'react-i18next';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
@@ -20,6 +21,7 @@ import { SpeedGraphWrapper } from './SpeedGraphWrapper';
 dayjs.extend(utc);
 
 export function SpeedDetails() {
+  const { t } = useTranslation(['speed', 'common']);
   const {
     line,
     query: { startDate, endDate },
@@ -36,7 +38,7 @@ export function SpeedDetails() {
     enabled
   );
   if (!startDate || !endDate) {
-    return <p>Select a date range to load graphs.</p>;
+    return <p>{t('common:notices.selectDateRange')}</p>;
   }
 
   const stats = speeds.data ? getSpeedStats(speeds.data, line) : null;
@@ -46,28 +48,34 @@ export function SpeedDetails() {
     const sentiment: StatSentiment =
       Math.abs(delta) <= negligible ? 'flat' : delta > 0 ? 'good' : 'bad';
     const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'faster' : 'slower';
-    const magnitude = unit === 'pp' ? `${Math.round(delta * 100)}pp` : `${delta.toFixed(1)} mph`;
-    return { label: `${delta > 0 ? '+' : ''}${magnitude} · ${word}`, sentiment };
+    const magnitude =
+      unit === 'pp'
+        ? t('common:stats.comparison.percentagePoints', { value: Math.round(delta * 100) })
+        : t('units.mph', { value: delta.toFixed(1) });
+    return {
+      label: t(`delta.${word}`, { delta: `${delta > 0 ? '+' : ''}${magnitude}` }),
+      sentiment,
+    };
   };
 
   return (
-    <PageWrapper pageTitle={'Speed'}>
+    <PageWrapper pageTitle={t('common:pages.speed.name')}>
       <ChartPageDiv>
         {stats && Number.isFinite(stats.avgSpeed) && (
           <StatCardGrid>
             <StatCard
-              label="Average speed"
+              label={t('stats.average')}
               value={stats.avgSpeed.toFixed(1)}
-              unit="mph"
+              unit={t('units.mphLabel')}
               delta={deltaFor(stats.avgSpeedDelta, 0.2, 'mph')}
             />
             <StatCard
-              label="Peak speed"
+              label={t('stats.peak')}
               value={Number.isFinite(stats.peakSpeed) ? stats.peakSpeed.toFixed(1) : '—'}
-              unit="mph"
+              unit={t('units.mphLabel')}
             />
             <StatCard
-              label="Share of historical max"
+              label={t('stats.shareOfMax')}
               value={
                 Number.isFinite(stats.percentOfMax)
                   ? `${Math.round(stats.percentOfMax * 100)}%`
@@ -77,7 +85,7 @@ export function SpeedDetails() {
             />
           </StatCardGrid>
         )}
-        <Widget title="Speed" subtitle="Average across the line" ready={[speeds]}>
+        <Widget title={t('common:pages.speed.name')} subtitle={t('lineAverage')} ready={[speeds]}>
           <SpeedGraphWrapper
             data={speeds.data!}
             config={config}

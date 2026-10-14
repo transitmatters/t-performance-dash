@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { SingleDayDataPoint } from '../../../common/types/charts';
 import { MetricFieldKeys, PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
@@ -19,6 +20,7 @@ export const SpeedBetweenStationsSingleChart: React.FC<SpeedBetweenStationsSingl
   fromStation,
   showLegend = true,
 }) => {
+  const { t } = useTranslation('speed');
   const {
     linePath,
     query: { date },
@@ -38,7 +40,7 @@ export const SpeedBetweenStationsSingleChart: React.FC<SpeedBetweenStationsSingl
         location={location}
         units="mph"
         fname={'speeds'}
-        chartTitle="Speeds"
+        chartTitle={t('betweenStations.title')}
         showLegend={true}
       />
     );

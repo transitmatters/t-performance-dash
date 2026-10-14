@@ -6,6 +6,7 @@ import 'chartjs-adapter-date-fns';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import dayjs from 'dayjs';
 import { max, min } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import { getDateFnsLocale } from '../../../common/i18n/format';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS_LEVELS } from '../../../common/constants/colors';
@@ -32,6 +33,7 @@ export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
   endDate,
   showTitle = false,
 }) => {
+  const { t } = useTranslation(['predictions', 'common']);
   const { line, linePath } = useDelimitatedRoute();
   const peak = PEAK_SPEED[line ?? 'DEFAULT'];
   const ref = useRef(null);
@@ -75,7 +77,7 @@ export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
             labels,
             datasets: [
               {
-                label: `0-3min predictions`,
+                label: t('chart.bins.0to3'),
                 borderColor: LINE_COLORS_LEVELS[line ?? 'default'][0],
                 pointRadius: 0,
                 pointBorderWidth: 0,
@@ -92,7 +94,7 @@ export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
                 ),
               },
               {
-                label: `3-6min predictions`,
+                label: t('chart.bins.3to6'),
                 borderColor: LINE_COLORS_LEVELS[line ?? 'default'][1],
                 pointRadius: 0,
                 pointBorderWidth: 0,
@@ -109,7 +111,7 @@ export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
                 ),
               },
               {
-                label: `6-12min predictions`,
+                label: t('chart.bins.6to12'),
                 borderColor: LINE_COLORS_LEVELS[line ?? 'default'][2],
                 pointRadius: 0,
                 pointBorderWidth: 0,
@@ -126,7 +128,7 @@ export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
                 ),
               },
               {
-                label: `12-30min predictions`,
+                label: t('chart.bins.12to30'),
                 borderColor: LINE_COLORS_LEVELS[line ?? 'default'][3],
                 pointRadius: 0,
                 pointBorderWidth: 0,
@@ -163,10 +165,13 @@ export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
                 position: 'nearest',
                 callbacks: {
                   title: (context) => {
-                    return `Week of ${context[0].label}`;
+                    return t('common:charts.weekOf', { label: context[0].label });
                   },
                   label: (context) => {
-                    return `${context.dataset.label}: ${context.parsed.y}% accurate`;
+                    return t('chart.tooltip', {
+                      label: context.dataset.label,
+                      percent: context.parsed.y,
+                    });
                   },
                 },
               },
@@ -208,7 +213,7 @@ export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Accuracy (%)',
+                  text: t('chart.axis'),
                   color: COLORS.design.subtitleGrey,
                 },
               },
@@ -254,10 +259,10 @@ export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
                   ctx.textAlign = 'center';
                   ctx.textBaseline = 'middle';
                   ctx.font = "16px normal 'Helvetica Nueue'";
-                  ctx.fillText('No data to display', width / 2, height / 2);
+                  ctx.fillText(t('common:charts.noDataToDisplay'), width / 2, height / 2);
                   ctx.restore();
                 }
-                if (showTitle) drawSimpleTitle(`Arrival Predictions`, chart);
+                if (showTitle) drawSimpleTitle(t('chart.title'), chart);
               },
             },
             ChartjsPluginWatermark,

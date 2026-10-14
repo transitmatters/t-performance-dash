@@ -1,0 +1,17 @@
+{
+  "median": "Median headway",
+  "histogram": {
+    "vehicles": {
+      "bus": "Buses",
+      "ferry": "Ferries",
+      "train": "Trains"
+    },
+    "share": {
+      "bus": "{{percent}}% of buses",
+      "ferry": "{{percent}}% of ferries",
+      "train": "{{percent}}% of trains"
+    },
+    "bucket": "{{min}} - {{max}} min.",
+    "benchmark": "Benchmark: {{time}}"
+  }
+}
