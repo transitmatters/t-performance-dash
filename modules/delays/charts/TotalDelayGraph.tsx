@@ -2,11 +2,11 @@ import React, { useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
-import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import { max, min } from 'date-fns';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import { getDateFnsLocale } from '../../../common/i18n/format';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
@@ -148,7 +148,7 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
                 },
                 adapters: {
                   date: {
-                    locale: enUS,
+                    locale: getDateFnsLocale(),
                   },
                 },
                 display: true,

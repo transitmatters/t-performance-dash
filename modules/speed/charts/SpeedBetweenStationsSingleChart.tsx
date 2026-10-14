@@ -36,7 +36,7 @@ export const SpeedBetweenStationsSingleChart: React.FC<SpeedBetweenStationsSingl
         pointField={PointFieldKeys.depDt}
         includeBothStopsForLocation={true}
         location={location}
-        units={'MPH'}
+        units="mph"
         fname={'speeds'}
         chartTitle="Speeds"
         showLegend={true}

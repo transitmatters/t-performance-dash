@@ -95,6 +95,9 @@ export interface LineProps {
   showUnderRatio?: boolean;
 }
 
+/** Unit a line chart's values are in; its display label comes from `chartUnits.*` in the catalog. */
+export type ChartUnit = 'minutes' | 'mph';
+
 export interface AggregateLineProps extends LineProps {
   timeUnit: TimeUnit;
   data: AggregateDataPoint[];
@@ -107,7 +110,7 @@ export interface AggregateLineProps extends LineProps {
   suggestedYMax?: number;
   byTime?: boolean;
   children?: React.ReactNode;
-  yUnit: string;
+  yUnit: ChartUnit;
 }
 
 export interface SingleDayLineProps extends LineProps {
@@ -116,7 +119,7 @@ export interface SingleDayLineProps extends LineProps {
   date: string | undefined;
   benchmarkField?: BenchmarkField;
   tmBenchmarkField?: BenchmarkField;
-  units: 'Minutes' | 'MPH';
+  units: ChartUnit;
 }
 
 export interface HeadwayHistogramProps {

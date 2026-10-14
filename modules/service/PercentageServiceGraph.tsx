@@ -2,11 +2,11 @@ import React, { useMemo, useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
-import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { round } from '@lodash-utils';
+import { getDateFnsLocale } from '../../common/i18n/format';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
@@ -172,7 +172,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
                   },
                   adapters: {
                     date: {
-                      locale: enUS,
+                      locale: getDateFnsLocale(),
                     },
                   },
                   display: true,

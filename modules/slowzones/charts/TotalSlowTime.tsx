@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
 
 import 'chartjs-adapter-date-fns';
-import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import duration from 'dayjs/plugin/duration';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { Line } from '@chartjs-components';
+import { getDateFnsLocale } from '../../../common/i18n/format';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
 import type { LineShort, Line as TrainLine } from '../../../common/types/lines';
@@ -153,7 +153,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
                 },
                 adapters: {
                   date: {
-                    locale: enUS,
+                    locale: getDateFnsLocale(),
                   },
                 },
                 display: true,

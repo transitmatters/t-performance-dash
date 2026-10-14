@@ -1,3 +1,5 @@
+// Initialise i18n before anything renders.
+import './common/i18n';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';

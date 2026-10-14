@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { formatNumber } from '../../../common/i18n/format';
 import type {
   BaselineMetric,
   BaselineSeries,
@@ -150,7 +151,7 @@ export const ratioCell = (
   const raw = opts.aggregate === 'median' ? median(window.values) : mean(window.values);
   const rawValue = Number.isFinite(raw) ? raw : null;
   const format = (v: number) =>
-    v >= 1000 ? Math.round(v).toLocaleString('en-us') : v >= 100 ? Math.round(v) : v.toFixed(1);
+    v >= 1000 ? formatNumber(Math.round(v)) : v >= 100 ? Math.round(v) : v.toFixed(1);
   if (baseline.value === null) {
     return {
       ...judgedCell(metric, null, { unit: 'count', window, now: opts.now, href: opts.href }),

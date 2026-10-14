@@ -1,11 +1,12 @@
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
-import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef, useState } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import { useTranslation } from 'react-i18next';
 import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
 import { prettyDate } from '../../utils/date';
+import { formatNumber, getDateFnsLocale } from '../../i18n/format';
 import { CHART_COLORS } from '../../constants/colors';
 import { DownloadButton } from '../buttons/DownloadButton';
 import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
@@ -82,10 +83,12 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   suggestedYMax,
   showLegend = true,
   byTime = false,
-  yUnit = 'Minutes',
+  yUnit = 'minutes',
   chartTitle,
 }) => {
   const ref = useRef(null);
+  const { t } = useTranslation();
+  const unitLabel = t(`chartUnits.${yUnit}`);
   const chartTheme = useChartTheme();
   const hourly = timeUnit === 'hour';
   const weatherEnabled = useWeatherStore((s) => s.enabled);
@@ -103,7 +106,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const [isTrendlineVisible, setIsTrendlineVisible] = useState(false);
-  const multiplier = yUnit === 'Minutes' ? 1 / 60 : 1;
+  const multiplier = yUnit === 'minutes' ? 1 / 60 : 1;
 
   const trendlineData = useMemo(() => {
     if (!isTrendlineVisible) return [];
@@ -210,16 +213,17 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 border: { display: false },
                 title: {
                   display: true,
-                  text: yUnit,
+                  text: unitLabel,
                   color: chartTheme.tick,
                 },
                 ticks: {
                   color: chartTheme.tick,
                   precision: 1,
                   callback: (value) => {
-                    return yUnit === 'Minutes' && typeof value === 'number'
+                    if (typeof value !== 'number') return value;
+                    return yUnit === 'minutes'
                       ? getFormattedTimeString(value, 'minutes')
-                      : value.toLocaleString();
+                      : formatNumber(value);
                   },
                 },
                 suggestedMin: suggestedYMin,
@@ -250,7 +254,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 type: 'time',
                 adapters: {
                   date: {
-                    locale: enUS,
+                    locale: getDateFnsLocale(),
                   },
                 },
                 // force graph to show startDate to endDate, even if missing data
@@ -290,9 +294,9 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                       return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y} °F`;
                     }
                     return `${tooltipItem.dataset.label}: ${
-                      yUnit === 'Minutes'
+                      yUnit === 'minutes'
                         ? getFormattedTimeString(tooltipItem.parsed.y, 'minutes')
-                        : `${tooltipItem.parsed.y} ${yUnit}`
+                        : `${tooltipItem.parsed.y} ${unitLabel}`
                     }`;
                   },
                 },

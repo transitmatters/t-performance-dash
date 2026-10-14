@@ -5,7 +5,6 @@ import Annotation from 'chartjs-plugin-annotation';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import 'chartjs-adapter-date-fns';
 
-import { enUS } from 'date-fns/locale';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -21,6 +20,7 @@ import {
   BarController,
   LineController,
 } from '@chartjs-utils';
+import { getDateFnsLocale } from '../../../i18n/format';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { ChartDiv } from '../ChartDiv';
 import { CHART_COLORS, COLORS } from '../../../constants/colors';
@@ -175,7 +175,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         offset: hasBars,
         adapters: {
           date: {
-            locale: enUS,
+            locale: getDateFnsLocale(),
           },
         },
         ticks: {

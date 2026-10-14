@@ -2,10 +2,10 @@ import React, { useMemo, useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
-import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
+import { formatNumber, getDateFnsLocale } from '../../common/i18n/format';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { RidershipCount } from '../../common/types/dataPoints';
@@ -76,7 +76,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
 
                 {
                   // This null dataset produces the entry in the legend for the peak annotation.
-                  label: `Historical Maximum (${peak.toLocaleString('en-us')} fare validations)`,
+                  label: `Historical Maximum (${formatNumber(peak)} fare validations)`,
                   backgroundColor: CHART_COLORS.ANNOTATIONS,
                   data: null,
                 },
@@ -103,7 +103,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                     ...callbacks,
                     label: (context) => {
                       if (!context.parsed.y) return '';
-                      return `${context.parsed.y.toLocaleString('en-us')} (${(
+                      return `${formatNumber(context.parsed.y)} (${(
                         (100 * context.parsed.y) /
                         peak
                       ).toFixed(1)}% of historical maximum)`;
@@ -165,7 +165,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                   },
                   adapters: {
                     date: {
-                      locale: enUS,
+                      locale: getDateFnsLocale(),
                     },
                   },
                   display: true,

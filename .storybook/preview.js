@@ -1,3 +1,4 @@
+import '../common/i18n';
 import '../styles/globals.css';
 
 export const parameters = {

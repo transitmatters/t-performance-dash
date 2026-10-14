@@ -31,7 +31,7 @@ export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
         benchmarkField={BenchmarkFieldKeys.benchmarkHeadwayTimeSec}
         location={getLocationDetails(fromStation, toStation)}
         fname={'headways'}
-        units={'Minutes'}
+        units="minutes"
         showLegend={showLegend && anyHeadwayBenchmarks}
         showUnderRatio={true}
       />

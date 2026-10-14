@@ -1,11 +1,11 @@
 import timezone from 'dayjs/plugin/timezone';
 import dayjs from 'dayjs';
-import { enUS } from 'date-fns/locale';
 import type { TimeUnit } from 'chart.js';
 import utc from 'dayjs/plugin/utc';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { useMemo } from 'react';
+import { getDateFnsLocale } from '../i18n/format';
 import type { Station } from '../types/stations';
 import type { DayDelayTotals, Direction, SlowZone, SlowZoneResponse } from '../types/dataPoints';
 import { TODAY_MIDNIGHT } from '../constants/dates';
@@ -201,7 +201,7 @@ export const getDateAxisConfig = (startDateUTC: dayjs.Dayjs, endDateUTC: dayjs.D
     time: { unit: getTimeUnitSlowzones(startDateUTC, endDateUTC) },
     adapters: {
       date: {
-        locale: enUS,
+        locale: getDateFnsLocale(),
       },
     },
     display: true,

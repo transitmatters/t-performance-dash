@@ -69,6 +69,10 @@ npm run lint-frontend-fix # Auto-fix frontend
 npm run format            # Format frontend files (oxfmt)
 npm run lint-backend-fix  # Auto-fix backend (ruff)
 
+# Translation catalogs (locales/)
+npm run i18n:extract      # Sync locales/en with the keys the code uses
+npm run i18n:check        # Fail if catalogs and code disagree (runs in lint-frontend)
+
 # Fetch static data for local dev
 npm run get-data
 
@@ -100,6 +104,7 @@ Optional:
 - **Layouts**: Routes pick a secondary layout via `staticData: { layout: Layout.Dashboard }`; `routes/__root.tsx` applies it
 - **New pages**: add the route file, and for `/$line/...` pages add the page's lines to `common/constants/staticRoutes.ts` (drives 404s and the per-route prerendered HTML)
 - **Links/URL state**: use `common/components/general/Link` and the hooks in `common/utils/router.tsx`; query params stay plain strings
+- **i18n**: user-facing text lives in `locales/en/<namespace>.json` (`common` for shared UI, one namespace per module), never inline. Components use `useTranslation('<ns>')` / `<Trans>`; non-React code (constants, Chart.js callbacks, `metaTags.ts`) uses `i18n.t` from `common/i18n`. Keys are typed, so a missing key fails `tsc`. Use interpolation and `count` plurals instead of building sentences, and the formatters in `common/i18n/format.ts` instead of hard-coded `'en-US'`. Don't extract station/stop names, route IDs or MBTA alert text. Register new namespaces in `common/i18n/resources.ts`. To spot unextracted text in dev, run `localStorage.setItem('tm-lng', 'pseudo')` and reload.
 
 ### Backend
 

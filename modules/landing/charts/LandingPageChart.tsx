@@ -8,7 +8,7 @@ import 'chartjs-adapter-date-fns';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-import { enUS } from 'date-fns/locale';
+import { getDateFnsLocale } from '../../../common/i18n/format';
 import { COLORS } from '../../../common/constants/colors';
 import {
   PRETTY_DATE_FORMAT,
@@ -107,7 +107,7 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
                 },
                 adapters: {
                   date: {
-                    locale: enUS,
+                    locale: getDateFnsLocale(),
                   },
                 },
                 display: true,

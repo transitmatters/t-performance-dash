@@ -18,7 +18,8 @@
     "common/constants/licenses/",
     "common/constants/stations.json",
     "common/constants/station_distances.json",
-    "server/openapi.json"
+    "server/openapi.json",
+    "locales/"
   ],
   "overrides": [
     {

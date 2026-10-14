@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 
+import { formatNumber } from '../../../common/i18n/format';
 import { useDeliveredTripMetrics } from '../../../common/api/hooks/tripmetrics';
 import { useRidershipData } from '../../../common/api/hooks/ridership';
 import { getRidershipLineId } from '../../../common/utils/ridership';
@@ -20,7 +21,7 @@ const WINDOW_START = dayjs().subtract(400, 'day').format('YYYY-MM-DD');
 
 const formatCompact = (value: number): string => {
   if (Math.abs(value) >= 1000) return `${(value / 1000).toFixed(1)}k`;
-  return Math.round(value).toLocaleString();
+  return formatNumber(Math.round(value));
 };
 
 const deltaSentimentFor = (
