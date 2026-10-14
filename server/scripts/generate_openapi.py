@@ -134,6 +134,58 @@ def annotate_path_params(openapi_spec):
     return openapi_spec
 
 
+# operationIds become method names in generated clients, so keep them stable once published.
+# Every operation needs an entry here; generation fails otherwise.
+_OPERATION_IDS = {
+    ("/api/healthcheck", "get"): "getHealthcheck",
+    ("/api/headways/{user_date}", "get"): "getHeadways",
+    ("/api/dwells/{user_date}", "get"): "getDwells",
+    ("/api/traveltimes/{user_date}", "get"): "getTravelTimes",
+    ("/api/alerts/{user_date}", "get"): "getHistoricalAlerts",
+    ("/api/aggregate/traveltimes", "get"): "getAggregateTravelTimes",
+    ("/api/aggregate/traveltimes2", "get"): "getAggregateTravelTimesV2",
+    ("/api/aggregate/headways", "get"): "getAggregateHeadways",
+    ("/api/aggregate/dwells", "get"): "getAggregateDwells",
+    ("/api/git_id", "get"): "getGitId",
+    ("/api/alerts", "get"): "getCurrentAlerts",
+    ("/api/linedelays", "get"): "getLineDelays",
+    ("/api/tripmetrics", "get"): "getTripMetrics",
+    ("/api/scheduledservice", "get"): "getScheduledService",
+    ("/api/ridership", "get"): "getRidership",
+    ("/api/facilities", "get"): "getFacilities",
+    ("/api/speed_restrictions", "get"): "getSpeedRestrictions",
+    ("/api/service_hours", "get"): "getServiceHours",
+    ("/api/time_predictions", "get"): "getTimePredictions",
+    ("/api/service_ridership_dashboard", "get"): "getServiceRidershipDashboard",
+    ("/api/routes", "get"): "getRoutes",
+    ("/api/stops/{route_id}", "get"): "getStopsForRoute",
+}
+
+_HTTP_METHODS = {"get", "put", "post", "delete", "options", "head", "patch", "trace"}
+
+
+def add_operation_ids(openapi_spec):
+    """Set each operation's operationId from _OPERATION_IDS.
+
+    chalice-spec can't set operationIds itself. Raises if an operation has no entry, or an entry
+    matches no operation, so a new or renamed route can't ship without one.
+    """
+    operations = {
+        (path, method): operation
+        for path, path_item in openapi_spec.get("paths", {}).items()
+        for method, operation in path_item.items()
+        if method in _HTTP_METHODS
+    }
+    missing = sorted(set(operations) - set(_OPERATION_IDS))
+    stale = sorted(set(_OPERATION_IDS) - set(operations))
+    if missing or stale:
+        raise ValueError(f"_OPERATION_IDS is out of date. Missing: {missing}. No longer in the API: {stale}.")
+
+    for key, operation in operations.items():
+        operation["operationId"] = _OPERATION_IDS[key]
+    return openapi_spec
+
+
 def convert_get_requestbody_to_params(openapi_spec):
     """Convert requestBody to query parameters for GET endpoints.
 
@@ -304,6 +356,10 @@ def generate_openapi_json(output_path="openapi.json"):
         # Annotate path parameters with descriptions
         print("Annotating path parameters...")
         openapi_spec = annotate_path_params(openapi_spec)
+
+        # Name each operation for generated clients
+        print("Adding operation IDs...")
+        openapi_spec = add_operation_ids(openapi_spec)
 
         # Fix Pydantic v2 nullable types for OpenAPI 3.0 compatibility
         print("Fixing nullable types...")

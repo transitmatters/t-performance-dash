@@ -17,7 +17,8 @@
         "tags": [
           "/api"
         ],
-        "summary": "Run API health checks and return pass/fail status with details on any failures."
+        "summary": "Run API health checks and return pass/fail status with details on any failures.",
+        "operationId": "getHealthcheck"
       }
     },
     "/api/headways/{user_date}": {
@@ -55,7 +56,8 @@
             "style": "form",
             "explode": true
           }
-        ]
+        ],
+        "operationId": "getHeadways"
       },
       "parameters": [
         {
@@ -104,7 +106,8 @@
             "style": "form",
             "explode": true
           }
-        ]
+        ],
+        "operationId": "getDwells"
       },
       "parameters": [
         {
@@ -168,7 +171,8 @@
             "style": "form",
             "explode": true
           }
-        ]
+        ],
+        "operationId": "getTravelTimes"
       },
       "parameters": [
         {
@@ -217,7 +221,8 @@
             "style": "form",
             "explode": true
           }
-        ]
+        ],
+        "operationId": "getHistoricalAlerts"
       },
       "parameters": [
         {
@@ -300,7 +305,8 @@
             "style": "form",
             "explode": true
           }
-        ]
+        ],
+        "operationId": "getAggregateTravelTimes"
       }
     },
     "/api/aggregate/traveltimes2": {
@@ -372,7 +378,8 @@
             "style": "form",
             "explode": true
           }
-        ]
+        ],
+        "operationId": "getAggregateTravelTimesV2"
       }
     },
     "/api/aggregate/headways": {
@@ -429,7 +436,8 @@
             "style": "form",
             "explode": true
           }
-        ]
+        ],
+        "operationId": "getAggregateHeadways"
       }
     },
     "/api/aggregate/dwells": {
@@ -486,7 +494,8 @@
             "style": "form",
             "explode": true
           }
-        ]
+        ],
+        "operationId": "getAggregateDwells"
       }
     },
     "/api/git_id": {
@@ -506,7 +515,8 @@
         "tags": [
           "/api"
         ],
-        "summary": "Return the current git commit ID. Only available on localhost."
+        "summary": "Return the current git commit ID. Only available on localhost.",
+        "operationId": "getGitId"
       }
     },
     "/api/alerts": {
@@ -526,7 +536,8 @@
         "tags": [
           "/api"
         ],
-        "summary": "Fetch current live alerts from the MBTA v3 API."
+        "summary": "Fetch current live alerts from the MBTA v3 API.",
+        "operationId": "getCurrentAlerts"
       }
     },
     "/api/linedelays": {
@@ -601,7 +612,8 @@
             },
             "description": "Aggregation period: `daily` or `weekly`."
           }
-        ]
+        ],
+        "operationId": "getLineDelays"
       }
     },
     "/api/tripmetrics": {
@@ -675,7 +687,8 @@
             },
             "description": "GTFS line identifier. Rapid transit: `line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`. Commuter rail: `line-Fairmount`, `line-Lowell`, etc. Use `/api/routes` to list all valid values."
           }
-        ]
+        ],
+        "operationId": "getTripMetrics"
       }
     },
     "/api/scheduledservice": {
@@ -737,7 +750,8 @@
             },
             "description": "Aggregation period: `daily`, `weekly`, or `monthly`."
           }
-        ]
+        ],
+        "operationId": "getScheduledService"
       }
     },
     "/api/ridership": {
@@ -790,7 +804,8 @@
             },
             "description": "Line identifier for ridership data. Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. Bus: `line-{route}` (e.g. `line-1`, `line-66`). Commuter rail: `line-{line}` (e.g. `line-Fairmount`). Ferry: `line-F1`, `line-F4`, etc. Omit to return all lines."
           }
-        ]
+        ],
+        "operationId": "getRidership"
       }
     },
     "/api/facilities": {
@@ -810,7 +825,8 @@
         "tags": [
           "/api"
         ],
-        "summary": "Fetch facility data (elevators, escalators) from the MBTA v3 API."
+        "summary": "Fetch facility data (elevators, escalators) from the MBTA v3 API.",
+        "operationId": "getFacilities"
       }
     },
     "/api/speed_restrictions": {
@@ -850,7 +866,8 @@
             },
             "description": "Date to query (YYYY-MM-DD)."
           }
-        ]
+        ],
+        "operationId": "getSpeedRestrictions"
       }
     },
     "/api/service_hours": {
@@ -912,7 +929,8 @@
             },
             "description": "Aggregation period: `daily`, `weekly`, or `monthly`."
           }
-        ]
+        ],
+        "operationId": "getServiceHours"
       }
     },
     "/api/time_predictions": {
@@ -943,7 +961,8 @@
             },
             "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs."
           }
-        ]
+        ],
+        "operationId": "getTimePredictions"
       }
     },
     "/api/service_ridership_dashboard": {
@@ -963,7 +982,8 @@
         "tags": [
           "/api"
         ],
-        "summary": "Retrieve combined service and ridership data for the overview dashboard."
+        "summary": "Retrieve combined service and ridership data for the overview dashboard.",
+        "operationId": "getServiceRidershipDashboard"
       }
     },
     "/api/routes": {
@@ -984,7 +1004,8 @@
           "/api"
         ],
         "summary": "Get a manifest of all available routes supported in the dashboard.",
-        "description": "Returns:\n    Response: JSON response containing route IDs grouped by category\n        (rapid_transit, bus, commuter_rail, ferry), cached for one day."
+        "description": "Returns:\n    Response: JSON response containing route IDs grouped by category\n        (rapid_transit, bus, commuter_rail, ferry), cached for one day.",
+        "operationId": "getRoutes"
       }
     },
     "/api/stops/{route_id}": {
@@ -1005,7 +1026,8 @@
           "/api"
         ],
         "summary": "Get the stop information for a specific route.",
-        "description": "Args:\n    route_id: The route ID to look up stops for.\n\nReturns:\n    Response: JSON response containing station/stop data including names, IDs,\n        and directions, or a 404 response if the route is not found."
+        "description": "Args:\n    route_id: The route ID to look up stops for.\n\nReturns:\n    Response: JSON response containing station/stop data including names, IDs,\n        and directions, or a 404 response if the route is not found.",
+        "operationId": "getStopsForRoute"
       },
       "parameters": [
         {
