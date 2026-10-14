@@ -1,3 +1,4 @@
+import { i18n } from '../i18n';
 import type { Line } from '../types/lines';
 import { LINE_OBJECTS } from '../constants/lines';
 import { STATIC_PATHS } from '../constants/staticRoutes';
@@ -7,8 +8,6 @@ export const BASE_URL = 'https://dashboard.transitmatters.org';
 const IMAGE_ORIGIN = import.meta.env.VITE_FRONTEND_HOST
   ? `https://${import.meta.env.VITE_FRONTEND_HOST}`
   : BASE_URL;
-const DEFAULT_DESCRIPTION =
-  'Explore MBTA subway, commuter rail and bus performance data with the TransitMatters Data Dashboard.';
 
 const linePathToKey: Record<string, Line> = {
   red: 'line-red',
@@ -22,33 +21,40 @@ const linePathToKey: Record<string, Line> = {
   'the-ride': 'line-RIDE',
 };
 
-const PAGE_DISPLAY_NAMES: Record<string, string> = {
-  speed: 'Speed',
-  service: 'Service',
-  predictions: 'Predictions',
-  delays: 'Delays',
-  slowzones: 'Slow Zones',
-  ridership: 'Ridership',
-  reliability: 'Reliability',
-  fleet: 'Fleet',
-  leaderboard: 'Leaderboard',
-  speedmap: 'Speed Map',
-  opensource: 'Open Source',
-};
+// Path segments with a page name in titles and descriptions (`meta.pages.<segment>`).
+const NAMED_PAGES = [
+  'speed',
+  'service',
+  'predictions',
+  'delays',
+  'slowzones',
+  'ridership',
+  'reliability',
+  'fleet',
+  'leaderboard',
+  'speedmap',
+  'opensource',
+] as const;
+type NamedPage = (typeof NAMED_PAGES)[number] | 'trips' | 'multiTrips';
 
 const TM_RED = '#a31e1e';
 export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
 
-function getPageName(pathname: string): string | undefined {
+function getPage(pathname: string): NamedPage | undefined {
   const segments = pathname.split('/').filter(Boolean);
   if (segments.includes('trips')) {
     const tripType = segments[segments.length - 1];
-    if (tripType === 'single') return 'Trips';
-    if (tripType === 'multi') return 'Multi-day Trips';
+    if (tripType === 'single') return 'trips';
+    if (tripType === 'multi') return 'multiTrips';
   }
   const lastSegment = segments[segments.length - 1];
-  return PAGE_DISPLAY_NAMES[lastSegment];
+  return NAMED_PAGES.find((page) => page === lastSegment);
+}
+
+function getPageName(pathname: string): string | undefined {
+  const page = getPage(pathname);
+  return page && i18n.t(`meta.pages.${page}.title`);
 }
 
 /** `startCase(toLower(...))` of the path segment, matching how useDelimitatedRoute derives it. */
@@ -58,13 +64,14 @@ export function lineShortFor(linePath: string | undefined) {
   return words.map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
-function dateSummary(query: Record<string, unknown>) {
+function tripDescription(trip: string, query: Record<string, unknown>, line: string) {
   const { date, startDate, endDate } = query;
-  if (typeof date === 'string') return ` on ${date}`;
+  if (typeof date === 'string') return i18n.t('meta.description.tripOnDate', { trip, date, line });
   if (typeof startDate === 'string' && typeof endDate === 'string')
-    return ` from ${startDate} to ${endDate}`;
-  if (typeof startDate === 'string') return ` since ${startDate}`;
-  return '';
+    return i18n.t('meta.description.tripDateRange', { trip, startDate, endDate, line });
+  if (typeof startDate === 'string')
+    return i18n.t('meta.description.tripSince', { trip, startDate, line });
+  return i18n.t('meta.description.trip', { trip, line });
 }
 
 export interface MetaTags {
@@ -97,13 +104,14 @@ export function getOgCard(pathname: string): OgCard {
   const lineName = lineKey ? LINE_OBJECTS[lineKey].name : undefined;
   const pageName = getPageName(pathname);
   const heading =
-    lineName ?? (segments[0] === 'system' ? 'Systemwide' : (pageName ?? 'Data Dashboard'));
+    lineName ??
+    (segments[0] === 'system' ? i18n.t('meta.og.systemwide') : (pageName ?? i18n.t('app.name')));
   const subheading =
     lineName || segments[0] === 'system'
-      ? (pageName ?? 'Overview')
+      ? (pageName ?? i18n.t('meta.og.overview'))
       : segments.length
         ? null
-        : 'MBTA subway, bus and commuter rail performance';
+        : i18n.t('meta.og.tagline');
   return {
     slug: ogImageSlug(pathname),
     path: pathname,
@@ -128,14 +136,18 @@ export function getMetaTags(
   const linePath = pathname.split('/')[1];
   const lineKey = linePath ? linePathToKey[linePath] : undefined;
   const lineName = lineKey ? LINE_OBJECTS[lineKey]?.name : undefined;
+  const page = getPage(pathname);
   const pageName = getPageName(pathname);
 
-  const title = [lineName, trip ?? pageName, 'Data Dashboard'].filter(Boolean).join(' | ');
+  const title = [lineName, trip ?? pageName, i18n.t('app.name')].filter(Boolean).join(' | ');
   const description = trip
-    ? `${trip}${dateSummary(query)} on the ${lineName ?? 'MBTA'}, from the TransitMatters Data Dashboard.`
+    ? tripDescription(trip, query, lineName ?? 'MBTA')
     : lineName
-      ? `${lineName} ${pageName?.toLowerCase() ?? 'performance'} data on the TransitMatters Data Dashboard.`
-      : DEFAULT_DESCRIPTION;
+      ? i18n.t('meta.description.linePage', {
+          line: lineName,
+          page: page ? i18n.t(`meta.pages.${page}.inSentence`) : i18n.t('meta.performance'),
+        })
+      : i18n.t('meta.description.default');
 
   // Only prerendered paths get a generated card. 404s use the one in public/, which doesn't depend
   // on the card job having run.
@@ -161,7 +173,7 @@ export function getMetaTagEntries({ title, description, canonicalUrl, image }: M
     ['property', 'og:image:width', String(OG_IMAGE_WIDTH)],
     ['property', 'og:image:height', String(OG_IMAGE_HEIGHT)],
     ['property', 'og:image:alt', title],
-    ['property', 'og:site_name', 'TransitMatters Data Dashboard'],
+    ['property', 'og:site_name', i18n.t('meta.siteName')],
     ['name', 'twitter:card', 'summary_large_image'],
     ['name', 'twitter:site', '@transitmatters'],
     ['name', 'twitter:title', title],

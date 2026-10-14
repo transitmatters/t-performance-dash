@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import { i18n } from '../i18n';
 import type {
   DateParams,
   DateSelectionDefaultOptions,
@@ -27,7 +28,7 @@ export const YESTERDAY_MIDNIGHT = TODAY_MIDNIGHT.subtract(1, 'day');
 export const TODAY_STRING = TODAY.format(DATE_FORMAT);
 export const YESTERDAY_STRING = TODAY.subtract(1, 'day').format(DATE_FORMAT);
 export const TODAY_SERVICE_STARTED = TODAY.hour() >= 6;
-export const RANGE_OPTIONS = ['Single Day', 'Range'];
+export const RANGE_OPTIONS = ['singleDay', 'range'] as const;
 export const ONE_WEEK_AGO = TODAY.subtract(7, 'days');
 export const ONE_WEEK_AGO_STRING = ONE_WEEK_AGO.format(DATE_FORMAT);
 export const ONE_YEAR_AGO = TODAY.subtract(1, 'year');
@@ -169,29 +170,29 @@ const DATE_BOUNDS: { [key in Tab]: { minDate: string; maxDate: string } } = {
 const SINGLE_RAPID_PRESETS: {
   [key in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams>;
 } = {
-  today: { key: 'today', name: 'Today', input: { date: TODAY_STRING } },
+  today: { key: 'today', name: i18n.t('datePresets.today'), input: { date: TODAY_STRING } },
   yesterday: {
     key: 'yesterday',
-    name: 'Yesterday',
+    name: i18n.t('datePresets.yesterday'),
     input: { date: TODAY.subtract(1, 'day').format(DATE_FORMAT) },
   },
   week: {
     key: 'week',
-    name: `Last ${TODAY.subtract(7, 'days').format('dddd')}`,
+    name: i18n.t('datePresets.lastWeekday', { weekday: TODAY.subtract(7, 'days').format('dddd') }),
     input: {
       date: TODAY.subtract(7, 'days').format(DATE_FORMAT),
     },
   },
   month: {
     key: 'month',
-    name: `30 days ago`,
+    name: i18n.t('datePresets.thirtyDaysAgo'),
     input: {
       date: TODAY.subtract(30, 'days').format(DATE_FORMAT),
     },
   },
   year: {
     key: 'year',
-    name: `One year ago`,
+    name: i18n.t('datePresets.oneYearAgo'),
     input: {
       date: ONE_YEAR_AGO_STRING,
     },
@@ -215,14 +216,16 @@ const SINGLE_BUS_PRESETS: {
   },
   firstOfYear: {
     key: 'firstOfYear',
-    name: `First of ${BUS_MAX_DAY.startOf('year').format('YYYY')}`,
+    name: i18n.t('datePresets.firstOfYear', { year: BUS_MAX_DAY.startOf('year').format('YYYY') }),
     input: {
       date: BUS_MAX_DAY.startOf('month').format(DATE_FORMAT),
     },
   },
   firstOfPrevYear: {
     key: 'firstOfPrevYear',
-    name: `First of ${BUS_MAX_DAY.subtract(1, 'year').startOf('year').format('YYYY')}`,
+    name: i18n.t('datePresets.firstOfYear', {
+      year: BUS_MAX_DAY.subtract(1, 'year').startOf('year').format('YYYY'),
+    }),
     input: {
       date: BUS_MAX_DAY.subtract(1, 'year').startOf('year').format(DATE_FORMAT),
     },
@@ -246,14 +249,16 @@ const SINGLE_RIDE_PRESETS: {
   },
   firstOfYear: {
     key: 'firstOfYear',
-    name: `First of ${RIDE_MAX_DAY.startOf('year').format('YYYY')}`,
+    name: i18n.t('datePresets.firstOfYear', { year: RIDE_MAX_DAY.startOf('year').format('YYYY') }),
     input: {
       date: RIDE_MAX_DAY.startOf('month').format(DATE_FORMAT),
     },
   },
   firstOfPrevYear: {
     key: 'firstOfPrevYear',
-    name: `First of ${RIDE_MAX_DAY.subtract(1, 'year').startOf('year').format('YYYY')}`,
+    name: i18n.t('datePresets.firstOfYear', {
+      year: RIDE_MAX_DAY.subtract(1, 'year').startOf('year').format('YYYY'),
+    }),
     input: {
       date: RIDE_MAX_DAY.subtract(1, 'year').startOf('year').format(DATE_FORMAT),
     },
@@ -276,7 +281,7 @@ const RANGE_RAPID_PRESETS: {
 } = {
   week: {
     key: 'week',
-    name: 'Past week',
+    name: i18n.t('datePresets.pastWeek'),
     input: {
       startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
       endDate: TODAY_STRING,
@@ -284,7 +289,7 @@ const RANGE_RAPID_PRESETS: {
   },
   month: {
     key: 'month',
-    name: 'Past month',
+    name: i18n.t('datePresets.pastMonth'),
     input: {
       startDate: TODAY.subtract(31, 'days').format(DATE_FORMAT),
       endDate: TODAY_STRING,
@@ -308,7 +313,7 @@ const RANGE_RAPID_PRESETS: {
   },
   year: {
     key: 'year',
-    name: 'Past year',
+    name: i18n.t('datePresets.pastYear'),
     input: {
       startDate: ONE_YEAR_AGO_STRING,
       endDate: TODAY_STRING,
@@ -332,7 +337,7 @@ const RANGE_RAPID_PRESETS: {
   },
   all: {
     key: 'all',
-    name: 'All time',
+    name: i18n.t('datePresets.allTime'),
     input: {
       startDate: dayjs(OVERVIEW_TRAIN_MIN_DATE).format(DATE_FORMAT),
       endDate: TODAY_STRING,
@@ -377,7 +382,7 @@ const RANGE_BUS_PRESETS: {
   },
   all: {
     key: 'all',
-    name: 'All time',
+    name: i18n.t('datePresets.allTime'),
     input: {
       startDate: dayjs(RIDE_MIN_DATE).format(DATE_FORMAT),
       endDate: BUS_MAX_DATE,
@@ -422,7 +427,7 @@ const RANGE_RIDE_PRESETS: {
   },
   all: {
     key: 'all',
-    name: 'All time',
+    name: i18n.t('datePresets.allTime'),
     input: {
       startDate: dayjs(RIDE_MIN_DATE).format(DATE_FORMAT),
       endDate: RIDE_MAX_DATE,
@@ -481,12 +486,12 @@ export const OVERVIEW_OPTIONS: {
 
 export type OverviewDatePresetKey = keyof typeof OverviewRangeTypes;
 
-export enum OverviewRangeTypes {
-  week = 'Past week',
-  month = 'Past month',
-  year = 'Past year',
-  all = 'All time',
-}
+export const OverviewRangeTypes = {
+  week: i18n.t('datePresets.pastWeek'),
+  month: i18n.t('datePresets.pastMonth'),
+  year: i18n.t('datePresets.pastYear'),
+  all: i18n.t('datePresets.allTime'),
+};
 
 export const RANGE_DATE_KEYS = Object.fromEntries(
   [...Object.values(RANGE_RAPID_PRESETS), ...Object.values(RANGE_RIDE_PRESETS)].map(
@@ -500,5 +505,5 @@ export const SINGLE_DATE_KEYS = Object.fromEntries(
 );
 
 export const todayOrDate = (date: dayjs.Dayjs) => {
-  return date.isSame(TODAY, 'day') ? 'Today' : date.format(PRETTY_DATE_FORMAT);
+  return date.isSame(TODAY, 'day') ? i18n.t('dates.today') : date.format(PRETTY_DATE_FORMAT);
 };

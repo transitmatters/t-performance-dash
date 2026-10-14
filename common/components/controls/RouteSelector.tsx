@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
+import { i18n } from '../../i18n';
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from '../ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { getBusRoutes, getCommuterRailRoutes, getFerryRoutes } from '../../constants/stations';
@@ -18,7 +20,10 @@ import {
 const optionsForLine = (line: Line): { key: string; label: string }[] => {
   switch (line) {
     case 'line-bus':
-      return getBusRoutes().map((key) => ({ key, label: `Route ${key}` }));
+      return getBusRoutes().map((key) => ({
+        key,
+        label: i18n.t('routes.busRoute', { route: key }),
+      }));
     case 'line-commuter-rail':
       return getCommuterRailRoutes().map((key) => ({
         key,
@@ -43,6 +48,7 @@ const optionsForLine = (line: Line): { key: string; label: string }[] => {
  * cmdk list with no positioning logic of its own — nothing here for either to fight over.
  */
 export const RouteSelector: React.FC = () => {
+  const { t } = useTranslation();
   const route = useDelimitatedRoute();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
@@ -72,18 +78,18 @@ export const RouteSelector: React.FC = () => {
         <button
           type="button"
           aria-expanded={open}
-          aria-label="Select route"
+          aria-label={t('routes.select')}
           className="flex h-7 w-44 min-w-0 items-center justify-between gap-x-2 rounded-md border border-transparent bg-white px-3 text-sm text-stone-900 outline-none hover:bg-stone-50 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
         >
-          <span className="truncate">{selected?.label ?? 'Select route'}</span>
+          <span className="truncate">{selected?.label ?? t('routes.select')}</span>
           <FontAwesomeIcon icon={faChevronDown} className="size-3 shrink-0 text-stone-500" />
         </button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-72 p-0">
         <Command>
-          <CommandInput placeholder="Search routes..." />
+          <CommandInput placeholder={t('routes.search')} />
           <CommandList>
-            <CommandEmpty>No matching route.</CommandEmpty>
+            <CommandEmpty>{t('routes.noMatch')}</CommandEmpty>
             {options.map((option) => (
               <CommandItem
                 key={option.key}

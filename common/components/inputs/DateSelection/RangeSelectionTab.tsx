@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import { Tabs, TabsList, TabsTrigger } from '../../ui/tabs';
 import { lineColorVar } from '../../../styles/general';
 import { useDelimitatedRoute } from '../../../utils/router';
@@ -13,6 +14,7 @@ interface RangeSelectionTabProps {
 }
 
 export const RangeSelectionTab: React.FC<RangeSelectionTabProps> = ({ range, setRange }) => {
+  const { t } = useTranslation();
   const { line } = useDelimitatedRoute();
   const needsDarkText = readableOn(LINE_COLORS[line ?? 'default']) === 'dark';
 
@@ -35,7 +37,7 @@ export const RangeSelectionTab: React.FC<RangeSelectionTabProps> = ({ range, set
                 : 'data-[state=active]:text-white'
             )}
           >
-            {option}
+            {t(`dateSelection.${option}`)}
           </TabsTrigger>
         ))}
       </TabsList>

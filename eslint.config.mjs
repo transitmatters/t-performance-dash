@@ -36,6 +36,8 @@ const literalStringOptions = {
   callees: { exclude: [...i18nextDefaults.callees.exclude, 'format'] },
   // Also skip emoji carrying a variation selector (⚠️), which the default emoji pattern misses.
   words: { exclude: [...i18nextDefaults.words.exclude, /^[\p{Extended_Pictographic}\uFE0F]+$/u] },
+  // ARIA roles (`{ role: 'heading' }`) are identifiers, not text.
+  'object-properties': { exclude: [...i18nextDefaults['object-properties'].exclude, 'role'] },
 };
 
 export default typescriptEslint.config(
@@ -200,6 +202,13 @@ export default typescriptEslint.config(
     plugins: { i18next },
     rules: {
       'i18next/no-literal-string': ['warn', literalStringOptions],
+    },
+  },
+  {
+    files: ['common/**/*.tsx', 'routes/**/*.tsx'],
+    ignores: ['**/*.stories.tsx'],
+    rules: {
+      'i18next/no-literal-string': ['error', literalStringOptions],
     },
   },
 

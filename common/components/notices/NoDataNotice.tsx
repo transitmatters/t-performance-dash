@@ -2,6 +2,7 @@ import { faMagnifyingGlassChart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface NoDataNoticeProps {
   isWidget?: boolean;
@@ -20,6 +21,7 @@ export const NoDataNotice: React.FC<NoDataNoticeProps> = ({
   inverse,
   isLineMetric: isLineWide = false,
 }) => {
+  const { t } = useTranslation();
   return (
     <div className="relative flex h-60 w-full items-center justify-center">
       <div
@@ -35,10 +37,10 @@ export const NoDataNotice: React.FC<NoDataNoticeProps> = ({
           aria-hidden
         />
         <p className={classNames('font-medium', inverse ? 'text-white' : 'text-card-foreground')}>
-          No data available
+          {t('notices.noData.title')}
         </p>
         <p className={classNames('text-sm', inverse ? 'text-white/80' : 'text-muted-foreground')}>
-          {isLineWide ? 'Try another date range.' : 'Try another station pair or date range.'}
+          {isLineWide ? t('notices.noData.lineHint') : t('notices.noData.hint')}
         </p>
       </div>
     </div>

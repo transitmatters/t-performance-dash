@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface PageWrapperProps {
   pageTitle?: string;
@@ -6,9 +7,10 @@ interface PageWrapperProps {
 }
 
 export const PageWrapper: React.FC<PageWrapperProps> = ({ pageTitle, children }) => {
+  const { t } = useTranslation();
   return (
     <>
-      <title>{`${pageTitle ? `${pageTitle} | ` : ''}Data Dashboard`}</title>
+      <title>{pageTitle ? t('app.pageTitle', { page: pageTitle }) : t('app.name')}</title>
       {children}
     </>
   );

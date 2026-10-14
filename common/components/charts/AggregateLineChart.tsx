@@ -115,7 +115,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
 
   const datasets: Array<Record<string, unknown>> = [
     {
-      label: 'Trend',
+      label: t('charts.trend'),
       fill: false,
       borderColor: CHART_COLORS.RED,
       borderWidth: 2,
@@ -137,7 +137,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
       data: data.map((item: AggregateDataPoint) => (item['50%'] * multiplier).toFixed(2)),
     },
     {
-      label: '25th percentile',
+      label: t('charts.percentile25'),
       fill: 1,
       backgroundColor: fillColor,
       stepped: byTime,
@@ -146,7 +146,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
       data: data.map((item: AggregateDataPoint) => (item['25%'] * multiplier).toFixed(2)),
     },
     {
-      label: '75th percentile',
+      label: t('charts.percentile75'),
       fill: 1,
       backgroundColor: fillColor,
       stepped: byTime,
@@ -159,7 +159,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   if (temperatureSeries && temperatureSeries.mean.length > 0) {
     const minIndex = datasets.length;
     datasets.push({
-      label: 'Daily low',
+      label: t('charts.dailyLow'),
       data: temperatureSeries.min,
       yAxisID: 'yTemp',
       borderColor: 'transparent',
@@ -169,7 +169,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
       tension: 0.3,
     });
     datasets.push({
-      label: 'Daily high',
+      label: t('charts.dailyHigh'),
       data: temperatureSeries.max,
       yAxisID: 'yTemp',
       borderColor: 'transparent',
@@ -180,7 +180,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
       tension: 0.3,
     });
     datasets.push({
-      label: 'Daily mean',
+      label: t('charts.dailyMean'),
       data: temperatureSeries.mean,
       yAxisID: 'yTemp',
       borderColor: TEMPERATURE_LINE_COLOR,

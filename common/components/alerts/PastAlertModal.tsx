@@ -1,6 +1,7 @@
 import React from 'react';
 import type { SetStateAction } from 'react';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
 import { getDateString } from '../../../modules/commute/alerts/AlertUtils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
@@ -11,13 +12,14 @@ interface PastAlertModalProps {
 }
 
 export const PastAlertModal: React.FC<PastAlertModalProps> = ({ alertsOpen, setAlertsOpen }) => {
+  const { t } = useTranslation();
   const alertStore = useAlertStore();
   return (
     <Dialog open={alertsOpen} onOpenChange={setAlertsOpen}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="items-center">
           <p className="text-5xl">⚠️</p>
-          <DialogTitle className="text-lg font-normal">Alerts</DialogTitle>
+          <DialogTitle className="text-lg font-normal">{t('alerts.title')}</DialogTitle>
         </DialogHeader>
         <div className="flex max-h-[50vh] flex-col gap-4 overflow-y-auto md:max-h-[66vh]">
           {alertStore.alerts?.map((alert, index) => (
@@ -34,7 +36,7 @@ export const PastAlertModal: React.FC<PastAlertModalProps> = ({ alertsOpen, setA
               <p className="font-bold">{getDateString(alert.valid_from, alert.valid_to)}</p>
               <p className="text-sm">{alert.text}</p>
               <p className="w-full pt-2 text-center text-sm italic">
-                {alert.applied ? 'Remove' : 'Add to chart'}
+                {alert.applied ? t('alerts.remove') : t('alerts.addToChart')}
               </p>
             </div>
           ))}

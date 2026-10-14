@@ -1,5 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
+import { i18n } from '../../i18n';
 import { Link } from '../general/Link';
 import { TRIP_PAGES } from '../../constants/pages';
 import { LINE_COLORS, LINE_COLORS_DARK } from '../../constants/colors';
@@ -13,8 +15,8 @@ import { useDelimitatedRoute, useGenerateHref, useHandleConfigStore } from '../.
 
 /** Labelled for where they sit — beside the date control, which is what they change. */
 const MODE_LABELS: Record<string, string> = {
-  singleTrips: 'Single day',
-  multiTrips: 'Date range',
+  singleTrips: i18n.t('tripMode.singleDay'),
+  multiTrips: i18n.t('tripMode.dateRange'),
 };
 
 /**
@@ -24,6 +26,7 @@ const MODE_LABELS: Record<string, string> = {
  * the relationship visible, and `getTripHopDates` keeps the selected day or range across the hop.
  */
 export const TripModeToggle: React.FC = () => {
+  const { t } = useTranslation();
   const { line, page, query, linePath } = useDelimitatedRoute();
   const generateHref = useGenerateHref();
   const handlePageConfig = useHandleConfigStore();
@@ -38,7 +41,7 @@ export const TripModeToggle: React.FC = () => {
   return (
     <div
       role="group"
-      aria-label="Trip view"
+      aria-label={t('tripMode.label')}
       className={classNames(
         'flex shrink-0 flex-row overflow-hidden rounded-md border',
         lineColorLightBorder[line ?? 'DEFAULT']

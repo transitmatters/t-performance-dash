@@ -1,3 +1,5 @@
+import { i18n } from '../i18n';
+
 export type Line =
   | 'line-red'
   | 'line-orange'
@@ -459,28 +461,28 @@ export const COMMUTER_RAIL_ROUTES: CommuterRailRoute[] = [
 ];
 
 export const COMMUTER_RAIL_LINE_NAMES: { [line in CommuterRailRoute]: string } = {
-  'CR-Fitchburg': 'Fitchburg Line',
-  'CR-Franklin': 'Franklin Line',
-  'CR-Greenbush': 'Greenbush Line',
-  'CR-Haverhill': 'Haverhill Line',
-  'CR-Lowell': 'Lowell Line',
-  'CR-Worcester': 'Worcester Line',
-  'CR-Fairmount': 'Fairmount Line',
-  'CR-Kingston': 'Kingston/Plymouth Line',
-  'CR-Middleborough': 'Middleborough Line',
-  'CR-NewBedford': 'Fall River/New Bedford Line',
-  'CR-Needham': 'Needham Line',
-  'CR-Newburyport': 'Newburyport/Rockport Line',
-  'CR-Providence': 'Providence/Stoughton Line',
+  'CR-Fitchburg': i18n.t('commuterRailLines.CR-Fitchburg'),
+  'CR-Franklin': i18n.t('commuterRailLines.CR-Franklin'),
+  'CR-Greenbush': i18n.t('commuterRailLines.CR-Greenbush'),
+  'CR-Haverhill': i18n.t('commuterRailLines.CR-Haverhill'),
+  'CR-Lowell': i18n.t('commuterRailLines.CR-Lowell'),
+  'CR-Worcester': i18n.t('commuterRailLines.CR-Worcester'),
+  'CR-Fairmount': i18n.t('commuterRailLines.CR-Fairmount'),
+  'CR-Kingston': i18n.t('commuterRailLines.CR-Kingston'),
+  'CR-Middleborough': i18n.t('commuterRailLines.CR-Middleborough'),
+  'CR-NewBedford': i18n.t('commuterRailLines.CR-NewBedford'),
+  'CR-Needham': i18n.t('commuterRailLines.CR-Needham'),
+  'CR-Newburyport': i18n.t('commuterRailLines.CR-Newburyport'),
+  'CR-Providence': i18n.t('commuterRailLines.CR-Providence'),
 };
 
 export const FERRY_LINE_NAMES: { [line in FerryRoute]: string } = {
-  'Boat-F1': 'Hingham Ferry',
-  'Boat-F2H': 'Hingham/Hull Ferry',
-  'Boat-F4': 'Charlestown Ferry',
-  'Boat-F6': 'Winthrop Ferry',
-  'Boat-F7': 'Quincy Ferry',
-  'Boat-F10': 'Harbor Loop Ferry',
-  'Boat-EastBoston': 'East Boston Ferry',
-  'Boat-Lynn': 'Lynn Ferry',
+  'Boat-F1': i18n.t('ferryLines.Boat-F1'),
+  'Boat-F2H': i18n.t('ferryLines.Boat-F2H'),
+  'Boat-F4': i18n.t('ferryLines.Boat-F4'),
+  'Boat-F6': i18n.t('ferryLines.Boat-F6'),
+  'Boat-F7': i18n.t('ferryLines.Boat-F7'),
+  'Boat-F10': i18n.t('ferryLines.Boat-F10'),
+  'Boat-EastBoston': i18n.t('ferryLines.Boat-EastBoston'),
+  'Boat-Lynn': i18n.t('ferryLines.Boat-Lynn'),
 };

@@ -10,10 +10,14 @@ export interface WidgetComparison {
   unit: 'time' | 'percentage';
 }
 
+export type StatId = 'average' | 'median' | 'p10' | 'p90' | 'min' | 'max' | 'bunched' | 'onTime';
+
 export interface MiniWidgetObject {
   type: 'delta' | 'data' | string;
   widgetValue: WidgetValueInterface;
   text: string;
+  /** What the figure is, independent of its (translated) label. */
+  stat?: StatId;
   comparison?: WidgetComparison;
 }
 

@@ -20,6 +20,7 @@ import {
   BarController,
   LineController,
 } from '@chartjs-utils';
+import { useTranslation } from 'react-i18next';
 import { getDateFnsLocale } from '../../../i18n/format';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { ChartDiv } from '../ChartDiv';
@@ -88,6 +89,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     height,
   } = props;
 
+  const { t } = useTranslation();
   const isMobile = !useBreakpoint('md');
 
   const appliedStyles = useMemo(() => {
@@ -255,7 +257,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         backgroundColor: fillColor || CHART_COLORS.BLOCKS_SOLID,
         borderWidth: 0,
         label: {
-          content: label || 'No data',
+          content: label || t('charts.noData'),
           rotation: -90,
           color: textColor || 'white',
           display: true,
@@ -282,7 +284,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
             title: (datasets) => {
               const { label } = datasets[0];
               if (timeAxis.granularity === 'week') {
-                return `Week of ${label}`;
+                return t('charts.weekOf', { label });
               }
               return label;
             },
@@ -321,6 +323,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     legend.visible,
     appliedStyles,
     isMobile,
+    t,
   ]);
 
   const chartJsPlugins = useMemo(() => {

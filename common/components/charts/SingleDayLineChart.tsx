@@ -4,6 +4,7 @@ import 'chartjs-adapter-date-fns';
 import React, { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useTranslation } from 'react-i18next';
+import { i18n } from '../../i18n';
 import type { DataPoint } from '../../types/dataPoints';
 import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
 import type { SingleDayLineProps } from '../../types/charts';
@@ -88,17 +89,17 @@ const departureFromNormalString = (
   }
   const ratio = metric / benchmark;
   if (showUnderRatio && ratio <= 0.5) {
-    return `50%+ under ${referenceWord}`;
+    return i18n.t(`charts.departure.${referenceWord}.under50`);
   } else if (showUnderRatio && ratio <= 0.75) {
-    return `25%+ under ${referenceWord}`;
+    return i18n.t(`charts.departure.${referenceWord}.under25`);
   } else if (!isFinite(ratio) || ratio <= 1.25) {
     return '';
   } else if (ratio <= 1.5) {
-    return `25%+ over ${referenceWord}`;
+    return i18n.t(`charts.departure.${referenceWord}.over25`);
   } else if (ratio <= 2.0) {
-    return `50%+ over ${referenceWord}`;
+    return i18n.t(`charts.departure.${referenceWord}.over50`);
   } else if (ratio > 2.0) {
-    return `100%+ over ${referenceWord}`;
+    return i18n.t(`charts.departure.${referenceWord}.over100`);
   }
   return '';
 };
@@ -183,7 +184,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const datasets: Array<Record<string, unknown>> = [
     {
       kind: 'actual',
-      label: `Actual`,
+      label: t('charts.actual'),
       fill: false,
       borderColor: chartTheme.benchmarkLine,
       pointBackgroundColor: pointColors(
@@ -210,7 +211,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
       // chart uses the TM value. The tooltip overrides this per
       // point to get the exact name right for each hover.
       kind: 'benchmark',
-      label: usingTmBenchmark ? `TransitMatters Benchmark` : `MBTA Benchmark`,
+      label: usingTmBenchmark ? t('charts.tmBenchmark') : t('charts.mbtaBenchmark'),
       backgroundColor: chartTheme.benchmarkFill,
       data: effectiveBenchmarkFormatted,
       pointRadius: 0,
@@ -222,7 +223,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
 
   if (temperaturePoints.length > 0) {
     datasets.push({
-      label: 'Temperature',
+      label: t('charts.temperature'),
       data: temperaturePoints,
       yAxisID: 'yTemp',
       borderColor: TEMPERATURE_LINE_COLOR,
@@ -273,8 +274,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                     // point's benchmark source honestly.
                     const displayLabel = isBenchmark
                       ? tmBenchmarkData[tooltipItem.dataIndex] != null
-                        ? 'TransitMatters Benchmark'
-                        : 'MBTA Benchmark'
+                        ? t('charts.tmBenchmark')
+                        : t('charts.mbtaBenchmark')
                       : datasetLabel;
                     return `${displayLabel}: ${
                       units === 'minutes'
@@ -309,10 +310,14 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                       const arrNums = dataPoint.vehicle_consist.split('|').map(Number);
                       if (arrNums.length > 1) {
                         result.push(
-                          `Vehicle Numbers: ${dataPoint.vehicle_consist.replaceAll('|', ', ')}`
+                          t('charts.vehicleNumbers', {
+                            numbers: dataPoint.vehicle_consist.replaceAll('|', ', '),
+                          })
                         );
                       } else {
-                        result.push(`Vehicle Number: ${dataPoint.vehicle_consist}`);
+                        result.push(
+                          t('charts.vehicleNumber', { number: dataPoint.vehicle_consist })
+                        );
                       }
                     }
                     if (dataPoint?.vehicle_label) {
@@ -322,10 +327,10 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                         if (consistHead === parseInt(dataPoint.vehicle_label)) {
                           //pass
                         } else {
-                          result.push(`Vehicle Label: ${dataPoint.vehicle_label}`);
+                          result.push(t('charts.vehicleLabel', { label: dataPoint.vehicle_label }));
                         }
                       } else {
-                        result.push(`Vehicle Label: ${dataPoint.vehicle_label}`);
+                        result.push(t('charts.vehicleLabel', { label: dataPoint.vehicle_label }));
                       }
                     }
 
@@ -394,7 +399,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 display: true,
                 title: {
                   display: true,
-                  text: date ? prettyDate(date, true) : 'No date selected',
+                  text: date ? prettyDate(date, true) : t('charts.noDateSelected'),
                   color: chartTheme.tick,
                 },
                 afterDataLimits: (axis) => {

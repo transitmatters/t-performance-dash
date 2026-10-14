@@ -2,6 +2,7 @@ import { faArrowRight, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../inputs/Button';
 import { StationSelector } from '../inputs/StationSelector';
 import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
@@ -30,6 +31,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
   crRoute,
   ferryRoute,
 }) => {
+  const { t } = useTranslation();
   const updateQueryParams = useUpdateQuery();
   const lineShort = LINE_OBJECTS[line].short;
   const {
@@ -118,7 +120,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
       />
       <div className="flex h-4 w-4 shrink-0 items-center justify-center">
         <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" aria-hidden />
-        <span className="sr-only">to</span>
+        <span className="sr-only">{t('stations.to')}</span>
       </div>
       <StationSelector
         type={'to'}
@@ -128,8 +130,11 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
       />
       <Button
         onClick={() => updateStations('swap')}
-        title={'Swap stations'}
-        aria-label={`Swap direction: show ${toStation.stop_name} to ${fromStation.stop_name}`}
+        title={t('stations.swap')}
+        aria-label={t('stations.swapLabel', {
+          from: toStation.stop_name,
+          to: fromStation.stop_name,
+        })}
         additionalClasses={'shrink-0 w-fit'}
       >
         <FontAwesomeIcon icon={faRightLeft} className={'h-4 w-4'} aria-hidden />

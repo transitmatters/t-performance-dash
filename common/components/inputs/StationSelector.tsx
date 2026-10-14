@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { faBicycle, faChevronDown, faWheelchair } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import type { Station } from '../../types/stations';
 import { useDelimitatedRoute } from '../../utils/router';
 import { optionsForField, stopIdsForStations } from '../../utils/stations';
@@ -34,6 +35,7 @@ export const StationSelector: React.FC<StationSelector> = ({
     lineShort,
     query: { busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const station = type === 'from' ? fromStation : toStation;
   const stationOptions = optionsForField(
@@ -58,7 +60,9 @@ export const StationSelector: React.FC<StationSelector> = ({
       <PopoverTrigger asChild>
         <Button
           additionalClasses="justify-between grow min-w-0 overflow-hidden h-10 md:h-7"
-          aria-label={`${type === 'from' ? 'Start' : 'End'} station: ${station.stop_name}. Change it.`}
+          aria-label={t(type === 'from' ? 'stations.changeStart' : 'stations.changeEnd', {
+            station: station.stop_name,
+          })}
         >
           <p className="items-center gap-x-1 truncate text-sm font-semibold">{station.stop_name}</p>
           <FontAwesomeIcon icon={faChevronDown} className="h-4 w-4 pl-2" aria-hidden />
@@ -66,9 +70,9 @@ export const StationSelector: React.FC<StationSelector> = ({
       </PopoverTrigger>
       <PopoverContent align="start" style={lineColorVar(line)} className="w-[min(22rem,90vw)] p-0">
         <Command>
-          <CommandInput placeholder="Search stations..." />
+          <CommandInput placeholder={t('stations.search')} />
           <CommandList>
-            <CommandEmpty>No matching station.</CommandEmpty>
+            <CommandEmpty>{t('stations.noMatch')}</CommandEmpty>
             {stationOptions?.map((option) => {
               const disabled = isDisabled(option);
               return (
@@ -102,7 +106,7 @@ export const StationSelector: React.FC<StationSelector> = ({
                     <div className="flex shrink-0 flex-row gap-x-1 pl-4">
                       {option.enclosed_bike_parking ? (
                         <FontAwesomeIcon
-                          title="Enclosed Bicycle Parking"
+                          title={t('stations.bikeParking')}
                           icon={faBicycle}
                           className="m-0 h-3 w-3 rounded-xs bg-gray-800 p-[2px] text-white"
                         />
@@ -111,7 +115,7 @@ export const StationSelector: React.FC<StationSelector> = ({
                       )}
                       {option.accessible ? (
                         <FontAwesomeIcon
-                          title="Wheelchair Accessible"
+                          title={t('stations.accessible')}
                           icon={faWheelchair}
                           className="m-0 h-3 w-3 rounded-xs bg-[#167cb9] p-[2px] text-white"
                         />

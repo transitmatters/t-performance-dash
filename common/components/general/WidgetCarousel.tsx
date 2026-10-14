@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import type { ComponentProps, FC, ReactElement } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 
 interface WidgetCarouselProps {
   children: React.ReactNode;
@@ -10,6 +11,7 @@ interface WidgetCarouselProps {
 }
 
 export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children, isSingleWidget = false }) => {
+  const { t } = useTranslation();
   const [activeItem, setActiveItem] = useState(0);
   const items = useMemo(
     () =>
@@ -46,7 +48,7 @@ export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children, isSingleWidg
             className={classNames(
               'group/button flex cursor-pointer items-center justify-center rounded-md focus:outline-hidden lg:p-1'
             )}
-            title={'Next Statistic'}
+            title={t('widgets.nextStatistic')}
             onClick={navigateTo(activeItem + 1)}
             type="button"
           >

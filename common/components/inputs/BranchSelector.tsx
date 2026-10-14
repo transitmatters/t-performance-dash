@@ -1,4 +1,5 @@
 import React from 'react';
+import { i18n } from '../../i18n';
 import { ButtonGroup } from '../general/ButtonGroup';
 import type { LineRouteId } from '../../types/lines';
 import { useDelimitatedRoute } from '../../utils/router';
@@ -8,12 +9,12 @@ interface BranchSelectorProps {
   setRouteId: (routeId: LineRouteId) => void;
 }
 
-enum GreenLineBranchOptions {
-  'Green-B' = 'B Branch',
-  'Green-C' = 'C Branch',
-  'Green-D' = 'D Branch',
-  'Green-E' = 'E Branch',
-}
+const GreenLineBranchOptions = {
+  'Green-B': i18n.t('greenLineBranches.Green-B'),
+  'Green-C': i18n.t('greenLineBranches.Green-C'),
+  'Green-D': i18n.t('greenLineBranches.Green-D'),
+  'Green-E': i18n.t('greenLineBranches.Green-E'),
+};
 
 export const BranchSelector: React.FunctionComponent<BranchSelectorProps> = ({
   routeId,

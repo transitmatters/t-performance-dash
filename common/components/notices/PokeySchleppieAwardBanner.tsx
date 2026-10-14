@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 import type { BusRoute } from '../../types/lines';
 
 const WINNERS: { [key in number]: { pokey: BusRoute; schleppie: BusRoute } } = {
@@ -17,6 +18,7 @@ interface PokeySchleppieAwardBannerProps {
 export const PokeySchleppieAwardBanner: React.FunctionComponent<PokeySchleppieAwardBannerProps> = ({
   busRoute,
 }) => {
+  const { t } = useTranslation();
   const years = Object.keys(WINNERS);
 
   if (!busRoute) {
@@ -42,15 +44,11 @@ export const PokeySchleppieAwardBanner: React.FunctionComponent<PokeySchleppieAw
           aria-hidden
         />
         <p className="min-w-0 flex-1 text-sm">
-          &ldquo;Winner&rdquo; of the {year}{' '}
           {pokey && schleppie
-            ? 'Pokey and Schleppie'
+            ? t('notices.award.both', { year })
             : pokey
-              ? 'Pokey'
-              : schleppie
-                ? 'Schleppie'
-                : null}{' '}
-          Award{pokey && schleppie ? 's' : ''}!
+              ? t('notices.award.pokey', { year })
+              : t('notices.award.schleppie', { year })}
         </p>
         <a
           href="https://drive.google.com/file/d/1QFTVg0N3-uQeVoMqlOE6QLPqcoCtifzp/view"
@@ -58,7 +56,7 @@ export const PokeySchleppieAwardBanner: React.FunctionComponent<PokeySchleppieAw
           rel="noreferrer"
           className="flex-none rounded-full px-3 py-1 text-sm font-medium ring-1 ring-foreground/15 transition-colors hover:bg-foreground/5 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
-          Read more <span aria-hidden="true">&rarr;</span>
+          {t('notices.readMore')} <span aria-hidden="true">&rarr;</span>
         </a>
       </div>
     );

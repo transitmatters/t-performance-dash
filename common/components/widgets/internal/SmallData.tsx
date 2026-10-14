@@ -2,6 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
+import { i18n } from '../../../i18n';
 import type { WidgetValueInterface } from '../../../types/basicWidgets';
 import type { WidgetComparison } from '../MiniWidgetCreator';
 import { getFormattedTimeString } from '../../../utils/time';
@@ -15,7 +17,7 @@ type SmallDataProps = {
 const formatComparisonDelta = (comparison: WidgetComparison) => {
   const abs = Math.abs(comparison.delta);
   if (comparison.unit === 'percentage') {
-    return `${Math.round(abs * 100)}pp`;
+    return i18n.t('stats.comparison.percentagePoints', { value: Math.round(abs * 100) });
   }
   return getFormattedTimeString(abs);
 };
@@ -26,6 +28,7 @@ const isNegligible = (comparison: WidgetComparison) => {
 };
 
 export const SmallData: React.FC<SmallDataProps> = ({ analysis, widgetValue, comparison }) => {
+  const { t } = useTranslation();
   const negligible = comparison ? isNegligible(comparison) : false;
 
   return (
@@ -39,8 +42,11 @@ export const SmallData: React.FC<SmallDataProps> = ({ analysis, widgetValue, com
           <span
             title={
               negligible
-                ? `About the same as ${comparison.label}`
-                : `${formatComparisonDelta(comparison)} ${comparison.delta > 0 ? 'higher' : 'lower'} than ${comparison.label}`
+                ? t('stats.comparison.same', { label: comparison.label })
+                : t(comparison.delta > 0 ? 'stats.comparison.higher' : 'stats.comparison.lower', {
+                    delta: formatComparisonDelta(comparison),
+                    label: comparison.label,
+                  })
             }
             className={classNames(
               'ml-0.5 cursor-default text-xs',

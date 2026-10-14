@@ -1,9 +1,11 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDelimitatedRoute } from '../../utils/router';
 import { TODAY_STRING } from '../../constants/dates';
 import { Notice } from './Notice';
 
 export const SameDayNotice: React.FC = () => {
+  const { t } = useTranslation();
   const {
     query: { date, endDate },
   } = useDelimitatedRoute();
@@ -13,9 +15,5 @@ export const SameDayNotice: React.FC = () => {
     return null;
   }
 
-  return (
-    <Notice variant="warning">
-      Data from today may be incomplete — it arrives with a delay of up to two hours.
-    </Notice>
-  );
+  return <Notice variant="warning">{t('notices.sameDay')}</Notice>;
 };

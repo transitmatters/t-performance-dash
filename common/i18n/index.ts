@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { isPseudoLocaleEnabled, pseudoPostProcessor, PSEUDO_LANGUAGE } from './pseudo';
+import { isPseudoLocaleEnabled, pseudoLocalizeCatalog } from './pseudo';
 import { defaultNS, resources } from './resources';
 
 // The app's one i18next instance. React components use `useTranslation`; everything else
@@ -8,12 +8,10 @@ import { defaultNS, resources } from './resources';
 // page, so a string resolved at module load never goes stale.
 export const i18n = i18next.createInstance();
 
-const pseudo = isPseudoLocaleEnabled();
-
-i18n.use(initReactI18next).use(pseudoPostProcessor);
+i18n.use(initReactI18next);
 
 void i18n.init({
-  resources,
+  resources: isPseudoLocaleEnabled() ? { en: pseudoLocalizeCatalog(resources.en) } : resources,
   defaultNS,
   ns: Object.keys(resources.en),
   lng: 'en',
@@ -22,7 +20,6 @@ void i18n.init({
   initAsync: false,
   // React already escapes rendered text.
   interpolation: { escapeValue: false },
-  postProcess: pseudo ? [PSEUDO_LANGUAGE] : false,
 });
 
 if (typeof document !== 'undefined') {

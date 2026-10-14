@@ -2,12 +2,16 @@ import React from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
+import { i18n } from '../../i18n';
 import { getFormattedTimeString } from '../../utils/time';
 import type { MiniWidgetObject, WidgetComparison } from './MiniWidgetCreator';
 
 const formatComparisonDelta = (comparison: WidgetComparison) => {
   const abs = Math.abs(comparison.delta);
-  if (comparison.unit === 'percentage') return `${Math.round(abs * 100)}pp`;
+  if (comparison.unit === 'percentage') {
+    return i18n.t('stats.comparison.percentagePoints', { value: Math.round(abs * 100) });
+  }
   return getFormattedTimeString(abs);
 };
 
@@ -15,9 +19,6 @@ const isNegligible = (comparison: WidgetComparison) =>
   comparison.unit === 'percentage'
     ? Math.abs(comparison.delta) <= 0.01
     : Math.abs(comparison.delta) <= 1;
-
-/** On-time share is the one stat that carries a verdict, so it gets sentiment color. */
-const isOnTimeStat = (label: string) => label.toLowerCase().includes('on time');
 
 interface StatCellProps {
   label: React.ReactNode;
@@ -44,15 +45,18 @@ const StatCell: React.FC<StatCellProps> = ({ label, children, valueClassName }) 
 );
 
 const ComparisonArrow: React.FC<{ comparison: WidgetComparison }> = ({ comparison }) => {
+  const { t } = useTranslation();
   const negligible = isNegligible(comparison);
+  const { label } = comparison;
+  const delta = formatComparisonDelta(comparison);
   return (
     <span
       title={
         negligible
-          ? `About the same as ${comparison.label}`
-          : `${formatComparisonDelta(comparison)} ${
-              comparison.delta > 0 ? 'higher' : 'lower'
-            } than ${comparison.label}`
+          ? t('stats.comparison.same', { label })
+          : comparison.delta > 0
+            ? t('stats.comparison.higher', { delta, label })
+            : t('stats.comparison.lower', { delta, label })
       }
       className={classNames(
         'cursor-default text-xs',
@@ -80,15 +84,16 @@ interface StatStripProps {
  * read as one range rather than two unrelated figures, so they share a cell when both are present.
  */
 export const StatStrip: React.FC<StatStripProps> = ({ widgetObjects }) => {
+  const { t } = useTranslation();
   const cells: React.ReactNode[] = [];
 
   for (let index = 0; index < widgetObjects.length; index++) {
     const widget = widgetObjects[index];
     const next = widgetObjects[index + 1];
 
-    if (widget.text === '10%' && next?.text === '90%') {
+    if (widget.stat === 'p10' && next?.stat === 'p90') {
       cells.push(
-        <StatCell key={widget.text} label="10th – 90th pctl">
+        <StatCell key={widget.text} label={t('stats.p10ToP90')}>
           {widget.widgetValue.getFormattedValue()}
           <span className="text-muted-foreground">–</span>
           {next.widgetValue.getFormattedValue()}
@@ -98,7 +103,8 @@ export const StatStrip: React.FC<StatStripProps> = ({ widgetObjects }) => {
       continue;
     }
 
-    const onTime = isOnTimeStat(widget.text);
+    // On-time share is the one stat that carries a verdict, so it gets sentiment color.
+    const onTime = widget.stat === 'onTime';
     const percentage = onTime ? widget.widgetValue.value : undefined;
     cells.push(
       <StatCell

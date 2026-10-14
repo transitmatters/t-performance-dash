@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link } from '../general/Link';
 import { useDelimitatedRoute } from '../../utils/router';
 
@@ -8,6 +9,7 @@ import { useDelimitatedRoute } from '../../utils/router';
  * "About this data" accordion (see TripDataNotes).
  */
 export const BetaDataNotice: React.FC = () => {
+  const { t } = useTranslation();
   const { line, linePath } = useDelimitatedRoute();
 
   if (line !== 'line-commuter-rail' && linePath !== 'commuter-rail') {
@@ -16,31 +18,30 @@ export const BetaDataNotice: React.FC = () => {
 
   return (
     <>
-      <p className="font-medium text-foreground">How Commuter Rail data is collected</p>
+      <p className="font-medium text-foreground">{t('notices.betaData.title')}</p>
       <p>
-        TransitMatters collects this data using the{' '}
-        <Link
-          href="https://www.mbta.com/developers/v3-api/streaming"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          MBTA&apos;s V3 API
-        </Link>
-        . It isn&apos;t cleaned or filtered before display, so we may occasionally miss trips or
-        stops. Confirm anything you see here against official MBTA sources when possible. See our{' '}
-        <Link
-          href="https://github.com/transitmatters/gobble"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          GitHub repository
-        </Link>{' '}
-        for technical details.
+        <Trans
+          t={t}
+          i18nKey="notices.betaData.collection"
+          components={{
+            v3Api: (
+              <Link
+                href="https://www.mbta.com/developers/v3-api/streaming"
+                rel="noopener noreferrer"
+                target="_blank"
+              />
+            ),
+            github: (
+              <Link
+                href="https://github.com/transitmatters/gobble"
+                rel="noopener noreferrer"
+                target="_blank"
+              />
+            ),
+          }}
+        />
       </p>
-      <p>
-        Benchmarks start on October 4, 2026, when we began comparing each train to its own schedule.
-        Before then they were often another train&apos;s, so we don&apos;t show them.
-      </p>
+      <p>{t('notices.betaData.benchmarks')}</p>
     </>
   );
 };

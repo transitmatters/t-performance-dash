@@ -1,11 +1,12 @@
 import React from 'react';
+import { i18n } from '../../../i18n';
 import { BigDelta } from './BigDelta';
 
 const getDescription = (value: number) => {
   if (value >= 0 || !value) {
-    return 'Faster';
+    return i18n.t('stats.faster');
   }
-  return 'Slower';
+  return i18n.t('stats.slower');
 };
 
 interface CompWidgetProps {

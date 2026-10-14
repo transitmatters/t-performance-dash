@@ -1,4 +1,5 @@
 import React from 'react';
+import { i18n } from '../i18n';
 import { Link } from '../components/general/Link';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '../components/ui/sidebar';
 import { AppSidebar } from '../../modules/navigation/AppSidebar';
@@ -25,7 +26,7 @@ export const NavLayout: React.FC<NavLayoutProps> = ({ children }) => {
         <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b bg-sidebar px-2 text-sidebar-foreground md:hidden">
           <SidebarTrigger />
           <Link href="/" className="flex items-center">
-            <img src="/TMLogo.svg" alt="TransitMatters" width={208} height={19.5} />
+            <img src="/TMLogo.svg" alt={i18n.t('app.orgName')} width={208} height={19.5} />
           </Link>
         </header>
         {children}

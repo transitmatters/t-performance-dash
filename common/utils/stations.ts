@@ -1,3 +1,4 @@
+import { i18n } from '../i18n';
 import type { BusRoute, CommuterRailRoute, Line, LineShort, FerryRoute } from '../types/lines';
 import { BUS_ROUTES } from '../types/lines';
 import { type Station } from '../types/stations';
@@ -234,8 +235,8 @@ export const getLocationDetails = (
 ): Location => {
   if (to === undefined || from === undefined) {
     return {
-      to: to?.stop_name || 'Loading...',
-      from: from?.stop_name || 'Loading...',
+      to: to?.stop_name || i18n.t('status.loading'),
+      from: from?.stop_name || i18n.t('status.loading'),
       direction: 'southbound',
     };
   }

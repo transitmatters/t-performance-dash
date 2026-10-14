@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDelimitatedRoute } from '../../utils/router';
 import { spinnerFillColor } from './styles/spinnerFillColor';
 
@@ -7,6 +8,7 @@ interface LoadingSpinnerProps {
 }
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ isWidget }) => {
+  const { t } = useTranslation();
   const { line } = useDelimitatedRoute();
   return (
     <div
@@ -33,7 +35,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ isWidget }) => {
           fill="currentFill"
         />
       </svg>
-      <span className="sr-only">Loading...</span>
+      <span className="sr-only">{t('status.loading')}</span>
     </div>
   );
 };

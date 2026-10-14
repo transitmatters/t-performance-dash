@@ -1,5 +1,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link } from '../general/Link';
 import { useDelimitatedRoute } from '../../utils/router';
 import { BUS_MAX_DAY, LAMP_BUS_START_DAY } from '../../constants/dates';
@@ -12,6 +13,7 @@ import { BUS_MAX_DAY, LAMP_BUS_START_DAY } from '../../constants/dates';
  * accordion (see TripDataNotes). Commuter Rail attribution is owned by BetaDataNotice.
  */
 export const GobbleDataNotice: React.FC = () => {
+  const { t } = useTranslation();
   const {
     line,
     linePath,
@@ -36,16 +38,19 @@ export const GobbleDataNotice: React.FC = () => {
 
   return (
     <p>
-      For these recent dates, data is collected via the{' '}
-      <Link
-        href="https://www.mbta.com/developers/v3-api/streaming"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        MBTA&apos;s V3 API
-      </Link>{' '}
-      and isn&apos;t cleaned or filtered — expect reduced accuracy. Official MBTA data is shown once
-      available.
+      <Trans
+        t={t}
+        i18nKey="notices.gobbleData"
+        components={{
+          v3Api: (
+            <Link
+              href="https://www.mbta.com/developers/v3-api/streaming"
+              rel="noopener noreferrer"
+              target="_blank"
+            />
+          ),
+        }}
+      />
     </p>
   );
 };

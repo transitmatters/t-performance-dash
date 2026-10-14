@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { i18n } from '../../i18n';
 import type { OverviewDatePresetKey } from '../../constants/dates';
 import { TODAY_STRING, SMALL_DATE_FORMAT, RANGE_PRESETS } from '../../constants/dates';
 import type { DateStoreSection } from '../../constants/pages';
@@ -92,5 +93,5 @@ const formatDate = (date: string) => {
 };
 
 export const formatDateTodayCheck = (date: string) => {
-  return date === TODAY_STRING ? 'Today' : formatDate(date);
+  return date === TODAY_STRING ? i18n.t('dates.today') : formatDate(date);
 };

@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from '@/common/components/ui/dialog';
 import { InputGroup, InputGroupAddon } from '@/common/components/ui/input-group';
+import { i18n } from '@/common/i18n';
 
 function Command({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
   return (
@@ -26,8 +27,8 @@ function Command({ className, ...props }: React.ComponentProps<typeof CommandPri
 }
 
 function CommandDialog({
-  title = 'Command Palette',
-  description = 'Search for a command to run...',
+  title = i18n.t('ui.command.title'),
+  description = i18n.t('ui.command.description'),
   children,
   className,
   showCloseButton = false,
