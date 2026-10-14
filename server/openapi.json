@@ -608,6 +608,10 @@
             "required": false,
             "schema": {
               "default": "weekly",
+              "enum": [
+                "daily",
+                "weekly"
+              ],
               "type": "string"
             },
             "description": "Aggregation period: `daily` or `weekly`."
@@ -674,6 +678,11 @@
             "name": "agg",
             "required": true,
             "schema": {
+              "enum": [
+                "daily",
+                "weekly",
+                "monthly"
+              ],
               "type": "string"
             },
             "description": "Aggregation period: `daily`, `weekly`, or `monthly`."
@@ -746,6 +755,11 @@
             "name": "agg",
             "required": true,
             "schema": {
+              "enum": [
+                "daily",
+                "weekly",
+                "monthly"
+              ],
               "type": "string"
             },
             "description": "Aggregation period: `daily`, `weekly`, or `monthly`."
@@ -925,6 +939,11 @@
             "name": "agg",
             "required": true,
             "schema": {
+              "enum": [
+                "daily",
+                "weekly",
+                "monthly"
+              ],
               "type": "string"
             },
             "description": "Aggregation period: `daily`, `weekly`, or `monthly`."
@@ -1398,6 +1417,10 @@
           "agg": {
             "default": "weekly",
             "description": "Aggregation period: `daily` or `weekly`.",
+            "enum": [
+              "daily",
+              "weekly"
+            ],
             "title": "Agg",
             "type": "string"
           }
@@ -1449,6 +1472,11 @@
           },
           "agg": {
             "description": "Aggregation period: `daily`, `weekly`, or `monthly`.",
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly"
+            ],
             "title": "Agg",
             "type": "string"
           },
@@ -1499,6 +1527,11 @@
           },
           "agg": {
             "description": "Aggregation period: `daily`, `weekly`, or `monthly`.",
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly"
+            ],
             "title": "Agg",
             "type": "string"
           }
@@ -1691,6 +1724,11 @@
           },
           "agg": {
             "description": "Aggregation period: `daily`, `weekly`, or `monthly`.",
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly"
+            ],
             "title": "Agg",
             "type": "string"
           }

@@ -10,11 +10,12 @@ with `uv run python -m scripts.capture_api_samples`. Every fixture is checked tw
 
 import json
 from pathlib import Path
+from typing import get_args, get_type_hints
 
 import pytest
 from openapi_schema_validator import OAS30Validator
 
-from chalicelib import models
+from chalicelib import delays, models, sampling, speed
 from scripts.generate_openapi import add_operation_ids
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures" / "api_samples"
@@ -152,3 +153,21 @@ def test_operation_ids_required_for_new_routes():
     new_route = {"paths": {"/api/new_route": {"get": {"responses": {}}}}}
     with pytest.raises(ValueError, match="/api/new_route"):
         add_operation_ids(new_route)
+
+
+# The `agg` enums must match the values each handler supports
+_RESAMPLED_AGG = set(get_args(get_type_hints(sampling.resample_and_aggregate)["agg"]))
+
+
+@pytest.mark.parametrize(
+    "path,supported",
+    [
+        ("/api/linedelays", set(delays.AGG_TO_CONFIG_MAP)),
+        ("/api/tripmetrics", set(speed.AGG_TO_CONFIG_MAP)),
+        ("/api/scheduledservice", _RESAMPLED_AGG),
+        ("/api/service_hours", _RESAMPLED_AGG),
+    ],
+)
+def test_agg_param_lists_supported_values(spec, path, supported):
+    (agg,) = [param for param in spec["paths"][path]["get"]["parameters"] if param["name"] == "agg"]
+    assert set(agg["schema"]["enum"]) == supported
