@@ -221,6 +221,48 @@ def fix_nullable_types(obj):
     return result
 
 
+def fix_nullable_refs(openapi_spec):
+    """Move nullable: true from $ref siblings onto the referenced schemas.
+
+    fix_nullable_types turns an Optional model field into {"$ref": ..., "nullable": true}, but
+    OpenAPI 3.0 ignores every sibling of $ref, so the field silently stops accepting null. When
+    every reference to a schema is nullable, the schema itself is marked nullable instead. A schema
+    referenced both ways can't be expressed in OpenAPI 3.0, so that raises an error.
+    """
+    nullable_refs = {}
+
+    def collect(obj):
+        if isinstance(obj, dict):
+            if "$ref" in obj:
+                nullable_refs.setdefault(obj["$ref"], set()).add(obj.get("nullable") is True)
+            for value in obj.values():
+                collect(value)
+        elif isinstance(obj, list):
+            for item in obj:
+                collect(item)
+
+    collect(openapi_spec)
+    mixed = sorted(ref for ref, nullability in nullable_refs.items() if nullability == {True, False})
+    if mixed:
+        raise ValueError(f"Schemas referenced both as nullable and non-nullable: {', '.join(mixed)}")
+
+    schemas = openapi_spec["components"]["schemas"]
+    for ref, nullability in nullable_refs.items():
+        if nullability == {True}:
+            schemas[ref.rsplit("/", 1)[-1]]["nullable"] = True
+
+    def strip(obj):
+        if isinstance(obj, dict):
+            if "$ref" in obj:
+                return {"$ref": obj["$ref"]}
+            return {key: strip(value) for key, value in obj.items()}
+        if isinstance(obj, list):
+            return [strip(item) for item in obj]
+        return obj
+
+    return strip(openapi_spec)
+
+
 def generate_openapi_json(output_path="openapi.json"):
     """
     Generate OpenAPI JSON file from the application.
@@ -266,6 +308,7 @@ def generate_openapi_json(output_path="openapi.json"):
         # Fix Pydantic v2 nullable types for OpenAPI 3.0 compatibility
         print("Fixing nullable types...")
         openapi_spec = fix_nullable_types(openapi_spec)
+        openapi_spec = fix_nullable_refs(openapi_spec)
 
         # Add server definitions so Swagger UI knows where to send requests
         openapi_spec["servers"] = [
