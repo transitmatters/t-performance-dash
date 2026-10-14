@@ -161,7 +161,8 @@
       "date": "Date",
       "month": "Month"
     },
-    "roundTripHeadways": "({{minutes}}m headways)"
+    "roundTripHeadways": "({{minutes}}m headways)",
+    "noDataToDisplay": "No data to display"
   },
   "units": {
     "sec": "sec",
@@ -200,7 +201,14 @@
       "percentagePoints": "{{value}}pp"
     },
     "faster": "Faster",
-    "slower": "Slower"
+    "slower": "Slower",
+    "delta": {
+      "flat": "{{delta}} · flat",
+      "better": "{{delta}} · better",
+      "worse": "{{delta}} · worse",
+      "up": "{{delta}} · up",
+      "down": "{{delta}} · down"
+    }
   },
   "app": {
     "name": "Data Dashboard",
@@ -462,7 +470,8 @@
       "both": "“Winner” of the {{year}} Pokey and Schleppie Awards!",
       "pokey": "“Winner” of the {{year}} Pokey Award!",
       "schleppie": "“Winner” of the {{year}} Schleppie Award!"
-    }
+    },
+    "selectDateRange": "Select a date range to load graphs."
   },
   "ui": {
     "more": "More",

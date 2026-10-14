@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import {
   Table,
   TableBody,
@@ -47,6 +48,7 @@ interface ScorecardTableProps {
 
 /** Every line side by side, closest to Regional Rail first. */
 export const ScorecardTable: React.FC<ScorecardTableProps> = ({ data }) => {
+  const { t } = useTranslation('service');
   const rows = data
     // Lines the dashboard knows about; leaves out event-only service like Foxboro
     .filter((entry) => entry.routeId && entry.routeId in COMMUTER_RAIL_LINE_NAMES)
@@ -67,12 +69,18 @@ export const ScorecardTable: React.FC<ScorecardTableProps> = ({ data }) => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Line</TableHead>
-            <TableHead className="text-right">Trains / day</TableHead>
-            <TableHead className="text-right">Hours every 30 min</TableHead>
-            <TableHead className="text-right">Longest midday wait</TableHead>
-            <TableHead className="text-right">Longest evening wait</TableHead>
-            <TableHead className="text-right">Clock-face</TableHead>
+            <TableHead>{t('regionalRail.table.columns.line')}</TableHead>
+            <TableHead className="text-right">
+              {t('regionalRail.table.columns.trainsPerDay')}
+            </TableHead>
+            <TableHead className="text-right">
+              {t('regionalRail.table.columns.hoursAtTarget')}
+            </TableHead>
+            <TableHead className="text-right">{t('regionalRail.middayWait')}</TableHead>
+            <TableHead className="text-right">{t('regionalRail.eveningWait')}</TableHead>
+            <TableHead className="text-right">
+              {t('regionalRail.table.columns.clockFace')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -83,7 +91,10 @@ export const ScorecardTable: React.FC<ScorecardTableProps> = ({ data }) => {
                 {formatCount(row.tripsPerDay)}
               </TableCell>
               <Toned value={row.hoursAtTarget} tone={hoursTone}>
-                {formatCount(row.hoursAtTarget)} of {SPAN_HOURS}
+                {t('regionalRail.table.hoursOf', {
+                  value: formatCount(row.hoursAtTarget),
+                  total: SPAN_HOURS,
+                })}
               </Toned>
               <Toned value={row.maxGapMidday} tone={waitTone}>
                 {formatMinutes(row.maxGapMidday)}
@@ -99,10 +110,16 @@ export const ScorecardTable: React.FC<ScorecardTableProps> = ({ data }) => {
         </TableBody>
       </Table>
       <p className="mt-3 text-xs leading-6 text-muted-foreground">
-        <Swatch tone="meets">Green</Swatch> meets Regional Rail: all {SPAN_HOURS} hours with a train
-        every 30 minutes, no wait over 30 minutes, 90%+ of trains on a clock-face pattern.{' '}
-        <Swatch tone="partway">Amber</Swatch> is partway: at least half the hours, hourly waits, or
-        half the trains. <Swatch tone="far">Red</Swatch> is further off.
+        <Trans
+          t={t}
+          i18nKey="regionalRail.table.legend"
+          values={{ hours: SPAN_HOURS }}
+          components={{
+            meets: <Swatch tone="meets">{null}</Swatch>,
+            partway: <Swatch tone="partway">{null}</Swatch>,
+            far: <Swatch tone="far">{null}</Swatch>,
+          }}
+        />
       </p>
     </>
   );

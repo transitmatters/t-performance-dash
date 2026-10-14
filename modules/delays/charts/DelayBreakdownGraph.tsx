@@ -7,6 +7,8 @@ import { max, min } from 'date-fns';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
+import { reasonLabel } from '../utils';
 import { getDateFnsLocale } from '../../../common/i18n/format';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
@@ -36,6 +38,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
   showTitle = false,
   agg = 'weekly',
 }) => {
+  const { t } = useTranslation(['delays', 'common']);
   const { line, linePath } = useDelimitatedRoute();
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
@@ -64,7 +67,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
             labels,
             datasets: filterOutZeroValueDatasets([
               {
-                label: `🚉 Disabled Train`,
+                label: reasonLabel('disabled_vehicle'),
                 borderColor: '#dc2626',
                 backgroundColor: hexWithAlpha('#dc2626', 0.8),
                 pointRadius: 0,
@@ -75,7 +78,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.disabled_vehicle),
               },
               {
-                label: `🚪 Door Problem`,
+                label: reasonLabel('door_problem'),
                 borderColor: '#3f6212',
                 backgroundColor: hexWithAlpha('#3f6212', 0.8),
                 pointRadius: 0,
@@ -86,7 +89,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.door_problem),
               },
               {
-                label: `🔌 Power/Wire Issue`,
+                label: reasonLabel('power_problem'),
                 borderColor: '#eab308',
                 backgroundColor: hexWithAlpha('#eab308', 0.8),
                 pointRadius: 0,
@@ -97,7 +100,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.power_problem),
               },
               {
-                label: `🚦 Signal Problem`,
+                label: reasonLabel('signal_problem'),
                 borderColor: '#84cc16',
                 backgroundColor: hexWithAlpha('#84cc16', 0.8),
                 pointRadius: 0,
@@ -108,7 +111,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.signal_problem),
               },
               {
-                label: `🚙 Cars/Traffic`,
+                label: reasonLabel('car_traffic'),
                 borderColor: '#f59e0b',
                 backgroundColor: hexWithAlpha('#f59e0b', 0.8),
                 pointRadius: 0,
@@ -119,7 +122,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.car_traffic),
               },
               {
-                label: `🚧 Track Work`,
+                label: reasonLabel('track_work'),
                 borderColor: '#f87171',
                 backgroundColor: hexWithAlpha('#f87171', 0.8),
                 pointRadius: 0,
@@ -130,7 +133,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.track_work),
               },
               {
-                label: `🎚️ Switch Problem`,
+                label: reasonLabel('switch_problem'),
                 borderColor: '#10b981',
                 backgroundColor: hexWithAlpha('#10b981', 0.8),
                 pointRadius: 0,
@@ -141,7 +144,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.switch_problem),
               },
               {
-                label: `🛑 Brake Issue`,
+                label: reasonLabel('brake_problem'),
                 borderColor: '#4c1d95',
                 backgroundColor: hexWithAlpha('#4c1d95', 0.8),
                 pointRadius: 0,
@@ -152,7 +155,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.brake_problem),
               },
               {
-                label: `🛤️ Track Issue`,
+                label: reasonLabel('track_issue'),
                 borderColor: '#8b5cf6',
                 backgroundColor: hexWithAlpha('#8b5cf6', 0.8),
                 pointRadius: 0,
@@ -163,7 +166,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.track_issue),
               },
               {
-                label: `🔧 Mechanical Problem`,
+                label: reasonLabel('mechanical_problem'),
                 borderColor: '#451a03',
                 backgroundColor: hexWithAlpha('#451a03', 0.8),
                 pointRadius: 0,
@@ -174,7 +177,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.mechanical_problem),
               },
               {
-                label: `🌊 Flooding`,
+                label: reasonLabel('flooding'),
                 borderColor: '#0ea5e9',
                 backgroundColor: hexWithAlpha('#0ea5e9', 0.8),
                 pointRadius: 0,
@@ -185,7 +188,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.flooding),
               },
               {
-                label: `🚓 Police Activity`,
+                label: reasonLabel('police_activity'),
                 borderColor: '#1d4ed8',
                 backgroundColor: hexWithAlpha('#1d4ed8', 0.8),
                 pointRadius: 0,
@@ -196,7 +199,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.police_activity),
               },
               {
-                label: `🚑 Medical Emergency`,
+                label: reasonLabel('medical_emergency'),
                 borderColor: '#be123c',
                 backgroundColor: hexWithAlpha('#be123c', 0.8),
                 pointRadius: 0,
@@ -207,7 +210,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.medical_emergency),
               },
               {
-                label: `🚒 Fire Department Activity`,
+                label: reasonLabel('fire'),
                 borderColor: '#ea580c',
                 backgroundColor: hexWithAlpha('#ea580c', 0.8),
                 pointRadius: 0,
@@ -218,7 +221,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 data: data.map((datapoint) => datapoint.fire),
               },
               {
-                label: `Other/No Reason Given`,
+                label: reasonLabel('other'),
                 borderColor: '#6b7280',
                 backgroundColor: hexWithAlpha('#6b7280', 0.8),
                 pointRadius: 0,
@@ -249,7 +252,9 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 position: 'nearest',
                 callbacks: {
                   title: (context) => {
-                    return agg === 'weekly' ? `Week of ${context[0].label}` : `${context[0].label}`;
+                    return agg === 'weekly'
+                      ? t('common:charts.weekOf', { label: context[0].label })
+                      : `${context[0].label}`;
                   },
                   label: (tooltipItem) => {
                     if (!tooltipItem.parsed.y) return '';
@@ -287,7 +292,7 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Time delayed (minutes)',
+                  text: t('charts.timeDelayedAxis'),
                   color: COLORS.design.subtitleGrey,
                 },
               },
@@ -333,10 +338,10 @@ export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
                   ctx.textAlign = 'center';
                   ctx.textBaseline = 'middle';
                   ctx.font = "16px normal 'Helvetica Nueue'";
-                  ctx.fillText('No data to display', width / 2, height / 2);
+                  ctx.fillText(t('common:charts.noDataToDisplay'), width / 2, height / 2);
                   ctx.restore();
                 }
-                if (showTitle) drawSimpleTitle(`Speed`, chart);
+                if (showTitle) drawSimpleTitle(t('common:chartExport.titles.speed'), chart);
               },
             },
             ChartjsPluginWatermark,

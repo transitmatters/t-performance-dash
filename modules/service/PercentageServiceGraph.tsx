@@ -6,6 +6,7 @@ import Annotation from 'chartjs-plugin-annotation';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { round } from '@lodash-utils';
+import { useTranslation } from 'react-i18next';
 import { getDateFnsLocale } from '../../common/i18n/format';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
@@ -37,6 +38,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
   comparison,
   showTitle = false,
 }) => {
+  const { t } = useTranslation(['service', 'common']);
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
 
@@ -60,7 +62,9 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
               labels,
               datasets: [
                 {
-                  label: `% of ${comparison}`,
+                  label: compareToScheduled
+                    ? t('percentage.ofScheduled')
+                    : t('percentage.ofHistoricalMaximum'),
                   borderColor: lineColor,
                   pointRadius: 0,
                   pointHoverRadius: 6,
@@ -111,7 +115,10 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
                     ...callbacks,
                     label: (context) => {
                       if (!context.parsed.y) return '';
-                      return `${round(context.parsed.y, 1)}% of ${comparison}`;
+                      const value = round(context.parsed.y, 1);
+                      return compareToScheduled
+                        ? t('percentage.valueOfScheduled', { value })
+                        : t('percentage.valueOfHistoricalMaximum', { value });
                     },
                   },
                 },
@@ -152,7 +159,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
                   },
                   title: {
                     display: true,
-                    text: 'Percentage',
+                    text: t('percentage.axis'),
                     color: COLORS.design.subtitleGrey,
                   },
                 },
@@ -198,10 +205,10 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
                     ctx.font = "16px normal 'Helvetica Nueue'";
-                    ctx.fillText('No data to display', width / 2, height / 2);
+                    ctx.fillText(t('common:charts.noDataToDisplay'), width / 2, height / 2);
                     ctx.restore();
                   }
-                  if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
+                  if (showTitle) drawSimpleTitle(t('dailyRoundTrips'), chart);
                 },
               },
               Annotation,
@@ -220,6 +227,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
     calculatedData.scheduled,
     calculatedData.peak,
     showTitle,
+    t,
     callbacks,
     startDate,
     endDate,

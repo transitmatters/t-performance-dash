@@ -2,6 +2,8 @@
 
 import React from 'react';
 import dayjs from 'dayjs';
+import { Trans, useTranslation } from 'react-i18next';
+import { i18n } from '../../../common/i18n';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { useCrScorecard } from '../../../common/api/hooks/crScorecard';
 import { PageWrapper } from '../../../common/layouts/PageWrapper';
@@ -52,21 +54,19 @@ const DIRECTION_COLORS = {
 const TONE_SENTIMENT: Record<Tone, StatSentiment> = { meets: 'good', partway: 'flat', far: 'bad' };
 
 const WAIT_TARGET = {
-  label: `Regional Rail: ${TARGET_HEADWAY_MINUTES} min`,
+  label: i18n.t('service:regionalRail.waitTarget', { minutes: TARGET_HEADWAY_MINUTES }),
   value: TARGET_HEADWAY_MINUTES,
   goodSide: 'below' as const,
 };
 
-const HOURLY_AXIS = { title: 'Scheduled trains', tooltipItemLabel: 'trains' };
-
-const DAY_LABELS: Record<DayKind, string> = {
-  weekday: 'weekday',
-  saturday: 'Saturday',
-  sunday: 'Sunday',
+const HOURLY_AXIS = {
+  title: i18n.t('service:regionalRail.hourly.axis'),
+  tooltipItemLabel: i18n.t('service:regionalRail.hourly.unit'),
 };
 
 /** Commuter Rail's scheduled service, measured against TransitMatters' Regional Rail standards. */
 export function CommuterRailService() {
+  const { t } = useTranslation(['service', 'common']);
   const {
     query: { startDate, endDate, crRoute },
   } = useDelimitatedRoute();
@@ -74,17 +74,17 @@ export function CommuterRailService() {
   const { value: scope, control: scopeControl } = useChartToggle(
     'route',
     [
-      ['route', 'This line'],
-      ['all', 'All lines'],
+      ['route', t('regionalRail.scope.thisLine')],
+      ['all', t('regionalRail.scope.allLines')],
     ],
     { paramKey: 'serviceScope' }
   );
   const { value: dayKind, control: dayKindControl } = useChartToggle(
     'weekday' as const,
     [
-      ['weekday', 'Weekday'],
-      ['saturday', 'Saturday'],
-      ['sunday', 'Sunday'],
+      ['weekday', t('dayKind.weekday')],
+      ['saturday', t('dayKind.saturday')],
+      ['sunday', t('dayKind.sunday')],
     ],
     { paramKey: 'day' }
   );
@@ -129,13 +129,14 @@ export function CommuterRailService() {
   );
 
   if (!startDate || !endDate) {
-    return <p>Select a date range to load graphs.</p>;
+    return <p>{t('common:notices.selectDateRange')}</p>;
   }
 
   const data = scorecard.data ?? [];
   const stats = byLine && scorecard.data ? getScorecardStats(scorecard.data) : null;
   const ready = [scorecard];
-  const day = DAY_LABELS[dayKind];
+  // Typed so the per-day catalog keys below resolve statically.
+  const day: DayKind = dayKind;
   const tripsData = bars ? (everyDay.data ?? []) : data;
   const directionLines = (
     field: 'hoursAtTarget' | 'maxGapMidday' | 'maxGapEvening' | 'trips',
@@ -150,7 +151,11 @@ export function CommuterRailService() {
   const graphProps = { agg, startDate, endDate };
 
   return (
-    <PageWrapper pageTitle={`Service · ${byLine ? lineName : 'All lines'}`}>
+    <PageWrapper
+      pageTitle={t('regionalRail.pageTitle', {
+        scope: byLine ? lineName : t('regionalRail.scope.allLines'),
+      })}
+    >
       <ChartPageDiv>
         <div className="flex flex-wrap justify-end gap-2">
           {crRoute && scopeControl}
@@ -159,51 +164,55 @@ export function CommuterRailService() {
         {stats && (
           <StatCardGrid>
             <StatCard
-              label="Trains per day"
+              label={t('regionalRail.trainsPerDay')}
               value={formatCount(stats.tripsPerDay)}
-              unit="both ways"
+              unit={t('regionalRail.stats.bothWays')}
             />
             <StatCard
-              label="Hours with a train every 30 min"
+              label={t('regionalRail.stats.hoursAtTarget')}
               value={formatCount(stats.hoursAtTarget)}
-              unit={`of ${SPAN_HOURS}`}
+              unit={t('regionalRail.stats.ofHours', { total: SPAN_HOURS })}
               delta={
                 stats.hoursAtTarget != null
                   ? {
                       label:
                         hoursTone(stats.hoursAtTarget) === 'meets'
-                          ? 'Meets Regional Rail'
-                          : `${SPAN_HOURS - Math.round(stats.hoursAtTarget)} hrs short`,
+                          ? t('regionalRail.stats.meets')
+                          : t('regionalRail.stats.hoursShort', {
+                              hours: SPAN_HOURS - Math.round(stats.hoursAtTarget),
+                            }),
                       sentiment: TONE_SENTIMENT[hoursTone(stats.hoursAtTarget)],
                     }
                   : undefined
               }
             />
             <StatCard
-              label="Longest midday wait"
+              label={t('regionalRail.middayWait')}
               value={formatMinutes(stats.maxGapMidday)}
               delta={
                 stats.maxGapMidday != null
                   ? {
                       label:
                         waitTone(stats.maxGapMidday) === 'meets'
-                          ? 'Meets Regional Rail'
-                          : `${formatMinutes(stats.maxGapMidday - TARGET_HEADWAY_MINUTES)} too long`,
+                          ? t('regionalRail.stats.meets')
+                          : t('regionalRail.stats.tooLong', {
+                              wait: formatMinutes(stats.maxGapMidday - TARGET_HEADWAY_MINUTES),
+                            }),
                       sentiment: TONE_SENTIMENT[waitTone(stats.maxGapMidday)],
                     }
                   : undefined
               }
             />
             <StatCard
-              label="Clock-face trains"
+              label={t('regionalRail.stats.clockFace')}
               value={formatShare(stats.clockFaceShare)}
               delta={
                 stats.clockFaceShare != null
                   ? {
                       label:
                         clockFaceTone(stats.clockFaceShare) === 'meets'
-                          ? 'Regular pattern'
-                          : 'Irregular pattern',
+                          ? t('regionalRail.stats.regular')
+                          : t('regionalRail.stats.irregular'),
                       sentiment: TONE_SENTIMENT[clockFaceTone(stats.clockFaceShare)],
                     }
                   : undefined
@@ -214,52 +223,54 @@ export function CommuterRailService() {
         {byLine ? (
           <>
             <Widget
-              title="Hours with a train every 30 minutes"
-              subtitle={`Of the ${SPAN_HOURS} hours from 5am to 1am, on a ${day} · higher is better`}
+              title={t('regionalRail.hoursAtTarget.title')}
+              subtitle={t(`regionalRail.hoursAtTarget.subtitle.${day}`, { hours: SPAN_HOURS })}
               ready={ready}
             >
               <ScorecardGraph
                 {...graphProps}
                 data={directionLines('hoursAtTarget')}
-                valueAxisLabel="Hours"
-                format={(v) => `${v.toFixed(1)} of ${SPAN_HOURS} hours`}
+                valueAxisLabel={t('regionalRail.hoursAtTarget.axis')}
+                format={(v) =>
+                  t('regionalRail.hoursAtTarget.value', { value: v.toFixed(1), total: SPAN_HOURS })
+                }
                 max={SPAN_HOURS}
                 benchmark={{
-                  label: `Regional Rail: all ${SPAN_HOURS} hours`,
+                  label: t('regionalRail.hoursAtTarget.target', { hours: SPAN_HOURS }),
                   value: SPAN_HOURS,
                   goodSide: 'above',
                 }}
               />
             </Widget>
             <Widget
-              title="Longest midday wait"
-              subtitle={`Longest gap between trains, 10am to 3pm, on a ${day} · lower is better`}
+              title={t('regionalRail.middayWait')}
+              subtitle={t(`regionalRail.middaySubtitle.${day}`)}
               ready={ready}
             >
               <ScorecardGraph
                 {...graphProps}
                 data={directionLines('maxGapMidday')}
-                valueAxisLabel="Minutes"
+                valueAxisLabel={t('common:chartUnits.minutes')}
                 format={formatMinutes}
                 benchmark={WAIT_TARGET}
               />
             </Widget>
             <Widget
-              title="Longest evening wait"
-              subtitle={`Longest gap between trains, 7pm to midnight, on a ${day} · lower is better`}
+              title={t('regionalRail.eveningWait')}
+              subtitle={t(`regionalRail.eveningSubtitle.${day}`)}
               ready={ready}
             >
               <ScorecardGraph
                 {...graphProps}
                 data={directionLines('maxGapEvening')}
-                valueAxisLabel="Minutes"
+                valueAxisLabel={t('common:chartUnits.minutes')}
                 format={formatMinutes}
                 benchmark={WAIT_TARGET}
               />
             </Widget>
             <Widget
-              title="Trains per day"
-              subtitle={bars ? 'Every day' : `On a ${day}`}
+              title={t('regionalRail.trainsPerDay')}
+              subtitle={bars ? t('regionalRail.everyDay') : t(`regionalRail.onDay.${day}`)}
               ready={bars ? [everyDay] : ready}
             >
               <ScorecardGraph
@@ -267,18 +278,18 @@ export function CommuterRailService() {
                 data={[
                   ...directionLines('trips', tripsData, bars),
                   {
-                    label: 'Reverse peak',
+                    label: t('regionalRail.reversePeak'),
                     data: toPoints(tripsData, (entry) => entry.reversePeakTrips),
                     style: { color: CHART_COLORS.YELLOW, width: 1, bar: bars },
                   },
                 ]}
-                valueAxisLabel="Trains"
-                format={(v) => `${Math.round(v)} trains`}
+                valueAxisLabel={t('regionalRail.trainsAxis')}
+                format={(v) => t('regionalRail.trainsValue', { value: Math.round(v) })}
               />
             </Widget>
             <Widget
-              title="Trains by hour"
-              subtitle={`Average ${day} in this range · Regional Rail runs at least 2 an hour`}
+              title={t('regionalRail.byHour.title')}
+              subtitle={t(`regionalRail.byHour.subtitle.${day}`)}
               ready={ready}
             >
               <ChartStack>
@@ -288,8 +299,8 @@ export function CommuterRailService() {
           </>
         ) : (
           <Widget
-            title="Lines against Regional Rail standards"
-            subtitle={`Average ${day} in this range · weaker direction`}
+            title={t('regionalRail.table.title')}
+            subtitle={t(`regionalRail.table.subtitle.${day}`)}
             ready={ready}
           >
             <ScorecardTable data={data} />
@@ -297,21 +308,17 @@ export function CommuterRailService() {
         )}
         <DataNotes>
           <p>
-            Built from the MBTA&apos;s published schedules, not trains actually run.
-            TransitMatters&apos; Regional Rail vision calls for a train at least every 30 minutes in
-            both directions, from 5am to 1am, on a repeating hourly pattern riders can memorize.{' '}
-            <Link href={REGIONAL_RAIL_URL} rel="noopener noreferrer" target="_blank">
-              Read our Regional Rail reports
-            </Link>
-            .
+            <Trans
+              t={t}
+              i18nKey="regionalRail.notes.vision"
+              components={{
+                reports: (
+                  <Link href={REGIONAL_RAIL_URL} rel="noopener noreferrer" target="_blank" />
+                ),
+              }}
+            />
           </p>
-          <p>
-            Each direction is measured at its Boston terminal: outbound trains when they leave,
-            inbound trains when they arrive. A wait spans the trains on either side of the window,
-            so a 7am train followed by a 4pm train counts as a 9-hour midday wait. Clock-face trains
-            have another train exactly an hour before or after, within two minutes. Holidays are
-            counted with the kind of day they fall on.
-          </p>
+          <p>{t('regionalRail.notes.method')}</p>
         </DataNotes>
       </ChartPageDiv>
     </PageWrapper>

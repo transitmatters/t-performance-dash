@@ -1,3 +1,4 @@
+import { i18n } from '../../../common/i18n';
 import type { Line } from '../../../common/types/lines';
 import type { FleetMetrics } from '../../../common/types/dataPoints';
 
@@ -27,13 +28,13 @@ export const FLEET_TYPES: Partial<Record<Line, FleetType[]>> = {
     { key: 'type10', label: 'Type 10', years: '2026–' },
   ],
   'line-bus': [
-    { key: 'diesel', label: 'Diesel' },
+    { key: 'diesel', label: i18n.t('fleet:types.diesel') },
     { key: 'cng', label: 'CNG' },
-    { key: 'hybrid', label: 'Hybrid' },
-    { key: 'battery', label: 'Battery-electric' },
+    { key: 'hybrid', label: i18n.t('fleet:types.hybrid') },
+    { key: 'battery', label: i18n.t('fleet:types.battery') },
   ],
   'line-commuter-rail': [
-    { key: 'locomotive', label: 'Locomotive' },
+    { key: 'locomotive', label: i18n.t('fleet:types.locomotive') },
     { key: 'mbb', label: 'MBB', years: '1987–88' },
     { key: 'bombardier', label: 'Bombardier', years: '1989–90' },
     { key: 'kawasaki', label: 'Kawasaki', years: '1990–91' },
@@ -59,20 +60,20 @@ export interface FleetModeMetrics {
 const RAIL_METRICS: FleetModeMetrics = {
   share: {
     field: 'pct_new_trips',
-    title: '% of trips run by new trains',
-    axisLabel: 'Trips run by new trains',
+    title: i18n.t('fleet:rail.share.title'),
+    axisLabel: i18n.t('fleet:rail.share.axis'),
     datasetName: 'fleet-pct-new-trains',
-    tooltipSuffix: 'new trains',
+    tooltipSuffix: i18n.t('fleet:rail.share.tooltipSuffix'),
     fixedScale: true,
   },
   age: {
     field: 'avg_car_age',
-    title: 'Average car age',
-    axisLabel: 'Average car age (years)',
+    title: i18n.t('fleet:rail.age.title'),
+    axisLabel: i18n.t('fleet:rail.age.axis'),
     datasetName: 'fleet-car-age',
   },
-  mixTitle: 'Fleet mix',
-  mixSubtitle: 'Share of cars by type',
+  mixTitle: i18n.t('fleet:mixTitle'),
+  mixSubtitle: i18n.t('fleet:rail.mixSubtitle'),
 };
 
 export const getFleetModeMetrics = (line: Line | undefined): FleetModeMetrics => {
@@ -81,31 +82,31 @@ export const getFleetModeMetrics = (line: Line | undefined): FleetModeMetrics =>
       return {
         share: {
           field: 'pct_battery_trips',
-          title: '% of trips run by battery-electric buses',
-          axisLabel: 'Trips run by battery-electric buses',
+          title: i18n.t('fleet:bus.share.title'),
+          axisLabel: i18n.t('fleet:bus.share.axis'),
           datasetName: 'fleet-pct-battery-trips',
-          tooltipSuffix: 'battery-electric',
+          tooltipSuffix: i18n.t('fleet:bus.share.tooltipSuffix'),
           fixedScale: false,
         },
         age: {
           field: 'avg_bus_age',
-          title: 'Average bus age',
-          axisLabel: 'Average bus age (years)',
+          title: i18n.t('fleet:bus.age.title'),
+          axisLabel: i18n.t('fleet:bus.age.axis'),
           datasetName: 'fleet-bus-age',
         },
-        mixTitle: 'Fleet mix',
-        mixSubtitle: 'Share of trips by propulsion',
+        mixTitle: i18n.t('fleet:mixTitle'),
+        mixSubtitle: i18n.t('fleet:bus.mixSubtitle'),
       };
     case 'line-commuter-rail':
       return {
         age: {
           field: 'avg_cab_car_age',
-          title: 'Average cab car age',
-          axisLabel: 'Average cab car age (years)',
+          title: i18n.t('fleet:commuterRail.age.title'),
+          axisLabel: i18n.t('fleet:commuterRail.age.axis'),
           datasetName: 'fleet-cab-car-age',
         },
-        mixTitle: 'Cab car mix',
-        mixSubtitle: 'Share of trips by the car at the cab end',
+        mixTitle: i18n.t('fleet:commuterRail.mixTitle'),
+        mixSubtitle: i18n.t('fleet:commuterRail.mixSubtitle'),
       };
     default:
       return RAIL_METRICS;

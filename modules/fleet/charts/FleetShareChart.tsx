@@ -5,6 +5,7 @@ import 'chartjs-adapter-date-fns';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { round } from '@lodash-utils';
+import { useTranslation } from 'react-i18next';
 import { getDateFnsLocale } from '../../../common/i18n/format';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { LINE_COLORS } from '../../../common/constants/colors';
@@ -41,6 +42,7 @@ export const FleetShareChart: React.FC<FleetShareChartProps> = ({
   endDate,
   showTitle = false,
 }) => {
+  const { t } = useTranslation('fleet');
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef(null);
@@ -102,7 +104,10 @@ export const FleetShareChart: React.FC<FleetShareChartProps> = ({
                   ...callbacks,
                   label: (context) => {
                     if (context.parsed.y === null || context.parsed.y === undefined) return '';
-                    return `${round(context.parsed.y, 1)}% ${metric.tooltipSuffix}`;
+                    return t('share.tooltip', {
+                      value: round(context.parsed.y, 1),
+                      suffix: metric.tooltipSuffix,
+                    });
                   },
                 },
               },

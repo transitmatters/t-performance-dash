@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import type { DayKind, ScheduledService } from '../../common/types/dataPoints';
 import { ByHourHistogram } from '../../common/components/charts/ByHourHistogram';
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export const DailyServiceHistogram: React.FC<Props> = (props) => {
+  const { t } = useTranslation('service');
   const { scheduledService, dayKind } = props;
   const { color } = useDelimitatedRoute();
 
@@ -43,7 +45,10 @@ export const DailyServiceHistogram: React.FC<Props> = (props) => {
         <ByHourHistogram
           data={data}
           style={{ color }}
-          valueAxis={{ title: 'Scheduled round trips', tooltipItemLabel: 'round trips' }}
+          valueAxis={{
+            title: t('graph.scheduledRoundTrips'),
+            tooltipItemLabel: t('stats.roundTrips'),
+          }}
           datasetRoundTrips
         />
       </ChartStack>

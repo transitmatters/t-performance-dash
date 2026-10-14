@@ -1,5 +1,6 @@
 import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
 import dayjs from 'dayjs';
+import { i18n } from '../../../common/i18n';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AlertForModal } from '../../../common/types/alerts';
 import { hexWithAlpha } from '../../../common/utils/general';
@@ -9,7 +10,7 @@ const shuttlingAnnotationBlockStyle = {
   backgroundColor: CHART_COLORS.BLOCKS,
   borderWidth: 0,
   label: {
-    content: 'No data',
+    content: i18n.t('charts.noData'),
     rotation: -90,
     color: 'white',
     display: true,

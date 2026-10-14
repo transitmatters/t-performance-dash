@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
+import { i18n } from '../../../common/i18n';
 import {
   Accordion,
   AccordionItem,
@@ -30,9 +32,9 @@ type Props = {
 };
 
 const serviceDayItems = [
-  { value: 'weekday', label: 'Weekdays' },
-  { value: 'saturday', label: 'Saturday' },
-  { value: 'sunday', label: 'Sunday' },
+  { value: 'weekday', label: i18n.t('serviceAndRidership:serviceDay.weekday') },
+  { value: 'saturday', label: i18n.t('serviceAndRidership:serviceDay.saturday') },
+  { value: 'sunday', label: i18n.t('serviceAndRidership:serviceDay.sunday') },
 ];
 
 const getHighestTphValue = (lineData: LineData) => {
@@ -49,29 +51,36 @@ const getHighestTphValue = (lineData: LineData) => {
   return max;
 };
 
-const regionalRailCaveats = (
-  <Accordion type="single" collapsible>
-    <AccordionItem value="caveats" className="border-b-0">
-      <AccordionTrigger className="py-1 text-sm font-normal text-stone-500 hover:no-underline">
-        Caveats on Commuter Rail data
-      </AccordionTrigger>
-      <AccordionContent className="text-stone-500">
-        The MBTA doesn't provide us daily Commuter Rail ridership from before June 2020. We estimate
-        a baseline (100%) value for February 2020 based on{' '}
-        <a
-          href="https://mbta-massdot.opendata.arcgis.com/datasets/MassDOT::mbta-commuter-rail-ridership-by-trip-season-route-line-and-stop/explore"
-          target="_blank"
-          rel="noreferrer"
-        >
-          2018 per-line ridership values
-        </a>
-        .
-      </AccordionContent>
-    </AccordionItem>
-  </Accordion>
-);
+const RegionalRailCaveats: React.FC = () => {
+  const { t } = useTranslation('serviceAndRidership');
+  return (
+    <Accordion type="single" collapsible>
+      <AccordionItem value="caveats" className="border-b-0">
+        <AccordionTrigger className="py-1 text-sm font-normal text-stone-500 hover:no-underline">
+          {t('caveats.title')}
+        </AccordionTrigger>
+        <AccordionContent className="text-stone-500">
+          <Trans
+            t={t}
+            i18nKey="caveats.body"
+            components={{
+              source: (
+                <a
+                  href="https://mbta-massdot.opendata.arcgis.com/datasets/MassDOT::mbta-commuter-rail-ridership-by-trip-season-route-line-and-stop/explore"
+                  target="_blank"
+                  rel="noreferrer"
+                />
+              ),
+            }}
+          />
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  );
+};
 
 export const LineCard = (props: Props) => {
+  const { t } = useTranslation('serviceAndRidership');
   const { lineData } = props;
   const { id, ridershipHistory, lineKind, serviceHistory, serviceRegimes, shortName, longName } =
     lineData;
@@ -119,8 +128,8 @@ export const LineCard = (props: Props) => {
   }, [generateHref, id, lineKind, shortName, startDate, endDate]);
 
   const ridershipAndFrequencyLabel = ridershipHistory
-    ? 'Weekday ridership and service levels'
-    : 'Weekday service levels (ridership not available)';
+    ? t('lineCard.ridershipAndService')
+    : t('lineCard.serviceOnly');
 
   const renderSectionLabel = (title: string, rightElement: React.ReactNode = null) => {
     return (
@@ -133,14 +142,14 @@ export const LineCard = (props: Props) => {
 
   const renderDetails = () => {
     if (lineData.lineKind === 'regional-rail') {
-      return regionalRailCaveats;
+      return <RegionalRailCaveats />;
     }
     return null;
   };
 
   return (
     <Widget title={title} titleHref={href} details={renderDetails()} className="pb-16">
-      {renderSectionLabel('Current service levels')}
+      {renderSectionLabel(t('lineCard.currentService'))}
       <ButtonGroup
         options={serviceDayItems.map((item) => [item.value, item.label])}
         pressFunction={setServiceDay}

@@ -1,0 +1,48 @@
+{
+  "onTimePerformance": "On-time performance",
+  "onTime": "On time",
+  "cr": {
+    "stats": {
+      "onTime": "Trains on time",
+      "peakOnTime": "Peak on time",
+      "offPeakOnTime": "Off-peak on time",
+      "cancelled": "Cancelled trains"
+    },
+    "onTimeSubtitle": "Share of trains meeting MBTA schedule adherence",
+    "series": {
+      "all": "All trains",
+      "peak": "Peak",
+      "offPeak": "Off-peak",
+      "cancelled": "Cancelled"
+    },
+    "cancelledPerDay": "Cancelled trains per day",
+    "cancelledAxis": "Cancelled per day"
+  },
+  "ride": {
+    "stats": {
+      "onTime": "Completed trips on time",
+      "tripsPerDay": "Completed trips per day",
+      "missed": "Missed trips",
+      "noShows": "Rider no-shows"
+    },
+    "onTimeSubtitle": "Share of completed trips that picked up on time",
+    "series": {
+      "mbtaOtp": "MBTA OTP (no-shows count as on time)",
+      "completed": "Completed",
+      "requested": "Requested"
+    },
+    "tripsPerDay": "Trips per day",
+    "missedPerDay": "Missed trips and no-shows per day",
+    "perDay": "Per day"
+  },
+  "pageTitle": "Reliability",
+  "pageTitleScoped": "Reliability · {{scope}}",
+  "allLines": "All lines",
+  "notes": {
+    "ride": {
+      "source": "Daily trip counts published by the MBTA on its open data portal. From September 2025 the MBTA reports requests, no-shows and missed trips alongside completed and on-time trips; earlier history (back to July 2014) only has completed and on-time trips. No reliability data was published for August 2025.",
+      "onTime": "\"On time\" is the share of completed trips that picked up on time, which can be compared across the whole history. The MBTA's own OTP figure also counts rider no-shows as on time and missed trips as late, so it's shown separately from January 2026, when those counts start."
+    },
+    "commuterRail": "Daily on-time and cancellation counts by line, published by the MBTA on its open data portal, split into peak and off-peak service. Branches that share a line, such as Fall River and New Bedford or trains running via the Fairmount Line, are counted under their line. The data is updated monthly, so the latest weeks may be missing."
+  }
+}

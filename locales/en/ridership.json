@@ -1,0 +1,16 @@
+{
+  "weekdayRidership": "Weekday ridership",
+  "stats": {
+    "averageWeekday": "Average weekday riders",
+    "ofHistoricalMaximum": "Of historical maximum",
+    "peakDay": "Peak day",
+    "peakDayOn": "Peak day · {{date}}",
+    "riders": "riders"
+  },
+  "graph": {
+    "fareValidations": "Fare validations",
+    "historicalMaximum": "Historical Maximum ({{peak}} fare validations)",
+    "tooltip": "{{value}} ({{percent}}% of historical maximum)",
+    "drawnTitle": "Daily round trips"
+  }
+}

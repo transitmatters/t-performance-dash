@@ -2,6 +2,7 @@
 
 import React from 'react';
 import dayjs from 'dayjs';
+import { Trans, useTranslation } from 'react-i18next';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
@@ -23,6 +24,7 @@ import { DelayBreakdownGraph } from './charts/DelayBreakdownGraph';
 import { TotalDelayGraph } from './charts/TotalDelayGraph';
 
 export function DelaysDetails() {
+  const { t } = useTranslation(['delays', 'common']);
   const {
     line,
     query: { startDate, endDate, crRoute },
@@ -63,7 +65,7 @@ export function DelaysDetails() {
     enabled
   );
   if (!startDate || !endDate) {
-    return <p>Select a date range to load graphs.</p>;
+    return <p>{t('common:notices.selectDateRange')}</p>;
   }
 
   const stats = alertDelays.data ? getDelayStats(alertDelays.data, agg) : null;
@@ -73,20 +75,25 @@ export function DelaysDetails() {
     const sentiment: StatSentiment = Math.abs(delta) <= 1 ? 'flat' : delta < 0 ? 'good' : 'bad';
     const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
     const sign = delta > 0 ? '+' : delta < 0 ? '-' : '';
-    return { label: `${sign}${getFormattedTimeString(delta, 'minutes')} · ${word}`, sentiment };
+    return {
+      label: t(`common:stats.delta.${word}`, {
+        delta: `${sign}${getFormattedTimeString(delta, 'minutes')}`,
+      }),
+      sentiment,
+    };
   };
 
   return (
-    <PageWrapper pageTitle={'Delays'}>
+    <PageWrapper pageTitle={t('common:pages.delays.name')}>
       <ChartPageDiv>
         {stats && Number.isFinite(stats.avgDelay) && (
           <StatCardGrid>
             <StatCard
-              label="Total time delayed"
+              label={t('totalDelayed')}
               value={getFormattedTimeString(stats.totalDelay, 'minutes')}
             />
             <StatCard
-              label={`Avg per ${stats.agg === 'weekly' ? 'week' : 'day'}`}
+              label={stats.agg === 'weekly' ? t('stats.avgPerWeek') : t('stats.avgPerDay')}
               value={getFormattedTimeString(stats.avgDelay, 'minutes')}
               delta={deltaFor(stats.avgDelayDelta)}
             />
@@ -94,14 +101,14 @@ export function DelaysDetails() {
               <StatCard
                 label={stats.topReasonLabel}
                 value={`${Math.round(stats.topReasonShare * 100)}%`}
-                unit="of delay time"
+                unit={t('stats.ofDelayTime')}
               />
             )}
           </StatCardGrid>
         )}
         <Widget
-          title="Total time delayed"
-          subtitle={`Per ${agg === 'weekly' ? 'week' : 'day'}, from rider alerts`}
+          title={t('totalDelayed')}
+          subtitle={agg === 'weekly' ? t('widgets.perWeek') : t('widgets.perDay')}
           ready={[alertDelays]}
           action={greenBranchToggle}
         >
@@ -113,8 +120,8 @@ export function DelaysDetails() {
           />
         </Widget>
         <Widget
-          title="Delay time by reason"
-          subtitle="Over time"
+          title={t('widgets.byReason')}
+          subtitle={t('widgets.overTime')}
           ready={[alertDelays]}
           action={greenBranchToggle}
         >
@@ -126,63 +133,67 @@ export function DelaysDetails() {
           />
         </Widget>
         <Widget
-          title="Delay time by reason"
-          subtitle="Total for the period"
+          title={t('widgets.byReason')}
+          subtitle={t('widgets.periodTotal')}
           ready={[alertDelays]}
           action={greenBranchToggle}
         >
           <DelayByCategoryGraph data={alertDelays.data!} />
         </Widget>
         <DataNotes>
-          <p>
-            When there's a delay on the T, the MBTA sends out an alert to riders. These alerts
-            almost always include a reason for the delay, and an estimate of how long trains may be
-            delayed. We collect these alerts and group them by general matching categories, and add
-            up the total delay time to riders in a week.
-          </p>
+          <p>{t('notes.body')}</p>
           <div>
-            <h4 className="font-semibold">Example alerts</h4>
+            <h4 className="font-semibold">{t('notes.examples')}</h4>
             <blockquote className="my-2 border-s-4 border-gray-300 bg-gray-50 p-4 dark:border-gray-500 dark:bg-gray-800">
-              <span className="animate-text bg-clip-text text-mbta-blue shadow-none transition-shadow duration-300">
-                Blue Line
-              </span>
-              : Delays of about{' '}
-              <span className="animate-text bg-linear-to-r from-red-500 to-blue-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
-                20 minutes
-              </span>{' '}
-              due to a{' '}
-              <span className="animate-text bg-yellow-400 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
-                power issue
-              </span>{' '}
-              near wood island. Some trains may hold at stations.
+              <Trans
+                t={t}
+                i18nKey="notes.example.blue"
+                components={{
+                  line: (
+                    <span className="animate-text bg-clip-text text-mbta-blue shadow-none transition-shadow duration-300" />
+                  ),
+                  duration: (
+                    <span className="animate-text bg-linear-to-r from-red-500 to-blue-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300" />
+                  ),
+                  reason: (
+                    <span className="animate-text bg-yellow-400 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300" />
+                  ),
+                }}
+              />
             </blockquote>
             <blockquote className="my-2 border-s-4 border-gray-300 bg-gray-50 p-4 dark:border-gray-500 dark:bg-gray-800">
-              <span className="animate-text bg-clip-text text-mbta-orange shadow-none transition-shadow duration-300">
-                Orange Line
-              </span>
-              : Delays of about{' '}
-              <span className="animate-text bg-linear-to-r from-red-500 to-blue-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
-                10 minutes
-              </span>{' '}
-              due to a{' '}
-              <span className="animate-text bg-red-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
-                disabled train
-              </span>{' '}
-              at Northeastern.
+              <Trans
+                t={t}
+                i18nKey="notes.example.orange"
+                components={{
+                  line: (
+                    <span className="animate-text bg-clip-text text-mbta-orange shadow-none transition-shadow duration-300" />
+                  ),
+                  duration: (
+                    <span className="animate-text bg-linear-to-r from-red-500 to-blue-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300" />
+                  ),
+                  reason: (
+                    <span className="animate-text bg-red-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300" />
+                  ),
+                }}
+              />
             </blockquote>
             <blockquote className="my-2 border-s-4 border-gray-300 bg-gray-50 p-4 dark:border-gray-500 dark:bg-gray-800">
-              <span className="animate-text bg-clip-text text-mbta-green shadow-none transition-shadow duration-300">
-                Green Line D Branch
-              </span>
-              : Delays of about{' '}
-              <span className="animate-text bg-linear-to-r from-red-500 to-blue-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
-                10 minutes
-              </span>{' '}
-              eastbound due to a maintenance train{' '}
-              <span className="animate-text bg-yellow-400 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300">
-                inspecting the overhead
-              </span>{' '}
-              between riverside and kenmore.
+              <Trans
+                t={t}
+                i18nKey="notes.example.green"
+                components={{
+                  line: (
+                    <span className="animate-text bg-clip-text text-mbta-green shadow-none transition-shadow duration-300" />
+                  ),
+                  duration: (
+                    <span className="animate-text bg-linear-to-r from-red-500 to-blue-500 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300" />
+                  ),
+                  reason: (
+                    <span className="animate-text bg-yellow-400 bg-clip-text font-semibold text-transparent shadow-none transition-shadow duration-300" />
+                  ),
+                }}
+              />
             </blockquote>
           </div>
         </DataNotes>

@@ -5,6 +5,7 @@ import { round } from '@lodash-utils';
 import 'chartjs-adapter-date-fns';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import { useTranslation } from 'react-i18next';
 import { getDateFnsLocale } from '../../../common/i18n/format';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { LINE_COLORS } from '../../../common/constants/colors';
@@ -42,6 +43,7 @@ export const FleetMixChart: React.FC<FleetMixChartProps> = ({
   endDate,
   showTitle = false,
 }) => {
+  const { t } = useTranslation('fleet');
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef(null);
@@ -136,7 +138,7 @@ export const FleetMixChart: React.FC<FleetMixChartProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Share of cars',
+                  text: t('mixAxis'),
                   color: chartTheme.tick,
                 },
               },
@@ -174,7 +176,7 @@ export const FleetMixChart: React.FC<FleetMixChartProps> = ({
             {
               id: 'customTitle',
               afterDraw: (chart) => {
-                if (showTitle) drawSimpleTitle(`Fleet mix`, chart);
+                if (showTitle) drawSimpleTitle(t('mixTitle'), chart);
               },
             },
             ChartjsPluginWatermark,

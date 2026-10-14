@@ -1,0 +1,38 @@
+{
+  "serviceDay": {
+    "weekday": "Weekdays",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  },
+  "caveats": {
+    "title": "Caveats on Commuter Rail data",
+    "body": "The MBTA doesn't provide us daily Commuter Rail ridership from before June 2020. We estimate a baseline (100%) value for February 2020 based on <source>2018 per-line ridership values</source>."
+  },
+  "lineCard": {
+    "ridershipAndService": "Weekday ridership and service levels",
+    "serviceOnly": "Weekday service levels (ridership not available)",
+    "currentService": "Current service levels"
+  },
+  "chart": {
+    "service": "Service levels",
+    "serviceTooltip": "Service levels: {{value}} trips/day",
+    "ridership": "Ridership",
+    "ridershipValidations": "Ridership: {{value}} faregate validations/day",
+    "ridershipRiders": "Ridership: {{value}} riders/day"
+  },
+  "tph": {
+    "baseline": "Pre-COVID trips per hour",
+    "current": "Current trips per hour",
+    "tooltip": "{{label}}: {{value}} (each direction)"
+  },
+  "summary": {
+    "title": "Summary",
+    "total": "Total",
+    "selection": {
+      "total": "All Lines",
+      "rapidTransit": "Rapid Transit",
+      "regionalRail": "Regional Rail",
+      "bus": "Bus"
+    }
+  }
+}

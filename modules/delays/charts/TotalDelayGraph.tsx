@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import { max, min } from 'date-fns';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import { useTranslation } from 'react-i18next';
 import { getDateFnsLocale } from '../../../common/i18n/format';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
@@ -35,6 +36,7 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
   showTitle = false,
   agg = 'weekly',
 }) => {
+  const { t } = useTranslation(['delays', 'common']);
   const { line, linePath } = useDelimitatedRoute();
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
@@ -63,7 +65,7 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
             labels,
             datasets: [
               {
-                label: `Total time delayed`,
+                label: t('totalDelayed'),
                 borderColor: lineColor,
                 backgroundColor: hexWithAlpha(lineColor, 0.8),
                 pointRadius: 0,
@@ -94,7 +96,9 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
                 position: 'nearest',
                 callbacks: {
                   title: (context) => {
-                    return agg === 'weekly' ? `Week of ${context[0].label}` : `${context[0].label}`;
+                    return agg === 'weekly'
+                      ? t('common:charts.weekOf', { label: context[0].label })
+                      : `${context[0].label}`;
                   },
                   label: (tooltipItem) => {
                     if (!tooltipItem.parsed.y) return '';
@@ -128,7 +132,7 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Total time delayed (minutes)',
+                  text: t('charts.totalDelayedAxis'),
                   color: COLORS.design.subtitleGrey,
                 },
               },
@@ -174,10 +178,10 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
                   ctx.textAlign = 'center';
                   ctx.textBaseline = 'middle';
                   ctx.font = "16px normal 'Helvetica Nueue'";
-                  ctx.fillText('No data to display', width / 2, height / 2);
+                  ctx.fillText(t('common:charts.noDataToDisplay'), width / 2, height / 2);
                   ctx.restore();
                 }
-                if (showTitle) drawSimpleTitle(`Speed`, chart);
+                if (showTitle) drawSimpleTitle(t('common:chartExport.titles.speed'), chart);
               },
             },
             ChartjsPluginWatermark,

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useServiceAndRidershipDashboard } from '../../common/api/hooks/serviceAndRidership';
@@ -8,10 +9,11 @@ import { ServiceAndRidershipProvider } from './ServiceAndRidershipProvider';
 import { SummaryCard } from './SummaryCard';
 
 export function ServiceAndRidershipDash() {
+  const { t } = useTranslation();
   const { data } = useServiceAndRidershipDashboard();
 
   return (
-    <PageWrapper pageTitle={'Service & Ridership'}>
+    <PageWrapper pageTitle={t('pages.systemServiceAndRidership.name')}>
       <div className="flex w-full flex-col gap-4">
         <ServiceAndRidershipProvider>
           {data && <SummaryCard {...data} />}

@@ -1,22 +1,7 @@
 import type { ChartDataset } from 'chart.js';
+import { DELAY_REASONS, reasonLabel } from '../utils';
 
-const labels = [
-  '🚉 Disabled Train',
-  '🚪 Door Problem',
-  '🔌 Power/Wire Issue',
-  '🚦 Signal Problem',
-  '🎚️ Switch Problem',
-  '🛑 Brake Issue',
-  '🛤️ Track Issue',
-  `🚧 Track Work`,
-  `🚙 Cars/Traffic`,
-  '🔧 Mechanical Problem',
-  '🌊 Flooding',
-  '🚓 Police Activity',
-  '🚑 Medical Emergency',
-  '🚒 Fire Department Activity',
-  'Other/No Reason Given',
-];
+const labels = DELAY_REASONS.map(reasonLabel);
 
 const backgroundColors = [
   '#dc2626',

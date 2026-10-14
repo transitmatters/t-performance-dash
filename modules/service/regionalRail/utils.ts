@@ -1,10 +1,11 @@
+import { i18n } from '../../../common/i18n';
 import type { DataPoint } from '../../../common/components/charts/TimeSeriesChart';
 import type { CrScorecardEntry, ScorecardDirection } from '../../../common/types/dataPoints';
 
 /** Each direction is measured at its Boston terminal: outbound leaving it, inbound reaching it. */
 export const DIRECTIONS = [
-  { key: 'outbound', label: 'Outbound' },
-  { key: 'inbound', label: 'Inbound' },
+  { key: 'outbound', label: i18n.t('service:regionalRail.directions.outbound') },
+  { key: 'inbound', label: i18n.t('service:regionalRail.directions.inbound') },
 ] as const;
 
 export type Direction = (typeof DIRECTIONS)[number]['key'];
@@ -76,9 +77,11 @@ export const getScorecardStats = (data: CrScorecardEntry[]) => {
 export const formatMinutes = (minutes?: number) => {
   if (minutes == null) return '—';
   const rounded = Math.round(minutes);
-  if (rounded < 60) return `${rounded} min`;
+  if (rounded < 60) return i18n.t('service:units.minutes', { minutes: rounded });
   const remainder = rounded % 60;
-  return remainder ? `${Math.floor(rounded / 60)} hr ${remainder} min` : `${rounded / 60} hr`;
+  return remainder
+    ? i18n.t('service:units.hoursMinutes', { hours: Math.floor(rounded / 60), minutes: remainder })
+    : i18n.t('service:units.hours', { hours: rounded / 60 });
 };
 
 export const formatCount = (value?: number) => (value == null ? '—' : `${Math.round(value)}`);

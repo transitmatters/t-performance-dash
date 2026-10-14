@@ -1,0 +1,139 @@
+{
+  "regionalRail": {
+    "directions": {
+      "outbound": "Outbound",
+      "inbound": "Inbound"
+    },
+    "waitTarget": "Regional Rail: {{minutes}} min",
+    "hourly": {
+      "axis": "Scheduled trains",
+      "unit": "trains"
+    },
+    "scope": {
+      "thisLine": "This line",
+      "allLines": "All lines"
+    },
+    "pageTitle": "Service · {{scope}}",
+    "trainsPerDay": "Trains per day",
+    "middayWait": "Longest midday wait",
+    "eveningWait": "Longest evening wait",
+    "stats": {
+      "bothWays": "both ways",
+      "hoursAtTarget": "Hours with a train every 30 min",
+      "ofHours": "of {{total}}",
+      "meets": "Meets Regional Rail",
+      "hoursShort": "{{hours}} hrs short",
+      "tooLong": "{{wait}} too long",
+      "clockFace": "Clock-face trains",
+      "regular": "Regular pattern",
+      "irregular": "Irregular pattern"
+    },
+    "hoursAtTarget": {
+      "title": "Hours with a train every 30 minutes",
+      "subtitle": {
+        "weekday": "Of the {{hours}} hours from 5am to 1am, on a weekday · higher is better",
+        "saturday": "Of the {{hours}} hours from 5am to 1am, on a Saturday · higher is better",
+        "sunday": "Of the {{hours}} hours from 5am to 1am, on a Sunday · higher is better"
+      },
+      "axis": "Hours",
+      "value": "{{value}} of {{total}} hours",
+      "target": "Regional Rail: all {{hours}} hours"
+    },
+    "middaySubtitle": {
+      "weekday": "Longest gap between trains, 10am to 3pm, on a weekday · lower is better",
+      "saturday": "Longest gap between trains, 10am to 3pm, on a Saturday · lower is better",
+      "sunday": "Longest gap between trains, 10am to 3pm, on a Sunday · lower is better"
+    },
+    "eveningSubtitle": {
+      "weekday": "Longest gap between trains, 7pm to midnight, on a weekday · lower is better",
+      "saturday": "Longest gap between trains, 7pm to midnight, on a Saturday · lower is better",
+      "sunday": "Longest gap between trains, 7pm to midnight, on a Sunday · lower is better"
+    },
+    "everyDay": "Every day",
+    "onDay": {
+      "weekday": "On a weekday",
+      "saturday": "On a Saturday",
+      "sunday": "On a Sunday"
+    },
+    "reversePeak": "Reverse peak",
+    "trainsAxis": "Trains",
+    "trainsValue": "{{value}} trains",
+    "byHour": {
+      "title": "Trains by hour",
+      "subtitle": {
+        "weekday": "Average weekday in this range · Regional Rail runs at least 2 an hour",
+        "saturday": "Average Saturday in this range · Regional Rail runs at least 2 an hour",
+        "sunday": "Average Sunday in this range · Regional Rail runs at least 2 an hour"
+      }
+    },
+    "table": {
+      "title": "Lines against Regional Rail standards",
+      "subtitle": {
+        "weekday": "Average weekday in this range · weaker direction",
+        "saturday": "Average Saturday in this range · weaker direction",
+        "sunday": "Average Sunday in this range · weaker direction"
+      },
+      "columns": {
+        "line": "Line",
+        "trainsPerDay": "Trains / day",
+        "hoursAtTarget": "Hours every 30 min",
+        "clockFace": "Clock-face"
+      },
+      "hoursOf": "{{value}} of {{total}}",
+      "legend": "<meets>Green</meets> meets Regional Rail: all {{hours}} hours with a train every 30 minutes, no wait over 30 minutes, 90%+ of trains on a clock-face pattern. <partway>Amber</partway> is partway: at least half the hours, hourly waits, or half the trains. <far>Red</far> is further off."
+    },
+    "notes": {
+      "vision": "Built from the MBTA's published schedules, not trains actually run. TransitMatters' Regional Rail vision calls for a train at least every 30 minutes in both directions, from 5am to 1am, on a repeating hourly pattern riders can memorize. <reports>Read our Regional Rail reports</reports>.",
+      "method": "Each direction is measured at its Boston terminal: outbound trains when they leave, inbound trains when they arrive. A wait spans the trains on either side of the window, so a 7am train followed by a 4pm train counts as a 9-hour midday wait. Clock-face trains have another train exactly an hour before or after, within two minutes. Holidays are counted with the kind of day they fall on."
+    }
+  },
+  "units": {
+    "minutes": "{{minutes}} min",
+    "hoursMinutes": "{{hours}} hr {{minutes}} min",
+    "hours": "{{hours}} hr"
+  },
+  "dayKind": {
+    "weekday": "Weekday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  },
+  "comparison": {
+    "scheduled": "Scheduled",
+    "historicalMaximum": "Historical Maximum",
+    "comparedToScheduled": "Compared to Scheduled",
+    "comparedToHistoricalMaximum": "Compared to Historical Maximum"
+  },
+  "stats": {
+    "roundTripsPerDay": "Round trips / day",
+    "perDay": "/day",
+    "peakDay": "Peak day",
+    "roundTrips": "round trips"
+  },
+  "serviceDelivered": "Service delivered",
+  "dailyRoundTrips": "Daily round trips",
+  "serviceHours": {
+    "title": "Hours of service",
+    "subtitle": "Across all trains",
+    "scheduled": "Scheduled service hours",
+    "delivered": "Delivered service hours",
+    "axis": "Service hours"
+  },
+  "byHour": {
+    "title": "Scheduled service by hour",
+    "subtitle": "Round trips"
+  },
+  "percentage": {
+    "ofScheduled": "% of Scheduled",
+    "ofHistoricalMaximum": "% of Historical Maximum",
+    "valueOfScheduled": "{{value}}% of Scheduled",
+    "valueOfHistoricalMaximum": "{{value}}% of Historical Maximum",
+    "axis": "Percentage"
+  },
+  "graph": {
+    "historicalMaximum": "Historical maximum ({{peak}} round trips)",
+    "scheduledRoundTrips": "Scheduled round trips",
+    "scheduledTooltip": "Scheduled: {{value}} ({{percent}} of peak)",
+    "actualTooltip": "Actual: {{value}} ({{percent}} of peak)",
+    "axis": "Round trips"
+  }
+}
