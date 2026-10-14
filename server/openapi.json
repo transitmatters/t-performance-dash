@@ -12,6 +12,16 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "One or more health checks failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthcheckResponse"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -30,6 +40,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HeadwayResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`user_date` is not a valid YYYY-MM-DD date.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -64,7 +84,8 @@
           "in": "path",
           "name": "user_date",
           "schema": {
-            "type": "string"
+            "type": "string",
+            "format": "date"
           },
           "required": true,
           "description": "Date in `YYYY-MM-DD` format."
@@ -80,6 +101,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DwellResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`user_date` is not a valid YYYY-MM-DD date.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -114,7 +145,8 @@
           "in": "path",
           "name": "user_date",
           "schema": {
-            "type": "string"
+            "type": "string",
+            "format": "date"
           },
           "required": true,
           "description": "Date in `YYYY-MM-DD` format."
@@ -130,6 +162,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TravelTimeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`user_date` is not a valid YYYY-MM-DD date.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -179,7 +221,8 @@
           "in": "path",
           "name": "user_date",
           "schema": {
-            "type": "string"
+            "type": "string",
+            "format": "date"
           },
           "required": true,
           "description": "Date in `YYYY-MM-DD` format."
@@ -195,6 +238,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AlertsRouteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`user_date` is not a valid YYYY-MM-DD date.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -229,7 +282,8 @@
           "in": "path",
           "name": "user_date",
           "schema": {
-            "type": "string"
+            "type": "string",
+            "format": "date"
           },
           "required": true,
           "description": "Date in `YYYY-MM-DD` format."
@@ -245,6 +299,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TravelTimeAggregateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -321,6 +385,16 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -394,6 +468,16 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -452,6 +536,16 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -498,27 +592,6 @@
         "operationId": "getAggregateDwells"
       }
     },
-    "/api/git_id": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GitIdResponse"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "/api"
-        ],
-        "summary": "Return the current git commit ID. Only available on localhost.",
-        "operationId": "getGitId"
-      }
-    },
     "/api/alerts": {
       "get": {
         "responses": {
@@ -552,6 +625,16 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -564,15 +647,8 @@
             "name": "start_date",
             "required": true,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "format": "date",
-                  "type": "string"
-                }
-              ]
+              "format": "date",
+              "type": "string"
             },
             "description": "Start of the date range, inclusive (YYYY-MM-DD)."
           },
@@ -581,15 +657,8 @@
             "name": "end_date",
             "required": true,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "format": "date",
-                  "type": "string"
-                }
-              ]
+              "format": "date",
+              "type": "string"
             },
             "description": "End of the date range, inclusive (YYYY-MM-DD)."
           },
@@ -632,6 +701,26 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The date range has too many entries for the aggregation level.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -644,15 +733,8 @@
             "name": "start_date",
             "required": true,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "format": "date",
-                  "type": "string"
-                }
-              ]
+              "format": "date",
+              "type": "string"
             },
             "description": "Start of the date range, inclusive (YYYY-MM-DD)."
           },
@@ -661,15 +743,8 @@
             "name": "end_date",
             "required": true,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "format": "date",
-                  "type": "string"
-                }
-              ]
+              "format": "date",
+              "type": "string"
             },
             "description": "End of the date range, inclusive (YYYY-MM-DD)."
           },
@@ -694,7 +769,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "GTFS line identifier. Rapid transit: `line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`. Commuter rail: `line-Fairmount`, `line-Lowell`, etc. Use `/api/routes` to list all valid values."
+            "description": "GTFS rapid transit line identifier: `line-red`, `line-orange`, `line-blue`, `line-green`, or `line-mattapan`."
           }
         ],
         "operationId": "getTripMetrics"
@@ -709,6 +784,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetScheduledServiceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -742,13 +827,11 @@
           {
             "in": "query",
             "name": "route_id",
-            "required": false,
+            "required": true,
             "schema": {
-              "default": null,
-              "nullable": true,
               "type": "string"
             },
-            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs. Omit to return all routes."
+            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs."
           },
           {
             "in": "query",
@@ -777,6 +860,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RidershipResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -810,13 +903,11 @@
           {
             "in": "query",
             "name": "line_id",
-            "required": false,
+            "required": true,
             "schema": {
-              "default": null,
-              "nullable": true,
               "type": "string"
             },
-            "description": "Line identifier for ridership data. Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. Bus: `line-{route}` (e.g. `line-1`, `line-66`). Commuter rail: `line-{line}` (e.g. `line-Fairmount`). Ferry: `line-F1`, `line-F4`, etc. Omit to return all lines."
+            "description": "Line identifier for ridership data. Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. Bus: `line-{route}` (e.g. `line-1`, `line-66`). Commuter rail: `line-{line}` (e.g. `line-Fairmount`). Ferry: `line-F1`, `line-F4`, etc."
           }
         ],
         "operationId": "getRidership"
@@ -855,6 +946,16 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -869,13 +970,14 @@
             "schema": {
               "type": "string"
             },
-            "description": "GTFS rapid transit line identifier: `line-red`, `line-orange`, `line-blue`, or `line-green`. Speed restriction data is only available for rapid transit lines."
+            "description": "GTFS rapid transit line identifier: `line-Red`, `line-Orange`, `line-Blue`, or `line-Green`. IDs are case-sensitive. Speed restriction data is only available for rapid transit lines."
           },
           {
             "in": "query",
             "name": "date",
             "required": true,
             "schema": {
+              "format": "date",
               "type": "string"
             },
             "description": "Date to query (YYYY-MM-DD)."
@@ -896,6 +998,16 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -906,13 +1018,11 @@
           {
             "in": "query",
             "name": "line_id",
-            "required": false,
+            "required": true,
             "schema": {
-              "default": null,
-              "nullable": true,
               "type": "string"
             },
-            "description": "GTFS line identifier. Rapid transit: `line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`. Commuter rail: `line-Fairmount`, `line-Lowell`, etc. Use `/api/routes` to list all valid values. Omit to aggregate all lines."
+            "description": "GTFS rapid transit line identifier: `line-red`, `line-orange`, `line-blue`, `line-green`, or `line-mattapan`."
           },
           {
             "in": "query",
@@ -961,6 +1071,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TimePredictionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1039,6 +1159,16 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "No route has this ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteNotFoundResponse"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -1056,7 +1186,7 @@
             "type": "string"
           },
           "required": true,
-          "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`\u2013`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs."
+          "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs."
         }
       ]
     }
@@ -1120,6 +1250,26 @@
         },
         "title": "HeadwayResponse",
         "type": "array"
+      },
+      "ErrorResponse": {
+        "additionalProperties": true,
+        "description": "Error body sent by the API framework when a request is rejected.\n\nAttributes:\n    Code: Error type (e.g., `BadRequestError`, `ForbiddenError`).\n    Message: Description of the problem.",
+        "properties": {
+          "Code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "Message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "Code",
+          "Message"
+        ],
+        "title": "ErrorResponse",
+        "type": "object"
       },
       "DwellParams": {
         "description": "Query parameters for `/api/dwells/{user_date}`.\n\nAttributes:\n    stop: One or more stop IDs to retrieve dwell data for.",
@@ -1358,20 +1508,6 @@
         "title": "DwellsAggregateResponse",
         "type": "array"
       },
-      "GitIdResponse": {
-        "description": "Response for `/api/git_id` \u2014 current deployment's git commit.\n\nAttributes:\n    git_id: Git commit hash of the deployed code.",
-        "properties": {
-          "git_id": {
-            "title": "Git Id",
-            "type": "string"
-          }
-        },
-        "required": [
-          "git_id"
-        ],
-        "title": "GitIdResponse",
-        "type": "object"
-      },
       "LiveAlertsResponse": {
         "description": "Response for `/api/alerts`: current MBTA alerts with one of the effects listed on `LiveAlert`.",
         "items": {
@@ -1384,30 +1520,16 @@
         "description": "Parameters for the `/api/linedelays` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    line: Line identifier (e.g., `Red`, `Orange`, `Green-B`).\n    agg: Aggregation level \u2014 `daily` or `weekly`. Defaults to `weekly`.",
         "properties": {
           "start_date": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "format": "date",
-                "type": "string"
-              }
-            ],
             "description": "Start of the date range, inclusive (YYYY-MM-DD).",
-            "title": "Start Date"
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
           },
           "end_date": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "format": "date",
-                "type": "string"
-              }
-            ],
             "description": "End of the date range, inclusive (YYYY-MM-DD).",
-            "title": "End Date"
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
           },
           "line": {
             "description": "MBTA line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc.",
@@ -1445,30 +1567,16 @@
         "description": "Parameters for the `/api/tripmetrics` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.\n    line: GTFS line identifier (e.g., `line-red`, `line-green`).",
         "properties": {
           "start_date": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "format": "date",
-                "type": "string"
-              }
-            ],
             "description": "Start of the date range, inclusive (YYYY-MM-DD).",
-            "title": "Start Date"
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
           },
           "end_date": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "format": "date",
-                "type": "string"
-              }
-            ],
             "description": "End of the date range, inclusive (YYYY-MM-DD).",
-            "title": "End Date"
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
           },
           "agg": {
             "description": "Aggregation period: `daily`, `weekly`, or `monthly`.",
@@ -1481,7 +1589,7 @@
             "type": "string"
           },
           "line": {
-            "description": "GTFS line identifier. Rapid transit: `line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`. Commuter rail: `line-Fairmount`, `line-Lowell`, etc. Use `/api/routes` to list all valid values.",
+            "description": "GTFS rapid transit line identifier: `line-red`, `line-orange`, `line-blue`, `line-green`, or `line-mattapan`.",
             "title": "Line",
             "type": "string"
           }
@@ -1504,7 +1612,7 @@
         "type": "array"
       },
       "ScheduledServiceParams": {
-        "description": "Parameters for the `/api/scheduledservice` endpoint.\n\nAttributes:\n    start_date: Start of date range.\n    end_date: End of date range.\n    route_id: Optional route filter. `None` returns all routes.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
+        "description": "Parameters for the `/api/scheduledservice` endpoint.\n\nAttributes:\n    start_date: Start of date range.\n    end_date: End of date range.\n    route_id: Route identifier (e.g., `Red`, `1`, `CR-Fairmount`).\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
         "properties": {
           "start_date": {
             "description": "Start of the date range, inclusive (YYYY-MM-DD).",
@@ -1519,10 +1627,8 @@
             "type": "string"
           },
           "route_id": {
-            "default": null,
-            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs. Omit to return all routes.",
+            "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs.",
             "title": "Route Id",
-            "nullable": true,
             "type": "string"
           },
           "agg": {
@@ -1539,6 +1645,7 @@
         "required": [
           "start_date",
           "end_date",
+          "route_id",
           "agg"
         ],
         "title": "ScheduledServiceParams",
@@ -1581,7 +1688,7 @@
         "type": "object"
       },
       "RidershipParams": {
-        "description": "Parameters for the `/api/ridership` endpoint.\n\nAttributes:\n    start_date: Start of date range.\n    end_date: End of date range.\n    line_id: Optional line filter. `None` returns all lines.",
+        "description": "Parameters for the `/api/ridership` endpoint.\n\nAttributes:\n    start_date: Start of date range.\n    end_date: End of date range.\n    line_id: Line identifier (e.g., `line-Red`, `line-1`, `line-Fairmount`).",
         "properties": {
           "start_date": {
             "description": "Start of the date range, inclusive (YYYY-MM-DD).",
@@ -1596,16 +1703,15 @@
             "type": "string"
           },
           "line_id": {
-            "default": null,
-            "description": "Line identifier for ridership data. Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. Bus: `line-{route}` (e.g. `line-1`, `line-66`). Commuter rail: `line-{line}` (e.g. `line-Fairmount`). Ferry: `line-F1`, `line-F4`, etc. Omit to return all lines.",
+            "description": "Line identifier for ridership data. Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. Bus: `line-{route}` (e.g. `line-1`, `line-66`). Commuter rail: `line-{line}` (e.g. `line-Fairmount`). Ferry: `line-F1`, `line-F4`, etc.",
             "title": "Line Id",
-            "nullable": true,
             "type": "string"
           }
         },
         "required": [
           "start_date",
-          "end_date"
+          "end_date",
+          "line_id"
         ],
         "title": "RidershipParams",
         "type": "object"
@@ -1650,15 +1756,16 @@
         "type": "object"
       },
       "SpeedRestrictionsParams": {
-        "description": "Parameters for the `/api/speed_restrictions` endpoint.\n\nAttributes:\n    line_id: GTFS line identifier (e.g., `line-red`, `line-orange`).\n    date: Date to query (YYYY-MM-DD).",
+        "description": "Parameters for the `/api/speed_restrictions` endpoint.\n\nAttributes:\n    line_id: GTFS line identifier (e.g., `line-Red`, `line-Orange`).\n    date: Date to query (YYYY-MM-DD).",
         "properties": {
           "line_id": {
-            "description": "GTFS rapid transit line identifier: `line-red`, `line-orange`, `line-blue`, or `line-green`. Speed restriction data is only available for rapid transit lines.",
+            "description": "GTFS rapid transit line identifier: `line-Red`, `line-Orange`, `line-Blue`, or `line-Green`. IDs are case-sensitive. Speed restriction data is only available for rapid transit lines.",
             "title": "Line Id",
             "type": "string"
           },
           "date": {
             "description": "Date to query (YYYY-MM-DD).",
+            "format": "date",
             "title": "Date",
             "type": "string"
           }
@@ -1701,13 +1808,11 @@
         "type": "object"
       },
       "ServiceHoursParams": {
-        "description": "Parameters for the `/api/service_hours` endpoint.\n\nAttributes:\n    line_id: Optional line filter. `None` returns all lines.\n    start_date: Start of date range.\n    end_date: End of date range.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
+        "description": "Parameters for the `/api/service_hours` endpoint.\n\nAttributes:\n    line_id: GTFS line identifier (e.g., `line-red`).\n    start_date: Start of date range.\n    end_date: End of date range.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
         "properties": {
           "line_id": {
-            "default": null,
-            "description": "GTFS line identifier. Rapid transit: `line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`. Commuter rail: `line-Fairmount`, `line-Lowell`, etc. Use `/api/routes` to list all valid values. Omit to aggregate all lines.",
+            "description": "GTFS rapid transit line identifier: `line-red`, `line-orange`, `line-blue`, `line-green`, or `line-mattapan`.",
             "title": "Line Id",
-            "nullable": true,
             "type": "string"
           },
           "start_date": {
@@ -1734,6 +1839,7 @@
           }
         },
         "required": [
+          "line_id",
           "start_date",
           "end_date",
           "agg"
@@ -1884,6 +1990,21 @@
           "stations"
         ],
         "title": "StopsResponse",
+        "type": "object"
+      },
+      "RouteNotFoundResponse": {
+        "additionalProperties": true,
+        "description": "Error body for `/api/stops/{route_id}` when the route doesn't exist.\n\nAttributes:\n    error: Description of the problem (e.g., `Route 'X' not found`).",
+        "properties": {
+          "error": {
+            "title": "Error",
+            "type": "string"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "title": "RouteNotFoundResponse",
         "type": "object"
       },
       "HeadwayEvent": {
@@ -3278,12 +3399,12 @@
   },
   "servers": [
     {
-      "url": "http://localhost:5000",
-      "description": "Local development server"
+      "url": "https://dashboard-api.labs.transitmatters.org",
+      "description": "Production"
     },
     {
-      "url": "https://dashboard.transitmatters.org",
-      "description": "Production"
+      "url": "http://localhost:5000",
+      "description": "Local development server"
     }
   ]
 }

@@ -4,8 +4,9 @@ All models use Pydantic v2 and serve as both runtime validation
 and API documentation via `chalice-spec`.
 """
 
+import datetime
 from datetime import date
-from typing import List, Dict, Union, Any, Literal
+from typing import List, Dict, Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, RootModel
 
 #################################################
@@ -31,10 +32,7 @@ _ROUTE_ID_DESC = (
 )
 
 _LINE_ID_DESC = (
-    "GTFS line identifier. "
-    "Rapid transit: `line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`. "
-    "Commuter rail: `line-Fairmount`, `line-Lowell`, etc. "
-    "Use `/api/routes` to list all valid values."
+    "GTFS rapid transit line identifier: `line-red`, `line-orange`, `line-blue`, `line-green`, or `line-mattapan`."
 )
 
 _DATE_RANGE_START_DESC = "Start of the date range, inclusive (YYYY-MM-DD)."
@@ -141,8 +139,8 @@ class AlertDelaysByLineParams(BaseModel):
         agg: Aggregation level — `daily` or `weekly`. Defaults to `weekly`.
     """
 
-    start_date: Union[str, date] = Field(description=_DATE_RANGE_START_DESC)
-    end_date: Union[str, date] = Field(description=_DATE_RANGE_END_DESC)
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
     line: str = Field(
         description=(
             "MBTA line identifier. "
@@ -163,8 +161,8 @@ class TripMetricsByLineParams(BaseModel):
         line: GTFS line identifier (e.g., `line-red`, `line-green`).
     """
 
-    start_date: Union[str, date] = Field(description=_DATE_RANGE_START_DESC)
-    end_date: Union[str, date] = Field(description=_DATE_RANGE_END_DESC)
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
     agg: AggregationPeriod = Field(description=_AGG_DESC)
     line: str = Field(description=_LINE_ID_DESC)
 
@@ -175,13 +173,13 @@ class ScheduledServiceParams(BaseModel):
     Attributes:
         start_date: Start of date range.
         end_date: End of date range.
-        route_id: Optional route filter. `None` returns all routes.
+        route_id: Route identifier (e.g., `Red`, `1`, `CR-Fairmount`).
         agg: Aggregation level — `daily`, `weekly`, or `monthly`.
     """
 
     start_date: date = Field(description=_DATE_RANGE_START_DESC)
     end_date: date = Field(description=_DATE_RANGE_END_DESC)
-    route_id: str | None = Field(default=None, description=_ROUTE_ID_DESC + " Omit to return all routes.")
+    route_id: str = Field(description=_ROUTE_ID_DESC)
     agg: AggregationPeriod = Field(description=_AGG_DESC)
 
 
@@ -191,20 +189,18 @@ class RidershipParams(BaseModel):
     Attributes:
         start_date: Start of date range.
         end_date: End of date range.
-        line_id: Optional line filter. `None` returns all lines.
+        line_id: Line identifier (e.g., `line-Red`, `line-1`, `line-Fairmount`).
     """
 
     start_date: date = Field(description=_DATE_RANGE_START_DESC)
     end_date: date = Field(description=_DATE_RANGE_END_DESC)
-    line_id: str | None = Field(
-        default=None,
+    line_id: str = Field(
         description=(
             "Line identifier for ridership data. "
             "Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. "
             "Bus: `line-{route}` (e.g. `line-1`, `line-66`). "
             "Commuter rail: `line-{line}` (e.g. `line-Fairmount`). "
-            "Ferry: `line-F1`, `line-F4`, etc. "
-            "Omit to return all lines."
+            "Ferry: `line-F1`, `line-F4`, etc."
         ),
     )
 
@@ -223,33 +219,31 @@ class SpeedRestrictionsParams(BaseModel):
     """Parameters for the `/api/speed_restrictions` endpoint.
 
     Attributes:
-        line_id: GTFS line identifier (e.g., `line-red`, `line-orange`).
+        line_id: GTFS line identifier (e.g., `line-Red`, `line-Orange`).
         date: Date to query (YYYY-MM-DD).
     """
 
     line_id: str = Field(
         description=(
-            "GTFS rapid transit line identifier: `line-red`, `line-orange`, `line-blue`, or `line-green`. "
-            "Speed restriction data is only available for rapid transit lines."
+            "GTFS rapid transit line identifier: `line-Red`, `line-Orange`, `line-Blue`, or `line-Green`. "
+            "IDs are case-sensitive. Speed restriction data is only available for rapid transit lines."
         )
     )
-    date: str = Field(description="Date to query (YYYY-MM-DD).")
+    # Annotated as datetime.date because a field named `date` can't use the bare `date` type
+    date: datetime.date = Field(description="Date to query (YYYY-MM-DD).")
 
 
 class ServiceHoursParams(BaseModel):
     """Parameters for the `/api/service_hours` endpoint.
 
     Attributes:
-        line_id: Optional line filter. `None` returns all lines.
+        line_id: GTFS line identifier (e.g., `line-red`).
         start_date: Start of date range.
         end_date: End of date range.
         agg: Aggregation level — `daily`, `weekly`, or `monthly`.
     """
 
-    line_id: str | None = Field(
-        default=None,
-        description=_LINE_ID_DESC + " Omit to aggregate all lines.",
-    )
+    line_id: str = Field(description=_LINE_ID_DESC)
     start_date: date = Field(description=_DATE_RANGE_START_DESC)
     end_date: date = Field(description=_DATE_RANGE_END_DESC)
     agg: AggregationPeriod = Field(description=_AGG_DESC)
@@ -1048,6 +1042,31 @@ class ServiceRidershipDashboardResponse(BaseModel):
     summaryData: DashboardSummary
     modeData: Dict[str, DashboardSummary]
     lineData: Dict[str, DashboardLine]
+
+
+# Errors
+class ErrorResponse(BaseModel):
+    """Error body sent by the API framework when a request is rejected.
+
+    Attributes:
+        Code: Error type (e.g., `BadRequestError`, `ForbiddenError`).
+        Message: Description of the problem.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    Code: str
+    Message: str
+
+
+class RouteNotFoundResponse(BaseModel):
+    """Error body for `/api/stops/{route_id}` when the route doesn't exist.
+
+    Attributes:
+        error: Description of the problem (e.g., `Route 'X' not found`).
+    """
+
+    model_config = ConfigDict(extra="allow")
+    error: str
 
 
 # Misc Endpoints

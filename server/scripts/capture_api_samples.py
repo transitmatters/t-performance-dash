@@ -7,9 +7,10 @@ tests/fixtures/api_samples/<endpoint>/<case>.json. A manifest.json next to them 
 HTTP status and capture time of every sample. tests/test_api_models.py validates every fixture
 against the Pydantic response models and against the generated openapi.json.
 
-Re-run this when the API's response shapes change, then review the fixture diff:
+Re-run this when the API's response shapes change, then review the fixture diff. Pass fixture
+name prefixes to capture only some samples:
 
-    cd server && uv run python -m scripts.capture_api_samples
+    cd server && uv run python -m scripts.capture_api_samples [prefix ...]
 """
 
 import json
@@ -151,6 +152,16 @@ SAMPLES = [
     ("stops/commuter_rail", "/api/stops/CR-Fairmount", {}, 200),
     ("stops/ferry", "/api/stops/Boat-F1", {}, 200),
     ("healthcheck/pass", "/api/healthcheck", {}, 200),
+    ("errors/headways_invalid_date", "/api/headways/not-a-date", {"stop": ["70061"]}, 400),
+    ("errors/aggregate_headways_missing_dates", "/api/aggregate/headways", {"stop": ["70061"]}, 400),
+    ("errors/linedelays_unsupported_agg", "/api/linedelays", {**QUARTER, "line": "Red", "agg": "monthly"}, 400),
+    (
+        "errors/tripmetrics_range_too_long",
+        "/api/tripmetrics",
+        {"start_date": "2025-01-01", "end_date": "2026-06-30", "line": "line-red", "agg": "daily"},
+        403,
+    ),
+    ("errors/stops_unknown_route", "/api/stops/unknown-route", {}, 404),
 ]
 
 
@@ -208,13 +219,14 @@ def capture(name, path, params, expected_status):
     }
 
 
-def main():
+def main(prefixes):
+    samples = [sample for sample in SAMPLES if not prefixes or sample[0].startswith(tuple(prefixes))]
     # Start from the existing manifest so a failed capture keeps the previous fixture's entry
     manifest_path = OUTPUT_DIR / "manifest.json"
     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
     captured = 0
     failures = []
-    for name, path, params, expected_status in SAMPLES:
+    for name, path, params, expected_status in samples:
         try:
             manifest[name] = capture(name, path, params, expected_status)
             captured += 1
@@ -227,9 +239,9 @@ def main():
         json.dump(dict(sorted(manifest.items())), f, indent=2)
         f.write("\n")
 
-    print(f"Captured {captured} of {len(SAMPLES)} samples into {OUTPUT_DIR}")
+    print(f"Captured {captured} of {len(samples)} samples into {OUTPUT_DIR}")
     return 1 if failures else 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))
