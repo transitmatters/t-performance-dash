@@ -1,5 +1,6 @@
 import type dayjs from 'dayjs';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import type { DayDelayTotals } from '../../common/types/dataPoints';
 import type { LineShort, Line } from '../../common/types/lines';
@@ -30,6 +31,7 @@ export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
   showTitle = false,
   showWidgetValue = true,
 }) => {
+  const { t } = useTranslation('slowzones');
   const filteredDelayTotals = useFilteredDelayTotals(data, startDateUTC, endDateUTC);
   const delayDelta = getSlowZoneDelayDelta(filteredDelayTotals, lineShort);
 
@@ -45,7 +47,7 @@ export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
               )
             }
             layoutKind="no-delta"
-            analysis={`Current (${todayOrDate(endDateUTC)})`}
+            analysis={t('current', { date: todayOrDate(endDateUTC) })}
           />
         </WidgetCarousel>
       )}

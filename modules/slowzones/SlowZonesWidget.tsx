@@ -2,6 +2,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { useTranslation } from 'react-i18next';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -13,6 +14,7 @@ import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 dayjs.extend(utc);
 
 export const SlowZonesWidget: React.FC = () => {
+  const { t } = useTranslation();
   const { line, query, lineShort } = useDelimitatedRoute();
   const delayTotals = useSlowzoneDelayTotalData();
   const { startDate } = OVERVIEW_OPTIONS[query.view ?? 'year'];
@@ -29,7 +31,7 @@ export const SlowZonesWidget: React.FC = () => {
   return (
     <>
       <WidgetDiv className="relative">
-        <WidgetTitle title="Slow zones" tab="slowzones" line={line} />
+        <WidgetTitle title={t('pages.slowzones.name')} tab="slowzones" line={line} />
         {totalSlowTimeReady && lineShort !== 'Commuter Rail' && lineShort !== 'Bus' ? (
           <TotalSlowTimeWrapper
             data={delayTotals.data.data}

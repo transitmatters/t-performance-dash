@@ -3,6 +3,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link } from '../../common/components/general/Link';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
@@ -25,6 +26,7 @@ import { PredictionsBinsGraphWrapper } from './charts/PredictionsBinsGraphWrappe
 dayjs.extend(utc);
 
 export function PredictionsDetails() {
+  const { t } = useTranslation(['predictions', 'common']);
   const {
     line,
     query: { startDate, endDate },
@@ -47,7 +49,7 @@ export function PredictionsDetails() {
     enabled
   );
   if (!startDate || !endDate) {
-    return <p>Select a date range to load graphs.</p>;
+    return <p>{t('common:notices.selectDateRange')}</p>;
   }
 
   const stats = predictions.data?.length ? getPredictionStats(predictions.data) : null;
@@ -57,21 +59,27 @@ export function PredictionsDetails() {
     const sentiment: StatSentiment =
       Math.abs(delta) <= negligible ? 'flat' : delta > 0 ? 'good' : 'bad';
     const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
-    return { label: `${delta > 0 ? '+' : ''}${Math.round(delta * 100)}pp · ${word}`, sentiment };
+    const points = t('common:stats.comparison.percentagePoints', {
+      value: Math.round(delta * 100),
+    });
+    return {
+      label: t(`common:stats.delta.${word}`, { delta: `${delta > 0 ? '+' : ''}${points}` }),
+      sentiment,
+    };
   };
 
   return (
-    <PageWrapper pageTitle={'Predictions'}>
+    <PageWrapper pageTitle={t('common:pages.predictions.name')}>
       <ChartPageDiv>
         {stats && Number.isFinite(stats.overallAccuracy) && (
           <StatCardGrid>
             <StatCard
-              label="Prediction accuracy"
+              label={t('stats.accuracy')}
               value={`${Math.round(stats.overallAccuracy * 100)}%`}
               delta={accuracyDelta(stats.accuracyDelta)}
             />
             <StatCard
-              label="Best week"
+              label={t('stats.bestWeek')}
               value={
                 Number.isFinite(stats.peakAccuracy)
                   ? `${Math.round(stats.peakAccuracy * 100)}%`
@@ -80,7 +88,7 @@ export function PredictionsDetails() {
               unit={prettyDate(stats.peakDate, false)}
             />
             <StatCard
-              label="Worst week"
+              label={t('stats.worstWeek')}
               value={
                 Number.isFinite(stats.worstAccuracy)
                   ? `${Math.round(stats.worstAccuracy * 100)}%`
@@ -91,8 +99,8 @@ export function PredictionsDetails() {
           </StatCardGrid>
         )}
         <Widget
-          title="Arrival predictions"
-          subtitle="Share of predictions that were accurate"
+          title={t('widgets.accuracy.title')}
+          subtitle={t('widgets.accuracy.subtitle')}
           ready={[predictions]}
           action={greenBranchToggle}
         >
@@ -103,8 +111,8 @@ export function PredictionsDetails() {
           />
         </Widget>
         <Widget
-          title="Arrival predictions by bin"
-          subtitle="Accuracy by how far out the prediction was made"
+          title={t('widgets.bins.title')}
+          subtitle={t('widgets.bins.subtitle')}
           ready={[predictions]}
           action={greenBranchToggle}
         >
@@ -115,26 +123,21 @@ export function PredictionsDetails() {
           />
         </Widget>
         <DataNotes>
-          <p>
-            MBTA calculates and publishes prediction accuracy data for each line. Whenever the MBTA
-            makes a prediction about a train or bus arrival, for example "Alewife 4 mins", their
-            system records it and then checks back when that train it predicted would be there in 4
-            minutes actually arrived. The T categorizes these into 4 groups: "0-3 min", "3-6 min",
-            "6-12 min", and "12-30 min". Each grouping has different thresholds for what count as
-            "accurate":
-          </p>
+          <p>{t('notes.method')}</p>
           <ul className="ml-7 list-disc">
-            <li>0-3 min: 60 seconds early to 60 seconds late</li>
-            <li>3-6 min: 90 seconds early to 120 seconds late</li>
-            <li>6-12 min: 150 seconds early to 210 seconds late</li>
-            <li>12-30 min: 240 seconds early to 360 seconds late</li>
+            <li>{t('notes.thresholds.0to3')}</li>
+            <li>{t('notes.thresholds.3to6')}</li>
+            <li>{t('notes.thresholds.6to12')}</li>
+            <li>{t('notes.thresholds.12to30')}</li>
           </ul>
           <p>
-            We receive this data in monthly batches from the{' '}
-            <Link href="https://mbta-massdot.opendata.arcgis.com" target="_blank">
-              MassDOT Open Data Portal
-            </Link>{' '}
-            — if recent data is missing, it's likely because it's not yet available.
+            <Trans
+              t={t}
+              i18nKey="notes.source"
+              components={{
+                portal: <Link href="https://mbta-massdot.opendata.arcgis.com" target="_blank" />,
+              }}
+            />
           </p>
         </DataNotes>
       </ChartPageDiv>

@@ -201,26 +201,21 @@ export default typescriptEslint.config(
     },
   },
 
-  // i18n: a warning while strings are being extracted into locales/; each migrated area
-  // gets its own block below with this rule as an error.
+  // i18n: user-facing text comes from locales/ (see the literalStringOptions comment above).
   {
     files: ['**/*.tsx'],
     ignores: ['**/*.stories.tsx'],
     plugins: { i18next },
     rules: {
-      'i18next/no-literal-string': ['warn', literalStringOptions],
+      'i18next/no-literal-string': ['error', literalStringOptions],
     },
   },
+
+  // Override: the namespace registry imports one catalog per namespace by design.
   {
-    files: [
-      'common/**/*.tsx',
-      'routes/**/*.tsx',
-      'modules/{commute,dashboard,delays,fleet,home,landing,navigation}/**/*.tsx',
-      'modules/{reliability,ridership,service,serviceAndRidership,weather}/**/*.tsx',
-    ],
-    ignores: ['**/*.stories.tsx'],
+    files: ['common/i18n/resources.ts'],
     rules: {
-      'i18next/no-literal-string': ['error', literalStringOptions],
+      'import-x/max-dependencies': 'off',
     },
   },
 

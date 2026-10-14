@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import { i18n } from '../../common/i18n';
 import { FREQUENT_BUS_ROUTE_IDS } from '../../common/constants/lines';
 import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
 import { getBusRouteGroup } from '../../common/utils/stations';
@@ -28,7 +29,20 @@ export const periodLabel = (date: string | undefined, period: Period): string | 
   const start = day.startOf('isoWeek');
   const end = day.endOf('isoWeek');
   const endFormat = start.isSame(end, 'month') ? 'D, YYYY' : 'MMM D, YYYY';
-  return `Week of ${start.format('MMM D')} – ${end.format(endFormat)}`;
+  return i18n.t('busspeedmap:weekOf', { start: start.format('MMM D'), end: end.format(endFormat) });
+};
+
+/** "Median of 12 trips[ this week][, 2 with an interpolated stop time]" for a segment. */
+export const traversalSummary = (trips: number, interpolated: number, period: Period = 'daily') => {
+  const values = { trips, interpolated };
+  if (interpolated > 0) {
+    if (period === 'weekly') return i18n.t('busspeedmap:traversals.weekInterpolated', values);
+    if (period === 'monthly') return i18n.t('busspeedmap:traversals.monthInterpolated', values);
+    return i18n.t('busspeedmap:traversals.interpolated', values);
+  }
+  if (period === 'weekly') return i18n.t('busspeedmap:traversals.week', values);
+  if (period === 'monthly') return i18n.t('busspeedmap:traversals.month', values);
+  return i18n.t('busspeedmap:traversals.median', values);
 };
 
 /** The current, still-accumulating week/month has a tile too, built from partial data. */

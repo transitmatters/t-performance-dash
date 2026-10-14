@@ -6,6 +6,7 @@ import 'chartjs-adapter-date-fns';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { max, min } from 'date-fns';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 import { getDateFnsLocale } from '../../../common/i18n/format';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
@@ -35,6 +36,7 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
   endDate,
   showTitle = false,
 }) => {
+  const { t } = useTranslation(['predictions', 'common']);
   const { line, linePath } = useDelimitatedRoute();
   const peak = PEAK_SPEED[line ?? 'DEFAULT'];
   const ref = useRef(null);
@@ -84,7 +86,7 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
             labels,
             datasets: [
               {
-                label: `Arrival Predictions`,
+                label: t('chart.title'),
                 borderColor: LINE_COLORS[line ?? 'default'],
                 pointRadius: 0,
                 pointBorderWidth: 0,
@@ -121,10 +123,13 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
                 position: 'nearest',
                 callbacks: {
                   title: (context) => {
-                    return `Week of ${context[0].label}`;
+                    return t('common:charts.weekOf', { label: context[0].label });
                   },
                   label: (context) => {
-                    return `${context.dataset.label}: ${context.parsed.y}% accurate`;
+                    return t('chart.tooltip', {
+                      label: context.dataset.label,
+                      percent: context.parsed.y,
+                    });
                   },
                 },
               },
@@ -163,7 +168,7 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Accuracy (%)',
+                  text: t('chart.axis'),
                   color: COLORS.design.subtitleGrey,
                 },
               },
@@ -209,10 +214,10 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
                   ctx.textAlign = 'center';
                   ctx.textBaseline = 'middle';
                   ctx.font = "16px normal 'Helvetica Nueue'";
-                  ctx.fillText('No data to display', width / 2, height / 2);
+                  ctx.fillText(t('common:charts.noDataToDisplay'), width / 2, height / 2);
                   ctx.restore();
                 }
-                if (showTitle) drawSimpleTitle(`Arrival Predictions`, chart);
+                if (showTitle) drawSimpleTitle(t('chart.title'), chart);
               },
             },
             ChartjsPluginWatermark,

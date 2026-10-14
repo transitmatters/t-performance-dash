@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import { STATION_LINES } from '../constants';
 import type { BusStopProperties, StationProperties } from '../types';
@@ -38,14 +39,15 @@ export const StationPopupContent: React.FC<{ station: StationProperties }> = ({ 
 };
 
 export const BusStopPopupContent: React.FC<{ busStop: BusStopProperties }> = ({ busStop }) => {
+  const { t } = useTranslation('busspeedmap');
   const routes = splitList(busStop.routes).map(getBusRouteDisplayName);
   return (
     <div className="text-xs text-stone-900">
       <p className="font-semibold">{busStop.stop_name}</p>
       {/* The pole's GTFS stop_id is the number printed on the stop's own sign. */}
-      <p className="text-stone-600">Stop {busStop.stop_id}</p>
+      <p className="text-stone-600">{t('popup.stop', { id: busStop.stop_id })}</p>
       <p className="mt-1">
-        {routes.length === 1 ? 'Route' : 'Routes'} {routes.join(', ')}
+        {t('popup.routes', { count: routes.length, routes: routes.join(', ') })}
       </p>
     </div>
   );

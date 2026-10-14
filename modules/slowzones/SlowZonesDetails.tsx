@@ -3,6 +3,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { useTranslation } from 'react-i18next';
 
 import { Link } from '../../common/components/general/Link';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -37,10 +38,13 @@ dayjs.extend(utc);
 const DIRECTION_OPTIONS = Object.entries(DirectionObject) as [Direction, string][];
 
 export function SlowZonesDetails() {
+  const { t } = useTranslation(['slowzones', 'common']);
   const { value: direction, control: directionControl } = useChartToggle(
     'northbound',
     DIRECTION_OPTIONS
   );
+  // Typed so the per-direction catalog keys resolve statically.
+  const segmentsDirection: Direction = direction;
 
   const {
     lineShort,
@@ -64,7 +68,7 @@ export function SlowZonesDetails() {
   const isDesktop = useBreakpoint('lg');
 
   if (!endDateUTC || !startDateUTC) {
-    return <p>Select a date range to load graphs.</p>;
+    return <p>{t('common:notices.selectDateRange')}</p>;
   }
 
   const isRapidTransit = lineShort !== 'Commuter Rail' && lineShort !== 'Bus';
@@ -86,7 +90,9 @@ export function SlowZonesDetails() {
     const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
     const sign = deltaSeconds > 0 ? '+' : deltaSeconds < 0 ? '−' : '';
     return {
-      label: `${sign}${getFormattedTimeString(Math.abs(deltaSeconds))} · ${word}`,
+      label: t(`common:stats.delta.${word}`, {
+        delta: `${sign}${getFormattedTimeString(Math.abs(deltaSeconds))}`,
+      }),
       sentiment,
     };
   };
@@ -94,28 +100,31 @@ export function SlowZonesDetails() {
     if (!Number.isFinite(delta)) return undefined;
     const sentiment: StatSentiment = delta === 0 ? 'flat' : delta < 0 ? 'good' : 'bad';
     const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
-    return { label: `${delta > 0 ? '+' : ''}${delta} · ${word}`, sentiment };
+    return {
+      label: t(`common:stats.delta.${word}`, { delta: `${delta > 0 ? '+' : ''}${delta}` }),
+      sentiment,
+    };
   };
 
   return (
-    <PageWrapper pageTitle={'Slow zones'}>
+    <PageWrapper pageTitle={t('common:pages.slowzones.name')}>
       <ChartPageDiv>
         <GreenLineSlowZoneNotice />
         {stats && Number.isFinite(stats.currentSlowTime) && (
           <StatCardGrid>
             <StatCard
-              label="Current slow time"
+              label={t('stats.currentSlowTime')}
               value={getFormattedTimeString(stats.currentSlowTime)}
               delta={timeDeltaBadge(stats.slowTimeDelta)}
             />
             <StatCard
-              label="Active slow zones"
+              label={t('stats.activeZones')}
               value={`${stats.activeZones}`}
-              unit="zones"
+              unit={t('stats.zones')}
               delta={zonesDeltaBadge(stats.zonesDelta)}
             />
             <StatCard
-              label="Worst segment"
+              label={t('stats.worstSegment')}
               value={stats.worstSegment ? stats.worstSegment.title : '—'}
               unit={
                 stats.worstSegment ? getFormattedTimeString(stats.worstSegment.delay) : undefined
@@ -124,10 +133,10 @@ export function SlowZonesDetails() {
           </StatCardGrid>
         )}
         <Widget
-          title="Total slow time"
+          title={t('totalSlowTime')}
           subtitle={
             <Link href="https://transitmatters.org/blog/slowzonesupdate" target="_blank">
-              Time over baseline across the line
+              {t('totalSlowTimeSubtitle')}
             </Link>
           }
           ready={[delayTotals, line]}
@@ -148,8 +157,8 @@ export function SlowZonesDetails() {
           )}
         </Widget>
         <Widget
-          title="Line map"
-          subtitle={`As of ${formatDateTodayCheck(endDate!)}`}
+          title={t('lineMap')}
+          subtitle={t('asOf', { date: formatDateTodayCheck(endDate!) })}
           ready={[allSlow, speedRestrictions]}
         >
           {canShowSlowZonesMap ? (
@@ -165,8 +174,8 @@ export function SlowZonesDetails() {
           )}
         </Widget>
         <Widget
-          title={`${DirectionObject[direction]} segments`}
-          subtitle="Time over baseline, by segment"
+          title={t(`segments.title.${segmentsDirection}`)}
+          subtitle={t('segments.subtitle')}
           action={directionControl}
           ready={[allSlow]}
         >

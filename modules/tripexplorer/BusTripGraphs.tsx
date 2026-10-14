@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
@@ -37,6 +38,7 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
   enabled,
   line,
 }) => {
+  const { t } = useTranslation(['tripexplorer', 'common']);
   const { traveltimes, headways } = useTripExplorerQueries(
     'bus',
     parameters,
@@ -46,7 +48,9 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
   );
   const location = getLocationDetails(fromStation, toStation);
   const { query } = useDelimitatedRoute();
-  const busRouteLabel = query.busRoute ? `Route ${query.busRoute}` : undefined;
+  const busRouteLabel = query.busRoute
+    ? t('common:routes.busRoute', { route: query.busRoute })
+    : undefined;
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,
@@ -69,7 +73,7 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
         <>
           <WidgetDiv>
             <WidgetTitle
-              title="Travel times"
+              title={t('widgets.travelTimes.title')}
               location={location}
               line={line}
               both
@@ -84,8 +88,8 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="Headways"
-              subtitle="Time between buses"
+              title={t('widgets.headways.title')}
+              subtitle={t('widgets.headways.subtitleBuses')}
               location={location}
               line={line}
               action={headwaysDayFilterControl}
@@ -99,7 +103,7 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv className="flex flex-col justify-center">
             <WidgetTitle
-              title="Travel times by hour"
+              title={t('widgets.travelTimes.byHour')}
               location={location}
               line={line}
               both
@@ -127,7 +131,12 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
             />
           )}
           <WidgetDiv>
-            <WidgetTitle title="Travel times" location={location} line={line} both />
+            <WidgetTitle
+              title={t('widgets.travelTimes.title')}
+              location={location}
+              line={line}
+              both
+            />
             <TravelTimesSingleWrapper
               query={traveltimes}
               toStation={toStation}
@@ -136,8 +145,8 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="Headways"
-              subtitle="Time between buses"
+              title={t('widgets.headways.title')}
+              subtitle={t('widgets.headways.subtitleBuses')}
               location={location}
               line={line}
             />

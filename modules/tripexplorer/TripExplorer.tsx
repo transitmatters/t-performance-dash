@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { i18n } from '../../common/i18n';
 import { useHistoricalAlertsData } from '../../common/api/hooks/alerts';
 import { findMatch } from '../../common/components/alerts/AlertFilter';
 import { AlertNotice } from '../../common/components/alerts/AlertNotice';
@@ -17,20 +19,29 @@ import { TripGraphs } from './TripGraphs';
 import { TripSetupNotice } from './TripSetupNotice';
 import { TripGraphsBoundary } from './TripGraphsBoundary';
 
-const describeDates = (date?: string, startDate?: string, endDate?: string) => {
-  if (date) return ` on ${date}`;
-  if (startDate && endDate) return ` from ${startDate} to ${endDate}`;
-  if (startDate) return ` since ${startDate}`;
-  return '';
+/** Announces the trip on screen, for screen readers. */
+const describeTrip = (
+  from: string,
+  to: string,
+  date?: string,
+  startDate?: string,
+  endDate?: string
+) => {
+  if (date) return i18n.t('tripexplorer:showing.onDate', { from, to, date });
+  if (startDate && endDate)
+    return i18n.t('tripexplorer:showing.dateRange', { from, to, startDate, endDate });
+  if (startDate) return i18n.t('tripexplorer:showing.since', { from, to, startDate });
+  return i18n.t('tripexplorer:showing.trip', { from, to });
 };
 
 export const TripExplorer = () => {
+  const { t } = useTranslation('tripexplorer');
   const {
     lineShort,
     page,
     query: { to, from, date, startDate, endDate, busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
-  const pageTitle = page === 'multiTrips' ? 'Trips over a date range' : 'Trips on a single day';
+  const pageTitle = page === 'multiTrips' ? t('pageTitle.multi') : t('pageTitle.single');
   const { data: alerts } = useHistoricalAlertsData(date, lineShort, busRoute, crRoute, ferryRoute);
 
   const fromStation = from ? getParentStationForStopId(from, lineShort) : undefined;
@@ -51,7 +62,7 @@ export const TripExplorer = () => {
             {/* Changing a station or a date silently swaps every chart on the page. This is the
                 only thing that says so to a screen reader. */}
             <div aria-live="polite" className="sr-only">
-              {`Showing ${fromStation.stop_name} to ${toStation.stop_name}${describeDates(date, startDate, endDate)}.`}
+              {describeTrip(fromStation.stop_name, toStation.stop_name, date, startDate, endDate)}
             </div>
             {alertsForModal?.length ? <AlertNotice count={alertsForModal.length} /> : null}
             <PokeySchleppieAwardBanner busRoute={busRoute} />

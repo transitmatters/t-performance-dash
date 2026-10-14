@@ -1,0 +1,90 @@
+{
+  "timeBands": {
+    "allDay": {
+      "label": "All day",
+      "hours": "all service hours"
+    },
+    "earlyAm": {
+      "label": "Early AM",
+      "hours": "before 7am"
+    },
+    "amPeak": {
+      "label": "AM peak",
+      "hours": "7-9am"
+    },
+    "midday": {
+      "label": "Midday",
+      "hours": "9am-4pm"
+    },
+    "pmPeak": {
+      "label": "PM peak",
+      "hours": "4-6:30pm"
+    },
+    "evening": {
+      "label": "Evening",
+      "hours": "6:30-10pm"
+    },
+    "lateNight": {
+      "label": "Late night",
+      "hours": "after 10pm"
+    }
+  },
+  "directions": {
+    "inbound": "Inbound",
+    "outbound": "Outbound"
+  },
+  "periods": {
+    "daily": "Day",
+    "weekly": "Week",
+    "monthly": "Month"
+  },
+  "weekOf": "Week of {{start}} – {{end}}",
+  "traversals": {
+    "median": "Median of {{trips}} trips",
+    "week": "Median of {{trips}} trips this week",
+    "month": "Median of {{trips}} trips this month",
+    "interpolated": "Median of {{trips}} trips, {{interpolated}} with an interpolated stop time",
+    "weekInterpolated": "Median of {{trips}} trips this week, {{interpolated}} with an interpolated stop time",
+    "monthInterpolated": "Median of {{trips}} trips this month, {{interpolated}} with an interpolated stop time"
+  },
+  "mph": "{{value}} mph",
+  "inProgress": {
+    "week": "This week is still in progress — figures reflect service so far, not the full period.",
+    "month": "This month is still in progress — figures reflect service so far, not the full period."
+  },
+  "map": {
+    "selectDate": "Select a date to load the bus speed map.",
+    "title": "Bus speeds"
+  },
+  "controls": {
+    "period": "Period",
+    "dayType": "Day type",
+    "timeOfDay": "Time of day",
+    "direction": "Direction"
+  },
+  "leaderboard": {
+    "byRoute": "By route",
+    "bySegment": "By segment",
+    "rankedBySpeed": "Ranked by average speed",
+    "slowestRoutes": "Slowest routes",
+    "slowestSegments": "Slowest segments",
+    "frequentOnly": "Frequent bus routes only",
+    "rankBy": "Rank by",
+    "selectDate": "Select a date to load the leaderboard.",
+    "showTop": "Show top {{size}}",
+    "showAllRoutes": "Show all {{total}} routes",
+    "showAllSegments": "Show all {{total}} segments",
+    "route": "Route",
+    "allRoutes": "All routes"
+  },
+  "popup": {
+    "stop": "Stop {{id}}",
+    "routes_one": "Route {{routes}}",
+    "routes_other": "Routes {{routes}}"
+  },
+  "legend": {
+    "slower": "Slower",
+    "faster": "Faster",
+    "description": "Median speed from stop to stop, including time spent waiting at the stop — what a rider on board experiences."
+  }
+}

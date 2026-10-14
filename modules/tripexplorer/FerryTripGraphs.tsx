@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
@@ -35,6 +36,7 @@ export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
   enabled,
   line,
 }) => {
+  const { t } = useTranslation(['tripexplorer', 'common']);
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,
@@ -67,8 +69,8 @@ export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
           <WidgetDiv>
             <>
               <WidgetTitle
-                title="Travel times"
-                subtitle="Time between stops"
+                title={t('widgets.travelTimes.title')}
+                subtitle={t('widgets.travelTimes.subtitle')}
                 location={location}
                 line={line}
                 both
@@ -84,8 +86,8 @@ export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="Headways"
-              subtitle="Time between ferries"
+              title={t('widgets.headways.title')}
+              subtitle={t('widgets.headways.subtitleFerries')}
               location={location}
               line={line}
               action={headwaysDayFilterControl}
@@ -100,7 +102,7 @@ export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv className="flex flex-col justify-center">
             <WidgetTitle
-              title="Travel times by hour"
+              title={t('widgets.travelTimes.byHour')}
               location={location}
               line={line}
               both
@@ -120,8 +122,8 @@ export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
         <>
           <WidgetDiv>
             <WidgetTitle
-              title="Travel times"
-              subtitle="Time between stops"
+              title={t('widgets.travelTimes.title')}
+              subtitle={t('widgets.travelTimes.subtitle')}
               location={location}
               line={line}
               both
@@ -134,8 +136,8 @@ export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="Headways"
-              subtitle="Time between ferries"
+              title={t('widgets.headways.title')}
+              subtitle={t('widgets.headways.subtitleFerries')}
               location={location}
               line={line}
             />
@@ -147,8 +149,8 @@ export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="Headway distribution"
-              subtitle="Time between ferries"
+              title={t('widgets.headways.distribution')}
+              subtitle={t('widgets.headways.subtitleFerries')}
               location={location}
               line={line}
             />

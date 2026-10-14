@@ -1,5 +1,6 @@
 import type { TooltipCallbacks, TooltipItem, TooltipModel } from 'chart.js';
 import dayjs from 'dayjs';
+import { i18n } from '../../../common/i18n';
 import { todayOrDate } from '../../../common/constants/dates';
 
 // chart.js does not publicly export its internal `_DeepPartialObject` helper type;
@@ -37,7 +38,7 @@ export const getSpeedGraphConfig = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs
 
 const getWeeklyTitle = (date: string) => {
   const dateObject = dayjs(date);
-  return `Week of ${dateObject.format('MMM D, YYYY')}`;
+  return i18n.t('charts.weekOf', { label: dateObject.format('MMM D, YYYY') });
 };
 
 const getMonthlyTitle = (date: string) => {
@@ -56,7 +57,7 @@ export const SPEED_RANGE_PARAM_MAP: { [s: string]: ParamsType } = {
     agg: 'weekly',
     tooltipFormat: 'MMM d, yyyy',
     callbacks: {
-      title: (context) => `Week of ${context[0].label}`,
+      title: (context) => i18n.t('charts.weekOf', { label: context[0].label }),
     },
     unit: 'month',
     getWidgetTitle: getWeeklyTitle,

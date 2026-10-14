@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from '../../../common/components/general/Link';
 import type { BusSpeedLeaderboardEntry } from '../../../common/types/dataPoints';
 import { getBusSpeedMapRouteHref, useDelimitatedRoute } from '../../../common/utils/router';
@@ -8,6 +9,7 @@ interface BusSpeedRouteLeaderboardProps {
 }
 
 export const BusSpeedRouteLeaderboard: React.FC<BusSpeedRouteLeaderboardProps> = ({ data }) => {
+  const { t } = useTranslation(['busspeedmap', 'common']);
   const route = useDelimitatedRoute();
 
   return (
@@ -22,9 +24,13 @@ export const BusSpeedRouteLeaderboard: React.FC<BusSpeedRouteLeaderboardProps> =
             >
               <span className="flex items-center gap-3">
                 <span className="w-5 text-right text-stone-400">{index + 1}</span>
-                <span className="font-semibold text-stone-900">Route {entry.route}</span>
+                <span className="font-semibold text-stone-900">
+                  {t('common:routes.busRoute', { route: entry.route })}
+                </span>
               </span>
-              <span className="font-semibold text-stone-900">{mph.toFixed(1)} mph</span>
+              <span className="font-semibold text-stone-900">
+                {t('mph', { value: mph.toFixed(1) })}
+              </span>
             </Link>
           </li>
         );

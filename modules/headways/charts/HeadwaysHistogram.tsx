@@ -2,6 +2,7 @@ import { Bar } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import React, { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import { useTranslation } from 'react-i18next';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { LINE_COLORS } from '../../../common/constants/colors';
 import type { HeadwayTooltipData, HeadwaysChartProps } from '../../../common/types/charts';
@@ -15,6 +16,7 @@ import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { getFormattedTimeString } from '../../../common/utils/time';
 
 export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) => {
+  const { t } = useTranslation(['headways', 'common']);
   const { line, linePath, lineShort } = useDelimitatedRoute();
 
   const ref = useRef(null);
@@ -56,6 +58,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
     return headwayBucketPercentages;
   }, [headways, dataObject]);
 
+  const vehicle = lineShort === 'Bus' ? 'bus' : lineShort === 'Ferry' ? 'ferry' : 'train';
   const histogram = useMemo(() => {
     return (
       <ChartStack>
@@ -69,8 +72,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
               datasets: [
                 {
                   backgroundColor: LINE_COLORS[line ?? 'default'],
-                  label:
-                    lineShort === 'Bus' ? 'Buses' : lineShort === 'Ferry' ? 'Ferries' : 'Trains',
+                  label: t(`histogram.vehicles.${vehicle}`),
                   data: dataObject,
                 },
               ],
@@ -92,7 +94,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
                   },
                   title: {
                     display: true,
-                    text: `Minutes`,
+                    text: t('common:chartUnits.minutes'),
                     color: chartTheme.tick,
                   },
                 },
@@ -100,8 +102,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
                   grid: { color: chartTheme.grid },
                   title: {
                     display: true,
-                    text:
-                      lineShort === 'Bus' ? 'Buses' : lineShort === 'Ferry' ? 'Ferries' : 'Trains',
+                    text: t(`histogram.vehicles.${vehicle}`),
                     color: chartTheme.tick,
                   },
                   ticks: {
@@ -124,19 +125,17 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
                       if (!x) return '';
                       const min = x - 0.5;
                       const max = x + 0.5;
-                      const tooltip = [`${min} - ${max} min.`];
+                      const tooltip = [t('histogram.bucket', { min, max })];
 
                       const tooltipData = headwayBucketPercentages[x.toString()];
-                      const vehicleType =
-                        lineShort === 'Bus'
-                          ? 'buses'
-                          : lineShort === 'Ferry'
-                            ? 'ferries'
-                            : 'trains';
-                      tooltip.push(`${tooltipData.pct_trains}% of ${vehicleType}`);
+                      tooltip.push(
+                        t(`histogram.share.${vehicle}`, { percent: tooltipData.pct_trains })
+                      );
                       if (!Number.isNaN(benchmarkTime) && benchmarkTime > 0) {
                         tooltip.push(
-                          `Benchmark: ${getFormattedTimeString(benchmarkTime, 'seconds')}`
+                          t('histogram.benchmark', {
+                            time: getFormattedTimeString(benchmarkTime, 'seconds'),
+                          })
                         );
                       }
                       return tooltip;
@@ -162,10 +161,11 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
     isMobile,
     line,
     linePath,
-    lineShort,
     benchmarkTime,
     headwayBucketPercentages,
     chartTheme,
+    vehicle,
+    t,
   ]);
   return histogram;
 };

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import type { TooltipSide } from '@transitmatters/stripmap';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { getParentStationForStopId, getStationById } from '../../../common/utils/stations';
 
@@ -75,6 +76,7 @@ const getOrderedStationNames = (
 };
 
 export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
+  const { t } = useTranslation('slowzones');
   const {
     side,
     color,
@@ -109,16 +111,31 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
       const oldestString = prettyDate(oldest, false);
       return (
         <div className={classNames(styles.speedRestriction, 'stone bg-slate-200 text-xs')}>
-          <b>MBTA speed restrictions</b>
+          <b>{t('tooltip.speedRestrictions')}</b>
           <div className={styles.speedRestrictionStats}>
             <div>
-              <i>Total:</i> {totalFeet} feet
+              <Trans
+                t={t}
+                i18nKey="tooltip.total"
+                values={{ feet: totalFeet }}
+                components={{ label: <i /> }}
+              />
             </div>
             <div>
-              <i>Slowest:</i> {minimumSpeed} mph
+              <Trans
+                t={t}
+                i18nKey="tooltip.slowest"
+                values={{ mph: minimumSpeed }}
+                components={{ label: <i /> }}
+              />
             </div>
             <div>
-              <i>Since:</i> {oldestString}
+              <Trans
+                t={t}
+                i18nKey="tooltip.since"
+                values={{ date: oldestString }}
+                components={{ label: <i /> }}
+              />
             </div>
           </div>
         </div>
@@ -154,11 +171,11 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
                   isHorizontal={isHorizontal}
                   direction={direction}
                 />
-                {direction === '0' ? 'Southbound' : 'Northbound'}
+                {direction === '0' ? t('directions.southbound') : t('directions.northbound')}
               </div>
             }
             layoutKind="delta-and-percent-change"
-            analysis="compared to peak"
+            analysis={t('tooltip.comparedToPeak')}
           />
           {renderSpeedRestrictions(speedRestrictionsForDirection)}
         </div>
@@ -176,11 +193,10 @@ export const SlowZonesTooltip: React.FC<SlowZonesTooltipProps> = (props) => {
               isHorizontal={isHorizontal}
               direction={direction}
             />
-            {direction === '0' ? 'Southbound' : 'Northbound'}
+            {direction === '0' ? t('directions.southbound') : t('directions.northbound')}
           </div>
           <div className={classNames('mb-1 max-w-[200px] text-xs text-stone-500 italic')}>
-            TransitMatters has not detected a slow zone for this segment despite the MBTA having an
-            official speed restriction within it.
+            {t('tooltip.undetected')}
           </div>
         </div>
         {renderSpeedRestrictions(speedRestrictionsForDirection)}

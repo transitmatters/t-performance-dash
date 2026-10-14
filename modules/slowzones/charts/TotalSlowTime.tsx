@@ -6,6 +6,8 @@ import utc from 'dayjs/plugin/utc';
 import duration from 'dayjs/plugin/duration';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { Line } from '@chartjs-components';
+import { useTranslation } from 'react-i18next';
+import { LINE_OBJECTS } from '../../../common/constants/lines';
 import { getDateFnsLocale } from '../../../common/i18n/format';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
@@ -39,6 +41,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
   line,
   showTitle,
 }) => {
+  const { t } = useTranslation(['slowzones', 'common']);
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((item) => dayjs.utc(item.date).format('YYYY-MM-DD'));
@@ -48,7 +51,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
   const datasets = isLinePage
     ? [
         {
-          label: `${lineShort} Line`,
+          label: LINE_OBJECTS[line].name,
           data: data?.map((d) => (d[lineShort] / 60).toFixed(2)),
           borderColor: LINE_COLORS[line],
           backgroundColor: LINE_COLORS[line],
@@ -58,7 +61,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
       ]
     : [
         {
-          label: `Red Line`,
+          label: LINE_OBJECTS['line-red'].name,
           data: data?.map((d) => (d['Red'] / 60).toFixed(2)),
           borderColor: LINE_COLORS['line-red'],
           backgroundColor: LINE_COLORS['line-red'],
@@ -66,7 +69,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
           tension: 0.1,
         },
         {
-          label: `Orange Line`,
+          label: LINE_OBJECTS['line-orange'].name,
           data: data?.map((d) => (d['Orange'] / 60).toFixed(2)),
           borderColor: LINE_COLORS['line-orange'],
           backgroundColor: LINE_COLORS['line-orange'],
@@ -74,7 +77,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
           tension: 0.1,
         },
         {
-          label: `Blue Line`,
+          label: LINE_OBJECTS['line-blue'].name,
           data: data?.map((d) => (d['Blue'] / 60).toFixed(2)),
           borderColor: LINE_COLORS['line-blue'],
           backgroundColor: LINE_COLORS['line-blue'],
@@ -82,7 +85,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
           tension: 0.1,
         },
         {
-          label: `Green Line`,
+          label: LINE_OBJECTS['line-green'].name,
           data: data?.map((d) => (d['Green'] / 60).toFixed(2)),
           borderColor: LINE_COLORS['line-green'],
           backgroundColor: LINE_COLORS['line-green'],
@@ -90,7 +93,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
           tension: 0.1,
         },
         {
-          label: `Mattapan Line`,
+          label: LINE_OBJECTS['line-mattapan'].name,
           data: data?.map((d) => (d['Mattapan'] / 60).toFixed(2)),
           borderColor: LINE_COLORS['line-mattapan'],
           backgroundColor: LINE_COLORS['line-mattapan'],
@@ -133,7 +136,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Minutes',
+                  text: t('common:chartUnits.minutes'),
                   color: COLORS.design.subtitleGrey,
                 },
               },
@@ -172,9 +175,10 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
                   },
                   label: (tooltipItem) => {
                     if (!tooltipItem.parsed.y) return '';
-                    return `${
-                      !isLinePage ? `${tooltipItem.dataset.label} slow time:` : 'Total slow time: '
-                    } ${getFormattedTimeString(tooltipItem.parsed.y, 'minutes')}`;
+                    const time = getFormattedTimeString(tooltipItem.parsed.y, 'minutes');
+                    return isLinePage
+                      ? t('chart.totalTooltip', { time })
+                      : t('chart.lineTooltip', { line: tooltipItem.dataset.label, time });
                   },
                 },
               },
@@ -192,7 +196,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
             {
               id: 'customTitle',
               afterDraw: (chart) => {
-                if (showTitle) drawSimpleTitle(`Total slow time`, chart);
+                if (showTitle) drawSimpleTitle(t('totalSlowTime'), chart);
               },
             },
             ChartjsPluginWatermark,

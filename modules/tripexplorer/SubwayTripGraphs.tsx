@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
@@ -39,6 +40,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
   enabled,
   line,
 }) => {
+  const { t } = useTranslation(['tripexplorer', 'common']);
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,
@@ -47,8 +49,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
   const { value: travelTimeDisplay, control: travelTimeControl } = useChartToggle(
     'traveltimes' as const,
     [
-      ['traveltimes', 'Travel times'],
-      ['speeds', 'Speeds'],
+      ['traveltimes', t('widgets.travelTimes.title')],
+      ['speeds', t('widgets.speeds.title')],
     ],
     // Dropdown, matching the Service card's comparison selector, rather than a segmented toggle.
     { variant: 'select', paramKey: 'ttView' }
@@ -86,8 +88,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             {travelTimeDisplay === 'speeds' ? (
               <>
                 <WidgetTitle
-                  title="Speeds"
-                  subtitle="Average speed between stops"
+                  title={t('widgets.speeds.title')}
+                  subtitle={t('widgets.speeds.subtitle')}
                   location={location}
                   line={line}
                   both
@@ -102,8 +104,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             ) : (
               <>
                 <WidgetTitle
-                  title="Travel times"
-                  subtitle="Time between stops"
+                  title={t('widgets.travelTimes.title')}
+                  subtitle={t('widgets.travelTimes.subtitle')}
                   location={location}
                   line={line}
                   both
@@ -125,8 +127,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="Headways"
-              subtitle="Time between trains"
+              title={t('widgets.headways.title')}
+              subtitle={t('widgets.headways.subtitleTrains')}
               location={location}
               line={line}
               action={headwaysDayFilterControl}
@@ -141,8 +143,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="Dwells"
-              subtitle="Time spent at station"
+              title={t('widgets.dwells.title')}
+              subtitle={t('widgets.dwells.subtitle')}
               location={location}
               line={line}
               action={dwellsDayFilterControl}
@@ -156,7 +158,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv className="flex flex-col justify-center">
             <WidgetTitle
-              title="Travel times by hour"
+              title={t('widgets.travelTimes.byHour')}
               location={location}
               line={line}
               both
@@ -178,8 +180,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             {travelTimeDisplay === 'speeds' ? (
               <>
                 <WidgetTitle
-                  title="Speeds"
-                  subtitle="Average speed between stops"
+                  title={t('widgets.speeds.title')}
+                  subtitle={t('widgets.speeds.subtitle')}
                   location={location}
                   line={line}
                   both
@@ -194,8 +196,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
             ) : (
               <>
                 <WidgetTitle
-                  title="Travel times"
-                  subtitle="Time between stops"
+                  title={t('widgets.travelTimes.title')}
+                  subtitle={t('widgets.travelTimes.subtitle')}
                   location={location}
                   line={line}
                   both
@@ -212,8 +214,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
 
           <WidgetDiv>
             <WidgetTitle
-              title="Headways"
-              subtitle="Time between trains"
+              title={t('widgets.headways.title')}
+              subtitle={t('widgets.headways.subtitleTrains')}
               location={location}
               line={line}
             />
@@ -225,8 +227,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="Dwells"
-              subtitle="Time spent at station"
+              title={t('widgets.dwells.title')}
+              subtitle={t('widgets.dwells.subtitle')}
               location={location}
               line={line}
             />
@@ -234,8 +236,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="Headway distribution"
-              subtitle="Time between trains"
+              title={t('widgets.headways.distribution')}
+              subtitle={t('widgets.headways.subtitleTrains')}
               location={location}
               line={line}
             />

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useBusSpeedLeaderboard } from '../../../common/api/hooks/busTripMetrics';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
@@ -27,6 +28,7 @@ export const BusSpeedRouteLeaderboardSection: React.FC<BusSpeedRouteLeaderboardS
   period,
   frequentRoutesOnly,
 }) => {
+  const { t } = useTranslation('busspeedmap');
   const [showAll, setShowAll] = useState(false);
 
   const dateRange = date ? periodDateRange(date, period) : undefined;
@@ -35,7 +37,7 @@ export const BusSpeedRouteLeaderboardSection: React.FC<BusSpeedRouteLeaderboardS
     Boolean(dateRange)
   );
 
-  if (!date || !dateRange) return <p>Select a date to load the leaderboard.</p>;
+  if (!date || !dateRange) return <p>{t('leaderboard.selectDate')}</p>;
   if (leaderboard.isError || !leaderboard.data) return <ChartPlaceHolder query={leaderboard} />;
 
   const grouped = groupLeaderboardByBusRoute(leaderboard.data, dateRange.end_date);
@@ -55,7 +57,9 @@ export const BusSpeedRouteLeaderboardSection: React.FC<BusSpeedRouteLeaderboardS
           className="mt-3 self-center"
           onClick={() => setShowAll(!showAll)}
         >
-          {showAll ? `Show top ${LEADERBOARD_PREVIEW_SIZE}` : `Show all ${ranked.length} routes`}
+          {showAll
+            ? t('leaderboard.showTop', { size: LEADERBOARD_PREVIEW_SIZE })
+            : t('leaderboard.showAllRoutes', { total: ranked.length })}
         </Button>
       )}
     </>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
@@ -36,6 +37,7 @@ export const CommuterRailTripGraphs: React.FC<CommuterRailTripGraphsProps> = ({
   enabled,
   line,
 }) => {
+  const { t } = useTranslation(['tripexplorer', 'common']);
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,
@@ -72,8 +74,8 @@ export const CommuterRailTripGraphs: React.FC<CommuterRailTripGraphsProps> = ({
         <>
           <WidgetDiv>
             <WidgetTitle
-              title="Travel times"
-              subtitle="Time between stops"
+              title={t('widgets.travelTimes.title')}
+              subtitle={t('widgets.travelTimes.subtitle')}
               location={location}
               line={line}
               both
@@ -88,8 +90,8 @@ export const CommuterRailTripGraphs: React.FC<CommuterRailTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="Headways"
-              subtitle="Time between trains"
+              title={t('widgets.headways.title')}
+              subtitle={t('widgets.headways.subtitleTrains')}
               location={location}
               line={line}
               action={headwaysDayFilterControl}
@@ -104,8 +106,8 @@ export const CommuterRailTripGraphs: React.FC<CommuterRailTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="Dwells"
-              subtitle="Time spent at station"
+              title={t('widgets.dwells.title')}
+              subtitle={t('widgets.dwells.subtitle')}
               location={location}
               line={line}
               action={dwellsDayFilterControl}
@@ -119,7 +121,7 @@ export const CommuterRailTripGraphs: React.FC<CommuterRailTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv className="flex flex-col justify-center">
             <WidgetTitle
-              title="Travel times by hour"
+              title={t('widgets.travelTimes.byHour')}
               location={location}
               line={line}
               both
@@ -139,8 +141,8 @@ export const CommuterRailTripGraphs: React.FC<CommuterRailTripGraphsProps> = ({
         <>
           <WidgetDiv>
             <WidgetTitle
-              title="Travel times"
-              subtitle="Time between stops"
+              title={t('widgets.travelTimes.title')}
+              subtitle={t('widgets.travelTimes.subtitle')}
               location={location}
               line={line}
               both
@@ -154,8 +156,8 @@ export const CommuterRailTripGraphs: React.FC<CommuterRailTripGraphsProps> = ({
 
           <WidgetDiv>
             <WidgetTitle
-              title="Headways"
-              subtitle="Time between trains"
+              title={t('widgets.headways.title')}
+              subtitle={t('widgets.headways.subtitleTrains')}
               location={location}
               line={line}
             />
@@ -167,8 +169,8 @@ export const CommuterRailTripGraphs: React.FC<CommuterRailTripGraphsProps> = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="Dwells"
-              subtitle="Time spent at station"
+              title={t('widgets.dwells.title')}
+              subtitle={t('widgets.dwells.subtitle')}
               location={location}
               line={line}
             />

@@ -2,6 +2,7 @@
 
 import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useBusTripMetrics } from '../../common/api/hooks/busTripMetrics';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
@@ -27,6 +28,7 @@ const DAY_TYPE_PARAM: Record<(typeof DAY_FILTER_OPTIONS)[number][0], DayType | u
 };
 
 export function BusSpeedDetails() {
+  const { t } = useTranslation(['speed', 'common']);
   const {
     query: { startDate, endDate, busRoute },
   } = useDelimitatedRoute();
@@ -73,15 +75,15 @@ export function BusSpeedDetails() {
     .join(' · ');
 
   if (!startDate || !endDate) {
-    return <p>Select a date range to load graphs.</p>;
+    return <p>{t('common:notices.selectDateRange')}</p>;
   }
 
   return (
-    <PageWrapper pageTitle={'Speed'}>
+    <PageWrapper pageTitle={t('common:pages.speed.name')}>
       <ChartPageDiv>
         <BusDataNotice />
         <Widget
-          title="Speed"
+          title={t('common:pages.speed.name')}
           subtitle={subtitle || undefined}
           action={
             <div className="flex flex-wrap justify-end gap-2">

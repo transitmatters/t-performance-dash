@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BusSpeedDataUnavailableError } from '../../../common/api/busSpeedSegments';
 import { useBusSpeedSegmentLeaderboard } from '../../../common/api/hooks/busSpeedSegments';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
@@ -42,6 +43,7 @@ interface BusSpeedSegmentLeaderboardSectionProps {
 export const BusSpeedSegmentLeaderboardSection: React.FC<
   BusSpeedSegmentLeaderboardSectionProps
 > = ({ date, period, dayType, timeBand, frequentRoutesOnly }) => {
+  const { t } = useTranslation('busspeedmap');
   const [showAll, setShowAll] = useState(false);
   const [routeFilter, setRouteFilter] = useState(ALL_ROUTES);
   const [selectedSegment, setSelectedSegment] = useState<
@@ -68,7 +70,7 @@ export const BusSpeedSegmentLeaderboardSection: React.FC<
   }, [leaderboard.data, period, date]);
 
   const renderList = () => {
-    if (!date) return <p>Select a date to load the leaderboard.</p>;
+    if (!date) return <p>{t('leaderboard.selectDate')}</p>;
     if (leaderboard.isLoading) return <ChartPlaceHolder />;
     // A date with no published file isn't a failure, it's just outside coverage.
     if (leaderboard.error instanceof BusSpeedDataUnavailableError)
@@ -109,8 +111,8 @@ export const BusSpeedSegmentLeaderboardSection: React.FC<
             onClick={() => setShowAll(!showAll)}
           >
             {showAll
-              ? `Show top ${LEADERBOARD_PREVIEW_SIZE}`
-              : `Show all ${entries.length} segments`}
+              ? t('leaderboard.showTop', { size: LEADERBOARD_PREVIEW_SIZE })
+              : t('leaderboard.showAllSegments', { total: entries.length })}
           </Button>
         )}
       </>
@@ -121,13 +123,13 @@ export const BusSpeedSegmentLeaderboardSection: React.FC<
     <>
       {availableRoutes.length > 0 && (
         <label className="flex items-center gap-2 self-start text-sm">
-          <span className="text-stone-600">Route</span>
+          <span className="text-stone-600">{t('leaderboard.route')}</span>
           <Select value={routeFilter} onValueChange={setRouteFilter}>
             <SelectTrigger size="sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ALL_ROUTES}>All routes</SelectItem>
+              <SelectItem value={ALL_ROUTES}>{t('leaderboard.allRoutes')}</SelectItem>
               {availableRoutes.map((busRoute) => (
                 <SelectItem key={busRoute} value={busRoute}>
                   {busRoute}
