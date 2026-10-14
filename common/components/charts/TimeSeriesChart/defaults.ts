@@ -1,3 +1,4 @@
+import { i18n } from '../../../i18n';
 import type { DataPoint, DisplayStyle, ResolvedTimeAxis } from './types';
 
 export const defaultStyle: DisplayStyle<DataPoint> = {
@@ -17,13 +18,13 @@ export const defaultStyle: DisplayStyle<DataPoint> = {
 
 export const defaultTimeAxis: ResolvedTimeAxis = {
   granularity: 'time',
-  label: 'Time',
+  label: i18n.t('charts.axis.time'),
   format: 'h a',
 };
 
 export const defaultDayAxis: ResolvedTimeAxis = {
   granularity: 'day',
-  label: 'Date',
+  label: i18n.t('charts.axis.date'),
   format: 'MMM d',
   tooltipFormat: 'MMM d, yyyy',
 };
@@ -31,7 +32,7 @@ export const defaultDayAxis: ResolvedTimeAxis = {
 export const defaultWeekAxis: ResolvedTimeAxis = {
   granularity: 'week',
   axisUnit: 'month',
-  label: 'Date',
+  label: i18n.t('charts.axis.date'),
   format: 'MMM',
   tooltipFormat: 'MMM d, yyyy',
 };
@@ -39,7 +40,7 @@ export const defaultWeekAxis: ResolvedTimeAxis = {
 export const defaultMonthAxis: ResolvedTimeAxis = {
   granularity: 'month',
   axisUnit: 'year',
-  label: 'Month',
+  label: i18n.t('charts.axis.month'),
   format: 'yyyy',
   tooltipFormat: 'MMM yyyy',
 };

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import React from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button';
 
 interface ErrorNoticeProps {
@@ -18,6 +19,7 @@ interface ErrorNoticeProps {
  * shown, so backend internals stay out of the UI.
  */
 export const ErrorNotice: React.FC<ErrorNoticeProps> = ({ isWidget, inverse, query }) => {
+  const { t } = useTranslation();
   const errorMessage = query?.error?.['message'];
   const timeout = errorMessage === 'network request failed';
   const canRetry = Boolean(query?.refetch);
@@ -37,12 +39,10 @@ export const ErrorNotice: React.FC<ErrorNoticeProps> = ({ isWidget, inverse, que
         aria-hidden
       />
       <p className={classNames('font-medium', inverse ? 'text-white' : 'text-card-foreground')}>
-        {timeout ? 'The response took too long' : "Couldn't load this chart"}
+        {timeout ? t('notices.error.timeoutTitle') : t('notices.error.title')}
       </p>
       <p className={classNames('text-sm', inverse ? 'text-white/80' : 'text-muted-foreground')}>
-        {timeout
-          ? 'Try a shorter date range.'
-          : 'The data service did not respond. This is usually temporary.'}
+        {timeout ? t('notices.error.timeoutHint') : t('notices.error.hint')}
       </p>
       {canRetry && (
         <Button
@@ -57,7 +57,7 @@ export const ErrorNotice: React.FC<ErrorNoticeProps> = ({ isWidget, inverse, que
             className={classNames(query?.isFetching && 'animate-spin')}
             aria-hidden
           />
-          {query?.isFetching ? 'Retrying…' : 'Try again'}
+          {query?.isFetching ? t('notices.error.retrying') : t('notices.error.retry')}
         </Button>
       )}
     </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Station } from '../../types/stations';
 import { Notice } from './Notice';
 
@@ -8,16 +9,12 @@ interface TerminusNoticeProps {
 }
 
 export const TerminusNotice: React.FC<TerminusNoticeProps> = ({ toStation, fromStation }) => {
+  const { t } = useTranslation();
   const isTerminus = toStation?.terminus || fromStation?.terminus;
 
   if (!isTerminus) {
     return null;
   }
 
-  return (
-    <Notice variant="warning">
-      Data collection at terminus stations can be incomplete, which may affect travel time and dwell
-      figures in particular.
-    </Notice>
-  );
+  return <Notice variant="warning">{t('notices.terminus')}</Notice>;
 };

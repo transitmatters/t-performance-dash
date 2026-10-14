@@ -1,6 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import { i18n } from '../i18n';
 import { getFormattedTimeValue, getTimeUnit } from '../utils/time';
 import { WidgetText } from '../components/widgets/internal/WidgetText';
 import { UnitText } from '../components/widgets/internal/UnitText';
@@ -56,7 +57,7 @@ export class DeltaTimeWidgetValue extends BaseWidgetValue implements WidgetValue
 
 export class DeltaZonesWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'zones';
+    return i18n.t('units.zones');
   }
   getFormattedValue(isLarge?: boolean) {
     if (this.delta === undefined) return '...';
@@ -95,18 +96,18 @@ export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInter
     const sign = this.delta >= 0 ? '+' : '-';
     switch (true) {
       case absValue < 100:
-        return `${sign}${absDelta.toFixed(0)} sec`;
+        return `${sign}${absDelta.toFixed(0)} ${i18n.t('units.sec')}`;
       case absValue < 3600:
         return `${sign}${dayjs.duration(absDelta, 'seconds').format('m:ss')}`;
       default:
-        return `${sign}${dayjs.duration(absDelta, 'seconds').as('minutes').toFixed(0)} min`;
+        return `${sign}${dayjs.duration(absDelta, 'seconds').as('minutes').toFixed(0)} ${i18n.t('units.min')}`;
     }
   }
 }
 
 export class SZWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'zones';
+    return i18n.t('units.zones');
   }
   getFormattedValue(isLarge?: boolean) {
     if (typeof this.value === 'undefined') return '...';
@@ -146,7 +147,7 @@ export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValu
 
 export class TripsWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'Round trips';
+    return i18n.t('units.roundTrips');
   }
 
   getFormattedValue(isLarge?: boolean) {
@@ -167,7 +168,7 @@ export class TripsWidgetValue extends BaseWidgetValue implements WidgetValueInte
 
 export class MPHWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'MPH';
+    return i18n.t('units.mph');
   }
 
   getFormattedValue(isLarge?: boolean) {
@@ -189,7 +190,7 @@ export class MPHWidgetValue extends BaseWidgetValue implements WidgetValueInterf
 
 export class RidersWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
-    return 'Fare validations';
+    return i18n.t('units.fareValidations');
   }
 
   getFormattedValue(isLarge?: boolean) {

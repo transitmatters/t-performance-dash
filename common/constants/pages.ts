@@ -15,6 +15,7 @@ import {
   faRankingStar,
   faCalendarCheck,
 } from '@fortawesome/free-solid-svg-icons';
+import { i18n } from '../i18n';
 import type { BusRoute, Line } from '../types/lines';
 
 export type Page = keyof typeof PAGES;
@@ -74,7 +75,7 @@ export const ALL_PAGES: PageMap = {
   landing: {
     key: 'landing',
     path: '/',
-    name: 'Home',
+    name: i18n.t('pages.landing.name'),
     lines: [],
     icon: faHouse,
     dateStoreSection: 'landing',
@@ -82,8 +83,8 @@ export const ALL_PAGES: PageMap = {
   singleTrips: {
     key: 'singleTrips',
     path: '/trips/single',
-    name: 'Trips',
-    title: 'Trips',
+    name: i18n.t('pages.singleTrips.name'),
+    title: i18n.t('pages.singleTrips.title'),
     lines: [
       'line-red',
       'line-blue',
@@ -101,8 +102,8 @@ export const ALL_PAGES: PageMap = {
   multiTrips: {
     key: 'multiTrips',
     path: '/trips/multi',
-    name: 'Multi-day trips',
-    title: 'Multi-day trips',
+    name: i18n.t('pages.multiTrips.name'),
+    title: i18n.t('pages.multiTrips.title'),
     lines: [
       'line-red',
       'line-blue',
@@ -120,7 +121,7 @@ export const ALL_PAGES: PageMap = {
   overview: {
     key: 'overview',
     path: '/',
-    name: 'Line overview',
+    name: i18n.t('pages.overview.name'),
     lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-mattapan'],
     dateStoreSection: 'overview',
     icon: faTableColumns,
@@ -128,7 +129,7 @@ export const ALL_PAGES: PageMap = {
   speed: {
     key: 'speed',
     path: '/speed',
-    name: 'Speed',
+    name: i18n.t('pages.speed.name'),
     lines: ['line-red', 'line-orange', 'line-blue', 'line-green', 'line-mattapan', 'line-bus'],
     icon: faGaugeHigh,
     dateStoreSection: 'line',
@@ -136,7 +137,7 @@ export const ALL_PAGES: PageMap = {
   fleet: {
     key: 'fleet',
     path: '/fleet',
-    name: 'Fleet',
+    name: i18n.t('pages.fleet.name'),
     // Blue and Mattapan are hidden: each runs a single car type with no "new" fleet, so the
     // charts are flat. Add them back here if that changes.
     lines: ['line-red', 'line-orange', 'line-green', 'line-bus', 'line-commuter-rail'],
@@ -146,7 +147,7 @@ export const ALL_PAGES: PageMap = {
   predictions: {
     key: 'predictions',
     path: '/predictions',
-    name: 'Predictions',
+    name: i18n.t('pages.predictions.name'),
     lines: ['line-red', 'line-orange', 'line-blue', 'line-green', 'line-mattapan'],
     icon: faStopwatch20,
     dateStoreSection: 'line',
@@ -154,7 +155,7 @@ export const ALL_PAGES: PageMap = {
   service: {
     key: 'service',
     path: '/service',
-    name: 'Service',
+    name: i18n.t('pages.service.name'),
     lines: [
       'line-red',
       'line-orange',
@@ -169,7 +170,7 @@ export const ALL_PAGES: PageMap = {
   delays: {
     key: 'delays',
     path: '/delays',
-    name: 'Delays',
+    name: i18n.t('pages.delays.name'),
     lines: [
       'line-red',
       'line-orange',
@@ -184,7 +185,7 @@ export const ALL_PAGES: PageMap = {
   slowzones: {
     key: 'slowzones',
     path: '/slowzones',
-    name: 'Slow zones',
+    name: i18n.t('pages.slowzones.name'),
     lines: ['line-red', 'line-blue', 'line-orange', 'line-green', 'line-mattapan'],
     icon: faWarning,
     dateStoreSection: 'line',
@@ -192,7 +193,7 @@ export const ALL_PAGES: PageMap = {
   systemSlowzones: {
     key: 'systemSlowzones',
     path: '/slowzones',
-    name: 'Slow zones',
+    name: i18n.t('pages.systemSlowzones.name'),
     lines: [],
     icon: faWarning,
     dateStoreSection: 'system',
@@ -200,7 +201,7 @@ export const ALL_PAGES: PageMap = {
   systemServiceAndRidership: {
     key: 'systemServiceAndRidership',
     path: '/ridership',
-    name: 'Service & Ridership',
+    name: i18n.t('pages.systemServiceAndRidership.name'),
     lines: [],
     icon: faUsers,
     dateStoreSection: 'system',
@@ -208,7 +209,7 @@ export const ALL_PAGES: PageMap = {
   ridership: {
     key: 'ridership',
     path: '/ridership',
-    name: 'Ridership',
+    name: i18n.t('pages.ridership.name'),
     lines: [
       'line-red',
       'line-blue',
@@ -225,7 +226,7 @@ export const ALL_PAGES: PageMap = {
   reliability: {
     key: 'reliability',
     path: '/reliability',
-    name: 'Reliability',
+    name: i18n.t('pages.reliability.name'),
     lines: ['line-commuter-rail', 'line-RIDE'],
     icon: faCalendarCheck,
     dateStoreSection: 'line',
@@ -233,8 +234,8 @@ export const ALL_PAGES: PageMap = {
   speedmap: {
     key: 'speedmap',
     path: '/speedmap',
-    name: 'Speed map',
-    title: 'Bus speed map',
+    name: i18n.t('pages.speedmap.name'),
+    title: i18n.t('pages.speedmap.title'),
     lines: ['line-bus'],
     icon: faMap,
     // Route 1, same as the rest of the bus pages' entry points.
@@ -246,8 +247,8 @@ export const ALL_PAGES: PageMap = {
   leaderboard: {
     key: 'leaderboard',
     path: '/leaderboard',
-    name: 'Leaderboard',
-    title: 'Bus speed leaderboard',
+    name: i18n.t('pages.leaderboard.name'),
+    title: i18n.t('pages.leaderboard.title'),
     lines: ['line-bus'],
     icon: faRankingStar,
     // Ranks across every route or segment at once, so there's no single route to

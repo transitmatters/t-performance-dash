@@ -1,65 +1,66 @@
+import { i18n } from '../i18n';
 import type { LineObject } from '../types/lines';
 import { COLORS } from './colors';
 
 export const LINE_OBJECTS: LineObject = {
   'line-red': {
-    name: 'Red Line',
+    name: i18n.t('lines.red'),
     short: 'Red',
     path: 'red',
     key: 'line-red',
     color: COLORS.mbta.red,
   },
   'line-orange': {
-    name: 'Orange Line',
+    name: i18n.t('lines.orange'),
     short: 'Orange',
     path: 'orange',
     key: 'line-orange',
     color: COLORS.mbta.orange,
   },
   'line-green': {
-    name: 'Green Line',
+    name: i18n.t('lines.green'),
     short: 'Green',
     path: 'green',
     key: 'line-green',
     color: COLORS.mbta.green,
   },
   'line-blue': {
-    name: 'Blue Line',
+    name: i18n.t('lines.blue'),
     short: 'Blue',
     path: 'blue',
     key: 'line-blue',
     color: COLORS.mbta.blue,
   },
   'line-mattapan': {
-    name: 'Mattapan Line',
+    name: i18n.t('lines.mattapan'),
     short: 'Mattapan',
     path: 'mattapan',
     key: 'line-mattapan',
     color: COLORS.mbta.red,
   },
   'line-bus': {
-    name: 'Buses',
+    name: i18n.t('lines.bus'),
     short: 'Bus',
     path: 'bus',
     key: 'line-bus',
     color: COLORS.mbta.bus,
   },
   'line-commuter-rail': {
-    name: 'Commuter Rail',
+    name: i18n.t('lines.commuterRail'),
     short: 'Commuter Rail',
     path: 'commuter-rail',
     key: 'line-commuter-rail',
     color: COLORS.mbta.commuterRail,
   },
   'line-ferry': {
-    name: 'Ferry',
+    name: i18n.t('lines.ferry'),
     short: 'Ferry',
     path: 'ferry',
     key: 'line-ferry',
     color: COLORS.mbta.ferry,
   },
   'line-RIDE': {
-    name: 'The RIDE',
+    name: i18n.t('lines.theRide'),
     short: 'The RIDE',
     path: 'the-ride',
     key: 'line-RIDE',

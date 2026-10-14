@@ -1,8 +1,10 @@
 import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { useDelimitatedRoute } from '../../utils/router';
 import { Notice } from './Notice';
 
 export const GreenLineSlowZoneNotice: React.FC = () => {
+  const { t } = useTranslation();
   const { line } = useDelimitatedRoute();
 
   if (line !== 'line-green') {
@@ -10,12 +12,15 @@ export const GreenLineSlowZoneNotice: React.FC = () => {
   }
 
   return (
-    <Notice variant="warning" title="Green Line slow zones are less precise">
+    <Notice variant="warning" title={t('notices.greenLineSlowZones.title')}>
       <p>
-        Green Line service is more variable than on the heavy rail lines, and much of it runs on the
-        street rather than on a{' '}
-        <a href="https://en.wikipedia.org/wiki/Grade_separation">grade-separated</a> right-of-way.
-        Slow zone detection here is more prone to error than on other lines.
+        <Trans
+          t={t}
+          i18nKey="notices.greenLineSlowZones.body"
+          components={{
+            gradeSeparated: <a href="https://en.wikipedia.org/wiki/Grade_separation" />,
+          }}
+        />
       </p>
     </Notice>
   );

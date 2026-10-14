@@ -1,3 +1,4 @@
+import { i18n } from '../i18n';
 import type { MiniWidgetObject, WidgetComparison } from '../components/widgets/MiniWidgetCreator';
 import { MPHWidgetValue, PercentageWidgetValue, TimeWidgetValue } from '../types/basicWidgets';
 import type { DayFilter } from '../types/charts';
@@ -116,7 +117,8 @@ export const filterByDayType = (data: AggregateDataPoint[], type: 'weekday' | 'w
 export const getComparisonData = (allData: AggregateDataPoint[], dayFilter: DayFilter) => {
   if (dayFilter === 'all') return undefined;
   const oppositeType = dayFilter === 'weekday' ? 'weekend' : 'weekday';
-  const oppositeLabel = dayFilter === 'weekday' ? 'weekends & holidays' : 'weekdays';
+  const oppositeLabel =
+    dayFilter === 'weekday' ? i18n.t('stats.vsWeekendsHolidays') : i18n.t('stats.vsWeekdays');
   const data = filterByDayType(allData, oppositeType);
   if (data.length === 0) return undefined;
   return { data, label: oppositeLabel };
@@ -143,37 +145,43 @@ export const getAggDataWidgets = (
 
   return [
     {
-      text: 'Average',
+      stat: 'average',
+      text: i18n.t('stats.average'),
       widgetValue: getWidget(type, average),
       type: 'data',
       comparison: comp ? makeComparison(average, comp.average, label, 'time') : undefined,
     },
     {
-      text: 'Median',
+      stat: 'median',
+      text: i18n.t('stats.median'),
       widgetValue: getWidget(type, median),
       type: 'data',
       comparison: comp ? makeComparison(median, comp.median, label, 'time') : undefined,
     },
     {
-      text: '10%',
+      stat: 'p10',
+      text: i18n.t('stats.p10'),
       widgetValue: getWidget(type, p10),
       type: 'data',
       comparison: comp ? makeComparison(p10, comp.p10, label, 'time') : undefined,
     },
     {
-      text: '90%',
+      stat: 'p90',
+      text: i18n.t('stats.p90'),
       widgetValue: getWidget(type, p90),
       type: 'data',
       comparison: comp ? makeComparison(p90, comp.p90, label, 'time') : undefined,
     },
     {
-      text: 'Min',
+      stat: 'min',
+      text: i18n.t('stats.min'),
       widgetValue: getWidget(type, min),
       type: 'data',
       comparison: comp ? makeComparison(min, comp.min, label, 'time') : undefined,
     },
     {
-      text: 'Max',
+      stat: 'max',
+      text: i18n.t('stats.max'),
       widgetValue: getWidget(type, max),
       type: 'data',
       comparison: comp ? makeComparison(max, comp.max, label, 'time') : undefined,
@@ -192,49 +200,57 @@ export const getAggHeadwayDataWidgets = (
 
   return [
     {
-      text: 'Average',
+      stat: 'average',
+      text: i18n.t('stats.average'),
       widgetValue: getWidget(type, average),
       type: 'data',
       comparison: comp ? makeComparison(average, comp.average, label, 'time') : undefined,
     },
     {
-      text: 'Median',
+      stat: 'median',
+      text: i18n.t('stats.median'),
       widgetValue: getWidget(type, median),
       type: 'data',
       comparison: comp ? makeComparison(median, comp.median, label, 'time') : undefined,
     },
     {
-      text: '10%',
+      stat: 'p10',
+      text: i18n.t('stats.p10'),
       widgetValue: getWidget(type, p10),
       type: 'data',
       comparison: comp ? makeComparison(p10, comp.p10, label, 'time') : undefined,
     },
     {
-      text: '90%',
+      stat: 'p90',
+      text: i18n.t('stats.p90'),
       widgetValue: getWidget(type, p90),
       type: 'data',
       comparison: comp ? makeComparison(p90, comp.p90, label, 'time') : undefined,
     },
     {
-      text: 'Min',
+      stat: 'min',
+      text: i18n.t('stats.min'),
       widgetValue: getWidget(type, min),
       type: 'data',
       comparison: comp ? makeComparison(min, comp.min, label, 'time') : undefined,
     },
     {
-      text: 'Max',
+      stat: 'max',
+      text: i18n.t('stats.max'),
       widgetValue: getWidget(type, max),
       type: 'data',
       comparison: comp ? makeComparison(max, comp.max, label, 'time') : undefined,
     },
     {
-      text: 'Bunched Trips',
+      stat: 'bunched',
+      text: i18n.t('stats.bunchedTrips'),
       widgetValue: new PercentageWidgetValue(bunched),
       type: 'data',
       comparison: comp ? makeComparison(bunched, comp.bunched, label, 'percentage') : undefined,
     },
     {
-      text: 'On Time Trips',
+      stat: 'onTime',
+      text: i18n.t('stats.onTimeTrips'),
       widgetValue: new PercentageWidgetValue(onTime),
       type: 'data',
       comparison: comp ? makeComparison(onTime, comp.onTime, label, 'percentage') : undefined,
@@ -281,19 +297,30 @@ export const getSingleDayWidgets = (
     getSingleDayPointsOfInterest(data, type);
 
   const widgets: MiniWidgetObject[] = [
-    { text: 'Average', widgetValue: getWidget(type, average), type: 'data' },
-    { text: 'Median', widgetValue: getWidget(type, median), type: 'data' },
-    { text: '10%', widgetValue: getWidget(type, p10), type: 'data' },
-    { text: '90%', widgetValue: getWidget(type, p90), type: 'data' },
-    { text: 'Min', widgetValue: getWidget(type, min), type: 'data' },
-    { text: 'Max', widgetValue: getWidget(type, max), type: 'data' },
+    {
+      stat: 'average',
+      text: i18n.t('stats.average'),
+      widgetValue: getWidget(type, average),
+      type: 'data',
+    },
+    {
+      stat: 'median',
+      text: i18n.t('stats.median'),
+      widgetValue: getWidget(type, median),
+      type: 'data',
+    },
+    { stat: 'p10', text: i18n.t('stats.p10'), widgetValue: getWidget(type, p10), type: 'data' },
+    { stat: 'p90', text: i18n.t('stats.p90'), widgetValue: getWidget(type, p90), type: 'data' },
+    { stat: 'min', text: i18n.t('stats.min'), widgetValue: getWidget(type, min), type: 'data' },
+    { stat: 'max', text: i18n.t('stats.max'), widgetValue: getWidget(type, max), type: 'data' },
   ];
 
   if (type === 'traveltimes') {
     const onTimeTravel = getOnTimeTravelPercentage(data);
     if (onTimeTravel !== undefined) {
       widgets.push({
-        text: 'On Time',
+        stat: 'onTime',
+        text: i18n.t('stats.onTime'),
         widgetValue: new PercentageWidgetValue(onTimeTravel),
         type: 'data',
       });
@@ -302,12 +329,14 @@ export const getSingleDayWidgets = (
 
   if (type === 'headways' && data.some((point) => point.benchmark_headway_time_sec)) {
     widgets.push({
-      text: 'On Time Trips',
+      stat: 'onTime',
+      text: i18n.t('stats.onTimeTrips'),
       widgetValue: new PercentageWidgetValue(onTimePercentage),
       type: 'data',
     });
     widgets.push({
-      text: 'Bunched Trips',
+      stat: 'bunched',
+      text: i18n.t('stats.bunchedTrips'),
       widgetValue: new PercentageWidgetValue(bunchedPercentage),
       type: 'data',
     });

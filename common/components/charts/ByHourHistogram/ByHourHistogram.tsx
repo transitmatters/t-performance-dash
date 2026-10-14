@@ -12,6 +12,7 @@ import {
   Legend,
 } from '@chartjs-utils';
 import { Bar as BarChart } from '@chartjs-components';
+import { useTranslation } from 'react-i18next';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../../constants/charts';
 import type { ByHourDataset, DisplayStyle, ValueAxis as ValueAxis } from './types';
@@ -67,6 +68,7 @@ export const ByHourHistogram: React.FC<Props> = (props) => {
     [dataWithZeros]
   );
   const ref = useRef(null);
+  const { t } = useTranslation();
   const isMobile = !useBreakpoint('md');
 
   const tooltipFormat = React.useCallback(
@@ -76,11 +78,12 @@ export const ByHourHistogram: React.FC<Props> = (props) => {
       const { label } = dataset;
 
       if (datasetRoundTrips) {
-        return `${label}: ${value} ${valueAxis.tooltipItemLabel ?? ''} (${Math.round(60 / value)}m headways)`.trim();
+        const headways = t('charts.roundTripHeadways', { minutes: Math.round(60 / value) });
+        return `${label}: ${value} ${valueAxis.tooltipItemLabel ?? ''} ${headways}`.trim();
       }
       return `${label}: ${value} ${valueAxis.tooltipItemLabel ?? ''}`.trim();
     },
-    [data, datasetRoundTrips, valueAxis.tooltipItemLabel]
+    [data, datasetRoundTrips, valueAxis.tooltipItemLabel, t]
   );
 
   const chartData = useMemo(() => {

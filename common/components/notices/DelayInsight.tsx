@@ -1,5 +1,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
+import { Trans, useTranslation } from 'react-i18next';
 import type { SingleDayDataPoint, BenchmarkFieldKeys, MetricFieldKeys } from '../../types/charts';
 import { PointFieldKeys } from '../../types/charts';
 import { lineColorVar } from '../../styles/general';
@@ -8,16 +9,18 @@ import type { Line } from '../../types/lines';
 /** Matches the chart legend's "25%+ off" band, so the callout and the plot agree. */
 const BEHIND_SCHEDULE_RATIO = 1.25;
 
-const TIME_WINDOWS = [
-  { label: 'the morning peak', start: 6, end: 10 },
-  { label: 'midday', start: 10, end: 15 },
-  { label: 'the evening peak', start: 15, end: 19 },
-  { label: 'the evening', start: 19, end: 24 },
-  { label: 'the early morning', start: 0, end: 6 },
+type TimeWindow = 'morningPeak' | 'midday' | 'eveningPeak' | 'evening' | 'earlyMorning';
+
+const TIME_WINDOWS: { key: TimeWindow; start: number; end: number }[] = [
+  { key: 'morningPeak', start: 6, end: 10 },
+  { key: 'midday', start: 10, end: 15 },
+  { key: 'eveningPeak', start: 15, end: 19 },
+  { key: 'evening', start: 19, end: 24 },
+  { key: 'earlyMorning', start: 0, end: 6 },
 ];
 
 const windowFor = (hour: number) =>
-  TIME_WINDOWS.find((window) => hour >= window.start && hour < window.end)?.label;
+  TIME_WINDOWS.find((window) => hour >= window.start && hour < window.end)?.key;
 
 interface DelayInsightProps {
   data: SingleDayDataPoint[];
@@ -39,6 +42,7 @@ export const DelayInsight: React.FC<DelayInsightProps> = ({
   subject,
   line,
 }) => {
+  const { t } = useTranslation();
   const insight = React.useMemo(() => {
     const behind = data.filter((point) => {
       const benchmark = point[benchmarkField];
@@ -48,7 +52,7 @@ export const DelayInsight: React.FC<DelayInsightProps> = ({
     });
     if (behind.length === 0) return undefined;
 
-    const counts = new Map<string, number>();
+    const counts = new Map<TimeWindow, number>();
     behind.forEach((point) => {
       const label = windowFor(dayjs(point[PointFieldKeys.depDt]).hour());
       if (label) counts.set(label, (counts.get(label) ?? 0) + 1);
@@ -61,7 +65,15 @@ export const DelayInsight: React.FC<DelayInsightProps> = ({
 
   if (!insight) return null;
 
-  const trips = insight.count === 1 ? 'trip' : 'trips';
+  const { count } = insight;
+  const concentrated: TimeWindow | undefined = insight.concentrated;
+  const sentence = subject
+    ? concentrated
+      ? 'notices.delayInsight.subjectDuring'
+      : 'notices.delayInsight.subject'
+    : concentrated
+      ? 'notices.delayInsight.during'
+      : 'notices.delayInsight.summary';
   return (
     <div
       style={lineColorVar(line)}
@@ -71,12 +83,16 @@ export const DelayInsight: React.FC<DelayInsightProps> = ({
         !
       </span>
       <span className="text-[12.5px] leading-snug text-stone-700">
-        {subject ? `${subject} had ` : 'There were '}
-        <b className="font-semibold">
-          {insight.count} {trips}
-        </b>{' '}
-        more than 25% behind schedule today
-        {insight.concentrated ? `, mostly during ${insight.concentrated}` : ''}.
+        <Trans
+          t={t}
+          i18nKey={sentence}
+          count={count}
+          values={{
+            subject,
+            window: concentrated && t(`notices.delayInsight.windows.${concentrated}`),
+          }}
+          components={{ b: <b className="font-semibold" /> }}
+        />
       </span>
     </div>
   );

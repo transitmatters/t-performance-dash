@@ -3,10 +3,16 @@ import { Slot } from 'radix-ui';
 
 import { ChevronRightIcon, MoreHorizontalIcon } from 'lucide-react';
 import { cn } from '@/common/utils/cn';
+import { i18n } from '@/common/i18n';
 
 function Breadcrumb({ className, ...props }: React.ComponentProps<'nav'>) {
   return (
-    <nav aria-label="breadcrumb" data-slot="breadcrumb" className={cn(className)} {...props} />
+    <nav
+      aria-label={i18n.t('ui.breadcrumb')}
+      data-slot="breadcrumb"
+      className={cn(className)}
+      {...props}
+    />
   );
 }
 
@@ -88,7 +94,7 @@ function BreadcrumbEllipsis({ className, ...props }: React.ComponentProps<'span'
       {...props}
     >
       <MoreHorizontalIcon />
-      <span className="sr-only">More</span>
+      <span className="sr-only">{i18n.t('ui.more')}</span>
     </span>
   );
 }

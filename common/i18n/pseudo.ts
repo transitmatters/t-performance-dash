@@ -1,16 +1,15 @@
-import type { PostProcessorModule } from 'i18next';
-
-// Dev-only pseudo-locale: every translated string renders accented and bracketed
-// ("[Śļöŵ žöñéš]"), so any plain English left on screen is a string that wasn't extracted.
-// Turn it on with localStorage.setItem('tm-lng', 'pseudo') and reload.
+// Dev-only pseudo-locale: every catalog string renders accented and bracketed ("[Śļöŵ žöñéš]"),
+// so any plain English left on screen wasn't extracted. Interpolated values (station names, numbers)
+// stay plain, since only the catalog is transformed. Turn it on with
+// localStorage.setItem('tm-lng', 'pseudo') and reload.
 export const LANGUAGE_STORAGE_KEY = 'tm-lng';
 export const PSEUDO_LANGUAGE = 'pseudo';
 
 const PLAIN = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const ACCENTED = Array.from('áƀçðéƒĝĥíĵķļɱñöþǫŕšţúṽŵẋýžÁƁÇÐÉƑĜĤÍĴĶĻṀÑÖÞǪŔŠŢÚṼŴẊÝŽ');
 
-// Markup that <Trans> parses (`<1>`, `<link>`) and HTML entities must survive untouched.
-const PROTECTED = /(<[^>]*>|&\w+;)/;
+// Placeholders, <Trans> markup (`<link>`, `<1>`) and HTML entities must survive untouched.
+const PROTECTED = /(\{\{[^}]*\}\}|<[^>]*>|&\w+;)/;
 
 export const pseudoLocalize = (text: string) =>
   `[${text
@@ -18,11 +17,15 @@ export const pseudoLocalize = (text: string) =>
     .map((part, i) => (i % 2 ? part : part.replace(/[a-zA-Z]/g, (c) => ACCENTED[PLAIN.indexOf(c)])))
     .join('')}]`;
 
-export const pseudoPostProcessor: PostProcessorModule = {
-  type: 'postProcessor',
-  name: PSEUDO_LANGUAGE,
-  process: (value: string) => pseudoLocalize(value),
-};
+type Catalog = { [key: string]: string | Catalog };
+
+export const pseudoLocalizeCatalog = (catalog: Catalog): Catalog =>
+  Object.fromEntries(
+    Object.entries(catalog).map(([key, value]) => [
+      key,
+      typeof value === 'string' ? pseudoLocalize(value) : pseudoLocalizeCatalog(value),
+    ])
+  );
 
 export const isPseudoLocaleEnabled = () => {
   if (!import.meta.env.DEV || typeof window === 'undefined') return false;

@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay, faCalendarWeek } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 import {
   buttonHighlightFocus,
   lineColorDarkBackground,
@@ -24,6 +25,7 @@ interface DateSelectionProps {
 }
 
 export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) => {
+  const { t } = useTranslation();
   const { line, page, tab, query } = useDelimitatedRoute();
   const [range, setRange] = useState<boolean>(type !== 'single');
   const [open, setOpen] = useState<boolean>(false);
@@ -75,7 +77,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
             className="pr-1 text-white"
           />
           <p className="truncate">
-            {datePreset && presets[datePreset] ? presets[datePreset].name : 'Custom'}
+            {datePreset && presets[datePreset] ? presets[datePreset].name : t('datePresets.custom')}
           </p>
         </PopoverTrigger>
 

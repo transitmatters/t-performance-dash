@@ -2,5 +2,483 @@
   "chartUnits": {
     "minutes": "Minutes",
     "mph": "MPH"
+  },
+  "lines": {
+    "red": "Red Line",
+    "orange": "Orange Line",
+    "green": "Green Line",
+    "blue": "Blue Line",
+    "mattapan": "Mattapan Line",
+    "bus": "Buses",
+    "commuterRail": "Commuter Rail",
+    "ferry": "Ferry",
+    "theRide": "The RIDE"
+  },
+  "commuterRailLines": {
+    "CR-Fitchburg": "Fitchburg Line",
+    "CR-Franklin": "Franklin Line",
+    "CR-Greenbush": "Greenbush Line",
+    "CR-Haverhill": "Haverhill Line",
+    "CR-Lowell": "Lowell Line",
+    "CR-Worcester": "Worcester Line",
+    "CR-Fairmount": "Fairmount Line",
+    "CR-Kingston": "Kingston/Plymouth Line",
+    "CR-Middleborough": "Middleborough Line",
+    "CR-NewBedford": "Fall River/New Bedford Line",
+    "CR-Needham": "Needham Line",
+    "CR-Newburyport": "Newburyport/Rockport Line",
+    "CR-Providence": "Providence/Stoughton Line"
+  },
+  "ferryLines": {
+    "Boat-F1": "Hingham Ferry",
+    "Boat-F2H": "Hingham/Hull Ferry",
+    "Boat-F4": "Charlestown Ferry",
+    "Boat-F6": "Winthrop Ferry",
+    "Boat-F7": "Quincy Ferry",
+    "Boat-F10": "Harbor Loop Ferry",
+    "Boat-EastBoston": "East Boston Ferry",
+    "Boat-Lynn": "Lynn Ferry"
+  },
+  "pages": {
+    "landing": {
+      "name": "Home"
+    },
+    "singleTrips": {
+      "name": "Trips",
+      "title": "Trips"
+    },
+    "multiTrips": {
+      "name": "Multi-day trips",
+      "title": "Multi-day trips"
+    },
+    "overview": {
+      "name": "Line overview"
+    },
+    "speed": {
+      "name": "Speed"
+    },
+    "fleet": {
+      "name": "Fleet"
+    },
+    "predictions": {
+      "name": "Predictions"
+    },
+    "service": {
+      "name": "Service"
+    },
+    "delays": {
+      "name": "Delays"
+    },
+    "slowzones": {
+      "name": "Slow zones"
+    },
+    "systemSlowzones": {
+      "name": "Slow zones"
+    },
+    "systemServiceAndRidership": {
+      "name": "Service & Ridership"
+    },
+    "ridership": {
+      "name": "Ridership"
+    },
+    "reliability": {
+      "name": "Reliability"
+    },
+    "speedmap": {
+      "name": "Speed map",
+      "title": "Bus speed map"
+    },
+    "leaderboard": {
+      "name": "Leaderboard",
+      "title": "Bus speed leaderboard"
+    }
+  },
+  "dateSelection": {
+    "singleDay": "Single Day",
+    "range": "Range"
+  },
+  "datePresets": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "lastWeekday": "Last {{weekday}}",
+    "thirtyDaysAgo": "30 days ago",
+    "oneYearAgo": "One year ago",
+    "firstOfYear": "First of {{year}}",
+    "pastWeek": "Past week",
+    "pastMonth": "Past month",
+    "pastYear": "Past year",
+    "allTime": "All time",
+    "custom": "Custom"
+  },
+  "charts": {
+    "departure": {
+      "schedule": {
+        "under50": "50%+ under schedule",
+        "under25": "25%+ under schedule",
+        "over25": "25%+ over schedule",
+        "over50": "50%+ over schedule",
+        "over100": "100%+ over schedule"
+      },
+      "benchmark": {
+        "under50": "50%+ under benchmark",
+        "under25": "25%+ under benchmark",
+        "over25": "25%+ over benchmark",
+        "over50": "50%+ over benchmark",
+        "over100": "100%+ over benchmark"
+      }
+    },
+    "actual": "Actual",
+    "tmBenchmark": "TransitMatters Benchmark",
+    "mbtaBenchmark": "MBTA Benchmark",
+    "temperature": "Temperature",
+    "vehicleNumbers": "Vehicle Numbers: {{numbers}}",
+    "vehicleNumber": "Vehicle Number: {{number}}",
+    "vehicleLabel": "Vehicle Label: {{label}}",
+    "noDateSelected": "No date selected",
+    "trend": "Trend",
+    "percentile25": "25th percentile",
+    "percentile75": "75th percentile",
+    "dailyLow": "Daily low",
+    "dailyHigh": "Daily high",
+    "dailyMean": "Daily mean",
+    "legend": {
+      "compareToTm": "Compare to <line></line> TransitMatters benchmark:",
+      "compareToMbta": "Compare to <line></line> MBTA benchmark:",
+      "severity": {
+        "onTime": "On time",
+        "off25": "25%+ off",
+        "off50": "50%+ off",
+        "off100": "100%+ off"
+      },
+      "median": "Median",
+      "interquartileRange": "Interquartile range",
+      "trendline": "Trendline"
+    },
+    "noData": "No data",
+    "weekOf": "Week of {{label}}",
+    "axis": {
+      "time": "Time",
+      "date": "Date",
+      "month": "Month"
+    },
+    "roundTripHeadways": "({{minutes}}m headways)"
+  },
+  "units": {
+    "sec": "sec",
+    "min": "min",
+    "hrs": "hrs",
+    "secondsShort": "s",
+    "minutesShort": "m",
+    "hoursShort": "h",
+    "duration": {
+      "seconds": "{{s}}s",
+      "minutesSeconds": "{{m}}m {{s}}s",
+      "hoursMinutes": "{{h}}h {{m}}m"
+    },
+    "zones": "zones",
+    "roundTrips": "Round trips",
+    "mph": "MPH",
+    "fareValidations": "Fare validations"
+  },
+  "stats": {
+    "average": "Average",
+    "median": "Median",
+    "p10": "10%",
+    "p90": "90%",
+    "min": "Min",
+    "max": "Max",
+    "bunchedTrips": "Bunched Trips",
+    "onTimeTrips": "On Time Trips",
+    "onTime": "On Time",
+    "vsWeekendsHolidays": "weekends & holidays",
+    "vsWeekdays": "weekdays",
+    "p10ToP90": "10th – 90th pctl",
+    "comparison": {
+      "same": "About the same as {{label}}",
+      "higher": "{{delta}} higher than {{label}}",
+      "lower": "{{delta}} lower than {{label}}",
+      "percentagePoints": "{{value}}pp"
+    },
+    "faster": "Faster",
+    "slower": "Slower"
+  },
+  "app": {
+    "name": "Data Dashboard",
+    "orgName": "TransitMatters",
+    "pageTitle": "{{page}} | Data Dashboard"
+  },
+  "meta": {
+    "siteName": "TransitMatters Data Dashboard",
+    "pages": {
+      "speed": {
+        "title": "Speed",
+        "inSentence": "speed"
+      },
+      "service": {
+        "title": "Service",
+        "inSentence": "service"
+      },
+      "predictions": {
+        "title": "Predictions",
+        "inSentence": "predictions"
+      },
+      "delays": {
+        "title": "Delays",
+        "inSentence": "delays"
+      },
+      "slowzones": {
+        "title": "Slow Zones",
+        "inSentence": "slow zones"
+      },
+      "ridership": {
+        "title": "Ridership",
+        "inSentence": "ridership"
+      },
+      "reliability": {
+        "title": "Reliability",
+        "inSentence": "reliability"
+      },
+      "fleet": {
+        "title": "Fleet",
+        "inSentence": "fleet"
+      },
+      "leaderboard": {
+        "title": "Leaderboard",
+        "inSentence": "leaderboard"
+      },
+      "speedmap": {
+        "title": "Speed Map",
+        "inSentence": "speed map"
+      },
+      "opensource": {
+        "title": "Open Source",
+        "inSentence": "open source"
+      },
+      "trips": {
+        "title": "Trips",
+        "inSentence": "trips"
+      },
+      "multiTrips": {
+        "title": "Multi-day Trips",
+        "inSentence": "multi-day trips"
+      }
+    },
+    "performance": "performance",
+    "description": {
+      "default": "Explore MBTA subway, commuter rail and bus performance data with the TransitMatters Data Dashboard.",
+      "linePage": "{{line}} {{page}} data on the TransitMatters Data Dashboard.",
+      "trip": "{{trip}} on the {{line}}, from the TransitMatters Data Dashboard.",
+      "tripOnDate": "{{trip}} on {{date}} on the {{line}}, from the TransitMatters Data Dashboard.",
+      "tripDateRange": "{{trip}} from {{startDate}} to {{endDate}} on the {{line}}, from the TransitMatters Data Dashboard.",
+      "tripSince": "{{trip}} since {{startDate}} on the {{line}}, from the TransitMatters Data Dashboard."
+    },
+    "og": {
+      "systemwide": "Systemwide",
+      "overview": "Overview",
+      "tagline": "MBTA subway, bus and commuter rail performance"
+    }
+  },
+  "chartExport": {
+    "titles": {
+      "headways": "Headways",
+      "traveltimes": "Travel Times",
+      "dwells": "Dwells",
+      "speed": "Speed",
+      "ridership": "Ridership",
+      "predictions": "Arrival Predictions",
+      "service": "Service"
+    },
+    "subtitles": {
+      "headways": "Time between trains",
+      "traveltimes": "Time between stops",
+      "dwells": "Time spent at station",
+      "speed": "Average speed between stops"
+    }
+  },
+  "dayFilter": {
+    "all": "All days",
+    "weekdays": "Weekdays",
+    "weekendsHolidays": "Weekends & holidays",
+    "weekday": "Weekday",
+    "weekendHoliday": "Weekend/holiday"
+  },
+  "dates": {
+    "today": "Today"
+  },
+  "status": {
+    "loading": "Loading...",
+    "loadingChart": "Loading chart",
+    "loadingChartData": "Loading chart data…"
+  },
+  "location": {
+    "fromTo": "<from>{{from}}</from><connector>to</connector><to>{{to}}</to>",
+    "fromDirection": "<from>{{from}}</from><connector>{{direction}}</connector>"
+  },
+  "directions": {
+    "northbound": "northbound",
+    "southbound": "southbound",
+    "eastbound": "eastbound",
+    "westbound": "westbound",
+    "inbound": "inbound",
+    "outbound": "outbound"
+  },
+  "notFound": {
+    "documentTitle": "Data Dashboard - 404",
+    "heading": "Sorry, we can't find that page",
+    "returnHome": "Return to home"
+  },
+  "banners": {
+    "cip": "🚨 The MBTA's 5-year Capital Investment Plan needs your input — Take action now!"
+  },
+  "alerts": {
+    "buttonLabel": "Service alerts affecting this trip ({{total}})",
+    "count_one": "{{count}} alert",
+    "count_other": "{{count}} alerts",
+    "title": "Alerts",
+    "remove": "Remove",
+    "addToChart": "Add to chart"
+  },
+  "buttons": {
+    "copyLink": {
+      "label": "Copy a link to this chart's current view",
+      "idle": "Copy link",
+      "copied": "Copied",
+      "failed": "Couldn't copy",
+      "copiedAnnouncement": "Link copied to clipboard",
+      "failedAnnouncement": "Could not copy the link; copy it from the address bar instead"
+    },
+    "donate": "Make a donation",
+    "downloadCsv": "Download this chart's data as CSV",
+    "saveImage": "Save chart as an image"
+  },
+  "routes": {
+    "busRoute": "Route {{route}}",
+    "select": "Select route",
+    "search": "Search routes...",
+    "noMatch": "No matching route."
+  },
+  "tripMode": {
+    "singleDay": "Single day",
+    "dateRange": "Date range",
+    "label": "Trip view"
+  },
+  "widgets": {
+    "nextStatistic": "Next Statistic"
+  },
+  "greenLineBranches": {
+    "Green-B": "B Branch",
+    "Green-C": "C Branch",
+    "Green-D": "D Branch",
+    "Green-E": "E Branch"
+  },
+  "stations": {
+    "changeStart": "Start station: {{station}}. Change it.",
+    "changeEnd": "End station: {{station}}. Change it.",
+    "search": "Search stations...",
+    "noMatch": "No matching station.",
+    "bikeParking": "Enclosed Bicycle Parking",
+    "accessible": "Wheelchair Accessible",
+    "to": "to",
+    "swap": "Swap stations",
+    "swapLabel": "Swap direction: show {{from}} to {{to}}"
+  },
+  "theme": {
+    "switchToDark": "Switch to dark theme",
+    "switchToLight": "Switch to light theme",
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode"
+  },
+  "notices": {
+    "dismiss": "Dismiss",
+    "betaData": {
+      "title": "How Commuter Rail data is collected",
+      "collection": "TransitMatters collects this data using the <v3Api>MBTA's V3 API</v3Api>. It isn't cleaned or filtered before display, so we may occasionally miss trips or stops. Confirm anything you see here against official MBTA sources when possible. See our <github>GitHub repository</github> for technical details.",
+      "benchmarks": "Benchmarks start on October 4, 2026, when we began comparing each train to its own schedule. Before then they were often another train's, so we don't show them."
+    },
+    "betaRum": {
+      "text": "This is our internal beta. It collects extra usage and performance data with Datadog to help us find bugs. The public dashboard doesn’t."
+    },
+    "busData": "Bus data isn't guaranteed to be complete for any stop or date, which may affect headway figures in particular.",
+    "crBetaAccuracy": "Commuter Rail data is in beta — headways and travel times may be incomplete or inaccurate.",
+    "sameDay": "Data from today may be incomplete — it arrives with a delay of up to two hours.",
+    "terminus": "Data collection at terminus stations can be incomplete, which may affect travel time and dwell figures in particular.",
+    "gobbleData": "For these recent dates, data is collected via the <v3Api>MBTA's V3 API</v3Api> and isn't cleaned or filtered — expect reduced accuracy. Official MBTA data is shown once available.",
+    "greenLineSlowZones": {
+      "title": "Green Line slow zones are less precise",
+      "body": "Green Line service is more variable than on the heavy rail lines, and much of it runs on the street rather than on a <gradeSeparated>grade-separated</gradeSeparated> right-of-way. Slow zone detection here is more prone to error than on other lines."
+    },
+    "bnrd": {
+      "default": "This route was upgraded as part of Better Bus Network (Bus Network Redesign).",
+      "route40_50": "The combined Route 40/50 that runs on weekday evenings, Saturday evenings, and Sunday will be discontinued.",
+      "route85": "The CT2 and 85 will combine to be the new Route 85, with new service extending to Assembly.",
+      "route86": "This route was shortened to run between Reservoir and Harvard Square, with improved midday, evening, and weekend service.",
+      "route87": "All Route 87 trips will travel between Lechmere and Arlington Center. The route pattern that ends at Clarendon Hill will be discontinued.",
+      "route104": "This route now offers new crosstown service between Malden Center and Logan Airport, with buses every 15 minutes or better.",
+      "route109": "This route now extends to Harvard Square and runs more frequently, with service every 15 minutes or better.",
+      "route110": "This route now offers improved frequency between Wellington and Wonderland, with service every 15 minutes.",
+      "route116": "This route now combines former Routes 116/117 with improved frequency, running every 15 minutes or better.",
+      "route350": "All Route 350 trips will now serve Burlington Mall Rd.",
+      "route65": "Route 65 was restructured to run between Brighton Center and Ruggles via the Longwood Medical Area, replacing its former Kenmore terminus, with improved frequency and span of service.",
+      "route60_65Legacy": "Routes 60 and 65 were previously combined for display here. Route 65 was restructured to run between Brighton Center and Ruggles via the Longwood Medical Area; Route 60 is now shown separately.",
+      "route220": "Route 220 now serves only Hingham Depot (the Hingham Center pattern was discontinued) and Route 222 now serves only Lovell Corners (the East Weymouth pattern was discontinued), both with improved frequency.",
+      "route220Legacy": "This reflects the combined Route 220/221/222 pattern before Sept. 6, 2026. Route 220 dropped its Hingham Center pattern and Route 222 dropped its East Weymouth pattern; see the current Route 220/221/222 for the present-day pattern.",
+      "route434": "Outbound Route 435 trips now end at Liberty Tree Mall instead of continuing to Salem Depot.",
+      "route434Legacy": "This reflects the combined Route 434/435/436 pattern before Sept. 6, 2026, when Route 435 still continued past Liberty Tree Mall to Salem Depot; see the current Route 434/435/436 for the present-day pattern.",
+      "route465": "Route 465 was restored as a pilot route between Salem Depot and Danvers Square via Liberty Tree Mall."
+    },
+    "readMore": "Read more",
+    "aboutThisData": "About this data",
+    "delayInsight": {
+      "summary_one": "There were <b>{{count}} trip</b> more than 25% behind schedule today.",
+      "summary_other": "There were <b>{{count}} trips</b> more than 25% behind schedule today.",
+      "during_one": "There were <b>{{count}} trip</b> more than 25% behind schedule today, mostly during {{window}}.",
+      "during_other": "There were <b>{{count}} trips</b> more than 25% behind schedule today, mostly during {{window}}.",
+      "subject_one": "{{subject}} had <b>{{count}} trip</b> more than 25% behind schedule today.",
+      "subject_other": "{{subject}} had <b>{{count}} trips</b> more than 25% behind schedule today.",
+      "subjectDuring_one": "{{subject}} had <b>{{count}} trip</b> more than 25% behind schedule today, mostly during {{window}}.",
+      "subjectDuring_other": "{{subject}} had <b>{{count}} trips</b> more than 25% behind schedule today, mostly during {{window}}.",
+      "windows": {
+        "morningPeak": "the morning peak",
+        "midday": "midday",
+        "eveningPeak": "the evening peak",
+        "evening": "the evening",
+        "earlyMorning": "the early morning"
+      }
+    },
+    "error": {
+      "timeoutTitle": "The response took too long",
+      "title": "Couldn't load this chart",
+      "timeoutHint": "Try a shorter date range.",
+      "hint": "The data service did not respond. This is usually temporary.",
+      "retrying": "Retrying…",
+      "retry": "Try again"
+    },
+    "noData": {
+      "title": "No data available",
+      "lineHint": "Try another date range.",
+      "hint": "Try another station pair or date range."
+    },
+    "award": {
+      "both": "“Winner” of the {{year}} Pokey and Schleppie Awards!",
+      "pokey": "“Winner” of the {{year}} Pokey Award!",
+      "schleppie": "“Winner” of the {{year}} Schleppie Award!"
+    }
+  },
+  "ui": {
+    "more": "More",
+    "close": "Close",
+    "sidebar": {
+      "title": "Sidebar",
+      "description": "Displays the mobile sidebar.",
+      "toggle": "Toggle Sidebar"
+    },
+    "command": {
+      "title": "Command Palette",
+      "description": "Search for a command to run..."
+    },
+    "breadcrumb": "breadcrumb"
+  },
+  "openSource": {
+    "documentTitle": "Data Dashboard - Open Source Licenses"
   }
 }

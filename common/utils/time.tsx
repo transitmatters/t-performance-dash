@@ -2,6 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 
+import { i18n } from '../i18n';
 import { WidgetText } from '../components/widgets/internal/WidgetText';
 import { UnitText } from '../components/widgets/internal/UnitText';
 
@@ -11,11 +12,11 @@ export const getTimeUnit = (value: number) => {
   const secondsAbs = Math.abs(value);
   switch (true) {
     case secondsAbs < 100:
-      return 'sec';
+      return i18n.t('units.sec');
     case secondsAbs < 3600:
-      return 'min';
+      return i18n.t('units.min');
     default:
-      return 'hrs';
+      return i18n.t('units.hrs');
   }
 };
 
@@ -27,25 +28,25 @@ export const getFormattedTimeValue = (value: number, isLarge?: boolean) => {
       return (
         <p className="text-sm">
           <WidgetText isLarge={isLarge} text={absValue.toFixed(0)} />
-          <UnitText isLarge={isLarge} text={'s'} />
+          <UnitText isLarge={isLarge} text={i18n.t('units.secondsShort')} />
         </p>
       );
     case absValue < 3600:
       return (
         <p className="text-sm">
           <WidgetText isLarge={isLarge} text={duration.format('m')} />
-          <UnitText isLarge={isLarge} text={'m'} />{' '}
+          <UnitText isLarge={isLarge} text={i18n.t('units.minutesShort')} />{' '}
           <WidgetText isLarge={isLarge} text={duration.format('s').padStart(2, '0')} />
-          <UnitText isLarge={isLarge} text={'s'} />
+          <UnitText isLarge={isLarge} text={i18n.t('units.secondsShort')} />
         </p>
       );
     default:
       return (
         <p className="text-sm">
           <WidgetText isLarge={isLarge} text={duration.format('H')} />
-          <UnitText isLarge={isLarge} text={'h'} />{' '}
+          <UnitText isLarge={isLarge} text={i18n.t('units.hoursShort')} />{' '}
           <WidgetText isLarge={isLarge} text={duration.format('m').padStart(2, '0')} />
-          <UnitText isLarge={isLarge} text={'m'} />
+          <UnitText isLarge={isLarge} text={i18n.t('units.minutesShort')} />
         </p>
       );
   }
@@ -58,13 +59,22 @@ export const getFormattedTimeString = (value: number, unit: 'minutes' | 'seconds
   const hoursDuration = duration.asHours();
   switch (true) {
     case absValue < 100:
-      return `${absValue}s`;
+      return i18n.t('units.duration.seconds', { s: absValue });
     case absValue < 3600:
-      return `${duration.format('m')}m ${duration.format('s').padStart(2, '0')}s`;
+      return i18n.t('units.duration.minutesSeconds', {
+        m: duration.format('m'),
+        s: duration.format('s').padStart(2, '0'),
+      });
     case absValue > 86400:
-      return `${hoursDuration.toFixed(0)}h ${duration.format('m').padStart(2, '0')}m`;
+      return i18n.t('units.duration.hoursMinutes', {
+        h: hoursDuration.toFixed(0),
+        m: duration.format('m').padStart(2, '0'),
+      });
     default:
-      return `${duration.format('H')}h ${duration.format('m').padStart(2, '0')}m`;
+      return i18n.t('units.duration.hoursMinutes', {
+        h: duration.format('H'),
+        m: duration.format('m').padStart(2, '0'),
+      });
   }
 };
 

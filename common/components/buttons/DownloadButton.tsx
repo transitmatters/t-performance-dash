@@ -2,6 +2,7 @@ import { CSVLink } from 'react-csv';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 import type { Location } from '../../types/charts';
 import { useDelimitatedRoute } from '../../utils/router';
 import { getCsvFilename } from '../../utils/csv';
@@ -24,12 +25,13 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
   location,
   endDate,
 }) => {
+  const { t } = useTranslation();
   const { line } = useDelimitatedRoute();
   return (
     <CSVLink
       className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'csv-link' })}
       data={data}
-      aria-label="Download this chart's data as CSV"
+      aria-label={t('buttons.downloadCsv')}
       filename={getCsvFilename({
         datasetName,
         includeBothStopsForLocation,

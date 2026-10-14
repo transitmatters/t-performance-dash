@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { CHART_COLORS } from '../../constants/colors';
 
 interface LegendProps {
@@ -24,27 +25,33 @@ export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio, usingTm
 };
 
 const SEVERITY_LEGEND = [
-  { label: 'On time', color: CHART_COLORS.GREEN },
-  { label: '25%+ off', color: CHART_COLORS.YELLOW },
-  { label: '50%+ off', color: CHART_COLORS.RED },
-  { label: '100%+ off', color: CHART_COLORS.PURPLE },
-];
+  { key: 'onTime', color: CHART_COLORS.GREEN },
+  { key: 'off25', color: CHART_COLORS.YELLOW },
+  { key: 'off50', color: CHART_COLORS.RED },
+  { key: 'off100', color: CHART_COLORS.PURPLE },
+] as const;
 
 const LegendSingle: React.FC<LegendProps> = ({ usingTmBenchmark = false }) => {
+  const { t } = useTranslation();
   return (
     <>
       <p className="flex flex-row items-center gap-x-1 italic">
-        Compare to
-        <span className="inline-block h-0 w-3 border-t-2 border-muted-foreground align-middle" />
-        {usingTmBenchmark ? 'TransitMatters' : 'MBTA'} benchmark:
+        <Trans
+          i18nKey={usingTmBenchmark ? 'charts.legend.compareToTm' : 'charts.legend.compareToMbta'}
+          components={{
+            line: (
+              <span className="inline-block h-0 w-3 border-t-2 border-muted-foreground align-middle" />
+            ),
+          }}
+        />
       </p>
-      {SEVERITY_LEGEND.map(({ label, color }) => (
-        <p key={label} className="flex flex-row items-center gap-x-1.5">
+      {SEVERITY_LEGEND.map(({ key, color }) => (
+        <p key={key} className="flex flex-row items-center gap-x-1.5">
           <span
             className="inline-block h-2.5 w-2.5 rounded-full ring-1 ring-foreground/25"
             style={{ backgroundColor: color }}
           />
-          {label}
+          {t(`charts.legend.severity.${key}`)}
         </p>
       ))}
     </>
@@ -55,20 +62,22 @@ export const LegendLongTerm: React.FC<LegendLongTermProps> = ({
   isTrendlineVisible,
   onToggleTrendline,
 }) => {
+  const { t } = useTranslation();
   return (
     <div className="flex w-full flex-row items-baseline gap-2 p-1 text-left text-xs text-muted-foreground sm:gap-4">
       <p>
-        <span className={'mr-1 inline-block h-2.5 w-2.5 rounded-full bg-foreground'}></span> Median
+        <span className={'mr-1 inline-block h-2.5 w-2.5 rounded-full bg-foreground'}></span>{' '}
+        {t('charts.legend.median')}
       </p>
       <p>
         <span className={'mr-1 inline-block h-2.5 w-2.5 rounded-xs bg-muted-foreground/50'}></span>{' '}
-        Interquartile range
+        {t('charts.legend.interquartileRange')}
       </p>
       <button onClick={onToggleTrendline} className="flex items-center hover:opacity-80">
         <span
           className={`mr-1 inline-block h-2.5 w-2.5 border-2 border-dashed ${isTrendlineVisible ? `border-tm-red` : 'border-muted-foreground/50'}`}
         />
-        Trendline
+        {t('charts.legend.trendline')}
       </button>
     </div>
   );

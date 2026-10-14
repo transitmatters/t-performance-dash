@@ -1,5 +1,6 @@
 import type { Chart } from 'chart.js';
 import dayjs from 'dayjs';
+import { i18n } from '../i18n';
 import type { Location } from '../types/charts';
 import { LINE_COLORS, LINE_COLORS_ON_DARK } from '../constants/colors';
 import { SMALL_DATE_FORMAT } from '../constants/dates';
@@ -42,22 +43,22 @@ const getImageTheme = (): ImageTheme =>
   useThemeStore.getState().theme === 'dark' ? IMAGE_DARK : IMAGE_LIGHT;
 
 const CHART_TITLES: Record<string, string> = {
-  headways: 'Headways',
-  traveltimes: 'Travel Times',
-  dwells: 'Dwells',
-  speeds: 'Speed',
-  speed: 'Speed',
-  ridership: 'Ridership',
-  'ridership predictions': 'Arrival Predictions',
-  service: 'Service',
+  headways: i18n.t('chartExport.titles.headways'),
+  traveltimes: i18n.t('chartExport.titles.traveltimes'),
+  dwells: i18n.t('chartExport.titles.dwells'),
+  speeds: i18n.t('chartExport.titles.speed'),
+  speed: i18n.t('chartExport.titles.speed'),
+  ridership: i18n.t('chartExport.titles.ridership'),
+  'ridership predictions': i18n.t('chartExport.titles.predictions'),
+  service: i18n.t('chartExport.titles.service'),
 };
 
 const CHART_SUBTITLES: Record<string, string> = {
-  headways: 'Time between trains',
-  traveltimes: 'Time between stops',
-  dwells: 'Time spent at station',
-  speeds: 'Average speed between stops',
-  speed: 'Average speed between stops',
+  headways: i18n.t('chartExport.subtitles.headways'),
+  traveltimes: i18n.t('chartExport.subtitles.traveltimes'),
+  dwells: i18n.t('chartExport.subtitles.dwells'),
+  speeds: i18n.t('chartExport.subtitles.speed'),
+  speed: i18n.t('chartExport.subtitles.speed'),
 };
 
 export function getChartTitle(datasetName: string): string {

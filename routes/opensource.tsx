@@ -1,10 +1,12 @@
 import React from 'react';
 import { createFileRoute } from '@tanstack/react-router';
+import { useTranslation } from 'react-i18next';
 import licenses from '../common/constants/licenses/licenseInfos.json';
 import { Accordion } from '../common/components/accordion/Accordion';
 import { Layout } from '../common/layouts/layoutTypes';
 
 function OpenSource() {
+  const { t } = useTranslation();
   const licensesDisplays = Object.entries(licenses)
     .map(([library, license]) => {
       if (license.licenseText.length > 1) {
@@ -21,7 +23,7 @@ function OpenSource() {
 
   return (
     <div className="w-full">
-      <title>Data Dashboard - Open Source Licenses</title>
+      <title>{t('openSource.documentTitle')}</title>
       <Accordion contentList={licensesDisplays} />
     </div>
   );

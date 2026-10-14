@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Skeleton } from '../ui/skeleton';
 
 /**
@@ -8,12 +9,13 @@ import { Skeleton } from '../ui/skeleton';
  */
 export const ChartSkeleton: React.FC<{ isMobile?: boolean }> = ({ isMobile = false }) => {
   // Static, uneven heights: a plot silhouette rather than a row of identical bars.
+  const { t } = useTranslation();
   const bars = [45, 70, 38, 82, 56, 91, 64, 48, 75, 60, 86, 52];
 
   return (
     <div
       role="status"
-      aria-label="Loading chart"
+      aria-label={t('status.loadingChart')}
       className={`flex w-full flex-col justify-end gap-2 ${isMobile ? 'h-48' : 'h-60'}`}
     >
       <div className="flex flex-1 flex-row items-end gap-1.5 pt-2">
@@ -31,7 +33,7 @@ export const ChartSkeleton: React.FC<{ isMobile?: boolean }> = ({ isMobile = fal
           <Skeleton key={index} className="h-2.5 w-10" />
         ))}
       </div>
-      <span className="sr-only">Loading chart data…</span>
+      <span className="sr-only">{t('status.loadingChartData')}</span>
     </div>
   );
 };

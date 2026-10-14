@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDelimitatedRoute } from '../../utils/router';
 
 /**
@@ -6,16 +7,12 @@ import { useDelimitatedRoute } from '../../utils/router';
  * accordion (see TripDataNotes).
  */
 export const BusDataNotice: React.FC = () => {
+  const { t } = useTranslation();
   const { line, linePath } = useDelimitatedRoute();
 
   if (line !== 'line-bus' && linePath !== 'bus') {
     return null;
   }
 
-  return (
-    <p>
-      Bus data isn&apos;t guaranteed to be complete for any stop or date, which may affect headway
-      figures in particular.
-    </p>
-  );
+  return <p>{t('notices.busData')}</p>;
 };

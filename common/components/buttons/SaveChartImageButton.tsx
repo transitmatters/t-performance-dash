@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import type { Chart } from 'chart.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileImage } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 import type { Location } from '../../types/charts';
 import { useDelimitatedRoute } from '../../utils/router';
 import { Button } from '../ui/button';
@@ -27,6 +28,7 @@ export const SaveChartImageButton: React.FC<SaveChartImageButtonProps> = ({
   endDate,
   chartTitle,
 }) => {
+  const { t } = useTranslation();
   const { line } = useDelimitatedRoute();
 
   const handleClick = useCallback(() => {
@@ -56,7 +58,7 @@ export const SaveChartImageButton: React.FC<SaveChartImageButtonProps> = ({
   ]);
 
   return (
-    <Button variant="ghost" size="sm" onClick={handleClick} aria-label="Save chart as an image">
+    <Button variant="ghost" size="sm" onClick={handleClick} aria-label={t('buttons.saveImage')}>
       <FontAwesomeIcon icon={faFileImage} aria-hidden />
       PNG
     </Button>

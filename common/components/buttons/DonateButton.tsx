@@ -1,10 +1,12 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 import { Link } from '../general/Link';
 import { StarBorder } from '../StarBorder/StarBorder';
 
 export const DonateButton: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <StarBorder speed="10s">
       <Link
@@ -19,7 +21,7 @@ export const DonateButton: React.FC = () => {
               className="transition-transform duration-200 group-hover/donate:scale-125 group-hover/donate:text-tm-red"
             />
           </div>
-          <p className="group-hover/donate:text-tm-red">Make a donation</p>
+          <p className="group-hover/donate:text-tm-red">{t('buttons.donate')}</p>
         </div>
       </Link>
     </StarBorder>

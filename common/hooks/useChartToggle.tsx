@@ -1,4 +1,5 @@
 import React from 'react';
+import { i18n } from '../i18n';
 import { ButtonGroup } from '../components/general/ButtonGroup';
 import {
   Select,
@@ -105,12 +106,12 @@ export const useChartToggle = <K extends string, T extends string>(
 };
 
 export const DAY_FILTER_OPTIONS: ['all' | 'weekday' | 'weekend', string][] = [
-  ['all', 'All days'],
-  ['weekday', 'Weekdays'],
-  ['weekend', 'Weekends & holidays'],
+  ['all', i18n.t('dayFilter.all')],
+  ['weekday', i18n.t('dayFilter.weekdays')],
+  ['weekend', i18n.t('dayFilter.weekendsHolidays')],
 ];
 
 export const PEAK_TIME_OPTIONS: ['weekday' | 'weekend', string][] = [
-  ['weekday', 'Weekday'],
-  ['weekend', 'Weekend/holiday'],
+  ['weekday', i18n.t('dayFilter.weekday')],
+  ['weekend', i18n.t('dayFilter.weekendHoliday')],
 ];
