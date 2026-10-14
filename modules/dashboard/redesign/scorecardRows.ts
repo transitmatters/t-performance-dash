@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 
+import { i18n } from '../../../common/i18n';
 import { formatNumber } from '../../../common/i18n/format';
 import { useDeliveredTripMetrics } from '../../../common/api/hooks/tripmetrics';
 import { useRidershipData } from '../../../common/api/hooks/ridership';
@@ -61,8 +62,13 @@ const buildRow = (params: {
     unit: params.unit,
     deltaLabel:
       delta === null
-        ? 'Not enough data'
-        : `${delta > 0 ? '+' : ''}${params.formatValue(delta)} · ${sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse'}`,
+        ? i18n.t('dashboard:scorecard.notEnoughData')
+        : i18n.t(
+            `dashboard:scorecard.delta.${sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse'}`,
+            {
+              delta: `${delta > 0 ? '+' : ''}${params.formatValue(delta)}`,
+            }
+          ),
     // Compact form for narrow (mobile) columns: just the signed change — the badge color already
     // carries better/worse, so the word is redundant where space is tight.
     deltaValueLabel: delta === null ? '—' : `${delta > 0 ? '+' : ''}${params.formatValue(delta)}`,
@@ -103,11 +109,11 @@ export const useScorecardRows = (line: Line | undefined, lineShort: LineShort | 
         }));
       const speedRow = buildRow({
         key: 'speed',
-        label: 'Speed',
-        subtitle: 'Average, both directions',
+        label: i18n.t('dashboard:scorecard.speed.label'),
+        subtitle: i18n.t('dashboard:scorecard.speed.subtitle'),
         points: speedPoints,
         reducer: 'avg',
-        unit: 'mph',
+        unit: i18n.t('dashboard:scorecard.units.mph'),
         formatValue: (v) => v.toFixed(1),
         negligibleDelta: 0.1,
         higherIsBetter: true,
@@ -120,11 +126,11 @@ export const useScorecardRows = (line: Line | undefined, lineShort: LineShort | 
         .map((point) => ({ date: point.date, value: point.count }));
       const serviceRow = buildRow({
         key: 'service',
-        label: 'Service delivered',
-        subtitle: 'Round trips, daily average',
+        label: i18n.t('dashboard:scorecard.service.label'),
+        subtitle: i18n.t('dashboard:scorecard.service.subtitle'),
         points: servicePoints,
         reducer: 'avg',
-        unit: '/day',
+        unit: i18n.t('dashboard:scorecard.units.perDay'),
         formatValue: (v) => Math.round(v).toString(),
         negligibleDelta: 1,
         higherIsBetter: true,
@@ -140,11 +146,11 @@ export const useScorecardRows = (line: Line | undefined, lineShort: LineShort | 
       }));
       const ridershipRow = buildRow({
         key: 'ridership',
-        label: 'Ridership',
-        subtitle: 'Fare validations, daily average',
+        label: i18n.t('dashboard:scorecard.ridership.label'),
+        subtitle: i18n.t('dashboard:scorecard.ridership.subtitle'),
         points: ridershipPoints,
         reducer: 'avg',
-        unit: '/day',
+        unit: i18n.t('dashboard:scorecard.units.perDay'),
         formatValue: formatCompact,
         negligibleDelta: 50,
         higherIsBetter: true,
@@ -193,18 +199,20 @@ export const useScorecardRows = (line: Line | undefined, lineShort: LineShort | 
 
       built.push({
         key: 'slowzones',
-        label: 'Slow zones',
-        subtitle: 'Speed-restricted segments',
+        label: i18n.t('dashboard:scorecard.slowZones.label'),
+        subtitle: i18n.t('dashboard:scorecard.slowZones.subtitle'),
         formattedCurrent: `${currentCount}`,
         currentValue: currentCount,
         // "zones" (a plain count noun under the "This month" column), not "active" — the count is a
         // monthly figure, and "active" would imply a live/right-now reading.
         formatValue: (v) => Math.round(v).toString(),
-        unit: 'zones',
+        unit: i18n.t('dashboard:scorecard.units.zones'),
         deltaLabel:
           delta === 0
-            ? 'No change · flat'
-            : `${delta > 0 ? '+' : ''}${delta} · ${sentiment === 'good' ? 'better' : 'worse'}`,
+            ? i18n.t('dashboard:scorecard.noChange')
+            : i18n.t(`dashboard:scorecard.delta.${sentiment === 'good' ? 'better' : 'worse'}`, {
+                delta: `${delta > 0 ? '+' : ''}${delta}`,
+              }),
         deltaValueLabel: delta === 0 ? '0' : `${delta > 0 ? '+' : ''}${delta}`,
         deltaSentiment: sentiment,
         trend: monthlyCounts,

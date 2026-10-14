@@ -1,3 +1,4 @@
+import { i18n } from '../../common/i18n';
 import type { Line } from '../../common/types/lines';
 import type { FleetType } from '../fleet/constants/fleetTypes';
 import type { Direction, HeroStat, MetricId, Unit } from './types';
@@ -13,17 +14,14 @@ export const FREQUENCY_GOALS = {
 /** What a row measures against; each measure explains itself per mode. */
 export type RowMode = 'subway' | 'commuterRail' | 'frequentBus' | 'bus' | 'ferry';
 
-const WEEKDAY_WEIGHTING = 'Weekdays count five times as much as Saturday or Sunday.';
-const SCHEDULED_SERVICE =
-  'Scheduled trips per day (the 12-week median), compared with the most scheduled in any 12-week stretch at least 3 years ago.';
-const frequencyDefinition = (vehicle: string, minutes: number) =>
-  `Share of scheduled service hours, first trip to last, with a ${vehicle} at least every ${minutes} minutes. ${WEEKDAY_WEIGHTING}`;
-const BUS_FLEET =
-  'Share of bus trips run by battery-electric or hybrid buses over the last 4 weeks.';
+const SCHEDULED_SERVICE = i18n.t('home:definitions.scheduledService');
+const BUS_FLEET = i18n.t('home:definitions.busFleet');
 
 export interface MetricMethod {
   id: MetricId;
   label: string;
+  /** The label as it reads mid-sentence ("Held back by service and speed"). */
+  inSentence: string;
   /** Shown in a cell's detail; a mode with none isn't measured on this. */
   definitions: Partial<Record<RowMode, string>>;
   direction: Direction;
@@ -38,10 +36,10 @@ export interface MetricMethod {
 export const METRICS: Record<MetricId, MetricMethod> = {
   service: {
     id: 'service',
-    label: 'Service',
+    label: i18n.t('home:metrics.service.label'),
+    inSentence: i18n.t('home:metrics.service.inSentence'),
     definitions: {
-      subway:
-        'Trips run per day (the 12-week median), compared with the busiest 4-week stretch at least 3 years ago.',
+      subway: i18n.t('home:definitions.subwayService'),
       commuterRail: SCHEDULED_SERVICE,
       frequentBus: SCHEDULED_SERVICE,
       bus: SCHEDULED_SERVICE,
@@ -54,12 +52,17 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   },
   frequency: {
     id: 'frequency',
-    label: 'Frequency',
+    label: i18n.t('home:metrics.frequency.label'),
+    inSentence: i18n.t('home:metrics.frequency.inSentence'),
     definitions: {
-      subway: frequencyDefinition('train', FREQUENCY_GOALS.subway),
-      commuterRail: frequencyDefinition('train', FREQUENCY_GOALS.commuterRail),
-      frequentBus: frequencyDefinition('bus', FREQUENCY_GOALS.frequentBus),
-      bus: `${frequencyDefinition('bus', FREQUENCY_GOALS.bus)} Each route counts by its riders.`,
+      subway: i18n.t('home:definitions.frequencyTrain', { minutes: FREQUENCY_GOALS.subway }),
+      commuterRail: i18n.t('home:definitions.frequencyTrain', {
+        minutes: FREQUENCY_GOALS.commuterRail,
+      }),
+      frequentBus: i18n.t('home:definitions.frequencyBus', {
+        minutes: FREQUENCY_GOALS.frequentBus,
+      }),
+      bus: i18n.t('home:definitions.frequencyAllBus', { minutes: FREQUENCY_GOALS.bus }),
     },
     direction: 'higher',
     thresholds: [1, 0.9, 0.75],
@@ -68,10 +71,10 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   },
   speed: {
     id: 'speed',
-    label: 'Speed',
+    label: i18n.t('home:metrics.speed.label'),
+    inSentence: i18n.t('home:metrics.speed.inSentence'),
     definitions: {
-      subway:
-        'Median weekly average speed over 12 weeks, end to end including stops, compared with the fastest 4-week stretch at least 3 years ago.',
+      subway: i18n.t('home:definitions.speed'),
     },
     direction: 'higher',
     thresholds: [1, 0.95, 0.88],
@@ -80,9 +83,10 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   },
   slowZones: {
     id: 'slowZones',
-    label: 'Slow zones',
+    label: i18n.t('home:metrics.slowZones.label'),
+    inSentence: i18n.t('home:metrics.slowZones.inSentence'),
     definitions: {
-      subway: 'Average extra time per day that slow zones add to a trip, over the last 12 weeks.',
+      subway: i18n.t('home:definitions.slowZones'),
     },
     direction: 'lower',
     thresholds: [30, 60, 180],
@@ -91,11 +95,11 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   },
   fleet: {
     id: 'fleet',
-    label: 'Vehicles',
+    label: i18n.t('home:metrics.fleet.label'),
+    inSentence: i18n.t('home:metrics.fleet.inSentence'),
     definitions: {
-      subway:
-        'Age of the oldest cars still in regular service (at least 1% of cars over the last 4 weeks), counted from when that type was first built. Riders feel the oldest trains, not the average.',
-      commuterRail: 'Share of Commuter Rail service run with electric trains.',
+      subway: i18n.t('home:definitions.subwayFleet'),
+      commuterRail: i18n.t('home:definitions.commuterRailFleet'),
       frequentBus: BUS_FLEET,
       bus: BUS_FLEET,
     },
@@ -167,7 +171,7 @@ export interface RowConfig {
 export const ROWS: RowConfig[] = [
   {
     id: 'red',
-    label: 'Red Line',
+    label: i18n.t('home:rows.red'),
     group: 'core',
     line: 'line-red',
     mode: 'subway',
@@ -176,7 +180,7 @@ export const ROWS: RowConfig[] = [
   },
   {
     id: 'orange',
-    label: 'Orange Line',
+    label: i18n.t('home:rows.orange'),
     group: 'core',
     line: 'line-orange',
     mode: 'subway',
@@ -185,7 +189,7 @@ export const ROWS: RowConfig[] = [
   },
   {
     id: 'blue',
-    label: 'Blue Line',
+    label: i18n.t('home:rows.blue'),
     group: 'core',
     line: 'line-blue',
     mode: 'subway',
@@ -194,7 +198,7 @@ export const ROWS: RowConfig[] = [
   },
   {
     id: 'green',
-    label: 'Green Line',
+    label: i18n.t('home:rows.green'),
     group: 'core',
     line: 'line-green',
     mode: 'subway',
@@ -203,7 +207,7 @@ export const ROWS: RowConfig[] = [
   },
   {
     id: 'commuter-rail',
-    label: 'Commuter Rail',
+    label: i18n.t('home:rows.commuter-rail'),
     group: 'core',
     line: 'line-commuter-rail',
     mode: 'commuterRail',
@@ -212,7 +216,7 @@ export const ROWS: RowConfig[] = [
   },
   {
     id: 'frequent-bus',
-    label: 'Frequent Bus',
+    label: i18n.t('home:rows.frequent-bus'),
     group: 'core',
     line: 'line-bus',
     mode: 'frequentBus',
@@ -222,7 +226,7 @@ export const ROWS: RowConfig[] = [
   },
   {
     id: 'all-bus',
-    label: 'All Bus',
+    label: i18n.t('home:rows.all-bus'),
     group: 'core',
     line: 'line-bus',
     mode: 'bus',
@@ -231,7 +235,7 @@ export const ROWS: RowConfig[] = [
   },
   {
     id: 'mattapan',
-    label: 'Mattapan',
+    label: i18n.t('home:rows.mattapan'),
     group: 'also',
     line: 'line-mattapan',
     mode: 'subway',
@@ -240,7 +244,7 @@ export const ROWS: RowConfig[] = [
   },
   {
     id: 'ferry',
-    label: 'Ferry',
+    label: i18n.t('home:rows.ferry'),
     group: 'also',
     line: 'line-ferry',
     mode: 'ferry',
@@ -269,37 +273,37 @@ export type HeroConfig = Omit<HeroStat, 'value' | 'trend' | 'note'>;
 export const HERO: HeroConfig[] = [
   {
     id: 'subwayFrequency',
-    label: 'Subway',
+    label: i18n.t('home:hero.subwayFrequency.label'),
     unit: 'pct',
-    detail: `of service hours at every ${FREQUENCY_GOALS.subway} min or better`,
+    detail: i18n.t('home:hero.frequencyDetail', { minutes: FREQUENCY_GOALS.subway }),
     direction: 'higher',
   },
   {
     id: 'service',
-    label: 'Scheduled service',
+    label: i18n.t('home:hero.service.label'),
     unit: 'pct',
-    detail: 'of the most trips ever scheduled',
+    detail: i18n.t('home:hero.service.detail'),
     direction: 'higher',
   },
   {
     id: 'slowZones',
-    label: 'Slow zone delay',
+    label: i18n.t('home:hero.slowZones.label'),
     unit: 'minutes',
-    detail: 'added per day across the subway, last week',
+    detail: i18n.t('home:hero.slowZones.detail'),
     direction: 'lower',
   },
   {
     id: 'frequentBus',
-    label: 'Frequent Bus',
+    label: i18n.t('home:hero.frequentBus.label'),
     unit: 'pct',
-    detail: `of service hours at every ${FREQUENCY_GOALS.frequentBus} min or better`,
+    detail: i18n.t('home:hero.frequencyDetail', { minutes: FREQUENCY_GOALS.frequentBus }),
     direction: 'higher',
   },
   {
     id: 'crHeadway',
-    label: 'Commuter Rail midday',
+    label: i18n.t('home:hero.crHeadway.label'),
     unit: 'minutes',
-    detail: 'between trains on weekdays',
+    detail: i18n.t('home:hero.crHeadway.detail'),
     direction: 'lower',
   },
 ];

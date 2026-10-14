@@ -2,6 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 import type { AlertTime } from '../../../common/types/alerts';
 
 interface TimeProps {
@@ -9,29 +10,30 @@ interface TimeProps {
 }
 
 export const CurrentTime: React.FC<TimeProps> = ({ times }) => {
+  const { t } = useTranslation('commute');
   // Get end of service day (2 am)
   const dayEnd = dayjs().tz('America/New_York').add(1, 'day').set('hour', 2).set('minute', 0);
   const now = dayjs();
   const timeStrings = times.map((time) => {
     if (time.end == null) {
-      return 'Ongoing';
+      return t('time.ongoing');
     }
     const startTime = dayjs(time.start);
     const endTime = dayjs(time.end);
     if (startTime.isAfter(now)) {
       if (endTime.isAfter(dayEnd)) {
         // has not begun and ends after end of service day
-        return `${startTime.format('h:mm A')} - end of service`;
+        return t('time.untilEndOfService', { start: startTime.format('h:mm A') });
       }
       // Has not begun and ends before end of service time
       return `${startTime.format('h:mm A')} - ${endTime.format('h:mm A')}`;
     }
     if (endTime.isAfter(dayEnd)) {
       // Has begun and continues through tomorrow
-      return 'All Day';
+      return t('time.allDayCapitalized');
     } else {
       // Has begun but ends before end of service time
-      return `Until ${endTime.format('h:mm A')}`;
+      return t('time.until', { end: endTime.format('h:mm A') });
     }
   });
 
@@ -72,11 +74,12 @@ export const UpcomingTime: React.FC<TimeProps> = ({ times }) => {
 };
 
 export const EffectiveTime: React.FC<TimeProps> = ({ times }) => {
+  const { t } = useTranslation('commute');
   const timeString = dayjs(times[0].start).format('MMM D YYYY');
   return (
     <>
       <FontAwesomeIcon icon={faCalendar} size={'sm'} className={'m-0 mr-1 h-4 w-4'} />
-      Since {timeString}
+      {t('time.since', { date: timeString })}
     </>
   );
 };

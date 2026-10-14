@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type {
   AlertsResponse,
   FormattedAlert,
@@ -65,13 +66,14 @@ const getAlertComponent = (
 };
 
 export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, busRoute, type }) => {
+  const { t } = useTranslation('commute');
   const alertBox = useMemo(() => {
     const relevantAlerts = getRelevantAlerts(alerts, type);
 
     if (!relevantAlerts || relevantAlerts.length === 0) {
       return (
         <div className="flex w-full justify-center rounded-xs bg-black/10 px-4 py-2 pb-2">
-          <p className="text-stone-100">None</p>
+          <p className="text-stone-100">{t('none')}</p>
         </div>
       );
     } else {
@@ -84,6 +86,6 @@ export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, busRoute,
         </div>
       );
     }
-  }, [alerts, type, lineShort, busRoute]);
+  }, [alerts, type, lineShort, busRoute, t]);
   return alertBox;
 };

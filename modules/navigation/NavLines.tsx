@@ -8,6 +8,7 @@ import {
   faTrainTram,
 } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import { Link } from '../../common/components/general/Link';
 import {
   Collapsible,
@@ -112,11 +113,12 @@ interface NavLinesProps {
 }
 
 export const NavLines: React.FC<NavLinesProps> = ({ close }) => {
+  const { t } = useTranslation('navigation');
   const route = useDelimitatedRoute();
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Lines</SidebarGroupLabel>
+      <SidebarGroupLabel>{t('lines')}</SidebarGroupLabel>
       <SidebarMenu>
         {NAV_LINES.map((line) => {
           const lineObject = LINE_OBJECTS[line];

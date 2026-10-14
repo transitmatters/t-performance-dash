@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { i18n } from '../../../common/i18n';
 import { formatNumber } from '../../../common/i18n/format';
 import type {
   BaselineMetric,
@@ -22,9 +23,9 @@ interface Baseline {
 }
 
 const HELD_BACK_NOTES: Record<string, string> = {
-  noPrePandemicHistory: 'No baseline yet: records start after 2020.',
-  seasonal: 'No baseline yet: seasonal service.',
-  notComparable: 'No baseline yet: service was counted differently before.',
+  noPrePandemicHistory: i18n.t('home:notes.noBaseline.noPrePandemicHistory'),
+  seasonal: i18n.t('home:notes.noBaseline.seasonal'),
+  notComparable: i18n.t('home:notes.noBaseline.notComparable'),
 };
 
 const missingBaselineNote = (
@@ -35,7 +36,10 @@ const missingBaselineNote = (
   if (heldBack) {
     const reason = baselines?.heldBackReasons?.[heldBack];
     return (
-      HELD_BACK_NOTES[heldBack] ?? (reason ? `No baseline yet. ${reason}` : 'No baseline yet.')
+      HELD_BACK_NOTES[heldBack] ??
+      (reason
+        ? i18n.t('home:notes.noBaseline.withReason', { reason })
+        : i18n.t('home:notes.noBaseline.plain'))
     );
   }
   const short = series.find((s) => s?.insufficientHistory && s.historyWindow);
@@ -43,13 +47,20 @@ const missingBaselineNote = (
     const { start, end } = short.historyWindow;
     const years = baselines.lookbackYears ?? 3;
     if (start > end) {
-      return `No baseline yet: records start ${dayjs(start).format('MMM YYYY')}, and baselines only use weeks at least ${years} years old.`;
+      return i18n.t('home:notes.noBaseline.recordsTooRecent', {
+        start: dayjs(start).format('MMM YYYY'),
+        years,
+      });
     }
     if (baselines.minHistoryWeeks && short.historyWeeks !== undefined) {
-      return `No baseline yet: ${short.historyWeeks} weeks of records are at least ${years} years old, and a baseline needs ${baselines.minHistoryWeeks}.`;
+      return i18n.t('home:notes.noBaseline.tooFewWeeks', {
+        weeks: short.historyWeeks,
+        years,
+        needed: baselines.minHistoryWeeks,
+      });
     }
   }
-  return 'No baseline yet.';
+  return i18n.t('home:notes.noBaseline.plain');
 };
 
 export const baselineFor = (
@@ -104,11 +115,10 @@ export const judgedCell = (metric: MetricId, score: number | null, opts: CellOpt
   const stale =
     !window.asOf || daysBetween(window.asOf, now) - (opts.asOfOffsetDays ?? 6) > method.staleDays;
   if (window.excluded) {
-    const weeks = `${window.excluded} week${window.excluded > 1 ? 's' : ''}`;
-    notes.push(`Leaves out ${weeks} of shutdowns or holidays.`);
+    notes.push(i18n.t('home:notes.excludedWeeks', { count: window.excluded }));
   }
   if (stale && window.asOf)
-    notes.push(`Latest data is from ${dayjs(window.asOf).format('MMM D')}.`);
+    notes.push(i18n.t('home:notes.latestData', { date: dayjs(window.asOf).format('MMM D') }));
   const status =
     enoughData && !stale
       ? statusFor(score, opts.direction ?? method.direction, opts.thresholds ?? method.thresholds)
@@ -161,7 +171,9 @@ export const ratioCell = (
       unitLabel: opts.rawUnitLabel,
       notes: [
         ...(opts.notes ?? []),
-        rawValue === null ? 'No recent data.' : (baseline.note ?? 'No baseline yet.'),
+        rawValue === null
+          ? i18n.t('home:notes.noRecentData')
+          : (baseline.note ?? i18n.t('home:notes.noBaseline.plain')),
       ],
     };
   }
@@ -174,9 +186,13 @@ export const ratioCell = (
     href: opts.href,
     notes: opts.notes,
     secondary: rawValue !== null ? `${format(rawValue)} ${opts.rawUnitLabel}` : undefined,
-    baselineLabel: `Best: ${format(baseline.value)} ${opts.rawUnitLabel}${
-      baseline.label ? ` (${baseline.label})` : ''
-    }`,
+    baselineLabel: baseline.label
+      ? i18n.t('home:cells.bestOn', {
+          value: format(baseline.value),
+          unit: opts.rawUnitLabel,
+          date: baseline.label,
+        })
+      : i18n.t('home:cells.best', { value: format(baseline.value), unit: opts.rawUnitLabel }),
   });
 };
 
@@ -226,9 +242,11 @@ export const frequencyCell = (
     asOfOffsetDays: 0,
     href: opts.href,
     notes: opts.notes,
-    secondary: `Goal: every ${goalMinutes} min`,
+    secondary: i18n.t('home:cells.goal', { minutes: goalMinutes }),
     baselineLabel:
-      yearAgo !== null ? `A year ago: ${Math.round(yearAgo * 100)}% of hours` : undefined,
+      yearAgo !== null
+        ? i18n.t('home:cells.yearAgo', { percent: Math.round(yearAgo * 100) })
+        : undefined,
   });
   return {
     ...cell,

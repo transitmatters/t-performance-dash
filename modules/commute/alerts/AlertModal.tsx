@@ -1,6 +1,7 @@
 import type { SetStateAction } from 'react';
 import React from 'react';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import { AlertNames } from '../../../common/types/alerts';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { lineColorBackground, lineColorVar } from '../../../common/styles/general';
@@ -31,6 +32,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
   Icon,
   type,
 }) => {
+  const { t } = useTranslation();
   const { line } = useDelimitatedRoute();
   return (
     <Dialog open={showModal} onOpenChange={setShowModal}>
@@ -57,7 +59,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
             className="w-full bg-(--line-color) text-white hover:bg-(--line-color)/90"
             onClick={() => setShowModal(false)}
           >
-            Close
+            {t('ui.close')}
           </Button>
         </DialogFooter>
       </DialogContent>

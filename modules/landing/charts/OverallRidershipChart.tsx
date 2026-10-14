@@ -1,6 +1,6 @@
 import React from 'react';
+import { LandingBaseline } from '../LandingCopy';
 import type { RidershipCount } from '../../../common/types/dataPoints';
-import { RidershipBaseline } from '../../../copy/landingCopy';
 import type { Line as LineType } from '../../../common/types/lines';
 import { useHistoricalBaselines } from '../../../common/api/hooks/baselines';
 import { convertToRidershipDataset, LANDING_CHART_LABELS } from '../utils';
@@ -18,7 +18,7 @@ export const OverallRidershipChart: React.FC<OverallRidershipChartProps> = ({ ri
   return (
     <LandingChartDiv>
       <LandingPageChart datasets={datasets} labels={labels} id="system-ridership" />
-      {RidershipBaseline}
+      <LandingBaseline />
     </LandingChartDiv>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import {
   Card,
@@ -45,6 +46,7 @@ export const MetricsScorecard: React.FC<MetricsScorecardProps> = ({
   selectedMetric,
   onSelectMetric,
 }) => {
+  const { t } = useTranslation('dashboard');
   return (
     <Card>
       <CardHeader>
@@ -52,24 +54,26 @@ export const MetricsScorecard: React.FC<MetricsScorecardProps> = ({
           <span style={{ color: rows[0]?.color }}>
             <RouteBullet />
           </span>
-          Metrics
+          {t('scorecard.title')}
         </CardTitle>
-        <CardDescription>Select a row to chart it below.</CardDescription>
+        <CardDescription>{t('scorecard.description')}</CardDescription>
       </CardHeader>
       <CardContent className="px-0">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="pl-6">Metric</TableHead>
-              <TableHead>Last 30 days</TableHead>
+              <TableHead className="pl-6">{t('scorecard.columns.metric')}</TableHead>
+              <TableHead>{t('scorecard.columns.last30Days')}</TableHead>
               <TableHead>
-                <span className="md:hidden">Vs prev</span>
-                <span className="hidden md:inline">Vs previous 30 days</span>
+                <span className="md:hidden">{t('scorecard.columns.vsPreviousShort')}</span>
+                <span className="hidden md:inline">{t('scorecard.columns.vsPrevious')}</span>
               </TableHead>
-              <TableHead className="hidden pr-6 md:table-cell">12 months</TableHead>
+              <TableHead className="hidden pr-6 md:table-cell">
+                {t('scorecard.columns.twelveMonths')}
+              </TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody role="radiogroup" aria-label="Select a metric to chart below">
+          <TableBody role="radiogroup" aria-label={t('scorecard.selectLabel')}>
             {isLoading
               ? Array.from({ length: 4 }).map((_, i) => (
                   <TableRow key={`skeleton-${i}`} className="hover:bg-transparent">
@@ -109,7 +113,7 @@ export const MetricsScorecard: React.FC<MetricsScorecardProps> = ({
                           className="sr-only"
                           checked={isSelected}
                           onChange={() => onSelectMetric(row.key)}
-                          aria-label={`Chart the ${row.label} metric`}
+                          aria-label={t('scorecard.chartMetric', { metric: row.label })}
                         />
                         <span className="pointer-events-none absolute inset-y-0 left-6 flex w-3 -translate-x-1/2 justify-center opacity-30">
                           <RouteLine orientation="vertical" />
@@ -125,7 +129,7 @@ export const MetricsScorecard: React.FC<MetricsScorecardProps> = ({
                           {isSelected && (
                             <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-primary">
                               <ChevronDown className="size-3" aria-hidden />
-                              Charted below
+                              {t('scorecard.chartedBelow')}
                             </span>
                           )}
                         </div>
@@ -156,7 +160,7 @@ export const MetricsScorecard: React.FC<MetricsScorecardProps> = ({
                   colSpan={4}
                   className="px-6 py-8 text-center text-sm text-muted-foreground"
                 >
-                  No data available for this line.
+                  {t('scorecard.noData')}
                 </TableCell>
               </TableRow>
             )}

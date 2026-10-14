@@ -2,13 +2,15 @@ import React from 'react';
 import { faBus, faTrain, faTrainSubway, faTrainTram } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import { LineButton } from './LineButton';
 
 export const LineSelectionLanding: React.FC = () => {
+  const { t } = useTranslation('landing');
   return (
     <div className="flex w-full flex-col items-start px-4 pt-20 text-stone-900 md:items-center md:pt-32">
-      <h2 className="text-5xl font-thin xl:text-7xl">Ready to learn more?</h2>
-      <h3 className="text-lg">Select a subway line or bus route to get started.</h3>
+      <h2 className="text-5xl font-thin xl:text-7xl">{t('lineSelection.heading')}</h2>
+      <h3 className="text-lg">{t('lineSelection.subheading')}</h3>
       <div className="flex w-full flex-col gap-y-8 pt-12 md:max-w-4xl md:flex-row md:justify-around">
         <LineButton line="line-red">
           <FontAwesomeIcon

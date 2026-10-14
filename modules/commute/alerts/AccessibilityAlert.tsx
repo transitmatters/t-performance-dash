@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
 import { AlertEffect } from '../../../common/types/alerts';
 import EscalatorIcon from '../../../public/Icons/EscalatorIcon.svg?react';
@@ -14,6 +15,7 @@ interface DelayAlertProps {
 }
 
 export const AccessibilityAlert: React.FC<DelayAlertProps> = ({ alert, type, lineShort }) => {
+  const { t } = useTranslation('commute');
   // TODO: We don't pass the route id yet
   if (lineShort === 'Commuter Rail' || lineShort === 'Bus') {
     return null;
@@ -27,10 +29,6 @@ export const AccessibilityAlert: React.FC<DelayAlertProps> = ({ alert, type, lin
     .map((stop) => lineStations.find((station) => station.station === stop))
     .filter((stop) => stop !== undefined);
 
-  const alertText =
-    alert.type === AlertEffect.ESCALATOR_CLOSURE
-      ? 'Escalator out of service at'
-      : 'Elevator out of service at';
   const stopsText = stops.map((stop) => stop?.stop_name).join(', ');
 
   return (
@@ -42,7 +40,16 @@ export const AccessibilityAlert: React.FC<DelayAlertProps> = ({ alert, type, lin
       showEffectiveTime={true}
     >
       <span>
-        {alertText} <strong>{stopsText}</strong>
+        <Trans
+          t={t}
+          i18nKey={
+            alert.type === AlertEffect.ESCALATOR_CLOSURE
+              ? 'accessibility.escalatorOutAt'
+              : 'accessibility.elevatorOutAt'
+          }
+          values={{ stops: stopsText }}
+          components={{ stops: <strong /> }}
+        />
       </span>
     </AlertBoxInner>
   );

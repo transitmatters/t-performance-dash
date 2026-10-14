@@ -1,15 +1,22 @@
 import React from 'react';
+import { i18n } from '../../common/i18n';
 import { Link } from '../../common/components/general/Link';
 import { DonateButton } from '../../common/components/buttons/DonateButton';
 import { SidebarSeparator } from '../../common/components/ui/sidebar';
 import { ThemeToggle } from '../../common/components/nav/ThemeToggle';
 
 const LINKS = [
-  { name: 'About', href: 'https://transitmatters.org/transitmatters-labs' },
-  { name: 'Join us', href: 'https://transitmatters.org/join' },
-  { name: 'Feedback', href: 'https://forms.gle/SKYtxgKSyCrYxM1v7' },
-  { name: 'Source', href: 'https://github.com/transitmatters/t-performance-dash' },
-  { name: 'Attributions', href: '/opensource' },
+  {
+    name: i18n.t('navigation:links.about'),
+    href: 'https://transitmatters.org/transitmatters-labs',
+  },
+  { name: i18n.t('navigation:links.joinUs'), href: 'https://transitmatters.org/join' },
+  { name: i18n.t('navigation:links.feedback'), href: 'https://forms.gle/SKYtxgKSyCrYxM1v7' },
+  {
+    name: i18n.t('navigation:links.source'),
+    href: 'https://github.com/transitmatters/t-performance-dash',
+  },
+  { name: i18n.t('navigation:links.attributions'), href: '/opensource' },
 ];
 
 /**

@@ -1,6 +1,9 @@
 import React from 'react';
 import { TriangleAlert } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
+import type { Line } from '../../../common/types/lines';
+import { LINE_OBJECTS } from '../../../common/constants/lines';
 import {
   Card,
   CardHeader,
@@ -21,6 +24,7 @@ interface ServiceAlertsCardProps {
 }
 
 export const ServiceAlertsCard: React.FC<ServiceAlertsCardProps> = ({ lineShort }) => {
+  const { t } = useTranslation(['dashboard', 'common']);
   const alerts = useAlertsData(lineShort);
   const { isLoading } = alerts;
   const { isError } = alerts;
@@ -31,15 +35,15 @@ export const ServiceAlertsCard: React.FC<ServiceAlertsCardProps> = ({ lineShort 
     <Card className="flex flex-col">
       <CardHeader className="flex-row items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
-          <CardTitle>Service alerts</CardTitle>
+          <CardTitle>{t('serviceAlerts.title')}</CardTitle>
           <CardDescription>
             {isLoading
-              ? 'Checking for active alerts…'
+              ? t('serviceAlerts.checking')
               : isError
-                ? "Couldn't load service alerts."
+                ? t('serviceAlerts.error')
                 : current.length
-                  ? `${current.length} affecting service right now`
-                  : 'Nothing affecting service right now'}
+                  ? t('serviceAlerts.current', { count: current.length })
+                  : t('serviceAlerts.none')}
           </CardDescription>
         </div>
         <Badge
@@ -49,12 +53,12 @@ export const ServiceAlertsCard: React.FC<ServiceAlertsCardProps> = ({ lineShort 
           className="shrink-0"
         >
           {isLoading
-            ? 'Checking…'
+            ? t('badge.checking')
             : isError
-              ? 'Unavailable'
+              ? t('badge.unavailable')
               : current.length
-                ? `${current.length} active`
-                : 'Running normally'}
+                ? t('serviceAlerts.badge.active', { count: current.length })
+                : t('serviceAlerts.badge.normal')}
         </Badge>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col gap-3">
@@ -68,14 +72,14 @@ export const ServiceAlertsCard: React.FC<ServiceAlertsCardProps> = ({ lineShort 
           // The card description already states the error; here we just offer the way out.
           <div className="py-2">
             <Button variant="outline" size="sm" onClick={() => alerts.refetch()}>
-              Try again
+              {t('common:notices.error.retry')}
             </Button>
           </div>
         ) : (
           <>
             {upcoming.length > 0 && (
               <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                Upcoming · {upcoming.length}
+                {t('serviceAlerts.upcoming', { count: upcoming.length })}
               </div>
             )}
             <div className="flex flex-col divide-y">
@@ -92,7 +96,10 @@ export const ServiceAlertsCard: React.FC<ServiceAlertsCardProps> = ({ lineShort 
               ))}
               {!current.length && !upcoming.length && (
                 <p className="py-2 text-sm text-muted-foreground">
-                  No alerts for the {lineShort} Line.
+                  {t('serviceAlerts.noAlerts', {
+                    line:
+                      LINE_OBJECTS[`line-${lineShort.toLowerCase()}` as Line]?.name ?? lineShort,
+                  })}
                 </p>
               )}
             </div>

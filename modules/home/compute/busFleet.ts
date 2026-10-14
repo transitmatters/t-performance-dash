@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { i18n } from '../../../common/i18n';
 import type { DeliveredTripMetricsBus } from '../../../common/types/dataPoints';
 import { BUS_FLEET_THRESHOLDS } from '../config';
 import type { Cell } from '../types';
@@ -43,7 +44,10 @@ export const busFleetCell = (
   opts: { now: Date; href?: string }
 ): Cell => {
   if (rows === null) {
-    return { ...naCell('fleet', 'pct', "Couldn't load bus fleet data."), status: 'insufficient' };
+    return {
+      ...naCell('fleet', 'pct', i18n.t('home:notes.busFleetError')),
+      status: 'insufficient',
+    };
   }
 
   const weeks = new Map<string, Totals>();
@@ -76,12 +80,15 @@ export const busFleetCell = (
       direction: 'higher',
       thresholds: BUS_FLEET_THRESHOLDS,
       secondary: recent.trips
-        ? `Battery ${pct(recent.battery)} · Hybrid ${pct(recent.hybrid)} of trips`
+        ? i18n.t('home:cells.busFleetMix', {
+            battery: pct(recent.battery),
+            hybrid: pct(recent.hybrid),
+          })
         : undefined,
       baselineLabel: recent.ageTrips
-        ? `Average bus age: ${Math.round(recent.ageSum / recent.ageTrips)} yr`
+        ? i18n.t('home:cells.averageBusAge', { years: Math.round(recent.ageSum / recent.ageTrips) })
         : undefined,
-      notes: recent.trips ? undefined : ['No recent fleet data.'],
+      notes: recent.trips ? undefined : [i18n.t('home:notes.noRecentFleetData')],
       href: opts.href,
     }),
     // A fleet shifts over years, so a 2-week trend says nothing here.

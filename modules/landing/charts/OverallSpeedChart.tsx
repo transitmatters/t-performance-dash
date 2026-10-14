@@ -1,6 +1,6 @@
 import React from 'react';
+import { LandingBaseline } from '../LandingCopy';
 import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
-import { SpeedBaseline } from '../../../copy/landingCopy';
 import type { Line } from '../../../common/types/lines';
 import { LandingChartDiv } from '../LandingChartDiv';
 import { useHistoricalBaselines } from '../../../common/api/hooks/baselines';
@@ -17,7 +17,7 @@ export const OverallSpeedChart: React.FC<OverallSpeedChartProps> = ({ speedData 
   return (
     <LandingChartDiv>
       <LandingPageChart datasets={datasets} labels={labels} id="system-speed" />
-      {SpeedBaseline}
+      <LandingBaseline />
     </LandingChartDiv>
   );
 };

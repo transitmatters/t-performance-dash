@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import { Link } from '../../common/components/general/Link';
 import type { Line } from '../../common/types/lines';
 import { lineColorBorder, lineColorVar } from '../../common/styles/general';
@@ -12,6 +13,7 @@ interface LineButtonProps {
 }
 
 export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
+  const { t } = useTranslation('landing');
   const lineObject = LINE_OBJECTS[line];
 
   return (
@@ -36,7 +38,7 @@ export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
       </div>
       <div className="flex flex-row items-baseline gap-2 md:flex-col md:items-center">
         <h3 className="text-center text-3xl md:text-xl">{LINE_OBJECTS[line].name}</h3>
-        {line === 'line-commuter-rail' && <p className="text-center font-bold">(Beta)</p>}
+        {line === 'line-commuter-rail' && <p className="text-center font-bold">{t('beta')}</p>}
       </div>
     </Link>
   );

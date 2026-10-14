@@ -2,6 +2,7 @@ import React, { Suspense, lazy, useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import HeroLottie from '../../public/Animations/hero.lottie.json';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
@@ -11,13 +12,14 @@ import { LineSelectionLanding } from './LineSelectionLanding';
 const Lottie = lazy(() => import('react-lottie-player'));
 
 export function Landing() {
+  const { t } = useTranslation(['landing', 'common']);
   const md = useBreakpoint('md');
   const handleScrollToDetails = useCallback(() => {
     document.getElementById('charts')?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
   return (
-    <PageWrapper pageTitle="Home">
+    <PageWrapper pageTitle={t('pageTitle')}>
       <div
         className={classNames(
           isMobile && 'pb-32',
@@ -30,19 +32,17 @@ export function Landing() {
             className="w-48 sm:w-60 xl:w-[20rem]"
             width="3204"
             height="301"
-            alt="TransitMatters"
+            alt={t('common:app.orgName')}
           />
           <h1 className="text-center text-3xl font-bold text-stone-100 uppercase italic sm:text-5xl lg:text-6xl">
-            Data Dashboard
+            {t('common:app.name')}
           </h1>
-          <h2 className="w-3/4 text-center text-lg text-white lg:px-8">
-            See how your transit line is doing at a glance, or explore MBTA performance trends.
-          </h2>
+          <h2 className="w-3/4 text-center text-lg text-white lg:px-8">{t('hero.subheading')}</h2>
           <button
             className="rounded-md border-2 border-stone-100 px-8 py-2 text-xl font-bold text-stone-100 italic hover:bg-stone-100 hover:text-stone-700"
             onClick={handleScrollToDetails}
           >
-            LET'S GO
+            {t('hero.cta')}
           </button>
         </div>
       </div>

@@ -1,0 +1,28 @@
+{
+  "accessibility": {
+    "escalatorOutAt": "Escalator out of service at <stops>{{stops}}</stops>",
+    "elevatorOutAt": "Elevator out of service at <stops>{{stops}}</stops>"
+  },
+  "none": "None",
+  "title": "Alerts",
+  "today": "Today",
+  "upcoming": "Upcoming",
+  "delays": {
+    "label": "Delays",
+    "onLineRoutes": "Delays on {{line}} ({{routes}})"
+  },
+  "shuttling": "Shuttling",
+  "stopClosures": "Stop Closures",
+  "suspension": {
+    "noService": "No service",
+    "detours": "Detours on {{line}}"
+  },
+  "time": {
+    "allDay": "All day",
+    "ongoing": "Ongoing",
+    "untilEndOfService": "{{start}} - end of service",
+    "allDayCapitalized": "All Day",
+    "until": "Until {{end}}",
+    "since": "Since {{date}}"
+  }
+}

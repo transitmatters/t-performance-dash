@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import { i18n } from '../../common/i18n';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ALL_PAGES } from '../../common/constants/pages';
@@ -23,11 +24,11 @@ export const DesktopHeader: React.FC = () => {
     dateStoreSection && (line || tab === 'System') && dateStoreSection !== 'today';
 
   const getLineName = () => {
-    if (busRoute) return `Route ${busRoute}`;
+    if (busRoute) return i18n.t('routes.busRoute', { route: busRoute });
     if (crRoute) return COMMUTER_RAIL_LINE_NAMES[crRoute];
     if (ferryRoute) return FERRY_LINE_NAMES[ferryRoute];
     if (line) return LINE_OBJECTS[line]?.name;
-    if (tab === 'System') return 'System';
+    if (tab === 'System') return i18n.t('dashboard:system');
   };
 
   // Bus yellow and the other light line colors can't carry white text.

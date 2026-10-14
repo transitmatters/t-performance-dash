@@ -205,7 +205,11 @@ export default typescriptEslint.config(
     },
   },
   {
-    files: ['common/**/*.tsx', 'routes/**/*.tsx'],
+    files: [
+      'common/**/*.tsx',
+      'routes/**/*.tsx',
+      'modules/{commute,dashboard,home,landing,navigation}/**/*.tsx',
+    ],
     ignores: ['**/*.stories.tsx'],
     rules: {
       'i18next/no-literal-string': ['error', literalStringOptions],

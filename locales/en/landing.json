@@ -1,0 +1,34 @@
+{
+  "baseline": "Compared to historical maximums",
+  "charts": {
+    "Speed": {
+      "title": "Speed",
+      "question": "How quickly can riders move through Boston?",
+      "description": "Speed for a line is the median time to go from the first station to the last divided by the distance between those stations. It includes time spent at stops, also known as dwell times."
+    },
+    "Service": {
+      "title": "Service",
+      "question": "How long must riders wait for trains and buses?",
+      "description": "We measure service by daily vehicle trips—the number of times a train or bus makes a complete round trip. More service means shorter wait times for riders."
+    },
+    "Ridership": {
+      "title": "Ridership",
+      "question": "How many riders are using the system?",
+      "description": "We measure ridership with fare validation data published weekly by the MBTA. Our charts include only weekday data."
+    }
+  },
+  "pageTitle": "Home",
+  "hero": {
+    "subheading": "See how your transit line is doing at a glance, or explore MBTA performance trends.",
+    "cta": "LET'S GO"
+  },
+  "beta": "(Beta)",
+  "lineSelection": {
+    "heading": "Ready to learn more?",
+    "subheading": "Select a subway line or bus route to get started."
+  },
+  "chart": {
+    "tooltip": "{{percent}}% of historical maximum ({{line}})",
+    "axis": "Percentage of historical maximum"
+  }
+}

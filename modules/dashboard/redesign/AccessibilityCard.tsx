@@ -1,5 +1,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
+import { Trans, useTranslation } from 'react-i18next';
 
 import {
   Card,
@@ -24,6 +25,7 @@ interface AccessibilityCardProps {
 }
 
 export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort }) => {
+  const { t } = useTranslation(['dashboard', 'common']);
   const accessibilityAlerts = useAccessibilityAlertsData(lineShort);
   const notTracked = lineShort === 'Commuter Rail' || lineShort === 'Bus';
   const isLoading = !notTracked && accessibilityAlerts.isLoading;
@@ -45,17 +47,20 @@ export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort 
     <Card className="flex flex-col">
       <CardHeader className="flex-row items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
-          <CardTitle>Accessibility</CardTitle>
+          <CardTitle>{t('accessibility.title')}</CardTitle>
           <CardDescription>
             {notTracked
-              ? 'Elevator status not tracked for this line'
+              ? t('accessibility.notTracked')
               : isLoading
-                ? 'Checking elevator & escalator status…'
+                ? t('accessibility.checking')
                 : isError
-                  ? "Couldn't load accessibility status."
+                  ? t('accessibility.error')
                   : affectedStationCount
-                    ? `${affectedStationCount} of ${lineStations.length} stations have equipment out of service`
-                    : 'All stations fully accessible'}
+                    ? t('accessibility.affected', {
+                        count: affectedStationCount,
+                        total: lineStations.length,
+                      })
+                    : t('accessibility.allAccessible')}
           </CardDescription>
         </div>
         <Badge
@@ -71,14 +76,14 @@ export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort 
           className="shrink-0"
         >
           {notTracked
-            ? 'N/A'
+            ? t('accessibility.badge.notApplicable')
             : isLoading
-              ? 'Checking…'
+              ? t('badge.checking')
               : isError
-                ? 'Unavailable'
+                ? t('badge.unavailable')
                 : affectedStationCount
-                  ? `${affectedStationCount} affected`
-                  : 'All clear'}
+                  ? t('accessibility.badge.affected', { count: affectedStationCount })
+                  : t('accessibility.badge.allClear')}
         </Badge>
       </CardHeader>
       <CardContent className="flex min-h-0 flex-1 flex-col">
@@ -91,7 +96,7 @@ export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort 
         {isError && (
           <div className="py-2">
             <Button variant="outline" size="sm" onClick={() => accessibilityAlerts.refetch()}>
-              Try again
+              {t('common:notices.error.retry')}
             </Button>
           </div>
         )}
@@ -100,7 +105,7 @@ export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort 
           // keyboard users can scroll it too, and labelled for screen readers.
           <div
             role="region"
-            aria-label="Out-of-service elevators and escalators"
+            aria-label={t('accessibility.listLabel')}
             tabIndex={0}
             className="-mx-1 flex max-h-80 flex-col divide-y overflow-y-auto overscroll-contain rounded-md px-1 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
           >
@@ -118,12 +123,24 @@ export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort 
                   <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                   <div className="flex flex-1 flex-col gap-1">
                     <span className="text-sm font-medium">
-                      {alert.type === AlertEffect.ESCALATOR_CLOSURE ? 'Escalator' : 'Elevator'} out
-                      of service · <span className="font-semibold">{stopsText}</span>
+                      <Trans
+                        t={t}
+                        i18nKey={
+                          alert.type === AlertEffect.ESCALATOR_CLOSURE
+                            ? 'accessibility.escalatorOut'
+                            : 'accessibility.elevatorOut'
+                        }
+                        values={{ stops: stopsText }}
+                        components={{ stops: <span className="font-semibold" /> }}
+                      />
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      {days !== null ? `${days} day${days === 1 ? '' : 's'} · ` : ''}
-                      {start ? `since ${dayjs(start).format('MMM D, YYYY')}` : ''}
+                      {start && days !== null
+                        ? t('accessibility.outageAge', {
+                            count: days,
+                            date: dayjs(start).format('MMM D, YYYY'),
+                          })
+                        : ''}
                     </span>
                   </div>
                 </div>
@@ -132,7 +149,7 @@ export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort 
           </div>
         )}
         {!notTracked && !isLoading && !isError && !current.length && (
-          <p className="py-2 text-sm text-muted-foreground">No open accessibility alerts.</p>
+          <p className="py-2 text-sm text-muted-foreground">{t('accessibility.noAlerts')}</p>
         )}
       </CardContent>
     </Card>

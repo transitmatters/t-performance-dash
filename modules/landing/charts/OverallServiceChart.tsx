@@ -1,7 +1,7 @@
 import React from 'react';
+import { LandingBaseline } from '../LandingCopy';
 import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
 import type { Line } from '../../../common/types/lines';
-import { ServiceBaseline } from '../../../copy/landingCopy';
 import { LandingChartDiv } from '../LandingChartDiv';
 import { useHistoricalBaselines } from '../../../common/api/hooks/baselines';
 import { convertToServiceDataset, LANDING_CHART_LABELS } from '../utils';
@@ -18,7 +18,7 @@ export const OverallServiceChart: React.FC<OverallServiceChartProps> = ({ servic
   return (
     <LandingChartDiv>
       <LandingPageChart datasets={datasets} labels={labels} id="system-service" />
-      {ServiceBaseline}
+      <LandingBaseline />
     </LandingChartDiv>
   );
 };

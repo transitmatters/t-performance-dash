@@ -1,0 +1,12 @@
+{
+  "system": "System",
+  "links": {
+    "about": "About",
+    "joinUs": "Join us",
+    "feedback": "Feedback",
+    "source": "Source",
+    "attributions": "Attributions"
+  },
+  "lines": "Lines",
+  "betaNotice": "Beta: usage data collected via Datadog"
+}
