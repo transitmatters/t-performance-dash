@@ -1,0 +1,47 @@
+{
+  "reasons": {
+    "disabled_vehicle": "Disabled Train",
+    "door_problem": "Door Problem",
+    "power_problem": "Power/Wire Issue",
+    "signal_problem": "Signal Problem",
+    "switch_problem": "Switch Problem",
+    "brake_problem": "Brake Issue",
+    "track_issue": "Track Issue",
+    "track_work": "Track Work",
+    "car_traffic": "Cars/Traffic",
+    "mechanical_problem": "Mechanical Problem",
+    "flooding": "Flooding",
+    "police_activity": "Police Activity",
+    "medical_emergency": "Medical Emergency",
+    "fire": "Fire Department Activity",
+    "other": "Other/No Reason Given"
+  },
+  "totalDelayed": "Total time delayed",
+  "charts": {
+    "totalDelayedAxis": "Total time delayed (minutes)",
+    "timeDelayedAxis": "Time delayed (minutes)",
+    "byCategory": "Delay by Category",
+    "categoryTotal": "{{reason}} total delay: {{delay}}"
+  },
+  "notes": {
+    "example": {
+      "blue": "<line>Blue Line</line>: Delays of about <duration>20 minutes</duration> due to a <reason>power issue</reason> near wood island. Some trains may hold at stations.",
+      "orange": "<line>Orange Line</line>: Delays of about <duration>10 minutes</duration> due to a <reason>disabled train</reason> at Northeastern.",
+      "green": "<line>Green Line D Branch</line>: Delays of about <duration>10 minutes</duration> eastbound due to a maintenance train <reason>inspecting the overhead</reason> between riverside and kenmore."
+    },
+    "body": "When there's a delay on the T, the MBTA sends out an alert to riders. These alerts almost always include a reason for the delay, and an estimate of how long trains may be delayed. We collect these alerts and group them by general matching categories, and add up the total delay time to riders in a week.",
+    "examples": "Example alerts"
+  },
+  "stats": {
+    "avgPerWeek": "Avg per week",
+    "avgPerDay": "Avg per day",
+    "ofDelayTime": "of delay time"
+  },
+  "widgets": {
+    "perWeek": "Per week, from rider alerts",
+    "perDay": "Per day, from rider alerts",
+    "byReason": "Delay time by reason",
+    "overTime": "Over time",
+    "periodTotal": "Total for the period"
+  }
+}

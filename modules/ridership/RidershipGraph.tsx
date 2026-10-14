@@ -4,6 +4,7 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import Annotation from 'chartjs-plugin-annotation';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import { useTranslation } from 'react-i18next';
 
 import { formatNumber, getDateFnsLocale } from '../../common/i18n/format';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -36,6 +37,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
   endDate,
   showTitle = false,
 }) => {
+  const { t } = useTranslation(['ridership', 'common']);
   const {
     line,
     linePath,
@@ -62,7 +64,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
               labels,
               datasets: [
                 {
-                  label: `Fare validations`,
+                  label: t('graph.fareValidations'),
                   borderColor: lineColor,
                   borderWidth: HERO_LINE_WIDTH,
                   backgroundColor: hexWithAlpha(lineColor, 0.8),
@@ -76,7 +78,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
 
                 {
                   // This null dataset produces the entry in the legend for the peak annotation.
-                  label: `Historical Maximum (${formatNumber(peak)} fare validations)`,
+                  label: t('graph.historicalMaximum', { peak: formatNumber(peak) }),
                   backgroundColor: CHART_COLORS.ANNOTATIONS,
                   data: null,
                 },
@@ -103,10 +105,10 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                     ...callbacks,
                     label: (context) => {
                       if (!context.parsed.y) return '';
-                      return `${formatNumber(context.parsed.y)} (${(
-                        (100 * context.parsed.y) /
-                        peak
-                      ).toFixed(1)}% of historical maximum)`;
+                      return t('graph.tooltip', {
+                        value: formatNumber(context.parsed.y),
+                        percent: ((100 * context.parsed.y) / peak).toFixed(1),
+                      });
                     },
                   },
                 },
@@ -145,7 +147,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                   },
                   title: {
                     display: true,
-                    text: 'Fare validations',
+                    text: t('graph.fareValidations'),
                     color: COLORS.design.subtitleGrey,
                   },
                 },
@@ -191,10 +193,10 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
                     ctx.font = "16px normal 'Helvetica Nueue'";
-                    ctx.fillText('No data to display', width / 2, height / 2);
+                    ctx.fillText(t('common:charts.noDataToDisplay'), width / 2, height / 2);
                     ctx.restore();
                   }
-                  if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
+                  if (showTitle) drawSimpleTitle(t('graph.drawnTitle'), chart);
                 },
               },
               Annotation,
@@ -225,6 +227,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
       </ChartStack>
     );
   }, [
+    t,
     peak,
     line,
     data,

@@ -1,5 +1,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
@@ -11,6 +12,7 @@ import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';
 
 export const ServiceWidget: React.FC = () => {
+  const { t } = useTranslation();
   const { line, query, lineShort } = useDelimitatedRoute();
   const { startDate, agg } = OVERVIEW_OPTIONS[query.view ?? 'year'];
   const endDate = TODAY_STRING;
@@ -36,7 +38,7 @@ export const ServiceWidget: React.FC = () => {
 
   return (
     <WidgetDiv>
-      <WidgetTitle title="Service" tab="service" line={line} />
+      <WidgetTitle title={t('pages.service.name')} tab="service" line={line} />
       {serviceReady ? (
         <ServiceGraphWrapper
           data={tripsData.data}

@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { i18n } from '../../../common/i18n';
 import type { ModeKind, SummaryData } from '../types';
 
 import { Widget } from '../../../common/components/widgets/Widget';
@@ -17,10 +19,10 @@ type Selection = 'total' | ModeKind;
 const DEFAULT_COLOR = '#165c96';
 
 const SelectionLabels: Partial<Record<Selection, string>> = {
-  total: 'All Lines',
-  'rapid-transit': 'Rapid Transit',
-  'regional-rail': 'Regional Rail',
-  bus: 'Bus',
+  total: i18n.t('serviceAndRidership:summary.selection.total'),
+  'rapid-transit': i18n.t('serviceAndRidership:summary.selection.rapidTransit'),
+  'regional-rail': i18n.t('serviceAndRidership:summary.selection.regionalRail'),
+  bus: i18n.t('serviceAndRidership:summary.selection.bus'),
 };
 
 const colorsBySelection: Partial<Record<Selection, string>> = {
@@ -31,6 +33,7 @@ const colorsBySelection: Partial<Record<Selection, string>> = {
 };
 
 export const SummaryCard = (props: Props) => {
+  const { t } = useTranslation('serviceAndRidership');
   const { summaryData, modeData } = props;
   const [selection, setSelection] = useState<Selection>('total');
   const { startDate, endDate } = useServiceAndRidershipContext();
@@ -50,7 +53,7 @@ export const SummaryCard = (props: Props) => {
   }, [selection, summaryData, modeData]);
 
   return (
-    <Widget title="Summary" className="pb-16">
+    <Widget title={t('summary.title')} className="pb-16">
       <div className="pt-2 pb-1">
         <ButtonGroup
           options={Object.entries(SelectionLabels).map(([key, value]) => [key, value])}
@@ -60,7 +63,7 @@ export const SummaryCard = (props: Props) => {
       </div>
       <ServiceRidershipChart
         color={colorsBySelection[selection] ?? DEFAULT_COLOR}
-        lineTitle="Total"
+        lineTitle={t('summary.total')}
         lineId="total"
         serviceHistory={serviceHistory}
         ridershipHistory={ridershipHistory}

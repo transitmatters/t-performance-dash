@@ -1,0 +1,60 @@
+{
+  "types": {
+    "diesel": "Diesel",
+    "hybrid": "Hybrid",
+    "battery": "Battery-electric",
+    "locomotive": "Locomotive"
+  },
+  "mixTitle": "Fleet mix",
+  "rail": {
+    "share": {
+      "title": "% of trips run by new trains",
+      "axis": "Trips run by new trains",
+      "tooltipSuffix": "new trains"
+    },
+    "age": {
+      "title": "Average car age",
+      "axis": "Average car age (years)"
+    },
+    "mixSubtitle": "Share of cars by type"
+  },
+  "bus": {
+    "share": {
+      "title": "% of trips run by battery-electric buses",
+      "axis": "Trips run by battery-electric buses",
+      "tooltipSuffix": "battery-electric"
+    },
+    "age": {
+      "title": "Average bus age",
+      "axis": "Average bus age (years)"
+    },
+    "mixSubtitle": "Share of trips by propulsion"
+  },
+  "commuterRail": {
+    "age": {
+      "title": "Average cab car age",
+      "axis": "Average cab car age (years)"
+    },
+    "mixTitle": "Cab car mix",
+    "mixSubtitle": "Share of trips by the car at the cab end"
+  },
+  "scope": {
+    "allLines": "All lines",
+    "allRoutes": "All routes"
+  },
+  "shareSubtitle": "Share of trips across the line",
+  "ageSubtitle": "Average across the line",
+  "mixSubtitleScoped": "{{subtitle}} · {{scope}}",
+  "notes": {
+    "bus": "Based on the buses seen at one stop per direction on each route, so expect some day-to-day noise.",
+    "commuterRail": "The MBTA's feed identifies only the cab car at one end of each train, not the locomotive or the other coaches, so these figures describe cab cars. Based on one stop per direction on each line.",
+    "rail": "Based on a representative sample of trips per day, not a full census of the line, so expect some day-to-day noise."
+  },
+  "share": {
+    "tooltip": "{{value}}% {{suffix}}"
+  },
+  "age": {
+    "tooltip": "{{value}} years"
+  },
+  "mixAxis": "Share of cars"
+}

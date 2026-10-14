@@ -3,6 +3,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { useTranslation } from 'react-i18next';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
@@ -25,6 +26,7 @@ dayjs.extend(utc);
 const SYSTEM_WIDE_ROUTE = 'all';
 
 export function FleetDetails() {
+  const { t } = useTranslation(['fleet', 'common']);
   const {
     line,
     query: { startDate, endDate, busRoute, crRoute },
@@ -35,10 +37,10 @@ export function FleetDetails() {
   const isRail = !isBus && !isCommuterRail;
   const selectedRoute = isBus ? busRoute : isCommuterRail ? crRoute : undefined;
   const routeLabel = isBus
-    ? `Route ${busRoute}`
+    ? t('common:routes.busRoute', { route: busRoute })
     : (COMMUTER_RAIL_LINE_NAMES[crRoute!] ?? crRoute ?? '');
   // Commuter Rail calls its routes lines, as on the Reliability page.
-  const allLabel = isCommuterRail ? 'All lines' : 'All routes';
+  const allLabel = isCommuterRail ? t('scope.allLines') : t('scope.allRoutes');
   // Follows the route picked in the header, like the other bus and CR pages.
   const { value: scope, control: scopeControl } = useChartToggle(
     'route',
@@ -79,17 +81,17 @@ export function FleetDetails() {
   const shuttling = isRail;
 
   if (!startDate || !endDate) {
-    return <p>Select a date range to load graphs.</p>;
+    return <p>{t('common:notices.selectDateRange')}</p>;
   }
 
   return (
-    <PageWrapper pageTitle={'Fleet'}>
+    <PageWrapper pageTitle={t('common:pages.fleet.name')}>
       <ChartPageDiv>
         {!isRail && selectedRoute && <div className="flex justify-end">{scopeControl}</div>}
         {metrics.share && (
           <Widget
             title={metrics.share.title}
-            subtitle={subtitle('Share of trips across the line')}
+            subtitle={subtitle(t('shareSubtitle'))}
             ready={[fleetMetrics]}
           >
             <FleetShareGraphWrapper
@@ -104,7 +106,7 @@ export function FleetDetails() {
         )}
         <Widget
           title={metrics.age.title}
-          subtitle={subtitle('Average across the line')}
+          subtitle={subtitle(t('ageSubtitle'))}
           ready={[fleetMetrics]}
         >
           <FleetAgeGraphWrapper
@@ -119,7 +121,11 @@ export function FleetDetails() {
         {fleetTypes && (
           <Widget
             title={metrics.mixTitle}
-            subtitle={isRail ? metrics.mixSubtitle : `${metrics.mixSubtitle} · ${scopeLabel}`}
+            subtitle={
+              isRail
+                ? metrics.mixSubtitle
+                : t('mixSubtitleScoped', { subtitle: metrics.mixSubtitle, scope: scopeLabel })
+            }
             ready={[fleetMetrics]}
           >
             <FleetMixGraphWrapper
@@ -133,12 +139,9 @@ export function FleetDetails() {
           </Widget>
         )}
         <p className="text-sm text-muted-foreground">
-          {isBus &&
-            'Based on the buses seen at one stop per direction on each route, so expect some day-to-day noise. '}
-          {isCommuterRail &&
-            "The MBTA's feed identifies only the cab car at one end of each train, not the locomotive or the other coaches, so these figures describe cab cars. Based on one stop per direction on each line. "}
-          {isRail &&
-            'Based on a representative sample of trips per day, not a full census of the line, so expect some day-to-day noise.'}
+          {isBus && t('notes.bus')}
+          {isCommuterRail && t('notes.commuterRail')}
+          {isRail && t('notes.rail')}
         </p>
       </ChartPageDiv>
     </PageWrapper>

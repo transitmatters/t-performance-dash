@@ -1,0 +1,21 @@
+{
+  "status": {
+    "loading": "loading…",
+    "noData": "no data",
+    "clear": "clear",
+    "notableHours_one": "{{count}} notable hour",
+    "notableHours_other": "{{count}} notable hours"
+  },
+  "overlay": "Weather overlay",
+  "conditions": {
+    "rain": "rain",
+    "fog": "fog",
+    "snow": "snow",
+    "storm": "storm"
+  },
+  "temperature": {
+    "title": "Temperature",
+    "highLow": "high/low",
+    "mean": "mean"
+  }
+}

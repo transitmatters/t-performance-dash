@@ -1,5 +1,6 @@
 import React from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import { CHART_COLORS, LINE_COLORS } from '../../common/constants/colors';
@@ -28,6 +29,7 @@ export const CommuterRailReliability: React.FC<CommuterRailReliabilityProps> = (
   startDate,
   endDate,
 }) => {
+  const { t } = useTranslation('reliability');
   const data = reliability.data ?? [];
   const stats = reliability.data ? getCommuterRailStats(reliability.data) : null;
   const color = LINE_COLORS['line-commuter-rail'];
@@ -37,31 +39,30 @@ export const CommuterRailReliability: React.FC<CommuterRailReliabilityProps> = (
     <>
       {stats && (
         <StatCardGrid>
-          <StatCard label="Trains on time" value={formatPercent(stats.onTime)} />
-          <StatCard label="Peak on time" value={formatPercent(stats.peakOnTime)} />
-          <StatCard label="Off-peak on time" value={formatPercent(stats.offPeakOnTime)} />
-          <StatCard label="Cancelled trains" value={formatCount(stats.cancelled)} />
+          <StatCard label={t('cr.stats.onTime')} value={formatPercent(stats.onTime)} />
+          <StatCard label={t('cr.stats.peakOnTime')} value={formatPercent(stats.peakOnTime)} />
+          <StatCard
+            label={t('cr.stats.offPeakOnTime')}
+            value={formatPercent(stats.offPeakOnTime)}
+          />
+          <StatCard label={t('cr.stats.cancelled')} value={formatCount(stats.cancelled)} />
         </StatCardGrid>
       )}
-      <Widget
-        title="On-time performance"
-        subtitle="Share of trains meeting MBTA schedule adherence"
-        ready={ready}
-      >
+      <Widget title={t('onTimePerformance')} subtitle={t('cr.onTimeSubtitle')} ready={ready}>
         <ReliabilityGraph
           data={[
             {
-              label: 'All trains',
+              label: t('cr.series.all'),
               data: toPoints(data, (e) => percent(e.otpNumerator, e.otpDenominator)),
               style: { color },
             },
             {
-              label: 'Peak',
+              label: t('cr.series.peak'),
               data: toPoints(data, (e) => percent(e.peak?.otpNumerator, e.peak?.otpDenominator)),
               style: { color: CHART_COLORS.BLUE, width: 1 },
             },
             {
-              label: 'Off-peak',
+              label: t('cr.series.offPeak'),
               data: toPoints(data, (e) =>
                 percent(e.offPeak?.otpNumerator, e.offPeak?.otpDenominator)
               ),
@@ -72,14 +73,14 @@ export const CommuterRailReliability: React.FC<CommuterRailReliabilityProps> = (
           startDate={startDate!}
           endDate={endDate!}
           kind="percent"
-          valueAxisLabel="On time"
+          valueAxisLabel={t('onTime')}
         />
       </Widget>
-      <Widget title="Cancelled trains per day" ready={ready}>
+      <Widget title={t('cr.cancelledPerDay')} ready={ready}>
         <ReliabilityGraph
           data={[
             {
-              label: 'Cancelled',
+              label: t('cr.series.cancelled'),
               data: toPoints(data, (e) => perDay(e, e.cancelled)),
               style: { color: CHART_COLORS.RED },
             },
@@ -88,7 +89,7 @@ export const CommuterRailReliability: React.FC<CommuterRailReliabilityProps> = (
           startDate={startDate!}
           endDate={endDate!}
           kind="count"
-          valueAxisLabel="Cancelled per day"
+          valueAxisLabel={t('cr.cancelledAxis')}
         />
       </Widget>
     </>

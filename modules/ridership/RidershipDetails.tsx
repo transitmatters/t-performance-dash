@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { formatNumber } from '../../common/i18n/format';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useRidershipData } from '../../common/api/hooks/ridership';
@@ -17,6 +18,7 @@ import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 import { getRidershipStats } from './utils/utils';
 
 export function RidershipDetails() {
+  const { t } = useTranslation(['ridership', 'common']);
   const {
     line,
     query: { startDate, endDate, busRoute, crRoute, ferryRoute },
@@ -42,37 +44,41 @@ export function RidershipDetails() {
       Math.abs(delta) <= negligible ? 'flat' : delta > 0 ? 'good' : 'bad';
     const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'up' : 'down';
     return {
-      label: `${delta > 0 ? '+' : ''}${formatNumber(Math.round(delta))} · ${word}`,
+      label: t(`common:stats.delta.${word}`, {
+        delta: `${delta > 0 ? '+' : ''}${formatNumber(Math.round(delta))}`,
+      }),
       sentiment,
     };
   };
 
   return (
-    <PageWrapper pageTitle={'Ridership'}>
+    <PageWrapper pageTitle={t('common:pages.ridership.name')}>
       <ChartPageDiv>
         {stats && Number.isFinite(stats.average) && (
           <StatCardGrid>
             <StatCard
-              label="Average weekday riders"
+              label={t('stats.averageWeekday')}
               value={`${formatNumber(Math.round(stats.average))}`}
               delta={deltaFor(stats.averageDelta, 1)}
             />
             <StatCard
-              label="Of historical maximum"
+              label={t('stats.ofHistoricalMaximum')}
               value={
                 Number.isFinite(stats.percentage) ? `${Math.round(stats.percentage * 100)}%` : '—'
               }
             />
             <StatCard
               label={
-                stats.peakDate ? `Peak day · ${config.getWidgetTitle(stats.peakDate)}` : 'Peak day'
+                stats.peakDate
+                  ? t('stats.peakDayOn', { date: config.getWidgetTitle(stats.peakDate) })
+                  : t('stats.peakDay')
               }
               value={stats.peakCount != null ? `${formatNumber(Math.round(stats.peakCount))}` : '—'}
-              unit="riders"
+              unit={t('stats.riders')}
             />
           </StatCardGrid>
         )}
-        <Widget title="Weekday ridership" ready={[ridership, startDate, endDate, lineId]}>
+        <Widget title={t('weekdayRidership')} ready={[ridership, startDate, endDate, lineId]}>
           <RidershipGraphWrapper
             data={ridership.data!}
             config={config}

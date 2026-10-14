@@ -1,5 +1,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
@@ -11,6 +12,7 @@ import { getRidershipLineId } from '../../common/utils/ridership';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 
 export const RidershipWidget: React.FC = () => {
+  const { t } = useTranslation('ridership');
   const { line, query } = useDelimitatedRoute();
   const { startDate } = OVERVIEW_OPTIONS[query.view ?? 'year'];
   const endDate = TODAY_STRING;
@@ -25,7 +27,7 @@ export const RidershipWidget: React.FC = () => {
 
   return (
     <WidgetDiv>
-      <WidgetTitle title="Weekday ridership" tab="ridership" line={line} />
+      <WidgetTitle title={t('weekdayRidership')} tab="ridership" line={line} />
       {ridership.data && serviceReady ? (
         <RidershipGraphWrapper
           line={line}

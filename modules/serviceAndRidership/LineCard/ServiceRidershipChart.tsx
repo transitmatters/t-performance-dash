@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import { i18n } from '../../../common/i18n';
 import type { LineData } from '../types';
 
 import type { Dataset } from '../../../common/components/charts/TimeSeriesChart';
@@ -19,12 +21,10 @@ type Props = {
   baselineMode?: BaselineMode;
 };
 
-const getRidershipNoun = (lineId: string) => {
-  if (['line-Red', 'line-Orange', 'line-Blue', 'line-Green'].includes(lineId)) {
-    return 'faregate validations';
-  }
-  return 'riders';
-};
+const ridershipTooltip = (lineId: string, value: number) =>
+  ['line-Red', 'line-Orange', 'line-Blue', 'line-Green'].includes(lineId)
+    ? i18n.t('serviceAndRidership:chart.ridershipValidations', { value })
+    : i18n.t('serviceAndRidership:chart.ridershipRiders', { value });
 
 const asPercentString = (p: number) => Math.round(100 * p).toString() + '%';
 
@@ -69,6 +69,7 @@ const getNormalizedData = (
 };
 
 export const ServiceRidershipChart = (props: Props) => {
+  const { t } = useTranslation('serviceAndRidership');
   const {
     color,
     serviceHistory,
@@ -81,13 +82,13 @@ export const ServiceRidershipChart = (props: Props) => {
 
   const data = useMemo((): Dataset[] => {
     const service: Dataset = {
-      label: 'Service levels',
+      label: t('chart.service'),
       data: getNormalizedData(serviceHistory, startDate, endDate, baselineMode),
       style: {
         fillPattern: 'striped' as const,
         tooltipLabel(point) {
           const { actualValue } = point as unknown as { actualValue: number };
-          return `Service levels: ${actualValue} trips/day`;
+          return t('chart.serviceTooltip', { value: actualValue });
         },
       },
     };
@@ -95,19 +96,19 @@ export const ServiceRidershipChart = (props: Props) => {
       return [
         service,
         {
-          label: 'Ridership',
+          label: t('chart.ridership'),
           data: getNormalizedData(ridershipHistory, startDate, endDate, baselineMode),
           style: {
             tooltipLabel(point) {
               const { actualValue } = point as unknown as { actualValue: number };
-              return `Ridership: ${actualValue} ${getRidershipNoun(lineId)}/day`;
+              return ridershipTooltip(lineId, actualValue);
             },
           },
         },
       ];
     }
     return [service];
-  }, [serviceHistory, startDate, endDate, ridershipHistory, lineId, baselineMode]);
+  }, [serviceHistory, startDate, endDate, ridershipHistory, lineId, baselineMode, t]);
 
   return (
     <div className={styles.serviceAndRidershipChartContainer}>

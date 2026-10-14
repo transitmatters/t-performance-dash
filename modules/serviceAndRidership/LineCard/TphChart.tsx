@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Chart, Filler, Legend } from '@chartjs-utils';
 import Color from 'color';
 import { Line } from '@chartjs-components';
+import { useTranslation } from 'react-i18next';
 
 Chart.register(Filler, Legend);
 
@@ -20,6 +21,7 @@ type Props = {
 };
 
 export const TphChart = (props: Props) => {
+  const { t } = useTranslation('serviceAndRidership');
   const { color, baselineTph, currentTph, highestTph } = props;
   const currentColor = Color(color).alpha(0.4).rgb().string();
 
@@ -28,7 +30,7 @@ export const TphChart = (props: Props) => {
       labels: hourLabels,
       datasets: [
         {
-          label: 'Pre-COVID trips per hour',
+          label: t('tph.baseline'),
           data: baselineTph,
           stepped: true,
           borderColor: color,
@@ -38,7 +40,7 @@ export const TphChart = (props: Props) => {
           pointRadius: 0,
         },
         {
-          label: 'Current trips per hour',
+          label: t('tph.current'),
           data: currentTph,
           stepped: true,
           borderWidth: 2,
@@ -49,7 +51,7 @@ export const TphChart = (props: Props) => {
         },
       ],
     }),
-    [baselineTph, color, currentColor, currentTph]
+    [baselineTph, color, currentColor, currentTph, t]
   );
 
   const { datasets } = data;
@@ -73,7 +75,7 @@ export const TphChart = (props: Props) => {
             label: (context) => {
               const dataset = datasets[context.datasetIndex];
               const point = dataset.data[context.dataIndex];
-              return `${dataset.label}: ${point} (each direction)`;
+              return t('tph.tooltip', { label: dataset.label, value: point });
             },
           },
         },
@@ -90,7 +92,7 @@ export const TphChart = (props: Props) => {
         },
       },
     };
-  }, [datasets, highestTph]);
+  }, [datasets, highestTph, t]);
 
   return (
     <div className={styles.tphChartContainer}>

@@ -5,6 +5,7 @@ import 'chartjs-adapter-date-fns';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { COLORS } from '../../../common/constants/colors';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
@@ -38,6 +39,7 @@ export const DelayByCategoryGraph: React.FC<DelayByCategoryGraphProps> = ({
   data,
   showTitle = false,
 }) => {
+  const { t } = useTranslation(['delays', 'common']);
   const { linePath } = useDelimitatedRoute();
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
@@ -78,7 +80,7 @@ export const DelayByCategoryGraph: React.FC<DelayByCategoryGraphProps> = ({
             labels,
             datasets: [
               {
-                label: `Delay by Category`,
+                label: t('charts.byCategory'),
                 backgroundColor: backgroundColors,
                 data: delayTotals,
               },
@@ -104,10 +106,10 @@ export const DelayByCategoryGraph: React.FC<DelayByCategoryGraphProps> = ({
                 callbacks: {
                   label: (tooltipItem) => {
                     if (!tooltipItem.parsed.y) return '';
-                    return `${tooltipItem.label} total delay: ${getFormattedTimeString(
-                      tooltipItem.parsed.y,
-                      'minutes'
-                    )}`;
+                    return t('charts.categoryTotal', {
+                      reason: tooltipItem.label,
+                      delay: getFormattedTimeString(tooltipItem.parsed.y, 'minutes'),
+                    });
                   },
                 },
               },
@@ -131,7 +133,7 @@ export const DelayByCategoryGraph: React.FC<DelayByCategoryGraphProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Time delayed (minutes)',
+                  text: t('charts.timeDelayedAxis'),
                   color: COLORS.design.subtitleGrey,
                 },
               },
@@ -162,10 +164,10 @@ export const DelayByCategoryGraph: React.FC<DelayByCategoryGraphProps> = ({
                   ctx.textAlign = 'center';
                   ctx.textBaseline = 'middle';
                   ctx.font = "16px normal 'Helvetica Nueue'";
-                  ctx.fillText('No data to display', width / 2, height / 2);
+                  ctx.fillText(t('common:charts.noDataToDisplay'), width / 2, height / 2);
                   ctx.restore();
                 }
-                if (showTitle) drawSimpleTitle(`Speed`, chart);
+                if (showTitle) drawSimpleTitle(t('common:chartExport.titles.speed'), chart);
               },
             },
             ChartjsPluginWatermark,

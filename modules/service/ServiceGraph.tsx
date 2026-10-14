@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
@@ -19,15 +20,16 @@ interface ServiceGraphProps {
 }
 
 export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphProps) => {
+  const { t } = useTranslation('service');
   const { data, predictedData, startDate, endDate, config } = props;
   const { line } = useDelimitatedRoute();
 
   const peak = useScheduledServiceBaseline(line);
 
   const benchmarks = useMemo(() => {
-    const label = `Historical maximum (${peak} round trips)`;
+    const label = t('graph.historicalMaximum', { peak });
     return [{ label, value: peak }];
-  }, [peak]);
+  }, [peak, t]);
 
   const blocks = useMemo(() => {
     const shuttlingBlocks = getShuttlingBlockAnnotations(data);
@@ -49,7 +51,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
 
   const scheduled = useMemo(() => {
     return {
-      label: 'Scheduled round trips',
+      label: t('graph.scheduledRoundTrips'),
       data: allDates.map((date) => {
         const scheduledToday = scheduledDataByDate[date];
         const deliveredToday = deliveredDataByDate[date];
@@ -62,15 +64,15 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
         fillPattern: 'striped' as const,
         tooltipLabel: (point) => {
           const percentOfPeak = `${((100 * point.value) / peak).toFixed(1)}%`;
-          return `Scheduled: ${point.value} (${percentOfPeak} of peak)`;
+          return t('graph.scheduledTooltip', { value: point.value, percent: percentOfPeak });
         },
       },
     };
-  }, [allDates, deliveredDataByDate, peak, scheduledDataByDate]);
+  }, [allDates, deliveredDataByDate, peak, scheduledDataByDate, t]);
 
   const delivered = useMemo(() => {
     return {
-      label: 'Daily round trips',
+      label: t('dailyRoundTrips'),
       data: allDates.map((date) => {
         const deliveredToday = deliveredDataByDate[date];
         const value = deliveredToday?.miles_covered ? Math.round(deliveredToday.count) : 0;
@@ -79,16 +81,16 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
       style: {
         tooltipLabel: (point) => {
           const percentOfPeak = `${((100 * point.value) / peak).toFixed(1)}%`;
-          return `Actual: ${point.value} (${percentOfPeak} of peak)`;
+          return t('graph.actualTooltip', { value: point.value, percent: percentOfPeak });
         },
       },
     };
-  }, [data, peak]);
+  }, [data, peak, t]);
 
   return (
     <ChartStack>
       <ScheduledAndDeliveredGraph
-        valueAxisLabel="Round trips"
+        valueAxisLabel={t('graph.axis')}
         scheduled={scheduled}
         delivered={delivered}
         blocks={blocks}
