@@ -1,0 +1,3 @@
+[settings]
+# Read versions from .nvmrc / .python-version so other version managers work too
+idiomatic_version_file_enable_tools = ["node", "python"]
