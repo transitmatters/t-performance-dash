@@ -1,6 +1,8 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faUsers, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
+import { i18n } from '../../common/i18n';
 import { Link } from '../../common/components/general/Link';
 import {
   SidebarGroup,
@@ -12,11 +14,16 @@ import {
 import { useDelimitatedRoute } from '../../common/utils/router';
 
 const SYSTEM_ITEMS = [
-  { page: 'landing', name: 'Home', href: '/', icon: faHouse },
-  { page: 'systemSlowzones', name: 'Slow zones', href: '/system/slowzones', icon: faWarning },
+  { page: 'landing', name: i18n.t('pages.landing.name'), href: '/', icon: faHouse },
+  {
+    page: 'systemSlowzones',
+    name: i18n.t('pages.systemSlowzones.name'),
+    href: '/system/slowzones',
+    icon: faWarning,
+  },
   {
     page: 'systemServiceAndRidership',
-    name: 'Service & Ridership',
+    name: i18n.t('pages.systemServiceAndRidership.name'),
     href: '/system/ridership',
     icon: faUsers,
   },
@@ -27,11 +34,12 @@ interface NavSystemProps {
 }
 
 export const NavSystem: React.FC<NavSystemProps> = ({ close }) => {
+  const { t } = useTranslation('navigation');
   const { page } = useDelimitatedRoute();
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>System</SidebarGroupLabel>
+      <SidebarGroupLabel>{t('system')}</SidebarGroupLabel>
       <SidebarMenu>
         {SYSTEM_ITEMS.map((item) => (
           <SidebarMenuItem key={item.page}>

@@ -1,0 +1,166 @@
+{
+  "rows": {
+    "red": "Red Line",
+    "orange": "Orange Line",
+    "blue": "Blue Line",
+    "green": "Green Line",
+    "commuter-rail": "Commuter Rail",
+    "frequent-bus": "Frequent Bus",
+    "all-bus": "All Bus",
+    "mattapan": "Mattapan",
+    "ferry": "Ferry"
+  },
+  "metrics": {
+    "service": {
+      "label": "Service",
+      "inSentence": "service"
+    },
+    "frequency": {
+      "label": "Frequency",
+      "inSentence": "frequency"
+    },
+    "speed": {
+      "label": "Speed",
+      "inSentence": "speed"
+    },
+    "slowZones": {
+      "label": "Slow zones",
+      "inSentence": "slow zones"
+    },
+    "fleet": {
+      "label": "Vehicles",
+      "inSentence": "vehicles"
+    }
+  },
+  "definitions": {
+    "scheduledService": "Scheduled trips per day (the 12-week median), compared with the most scheduled in any 12-week stretch at least 3 years ago.",
+    "subwayService": "Trips run per day (the 12-week median), compared with the busiest 4-week stretch at least 3 years ago.",
+    "frequencyTrain": "Share of scheduled service hours, first trip to last, with a train at least every {{minutes}} minutes. Weekdays count five times as much as Saturday or Sunday.",
+    "frequencyBus": "Share of scheduled service hours, first trip to last, with a bus at least every {{minutes}} minutes. Weekdays count five times as much as Saturday or Sunday.",
+    "frequencyAllBus": "Share of scheduled service hours, first trip to last, with a bus at least every {{minutes}} minutes. Weekdays count five times as much as Saturday or Sunday. Each route counts by its riders.",
+    "speed": "Median weekly average speed over 12 weeks, end to end including stops, compared with the fastest 4-week stretch at least 3 years ago.",
+    "slowZones": "Average extra time per day that slow zones add to a trip, over the last 12 weeks.",
+    "subwayFleet": "Age of the oldest cars still in regular service (at least 1% of cars over the last 4 weeks), counted from when that type was first built. Riders feel the oldest trains, not the average.",
+    "commuterRailFleet": "Share of Commuter Rail service run with electric trains.",
+    "busFleet": "Share of bus trips run by battery-electric or hybrid buses over the last 4 weeks."
+  },
+  "hero": {
+    "frequencyDetail": "of service hours at every {{minutes}} min or better",
+    "subwayFrequency": {
+      "label": "Subway"
+    },
+    "service": {
+      "label": "Scheduled service",
+      "detail": "of the most trips ever scheduled"
+    },
+    "slowZones": {
+      "label": "Slow zone delay",
+      "detail": "added per day across the subway, last week"
+    },
+    "frequentBus": {
+      "label": "Frequent Bus"
+    },
+    "crHeadway": {
+      "label": "Commuter Rail midday",
+      "detail": "between trains on weekdays",
+      "saturday": "{{minutes}} min on Saturdays"
+    },
+    "label": "The T at a glance"
+  },
+  "status": {
+    "win": "Win",
+    "good": "Good",
+    "room": "Room to grow",
+    "problem": "Needs work",
+    "insufficient": "Not enough data",
+    "na": "Not measured"
+  },
+  "headline": {
+    "strong": "Strong",
+    "good": "Good",
+    "room": "Room to grow",
+    "needsWork": "Needs work",
+    "limited": "Limited data"
+  },
+  "heldBackBy": "Held back by {{metrics}}",
+  "units": {
+    "mph": "{{value}} mph",
+    "min": "{{value}} min",
+    "s": "{{value}} s",
+    "hr": "{{value}} hr",
+    "yr": "{{value}} yr",
+    "tripsPerDay": "trips/day",
+    "scheduledTripsPerDay": "scheduled trips/day"
+  },
+  "notApplicable": "n/a",
+  "trend": {
+    "yearAgo": "{{arrow}} {{amount}} pts vs a year ago",
+    "recent": "{{arrow}} {{amount}}% last 2 weeks vs 12"
+  },
+  "thresholds": "Win {{op}}{{win}} · Good {{op}}{{good}} · Room to grow {{op}}{{room}}",
+  "notes": {
+    "noBaseline": {
+      "plain": "No baseline yet.",
+      "withReason": "No baseline yet. {{reason}}",
+      "noPrePandemicHistory": "No baseline yet: records start after 2020.",
+      "seasonal": "No baseline yet: seasonal service.",
+      "notComparable": "No baseline yet: service was counted differently before.",
+      "recordsTooRecent": "No baseline yet: records start {{start}}, and baselines only use weeks at least {{years}} years old.",
+      "tooFewWeeks": "No baseline yet: {{weeks}} weeks of records are at least {{years}} years old, and a baseline needs {{needed}}."
+    },
+    "excludedWeeks_one": "Leaves out {{count}} week of shutdowns or holidays.",
+    "excludedWeeks_other": "Leaves out {{count}} weeks of shutdowns or holidays.",
+    "latestData": "Latest data is from {{date}}.",
+    "noRecentData": "No recent data.",
+    "busFleetError": "Couldn't load bus fleet data.",
+    "noRecentFleetData": "No recent fleet data.",
+    "comingSoon": "Coming to the home page soon.",
+    "greenTrunk": "Trips on the shared trunk, all branches together.",
+    "notInSchedule": "Not in the schedule data yet.",
+    "notMeasuredCommuterRail": "Not measured for Commuter Rail yet.",
+    "routesWithBaseline_one": "{{count}} of {{total}} routes have a baseline.",
+    "routesWithBaseline_other": "{{count}} of {{total}} routes have a baseline.",
+    "silverLineBranches": "Silver Line branches that share a street count together.",
+    "noFerryFrequencyGoal": "No frequency goal for ferries yet.",
+    "notMeasuredFerries": "Not measured for ferries.",
+    "slowZonesSubwayOnly": "Slow zones are tracked on the subway only.",
+    "notMeasured": "Not measured."
+  },
+  "cells": {
+    "best": "Best: {{value}} {{unit}}",
+    "bestOn": "Best: {{value}} {{unit}} ({{date}})",
+    "goal": "Goal: every {{minutes}} min",
+    "yearAgo": "A year ago: {{percent}}% of hours",
+    "busFleetMix": "Battery {{battery}} · Hybrid {{hybrid}} of trips",
+    "averageBusAge": "Average bus age: {{years}} yr",
+    "averageCarAge": "Average car age: {{years}} yr",
+    "newTrainTrips": "{{percent}}% of trips on new trains",
+    "oldestInService": "Oldest in service: {{type}} ({{years}})",
+    "oldestInServiceShare": "Oldest in service: {{type}} ({{years}}), {{share}}% of cars",
+    "electricShare": "Share of service run electric"
+  },
+  "pageTitle": "Home",
+  "cellDetail": {
+    "seeDetails": "See the details"
+  },
+  "donate": {
+    "title": "Keep the data flowing",
+    "body": "TransitMatters is a nonprofit fighting for better public transit in Boston. Volunteers build this dashboard, and your donation keeps it running.",
+    "button": "Donate to TransitMatters"
+  },
+  "title": {
+    "heading": "How is the T doing?",
+    "subheading": "Every line and mode, measured against the best it has done and the service riders need.",
+    "updated": "Updated {{date}}."
+  },
+  "scoreboard": {
+    "cellLabel": "{{row}} {{metric}}: {{status}}, {{figure}}. Show details.",
+    "cellLabelNotMeasured": "{{row}} {{metric}}: {{status}}. Show details.",
+    "line": "Line",
+    "alsoRunning": "Also running",
+    "title": "Every line, every measure",
+    "description": "Each line is only as good as its weakest measure: there's no averaging. Tap any stop for the numbers behind it.",
+    "loading": "Loading the latest numbers.",
+    "error": "Couldn't load the latest numbers. Each line's own pages are still up to date."
+  }
+}

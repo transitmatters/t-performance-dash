@@ -1,6 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 
+import { i18n } from '../../../common/i18n';
 import {
   Card,
   CardHeader,
@@ -28,10 +29,22 @@ interface MetricChartCardProps {
 }
 
 const METRIC_COPY: Record<MetricKey, { title: string; subtitle: string }> = {
-  speed: { title: 'Speed', subtitle: 'Daily average, last 30 days' },
-  service: { title: 'Service delivered', subtitle: 'Daily round trips, last 30 days' },
-  slowzones: { title: 'Slow zones', subtitle: 'Time lost to slow zones, last 30 days' },
-  ridership: { title: 'Ridership', subtitle: 'Fare validations, last 30 days' },
+  speed: {
+    title: i18n.t('dashboard:chart.speed.title'),
+    subtitle: i18n.t('dashboard:chart.speed.subtitle'),
+  },
+  service: {
+    title: i18n.t('dashboard:chart.service.title'),
+    subtitle: i18n.t('dashboard:chart.service.subtitle'),
+  },
+  slowzones: {
+    title: i18n.t('dashboard:chart.slowZones.title'),
+    subtitle: i18n.t('dashboard:chart.slowZones.subtitle'),
+  },
+  ridership: {
+    title: i18n.t('dashboard:chart.ridership.title'),
+    subtitle: i18n.t('dashboard:chart.ridership.subtitle'),
+  },
 };
 
 /** The single chart the scorecard drives — clicking a row swaps which metric renders here. */

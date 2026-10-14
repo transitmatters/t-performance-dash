@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Link } from '../../../common/components/general/Link';
 import { METRICS, definitionFor } from '../config';
 import { STATUS_LABELS } from '../copy';
@@ -16,6 +17,7 @@ interface CellDetailProps {
 
 /** Everything behind one stop: the number, what it's judged against, and how the status is set. */
 export const CellDetail: React.FC<CellDetailProps> = ({ row, cell }) => {
+  const { t } = useTranslation('home');
   const method = METRICS[cell.metric];
   const trend = formatTrend(cell);
   const direction = cell.direction ?? method.direction;
@@ -69,7 +71,7 @@ export const CellDetail: React.FC<CellDetailProps> = ({ row, cell }) => {
           href={cell.href}
           className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
         >
-          See the details <ArrowRight className="size-3" aria-hidden />
+          {t('cellDetail.seeDetails')} <ArrowRight className="size-3" aria-hidden />
         </Link>
       )}
     </div>

@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { i18n } from '../../../common/i18n';
 import { stations } from '../../../common/constants/stations';
 import type { BusRoute, LineShort } from '../../../common/types/lines';
 import type { Station } from '../../../common/types/stations';
@@ -35,7 +36,7 @@ export const getDateString = (validFrom: string, validTo: string) => {
   const validFromDay = dayjs(validFrom);
   const validToDay = dayjs(validTo);
   if (validToDay.diff(validFromDay, 'hour') > 24) {
-    return 'All day ';
+    return i18n.t('commute:time.allDay');
   }
-  return `${validFromDay.format('h:mm a')} - ${validToDay.format('h:mm a')} `;
+  return `${validFromDay.format('h:mm a')} - ${validToDay.format('h:mm a')}`;
 };

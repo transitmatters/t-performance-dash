@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import type { UseQueryResult } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { lineColorBackground } from '../../../common/styles/general';
 import { Divider } from '../../../common/components/general/Divider';
@@ -14,6 +15,7 @@ interface AlertsProps {
 }
 
 export const Alerts: React.FC<AlertsProps> = ({ title, alerts }) => {
+  const { t } = useTranslation('commute');
   const {
     line,
     lineShort,
@@ -30,7 +32,7 @@ export const Alerts: React.FC<AlertsProps> = ({ title, alerts }) => {
   if (!alertsReady) {
     return (
       <div className={divStyle}>
-        <h3 className="w-full px-4 text-2xl md:w-auto">Alerts</h3>
+        <h3 className="w-full px-4 text-2xl md:w-auto">{t('title')}</h3>
         <ChartPlaceHolder query={alerts} isInverse />
       </div>
     );
@@ -40,7 +42,7 @@ export const Alerts: React.FC<AlertsProps> = ({ title, alerts }) => {
       <h3 className="w-full px-4 text-2xl md:w-auto">{title}</h3>
       <div className="flex w-full flex-row gap-x-4 overflow-x-auto px-4 md:flex-col md:gap-x-0 md:overflow-x-auto">
         <div className="md:w-full">
-          <Divider title="Today" line={line} />
+          <Divider title={t('today')} line={line} />
 
           <AlertBox
             alerts={alerts.data || []}
@@ -50,7 +52,7 @@ export const Alerts: React.FC<AlertsProps> = ({ title, alerts }) => {
           />
         </div>
         <div className="md:mt-2 md:flex md:w-full md:flex-col">
-          <Divider title="Upcoming" line={line} />
+          <Divider title={t('upcoming')} line={line} />
 
           <AlertBox
             alerts={alerts.data || []}

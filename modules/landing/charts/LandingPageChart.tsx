@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import 'chartjs-adapter-date-fns';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { useTranslation } from 'react-i18next';
 
 import { getDateFnsLocale } from '../../../common/i18n/format';
 import { COLORS } from '../../../common/constants/colors';
@@ -30,6 +31,7 @@ interface LandingPageChartsProps {
 const CHART_PADDING = 48;
 
 export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, labels, id }) => {
+  const { t } = useTranslation('landing');
   const isMobile = !useBreakpoint('md');
 
   const chart = useMemo(() => {
@@ -62,9 +64,10 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
                 position: 'nearest',
                 callbacks: {
                   label: (value) =>
-                    `${value.formattedValue}% of historical maximum (${
-                      LINE_OBJECTS[LANDING_RAIL_LINES[value.datasetIndex]].name
-                    })`,
+                    t('chart.tooltip', {
+                      percent: value.formattedValue,
+                      line: LINE_OBJECTS[LANDING_RAIL_LINES[value.datasetIndex]].name,
+                    }),
                   title: (value) => {
                     const startDay = dayjs(value[0].label);
                     const endDay = startDay.add(6, 'days');
@@ -89,7 +92,7 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
                 },
                 title: {
                   display: true,
-                  text: 'Percentage of historical maximum',
+                  text: t('chart.axis'),
                   color: COLORS.design.darkGrey,
                 },
               },
@@ -122,6 +125,6 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
         />
       </div>
     );
-  }, [datasets, labels, id, isMobile]);
+  }, [datasets, labels, id, isMobile, t]);
   return chart;
 };

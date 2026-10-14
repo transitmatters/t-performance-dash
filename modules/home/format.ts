@@ -1,3 +1,4 @@
+import { i18n } from '../../common/i18n';
 import type { MetricMethod } from './config';
 import type { Cell, Status, Unit } from './types';
 
@@ -19,13 +20,17 @@ export const formatValue = (value: number | null, unit: Unit | 'minutes'): strin
     case 'pct':
       return `${Math.round(value * 100)}%`;
     case 'mph':
-      return `${round(value, 1)} mph`;
+      return i18n.t('home:units.mph', { value: round(value, 1) });
     case 'seconds':
-      return value >= 90 ? `${round(value / 60, 1)} min` : `${Math.round(value)} s`;
+      return value >= 90
+        ? i18n.t('home:units.min', { value: round(value / 60, 1) })
+        : i18n.t('home:units.s', { value: Math.round(value) });
     case 'minutes':
-      return value >= 90 ? `${round(value / 60, 1)} hr` : `${round(value, value < 10 ? 1 : 0)} min`;
+      return value >= 90
+        ? i18n.t('home:units.hr', { value: round(value / 60, 1) })
+        : i18n.t('home:units.min', { value: round(value, value < 10 ? 1 : 0) });
     case 'years':
-      return `${Math.round(value)} yr`;
+      return i18n.t('home:units.yr', { value: Math.round(value) });
     case 'count':
       return formatNumber(value);
   }
@@ -33,7 +38,7 @@ export const formatValue = (value: number | null, unit: Unit | 'minutes'): strin
 
 /** The figure shown on a stop; `withUnit` adds the count's label (trips/day) for the detail. */
 export const formatCell = (cell: Cell, withUnit = false) => {
-  if (cell.status === 'na') return 'n/a';
+  if (cell.status === 'na') return i18n.t('home:notApplicable');
   const text = formatValue(cell.value, cell.unit);
   return withUnit && cell.unit === 'count' && cell.unitLabel && text !== '—'
     ? `${text} ${cell.unitLabel}`
@@ -46,16 +51,16 @@ export const formatTrend = (cell: Pick<Cell, 'trend' | 'trendBasis'>) => {
   const arrow = cell.trend > 0 ? '▲' : cell.trend < 0 ? '▼' : '';
   const amount = Math.abs(Math.round(cell.trend * 100));
   return cell.trendBasis === 'yearAgo'
-    ? `${arrow} ${amount} pts vs a year ago`
-    : `${arrow} ${amount}% last 2 weeks vs 12`;
+    ? i18n.t('home:trend.yearAgo', { arrow, amount })
+    : i18n.t('home:trend.recent', { arrow, amount });
 };
 
 const formatThreshold = (value: number, unit: Unit) =>
   unit === 'pct'
     ? `${Math.round(value * 100)}%`
     : unit === 'seconds'
-      ? `${value} s`
-      : `${value} yr`;
+      ? i18n.t('home:units.s', { value })
+      : i18n.t('home:units.yr', { value });
 
 export const formatThresholds = (
   method: MetricMethod,
@@ -65,7 +70,7 @@ export const formatThresholds = (
 ) => {
   const op = direction === 'higher' ? '≥' : '≤';
   const [win, good, room] = thresholds.map((t) => formatThreshold(t, unit));
-  return `Win ${op}${win} · Good ${op}${good} · Room to grow ${op}${room}`;
+  return i18n.t('home:thresholds', { op, win, good, room });
 };
 
 export const STATUS_TONE: Record<Status, string> = {

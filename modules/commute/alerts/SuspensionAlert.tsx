@@ -2,6 +2,9 @@ import React from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLeftRight } from '@fortawesome/free-solid-svg-icons';
+import type { Line } from '../../../common/types/lines';
+import { LINE_OBJECTS } from '../../../common/constants/lines';
+import { i18n } from '../../../common/i18n';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
 import type { LineShort } from '../../../common/types/lines';
 import { AlertBoxInner } from './AlertBoxInner';
@@ -20,14 +23,20 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort) => {
 
     return (
       <>
-        <p className="mr-1">No service</p>
+        <p className="mr-1">{i18n.t('commute:suspension.noService')}</p>
         <p className="font-bold">{min?.stop_name}</p>
         <FontAwesomeIcon icon={faLeftRight} className={'mx-2 h-4 w-4'} />
         <p className="font-bold">{max?.stop_name}</p>
       </>
     );
   }
-  return <p className="mr-1">Detours on {lineShort} Line</p>;
+  return (
+    <p className="mr-1">
+      {i18n.t('commute:suspension.detours', {
+        line: LINE_OBJECTS[`line-${lineShort.toLowerCase()}` as Line]?.name ?? lineShort,
+      })}
+    </p>
+  );
 };
 
 export const SuspensionAlert: React.FC<SuspensionAlertProps> = ({

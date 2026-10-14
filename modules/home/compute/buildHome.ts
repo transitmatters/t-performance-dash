@@ -1,3 +1,4 @@
+import { i18n } from '../../../common/i18n';
 import type { HistoricalBaselines } from '../../../common/types/baselines';
 import type {
   DeliveredTripMetrics,
@@ -58,7 +59,7 @@ const SLOW_ZONE_KEYS: Record<SubwayLine, string> = {
   'line-mattapan': 'Mattapan',
 };
 
-const COMING_SOON = 'Coming to the home page soon.';
+const COMING_SOON = i18n.t('home:notes.comingSoon');
 
 // The four core lines; Mattapan sits under "Also running".
 const SUBWAY_FREQUENCY_LINE_IDS = ['line-Red', 'line-Orange', 'line-Blue', 'line-Green'];
@@ -124,7 +125,7 @@ const subwayCells = (
       now,
       aggregate: 'median',
       unit: 'pct',
-      rawUnitLabel: 'trips/day',
+      rawUnitLabel: i18n.t('home:units.tripsPerDay'),
       href: lineHref(row, 'service'),
     }
   );
@@ -137,13 +138,10 @@ const subwayCells = (
           now,
           asOf: src.serviceAndRidership.summaryData.endDate,
           href: lineHref(row, 'service'),
-          notes:
-            line === 'line-green'
-              ? ['Trips on the shared trunk, all branches together.']
-              : undefined,
+          notes: line === 'line-green' ? [i18n.t('home:notes.greenTrunk')] : undefined,
         }
       )
-    : { ...naCell('frequency', 'pct', 'Not in the schedule data yet.'), status: 'insufficient' };
+    : { ...naCell('frequency', 'pct', i18n.t('home:notes.notInSchedule')), status: 'insufficient' };
 
   cells.speed = ratioCell(
     'speed',
@@ -183,8 +181,10 @@ const subwayCells = (
   const oldest = oldestInService(line, trips);
   const oldestAge = oldest?.builtFrom != null ? now.getFullYear() - oldest.builtFrom : null;
   const context = [
-    Number.isFinite(recentAge) ? `Average car age: ${Math.round(recentAge)} yr` : null,
-    newTrips > 0 ? `${Math.round(newTrips)}% of trips on new trains` : null,
+    Number.isFinite(recentAge)
+      ? i18n.t('home:cells.averageCarAge', { years: Math.round(recentAge) })
+      : null,
+    newTrips > 0 ? i18n.t('home:cells.newTrainTrips', { percent: Math.round(newTrips) }) : null,
   ].filter(Boolean);
   cells.fleet = {
     ...judgedCell('fleet', oldestAge, {
@@ -192,9 +192,16 @@ const subwayCells = (
       window: ageWindow,
       now,
       secondary: oldest
-        ? `Oldest in service: ${oldest.type.label} (${oldest.type.years})${
-            oldest.share !== null ? `, ${Math.round(oldest.share)}% of cars` : ''
-          }`
+        ? oldest.share !== null
+          ? i18n.t('home:cells.oldestInServiceShare', {
+              type: oldest.type.label,
+              years: oldest.type.years,
+              share: Math.round(oldest.share),
+            })
+          : i18n.t('home:cells.oldestInService', {
+              type: oldest.type.label,
+              years: oldest.type.years,
+            })
         : undefined,
       baselineLabel: context.length ? context.join(' · ') : undefined,
       // Blue and Mattapan have no Fleet tab (one car type each), so their fleet links go nowhere new.
@@ -227,7 +234,7 @@ const modeServiceCell = (row: RowConfig, src: HomeSources, mode: string, baselin
       now: src.now,
       aggregate: 'median',
       unit: 'pct',
-      rawUnitLabel: 'scheduled trips/day',
+      rawUnitLabel: i18n.t('home:units.scheduledTripsPerDay'),
       href: row.href,
     }
   );
@@ -259,7 +266,7 @@ const buildCells = (row: RowConfig, src: HomeSources): Partial<Record<MetricId, 
           FREQUENCY_GOALS.commuterRail,
           { now, asOf, href: row.href }
         ),
-        speed: naCell('speed', 'mph', 'Not measured for Commuter Rail yet.'),
+        speed: naCell('speed', 'mph', i18n.t('home:notes.notMeasuredCommuterRail')),
         fleet: judgedCell('fleet', CR_ELECTRIFIED_SHARE, {
           unit: 'pct',
           window: { points: [], values: [1], excluded: 0, asOf },
@@ -268,7 +275,7 @@ const buildCells = (row: RowConfig, src: HomeSources): Partial<Record<MetricId, 
           asOfOffsetDays: 0,
           direction: 'higher',
           thresholds: CR_ELECTRIFIED_THRESHOLDS,
-          secondary: 'Share of service run electric',
+          secondary: i18n.t('home:cells.electricShare'),
         }),
       };
     }
@@ -279,7 +286,12 @@ const buildCells = (row: RowConfig, src: HomeSources): Partial<Record<MetricId, 
       );
       const routeNote =
         withService.length < lines.length
-          ? [`${withService.length} of ${lines.length} routes have a baseline.`]
+          ? [
+              i18n.t('home:notes.routesWithBaseline', {
+                count: withService.length,
+                total: lines.length,
+              }),
+            ]
           : [];
       return {
         service: ratioCell(
@@ -294,7 +306,7 @@ const buildCells = (row: RowConfig, src: HomeSources): Partial<Record<MetricId, 
             now,
             aggregate: 'median',
             unit: 'pct',
-            rawUnitLabel: 'scheduled trips/day',
+            rawUnitLabel: i18n.t('home:units.scheduledTripsPerDay'),
             href: row.href,
             notes: routeNote,
           }
@@ -306,7 +318,7 @@ const buildCells = (row: RowConfig, src: HomeSources): Partial<Record<MetricId, 
             now,
             asOf,
             href: row.href,
-            notes: ['Silver Line branches that share a street count together.'],
+            notes: [i18n.t('home:notes.silverLineBranches')],
           }
         ),
         speed: naCell('speed', 'mph', COMING_SOON),
@@ -329,9 +341,9 @@ const buildCells = (row: RowConfig, src: HomeSources): Partial<Record<MetricId, 
     case 'ferry':
       return {
         service: modeServiceCell(row, src, 'boat', 'mode-boat'),
-        frequency: naCell('frequency', 'pct', 'No frequency goal for ferries yet.'),
-        speed: naCell('speed', 'mph', 'Not measured for ferries.'),
-        fleet: naCell('fleet', 'years', 'Not measured for ferries.'),
+        frequency: naCell('frequency', 'pct', i18n.t('home:notes.noFerryFrequencyGoal')),
+        speed: naCell('speed', 'mph', i18n.t('home:notes.notMeasuredFerries')),
+        fleet: naCell('fleet', 'years', i18n.t('home:notes.notMeasuredFerries')),
       };
     default:
       return {};
@@ -339,7 +351,7 @@ const buildCells = (row: RowConfig, src: HomeSources): Partial<Record<MetricId, 
 };
 
 const NOT_MEASURED: Partial<Record<MetricId, string>> = {
-  slowZones: 'Slow zones are tracked on the subway only.',
+  slowZones: i18n.t('home:notes.slowZonesSubwayOnly'),
 };
 
 const buildRow = (config: RowConfig, src: HomeSources): Row => {
@@ -348,7 +360,11 @@ const buildRow = (config: RowConfig, src: HomeSources): Row => {
     METRIC_ORDER.map((metric) => [
       metric,
       built[metric] ??
-        naCell(metric, METRICS[metric].scoreUnit, NOT_MEASURED[metric] ?? 'Not measured.'),
+        naCell(
+          metric,
+          METRICS[metric].scoreUnit,
+          NOT_MEASURED[metric] ?? i18n.t('home:notes.notMeasured')
+        ),
     ])
   ) as Record<MetricId, Cell>;
   return {
@@ -396,7 +412,10 @@ const buildHero = (src: HomeSources): HeroStat[] => {
     frequentBus: { value: frequent },
     crHeadway: {
       value: crWeekday,
-      note: crSaturday !== null ? `${Math.round(crSaturday)} min on Saturdays` : undefined,
+      note:
+        crSaturday !== null
+          ? i18n.t('home:hero.crHeadway.saturday', { minutes: Math.round(crSaturday) })
+          : undefined,
     },
   };
   return HERO.map((config) => {

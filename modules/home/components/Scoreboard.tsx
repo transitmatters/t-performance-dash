@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { i18n } from '../../../common/i18n';
 import { Link } from '../../../common/components/general/Link';
 import {
   Card,
@@ -81,10 +83,16 @@ const RowTitle: React.FC<{ line: ScoreboardLine; state: HomeState }> = ({
   );
 };
 
-const cellLabel = (row: Row, cell: Cell) =>
-  `${row.label} ${METRICS[cell.metric].label}: ${STATUS_LABELS[cell.status]}${
-    cell.status === 'na' ? '' : `, ${formatCell(cell, true)}`
-  }. Show details.`;
+const cellLabel = (row: Row, cell: Cell) => {
+  const parts = {
+    row: row.label,
+    metric: METRICS[cell.metric].label,
+    status: STATUS_LABELS[cell.status],
+  };
+  return cell.status === 'na'
+    ? i18n.t('home:scoreboard.cellLabelNotMeasured', parts)
+    : i18n.t('home:scoreboard.cellLabel', { ...parts, figure: formatCell(cell, true) });
+};
 
 /** One stop on the strip: the node opens the detail, with the figure and its status beneath. */
 const Stop: React.FC<{ row: Row; cell: Cell; layout: 'column' | 'row' }> = ({
@@ -206,6 +214,7 @@ const DesktopTable: React.FC<{ lines: ScoreboardLine[]; state: HomeState }> = ({
   lines,
   state,
 }) => {
+  const { t } = useTranslation('home');
   const renderRow = (line: ScoreboardLine, index: number) => (
     <tr
       key={line.config.id}
@@ -241,7 +250,7 @@ const DesktopTable: React.FC<{ lines: ScoreboardLine[]; state: HomeState }> = ({
       <thead>
         <tr className="border-b">
           <th scope="col" className="w-56 pb-2 pl-6 text-left">
-            <span className="sr-only">Line</span>
+            <span className="sr-only">{t('scoreboard.line')}</span>
           </th>
           {METRIC_ORDER.map((metric) => (
             <th scope="col" key={metric} className="pb-2 text-xs font-medium text-muted-foreground">
@@ -252,7 +261,7 @@ const DesktopTable: React.FC<{ lines: ScoreboardLine[]; state: HomeState }> = ({
       </thead>
       <tbody>
         {core.map(renderRow)}
-        {also.length > 0 && <GroupHeading>Also running</GroupHeading>}
+        {also.length > 0 && <GroupHeading>{t('scoreboard.alsoRunning')}</GroupHeading>}
         {also.map((line, i) => renderRow(line, core.length + i))}
       </tbody>
     </table>
@@ -262,70 +271,69 @@ const DesktopTable: React.FC<{ lines: ScoreboardLine[]; state: HomeState }> = ({
 const MobileStrips: React.FC<{ lines: ScoreboardLine[]; state: HomeState }> = ({
   lines,
   state,
-}) => (
-  <ul className="flex flex-col gap-3 lg:hidden">
-    {lines.flatMap((line, index) => [
-      ...(index > 0 && line.config.group === 'also' && lines[index - 1].config.group === 'core'
-        ? [
-            <li
-              key="also-running"
-              className="px-1 pt-2 text-xs font-medium tracking-wide text-muted-foreground uppercase"
-            >
-              Also running
-            </li>,
-          ]
-        : []),
-      <li
-        key={line.config.id}
-        data-line={line.config.line}
-        className="tm-reveal rounded-xl border bg-card px-4 py-3"
-        style={{ '--reveal-index': index } as React.CSSProperties}
-      >
-        <RowTitle line={line} state={state} />
-        <div className="relative mt-2">
-          <span className="pointer-events-none absolute top-5 bottom-5 left-2.5 -translate-x-1/2 text-primary opacity-40">
-            <RouteLine orientation="vertical" />
-          </span>
-          <ul>
-            {METRIC_ORDER.map((metric) => (
-              <li key={metric}>
-                <LineStop line={line} metric={metric} layout="row" state={state} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </li>,
-    ])}
-  </ul>
-);
+}) => {
+  const { t } = useTranslation('home');
+  return (
+    <ul className="flex flex-col gap-3 lg:hidden">
+      {lines.flatMap((line, index) => [
+        ...(index > 0 && line.config.group === 'also' && lines[index - 1].config.group === 'core'
+          ? [
+              <li
+                key="also-running"
+                className="px-1 pt-2 text-xs font-medium tracking-wide text-muted-foreground uppercase"
+              >
+                {t('scoreboard.alsoRunning')}
+              </li>,
+            ]
+          : []),
+        <li
+          key={line.config.id}
+          data-line={line.config.line}
+          className="tm-reveal rounded-xl border bg-card px-4 py-3"
+          style={{ '--reveal-index': index } as React.CSSProperties}
+        >
+          <RowTitle line={line} state={state} />
+          <div className="relative mt-2">
+            <span className="pointer-events-none absolute top-5 bottom-5 left-2.5 -translate-x-1/2 text-primary opacity-40">
+              <RouteLine orientation="vertical" />
+            </span>
+            <ul>
+              {METRIC_ORDER.map((metric) => (
+                <li key={metric}>
+                  <LineStop line={line} metric={metric} layout="row" state={state} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </li>,
+      ])}
+    </ul>
+  );
+};
 
 export const Scoreboard: React.FC<{ rows?: Row[]; state: HomeState; onRetry: () => void }> = ({
   rows,
   state,
   onRetry,
 }) => {
+  const { t } = useTranslation(['home', 'common']);
   const lines = ROWS.map((config) => ({ config, row: rows?.find((r) => r.id === config.id) }));
   return (
     <Card aria-busy={state === 'loading'}>
       <CardHeader>
-        <CardTitle>Every line, every measure</CardTitle>
-        <CardDescription>
-          Each line is only as good as its weakest measure: there's no averaging. Tap any stop for
-          the numbers behind it.
-        </CardDescription>
+        <CardTitle>{t('scoreboard.title')}</CardTitle>
+        <CardDescription>{t('scoreboard.description')}</CardDescription>
       </CardHeader>
       <CardContent className="px-3 lg:px-0">
-        {state === 'loading' && <p className="sr-only">Loading the latest numbers.</p>}
+        {state === 'loading' && <p className="sr-only">{t('scoreboard.loading')}</p>}
         {state === 'error' && (
           <div
             role="alert"
             className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm lg:mx-6"
           >
-            <span>
-              Couldn't load the latest numbers. Each line's own pages are still up to date.
-            </span>
+            <span>{t('scoreboard.error')}</span>
             <Button variant="outline" size="sm" onClick={onRetry}>
-              Try again
+              {t('common:notices.error.retry')}
             </Button>
           </div>
         )}

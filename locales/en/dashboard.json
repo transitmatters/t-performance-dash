@@ -1,0 +1,108 @@
+{
+  "system": "System",
+  "overview": {
+    "pageTitle": "Overview"
+  },
+  "scorecard": {
+    "notEnoughData": "Not enough data",
+    "noChange": "No change · flat",
+    "delta": {
+      "flat": "{{delta}} · flat",
+      "better": "{{delta}} · better",
+      "worse": "{{delta}} · worse"
+    },
+    "speed": {
+      "label": "Speed",
+      "subtitle": "Average, both directions"
+    },
+    "service": {
+      "label": "Service delivered",
+      "subtitle": "Round trips, daily average"
+    },
+    "ridership": {
+      "label": "Ridership",
+      "subtitle": "Fare validations, daily average"
+    },
+    "slowZones": {
+      "label": "Slow zones",
+      "subtitle": "Speed-restricted segments"
+    },
+    "units": {
+      "mph": "mph",
+      "perDay": "/day",
+      "zones": "zones"
+    },
+    "title": "Metrics",
+    "description": "Select a row to chart it below.",
+    "columns": {
+      "metric": "Metric",
+      "last30Days": "Last 30 days",
+      "vsPreviousShort": "Vs prev",
+      "vsPrevious": "Vs previous 30 days",
+      "twelveMonths": "12 months"
+    },
+    "selectLabel": "Select a metric to chart below",
+    "chartMetric": "Chart the {{metric}} metric",
+    "chartedBelow": "Charted below",
+    "noData": "No data available for this line."
+  },
+  "badge": {
+    "checking": "Checking…",
+    "unavailable": "Unavailable"
+  },
+  "accessibility": {
+    "title": "Accessibility",
+    "notTracked": "Elevator status not tracked for this line",
+    "checking": "Checking elevator & escalator status…",
+    "error": "Couldn't load accessibility status.",
+    "affected_one": "{{count}} of {{total}} stations have equipment out of service",
+    "affected_other": "{{count}} of {{total}} stations have equipment out of service",
+    "allAccessible": "All stations fully accessible",
+    "badge": {
+      "notApplicable": "N/A",
+      "affected_one": "{{count}} affected",
+      "affected_other": "{{count}} affected",
+      "allClear": "All clear"
+    },
+    "listLabel": "Out-of-service elevators and escalators",
+    "escalatorOut": "Escalator out of service · <stops>{{stops}}</stops>",
+    "elevatorOut": "Elevator out of service · <stops>{{stops}}</stops>",
+    "outageAge_one": "{{count}} day · since {{date}}",
+    "outageAge_other": "{{count}} days · since {{date}}",
+    "noAlerts": "No open accessibility alerts."
+  },
+  "serviceAlerts": {
+    "title": "Service alerts",
+    "checking": "Checking for active alerts…",
+    "error": "Couldn't load service alerts.",
+    "current_one": "{{count}} affecting service right now",
+    "current_other": "{{count}} affecting service right now",
+    "none": "Nothing affecting service right now",
+    "badge": {
+      "active_one": "{{count}} active",
+      "active_other": "{{count}} active",
+      "normal": "Running normally"
+    },
+    "upcoming_one": "Upcoming · {{count}}",
+    "upcoming_other": "Upcoming · {{count}}",
+    "noAlerts": "No alerts for the {{line}}."
+  },
+  "chart": {
+    "speed": {
+      "title": "Speed",
+      "subtitle": "Daily average, last 30 days"
+    },
+    "service": {
+      "title": "Service delivered",
+      "subtitle": "Daily round trips, last 30 days"
+    },
+    "slowZones": {
+      "title": "Slow zones",
+      "subtitle": "Time lost to slow zones, last 30 days"
+    },
+    "ridership": {
+      "title": "Ridership",
+      "subtitle": "Fare validations, last 30 days"
+    }
+  }
+}

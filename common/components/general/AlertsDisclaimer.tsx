@@ -15,7 +15,7 @@ export const AlertsDisclaimer: React.FC<AlertsDisclaimerProps> = ({ alerts }) =>
             <span style={{ fontFamily: 'Helvetica Neue' }}>⚠️ </span>
             <span className="font-bold italic">
               {getDateString(alert.valid_from, alert.valid_to)}
-            </span>
+            </span>{' '}
             <span className="text-xs italic">{alert.text}</span>
           </p>
         </div>

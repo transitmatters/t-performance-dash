@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
 import { AlertBoxInner } from './AlertBoxInner';
 
@@ -9,6 +10,7 @@ interface StopClosureProps {
 }
 
 export const StopClosure: React.FC<StopClosureProps> = ({ alert, type }) => {
+  const { t } = useTranslation('commute');
   return (
     <AlertBoxInner
       header={alert.header}
@@ -16,7 +18,7 @@ export const StopClosure: React.FC<StopClosureProps> = ({ alert, type }) => {
       alert={alert}
       type={type}
     >
-      <p className="mr-1">Stop Closures</p>
+      <p className="mr-1">{t('stopClosures')}</p>
     </AlertBoxInner>
   );
 };

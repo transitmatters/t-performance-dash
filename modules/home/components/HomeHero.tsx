@@ -1,5 +1,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 import { RollingNumber } from '../../../common/components/motion/RollingNumber';
 import { cn } from '../../../common/utils/cn';
 import { trendSentiment } from '../compute/series';
@@ -73,63 +74,71 @@ const HeroTile: React.FC<{
 export const HomeTitle: React.FC<{ generatedAt?: string; failed?: boolean }> = ({
   generatedAt,
   failed,
-}) => (
-  <header className="flex flex-col gap-4">
-    <div className="flex h-1.5 overflow-hidden rounded-full" aria-hidden="true">
-      {STRIPE.map((color) => (
-        <span key={color} className="flex-1" style={{ backgroundColor: color }} />
-      ))}
-    </div>
-    <div className="flex flex-col gap-1">
-      <h1 className="flex flex-wrap items-center gap-x-3 gap-y-1">
-        {/* The charcoal wordmark disappears on the dark background, so swap in the white one. */}
-        <img
-          src="/Logo_wordmark.png"
-          alt="TransitMatters"
-          width={3204}
-          height={301}
-          fetchPriority="high"
-          className="h-5 w-auto sm:h-6 dark:hidden"
-        />
-        <img
-          src="/Logo_wordmark_white.png"
-          alt="TransitMatters"
-          width={3204}
-          height={301}
-          fetchPriority="high"
-          className="hidden h-5 w-auto sm:h-6 dark:block"
-        />
-        <span className="text-sm font-semibold tracking-widest text-muted-foreground uppercase sm:text-base">
-          Data Dashboard
-        </span>
-      </h1>
-      <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">How is the T doing?</p>
-      <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
-        Every line and mode, measured against the best it has done and the service riders need.{' '}
-        {generatedAt ? (
-          <span className="tm-fade-in">Updated {dayjs(generatedAt).format('MMMM D, YYYY')}.</span>
-        ) : (
-          <Placeholder className="h-3.5 w-36" pulse={!failed} />
-        )}
-      </p>
-    </div>
-  </header>
-);
+}) => {
+  const { t } = useTranslation(['home', 'common']);
+  return (
+    <header className="flex flex-col gap-4">
+      <div className="flex h-1.5 overflow-hidden rounded-full" aria-hidden="true">
+        {STRIPE.map((color) => (
+          <span key={color} className="flex-1" style={{ backgroundColor: color }} />
+        ))}
+      </div>
+      <div className="flex flex-col gap-1">
+        <h1 className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          {/* The charcoal wordmark disappears on the dark background, so swap in the white one. */}
+          <img
+            src="/Logo_wordmark.png"
+            alt={t('common:app.orgName')}
+            width={3204}
+            height={301}
+            fetchPriority="high"
+            className="h-5 w-auto sm:h-6 dark:hidden"
+          />
+          <img
+            src="/Logo_wordmark_white.png"
+            alt={t('common:app.orgName')}
+            width={3204}
+            height={301}
+            fetchPriority="high"
+            className="hidden h-5 w-auto sm:h-6 dark:block"
+          />
+          <span className="text-sm font-semibold tracking-widest text-muted-foreground uppercase sm:text-base">
+            {t('common:app.name')}
+          </span>
+        </h1>
+        <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">{t('title.heading')}</p>
+        <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
+          {t('title.subheading')}{' '}
+          {generatedAt ? (
+            <span className="tm-fade-in">
+              {t('title.updated', { date: dayjs(generatedAt).format('MMMM D, YYYY') })}
+            </span>
+          ) : (
+            <Placeholder className="h-3.5 w-36" pulse={!failed} />
+          )}
+        </p>
+      </div>
+    </header>
+  );
+};
 
-export const HomeHero: React.FC<{ stats?: HeroStat[]; state: HomeState }> = ({ stats, state }) => (
-  <section
-    aria-label="The T at a glance"
-    aria-busy={state === 'loading'}
-    className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5"
-  >
-    {HERO.map((config, index) => (
-      <HeroTile
-        key={config.id}
-        config={config}
-        stat={stats?.find((stat) => stat.id === config.id)}
-        state={state}
-        index={index}
-      />
-    ))}
-  </section>
-);
+export const HomeHero: React.FC<{ stats?: HeroStat[]; state: HomeState }> = ({ stats, state }) => {
+  const { t } = useTranslation(['home', 'common']);
+  return (
+    <section
+      aria-label={t('hero.label')}
+      aria-busy={state === 'loading'}
+      className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5"
+    >
+      {HERO.map((config, index) => (
+        <HeroTile
+          key={config.id}
+          config={config}
+          stat={stats?.find((stat) => stat.id === config.id)}
+          state={state}
+          index={index}
+        />
+      ))}
+    </section>
+  );
+};

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from '../../common/components/general/Link';
 import {
   Sidebar,
@@ -14,6 +15,7 @@ import { NavSystem } from './NavSystem';
 import { ExtraMenuItems } from './ExtraMenuItems';
 
 export const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }) => {
+  const { t } = useTranslation(['navigation', 'common']);
   const { isMobile, setOpenMobile } = useSidebar();
   // On mobile the sidebar is a sheet, so navigating should dismiss it.
   const close = React.useCallback(() => {
@@ -30,7 +32,7 @@ export const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...
         >
           <img
             src="/TMLogo.svg"
-            alt="TransitMatters"
+            alt={t('common:app.orgName')}
             width={3189}
             height={299}
             fetchPriority="high"
@@ -46,9 +48,7 @@ export const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...
       </SidebarContent>
       <SidebarFooter className="group-data-[collapsible=icon]:hidden">
         {isBetaHost() && (
-          <p className="px-2 text-xs text-sidebar-foreground/60">
-            Beta: usage data collected via Datadog
-          </p>
+          <p className="px-2 text-xs text-sidebar-foreground/60">{t('betaNotice')}</p>
         )}
         <ExtraMenuItems />
       </SidebarFooter>
