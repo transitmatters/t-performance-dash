@@ -1,0 +1,332 @@
+{
+  "aggregate_dwells/bus": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/dwells?start_date=2026-09-01&end_date=2026-09-30&stop=1-0-93",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:21+00:00"
+  },
+  "aggregate_dwells/commuter_rail": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/dwells?start_date=2026-09-01&end_date=2026-09-30&stop=CR-Fairmount_1_DB-2240-02",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:22+00:00"
+  },
+  "aggregate_dwells/rapid_transit": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/dwells?start_date=2026-09-01&end_date=2026-09-30&stop=70063",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:20+00:00"
+  },
+  "aggregate_headways/bus": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/headways?start_date=2026-09-01&end_date=2026-09-30&stop=28-1-1728",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:19+00:00"
+  },
+  "aggregate_headways/commuter_rail": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/headways?start_date=2026-09-01&end_date=2026-09-30&stop=CR-Fairmount_1_FB-0095-04",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:19+00:00"
+  },
+  "aggregate_headways/rapid_transit": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/headways?start_date=2026-09-01&end_date=2026-09-30&stop=70061",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:18+00:00"
+  },
+  "aggregate_traveltimes/bus": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/traveltimes?start_date=2026-09-01&end_date=2026-09-30&from_stop=28-1-1728&to_stop=28-1-21148",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:12+00:00"
+  },
+  "aggregate_traveltimes/rapid_transit": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/traveltimes?start_date=2026-09-01&end_date=2026-09-30&from_stop=70061&to_stop=70105",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:11+00:00"
+  },
+  "aggregate_traveltimes2/bus": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/traveltimes2?start_date=2026-09-01&end_date=2026-09-30&from_stop=28-1-1728&to_stop=28-1-21148",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:15+00:00"
+  },
+  "aggregate_traveltimes2/commuter_rail": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/traveltimes2?start_date=2026-09-01&end_date=2026-09-30&from_stop=CR-Fairmount_1_FB-0095-04&to_stop=CR-Fairmount_1_NEC-2287",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:16+00:00"
+  },
+  "aggregate_traveltimes2/empty": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/traveltimes2?start_date=2026-09-01&end_date=2026-09-30&from_stop=unknown-stop&to_stop=unknown-stop",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:17+00:00"
+  },
+  "aggregate_traveltimes2/rapid_transit": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/traveltimes2?start_date=2026-09-01&end_date=2026-09-30&from_stop=70061&to_stop=70105",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:14+00:00"
+  },
+  "alerts_by_date/before_archive": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/alerts/2016-01-01?route=Red",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:07+00:00"
+  },
+  "alerts_by_date/bus": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/alerts/2026-10-07?route=1",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:07+00:00"
+  },
+  "alerts_by_date/v2_archive": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/alerts/2023-05-01?route=Red",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:07+00:00"
+  },
+  "alerts_by_date/v3_archive": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/alerts/2026-10-07?route=Red",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:07+00:00"
+  },
+  "alerts_live/accessibility": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/alerts?activity=USING_ESCALATOR%2CUSING_WHEELCHAIR&stop=place-dwnxg%2Cplace-pktrm%2Cplace-alfcl",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:08+00:00"
+  },
+  "alerts_live/bus": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/alerts?route=1%2C15%2C22%2C23%2C28%2C32%2C39%2C57%2C66%2C71%2C73%2C77%2C111%2C116%2C117&activity=BOARD%2CEXIT%2CRIDE",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:08+00:00"
+  },
+  "alerts_live/rapid_transit": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/alerts?route_type=0%2C1&activity=BOARD%2CEXIT%2CRIDE",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:08+00:00"
+  },
+  "dwells/bus": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/dwells/2026-10-07?stop=1-0-93",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:05+00:00"
+  },
+  "dwells/commuter_rail": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/dwells/2026-10-07?stop=CR-Fairmount_1_DB-2240-02",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:05+00:00"
+  },
+  "dwells/rapid_transit": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/dwells/2026-10-07?stop=70063",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:05+00:00"
+  },
+  "errors/aggregate_headways_missing_dates": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/headways?stop=70061",
+    "status": 400,
+    "captured_at": "2026-10-14T19:12:23+00:00"
+  },
+  "errors/headways_invalid_date": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/headways/not-a-date?stop=70061",
+    "status": 400,
+    "captured_at": "2026-10-14T19:12:23+00:00"
+  },
+  "errors/linedelays_unsupported_agg": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/linedelays?start_date=2026-06-01&end_date=2026-09-30&line=Red&agg=monthly",
+    "status": 400,
+    "captured_at": "2026-10-14T19:12:23+00:00"
+  },
+  "errors/stops_unknown_route": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/stops/unknown-route",
+    "status": 404,
+    "captured_at": "2026-10-14T19:12:24+00:00"
+  },
+  "errors/tripmetrics_range_too_long": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/tripmetrics?start_date=2025-01-01&end_date=2026-06-30&line=line-red&agg=daily",
+    "status": 403,
+    "captured_at": "2026-10-14T19:12:24+00:00"
+  },
+  "facilities/alewife": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/facilities?stop=place-alfcl",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:09+00:00"
+  },
+  "headways/bus": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/headways/2026-10-07?stop=28-1-1728",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:04+00:00"
+  },
+  "headways/bus_monthly_archive": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/headways/2026-06-03?stop=28-1-1728",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:04+00:00"
+  },
+  "headways/bus_without_benchmark": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/headways/2026-10-07?stop=1-0-93",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:04+00:00"
+  },
+  "headways/commuter_rail": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/headways/2026-10-07?stop=CR-Fairmount_1_FB-0095-04",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:04+00:00"
+  },
+  "headways/empty": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/headways/2026-10-07?stop=unknown-stop",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:04+00:00"
+  },
+  "headways/rapid_transit": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/headways/2026-10-07?stop=70061",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:03+00:00"
+  },
+  "healthcheck/pass": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/healthcheck",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:28+00:00"
+  },
+  "linedelays/commuter_rail_weekly": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/linedelays?start_date=2026-06-01&end_date=2026-09-30&line=CR-Fairmount&agg=weekly",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:22+00:00"
+  },
+  "linedelays/green_b_default_agg": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/linedelays?start_date=2026-06-01&end_date=2026-09-30&line=Green-B",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:22+00:00"
+  },
+  "linedelays/red_daily": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/linedelays?start_date=2026-09-01&end_date=2026-09-30&line=Red&agg=daily",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:22+00:00"
+  },
+  "ridership/bus": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/ridership?start_date=2026-06-01&end_date=2026-09-30&line_id=line-1",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:25+00:00"
+  },
+  "ridership/commuter_rail": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/ridership?start_date=2026-06-01&end_date=2026-09-30&line_id=line-Fairmount",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:25+00:00"
+  },
+  "ridership/rapid_transit": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/ridership?start_date=2026-06-01&end_date=2026-09-30&line_id=line-Red",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:25+00:00"
+  },
+  "routes/all": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/routes",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:27+00:00"
+  },
+  "scheduledservice/bus_monthly": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/scheduledservice?start_date=2026-06-01&end_date=2026-09-30&route_id=1&agg=monthly",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:26+00:00"
+  },
+  "scheduledservice/commuter_rail_daily": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/scheduledservice?start_date=2026-09-01&end_date=2026-09-07&route_id=CR-Fairmount&agg=daily",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:26+00:00"
+  },
+  "scheduledservice/rapid_transit_two_days": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/scheduledservice?start_date=2026-09-01&end_date=2026-09-02&route_id=Red&agg=daily",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:25+00:00"
+  },
+  "scheduledservice/rapid_transit_weekly": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/scheduledservice?start_date=2026-06-01&end_date=2026-09-30&route_id=Red&agg=weekly",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:25+00:00"
+  },
+  "service_hours/orange_monthly": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/service_hours?start_date=2026-06-01&end_date=2026-09-30&line_id=line-orange&agg=monthly",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:24+00:00"
+  },
+  "service_hours/red_daily": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/service_hours?start_date=2026-09-01&end_date=2026-09-07&line_id=line-red&agg=daily",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:23+00:00"
+  },
+  "service_hours/red_weekly": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/service_hours?start_date=2026-06-01&end_date=2026-09-30&line_id=line-red&agg=weekly",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:23+00:00"
+  },
+  "service_ridership_dashboard/latest": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/service_ridership_dashboard",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:27+00:00"
+  },
+  "speed_restrictions/available": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/speed_restrictions?line_id=line-Red&date=2025-12-01",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:26+00:00"
+  },
+  "speed_restrictions/unavailable": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/speed_restrictions?line_id=line-Red&date=2010-01-01",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:26+00:00"
+  },
+  "stops/bus": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/stops/1",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:27+00:00"
+  },
+  "stops/bus_fractional_order": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/stops/111",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:27+00:00"
+  },
+  "stops/commuter_rail": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/stops/CR-Fairmount",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:28+00:00"
+  },
+  "stops/ferry": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/stops/Boat-F1",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:28+00:00"
+  },
+  "stops/rapid_transit": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/stops/Red",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:27+00:00"
+  },
+  "time_predictions/commuter_rail": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/time_predictions?route_id=CR-Fairmount",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:25+00:00"
+  },
+  "time_predictions/red": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/time_predictions?route_id=Red",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:25+00:00"
+  },
+  "traveltimes/bus": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/traveltimes/2026-10-07?from_stop=28-1-1728&to_stop=28-1-21148",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:06+00:00"
+  },
+  "traveltimes/bus_monthly_archive": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/traveltimes/2026-06-03?from_stop=28-1-1728&to_stop=28-1-21148",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:06+00:00"
+  },
+  "traveltimes/commuter_rail": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/traveltimes/2026-10-07?from_stop=CR-Fairmount_1_FB-0095-04&to_stop=CR-Fairmount_1_NEC-2287",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:07+00:00"
+  },
+  "traveltimes/rapid_transit": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/traveltimes/2026-10-07?from_stop=70061&to_stop=70105",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:06+00:00"
+  },
+  "tripmetrics/green_monthly": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/tripmetrics?start_date=2026-01-01&end_date=2026-09-30&line=line-green&agg=monthly",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:23+00:00"
+  },
+  "tripmetrics/mattapan_weekly": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/tripmetrics?start_date=2026-06-01&end_date=2026-09-30&line=line-mattapan&agg=weekly",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:22+00:00"
+  },
+  "tripmetrics/red_daily": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/tripmetrics?start_date=2026-09-01&end_date=2026-09-07&line=line-red&agg=daily",
+    "status": 200,
+    "captured_at": "2026-10-14T18:52:22+00:00"
+  }
+}

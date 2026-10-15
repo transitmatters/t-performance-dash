@@ -10,7 +10,7 @@ from chalice import (
     Response,
     ConvertToMiddleware,
 )
-from chalice_spec import ChaliceWithSpec, PydanticPlugin, Docs
+from chalice_spec import ChaliceWithSpec, PydanticPlugin, Docs, Resp
 from apispec import APISpec
 from datetime import date
 from datadog_lambda.wrapper import datadog_lambda_wrapper
@@ -50,6 +50,13 @@ cors_config = (
     if TM_FRONTEND_HOST == localhost
     else CORSConfig(allow_origin=f"https://{TM_FRONTEND_HOST}", max_age=3600)
 )
+
+# Error responses documented in the OpenAPI spec. Resp is chalice-spec's response descriptor, not chalice.Response.
+INVALID_DATE = Resp(models.ErrorResponse, 400, "`user_date` is not a valid YYYY-MM-DD date.")
+BAD_REQUEST = Resp(models.ErrorResponse, 400, "A required query parameter is missing or invalid.")
+RANGE_TOO_LONG = Resp(models.ErrorResponse, 403, "The date range has too many entries for the aggregation level.")
+ROUTE_NOT_FOUND = Resp(models.RouteNotFoundResponse, 404, "No route has this ID.")
+CHECKS_FAILED = Resp(models.HealthcheckResponse, 500, "One or more health checks failed.")
 
 if TM_FRONTEND_HOST != localhost:
     app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
@@ -113,7 +120,7 @@ def mutlidict_to_dict(mutlidict):
     return res_dict
 
 
-@app.route("/api/healthcheck", cors=cors_config, docs=Docs(response=models.HealthcheckResponse))
+@app.route("/api/healthcheck", cors=cors_config, docs=Docs(responses=[Resp(models.HealthcheckResponse), CHECKS_FAILED]))
 def healthcheck():
     """Run API health checks and return pass/fail status with details on any failures."""
     # These functions must return True or False :-)
@@ -154,7 +161,7 @@ def healthcheck():
 @app.route(
     "/api/headways/{user_date}",
     cors=cors_config,
-    docs=Docs(request=models.HeadwayParams, response=models.HeadwayResponse),
+    docs=Docs(request=models.HeadwayParams, responses=[Resp(models.HeadwayResponse), INVALID_DATE]),
 )
 def headways_route(user_date):
     """Retrieve headway data for the given date and stop(s).
@@ -190,7 +197,7 @@ def headways_route(user_date):
 @app.route(
     "/api/dwells/{user_date}",
     cors=cors_config,
-    docs=Docs(request=models.DwellParams, response=models.DwellResponse),
+    docs=Docs(request=models.DwellParams, responses=[Resp(models.DwellResponse), INVALID_DATE]),
 )
 def dwells_route(user_date):
     """Retrieve dwell time data for the given date and stop(s).
@@ -226,7 +233,7 @@ def dwells_route(user_date):
 @app.route(
     "/api/traveltimes/{user_date}",
     cors=cors_config,
-    docs=Docs(request=models.TravelTimeParams, response=models.TravelTimeResponse),
+    docs=Docs(request=models.TravelTimeParams, responses=[Resp(models.TravelTimeResponse), INVALID_DATE]),
 )
 def traveltime_route(user_date):
     """Retrieve travel time data between stop pairs for the given date.
@@ -267,7 +274,7 @@ def traveltime_route(user_date):
 @app.route(
     "/api/alerts/{user_date}",
     cors=cors_config,
-    docs=Docs(request=models.AlertsByDateParams, response=models.AlertsRouteResponse),
+    docs=Docs(request=models.AlertsByDateParams, responses=[Resp(models.AlertsRouteResponse), INVALID_DATE]),
 )
 def alerts_route(user_date):
     """Retrieve transit alerts for the given date and route(s).
@@ -304,7 +311,7 @@ def alerts_route(user_date):
     cors=cors_config,
     docs=Docs(
         request=models.AggregateTravelTimesParams,
-        response=models.TravelTimeAggregateResponse,
+        responses=[Resp(models.TravelTimeAggregateResponse), BAD_REQUEST],
     ),
 )
 def traveltime_aggregate_route():
@@ -339,7 +346,7 @@ def traveltime_aggregate_route():
     cors=cors_config,
     docs=Docs(
         request=models.AggregateTravelTimesParams,
-        response=models.TravelTimeAggregateResponse,
+        responses=[Resp(models.TravelTimeAggregate2Response), BAD_REQUEST],
     ),
 )
 def traveltime_aggregate_route_2():
@@ -374,7 +381,7 @@ def traveltime_aggregate_route_2():
     cors=cors_config,
     docs=Docs(
         request=models.AggregateHeadwaysParams,
-        response=models.HeadwaysAggregateResponse,
+        responses=[Resp(models.HeadwaysAggregateResponse), BAD_REQUEST],
     ),
 )
 def headways_aggregate_route():
@@ -406,7 +413,7 @@ def headways_aggregate_route():
 @app.route(
     "/api/aggregate/dwells",
     cors=cors_config,
-    docs=Docs(request=models.AggregateDwellsParams, response=models.DwellsAggregateResponse),
+    docs=Docs(request=models.AggregateDwellsParams, responses=[Resp(models.DwellsAggregateResponse), BAD_REQUEST]),
 )
 def dwells_aggregate_route():
     """Retrieve aggregated dwell time data over a date range for the given stop(s)."""
@@ -445,7 +452,7 @@ def get_git_id():
         raise ConflictError("Cannot get git id from serverless host")
 
 
-@app.route("/api/alerts", cors=cors_config, docs=Docs(response=models.AlertsRouteResponse))
+@app.route("/api/alerts", cors=cors_config, docs=Docs(response=models.LiveAlertsResponse))
 def get_alerts():
     """Fetch current live alerts from the MBTA v3 API."""
     data = mbta_v3.getAlerts(app.current_request.query_params or {})
@@ -462,7 +469,7 @@ def get_alerts():
 @app.route(
     "/api/linedelays",
     cors=cors_config,
-    docs=Docs(request=models.AlertDelaysByLineParams, response=models.LineDelaysResponse),
+    docs=Docs(request=models.AlertDelaysByLineParams, responses=[Resp(models.LineDelaysResponse), BAD_REQUEST]),
 )
 def get_delays_by_line():
     """Retrieve alert-based delay data aggregated by line over a date range."""
@@ -488,7 +495,10 @@ def get_delays_by_line():
 @app.route(
     "/api/tripmetrics",
     cors=cors_config,
-    docs=Docs(request=models.TripMetricsByLineParams, response=models.TripMetricsResponse),
+    docs=Docs(
+        request=models.TripMetricsByLineParams,
+        responses=[Resp(models.TripMetricsResponse), BAD_REQUEST, RANGE_TOO_LONG],
+    ),
 )
 def get_trips_by_line():
     """Retrieve trip metrics (speed, travel time, etc.) aggregated by line over a date range."""
@@ -516,7 +526,7 @@ def get_trips_by_line():
     cors=cors_config,
     docs=Docs(
         request=models.ScheduledServiceParams,
-        response=models.GetScheduledServiceResponse,
+        responses=[Resp(models.GetScheduledServiceResponse), BAD_REQUEST],
     ),
 )
 def get_scheduled_service():
@@ -553,7 +563,7 @@ def get_scheduled_service():
 @app.route(
     "/api/ridership",
     cors=cors_config,
-    docs=Docs(request=models.RidershipParams, response=models.RidershipResponse),
+    docs=Docs(request=models.RidershipParams, responses=[Resp(models.RidershipResponse), BAD_REQUEST]),
 )
 def get_ridership():
     """Retrieve ridership data for a line over a date range."""
@@ -584,7 +594,7 @@ def get_ridership():
     )
 
 
-@app.route("/api/facilities", cors=cors_config, docs=Docs(response=models.Facility))
+@app.route("/api/facilities", cors=cors_config, docs=Docs(response=models.FacilitiesResponse))
 def get_facilities():
     """Fetch facility data (elevators, escalators) from the MBTA v3 API."""
     data = mbta_v3.getV3("facilities", app.current_request.query_params or {})
@@ -603,7 +613,7 @@ def get_facilities():
     cors=cors_config,
     docs=Docs(
         request=models.SpeedRestrictionsParams,
-        response=models.SpeedRestrictionsResponse,
+        responses=[Resp(models.SpeedRestrictionsResponse), BAD_REQUEST],
     ),
 )
 def get_speed_restrictions():
@@ -636,7 +646,7 @@ def get_speed_restrictions():
 @app.route(
     "/api/service_hours",
     cors=cors_config,
-    docs=Docs(request=models.ServiceHoursParams, response=models.ServiceHoursResponse),
+    docs=Docs(request=models.ServiceHoursParams, responses=[Resp(models.ServiceHoursResponse), BAD_REQUEST]),
 )
 def get_service_hours():
     """Retrieve delivered service hours for a line over a date range."""
@@ -672,7 +682,7 @@ def get_service_hours():
 @app.route(
     "/api/time_predictions",
     cors=cors_config,
-    docs=Docs(request=models.TimePredictionParams, response=models.TimePredictionResponse),
+    docs=Docs(request=models.TimePredictionParams, responses=[Resp(models.TimePredictionResponse), BAD_REQUEST]),
 )
 def get_time_predictions():
     """Retrieve time prediction accuracy data for a route."""
@@ -740,7 +750,9 @@ def get_routes():
     )
 
 
-@app.route("/api/stops/{route_id}", cors=cors_config, docs=Docs(response=models.StopsResponse))
+@app.route(
+    "/api/stops/{route_id}", cors=cors_config, docs=Docs(responses=[Resp(models.StopsResponse), ROUTE_NOT_FOUND])
+)
 def get_stops(route_id):
     """Get the stop information for a specific route.
 

@@ -1,0 +1,227 @@
+[
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T05:17:08",
+    "dep_dt": "2026-10-07T05:17:50",
+    "dwell_time_sec": 42.0,
+    "vehicle_consist": "1930|1931|1960|1961|1951|1950",
+    "vehicle_label": "1930"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T05:26:56",
+    "dep_dt": "2026-10-07T05:27:46",
+    "dwell_time_sec": 50.0,
+    "vehicle_consist": "1883|1882|1881|1880|1800|1801",
+    "vehicle_label": "1883"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T05:32:39",
+    "dep_dt": "2026-10-07T05:33:22",
+    "dwell_time_sec": 43.0,
+    "vehicle_consist": "1932|1933|1937|1936|1917|1916",
+    "vehicle_label": "1932"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T05:39:58",
+    "dep_dt": "2026-10-07T05:40:38",
+    "dwell_time_sec": 40.0,
+    "vehicle_consist": "1918|1919|1939|1938|1913|1912",
+    "vehicle_label": "1918"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T05:46:05",
+    "dep_dt": "2026-10-07T05:46:54",
+    "dwell_time_sec": 49.0,
+    "vehicle_consist": "1838|1839|1875|1874",
+    "vehicle_label": "1838"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T05:54:14",
+    "dep_dt": "2026-10-07T05:54:55",
+    "dwell_time_sec": 41.0,
+    "vehicle_consist": "1871|1870|1859|1858|1849|1848",
+    "vehicle_label": "1871"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T05:57:59",
+    "dep_dt": "2026-10-07T05:58:38",
+    "dwell_time_sec": 39.0,
+    "vehicle_consist": "1815|1814|1862|1863|1806|1807",
+    "vehicle_label": "1815"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T06:04:26",
+    "dep_dt": "2026-10-07T06:04:45",
+    "dwell_time_sec": 19.0,
+    "vehicle_consist": "1940|1941|1966|1967|1959|1958",
+    "vehicle_label": "1940"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T06:07:16",
+    "dep_dt": "2026-10-07T06:07:52",
+    "dwell_time_sec": 36.0,
+    "vehicle_consist": "1735|1734|1701|1700|1753|1752",
+    "vehicle_label": "1735"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T06:13:23",
+    "dep_dt": "2026-10-07T06:13:34",
+    "dwell_time_sec": 11.0,
+    "vehicle_consist": "1962|1963|1900|1901|1903|1902",
+    "vehicle_label": "1962"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T06:15:49",
+    "dep_dt": "2026-10-07T06:17:11",
+    "dwell_time_sec": 82.0,
+    "vehicle_consist": "1914|1915|1907|1906|1911|1910",
+    "vehicle_label": "1914"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T06:25:50",
+    "dep_dt": "2026-10-07T06:26:11",
+    "dwell_time_sec": 21.0,
+    "vehicle_consist": "1523|1522|1724|1725|1630|1631",
+    "vehicle_label": "1523"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T06:30:58",
+    "dep_dt": "2026-10-07T06:31:48",
+    "dwell_time_sec": 50.0,
+    "vehicle_consist": "1942|1943|1953|1952|1945|1944",
+    "vehicle_label": "1942"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T06:33:21",
+    "dep_dt": "2026-10-07T06:33:59",
+    "dwell_time_sec": 38.0,
+    "vehicle_consist": "1946|1947|1929|1928",
+    "vehicle_label": "1946"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T06:37:41",
+    "dep_dt": "2026-10-07T06:38:06",
+    "dwell_time_sec": 25.0,
+    "vehicle_consist": "1869|1868|1832|1833|1810|1811",
+    "vehicle_label": "1869"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T06:40:05",
+    "dep_dt": "2026-10-07T06:40:56",
+    "dwell_time_sec": 51.0,
+    "vehicle_consist": "1825|1824|1879|1878|1884|1885",
+    "vehicle_label": "1825"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T06:43:57",
+    "dep_dt": "2026-10-07T06:44:57",
+    "dwell_time_sec": 60.0,
+    "vehicle_consist": "1930|1931|1960|1961|1951|1950",
+    "vehicle_label": "1930"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T06:47:17",
+    "dep_dt": "2026-10-07T06:48:01",
+    "dwell_time_sec": 44.0,
+    "vehicle_consist": "1920|1921|1927|1926",
+    "vehicle_label": "1920"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T06:53:51",
+    "dep_dt": "2026-10-07T06:54:21",
+    "dwell_time_sec": 30.0,
+    "vehicle_consist": "1823|1822|1856|1857|1805|1804",
+    "vehicle_label": "1823"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T06:56:21",
+    "dep_dt": "2026-10-07T06:57:15",
+    "dwell_time_sec": 54.0,
+    "vehicle_consist": "1866|1867|1820|1821|1873|1872",
+    "vehicle_label": "1866"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T07:01:46",
+    "dep_dt": "2026-10-07T07:02:34",
+    "dwell_time_sec": 48.0,
+    "vehicle_consist": "1932|1933|1937|1936|1917|1916",
+    "vehicle_label": "1932"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T07:04:10",
+    "dep_dt": "2026-10-07T07:04:50",
+    "dwell_time_sec": 40.0,
+    "vehicle_consist": "1922|1923|1957|1956|1909|1908",
+    "vehicle_label": "1922"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T07:11:36",
+    "dep_dt": "2026-10-07T07:12:39",
+    "dwell_time_sec": 63.0,
+    "vehicle_consist": "1738|1739|1731|1730|1723|1722",
+    "vehicle_label": "1738"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T07:14:33",
+    "dep_dt": "2026-10-07T07:15:24",
+    "dwell_time_sec": 51.0,
+    "vehicle_consist": "1883|1882|1881|1880|1800|1801",
+    "vehicle_label": "1883"
+  },
+  {
+    "route_id": "Red",
+    "direction": 0,
+    "arr_dt": "2026-10-07T07:21:34",
+    "dep_dt": "2026-10-07T07:22:13",
+    "dwell_time_sec": 39.0,
+    "vehicle_consist": "1838|1839|1875|1874",
+    "vehicle_label": "1838"
+  }
+]
