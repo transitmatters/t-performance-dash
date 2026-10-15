@@ -109,6 +109,31 @@
     "status": 200,
     "captured_at": "2026-10-14T18:52:05+00:00"
   },
+  "errors/aggregate_headways_missing_dates": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/headways?stop=70061",
+    "status": 400,
+    "captured_at": "2026-10-14T19:12:23+00:00"
+  },
+  "errors/headways_invalid_date": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/headways/not-a-date?stop=70061",
+    "status": 400,
+    "captured_at": "2026-10-14T19:12:23+00:00"
+  },
+  "errors/linedelays_unsupported_agg": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/linedelays?start_date=2026-06-01&end_date=2026-09-30&line=Red&agg=monthly",
+    "status": 400,
+    "captured_at": "2026-10-14T19:12:23+00:00"
+  },
+  "errors/stops_unknown_route": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/stops/unknown-route",
+    "status": 404,
+    "captured_at": "2026-10-14T19:12:24+00:00"
+  },
+  "errors/tripmetrics_range_too_long": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/tripmetrics?start_date=2025-01-01&end_date=2026-06-30&line=line-red&agg=daily",
+    "status": 403,
+    "captured_at": "2026-10-14T19:12:24+00:00"
+  },
   "facilities/alewife": {
     "url": "https://dashboard-api.labs.transitmatters.org/api/facilities?stop=place-alfcl",
     "status": 200,

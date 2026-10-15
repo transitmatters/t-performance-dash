@@ -15,51 +15,64 @@ from typing import get_args, get_type_hints
 import pytest
 from openapi_schema_validator import OAS30Validator
 
-from chalicelib import delays, models, sampling, speed
+from chalicelib import config, delays, models, sampling, speed
 from scripts.generate_openapi import add_operation_ids
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures" / "api_samples"
 SPEC_PATH = Path(__file__).parent.parent / "openapi.json"
+MANIFEST = json.loads((FIXTURES_DIR / "manifest.json").read_text())
 
-# Fixture directory -> (API path, HTTP status, response model)
+# Fixture directory -> (API path, response model) for successful (HTTP 200) responses
 ENDPOINTS = {
-    "headways": ("/api/headways/{user_date}", 200, models.HeadwayResponse),
-    "dwells": ("/api/dwells/{user_date}", 200, models.DwellResponse),
-    "traveltimes": ("/api/traveltimes/{user_date}", 200, models.TravelTimeResponse),
-    "alerts_by_date": ("/api/alerts/{user_date}", 200, models.AlertsRouteResponse),
-    "alerts_live": ("/api/alerts", 200, models.LiveAlertsResponse),
-    "facilities": ("/api/facilities", 200, models.FacilitiesResponse),
-    "aggregate_traveltimes": ("/api/aggregate/traveltimes", 200, models.TravelTimeAggregateResponse),
-    "aggregate_traveltimes2": ("/api/aggregate/traveltimes2", 200, models.TravelTimeAggregate2Response),
-    "aggregate_headways": ("/api/aggregate/headways", 200, models.HeadwaysAggregateResponse),
-    "aggregate_dwells": ("/api/aggregate/dwells", 200, models.DwellsAggregateResponse),
-    "linedelays": ("/api/linedelays", 200, models.LineDelaysResponse),
-    "tripmetrics": ("/api/tripmetrics", 200, models.TripMetricsResponse),
-    "service_hours": ("/api/service_hours", 200, models.ServiceHoursResponse),
-    "time_predictions": ("/api/time_predictions", 200, models.TimePredictionResponse),
-    "ridership": ("/api/ridership", 200, models.RidershipResponse),
-    "scheduledservice": ("/api/scheduledservice", 200, models.GetScheduledServiceResponse),
-    "speed_restrictions": ("/api/speed_restrictions", 200, models.SpeedRestrictionsResponse),
-    "service_ridership_dashboard": (
-        "/api/service_ridership_dashboard",
-        200,
-        models.ServiceRidershipDashboardResponse,
-    ),
-    "routes": ("/api/routes", 200, models.RoutesResponse),
-    "stops": ("/api/stops/{route_id}", 200, models.StopsResponse),
-    "healthcheck": ("/api/healthcheck", 200, models.HealthcheckResponse),
+    "headways": ("/api/headways/{user_date}", models.HeadwayResponse),
+    "dwells": ("/api/dwells/{user_date}", models.DwellResponse),
+    "traveltimes": ("/api/traveltimes/{user_date}", models.TravelTimeResponse),
+    "alerts_by_date": ("/api/alerts/{user_date}", models.AlertsRouteResponse),
+    "alerts_live": ("/api/alerts", models.LiveAlertsResponse),
+    "facilities": ("/api/facilities", models.FacilitiesResponse),
+    "aggregate_traveltimes": ("/api/aggregate/traveltimes", models.TravelTimeAggregateResponse),
+    "aggregate_traveltimes2": ("/api/aggregate/traveltimes2", models.TravelTimeAggregate2Response),
+    "aggregate_headways": ("/api/aggregate/headways", models.HeadwaysAggregateResponse),
+    "aggregate_dwells": ("/api/aggregate/dwells", models.DwellsAggregateResponse),
+    "linedelays": ("/api/linedelays", models.LineDelaysResponse),
+    "tripmetrics": ("/api/tripmetrics", models.TripMetricsResponse),
+    "service_hours": ("/api/service_hours", models.ServiceHoursResponse),
+    "time_predictions": ("/api/time_predictions", models.TimePredictionResponse),
+    "ridership": ("/api/ridership", models.RidershipResponse),
+    "scheduledservice": ("/api/scheduledservice", models.GetScheduledServiceResponse),
+    "speed_restrictions": ("/api/speed_restrictions", models.SpeedRestrictionsResponse),
+    "service_ridership_dashboard": ("/api/service_ridership_dashboard", models.ServiceRidershipDashboardResponse),
+    "routes": ("/api/routes", models.RoutesResponse),
+    "stops": ("/api/stops/{route_id}", models.StopsResponse),
+    "healthcheck": ("/api/healthcheck", models.HealthcheckResponse),
 }
 
-# Documented paths without captured samples: /api/git_id only works on a local development server.
-UNSAMPLED_PATHS = {"/api/git_id"}
+# Error fixtures in errors/ -> (API path, HTTP status, error model)
+ERRORS = {
+    "headways_invalid_date": ("/api/headways/{user_date}", 400, models.ErrorResponse),
+    "aggregate_headways_missing_dates": ("/api/aggregate/headways", 400, models.ErrorResponse),
+    "linedelays_unsupported_agg": ("/api/linedelays", 400, models.ErrorResponse),
+    "tripmetrics_range_too_long": ("/api/tripmetrics", 403, models.ErrorResponse),
+    "stops_unknown_route": ("/api/stops/{route_id}", 404, models.RouteNotFoundResponse),
+}
 
 
 def _fixture_cases():
-    return [
-        pytest.param(endpoint, path, id=f"{endpoint}/{path.stem}")
-        for endpoint in sorted(ENDPOINTS)
+    """Return (fixture name, API path, HTTP status, model) for every fixture."""
+    cases = [
+        (f"{endpoint}/{path.stem}", api_path, 200, model)
+        for endpoint, (api_path, model) in sorted(ENDPOINTS.items())
         for path in sorted((FIXTURES_DIR / endpoint).glob("*.json"))
     ]
+    cases += [(f"errors/{name}", api_path, status, model) for name, (api_path, status, model) in sorted(ERRORS.items())]
+    return [pytest.param(*case, id=case[0]) for case in cases]
+
+
+FIXTURE_CASES = _fixture_cases()
+
+
+def _fixture_text(name):
+    return (FIXTURES_DIR / f"{name}.json").read_text()
 
 
 @pytest.fixture(scope="module")
@@ -77,30 +90,48 @@ def _response_schema(spec, path, status):
     return spec["paths"][path]["get"]["responses"][str(status)]["content"]["application/json"]["schema"]
 
 
-@pytest.mark.parametrize("endpoint,fixture_path", _fixture_cases())
-def test_fixture_matches_model(endpoint, fixture_path):
-    _, _, model = ENDPOINTS[endpoint]
-    model.model_validate_json(fixture_path.read_text(), strict=True)
+@pytest.mark.parametrize("name,api_path,status,model", FIXTURE_CASES)
+def test_fixture_matches_model(name, api_path, status, model):
+    model.model_validate_json(_fixture_text(name), strict=True)
 
 
-@pytest.mark.parametrize("endpoint,fixture_path", _fixture_cases())
-def test_fixture_matches_spec(spec, endpoint, fixture_path):
-    path, status, _ = ENDPOINTS[endpoint]
+@pytest.mark.parametrize("name,api_path,status,model", FIXTURE_CASES)
+def test_fixture_matches_spec(spec, name, api_path, status, model):
     # Bundle the components with the schema so its "#/components/schemas/..." references resolve
-    schema = {**_response_schema(spec, path, status), "components": spec["components"]}
-    OAS30Validator(schema).validate(json.loads(fixture_path.read_text()))
+    schema = {**_response_schema(spec, api_path, status), "components": spec["components"]}
+    OAS30Validator(schema).validate(json.loads(_fixture_text(name)))
 
 
-def test_every_fixture_directory_is_checked():
-    directories = {path.name for path in FIXTURES_DIR.iterdir() if path.is_dir()}
-    assert directories == set(ENDPOINTS)
+@pytest.mark.parametrize("name,api_path,status,model", FIXTURE_CASES)
+def test_fixture_status_matches_capture(name, api_path, status, model):
+    assert MANIFEST[name]["status"] == status
+
+
+def test_every_fixture_is_checked():
+    fixtures = {str(path.relative_to(FIXTURES_DIR).with_suffix("")) for path in FIXTURES_DIR.glob("*/*.json")}
+    assert fixtures == {case.values[0] for case in FIXTURE_CASES}
 
 
 def test_every_endpoint_has_samples(spec):
-    sampled_paths = {path for path, _, _ in ENDPOINTS.values()}
-    assert set(spec["paths"]) - UNSAMPLED_PATHS == sampled_paths
+    assert set(spec["paths"]) == {api_path for api_path, _ in ENDPOINTS.values()}
     for endpoint in ENDPOINTS:
         assert list((FIXTURES_DIR / endpoint).glob("*.json")), f"no samples for {endpoint}"
+
+
+def test_production_is_the_default_server(spec):
+    assert spec["servers"][0]["url"] == config.PRODUCTION_API
+
+
+def test_date_parameters_are_dates(spec):
+    date_params = [
+        (path, param["name"], param["schema"])
+        for path, path_item in spec["paths"].items()
+        for param in path_item.get("parameters", []) + path_item["get"].get("parameters", [])
+        if "date" in param["name"]
+    ]
+    assert date_params
+    for path, name, schema in date_params:
+        assert schema.get("format") == "date", f"{path} {name}"
 
 
 def _free_form_objects(spec, schema, where, seen):

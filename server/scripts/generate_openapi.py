@@ -109,7 +109,7 @@ def update_refs_in_schema(obj, parent_schema_name):
 _PATH_PARAM_DESCRIPTIONS = {
     "route_id": (
         "MBTA route ID. "
-        "Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`–`Green-E`, `Mattapan`. "
+        "Rapid transit: `Red`, `Orange`, `Blue`, `Green`, `Mattapan`. "
         "Bus: numeric string (e.g. `1`, `66`). "
         "Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). "
         "Ferry: `Boat-F1`, `Boat-F4`, etc. "
@@ -118,13 +118,22 @@ _PATH_PARAM_DESCRIPTIONS = {
     "user_date": "Date in `YYYY-MM-DD` format.",
 }
 
+# chalice-spec declares every path parameter as a plain string
+_PATH_PARAM_SCHEMAS = {
+    "user_date": {"type": "string", "format": "date"},
+}
+
 
 def annotate_path_params(openapi_spec):
-    """Add descriptions to path parameters using known param-name mappings."""
+    """Add descriptions and schemas to path parameters using known param-name mappings."""
     annotated = 0
     for path_item in openapi_spec.get("paths", {}).values():
         for param in path_item.get("parameters", []):
-            if param.get("in") == "path" and "description" not in param:
+            if param.get("in") != "path":
+                continue
+            if param["name"] in _PATH_PARAM_SCHEMAS:
+                param["schema"] = _PATH_PARAM_SCHEMAS[param["name"]]
+            if "description" not in param:
                 desc = _PATH_PARAM_DESCRIPTIONS.get(param["name"])
                 if desc:
                     param["description"] = desc
@@ -146,7 +155,6 @@ _OPERATION_IDS = {
     ("/api/aggregate/traveltimes2", "get"): "getAggregateTravelTimesV2",
     ("/api/aggregate/headways", "get"): "getAggregateHeadways",
     ("/api/aggregate/dwells", "get"): "getAggregateDwells",
-    ("/api/git_id", "get"): "getGitId",
     ("/api/alerts", "get"): "getCurrentAlerts",
     ("/api/linedelays", "get"): "getLineDelays",
     ("/api/tripmetrics", "get"): "getTripMetrics",
@@ -183,6 +191,31 @@ def add_operation_ids(openapi_spec):
 
     for key, operation in operations.items():
         operation["operationId"] = _OPERATION_IDS[key]
+    return openapi_spec
+
+
+# Routes left out of the published spec. /api/git_id only works on a local development server.
+_EXCLUDED_PATHS = {"/api/git_id"}
+
+
+def _schema_refs(obj):
+    """Return the names of all schemas referenced anywhere in obj."""
+    if isinstance(obj, dict):
+        refs = {obj["$ref"].rsplit("/", 1)[-1]} if "$ref" in obj else set()
+        return refs.union(*(_schema_refs(value) for value in obj.values()))
+    if isinstance(obj, list):
+        return set().union(*(_schema_refs(item) for item in obj))
+    return set()
+
+
+def exclude_paths(openapi_spec):
+    """Remove _EXCLUDED_PATHS, and any schemas only they referenced, from the spec."""
+    paths = openapi_spec.get("paths", {})
+    excluded = {path: paths.pop(path) for path in _EXCLUDED_PATHS if path in paths}
+    schemas = openapi_spec.get("components", {}).get("schemas", {})
+    orphans = _schema_refs(excluded) - _schema_refs(paths) - _schema_refs(schemas)
+    for name in orphans:
+        schemas.pop(name, None)
     return openapi_spec
 
 
@@ -357,6 +390,9 @@ def generate_openapi_json(output_path="openapi.json"):
         print("Annotating path parameters...")
         openapi_spec = annotate_path_params(openapi_spec)
 
+        # Remove routes that shouldn't be published
+        openapi_spec = exclude_paths(openapi_spec)
+
         # Name each operation for generated clients
         print("Adding operation IDs...")
         openapi_spec = add_operation_ids(openapi_spec)
@@ -367,9 +403,11 @@ def generate_openapi_json(output_path="openapi.json"):
         openapi_spec = fix_nullable_refs(openapi_spec)
 
         # Add server definitions so Swagger UI knows where to send requests
+        # Production first: generated clients use the first server by default. The API is served from
+        # its own host; dashboard.transitmatters.org is the frontend.
         openapi_spec["servers"] = [
+            {"url": "https://dashboard-api.labs.transitmatters.org", "description": "Production"},
             {"url": "http://localhost:5000", "description": "Local development server"},
-            {"url": "https://dashboard.transitmatters.org", "description": "Production"},
         ]
 
         # Ensure the directory exists
