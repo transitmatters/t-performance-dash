@@ -1,0 +1,93 @@
+[
+  {
+    "avg_car_age": 21.3,
+    "count": 216.5,
+    "date": "2026-09-01",
+    "fleet_mix_red1": 2.8,
+    "fleet_mix_red2": 17.2,
+    "fleet_mix_red3": 32.0,
+    "fleet_mix_red4": 48.0,
+    "line": "line-red",
+    "miles_covered": 6344.9026335488215,
+    "pct_new_trips": 47.0,
+    "total_time": 970893.3
+  },
+  {
+    "avg_car_age": 21.9,
+    "count": 216.0,
+    "date": "2026-09-02",
+    "fleet_mix_red1": 7.0,
+    "fleet_mix_red2": 14.5,
+    "fleet_mix_red3": 31.7,
+    "fleet_mix_red4": 46.7,
+    "line": "line-red",
+    "miles_covered": 6350.785108464688,
+    "pct_new_trips": 46.8,
+    "total_time": 988755.95
+  },
+  {
+    "avg_car_age": 21.5,
+    "count": 226.5,
+    "date": "2026-09-03",
+    "fleet_mix_red1": 7.0,
+    "fleet_mix_red2": 13.6,
+    "fleet_mix_red3": 34.6,
+    "fleet_mix_red4": 44.8,
+    "line": "line-red",
+    "miles_covered": 6662.156675308694,
+    "pct_new_trips": 45.1,
+    "total_time": 977517.15
+  },
+  {
+    "avg_car_age": 21.9,
+    "count": 233.0,
+    "date": "2026-09-04",
+    "fleet_mix_red1": 5.8,
+    "fleet_mix_red2": 16.4,
+    "fleet_mix_red3": 38.4,
+    "fleet_mix_red4": 39.4,
+    "line": "line-red",
+    "miles_covered": 6838.39872063648,
+    "pct_new_trips": 40.3,
+    "total_time": 991055.2999999999
+  },
+  {
+    "avg_car_age": 20.9,
+    "count": 180.0,
+    "date": "2026-09-05",
+    "fleet_mix_red1": 4.9,
+    "fleet_mix_red2": 20.6,
+    "fleet_mix_red3": 33.0,
+    "fleet_mix_red4": 41.5,
+    "line": "line-red",
+    "miles_covered": 5287.423361332317,
+    "pct_new_trips": 42.8,
+    "total_time": 755352.0
+  },
+  {
+    "avg_car_age": 22.8,
+    "count": 179.0,
+    "date": "2026-09-06",
+    "fleet_mix_red1": 5.8,
+    "fleet_mix_red2": 11.7,
+    "fleet_mix_red3": 37.3,
+    "fleet_mix_red4": 45.2,
+    "line": "line-red",
+    "miles_covered": 5258.048787102693,
+    "pct_new_trips": 45.5,
+    "total_time": 746465.8
+  },
+  {
+    "avg_car_age": 21.5,
+    "count": 177.5,
+    "date": "2026-09-07",
+    "fleet_mix_red1": 2.8,
+    "fleet_mix_red2": 14.0,
+    "fleet_mix_red3": 36.9,
+    "fleet_mix_red4": 46.4,
+    "line": "line-red",
+    "miles_covered": 5216.925463191211,
+    "pct_new_trips": 46.4,
+    "total_time": 759981.15
+  }
+]

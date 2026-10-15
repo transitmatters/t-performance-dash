@@ -1,0 +1,119 @@
+[
+  {
+    "active_period": [
+      {
+        "current": true,
+        "end": "2026-10-14T16:51:31-04:00",
+        "start": "2026-10-14T13:57:40-04:00",
+        "upcoming": false
+      }
+    ],
+    "header": "Route 22 is experiencing delays of about 20 minutes due to traffic.",
+    "id": "1038803",
+    "routes": [
+      "22"
+    ],
+    "stops": [],
+    "type": "DELAY"
+  },
+  {
+    "active_period": [
+      {
+        "current": false,
+        "end": "2026-11-05T20:00:00-05:00",
+        "start": "2026-11-05T09:30:00-05:00",
+        "upcoming": true
+      }
+    ],
+    "header": "Routes 104, 112, 114, and 116 will be detoured inbound on Tuesday, November 5 from 9:30 AM to 8:00 PM due to a construction crane placement. The closest stops with service are Broadway @ Fourth St and Park St @ Hawthorne St.",
+    "id": "1037350",
+    "routes": [
+      "104",
+      "112",
+      "114",
+      "116"
+    ],
+    "stops": [
+      5653
+    ],
+    "type": "DETOUR"
+  },
+  {
+    "active_period": [
+      {
+        "current": false,
+        "end": "2026-11-08T13:30:00-05:00",
+        "start": "2026-11-08T07:30:00-05:00",
+        "upcoming": true
+      }
+    ],
+    "header": "On Sunday, November 8, Route 39 is detoured from 7:30 AM to 1:30 PM, due to the BAA Half Marathon. There is no service to/from Forest Hills Station or South Street. The closest stop with service is Centre St @ Eliot Street.",
+    "id": "1035884",
+    "routes": [
+      "39",
+      "39",
+      "39",
+      "39",
+      "39",
+      "39",
+      "39",
+      "39",
+      "39",
+      "39",
+      "39",
+      "39",
+      "39",
+      "39"
+    ],
+    "stops": [
+      1128,
+      99991,
+      875,
+      1936,
+      1937,
+      10642,
+      2006,
+      2007
+    ],
+    "type": "DETOUR"
+  },
+  {
+    "active_period": [
+      {
+        "current": true,
+        "end": "2026-10-14T16:51:31-04:00",
+        "start": "2026-10-14T14:33:42-04:00",
+        "upcoming": false
+      }
+    ],
+    "header": "Route 116 is experiencing delays of about 20 minutes due to traffic.",
+    "id": "1038813",
+    "routes": [
+      "116"
+    ],
+    "stops": [],
+    "type": "DELAY"
+  },
+  {
+    "active_period": [
+      {
+        "current": false,
+        "end": "2026-10-27T20:00:00-04:00",
+        "start": "2026-10-27T09:30:00-04:00",
+        "upcoming": true
+      }
+    ],
+    "header": "Routes 104, 112, 114, and 116 will be detoured inbound on Tuesday, October 27 from 9:30 AM to 8:00 PM due to a construction crane placement. The closest stops with service are Broadway @ Fourth St and Park St @ Hawthorne St.",
+    "id": "1037349",
+    "routes": [
+      "104",
+      "112",
+      "114",
+      "116"
+    ],
+    "stops": [
+      5653
+    ],
+    "type": "DETOUR"
+  }
+]

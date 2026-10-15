@@ -1,0 +1,86 @@
+[
+  {
+    "prediction": [
+      {
+        "mode": "subway",
+        "arrival_departure": "blended",
+        "route_id": "CR-Fairmount",
+        "bin": "0-3 min",
+        "weekly": "2022-12-19",
+        "num_accurate_predictions": 9556,
+        "num_predictions": 16848
+      },
+      {
+        "mode": "subway",
+        "arrival_departure": "blended",
+        "route_id": "CR-Fairmount",
+        "bin": "3-6 min",
+        "weekly": "2022-12-19",
+        "num_accurate_predictions": 8560,
+        "num_predictions": 13820
+      },
+      {
+        "mode": "subway",
+        "arrival_departure": "blended",
+        "route_id": "CR-Fairmount",
+        "bin": "6-12 min",
+        "weekly": "2022-12-19",
+        "num_accurate_predictions": 13012,
+        "num_predictions": 19892
+      },
+      {
+        "mode": "subway",
+        "arrival_departure": "blended",
+        "route_id": "CR-Fairmount",
+        "bin": "12-30 min",
+        "weekly": "2022-12-19",
+        "num_accurate_predictions": 8236,
+        "num_predictions": 23688
+      }
+    ],
+    "routeId": "CR-Fairmount",
+    "week": "2022-12-19"
+  },
+  {
+    "prediction": [
+      {
+        "mode": "subway",
+        "arrival_departure": "blended",
+        "route_id": "CR-Fairmount",
+        "bin": "0-3 min",
+        "weekly": "2022-12-26",
+        "num_accurate_predictions": 14076,
+        "num_predictions": 28612
+      },
+      {
+        "mode": "subway",
+        "arrival_departure": "blended",
+        "route_id": "CR-Fairmount",
+        "bin": "3-6 min",
+        "weekly": "2022-12-26",
+        "num_accurate_predictions": 14064,
+        "num_predictions": 23680
+      },
+      {
+        "mode": "subway",
+        "arrival_departure": "blended",
+        "route_id": "CR-Fairmount",
+        "bin": "6-12 min",
+        "weekly": "2022-12-26",
+        "num_accurate_predictions": 22364,
+        "num_predictions": 35476
+      },
+      {
+        "mode": "subway",
+        "arrival_departure": "blended",
+        "route_id": "CR-Fairmount",
+        "bin": "12-30 min",
+        "weekly": "2022-12-26",
+        "num_accurate_predictions": 17080,
+        "num_predictions": 37252
+      }
+    ],
+    "routeId": "CR-Fairmount",
+    "week": "2022-12-26"
+  }
+]

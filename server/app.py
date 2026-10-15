@@ -339,7 +339,7 @@ def traveltime_aggregate_route():
     cors=cors_config,
     docs=Docs(
         request=models.AggregateTravelTimesParams,
-        response=models.TravelTimeAggregateResponse,
+        response=models.TravelTimeAggregate2Response,
     ),
 )
 def traveltime_aggregate_route_2():
@@ -445,7 +445,7 @@ def get_git_id():
         raise ConflictError("Cannot get git id from serverless host")
 
 
-@app.route("/api/alerts", cors=cors_config, docs=Docs(response=models.AlertsRouteResponse))
+@app.route("/api/alerts", cors=cors_config, docs=Docs(response=models.LiveAlertsResponse))
 def get_alerts():
     """Fetch current live alerts from the MBTA v3 API."""
     data = mbta_v3.getAlerts(app.current_request.query_params or {})
@@ -584,7 +584,7 @@ def get_ridership():
     )
 
 
-@app.route("/api/facilities", cors=cors_config, docs=Docs(response=models.Facility))
+@app.route("/api/facilities", cors=cors_config, docs=Docs(response=models.FacilitiesResponse))
 def get_facilities():
     """Fetch facility data (elevators, escalators) from the MBTA v3 API."""
     data = mbta_v3.getV3("facilities", app.current_request.query_params or {})

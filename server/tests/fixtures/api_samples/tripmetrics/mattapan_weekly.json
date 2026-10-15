@@ -1,0 +1,164 @@
+[
+  {
+    "avg_car_age": 80.2,
+    "count": 124.5,
+    "date": "2026-06-01",
+    "line": "line-mattapan",
+    "miles_covered": 4003.4990719199855,
+    "pct_new_trips": 0,
+    "total_time": 676022.1
+  },
+  {
+    "avg_car_age": 80.2,
+    "count": 125.5,
+    "date": "2026-06-08",
+    "line": "line-mattapan",
+    "miles_covered": 4036.027501879335,
+    "pct_new_trips": 0,
+    "total_time": 692796.6
+  },
+  {
+    "avg_car_age": 80.2,
+    "count": 125.5,
+    "date": "2026-06-15",
+    "line": "line-mattapan",
+    "miles_covered": 4068.555931838685,
+    "pct_new_trips": 0,
+    "total_time": 690316.45
+  },
+  {
+    "avg_car_age": 80.2,
+    "count": 123.5,
+    "date": "2026-06-22",
+    "line": "line-mattapan",
+    "miles_covered": 3973.472828880585,
+    "pct_new_trips": 0,
+    "total_time": 670165.9
+  },
+  {
+    "avg_car_age": 80.41428571428571,
+    "count": 113,
+    "date": "2026-06-29",
+    "line": "line-mattapan",
+    "miles_covered": 3758.284753764886,
+    "pct_new_trips": 0,
+    "total_time": 619518.1
+  },
+  {
+    "avg_car_age": 80.5,
+    "count": 95,
+    "date": "2026-07-06",
+    "line": "line-mattapan",
+    "miles_covered": 3510.5682486898368,
+    "pct_new_trips": 0,
+    "total_time": 590779.5
+  },
+  {
+    "avg_car_age": 80.5,
+    "count": 119,
+    "date": "2026-07-13",
+    "line": "line-mattapan",
+    "miles_covered": 3970.9706419606355,
+    "pct_new_trips": 0,
+    "total_time": 671714.15
+  },
+  {
+    "avg_car_age": 80.5,
+    "count": 128.5,
+    "date": "2026-07-20",
+    "line": "line-mattapan",
+    "miles_covered": 4136.114978677335,
+    "pct_new_trips": 0,
+    "total_time": 699442.35
+  },
+  {
+    "avg_car_age": 80.5,
+    "count": 122,
+    "date": "2026-07-27",
+    "line": "line-mattapan",
+    "miles_covered": 3995.992511160135,
+    "pct_new_trips": 0,
+    "total_time": 689589.25
+  },
+  {
+    "avg_car_age": 80.5,
+    "count": 124.5,
+    "date": "2026-08-03",
+    "line": "line-mattapan",
+    "miles_covered": 4051.0406233990348,
+    "pct_new_trips": 0,
+    "total_time": 681837.4
+  },
+  {
+    "avg_car_age": 80.5,
+    "count": 126,
+    "date": "2026-08-10",
+    "line": "line-mattapan",
+    "miles_covered": 4000.996885000035,
+    "pct_new_trips": 0,
+    "total_time": 674052.5
+  },
+  {
+    "avg_car_age": 80.5,
+    "count": 125.5,
+    "date": "2026-08-17",
+    "line": "line-mattapan",
+    "miles_covered": 4033.525314959385,
+    "pct_new_trips": 0,
+    "total_time": 674609.1
+  },
+  {
+    "avg_car_age": 80.5,
+    "count": 123,
+    "date": "2026-08-24",
+    "line": "line-mattapan",
+    "miles_covered": 3963.464081200785,
+    "pct_new_trips": 0,
+    "total_time": 672909.95
+  },
+  {
+    "avg_car_age": 80.5,
+    "count": 113,
+    "date": "2026-08-31",
+    "line": "line-mattapan",
+    "miles_covered": 3928.433464321485,
+    "pct_new_trips": 0,
+    "total_time": 673967.55
+  },
+  {
+    "avg_car_age": 80.28571428571429,
+    "count": 122,
+    "date": "2026-09-07",
+    "line": "line-mattapan",
+    "miles_covered": 3873.3853520825855,
+    "pct_new_trips": 0,
+    "total_time": 662089.2
+  },
+  {
+    "avg_car_age": 80.5,
+    "count": 121.5,
+    "date": "2026-09-14",
+    "line": "line-mattapan",
+    "miles_covered": 4011.005632679835,
+    "pct_new_trips": 0,
+    "total_time": 679160.1
+  },
+  {
+    "avg_car_age": 80.5,
+    "count": 115.5,
+    "date": "2026-09-21",
+    "line": "line-mattapan",
+    "miles_covered": 3858.3722305628858,
+    "pct_new_trips": 0,
+    "total_time": 654679.65
+  },
+  {
+    "avg_car_age": 80.67142857142858,
+    "count": 124.5,
+    "date": "2026-09-28",
+    "line": "line-mattapan",
+    "miles_covered": 4028.520941119485,
+    "pct_new_trips": 0,
+    "total_time": 680795
+  }
+]

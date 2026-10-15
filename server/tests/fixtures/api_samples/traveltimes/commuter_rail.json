@@ -1,0 +1,189 @@
+[
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T05:30:55",
+    "arr_dt": "2026-10-07T05:56:33",
+    "travel_time_sec": 1538.938266,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1860",
+    "vehicle_label": "1860"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T06:00:55",
+    "arr_dt": "2026-10-07T06:30:24",
+    "travel_time_sec": 1769.403397,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1837",
+    "vehicle_label": "1837"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T07:01:09",
+    "arr_dt": "2026-10-07T07:31:00",
+    "travel_time_sec": 1791.672065,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1838",
+    "vehicle_label": "1838"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T07:30:34",
+    "arr_dt": "2026-10-07T07:59:10",
+    "travel_time_sec": 1716.984811,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1837",
+    "vehicle_label": "1837"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T08:31:05",
+    "arr_dt": "2026-10-07T09:03:09",
+    "travel_time_sec": 1924.0,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1814",
+    "vehicle_label": "1814"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T10:01:40",
+    "arr_dt": "2026-10-07T10:29:09",
+    "travel_time_sec": 1649.787894,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1814",
+    "vehicle_label": "1814"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T13:00:59",
+    "arr_dt": "2026-10-07T13:30:53",
+    "travel_time_sec": 1794.708945,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1857",
+    "vehicle_label": "1857"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T14:00:52",
+    "arr_dt": "2026-10-07T14:27:59",
+    "travel_time_sec": 1627.31499,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1812",
+    "vehicle_label": "1812"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T15:00:43",
+    "arr_dt": "2026-10-07T15:34:26",
+    "travel_time_sec": 2023.788572,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1831",
+    "vehicle_label": "1831"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T16:01:09",
+    "arr_dt": "2026-10-07T16:30:44",
+    "travel_time_sec": 1775.145807,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1838",
+    "vehicle_label": "1838"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T16:31:44",
+    "arr_dt": "2026-10-07T17:01:18",
+    "travel_time_sec": 1774.350191,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1832",
+    "vehicle_label": "1832"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T17:01:42",
+    "arr_dt": "2026-10-07T17:30:52",
+    "travel_time_sec": 1750.969395,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1812",
+    "vehicle_label": "1812"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T17:31:20",
+    "arr_dt": "2026-10-07T17:58:33",
+    "travel_time_sec": 1633.296213,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1838",
+    "vehicle_label": "1838"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T18:01:15",
+    "arr_dt": "2026-10-07T18:37:25",
+    "travel_time_sec": 2170.092631,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1832",
+    "vehicle_label": "1832"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T18:30:34",
+    "arr_dt": "2026-10-07T18:58:10",
+    "travel_time_sec": 1656.645571,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1812",
+    "vehicle_label": "1812"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T19:00:45",
+    "arr_dt": "2026-10-07T19:32:54",
+    "travel_time_sec": 1929.505191,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1839",
+    "vehicle_label": "1839"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "dep_dt": "2026-10-07T20:35:49",
+    "arr_dt": "2026-10-07T21:02:13",
+    "travel_time_sec": 1584.06144,
+    "benchmark_travel_time_sec": 1800.0,
+    "tm_benchmark_travel_time_sec": null,
+    "vehicle_consist": "1845",
+    "vehicle_label": "1845"
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "date": "2026-07-31",
+    "scheduled": 253.0,
+    "delivered": 172.0
+  },
+  {
+    "date": "2026-08-31",
+    "scheduled": 189.0,
+    "delivered": 245.0
+  },
+  {
+    "date": "2026-09-30",
+    "scheduled": 246.0,
+    "delivered": 245.0
+  }
+]
