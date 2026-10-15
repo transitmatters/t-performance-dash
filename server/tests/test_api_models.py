@@ -15,6 +15,7 @@ import pytest
 from openapi_schema_validator import OAS30Validator
 
 from chalicelib import models
+from scripts.generate_openapi import add_operation_ids
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures" / "api_samples"
 SPEC_PATH = Path(__file__).parent.parent / "openapi.json"
@@ -134,3 +135,20 @@ def test_success_responses_are_not_free_form(spec):
                     schema = response["content"]["application/json"]["schema"]
                     free_form += _free_form_objects(spec, schema, f"{method.upper()} {path}", set())
     assert free_form == []
+
+
+def test_every_operation_has_a_unique_operation_id(spec):
+    operation_ids = [
+        operation.get("operationId")
+        for path_item in spec["paths"].values()
+        for method, operation in path_item.items()
+        if method != "parameters"
+    ]
+    assert None not in operation_ids
+    assert len(operation_ids) == len(set(operation_ids))
+
+
+def test_operation_ids_required_for_new_routes():
+    new_route = {"paths": {"/api/new_route": {"get": {"responses": {}}}}}
+    with pytest.raises(ValueError, match="/api/new_route"):
+        add_operation_ids(new_route)
