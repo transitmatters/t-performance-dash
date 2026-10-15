@@ -74,13 +74,45 @@ Additional notes:
 - If you're on a platform with a non-GNU `sed`, deploy.sh might fail. On macOS, this is fixed by `brew install gnu-sed` and adding it to your PATH.
 - If you get an unexplained error, check the CloudFormation stack status in AWS Console. Good luck!
 
-## ✨ Linting and Code Style
+## 🗺️ Project Structure
+
+```
+pages/              # Next.js pages (routing); pages compose layouts via a `Layout` property
+modules/            # Self-contained feature modules (alerts, delays, headways, slowzones, etc.)
+common/
+  api/              # API client and React Query hooks (common/api/hooks/)
+  components/       # Shared UI components
+  constants/        # Date ranges, line configurations, colors
+  state/            # Zustand stores (date and station selection)
+  types/            # TypeScript types (lines.ts has line and route definitions)
+  utils/            # Utility functions
+server/
+  app.py            # Chalice API routes
+  chalicelib/       # Backend modules; data sources are abstracted in data_funcs.py, s3.py, dynamo.py
+  chalicelib/models.py  # Pydantic response models
+  chalicelib/config.py  # Backend configuration
+  openapi.json      # Generated API spec
+```
+
+The frontend uses Next.js, Zustand, TanStack React Query, Tailwind CSS, and Chart.js. The backend is Python on AWS Chalice, reading from DynamoDB and S3.
+
+Other useful commands:
+
+- `npm run get-data` fetches static data for local development (runs automatically with `npm start`)
+- `npm run storybook` starts Storybook on port 6006
+- `npm run generate-openapi` regenerates `server/openapi.json`. Run it after changing API routes or models; CI fails if the committed spec is out of date.
+
+## ✨ Linting, Code Style, and Tests
 
 To lint frontend and backend code, run `npm run lint` in the root directory
 
-To lint just frontend code, run `npm run lint-frontend`
+To lint just frontend code, run `npm run lint-frontend` (or `npm run lint-frontend-fix` to auto-fix)
 
-To lint just backend code, run `npm run lint-backend`
+To lint just backend code, run `npm run lint-backend` (or `npm run lint-backend-fix` to auto-fix)
+
+To run backend tests, run `cd server && uv run pytest`
+
+Frontend code uses ESLint with Prettier, enforced import ordering, and type imports (`import type { Foo }`). Backend code uses Ruff with a 120 character line length.
 
 #### VSCode
 
