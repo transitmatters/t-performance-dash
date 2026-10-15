@@ -5,7 +5,7 @@ and API documentation via `chalice-spec`.
 """
 
 from datetime import date
-from typing import List, Dict, Union, Any
+from typing import List, Dict, Union, Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, RootModel
 
 #################################################
@@ -128,6 +128,7 @@ class AggregateDwellsParams(BaseModel):
 
 
 _AGG_DESC = "Aggregation period: `daily`, `weekly`, or `monthly`."
+AggregationPeriod = Literal["daily", "weekly", "monthly"]
 
 
 class AlertDelaysByLineParams(BaseModel):
@@ -149,7 +150,7 @@ class AlertDelaysByLineParams(BaseModel):
             "Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc."
         )
     )
-    agg: str = Field(default="weekly", description="Aggregation period: `daily` or `weekly`.")
+    agg: Literal["daily", "weekly"] = Field(default="weekly", description="Aggregation period: `daily` or `weekly`.")
 
 
 class TripMetricsByLineParams(BaseModel):
@@ -164,7 +165,7 @@ class TripMetricsByLineParams(BaseModel):
 
     start_date: Union[str, date] = Field(description=_DATE_RANGE_START_DESC)
     end_date: Union[str, date] = Field(description=_DATE_RANGE_END_DESC)
-    agg: str = Field(description=_AGG_DESC)
+    agg: AggregationPeriod = Field(description=_AGG_DESC)
     line: str = Field(description=_LINE_ID_DESC)
 
 
@@ -181,7 +182,7 @@ class ScheduledServiceParams(BaseModel):
     start_date: date = Field(description=_DATE_RANGE_START_DESC)
     end_date: date = Field(description=_DATE_RANGE_END_DESC)
     route_id: str | None = Field(default=None, description=_ROUTE_ID_DESC + " Omit to return all routes.")
-    agg: str = Field(description=_AGG_DESC)
+    agg: AggregationPeriod = Field(description=_AGG_DESC)
 
 
 class RidershipParams(BaseModel):
@@ -251,7 +252,7 @@ class ServiceHoursParams(BaseModel):
     )
     start_date: date = Field(description=_DATE_RANGE_START_DESC)
     end_date: date = Field(description=_DATE_RANGE_END_DESC)
-    agg: str = Field(description=_AGG_DESC)
+    agg: AggregationPeriod = Field(description=_AGG_DESC)
 
 
 #################################################
