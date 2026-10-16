@@ -11,12 +11,12 @@ import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartBorder } from '../../../common/components/charts/ChartBorder';
-import type { LineDelays } from '../../../common/types/delays';
+import type { DisplayedDelays } from '../../../common/types/delays';
 import { getFormattedTimeString } from '../../../common/utils/time';
 import { filterOutZeroValues } from './utils';
 
 interface DelayByCategoryGraphProps {
-  data: LineDelays[];
+  data: DisplayedDelays[];
   showTitle?: boolean;
 }
 
