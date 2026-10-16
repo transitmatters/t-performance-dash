@@ -3,6 +3,7 @@
 import json
 import os
 import subprocess
+from urllib.parse import unquote
 from chalice import (
     BadRequestError,
     CORSConfig,
@@ -757,12 +758,15 @@ def get_stops(route_id):
     """Get the stop information for a specific route.
 
     Args:
-        route_id: The route ID to look up stops for.
+        route_id: The route ID to look up stops for. Combined bus routes contain
+            slashes ("SL4/SL5"), so callers must percent-encode them ("SL4%2FSL5").
 
     Returns:
         Response: JSON response containing station/stop data including names, IDs,
             and directions, or a 404 response if the route is not found.
     """
+    # API Gateway passes path parameters through without decoding %2F.
+    route_id = unquote(route_id)
     data = route_manifest.get_route_stops(route_id)
 
     if data is None:

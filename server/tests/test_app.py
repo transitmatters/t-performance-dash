@@ -206,6 +206,11 @@ class TestHappyPaths:
         result = client.http.get("/api/stops/Red")
         assert result.status_code == 200
 
+    def test_stops_combined_route_with_encoded_slash_returns_200(self, client):
+        result = client.http.get("/api/stops/SL4%2FSL5")
+        assert result.status_code == 200
+        assert json.loads(result.body)["type"] == "bus"
+
     def test_stops_unknown_route_returns_404(self, client):
         result = client.http.get("/api/stops/not-a-real-route")
         assert result.status_code == 404
