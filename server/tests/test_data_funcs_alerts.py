@@ -19,14 +19,14 @@ class TestAlertsDispatch:
     def test_v2_range_uses_get_v2_alerts(self):
         with mock.patch("chalicelib.data_funcs.s3_alerts.get_v2_alerts", return_value=[]) as mock_v2:
             with mock.patch("chalicelib.data_funcs.s3_alerts.get_lamp_alerts") as mock_lamp:
-                data_funcs.alerts(date(2019, 8, 31), {})
+                data_funcs.alerts(date(2019, 9, 14), {})
         mock_v2.assert_called_once()
         mock_lamp.assert_not_called()
 
     def test_lamp_range_uses_get_lamp_alerts(self):
         with mock.patch("chalicelib.data_funcs.s3_alerts.get_lamp_alerts", return_value=[]) as mock_lamp:
             with mock.patch("chalicelib.data_funcs.s3_alerts.get_v2_alerts") as mock_v2:
-                data_funcs.alerts(date(2019, 9, 1), {})
+                data_funcs.alerts(date(2019, 9, 15), {})
         mock_lamp.assert_called_once()
         mock_v2.assert_not_called()
 
@@ -37,6 +37,15 @@ class TestAlertsDispatch:
                 result = data_funcs.alerts(date.today(), {})
         mock_v3.assert_called_once()
         assert result == []
+
+    def test_lamp_range_falls_back_to_v2_before_v3_coverage(self):
+        # A pre-2024-04-12 day the LAMP backfill hasn't written has no v3 file.
+        with mock.patch("chalicelib.data_funcs.s3_alerts.get_lamp_alerts", side_effect=_no_such_key_error()):
+            with mock.patch("chalicelib.data_funcs.s3_alerts.get_v2_alerts", return_value=[]) as mock_v2:
+                with mock.patch("chalicelib.data_funcs.s3_alerts.get_v3_alerts") as mock_v3:
+                    data_funcs.alerts(date(2022, 3, 15), {})
+        mock_v2.assert_called_once()
+        mock_v3.assert_not_called()
 
     def test_lamp_range_reraises_non_missing_key_errors(self):
         other_error = ClientError({"Error": {"Code": "AccessDenied", "Message": "nope"}}, "GetObject")
@@ -49,11 +58,11 @@ class TestAlertsDispatch:
         assert result is None
 
     def test_v2_lamp_boundary_is_half_open(self):
-        # 2019-08-31 is v2's last day; 2019-09-01 is LAMP's first. Neither source
+        # 2019-09-14 is v2's last day; 2019-09-15 is LAMP's first. Neither source
         # should be asked to cover the other's day.
         with mock.patch("chalicelib.data_funcs.s3_alerts.get_v2_alerts", return_value=[]) as mock_v2:
             with mock.patch("chalicelib.data_funcs.s3_alerts.get_lamp_alerts") as mock_lamp:
-                data_funcs.alerts(date(2019, 9, 1), {})
+                data_funcs.alerts(date(2019, 9, 15), {})
         mock_v2.assert_not_called()
         mock_lamp.assert_called()
 

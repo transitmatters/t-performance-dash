@@ -10,11 +10,13 @@ from chalicelib import s3_historical, s3_alerts, s3
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
 WE_HAVE_V2_ALERTS_SINCE = datetime.date(2017, 11, 6)
-# LAMP's alert coverage is dense from this date onward (sparser before it) -- see
-# mbta-performance's chalicelib/lamp/alerts.py module docstring. It supersedes the
-# v3 poller (previously the boundary here was WE_HAVE_V3_ALERTS_SINCE, 2024-04-12)
-# for every day at or after this date.
-WE_HAVE_LAMP_ALERTS_SINCE = datetime.date(2019, 9, 1)
+# LAMP's alert archive is effectively empty before this date (see mbta-performance's
+# chalicelib/lamp/backfill/alerts.py). From here on it's used for every day it has a
+# file for, ahead of the v2 archive and the live v3 poller.
+WE_HAVE_LAMP_ALERTS_SINCE = datetime.date(2019, 9, 15)
+# The live v3 poller's files start here; it's the fallback for days LAMP hasn't
+# published yet (today), with v2 covering the rest.
+WE_HAVE_V3_ALERTS_SINCE = datetime.date(2024, 4, 12)
 
 
 def bucket_by(
@@ -197,9 +199,9 @@ def dwells(start_date, stops, end_date: date | None = None):
 def alerts(day: date, params):
     """Retrieve and flatten alert data for a given date and route(s) from S3.
 
-    Fetches v2 alerts (2017-11-06 to 2019-08-31), LAMP-derived alerts (2019-09-01
-    onward, falling back to the live v3 poller's file for a day LAMP hasn't
-    published yet), then flattens alert versions into a list of
+    Fetches v2 alerts (2017-11-06 to 2019-09-14), LAMP-derived alerts (2019-09-15
+    onward, falling back to the v3 poller's file -- or v2's, before 2024-04-12 -- for
+    a day LAMP hasn't published), then flattens alert versions into a list of
     {valid_from, valid_to, text} dicts.
 
     Args:
@@ -220,9 +222,12 @@ def alerts(day: date, params):
             except ClientError as e:
                 if e.response["Error"]["Code"] != "NoSuchKey":
                     raise
-                # LAMP hasn't published this day yet (e.g. today, before the daily
-                # rebuild has run) -- fall back to the live v3 poller's file.
-                alert_items = s3_alerts.get_v3_alerts(day, routes)
+                # LAMP hasn't published this day (e.g. today) -- fall back to
+                # whichever older source covers it.
+                if day >= WE_HAVE_V3_ALERTS_SINCE:
+                    alert_items = s3_alerts.get_v3_alerts(day, routes)
+                else:
+                    alert_items = s3_alerts.get_v2_alerts(day, routes)
         else:
             return None
 
