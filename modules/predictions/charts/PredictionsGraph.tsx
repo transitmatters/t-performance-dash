@@ -74,7 +74,7 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
     <ChartStack>
       <ChartDiv isMobile={isMobile}>
         <Line
-          id={`speed-${linePath}`}
+          id={`predictions-${linePath}`}
           height={isMobile ? 240 : 200}
           ref={ref}
           redraw={true}
@@ -209,14 +209,14 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
           <>
             <SaveChartImageButton
               chartRef={ref}
-              datasetName="ridership predictions"
+              datasetName="predictions"
               includeBothStopsForLocation={false}
               startDate={startDate}
               endDate={endDate}
             />
             <DownloadButton
               data={dataWithPercentage}
-              datasetName="ridership predictions"
+              datasetName="predictions"
               includeBothStopsForLocation={false}
               startDate={startDate}
               endDate={endDate}

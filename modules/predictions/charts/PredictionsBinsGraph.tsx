@@ -65,7 +65,7 @@ export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
     <ChartStack>
       <ChartDiv isMobile={isMobile}>
         <Line
-          id={`speed-${linePath}`}
+          id={`predictions-bins-${linePath}`}
           height={isMobile ? 240 : 200}
           ref={ref}
           redraw={true}

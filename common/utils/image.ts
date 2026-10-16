@@ -48,7 +48,7 @@ const CHART_TITLES: Record<string, string> = {
   speeds: 'Speed',
   speed: 'Speed',
   ridership: 'Ridership',
-  'ridership predictions': 'Arrival Predictions',
+  predictions: 'Arrival Predictions',
   service: 'Service',
 };
 
