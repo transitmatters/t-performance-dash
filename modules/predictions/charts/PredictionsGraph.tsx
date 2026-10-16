@@ -8,14 +8,13 @@ import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { max, min } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
-import { PEAK_SPEED } from '../../../common/constants/baselines';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
@@ -36,7 +35,6 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
   showTitle = false,
 }) => {
   const { line, linePath } = useDelimitatedRoute();
-  const peak = PEAK_SPEED[line ?? 'DEFAULT'];
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.week);
@@ -137,20 +135,7 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
                 text: '',
               },
               annotation: {
-                // Add your annotations here
-                annotations: [
-                  ...earlierBlocks,
-                  {
-                    type: 'line',
-                    yMin: peak,
-                    yMax: peak,
-                    borderColor: CHART_COLORS.ANNOTATIONS,
-                    // corresponds to null dataset index.
-                    display: (ctx) => ctx.chart.isDatasetVisible(1),
-                    borderWidth: 2,
-                  },
-                  ...remainingBlocks,
-                ],
+                annotations: [...earlierBlocks, ...remainingBlocks],
               },
             },
             scales: {
