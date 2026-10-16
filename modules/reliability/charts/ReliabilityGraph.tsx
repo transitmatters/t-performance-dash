@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatNumber } from '../../../common/i18n/format';
 import type { Benchmark, Dataset } from '../../../common/components/charts/TimeSeriesChart';
 import { TimeSeriesChart } from '../../../common/components/charts/TimeSeriesChart';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
@@ -28,7 +29,7 @@ export const ReliabilityGraph: React.FC<ReliabilityGraphProps> = ({
     return <NoDataNotice isLineMetric />;
   }
   const format = (value: number) =>
-    kind === 'percent' ? `${value.toFixed(1)}%` : Math.round(value).toLocaleString('en-us');
+    kind === 'percent' ? `${value.toFixed(1)}%` : formatNumber(Math.round(value));
   return (
     <TimeSeriesChart
       data={data}

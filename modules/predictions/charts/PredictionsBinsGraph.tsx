@@ -2,11 +2,11 @@ import React, { useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
-import { enUS } from 'date-fns/locale';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import dayjs from 'dayjs';
 import { max, min } from 'date-fns';
+import { getDateFnsLocale } from '../../../common/i18n/format';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { COLORS, LINE_COLORS_LEVELS } from '../../../common/constants/colors';
 import type { TimePredictionWeek } from '../../../common/types/dataPoints';
@@ -213,7 +213,7 @@ export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
                 },
                 adapters: {
                   date: {
-                    locale: enUS,
+                    locale: getDateFnsLocale(),
                   },
                 },
                 display: true,

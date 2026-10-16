@@ -51,7 +51,7 @@ export const SpeedBetweenStationsAggregateChart: React.FC<
         includeBothStopsForLocation={true}
         fname="speeds"
         chartTitle="Speeds"
-        yUnit="MPH"
+        yUnit="mph"
       />
     );
   }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime]);

@@ -2,9 +2,9 @@ import React, { useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
-import { enUS } from 'date-fns/locale';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import { getDateFnsLocale } from '../../../common/i18n/format';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { HERO_LINE_WIDTH } from '../../../common/utils/chartTheme';
@@ -180,7 +180,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 },
                 adapters: {
                   date: {
-                    locale: enUS,
+                    locale: getDateFnsLocale(),
                   },
                 },
                 display: true,

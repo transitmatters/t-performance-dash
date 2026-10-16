@@ -1,3 +1,4 @@
+import { formatNumber } from '../../common/i18n/format';
 import type { DataPoint } from '../../common/components/charts/TimeSeriesChart';
 import type { ReliabilityCounts, ReliabilityEntry } from '../../common/types/dataPoints';
 
@@ -60,4 +61,4 @@ export const formatPercent = (value?: number) =>
   value == null || !Number.isFinite(value) ? '—' : `${value.toFixed(1)}%`;
 
 export const formatCount = (value?: number) =>
-  value == null || !Number.isFinite(value) ? '—' : Math.round(value).toLocaleString('en-us');
+  value == null || !Number.isFinite(value) ? '—' : formatNumber(Math.round(value));

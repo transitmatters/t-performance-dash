@@ -65,7 +65,7 @@ export const TravelTimesAggregateChart: React.FC<TravelTimesAggregateChartProps>
         includeBothStopsForLocation={true}
         fname={'traveltimes'}
         chartTitle={timeUnitByDate ? 'Travel times' : 'Travel times by hour'}
-        yUnit="Minutes"
+        yUnit="minutes"
       />
     );
   }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime, dayFilter]);

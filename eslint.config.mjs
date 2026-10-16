@@ -5,7 +5,38 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import unusedImports from 'eslint-plugin-unused-imports';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import i18next from 'eslint-plugin-i18next';
+import i18nextDefaults from 'eslint-plugin-i18next/lib/options/defaults.js';
 import globals from 'globals';
+
+// User-facing text lives in locales/ and renders through t() / <Trans>. Checks JSX text,
+// string and template literals inside JSX, and the props below that carry display text.
+const literalStringOptions = {
+  mode: 'jsx-only',
+  'should-validate-template': true,
+  'jsx-attributes': {
+    include: [
+      'title',
+      'subtitle',
+      'label',
+      'pageTitle',
+      'aria-label',
+      'alt',
+      'placeholder',
+      'valueAxisLabel',
+      'seriesName',
+      'chartTitle',
+      'lineTitle',
+      'lineName',
+      'analysis',
+    ],
+  },
+  // Options replace the plugin's defaults rather than merging, so extend them.
+  // Date-format tokens (`.format('MMM D')`) are localized with the date library, not the catalogs.
+  callees: { exclude: [...i18nextDefaults.callees.exclude, 'format'] },
+  // Also skip emoji carrying a variation selector (⚠️), which the default emoji pattern misses.
+  words: { exclude: [...i18nextDefaults.words.exclude, /^[\p{Extended_Pictographic}\uFE0F]+$/u] },
+};
 
 export default typescriptEslint.config(
   // Global ignores
@@ -161,9 +192,20 @@ export default typescriptEslint.config(
     },
   },
 
+  // i18n: a warning while strings are being extracted into locales/; each migrated area
+  // gets its own block below with this rule as an error.
+  {
+    files: ['**/*.tsx'],
+    ignores: ['**/*.stories.tsx'],
+    plugins: { i18next },
+    rules: {
+      'i18next/no-literal-string': ['warn', literalStringOptions],
+    },
+  },
+
   // Override: stories and tool configs — allow default exports
   {
-    files: ['**/*.stories.tsx', 'vite.config.ts'],
+    files: ['**/*.stories.tsx', 'vite.config.ts', 'i18next.config.ts'],
     rules: {
       'import-x/no-default-export': 'off',
     },

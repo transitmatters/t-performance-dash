@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatNumber } from '../../common/i18n/format';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useRidershipData } from '../../common/api/hooks/ridership';
 import { useRidershipBaseline } from '../../common/api/hooks/baselines';
@@ -41,7 +42,7 @@ export function RidershipDetails() {
       Math.abs(delta) <= negligible ? 'flat' : delta > 0 ? 'good' : 'bad';
     const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'up' : 'down';
     return {
-      label: `${delta > 0 ? '+' : ''}${Math.round(delta).toLocaleString('en-us')} · ${word}`,
+      label: `${delta > 0 ? '+' : ''}${formatNumber(Math.round(delta))} · ${word}`,
       sentiment,
     };
   };
@@ -53,7 +54,7 @@ export function RidershipDetails() {
           <StatCardGrid>
             <StatCard
               label="Average weekday riders"
-              value={`${Math.round(stats.average).toLocaleString('en-us')}`}
+              value={`${formatNumber(Math.round(stats.average))}`}
               delta={deltaFor(stats.averageDelta, 1)}
             />
             <StatCard
@@ -66,11 +67,7 @@ export function RidershipDetails() {
               label={
                 stats.peakDate ? `Peak day · ${config.getWidgetTitle(stats.peakDate)}` : 'Peak day'
               }
-              value={
-                stats.peakCount != null
-                  ? `${Math.round(stats.peakCount).toLocaleString('en-us')}`
-                  : '—'
-              }
+              value={stats.peakCount != null ? `${formatNumber(Math.round(stats.peakCount))}` : '—'}
               unit="riders"
             />
           </StatCardGrid>

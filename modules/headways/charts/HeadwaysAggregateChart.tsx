@@ -52,7 +52,7 @@ export const HeadwaysAggregateChart: React.FC<HeadwaysAggregateChartProps> = ({
         location={getLocationDetails(fromStation, toStation)}
         includeBothStopsForLocation={false}
         fname="headways"
-        yUnit="Minutes"
+        yUnit="minutes"
       />
     );
   }, [headways.by_date, startDate, endDate, fromStation, toStation, dayFilter]);

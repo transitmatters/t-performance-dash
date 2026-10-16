@@ -1,9 +1,9 @@
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
-import { enUS } from 'date-fns/locale';
 import React, { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import { useTranslation } from 'react-i18next';
 import type { DataPoint } from '../../types/dataPoints';
 import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
 import type { SingleDayLineProps } from '../../types/charts';
@@ -17,6 +17,7 @@ import { useWeatherData } from '../../api/hooks/weather';
 import { useWeatherStore } from '../../../modules/weather/WeatherStore';
 import { WeatherDisclaimer } from '../../../modules/weather/WeatherDisclaimer';
 import { prettyDate } from '../../utils/date';
+import { formatNumber, getDateFnsLocale } from '../../i18n/format';
 import { DownloadButton } from '../buttons/DownloadButton';
 import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
 import { CopyLinkButton } from '../buttons/CopyLinkButton';
@@ -29,6 +30,10 @@ import { FIVE_MINUTES } from '../../constants/time';
 import { LegendSingleDay } from './Legend';
 import { ChartDiv } from './ChartDiv';
 import { ChartStack } from './ChartStack';
+
+// Datasets carry a stable kind so tooltip logic never depends on their (translated) labels.
+type DatasetKind = 'actual' | 'benchmark';
+const datasetKind = (dataset: object) => (dataset as { kind?: DatasetKind }).kind;
 
 const pointColors = (
   data: DataPoint[],
@@ -115,6 +120,8 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   chartTitle,
 }) => {
   const ref = useRef(null);
+  const { t } = useTranslation();
+  const unitLabel = t(`chartUnits.${units}`);
   const chartTheme = useChartTheme();
   const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);
   const alertAnnotations = date && alerts ? getAlertAnnotations(alerts, date) : [];
@@ -162,7 +169,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
   const displayBenchmarkData = effectiveBenchmarkData.some((d) => d !== null);
   const usingTmBenchmark = tmBenchmarkData.some((d) => d !== null);
 
-  const multiplier = units === 'Minutes' ? 1 / 60 : 1;
+  const multiplier = units === 'minutes' ? 1 / 60 : 1;
   // Keep nulls in place so Chart.js renders gaps at those points rather than
   // compressing the array and misaligning the benchmark line against labels.
   const effectiveBenchmarkFormatted = effectiveBenchmarkData.map((d) =>
@@ -175,6 +182,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
 
   const datasets: Array<Record<string, unknown>> = [
     {
+      kind: 'actual',
       label: `Actual`,
       fill: false,
       borderColor: chartTheme.benchmarkLine,
@@ -201,6 +209,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
       // Dataset label switches based on whether any point on this
       // chart uses the TM value. The tooltip overrides this per
       // point to get the exact name right for each hover.
+      kind: 'benchmark',
       label: usingTmBenchmark ? `TransitMatters Benchmark` : `MBTA Benchmark`,
       backgroundColor: chartTheme.benchmarkFill,
       data: effectiveBenchmarkFormatted,
@@ -252,9 +261,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 callbacks: {
                   label: (tooltipItem) => {
                     const datasetLabel = tooltipItem.dataset.label ?? '';
-                    const isBenchmark =
-                      datasetLabel === 'MBTA Benchmark' ||
-                      datasetLabel === 'TransitMatters Benchmark';
+                    const isBenchmark = datasetKind(tooltipItem.dataset) === 'benchmark';
                     if (!tooltipItem.parsed.y || (tooltipItem.parsed.y === 0 && isBenchmark)) {
                       return '';
                     }
@@ -270,20 +277,20 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                         : 'MBTA Benchmark'
                       : datasetLabel;
                     return `${displayLabel}: ${
-                      units === 'Minutes'
+                      units === 'minutes'
                         ? getFormattedTimeString(tooltipItem.parsed.y, 'minutes')
-                        : `${tooltipItem.parsed.y} ${units}`
+                        : `${tooltipItem.parsed.y} ${unitLabel}`
                     }`;
                   },
                   afterBody: (tooltipItems) => {
                     const result: string[] = [];
 
                     // Add departure from normal information
-                    const actualItem = tooltipItems.find((t) => t.dataset.label === 'Actual');
+                    const actualItem = tooltipItems.find(
+                      (item) => datasetKind(item.dataset) === 'actual'
+                    );
                     const benchmarkItem = tooltipItems.find(
-                      (t) =>
-                        t.dataset.label === 'MBTA Benchmark' ||
-                        t.dataset.label === 'TransitMatters Benchmark'
+                      (item) => datasetKind(item.dataset) === 'benchmark'
                     );
                     const departureInfo = departureFromNormalString(
                       actualItem?.parsed.y ?? 0,
@@ -342,14 +349,15 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 ticks: {
                   color: chartTheme.tick,
                   callback: (value) => {
-                    return units === 'Minutes' && typeof value === 'number'
+                    if (typeof value !== 'number') return value;
+                    return units === 'minutes'
                       ? getFormattedTimeString(value, 'minutes')
-                      : value.toLocaleString();
+                      : formatNumber(value);
                   },
                 },
                 title: {
                   display: true,
-                  text: units,
+                  text: unitLabel,
                   color: chartTheme.tick,
                 },
               },
@@ -380,7 +388,7 @@ export const SingleDayLineChart: React.FC<SingleDayLineProps> = ({
                 },
                 adapters: {
                   date: {
-                    locale: enUS,
+                    locale: getDateFnsLocale(),
                   },
                 },
                 display: true,
