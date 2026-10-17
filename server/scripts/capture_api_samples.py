@@ -11,16 +11,19 @@ Re-run this when the API's response shapes change, then review the fixture diff.
 name prefixes to capture only some samples:
 
     cd server && uv run python -m scripts.capture_api_samples [prefix ...]
+
+Set TM_API_URL to capture from another deployment, e.g. beta for endpoints production doesn't serve yet.
 """
 
 import json
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
 
-PRODUCTION_API = "https://dashboard-api.labs.transitmatters.org"
+API_URL = os.environ.get("TM_API_URL", "https://dashboard-api.labs.transitmatters.org")
 OUTPUT_DIR = Path(__file__).parent.parent / "tests" / "fixtures" / "api_samples"
 
 # Trim limits: lists keep their first MAX_LIST_ITEMS entries; objects with more than MAX_MAP_KEYS
@@ -110,6 +113,13 @@ SAMPLES = [
         {"start_date": "2026-01-01", "end_date": "2026-09-30", "line": "line-green", "agg": "monthly"},
         200,
     ),
+    ("bustripmetrics/daily", "/api/bustripmetrics", {**WEEK, "route": "1"}, 200),
+    ("bustripmetrics/am_peak", "/api/bustripmetrics", {**WEEK, "route": "1", "time_band": "am_peak"}, 200),
+    ("bustripmetrics/grouped_weekly", "/api/bustripmetrics", {**MONTH, "route": "114,116,117", "agg": "weekly"}, 200),
+    ("bustripmetrics/monthly", "/api/bustripmetrics", {**QUARTER, "route": "28", "agg": "monthly"}, 200),
+    ("crtripmetrics/daily", "/api/crtripmetrics", {**WEEK, "route": "CR-Fairmount"}, 200),
+    ("crtripmetrics/all_monthly", "/api/crtripmetrics", {**QUARTER, "route": "all", "agg": "monthly"}, 200),
+    ("busspeedleaderboard/week", "/api/busspeedleaderboard", {**WEEK, "limit": 5}, 200),
     ("service_hours/red_daily", "/api/service_hours", {**WEEK, "line_id": "line-red", "agg": "daily"}, 200),
     ("service_hours/red_weekly", "/api/service_hours", {**QUARTER, "line_id": "line-red", "agg": "weekly"}, 200),
     (
@@ -123,6 +133,37 @@ SAMPLES = [
     ("ridership/rapid_transit", "/api/ridership", {**QUARTER, "line_id": "line-Red"}, 200),
     ("ridership/bus", "/api/ridership", {**QUARTER, "line_id": "line-1"}, 200),
     ("ridership/commuter_rail", "/api/ridership", {**QUARTER, "line_id": "line-Fairmount"}, 200),
+    (
+        "reliability/ride_monthly",
+        "/api/reliability",
+        {"start_date": "2025-12-01", "end_date": "2026-03-31", "route_id": "RIDE", "agg": "monthly"},
+        200,
+    ),
+    (
+        "reliability/commuter_rail_weekly",
+        "/api/reliability",
+        {"start_date": "2026-03-01", "end_date": "2026-03-31", "route_id": "commuter-rail", "agg": "weekly"},
+        200,
+    ),
+    (
+        "reliability/route_daily",
+        "/api/reliability",
+        {"start_date": "2026-03-01", "end_date": "2026-03-07", "route_id": "CR-Worcester", "agg": "daily"},
+        200,
+    ),
+    (
+        "crscorecard/route_monthly",
+        "/api/crscorecard",
+        {**QUARTER, "route_id": "CR-Worcester", "agg": "monthly", "day_kind": "weekday"},
+        200,
+    ),
+    (
+        "crscorecard/all_routes",
+        "/api/crscorecard",
+        {**MONTH, "route_id": "commuter-rail", "agg": "monthly", "day_kind": "sunday"},
+        200,
+    ),
+    ("weather/day", "/api/weather", {"start_date": DAY, "end_date": DAY}, 200),
     (
         "scheduledservice/rapid_transit_weekly",
         "/api/scheduledservice",
@@ -161,6 +202,12 @@ SAMPLES = [
         {"start_date": "2025-01-01", "end_date": "2026-06-30", "line": "line-red", "agg": "daily"},
         403,
     ),
+    (
+        "errors/bustripmetrics_unknown_time_band",
+        "/api/bustripmetrics",
+        {**WEEK, "route": "1", "time_band": "rush"},
+        400,
+    ),
     ("errors/stops_unknown_route", "/api/stops/unknown-route", {}, 404),
 ]
 
@@ -196,7 +243,7 @@ CUSTOM_TRIMS = {
 
 def capture(name, path, params, expected_status):
     """Fetch one sample from production and write it as a fixture. Returns its manifest entry."""
-    response = requests.get(f"{PRODUCTION_API}{path}", params=params, timeout=120)
+    response = requests.get(f"{API_URL}{path}", params=params, timeout=120)
     if response.status_code != expected_status:
         raise RuntimeError(f"{name}: expected HTTP {expected_status}, got {response.status_code} from {response.url}")
 
