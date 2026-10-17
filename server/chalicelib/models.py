@@ -249,6 +249,128 @@ class ServiceHoursParams(BaseModel):
     agg: AggregationPeriod = Field(description=_AGG_DESC)
 
 
+class BusTripMetricsParams(BaseModel):
+    """Parameters for the `/api/bustripmetrics` endpoint.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        route: Bus route ID, or a comma-separated group of routes.
+        agg: Aggregation level — `daily`, `weekly`, or `monthly`. Defaults to `daily`.
+        time_band: Optional time of day to report instead of the whole day.
+        day_type: Optional day type to keep, dropping every other day.
+    """
+
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+    route: str = Field(
+        description=(
+            "Bus route ID (e.g. `1`, `57`, `111`), or a comma-separated list (e.g. `114,116,117`) "
+            "whose routes are summed per period."
+        )
+    )
+    agg: AggregationPeriod = Field(default="daily", description=_AGG_DESC)
+    time_band: Literal["early_am", "am_peak", "midday", "pm_peak", "evening", "late_night"] | None = Field(
+        default=None,
+        description=(
+            "Time of day. Each figure is then that band's alone, and daily entries drop `median_speed_mph` "
+            "and `mean_speed_mph`, which have no per-band version. Omit it for the whole day."
+        ),
+    )
+    day_type: Literal["business_day", "weekend_or_holiday"] | None = Field(
+        default=None,
+        description="Keep only business days, or only weekends and MBTA holidays. Omit it for every day.",
+    )
+
+
+class CrTripMetricsParams(BaseModel):
+    """Parameters for the `/api/crtripmetrics` endpoint.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        route: Commuter Rail route ID, or `all` for the whole system.
+        agg: Aggregation level — `daily`, `weekly`, or `monthly`. Defaults to `daily`.
+    """
+
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+    route: str = Field(description="Commuter Rail route ID (e.g. `CR-Fairmount`), or `all` for the whole system.")
+    agg: AggregationPeriod = Field(default="daily", description=_AGG_DESC)
+
+
+class BusSpeedLeaderboardParams(BaseModel):
+    """Parameters for the `/api/busspeedleaderboard` endpoint.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        limit: Maximum number of routes to return.
+    """
+
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+    limit: int = Field(default=10, description="Maximum number of routes to return. Clamped to 1-200.")
+
+
+class ReliabilityParams(BaseModel):
+    """Parameters for the `/api/reliability` endpoint.
+
+    Attributes:
+        route_id: `RIDE`, a commuter rail route, or `commuter-rail` for all of commuter rail.
+        start_date: Start of date range.
+        end_date: End of date range.
+        agg: Aggregation level — `daily`, `weekly`, or `monthly`.
+    """
+
+    route_id: str = Field(
+        description=(
+            "`RIDE` for The RIDE, a commuter rail route ID (e.g. `CR-Worcester`), "
+            "or `commuter-rail` for every commuter rail route combined."
+        )
+    )
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+    agg: AggregationPeriod = Field(description=_AGG_DESC)
+
+
+class CrScorecardParams(BaseModel):
+    """Parameters for the `/api/crscorecard` endpoint.
+
+    Attributes:
+        route_id: A Commuter Rail route, or `commuter-rail` to compare every route.
+        start_date: Start of date range.
+        end_date: End of date range.
+        agg: Aggregation level — `daily`, `weekly`, or `monthly`. Ignored for `commuter-rail`.
+        day_kind: Which schedule to measure, or `all` for every day.
+    """
+
+    route_id: str = Field(
+        description=(
+            "Commuter Rail route ID (e.g. `CR-Worcester`), or `commuter-rail` for one summary per route "
+            "over the whole range."
+        )
+    )
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+    agg: AggregationPeriod = Field(description=f"{_AGG_DESC} Ignored for `commuter-rail`.")
+    day_kind: Literal["weekday", "saturday", "sunday", "all"] = Field(
+        description="Which schedule to measure: `weekday`, `saturday` or `sunday`, or `all` to mix every day."
+    )
+
+
+class WeatherParams(BaseModel):
+    """Parameters for the `/api/weather` endpoint.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+    """
+
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+
+
 #################################################
 # API Response Models
 #################################################
@@ -727,6 +849,81 @@ class TripMetricsResponse(RootModel[List[TripMetricsEntry]]):
     """Response for `/api/tripmetrics`: delivered trip metrics at the requested aggregation level."""
 
 
+class BusTripMetricsEntry(BaseModel):
+    """Delivered trip metrics for a bus route (or group of routes) over one day, week or month.
+
+    Entries can also have fleet fields: `fleet_trips` (trips with a known vehicle), `avg_bus_age`,
+    `pct_<type>_trips` and per-propulsion shares named `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`).
+    These are omitted when unknown. Daily entries for the whole day (no `time_band`) also have
+    `median_speed_mph` and `mean_speed_mph`.
+
+    Attributes:
+        date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).
+        route: Route ID, or the comma-separated group that was requested.
+        count: Trips delivered.
+        total_time: Total trip time in seconds.
+        miles_covered: Total miles covered.
+        n_traversals: Segment traversals measured.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    date: str
+    route: str
+    count: float
+    total_time: float
+    miles_covered: float
+    n_traversals: float
+
+
+class BusTripMetricsResponse(RootModel[List[BusTripMetricsEntry]]):
+    """Response for `/api/bustripmetrics`: delivered trip metrics at the requested aggregation level."""
+
+
+class CrTripMetricsEntry(BaseModel):
+    """Commuter Rail fleet metrics for a route over one day, week or month.
+
+    Entries also have per-fleet shares named `fleet_mix_<type>` (e.g. `fleet_mix_rotem`), and
+    `avg_cab_car_age` when known.
+
+    Attributes:
+        date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).
+        route: Route ID, or `all`.
+        fleet_trips: Trips with a known cab car.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    date: str
+    route: str
+    fleet_trips: float | None = None
+
+
+class CrTripMetricsResponse(RootModel[List[CrTripMetricsEntry]]):
+    """Response for `/api/crtripmetrics`: Commuter Rail fleet metrics at the requested aggregation level."""
+
+
+class BusSpeedLeaderboardEntry(BaseModel):
+    """A bus route's totals over the date range. Speed in mph is `miles_covered / (total_time / 3600)`.
+
+    Attributes:
+        route: Route ID.
+        count: Trips delivered.
+        total_time: Total trip time in seconds.
+        miles_covered: Total miles covered.
+        n_traversals: Segment traversals measured.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    route: str
+    count: float
+    total_time: float
+    miles_covered: float
+    n_traversals: float
+
+
+class BusSpeedLeaderboardResponse(RootModel[List[BusSpeedLeaderboardEntry]]):
+    """Response for `/api/busspeedleaderboard`: bus routes ranked by average speed, slowest first."""
+
+
 class ServiceHoursEntry(BaseModel):
     """Scheduled and delivered service hours for one day, week or month.
 
@@ -805,6 +1002,146 @@ class RidershipEntry(BaseModel):
 
 class RidershipResponse(RootModel[List[RidershipEntry]]):
     """Response for `/api/ridership`: ridership counts over the date range."""
+
+
+# Reliability
+class ReliabilityCounts(BaseModel):
+    """On-time and cancellation counts for one commuter rail time period.
+
+    Attributes:
+        otpNumerator: Trips that ran on time.
+        otpDenominator: Trips measured for on-time performance.
+        cancelled: Cancelled trips.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    otpNumerator: int
+    otpDenominator: int
+    cancelled: int
+
+
+class ReliabilityEntry(BaseModel):
+    """Summed on-time performance counts for one day, week, or month.
+
+    The RIDE entries have `completed` and `onTime`, plus `requests`, `noShows` and `missed` for periods
+    where every day recorded them. Commuter rail entries have `otpNumerator`, `otpDenominator`,
+    `cancelled`, `peak` and `offPeak`.
+
+    Attributes:
+        date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).
+        days: Service days with data in the period.
+        completed: The RIDE completed trips.
+        onTime: The RIDE trips completed on time.
+        requests: The RIDE trip requests.
+        noShows: The RIDE rider no-shows.
+        missed: The RIDE missed trips.
+        otpNumerator: Commuter rail trips that ran on time.
+        otpDenominator: Commuter rail trips measured.
+        cancelled: Commuter rail cancelled trips.
+        peak: Commuter rail peak-period counts.
+        offPeak: Commuter rail off-peak counts.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    date: str
+    days: int
+    completed: int | None = None
+    onTime: int | None = None
+    requests: int | None = None
+    noShows: int | None = None
+    missed: int | None = None
+    otpNumerator: int | None = None
+    otpDenominator: int | None = None
+    cancelled: int | None = None
+    peak: ReliabilityCounts | None = None
+    offPeak: ReliabilityCounts | None = None
+
+
+class ReliabilityResponse(RootModel[List[ReliabilityEntry]]):
+    """Response for `/api/reliability`: on-time performance counts, one entry per period."""
+
+
+class CrScorecardDirection(BaseModel):
+    """Scheduled service in one direction, measured at the Boston terminal. Values are averages over the days.
+
+    Attributes:
+        trips: Trains.
+        firstTrip: First train, in seconds after midnight.
+        lastTrip: Last train, in seconds after midnight.
+        maxGapMidday: Longest midday wait, in minutes.
+        maxGapEvening: Longest evening wait, in minutes.
+        hoursAtTarget: Hours from 5am to 1am with a train at least every 30 minutes.
+        clockFaceShare: Share of trains on a repeating hourly pattern (0-1).
+        byHour: Trains in each hour of the day, starting at midnight.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    trips: float | None = None
+    firstTrip: float | None = None
+    lastTrip: float | None = None
+    maxGapMidday: float | None = None
+    maxGapEvening: float | None = None
+    hoursAtTarget: float | None = None
+    clockFaceShare: float | None = None
+    byHour: List[float | None] | None = None
+
+
+class CrScorecardEntry(BaseModel):
+    """A Commuter Rail schedule measured against Regional Rail standards, averaged over `days` days.
+
+    For a route, entries are per period and have `date`. For `commuter-rail`, entries are per route
+    and have `routeId` instead.
+
+    Attributes:
+        date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).
+        routeId: Route ID.
+        days: Days averaged.
+        outbound: Outbound service.
+        inbound: Inbound service.
+        peakTrips: Peak trains, both directions.
+        reversePeakTrips: Reverse-peak trains, both directions.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    date: str | None = None
+    routeId: str | None = None
+    days: int
+    outbound: CrScorecardDirection
+    inbound: CrScorecardDirection
+    peakTrips: float | None = None
+    reversePeakTrips: float | None = None
+
+
+class CrScorecardResponse(RootModel[List[CrScorecardEntry]]):
+    """Response for `/api/crscorecard`: scheduled Commuter Rail service against Regional Rail standards."""
+
+
+# Weather
+class WeatherHourlyEntry(BaseModel):
+    """One hour's weather in downtown Boston.
+
+    Attributes:
+        timestamp: Local-time ISO hour (America/New_York, no offset), e.g. `2026-04-22T14:00`.
+        temperature_f: Air temperature in °F.
+        weather_code: WMO weather code from Open-Meteo.
+        condition: Coarse label, e.g. `clear`, `cloudy`, `fog`, `rain`, `snow`, `storm` or `unknown`.
+        precipitation_in: Precipitation in inches for the hour.
+        humidity_pct: Relative humidity at 2m (0-100).
+        wind_mph: Wind speed at 10m in mph.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    timestamp: str
+    temperature_f: float | None = None
+    weather_code: int | None = None
+    condition: str | None = None
+    precipitation_in: float | None = None
+    humidity_pct: int | None = None
+    wind_mph: float | None = None
+
+
+class WeatherResponse(RootModel[List[WeatherHourlyEntry]]):
+    """Response for `/api/weather`: hourly observations sorted by timestamp. Days without data are skipped."""
 
 
 # Service and Scheduling
