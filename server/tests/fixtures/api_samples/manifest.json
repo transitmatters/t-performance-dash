@@ -94,6 +94,51 @@
     "status": 200,
     "captured_at": "2026-10-14T18:52:08+00:00"
   },
+  "busspeedleaderboard/week": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/busspeedleaderboard?start_date=2026-09-01&end_date=2026-09-07&limit=5",
+    "status": 200,
+    "captured_at": "2026-10-17T00:51:17+00:00"
+  },
+  "bustripmetrics/am_peak": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/bustripmetrics?start_date=2026-09-01&end_date=2026-09-07&route=1&time_band=am_peak",
+    "status": 200,
+    "captured_at": "2026-10-17T00:51:11+00:00"
+  },
+  "bustripmetrics/daily": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/bustripmetrics?start_date=2026-09-01&end_date=2026-09-07&route=1",
+    "status": 200,
+    "captured_at": "2026-10-17T00:51:11+00:00"
+  },
+  "bustripmetrics/grouped_weekly": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/bustripmetrics?start_date=2026-09-01&end_date=2026-09-30&route=114%2C116%2C117&agg=weekly",
+    "status": 200,
+    "captured_at": "2026-10-17T00:51:11+00:00"
+  },
+  "bustripmetrics/monthly": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/bustripmetrics?start_date=2026-06-01&end_date=2026-09-30&route=28&agg=monthly",
+    "status": 200,
+    "captured_at": "2026-10-17T00:51:16+00:00"
+  },
+  "crscorecard/all_routes": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/crscorecard?start_date=2026-09-01&end_date=2026-09-30&route_id=commuter-rail&agg=monthly&day_kind=sunday",
+    "status": 200,
+    "captured_at": "2026-10-17T00:51:18+00:00"
+  },
+  "crscorecard/route_monthly": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/crscorecard?start_date=2026-06-01&end_date=2026-09-30&route_id=CR-Worcester&agg=monthly&day_kind=weekday",
+    "status": 200,
+    "captured_at": "2026-10-17T00:51:18+00:00"
+  },
+  "crtripmetrics/all_monthly": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/crtripmetrics?start_date=2026-06-01&end_date=2026-09-30&route=all&agg=monthly",
+    "status": 200,
+    "captured_at": "2026-10-17T00:51:17+00:00"
+  },
+  "crtripmetrics/daily": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/crtripmetrics?start_date=2026-09-01&end_date=2026-09-07&route=CR-Fairmount",
+    "status": 200,
+    "captured_at": "2026-10-17T00:51:17+00:00"
+  },
   "dwells/bus": {
     "url": "https://dashboard-api.labs.transitmatters.org/api/dwells/2026-10-07?stop=1-0-93",
     "status": 200,
@@ -113,6 +158,11 @@
     "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/headways?stop=70061",
     "status": 400,
     "captured_at": "2026-10-14T19:12:23+00:00"
+  },
+  "errors/bustripmetrics_unknown_time_band": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/bustripmetrics?start_date=2026-09-01&end_date=2026-09-07&route=1&time_band=rush",
+    "status": 400,
+    "captured_at": "2026-10-17T00:51:19+00:00"
   },
   "errors/headways_invalid_date": {
     "url": "https://dashboard-api.labs.transitmatters.org/api/headways/not-a-date?stop=70061",
@@ -188,6 +238,21 @@
     "url": "https://dashboard-api.labs.transitmatters.org/api/linedelays?start_date=2026-09-01&end_date=2026-09-30&line=Red&agg=daily",
     "status": 200,
     "captured_at": "2026-10-14T18:52:22+00:00"
+  },
+  "reliability/commuter_rail_weekly": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/reliability?start_date=2026-03-01&end_date=2026-03-31&route_id=commuter-rail&agg=weekly",
+    "status": 200,
+    "captured_at": "2026-10-17T00:51:17+00:00"
+  },
+  "reliability/ride_monthly": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/reliability?start_date=2025-12-01&end_date=2026-03-31&route_id=RIDE&agg=monthly",
+    "status": 200,
+    "captured_at": "2026-10-17T00:51:17+00:00"
+  },
+  "reliability/route_daily": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/reliability?start_date=2026-03-01&end_date=2026-03-07&route_id=CR-Worcester&agg=daily",
+    "status": 200,
+    "captured_at": "2026-10-17T00:51:18+00:00"
   },
   "ridership/bus": {
     "url": "https://dashboard-api.labs.transitmatters.org/api/ridership?start_date=2026-06-01&end_date=2026-09-30&line_id=line-1",
@@ -328,5 +393,10 @@
     "url": "https://dashboard-api.labs.transitmatters.org/api/tripmetrics?start_date=2026-09-01&end_date=2026-09-07&line=line-red&agg=daily",
     "status": 200,
     "captured_at": "2026-10-14T18:52:22+00:00"
+  },
+  "weather/day": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/weather?start_date=2026-10-07&end_date=2026-10-07",
+    "status": 200,
+    "captured_at": "2026-10-17T00:51:19+00:00"
   }
 }

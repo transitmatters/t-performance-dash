@@ -1,0 +1,218 @@
+[
+  {
+    "timestamp": "2026-10-07T00:00",
+    "temperature_f": 45.2,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 58,
+    "wind_mph": 3.4
+  },
+  {
+    "timestamp": "2026-10-07T01:00",
+    "temperature_f": 44.1,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 63,
+    "wind_mph": 2.7
+  },
+  {
+    "timestamp": "2026-10-07T02:00",
+    "temperature_f": 43.1,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 64,
+    "wind_mph": 3.2
+  },
+  {
+    "timestamp": "2026-10-07T03:00",
+    "temperature_f": 41.1,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 76,
+    "wind_mph": 3.1
+  },
+  {
+    "timestamp": "2026-10-07T04:00",
+    "temperature_f": 40.3,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 76,
+    "wind_mph": 2.1
+  },
+  {
+    "timestamp": "2026-10-07T05:00",
+    "temperature_f": 39.2,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 83,
+    "wind_mph": 2.2
+  },
+  {
+    "timestamp": "2026-10-07T06:00",
+    "temperature_f": 38.4,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 85,
+    "wind_mph": 1.6
+  },
+  {
+    "timestamp": "2026-10-07T07:00",
+    "temperature_f": 37.6,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 84,
+    "wind_mph": 2.2
+  },
+  {
+    "timestamp": "2026-10-07T08:00",
+    "temperature_f": 41.3,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 80,
+    "wind_mph": 2.9
+  },
+  {
+    "timestamp": "2026-10-07T09:00",
+    "temperature_f": 47.5,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 68,
+    "wind_mph": 3.1
+  },
+  {
+    "timestamp": "2026-10-07T10:00",
+    "temperature_f": 53.7,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 54,
+    "wind_mph": 4.6
+  },
+  {
+    "timestamp": "2026-10-07T11:00",
+    "temperature_f": 58.3,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 46,
+    "wind_mph": 8.8
+  },
+  {
+    "timestamp": "2026-10-07T12:00",
+    "temperature_f": 61.4,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 37,
+    "wind_mph": 9.3
+  },
+  {
+    "timestamp": "2026-10-07T13:00",
+    "temperature_f": 63.8,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 26,
+    "wind_mph": 8.2
+  },
+  {
+    "timestamp": "2026-10-07T14:00",
+    "temperature_f": 65.8,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 27,
+    "wind_mph": 9.7
+  },
+  {
+    "timestamp": "2026-10-07T15:00",
+    "temperature_f": 66.7,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 27,
+    "wind_mph": 10.1
+  },
+  {
+    "timestamp": "2026-10-07T16:00",
+    "temperature_f": 66.3,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 36,
+    "wind_mph": 11.2
+  },
+  {
+    "timestamp": "2026-10-07T17:00",
+    "temperature_f": 64.3,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 37,
+    "wind_mph": 12.3
+  },
+  {
+    "timestamp": "2026-10-07T18:00",
+    "temperature_f": 60.0,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 49,
+    "wind_mph": 9.7
+  },
+  {
+    "timestamp": "2026-10-07T19:00",
+    "temperature_f": 57.5,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 53,
+    "wind_mph": 7.8
+  },
+  {
+    "timestamp": "2026-10-07T20:00",
+    "temperature_f": 55.0,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 56,
+    "wind_mph": 5.9
+  },
+  {
+    "timestamp": "2026-10-07T21:00",
+    "temperature_f": 53.9,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 59,
+    "wind_mph": 5.4
+  },
+  {
+    "timestamp": "2026-10-07T22:00",
+    "temperature_f": 53.0,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 62,
+    "wind_mph": 5.6
+  },
+  {
+    "timestamp": "2026-10-07T23:00",
+    "temperature_f": 52.9,
+    "weather_code": 0,
+    "condition": "clear",
+    "precipitation_in": 0.0,
+    "humidity_pct": 72,
+    "wind_mph": 6.8
+  }
+]
