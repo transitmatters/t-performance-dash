@@ -16,7 +16,7 @@ import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
-import { getShuttlingBlockAnnotations } from './utils/graphUtils';
+import { getNoDataSinceLatestAnnotation, getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 interface PercentageServiceGraphProps {
   data: DeliveredTripMetrics[];
@@ -139,6 +139,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
                       borderWidth: 2,
                     },
                     ...shuttlingBlocks,
+                    ...getNoDataSinceLatestAnnotation(labels),
                   ],
                 },
               },

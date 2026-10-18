@@ -4,6 +4,7 @@ import type { FetchServiceHoursResponse } from '../../common/types/api';
 import type { AggType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
+import { getNoDataSinceLatestBlock } from './utils/graphUtils';
 
 interface ServiceHoursGraphProps {
   serviceHours: FetchServiceHoursResponse;
@@ -41,6 +42,7 @@ export const ServiceHoursGraph: React.FC<ServiceHoursGraphProps> = (
         endDate={endDate}
         agg={agg}
         valueAxisLabel="Service hours"
+        blocks={getNoDataSinceLatestBlock(serviceHours.map((sh) => sh.date))}
       />
     </ChartStack>
   );

@@ -16,7 +16,10 @@ import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { useSpeedBaseline } from '../../../common/api/hooks/baselines';
-import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
+import {
+  getNoDataSinceLatestAnnotation,
+  getShuttlingBlockAnnotations,
+} from '../../service/utils/graphUtils';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { addMPHToSpeedData } from '../../../common/utils/csv';
@@ -148,6 +151,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                       ]
                     : []),
                   ...shuttlingBlocks,
+                  ...getNoDataSinceLatestAnnotation(labels),
                 ],
               },
             },

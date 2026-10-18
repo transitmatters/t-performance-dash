@@ -2,6 +2,7 @@ import type { FetchDeliveredTripMetricsOptions } from '../types/api';
 import { FetchDeliveredTripMetricsParams } from '../types/api';
 import type { DeliveredTripMetrics } from '../types/dataPoints';
 import type { Line } from '../types/lines';
+import { withWeekStart } from '../utils/date';
 import { apiFetch } from './utils/fetch';
 
 export const fetchActualTripsByLine = async (
@@ -11,7 +12,7 @@ export const fetchActualTripsByLine = async (
 
   return await apiFetch({
     path: '/api/tripmetrics',
-    options,
+    options: withWeekStart(options),
     errorMessage: 'Failed to fetch trip metrics',
   });
 };

@@ -18,7 +18,10 @@ import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
-import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
+import {
+  getNoDataSinceLatestAnnotation,
+  getShuttlingBlockAnnotations,
+} from '../../service/utils/graphUtils';
 import type { ParamsType } from '../../speed/constants/speeds';
 import type { FleetType } from '../constants/fleetTypes';
 import { getFleetMixValue, hasFleetMix } from '../constants/fleetTypes';
@@ -119,7 +122,7 @@ export const FleetMixChart: React.FC<FleetMixChartProps> = ({
                 text: '',
               },
               annotation: {
-                annotations: [...shuttlingBlocks],
+                annotations: [...shuttlingBlocks, ...getNoDataSinceLatestAnnotation(labels)],
               },
             },
             scales: {

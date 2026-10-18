@@ -1,9 +1,10 @@
 import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
 import dayjs from 'dayjs';
+import type { Block } from '../../../common/components/charts/TimeSeriesChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AlertForModal } from '../../../common/types/alerts';
 import { hexWithAlpha } from '../../../common/utils/general';
-import { TODAY, OVERVIEW_TRAIN_MIN_DATE } from '../../../common/constants/dates';
+import { TODAY, OVERVIEW_TRAIN_MIN_DATE, DATE_FORMAT } from '../../../common/constants/dates';
 
 const shuttlingAnnotationBlockStyle = {
   backgroundColor: CHART_COLORS.BLOCKS,
@@ -74,6 +75,27 @@ export const getRemainingBlockAnnotation = (
       ...shuttlingAnnotationBlockStyle,
     },
   ];
+};
+
+const getLatestDate = (dates: string[]) =>
+  dates.reduce<string | undefined>(
+    (latest, date) => (!latest || date > latest ? date : latest),
+    undefined
+  );
+
+/*
+ * A "No data" block from the latest datapoint through today, so data that lags behind
+ * (weekly data especially) reads as not yet available rather than a line that just stops.
+ */
+export const getNoDataSinceLatestAnnotation = (dates: string[]) => {
+  const latest = getLatestDate(dates);
+  return latest ? getRemainingBlockAnnotation(latest) : [];
+};
+
+// The same block, for TimeSeriesChart.
+export const getNoDataSinceLatestBlock = (dates: string[]): Block[] => {
+  const latest = getLatestDate(dates);
+  return latest ? [{ from: latest, to: TODAY.format(DATE_FORMAT) }] : [];
 };
 
 export const getAlertAnnotations = (alerts: AlertForModal[], date: string) => {

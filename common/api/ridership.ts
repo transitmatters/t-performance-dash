@@ -2,7 +2,7 @@ import { FetchRidershipParams } from '../types/api';
 import type { FetchRidershipOptions } from '../types/api';
 import type { RidershipCount } from '../types/dataPoints';
 import { RIDERSHIP_KEYS, type Line } from '../types/lines';
-import { getRidershipWeekStart } from '../utils/ridership';
+import { getWeekStart } from '../utils/date';
 import { apiFetch } from './utils/fetch';
 
 function sumByDate(arrays: RidershipCount[][]) {
@@ -24,7 +24,7 @@ export const fetchRidership = async (
   const startDate = options[FetchRidershipParams.startDate];
   const params: FetchRidershipOptions = {
     ...options,
-    ...(startDate && { [FetchRidershipParams.startDate]: getRidershipWeekStart(startDate) }),
+    ...(startDate && { [FetchRidershipParams.startDate]: getWeekStart(startDate) }),
   };
 
   // If we don't have a lineId, return a systemwide merged total

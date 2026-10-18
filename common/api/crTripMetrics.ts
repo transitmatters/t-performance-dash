@@ -1,5 +1,6 @@
 import type { FetchCrTripMetricsOptions } from '../types/api';
 import type { DeliveredTripMetricsCR } from '../types/dataPoints';
+import { withWeekStart } from '../utils/date';
 import { apiFetch } from './utils/fetch';
 
 export const fetchCrTripMetricsByRoute = async (
@@ -9,7 +10,7 @@ export const fetchCrTripMetricsByRoute = async (
 
   return await apiFetch({
     path: '/api/crtripmetrics',
-    options,
+    options: withWeekStart(options),
     errorMessage: 'Failed to fetch commuter rail trip metrics',
   });
 };

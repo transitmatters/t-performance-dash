@@ -1,5 +1,6 @@
 import type { FetchReliabilityOptions } from '../types/api';
 import type { ReliabilityEntry } from '../types/dataPoints';
+import { withWeekStart } from '../utils/date';
 import { apiFetch } from './utils/fetch';
 
 export const fetchReliability = async (
@@ -7,7 +8,7 @@ export const fetchReliability = async (
 ): Promise<ReliabilityEntry[]> => {
   return await apiFetch({
     path: '/api/reliability',
-    options,
+    options: withWeekStart(options),
     errorMessage: 'Failed to fetch reliability data',
   });
 };
