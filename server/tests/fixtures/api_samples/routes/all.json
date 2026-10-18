@@ -1,0 +1,61 @@
+{
+  "rapid_transit": [
+    "Red",
+    "Orange",
+    "Blue",
+    "Green",
+    "Mattapan"
+  ],
+  "bus": [
+    "1",
+    "10",
+    "100",
+    "101",
+    "104/109",
+    "104",
+    "105",
+    "106",
+    "108",
+    "109",
+    "11",
+    "110",
+    "111",
+    "112",
+    "114/116/117",
+    "116",
+    "119",
+    "120/121",
+    "120",
+    "131/132",
+    "134",
+    "136/137",
+    "14",
+    "15",
+    "16"
+  ],
+  "commuter_rail": [
+    "CR-Fairmount",
+    "CR-Fitchburg",
+    "CR-Franklin",
+    "CR-Greenbush",
+    "CR-Haverhill",
+    "CR-Kingston",
+    "CR-Lowell",
+    "CR-Middleborough",
+    "CR-Needham",
+    "CR-NewBedford",
+    "CR-Newburyport",
+    "CR-Providence",
+    "CR-Worcester"
+  ],
+  "ferry": [
+    "Boat-EastBoston",
+    "Boat-F1",
+    "Boat-F10",
+    "Boat-F2H",
+    "Boat-F4",
+    "Boat-F6",
+    "Boat-F7",
+    "Boat-Lynn"
+  ]
+}

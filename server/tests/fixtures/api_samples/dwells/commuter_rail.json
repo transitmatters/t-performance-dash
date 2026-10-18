@@ -1,0 +1,218 @@
+[
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T04:59:03",
+    "dep_dt": "2026-10-07T05:00:34",
+    "dwell_time_sec": 91.0,
+    "vehicle_consist": "1865",
+    "vehicle_label": "1865"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T05:40:55",
+    "dep_dt": "2026-10-07T05:41:20",
+    "dwell_time_sec": 25.0,
+    "vehicle_consist": "1860",
+    "vehicle_label": "1860"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T06:12:24",
+    "dep_dt": "2026-10-07T06:12:44",
+    "dwell_time_sec": 20.0,
+    "vehicle_consist": "1837",
+    "vehicle_label": "1837"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T07:13:25",
+    "dep_dt": "2026-10-07T07:13:44",
+    "dwell_time_sec": 19.0,
+    "vehicle_consist": "1838",
+    "vehicle_label": "1838"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T07:42:38",
+    "dep_dt": "2026-10-07T07:42:59",
+    "dwell_time_sec": 21.0,
+    "vehicle_consist": "1837",
+    "vehicle_label": "1837"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T08:41:45",
+    "dep_dt": "2026-10-07T08:42:05",
+    "dwell_time_sec": 20.0,
+    "vehicle_consist": "1814",
+    "vehicle_label": "1814"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T09:38:47",
+    "dep_dt": "2026-10-07T09:39:00",
+    "dwell_time_sec": 13.0,
+    "vehicle_consist": "1810",
+    "vehicle_label": "1810"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T10:12:30",
+    "dep_dt": "2026-10-07T10:12:54",
+    "dwell_time_sec": 24.0,
+    "vehicle_consist": "1814",
+    "vehicle_label": "1814"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T10:40:45",
+    "dep_dt": "2026-10-07T10:41:10",
+    "dwell_time_sec": 25.0,
+    "vehicle_consist": "1867",
+    "vehicle_label": "1867"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T12:12:45",
+    "dep_dt": "2026-10-07T12:13:15",
+    "dwell_time_sec": 30.0,
+    "vehicle_consist": "1867",
+    "vehicle_label": "1867"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T13:12:24",
+    "dep_dt": "2026-10-07T13:12:44",
+    "dwell_time_sec": 20.0,
+    "vehicle_consist": "1857",
+    "vehicle_label": "1857"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T13:42:25",
+    "dep_dt": "2026-10-07T13:42:45",
+    "dwell_time_sec": 20.0,
+    "vehicle_consist": "1831",
+    "vehicle_label": "1831"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T14:11:42",
+    "dep_dt": "2026-10-07T14:11:58",
+    "dwell_time_sec": 16.0,
+    "vehicle_consist": "1812",
+    "vehicle_label": "1812"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T14:43:50",
+    "dep_dt": "2026-10-07T14:44:10",
+    "dwell_time_sec": 20.0,
+    "vehicle_consist": "1857",
+    "vehicle_label": "1857"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T15:11:35",
+    "dep_dt": "2026-10-07T15:12:00",
+    "dwell_time_sec": 25.0,
+    "vehicle_consist": "1831",
+    "vehicle_label": "1831"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T15:40:58",
+    "dep_dt": "2026-10-07T15:41:13",
+    "dwell_time_sec": 15.0,
+    "vehicle_consist": "1812",
+    "vehicle_label": "1812"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T16:12:15",
+    "dep_dt": "2026-10-07T16:12:39",
+    "dwell_time_sec": 24.0,
+    "vehicle_consist": "1838",
+    "vehicle_label": "1838"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T16:42:45",
+    "dep_dt": "2026-10-07T16:43:04",
+    "dwell_time_sec": 19.0,
+    "vehicle_consist": "1832",
+    "vehicle_label": "1832"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T17:13:12",
+    "dep_dt": "2026-10-07T17:13:28",
+    "dwell_time_sec": 16.0,
+    "vehicle_consist": "1812",
+    "vehicle_label": "1812"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T17:41:55",
+    "dep_dt": "2026-10-07T17:42:14",
+    "dwell_time_sec": 19.0,
+    "vehicle_consist": "1838",
+    "vehicle_label": "1838"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T18:14:35",
+    "dep_dt": "2026-10-07T18:14:54",
+    "dwell_time_sec": 19.0,
+    "vehicle_consist": "1832",
+    "vehicle_label": "1832"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T18:41:46",
+    "dep_dt": "2026-10-07T18:42:03",
+    "dwell_time_sec": 17.0,
+    "vehicle_consist": "1812",
+    "vehicle_label": "1812"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T19:11:20",
+    "dep_dt": "2026-10-07T19:12:30",
+    "dwell_time_sec": 70.0,
+    "vehicle_consist": "1839",
+    "vehicle_label": "1839"
+  },
+  {
+    "route_id": "CR-Fairmount",
+    "direction": 1,
+    "arr_dt": "2026-10-07T20:46:10",
+    "dep_dt": "2026-10-07T20:46:33",
+    "dwell_time_sec": 23.0,
+    "vehicle_consist": "1845",
+    "vehicle_label": "1845"
+  }
+]

@@ -133,9 +133,6 @@
     "node": ">=26.8.2",
     "npm": ">=11.0.0"
   },
-  "volta": {
-    "node": "26.8.2"
-  },
   "allowScripts": {
     "esbuild@0.28.2": true,
     "unrs-resolver@1.12.2": true,

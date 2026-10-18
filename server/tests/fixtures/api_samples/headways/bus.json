@@ -1,0 +1,227 @@
+[
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T03:50:58",
+    "headway_time_sec": 2913.0,
+    "benchmark_headway_time_sec": 2880.0,
+    "vehicle_consist": "1883",
+    "vehicle_label": "1883"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T04:40:41",
+    "headway_time_sec": 2983.0,
+    "benchmark_headway_time_sec": 2940.0,
+    "vehicle_consist": "1883",
+    "vehicle_label": "1883"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T05:03:00",
+    "headway_time_sec": 1339.0,
+    "benchmark_headway_time_sec": 1320.0,
+    "vehicle_consist": "1262",
+    "vehicle_label": "1262"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T05:21:11",
+    "headway_time_sec": 1091.0,
+    "benchmark_headway_time_sec": 900.0,
+    "vehicle_consist": "1253",
+    "vehicle_label": "1253"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T05:32:39",
+    "headway_time_sec": 688.0,
+    "benchmark_headway_time_sec": 300.0,
+    "vehicle_consist": "1207",
+    "vehicle_label": "1207"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T05:35:19",
+    "headway_time_sec": 160.0,
+    "benchmark_headway_time_sec": 300.0,
+    "vehicle_consist": "1259",
+    "vehicle_label": "1259"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T05:40:56",
+    "headway_time_sec": 337.0,
+    "benchmark_headway_time_sec": 420.0,
+    "vehicle_consist": "1256",
+    "vehicle_label": "1256"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T05:56:03",
+    "headway_time_sec": 907.0,
+    "benchmark_headway_time_sec": 360.0,
+    "vehicle_consist": "1272",
+    "vehicle_label": "1272"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T06:04:37",
+    "headway_time_sec": 514.0,
+    "benchmark_headway_time_sec": 240.0,
+    "vehicle_consist": "1258",
+    "vehicle_label": "1258"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T06:07:14",
+    "headway_time_sec": 157.0,
+    "benchmark_headway_time_sec": 240.0,
+    "vehicle_consist": "1269",
+    "vehicle_label": "1269"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T06:11:42",
+    "headway_time_sec": 268.0,
+    "benchmark_headway_time_sec": 480.0,
+    "vehicle_consist": "1264",
+    "vehicle_label": "1264"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T06:26:30",
+    "headway_time_sec": 888.0,
+    "benchmark_headway_time_sec": 660.0,
+    "vehicle_consist": "1262",
+    "vehicle_label": "1262"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T06:36:27",
+    "headway_time_sec": 597.0,
+    "benchmark_headway_time_sec": 720.0,
+    "vehicle_consist": "1253",
+    "vehicle_label": "1253"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T06:59:42",
+    "headway_time_sec": 1395.0,
+    "benchmark_headway_time_sec": 660.0,
+    "vehicle_consist": "1259",
+    "vehicle_label": "1259"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T07:06:07",
+    "headway_time_sec": 385.0,
+    "benchmark_headway_time_sec": 420.0,
+    "vehicle_consist": "1256",
+    "vehicle_label": "1256"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T07:23:43",
+    "headway_time_sec": 1056.0,
+    "benchmark_headway_time_sec": 720.0,
+    "vehicle_consist": "1326",
+    "vehicle_label": "1326"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T07:37:47",
+    "headway_time_sec": 844.0,
+    "benchmark_headway_time_sec": 780.0,
+    "vehicle_consist": "1272",
+    "vehicle_label": "1272"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T07:50:55",
+    "headway_time_sec": 788.0,
+    "benchmark_headway_time_sec": 900.0,
+    "vehicle_consist": "1258",
+    "vehicle_label": "1258"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T08:01:59",
+    "headway_time_sec": 664.0,
+    "benchmark_headway_time_sec": 840.0,
+    "vehicle_consist": "1264",
+    "vehicle_label": "1264"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T08:08:40",
+    "headway_time_sec": 401.0,
+    "benchmark_headway_time_sec": 660.0,
+    "vehicle_consist": "1269",
+    "vehicle_label": "1269"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T08:21:07",
+    "headway_time_sec": 747.0,
+    "benchmark_headway_time_sec": 420.0,
+    "vehicle_consist": "1262",
+    "vehicle_label": "1262"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T08:27:17",
+    "headway_time_sec": 370.0,
+    "benchmark_headway_time_sec": 720.0,
+    "vehicle_consist": "1253",
+    "vehicle_label": "1253"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T08:41:46",
+    "headway_time_sec": 869.0,
+    "benchmark_headway_time_sec": 720.0,
+    "vehicle_consist": "1202",
+    "vehicle_label": "1202"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T08:59:15",
+    "headway_time_sec": 1049.0,
+    "benchmark_headway_time_sec": 900.0,
+    "vehicle_consist": "1259",
+    "vehicle_label": "1259"
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-10-07T08:59:51",
+    "headway_time_sec": 36.0,
+    "benchmark_headway_time_sec": 900.0,
+    "vehicle_consist": "1256",
+    "vehicle_label": "1256"
+  }
+]

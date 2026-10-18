@@ -172,6 +172,16 @@ class TestBusTripMetricsValidation:
         assert result.status_code == 200
 
 
+class TestCrTripMetricsValidation:
+    def test_missing_route_returns_400(self, client):
+        result = client.http.get("/api/crtripmetrics?start_date=2024-01-01&end_date=2024-01-31")
+        assert result.status_code == 400
+
+    def test_missing_dates_returns_400(self, client):
+        result = client.http.get("/api/crtripmetrics?route=CR-Fairmount")
+        assert result.status_code == 400
+
+
 class TestBusSpeedLeaderboardValidation:
     def test_missing_all_returns_400(self, client):
         result = client.http.get("/api/busspeedleaderboard")
@@ -210,6 +220,36 @@ class TestReliabilityValidation:
     def test_valid_request_returns_200(self, client):
         result = client.http.get("/api/reliability?route_id=RIDE&start_date=2024-01-01&end_date=2024-02-01&agg=weekly")
         assert result.status_code == 200
+
+
+class TestCrScorecardValidation:
+    PARAMS = "route_id=CR-Worcester&start_date=2024-01-01&end_date=2024-02-01"
+
+    def test_missing_day_kind_returns_400(self, client):
+        result = client.http.get(f"/api/crscorecard?{self.PARAMS}&agg=monthly")
+        assert result.status_code == 400
+
+    def test_invalid_agg_returns_400(self, client):
+        result = client.http.get(f"/api/crscorecard?{self.PARAMS}&agg=hourly&day_kind=weekday")
+        assert result.status_code == 400
+
+    def test_invalid_day_kind_returns_400(self, client):
+        result = client.http.get(f"/api/crscorecard?{self.PARAMS}&agg=monthly&day_kind=holiday")
+        assert result.status_code == 400
+
+    def test_valid_request_returns_200(self, client):
+        result = client.http.get(f"/api/crscorecard?{self.PARAMS}&agg=monthly&day_kind=weekday")
+        assert result.status_code == 200
+
+
+class TestWeatherValidation:
+    def test_missing_dates_returns_400(self, client):
+        result = client.http.get("/api/weather")
+        assert result.status_code == 400
+
+    def test_missing_end_date_returns_400(self, client):
+        result = client.http.get("/api/weather?start_date=2024-01-01")
+        assert result.status_code == 400
 
 
 class TestSpeedRestrictionsValidation:
