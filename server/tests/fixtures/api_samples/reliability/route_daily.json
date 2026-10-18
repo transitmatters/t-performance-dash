@@ -1,0 +1,121 @@
+[
+  {
+    "date": "2026-03-01",
+    "days": 1,
+    "cancelled": 0,
+    "offPeak": {
+      "cancelled": 0,
+      "otpDenominator": 20,
+      "otpNumerator": 18
+    },
+    "otpDenominator": 20,
+    "otpNumerator": 18,
+    "peak": {
+      "cancelled": 0,
+      "otpDenominator": 0,
+      "otpNumerator": 0
+    }
+  },
+  {
+    "date": "2026-03-02",
+    "days": 1,
+    "cancelled": 0,
+    "offPeak": {
+      "cancelled": 0,
+      "otpDenominator": 38,
+      "otpNumerator": 37
+    },
+    "otpDenominator": 55,
+    "otpNumerator": 51,
+    "peak": {
+      "cancelled": 0,
+      "otpDenominator": 17,
+      "otpNumerator": 14
+    }
+  },
+  {
+    "date": "2026-03-03",
+    "days": 1,
+    "cancelled": 0,
+    "offPeak": {
+      "cancelled": 0,
+      "otpDenominator": 38,
+      "otpNumerator": 37
+    },
+    "otpDenominator": 55,
+    "otpNumerator": 53,
+    "peak": {
+      "cancelled": 0,
+      "otpDenominator": 17,
+      "otpNumerator": 16
+    }
+  },
+  {
+    "date": "2026-03-04",
+    "days": 1,
+    "cancelled": 0,
+    "offPeak": {
+      "cancelled": 0,
+      "otpDenominator": 38,
+      "otpNumerator": 37
+    },
+    "otpDenominator": 55,
+    "otpNumerator": 48,
+    "peak": {
+      "cancelled": 0,
+      "otpDenominator": 17,
+      "otpNumerator": 11
+    }
+  },
+  {
+    "date": "2026-03-05",
+    "days": 1,
+    "cancelled": 0,
+    "offPeak": {
+      "cancelled": 0,
+      "otpDenominator": 38,
+      "otpNumerator": 33
+    },
+    "otpDenominator": 55,
+    "otpNumerator": 46,
+    "peak": {
+      "cancelled": 0,
+      "otpDenominator": 17,
+      "otpNumerator": 13
+    }
+  },
+  {
+    "date": "2026-03-06",
+    "days": 1,
+    "cancelled": 0,
+    "offPeak": {
+      "cancelled": 0,
+      "otpDenominator": 38,
+      "otpNumerator": 37
+    },
+    "otpDenominator": 55,
+    "otpNumerator": 54,
+    "peak": {
+      "cancelled": 0,
+      "otpDenominator": 17,
+      "otpNumerator": 17
+    }
+  },
+  {
+    "date": "2026-03-07",
+    "days": 1,
+    "cancelled": 0,
+    "offPeak": {
+      "cancelled": 0,
+      "otpDenominator": 20,
+      "otpNumerator": 19
+    },
+    "otpDenominator": 20,
+    "otpNumerator": 19,
+    "peak": {
+      "cancelled": 0,
+      "otpDenominator": 0,
+      "otpNumerator": 0
+    }
+  }
+]
