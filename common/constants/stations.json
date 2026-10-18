@@ -1597,7 +1597,8 @@
           "0": ["70276"],
           "1": ["70275"]
         },
-        "accessible": true
+        "accessible": true,
+        "terminus": true
       }
     ]
   }

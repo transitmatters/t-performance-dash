@@ -6,6 +6,7 @@ import { DesktopHeader } from '../../modules/dashboard/DesktopHeader';
 import { useDelimitatedRoute } from '../utils/router';
 import { ALL_PAGES } from '../constants/pages';
 import { MobileControlPanel } from '../components/controls/MobileControlPanel';
+import { CIPBanner } from '../components/CIPBanner';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -21,6 +22,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
 
   return (
     <div className="flex flex-1 flex-col pb-24 md:pb-0 md:pl-64">
+      <CIPBanner />
       <main className="flex-1">
         {isMobile ? <MobileHeader /> : <DesktopHeader />}
         <div className="py-2 md:py-4">

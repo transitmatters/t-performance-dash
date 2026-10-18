@@ -6,6 +6,8 @@ import {
   PEAK_SCHEDULED_SERVICE,
   PEAK_SPEED,
 } from '../../common/constants/baselines';
+import type { HistoricalBaselines } from '../../common/types/baselines';
+import { getBaseline, lineSeriesId } from '../../common/utils/baselines';
 import { LINE_COLORS } from '../../common/constants/colors';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import type { RidershipCount, DeliveredTripMetrics } from '../../common/types/dataPoints';
@@ -35,7 +37,8 @@ const getDatasetOptions = (line: Line): Partial<ChartDataset<'line'>> => {
 
 export const convertToSpeedDataset = (
   data: { [key in Line]?: DeliveredTripMetrics[] },
-  labels: string[]
+  labels: string[],
+  baselines: HistoricalBaselines | null | undefined
 ) => {
   return (Object.keys(data) as Line[]).map((line: Line) => {
     // We don't need to show the Mattapan line on the landing page
@@ -43,6 +46,7 @@ export const convertToSpeedDataset = (
       return { data: [] };
     }
 
+    const peak = getBaseline(baselines, 'speed', line, PEAK_SPEED[line]);
     const datasetOptions = getDatasetOptions(line);
     return {
       ...datasetOptions,
@@ -53,10 +57,7 @@ export const convertToSpeedDataset = (
             return null;
           }
           return datapoint.miles_covered
-            ? round(
-                (100 * datapoint.miles_covered) / (datapoint.total_time / 3600) / PEAK_SPEED[line],
-                1
-              )
+            ? round((100 * datapoint.miles_covered) / (datapoint.total_time / 3600) / peak, 1)
             : null;
         }) ?? [],
     };
@@ -116,7 +117,8 @@ export const convertToAggregateStationSpeedDataset = (
 
 export const convertToServiceDataset = (
   data: { [key in Line]?: DeliveredTripMetrics[] },
-  labels: string[]
+  labels: string[],
+  baselines: HistoricalBaselines | null | undefined
 ) => {
   return (Object.keys(data) as Line[]).map((line: Line) => {
     // We don't need to show the Mattapan line on the landing page
@@ -124,6 +126,12 @@ export const convertToServiceDataset = (
       return { data: [] };
     }
 
+    const peak = getBaseline(
+      baselines,
+      'scheduledService',
+      lineSeriesId(line),
+      PEAK_SCHEDULED_SERVICE[line]
+    );
     const datasetOptions = getDatasetOptions(line);
     return {
       ...datasetOptions,
@@ -131,9 +139,7 @@ export const convertToServiceDataset = (
         labels.map((label) => {
           const datapoint = data[line]?.find((datapoint) => datapoint.date === label);
           if (!datapoint) return null;
-          return datapoint.miles_covered
-            ? round((100 * datapoint.count) / PEAK_SCHEDULED_SERVICE[line], 1)
-            : null;
+          return datapoint.miles_covered ? round((100 * datapoint.count) / peak, 1) : null;
         }) ?? [],
     };
   });
@@ -141,24 +147,25 @@ export const convertToServiceDataset = (
 
 export const convertToRidershipDataset = (
   data: { [key in Line]: RidershipCount[] },
-  labels: string[]
+  labels: string[],
+  baselines: HistoricalBaselines | null | undefined
 ) => {
   return (
     (Object.keys(data) as Exclude<Line, 'line-bus'>[]).map((line: Exclude<Line, 'line-bus'>) => {
-      // We don't need to show the Mattapan line on the landing page
-      if (line === 'line-mattapan') {
+      // We don't need to show Mattapan or bus on the landing page. Bus has no hard-coded peak, so it
+      // never drew; keep it hidden now that a published baseline would make it appear.
+      if (line === 'line-mattapan' || (line as Line) === 'line-bus') {
         return { data: [] };
       }
 
+      const peak = getBaseline(baselines, 'ridership', lineSeriesId(line), PEAK_RIDERSHIP[line]);
       const datasetOptions = getDatasetOptions(line);
       return {
         ...datasetOptions,
         data: labels.map((labels) => {
           const datapoint = data[line]?.find((datapoint) => datapoint.date === labels);
           if (!datapoint) return null;
-          return datapoint.count
-            ? Math.round(10 * 100 * (datapoint.count / PEAK_RIDERSHIP[line])) / 10
-            : null;
+          return datapoint.count ? Math.round(10 * 100 * (datapoint.count / peak)) / 10 : null;
         }),
       };
     }) ?? []

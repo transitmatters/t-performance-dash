@@ -6,6 +6,7 @@ import { useDelimitatedRoute } from '../../utils/router';
 
 interface LegendProps {
   showUnderRatio?: boolean;
+  usingTmBenchmark?: boolean;
 }
 
 interface LegendLongTermProps {
@@ -13,7 +14,7 @@ interface LegendLongTermProps {
   onToggleTrendline: () => void;
 }
 
-export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio }) => {
+export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio, usingTmBenchmark }) => {
   const { line } = useDelimitatedRoute();
   return (
     <Disclosure>
@@ -31,7 +32,7 @@ export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio }) => {
                 'grid w-full grid-cols-2 items-baseline p-1 px-4 text-left text-xs lg:flex lg:flex-row lg:gap-4'
               }
             >
-              <LegendSingle showUnderRatio={showUnderRatio} />
+              <LegendSingle showUnderRatio={showUnderRatio} usingTmBenchmark={usingTmBenchmark} />
             </div>
 
             <div
@@ -54,14 +55,17 @@ export const LegendSingleDay: React.FC<LegendProps> = ({ showUnderRatio }) => {
   );
 };
 
-const LegendSingle: React.FC<LegendProps> = ({ showUnderRatio = false }) => {
+const LegendSingle: React.FC<LegendProps> = ({
+  showUnderRatio = false,
+  usingTmBenchmark = false,
+}) => {
   return (
     <>
       <div className="col-span-2 flex flex-row items-baseline gap-2 pb-1 italic lg:pb-0">
         <p>
           Compare to{' '}
           <span className="top-[1px] inline-block h-2.5 w-2.5 items-center border-t-2 border-[#bbb] bg-[#ddd] shadow-sm"></span>{' '}
-          MBTA benchmark:
+          {usingTmBenchmark ? 'TransitMatters' : 'MBTA'} benchmark:
         </p>
       </div>
       <p>

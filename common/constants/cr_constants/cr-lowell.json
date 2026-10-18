@@ -12,7 +12,7 @@
         "branches": null,
         "order": 1,
         "stops": {
-          "0": [],
+          "0": ["CR-Lowell_0_NHRML-0254-04"],
           "1": ["CR-Lowell_1_NHRML-0254-04"]
         },
         "terminus": true
@@ -96,7 +96,7 @@
             "CR-Lowell_0_BNT-0000-09",
             "CR-Lowell_0_BNT-0000-10"
           ],
-          "1": []
+          "1": ["CR-Lowell_1_BNT-0000"]
         },
         "terminus": true
       }

@@ -3,6 +3,7 @@ import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
 import { SpeedBaseline } from '../../../copy/landingCopy';
 import type { Line } from '../../../common/types/lines';
 import { LandingChartDiv } from '../LandingChartDiv';
+import { useHistoricalBaselines } from '../../../common/api/hooks/baselines';
 import { convertToSpeedDataset, LANDING_CHART_LABELS } from '../utils';
 import { LandingPageChart } from './LandingPageChart';
 
@@ -11,7 +12,8 @@ interface OverallSpeedChartProps {
 }
 export const OverallSpeedChart: React.FC<OverallSpeedChartProps> = ({ speedData }) => {
   const labels = LANDING_CHART_LABELS;
-  const datasets = convertToSpeedDataset(speedData, labels);
+  const { data: baselines } = useHistoricalBaselines();
+  const datasets = convertToSpeedDataset(speedData, labels, baselines);
   return (
     <LandingChartDiv>
       <LandingPageChart datasets={datasets} labels={labels} id="system-speed" />

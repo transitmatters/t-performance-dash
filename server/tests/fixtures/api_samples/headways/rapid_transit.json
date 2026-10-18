@@ -1,0 +1,227 @@
+[
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T05:24:56",
+    "headway_time_sec": 548.0,
+    "benchmark_headway_time_sec": 360.0,
+    "vehicle_consist": "1883|1882|1881|1880|1800|1801",
+    "vehicle_label": "1883"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T05:31:07",
+    "headway_time_sec": 371.0,
+    "benchmark_headway_time_sec": 380.0,
+    "vehicle_consist": "1932|1933|1937|1936|1917|1916",
+    "vehicle_label": "1932"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T05:37:50",
+    "headway_time_sec": 403.0,
+    "benchmark_headway_time_sec": 380.0,
+    "vehicle_consist": "1918|1919|1939|1938|1913|1912",
+    "vehicle_label": "1918"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T05:44:33",
+    "headway_time_sec": 403.0,
+    "benchmark_headway_time_sec": 380.0,
+    "vehicle_consist": "1838|1839|1875|1874",
+    "vehicle_label": "1838"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T05:51:31",
+    "headway_time_sec": 418.0,
+    "benchmark_headway_time_sec": 380.0,
+    "vehicle_consist": "1871|1870|1859|1858|1849|1848",
+    "vehicle_label": "1871"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T05:56:38",
+    "headway_time_sec": 307.0,
+    "benchmark_headway_time_sec": 380.0,
+    "vehicle_consist": "1815|1814|1862|1863|1806|1807",
+    "vehicle_label": "1815"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T06:02:22",
+    "headway_time_sec": 344.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1940|1941|1966|1967|1959|1958",
+    "vehicle_label": "1940"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T06:05:52",
+    "headway_time_sec": 210.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1735|1734|1701|1700|1753|1752",
+    "vehicle_label": "1735"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T06:11:13",
+    "headway_time_sec": 321.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1962|1963|1900|1901|1903|1902",
+    "vehicle_label": "1962"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T06:13:59",
+    "headway_time_sec": 166.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1914|1915|1907|1906|1911|1910",
+    "vehicle_label": "1914"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T06:24:17",
+    "headway_time_sec": 618.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1523|1522|1724|1725|1630|1631",
+    "vehicle_label": "1523"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T06:28:50",
+    "headway_time_sec": 273.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1942|1943|1953|1952|1945|1944",
+    "vehicle_label": "1942"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T06:31:45",
+    "headway_time_sec": 175.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1946|1947|1929|1928",
+    "vehicle_label": "1946"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T06:35:27",
+    "headway_time_sec": 222.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1869|1868|1832|1833|1810|1811",
+    "vehicle_label": "1869"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T06:38:33",
+    "headway_time_sec": 186.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1825|1824|1879|1878|1884|1885",
+    "vehicle_label": "1825"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T06:41:49",
+    "headway_time_sec": 196.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1930|1931|1960|1961|1951|1950",
+    "vehicle_label": "1930"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T06:45:55",
+    "headway_time_sec": 246.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1920|1921|1927|1926",
+    "vehicle_label": "1920"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T06:51:36",
+    "headway_time_sec": 341.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1823|1822|1856|1857|1805|1804",
+    "vehicle_label": "1823"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T06:54:58",
+    "headway_time_sec": 202.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1866|1867|1820|1821|1873|1872",
+    "vehicle_label": "1866"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T06:59:38",
+    "headway_time_sec": 280.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1932|1933|1937|1936|1917|1916",
+    "vehicle_label": "1932"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T07:02:40",
+    "headway_time_sec": 182.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1922|1923|1957|1956|1909|1908",
+    "vehicle_label": "1922"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T07:08:38",
+    "headway_time_sec": 358.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1738|1739|1731|1730|1723|1722",
+    "vehicle_label": "1738"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T07:13:11",
+    "headway_time_sec": 273.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1883|1882|1881|1880|1800|1801",
+    "vehicle_label": "1883"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T07:19:28",
+    "headway_time_sec": 377.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1838|1839|1875|1874",
+    "vehicle_label": "1838"
+  },
+  {
+    "route_id": "Red",
+    "direction": "0",
+    "current_dep_dt": "2026-10-07T07:26:15",
+    "headway_time_sec": 407.0,
+    "benchmark_headway_time_sec": 270.0,
+    "vehicle_consist": "1750|1751|1717|1716|1737|1736",
+    "vehicle_label": "1750"
+  }
+]

@@ -1,0 +1,87 @@
+[
+  {
+    "date": "2026-06-08",
+    "scheduled": 309.0,
+    "delivered": 307.0
+  },
+  {
+    "date": "2026-06-15",
+    "scheduled": 322.0,
+    "delivered": 324.0
+  },
+  {
+    "date": "2026-06-22",
+    "scheduled": 322.0,
+    "delivered": 328.0
+  },
+  {
+    "date": "2026-06-29",
+    "scheduled": 322.0,
+    "delivered": 137.0
+  },
+  {
+    "date": "2026-07-06",
+    "scheduled": 322.0,
+    "delivered": 136.0
+  },
+  {
+    "date": "2026-07-13",
+    "scheduled": 322.0,
+    "delivered": 255.0
+  },
+  {
+    "date": "2026-07-20",
+    "scheduled": 133.0,
+    "delivered": 317.0
+  },
+  {
+    "date": "2026-07-27",
+    "scheduled": 133.0,
+    "delivered": 241.0
+  },
+  {
+    "date": "2026-08-03",
+    "scheduled": 322.0,
+    "delivered": 308.0
+  },
+  {
+    "date": "2026-08-10",
+    "scheduled": 322.0,
+    "delivered": 312.0
+  },
+  {
+    "date": "2026-08-17",
+    "scheduled": 322.0,
+    "delivered": 317.0
+  },
+  {
+    "date": "2026-08-24",
+    "scheduled": 322.0,
+    "delivered": 309.0
+  },
+  {
+    "date": "2026-08-31",
+    "scheduled": 322.0,
+    "delivered": 323.0
+  },
+  {
+    "date": "2026-09-07",
+    "scheduled": 324.0,
+    "delivered": 326.0
+  },
+  {
+    "date": "2026-09-14",
+    "scheduled": 324.0,
+    "delivered": 324.0
+  },
+  {
+    "date": "2026-09-21",
+    "scheduled": 324.0,
+    "delivered": 322.0
+  },
+  {
+    "date": "2026-09-28",
+    "scheduled": 324.0,
+    "delivered": 326.0
+  }
+]

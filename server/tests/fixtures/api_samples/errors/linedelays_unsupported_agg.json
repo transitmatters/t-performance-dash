@@ -1,0 +1,4 @@
+{
+  "Code": "BadRequestError",
+  "Message": "Invalid aggregation type. Must be 'daily' or 'weekly'."
+}

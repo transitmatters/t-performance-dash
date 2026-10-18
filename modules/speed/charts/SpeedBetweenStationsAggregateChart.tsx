@@ -50,6 +50,7 @@ export const SpeedBetweenStationsAggregateChart: React.FC<
         location={getLocationDetails(fromStation, toStation)}
         includeBothStopsForLocation={true}
         fname="speeds"
+        chartTitle="Speeds"
         yUnit="MPH"
       />
     );

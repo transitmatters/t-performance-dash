@@ -1,5 +1,6 @@
-import type { MiniWidgetObject } from '../components/widgets/MiniWidgetCreator';
+import type { MiniWidgetObject, WidgetComparison } from '../components/widgets/MiniWidgetCreator';
 import { MPHWidgetValue, PercentageWidgetValue, TimeWidgetValue } from '../types/basicWidgets';
+import type { DayFilter } from '../types/charts';
 import {
   BenchmarkFieldKeys,
   type AggregateDataPoint,
@@ -85,29 +86,140 @@ const getAggHeadwayDataPoints = (aggData: AggregateDataPoint[]) => {
   return { average, min, max, median, p10, p90, bunched, onTime };
 };
 
-export const getAggDataWidgets = (aggData: AggregateDataPoint[], type: 'times' | 'speeds') => {
+export const filterByDayType = (data: AggregateDataPoint[], type: 'weekday' | 'weekend') => {
+  return data.filter((datapoint) => {
+    if (!datapoint.service_date) return true;
+    const isWeekendOrHoliday = datapoint.holiday || datapoint.weekend;
+    return type === 'weekend' ? isWeekendOrHoliday : !isWeekendOrHoliday;
+  });
+};
+
+export const getComparisonData = (allData: AggregateDataPoint[], dayFilter: DayFilter) => {
+  if (dayFilter === 'all') return undefined;
+  const oppositeType = dayFilter === 'weekday' ? 'weekend' : 'weekday';
+  const oppositeLabel = dayFilter === 'weekday' ? 'weekends & holidays' : 'weekdays';
+  const data = filterByDayType(allData, oppositeType);
+  if (data.length === 0) return undefined;
+  return { data, label: oppositeLabel };
+};
+
+const makeComparison = (
+  current: number | undefined,
+  other: number | undefined,
+  label: string,
+  unit: WidgetComparison['unit']
+): WidgetComparison | undefined => {
+  if (current === undefined || other === undefined) return undefined;
+  return { delta: current - other, label, unit };
+};
+
+export const getAggDataWidgets = (
+  aggData: AggregateDataPoint[],
+  type: 'times' | 'speeds',
+  comparisonData?: { data: AggregateDataPoint[]; label: string }
+): MiniWidgetObject[] => {
   const { average, min, max, median, p10, p90 } = getAggDataPointsOfInterest(aggData);
+  const comp = comparisonData ? getAggDataPointsOfInterest(comparisonData.data) : undefined;
+  const label = comparisonData?.label ?? '';
+
   return [
-    { text: 'Avg', widgetValue: getWidget(type, average), type: 'data' },
-    { text: 'Median', widgetValue: getWidget(type, median), type: 'data' },
-    { text: '10%', widgetValue: getWidget(type, p10), type: 'data' },
-    { text: '90%', widgetValue: getWidget(type, p90), type: 'data' },
-    { text: 'Min', widgetValue: getWidget(type, min), type: 'data' },
-    { text: 'Max', widgetValue: getWidget(type, max), type: 'data' },
+    {
+      text: 'Avg',
+      widgetValue: getWidget(type, average),
+      type: 'data',
+      comparison: comp ? makeComparison(average, comp.average, label, 'time') : undefined,
+    },
+    {
+      text: 'Median',
+      widgetValue: getWidget(type, median),
+      type: 'data',
+      comparison: comp ? makeComparison(median, comp.median, label, 'time') : undefined,
+    },
+    {
+      text: '10%',
+      widgetValue: getWidget(type, p10),
+      type: 'data',
+      comparison: comp ? makeComparison(p10, comp.p10, label, 'time') : undefined,
+    },
+    {
+      text: '90%',
+      widgetValue: getWidget(type, p90),
+      type: 'data',
+      comparison: comp ? makeComparison(p90, comp.p90, label, 'time') : undefined,
+    },
+    {
+      text: 'Min',
+      widgetValue: getWidget(type, min),
+      type: 'data',
+      comparison: comp ? makeComparison(min, comp.min, label, 'time') : undefined,
+    },
+    {
+      text: 'Max',
+      widgetValue: getWidget(type, max),
+      type: 'data',
+      comparison: comp ? makeComparison(max, comp.max, label, 'time') : undefined,
+    },
   ];
 };
 
-export const getAggHeadwayDataWidgets = (aggData: AggregateDataPoint[], type: 'times') => {
+export const getAggHeadwayDataWidgets = (
+  aggData: AggregateDataPoint[],
+  type: 'times',
+  comparisonData?: { data: AggregateDataPoint[]; label: string }
+): MiniWidgetObject[] => {
   const { average, min, max, median, p10, p90, bunched, onTime } = getAggHeadwayDataPoints(aggData);
+  const comp = comparisonData ? getAggHeadwayDataPoints(comparisonData.data) : undefined;
+  const label = comparisonData?.label ?? '';
+
   return [
-    { text: 'Avg', widgetValue: getWidget(type, average), type: 'data' },
-    { text: 'Median', widgetValue: getWidget(type, median), type: 'data' },
-    { text: '10%', widgetValue: getWidget(type, p10), type: 'data' },
-    { text: '90%', widgetValue: getWidget(type, p90), type: 'data' },
-    { text: 'Min', widgetValue: getWidget(type, min), type: 'data' },
-    { text: 'Max', widgetValue: getWidget(type, max), type: 'data' },
-    { text: 'Bunched Trips', widgetValue: new PercentageWidgetValue(bunched), type: 'data' },
-    { text: 'On Time Trips', widgetValue: new PercentageWidgetValue(onTime), type: 'data' },
+    {
+      text: 'Avg',
+      widgetValue: getWidget(type, average),
+      type: 'data',
+      comparison: comp ? makeComparison(average, comp.average, label, 'time') : undefined,
+    },
+    {
+      text: 'Median',
+      widgetValue: getWidget(type, median),
+      type: 'data',
+      comparison: comp ? makeComparison(median, comp.median, label, 'time') : undefined,
+    },
+    {
+      text: '10%',
+      widgetValue: getWidget(type, p10),
+      type: 'data',
+      comparison: comp ? makeComparison(p10, comp.p10, label, 'time') : undefined,
+    },
+    {
+      text: '90%',
+      widgetValue: getWidget(type, p90),
+      type: 'data',
+      comparison: comp ? makeComparison(p90, comp.p90, label, 'time') : undefined,
+    },
+    {
+      text: 'Min',
+      widgetValue: getWidget(type, min),
+      type: 'data',
+      comparison: comp ? makeComparison(min, comp.min, label, 'time') : undefined,
+    },
+    {
+      text: 'Max',
+      widgetValue: getWidget(type, max),
+      type: 'data',
+      comparison: comp ? makeComparison(max, comp.max, label, 'time') : undefined,
+    },
+    {
+      text: 'Bunched Trips',
+      widgetValue: new PercentageWidgetValue(bunched),
+      type: 'data',
+      comparison: comp ? makeComparison(bunched, comp.bunched, label, 'percentage') : undefined,
+    },
+    {
+      text: 'On Time Trips',
+      widgetValue: new PercentageWidgetValue(onTime),
+      type: 'data',
+      comparison: comp ? makeComparison(onTime, comp.onTime, label, 'percentage') : undefined,
+    },
   ];
 };
 

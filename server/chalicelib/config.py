@@ -1,3 +1,5 @@
+"""Application configuration: API keys, AWS credentials, and backend source selection."""
+
 import os
 
 import boto3
@@ -24,9 +26,14 @@ def _check_aws_credentials():
 
 
 def get_backend_source():
-    """
-    Determine the backend data source.
-    Returns: 'prod', 'aws', or 'static'
+    """Determine the backend data source.
+
+    Reads the TM_BACKEND_SOURCE environment variable. If not set or unrecognized,
+    auto-detects by checking for valid AWS credentials.
+
+    Returns:
+        str: 'prod' to proxy requests to the production API, 'aws' to query AWS
+             directly, or 'static' to use local static data.
     """
     source = os.environ.get("TM_BACKEND_SOURCE", "").lower()
     if source in ("prod", "aws", "static"):

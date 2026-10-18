@@ -1,3 +1,9 @@
+"""Scheduled vs. delivered service hours comparison.
+
+Queries both scheduled service data and delivered trip metrics from DynamoDB,
+then computes and compares service hours at the requested aggregation level.
+"""
+
 from datetime import date
 from concurrent import futures
 from typing import List, TypedDict, Literal, Dict
@@ -27,12 +33,33 @@ SINGLE_ROUTE_IDS_BY_LINE_KEY = {
 
 
 class ServiceHoursEntry(TypedDict):
+    """A single day's scheduled vs. delivered service hours.
+
+    Attributes:
+        date: Date string (YYYY-MM-DD).
+        scheduled: Scheduled service hours for the day.
+        delivered: Delivered service hours for the day.
+    """
+
     date: str
     scheduled: int
     delivered: int
 
 
 def get_delivered_service_times(response_dicts: List[Dict[str, any]], agg: AggType):
+    """Calculate delivered service hours from extended trip metric records.
+
+    Computes total delivered hours per date by multiplying trip counts by
+    mean trip times for each direction, then resamples to the requested
+    aggregation level using median.
+
+    Args:
+        response_dicts: List of extended trip metric records from DynamoDB.
+        agg: Aggregation level — ``"daily"``, ``"weekly"``, or ``"monthly"``.
+
+    Returns:
+        Dictionary mapping date strings to delivered service hours.
+    """
     df = pd.DataFrame.from_records(response_dicts)
     service_hours = {}
     # unique service_dates
@@ -60,6 +87,20 @@ def get_service_hours(
     end_date: date,
     agg: AggType,
 ) -> List[ServiceHoursEntry]:
+    """Compare scheduled vs. delivered service hours for a transit line.
+
+    Queries scheduled service and delivered trip metrics concurrently using
+    a thread pool, then matches dates where both values are available.
+
+    Args:
+        single_route_id: Line identifier (e.g., ``line-red``, ``line-green``).
+        start_date: Start of the date range.
+        end_date: End of the date range.
+        agg: Aggregation level — ``"daily"``, ``"weekly"``, or ``"monthly"``.
+
+    Returns:
+        List of ``ServiceHoursEntry`` dicts with date, scheduled, and delivered fields.
+    """
     responses = []
     route_ids = ROUTE_IDS_BY_LINE[single_route_id]
     single_route_id = SINGLE_ROUTE_IDS_BY_LINE_KEY[single_route_id]

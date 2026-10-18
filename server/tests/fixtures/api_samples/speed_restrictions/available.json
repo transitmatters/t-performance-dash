@@ -1,0 +1,32 @@
+{
+  "available": true,
+  "date": "2025-12-01",
+  "zones": [
+    {
+      "date": "2025-12-01",
+      "trackFeet": 200,
+      "reason": "Track",
+      "speedMph": 10,
+      "fromStopId": "place-shmnl",
+      "reported": "2025-08-25",
+      "lineId": "line-Red",
+      "description": "SB Savin Hill to Fields Corner",
+      "id": "000223R",
+      "toStopId": "place-fldcr",
+      "direction": "SB"
+    },
+    {
+      "date": "2025-12-01",
+      "trackFeet": 100,
+      "reason": "Track",
+      "speedMph": 10,
+      "fromStopId": "place-brntn",
+      "reported": "2025-07-03",
+      "lineId": "line-Red",
+      "description": "NB Braintree Station",
+      "id": "000205R",
+      "toStopId": null,
+      "direction": "NB"
+    }
+  ]
+}

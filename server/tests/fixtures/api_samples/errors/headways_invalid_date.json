@@ -1,0 +1,4 @@
+{
+  "Code": "BadRequestError",
+  "Message": "Invalid date 'not-a-date'. Expected format: YYYY-MM-DD."
+}

@@ -13,9 +13,10 @@ import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartBorder } from '../../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
-import { PEAK_SPEED } from '../../../common/constants/baselines';
+import { useSpeedBaseline } from '../../../common/api/hooks/baselines';
 import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
+import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { addMPHToSpeedData } from '../../../common/utils/csv';
 import type { ParamsType } from '../constants/speeds';
 
@@ -36,7 +37,7 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
 }) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
-  const peak = PEAK_SPEED[line ?? 'DEFAULT'];
+  const peak = useSpeedBaseline(line);
   const ref = useRef();
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
@@ -198,13 +199,22 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
       </ChartDiv>
       <div className="flex flex-row items-end justify-end gap-4">
         {startDate && (
-          <DownloadButton
-            data={dataWithMPH}
-            datasetName="speed"
-            includeBothStopsForLocation={false}
-            startDate={startDate}
-            endDate={endDate}
-          />
+          <>
+            <SaveChartImageButton
+              chartRef={ref}
+              datasetName="speed"
+              includeBothStopsForLocation={false}
+              startDate={startDate}
+              endDate={endDate}
+            />
+            <DownloadButton
+              data={dataWithMPH}
+              datasetName="speed"
+              includeBothStopsForLocation={false}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          </>
         )}
       </div>
     </ChartBorder>

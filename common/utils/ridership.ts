@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+import { DATE_FORMAT } from '../constants/dates';
 import type { BusRoute, CommuterRailRoute, FerryRoute, Line } from '../types/lines';
 import { RIDERSHIP_KEYS } from '../types/lines';
 
@@ -31,4 +33,11 @@ export const getRidershipLineId = (
   } else {
     return RIDERSHIP_KEYS[line ?? ''];
   }
+};
+
+// Ridership is weekly, keyed on the Monday of each week. Start from the Monday of the
+// start date's week so a range that begins mid-week still includes that week.
+export const getRidershipWeekStart = (date: string) => {
+  const day = dayjs(date);
+  return day.subtract((day.day() + 6) % 7, 'day').format(DATE_FORMAT);
 };
