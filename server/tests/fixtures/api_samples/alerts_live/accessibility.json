@@ -1,0 +1,63 @@
+[
+  {
+    "active_period": [
+      {
+        "current": true,
+        "end": null,
+        "start": "2026-05-12T10:55:27-04:00",
+        "upcoming": false
+      }
+    ],
+    "description": null,
+    "header": "Alewife Escalator 351 (Main concourse to platform) is unavailable due to maintenance.",
+    "id": "1009804",
+    "stops": [
+      "Alewife-02",
+      "Alewife-01",
+      "place-alfcl"
+    ],
+    "type": "ESCALATOR_CLOSURE"
+  },
+  {
+    "active_period": [
+      {
+        "current": true,
+        "end": null,
+        "start": "2026-05-11T21:48:34-04:00",
+        "upcoming": false
+      }
+    ],
+    "description": null,
+    "header": "Alewife Escalator 353 (Main concourse to busway) is unavailable due to maintenance.",
+    "id": "1009729",
+    "stops": [
+      "node-alfcl-buswayplatform-middle",
+      "Alewife-02",
+      "Alewife-01",
+      "place-alfcl"
+    ],
+    "type": "ESCALATOR_CLOSURE"
+  },
+  {
+    "active_period": [
+      {
+        "current": true,
+        "end": "2026-12-02T03:00:00-05:00",
+        "start": "2026-09-22T03:00:00-04:00",
+        "upcoming": true
+      }
+    ],
+    "description": "The elevator is closed for major equipment upgrades that will significantly improve the long-term reliability of this elevator.\r\n\r\nTo board a Red Line Train: Proceed to the Orange Line Oak Grove Platform at the opposite end of the concourse. Take elevator 998 or 999 to the Red Line passage, then follow signs to Alewife. \r\n  \r\nTo exit the station: Proceed to the north end of the platform to the Orange - Red Line passage. Take Elevator 998 or 999 to the Orange Line Oak Grove platform. Exit the station using the 101 Arch St Elevator on the Summer St concourse.\r\n",
+    "header": "Downtown Crossing Elevator 869 (Alewife platform to Summer Street Concourse) is unavailable due to maintenance through Tuesday, December 1.",
+    "id": "1031518",
+    "stops": [
+      "door-dwnxg-summer",
+      "door-dwnxg-101arch",
+      "door-dwnxg-summereast",
+      "door-dwnxg-macys",
+      "door-dwnxg-rochebros",
+      "place-dwnxg"
+    ],
+    "type": "ELEVATOR_CLOSURE"
+  }
+]

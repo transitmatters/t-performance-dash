@@ -1,0 +1,1701 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife Garage EV Chargers",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "capacity",
+            "value": "6"
+          }
+        ],
+        "short_name": "EV Chargers",
+        "type": "ELECTRIC_CAR_CHARGERS"
+      },
+      "id": "ev-alfcl-garage",
+      "links": {
+        "self": "/facilities/ev-alfcl-garage"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife customer service agent with blank CharlieCards",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "dispenses",
+            "value": "fare-media"
+          },
+          {
+            "name": "note",
+            "value": "Saturday hours: 7:00A - 7:00P"
+          },
+          {
+            "name": "note",
+            "value": "Sunday hours: 7:00A - 7:00P"
+          },
+          {
+            "name": "note",
+            "value": "Weekday hours: 7:00A - 7:00P"
+          }
+        ],
+        "short_name": "Employee with blank CharlieCards",
+        "type": "FARE_MEDIA_ASSISTANT"
+      },
+      "id": "charliecard-alfcl",
+      "links": {
+        "self": "/facilities/charliecard-alfcl"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife ramp access",
+        "longitude": null,
+        "properties": [],
+        "short_name": "Ramp access",
+        "type": "RAMP"
+      },
+      "id": "ramp-alfcl",
+      "links": {
+        "self": "/facilities/ramp-alfcl"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife Escalator 355 (Garage level 2 to level 3)",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "direction",
+            "value": "up"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14112"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14118"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14120"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14121"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14122"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14123"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "9070061"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewife"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewifes"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-cambridgepark"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-pathbusway"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-russell"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-steel"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-354-bottom"
+          }
+        ],
+        "short_name": "Garage level 2 to level 3",
+        "type": "ESCALATOR"
+      },
+      "id": "355",
+      "links": {
+        "self": "/facilities/355"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife fare vending machine 201350",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "enclosed",
+            "value": "1"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewife"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-cambridgepark"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-steel"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "cash"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "credit-debit-card"
+          }
+        ],
+        "short_name": "Fare vending machine 201350",
+        "type": "FARE_VENDING_MACHINE"
+      },
+      "id": "fvm-201350",
+      "links": {
+        "self": "/facilities/fvm-201350"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife Escalator 349 (Platform to Russell Field)",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "direction",
+            "value": "up"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14112"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14118"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14120"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14121"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14122"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14123"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "9070061"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewife"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewifes"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-cambridgepark"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-pathbusway"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-steel"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-354-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-354-top"
+          }
+        ],
+        "short_name": "Platform to Russell Field",
+        "type": "ESCALATOR"
+      },
+      "id": "349",
+      "links": {
+        "self": "/facilities/349"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife fare vending machine 201118",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "enclosed",
+            "value": "1"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-russell"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "cash"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "credit-debit-card"
+          }
+        ],
+        "short_name": "Fare vending machine 201118",
+        "type": "FARE_VENDING_MACHINE"
+      },
+      "id": "fvm-201118",
+      "links": {
+        "self": "/facilities/fvm-201118"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": "42.395974",
+        "long_name": "Alewife West Pedal and Park",
+        "longitude": "-71.142622",
+        "properties": [
+          {
+            "name": "capacity",
+            "value": "494"
+          },
+          {
+            "name": "enclosed",
+            "value": "1"
+          },
+          {
+            "name": "secured",
+            "value": "1"
+          }
+        ],
+        "short_name": "Pedal and Park",
+        "type": "BIKE_STORAGE"
+      },
+      "id": "bike-alfcl-west",
+      "links": {
+        "self": "/facilities/bike-alfcl-west"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": "42.395539",
+        "long_name": "Alewife Central Pedal and Park",
+        "longitude": "-71.142084",
+        "properties": [
+          {
+            "name": "capacity",
+            "value": "494"
+          },
+          {
+            "name": "enclosed",
+            "value": "1"
+          },
+          {
+            "name": "secured",
+            "value": "1"
+          }
+        ],
+        "short_name": "Pedal and Park",
+        "type": "BIKE_STORAGE"
+      },
+      "id": "bike-alfcl-central",
+      "links": {
+        "self": "/facilities/bike-alfcl-central"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife fare vending machine 201319",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "enclosed",
+            "value": "1"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-russell"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "cash"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "credit-debit-card"
+          }
+        ],
+        "short_name": "Fare vending machine 201319",
+        "type": "FARE_VENDING_MACHINE"
+      },
+      "id": "fvm-201319",
+      "links": {
+        "self": "/facilities/fvm-201319"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": "42.39612",
+        "long_name": "Alewife Elevator 961 (Platform to Russell Field, Rindge Avenue lobby)",
+        "longitude": "-71.139856",
+        "properties": [
+          {
+            "name": "alternate-service-text",
+            "value": "To exit, use Elevator 813 located at the opposite end of the platform to access the main lobby. To board, travel west down the Alewife Linear Path to the main station entrance and use Elevator 813."
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14112"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14118"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14120"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14121"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14122"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14123"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "9070061"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewife"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewifes"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-cambridgepark"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-pathbusway"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-steel"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-354-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-354-top"
+          }
+        ],
+        "short_name": "Platform to Russell Field, Rindge Avenue lobby",
+        "type": "ELEVATOR"
+      },
+      "id": "961",
+      "links": {
+        "self": "/facilities/961"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife Escalator 356 (Garage level 2 to level 4)",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "direction",
+            "value": "up"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14112"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14118"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14120"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14121"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14122"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14123"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "9070061"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewife"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewifes"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-cambridgepark"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-pathbusway"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-russell"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-steel"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-354-bottom"
+          }
+        ],
+        "short_name": "Garage level 2 to level 4",
+        "type": "ESCALATOR"
+      },
+      "id": "356",
+      "links": {
+        "self": "/facilities/356"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": "42.395815",
+        "long_name": "Alewife Elevator 815 (Main lobby to street, parking garage)",
+        "longitude": "-71.141239",
+        "properties": [
+          {
+            "name": "alternate-service-text",
+            "value": "Please use the nearby Alewife Elevator 814."
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14112"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14118"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14120"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14121"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14122"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14123"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "9070061"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewife"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewifes"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-cambridgepark"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-pathbusway"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-russell"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-steel"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-354-bottom"
+          }
+        ],
+        "short_name": "Main lobby to street, parking garage",
+        "type": "ELEVATOR"
+      },
+      "id": "815",
+      "links": {
+        "self": "/facilities/815"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife fare vending machine 201120",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "enclosed",
+            "value": "1"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewife"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-cambridgepark"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-steel"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "cash"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "credit-debit-card"
+          }
+        ],
+        "short_name": "Fare vending machine 201120",
+        "type": "FARE_VENDING_MACHINE"
+      },
+      "id": "fvm-201120",
+      "links": {
+        "self": "/facilities/fvm-201120"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": "42.395428",
+        "long_name": "Alewife Garage",
+        "longitude": "-71.142483",
+        "properties": [
+          {
+            "name": "attended",
+            "value": "1"
+          },
+          {
+            "name": "capacity",
+            "value": "2471"
+          },
+          {
+            "name": "capacity-accessible",
+            "value": "32"
+          },
+          {
+            "name": "car-sharing",
+            "value": "Zipcar"
+          },
+          {
+            "name": "contact",
+            "value": "MBTA Customer Support"
+          },
+          {
+            "name": "contact-phone",
+            "value": "617-222-3200"
+          },
+          {
+            "name": "contact-url",
+            "value": "https://www.mbta.com/customer-support"
+          },
+          {
+            "name": "enclosed",
+            "value": "1"
+          },
+          {
+            "name": "fee-daily",
+            "value": "Mon-Fri: $9 | Sat-Sun: $3 "
+          },
+          {
+            "name": "fee-monthly",
+            "value": "Monthly passes are not available at MBTA garages."
+          },
+          {
+            "name": "municipality",
+            "value": "Cambridge"
+          },
+          {
+            "name": "operator",
+            "value": "Keolis Commuter Services"
+          },
+          {
+            "name": "overnight-allowed",
+            "value": "yes"
+          },
+          {
+            "name": "owner",
+            "value": "MBTA"
+          },
+          {
+            "name": "payment-app",
+            "value": "PayByPhone"
+          },
+          {
+            "name": "payment-app-id",
+            "value": "4241"
+          },
+          {
+            "name": "payment-app-url",
+            "value": "https://www.paybyphone.com/"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "invoice"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "mobile-app"
+          }
+        ],
+        "short_name": "Garage",
+        "type": "PARKING_AREA"
+      },
+      "id": "park-alfcl-garage",
+      "links": {
+        "self": "/facilities/park-alfcl-garage"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife fare vending machine 201317",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "enclosed",
+            "value": "1"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-russell"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "cash"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "credit-debit-card"
+          }
+        ],
+        "short_name": "Fare vending machine 201317",
+        "type": "FARE_VENDING_MACHINE"
+      },
+      "id": "fvm-201317",
+      "links": {
+        "self": "/facilities/fvm-201317"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife fare vending machine 201119",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "enclosed",
+            "value": "1"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-russell"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "cash"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "credit-debit-card"
+          }
+        ],
+        "short_name": "Fare vending machine 201119",
+        "type": "FARE_VENDING_MACHINE"
+      },
+      "id": "fvm-201119",
+      "links": {
+        "self": "/facilities/fvm-201119"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife fare vending machine 201116",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "enclosed",
+            "value": "1"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-russell"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "cash"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "credit-debit-card"
+          }
+        ],
+        "short_name": "Fare vending machine 201116",
+        "type": "FARE_VENDING_MACHINE"
+      },
+      "id": "fvm-201116",
+      "links": {
+        "self": "/facilities/fvm-201116"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": "42.39563",
+        "long_name": "Alewife Garage Pick-up/Drop-off",
+        "longitude": "-71.141923",
+        "properties": [],
+        "short_name": "Garage",
+        "type": "PICK_DROP"
+      },
+      "id": "pick-alfcl-garage",
+      "links": {
+        "self": "/facilities/pick-alfcl-garage"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife Escalator 352 (Platform to main concourse)",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "direction",
+            "value": "up"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14112"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14118"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14120"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14121"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14122"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14123"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "9070061"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewife"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewifes"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-cambridgepark"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-pathbusway"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-russell"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-steel"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-354-bottom"
+          }
+        ],
+        "short_name": "Platform to main concourse",
+        "type": "ESCALATOR"
+      },
+      "id": "352",
+      "links": {
+        "self": "/facilities/352"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife fare vending machine 201318",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "enclosed",
+            "value": "1"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-russell"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "cash"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "credit-debit-card"
+          }
+        ],
+        "short_name": "Fare vending machine 201318",
+        "type": "FARE_VENDING_MACHINE"
+      },
+      "id": "fvm-201318",
+      "links": {
+        "self": "/facilities/fvm-201318"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": "42.395791",
+        "long_name": "Alewife Elevator 814 (Main lobby to street, parking garage)",
+        "longitude": "-71.141323",
+        "properties": [
+          {
+            "name": "alternate-service-text",
+            "value": "Please use the nearby Alewife Elevator 815."
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14112"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14118"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14120"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14121"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14122"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14123"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "9070061"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewife"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewifes"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-cambridgepark"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-pathbusway"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-russell"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-steel"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-354-bottom"
+          }
+        ],
+        "short_name": "Main lobby to street, parking garage",
+        "type": "ELEVATOR"
+      },
+      "id": "814",
+      "links": {
+        "self": "/facilities/814"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife fare vending machine 201117",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "enclosed",
+            "value": "1"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-russell"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "cash"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "credit-debit-card"
+          }
+        ],
+        "short_name": "Fare vending machine 201117",
+        "type": "FARE_VENDING_MACHINE"
+      },
+      "id": "fvm-201117",
+      "links": {
+        "self": "/facilities/fvm-201117"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife Escalator 354 (Main concourse to garage level 2)",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "direction",
+            "value": "up"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14112"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14118"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14120"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14121"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14122"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "14123"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "9070061"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewife"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-alewifes"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-cambridgepark"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-pathbusway"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-russell"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-steel"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-349-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-350-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-351-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-352-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-bottom"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-353-top"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "node-354-bottom"
+          }
+        ],
+        "short_name": "Main concourse to garage level 2",
+        "type": "ESCALATOR"
+      },
+      "id": "354",
+      "links": {
+        "self": "/facilities/354"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    },
+    {
+      "attributes": {
+        "latitude": null,
+        "long_name": "Alewife fare vending machine 201320",
+        "longitude": null,
+        "properties": [
+          {
+            "name": "enclosed",
+            "value": "1"
+          },
+          {
+            "name": "excludes-stop",
+            "value": "door-alfcl-russell"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "cash"
+          },
+          {
+            "name": "payment-form-accepted",
+            "value": "credit-debit-card"
+          }
+        ],
+        "short_name": "Fare vending machine 201320",
+        "type": "FARE_VENDING_MACHINE"
+      },
+      "id": "fvm-201320",
+      "links": {
+        "self": "/facilities/fvm-201320"
+      },
+      "relationships": {
+        "stop": {
+          "data": {
+            "id": "place-alfcl",
+            "type": "stop"
+          }
+        }
+      },
+      "type": "facility"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

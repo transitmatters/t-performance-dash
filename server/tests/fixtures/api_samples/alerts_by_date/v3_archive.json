@@ -1,0 +1,17 @@
+[
+  {
+    "valid_from": "2026-10-07T08:31:00-04:00",
+    "valid_to": "2026-10-07T11:15:01-04:00",
+    "text": "Red Line: Delays of about 15 minutes due to an earlier disabled train at Savin Hill. Service is proceeding."
+  },
+  {
+    "valid_from": "2026-10-07T17:24:49-04:00",
+    "valid_to": "2026-10-07T20:00:00-04:00",
+    "text": "Red Line: Delays of about 15 minutes while crews remove a disabled train from service at Kendall/MIT."
+  },
+  {
+    "valid_from": "2026-10-07T19:26:24-04:00",
+    "valid_to": "2026-10-07T22:30:01-04:00",
+    "text": "Red Line: Delays of about 20 minutes while crews address a signal problem near Davis."
+  }
+]
