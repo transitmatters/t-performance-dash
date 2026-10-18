@@ -11,9 +11,12 @@ export interface TravelTimePoint extends DataPoint {
   arr_dt: string;
   travel_time_sec: number;
   benchmark_travel_time_sec: number;
+  tm_benchmark_travel_time_sec?: number | null;
   threshold_flag_1?: string;
   threshold_flag_2?: string;
   threshold_flag_3?: string;
+  vehicle_consist?: string;
+  vehicle_label?: string;
 }
 
 export interface HeadwayPoint extends DataPoint {
@@ -21,16 +24,20 @@ export interface HeadwayPoint extends DataPoint {
   current_dep_dt: string;
   previous_dep_dt: string;
   headway_time_sec: number;
-  benchmark_headway_time_sec: number;
+  benchmark_headway_time_sec: number | null;
   threshold_flag_1?: string;
   threshold_flag_2?: string;
   threshold_flag_3?: string;
+  vehicle_consist?: string;
+  vehicle_label?: string;
 }
 
 export interface DwellPoint extends DataPoint {
   arr_dt: string;
   dep_dt: string;
   dwell_time_sec: number;
+  vehicle_consist?: string;
+  vehicle_label?: string;
 }
 
 export interface DayDelayTotals {
@@ -99,6 +106,9 @@ export interface DeliveredTripMetrics {
   total_time: number;
   count: number;
   miles_per_hour?: string;
+  avg_car_age?: number;
+  pct_new_trips?: number;
+  [key: `fleet_mix_${string}`]: number | undefined;
 }
 
 export type LineSegmentData = {

@@ -6,18 +6,20 @@
 ![deploy](https://github.com/transitmatters/t-performance-dash/workflows/deploy/badge.svg?branch=main)
 ![healthcheck](https://github.com/transitmatters/t-performance-dash/workflows/healthcheck/badge.svg)
 
-This is the repository for the TransitMatters Data Dashboard. Client code is written in Typescript with React and Next.js, and the backend is written in Python with Chalice.
+This is the repository for the [TransitMatters Data Dashboard](https://dashboard.transitmatters.org/). Client code is written in Typescript with React and Next.js, and the backend is written in Python with Chalice.
 
-## Requirements to develop locally
+---
 
-- node 20.x and npm 9.x+ required
-  - With `nvm` installed, use `nvm install && nvm use`
+## 🧰 Requirements to Develop Locally
+
+- node 24.x and npm 11.x+ required
   - verify with `node -v`
-- Python 3.12 with recent poetry (1.7.0 or later)
-  - Verify with `python --version && poetry --version`
-  - `poetry self update` to update poetry
+- Python 3.12 with recent uv (0.9.8 or later)
+  - Verify with `python --version && uv --version`
+  - `uv self update` to update uv
+- With [mise](https://mise.jdx.dev) installed, `mise trust && mise install` sets up Node and Python (versions are pinned in `.nvmrc` / `.python-version`)
 
-## Development Instructions
+## 🧪 Local Development
 
 1. Add `MBTA_V3_API_KEY` to your shell environment:
    - `export MBTA_V3_API_KEY='KEY'` in ~/.bashrc or ~/.zshrc
@@ -25,18 +27,41 @@ This is the repository for the TransitMatters Data Dashboard. Client code is wri
 3. Run `npm start` to start both the JavaScript development server and the Python backend at the same time.
 4. Navigate to [http://localhost:3000](http://localhost:3000) (or the url provided after running `npm start`)
 
-### AWS Setup
+### Backend Data Source
 
-If you have access to AWS credentials, add them to your local setup for a better development experience
+The backend supports three data source modes, controlled by the `TM_BACKEND_SOURCE` environment variable:
+
+| Mode     | Description                                                                                       |
+| -------- | ------------------------------------------------------------------------------------------------- |
+| `aws`    | Use local AWS credentials to query DynamoDB/S3 directly (default if AWS credentials are detected) |
+| `prod`   | Proxy requests to the production API (live data, no AWS credentials needed)                       |
+| `static` | Use cached sample data (offline development, default if no AWS credentials)                       |
+
+**For external contributors (no AWS access):**
+No configuration needed! The backend auto-detects missing AWS credentials and falls back to cached sample data. For live data without AWS credentials:
+
+```bash
+export TM_BACKEND_SOURCE=prod
+```
+
+**For TransitMatters members (with AWS access):**
+
+```bash
+export TM_BACKEND_SOURCE=aws
+```
+
+## ☁️ AWS Setup
+
+If you have access to AWS credentials, add them to your local setup for a better development experience. If you don't yet have TransitMatters AWS credentials, reach out in [slack](https://transitmatters.slack.com/archives/GSJ6F35DW).
 
 1. Add your AWS credentials (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) to your shell environment, OR add them to a .boto config file with awscli command `aws configure`.
 2. Ensure that AWS is set to read from/to `us-east-1` via `export AWS_DEFAULT_REGION=us-east-1` or with an aws config
 
-AWS access is not required for development, but may be required for certain charts and data to appear
+AWS access is not strictly required for development - see "Backend Data Source" above for alternatives
 
-## Deployment Instructions
+## 🚀 Deployment Instructions
 
-1. Configure AWS CLI 1.x or 2.x with your AWS access key ID and secret under the profile name `transitmatters`.
+1. Configure AWS CLI 2.x with your AWS access key ID and secret under the profile name `transitmatters`.
 2. Configure shell environment variables for AWS ACM domain certificates.
    - `TM_FRONTEND_CERT_ARN`
    - `TM_LABS_WILDCARD_CERT_ARN`
@@ -49,22 +74,58 @@ Additional notes:
 - If you're on a platform with a non-GNU `sed`, deploy.sh might fail. On macOS, this is fixed by `brew install gnu-sed` and adding it to your PATH.
 - If you get an unexplained error, check the CloudFormation stack status in AWS Console. Good luck!
 
-### Linting
+## 🗺️ Project Structure
+
+```
+pages/              # Next.js pages (routing); pages compose layouts via a `Layout` property
+modules/            # Self-contained feature modules (alerts, delays, headways, slowzones, etc.)
+common/
+  api/              # API client and React Query hooks (common/api/hooks/)
+  components/       # Shared UI components
+  constants/        # Date ranges, line configurations, colors
+  state/            # Zustand stores (date and station selection)
+  types/            # TypeScript types (lines.ts has line and route definitions)
+  utils/            # Utility functions
+server/
+  app.py            # Chalice API routes
+  chalicelib/       # Backend modules; data sources are abstracted in data_funcs.py, s3.py, dynamo.py
+  chalicelib/models.py  # Pydantic response models
+  chalicelib/config.py  # Backend configuration
+  openapi.json      # Generated API spec
+```
+
+The frontend uses Next.js, Zustand, TanStack React Query, Tailwind CSS, and Chart.js. The backend is Python on AWS Chalice, reading from DynamoDB and S3.
+
+Other useful commands:
+
+- `npm run get-data` fetches static data for local development (runs automatically with `npm start`)
+- `npm run storybook` starts Storybook on port 6006
+- `npm run generate-openapi` regenerates `server/openapi.json`. Run it after changing API routes or models; CI fails if the committed spec is out of date.
+
+## ✨ Linting, Code Style, and Tests
 
 To lint frontend and backend code, run `npm run lint` in the root directory
 
-To lint just frontend code, run `npm run lint-frontend`
+To lint just frontend code, run `npm run lint-frontend` (or `npm run lint-frontend-fix` to auto-fix)
 
-To lint just backend code, run `npm run lint-backend`
+To lint just backend code, run `npm run lint-backend` (or `npm run lint-backend-fix` to auto-fix)
+
+To run backend tests, run `cd server && uv run pytest`
+
+Frontend code uses ESLint with Prettier, enforced import ordering, and type imports (`import type { Foo }`). Backend code uses Ruff with a 120 character line length.
 
 #### VSCode
 
 If you're using VSCode, `.vscode` contains a based default workspace setup. It also includes recommended extentions that will improve the dev experience. This config is meant to be as small as possible to enable an "out of the box" easy experience for handling eslint.
 
-### Updating backend data
+## 🗂️ Data Maintenance
 
-See `server/rapid/gen_latest_rapid_data.sh` and `server/bus/gen_latest_bus_data.sh` for instructions.
+### Updating historical backend data
 
-## Support TransitMatters
+See `server/bus/gen_latest_bus_data.sh` for instructions.
+
+GTFS archives used by the bus scripts are downloaded to `data/gtfs_archives/` by default. Set `GTFS_DATA_DIR` to share them with other TransitMatters repos (they'll go in `$GTFS_DATA_DIR/gtfs_archives`).
+
+## ❤️ Support TransitMatters
 
 If you've found this app helpful or interesting, please consider [donating](https://transitmatters.org/donate) to TransitMatters to help support our mission to provide data-driven advocacy for a more reliable, sustainable, and equitable transit system in Metropolitan Boston.

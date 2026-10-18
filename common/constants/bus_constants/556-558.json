@@ -1,0 +1,108 @@
+{
+    "556/558": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Auburndale",
+                "branches": [
+                    "558"
+                ],
+                "station": "aubnd",
+                "order": 0,
+                "stops": {
+                    "1": [],
+                    "0": [
+                        "558-0-7828"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Riverside",
+                "branches": [
+                    "558"
+                ],
+                "station": "rivsd",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "558-1-38155"
+                    ],
+                    "0": [
+                        "558-0-38155"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Tomlin & Summit",
+                "branches": [
+                    "556"
+                ],
+                "station": "tomsu",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "556-1-7724"
+                    ],
+                    "0": [
+                        "556-0-7724"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Moody & Carter Streets (Central Square, Waltham)",
+                "branches": [
+                    "558"
+                ],
+                "station": "mdyca",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "558-1-86971"
+                    ],
+                    "0": [
+                        "558-0-88333"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Central Square (Waltham)",
+                "branches": [
+                    "556"
+                ],
+                "station": "walth",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "556-1-883321"
+                    ],
+                    "0": [
+                        "556-0-7859"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Newton Corner",
+                "branches": [
+                    "556",
+                    "558"
+                ],
+                "station": "nwcor",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "556-1-903",
+                        "558-1-903"
+                    ],
+                    "0": [
+                        "556-0-903",
+                        "558-0-903"
+                    ]
+                }
+            }
+        ]
+    }
+}

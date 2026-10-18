@@ -61,7 +61,7 @@ export const fetchAggregateData = async (
     throw new Error('network request failed');
   }
   const responseJson = await response.json();
-  return name === QueryNameKeys.traveltimes ? responseJson : { by_date: responseJson };
+  return name === QueryNameKeys.traveltimes ? responseJson : { by_date: responseJson, by_time: [] };
 };
 
 // Object to contain name of each aggregate query and the parameters/keys it takes.
@@ -143,6 +143,14 @@ export const useTripExplorerQueries: UseQueriesOverload = (
   }
 
   if (routeType === 'cr') {
+    return {
+      [QueryNameKeys.traveltimes]: requests[0],
+      [QueryNameKeys.headways]: requests[1],
+      [QueryNameKeys.dwells]: requests[2],
+    };
+  }
+
+  if (routeType === 'ferry') {
     return {
       [QueryNameKeys.traveltimes]: requests[0],
       [QueryNameKeys.headways]: requests[1],

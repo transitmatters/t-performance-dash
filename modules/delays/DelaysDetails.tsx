@@ -2,7 +2,6 @@
 
 import React from 'react';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { Layout } from '../../common/layouts/layoutTypes';
@@ -18,22 +17,35 @@ import { DelayByCategoryGraph } from './charts/DelayByCategoryGraph';
 import { DelayBreakdownGraph } from './charts/DelayBreakdownGraph';
 import { TotalDelayGraph } from './charts/TotalDelayGraph';
 
-dayjs.extend(utc);
-
 export function DelaysDetails() {
   const {
     line,
-    query: { startDate, endDate },
+    query: { startDate, endDate, crRoute },
   } = useDelimitatedRoute();
 
-  const [routeId, setRouteId] = React.useState<LineRouteId>(lineToDefaultRouteId(line));
+  // For commuter rail, use the crRoute from query params; otherwise use the default route ID
+  const defaultRouteId =
+    line === 'line-commuter-rail' && crRoute ? crRoute : lineToDefaultRouteId(line);
+  const [routeId, setRouteId] = React.useState<LineRouteId>(defaultRouteId);
   const greenBranchToggle = React.useMemo(() => {
     return line === 'line-green' && <BranchSelector routeId={routeId} setRouteId={setRouteId} />;
   }, [line, routeId]);
 
   React.useEffect(() => {
-    setRouteId(lineToDefaultRouteId(line));
-  }, [line]);
+    const newRouteId =
+      line === 'line-commuter-rail' && crRoute ? crRoute : lineToDefaultRouteId(line);
+    setRouteId(newRouteId);
+  }, [line, crRoute]);
+
+  // Determine whether to use daily or weekly data based on date range
+  const agg = React.useMemo(() => {
+    if (!startDate || !endDate) return 'weekly';
+    const start = dayjs(startDate);
+    const end = dayjs(endDate);
+    const daysDiff = end.diff(start, 'day');
+    // Use daily data for 90 days or less, weekly for longer ranges
+    return daysDiff <= 90 ? 'daily' : 'weekly';
+  }, [startDate, endDate]);
 
   const enabled = Boolean(startDate && endDate && line);
   const alertDelays = useAlertDelays(
@@ -41,6 +53,7 @@ export function DelaysDetails() {
       start_date: startDate,
       end_date: endDate,
       line: routeId,
+      agg: agg,
     },
     enabled
   );
@@ -48,13 +61,17 @@ export function DelaysDetails() {
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
   }
-
   return (
     <PageWrapper pageTitle={'Delays'}>
       <ChartPageDiv>
         <Widget title="Total Time Delayed" ready={[alertDelays]}>
           {delaysReady ? (
-            <TotalDelayGraph data={alertDelays.data} startDate={startDate} endDate={endDate} />
+            <TotalDelayGraph
+              data={alertDelays.data}
+              startDate={startDate}
+              endDate={endDate}
+              agg={agg}
+            />
           ) : (
             <div className="relative flex h-full">
               <ChartPlaceHolder query={alertDelays} />
@@ -64,7 +81,12 @@ export function DelaysDetails() {
         </Widget>
         <Widget title="Delay Time by Reason" ready={[alertDelays]}>
           {delaysReady ? (
-            <DelayBreakdownGraph data={alertDelays.data} startDate={startDate} endDate={endDate} />
+            <DelayBreakdownGraph
+              data={alertDelays.data}
+              startDate={startDate}
+              endDate={endDate}
+              agg={agg}
+            />
           ) : (
             <div className="relative flex h-full">
               <ChartPlaceHolder query={alertDelays} />

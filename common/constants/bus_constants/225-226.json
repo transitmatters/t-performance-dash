@@ -1,0 +1,193 @@
+{
+    "225/226": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Columbian Square",
+                "branches": [
+                    "226"
+                ],
+                "station": "colsq",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "226-1-13829"
+                    ],
+                    "0": [
+                        "226-0-13829"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Weymouth Landing",
+                "branches": [
+                    "225",
+                    "226"
+                ],
+                "station": "weyln",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "225-1-3824",
+                        "226-1-3824"
+                    ],
+                    "0": [
+                        "225-0-3824",
+                        "226-0-13814"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Washington & Middle Streets",
+                "branches": [
+                    "226"
+                ],
+                "station": "wamid",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "226-1-13839"
+                    ],
+                    "0": [
+                        "226-0-13820"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Weymouth Landing",
+                "branches": [
+                    "225",
+                    "226"
+                ],
+                "station": "welnd",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "225-1-3711",
+                        "226-1-3711"
+                    ],
+                    "0": [
+                        "225-0-3808",
+                        "226-0-13808"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Fore River Shipyard",
+                "branches": [
+                    "225"
+                ],
+                "station": "forvr",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "225-1-3724"
+                    ],
+                    "0": [
+                        "225-0-3793"
+                    ]
+                }
+            },
+            {
+                "stop_name": "President Plaza",
+                "branches": [
+                    "225"
+                ],
+                "station": "prplz",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "225-1-3729"
+                    ],
+                    "0": [
+                        "225-0-3789"
+                    ]
+                }
+            },
+            {
+                "stop_name": "1000 Southern Artery",
+                "branches": [
+                    "225"
+                ],
+                "station": "thosa",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "225-1-39401"
+                    ],
+                    "0": [
+                        "225-0-39321"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Braintree Station",
+                "branches": [
+                    "226"
+                ],
+                "station": "brnst",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "226-1-38671"
+                    ],
+                    "0": [
+                        "226-0-38671"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Hancock Street (Quincy)",
+                "branches": [
+                    "225"
+                ],
+                "station": "hnock",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "225-1-3422"
+                    ],
+                    "0": [
+                        "225-0-3784"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Hancock Street @ Cottage Avenue",
+                "branches": [
+                    "225"
+                ],
+                "station": "hncot",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "225-1-3423"
+                    ],
+                    "0": [
+                        "225-0-3326"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Quincy Center",
+                "branches": [
+                    "225"
+                ],
+                "station": "qnctr",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "225-1-32001"
+                    ],
+                    "0": [
+                        "225-0-32001"
+                    ]
+                }
+            }
+        ]
+    }
+}

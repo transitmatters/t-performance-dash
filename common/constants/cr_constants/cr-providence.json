@@ -12,7 +12,7 @@
         "branches": null,
         "order": 1,
         "stops": {
-          "0": [],
+          "0": ["CR-Providence_0_NEC-1659-03"],
           "1": ["CR-Providence_1_NEC-1659-03"]
         },
         "terminus": true
@@ -43,8 +43,8 @@
         "branches": null,
         "order": 4,
         "stops": {
-          "0": ["CR-Providence_0_NEC-1891-02", "CR-Providence_0_NEC-1891-01"],
-          "1": ["CR-Providence_1_NEC-1891-02", "CR-Providence_1_NEC-1891-01"]
+          "0": ["CR-Providence_0_NEC-1891-01", "CR-Providence_0_NEC-1891-02"],
+          "1": ["CR-Providence_1_NEC-1891-01", "CR-Providence_1_NEC-1891-02"]
         }
       },
       {
@@ -93,7 +93,7 @@
         "branches": null,
         "order": 9,
         "stops": {
-          "0": [],
+          "0": ["CR-Providence_0_SB-0189-S"],
           "1": ["CR-Providence_1_SB-0189-S"]
         }
       },
@@ -114,11 +114,11 @@
         "order": 11,
         "stops": {
           "0": [
-            "CR-Providence_0_NEC-2139-02",
             "CR-Providence_0_NEC-2139-01",
+            "CR-Providence_0_NEC-2139-02",
             "CR-Providence_0_SB-0150-04"
           ],
-          "1": ["CR-Providence_1_SB-0150-06", "CR-Providence_1_NEC-2139-02"]
+          "1": ["CR-Providence_1_NEC-2139-02", "CR-Providence_1_SB-0150-06"]
         }
       },
       {
@@ -138,7 +138,7 @@
         "order": 13,
         "stops": {
           "0": ["CR-Providence_0_NEC-2192-03"],
-          "1": ["CR-Providence_1_NEC-2192-03", "CR-Providence_1_NEC-2192-02"]
+          "1": ["CR-Providence_1_NEC-2192-02", "CR-Providence_1_NEC-2192-03"]
         }
       },
       {
@@ -168,7 +168,7 @@
         "order": 16,
         "stops": {
           "0": ["CR-Providence_0_NEC-2276-01", "CR-Providence_0_NEC-2276-03"],
-          "1": ["CR-Providence_1_NEC-2276-03", "CR-Providence_1_NEC-2276-02"]
+          "1": ["CR-Providence_1_NEC-2276-02", "CR-Providence_1_NEC-2276-03"]
         }
       },
       {
@@ -178,20 +178,21 @@
         "order": 17,
         "stops": {
           "0": [
+            "CR-Providence_0_NEC-2287",
+            "CR-Providence_0_NEC-2287-01",
+            "CR-Providence_0_NEC-2287-02",
             "CR-Providence_0_NEC-2287-03",
-            "CR-Providence_0_NEC-2287-08",
-            "CR-Providence_0_NEC-2287-07",
-            "CR-Providence_0_NEC-2287-06",
             "CR-Providence_0_NEC-2287-04",
             "CR-Providence_0_NEC-2287-05",
-            "CR-Providence_0_NEC-2287-11",
+            "CR-Providence_0_NEC-2287-06",
+            "CR-Providence_0_NEC-2287-07",
+            "CR-Providence_0_NEC-2287-08",
             "CR-Providence_0_NEC-2287-09",
-            "CR-Providence_0_NEC-2287-12",
-            "CR-Providence_0_NEC-2287-02",
-            "CR-Providence_0_NEC-2287",
-            "CR-Providence_0_NEC-2287-10"
+            "CR-Providence_0_NEC-2287-10",
+            "CR-Providence_0_NEC-2287-11",
+            "CR-Providence_0_NEC-2287-12"
           ],
-          "1": []
+          "1": ["CR-Providence_1_NEC-2287"]
         },
         "terminus": true
       }

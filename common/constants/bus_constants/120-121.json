@@ -1,0 +1,146 @@
+{
+    "120/121": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Orient Heights to Waldemar",
+                "branches": [
+                    "120"
+                ],
+                "station": "orhw",
+                "order": 0,
+                "stops": {
+                    "1": [],
+                    "0": [
+                        "120-0-5879"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Eagle Square (East Boston)",
+                "branches": [
+                    "121"
+                ],
+                "station": "eagle",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "121-1-5450"
+                    ],
+                    "0": [
+                        "121-0-5907"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Orient Heights Station",
+                "branches": [
+                    "120"
+                ],
+                "station": "orhgt",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "120-1-5880"
+                    ],
+                    "0": [
+                        "120-0-5880"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Wood Island Station",
+                "branches": [
+                    "120",
+                    "121"
+                ],
+                "station": "woodi",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "120-1-5666",
+                        "121-1-5666"
+                    ],
+                    "0": [
+                        "120-0-5666",
+                        "121-0-5666"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Central Square (East Boston)",
+                "branches": [
+                    "120",
+                    "121"
+                ],
+                "station": "cntle",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "120-1-5854",
+                        "121-1-5736"
+                    ],
+                    "0": [
+                        "120-0-5867",
+                        "121-0-5743"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Maverick to Jeffries",
+                "branches": [
+                    "120"
+                ],
+                "station": "mavj",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "120-1-57400"
+                    ],
+                    "0": [
+                        "120-0-57400"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Jeffries Point Loop @ Maverick Street",
+                "branches": [
+                    "120"
+                ],
+                "station": "jefpt",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "120-1-5862"
+                    ],
+                    "0": [
+                        "120-0-5862"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Maverick Square (East Boston)",
+                "branches": [
+                    "120",
+                    "121"
+                ],
+                "station": "mavck",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "120-1-5740",
+                        "121-1-5740"
+                    ],
+                    "0": [
+                        "120-0-5740",
+                        "121-0-5740"
+                    ]
+                }
+            }
+        ]
+    }
+}

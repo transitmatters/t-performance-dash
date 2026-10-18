@@ -7,6 +7,7 @@ import { WidgetForCarousel } from '../../common/components/widgets/internal/Widg
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { CarouselGraphDiv } from '../../common/components/charts/CarouselGraphDiv';
 import { useDelimitatedRoute } from '../../common/utils/router';
+import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
 import type { ParamsType } from '../speed/constants/speeds';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { PercentageServiceGraph } from './PercentageServiceGraph';
@@ -33,10 +34,11 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
 }) => {
   // TODO: Add 1 or 2 widgets to percentage service graph.
   const { line } = useDelimitatedRoute();
+  const peakService = useScheduledServiceBaseline(line);
 
   const { scheduled, peak } = useMemo(
-    () => getPercentageData(data, predictedData, line),
-    [data, predictedData, line]
+    () => getPercentageData(data, predictedData, peakService, config.agg),
+    [data, predictedData, peakService, config.agg]
   );
 
   const { scheduledAverage, peakAverage } = useMemo(() => {
@@ -72,10 +74,10 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
       <div className={'flex w-full justify-center pt-2'}>
         <ButtonGroup
           line={line}
-          options={Object.entries({
-            Scheduled: 'Scheduled',
-            'Historical Maximum': 'Historical Maximum',
-          })}
+          options={[
+            ['Scheduled', 'Scheduled'],
+            ['Historical Maximum', 'Historical Maximum'],
+          ]}
           pressFunction={setComparison}
           additionalDivClass="md:w-auto"
           additionalButtonClass="md:w-fit"

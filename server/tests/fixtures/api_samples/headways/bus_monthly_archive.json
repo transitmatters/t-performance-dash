@@ -1,0 +1,227 @@
+[
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T03:57:50",
+    "headway_time_sec": 2816.0,
+    "benchmark_headway_time_sec": 2700.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T04:47:57",
+    "headway_time_sec": 3007.0,
+    "benchmark_headway_time_sec": 2760.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T05:06:31",
+    "headway_time_sec": 1114.0,
+    "benchmark_headway_time_sec": 1200.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T05:21:15",
+    "headway_time_sec": 884.0,
+    "benchmark_headway_time_sec": 900.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T05:29:32",
+    "headway_time_sec": 497.0,
+    "benchmark_headway_time_sec": 600.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T05:36:30",
+    "headway_time_sec": 418.0,
+    "benchmark_headway_time_sec": 300.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T05:41:23",
+    "headway_time_sec": 293.0,
+    "benchmark_headway_time_sec": 300.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T05:56:22",
+    "headway_time_sec": 899.0,
+    "benchmark_headway_time_sec": 300.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T06:02:47",
+    "headway_time_sec": 385.0,
+    "benchmark_headway_time_sec": 540.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T06:06:23",
+    "headway_time_sec": 216.0,
+    "benchmark_headway_time_sec": 120.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T06:15:36",
+    "headway_time_sec": 553.0,
+    "benchmark_headway_time_sec": 480.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T06:28:43",
+    "headway_time_sec": 787.0,
+    "benchmark_headway_time_sec": 720.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T06:43:03",
+    "headway_time_sec": 860.0,
+    "benchmark_headway_time_sec": 720.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T06:51:48",
+    "headway_time_sec": 525.0,
+    "benchmark_headway_time_sec": 600.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T07:01:09",
+    "headway_time_sec": 561.0,
+    "benchmark_headway_time_sec": 600.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T07:12:23",
+    "headway_time_sec": 674.0,
+    "benchmark_headway_time_sec": 660.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T07:32:32",
+    "headway_time_sec": 1209.0,
+    "benchmark_headway_time_sec": 600.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T07:45:40",
+    "headway_time_sec": 788.0,
+    "benchmark_headway_time_sec": 660.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T07:52:25",
+    "headway_time_sec": 405.0,
+    "benchmark_headway_time_sec": 720.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T08:03:36",
+    "headway_time_sec": 671.0,
+    "benchmark_headway_time_sec": 720.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T08:14:46",
+    "headway_time_sec": 670.0,
+    "benchmark_headway_time_sec": 660.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T08:30:44",
+    "headway_time_sec": 958.0,
+    "benchmark_headway_time_sec": 720.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T08:44:12",
+    "headway_time_sec": 808.0,
+    "benchmark_headway_time_sec": 720.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T08:53:16",
+    "headway_time_sec": 544.0,
+    "benchmark_headway_time_sec": 720.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  },
+  {
+    "route_id": "28",
+    "direction": "1",
+    "current_dep_dt": "2026-06-03T09:03:52",
+    "headway_time_sec": 636.0,
+    "benchmark_headway_time_sec": 720.0,
+    "vehicle_consist": null,
+    "vehicle_label": ""
+  }
+]

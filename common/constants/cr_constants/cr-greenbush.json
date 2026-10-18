@@ -12,7 +12,7 @@
         "branches": null,
         "order": 1,
         "stops": {
-          "0": [],
+          "0": ["CR-Greenbush_0_GRB-0276-S"],
           "1": ["CR-Greenbush_1_GRB-0276-S"]
         },
         "terminus": true
@@ -104,14 +104,17 @@
         "order": 10,
         "stops": {
           "0": [
-            "CR-Greenbush_0_NEC-2287-10",
             "CR-Greenbush_0_NEC-2287",
-            "CR-Greenbush_0_NEC-2287-11",
+            "CR-Greenbush_0_NEC-2287-02",
+            "CR-Greenbush_0_NEC-2287-04",
+            "CR-Greenbush_0_NEC-2287-07",
             "CR-Greenbush_0_NEC-2287-09",
+            "CR-Greenbush_0_NEC-2287-10",
+            "CR-Greenbush_0_NEC-2287-11",
             "CR-Greenbush_0_NEC-2287-12",
             "CR-Greenbush_0_NEC-2287-13"
           ],
-          "1": []
+          "1": ["CR-Greenbush_1_NEC-2287"]
         },
         "terminus": true
       }

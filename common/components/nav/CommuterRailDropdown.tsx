@@ -1,6 +1,6 @@
 import React from 'react';
 import { SidebarTabs } from '../../../modules/navigation/SidebarTabs';
-import { COMMUTER_RAIL_OVERVIEW, TRIP_PAGES } from '../../constants/pages';
+import { COMMUTER_RAIL_OVERVIEW, LINE_PAGES, TRIP_PAGES } from '../../constants/pages';
 import { CommuterRailRouteSelection } from './CommuterRailRouteSelection';
 
 interface CommuterRailDropdownProps {
@@ -18,6 +18,11 @@ export const CommuterRailDropdown: React.FC<CommuterRailDropdownProps> = ({ clos
         role={'navigation'}
       >
         <SidebarTabs tabs={COMMUTER_RAIL_OVERVIEW} close={close} />
+        <hr className="h-[1px] w-3/4 self-center border-neutral-500" />
+        <SidebarTabs
+          tabs={LINE_PAGES.filter((cur) => cur.lines.includes('line-commuter-rail'))}
+          close={close}
+        />
         <hr className="h-[1px] w-3/4 self-center border-neutral-500" />
         <SidebarTabs tabs={TRIP_PAGES} close={close} />
       </div>

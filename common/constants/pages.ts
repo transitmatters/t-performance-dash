@@ -10,6 +10,7 @@ import {
   faStopwatch20,
   faCalendarDays,
   faCalendarXmark,
+  faTrain,
 } from '@fortawesome/free-solid-svg-icons';
 import type { Line } from '../types/lines';
 
@@ -19,12 +20,13 @@ export enum PAGES {
   landing = 'landing',
   overview = 'overview',
   speed = 'speed',
+  fleet = 'fleet',
   predictions = 'predictions',
   delays = 'delays',
   service = 'service',
   slowzones = 'slowzones',
   systemSlowzones = 'systemSlowzones',
-  systemRidership = 'systemRidership',
+  systemServiceAndRidership = 'systemServiceAndRidership',
   ridership = 'ridership',
   singleTrips = 'singleTrips',
   multiTrips = 'multiTrips',
@@ -76,6 +78,7 @@ export const ALL_PAGES: PageMap = {
       'line-mattapan',
       'line-commuter-rail',
       'line-bus',
+      'line-ferry',
     ],
     icon: faMapLocationDot,
     hasStationStore: true,
@@ -94,6 +97,7 @@ export const ALL_PAGES: PageMap = {
       'line-mattapan',
       'line-commuter-rail',
       'line-bus',
+      'line-ferry',
     ],
     icon: faCalendarDays,
     dateStoreSection: 'multiTrips',
@@ -113,6 +117,16 @@ export const ALL_PAGES: PageMap = {
     name: 'Speed',
     lines: ['line-red', 'line-orange', 'line-blue', 'line-green', 'line-mattapan'],
     icon: faGaugeHigh,
+    dateStoreSection: 'line',
+  },
+  fleet: {
+    key: 'fleet',
+    path: '/fleet',
+    name: 'Fleet',
+    // Blue and Mattapan are hidden: each runs a single car type with no "new" fleet, so the
+    // charts are flat. Add them back here if that changes.
+    lines: ['line-red', 'line-orange', 'line-green'],
+    icon: faTrain,
     dateStoreSection: 'line',
   },
   predictions: {
@@ -135,7 +149,14 @@ export const ALL_PAGES: PageMap = {
     key: 'delays',
     path: '/delays',
     name: 'Delays',
-    lines: ['line-red', 'line-orange', 'line-blue', 'line-green', 'line-mattapan'],
+    lines: [
+      'line-red',
+      'line-orange',
+      'line-blue',
+      'line-green',
+      'line-mattapan',
+      'line-commuter-rail',
+    ],
     icon: faCalendarXmark,
     dateStoreSection: 'line',
   },
@@ -143,7 +164,7 @@ export const ALL_PAGES: PageMap = {
     key: 'slowzones',
     path: '/slowzones',
     name: 'Slow zones',
-    lines: ['line-red', 'line-blue', 'line-orange', 'line-green'],
+    lines: ['line-red', 'line-blue', 'line-orange', 'line-green', 'line-mattapan'],
     icon: faWarning,
     dateStoreSection: 'line',
   },
@@ -155,10 +176,10 @@ export const ALL_PAGES: PageMap = {
     icon: faWarning,
     dateStoreSection: 'system',
   },
-  systemRidership: {
-    key: 'systemRidership',
+  systemServiceAndRidership: {
+    key: 'systemServiceAndRidership',
     path: '/ridership',
-    name: 'Ridership',
+    name: 'Service & Ridership',
     lines: [],
     icon: faUsers,
     dateStoreSection: 'system',
@@ -167,7 +188,16 @@ export const ALL_PAGES: PageMap = {
     key: 'ridership',
     path: '/ridership',
     name: 'Ridership',
-    lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-bus', 'line-commuter-rail'],
+    lines: [
+      'line-red',
+      'line-blue',
+      'line-green',
+      'line-orange',
+      'line-bus',
+      'line-commuter-rail',
+      'line-ferry',
+      'line-RIDE',
+    ],
     icon: faUsers,
     dateStoreSection: 'line',
   },
@@ -180,12 +210,17 @@ export const BUS_OVERVIEW = [ALL_PAGES.ridership];
 
 export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.ridership];
 
+export const FERRY_OVERVIEW = [ALL_PAGES.ridership];
+
+export const RIDE_OVERVIEW = [ALL_PAGES.ridership];
+
 export const OVERVIEW_PAGE = [ALL_PAGES.overview];
 
 export const LINE_PAGES = [
   ALL_PAGES.service,
   ALL_PAGES.slowzones,
   ALL_PAGES.speed,
+  ALL_PAGES.fleet,
   ALL_PAGES.predictions,
   ALL_PAGES.delays,
   ALL_PAGES.ridership,
@@ -198,17 +233,17 @@ export const SUB_PAGES_MAP = {
   },
   system: {
     slowzones: 'systemSlowzones',
-    ridership: 'systemRidership',
+    ridership: 'systemServiceAndRidership',
   },
 };
 
 export const SYSTEM_PAGES_MAP = {
   system: {
     slowzones: 'systemSlowzones',
-    ridership: 'systemRidership',
+    ridership: 'systemServiceAndRidership',
   },
 };
 
 export const LANDING_PAGE = [ALL_PAGES.landing];
 
-export const SYSTEM_SUB_PAGES = [ALL_PAGES.systemSlowzones, ALL_PAGES.systemRidership];
+export const SYSTEM_SUB_PAGES = [ALL_PAGES.systemSlowzones, ALL_PAGES.systemServiceAndRidership];

@@ -1,4 +1,8 @@
-import { BUS_DEFAULTS, COMMUTER_RAIL_DEFAULTS } from '../state/defaults/dateDefaults';
+import {
+  BUS_DEFAULTS,
+  COMMUTER_RAIL_DEFAULTS,
+  FERRY_DEFAULTS,
+} from '../state/defaults/dateDefaults';
 import type { QueryParams, Tab } from '../types/router';
 
 export const DASHBOARD_TABS: {
@@ -15,5 +19,14 @@ export const DASHBOARD_TABS: {
     name: 'Commuter Rail',
     path: '/commuter-rail',
     query: { crRoute: 'CR-Fairmount', date: COMMUTER_RAIL_DEFAULTS.singleTripConfig.date },
+  },
+  Ferry: {
+    name: 'Ferry',
+    path: '/ferry/trips/single',
+    query: { ferryRoute: 'Boat-F1', date: FERRY_DEFAULTS.singleTripConfig.date },
+  },
+  'The RIDE': {
+    name: 'The RIDE',
+    path: '/the-ride/ridership',
   },
 };

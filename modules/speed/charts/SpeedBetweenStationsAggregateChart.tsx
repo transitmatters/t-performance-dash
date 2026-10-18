@@ -42,7 +42,7 @@ export const SpeedBetweenStationsAggregateChart: React.FC<
         pointField={timeUnitByDate ? PointFieldKeys.serviceDate : PointFieldKeys.depTimeFromEpoch}
         timeUnit={timeUnitByDate ? 'day' : 'hour'}
         byTime={!timeUnitByDate}
-        timeFormat={timeUnitByDate ? 'MMM d yyyy' : 'H:mm aaaa'}
+        timeFormat={timeUnitByDate ? 'MMM d yyyy' : 'h:mm aaaa'}
         seriesName={'Median Speed'}
         startDate={startDate}
         endDate={endDate}
@@ -50,6 +50,7 @@ export const SpeedBetweenStationsAggregateChart: React.FC<
         location={getLocationDetails(fromStation, toStation)}
         includeBothStopsForLocation={true}
         fname="speeds"
+        chartTitle="Speeds"
         yUnit="MPH"
       />
     );

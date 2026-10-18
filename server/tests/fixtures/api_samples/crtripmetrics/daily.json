@@ -1,0 +1,79 @@
+[
+  {
+    "avg_cab_car_age": 10.6,
+    "date": "2026-09-01",
+    "fleet_mix_bombardier": 0,
+    "fleet_mix_kawasaki": 7.3,
+    "fleet_mix_locomotive": 0,
+    "fleet_mix_mbb": 0,
+    "fleet_mix_rotem": 92.7,
+    "fleet_trips": 55,
+    "route": "CR-Fairmount"
+  },
+  {
+    "avg_cab_car_age": 4.7,
+    "date": "2026-09-02",
+    "fleet_mix_bombardier": 0,
+    "fleet_mix_kawasaki": 0,
+    "fleet_mix_locomotive": 0,
+    "fleet_mix_mbb": 0,
+    "fleet_mix_rotem": 100,
+    "fleet_trips": 53,
+    "route": "CR-Fairmount"
+  },
+  {
+    "avg_cab_car_age": 8.1,
+    "date": "2026-09-03",
+    "fleet_mix_bombardier": 3.5,
+    "fleet_mix_kawasaki": 0,
+    "fleet_mix_locomotive": 0,
+    "fleet_mix_mbb": 0,
+    "fleet_mix_rotem": 96.5,
+    "fleet_trips": 57,
+    "route": "CR-Fairmount"
+  },
+  {
+    "avg_cab_car_age": 6.3,
+    "date": "2026-09-04",
+    "fleet_mix_bombardier": 0,
+    "fleet_mix_kawasaki": 1.8,
+    "fleet_mix_locomotive": 0,
+    "fleet_mix_mbb": 0,
+    "fleet_mix_rotem": 98.2,
+    "fleet_trips": 57,
+    "route": "CR-Fairmount"
+  },
+  {
+    "avg_cab_car_age": 10.1,
+    "date": "2026-09-05",
+    "fleet_mix_bombardier": 3.1,
+    "fleet_mix_kawasaki": 6.2,
+    "fleet_mix_locomotive": 0,
+    "fleet_mix_mbb": 0,
+    "fleet_mix_rotem": 90.6,
+    "fleet_trips": 32,
+    "route": "CR-Fairmount"
+  },
+  {
+    "avg_cab_car_age": 6.8,
+    "date": "2026-09-06",
+    "fleet_mix_bombardier": 0,
+    "fleet_mix_kawasaki": 3,
+    "fleet_mix_locomotive": 0,
+    "fleet_mix_mbb": 0,
+    "fleet_mix_rotem": 97,
+    "fleet_trips": 33,
+    "route": "CR-Fairmount"
+  },
+  {
+    "avg_cab_car_age": 7.8,
+    "date": "2026-09-07",
+    "fleet_mix_bombardier": 0,
+    "fleet_mix_kawasaki": 12.1,
+    "fleet_mix_locomotive": 3,
+    "fleet_mix_mbb": 0,
+    "fleet_mix_rotem": 84.8,
+    "fleet_trips": 33,
+    "route": "CR-Fairmount"
+  }
+]

@@ -1,0 +1,77 @@
+{
+    "67/79": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Turkey Hill Loop",
+                "branches": [
+                    "67"
+                ],
+                "station": "trkhl",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "67-1-7961"
+                    ],
+                    "0": [
+                        "67-0-7961"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Arlington Center",
+                "branches": [
+                    "67"
+                ],
+                "station": "arlct",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "67-1-2258"
+                    ],
+                    "0": [
+                        "67-0-2283"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Acorn Park Drive @ Route 2",
+                "branches": [
+                    "67"
+                ],
+                "station": "acorn",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "67-1-24791"
+                    ],
+                    "0": [
+                        "67-0-12480"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Alewife Station",
+                "branches": [
+                    "67"
+                ],
+                "station": "alewf",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "67-1-141",
+                        "67-1-14118"
+                    ],
+                    "0": [
+                        "67-0-141",
+                        "67-0-14121"
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -33,7 +33,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
           Math.floor(datapoint[MetricFieldKeys.headwayTimeSec] / 60) + 0.5
       ) || [];
     const max = Math.max(...values);
-    const headwayBuckets = {};
+    const headwayBuckets: { [key in number]: number } = {};
     for (let i = 0.5; i <= max; i++) {
       headwayBuckets[i] = 0;
     }
@@ -45,7 +45,7 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
 
   // headway bucket => % [of trains in that bucket, difference from benchmark]
   const headwayBucketPercentages: Record<string, HeadwayTooltipData> = useMemo(() => {
-    const headwayBucketPercentages = {};
+    const headwayBucketPercentages: { [key in string]: { pct_trains: number } } = {};
     Object.entries(dataObject).forEach(([k, v]) => {
       headwayBucketPercentages[k] = {
         pct_trains: Math.floor((100 * v) / headways.length),
@@ -67,7 +67,8 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
               datasets: [
                 {
                   backgroundColor: LINE_COLORS[line ?? 'default'],
-                  label: lineShort !== 'Bus' ? 'Trains' : 'Buses',
+                  label:
+                    lineShort === 'Bus' ? 'Buses' : lineShort === 'Ferry' ? 'Ferries' : 'Trains',
                   data: dataObject,
                 },
               ],
@@ -95,7 +96,8 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
                 y: {
                   title: {
                     display: true,
-                    text: lineShort !== 'Bus' ? 'Trains' : 'Buses',
+                    text:
+                      lineShort === 'Bus' ? 'Buses' : lineShort === 'Ferry' ? 'Ferries' : 'Trains',
                     color: COLORS.design.subtitleGrey,
                   },
                   ticks: {
@@ -115,15 +117,24 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
                       }
                       const item = items[0];
                       const { x } = item.parsed;
+                      if (!x) return '';
                       const min = x - 0.5;
                       const max = x + 0.5;
                       const tooltip = [`${min} - ${max} min.`];
 
                       const tooltipData = headwayBucketPercentages[x.toString()];
-                      tooltip.push(`${tooltipData.pct_trains}% of trains`);
-                      tooltip.push(
-                        `Benchmark: ${getFormattedTimeString(benchmarkTime, 'seconds')}`
-                      );
+                      const vehicleType =
+                        lineShort === 'Bus'
+                          ? 'buses'
+                          : lineShort === 'Ferry'
+                            ? 'ferries'
+                            : 'trains';
+                      tooltip.push(`${tooltipData.pct_trains}% of ${vehicleType}`);
+                      if (!Number.isNaN(benchmarkTime) && benchmarkTime > 0) {
+                        tooltip.push(
+                          `Benchmark: ${getFormattedTimeString(benchmarkTime, 'seconds')}`
+                        );
+                      }
                       return tooltip;
                     },
                   },
@@ -142,6 +153,6 @@ export const HeadwaysHistogram: React.FC<HeadwaysChartProps> = ({ headways }) =>
         </ChartDiv>
       </ChartBorder>
     );
-  }, [dataObject, isMobile, line, linePath, lineShort]);
+  }, [dataObject, isMobile, line, linePath, lineShort, benchmarkTime, headwayBucketPercentages]);
   return histogram;
 };

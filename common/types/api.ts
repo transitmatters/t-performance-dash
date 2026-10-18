@@ -9,12 +9,13 @@ export enum QueryNameKeys {
 }
 export type QueryNameOptions = QueryNameKeys;
 
-export type RouteType = 'bus' | 'subway' | 'cr';
+export type RouteType = 'bus' | 'subway' | 'cr' | 'ferry';
 
 export const QUERIES: { [key in RouteType]: QueryNameOptions[] } = {
   subway: [QueryNameKeys.traveltimes, QueryNameKeys.headways, QueryNameKeys.dwells],
   bus: [QueryNameKeys.traveltimes, QueryNameKeys.headways],
-  cr: [QueryNameKeys.traveltimes, QueryNameKeys.headways],
+  cr: [QueryNameKeys.traveltimes, QueryNameKeys.headways, QueryNameKeys.dwells],
+  ferry: [QueryNameKeys.traveltimes, QueryNameKeys.headways],
 };
 
 export enum SingleDayAPIParams {
@@ -60,6 +61,7 @@ export type FetchAlertDelaysByLineOptions = {
   start_date?: string;
   end_date?: string;
   line?: LineRouteId;
+  agg?: 'daily' | 'weekly';
 };
 
 export enum FetchDeliveredTripMetricsParams {
@@ -73,6 +75,7 @@ export enum FetchAlertDelaysByLineParams {
   startDate = 'start_date',
   endDate = 'end_date',
   line = 'line',
+  agg = 'agg',
 }
 
 export enum FetchSpeedsParams {

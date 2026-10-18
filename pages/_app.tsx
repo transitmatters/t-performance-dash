@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -31,6 +30,7 @@ import { Layout } from '../common/layouts/PrimaryLayout';
 import { PRODUCTION } from '../common/utils/constants';
 import { NavLayout } from '../common/layouts/NavLayout';
 import { LoadPresetsLayout } from '../common/layouts/LoadPresetsLayout';
+import { DynamicMetaTags } from '../common/components/DynamicMetaTags';
 
 config.autoAddCss = false;
 
@@ -55,17 +55,29 @@ ChartJS.register(
 if (ChartJS.defaults.plugins.datalabels?.display)
   ChartJS.defaults.plugins.datalabels.display = false;
 
-export default function App({ Component, pageProps }) {
+interface AppProps {
+  Component: React.ComponentType & { Layout?: keyof typeof Layouts };
+  pageProps: Record<string, unknown>;
+}
+
+export default function App({ Component, pageProps }: AppProps) {
   const isProd = typeof window !== 'undefined' && window.location.hostname === PRODUCTION;
 
   const [loaded, setLoaded] = useState(false);
-  const SecondaryLayout = Layouts[Component.Layout] ?? ((page) => page);
+
+  const SecondaryLayout: (typeof Layouts)[keyof typeof Layouts] | ((page: any) => any) | undefined =
+    React.useMemo(() => {
+      if (Component.Layout) {
+        return Layouts[Component.Layout];
+      }
+      return (page) => page;
+    }, [Component.Layout]);
 
   // Don't load on the server. This prevents hydration errors between mobile/desktop layouts.
   useEffect(() => {
     setLoaded(true);
   }, []);
-  if (!loaded) return null;
+  if (!loaded) return <DynamicMetaTags />;
 
   return (
     <Layout>

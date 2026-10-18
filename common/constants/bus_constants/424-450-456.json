@@ -1,0 +1,247 @@
+{
+    "424/450/456": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Salem Depot",
+                "branches": [
+                    "450",
+                    "456"
+                ],
+                "station": "salem",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "450-1-37150",
+                        "456-1-37150"
+                    ],
+                    "0": [
+                        "450-0-37150",
+                        "456-0-37150"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Salem Hospital",
+                "branches": [
+                    "450",
+                    "456"
+                ],
+                "station": "smhsp",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "450-1-14460",
+                        "456-1-14460"
+                    ],
+                    "0": [
+                        "450-0-4553",
+                        "456-0-4553"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Waitt Avenue @ President Street (Lynn)",
+                "branches": [
+                    "424"
+                ],
+                "station": "waite",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "424-1-4477"
+                    ],
+                    "0": [
+                        "424-0-7214"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Buchanan Circle (East Lynn)",
+                "branches": [
+                    "450",
+                    "456"
+                ],
+                "station": "buchb",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "450-1-4472",
+                        "456-1-4472"
+                    ],
+                    "0": [
+                        "450-0-4541",
+                        "456-0-4541"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Eastern Avenue @ Western Avenue",
+                "branches": [
+                    "450",
+                    "456"
+                ],
+                "station": "estws",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "450-1-4475",
+                        "456-1-4475"
+                    ],
+                    "0": [
+                        "450-0-4538",
+                        "456-0-4538"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Chestnut Street & Western Avenue (Lynn)",
+                "branches": [
+                    "424",
+                    "450"
+                ],
+                "station": "chest",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "424-1-4482",
+                        "450-1-4482"
+                    ],
+                    "0": [
+                        "424-0-7252",
+                        "450-0-7252"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Essex Street @ Eastern Avenue",
+                "branches": [
+                    "424",
+                    "456"
+                ],
+                "station": "essex",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "424-1-6842",
+                        "456-1-7223"
+                    ],
+                    "0": [
+                        "424-0-7223",
+                        "456-0-6842"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Central Square, Lynn (Busway)",
+                "branches": [
+                    "456"
+                ],
+                "station": "censq",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "456-1-14748"
+                    ],
+                    "0": [
+                        "456-0-14748"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Lynn Garage",
+                "branches": [
+                    "424",
+                    "450"
+                ],
+                "station": "wlynn",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "424-1-4492",
+                        "450-1-4492"
+                    ],
+                    "0": [
+                        "424-0-4520",
+                        "450-0-4520"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Brown Circle",
+                "branches": [
+                    "424",
+                    "450"
+                ],
+                "station": "brown",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "424-1-4498",
+                        "450-1-4498"
+                    ],
+                    "0": [
+                        "424-0-4515",
+                        "450-0-4515"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Bell Circle",
+                "branches": [
+                    "450"
+                ],
+                "station": "bell",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "450-1-14717"
+                    ],
+                    "0": [
+                        "450-0-4526",
+                        "450-0-4733"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Haymarket",
+                "branches": [
+                    "450"
+                ],
+                "station": "hayms",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "450-1-117"
+                    ],
+                    "0": [
+                        "450-0-117"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Wonderland Station West",
+                "branches": [
+                    "424",
+                    "450"
+                ],
+                "station": "wondw",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "424-1-15799",
+                        "450-1-15799"
+                    ],
+                    "0": [
+                        "424-0-15799",
+                        "450-0-15799"
+                    ]
+                }
+            }
+        ]
+    }
+}

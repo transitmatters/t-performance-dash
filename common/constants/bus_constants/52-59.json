@@ -1,0 +1,287 @@
+{
+    "52/59": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Dedham Mall",
+                "branches": [
+                    "52"
+                ],
+                "station": "dmall",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "52-1-10833"
+                    ],
+                    "0": [
+                        "52-0-10833"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Needham Junction",
+                "branches": [
+                    "59"
+                ],
+                "station": "needj",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "59-1-91852"
+                    ],
+                    "0": [
+                        "59-0-91852"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Charles River Loop",
+                "branches": [
+                    "52"
+                ],
+                "station": "cloop",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "52-1-774",
+                        "52-1-820"
+                    ],
+                    "0": [
+                        "52-0-817",
+                        "52-0-820"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Needham Heights",
+                "branches": [
+                    "59"
+                ],
+                "station": "ndhts",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "59-1-81441"
+                    ],
+                    "0": [
+                        "59-0-82140"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Baker & Vermont Streets",
+                "branches": [
+                    "52"
+                ],
+                "station": "baker",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "52-1-8394"
+                    ],
+                    "0": [
+                        "52-0-85565"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Newton Upper Falls",
+                "branches": [
+                    "59"
+                ],
+                "station": "nwtup",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "59-1-8146",
+                        "59-1-81463"
+                    ],
+                    "0": [
+                        "59-0-82034",
+                        "59-0-8213"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Needham Street @ Columbia Street",
+                "branches": [
+                    "59"
+                ],
+                "station": "nedhm",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "59-1-82049"
+                    ],
+                    "0": [
+                        "59-0-82039"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Sawmill Brook Pkwy",
+                "branches": [
+                    "52"
+                ],
+                "station": "sbpfd",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "52-1-8476"
+                    ],
+                    "0": [
+                        "52-0-8554"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Newton Highlands",
+                "branches": [
+                    "59"
+                ],
+                "station": "nwthl",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "59-1-8155"
+                    ],
+                    "0": [
+                        "59-0-8203"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Oak Hill (Newton)",
+                "branches": [
+                    "52"
+                ],
+                "station": "oak",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "52-1-8486"
+                    ],
+                    "0": [
+                        "52-0-8545"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Newtonville",
+                "branches": [
+                    "59"
+                ],
+                "station": "nwtvl",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "59-1-8166"
+                    ],
+                    "0": [
+                        "59-0-82853"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Parker Street @ Wheeler",
+                "branches": [
+                    "52"
+                ],
+                "station": "prkwl",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "52-1-8495"
+                    ],
+                    "0": [
+                        "52-0-8537"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Newton Centre",
+                "branches": [
+                    "52"
+                ],
+                "station": "newct",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "52-1-8504"
+                    ],
+                    "0": [
+                        "52-0-8528"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Watertown Square",
+                "branches": [
+                    "59"
+                ],
+                "station": "wtrsq",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "59-1-8178"
+                    ],
+                    "0": [
+                        "59-0-8178"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Mount Alvernia Academy",
+                "branches": [
+                    "52"
+                ],
+                "station": "mtalv",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "52-1-8511"
+                    ],
+                    "0": [
+                        "52-0-8522"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Newton Corner",
+                "branches": [
+                    "52"
+                ],
+                "station": "nwcor",
+                "order": 9,
+                "stops": {
+                    "1": [
+                        "52-1-19031"
+                    ],
+                    "0": [
+                        "52-0-903"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Watertown Yard",
+                "branches": [
+                    "52"
+                ],
+                "station": "wtryd",
+                "order": 10,
+                "stops": {
+                    "1": [
+                        "52-1-999"
+                    ],
+                    "0": [
+                        "52-0-900"
+                    ]
+                }
+            }
+        ]
+    }
+}

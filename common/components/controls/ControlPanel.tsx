@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { lineColorBorder } from '../../styles/general';
-import type { BusRoute, CommuterRailRoute, Line } from '../../types/lines';
+import type { BusRoute, CommuterRailRoute, Line, FerryRoute } from '../../types/lines';
 import type { DateStoreSection } from '../../constants/pages';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
@@ -11,6 +11,7 @@ interface ControlPanelProps {
   busRoute: BusRoute | undefined;
   crRoute: CommuterRailRoute | undefined;
   line: Line | undefined;
+  ferryRoute: FerryRoute | undefined;
 }
 
 export const ControlPanel: React.FC<ControlPanelProps> = ({
@@ -18,6 +19,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   line,
   busRoute,
   crRoute,
+  ferryRoute,
 }) => {
   const getControls = () => {
     if ((dateStoreSection === 'singleTrips' || dateStoreSection === 'multiTrips') && line) {
@@ -27,7 +29,12 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             dateStoreSection={dateStoreSection}
             queryType={dateStoreSection === 'singleTrips' ? 'single' : 'range'}
           />
-          <StationSelectorWidget line={line} busRoute={busRoute} crRoute={crRoute} />
+          <StationSelectorWidget
+            line={line}
+            busRoute={busRoute}
+            crRoute={crRoute}
+            ferryRoute={ferryRoute}
+          />
         </>
       );
     }
@@ -43,7 +50,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   return (
     <div
       className={classNames(
-        'shrink-1 flex w-full flex-col items-end justify-end gap-x-8 gap-y-2 overflow-hidden p-3 pl-0 text-stone-900 lg:max-w-2xl',
+        'shrink-1 flex w-full flex-col items-end justify-end gap-x-8 gap-y-2 overflow-visible p-3 pl-0 text-stone-900 lg:max-w-2xl',
         lineColorBorder[line ?? 'DEFAULT']
       )}
     >

@@ -1,3 +1,5 @@
+import type { BusRouteId, CommuterRailRoute, FerryRoute, Line } from './lines';
+
 export type Time = number;
 
 export type LineKind =
@@ -12,6 +14,14 @@ export type LineKind =
 
 export type ServiceDay = 'weekday' | 'saturday' | 'sunday';
 export type ServiceRegime = 'peak' | 'current';
+
+export type RidershipKey =
+  | Exclude<Line, 'line-bus'>
+  | BusRouteId
+  | CommuterRailRoute
+  | 'line-RIDE'
+  | FerryRoute
+  | 'DEFAULT';
 
 export type TripsPerHour = readonly number[] & { length: 24 };
 

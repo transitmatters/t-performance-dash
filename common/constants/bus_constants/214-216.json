@@ -1,0 +1,123 @@
+{
+    "214/216": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Germantown",
+                "branches": [
+                    "216"
+                ],
+                "station": "grmnt",
+                "order": 0,
+                "stops": {
+                    "1": [],
+                    "0": [
+                        "216-0-3305",
+                        "216-0-3308"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Houghs Neck",
+                "branches": [
+                    "216"
+                ],
+                "station": "hsnck",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "216-1-3265"
+                    ],
+                    "0": [
+                        "216-0-3265"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Sea Street @ Palmer Street",
+                "branches": [
+                    "216"
+                ],
+                "station": "seast",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "216-1-3280"
+                    ],
+                    "0": [
+                        "216-0-3248",
+                        "216-0-3292"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Southern Artery @ Sea Street",
+                "branches": [
+                    "216"
+                ],
+                "station": "sosea",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "216-1-3288"
+                    ],
+                    "0": [
+                        "216-0-3240"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Coddington Street @ Woodward Avenue (Quincy High School)",
+                "branches": [
+                    "216"
+                ],
+                "station": "codwd",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "216-1-3290"
+                    ],
+                    "0": [
+                        "216-0-3239"
+                    ]
+                }
+            },
+            {
+                "stop_name": "McGrath Highway @ Washington Street",
+                "branches": [
+                    "216"
+                ],
+                "station": "mgrwa",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "216-1-32912"
+                    ],
+                    "0": [
+                        "216-0-3515"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Quincy Center",
+                "branches": [
+                    "216"
+                ],
+                "station": "qnctr",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "216-1-32002"
+                    ],
+                    "0": [
+                        "216-0-32002"
+                    ]
+                }
+            }
+        ]
+    }
+}

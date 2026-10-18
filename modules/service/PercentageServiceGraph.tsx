@@ -110,6 +110,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
                   callbacks: {
                     ...callbacks,
                     label: (context) => {
+                      if (!context.parsed.y) return '';
                       return `${round(context.parsed.y, 1)}% of ${comparison}`;
                     },
                   },

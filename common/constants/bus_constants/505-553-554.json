@@ -1,0 +1,198 @@
+{
+    "505/553/554": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Otis & Summer Streets",
+                "branches": [
+                    "505"
+                ],
+                "station": "otsum",
+                "order": 0,
+                "stops": {
+                    "1": [],
+                    "0": [
+                        "505-0-16535"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Roberts",
+                "branches": [
+                    "553"
+                ],
+                "station": "rbrts",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "553-1-7600"
+                    ],
+                    "0": [
+                        "553-0-7600"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Waverley Street",
+                "branches": [
+                    "554"
+                ],
+                "station": "waver",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "554-1-2099"
+                    ],
+                    "0": [
+                        "554-0-2099"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Moody & Carter Streets (Central Square, Waltham)",
+                "branches": [
+                    "505",
+                    "553",
+                    "554"
+                ],
+                "station": "mdyca",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "505-1-88333",
+                        "553-1-88333",
+                        "554-1-88333"
+                    ],
+                    "0": [
+                        "505-0-88333",
+                        "553-0-86971",
+                        "554-0-86971"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Central Square (Waltham)",
+                "branches": [
+                    "505"
+                ],
+                "station": "walth",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "505-1-86943"
+                    ],
+                    "0": []
+                }
+            },
+            {
+                "stop_name": "Lexington Street @ River Street",
+                "branches": [
+                    "505"
+                ],
+                "station": "lexrv",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "505-1-78201"
+                    ],
+                    "0": [
+                        "505-0-7838"
+                    ]
+                }
+            },
+            {
+                "stop_name": "West Newton",
+                "branches": [
+                    "505",
+                    "553",
+                    "554"
+                ],
+                "station": "wnwtn",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "505-1-78219",
+                        "553-1-7623",
+                        "554-1-7623"
+                    ],
+                    "0": [
+                        "505-0-65541",
+                        "553-0-7651",
+                        "554-0-7651"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Commonwealth Avenue @ Pamela Court",
+                "branches": [
+                    "505"
+                ],
+                "station": "compm",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "505-1-78211"
+                    ],
+                    "0": [
+                        "505-0-65547"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Newton Corner",
+                "branches": [
+                    "553",
+                    "554"
+                ],
+                "station": "nwcor",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "553-1-903",
+                        "554-1-903"
+                    ],
+                    "0": [
+                        "553-0-903",
+                        "554-0-903"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Kneeland Street",
+                "branches": [
+                    "505"
+                ],
+                "station": "kneel",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "505-1-6550"
+                    ],
+                    "0": [
+                        "505-0-6555"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Federal & Franklin",
+                "branches": [
+                    "505"
+                ],
+                "station": "fedfr",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "505-1-6551"
+                    ],
+                    "0": [
+                        "505-0-6551"
+                    ]
+                }
+            }
+        ]
+    }
+}

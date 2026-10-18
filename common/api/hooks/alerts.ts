@@ -1,18 +1,20 @@
 import type { UseQueryResult } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAlerts, fetchHistoricalAlerts, fetchAccessibilityAlertsForLine } from '../alerts';
-import type { LineShort } from '../../types/lines';
+import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from '../../types/lines';
 import { FIVE_MINUTES, ONE_MINUTE } from '../../constants/time';
 import type { AlertsResponse } from '../../types/alerts';
 
 export const useHistoricalAlertsData = (
   date: string | undefined,
   line: LineShort,
-  busRoute?: string
+  busRoute?: BusRoute,
+  crRoute?: CommuterRailRoute,
+  ferryRoute?: FerryRoute
 ) => {
   return useQuery({
-    queryKey: ['alerts', date, line, busRoute],
-    queryFn: () => fetchHistoricalAlerts(date, line, busRoute),
+    queryKey: ['alerts', date, line, busRoute, crRoute, ferryRoute],
+    queryFn: () => fetchHistoricalAlerts(date, line, busRoute, crRoute, ferryRoute),
     staleTime: FIVE_MINUTES,
     enabled: date !== undefined,
   });

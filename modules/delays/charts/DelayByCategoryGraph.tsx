@@ -103,6 +103,7 @@ export const DelayByCategoryGraph: React.FC<DelayByCategoryGraphProps> = ({
                 position: 'nearest',
                 callbacks: {
                   label: (tooltipItem) => {
+                    if (!tooltipItem.parsed.y) return '';
                     return `${tooltipItem.label} total delay: ${getFormattedTimeString(
                       tooltipItem.parsed.y,
                       'minutes'

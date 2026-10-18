@@ -1,3 +1,10 @@
+"""Generate per-line static data files from S3 and the MBTA v3 API.
+
+To run, run as
+
+uv run python -m scripts.generate_line_files
+"""
+
 import json
 import os
 import requests
@@ -5,13 +12,6 @@ import boto3
 import botocore
 
 from chalicelib.s3 import get_all_s3_objects
-
-"""
-To run, run as
-
-poetry shell
-python -m scripts.generate_line_files
-"""
 
 MBTA_V3_API_KEY = os.environ.get("MBTA_V3_API_KEY", "")
 BUCKET = "tm-mbta-performance"
@@ -26,6 +26,7 @@ ROUTES_CR = [
     "CR-Kingston",
     "CR-Lowell",
     "CR-Middleborough",
+    "CR-NewBedford",
     "CR-Needham",
     "CR-Newburyport",
     "CR-Providence",
@@ -70,6 +71,10 @@ def get_line_stops():
                 parent_children_map[parent_id] = {"0": [], "1": [stop["name"]]}
         else:
             parent_children_map[parent_id][direction].append(stop["name"])
+
+    for parent_id in parent_children_map:
+        for direction in parent_children_map[parent_id]:
+            parent_children_map[parent_id][direction].sort()
 
     return parent_children_map
 
@@ -134,6 +139,11 @@ for LINE_KEY in ROUTES_CR:
             "stations": stops_formatted,
         }
     }
+
+    if LINE_KEY == "CR-NewBedford":
+        output[LINE_KEY]["service_start"] = "2025-03-24"
+    if LINE_KEY == "CR-Middleborough":
+        output[LINE_KEY]["service_end"] = "2025-03-23"
 
     out_json = json.dumps(output, indent=2)
     with open("../common/constants/cr_constants/{}.json".format(LINE_KEY.lower()), "w+") as f:

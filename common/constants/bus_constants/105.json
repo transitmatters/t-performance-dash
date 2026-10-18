@@ -1,0 +1,91 @@
+{
+    "105": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Sullivan Square",
+                "branches": null,
+                "station": "sllwr",
+                "order": 0,
+                "stops": {
+                    "1": [],
+                    "0": [
+                        "105-0-29007"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Malden Center Station",
+                "branches": null,
+                "station": "malst",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "105-1-53270"
+                    ],
+                    "0": [
+                        "105-0-53270"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Bowdoin Street",
+                "branches": null,
+                "station": "bdoin",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "105-1-5381"
+                    ],
+                    "0": [
+                        "105-0-5426"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Main Street @ Cross Street",
+                "branches": null,
+                "station": "mncrs",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "105-1-5394"
+                    ],
+                    "0": [
+                        "105-0-5414"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Sweester Circle",
+                "branches": null,
+                "station": "sweet",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "105-1-5404"
+                    ],
+                    "0": [
+                        "105-0-5405"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Sullivan Square",
+                "branches": null,
+                "station": "sull",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "105-1-29001"
+                    ],
+                    "0": []
+                }
+            }
+        ]
+    }
+}

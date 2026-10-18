@@ -1,6 +1,5 @@
-import { PEAK_SCHEDULED_SERVICE } from '../../../common/constants/baselines';
 import type { DeliveredTripMetrics, ScheduledService } from '../../../common/types/dataPoints';
-import type { Line } from '../../../common/types/lines';
+import type { AggType } from '../../speed/constants/speeds';
 
 export const getServiceWidgetValues = (
   deliveredTripMetrics: DeliveredTripMetrics[],
@@ -34,20 +33,27 @@ export const getServiceWidgetValues = (
   return { current, delta, average, peak, percentDelivered };
 };
 
+// Monthly trip metrics are dated the first of the month but scheduled service the last,
+// and the two series can start in different months, so match them by period, not index.
+const getPeriodKey = (date: string, agg: AggType) => (agg === 'monthly' ? date.slice(0, 7) : date);
+
 export const getPercentageData = (
   data: DeliveredTripMetrics[],
   predictedData: ScheduledService,
-  line?: Line
+  peakService: number,
+  agg: AggType
 ) => {
-  const scheduled = data.map((datapoint, index) => {
-    return datapoint.miles_covered && predictedData.counts[index]
-      ? (100 * datapoint.count) / (predictedData.counts[index].count / 2)
+  const scheduledByPeriod = new Map(
+    predictedData.counts.map(({ date, count }) => [getPeriodKey(date, agg), count])
+  );
+  const scheduled = data.map((datapoint) => {
+    const scheduledCount = scheduledByPeriod.get(getPeriodKey(datapoint.date, agg));
+    return datapoint.miles_covered && scheduledCount
+      ? (100 * datapoint.count) / (scheduledCount / 2)
       : Number.NaN;
   });
   const peak = data.map((datapoint) =>
-    datapoint.miles_covered
-      ? (100 * datapoint.count) / PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
-      : Number.NaN
+    datapoint.miles_covered ? (100 * datapoint.count) / peakService : Number.NaN
   );
   return { scheduled: scheduled, peak };
 };

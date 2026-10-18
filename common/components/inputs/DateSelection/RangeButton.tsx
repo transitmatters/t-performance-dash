@@ -3,11 +3,10 @@ import React from 'react';
 import { buttonHighlightFocus, lineColorDarkBorder } from '../../../styles/general';
 import { useDelimitatedRoute } from '../../../utils/router';
 
-interface RangeButtonProps
-  extends React.DetailedHTMLProps<
-    React.ButtonHTMLAttributes<HTMLButtonElement>,
-    HTMLButtonElement
-  > {
+interface RangeButtonProps extends React.DetailedHTMLProps<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+> {
   children: string | React.ReactNode;
 }
 

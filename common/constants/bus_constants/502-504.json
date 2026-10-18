@@ -1,0 +1,103 @@
+{
+    "502/504": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Saint James Avenue @ Dartmouth Street",
+                "branches": [
+                    "504"
+                ],
+                "station": "stjim",
+                "order": 0,
+                "stops": {
+                    "1": [],
+                    "0": [
+                        "504-0-178"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Watertown Yard",
+                "branches": [
+                    "504"
+                ],
+                "station": "wtryd",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "504-1-900"
+                    ],
+                    "0": [
+                        "504-0-999"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Newton Corner",
+                "branches": [
+                    "504"
+                ],
+                "station": "nwcor",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "504-1-903"
+                    ],
+                    "0": [
+                        "504-0-903"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Copley Square @ Stuart Street",
+                "branches": [
+                    "504"
+                ],
+                "station": "copsq",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "504-1-71855"
+                    ],
+                    "0": []
+                }
+            },
+            {
+                "stop_name": "Kneeland Street",
+                "branches": [
+                    "504"
+                ],
+                "station": "kneel",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "504-1-6550"
+                    ],
+                    "0": [
+                        "504-0-6555"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Federal & Franklin",
+                "branches": [
+                    "504"
+                ],
+                "station": "fedfr",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "504-1-6551"
+                    ],
+                    "0": [
+                        "504-0-6551"
+                    ]
+                }
+            }
+        ]
+    }
+}

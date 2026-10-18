@@ -12,9 +12,12 @@ export interface SingleDayDataPoint {
   dwell_time_sec?: number;
   benchmark_travel_time_sec?: number;
   benchmark_headway_time_sec?: number | null;
+  tm_benchmark_travel_time_sec?: number | null;
   threshold_flag_1?: string;
   speed_mph?: number;
   benchmark_speed_mph?: number;
+  vehicle_consist?: string;
+  vehicle_label?: string;
 }
 
 export interface AggregateDataPoint {
@@ -32,6 +35,8 @@ export interface AggregateDataPoint {
   dep_time_from_epoch?: string;
   is_peak_day?: boolean;
   peak?: string;
+  holiday?: boolean;
+  weekend?: boolean;
 }
 
 export interface AggregateDataResponse {
@@ -46,6 +51,8 @@ export interface Location {
 }
 
 export type TravelTimesUnit = 'by_date' | 'by_time';
+
+export type DayFilter = 'all' | 'weekday' | 'weekend';
 
 type Direction = 'northbound' | 'southbound' | 'eastbound' | 'westbound' | 'inbound' | 'outbound';
 
@@ -67,6 +74,7 @@ export enum BenchmarkFieldKeys {
   benchmarkTravelTimeSec = 'benchmark_travel_time_sec',
   benchmarkHeadwayTimeSec = 'benchmark_headway_time_sec',
   benchmarkSpeedMph = 'benchmark_speed_mph',
+  tmBenchmarkTravelTimeSec = 'tm_benchmark_travel_time_sec',
 }
 
 export type PointField = PointFieldKeys;
@@ -82,6 +90,7 @@ export interface LineProps {
   includeBothStopsForLocation?: boolean;
   fname: DataName;
   showLegend?: boolean;
+  chartTitle?: string;
   /** Show ratios under 1.00 differently in chart */
   showUnderRatio?: boolean;
 }
@@ -106,6 +115,7 @@ export interface SingleDayLineProps extends LineProps {
   metricField: MetricField;
   date: string | undefined;
   benchmarkField?: BenchmarkField;
+  tmBenchmarkField?: BenchmarkField;
   units: 'Minutes' | 'MPH';
 }
 

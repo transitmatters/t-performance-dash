@@ -12,12 +12,13 @@ import type { RidershipCount } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
-import { PEAK_RIDERSHIP } from '../../common/constants/baselines';
+import { useRidershipBaseline } from '../../common/api/hooks/baselines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../common/constants/charts';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
+import { SaveChartImageButton } from '../../common/components/buttons/SaveChartImageButton';
 
 interface RidershipGraphProps {
   data: RidershipCount[];
@@ -37,14 +38,14 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
   const {
     line,
     linePath,
-    query: { busRoute, crRoute },
+    query: { busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const isMobile = !useBreakpoint('md');
   const ref = useRef();
+  const peak = useRidershipBaseline(line, busRoute, crRoute, ferryRoute);
 
   const chart = useMemo(() => {
-    const routeIndex = busRoute ? busRoute.replaceAll('/', '') : (crRoute ?? line);
     const labels = data.map((point) => point.date);
     const lineColor = LINE_COLORS[line ?? 'default'];
 
@@ -73,9 +74,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
 
                 {
                   // This null dataset produces the entry in the legend for the peak annotation.
-                  label: `Historical Maximum (${PEAK_RIDERSHIP[
-                    routeIndex ?? 'DEFAULT'
-                  ].toLocaleString('en-us')} fare validations)`,
+                  label: `Historical Maximum (${peak.toLocaleString('en-us')} fare validations)`,
                   backgroundColor: CHART_COLORS.ANNOTATIONS,
                   data: null,
                 },
@@ -101,9 +100,10 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                   callbacks: {
                     ...callbacks,
                     label: (context) => {
+                      if (!context.parsed.y) return '';
                       return `${context.parsed.y.toLocaleString('en-us')} (${(
                         (100 * context.parsed.y) /
-                        PEAK_RIDERSHIP[routeIndex ?? 'DEFAULT']
+                        peak
                       ).toFixed(1)}% of historical maximum)`;
                     },
                   },
@@ -124,8 +124,8 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                   annotations: [
                     {
                       type: 'line',
-                      yMin: PEAK_RIDERSHIP[routeIndex ?? 'DEFAULT'],
-                      yMax: PEAK_RIDERSHIP[routeIndex ?? 'DEFAULT'],
+                      yMin: peak,
+                      yMax: peak,
                       borderColor: CHART_COLORS.ANNOTATIONS,
                       // corresponds to null dataset index.
                       display: (ctx) => ctx.chart.isDatasetVisible(1),
@@ -202,19 +202,28 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
         </ChartDiv>
         <div className="flex flex-row items-end justify-end gap-4">
           {startDate && (
-            <DownloadButton
-              data={data}
-              datasetName="ridership"
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
+            <>
+              <SaveChartImageButton
+                chartRef={ref}
+                datasetName="ridership"
+                includeBothStopsForLocation={false}
+                startDate={startDate}
+                endDate={endDate}
+              />
+              <DownloadButton
+                data={data}
+                datasetName="ridership"
+                includeBothStopsForLocation={false}
+                startDate={startDate}
+                endDate={endDate}
+              />
+            </>
           )}
         </div>
       </ChartBorder>
     );
   }, [
-    busRoute,
+    peak,
     line,
     data,
     isMobile,

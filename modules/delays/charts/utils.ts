@@ -15,7 +15,7 @@ const labels = [
   '🚓 Police Activity',
   '🚑 Medical Emergency',
   '🚒 Fire Department Activity',
-  'Other',
+  'Other/No Reason Given',
 ];
 
 const backgroundColors = [

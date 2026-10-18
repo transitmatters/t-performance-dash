@@ -1,0 +1,139 @@
+{
+    "136/137": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Reading Commuter Rail Depot",
+                "branches": [
+                    "137"
+                ],
+                "station": "readc",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "137-1-29253"
+                    ],
+                    "0": [
+                        "137-0-29253"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Wakefield Square",
+                "branches": [
+                    "137"
+                ],
+                "station": "wakef",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "137-1-9179"
+                    ],
+                    "0": [
+                        "137-0-9251"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Greenwood Commuter Rail",
+                "branches": [
+                    "137"
+                ],
+                "station": "grnwd",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "137-1-9188"
+                    ],
+                    "0": [
+                        "137-0-9242"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Franklin Square",
+                "branches": [
+                    "137"
+                ],
+                "station": "fklin",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "137-1-9196"
+                    ],
+                    "0": [
+                        "137-0-9233"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Main & Porter",
+                "branches": [
+                    "137"
+                ],
+                "station": "mport",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "137-1-9199"
+                    ],
+                    "0": [
+                        "137-0-9230"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Main & Grove",
+                "branches": [
+                    "137"
+                ],
+                "station": "mgrov",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "137-1-9203"
+                    ],
+                    "0": [
+                        "137-0-9226"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Oak Grove Station",
+                "branches": [
+                    "137"
+                ],
+                "station": "okgrv",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "137-1-9328"
+                    ],
+                    "0": [
+                        "137-0-9328"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Malden Center Station",
+                "branches": [
+                    "137"
+                ],
+                "station": "malst",
+                "order": 8,
+                "stops": {
+                    "1": [
+                        "137-1-5327"
+                    ],
+                    "0": [
+                        "137-0-5327"
+                    ]
+                }
+            }
+        ]
+    }
+}

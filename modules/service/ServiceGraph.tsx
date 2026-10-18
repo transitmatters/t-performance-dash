@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { PEAK_SCHEDULED_SERVICE } from '../../common/constants/baselines';
+import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
 import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
 import { ChartBorder } from '../../common/components/charts/ChartBorder';
@@ -22,7 +22,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
   const { data, predictedData, startDate, endDate, config } = props;
   const { line } = useDelimitatedRoute();
 
-  const peak = PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'];
+  const peak = useScheduledServiceBaseline(line);
 
   const benchmarks = useMemo(() => {
     const label = `Historical maximum (${peak} round trips)`;

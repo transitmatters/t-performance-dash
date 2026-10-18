@@ -3,12 +3,13 @@ import type { Chart as ChartJS } from 'chart.js';
 
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../constants/colors';
 import { DownloadButton } from '../buttons/DownloadButton';
+import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { writeError } from '../../utils/chartError';
@@ -25,6 +26,34 @@ const xAxisLabel = (startDate: string, endDate: string, hourly: boolean) => {
     const y2 = endDate.split('-')[0];
     return y1 === y2 ? y1 : `${y1} – ${y2}`;
   }
+};
+
+const calculateTrendline = (data: AggregateDataPoint[], pointField: string, multiplier: number) => {
+  if (data.length < 2) return [];
+
+  const xValues = data.map((item) => new Date(item[pointField]).getTime());
+  const yValues = data.map((item) => Number(item['50%']) * multiplier);
+
+  const xMean = xValues.reduce((a, b) => a + b, 0) / xValues.length;
+  const yMean = yValues.reduce((a, b) => a + b, 0) / yValues.length;
+
+  let numerator = 0;
+  let denominator = 0;
+  for (let i = 0; i < xValues.length; i++) {
+    numerator += (xValues[i] - xMean) * (yValues[i] - yMean);
+    denominator += Math.pow(xValues[i] - xMean, 2);
+  }
+  const slope = numerator / denominator;
+  const intercept = yMean - slope * xMean;
+
+  // Calculate trendline value for each point
+  return data.map((item) => {
+    const x = new Date(item[pointField]).getTime();
+    return {
+      x: item[pointField],
+      y: Number((slope * x + intercept).toFixed(2)),
+    };
+  });
 };
 
 export const AggregateLineChart: React.FC<AggregateLineProps> = ({
@@ -45,13 +74,62 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
   showLegend = true,
   byTime = false,
   yUnit = 'Minutes',
+  chartTitle,
 }) => {
   const ref = useRef();
   const hourly = timeUnit === 'hour';
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
-
+  const [isTrendlineVisible, setIsTrendlineVisible] = useState(false);
   const multiplier = yUnit === 'Minutes' ? 1 / 60 : 1;
+
+  const trendlineData = useMemo(() => {
+    if (!isTrendlineVisible) return [];
+    return calculateTrendline(data, pointField, multiplier);
+  }, [data, pointField, multiplier, isTrendlineVisible]);
+
+  const datasets = [
+    {
+      label: 'Trend',
+      fill: false,
+      borderColor: CHART_COLORS.RED,
+      borderWidth: 2,
+      pointRadius: 0,
+      tension: 0,
+      data: trendlineData,
+    },
+    {
+      label: seriesName,
+      fill: false,
+      tension: 0.1,
+      borderColor: byTime ? CHART_COLORS.DARK_LINE : undefined,
+      pointBackgroundColor: CHART_COLORS.GREY,
+      pointHoverRadius: 3,
+      pointHoverBackgroundColor: CHART_COLORS.GREY,
+      pointRadius: byTime ? 0 : 3,
+      pointHitRadius: 10,
+      stepped: byTime,
+      data: data.map((item: AggregateDataPoint) => (item['50%'] * multiplier).toFixed(2)),
+    },
+    {
+      label: '25th percentile',
+      fill: 1,
+      backgroundColor: fillColor,
+      stepped: byTime,
+      tension: 0.4,
+      pointRadius: 0,
+      data: data.map((item: AggregateDataPoint) => (item['25%'] * multiplier).toFixed(2)),
+    },
+    {
+      label: '75th percentile',
+      fill: 1,
+      backgroundColor: fillColor,
+      stepped: byTime,
+      tension: 0.4,
+      pointRadius: 0,
+      data: data.map((item: AggregateDataPoint) => (item['75%'] * multiplier).toFixed(2)),
+    },
+  ];
 
   return (
     <ChartBorder>
@@ -63,39 +141,8 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
           redraw={true}
           data={{
             labels,
-            datasets: [
-              {
-                label: seriesName,
-                fill: false,
-                tension: 0.1,
-                borderColor: byTime ? CHART_COLORS.DARK_LINE : undefined,
-                pointBackgroundColor: CHART_COLORS.GREY,
-                pointHoverRadius: 3,
-                pointHoverBackgroundColor: CHART_COLORS.GREY,
-                pointRadius: byTime ? 0 : 3,
-                pointHitRadius: 10,
-                stepped: byTime,
-                data: data.map((item: AggregateDataPoint) => (item['50%'] * multiplier).toFixed(2)),
-              },
-              {
-                label: '25th percentile',
-                fill: 1,
-                backgroundColor: fillColor,
-                stepped: byTime,
-                tension: 0.4,
-                pointRadius: 0,
-                data: data.map((item: AggregateDataPoint) => (item['25%'] * multiplier).toFixed(2)),
-              },
-              {
-                label: '75th percentile',
-                fill: 1,
-                backgroundColor: fillColor,
-                stepped: byTime,
-                tension: 0.4,
-                pointRadius: 0,
-                data: data.map((item: AggregateDataPoint) => (item['75%'] * multiplier).toFixed(2)),
-              },
-            ],
+            // @ts-expect-error it doesnt like our combo of x,y in trendline + x and y seperate in datasets
+            datasets,
           }}
           options={{
             scales: {
@@ -154,6 +201,7 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
                 position: 'nearest',
                 callbacks: {
                   label: (tooltipItem) => {
+                    if (!tooltipItem.parsed.y) return '';
                     return `${tooltipItem.dataset.label}: ${
                       yUnit === 'Minutes'
                         ? getFormattedTimeString(tooltipItem.parsed.y, 'minutes')
@@ -178,15 +226,31 @@ export const AggregateLineChart: React.FC<AggregateLineProps> = ({
         />
       </ChartDiv>
       <div className="flex flex-row items-end gap-4">
-        {showLegend && <LegendLongTerm />}
-        {startDate && (
-          <DownloadButton
-            data={data}
-            datasetName={fname}
-            location={location}
-            includeBothStopsForLocation={includeBothStopsForLocation}
-            startDate={startDate}
+        {showLegend && (
+          <LegendLongTerm
+            isTrendlineVisible={isTrendlineVisible}
+            onToggleTrendline={() => setIsTrendlineVisible(!isTrendlineVisible)}
           />
+        )}
+        {startDate && (
+          <>
+            <SaveChartImageButton
+              chartRef={ref}
+              datasetName={fname}
+              location={location}
+              includeBothStopsForLocation={includeBothStopsForLocation}
+              startDate={startDate}
+              endDate={endDate}
+              chartTitle={chartTitle}
+            />
+            <DownloadButton
+              data={data}
+              datasetName={fname}
+              location={location}
+              includeBothStopsForLocation={includeBothStopsForLocation}
+              startDate={startDate}
+            />
+          </>
         )}
       </div>
     </ChartBorder>

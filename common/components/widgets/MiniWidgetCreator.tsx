@@ -4,10 +4,17 @@ import { DataPair } from '../general/DataPair';
 import { SmallDelta } from './internal/SmallDelta';
 import { SmallData } from './internal/SmallData';
 
+export interface WidgetComparison {
+  delta: number;
+  label: string;
+  unit: 'time' | 'percentage';
+}
+
 export interface MiniWidgetObject {
   type: 'delta' | 'data' | string;
   widgetValue: WidgetValueInterface;
   text: string;
+  comparison?: WidgetComparison;
 }
 
 interface MiniWidgetCreatorProps {
@@ -18,7 +25,13 @@ const getDeltaOrDataComponent = (widgetObject: MiniWidgetObject) => {
   if (widgetObject.type === 'delta') {
     return <SmallDelta analysis={widgetObject.text} widgetValue={widgetObject.widgetValue} />;
   }
-  return <SmallData analysis={widgetObject.text} widgetValue={widgetObject.widgetValue} />;
+  return (
+    <SmallData
+      analysis={widgetObject.text}
+      widgetValue={widgetObject.widgetValue}
+      comparison={widgetObject.comparison}
+    />
+  );
 };
 
 const getWidgets = (widgetObject: MiniWidgetObject[]) => {

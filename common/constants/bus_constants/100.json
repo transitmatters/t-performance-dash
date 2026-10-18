@@ -1,0 +1,81 @@
+{
+    "100": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Elm & Fells",
+                "branches": null,
+                "station": "elm",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "100-1-8302"
+                    ],
+                    "0": [
+                        "100-0-8301"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Roosevelt Circle",
+                "branches": null,
+                "station": "rosec",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "100-1-8303"
+                    ],
+                    "0": [
+                        "100-0-8315"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Fellsway @ Salem/Pleasant",
+                "branches": null,
+                "station": "felwy",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "100-1-5264"
+                    ],
+                    "0": [
+                        "100-0-8311"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Fells & Riverside",
+                "branches": null,
+                "station": "feriv",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "100-1-9042"
+                    ],
+                    "0": [
+                        "100-0-5215"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Wellington Station",
+                "branches": null,
+                "station": "welst",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "100-1-52720"
+                    ],
+                    "0": [
+                        "100-0-52711"
+                    ]
+                }
+            }
+        ]
+    }
+}

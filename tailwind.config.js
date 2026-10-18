@@ -13,7 +13,7 @@ module.exports = {
   safelist: [
     {
       pattern:
-        /(border|text|bg)-mbta-(red|lightRed|orange|lightOrange|blue|lightBlue|green|lightGreen|bus|lightBus)/,
+        /(border|text|bg)-mbta-(red|lightRed|orange|lightOrange|blue|lightBlue|green|lightGreen|bus|lightBus|ferry|lightFerry)/,
     },
   ],
   darkMode: 'class',
@@ -32,6 +32,20 @@ module.exports = {
       display: ['Helvetica Neue', 'sans-serif'],
     },
     extend: {
+      animation: {
+        'star-movement-bottom': 'star-movement-bottom linear infinite alternate',
+        'star-movement-top': 'star-movement-top linear infinite alternate',
+      },
+      keyframes: {
+        'star-movement-bottom': {
+          '0%': { transform: 'translate(0%, 0%)', opacity: '1' },
+          '100%': { transform: 'translate(-100%, 0%)', opacity: '0' },
+        },
+        'star-movement-top': {
+          '0%': { transform: 'translate(0%, 0%)', opacity: '1' },
+          '100%': { transform: 'translate(100%, 0%)', opacity: '0' },
+        },
+      },
       boxShadow: {
         figma: '4px 4px 0 #DA291C',
         dataBox: '1px 1px 4px rgba(0, 0, 0, 0.1);',
@@ -81,6 +95,9 @@ module.exports = {
           commuterRail: '#80276c',
           lightCommuterRail: '#942d7c',
           darkCommuterRail: '#6c215c',
+          ferry: '#008EAA',
+          lightFerry: '#80C7D7',
+          darkFerry: '#006B82',
         },
         tm: {
           red: '#a31e1e',

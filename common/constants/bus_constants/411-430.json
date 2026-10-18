@@ -1,0 +1,231 @@
+{
+    "411/430": {
+        "type": "bus",
+        "direction": {
+            "0": "outbound",
+            "1": "inbound"
+        },
+        "stations": [
+            {
+                "stop_name": "Kennedy Dr (Granada)",
+                "branches": [
+                    "411",
+                    "430"
+                ],
+                "station": "grana",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "411-1-8336",
+                        "430-1-8336"
+                    ],
+                    "0": [
+                        "411-0-8336",
+                        "430-0-8336"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Revere House",
+                "branches": [
+                    "411"
+                ],
+                "station": "revhs",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "411-1-4761"
+                    ],
+                    "0": [
+                        "411-0-4761"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Saugus Center",
+                "branches": [
+                    "430"
+                ],
+                "station": "saug",
+                "order": 1,
+                "stops": {
+                    "1": [
+                        "430-1-7474"
+                    ],
+                    "0": [
+                        "430-0-7474"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Broadway Square @ Salem Street",
+                "branches": [
+                    "411"
+                ],
+                "station": "bwysq",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "411-1-9021"
+                    ],
+                    "0": [
+                        "411-0-9063"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Cliftondale Square (Saugus)",
+                "branches": [
+                    "430"
+                ],
+                "station": "clift",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "430-1-7401"
+                    ],
+                    "0": [
+                        "430-0-7566"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Wonderland Station West",
+                "branches": [
+                    "411"
+                ],
+                "station": "wondw",
+                "order": 2,
+                "stops": {
+                    "1": [
+                        "411-1-15799"
+                    ],
+                    "0": [
+                        "411-0-15799"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Northgate Shopping Center",
+                "branches": [
+                    "411"
+                ],
+                "station": "ngate",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "411-1-6267"
+                    ],
+                    "0": [
+                        "411-0-6267"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Sqaure One Mall",
+                "branches": [
+                    "430"
+                ],
+                "station": "sqone",
+                "order": 3,
+                "stops": {
+                    "1": [
+                        "430-1-7529"
+                    ],
+                    "0": [
+                        "430-0-7529"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Linden Square (Malden)",
+                "branches": [
+                    "411"
+                ],
+                "station": "lindn",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "411-1-7417"
+                    ],
+                    "0": [
+                        "411-0-74120"
+                    ]
+                }
+            },
+            {
+                "stop_name": "North Broadway (Malden)",
+                "branches": [
+                    "430"
+                ],
+                "station": "nbway",
+                "order": 4,
+                "stops": {
+                    "1": [
+                        "430-1-7539"
+                    ],
+                    "0": [
+                        "430-0-7542"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Maplewood Square",
+                "branches": [
+                    "411",
+                    "430"
+                ],
+                "station": "mwood",
+                "order": 5,
+                "stops": {
+                    "1": [
+                        "411-1-9025",
+                        "430-1-9025"
+                    ],
+                    "0": [
+                        "411-0-9060",
+                        "430-0-9060"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Pleasant Street @ Main Street",
+                "branches": [
+                    "411",
+                    "430"
+                ],
+                "station": "plsmn",
+                "order": 6,
+                "stops": {
+                    "1": [
+                        "411-1-15431",
+                        "430-1-15431"
+                    ],
+                    "0": [
+                        "411-0-5342",
+                        "430-0-5342"
+                    ]
+                }
+            },
+            {
+                "stop_name": "Malden Center Station",
+                "branches": [
+                    "411",
+                    "430"
+                ],
+                "station": "malst",
+                "order": 7,
+                "stops": {
+                    "1": [
+                        "411-1-53270",
+                        "430-1-53270"
+                    ],
+                    "0": [
+                        "411-0-53270",
+                        "430-0-53270"
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -5,13 +5,13 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { ALL_PAGES } from '../../common/constants/pages';
 import { ControlPanel } from '../../common/components/controls/ControlPanel';
 import { lineColorBackground } from '../../common/styles/general';
-import { COMMUTER_RAIL_LINE_NAMES } from '../../common/types/lines';
+import { COMMUTER_RAIL_LINE_NAMES, FERRY_LINE_NAMES } from '../../common/types/lines';
 
 export const DesktopHeader: React.FC = () => {
   const {
     line,
     page,
-    query: { busRoute, crRoute },
+    query: { busRoute, crRoute, ferryRoute },
     tab,
   } = useDelimitatedRoute();
   const dateStoreSection = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
@@ -22,6 +22,7 @@ export const DesktopHeader: React.FC = () => {
   const getLineName = () => {
     if (busRoute) return `Route ${busRoute}`;
     if (crRoute) return COMMUTER_RAIL_LINE_NAMES[crRoute];
+    if (ferryRoute) return FERRY_LINE_NAMES[ferryRoute];
     if (line) return LINE_OBJECTS[line]?.name;
     if (tab === 'System') return 'System';
   };
@@ -48,6 +49,7 @@ export const DesktopHeader: React.FC = () => {
           line={line}
           busRoute={busRoute}
           crRoute={crRoute}
+          ferryRoute={ferryRoute}
         />
       )}
     </div>

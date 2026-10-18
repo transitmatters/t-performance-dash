@@ -89,6 +89,14 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
           pointRadius: 0,
           tension: 0.1,
         },
+        {
+          label: `Mattapan Line`,
+          data: data?.map((d) => (d['Mattapan'] / 60).toFixed(2)),
+          borderColor: LINE_COLORS['line-mattapan'],
+          backgroundColor: LINE_COLORS['line-mattapan'],
+          pointRadius: 0,
+          tension: 0.1,
+        },
       ];
   return (
     <ChartBorder>
@@ -163,6 +171,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
                     return `${tooltipItems[0].label.split(',').slice(0, 2).join(',')}`;
                   },
                   label: (tooltipItem) => {
+                    if (!tooltipItem.parsed.y) return '';
                     return `${
                       !isLinePage ? `${tooltipItem.dataset.label} slow time:` : 'Total slow time: '
                     } ${getFormattedTimeString(tooltipItem.parsed.y, 'minutes')}`;

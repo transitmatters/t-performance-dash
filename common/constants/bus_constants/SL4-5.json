@@ -1,0 +1,71 @@
+{
+  "SL4/SL5": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Nubian Station",
+        "branches": ["SL4", "SL5"],
+        "station": "nubn",
+        "order": 1,
+        "stops": {
+          "1": ["SL4-1-64", "SL5-1-64", "751-1-64", "749-1-64"],
+          "0": ["SL4-0-64", "SL5-0-64", "751-0-64", "749-0-64"]
+        }
+      },
+      {
+        "stop_name": "Massachusetts Avenue @ Washington",
+        "branches": ["SL4", "SL5"],
+        "station": "wasma",
+        "order": 2,
+        "stops": {
+          "1": ["SL4-1-5", "SL5-1-5", "751-1-5", "749-1-5"],
+          "0": ["SL4-0-55", "SL5-0-55", "751-0-55", "749-0-55"]
+        }
+      },
+      {
+        "stop_name": "Washington & East Berkeley",
+        "branches": ["SL4", "SL5"],
+        "station": "webrk",
+        "order": 3,
+        "stops": {
+          "1": ["SL4-1-5095", "SL5-1-5095", "751-1-5095", "749-1-5095"],
+          "0": ["SL4-0-5098", "SL5-0-5098", "751-0-5098", "749-0-5098"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ Tufts Medical Center",
+        "branches": ["SL4", "SL5"],
+        "station": "tumed",
+        "order": 4,
+        "stops": {
+          "1": ["SL4-1-6565", "SL5-1-6565", "751-1-6565", "749-1-6565"],
+          "0": ["SL4-0-49002", "SL5-0-49002", "751-0-49002", "749-0-49002"]
+        }
+      },
+      {
+        "stop_name": "Essex & Atlantic Avenue (South Station)",
+        "branches": ["SL4"],
+        "station": "esxat",
+        "order": 5,
+        "stops": {
+          "1": ["SL4-1-6538", "751-1-6538"],
+          "0": ["SL4-0-6538", "751-0-6538"]
+        }
+      },
+      {
+        "stop_name": "Temple Street @ Tremont Street",
+        "branches": ["SL5"],
+        "station": "templ",
+        "order": 5,
+        "stops": {
+          "1": ["SL5-1-49001", "749-1-49001"],
+          "0": ["SL5-0-49001", "749-0-49001"]
+        }
+      }
+    ]
+  }
+}

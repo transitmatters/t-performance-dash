@@ -9,9 +9,13 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "editor.formatOnSave": true,
   "python.analysis.typeCheckingMode": "off",
-  "python.formatting.provider": "black",
   "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter"
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
   },
-  "cSpell.words": ["MBTA"]
+  "ruff.enable": true,
+  "cSpell.words": ["chartjs", "MASSDOT", "MBTA", "slowzones"]
 }
