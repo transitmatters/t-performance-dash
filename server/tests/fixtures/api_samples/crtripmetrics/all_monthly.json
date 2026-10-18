@@ -1,0 +1,46 @@
+[
+  {
+    "avg_cab_car_age": 13.9,
+    "date": "2026-06-01",
+    "fleet_mix_bombardier": 0.0,
+    "fleet_mix_kawasaki": 22.9,
+    "fleet_mix_locomotive": 0.2,
+    "fleet_mix_mbb": 0.0,
+    "fleet_mix_rotem": 76.9,
+    "fleet_trips": 11284,
+    "route": "all"
+  },
+  {
+    "avg_cab_car_age": 14.2,
+    "date": "2026-07-01",
+    "fleet_mix_bombardier": 0.0,
+    "fleet_mix_kawasaki": 22.0,
+    "fleet_mix_locomotive": 0.2,
+    "fleet_mix_mbb": 0.0,
+    "fleet_mix_rotem": 77.8,
+    "fleet_trips": 12642,
+    "route": "all"
+  },
+  {
+    "avg_cab_car_age": 13.9,
+    "date": "2026-08-01",
+    "fleet_mix_bombardier": 0.5,
+    "fleet_mix_kawasaki": 22.0,
+    "fleet_mix_locomotive": 0.2,
+    "fleet_mix_mbb": 0.0,
+    "fleet_mix_rotem": 77.3,
+    "fleet_trips": 12988,
+    "route": "all"
+  },
+  {
+    "avg_cab_car_age": 13.7,
+    "date": "2026-09-01",
+    "fleet_mix_bombardier": 0.2,
+    "fleet_mix_kawasaki": 21.3,
+    "fleet_mix_locomotive": 1.6,
+    "fleet_mix_mbb": 0.0,
+    "fleet_mix_rotem": 77.0,
+    "fleet_trips": 12739,
+    "route": "all"
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "date": "2025-12-01",
+    "days": 31,
+    "completed": 90467,
+    "onTime": 86078,
+    "requests": 140556
+  },
+  {
+    "date": "2026-01-01",
+    "days": 31,
+    "completed": 82663,
+    "onTime": 79227,
+    "requests": 121918
+  },
+  {
+    "date": "2026-02-01",
+    "days": 28,
+    "completed": 77778,
+    "missed": 712,
+    "noShows": 3081,
+    "onTime": 74717,
+    "requests": 120411
+  },
+  {
+    "date": "2026-03-01",
+    "days": 31,
+    "completed": 102006,
+    "missed": 759,
+    "noShows": 3512,
+    "onTime": 98742,
+    "requests": 138525
+  }
+]
