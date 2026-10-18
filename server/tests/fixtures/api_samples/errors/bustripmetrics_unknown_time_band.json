@@ -1,0 +1,4 @@
+{
+  "Code": "BadRequestError",
+  "Message": "Invalid time_band parameter. Expected one of: early_am, am_peak, midday, pm_peak, evening, late_night. Omit it for the whole day."
+}

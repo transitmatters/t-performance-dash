@@ -146,6 +146,58 @@ class TestScheduledServiceValidation:
         assert result.status_code == 400
 
 
+class TestBusTripMetricsValidation:
+    def test_missing_all_returns_400(self, client):
+        result = client.http.get("/api/bustripmetrics")
+        assert result.status_code == 400
+
+    def test_missing_route_returns_400(self, client):
+        result = client.http.get("/api/bustripmetrics?start_date=2024-01-01&end_date=2024-01-31")
+        assert result.status_code == 400
+
+    def test_missing_dates_returns_400(self, client):
+        result = client.http.get("/api/bustripmetrics?route=1")
+        assert result.status_code == 400
+
+    @pytest.mark.parametrize("param", ["time_band=all_day", "time_band=rush", "day_type=weekday"])
+    def test_unknown_filter_returns_400(self, client, param):
+        result = client.http.get(f"/api/bustripmetrics?start_date=2024-01-01&end_date=2024-01-31&route=1&{param}")
+        assert result.status_code == 400
+        assert param.split("=")[0] in json.loads(result.body)["Message"]
+
+    def test_known_filters_accepted(self, client):
+        result = client.http.get(
+            "/api/bustripmetrics?start_date=2024-01-01&end_date=2024-01-31&route=1&time_band=am_peak&day_type=business_day"
+        )
+        assert result.status_code == 200
+
+
+class TestCrTripMetricsValidation:
+    def test_missing_route_returns_400(self, client):
+        result = client.http.get("/api/crtripmetrics?start_date=2024-01-01&end_date=2024-01-31")
+        assert result.status_code == 400
+
+    def test_missing_dates_returns_400(self, client):
+        result = client.http.get("/api/crtripmetrics?route=CR-Fairmount")
+        assert result.status_code == 400
+
+
+class TestBusSpeedLeaderboardValidation:
+    def test_missing_all_returns_400(self, client):
+        result = client.http.get("/api/busspeedleaderboard")
+        assert result.status_code == 400
+
+    def test_missing_end_date_returns_400(self, client):
+        result = client.http.get("/api/busspeedleaderboard?start_date=2024-01-01")
+        assert result.status_code == 400
+
+    def test_invalid_limit_returns_400(self, client):
+        result = client.http.get(
+            "/api/busspeedleaderboard?start_date=2024-01-01&end_date=2024-01-02&limit=not-a-number"
+        )
+        assert result.status_code == 400
+
+
 class TestRidershipValidation:
     def test_missing_dates_returns_400(self, client):
         result = client.http.get("/api/ridership")
@@ -153,6 +205,50 @@ class TestRidershipValidation:
 
     def test_missing_end_date_returns_400(self, client):
         result = client.http.get("/api/ridership?start_date=2024-01-01")
+        assert result.status_code == 400
+
+
+class TestReliabilityValidation:
+    def test_missing_params_returns_400(self, client):
+        result = client.http.get("/api/reliability?route_id=RIDE&start_date=2024-01-01")
+        assert result.status_code == 400
+
+    def test_invalid_agg_returns_400(self, client):
+        result = client.http.get("/api/reliability?route_id=RIDE&start_date=2024-01-01&end_date=2024-02-01&agg=hourly")
+        assert result.status_code == 400
+
+    def test_valid_request_returns_200(self, client):
+        result = client.http.get("/api/reliability?route_id=RIDE&start_date=2024-01-01&end_date=2024-02-01&agg=weekly")
+        assert result.status_code == 200
+
+
+class TestCrScorecardValidation:
+    PARAMS = "route_id=CR-Worcester&start_date=2024-01-01&end_date=2024-02-01"
+
+    def test_missing_day_kind_returns_400(self, client):
+        result = client.http.get(f"/api/crscorecard?{self.PARAMS}&agg=monthly")
+        assert result.status_code == 400
+
+    def test_invalid_agg_returns_400(self, client):
+        result = client.http.get(f"/api/crscorecard?{self.PARAMS}&agg=hourly&day_kind=weekday")
+        assert result.status_code == 400
+
+    def test_invalid_day_kind_returns_400(self, client):
+        result = client.http.get(f"/api/crscorecard?{self.PARAMS}&agg=monthly&day_kind=holiday")
+        assert result.status_code == 400
+
+    def test_valid_request_returns_200(self, client):
+        result = client.http.get(f"/api/crscorecard?{self.PARAMS}&agg=monthly&day_kind=weekday")
+        assert result.status_code == 200
+
+
+class TestWeatherValidation:
+    def test_missing_dates_returns_400(self, client):
+        result = client.http.get("/api/weather")
+        assert result.status_code == 400
+
+    def test_missing_end_date_returns_400(self, client):
+        result = client.http.get("/api/weather?start_date=2024-01-01")
         assert result.status_code == 400
 
 
@@ -192,6 +288,15 @@ class TestTimePredictionsValidation:
 
 
 class TestHappyPaths:
+    def test_busspeedleaderboard_returns_200(self, client):
+        result = client.http.get("/api/busspeedleaderboard?start_date=2026-09-07&end_date=2026-09-11")
+        assert result.status_code == 200
+
+    def test_busspeedleaderboard_response_is_a_list(self, client):
+        result = client.http.get("/api/busspeedleaderboard?start_date=2026-09-07&end_date=2026-09-11")
+        body = json.loads(result.body)
+        assert isinstance(body, list)
+
     def test_routes_returns_200(self, client):
         result = client.http.get("/api/routes")
         assert result.status_code == 200

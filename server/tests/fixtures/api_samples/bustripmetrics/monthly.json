@@ -1,0 +1,62 @@
+[
+  {
+    "avg_bus_age": 12.5,
+    "count": 5906,
+    "date": "2026-06-01",
+    "fleet_mix_battery": 0.0,
+    "fleet_mix_cng": 0.0,
+    "fleet_mix_diesel": 0.4,
+    "fleet_mix_hybrid": 99.6,
+    "fleet_trips": 5750,
+    "miles_covered": 31850.786,
+    "n_traversals": 184356,
+    "pct_battery_trips": 0.0,
+    "route": "28",
+    "total_time": 15332068
+  },
+  {
+    "avg_bus_age": 12.8,
+    "count": 6036,
+    "date": "2026-07-01",
+    "fleet_mix_battery": 0.0,
+    "fleet_mix_cng": 0.0,
+    "fleet_mix_diesel": 0.3,
+    "fleet_mix_hybrid": 99.7,
+    "fleet_trips": 5966,
+    "miles_covered": 32676.420000000002,
+    "n_traversals": 189310,
+    "pct_battery_trips": 0.0,
+    "route": "28",
+    "total_time": 15534744
+  },
+  {
+    "avg_bus_age": 12.6,
+    "count": 6047,
+    "date": "2026-08-01",
+    "fleet_mix_battery": 0.0,
+    "fleet_mix_cng": 0.0,
+    "fleet_mix_diesel": 0.1,
+    "fleet_mix_hybrid": 99.9,
+    "fleet_trips": 5860,
+    "miles_covered": 32503.12,
+    "n_traversals": 187736,
+    "pct_battery_trips": 0.0,
+    "route": "28",
+    "total_time": 15393805
+  },
+  {
+    "avg_bus_age": 12.7,
+    "count": 3540,
+    "date": "2026-09-01",
+    "fleet_mix_battery": 0.0,
+    "fleet_mix_cng": 0.0,
+    "fleet_mix_diesel": 0.6,
+    "fleet_mix_hybrid": 99.4,
+    "fleet_trips": 5728,
+    "miles_covered": 19131.523,
+    "n_traversals": 110657,
+    "pct_battery_trips": 0.0,
+    "route": "28",
+    "total_time": 9128883
+  }
+]

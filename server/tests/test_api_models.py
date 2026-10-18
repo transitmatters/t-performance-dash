@@ -36,9 +36,15 @@ ENDPOINTS = {
     "aggregate_dwells": ("/api/aggregate/dwells", models.DwellsAggregateResponse),
     "linedelays": ("/api/linedelays", models.LineDelaysResponse),
     "tripmetrics": ("/api/tripmetrics", models.TripMetricsResponse),
+    "bustripmetrics": ("/api/bustripmetrics", models.BusTripMetricsResponse),
+    "crtripmetrics": ("/api/crtripmetrics", models.CrTripMetricsResponse),
+    "busspeedleaderboard": ("/api/busspeedleaderboard", models.BusSpeedLeaderboardResponse),
     "service_hours": ("/api/service_hours", models.ServiceHoursResponse),
     "time_predictions": ("/api/time_predictions", models.TimePredictionResponse),
     "ridership": ("/api/ridership", models.RidershipResponse),
+    "reliability": ("/api/reliability", models.ReliabilityResponse),
+    "crscorecard": ("/api/crscorecard", models.CrScorecardResponse),
+    "weather": ("/api/weather", models.WeatherResponse),
     "scheduledservice": ("/api/scheduledservice", models.GetScheduledServiceResponse),
     "speed_restrictions": ("/api/speed_restrictions", models.SpeedRestrictionsResponse),
     "service_ridership_dashboard": ("/api/service_ridership_dashboard", models.ServiceRidershipDashboardResponse),
@@ -53,6 +59,7 @@ ERRORS = {
     "aggregate_headways_missing_dates": ("/api/aggregate/headways", 400, models.ErrorResponse),
     "linedelays_unsupported_agg": ("/api/linedelays", 400, models.ErrorResponse),
     "tripmetrics_range_too_long": ("/api/tripmetrics", 403, models.ErrorResponse),
+    "bustripmetrics_unknown_time_band": ("/api/bustripmetrics", 400, models.ErrorResponse),
     "stops_unknown_route": ("/api/stops/{route_id}", 404, models.RouteNotFoundResponse),
 }
 

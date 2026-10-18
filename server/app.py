@@ -26,6 +26,8 @@ from chalicelib import (
     route_manifest,
     models,
     predictions,
+    regional_rail,
+    reliability,
     ridership,
     scheduled_service,
     service_hours,
@@ -33,6 +35,7 @@ from chalicelib import (
     speed,
     speed_restrictions,
     static_data,
+    weather,
 )
 
 spec = APISpec(
@@ -523,6 +526,96 @@ def get_trips_by_line():
 
 
 @app.route(
+    "/api/bustripmetrics",
+    cors=cors_config,
+    docs=Docs(
+        request=models.BusTripMetricsParams,
+        responses=[Resp(models.BusTripMetricsResponse), BAD_REQUEST, RANGE_TOO_LONG],
+    ),
+)
+def get_bus_trip_metrics():
+    """Retrieve daily speed/trip metrics for a single bus route over a date range."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date", "route"])
+    # Checked here as well as in speed.py so every backend source rejects them alike.
+    speed.validate_bus_trip_filters(query_params)
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_bus_trip_metrics(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/bustripmetrics", query_params)
+    else:
+        data = speed.trip_metrics_by_bus_route(query_params)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
+    "/api/crtripmetrics",
+    cors=cors_config,
+    docs=Docs(
+        request=models.CrTripMetricsParams,
+        responses=[Resp(models.CrTripMetricsResponse), BAD_REQUEST, RANGE_TOO_LONG],
+    ),
+)
+def get_cr_trip_metrics():
+    """Retrieve Commuter Rail fleet metrics for one route, or `all`, over a date range."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date", "route"])
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = []
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/crtripmetrics", query_params)
+    else:
+        data = speed.trip_metrics_by_cr_route(query_params)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
+    "/api/busspeedleaderboard",
+    cors=cors_config,
+    docs=Docs(
+        request=models.BusSpeedLeaderboardParams,
+        responses=[Resp(models.BusSpeedLeaderboardResponse), BAD_REQUEST, RANGE_TOO_LONG],
+    ),
+)
+def get_bus_speed_leaderboard():
+    """Retrieve the slowest bus routes (by average speed) over a date range."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date"])
+    cache_max_age = cache.get_cache_max_age(query_params)
+    try:
+        # 200 comfortably covers every route the dashboard tracks (~115 as of writing), so a
+        # "show all" request never gets truncated. The full ranked list is already cached in S3
+        # regardless of limit (see bus_speed_leaderboard), so a larger slice costs nothing extra.
+        limit = min(max(int(query_params.get("limit", 10)), 1), 200)
+    except ValueError:
+        raise BadRequestError("Invalid limit parameter.")
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_bus_speed_leaderboard(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/busspeedleaderboard", query_params)
+    else:
+        data = speed.bus_speed_leaderboard(query_params["start_date"], query_params["end_date"], limit)
+
+    return Response(
+        body=json.dumps(data, indent=4, sort_keys=True),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
     "/api/scheduledservice",
     cors=cors_config,
     docs=Docs(
@@ -592,6 +685,99 @@ def get_ridership():
             "Content-Type": "application/json",
             "Cache-Control": f"public, max-age={cache_max_age}",
         },
+    )
+
+
+@app.route(
+    "/api/reliability",
+    cors=cors_config,
+    docs=Docs(request=models.ReliabilityParams, responses=[Resp(models.ReliabilityResponse), BAD_REQUEST]),
+)
+def get_reliability():
+    """Retrieve on-time performance counts for The RIDE or commuter rail over a date range."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["route_id", "start_date", "end_date", "agg"])
+    if query_params["agg"] not in reliability.AGGS:
+        raise BadRequestError(f"Invalid agg '{query_params['agg']}'. Expected one of: {', '.join(reliability.AGGS)}.")
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_reliability(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/reliability", query_params)
+    else:
+        data = reliability.get_reliability(
+            route_id=query_params["route_id"],
+            start_date=parse_user_date(query_params["start_date"]),
+            end_date=parse_user_date(query_params["end_date"]),
+            agg=query_params["agg"],
+        )
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
+    "/api/crscorecard",
+    cors=cors_config,
+    docs=Docs(request=models.CrScorecardParams, responses=[Resp(models.CrScorecardResponse), BAD_REQUEST]),
+)
+def get_cr_scorecard():
+    """Retrieve a Commuter Rail route's schedule measured against Regional Rail standards."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["route_id", "start_date", "end_date", "agg", "day_kind"])
+    if query_params["agg"] not in regional_rail.AGGS:
+        raise BadRequestError(f"Invalid agg '{query_params['agg']}'. Expected one of: {', '.join(regional_rail.AGGS)}.")
+    if query_params["day_kind"] not in regional_rail.DAY_KINDS:
+        raise BadRequestError(
+            f"Invalid day_kind '{query_params['day_kind']}'. Expected one of: {', '.join(regional_rail.DAY_KINDS)}."
+        )
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = []
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/crscorecard", query_params)
+    else:
+        data = regional_rail.get_scorecard(
+            route_id=query_params["route_id"],
+            start_date=parse_user_date(query_params["start_date"]),
+            end_date=parse_user_date(query_params["end_date"]),
+            agg=query_params["agg"],
+            kind=query_params["day_kind"],
+        )
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
+    "/api/weather",
+    cors=cors_config,
+    docs=Docs(request=models.WeatherParams, responses=[Resp(models.WeatherResponse), BAD_REQUEST]),
+)
+def get_weather():
+    """Retrieve hourly weather observations for a date range (downtown Boston)."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date"])
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_weather(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/weather", query_params)
+    else:
+        start_date = parse_user_date(query_params["start_date"])
+        end_date = parse_user_date(query_params["end_date"])
+        data = weather.get_weather(start_date=start_date, end_date=end_date)
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
     )
 
 

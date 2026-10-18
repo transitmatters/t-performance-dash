@@ -775,6 +775,287 @@
         "operationId": "getTripMetrics"
       }
     },
+    "/api/bustripmetrics": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusTripMetricsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The date range has too many entries for the aggregation level.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve daily speed/trip metrics for a single bus route over a date range.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "route",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Bus route ID (e.g. `1`, `57`, `111`), or a comma-separated list (e.g. `114,116,117`) whose routes are summed per period."
+          },
+          {
+            "in": "query",
+            "name": "agg",
+            "required": false,
+            "schema": {
+              "default": "daily",
+              "enum": [
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string"
+            },
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`."
+          },
+          {
+            "in": "query",
+            "name": "time_band",
+            "required": false,
+            "schema": {
+              "default": null,
+              "nullable": true,
+              "enum": [
+                "early_am",
+                "am_peak",
+                "midday",
+                "pm_peak",
+                "evening",
+                "late_night"
+              ],
+              "type": "string"
+            },
+            "description": "Time of day. Each figure is then that band's alone, and daily entries drop `median_speed_mph` and `mean_speed_mph`, which have no per-band version. Omit it for the whole day."
+          },
+          {
+            "in": "query",
+            "name": "day_type",
+            "required": false,
+            "schema": {
+              "default": null,
+              "nullable": true,
+              "enum": [
+                "business_day",
+                "weekend_or_holiday"
+              ],
+              "type": "string"
+            },
+            "description": "Keep only business days, or only weekends and MBTA holidays. Omit it for every day."
+          }
+        ],
+        "operationId": "getBusTripMetrics"
+      }
+    },
+    "/api/crtripmetrics": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrTripMetricsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The date range has too many entries for the aggregation level.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve Commuter Rail fleet metrics for one route, or `all`, over a date range.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "route",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Commuter Rail route ID (e.g. `CR-Fairmount`), or `all` for the whole system."
+          },
+          {
+            "in": "query",
+            "name": "agg",
+            "required": false,
+            "schema": {
+              "default": "daily",
+              "enum": [
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string"
+            },
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`."
+          }
+        ],
+        "operationId": "getCommuterRailTripMetrics"
+      }
+    },
+    "/api/busspeedleaderboard": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusSpeedLeaderboardResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The date range has too many entries for the aggregation level.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve the slowest bus routes (by average speed) over a date range.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "type": "integer"
+            },
+            "description": "Maximum number of routes to return. Clamped to 1-200."
+          }
+        ],
+        "operationId": "getBusSpeedLeaderboard"
+      }
+    },
     "/api/scheduledservice": {
       "get": {
         "responses": {
@@ -911,6 +1192,226 @@
           }
         ],
         "operationId": "getRidership"
+      }
+    },
+    "/api/reliability": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReliabilityResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve on-time performance counts for The RIDE or commuter rail over a date range.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "route_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`RIDE` for The RIDE, a commuter rail route ID (e.g. `CR-Worcester`), or `commuter-rail` for every commuter rail route combined."
+          },
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "agg",
+            "required": true,
+            "schema": {
+              "enum": [
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string"
+            },
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`."
+          }
+        ],
+        "operationId": "getReliability"
+      }
+    },
+    "/api/crscorecard": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrScorecardResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve a Commuter Rail route's schedule measured against Regional Rail standards.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "route_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Commuter Rail route ID (e.g. `CR-Worcester`), or `commuter-rail` for one summary per route over the whole range."
+          },
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "agg",
+            "required": true,
+            "schema": {
+              "enum": [
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string"
+            },
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`. Ignored for `commuter-rail`."
+          },
+          {
+            "in": "query",
+            "name": "day_kind",
+            "required": true,
+            "schema": {
+              "enum": [
+                "weekday",
+                "saturday",
+                "sunday",
+                "all"
+              ],
+              "type": "string"
+            },
+            "description": "Which schedule to measure: `weekday`, `saturday` or `sunday`, or `all` to mix every day."
+          }
+        ],
+        "operationId": "getCommuterRailScorecard"
+      }
+    },
+    "/api/weather": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeatherResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve hourly weather observations for a date range (downtown Boston).",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
+          }
+        ],
+        "operationId": "getWeather"
       }
     },
     "/api/facilities": {
@@ -1611,6 +2112,165 @@
         "title": "TripMetricsResponse",
         "type": "array"
       },
+      "BusTripMetricsParams": {
+        "description": "Parameters for the `/api/bustripmetrics` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    route: Bus route ID, or a comma-separated group of routes.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`. Defaults to `daily`.\n    time_band: Optional time of day to report instead of the whole day.\n    day_type: Optional day type to keep, dropping every other day.",
+        "properties": {
+          "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "route": {
+            "description": "Bus route ID (e.g. `1`, `57`, `111`), or a comma-separated list (e.g. `114,116,117`) whose routes are summed per period.",
+            "title": "Route",
+            "type": "string"
+          },
+          "agg": {
+            "default": "daily",
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`.",
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly"
+            ],
+            "title": "Agg",
+            "type": "string"
+          },
+          "time_band": {
+            "default": null,
+            "description": "Time of day. Each figure is then that band's alone, and daily entries drop `median_speed_mph` and `mean_speed_mph`, which have no per-band version. Omit it for the whole day.",
+            "title": "Time Band",
+            "nullable": true,
+            "enum": [
+              "early_am",
+              "am_peak",
+              "midday",
+              "pm_peak",
+              "evening",
+              "late_night"
+            ],
+            "type": "string"
+          },
+          "day_type": {
+            "default": null,
+            "description": "Keep only business days, or only weekends and MBTA holidays. Omit it for every day.",
+            "title": "Day Type",
+            "nullable": true,
+            "enum": [
+              "business_day",
+              "weekend_or_holiday"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "route"
+        ],
+        "title": "BusTripMetricsParams",
+        "type": "object"
+      },
+      "BusTripMetricsResponse": {
+        "description": "Response for `/api/bustripmetrics`: delivered trip metrics at the requested aggregation level.",
+        "items": {
+          "$ref": "#/components/schemas/BusTripMetricsEntry"
+        },
+        "title": "BusTripMetricsResponse",
+        "type": "array"
+      },
+      "CrTripMetricsParams": {
+        "description": "Parameters for the `/api/crtripmetrics` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    route: Commuter Rail route ID, or `all` for the whole system.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`. Defaults to `daily`.",
+        "properties": {
+          "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "route": {
+            "description": "Commuter Rail route ID (e.g. `CR-Fairmount`), or `all` for the whole system.",
+            "title": "Route",
+            "type": "string"
+          },
+          "agg": {
+            "default": "daily",
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`.",
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly"
+            ],
+            "title": "Agg",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "route"
+        ],
+        "title": "CrTripMetricsParams",
+        "type": "object"
+      },
+      "CrTripMetricsResponse": {
+        "description": "Response for `/api/crtripmetrics`: Commuter Rail fleet metrics at the requested aggregation level.",
+        "items": {
+          "$ref": "#/components/schemas/CrTripMetricsEntry"
+        },
+        "title": "CrTripMetricsResponse",
+        "type": "array"
+      },
+      "BusSpeedLeaderboardParams": {
+        "description": "Parameters for the `/api/busspeedleaderboard` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    limit: Maximum number of routes to return.",
+        "properties": {
+          "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "description": "Maximum number of routes to return. Clamped to 1-200.",
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "BusSpeedLeaderboardParams",
+        "type": "object"
+      },
+      "BusSpeedLeaderboardResponse": {
+        "description": "Response for `/api/busspeedleaderboard`: bus routes ranked by average speed, slowest first.",
+        "items": {
+          "$ref": "#/components/schemas/BusSpeedLeaderboardEntry"
+        },
+        "title": "BusSpeedLeaderboardResponse",
+        "type": "array"
+      },
       "ScheduledServiceParams": {
         "description": "Parameters for the `/api/scheduledservice` endpoint.\n\nAttributes:\n    start_date: Start of date range.\n    end_date: End of date range.\n    route_id: Route identifier (e.g., `Red`, `1`, `CR-Fairmount`).\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
         "properties": {
@@ -1722,6 +2382,145 @@
           "$ref": "#/components/schemas/RidershipEntry"
         },
         "title": "RidershipResponse",
+        "type": "array"
+      },
+      "ReliabilityParams": {
+        "description": "Parameters for the `/api/reliability` endpoint.\n\nAttributes:\n    route_id: `RIDE`, a commuter rail route, or `commuter-rail` for all of commuter rail.\n    start_date: Start of date range.\n    end_date: End of date range.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
+        "properties": {
+          "route_id": {
+            "description": "`RIDE` for The RIDE, a commuter rail route ID (e.g. `CR-Worcester`), or `commuter-rail` for every commuter rail route combined.",
+            "title": "Route Id",
+            "type": "string"
+          },
+          "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "agg": {
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`.",
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly"
+            ],
+            "title": "Agg",
+            "type": "string"
+          }
+        },
+        "required": [
+          "route_id",
+          "start_date",
+          "end_date",
+          "agg"
+        ],
+        "title": "ReliabilityParams",
+        "type": "object"
+      },
+      "ReliabilityResponse": {
+        "description": "Response for `/api/reliability`: on-time performance counts, one entry per period.",
+        "items": {
+          "$ref": "#/components/schemas/ReliabilityEntry"
+        },
+        "title": "ReliabilityResponse",
+        "type": "array"
+      },
+      "CrScorecardParams": {
+        "description": "Parameters for the `/api/crscorecard` endpoint.\n\nAttributes:\n    route_id: A Commuter Rail route, or `commuter-rail` to compare every route.\n    start_date: Start of date range.\n    end_date: End of date range.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`. Ignored for `commuter-rail`.\n    day_kind: Which schedule to measure, or `all` for every day.",
+        "properties": {
+          "route_id": {
+            "description": "Commuter Rail route ID (e.g. `CR-Worcester`), or `commuter-rail` for one summary per route over the whole range.",
+            "title": "Route Id",
+            "type": "string"
+          },
+          "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "agg": {
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`. Ignored for `commuter-rail`.",
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly"
+            ],
+            "title": "Agg",
+            "type": "string"
+          },
+          "day_kind": {
+            "description": "Which schedule to measure: `weekday`, `saturday` or `sunday`, or `all` to mix every day.",
+            "enum": [
+              "weekday",
+              "saturday",
+              "sunday",
+              "all"
+            ],
+            "title": "Day Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "route_id",
+          "start_date",
+          "end_date",
+          "agg",
+          "day_kind"
+        ],
+        "title": "CrScorecardParams",
+        "type": "object"
+      },
+      "CrScorecardResponse": {
+        "description": "Response for `/api/crscorecard`: scheduled Commuter Rail service against Regional Rail standards.",
+        "items": {
+          "$ref": "#/components/schemas/CrScorecardEntry"
+        },
+        "title": "CrScorecardResponse",
+        "type": "array"
+      },
+      "WeatherParams": {
+        "description": "Parameters for the `/api/weather` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).",
+        "properties": {
+          "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "title": "WeatherParams",
+        "type": "object"
+      },
+      "WeatherResponse": {
+        "description": "Response for `/api/weather`: hourly observations sorted by timestamp. Days without data are skipped.",
+        "items": {
+          "$ref": "#/components/schemas/WeatherHourlyEntry"
+        },
+        "title": "WeatherResponse",
         "type": "array"
       },
       "FacilitiesResponse": {
@@ -2691,6 +3490,107 @@
         "title": "TripMetricsEntry",
         "type": "object"
       },
+      "BusTripMetricsEntry": {
+        "additionalProperties": true,
+        "description": "Delivered trip metrics for a bus route (or group of routes) over one day, week or month.\n\nEntries can also have fleet fields: `fleet_trips` (trips with a known vehicle), `avg_bus_age`,\n`pct_<type>_trips` and per-propulsion shares named `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`).\nThese are omitted when unknown. Daily entries for the whole day (no `time_band`) also have\n`median_speed_mph` and `mean_speed_mph`.\n\nAttributes:\n    date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).\n    route: Route ID, or the comma-separated group that was requested.\n    count: Trips delivered.\n    total_time: Total trip time in seconds.\n    miles_covered: Total miles covered.\n    n_traversals: Segment traversals measured.",
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "route": {
+            "title": "Route",
+            "type": "string"
+          },
+          "count": {
+            "title": "Count",
+            "type": "number"
+          },
+          "total_time": {
+            "title": "Total Time",
+            "type": "number"
+          },
+          "miles_covered": {
+            "title": "Miles Covered",
+            "type": "number"
+          },
+          "n_traversals": {
+            "title": "N Traversals",
+            "type": "number"
+          }
+        },
+        "required": [
+          "date",
+          "route",
+          "count",
+          "total_time",
+          "miles_covered",
+          "n_traversals"
+        ],
+        "title": "BusTripMetricsEntry",
+        "type": "object"
+      },
+      "CrTripMetricsEntry": {
+        "additionalProperties": true,
+        "description": "Commuter Rail fleet metrics for a route over one day, week or month.\n\nEntries also have per-fleet shares named `fleet_mix_<type>` (e.g. `fleet_mix_rotem`), and\n`avg_cab_car_age` when known.\n\nAttributes:\n    date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).\n    route: Route ID, or `all`.\n    fleet_trips: Trips with a known cab car.",
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "route": {
+            "title": "Route",
+            "type": "string"
+          },
+          "fleet_trips": {
+            "default": null,
+            "title": "Fleet Trips",
+            "nullable": true,
+            "type": "number"
+          }
+        },
+        "required": [
+          "date",
+          "route"
+        ],
+        "title": "CrTripMetricsEntry",
+        "type": "object"
+      },
+      "BusSpeedLeaderboardEntry": {
+        "additionalProperties": true,
+        "description": "A bus route's totals over the date range. Speed in mph is `miles_covered / (total_time / 3600)`.\n\nAttributes:\n    route: Route ID.\n    count: Trips delivered.\n    total_time: Total trip time in seconds.\n    miles_covered: Total miles covered.\n    n_traversals: Segment traversals measured.",
+        "properties": {
+          "route": {
+            "title": "Route",
+            "type": "string"
+          },
+          "count": {
+            "title": "Count",
+            "type": "number"
+          },
+          "total_time": {
+            "title": "Total Time",
+            "type": "number"
+          },
+          "miles_covered": {
+            "title": "Miles Covered",
+            "type": "number"
+          },
+          "n_traversals": {
+            "title": "N Traversals",
+            "type": "number"
+          }
+        },
+        "required": [
+          "route",
+          "count",
+          "total_time",
+          "miles_covered",
+          "n_traversals"
+        ],
+        "title": "BusSpeedLeaderboardEntry",
+        "type": "object"
+      },
       "ByDayKindServiceLevels": {
         "additionalProperties": true,
         "description": "Scheduled service for a specific day type (weekday, Saturday, or Sunday).\n\nAttributes:\n    date: Reference date (YYYY-MM-DD).\n    service_levels: Scheduled trips by hour (index 0 = midnight); empty if unavailable.",
@@ -2770,6 +3670,264 @@
           "count"
         ],
         "title": "RidershipEntry",
+        "type": "object"
+      },
+      "ReliabilityCounts": {
+        "additionalProperties": true,
+        "description": "On-time and cancellation counts for one commuter rail time period.\n\nAttributes:\n    otpNumerator: Trips that ran on time.\n    otpDenominator: Trips measured for on-time performance.\n    cancelled: Cancelled trips.",
+        "properties": {
+          "otpNumerator": {
+            "title": "Otpnumerator",
+            "type": "integer"
+          },
+          "otpDenominator": {
+            "title": "Otpdenominator",
+            "type": "integer"
+          },
+          "cancelled": {
+            "title": "Cancelled",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "otpNumerator",
+          "otpDenominator",
+          "cancelled"
+        ],
+        "title": "ReliabilityCounts",
+        "type": "object",
+        "nullable": true
+      },
+      "ReliabilityEntry": {
+        "additionalProperties": true,
+        "description": "Summed on-time performance counts for one day, week, or month.\n\nThe RIDE entries have `completed` and `onTime`, plus `requests`, `noShows` and `missed` for periods\nwhere every day recorded them. Commuter rail entries have `otpNumerator`, `otpDenominator`,\n`cancelled`, `peak` and `offPeak`.\n\nAttributes:\n    date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).\n    days: Service days with data in the period.\n    completed: The RIDE completed trips.\n    onTime: The RIDE trips completed on time.\n    requests: The RIDE trip requests.\n    noShows: The RIDE rider no-shows.\n    missed: The RIDE missed trips.\n    otpNumerator: Commuter rail trips that ran on time.\n    otpDenominator: Commuter rail trips measured.\n    cancelled: Commuter rail cancelled trips.\n    peak: Commuter rail peak-period counts.\n    offPeak: Commuter rail off-peak counts.",
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "days": {
+            "title": "Days",
+            "type": "integer"
+          },
+          "completed": {
+            "default": null,
+            "title": "Completed",
+            "nullable": true,
+            "type": "integer"
+          },
+          "onTime": {
+            "default": null,
+            "title": "Ontime",
+            "nullable": true,
+            "type": "integer"
+          },
+          "requests": {
+            "default": null,
+            "title": "Requests",
+            "nullable": true,
+            "type": "integer"
+          },
+          "noShows": {
+            "default": null,
+            "title": "Noshows",
+            "nullable": true,
+            "type": "integer"
+          },
+          "missed": {
+            "default": null,
+            "title": "Missed",
+            "nullable": true,
+            "type": "integer"
+          },
+          "otpNumerator": {
+            "default": null,
+            "title": "Otpnumerator",
+            "nullable": true,
+            "type": "integer"
+          },
+          "otpDenominator": {
+            "default": null,
+            "title": "Otpdenominator",
+            "nullable": true,
+            "type": "integer"
+          },
+          "cancelled": {
+            "default": null,
+            "title": "Cancelled",
+            "nullable": true,
+            "type": "integer"
+          },
+          "peak": {
+            "$ref": "#/components/schemas/ReliabilityCounts"
+          },
+          "offPeak": {
+            "$ref": "#/components/schemas/ReliabilityCounts"
+          }
+        },
+        "required": [
+          "date",
+          "days"
+        ],
+        "title": "ReliabilityEntry",
+        "type": "object"
+      },
+      "CrScorecardDirection": {
+        "additionalProperties": true,
+        "description": "Scheduled service in one direction, measured at the Boston terminal. Values are averages over the days.\n\nAttributes:\n    trips: Trains.\n    firstTrip: First train, in seconds after midnight.\n    lastTrip: Last train, in seconds after midnight.\n    maxGapMidday: Longest midday wait, in minutes.\n    maxGapEvening: Longest evening wait, in minutes.\n    hoursAtTarget: Hours from 5am to 1am with a train at least every 30 minutes.\n    clockFaceShare: Share of trains on a repeating hourly pattern (0-1).\n    byHour: Trains in each hour of the day, starting at midnight.",
+        "properties": {
+          "trips": {
+            "default": null,
+            "title": "Trips",
+            "nullable": true,
+            "type": "number"
+          },
+          "firstTrip": {
+            "default": null,
+            "title": "Firsttrip",
+            "nullable": true,
+            "type": "number"
+          },
+          "lastTrip": {
+            "default": null,
+            "title": "Lasttrip",
+            "nullable": true,
+            "type": "number"
+          },
+          "maxGapMidday": {
+            "default": null,
+            "title": "Maxgapmidday",
+            "nullable": true,
+            "type": "number"
+          },
+          "maxGapEvening": {
+            "default": null,
+            "title": "Maxgapevening",
+            "nullable": true,
+            "type": "number"
+          },
+          "hoursAtTarget": {
+            "default": null,
+            "title": "Hoursattarget",
+            "nullable": true,
+            "type": "number"
+          },
+          "clockFaceShare": {
+            "default": null,
+            "title": "Clockfaceshare",
+            "nullable": true,
+            "type": "number"
+          },
+          "byHour": {
+            "default": null,
+            "title": "Byhour",
+            "nullable": true,
+            "items": {
+              "nullable": true,
+              "type": "number"
+            },
+            "type": "array"
+          }
+        },
+        "title": "CrScorecardDirection",
+        "type": "object"
+      },
+      "CrScorecardEntry": {
+        "additionalProperties": true,
+        "description": "A Commuter Rail schedule measured against Regional Rail standards, averaged over `days` days.\n\nFor a route, entries are per period and have `date`. For `commuter-rail`, entries are per route\nand have `routeId` instead.\n\nAttributes:\n    date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).\n    routeId: Route ID.\n    days: Days averaged.\n    outbound: Outbound service.\n    inbound: Inbound service.\n    peakTrips: Peak trains, both directions.\n    reversePeakTrips: Reverse-peak trains, both directions.",
+        "properties": {
+          "date": {
+            "default": null,
+            "title": "Date",
+            "nullable": true,
+            "type": "string"
+          },
+          "routeId": {
+            "default": null,
+            "title": "Routeid",
+            "nullable": true,
+            "type": "string"
+          },
+          "days": {
+            "title": "Days",
+            "type": "integer"
+          },
+          "outbound": {
+            "$ref": "#/components/schemas/CrScorecardDirection"
+          },
+          "inbound": {
+            "$ref": "#/components/schemas/CrScorecardDirection"
+          },
+          "peakTrips": {
+            "default": null,
+            "title": "Peaktrips",
+            "nullable": true,
+            "type": "number"
+          },
+          "reversePeakTrips": {
+            "default": null,
+            "title": "Reversepeaktrips",
+            "nullable": true,
+            "type": "number"
+          }
+        },
+        "required": [
+          "days",
+          "outbound",
+          "inbound"
+        ],
+        "title": "CrScorecardEntry",
+        "type": "object"
+      },
+      "WeatherHourlyEntry": {
+        "additionalProperties": true,
+        "description": "One hour's weather in downtown Boston.\n\nAttributes:\n    timestamp: Local-time ISO hour (America/New_York, no offset), e.g. `2026-04-22T14:00`.\n    temperature_f: Air temperature in \u00b0F.\n    weather_code: WMO weather code from Open-Meteo.\n    condition: Coarse label, e.g. `clear`, `cloudy`, `fog`, `rain`, `snow`, `storm` or `unknown`.\n    precipitation_in: Precipitation in inches for the hour.\n    humidity_pct: Relative humidity at 2m (0-100).\n    wind_mph: Wind speed at 10m in mph.",
+        "properties": {
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "string"
+          },
+          "temperature_f": {
+            "default": null,
+            "title": "Temperature F",
+            "nullable": true,
+            "type": "number"
+          },
+          "weather_code": {
+            "default": null,
+            "title": "Weather Code",
+            "nullable": true,
+            "type": "integer"
+          },
+          "condition": {
+            "default": null,
+            "title": "Condition",
+            "nullable": true,
+            "type": "string"
+          },
+          "precipitation_in": {
+            "default": null,
+            "title": "Precipitation In",
+            "nullable": true,
+            "type": "number"
+          },
+          "humidity_pct": {
+            "default": null,
+            "title": "Humidity Pct",
+            "nullable": true,
+            "type": "integer"
+          },
+          "wind_mph": {
+            "default": null,
+            "title": "Wind Mph",
+            "nullable": true,
+            "type": "number"
+          }
+        },
+        "required": [
+          "timestamp"
+        ],
+        "title": "WeatherHourlyEntry",
         "type": "object"
       },
       "Facility": {
