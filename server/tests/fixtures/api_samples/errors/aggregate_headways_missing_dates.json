@@ -1,0 +1,4 @@
+{
+  "Code": "BadRequestError",
+  "Message": "Missing required query parameter(s): start_date, end_date"
+}
