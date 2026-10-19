@@ -406,7 +406,7 @@ def _read_cached_leaderboard(start_date: str | date, end_date: str | date):
         return None
     # Anything unreadable -- not zlib, not UTF-8, not JSON, or not the expected shape -- is
     # treated as a miss so the caller rescans and overwrites it, rather than 500ing forever.
-    except (zlib.error, UnicodeDecodeError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+    except zlib.error, UnicodeDecodeError, json.JSONDecodeError, KeyError, TypeError, ValueError:
         return None
     if not isinstance(data, list):
         return None

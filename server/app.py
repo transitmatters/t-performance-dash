@@ -89,7 +89,7 @@ def parse_user_date(user_date: str):
         date_split = user_date.split("-")
         [year, month, day] = [int(x) for x in date_split[0:3]]
         return date(year=year, month=month, day=day)
-    except (ValueError, IndexError):
+    except ValueError, IndexError:
         raise BadRequestError(f"Invalid date '{user_date}'. Expected format: YYYY-MM-DD.")
 
 

@@ -21,7 +21,7 @@ def _check_aws_credentials():
         sts = boto3.client("sts")
         sts.get_caller_identity()
         return True
-    except (NoCredentialsError, ClientError):
+    except NoCredentialsError, ClientError:
         return False
 
 
