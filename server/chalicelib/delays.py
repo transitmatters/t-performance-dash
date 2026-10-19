@@ -5,16 +5,15 @@ request parameters and date ranges.
 """
 
 from typing import TypedDict
-from chalice import BadRequestError, ForbiddenError
+from chalice import BadRequestError
 from chalicelib import dynamo
-from datetime import date, datetime, timedelta
-from chalicelib.constants import DATE_FORMAT_BACKEND
+from datetime import date
 
 
 # Config map for daily vs weekly delay queries
 AGG_TO_CONFIG_MAP = {
-    "daily": {"table_name": "AlertDelaysDaily", "delta": 150},
-    "weekly": {"table_name": "AlertDelaysWeekly", "delta": 7 * 150},
+    "daily": {"table_name": "AlertDelaysDaily"},
+    "weekly": {"table_name": "AlertDelaysWeekly"},
 }
 
 
@@ -34,22 +33,6 @@ class AlertDelaysByLineParams(TypedDict):
     agg: str
 
 
-def is_invalid_range(start_date, end_date, max_delta):
-    """Check if a date range exceeds the maximum allowed number of entries.
-
-    Args:
-        start_date: Start date string (YYYY-MM-DD).
-        end_date: End date string (YYYY-MM-DD).
-        max_delta: Maximum number of days allowed in the range.
-
-    Returns:
-        ``True`` if the range exceeds ``max_delta`` days.
-    """
-    start_datetime = datetime.strptime(start_date, DATE_FORMAT_BACKEND)
-    end_datetime = datetime.strptime(end_date, DATE_FORMAT_BACKEND)
-    return start_datetime + timedelta(days=max_delta) < end_datetime
-
-
 def delay_time_by_line(params: AlertDelaysByLineParams):
     """Fetch alert-based delay data for a transit line.
 
@@ -64,7 +47,6 @@ def delay_time_by_line(params: AlertDelaysByLineParams):
 
     Raises:
         BadRequestError: If the line or aggregation type is invalid, or parameters are missing.
-        ForbiddenError: If the date range exceeds the maximum allowed entries (150).
     """
     try:
         start_date = params["start_date"]
@@ -101,8 +83,5 @@ def delay_time_by_line(params: AlertDelaysByLineParams):
             raise BadRequestError("Invalid Line key.")
     except KeyError:
         raise BadRequestError("Missing or invalid parameters.")
-    # Prevent queries of more than max allowed items (150 for the aggregation type).
-    if is_invalid_range(start_date, end_date, config["delta"]):
-        raise ForbiddenError("Date range too long. The maximum number of requested values is 150.")
     # Return the query from the appropriate table
     return dynamo.query_agg_trip_metrics(start_date, end_date, config["table_name"], line)

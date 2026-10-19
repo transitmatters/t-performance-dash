@@ -10,6 +10,8 @@ export type LineKind =
   | 'bus'
   | 'boat';
 
+export type ModeKind = 'rapid-transit' | 'regional-rail' | 'bus' | 'boat';
+
 export type ServiceDay = 'weekday' | 'saturday' | 'sunday';
 export type ServiceRegime = 'baseline' | 'current';
 
@@ -38,8 +40,8 @@ export type LineData = {
 };
 
 export type SummaryData = {
-  totalRidershipHistory: null | number[];
-  totalServiceHistory: null | number[];
+  totalRidershipHistory: null | WeeklyMedianTimeseries;
+  totalServiceHistory: null | WeeklyMedianTimeseries;
   totalRidershipPercentage: number;
   totalServicePercentage: number;
   totalPassengers: number;
@@ -53,6 +55,7 @@ export type SummaryData = {
 
 export type DashboardData = {
   lineData: Record<string, LineData>;
+  modeData: Record<string, SummaryData>;
   summaryData: SummaryData;
 };
 

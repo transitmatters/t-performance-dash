@@ -13,7 +13,7 @@
         "branches": null,
         "order": 1,
         "stops": {
-          "0": [],
+          "0": ["CR-NewBedford_0_NBM-0546-S"],
           "1": ["CR-NewBedford_1_NBM-0546-S"]
         },
         "terminus": true
@@ -34,7 +34,7 @@
         "branches": null,
         "order": 3,
         "stops": {
-          "0": [],
+          "0": ["CR-NewBedford_0_FRS-0109-S"],
           "1": ["CR-NewBedford_1_FRS-0109-S"]
         }
       },
@@ -144,7 +144,7 @@
         "branches": null,
         "order": 14,
         "stops": {
-          "0": [],
+          "0": ["CR-NewBedford_0_MM-0023-S"],
           "1": ["CR-NewBedford_1_MM-0023-S"]
         }
       },
@@ -181,6 +181,7 @@
             "CR-NewBedford_1_74611",
             "CR-NewBedford_1_74617",
             "CR-NewBedford_1_NEC-2287",
+            "CR-NewBedford_1_NEC-2287",
             "CR-NewBedford_1_NEC-2287-01",
             "CR-NewBedford_1_NEC-2287-02",
             "CR-NewBedford_1_NEC-2287-03",
@@ -196,7 +197,8 @@
             "CR-NewBedford_1_NEC-2287-13",
             "CR-NewBedford_1_NEC-2287-B"
           ]
-        }
+        },
+        "terminus": true
       }
     ]
   }

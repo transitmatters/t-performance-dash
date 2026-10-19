@@ -11,10 +11,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ['24']
-        python-version: ['3.12']
     env:
       AWS_PROFILE: transitmatters
       AWS_DEFAULT_REGION: us-east-1
@@ -27,21 +23,15 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-tags: true
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
+      - name: Set up Node/Python via mise
+        uses: jdx/mise-action@v5
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v7
       - name: Install dependencies
         run: cd server && uv sync --group dev && cd ..
-      - name: Set up Node ${{ matrix.node-version }}.x
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ matrix.node-version }}
       - name: Check if package-lock.json is up to date
         run: |
           npx --yes package-lock-utd@1.1.0

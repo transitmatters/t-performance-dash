@@ -12,12 +12,12 @@ This is the repository for the [TransitMatters Data Dashboard](https://dashboard
 
 ## 🧰 Requirements to Develop Locally
 
-- node 20.x and npm 9.x+ required
-  - With `nvm` installed, use `nvm install && nvm use`
+- node 24.x and npm 11.x+ required
   - verify with `node -v`
 - Python 3.12 with recent uv (0.9.8 or later)
   - Verify with `python --version && uv --version`
   - `uv self update` to update uv
+- With [mise](https://mise.jdx.dev) installed, `mise trust && mise install` sets up Node and Python (versions are pinned in `.nvmrc` / `.python-version`)
 
 ## 🧪 Local Development
 
@@ -91,6 +91,8 @@ If you're using VSCode, `.vscode` contains a based default workspace setup. It a
 ### Updating historical backend data
 
 See `server/bus/gen_latest_bus_data.sh` for instructions.
+
+GTFS archives used by the bus scripts are downloaded to `data/gtfs_archives/` by default. Set `GTFS_DATA_DIR` to share them with other TransitMatters repos (they'll go in `$GTFS_DATA_DIR/gtfs_archives`).
 
 ## ❤️ Support TransitMatters
 

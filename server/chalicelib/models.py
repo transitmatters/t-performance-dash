@@ -6,11 +6,128 @@ and API documentation via `chalice-spec`.
 
 from datetime import date
 from typing import List, Dict, Union, Any
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 #################################################
 # API Request Parameter Models
 #################################################
+
+
+_STOP_ID_DESC = (
+    "MBTA stop ID. "
+    "Rapid transit: 5-digit numeric (e.g. `70061`). "
+    "Bus: `{route}-{direction}-{n}` (e.g. `1-0-110`). "
+    "Commuter rail: `{route}_{direction}_{stop_code}` (e.g. `CR-Fairmount_0_DB-2205-01`). "
+    "Use `/api/stops/{route_id}` to look up valid stop IDs for a route."
+)
+
+_ROUTE_ID_DESC = (
+    "MBTA route ID. "
+    "Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. "
+    "Bus: numeric string (e.g. `1`, `66`). "
+    "Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). "
+    "Ferry: `Boat-F1`, `Boat-F4`, etc. "
+    "Use `/api/routes` to list all valid route IDs."
+)
+
+_LINE_ID_DESC = (
+    "GTFS line identifier. "
+    "Rapid transit: `line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`. "
+    "Commuter rail: `line-Fairmount`, `line-Lowell`, etc. "
+    "Use `/api/routes` to list all valid values."
+)
+
+_DATE_RANGE_START_DESC = "Start of the date range, inclusive (YYYY-MM-DD)."
+_DATE_RANGE_END_DESC = "End of the date range, inclusive (YYYY-MM-DD)."
+
+
+class HeadwayParams(BaseModel):
+    """Query parameters for `/api/headways/{user_date}`.
+
+    Attributes:
+        stop: One or more stop IDs to retrieve headway data for.
+    """
+
+    stop: List[str] = Field(default=[], description=_STOP_ID_DESC)
+
+
+class DwellParams(BaseModel):
+    """Query parameters for `/api/dwells/{user_date}`.
+
+    Attributes:
+        stop: One or more stop IDs to retrieve dwell data for.
+    """
+
+    stop: List[str] = Field(default=[], description=_STOP_ID_DESC)
+
+
+class TravelTimeParams(BaseModel):
+    """Query parameters for `/api/traveltimes/{user_date}`.
+
+    Attributes:
+        from_stop: One or more origin stop IDs.
+        to_stop: One or more destination stop IDs.
+    """
+
+    from_stop: List[str] = Field(default=[], description=f"Origin {_STOP_ID_DESC}")
+    to_stop: List[str] = Field(default=[], description=f"Destination {_STOP_ID_DESC}")
+
+
+class AlertsByDateParams(BaseModel):
+    """Query parameters for `/api/alerts/{user_date}`.
+
+    Attributes:
+        route: One or more route IDs to filter alerts by.
+    """
+
+    route: List[str] = Field(default=[], description=_ROUTE_ID_DESC)
+
+
+class AggregateTravelTimesParams(BaseModel):
+    """Query parameters for `/api/aggregate/traveltimes` and `/api/aggregate/traveltimes2`.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        from_stop: One or more origin stop IDs.
+        to_stop: One or more destination stop IDs.
+    """
+
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+    from_stop: List[str] = Field(default=[], description=f"Origin {_STOP_ID_DESC}")
+    to_stop: List[str] = Field(default=[], description=f"Destination {_STOP_ID_DESC}")
+
+
+class AggregateHeadwaysParams(BaseModel):
+    """Query parameters for `/api/aggregate/headways`.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        stop: One or more stop IDs.
+    """
+
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+    stop: List[str] = Field(default=[], description=_STOP_ID_DESC)
+
+
+class AggregateDwellsParams(BaseModel):
+    """Query parameters for `/api/aggregate/dwells`.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        stop: One or more stop IDs.
+    """
+
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+    stop: List[str] = Field(default=[], description=_STOP_ID_DESC)
+
+
+_AGG_DESC = "Aggregation period: `daily`, `weekly`, or `monthly`."
 
 
 class AlertDelaysByLineParams(BaseModel):
@@ -20,11 +137,19 @@ class AlertDelaysByLineParams(BaseModel):
         start_date: Start of date range (YYYY-MM-DD).
         end_date: End of date range (YYYY-MM-DD).
         line: Line identifier (e.g., `Red`, `Orange`, `Green-B`).
+        agg: Aggregation level — `daily` or `weekly`. Defaults to `weekly`.
     """
 
-    start_date: Union[str, date]
-    end_date: Union[str, date]
-    line: str
+    start_date: Union[str, date] = Field(description=_DATE_RANGE_START_DESC)
+    end_date: Union[str, date] = Field(description=_DATE_RANGE_END_DESC)
+    line: str = Field(
+        description=(
+            "MBTA line identifier. "
+            "Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. "
+            "Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc."
+        )
+    )
+    agg: str = Field(default="weekly", description="Aggregation period: `daily` or `weekly`.")
 
 
 class TripMetricsByLineParams(BaseModel):
@@ -34,13 +159,13 @@ class TripMetricsByLineParams(BaseModel):
         start_date: Start of date range (YYYY-MM-DD).
         end_date: End of date range (YYYY-MM-DD).
         agg: Aggregation level — `daily`, `weekly`, or `monthly`.
-        line: Line identifier (e.g., `Red`, `Green-B`).
+        line: GTFS line identifier (e.g., `line-red`, `line-green`).
     """
 
-    start_date: Union[str, date]
-    end_date: Union[str, date]
-    agg: str
-    line: str
+    start_date: Union[str, date] = Field(description=_DATE_RANGE_START_DESC)
+    end_date: Union[str, date] = Field(description=_DATE_RANGE_END_DESC)
+    agg: str = Field(description=_AGG_DESC)
+    line: str = Field(description=_LINE_ID_DESC)
 
 
 class ScheduledServiceParams(BaseModel):
@@ -53,10 +178,10 @@ class ScheduledServiceParams(BaseModel):
         agg: Aggregation level — `daily`, `weekly`, or `monthly`.
     """
 
-    start_date: date
-    end_date: date
-    route_id: str | None = None
-    agg: str
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+    route_id: str | None = Field(default=None, description=_ROUTE_ID_DESC + " Omit to return all routes.")
+    agg: str = Field(description=_AGG_DESC)
 
 
 class RidershipParams(BaseModel):
@@ -68,37 +193,65 @@ class RidershipParams(BaseModel):
         line_id: Optional line filter. `None` returns all lines.
     """
 
-    start_date: date
-    end_date: date
-    line_id: str | None = None
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+    line_id: str | None = Field(
+        default=None,
+        description=(
+            "Line identifier for ridership data. "
+            "Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. "
+            "Bus: `line-{route}` (e.g. `line-1`, `line-66`). "
+            "Commuter rail: `line-{line}` (e.g. `line-Fairmount`). "
+            "Ferry: `line-F1`, `line-F4`, etc. "
+            "Omit to return all lines."
+        ),
+    )
+
+
+class TimePredictionParams(BaseModel):
+    """Parameters for the `/api/time_predictions` endpoint.
+
+    Attributes:
+        route_id: Route identifier (e.g., `Red`, `CR-Fairmount`).
+    """
+
+    route_id: str = Field(description=_ROUTE_ID_DESC)
 
 
 class SpeedRestrictionsParams(BaseModel):
     """Parameters for the `/api/speed_restrictions` endpoint.
 
     Attributes:
-        line_id: Line identifier (e.g., `Red`, `Orange`).
-        on_date: Date to query (YYYY-MM-DD).
+        line_id: GTFS line identifier (e.g., `line-red`, `line-orange`).
+        date: Date to query (YYYY-MM-DD).
     """
 
-    line_id: str
-    on_date: str
+    line_id: str = Field(
+        description=(
+            "GTFS rapid transit line identifier: `line-red`, `line-orange`, `line-blue`, or `line-green`. "
+            "Speed restriction data is only available for rapid transit lines."
+        )
+    )
+    date: str = Field(description="Date to query (YYYY-MM-DD).")
 
 
 class ServiceHoursParams(BaseModel):
     """Parameters for the `/api/service_hours` endpoint.
 
     Attributes:
-        single_route_id: Optional route filter. `None` returns all routes.
+        line_id: Optional line filter. `None` returns all lines.
         start_date: Start of date range.
         end_date: End of date range.
         agg: Aggregation level — `daily`, `weekly`, or `monthly`.
     """
 
-    single_route_id: str | None = None
-    start_date: date
-    end_date: date
-    agg: str
+    line_id: str | None = Field(
+        default=None,
+        description=_LINE_ID_DESC + " Omit to aggregate all lines.",
+    )
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+    agg: str = Field(description=_AGG_DESC)
 
 
 #################################################

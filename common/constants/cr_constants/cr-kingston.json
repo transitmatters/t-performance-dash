@@ -12,7 +12,7 @@
         "branches": null,
         "order": 1,
         "stops": {
-          "0": [],
+          "0": ["CR-Kingston_0_KB-0351-S"],
           "1": ["CR-Kingston_1_KB-0351-S"]
         },
         "terminus": true
@@ -105,6 +105,8 @@
         "stops": {
           "0": [
             "CR-Kingston_0_NEC-2287",
+            "CR-Kingston_0_NEC-2287-01",
+            "CR-Kingston_0_NEC-2287-03",
             "CR-Kingston_0_NEC-2287-05",
             "CR-Kingston_0_NEC-2287-07",
             "CR-Kingston_0_NEC-2287-09",
@@ -113,7 +115,7 @@
             "CR-Kingston_0_NEC-2287-12",
             "CR-Kingston_0_NEC-2287-13"
           ],
-          "1": []
+          "1": ["CR-Kingston_1_NEC-2287"]
         },
         "terminus": true
       }

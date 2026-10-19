@@ -38,6 +38,7 @@ export const SpeedBetweenStationsSingleChart: React.FC<SpeedBetweenStationsSingl
         location={location}
         units={'MPH'}
         fname={'speeds'}
+        chartTitle="Speeds"
         showLegend={true}
       />
     );

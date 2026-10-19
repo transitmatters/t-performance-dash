@@ -32,6 +32,9 @@ const fetchAlertsForLine = async (line: LineShort): Promise<AlertsResponse[]> =>
   if (line === 'Green' || line === 'Mattapan') {
     // route_type 0 is light rail (green line & Mattapan)
     options['route_type'] = '0';
+    if (line === 'Mattapan') {
+      options['route'] = 'Mattapan';
+    }
   } else {
     options['route_type'] = '1';
     options['route'] = line;

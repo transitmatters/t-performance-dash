@@ -1,0 +1,72 @@
+{
+  "65": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "service_start": "2026-09-06",
+    "stations": [
+      {
+        "stop_name": "Ruggles",
+        "branches": null,
+        "station": "rugg",
+        "order": 1,
+        "stops": {
+          "1": ["65-1-17861"],
+          "0": ["65-0-17869"]
+        }
+      },
+      {
+        "stop_name": "Brookline & Longwood Avenues",
+        "branches": null,
+        "station": "brlng",
+        "order": 2,
+        "stops": {
+          "1": ["65-1-1779"],
+          "0": ["65-0-1521"]
+        }
+      },
+      {
+        "stop_name": "Brookline Village",
+        "branches": null,
+        "station": "brkvl",
+        "order": 3,
+        "stops": {
+          "1": ["65-1-1555"],
+          "0": ["65-0-1526"]
+        }
+      },
+      {
+        "stop_name": "Washington Square",
+        "branches": null,
+        "station": "bcnwa",
+        "order": 4,
+        "stops": {
+          "1": ["65-1-1276"],
+          "0": ["65-0-1292"]
+        }
+      },
+      {
+        "stop_name": "Winship Street",
+        "branches": null,
+        "station": "wnshp",
+        "order": 5,
+        "stops": {
+          "1": [],
+          "0": ["65-0-1994"]
+        }
+      },
+      {
+        "stop_name": "Brighton Center",
+        "branches": null,
+        "station": "brctr",
+        "order": 6,
+        "stops": {
+          "1": ["65-1-1026"],
+          "0": ["65-0-1026"]
+        }
+      }
+    ]
+  }
+}

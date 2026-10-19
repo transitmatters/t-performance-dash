@@ -19,6 +19,7 @@ import { PEAK_SPEED } from '../../../common/constants/baselines';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
+import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { addAccuracyPercentageToData } from '../../../common/utils/csv';
 
 interface PredictionsGraphProps {
@@ -220,13 +221,22 @@ export const PredictionsGraph: React.FC<PredictionsGraphProps> = ({
       </ChartDiv>
       <div className="flex flex-row items-end justify-end gap-4">
         {startDate && (
-          <DownloadButton
-            data={dataWithPercentage}
-            datasetName="ridership predictions"
-            includeBothStopsForLocation={false}
-            startDate={startDate}
-            endDate={endDate}
-          />
+          <>
+            <SaveChartImageButton
+              chartRef={ref}
+              datasetName="ridership predictions"
+              includeBothStopsForLocation={false}
+              startDate={startDate}
+              endDate={endDate}
+            />
+            <DownloadButton
+              data={dataWithPercentage}
+              datasetName="ridership predictions"
+              includeBothStopsForLocation={false}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          </>
         )}
       </div>
     </ChartBorder>

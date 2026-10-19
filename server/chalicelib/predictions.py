@@ -17,13 +17,13 @@ def set_time_predictions_table():
 
 
 def query_time_predictions(route_id: str):
-    """
+    """Query time prediction accuracy records for a route from DynamoDB.
 
     Args:
-      route_id: str:
+        route_id: The route identifier to query (e.g. ``"Red"``).
 
     Returns:
-
+        A list of time prediction records for the given route.
     """
     condition = Key("routeId").eq(route_id)
     response = TimePredictions.query(KeyConditionExpression=condition)

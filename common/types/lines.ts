@@ -33,9 +33,11 @@ export type LinePath =
 
 export type FerryRoute =
   | 'Boat-F1'
+  | 'Boat-F2H'
   | 'Boat-F4'
   | 'Boat-F6'
   | 'Boat-F7'
+  | 'Boat-F10'
   | 'Boat-EastBoston'
   | 'Boat-Lynn';
 
@@ -80,7 +82,9 @@ export type BusRoute =
   | '52/59'
   | '55'
   | '57'
-  | '60/65'
+  | '60'
+  | '65'
+  | '60/65-legacy'
   | '61/70/170'
   | '62/76'
   | '64/68'
@@ -95,6 +99,7 @@ export type BusRoute =
   | '80'
   | '83'
   | '85'
+  | '85-legacy'
   | '86'
   | '86-legacy'
   | '87'
@@ -134,6 +139,7 @@ export type BusRoute =
   | '215'
   | '217/245'
   | '220/221/222'
+  | '220/221/222-legacy'
   | '225/226'
   | '230'
   | '236'
@@ -146,9 +152,11 @@ export type BusRoute =
   | '426/428'
   | '429'
   | '434/435/436'
+  | '434/435/436-legacy'
   | '439/441/442'
   | '455'
-  | '451/465'
+  | '451'
+  | '465'
   | '501/503'
   | '502/504'
   | '505/553/554'
@@ -166,7 +174,7 @@ export type BusRouteId =
       | '24/27/33'
       | '40/50'
       | '52/59'
-      | '60/65'
+      | '60/65-legacy'
       | '61/70/170'
       | '62/76'
       | '64/68'
@@ -183,14 +191,15 @@ export type BusRouteId =
       | '214/216'
       | '217/245'
       | '220/221/222'
+      | '220/221/222-legacy'
       | '225/226'
       | '350/351'
       | '411/430'
       | '424/450/456'
       | '426/428'
       | '434/435/436'
+      | '434/435/436-legacy'
       | '439/441/442'
-      | '451/465'
       | '501/503'
       | '502/504'
       | '505/553/554'
@@ -205,7 +214,7 @@ export type BusRouteId =
   | '242733'
   | '4050'
   | '5259'
-  | '6065'
+  | '6065-legacy'
   | '6170170'
   | '6276'
   | '6468'
@@ -222,14 +231,15 @@ export type BusRouteId =
   | '214216'
   | '217245'
   | '220221222'
+  | '220221222-legacy'
   | '225226'
   | '350351'
   | '411430'
   | '424450456'
   | '426428'
   | '434435436'
+  | '434435436-legacy'
   | '439441442'
-  | '451465'
   | '501503'
   | '502504'
   | '505553554'
@@ -342,6 +352,8 @@ export const BUS_ROUTES: BusRoute[] = [
   '52/59',
   '55',
   '57',
+  '60',
+  '65',
   '61/70/170',
   '62/76',
   '64/68',
@@ -405,7 +417,8 @@ export const BUS_ROUTES: BusRoute[] = [
   '426/428',
   '429',
   '439/441/442',
-  '451/465',
+  '451',
+  '465',
   '455',
   '501/503',
   '502/504',
@@ -420,9 +433,11 @@ export const BUS_ROUTES: BusRoute[] = [
 
 export const FERRY_ROUTES: FerryRoute[] = [
   'Boat-F1',
+  'Boat-F2H',
   'Boat-F4',
   'Boat-F6',
   'Boat-F7',
+  'Boat-F10',
   'Boat-EastBoston',
   'Boat-Lynn',
 ];
@@ -460,10 +475,12 @@ export const COMMUTER_RAIL_LINE_NAMES: { [line in CommuterRailRoute]: string } =
 };
 
 export const FERRY_LINE_NAMES: { [line in FerryRoute]: string } = {
-  'Boat-F1': 'Hingham/Hull Ferry',
+  'Boat-F1': 'Hingham Ferry',
+  'Boat-F2H': 'Hingham/Hull Ferry',
   'Boat-F4': 'Charlestown Ferry',
   'Boat-F6': 'Winthrop Ferry',
   'Boat-F7': 'Quincy Ferry',
+  'Boat-F10': 'Harbor Loop Ferry',
   'Boat-EastBoston': 'East Boston Ferry',
   'Boat-Lynn': 'Lynn Ferry',
 };

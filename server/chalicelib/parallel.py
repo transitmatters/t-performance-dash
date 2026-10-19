@@ -12,7 +12,7 @@ from chalicelib import s3
 from chalicelib import date_utils
 
 
-def make_parallel(single_func, THREAD_COUNT=5):
+def make_parallel(single_func, THREAD_COUNT=10):
     """Wrap a single-item function to process an iterable in parallel.
 
     Creates a new function that calls ``single_func`` concurrently for each
@@ -21,7 +21,7 @@ def make_parallel(single_func, THREAD_COUNT=5):
 
     Args:
         single_func: Function whose first parameter is the item to parallelize over.
-        THREAD_COUNT: Maximum number of concurrent threads. Defaults to 5.
+        THREAD_COUNT: Maximum number of concurrent threads. Defaults to 10.
 
     Returns:
         A function that accepts an iterable as its first argument and returns
@@ -75,19 +75,25 @@ def s3_date_range(start: date, end: date, stops: list[str]):
     For dates covered by monthly archives, returns the 1st of each month
     (fewer files to download). For dates after the monthly archive cutoff,
     returns every individual date. Commuter rail stops always use daily
-    files since they have no monthly archives.
+    files since they have no monthly archives, and ferry stops use the
+    ferry archive's own cutoff.
 
     Args:
         start: Start date of the range.
         end: End date of the range.
-        stops: Stop IDs to query — used to detect commuter rail stops.
+        stops: Stop IDs to query — used to detect commuter rail and ferry stops.
 
     Returns:
         ``pandas.DatetimeIndex`` with the optimized set of dates to query.
     """
+    if any(s3.is_ferry(stop) for stop in stops):
+        monthly_cutoff = date_utils.get_max_ferry_monthly_data_date()
+    else:
+        monthly_cutoff = date_utils.get_max_monthly_data_date()
+
     month_end = end
-    if date_utils.get_max_monthly_data_date() < end and date_utils.get_max_monthly_data_date() > start:
-        month_end = date_utils.get_max_monthly_data_date()
+    if monthly_cutoff < end and monthly_cutoff > start:
+        month_end = monthly_cutoff
 
     date_range = pd.date_range(start, month_end, freq="1D", inclusive="both")
 
@@ -97,10 +103,10 @@ def s3_date_range(start: date, end: date, stops: list[str]):
     # This is kinda funky, but is stil simpler than other approaches
     # pandas won't generate a monthly date_range that includes Jan and Feb for Jan31-Feb1 e.g.
     # So we generate a daily date_range and then resample it down (summing 0s as a no-op in the process) so it aligns.
-    if date_utils.get_max_monthly_data_date() > start and not cr_data:
+    if monthly_cutoff > start and not cr_data:
         dates = pd.date_range(start, month_end, freq="1D", inclusive="both")
         series = pd.Series(0, index=dates)
-        date_range = series.resample("1M").sum().index
+        date_range = series.resample("1ME").sum().index
 
     # all dates between month_end and end if month_end is less than end
     if pd.to_datetime(month_end) < pd.to_datetime(end):
