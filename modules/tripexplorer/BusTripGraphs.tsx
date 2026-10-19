@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
+import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
@@ -100,6 +101,7 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
           <WidgetDiv className="flex flex-col justify-center">
             <WidgetTitle
               title="Travel times by hour"
+              subtitle={newestChunkSubtitle(traveltimes.chunks)}
               location={location}
               line={line}
               both

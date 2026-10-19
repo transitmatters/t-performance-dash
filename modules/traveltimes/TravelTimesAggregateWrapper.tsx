@@ -1,16 +1,16 @@
 import React, { useMemo } from 'react';
-import type { UseQueryResult } from '@tanstack/react-query';
-import type { AggregateDataResponse, DayFilter } from '../../common/types/charts';
+import type { ChunkedAggregateQueryResult, DayFilter } from '../../common/types/charts';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
+import { PartialDataNotice } from '../../common/components/notices/PartialDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { filterByDayType, getAggDataWidgets, getComparisonData } from '../../common/utils/widgets';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
 interface TravelTimesAggregateWrapperProps {
-  query: UseQueryResult<AggregateDataResponse>;
+  query: ChunkedAggregateQueryResult;
   toStation: Station;
   fromStation: Station;
   /** Owned by the parent, whose card header renders the day-filter control. */
@@ -52,7 +52,8 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
           timeUnit={'by_date'}
           dayFilter={dayFilter}
         />
-        <StatStrip widgetObjects={widgetObjects} />
+        {!query.chunks?.pending && <StatStrip widgetObjects={widgetObjects} />}
+        <PartialDataNotice query={query} />
       </ChartStack>
     </>
   );

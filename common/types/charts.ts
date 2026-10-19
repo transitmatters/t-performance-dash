@@ -1,3 +1,4 @@
+import type { UseQueryResult } from '@tanstack/react-query';
 import type { TimeUnit } from 'chart.js';
 import type { Station } from './stations';
 
@@ -43,6 +44,22 @@ export interface AggregateDataResponse {
   by_date: AggregateDataPoint[];
   by_time: AggregateDataPoint[];
 }
+
+export interface AggregateChunkProgress {
+  total: number;
+  loaded: number;
+  failed: number;
+  /** Chunks with neither data nor an error yet. */
+  pending: number;
+  /** by_time is taken from the newest chunk only, since percentiles can't be merged across chunks. */
+  byTimeRange: { startDate: string; endDate: string };
+  byTimeStatus: 'pending' | 'error' | 'success';
+}
+
+/** An aggregate query fetched as several date-range chunks; `chunks` is set when there are 2+. */
+export type ChunkedAggregateQueryResult = UseQueryResult<AggregateDataResponse> & {
+  chunks?: AggregateChunkProgress;
+};
 
 export interface Location {
   to: string;
