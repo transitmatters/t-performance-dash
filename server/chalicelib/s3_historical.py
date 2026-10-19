@@ -145,7 +145,7 @@ def headways(stop_ids: list, start_date: date, end_date: date):
                 # Check for NaN or Infinity
                 if math.isnan(benchmark_headway) or math.isinf(benchmark_headway):
                     benchmark_headway = None
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 benchmark_headway = None
         else:
             benchmark_headway = None
@@ -237,7 +237,7 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
             # Check for NaN, Infinity, or invalid values
             if math.isnan(benchmark) or math.isinf(benchmark) or benchmark < 1:
                 benchmark = None
-        except (TypeError, ValueError):
+        except TypeError, ValueError:
             benchmark = None
 
         # not every vehicle will have vehicle_consist

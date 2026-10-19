@@ -15,7 +15,7 @@ This is the repository for the [TransitMatters Data Dashboard](https://dashboard
 - node 26.x and npm 11.x+ required
   - With `nvm` installed, use `nvm install && nvm use`
   - verify with `node -v`
-- Python 3.13 with recent uv (0.9.8 or later)
+- Python 3.14 with recent uv (0.9.8 or later)
   - Verify with `python --version && uv --version`
   - `uv self update` to update uv
 - With [mise](https://mise.jdx.dev) installed, `mise trust && mise install` sets up Node and Python (versions are pinned in `.nvmrc` / `.python-version`)

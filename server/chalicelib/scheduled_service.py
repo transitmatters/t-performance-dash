@@ -20,7 +20,7 @@ class ByDayKindServiceLevels(TypedDict):
     service_levels: ByHourServiceLevels
 
 
-class ByDayKindServiceLevels(TypedDict):
+class ServiceLevelsByDayKind(TypedDict):
     """Service levels grouped by day kind (weekday, saturday, sunday)."""
 
     weekday: ByDayKindServiceLevels
@@ -31,8 +31,8 @@ class ByDayKindServiceLevels(TypedDict):
 class GetScheduledServiceResponse(TypedDict):
     """Response shape for the scheduled service endpoint."""
 
-    start_date_service_levels: ByDayKindServiceLevels
-    end_date_service_levels: ByDayKindServiceLevels
+    start_date_service_levels: ServiceLevelsByDayKind
+    end_date_service_levels: ServiceLevelsByDayKind
     counts: Dict[str, int]
     service_hours: Dict[str, float]
 
@@ -81,7 +81,7 @@ def get_next_day_kind_service_levels(
 def get_service_levels(
     scheduled_service: ScheduledService,
     search_from_end: bool,
-) -> ByDayKindServiceLevels:
+) -> ServiceLevelsByDayKind:
     """Get representative service levels for each day kind from a service list.
 
     Searches from the start or end of the list to find the first weekday, saturday,

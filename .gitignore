@@ -68,3 +68,6 @@ public/maplibre-gl-worker.mjs
 public/maplibre-gl-worker-dev.mjs
 public/maplibre-gl-shared.mjs
 public/maplibre-gl-shared-dev.mjs
+
+# Playwright MCP snapshots, screenshots and console logs
+.playwright-mcp/

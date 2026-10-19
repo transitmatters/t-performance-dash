@@ -69,8 +69,8 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
   );
 
   const diagram = useMemo(() => {
-    return createDefaultDiagramForLine(lineName, { pxPerStation: 15 });
-  }, [lineName]);
+    return createDefaultDiagramForLine(lineName, { pxPerStation: 15, direction });
+  }, [lineName, direction]);
 
   const { query } = useDelimitatedRoute();
   const { endDate } = query;
