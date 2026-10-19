@@ -626,7 +626,7 @@ def get_bus_speed_leaderboard():
 def get_scheduled_service():
     """Retrieve scheduled service counts for a route over a date range."""
     query_params = app.current_request.query_params or {}
-    validate_query_params(query_params, ["start_date", "end_date", "agg"])
+    validate_query_params(query_params, ["route_id", "start_date", "end_date", "agg"])
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -636,7 +636,7 @@ def get_scheduled_service():
     else:
         start_date = parse_user_date(query_params["start_date"])
         end_date = parse_user_date(query_params["end_date"])
-        route_id = query_params.get("route_id")
+        route_id = query_params["route_id"]
         agg = query_params["agg"]
         data = scheduled_service.get_scheduled_service_counts(
             start_date=start_date,

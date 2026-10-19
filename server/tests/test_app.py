@@ -145,6 +145,11 @@ class TestScheduledServiceValidation:
         result = client.http.get("/api/scheduledservice?agg=daily")
         assert result.status_code == 400
 
+    def test_missing_route_id_returns_400(self, client):
+        result = client.http.get("/api/scheduledservice?start_date=2026-09-01&end_date=2026-09-02&agg=daily")
+        assert result.status_code == 400
+        assert "route_id" in result.json_body["Message"]
+
 
 class TestBusTripMetricsValidation:
     def test_missing_all_returns_400(self, client):
