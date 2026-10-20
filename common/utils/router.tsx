@@ -41,12 +41,6 @@ const getParams = (params: ParsedUrlQuery | QueryParams) => {
   );
 };
 
-export const getDateParams = (params: ParsedUrlQuery | QueryParams) => {
-  return Object.fromEntries(
-    Object.entries(params).filter(([key, value]) => DATE_PARAMS.includes(key) && value)
-  );
-};
-
 const getPage = (pathItems: string[], tab: Tab): string => {
   if (tab === 'System') {
     const pageArray = pathItems.slice(1);
@@ -66,7 +60,7 @@ const getPage = (pathItems: string[], tab: Tab): string => {
   return pageArray[0];
 };
 
-const getTab = (path: LinePath) => {
+const getTab = (path: LinePath): Tab => {
   if (RAIL_LINES.includes(path)) {
     return 'Subway';
   } else if (path === 'bus') {
@@ -92,15 +86,23 @@ export const useIsNotFound = () =>
 /** The current query string as plain strings; no route declares a search schema yet. */
 export const useQueryParams = (): SearchObject => useSearch({ strict: false });
 
-export const useDelimitatedRoute = (): Route => {
-  const { pathname, search } = useLocation();
+/** The line, tab and page a pathname points at. Pure, so the router can use it before render. */
+export const parseRoutePath = (pathname: string) => {
   // Page detection expects Next's trailing-slash paths; a hand-typed `/red/speed` still has to work.
   const pathItems = (pathname.endsWith('/') ? pathname : `${pathname}/`).split('/');
-  const queryParams = search as QueryParams;
   const tab = getTab((pathItems[1] as LinePath) ?? 'System');
-  const page = getPage(pathItems, tab) as Page;
-  const newParams = getParams(queryParams);
-  const line = linePathToKeyMap[pathItems[1]];
+  return {
+    pathItems,
+    tab,
+    page: getPage(pathItems, tab) as Page,
+    line: linePathToKeyMap[pathItems[1]] as Line | undefined,
+  };
+};
+
+export const useDelimitatedRoute = (): Route => {
+  const { pathname, search } = useLocation();
+  const { pathItems, tab, page, line } = parseRoutePath(pathname);
+  const newParams = getParams(search);
 
   return {
     line,
@@ -128,26 +130,22 @@ export const useUpdateQuery = () => {
   const router = useRouter();
 
   const updateQueryParams = useCallback(
-    (newQueryParams: QueryParams, range?: boolean, replace = true) => {
+    (newQueryParams: QueryParams, replace = true) => {
       if (!newQueryParams) return;
       const { pathname, search } = router.latestLocation;
 
       const { startDate, endDate, to, from, date } = newQueryParams;
       const newTempQuery: Partial<QueryParams> = {};
 
+      // A single date and a range never coexist in the URL: writing one clears the other.
       if (date) {
         newTempQuery.date = date;
-      }
-
-      if (startDate) {
-        if (startDate && typeof startDate === 'string') {
-          newTempQuery.startDate = startDate;
-        }
-        if (range && endDate && typeof endDate === 'string') {
-          newTempQuery.endDate = endDate;
-        } else if (!range) {
-          newTempQuery.endDate = undefined;
-        }
+        newTempQuery.startDate = undefined;
+        newTempQuery.endDate = undefined;
+      } else if (startDate || endDate) {
+        if (startDate) newTempQuery.startDate = startDate;
+        if (endDate) newTempQuery.endDate = endDate;
+        newTempQuery.date = undefined;
       }
 
       if (to || from) {
@@ -159,14 +157,10 @@ export const useUpdateQuery = () => {
         }
       }
 
-      const newQuery = {
-        ...search,
-        ...newTempQuery,
-      };
+      const newQuery = pickBy({ ...search, ...newTempQuery }, (attr) => attr !== undefined);
 
       if (!isEqual(search, newQuery)) {
-        const query = pickBy(newQuery, (attr) => attr !== undefined);
-        navigateToQuery(router, pathname, query, replace);
+        navigateToQuery(router, pathname, newQuery, replace);
       }
     },
     [router]

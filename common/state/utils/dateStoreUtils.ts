@@ -3,7 +3,6 @@ import type { OverviewDatePresetKey } from '../../constants/dates';
 import { TODAY_STRING, SMALL_DATE_FORMAT, RANGE_PRESETS } from '../../constants/dates';
 import type { DateStoreSection } from '../../constants/pages';
 import type { QueryParams } from '../../types/router';
-import { getDateParams } from '../../utils/router';
 import type { DateStore } from '../dateStore';
 
 export const saveDateStoreSection = (
@@ -11,17 +10,14 @@ export const saveDateStoreSection = (
   query: QueryParams,
   dateStore: DateStore
 ) => {
-  const params = getDateParams(query);
+  const { date, startDate, endDate } = query;
+  // Only a complete selection is worth restoring later; a partial one would just break the next page.
+  const range = startDate && endDate ? { startDate, endDate } : undefined;
 
-  if (dateStoreSection === 'singleTrips') {
-    if (params.date) dateStore.setSingleTripConfig(params);
-  }
-  if (dateStoreSection === 'multiTrips') {
-    if (params.startDate) dateStore.setMultiTripConfig(params);
-  }
-  if (dateStoreSection === 'line') {
-    dateStore.setLineConfig(params);
-  }
+  if (dateStoreSection === 'singleTrips' && date) dateStore.setSingleTripConfig({ date });
+  if (dateStoreSection === 'multiTrips' && range) dateStore.setMultiTripConfig(range);
+  if (dateStoreSection === 'line' && range) dateStore.setLineConfig(range);
+  if (dateStoreSection === 'system' && range) dateStore.setSystemConfig(range);
 };
 
 export const TRIP_SECTIONS: DateStoreSection[] = ['singleTrips', 'multiTrips'];

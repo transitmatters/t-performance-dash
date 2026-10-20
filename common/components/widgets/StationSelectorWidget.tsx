@@ -61,7 +61,6 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
           {
             to: stopIdsForStations(fromStation, newStation).toStopIds?.[0],
           },
-          undefined,
           false
         );
         break;
@@ -79,7 +78,6 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
               from: stationIds?.fromStopIds?.[0],
               to: stationIds?.toStopIds?.[0],
             },
-            undefined,
             false
           );
           break;
@@ -88,14 +86,13 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
           {
             from: stopIdsForStations(newStation, toStation).fromStopIds?.[0],
           },
-          undefined,
           false
         );
         break;
       }
       case 'swap': {
         const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
-        updateQueryParams({ from: toStopIds?.[0], to: fromStopIds?.[0] }, undefined, false);
+        updateQueryParams({ from: toStopIds?.[0], to: fromStopIds?.[0] }, false);
         break;
       }
     }

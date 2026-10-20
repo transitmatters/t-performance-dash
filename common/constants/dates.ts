@@ -27,7 +27,6 @@ export const YESTERDAY_MIDNIGHT = TODAY_MIDNIGHT.subtract(1, 'day');
 export const TODAY_STRING = TODAY.format(DATE_FORMAT);
 export const YESTERDAY_STRING = TODAY.subtract(1, 'day').format(DATE_FORMAT);
 export const TODAY_SERVICE_STARTED = TODAY.hour() >= 6;
-export const RANGE_OPTIONS = ['Single Day', 'Range'];
 export const ONE_WEEK_AGO = TODAY.subtract(7, 'days');
 export const ONE_WEEK_AGO_STRING = ONE_WEEK_AGO.format(DATE_FORMAT);
 export const ONE_YEAR_AGO = TODAY.subtract(1, 'year');
@@ -80,37 +79,6 @@ export const RIDE_MAX_DATE = '2025-08-31';
 export const RIDE_MAX_DAY = dayjs(RIDE_MAX_DATE);
 export const getESTDayjs = (date: string) => {
   return dayjs(date).tz(est);
-};
-
-export const isDateValid = (
-  dateStr: string | undefined,
-  minDate: string | undefined,
-  maxDate: string | undefined
-) => {
-  if (!dateStr) return true;
-  const dateObj = dayjs(dateStr);
-
-  if (minDate && dateObj.isBefore(minDate)) {
-    return false;
-  }
-
-  if (maxDate && dateObj.isAfter(maxDate)) {
-    return false;
-  }
-
-  return true;
-};
-
-export const getValidDateForRange = (
-  currentDate: string | undefined,
-  minDate: string | undefined,
-  maxDate: string | undefined,
-  fallbackToToday = true
-) => {
-  if (!currentDate || !isDateValid(currentDate, minDate, maxDate)) {
-    return maxDate || minDate || (fallbackToToday ? TODAY_STRING : undefined);
-  }
-  return currentDate;
 };
 
 /** The selectable range for a tab's date picker — the calendar disables everything outside it. */
