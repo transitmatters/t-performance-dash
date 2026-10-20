@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import {
   DATE_FORMAT,
   FERRY_ARCHIVE_MAX_DATE,
@@ -6,12 +6,12 @@ import {
   FERRY_LIVE_START_DATE,
   PRETTY_DATE_FORMAT,
   TODAY_STRING,
-} from "../constants/dates";
-import type { QueryParams, Tab } from "../types/router";
+} from '../constants/dates';
+import type { QueryParams, Tab } from '../types/router';
 
-type DateQuery = Pick<QueryParams, "date" | "startDate" | "endDate">;
+type DateQuery = Pick<QueryParams, 'date' | 'startDate' | 'endDate'>;
 
-export type TripMetric = "traveltimes" | "headways" | "dwells";
+export type TripMetric = 'traveltimes' | 'headways' | 'dwells';
 
 interface CoverageGap {
   /** First and last missing days, inclusive. */
@@ -27,13 +27,11 @@ interface CoverageGap {
   why: string;
 }
 
-const dayAfter = (date: string) =>
-  dayjs(date).add(1, "day").format(DATE_FORMAT);
-const dayBefore = (date: string) =>
-  dayjs(date).subtract(1, "day").format(DATE_FORMAT);
+const dayAfter = (date: string) => dayjs(date).add(1, 'day').format(DATE_FORMAT);
+const dayBefore = (date: string) => dayjs(date).subtract(1, 'day').format(DATE_FORMAT);
 const pretty = (date: string) => dayjs(date).format(PRETTY_DATE_FORMAT);
-const prettySpan = (start: string, end: string, separator = " to ") =>
-  `${dayjs(start).format(dayjs(start).year() === dayjs(end).year() ? "MMM D" : PRETTY_DATE_FORMAT)}${separator}${pretty(end)}`;
+const prettySpan = (start: string, end: string, separator = ' to ') =>
+  `${dayjs(start).format(dayjs(start).year() === dayjs(end).year() ? 'MMM D' : PRETTY_DATE_FORMAT)}${separator}${pretty(end)}`;
 
 const FERRY_ARCHIVE_WHY = `The MBTA's ferry archive runs through ${pretty(FERRY_ARCHIVE_MAX_DATE)}`;
 
@@ -46,15 +44,15 @@ export const COVERAGE_GAPS: Partial<Record<Tab, CoverageGap[]>> = {
     {
       start: dayAfter(FERRY_ARCHIVE_MAX_DATE),
       end: dayBefore(FERRY_ARRIVALS_START_DATE),
-      label: "Ferry travel times",
-      metrics: ["traveltimes"],
-      because: "until TransitMatters began recording ferry arrivals",
+      label: 'Ferry travel times',
+      metrics: ['traveltimes'],
+      because: 'until TransitMatters began recording ferry arrivals',
       why: `${FERRY_ARCHIVE_WHY}, and TransitMatters began recording the ferry arrivals travel times need on ${pretty(FERRY_ARRIVALS_START_DATE)}.`,
     },
     {
       start: dayAfter(FERRY_ARCHIVE_MAX_DATE),
       end: dayBefore(FERRY_LIVE_START_DATE),
-      label: "Ferry data",
+      label: 'Ferry data',
       because:
         "between the end of the MBTA's archive and the start of TransitMatters' own recording",
       why: `${FERRY_ARCHIVE_WHY}, and TransitMatters began recording ferry trips on ${pretty(FERRY_LIVE_START_DATE)}.`,
@@ -79,9 +77,7 @@ const appliesTo = (gap: CoverageGap, metric?: TripMetric) =>
 const gapContaining = (tab: Tab, dates: DateQuery, metric?: TripMetric) => {
   const span = toSpan(dates);
   if (!span) return undefined;
-  return COVERAGE_GAPS[tab]?.find(
-    (gap) => appliesTo(gap, metric) && covers(gap, span),
-  );
+  return COVERAGE_GAPS[tab]?.find((gap) => appliesTo(gap, metric) && covers(gap, span));
 };
 
 /** Gaps that cut into the selected range without covering all of it, so some charts have a hole. */
@@ -89,27 +85,25 @@ export const getPartialCoverageGaps = (tab: Tab, dates: DateQuery) => {
   const span = toSpan(dates);
   if (!span) return [];
   return (COVERAGE_GAPS[tab] ?? []).filter(
-    (gap) =>
-      gap.start <= span.end && span.start <= gap.end && !covers(gap, span),
+    (gap) => gap.start <= span.end && span.start <= gap.end && !covers(gap, span)
   );
 };
 
 export const describeGap = (gap: CoverageGap) =>
-  `${gap.label} ${gap.label.endsWith("s") ? "are" : "is"} missing from ${prettySpan(gap.start, gap.end)}, ${gap.because}.`;
+  `${gap.label} ${gap.label.endsWith('s') ? 'are' : 'is'} missing from ${prettySpan(gap.start, gap.end)}, ${gap.because}.`;
 
 /** The same selection moved to just after the gap: one day, or a range of the same length capped at today. */
 const jumpPastGap = (gap: CoverageGap, dates: DateQuery, today: string) => {
   const start = dayAfter(gap.end);
-  if (dates.date)
-    return { jumpTo: { date: start }, jumpLabel: `Show ${pretty(start)}` };
+  if (dates.date) return { jumpTo: { date: start }, jumpLabel: `Show ${pretty(start)}` };
 
-  const length = dayjs(dates.endDate).diff(dates.startDate, "day");
-  let end = dayjs(start).add(length, "day").format(DATE_FORMAT);
+  const length = dayjs(dates.endDate).diff(dates.startDate, 'day');
+  let end = dayjs(start).add(length, 'day').format(DATE_FORMAT);
   if (end > today) end = today;
   if (end <= start) return undefined;
   return {
     jumpTo: { startDate: start, endDate: end },
-    jumpLabel: `Show ${prettySpan(start, end, " – ")}`,
+    jumpLabel: `Show ${prettySpan(start, end, ' – ')}`,
   };
 };
 
@@ -146,9 +140,8 @@ export const getNoDataReason = ({
 
   if (filtered) {
     return {
-      title: "Nothing matches this filter",
-      detail:
-        "There is data for these dates, but none for the selected days or times.",
+      title: 'Nothing matches this filter',
+      detail: 'There is data for these dates, but none for the selected days or times.',
     };
   }
 
@@ -156,7 +149,7 @@ export const getNoDataReason = ({
   const gap = isLineMetric ? undefined : gapContaining(tab, dates, metric);
   if (gap) {
     return {
-      title: `No ${gap.label.toLowerCase()} for ${date ? "this day" : "these dates"}`,
+      title: `No ${gap.label.toLowerCase()} for ${date ? 'this day' : 'these dates'}`,
       detail: gap.why,
       ...jumpPastGap(gap, dates, today),
     };
@@ -164,41 +157,40 @@ export const getNoDataReason = ({
 
   if (date && date === today) {
     return {
-      title: "No trips recorded yet today",
-      detail:
-        "Data arrives with a delay of up to two hours, so recent trips may not show yet.",
+      title: 'No trips recorded yet today',
+      detail: 'Data arrives with a delay of up to two hours, so recent trips may not show yet.',
       jumpTo: { date: dayBefore(today) },
-      jumpLabel: "Show yesterday",
+      jumpLabel: 'Show yesterday',
     };
   }
 
   if (isLineMetric) {
-    return { title: "No data available", detail: "Try another date range." };
+    return { title: 'No data available', detail: 'Try another date range.' };
   }
 
   switch (tab) {
-    case "Ferry":
+    case 'Ferry':
       return {
-        title: "No ferry trips recorded",
+        title: 'No ferry trips recorded',
         detail:
-          "Some ferry routes and stops run only seasonally or on weekdays. Try another stop pair or date.",
+          'Some ferry routes and stops run only seasonally or on weekdays. Try another stop pair or date.',
       };
-    case "Bus":
+    case 'Bus':
       return {
-        title: "No bus trips recorded",
+        title: 'No bus trips recorded',
         detail:
           "Bus tracking can miss trips, and some routes don't run every day. Try another stop pair or date.",
       };
-    case "Commuter Rail":
+    case 'Commuter Rail':
       return {
-        title: "No trains recorded",
+        title: 'No trains recorded',
         detail:
-          "Commuter Rail data is in beta and can miss trips, and many trains skip some stations. Try another station pair or date.",
+          'Commuter Rail data is in beta and can miss trips, and many trains skip some stations. Try another station pair or date.',
       };
     default:
       return {
-        title: "No data available",
-        detail: "Try another station pair or date range.",
+        title: 'No data available',
+        detail: 'Try another station pair or date range.',
       };
   }
 };
