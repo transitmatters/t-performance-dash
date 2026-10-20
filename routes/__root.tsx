@@ -10,6 +10,7 @@ import { useApplyTheme } from '../common/hooks/useApplyTheme';
 import { useGoatCounter } from '../common/hooks/useGoatCounter';
 import { BetaRumNotice } from '../common/components/notices/BetaRumNotice';
 import { initBetaRum } from '../common/utils/rum';
+import { redirectToCompleteDates } from '../common/utils/dateParams';
 
 const PassThroughLayout = ({ children }: { children?: React.ReactNode }) => <>{children}</>;
 
@@ -42,4 +43,7 @@ const RootComponent = () => {
   );
 };
 
-export const Route = createRootRoute({ component: RootComponent });
+export const Route = createRootRoute({
+  beforeLoad: redirectToCompleteDates,
+  component: RootComponent,
+});
