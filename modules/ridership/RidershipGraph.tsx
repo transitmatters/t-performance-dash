@@ -20,6 +20,7 @@ import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../common/components/buttons/SaveChartImageButton';
+import { getNoDataSinceLatestAnnotation } from '../service/utils/graphUtils';
 
 interface RidershipGraphProps {
   data: RidershipCount[];
@@ -133,6 +134,9 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                       display: (ctx) => ctx.chart.isDatasetVisible(1),
                       borderWidth: 2,
                     },
+                    ...getNoDataSinceLatestAnnotation(
+                      data.filter((point) => point.count !== null).map((point) => point.date)
+                    ),
                   ],
                 },
               },

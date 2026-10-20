@@ -20,7 +20,7 @@ def resample_and_aggregate(
 
     For daily aggregation, returns the input unchanged. For weekly or monthly,
     resamples using pandas, drops incomplete leading periods, and adjusts
-    weekly dates to show the week start (Sunday) rather than the end.
+    weekly dates to show the week start (Monday) rather than the end.
 
     Args:
         values: Dictionary mapping date strings (YYYY-MM-DD) to numeric values.
@@ -49,9 +49,10 @@ def resample_and_aggregate(
 
     df_agg = df_agg.mean() if avg_type == "mean" else df_agg.median()
 
-    # Drop the first week or month if it is incomplete
+    # Drop the first month if it is incomplete. An incomplete first week is dated before
+    # start_date, so the range filter below drops it.
     start_date = df.index.min()
-    if start_date.weekday() != 6:  # 6 is Sunday
+    if agg == "monthly" and start_date.weekday() != 6:  # 6 is Sunday
         df_agg = df_agg.iloc[1:]
 
     df_agg = df_agg.reset_index()

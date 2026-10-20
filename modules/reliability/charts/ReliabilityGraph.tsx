@@ -1,8 +1,10 @@
 import React from 'react';
 import type { Benchmark, Dataset } from '../../../common/components/charts/TimeSeriesChart';
 import { TimeSeriesChart } from '../../../common/components/charts/TimeSeriesChart';
+import { getLabelsForData } from '../../../common/components/charts/TimeSeriesChart/helpers';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import type { AggType } from '../../speed/constants/speeds';
+import { getNoDataSinceLatestBlock } from '../../service/utils/graphUtils';
 
 interface ReliabilityGraphProps {
   data: Dataset[];
@@ -44,6 +46,7 @@ export const ReliabilityGraph: React.FC<ReliabilityGraphProps> = ({
         pointHitRadius: 8,
         tooltipLabel: (point, context) => `${context.dataset.label}: ${format(point.value)}`,
       }}
+      blocks={getNoDataSinceLatestBlock(getLabelsForData(data))}
       legend={data.length > 1 ? { visible: true, align: 'end', position: 'top' } : undefined}
       benchmarks={benchmarks}
     />

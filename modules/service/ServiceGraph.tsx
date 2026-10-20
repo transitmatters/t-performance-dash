@@ -8,7 +8,7 @@ import { ChartStack } from '../../common/components/charts/ChartStack';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
 import { indexByProperty } from '../../common/utils/array';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
-import { getShuttlingBlockAnnotations } from './utils/graphUtils';
+import { getNoDataSinceLatestBlock, getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 interface ServiceGraphProps {
   config: ParamsType;
@@ -31,10 +31,13 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
 
   const blocks = useMemo(() => {
     const shuttlingBlocks = getShuttlingBlockAnnotations(data);
-    return shuttlingBlocks.map((block) => ({
-      from: block.xMin as string,
-      to: block.xMax as string,
-    }));
+    return [
+      ...shuttlingBlocks.map((block) => ({
+        from: block.xMin as string,
+        to: block.xMax as string,
+      })),
+      ...getNoDataSinceLatestBlock(data.map((point) => point.date)),
+    ];
   }, [data]);
 
   const allDates = [
