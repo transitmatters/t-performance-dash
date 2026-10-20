@@ -183,14 +183,21 @@ def get_time_predictions(query_params: dict):
 
     Args:
         query_params: Dict of query parameters. Recognized keys:
-            ``route_id`` (default ``"Red"``).
+            ``route_id`` (default ``"Red"``), and optional ``start_date`` and
+            ``end_date``, which filter on each record's ``week``.
 
     Returns:
         A list of time prediction records, or an empty list if no data is found.
     """
     route_id = query_params.get("route_id", "Red")
-    data = _load_static_json(f"time_predictions/{route_id}.json")
-    return data or []
+    start_date = query_params.get("start_date")
+    end_date = query_params.get("end_date")
+    data = _load_static_json(f"time_predictions/{route_id}.json") or []
+    return [
+        week
+        for week in data
+        if (not start_date or week["week"] >= start_date) and (not end_date or week["week"] <= end_date)
+    ]
 
 
 # Reliability static data
