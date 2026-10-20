@@ -42,7 +42,8 @@ export const HeadwaysAggregateWrapper: React.FC<HeadwaysAggregateWrapperProps> =
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
 
-  if (headwaysData.length < 1) return <NoDataNotice metric="headways" filtered={allData.length > 0} />;
+  if (headwaysData.length < 1)
+    return <NoDataNotice metric="headways" filtered={allData.length > 0} />;
 
   const widgetObjects = getAggHeadwayDataWidgets(headwaysData, 'times', comparisonData);
 
