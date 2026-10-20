@@ -7,18 +7,8 @@
     },
     "stations": [
       {
-        "stop_name": "Dedham Line (Washington St)",
-        "branches": null,
-        "station": "dline",
-        "order": 1,
-        "stops": {
-          "1": ["34-1-70618"],
-          "0": ["34-0-99832"]
-        }
-      },
-      {
         "stop_name": "Dedham Mall",
-        "branches": null,
+        "branches": ["34"],
         "station": "dmall",
         "order": 1,
         "stops": {
@@ -27,63 +17,143 @@
         }
       },
       {
-        "stop_name": "Stimson St @ Washington St",
-        "branches": null,
-        "station": "stims",
+        "stop_name": "Main Street @ Glenwood Street",
+        "branches": ["34E"],
+        "station": "mglen",
         "order": 2,
         "stops": {
-          "1": ["34-1-621"],
-          "0": ["34-0-616"]
+          "1": ["34E-1-98618"],
+          "0": ["34E-0-86618"]
         }
       },
       {
-        "stop_name": "Washington St @ West Boundary Road",
-        "branches": null,
-        "station": "wawbw",
+        "stop_name": "East Walpole",
+        "branches": ["34E"],
+        "station": "ewalp",
         "order": 3,
         "stops": {
-          "1": ["34-1-625"],
-          "0": ["34-0-10612"]
+          "1": ["34E-1-89617"],
+          "0": ["34E-0-73619"]
         }
       },
       {
-        "stop_name": "Washington St @ LaGrange St",
-        "branches": null,
-        "station": "walag",
+        "stop_name": "Washington @ Morse",
+        "branches": ["34E"],
+        "station": "morse",
         "order": 4,
         "stops": {
-          "1": ["34-1-628"],
-          "0": ["34-0-609"]
+          "1": ["34E-1-61848"],
+          "0": ["34E-0-36618"]
         }
       },
       {
-        "stop_name": "Washington St @ Metropolitan Avenue",
-        "branches": null,
-        "station": "wamet",
+        "stop_name": "Guild Street (Norwood)",
+        "branches": ["34E"],
+        "station": "guild",
         "order": 5,
         "stops": {
-          "1": ["34-1-633"],
-          "0": ["34-0-604"]
+          "1": ["34E-1-61857"],
+          "0": ["34E-0-26618"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ Railroad Avenue",
+        "branches": ["34E"],
+        "station": "warrd",
+        "order": 6,
+        "stops": {
+          "1": ["34E-1-60618"],
+          "0": ["34E-0-25618"]
+        }
+      },
+      {
+        "stop_name": "Islington Post Office",
+        "branches": ["34E"],
+        "station": "islng",
+        "order": 7,
+        "stops": {
+          "1": ["34E-1-50619"],
+          "0": ["34E-0-90620"]
+        }
+      },
+      {
+        "stop_name": "Dedham Square",
+        "branches": ["34E"],
+        "station": "dedsq",
+        "order": 8,
+        "stops": {
+          "1": ["34E-1-69618"],
+          "0": ["34E-0-13618"]
+        }
+      },
+      {
+        "stop_name": "Dedham Line (Washington Street)",
+        "branches": ["34", "34E"],
+        "station": "dline",
+        "order": 9,
+        "stops": {
+          "1": ["34-1-70618", "34E-1-70618"],
+          "0": ["34-0-99832", "34E-0-10618"]
+        }
+      },
+      {
+        "stop_name": "Stimson Street @ Washington Street",
+        "branches": ["34", "34E"],
+        "station": "stims",
+        "order": 10,
+        "stops": {
+          "1": ["34-1-621", "34E-1-621"],
+          "0": ["34-0-616", "34E-0-616"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ West Boundary Road",
+        "branches": ["34", "34E"],
+        "station": "wawbw",
+        "order": 11,
+        "stops": {
+          "1": ["34-1-625", "34E-1-625"],
+          "0": ["34-0-10612", "34E-0-10612"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ LaGrange Street",
+        "branches": ["34", "34E"],
+        "station": "walag",
+        "order": 12,
+        "stops": {
+          "1": ["34-1-628", "34E-1-628"],
+          "0": ["34-0-609", "34E-0-609"]
+        }
+      },
+      {
+        "stop_name": "Washington Street @ Metropolitan Avenue",
+        "branches": ["34", "34E"],
+        "station": "wamet",
+        "order": 13,
+        "stops": {
+          "1": ["34-1-633", "34E-1-633"],
+          "0": ["34-0-604", "34E-0-604"]
         }
       },
       {
         "stop_name": "Roslindale Square",
-        "branches": null,
+        "branches": ["34", "34E"],
         "station": "rossq",
-        "order": 6,
+        "order": 14,
         "stops": {
-          "1": ["34-1-636"],
-          "0": ["34-0-6022", "34-0-602"]
+          "1": ["34-1-636", "34E-1-636"],
+          "0": ["34-0-602", "34-0-6022", "34E-0-6022"]
         }
       },
       {
-        "stop_name": "Forest Hills Busway",
-        "branches": null,
+        "stop_name": "Forest Hills Upper Busway",
+        "branches": ["34", "34E"],
         "station": "fhill",
-        "order": 7,
+        "order": 15,
         "stops": {
-          "1": ["34-1-10642", "34-1-875"],
-          "0": ["34-0-10642"]
+          "1": ["34-1-10642", "34-1-875", "34E-1-10642"],
+          "0": ["34-0-10642", "34E-0-10642"]
         }
       }
     ]

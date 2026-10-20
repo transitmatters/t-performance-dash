@@ -1,0 +1,52 @@
+{
+  "114": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "service_start": "2024-12-15",
+    "stations": [
+      {
+        "stop_name": "Market Basket (former Mystic Mall)",
+        "branches": null,
+        "station": "mysml",
+        "order": 1,
+        "stops": {
+          "1": ["114-1-5045"],
+          "0": ["114-0-5045"]
+        }
+      },
+      {
+        "stop_name": "Bellingham Square (Chelsea)",
+        "branches": null,
+        "station": "belsq",
+        "order": 2,
+        "stops": {
+          "1": ["114-1-5605"],
+          "0": ["114-0-5615"]
+        }
+      },
+      {
+        "stop_name": "Central Square (East Boston)",
+        "branches": null,
+        "station": "cntle",
+        "order": 3,
+        "stops": {
+          "1": ["114-1-5736"],
+          "0": ["114-0-5743"]
+        }
+      },
+      {
+        "stop_name": "Maverick Square (East Boston)",
+        "branches": null,
+        "station": "mavck",
+        "order": 4,
+        "stops": {
+          "1": ["114-1-5740"],
+          "0": ["114-0-5740"]
+        }
+      }
+    ]
+  }
+}

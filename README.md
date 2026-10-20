@@ -120,9 +120,18 @@ If you're using VSCode, `.vscode` contains a based default workspace setup. It a
 
 ## 🗂️ Data Maintenance
 
-### Updating historical backend data
+### Adding or changing a bus route
 
-See `server/bus/gen_latest_bus_data.sh` for instructions.
+The MBTA changes bus routes every few months, usually as part of [Better Bus Network](https://www.mbta.com/projects/bus-network-redesign/making-better-bus-network-service-changes). Each dashboard bus route is a station manifest in `common/constants/bus_constants/`. To update them:
+
+1. From `server/bus`, generate the manifest from the GTFS schedule in effect after the change:
+   `uv run python manifest.py ../../common/constants/bus_constants/<route>.json -r <route ids...> --gtfs-date <YYYY-MM-DD> --service-start <YYYY-MM-DD>`.
+   For combined pages, pass every route and keep the existing key with `--name`. Run `check_latest_manifests.sh <YYYY-MM-DD>` to diff every current manifest against the new schedule.
+2. If a route's stops changed, keep the old manifest as `<route>-legacy.json` with a `service_end` and give the new one a `service_start`, so the old data stays reachable.
+3. Register new keys in `common/constants/stations.ts` and `common/types/lines.ts` (`BusRoute`, `BusRouteId`, `BUS_ROUTES`), and add a `PEAK_RIDERSHIP` entry in `common/constants/baselines.ts` (`server/scripts/update_max_ridership.py` can compute it). Combined routes also need an entry in `getStationForInvalidFromSelection` (`common/utils/stations.ts`).
+4. For Better Bus Network changes, add the phase to `common/constants/bnrd.ts` and banner text to `common/components/notices/BnrdBanner.tsx`.
+
+### Updating historical backend data
 
 GTFS archives used by the bus scripts are downloaded to `data/gtfs_archives/` by default. Set `GTFS_DATA_DIR` to share them with other TransitMatters repos (they'll go in `$GTFS_DATA_DIR/gtfs_archives`).
 
