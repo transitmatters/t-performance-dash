@@ -4,28 +4,41 @@ site_url: https://transitmatters.github.io/t-performance-dash/
 
 repo_name: transitmatters/t-performance-dash
 repo_url: https://github.com/transitmatters/t-performance-dash
+edit_uri: edit/main/docs/
+copyright: © TransitMatters
 
+# Styling matches the Labs docs at https://transitmatters.github.io/architecture/
 theme:
   name: material
   palette:
-    - scheme: default
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
       primary: custom
-      accent: deep orange
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
-    - scheme: slate
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
       primary: custom
-      accent: deep orange
+      accent: custom
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+  logo: assets/flask.png
+  favicon: assets/favicon.png
+  icon:
+    repo: fontawesome/brands/github
   features:
-    - navigation.sections
+    - content.action.edit
+    - content.code.copy
     - navigation.expand
+    - navigation.indexes
+    - navigation.instant
+    - navigation.sections
+    - navigation.tabs
     - navigation.top
     - search.suggest
-    - content.code.copy
     - toc.follow
 
 extra_css:
@@ -88,3 +101,11 @@ nav:
       - Getting Started: development/getting-started.md
       - Code Style: development/code-style.md
       - Testing: development/testing.md
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/transitmatters
+    - icon: fontawesome/solid/globe
+      link: https://transitmatters.org/transitmatters-labs

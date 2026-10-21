@@ -1,11 +1,41 @@
+/* TransitMatters Labs brand colors, sampled from the Labs logo.
+   Matches docs/stylesheets/extra.css in transitmatters/architecture. */
 :root {
-  --md-primary-fg-color: #da291c;
-  --md-primary-fg-color--light: #e85a50;
-  --md-primary-fg-color--dark: #b01f15;
+  --tm-blue: #1773ba;
+  --tm-blue-light: #4b95cf;
+  --tm-blue-dark: #115a92;
+  --tm-orange: #f17a21;
+}
+
+[data-md-color-primary="custom"] {
+  --md-primary-fg-color: var(--tm-blue);
+  --md-primary-fg-color--light: var(--tm-blue-light);
+  --md-primary-fg-color--dark: var(--tm-blue-dark);
+}
+
+[data-md-color-accent="custom"] {
+  --md-accent-fg-color: var(--tm-orange);
+  --md-accent-fg-color--transparent: rgba(241, 122, 33, 0.1);
+}
+
+/* Diagrams: TM blue instead of the accent color */
+[data-md-color-scheme="default"],
+[data-md-color-scheme="slate"] {
+  --md-mermaid-node-fg-color: var(--tm-blue);
+  --md-mermaid-node-bg-color: rgba(23, 115, 186, 0.08);
 }
 
 [data-md-color-scheme="slate"] {
-  --md-primary-fg-color: #da291c;
-  --md-primary-fg-color--light: #e85a50;
-  --md-primary-fg-color--dark: #b01f15;
+  --md-mermaid-node-fg-color: var(--tm-blue-light);
+  --md-mermaid-node-bg-color: rgba(75, 149, 207, 0.12);
+}
+
+/* Lighter links on dark backgrounds */
+[data-md-color-scheme="slate"] {
+  --md-typeset-a-color: #6cb4ea;
+}
+
+/* Bigger flask in the header */
+.md-header__button.md-logo img {
+  height: 2rem;
 }
