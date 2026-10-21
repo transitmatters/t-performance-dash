@@ -19,7 +19,7 @@ export const SpeedGraphWrapper: React.FC<SpeedGraphWrapperProps> = ({
   endDate,
 }) => {
   const dataNoNulls = data.filter((datapoint) => datapoint.miles_covered);
-  if (dataNoNulls.length < 1) return <NoDataNotice isLineMetric />;
+  if (dataNoNulls.length < 1) return <NoDataNotice isLineMetric shutdownScope="line" />;
   return (
     <ChartStack>
       <SpeedGraph config={config} data={data} startDate={startDate} endDate={endDate} />

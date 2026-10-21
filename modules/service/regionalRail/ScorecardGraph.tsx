@@ -29,7 +29,7 @@ export const ScorecardGraph: React.FC<ScorecardGraphProps> = ({
   benchmark,
 }) => {
   if (data.every((dataset) => dataset.data.length === 0)) {
-    return <NoDataNotice isLineMetric />;
+    return <NoDataNotice isLineMetric shutdownScope="line" />;
   }
   return (
     <TimeSeriesChart

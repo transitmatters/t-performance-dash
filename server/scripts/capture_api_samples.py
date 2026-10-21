@@ -164,6 +164,7 @@ SAMPLES = [
         200,
     ),
     ("weather/day", "/api/weather", {"start_date": DAY, "end_date": DAY}, 200),
+    ("shutdowns/green_quarter", "/api/shutdowns", {**QUARTER, "line": "Green"}, 200),
     (
         "scheduledservice/rapid_transit_weekly",
         "/api/scheduledservice",

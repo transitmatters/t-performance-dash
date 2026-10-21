@@ -26,6 +26,7 @@ from chalicelib import (
     scheduled_service,
     service_hours,
     service_ridership_dashboard,
+    shutdowns,
     speed,
     speed_restrictions,
     static_data,
@@ -497,6 +498,32 @@ def get_delays_by_line():
             "Content-Type": "application/json",
             "Cache-Control": f"public, max-age={cache_max_age}",
         },
+    )
+
+
+@app.route(
+    "/api/shutdowns",
+    cors=cors_config,
+    docs=Docs(request=models.ShutdownsParams, responses=[Resp(models.ShutdownsResponse), BAD_REQUEST]),
+)
+def get_shutdowns():
+    """Retrieve shuttles, suspensions, and station closures on a line that overlap a date range."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["line", "start_date", "end_date"])
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_shutdowns(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/shutdowns", query_params)
+    else:
+        start_date = parse_user_date(query_params["start_date"])
+        end_date = parse_user_date(query_params["end_date"])
+        data = shutdowns.get_shutdowns(query_params["line"], start_date, end_date)
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
     )
 
 

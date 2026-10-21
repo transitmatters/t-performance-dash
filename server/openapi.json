@@ -689,6 +689,68 @@
         "operationId": "getLineDelays"
       }
     },
+    "/api/shutdowns": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShutdownsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve shuttles, suspensions, and station closures on a line that overlap a date range.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "line",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "MBTA line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green` (every branch), `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc."
+          }
+        ],
+        "operationId": "getShutdowns"
+      }
+    },
     "/api/tripmetrics": {
       "get": {
         "responses": {
@@ -2062,6 +2124,43 @@
           "$ref": "#/components/schemas/LineDelayEntry"
         },
         "title": "LineDelaysResponse",
+        "type": "array"
+      },
+      "ShutdownsParams": {
+        "description": "Parameters for the `/api/shutdowns` endpoint.\n\nAttributes:\n    start_date: Start of date range (YYYY-MM-DD).\n    end_date: End of date range (YYYY-MM-DD).\n    line: Line identifier (e.g., `Red`, `Green`, `Green-B`, `CR-Worcester`).",
+        "properties": {
+          "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "line": {
+            "description": "MBTA line identifier. Rapid transit: `Red`, `Orange`, `Blue`, `Green` (every branch), `Green-B`-`Green-E`, `Mattapan`. Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc.",
+            "title": "Line",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "line"
+        ],
+        "title": "ShutdownsParams",
+        "type": "object"
+      },
+      "ShutdownsResponse": {
+        "description": "Response for `/api/shutdowns`: shutdowns overlapping the date range, sorted by start date.",
+        "items": {
+          "$ref": "#/components/schemas/ShutdownEntry"
+        },
+        "title": "ShutdownsResponse",
         "type": "array"
       },
       "TripMetricsByLineParams": {
@@ -3441,6 +3540,88 @@
           "track_work"
         ],
         "title": "LineDelayEntry",
+        "type": "object"
+      },
+      "ShutdownEntry": {
+        "additionalProperties": true,
+        "description": "A shuttle, suspension, or station closure alert that ran at least 3 hours.\n\nAttributes:\n    line: Line as requested (e.g. `Red`, `Green`, `CR-Worcester`).\n    alert_id: MBTA alert ID.\n    effect: Alert effect: `SHUTTLE`, `SUSPENSION`, or `STATION_CLOSURE`.\n    cause: Alert cause (e.g. `MAINTENANCE`, `CONSTRUCTION`), if given.\n    header: Alert header text.\n    stops: Stop and station IDs the alert lists on this line.\n    periods: When the shutdown was in effect, in order.\n    first_start: Service date of the first period's start (`YYYY-MM-DD`).\n    last_end: Service date of the last period's end (`YYYY-MM-DD`).",
+        "properties": {
+          "line": {
+            "title": "Line",
+            "type": "string"
+          },
+          "alert_id": {
+            "title": "Alert Id",
+            "type": "string"
+          },
+          "effect": {
+            "title": "Effect",
+            "type": "string"
+          },
+          "cause": {
+            "default": null,
+            "title": "Cause",
+            "nullable": true,
+            "type": "string"
+          },
+          "header": {
+            "title": "Header",
+            "type": "string"
+          },
+          "stops": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Stops",
+            "type": "array"
+          },
+          "periods": {
+            "items": {
+              "$ref": "#/components/schemas/ShutdownPeriod"
+            },
+            "title": "Periods",
+            "type": "array"
+          },
+          "first_start": {
+            "title": "First Start",
+            "type": "string"
+          },
+          "last_end": {
+            "title": "Last End",
+            "type": "string"
+          }
+        },
+        "required": [
+          "line",
+          "alert_id",
+          "effect",
+          "header",
+          "stops",
+          "periods",
+          "first_start",
+          "last_end"
+        ],
+        "title": "ShutdownEntry",
+        "type": "object"
+      },
+      "ShutdownPeriod": {
+        "additionalProperties": true,
+        "description": "When a shutdown was in effect.\n\nAttributes:\n    start: Start, as an ISO 8601 timestamp with offset.\n    end: End, as an ISO 8601 timestamp with offset. Cut short if the alert was taken down early.",
+        "properties": {
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "end": {
+            "title": "End",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ],
+        "title": "ShutdownPeriod",
         "type": "object"
       },
       "TripMetricsEntry": {

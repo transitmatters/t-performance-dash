@@ -35,7 +35,8 @@ export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapp
     [data, predictedData, peakService, config.agg]
   );
 
-  if (!data.some((datapoint) => datapoint.miles_covered)) return <NoDataNotice isLineMetric />;
+  if (!data.some((datapoint) => datapoint.miles_covered))
+    return <NoDataNotice isLineMetric shutdownScope="line" />;
 
   return (
     <ChartStack>
