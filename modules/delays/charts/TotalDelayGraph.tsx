@@ -8,20 +8,22 @@ import { max, min } from 'date-fns';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartBorder } from '../../../common/components/charts/ChartBorder';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
-import type { LineDelays } from '../../../common/types/delays';
+import type { DisplayedDelays } from '../../../common/types/delays';
 import { getFormattedTimeString } from '../../../common/utils/time';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
 
 interface TotalDelayGraphProps {
-  data: LineDelays[];
+  data: DisplayedDelays[];
+  /** Whether `total_delay_time` is the actual delay, to compare against the stated delay */
+  isActual?: boolean;
   startDate: string;
   endDate: string;
   showTitle?: boolean;
@@ -30,6 +32,7 @@ interface TotalDelayGraphProps {
 
 export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
   data,
+  isActual = false,
   startDate,
   endDate,
   showTitle = false,
@@ -63,7 +66,7 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
             labels,
             datasets: [
               {
-                label: `Total time delayed`,
+                label: isActual ? `Actual delay (time alerts were active)` : `Total time delayed`,
                 borderColor: lineColor,
                 backgroundColor: hexWithAlpha(lineColor, 0.8),
                 pointRadius: 0,
@@ -73,6 +76,23 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
                 pointHoverBackgroundColor: lineColor,
                 data: data.map((datapoint) => datapoint.total_delay_time),
               },
+              ...(isActual
+                ? [
+                    {
+                      label: `Delay stated in alerts`,
+                      borderColor: CHART_COLORS.DARK_LINE,
+                      backgroundColor: CHART_COLORS.DARK_LINE,
+                      borderDash: [5, 5],
+                      borderWidth: 2,
+                      pointRadius: 0,
+                      pointBorderWidth: 0,
+                      fill: false,
+                      pointHoverRadius: 6,
+                      pointHoverBackgroundColor: CHART_COLORS.DARK_LINE,
+                      data: data.map((datapoint) => datapoint.stated_delay_time),
+                    },
+                  ]
+                : []),
             ],
           }}
           options={{
@@ -106,7 +126,11 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
                 },
               },
               legend: {
-                display: false,
+                display: isActual,
+                position: 'bottom',
+                labels: {
+                  boxWidth: 15,
+                },
               },
               title: {
                 // empty title to set font and leave room for drawTitle fn
@@ -128,7 +152,7 @@ export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
                 },
                 title: {
                   display: true,
-                  text: 'Total time delayed (minutes)',
+                  text: isActual ? 'Minutes' : 'Total time delayed (minutes)',
                   color: COLORS.design.subtitleGrey,
                 },
               },

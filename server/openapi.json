@@ -3345,7 +3345,7 @@
       },
       "LineDelayEntry": {
         "additionalProperties": true,
-        "description": "Alert-reported delay on a line for one day or week, in minutes, by cause.\n\nAttributes:\n    date: Day, or the Monday starting the week (`YYYY-MM-DD`).\n    line: Line as requested (e.g. `Red`, `Green-B`, `CR-Fairmount`).\n    total_delay_time: Total delay.\n    brake_problem: Delay attributed to brake problems.\n    car_traffic: Delay attributed to car traffic.\n    disabled_vehicle: Delay attributed to disabled vehicles.\n    door_problem: Delay attributed to door problems.\n    fire: Delay attributed to fires.\n    flooding: Delay attributed to flooding.\n    mechanical_problem: Delay attributed to mechanical problems.\n    medical_emergency: Delay attributed to medical emergencies.\n    other: Delay attributed to other causes.\n    police_activity: Delay attributed to police activity.\n    power_problem: Delay attributed to power problems.\n    signal_problem: Delay attributed to signal problems.\n    switch_problem: Delay attributed to switch problems.\n    track_issue: Delay attributed to track issues.\n    track_work: Delay attributed to track work.",
+        "description": "Alert-reported delay on a line for one day or week, in minutes, by cause.\n\nThe per-cause fields add up the delay each alert *stated* (\"delays of about 15\nminutes\"). For subway lines, `delay_alert_minutes` is how long those same alerts\nwere actually up; per-cause versions are returned as `delay_alert_minutes_<cause>`\n(e.g. `delay_alert_minutes_signal_problem`). Commuter Rail has stated delay only.\n\nAttributes:\n    date: Day, or the Monday starting the week (`YYYY-MM-DD`).\n    line: Line as requested (e.g. `Red`, `Green-B`, `CR-Fairmount`).\n    total_delay_time: Total stated delay.\n    delay_alert_minutes: Minutes at least one delay alert was up (subway only;\n        absent for days without alert history).\n    brake_problem: Delay attributed to brake problems.\n    car_traffic: Delay attributed to car traffic.\n    disabled_vehicle: Delay attributed to disabled vehicles.\n    door_problem: Delay attributed to door problems.\n    fire: Delay attributed to fires.\n    flooding: Delay attributed to flooding.\n    mechanical_problem: Delay attributed to mechanical problems.\n    medical_emergency: Delay attributed to medical emergencies.\n    other: Delay attributed to other causes.\n    police_activity: Delay attributed to police activity.\n    power_problem: Delay attributed to power problems.\n    signal_problem: Delay attributed to signal problems.\n    switch_problem: Delay attributed to switch problems.\n    track_issue: Delay attributed to track issues.\n    track_work: Delay attributed to track work.",
         "properties": {
           "date": {
             "title": "Date",
@@ -3357,6 +3357,12 @@
           },
           "total_delay_time": {
             "title": "Total Delay Time",
+            "type": "integer"
+          },
+          "delay_alert_minutes": {
+            "default": null,
+            "title": "Delay Alert Minutes",
+            "nullable": true,
             "type": "integer"
           },
           "brake_problem": {
