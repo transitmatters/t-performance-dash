@@ -145,6 +145,11 @@ class TestScheduledServiceValidation:
         result = client.http.get("/api/scheduledservice?agg=daily")
         assert result.status_code == 400
 
+    def test_missing_route_id_returns_400(self, client):
+        result = client.http.get("/api/scheduledservice?start_date=2026-09-01&end_date=2026-09-02&agg=daily")
+        assert result.status_code == 400
+        assert "route_id" in result.json_body["Message"]
+
 
 class TestBusTripMetricsValidation:
     def test_missing_all_returns_400(self, client):
@@ -310,6 +315,11 @@ class TestHappyPaths:
     def test_stops_known_route_returns_200(self, client):
         result = client.http.get("/api/stops/Red")
         assert result.status_code == 200
+
+    def test_stops_combined_route_with_encoded_slash_returns_200(self, client):
+        result = client.http.get("/api/stops/SL4%2FSL5")
+        assert result.status_code == 200
+        assert json.loads(result.body)["type"] == "bus"
 
     def test_stops_unknown_route_returns_404(self, client):
         result = client.http.get("/api/stops/not-a-real-route")
