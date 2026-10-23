@@ -19,7 +19,7 @@ const describePlacement = (
 ) => {
   const { name, description } = AWARDS[award];
   const routeName = route === busRoute ? '' : `${route} · `;
-  const result = rank === 1 ? `${name} winner` : `#${rank} ${description}`;
+  const result = rank === 1 ? `${name} "winner"` : `#${rank} ${description}`;
   return `${year} · ${routeName}${result}`;
 };
 
