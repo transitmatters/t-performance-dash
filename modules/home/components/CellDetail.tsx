@@ -3,8 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from '../../../common/components/general/Link';
 import { METRICS, definitionFor } from '../config';
 import { STATUS_LABELS } from '../copy';
-import { formatCell, formatThresholds, formatTrend, STATUS_TONE } from '../format';
-import { trendSentiment } from '../compute/series';
+import { formatCell, formatThresholds, formatTrend, STATUS_TONE, trendSentiment } from '../format';
 import { cn } from '../../../common/utils/cn';
 import type { Cell, Row } from '../types';
 import { StatusNode } from './StatusNode';
@@ -18,12 +17,9 @@ interface CellDetailProps {
 export const CellDetail: React.FC<CellDetailProps> = ({ row, cell }) => {
   const method = METRICS[cell.metric];
   const trend = formatTrend(cell);
-  const direction = cell.direction ?? method.direction;
   const definition = definitionFor(cell.metric, row.id);
-  const sentiment = trendSentiment(cell.trend, direction);
-  const thresholds = cell.thresholds
-    ? formatThresholds(method, cell.thresholds, direction, cell.unit)
-    : formatThresholds(method);
+  const sentiment = cell.direction ? trendSentiment(cell.trend, cell.direction) : 'flat';
+  const thresholds = formatThresholds(cell);
 
   return (
     <div className="flex flex-col gap-2" data-line={row.line}>
@@ -63,7 +59,9 @@ export const CellDetail: React.FC<CellDetailProps> = ({ row, cell }) => {
         </p>
       ))}
       {definition && <p className="border-t pt-2 text-xs text-muted-foreground">{definition}</p>}
-      {cell.status !== 'na' && <p className="text-xs text-muted-foreground">{thresholds}</p>}
+      {cell.status !== 'na' && thresholds && (
+        <p className="text-xs text-muted-foreground">{thresholds}</p>
+      )}
       {cell.href && (
         <Link
           href={cell.href}
