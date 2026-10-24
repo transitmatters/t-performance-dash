@@ -33,9 +33,11 @@ const isUseQueryResult = (obj: unknown): obj is UseQueryResult => {
   return !!obj && typeof obj === 'object' && 'isLoading' in obj && 'isError' in obj;
 };
 
+const toArray = (ready: ReadyDependency | ReadyDependency[]) =>
+  Array.isArray(ready) ? ready : [ready];
+
 const getReadyState = (ready: ReadyDependency | ReadyDependency[]) => {
-  const readyArray = Array.isArray(ready) ? ready : [ready];
-  const eachState: ReadyState[] = readyArray.map((entry) =>
+  const eachState: ReadyState[] = toArray(ready).map((entry) =>
     isUseQueryResult(entry)
       ? entry.isError
         ? 'error'
@@ -75,6 +77,12 @@ export const Widget: React.FC<Props> = (props) => {
     : readyDependencies
       ? getReadyState(readyDependencies)
       : 'ready';
+  // Gives the error notice the failure to describe and a query to retry.
+  const failedQuery = readyDependencies
+    ? toArray(readyDependencies).find(
+        (entry): entry is UseQueryResult => isUseQueryResult(entry) && entry.isError
+      )
+    : undefined;
 
   return (
     <WidgetDiv className={className}>
@@ -93,7 +101,7 @@ export const Widget: React.FC<Props> = (props) => {
         </ErrorBoundary>
       ) : (
         <div className="relative flex h-full">
-          <ChartPlaceHolder readyState={readyState} />
+          <ChartPlaceHolder readyState={readyState} query={failedQuery} />
         </div>
       )}
     </WidgetDiv>

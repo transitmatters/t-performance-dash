@@ -39,7 +39,10 @@ export const AggregateChartWrapper: React.FC<AggregateChartWrapperProps> = ({
           (datapoint) => datapoint.is_peak_day === (peakTime ?? true)
         )
       : (query.data.by_date ?? []).filter((datapoint) => datapoint.peak === 'all');
-  if (plotted.length < 1) return <NoDataNotice />;
+  if (plotted.length < 1) {
+    const peakFilterEmptied = timeUnit === 'by_time' && Boolean(query.data.by_time?.length);
+    return <NoDataNotice metric={type} filtered={peakFilterEmptied} />;
+  }
 
   switch (type) {
     case 'traveltimes':

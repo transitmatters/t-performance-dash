@@ -8,7 +8,7 @@ import { ALL_PAGES } from '../constants/pages';
 import { getDefaultDates } from '../state/defaults/dateDefaults';
 import { useDateStore } from '../state/dateStore';
 import { getDateStoreSection } from '../state/utils/dateStoreUtils';
-import type { BusRoute, CommuterRailRoute } from '../types/lines';
+import type { BusRoute, CommuterRailRoute, FerryRoute } from '../types/lines';
 import type { Tab } from '../types/router';
 import { parseRoutePath } from './router';
 import type { SearchObject } from './searchParams';
@@ -102,7 +102,11 @@ export const normalizeDateParams = ({
   const isRange = RANGE_SECTIONS.includes(section);
   if (!isRange && !SINGLE_SECTIONS.includes(section)) return undefined;
 
-  const route = (search.busRoute ?? search.crRoute) as BusRoute | CommuterRailRoute | undefined;
+  const route = (search.busRoute ?? search.crRoute ?? search.ferryRoute) as
+    | BusRoute
+    | CommuterRailRoute
+    | FerryRoute
+    | undefined;
   const bounds = getDatePickerBounds(tab, page, route);
   const defaults: DateQuery = getDefaultDates(section, tab) ?? {};
 
