@@ -15,6 +15,7 @@ Guidance for AI coding agents working on the TransitMatters Data Dashboard, whic
 npm run lint                     # tsc + ESLint + oxfmt check, then Ruff check + format check
 npm run lint-frontend-fix        # Auto-fix frontend
 npm run lint-backend-fix         # Auto-fix backend
+npm test                         # Frontend tests (Vitest)
 cd server && uv run pytest       # Backend tests
 npm run generate-openapi         # After changing API routes or models
 ```
