@@ -35,6 +35,7 @@ ENDPOINTS = {
     "aggregate_headways": ("/api/aggregate/headways", models.HeadwaysAggregateResponse),
     "aggregate_dwells": ("/api/aggregate/dwells", models.DwellsAggregateResponse),
     "linedelays": ("/api/linedelays", models.LineDelaysResponse),
+    "shutdowns": ("/api/shutdowns", models.ShutdownsResponse),
     "tripmetrics": ("/api/tripmetrics", models.TripMetricsResponse),
     "bustripmetrics": ("/api/bustripmetrics", models.BusTripMetricsResponse),
     "crtripmetrics": ("/api/crtripmetrics", models.CrTripMetricsResponse),

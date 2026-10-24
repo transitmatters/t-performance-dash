@@ -25,7 +25,7 @@ export const FleetAgeGraphWrapper: React.FC<FleetAgeGraphWrapperProps> = ({
   endDate,
 }) => {
   if (!data.some((datapoint) => hasFleetMetric(datapoint, metric.field))) {
-    return <NoDataNotice isLineMetric />;
+    return <NoDataNotice isLineMetric shutdownScope="line" />;
   }
   return (
     <ChartStack>

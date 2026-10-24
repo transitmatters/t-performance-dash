@@ -25,7 +25,7 @@ export const FleetMixGraphWrapper: React.FC<FleetMixGraphWrapperProps> = ({
   endDate,
 }) => {
   if (!data.some((datapoint) => hasFleetMix(datapoint, types))) {
-    return <NoDataNotice isLineMetric />;
+    return <NoDataNotice isLineMetric shutdownScope="line" />;
   }
   return (
     <ChartStack>

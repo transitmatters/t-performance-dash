@@ -25,7 +25,8 @@ export const RidershipGraphWrapper: React.FC<RidershipGraphWrapperProps> = ({
   startDate,
   endDate,
 }) => {
-  if (!data.some((datapoint) => datapoint.count !== null)) return <NoDataNotice isLineMetric />;
+  if (!data.some((datapoint) => datapoint.count !== null))
+    return <NoDataNotice isLineMetric shutdownScope="line" />;
 
   return (
     <ChartStack>

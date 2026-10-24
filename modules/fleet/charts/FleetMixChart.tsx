@@ -23,6 +23,7 @@ import {
   getShuttlingBlockAnnotations,
 } from '../../service/utils/graphUtils';
 import type { ParamsType } from '../../speed/constants/speeds';
+import { explainGaps, usePageShutdowns } from '../../shutdowns';
 import type { FleetType } from '../constants/fleetTypes';
 import { getFleetMixValue, hasFleetMix } from '../constants/fleetTypes';
 
@@ -52,8 +53,16 @@ export const FleetMixChart: React.FC<FleetMixChartProps> = ({
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   const lineColor = LINE_COLORS[line ?? 'default'];
+  const shutdowns = usePageShutdowns('line', startDate, endDate);
   const shuttlingBlocks = showShuttling
-    ? getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMix(datapoint, types))
+    ? explainGaps(
+        getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMix(datapoint, types)),
+        shutdowns,
+        {
+          startDate,
+          endDate,
+        }
+      )
     : [];
 
   return (

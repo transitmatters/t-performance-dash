@@ -7,6 +7,7 @@ import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
 import { indexByProperty } from '../../common/utils/array';
+import { explainGapBlocks, usePageShutdowns } from '../shutdowns';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
 import { getNoDataSinceLatestBlock, getShuttlingBlockAnnotations } from './utils/graphUtils';
 
@@ -29,16 +30,18 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
     return [{ label, value: peak }];
   }, [peak]);
 
+  const shutdowns = usePageShutdowns('line', startDate, endDate);
+
   const blocks = useMemo(() => {
-    const shuttlingBlocks = getShuttlingBlockAnnotations(data);
+    const shuttlingBlocks = getShuttlingBlockAnnotations(data).map((block) => ({
+      from: block.xMin as string,
+      to: block.xMax as string,
+    }));
     return [
-      ...shuttlingBlocks.map((block) => ({
-        from: block.xMin as string,
-        to: block.xMax as string,
-      })),
+      ...explainGapBlocks(shuttlingBlocks, shutdowns, { startDate, endDate }),
       ...getNoDataSinceLatestBlock(data.map((point) => point.date)),
     ];
-  }, [data]);
+  }, [data, shutdowns, startDate, endDate]);
 
   const allDates = [
     ...new Set([
@@ -57,8 +60,9 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
         const scheduledToday = scheduledDataByDate[date];
         const deliveredToday = deliveredDataByDate[date];
         const anyDeliveredToday = deliveredToday && deliveredToday.miles_covered > 0;
-        const value =
-          scheduledToday?.count && anyDeliveredToday ? Math.round(scheduledToday?.count) / 2 : 0;
+        // NaN rather than 0 leaves a gap, so days without trips get no point under the gap's band
+        if (!anyDeliveredToday) return { date, value: Number.NaN };
+        const value = scheduledToday?.count ? Math.round(scheduledToday.count) / 2 : 0;
         return { date, value };
       }),
       style: {
@@ -76,7 +80,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
       label: 'Daily round trips',
       data: allDates.map((date) => {
         const deliveredToday = deliveredDataByDate[date];
-        const value = deliveredToday?.miles_covered ? Math.round(deliveredToday.count) : 0;
+        const value = deliveredToday?.miles_covered ? Math.round(deliveredToday.count) : Number.NaN;
         return { date, value };
       }),
       style: {

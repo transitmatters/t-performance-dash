@@ -314,6 +314,11 @@
     "status": 200,
     "captured_at": "2026-10-14T18:52:27+00:00"
   },
+  "shutdowns/green_quarter": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/shutdowns?start_date=2026-06-01&end_date=2026-09-30&line=Green",
+    "status": 200,
+    "captured_at": null
+  },
   "speed_restrictions/available": {
     "url": "https://dashboard-api.labs.transitmatters.org/api/speed_restrictions?line_id=line-Red&date=2025-12-01",
     "status": 200,

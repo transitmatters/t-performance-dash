@@ -10,6 +10,30 @@ from chalicelib import dynamo
 from datetime import date
 
 
+VALID_LINES = [
+    "Red",
+    "Blue",
+    "Orange",
+    "Green-B",
+    "Green-C",
+    "Green-D",
+    "Green-E",
+    "Mattapan",
+    "CR-Fairmount",
+    "CR-Fitchburg",
+    "CR-Worcester",
+    "CR-Franklin",
+    "CR-Greenbush",
+    "CR-Haverhill",
+    "CR-Kingston",
+    "CR-Lowell",
+    "CR-Middleborough",
+    "CR-NewBedford",
+    "CR-Needham",
+    "CR-Newburyport",
+    "CR-Providence",
+]
+
 # Config map for daily vs weekly delay queries
 AGG_TO_CONFIG_MAP = {
     "daily": {"table_name": "AlertDelaysDaily"},
@@ -56,30 +80,7 @@ def delay_time_by_line(params: AlertDelaysByLineParams):
         config = AGG_TO_CONFIG_MAP.get(agg)
         if not config:
             raise BadRequestError("Invalid aggregation type. Must be 'daily' or 'weekly'.")
-        valid_lines = [
-            "Red",
-            "Blue",
-            "Orange",
-            "Green-B",
-            "Green-C",
-            "Green-D",
-            "Green-E",
-            "Mattapan",
-            "CR-Fairmount",
-            "CR-Fitchburg",
-            "CR-Worcester",
-            "CR-Franklin",
-            "CR-Greenbush",
-            "CR-Haverhill",
-            "CR-Kingston",
-            "CR-Lowell",
-            "CR-Middleborough",
-            "CR-NewBedford",
-            "CR-Needham",
-            "CR-Newburyport",
-            "CR-Providence",
-        ]
-        if line not in valid_lines:
+        if line not in VALID_LINES:
             raise BadRequestError("Invalid Line key.")
     except KeyError:
         raise BadRequestError("Missing or invalid parameters.")
