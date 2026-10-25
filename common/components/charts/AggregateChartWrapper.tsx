@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import type { ChunkedAggregateQueryResult, TravelTimesUnit } from '../../types/charts';
 import type { Station } from '../../types/stations';
 import { ChartPlaceHolder } from '../graphics/ChartPlaceHolder';
@@ -16,14 +15,14 @@ interface AggregateChartWrapperProps {
   type: 'headways' | 'traveltimes' | 'dwells';
 }
 
-export const AggregateChartWrapper: FC<AggregateChartWrapperProps> = ({
+export const AggregateChartWrapper = ({
   query,
   toStation,
   fromStation,
   timeUnit,
   peakTime,
   type,
-}) => {
+}: AggregateChartWrapperProps) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   // by_time comes from the newest chunk only, which may still be loading or may have failed.

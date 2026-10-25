@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { CSSProperties, FC } from 'react';
+import type { CSSProperties } from 'react';
 import dayjs from 'dayjs';
 import classNames from 'classnames';
 import { Calendar } from '../../ui/calendar';
@@ -21,7 +21,7 @@ interface DateFieldProps {
 }
 
 /** A single date field: a button showing the current date, opening a calendar to change it. */
-export const DateField: FC<DateFieldProps> = ({
+export const DateField = ({
   value,
   onChange,
   minDate,
@@ -29,7 +29,7 @@ export const DateField: FC<DateFieldProps> = ({
   line,
   placeholder = 'mm/dd/yyyy',
   className,
-}) => {
+}: DateFieldProps) => {
   const [open, setOpen] = useState(false);
   const selected = value ? dayjs(value).toDate() : undefined;
   const min = minDate ? dayjs(minDate).toDate() : undefined;

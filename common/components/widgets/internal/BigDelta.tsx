@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import classNames from 'classnames';
 import type { SentimentDirection } from './BasicWidgetDataLayout';
 
@@ -7,10 +6,7 @@ interface BigDeltaProps {
   sentimentDirection?: SentimentDirection;
 }
 
-export const BigDelta: FC<BigDeltaProps> = ({
-  delta,
-  sentimentDirection = 'negativeOnIncrease',
-}) => {
+export const BigDelta = ({ delta, sentimentDirection = 'negativeOnIncrease' }: BigDeltaProps) => {
   const increase = delta ? delta > 0 : false;
   const positiveSentiment =
     (!increase && sentimentDirection === 'negativeOnIncrease') ||

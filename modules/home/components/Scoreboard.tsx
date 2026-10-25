@@ -1,4 +1,4 @@
-import type { CSSProperties, FC, ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { Link } from '../../../common/components/general/Link';
 import {
   Card,
@@ -30,7 +30,7 @@ const HEADLINE_TONE: Record<HeadlineKind, string> = {
   limited: 'border-border text-muted-foreground',
 };
 
-const HeadlineBadge: FC<{ row: Row }> = ({ row }) => (
+const HeadlineBadge = ({ row }: { row: Row }) => (
   <span
     className={cn(
       'tm-fade-in inline-flex w-fit items-center rounded-md border border-transparent px-1.5 py-0.5 text-xs font-medium whitespace-nowrap',
@@ -47,10 +47,7 @@ interface ScoreboardLine {
   row?: Row;
 }
 
-const RowTitle: FC<{ line: ScoreboardLine; state: HomeState }> = ({
-  line: { config, row },
-  state,
-}) => {
+const RowTitle = ({ line: { config, row }, state }: { line: ScoreboardLine; state: HomeState }) => {
   const heldBack =
     row && row.headline.kind !== 'limited' ? heldBackLabel(row.headline.heldBackBy) : undefined;
   return (
@@ -87,7 +84,7 @@ const cellLabel = (row: Row, cell: Cell) =>
   }. Show details.`;
 
 /** One stop on the strip: the node opens the detail, with the figure and its status beneath. */
-const Stop: FC<{ row: Row; cell: Cell; layout: 'column' | 'row' }> = ({ row, cell, layout }) => (
+const Stop = ({ row, cell, layout }: { row: Row; cell: Cell; layout: 'column' | 'row' }) => (
   <Popover>
     <PopoverTrigger
       aria-label={cellLabel(row, cell)}
@@ -133,10 +130,14 @@ const Stop: FC<{ row: Row; cell: Cell; layout: 'column' | 'row' }> = ({ row, cel
  * Holds a stop's place until its data lands: an unlit stop on the line, with bars where the figure
  * and status go, laid out like `Stop` so nothing moves when it fills in.
  */
-const PendingStop: FC<{ metric: MetricId; layout: 'column' | 'row'; state: HomeState }> = ({
+const PendingStop = ({
   metric,
   layout,
   state,
+}: {
+  metric: MetricId;
+  layout: 'column' | 'row';
+  state: HomeState;
 }) => {
   const pulse = state === 'loading';
   return (
@@ -174,19 +175,24 @@ const PendingStop: FC<{ metric: MetricId; layout: 'column' | 'row'; state: HomeS
   );
 };
 
-const LineStop: FC<{
+const LineStop = ({
+  line: { row },
+  metric,
+  layout,
+  state,
+}: {
   line: ScoreboardLine;
   metric: MetricId;
   layout: 'column' | 'row';
   state: HomeState;
-}> = ({ line: { row }, metric, layout, state }) =>
+}) =>
   row ? (
     <Stop row={row} cell={row.cells[metric]} layout={layout} />
   ) : (
     <PendingStop metric={metric} layout={layout} state={state} />
   );
 
-const GroupHeading: FC<{ children: ReactNode }> = ({ children }) => (
+const GroupHeading = ({ children }: { children: ReactNode }) => (
   <tr>
     <th
       colSpan={METRIC_ORDER.length + 1}
@@ -198,7 +204,7 @@ const GroupHeading: FC<{ children: ReactNode }> = ({ children }) => (
   </tr>
 );
 
-const DesktopTable: FC<{ lines: ScoreboardLine[]; state: HomeState }> = ({ lines, state }) => {
+const DesktopTable = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeState }) => {
   const renderRow = (line: ScoreboardLine, index: number) => (
     <tr
       key={line.config.id}
@@ -252,7 +258,7 @@ const DesktopTable: FC<{ lines: ScoreboardLine[]; state: HomeState }> = ({ lines
   );
 };
 
-const MobileStrips: FC<{ lines: ScoreboardLine[]; state: HomeState }> = ({ lines, state }) => (
+const MobileStrips = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeState }) => (
   <ul className="flex flex-col gap-3 lg:hidden">
     {lines.flatMap((line, index) => [
       ...(index > 0 && line.config.group === 'also' && lines[index - 1].config.group === 'core'
@@ -289,10 +295,14 @@ const MobileStrips: FC<{ lines: ScoreboardLine[]; state: HomeState }> = ({ lines
   </ul>
 );
 
-export const Scoreboard: FC<{ rows?: Row[]; state: HomeState; onRetry: () => void }> = ({
+export const Scoreboard = ({
   rows,
   state,
   onRetry,
+}: {
+  rows?: Row[];
+  state: HomeState;
+  onRetry: () => void;
 }) => {
   const lines = ROWS.map((config) => ({ config, row: rows?.find((r) => r.id === config.id) }));
   return (

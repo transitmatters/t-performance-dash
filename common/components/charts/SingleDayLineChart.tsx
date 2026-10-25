@@ -3,7 +3,6 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { useMemo, useRef } from 'react';
-import type { FC } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { DataPoint } from '../../types/dataPoints';
 import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
@@ -99,7 +98,7 @@ const departureFromNormalString = (
   return '';
 };
 
-export const SingleDayLineChart: FC<SingleDayLineProps> = ({
+export const SingleDayLineChart = ({
   chartId,
   data,
   date,
@@ -114,7 +113,7 @@ export const SingleDayLineChart: FC<SingleDayLineProps> = ({
   showLegend = true,
   showUnderRatio = false,
   chartTitle,
-}) => {
+}: SingleDayLineProps) => {
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);

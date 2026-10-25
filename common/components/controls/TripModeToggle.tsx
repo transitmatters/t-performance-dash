@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import classNames from 'classnames';
 import { Link } from '../general/Link';
 import { TRIP_PAGES } from '../../constants/pages';
@@ -23,7 +22,7 @@ const MODE_LABELS: Record<string, string> = {
  * sidebar item — behind a hamburger on mobile. Presenting them as two views of one surface makes
  * the relationship visible, and `getTripHopDates` keeps the selected day or range across the hop.
  */
-export const TripModeToggle: FC = () => {
+export const TripModeToggle = () => {
   const { line, page, query, linePath } = useDelimitatedRoute();
   const generateHref = useGenerateHref();
   const handlePageConfig = useHandleConfigStore();

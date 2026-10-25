@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import type { WidgetValueInterface } from '../../types/basicWidgets';
 import { DataPair } from '../general/DataPair';
 import { SmallDelta } from './internal/SmallDelta';
@@ -47,7 +47,7 @@ const getWidgets = (widgetObject: MiniWidgetObject[]) => {
   return widgets;
 };
 
-export const MiniWidgetCreator: FC<MiniWidgetCreatorProps> = ({ widgetObjects }) => {
+export const MiniWidgetCreator = ({ widgetObjects }: MiniWidgetCreatorProps) => {
   return (
     <div className="flex w-full flex-row gap-y-4 overflow-x-auto py-1 md:py-2">
       {getWidgets(widgetObjects)}

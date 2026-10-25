@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { CSSProperties, FC } from 'react';
+import type { CSSProperties } from 'react';
 import classNames from 'classnames';
 import type { TooltipSide } from '@transitmatters/stripmap';
 
@@ -75,7 +75,7 @@ const getOrderedStationNames = (
   return {};
 };
 
-export const SlowZonesTooltip: FC<SlowZonesTooltipProps> = (props) => {
+export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
   const {
     side,
     color,

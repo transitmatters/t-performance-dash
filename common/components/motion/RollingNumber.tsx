@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import type { FC } from 'react';
 
 interface RollingNumberProps {
   /** The target value to display. Roll-up animates from the currently shown value to this. */
@@ -29,12 +28,12 @@ const prefersReducedMotion = (): boolean =>
  * renders. Animates from whatever is currently on screen to `value`, so it survives React's dev
  * Strict-Mode double-invoke and resumes cleanly if `value` changes mid-roll.
  */
-export const RollingNumber: FC<RollingNumberProps> = ({
+export const RollingNumber = ({
   value,
   format,
   durationMs = 650,
   className,
-}) => {
+}: RollingNumberProps) => {
   const spanRef = useRef<HTMLSpanElement>(null);
   // Seed at the true value so first paint (and SSR, and any screenshot) shows the real number,
   // never a transient "0". The effect's `from === value` guard then no-ops on mount; only a later

@@ -1,4 +1,3 @@
-import type { FunctionComponent } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrophy } from '@fortawesome/free-solid-svg-icons';
 import type { BusRoute } from '../../types/lines';
@@ -14,9 +13,7 @@ interface PokeySchleppieAwardBannerProps {
   busRoute: BusRoute | undefined;
 }
 
-export const PokeySchleppieAwardBanner: FunctionComponent<PokeySchleppieAwardBannerProps> = ({
-  busRoute,
-}) => {
+export const PokeySchleppieAwardBanner = ({ busRoute }: PokeySchleppieAwardBannerProps) => {
   const years = Object.keys(WINNERS);
 
   if (!busRoute) {

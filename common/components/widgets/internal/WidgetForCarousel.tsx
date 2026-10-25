@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import type { WidgetValueInterface } from '../../../types/basicWidgets';
 import { LoadingSpinner } from '../../graphics/LoadingSpinner';
@@ -14,12 +14,12 @@ type WidgetForCarouselProps = {
   layoutKind?: LayoutKind;
 };
 
-export const WidgetForCarousel: FC<WidgetForCarouselProps> = ({
+export const WidgetForCarousel = ({
   analysis,
   widgetValue,
   layoutKind = 'total-and-delta',
   sentimentDirection = 'negativeOnIncrease',
-}) => {
+}: WidgetForCarouselProps) => {
   return (
     <div className="">
       <div className={classNames('relative flex')}>

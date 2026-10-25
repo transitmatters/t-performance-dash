@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import type { FC } from 'react';
 
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { useScorecardRows } from './scorecardRows';
@@ -11,7 +10,7 @@ import type { MetricKey } from './types';
 
 /** Design-doc option 2b: verdict + scorecard + one chart, replacing the 4-card grid.
  * Reachable at `?redesign=1` on the existing Overview route — see modules/dashboard/Overview.tsx. */
-export const OverviewRedesign: FC = () => {
+export const OverviewRedesign = () => {
   const { tab, line, lineShort } = useDelimitatedRoute();
   const { rows, isLoading } = useScorecardRows(line, lineShort);
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>('speed');

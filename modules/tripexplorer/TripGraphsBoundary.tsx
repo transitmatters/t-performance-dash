@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
@@ -8,7 +8,7 @@ import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
  * anywhere in the chart tree — a malformed API response, a Chart.js failure — unmounted the whole
  * route and left a blank screen. One failing chart should cost one card, not the page.
  */
-export const TripGraphsBoundary: FC<{ children: ReactNode }> = ({ children }) => (
+export const TripGraphsBoundary = ({ children }: { children: ReactNode }) => (
   <ErrorBoundary
     fallbackRender={() => (
       <WidgetDiv>

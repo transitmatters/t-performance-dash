@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import type { FC } from 'react';
 
 import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 import type { LineMetadata } from '../../../common/types/lines';
@@ -25,14 +24,14 @@ const LABEL_INNER_PADDING = 2;
 const LABEL_HEIGHT = 4;
 const FONT_SIZE = 3;
 
-const SlowZoneLabel: FC<SlowZoneLabelProps> = ({
+const SlowZoneLabel = ({
   direction,
   color,
   containingWidth,
   offset,
   isHorizontal,
   slowZone: { delay, latest_delay, baseline },
-}) => {
+}: SlowZoneLabelProps) => {
   const {
     query: { endDate },
   } = useDelimitatedRoute();
@@ -109,7 +108,7 @@ const getDirectionLabelOffsets = (slowZones: ByDirection<SlowZoneResponse[]>, he
   return {};
 };
 
-export const SlowSegmentLabel: FC<SlowSegmentLabelProps> = (props) => {
+export const SlowSegmentLabel = (props: SlowSegmentLabelProps) => {
   const {
     isHorizontal,
     segment: { slowZones },

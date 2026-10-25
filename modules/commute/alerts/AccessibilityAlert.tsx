@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
 import { AlertEffect } from '../../../common/types/alerts';
 import EscalatorIcon from '../../../public/Icons/EscalatorIcon.svg?react';
@@ -13,7 +12,7 @@ interface DelayAlertProps {
   lineShort: LineShort;
 }
 
-export const AccessibilityAlert: FC<DelayAlertProps> = ({ alert, type, lineShort }) => {
+export const AccessibilityAlert = ({ alert, type, lineShort }: DelayAlertProps) => {
   // TODO: We don't pass the route id yet
   if (lineShort === 'Commuter Rail' || lineShort === 'Bus') {
     return null;

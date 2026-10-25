@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { SPEED_COLOR_STOPS } from '../constants';
 
 /**
@@ -8,7 +7,7 @@ import { SPEED_COLOR_STOPS } from '../constants';
  * the bus drives" will conclude the map is broken and reach for the moving-speed column,
  * which reads more than twice as high and describes nobody's actual trip.
  */
-export const BusSpeedLegend: FC = () => {
+export const BusSpeedLegend = () => {
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center gap-2">

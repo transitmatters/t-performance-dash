@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import type { FC } from 'react';
 
 import type { Benchmark, Block, Dataset } from '../../common/components/charts/TimeSeriesChart';
 import { TimeSeriesChart } from '../../common/components/charts/TimeSeriesChart';
@@ -18,9 +17,7 @@ interface ScheduledAndDeliveredGraphProps {
   blocks?: Block[];
 }
 
-export const ScheduledAndDeliveredGraph: FC<ScheduledAndDeliveredGraphProps> = (
-  props: ScheduledAndDeliveredGraphProps
-) => {
+export const ScheduledAndDeliveredGraph = (props: ScheduledAndDeliveredGraphProps) => {
   const { scheduled, delivered, valueAxisLabel, agg, startDate, endDate, benchmarks, blocks } =
     props;
   const data = useMemo(() => [scheduled, delivered], [scheduled, delivered]);

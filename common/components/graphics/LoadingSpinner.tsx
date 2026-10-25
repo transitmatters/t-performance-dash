@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { useDelimitatedRoute } from '../../utils/router';
 import { spinnerFillColor } from './styles/spinnerFillColor';
 
@@ -6,7 +5,7 @@ interface LoadingSpinnerProps {
   isWidget?: boolean;
 }
 
-export const LoadingSpinner: FC<LoadingSpinnerProps> = ({ isWidget }) => {
+export const LoadingSpinner = ({ isWidget }: LoadingSpinnerProps) => {
   const { line } = useDelimitatedRoute();
   return (
     <div

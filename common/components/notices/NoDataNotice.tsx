@@ -1,7 +1,6 @@
 import { faMagnifyingGlassChart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import type { FC } from 'react';
 
 interface NoDataNoticeProps {
   isWidget?: boolean;
@@ -15,11 +14,11 @@ interface NoDataNoticeProps {
  * "something broke" stay visually distinct, and it is muted rather than line-colored — the line
  * colors are brand tokens tuned for fills, and bus yellow lands at 1.8:1 as 3x text on a card.
  */
-export const NoDataNotice: FC<NoDataNoticeProps> = ({
+export const NoDataNotice = ({
   isWidget,
   inverse,
   isLineMetric: isLineWide = false,
-}) => {
+}: NoDataNoticeProps) => {
   return (
     <div className="relative flex h-60 w-full items-center justify-center">
       <div

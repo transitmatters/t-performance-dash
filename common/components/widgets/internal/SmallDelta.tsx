@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowTrendDown, faArrowTrendUp } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +9,7 @@ type SmallDeltaProps = {
   widgetValue: WidgetValueInterface;
 };
 
-export const SmallDelta: FC<SmallDeltaProps> = ({ analysis, widgetValue }) => {
+export const SmallDelta = ({ analysis, widgetValue }: SmallDeltaProps) => {
   return (
     <div className="flex flex-row items-end justify-between">
       <p

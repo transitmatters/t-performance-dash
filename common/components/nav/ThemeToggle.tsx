@@ -1,10 +1,9 @@
-import type { FC } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { useThemeStore } from '../../state/themeStore';
 import { Button } from '../ui/button';
 
 /** Light/dark toggle. Shows the icon of the theme you'd switch TO. */
-export const ThemeToggle: FC = () => {
+export const ThemeToggle = () => {
   const theme = useThemeStore((state) => state.theme);
   const toggle = useThemeStore((state) => state.toggle);
   const nextIsDark = theme === 'light';

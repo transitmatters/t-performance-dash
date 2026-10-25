@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { cn } from '../../utils/cn';
 
 const SIZES = { sm: 'size-2.5', md: 'size-3', lg: 'size-3.5' } as const;
@@ -15,7 +14,7 @@ interface StationNodeProps {
  * so set it with `text-primary` (active line) or an explicit `style={{ color }}`. Decorative —
  * the label beside it carries the meaning.
  */
-export const StationNode: FC<StationNodeProps> = ({ size = 'md', filled = false, className }) => (
+export const StationNode = ({ size = 'md', filled = false, className }: StationNodeProps) => (
   <span
     aria-hidden="true"
     data-slot="station-node"

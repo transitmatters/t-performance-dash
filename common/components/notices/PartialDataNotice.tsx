@@ -1,7 +1,6 @@
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import type { FC } from 'react';
 import type { ChunkedAggregateQueryResult } from '../../types/charts';
 import { Button } from '../ui/button';
 import { Notice } from './Notice';
@@ -11,7 +10,7 @@ interface PartialDataNoticeProps {
 }
 
 /** Shown under a chart whose long date range is still arriving in pieces, or partly failed. */
-export const PartialDataNotice: FC<PartialDataNoticeProps> = ({ query }) => {
+export const PartialDataNotice = ({ query }: PartialDataNoticeProps) => {
   const { chunks } = query;
   if (!chunks || (!chunks.pending && !chunks.failed)) return null;
 

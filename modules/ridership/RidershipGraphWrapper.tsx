@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import type { RidershipCount } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
@@ -19,12 +18,12 @@ interface RidershipGraphWrapperProps {
 
 // The average/percentage/peak KPIs now live in the page's stat-card row (see RidershipDetails), so
 // the chart no longer carries an in-plot carousel value — just the graph.
-export const RidershipGraphWrapper: FC<RidershipGraphWrapperProps> = ({
+export const RidershipGraphWrapper = ({
   data,
   config,
   startDate,
   endDate,
-}) => {
+}: RidershipGraphWrapperProps) => {
   if (!data.some((datapoint) => datapoint.count !== null)) return <NoDataNotice isLineMetric />;
 
   return (

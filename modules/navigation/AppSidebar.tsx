@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { ComponentProps, FC } from 'react';
+import type { ComponentProps } from 'react';
 import { Link } from '../../common/components/general/Link';
 import {
   Sidebar,
@@ -14,7 +14,7 @@ import { NavLines } from './NavLines';
 import { NavSystem } from './NavSystem';
 import { ExtraMenuItems } from './ExtraMenuItems';
 
-export const AppSidebar: FC<ComponentProps<typeof Sidebar>> = ({ ...props }) => {
+export const AppSidebar = ({ ...props }: ComponentProps<typeof Sidebar>) => {
   const { isMobile, setOpenMobile } = useSidebar();
   // On mobile the sidebar is a sheet, so navigating should dismiss it.
   const close = useCallback(() => {

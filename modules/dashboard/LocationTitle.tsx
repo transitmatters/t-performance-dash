@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import type { Location } from '../../common/types/charts';
 
 interface LocationTitleProps {
@@ -11,7 +10,7 @@ interface LocationTitleProps {
  * yellow especially) fall well short of readable contrast on a white card. The TM red is itself
  * darkened for a light card, so it needs a lighter counterpart once the card goes dark.
  */
-export const LocationTitle: FC<LocationTitleProps> = ({ location, both }) => {
+export const LocationTitle = ({ location, both }: LocationTitleProps) => {
   if (both) {
     return (
       <p className="flex w-full gap-1 overflow-hidden text-[13px] font-semibold md:justify-end">

@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { TODAY_STRING } from '../../common/constants/dates';
 import { OverallSpeedChartWrapper } from './charts/OverallSpeedChartWrapper';
@@ -6,7 +5,7 @@ import { OverallServiceChartWrapper } from './charts/OverallServiceChartWrapper'
 import { OverallRidershipChartWrapper } from './charts/OverallRidershipChartWrapper';
 import { LandingChartWidget } from './LandingChartWidget';
 
-export const LandingCharts: FC = () => {
+export const LandingCharts = () => {
   // This query is just to get the lambdas "warm"
   useDeliveredTripMetrics({
     agg: 'daily',

@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import { Link } from '../../common/components/general/Link';
 import type { Line } from '../../common/types/lines';
@@ -11,7 +11,7 @@ interface LineButtonProps {
   line: Line;
 }
 
-export const LineButton: FC<LineButtonProps> = ({ children, line }) => {
+export const LineButton = ({ children, line }: LineButtonProps) => {
   const lineObject = LINE_OBJECTS[line];
 
   return (

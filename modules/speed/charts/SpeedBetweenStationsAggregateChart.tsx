@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import type { FC } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AggregateDataResponse, TravelTimesUnit } from '../../../common/types/charts';
@@ -17,13 +16,13 @@ interface SpeedBetweenStationsAggregateChartProps {
   peakTime?: boolean;
 }
 
-export const SpeedBetweenStationsAggregateChart: FC<SpeedBetweenStationsAggregateChartProps> = ({
+export const SpeedBetweenStationsAggregateChart = ({
   traveltimes,
   toStation,
   fromStation,
   timeUnit,
   peakTime = true,
-}) => {
+}: SpeedBetweenStationsAggregateChartProps) => {
   const {
     query: { startDate, endDate },
   } = useDelimitatedRoute();

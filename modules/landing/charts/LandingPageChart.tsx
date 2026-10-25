@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import type { FC } from 'react';
 
 import { Line } from '@chartjs-components';
 import type { ChartDataset } from 'chart.js';
@@ -30,7 +29,7 @@ interface LandingPageChartsProps {
 // Add padding for datalabels.
 const CHART_PADDING = 48;
 
-export const LandingPageChart: FC<LandingPageChartsProps> = ({ datasets, labels, id }) => {
+export const LandingPageChart = ({ datasets, labels, id }: LandingPageChartsProps) => {
   const isMobile = !useBreakpoint('md');
 
   const chart = useMemo(() => {

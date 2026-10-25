@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import type { FC } from 'react';
 import { lineColorBackground } from '../../styles/general';
 import type { Line } from '../../types/lines';
 
@@ -8,7 +7,7 @@ interface DividerProps {
   line?: Line;
 }
 
-export const Divider: FC<DividerProps> = ({ title, line }) => {
+export const Divider = ({ title, line }: DividerProps) => {
   return (
     <div className="relative mb-1">
       <div className="absolute inset-0 flex items-center" aria-hidden="true">

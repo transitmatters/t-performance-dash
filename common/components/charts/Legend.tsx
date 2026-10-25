@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { CHART_COLORS } from '../../constants/colors';
 
 interface LegendProps {
@@ -13,7 +12,7 @@ interface LegendLongTermProps {
 
 // The Commuter Rail data caveat lives once at the page level (BetaDataNotice),
 // so it is intentionally not repeated inside every chart legend here.
-export const LegendSingleDay: FC<LegendProps> = ({ showUnderRatio, usingTmBenchmark }) => {
+export const LegendSingleDay = ({ showUnderRatio, usingTmBenchmark }: LegendProps) => {
   return (
     <div className="flex min-w-0 flex-col gap-y-1 text-muted-foreground">
       <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-1 text-xs">
@@ -30,7 +29,7 @@ const SEVERITY_LEGEND = [
   { label: '100%+ off', color: CHART_COLORS.PURPLE },
 ];
 
-const LegendSingle: FC<LegendProps> = ({ usingTmBenchmark = false }) => {
+const LegendSingle = ({ usingTmBenchmark = false }: LegendProps) => {
   return (
     <>
       <p className="flex flex-row items-center gap-x-1 italic">
@@ -51,10 +50,7 @@ const LegendSingle: FC<LegendProps> = ({ usingTmBenchmark = false }) => {
   );
 };
 
-export const LegendLongTerm: FC<LegendLongTermProps> = ({
-  isTrendlineVisible,
-  onToggleTrendline,
-}) => {
+export const LegendLongTerm = ({ isTrendlineVisible, onToggleTrendline }: LegendLongTermProps) => {
   return (
     <div className="flex w-full flex-row items-baseline gap-2 p-1 text-left text-xs text-muted-foreground sm:gap-4">
       <p>

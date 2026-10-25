@@ -2,7 +2,6 @@ import { faArrowRight, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { useEffect } from 'react';
-import type { FC } from 'react';
 import { Button } from '../inputs/Button';
 import { StationSelector } from '../inputs/StationSelector';
 import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
@@ -25,12 +24,12 @@ interface StationSelectorWidgetProps {
   ferryRoute: FerryRoute | undefined;
 }
 
-export const StationSelectorWidget: FC<StationSelectorWidgetProps> = ({
+export const StationSelectorWidget = ({
   line,
   busRoute,
   crRoute,
   ferryRoute,
-}) => {
+}: StationSelectorWidgetProps) => {
   const updateQueryParams = useUpdateQuery();
   const lineShort = LINE_OBJECTS[line].short;
   const {

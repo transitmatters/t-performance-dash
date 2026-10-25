@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { FC } from 'react';
 import { addProtocol, LngLatBounds, setWorkerUrl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { PMTiles, Protocol } from 'pmtiles';
@@ -213,7 +212,7 @@ interface BusSpeedMapViewProps {
   segmentStops?: SegmentStops;
 }
 
-export const BusSpeedMapView: FC<BusSpeedMapViewProps> = ({
+export const BusSpeedMapView = ({
   pmtilesUrl,
   period,
   dayType,
@@ -221,7 +220,7 @@ export const BusSpeedMapView: FC<BusSpeedMapViewProps> = ({
   direction,
   routeFilter,
   segmentStops,
-}) => {
+}: BusSpeedMapViewProps) => {
   const [hovered, setHovered] = useState<Hovered | undefined>();
   const mapRef = useRef<MapRef>(null);
   const routeFilterClause = useMemo<FilterSpecification | undefined>(

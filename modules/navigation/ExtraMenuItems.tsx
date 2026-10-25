@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { Link } from '../../common/components/general/Link';
 import { DonateButton } from '../../common/components/buttons/DonateButton';
 import { SidebarSeparator } from '../../common/components/ui/sidebar';
@@ -16,7 +15,7 @@ const LINKS = [
  * Utility links are secondary to the nav, so they wrap inline rather than taking a row each —
  * stacked, they cost enough vertical space to push lines below the fold.
  */
-export const ExtraMenuItems: FC = () => {
+export const ExtraMenuItems = () => {
   return (
     <div className="flex flex-col gap-2 pb-1">
       <SidebarSeparator className="mx-0" />

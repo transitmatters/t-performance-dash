@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import classNames from 'classnames';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { useDelimitatedRoute } from '../../../common/utils/router';
@@ -13,7 +12,7 @@ interface AlertsProps {
   alerts: UseQueryResult<AlertsResponse[]>;
 }
 
-export const Alerts: FC<AlertsProps> = ({ title, alerts }) => {
+export const Alerts = ({ title, alerts }: AlertsProps) => {
   const {
     line,
     lineShort,

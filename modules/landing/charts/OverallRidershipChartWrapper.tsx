@@ -1,9 +1,8 @@
-import type { FC } from 'react';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { useRidershipDataLanding } from '../../../common/api/hooks/ridership';
 import { OverallRidershipChart } from './OverallRidershipChart';
 
-export const OverallRidershipChartWrapper: FC = () => {
+export const OverallRidershipChartWrapper = () => {
   const ridershipData = useRidershipDataLanding();
   const ridershipDataReady =
     !ridershipData.isLoading && !ridershipData.isError && ridershipData.data;

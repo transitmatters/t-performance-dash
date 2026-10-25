@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import classNames from 'classnames';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -10,7 +9,7 @@ import { LINE_COLORS } from '../../common/constants/colors';
 import { readableOn } from '../../common/utils/general';
 import { RouteBullet } from '../../common/components/transit/RouteBullet';
 
-export const DesktopHeader: FC = () => {
+export const DesktopHeader = () => {
   const {
     line,
     page,

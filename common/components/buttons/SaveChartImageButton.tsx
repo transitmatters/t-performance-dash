@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { FC, RefObject } from 'react';
+import type { RefObject } from 'react';
 import type { Chart } from 'chart.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileImage } from '@fortawesome/free-solid-svg-icons';
@@ -19,7 +19,7 @@ interface SaveChartImageButtonProps {
   chartTitle?: string;
 }
 
-export const SaveChartImageButton: FC<SaveChartImageButtonProps> = ({
+export const SaveChartImageButton = ({
   chartRef,
   datasetName,
   startDate,
@@ -27,7 +27,7 @@ export const SaveChartImageButton: FC<SaveChartImageButtonProps> = ({
   location,
   endDate,
   chartTitle,
-}) => {
+}: SaveChartImageButtonProps) => {
   const { line } = useDelimitatedRoute();
 
   const handleClick = useCallback(() => {

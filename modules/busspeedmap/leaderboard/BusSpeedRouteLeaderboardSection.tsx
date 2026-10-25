@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import type { FC } from 'react';
 import { useBusSpeedLeaderboard } from '../../../common/api/hooks/busTripMetrics';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
@@ -22,11 +21,11 @@ interface BusSpeedRouteLeaderboardSectionProps {
   frequentRoutesOnly: boolean;
 }
 
-export const BusSpeedRouteLeaderboardSection: FC<BusSpeedRouteLeaderboardSectionProps> = ({
+export const BusSpeedRouteLeaderboardSection = ({
   date,
   period,
   frequentRoutesOnly,
-}) => {
+}: BusSpeedRouteLeaderboardSectionProps) => {
   const [showAll, setShowAll] = useState(false);
 
   const dateRange = date ? periodDateRange(date, period) : undefined;

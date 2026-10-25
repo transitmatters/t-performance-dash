@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
-import type { FC } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay, faCalendarWeek } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -24,7 +23,7 @@ interface DateSelectionProps {
   type: QueryTypeOptions;
 }
 
-export const DateSelection: FC<DateSelectionProps> = ({ type }) => {
+export const DateSelection = ({ type }: DateSelectionProps) => {
   const { line, page, tab, query } = useDelimitatedRoute();
   const range = type === 'range';
   const [open, setOpen] = useState<boolean>(false);

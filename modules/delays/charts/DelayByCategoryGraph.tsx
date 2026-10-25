@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import type { FC } from 'react';
 import { Bar } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -35,10 +34,7 @@ const sumArray = (array: number[][]) => {
   return newArray;
 };
 
-export const DelayByCategoryGraph: FC<DelayByCategoryGraphProps> = ({
-  data,
-  showTitle = false,
-}) => {
+export const DelayByCategoryGraph = ({ data, showTitle = false }: DelayByCategoryGraphProps) => {
   const { linePath } = useDelimitatedRoute();
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');

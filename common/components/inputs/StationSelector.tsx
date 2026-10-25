@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import type { FC } from 'react';
 import { faBicycle, faChevronDown, faWheelchair } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
 import type { Station } from '../../types/stations';
@@ -24,12 +23,7 @@ const branchLabelWidth = {
   DEFAULT: 'w-0',
 };
 
-export const StationSelector: FC<StationSelector> = ({
-  type,
-  fromStation,
-  toStation,
-  setStation,
-}) => {
+export const StationSelector = ({ type, fromStation, toStation, setStation }: StationSelector) => {
   const {
     line,
     lineShort,

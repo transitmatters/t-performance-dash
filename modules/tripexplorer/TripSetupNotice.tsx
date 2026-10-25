@@ -1,6 +1,5 @@
 import { faCalendarDay, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import type { FC } from 'react';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 
@@ -14,7 +13,7 @@ interface TripSetupNoticeProps {
  * `return null`, which left the content well blank and read as a broken page — the one state a
  * first-time visitor is most likely to land in from a partial link.
  */
-export const TripSetupNotice: FC<TripSetupNoticeProps> = ({ missing }) => {
+export const TripSetupNotice = ({ missing }: TripSetupNoticeProps) => {
   const isMobile = !useBreakpoint('md');
   // The controls live in the sticky header on desktop and in the docked panel on mobile, so point
   // at whichever one the reader is actually looking at.

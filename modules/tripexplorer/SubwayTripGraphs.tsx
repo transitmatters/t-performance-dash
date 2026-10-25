@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
@@ -32,14 +31,14 @@ interface SubwayTripGraphsProps {
   line: Line | undefined;
 }
 
-export const SubwayTripGraphs: FC<SubwayTripGraphsProps> = ({
+export const SubwayTripGraphs = ({
   fromStation,
   toStation,
   parameters,
   aggregate,
   enabled,
   line,
-}) => {
+}: SubwayTripGraphsProps) => {
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,

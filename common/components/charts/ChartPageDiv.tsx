@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 interface ChartPageDivProps {
   children: ReactNode;
@@ -14,6 +14,6 @@ interface ChartPageDivProps {
  * gap between them. It also means a section that renders `null` leaves no element behind, so it
  * cannot hold an empty gap slot. The reveal stagger rides on the same children via CSS.
  */
-export const ChartPageDiv: FC<ChartPageDivProps> = ({ children }) => {
+export const ChartPageDiv = ({ children }: ChartPageDivProps) => {
   return <div className="flex w-full flex-col gap-6 md:gap-8">{children}</div>;
 };

@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import type { FC } from 'react';
 import type { ChunkedAggregateQueryResult, DayFilter } from '../../common/types/charts';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -18,12 +17,12 @@ interface TravelTimesAggregateWrapperProps {
   dayFilter: DayFilter;
 }
 
-export const TravelTimesAggregateWrapper: FC<TravelTimesAggregateWrapperProps> = ({
+export const TravelTimesAggregateWrapper = ({
   query,
   toStation,
   fromStation,
   dayFilter,
-}) => {
+}: TravelTimesAggregateWrapperProps) => {
   const allData = useMemo(
     () => query.data?.by_date.filter((datapoint) => datapoint.peak === 'all') ?? [],
     [query.data]

@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { DateSelection } from '../inputs/DateSelection/DateSelection';
 import { OverviewDateSelection } from '../inputs/DateSelection/OverviewDateSelection';
 import { useDelimitatedRoute, useQueryParams } from '../../utils/router';
@@ -10,7 +9,7 @@ interface DateControlProps {
   queryType: QueryTypeOptions;
 }
 
-export const DateControl: FC<DateControlProps> = ({ dateStoreSection, queryType }) => {
+export const DateControl = ({ dateStoreSection, queryType }: DateControlProps) => {
   const search = useQueryParams();
   const { tab } = useDelimitatedRoute();
   // The redesigned Overview (see modules/dashboard/redesign/) is fixed to the last month and

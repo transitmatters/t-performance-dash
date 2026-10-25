@@ -1,4 +1,4 @@
-import type { SetStateAction, Dispatch, FC } from 'react';
+import type { SetStateAction, Dispatch } from 'react';
 import classNames from 'classnames';
 import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
 import { getDateString } from '../../../modules/commute/alerts/AlertUtils';
@@ -9,7 +9,7 @@ interface PastAlertModalProps {
   setAlertsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const PastAlertModal: FC<PastAlertModalProps> = ({ alertsOpen, setAlertsOpen }) => {
+export const PastAlertModal = ({ alertsOpen, setAlertsOpen }: PastAlertModalProps) => {
   const alertStore = useAlertStore();
   return (
     <Dialog open={alertsOpen} onOpenChange={setAlertsOpen}>

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { ComponentProps, FC } from 'react';
+import type { ComponentProps } from 'react';
 import type { SegmentLocation, SegmentLabel, TooltipSide } from '@transitmatters/stripmap';
 import { LineMap, createDefaultDiagramForLine } from '@transitmatters/stripmap';
 
@@ -58,12 +58,12 @@ const getSegmentLabelOverrides = (
   return null;
 };
 
-export const SlowZonesMap: FC<SlowZonesMapProps> = ({
+export const SlowZonesMap = ({
   lineName,
   slowZones,
   direction,
   speedRestrictions,
-}) => {
+}: SlowZonesMapProps) => {
   const line = useMemo(
     () => Object.values(LINE_OBJECTS).find((obj) => obj.short === lineName)!,
     [lineName]

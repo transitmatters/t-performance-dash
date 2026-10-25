@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
 import { SpeedBaseline } from '../../../copy/landingCopy';
 import type { Line } from '../../../common/types/lines';
@@ -10,7 +9,7 @@ import { LandingPageChart } from './LandingPageChart';
 interface OverallSpeedChartProps {
   speedData: { [key in Line]?: DeliveredTripMetrics[] };
 }
-export const OverallSpeedChart: FC<OverallSpeedChartProps> = ({ speedData }) => {
+export const OverallSpeedChart = ({ speedData }: OverallSpeedChartProps) => {
   const labels = LANDING_CHART_LABELS;
   const { data: baselines } = useHistoricalBaselines();
   const datasets = convertToSpeedDataset(speedData, labels, baselines);

@@ -1,8 +1,7 @@
-import type { FC } from 'react';
 import { useDelimitatedRoute } from '../../utils/router';
 import { Notice } from './Notice';
 
-export const CrBetaAccuracyNotice: FC = () => {
+export const CrBetaAccuracyNotice = () => {
   const { line, linePath } = useDelimitatedRoute();
 
   if (line !== 'line-commuter-rail' && linePath !== 'commuter-rail') {

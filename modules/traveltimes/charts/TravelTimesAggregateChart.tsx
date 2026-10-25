@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import type { FC } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type {
@@ -21,14 +20,14 @@ interface TravelTimesAggregateChartProps {
   dayFilter?: DayFilter;
 }
 
-export const TravelTimesAggregateChart: FC<TravelTimesAggregateChartProps> = ({
+export const TravelTimesAggregateChart = ({
   traveltimes,
   toStation,
   fromStation,
   timeUnit = 'by_date',
   peakTime = true,
   dayFilter = 'all',
-}) => {
+}: TravelTimesAggregateChartProps) => {
   const {
     query: { startDate, endDate },
   } = useDelimitatedRoute();

@@ -1,7 +1,6 @@
 import { Bar } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { useMemo, useRef } from 'react';
-import type { FC } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { LINE_COLORS } from '../../../common/constants/colors';
@@ -15,7 +14,7 @@ import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { getFormattedTimeString } from '../../../common/utils/time';
 
-export const HeadwaysHistogram: FC<HeadwaysChartProps> = ({ headways }) => {
+export const HeadwaysHistogram = ({ headways }: HeadwaysChartProps) => {
   const { line, linePath, lineShort } = useDelimitatedRoute();
 
   const ref = useRef(null);

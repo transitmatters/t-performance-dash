@@ -1,4 +1,4 @@
-import type { SetStateAction, Dispatch, ElementType, FC } from 'react';
+import type { SetStateAction, Dispatch, ElementType } from 'react';
 import classNames from 'classnames';
 import { AlertNames } from '../../../common/types/alerts';
 import { useDelimitatedRoute } from '../../../common/utils/router';
@@ -22,14 +22,14 @@ interface AlertModalProps {
   type: string;
 }
 
-export const AlertModal: FC<AlertModalProps> = ({
+export const AlertModal = ({
   showModal,
   setShowModal,
   header,
   description,
   Icon,
   type,
-}) => {
+}: AlertModalProps) => {
   const { line } = useDelimitatedRoute();
   return (
     <Dialog open={showModal} onOpenChange={setShowModal}>

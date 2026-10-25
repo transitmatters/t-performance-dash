@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -39,7 +39,7 @@ const VARIANTS: Record<
  * slot, one container treatment per variant — so a stack of notices reads as
  * one system instead of four ad-hoc footnotes.
  */
-export const Notice: FC<NoticeProps> = ({ variant = 'info', title, icon, className, children }) => {
+export const Notice = ({ variant = 'info', title, icon, className, children }: NoticeProps) => {
   const styles = VARIANTS[variant];
   return (
     <div

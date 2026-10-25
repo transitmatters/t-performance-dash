@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import {
   Accordion as AccordionRoot,
   AccordionContent,
@@ -14,7 +14,7 @@ interface AccordionProps {
   size?: 'md' | 'lg';
 }
 
-export const Accordion: FC<AccordionProps> = ({ contentList, size = 'md' }) => {
+export const Accordion = ({ contentList, size = 'md' }: AccordionProps) => {
   return (
     <div className="w-full">
       <AccordionRoot type="multiple" className="mx-auto w-full rounded-2xl bg-white p-2">

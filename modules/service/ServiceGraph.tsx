@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import type { FC } from 'react';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
@@ -19,7 +18,7 @@ interface ServiceGraphProps {
   endDate: string;
 }
 
-export const ServiceGraph: FC<ServiceGraphProps> = (props: ServiceGraphProps) => {
+export const ServiceGraph = (props: ServiceGraphProps) => {
   const { data, predictedData, startDate, endDate, config } = props;
   const { line } = useDelimitatedRoute();
 

@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
@@ -25,7 +25,7 @@ const isNegligible = (comparison: WidgetComparison) => {
   return Math.abs(comparison.delta) <= 1;
 };
 
-export const SmallData: FC<SmallDataProps> = ({ analysis, widgetValue, comparison }) => {
+export const SmallData = ({ analysis, widgetValue, comparison }: SmallDataProps) => {
   const negligible = comparison ? isNegligible(comparison) : false;
 
   return (

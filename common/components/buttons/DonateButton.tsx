@@ -1,10 +1,9 @@
-import type { FC } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import { Link } from '../general/Link';
 import { StarBorder } from '../StarBorder/StarBorder';
 
-export const DonateButton: FC = () => {
+export const DonateButton = () => {
   return (
     <StarBorder speed="10s">
       <Link

@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
@@ -30,14 +29,14 @@ interface BusTripGraphsProps {
   line: Line | undefined;
 }
 
-export const BusTripGraphs: FC<BusTripGraphsProps> = ({
+export const BusTripGraphs = ({
   fromStation,
   toStation,
   parameters,
   aggregate,
   enabled,
   line,
-}) => {
+}: BusTripGraphsProps) => {
   const { traveltimes, headways } = useTripExplorerQueries(
     'bus',
     parameters,

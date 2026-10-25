@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -31,7 +31,7 @@ interface WidgetTitle {
 /** Type comes from CardTitle; only the wrapping behaviour is ours. */
 const titleClassName = 'text-balance md:whitespace-nowrap';
 
-export const WidgetTitle: FC<WidgetTitle> = ({
+export const WidgetTitle = ({
   title,
   subtitle,
   both = false,
@@ -40,7 +40,7 @@ export const WidgetTitle: FC<WidgetTitle> = ({
   action,
   tab,
   titleHref,
-}) => {
+}: WidgetTitle) => {
   const { page, query, linePath } = useDelimitatedRoute();
   const handlePageConfig = useHandleConfigStore();
   const generateHref = useGenerateHref();

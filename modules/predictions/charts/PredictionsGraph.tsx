@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import type { FC } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -29,12 +28,12 @@ interface PredictionsGraphProps {
   showTitle?: boolean;
 }
 
-export const PredictionsGraph: FC<PredictionsGraphProps> = ({
+export const PredictionsGraph = ({
   data,
   startDate,
   endDate,
   showTitle = false,
-}) => {
+}: PredictionsGraphProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');

@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import classNames from 'classnames';
 import type { WidgetValueInterface } from '../../../types/basicWidgets';
 import type { SentimentDirection } from './BasicWidgetDataLayout';
@@ -9,11 +8,11 @@ interface DeltaProps {
   usePercentChange?: boolean;
 }
 
-export const Delta: FC<DeltaProps> = ({
+export const Delta = ({
   widgetValue,
   sentimentDirection = 'negativeOnIncrease',
   usePercentChange = false,
-}) => {
+}: DeltaProps) => {
   const changingValue = usePercentChange ? widgetValue.percentChange : widgetValue.delta;
   const formattedChangingValue = usePercentChange
     ? widgetValue.getFormattedPercentChange()

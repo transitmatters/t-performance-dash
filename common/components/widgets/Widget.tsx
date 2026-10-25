@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import type { Href } from '../general/Link';
@@ -56,7 +56,7 @@ const getReadyState = (ready: ReadyDependency | ReadyDependency[]) => {
   return 'ready';
 };
 
-export const Widget: FC<Props> = (props) => {
+export const Widget = (props: Props) => {
   const {
     title,
     subtitle,

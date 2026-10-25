@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { cn } from '../../utils/cn';
 
 interface RouteLineProps {
@@ -10,7 +9,7 @@ interface RouteLineProps {
  * The motif kit's "structure" element: the line rendered as a line — a connector/spine/underline.
  * Drawn in the current text color (set via `text-primary` or `style={{ color }}`). Decorative.
  */
-export const RouteLine: FC<RouteLineProps> = ({ orientation = 'horizontal', className }) => (
+export const RouteLine = ({ orientation = 'horizontal', className }: RouteLineProps) => (
   <span
     aria-hidden="true"
     data-slot="route-line"

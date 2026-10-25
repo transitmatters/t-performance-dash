@@ -1,5 +1,4 @@
 import { CSVLink } from 'react-csv';
-import type { FC } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileArrowDown } from '@fortawesome/free-solid-svg-icons';
 import type { Location } from '../../types/charts';
@@ -16,14 +15,14 @@ interface DownloadButtonProps {
   endDate?: string;
 }
 
-export const DownloadButton: FC<DownloadButtonProps> = ({
+export const DownloadButton = ({
   datasetName,
   data,
   includeBothStopsForLocation,
   startDate,
   location,
   endDate,
-}) => {
+}: DownloadButtonProps) => {
   const { line } = useDelimitatedRoute();
   return (
     <CSVLink

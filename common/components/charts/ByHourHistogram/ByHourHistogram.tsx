@@ -1,5 +1,4 @@
 import { useMemo, useRef, useCallback } from 'react';
-import type { FC } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import Color from 'color';
 
@@ -56,7 +55,7 @@ const stripZeroHoursAndRotateMidnightToEnd = (
   return { data: strippedDatasets, timeLabels };
 };
 
-export const ByHourHistogram: FC<Props> = (props) => {
+export const ByHourHistogram = (props: Props) => {
   const {
     data: dataWithZeros,
     valueAxis,

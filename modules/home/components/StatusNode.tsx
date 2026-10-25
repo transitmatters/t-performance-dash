@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { Star } from 'lucide-react';
 import { cn } from '../../../common/utils/cn';
 import type { Status } from '../types';
@@ -15,7 +14,7 @@ interface StatusNodeProps {
  * the current text color (the line's color via `text-primary`). Decorative: the label beside it
  * says the same thing in words.
  */
-export const StatusNode: FC<StatusNodeProps> = ({ status, className }) => {
+export const StatusNode = ({ status, className }: StatusNodeProps) => {
   if (status === 'na') {
     return (
       <span

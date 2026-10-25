@@ -1,12 +1,12 @@
 import classNames from 'classnames';
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 interface DataPairProps {
   children: ReactNode;
   last?: boolean;
 }
 
-export const DataPair: FC<DataPairProps> = ({ children, last }) => {
+export const DataPair = ({ children, last }: DataPairProps) => {
   return (
     <div
       className={classNames(

@@ -1,5 +1,4 @@
 import { useId } from 'react';
-import type { FC } from 'react';
 import { Switch } from '../ui/switch';
 import { Label } from '../ui/label';
 import { lineColorVar } from '../../styles/general';
@@ -11,7 +10,7 @@ interface ToggleSwitchProps {
   label: string;
 }
 
-export const ToggleSwitch: FC<ToggleSwitchProps> = ({ enabled, setEnabled, label }) => {
+export const ToggleSwitch = ({ enabled, setEnabled, label }: ToggleSwitchProps) => {
   const { line } = useDelimitatedRoute();
   const id = useId();
 

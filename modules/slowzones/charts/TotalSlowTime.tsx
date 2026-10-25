@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import type { FC } from 'react';
 
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
@@ -32,14 +31,14 @@ interface TotalSlowTimeProps {
   showTitle: boolean;
 }
 
-export const TotalSlowTime: FC<TotalSlowTimeProps> = ({
+export const TotalSlowTime = ({
   data,
   startDateUTC,
   endDateUTC,
   lineShort,
   line,
   showTitle,
-}) => {
+}: TotalSlowTimeProps) => {
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((item) => dayjs.utc(item.date).format('YYYY-MM-DD'));

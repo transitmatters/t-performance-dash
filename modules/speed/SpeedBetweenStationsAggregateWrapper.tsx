@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import type { ChunkedAggregateQueryResult } from '../../common/types/charts';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -16,9 +15,11 @@ interface SpeedBetweenStationsAggregateWrapperProps {
   fromStation: Station;
 }
 
-export const SpeedBetweenStationsAggregateWrapper: FC<
-  SpeedBetweenStationsAggregateWrapperProps
-> = ({ query, toStation, fromStation }) => {
+export const SpeedBetweenStationsAggregateWrapper = ({
+  query,
+  toStation,
+  fromStation,
+}: SpeedBetweenStationsAggregateWrapperProps) => {
   const dataReady = !query.isError && query.data && toStation && fromStation && query.data;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   const traveltimesData = convertToAggregateStationSpeedDataset(

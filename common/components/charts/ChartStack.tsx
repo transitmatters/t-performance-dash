@@ -1,10 +1,10 @@
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 interface ChartStackProps {
   children: ReactNode;
 }
 
 /** Stacks a chart with its button/legend row. No card surface of its own — it always lives inside a Widget. */
-export const ChartStack: FC<ChartStackProps> = ({ children }) => {
+export const ChartStack = ({ children }: ChartStackProps) => {
   return <div className="relative flex w-full flex-col gap-y-2">{children}</div>;
 };

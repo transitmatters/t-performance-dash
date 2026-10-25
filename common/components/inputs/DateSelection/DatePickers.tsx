@@ -1,7 +1,6 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import type { FC } from 'react';
 import { getDatePickerBounds } from '../../../constants/dates';
 import { FOCUS_RING_ON_SURFACE } from '../../../styles/general';
 import type { QueryTypeOptions } from '../../../types/router';
@@ -17,7 +16,7 @@ interface DatePickerProps {
  * The date fields themselves. They only ever edit dates that are already there: the router fills in
  * and clamps missing or out-of-bounds dates before the page renders (see `redirectToCompleteDates`).
  */
-export const DatePickers: FC<DatePickerProps> = ({ type, clearPreset }) => {
+export const DatePickers = ({ type, clearPreset }: DatePickerProps) => {
   const updateQueryParams = useUpdateQuery();
   const { query, line, tab, page } = useDelimitatedRoute();
   const { startDate, endDate, date } = query;

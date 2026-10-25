@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { WidgetPage } from '../components/widgets/WidgetPage';
 import { MobileHeader } from '../../modules/dashboard/MobileHeader';
@@ -12,7 +12,7 @@ interface DashboardLayoutProps {
   children: ReactNode;
 }
 
-export const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
+export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const isMobile = !useBreakpoint('md');
   const { line, page, query, tab } = useDelimitatedRoute();
   const { busRoute, crRoute, ferryRoute } = query;

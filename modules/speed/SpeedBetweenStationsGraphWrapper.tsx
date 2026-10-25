@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -16,11 +15,11 @@ interface SpeedBetweenStationsSingleWrapperProps {
   fromStation: Station;
 }
 
-export const SpeedBetweenStationsSingleWrapper: FC<SpeedBetweenStationsSingleWrapperProps> = ({
+export const SpeedBetweenStationsSingleWrapper = ({
   query,
   toStation,
   fromStation,
-}) => {
+}: SpeedBetweenStationsSingleWrapperProps) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   if (query.data.length < 1) return <NoDataNotice />;

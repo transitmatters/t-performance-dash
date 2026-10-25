@@ -1,4 +1,4 @@
-import type { Dispatch, FC, SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
 import { DAY_TYPES, DIRECTIONS, PERIODS, TIME_BANDS } from '../constants';
 import type { DayType, DirectionFilter, Period, TimeBand } from '../types';
@@ -23,7 +23,7 @@ interface BusSpeedMapControlsProps {
   showTimeBand?: boolean;
 }
 
-export const BusSpeedMapControls: FC<BusSpeedMapControlsProps> = ({
+export const BusSpeedMapControls = ({
   period,
   setPeriod,
   dayType,
@@ -34,7 +34,7 @@ export const BusSpeedMapControls: FC<BusSpeedMapControlsProps> = ({
   setDirection,
   showDayType = true,
   showTimeBand = true,
-}) => {
+}: BusSpeedMapControlsProps) => {
   const periodOptions = PERIODS.map((option) => [option.key, option.label] as [Period, string]);
   const selectedPeriodIndex = PERIODS.findIndex((option) => option.key === period);
 

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import type { FC } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { PastAlertModal } from './PastAlertModal';
@@ -10,7 +9,7 @@ import { PastAlertModal } from './PastAlertModal';
  * no role, and announced — if at all — as a stray "warning sign". It is a real button now, with a
  * drawn icon rather than an emoji standing in for one.
  */
-export const AlertNotice: FC<{ count: number }> = ({ count }) => {
+export const AlertNotice = ({ count }: { count: number }) => {
   const [alertsOpen, setAlertsOpen] = useState(false);
 
   return (
