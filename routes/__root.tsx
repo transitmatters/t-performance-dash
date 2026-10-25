@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Outlet, createRootRoute, useMatches } from '@tanstack/react-router';
-import { useIsNotFound } from '../common/utils/router';
+import { useIsNotFound, useQueryParams } from '../common/utils/router';
 import { Layouts } from '../common/layouts/Layouts';
 import { Layout } from '../common/layouts/PrimaryLayout';
 import { NavLayout } from '../common/layouts/NavLayout';
@@ -15,17 +15,27 @@ import { redirectToCompleteDates } from '../common/utils/dateParams';
 const PassThroughLayout = ({ children }: { children?: React.ReactNode }) => <>{children}</>;
 
 const RootComponent = () => {
-  useApplyTheme();
+  // Not-found pages bring their own layout; everything else names one in its route's staticData.
+  const notFound = useIsNotFound();
+  const { layout, embed } = useMatches({
+    select: (matches) => matches[matches.length - 1]?.staticData ?? {},
+  });
+  // An embed's host page picks its theme (light unless `?theme=dark`), not the visitor's preference.
+  const { theme } = useQueryParams();
+  useApplyTheme(embed ? (theme === 'dark' ? 'dark' : 'light') : undefined);
   useGoatCounter();
   useEffect(() => {
     initBetaRum();
   }, []);
 
-  // Not-found pages bring their own layout; everything else names one in its route's staticData.
-  const notFound = useIsNotFound();
-  const layout = useMatches({
-    select: (matches) => matches[matches.length - 1]?.staticData.layout,
-  });
+  if (embed && !notFound) {
+    return (
+      <Layout>
+        <Outlet />
+      </Layout>
+    );
+  }
+
   const SecondaryLayout = layout && !notFound ? Layouts[layout] : PassThroughLayout;
 
   return (

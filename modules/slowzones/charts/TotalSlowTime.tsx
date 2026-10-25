@@ -29,6 +29,8 @@ interface TotalSlowTimeProps {
   lineShort?: LineShort;
   line?: TrainLine;
   showTitle: boolean;
+  /** Fill the parent's height instead of the fixed card height, as the embed does. */
+  fill?: boolean;
 }
 
 export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
@@ -38,6 +40,7 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
   lineShort,
   line,
   showTitle,
+  fill = false,
 }) => {
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
@@ -99,8 +102,8 @@ export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
         },
       ];
   return (
-    <ChartStack>
-      <ChartDiv isMobile={isMobile}>
+    <ChartStack className={fill ? 'h-full' : undefined}>
+      <ChartDiv isMobile={isMobile} fill={fill}>
         <Line
           ref={ref}
           id={`total-slow-time${line !== undefined ? `-${lineShort}` : ''}`}

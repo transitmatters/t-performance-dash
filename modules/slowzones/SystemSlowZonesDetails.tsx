@@ -24,6 +24,7 @@ import { LineSegments } from './charts/LineSegments';
 import { getLineSegmentsContainerStyle } from './constants/chartConfig';
 import { DirectionObject } from './constants/constants';
 import { SlowZonesMap } from './map';
+import { CopyEmbedButton } from './CopyEmbedButton';
 import type { SlowZonesLineName } from './types';
 
 interface SystemSlowZonesDetailsProps {
@@ -88,6 +89,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
               Time over baseline across the line
             </Link>
           }
+          action={<CopyEmbedButton line="system" startDate={startDate} endDate={endDate} />}
           ready={[delayTotals]}
         >
           {delayTotals.data && (

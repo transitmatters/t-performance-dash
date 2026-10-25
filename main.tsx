@@ -29,6 +29,8 @@ declare module '@tanstack/react-router' {
   }
   interface StaticDataRouteOption {
     layout?: Layout;
+    /** Renders the page alone, without the sidebar or headers, so it can be iframed. */
+    embed?: boolean;
   }
 }
 
