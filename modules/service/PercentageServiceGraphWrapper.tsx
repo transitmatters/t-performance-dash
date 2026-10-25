@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import type { FC } from 'react';
 import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -19,7 +20,7 @@ interface PercentageServiceGraphWrapperProps {
 
 // The "% delivered" KPI now lives in the page's stat-card row (see ServiceDetails), so the chart
 // no longer carries an in-plot carousel value — just the graph.
-export const PercentageServiceGraphWrapper: React.FC<PercentageServiceGraphWrapperProps> = ({
+export const PercentageServiceGraphWrapper: FC<PercentageServiceGraphWrapperProps> = ({
   data,
   predictedData,
   config,

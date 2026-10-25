@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import dayjs from 'dayjs';
 
 import {
@@ -23,7 +23,7 @@ interface AccessibilityCardProps {
   lineShort: LineShort;
 }
 
-export const AccessibilityCard: React.FC<AccessibilityCardProps> = ({ lineShort }) => {
+export const AccessibilityCard: FC<AccessibilityCardProps> = ({ lineShort }) => {
   const accessibilityAlerts = useAccessibilityAlertsData(lineShort);
   const notTracked = lineShort === 'Commuter Rail' || lineShort === 'Bus';
   const isLoading = !notTracked && accessibilityAlerts.isLoading;

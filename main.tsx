@@ -1,4 +1,4 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { config } from '@fortawesome/fontawesome-svg-core';
@@ -36,7 +36,7 @@ declare module '@tanstack/react-router' {
 document.querySelectorAll('[data-prerendered]').forEach((element) => element.remove());
 
 createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  <StrictMode>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </StrictMode>
 );

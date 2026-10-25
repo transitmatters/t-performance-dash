@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
@@ -22,7 +22,7 @@ interface CommuterRailReliabilityProps {
   endDate?: string;
 }
 
-export const CommuterRailReliability: React.FC<CommuterRailReliabilityProps> = ({
+export const CommuterRailReliability: FC<CommuterRailReliabilityProps> = ({
   reliability,
   agg,
   startDate,

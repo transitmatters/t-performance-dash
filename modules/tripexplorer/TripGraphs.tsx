@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { Station } from '../../common/types/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { stopIdsForStations } from '../../common/utils/stations';
@@ -15,7 +15,7 @@ interface TripGraphsProps {
   toStation: Station;
 }
 
-export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }) => {
+export const TripGraphs: FC<TripGraphsProps> = ({ fromStation, toStation }) => {
   const {
     query: { startDate, endDate, date },
     tab,

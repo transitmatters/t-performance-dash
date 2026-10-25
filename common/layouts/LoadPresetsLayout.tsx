@@ -1,12 +1,12 @@
-import React from 'react';
+import type { FC, ReactNode } from 'react';
 import { usePresetsOnFirstLoad } from '../utils/firstLoad';
 import { useDelimitatedRoute } from '../utils/router';
 import { ALL_PAGES } from '../constants/pages';
 
 interface LoadPresetsLayoutProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
-export const LoadPresetsLayout: React.FC<LoadPresetsLayoutProps> = ({ children }) => {
+export const LoadPresetsLayout: FC<LoadPresetsLayoutProps> = ({ children }) => {
   const { page, query } = useDelimitatedRoute();
   const dateStoreSection = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
   usePresetsOnFirstLoad(dateStoreSection, query);

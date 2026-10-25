@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { SingleDayDataPoint } from '../../types/charts';
 import type { Station } from '../../types/stations';
@@ -16,7 +16,7 @@ interface SingleChartWrapperProps {
   showLegend?: boolean;
 }
 
-export const SingleChartWrapper: React.FC<SingleChartWrapperProps> = ({
+export const SingleChartWrapper: FC<SingleChartWrapperProps> = ({
   query,
   toStation,
   fromStation,

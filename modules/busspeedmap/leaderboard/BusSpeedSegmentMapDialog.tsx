@@ -1,6 +1,6 @@
 'use client';
-
-import React, { useState } from 'react';
+import { useState } from 'react';
+import type { FC } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { BusSpeedDataUnavailableError } from '../../../common/api/busSpeedSegments';
 import { useBusSpeedSegmentsUrl } from '../../../common/api/hooks/busSpeedSegments';
@@ -26,7 +26,7 @@ interface BusSpeedSegmentMapDialogProps {
   onClose: () => void;
 }
 
-export const BusSpeedSegmentMapDialog: React.FC<BusSpeedSegmentMapDialogProps> = ({
+export const BusSpeedSegmentMapDialog: FC<BusSpeedSegmentMapDialogProps> = ({
   entry,
   date,
   period,

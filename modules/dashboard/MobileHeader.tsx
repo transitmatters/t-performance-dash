@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import classNames from 'classnames';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -7,7 +7,7 @@ import { lineColorBackground } from '../../common/styles/general';
 import { LINE_COLORS } from '../../common/constants/colors';
 import { readableOn } from '../../common/utils/general';
 
-export const MobileHeader: React.FC = () => {
+export const MobileHeader: FC = () => {
   const {
     line,
     page,

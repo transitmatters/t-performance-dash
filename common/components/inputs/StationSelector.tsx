@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import { useState } from 'react';
+import type { FC } from 'react';
 import { faBicycle, faChevronDown, faWheelchair } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
 import type { Station } from '../../types/stations';
@@ -23,7 +24,7 @@ const branchLabelWidth = {
   DEFAULT: 'w-0',
 };
 
-export const StationSelector: React.FC<StationSelector> = ({
+export const StationSelector: FC<StationSelector> = ({
   type,
   fromStation,
   toStation,
@@ -34,7 +35,7 @@ export const StationSelector: React.FC<StationSelector> = ({
     lineShort,
     query: { busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const station = type === 'from' ? fromStation : toStation;
   const stationOptions = optionsForField(
     type,

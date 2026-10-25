@@ -1,4 +1,5 @@
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
+import type { FC } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -30,7 +31,7 @@ interface RidershipGraphProps {
   showTitle?: boolean;
 }
 
-export const RidershipGraph: React.FC<RidershipGraphProps> = ({
+export const RidershipGraph: FC<RidershipGraphProps> = ({
   data,
   config,
   startDate,

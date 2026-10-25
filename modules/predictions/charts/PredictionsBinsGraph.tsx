@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+import type { FC } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -25,7 +26,7 @@ interface PredictionsBinsGraphProps {
   showTitle?: boolean;
 }
 
-export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
+export const PredictionsBinsGraph: FC<PredictionsBinsGraphProps> = ({
   data,
   startDate,
   endDate,

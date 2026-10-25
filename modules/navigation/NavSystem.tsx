@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faUsers, faWarning } from '@fortawesome/free-solid-svg-icons';
 import { Link } from '../../common/components/general/Link';
@@ -26,7 +26,7 @@ interface NavSystemProps {
   close?: () => void;
 }
 
-export const NavSystem: React.FC<NavSystemProps> = ({ close }) => {
+export const NavSystem: FC<NavSystemProps> = ({ close }) => {
   const { page } = useDelimitatedRoute();
 
   return (

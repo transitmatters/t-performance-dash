@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLeftRight } from '@fortawesome/free-solid-svg-icons';
@@ -43,7 +43,7 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort, busRoute?: 
   return <p className="mr-1">Delays</p>;
 };
 
-export const DelayAlert: React.FC<DelayAlertProps> = ({ alert, lineShort, type, busRoute }) => {
+export const DelayAlert: FC<DelayAlertProps> = ({ alert, lineShort, type, busRoute }) => {
   return (
     <AlertBoxInner
       header={alert.header}

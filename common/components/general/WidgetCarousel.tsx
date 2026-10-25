@@ -1,11 +1,11 @@
-import React, { Children, cloneElement, useCallback, useMemo, useState } from 'react';
+import { Children, cloneElement, useCallback, useMemo, useState } from 'react';
 import classNames from 'classnames';
-import type { ComponentProps, FC, ReactElement } from 'react';
+import type { ComponentProps, FC, ReactElement, ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 
 interface WidgetCarouselProps {
-  children: React.ReactNode;
+  children: ReactNode;
   isSingleWidget?: boolean;
 }
 

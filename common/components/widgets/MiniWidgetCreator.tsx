@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC, ReactNode } from 'react';
 import type { WidgetValueInterface } from '../../types/basicWidgets';
 import { DataPair } from '../general/DataPair';
 import { SmallDelta } from './internal/SmallDelta';
@@ -35,7 +35,7 @@ const getDeltaOrDataComponent = (widgetObject: MiniWidgetObject) => {
 };
 
 const getWidgets = (widgetObject: MiniWidgetObject[]) => {
-  const widgets: React.ReactNode[] = [];
+  const widgets: ReactNode[] = [];
   for (let x = 0; x < widgetObject.length; x += 2) {
     widgets.push(
       <DataPair key={x} last={x + 3 > widgetObject.length}>
@@ -47,7 +47,7 @@ const getWidgets = (widgetObject: MiniWidgetObject[]) => {
   return widgets;
 };
 
-export const MiniWidgetCreator: React.FC<MiniWidgetCreatorProps> = ({ widgetObjects }) => {
+export const MiniWidgetCreator: FC<MiniWidgetCreatorProps> = ({ widgetObjects }) => {
   return (
     <div className="flex w-full flex-row gap-y-4 overflow-x-auto py-1 md:py-2">
       {getWidgets(widgetObjects)}

@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import React from 'react';
+import { forwardRef } from 'react';
+import type { ButtonHTMLAttributes, DetailedHTMLProps, ReactNode } from 'react';
 import { LINE_COLORS_DARK } from '../../constants/colors';
 import {
   buttonHighlightFocus,
@@ -10,15 +11,15 @@ import {
 import { readableOn } from '../../utils/general';
 import { useDelimitatedRoute } from '../../utils/router';
 
-interface ButtonProps extends React.DetailedHTMLProps<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
+interface ButtonProps extends DetailedHTMLProps<
+  ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
 > {
-  children: React.ReactNode;
+  children: ReactNode;
   additionalClasses?: string;
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   { children, additionalClasses, ...props },
   ref
 ) {

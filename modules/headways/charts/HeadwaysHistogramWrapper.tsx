@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { SingleDayDataPoint } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
@@ -12,7 +12,7 @@ interface HeadwaysHistogramWrapperProps {
   fromStation: Station | undefined;
 }
 
-export const HeadwaysHistogramWrapper: React.FC<HeadwaysHistogramWrapperProps> = ({
+export const HeadwaysHistogramWrapper: FC<HeadwaysHistogramWrapperProps> = ({
   query,
   toStation,
   fromStation,

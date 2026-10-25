@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import classNames from 'classnames';
 import type { SentimentDirection } from './BasicWidgetDataLayout';
 
@@ -7,7 +7,7 @@ interface BigDeltaProps {
   sentimentDirection?: SentimentDirection;
 }
 
-export const BigDelta: React.FC<BigDeltaProps> = ({
+export const BigDelta: FC<BigDeltaProps> = ({
   delta,
   sentimentDirection = 'negativeOnIncrease',
 }) => {

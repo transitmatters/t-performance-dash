@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+import type { FC } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -28,7 +29,7 @@ interface TotalDelayGraphProps {
   agg?: 'daily' | 'weekly';
 }
 
-export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
+export const TotalDelayGraph: FC<TotalDelayGraphProps> = ({
   data,
   startDate,
   endDate,

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { BusRoute, CommuterRailRoute, Line, FerryRoute } from '../../types/lines';
 import type { DateStoreSection } from '../../constants/pages';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
@@ -26,7 +26,7 @@ const hasDateControl = (dateStoreSection: DateStoreSection) =>
   dateStoreSection === 'system';
 
 /** Route and date: the controls that sit on the title row. */
-export const PrimaryControls: React.FC<ControlPanelProps> = ({
+export const PrimaryControls: FC<ControlPanelProps> = ({
   dateStoreSection,
   line,
   hasStationStore,
@@ -48,7 +48,7 @@ export const PrimaryControls: React.FC<ControlPanelProps> = ({
 };
 
 /** Origin and destination: their own row, since station names run long. */
-export const StationControls: React.FC<ControlPanelProps> = ({
+export const StationControls: FC<ControlPanelProps> = ({
   dateStoreSection,
   line,
   busRoute,
@@ -72,7 +72,7 @@ export const StationControls: React.FC<ControlPanelProps> = ({
   );
 };
 
-export const ControlPanel: React.FC<ControlPanelProps> = (props) => {
+export const ControlPanel: FC<ControlPanelProps> = (props) => {
   return (
     <div className="flex w-full shrink flex-col items-end justify-end gap-y-2 overflow-visible p-3 pl-0 text-stone-900 lg:max-w-2xl">
       <PrimaryControls {...props} />

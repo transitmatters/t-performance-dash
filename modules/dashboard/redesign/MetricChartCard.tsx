@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import dayjs from 'dayjs';
 
 import {
@@ -35,7 +35,7 @@ const METRIC_COPY: Record<MetricKey, { title: string; subtitle: string }> = {
 };
 
 /** The single chart the scorecard drives — clicking a row swaps which metric renders here. */
-export const MetricChartCard: React.FC<MetricChartCardProps> = ({ metric }) => {
+export const MetricChartCard: FC<MetricChartCardProps> = ({ metric }) => {
   const { line, lineShort } = useDelimitatedRoute();
   const endDate = TODAY_STRING;
   const startDate = dayjs(endDate).subtract(60, 'day').format('YYYY-MM-DD');

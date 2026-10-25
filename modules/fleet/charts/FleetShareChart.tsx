@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+import type { FC } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -35,7 +36,7 @@ interface FleetShareChartProps {
   showTitle?: boolean;
 }
 
-export const FleetShareChart: React.FC<FleetShareChartProps> = ({
+export const FleetShareChart: FC<FleetShareChartProps> = ({
   data,
   metric,
   showShuttling,

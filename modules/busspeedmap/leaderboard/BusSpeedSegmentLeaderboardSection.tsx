@@ -1,6 +1,6 @@
 'use client';
-
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
+import type { FC } from 'react';
 import { BusSpeedDataUnavailableError } from '../../../common/api/busSpeedSegments';
 import { useBusSpeedSegmentLeaderboard } from '../../../common/api/hooks/busSpeedSegments';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
@@ -39,9 +39,13 @@ interface BusSpeedSegmentLeaderboardSectionProps {
   frequentRoutesOnly: boolean;
 }
 
-export const BusSpeedSegmentLeaderboardSection: React.FC<
-  BusSpeedSegmentLeaderboardSectionProps
-> = ({ date, period, dayType, timeBand, frequentRoutesOnly }) => {
+export const BusSpeedSegmentLeaderboardSection: FC<BusSpeedSegmentLeaderboardSectionProps> = ({
+  date,
+  period,
+  dayType,
+  timeBand,
+  frequentRoutesOnly,
+}) => {
   const [showAll, setShowAll] = useState(false);
   const [routeFilter, setRouteFilter] = useState(ALL_ROUTES);
   const [selectedSegment, setSelectedSegment] = useState<

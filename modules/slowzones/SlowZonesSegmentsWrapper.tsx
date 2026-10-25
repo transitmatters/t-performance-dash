@@ -1,5 +1,5 @@
 import type dayjs from 'dayjs';
-import React from 'react';
+import type { FC } from 'react';
 import type { Direction, SlowZoneResponse } from '../../common/types/dataPoints';
 import type { LinePath, LineShort } from '../../common/types/lines';
 import { useFilteredAllSlow, useFormatSegments } from '../../common/utils/slowZoneUtils';
@@ -17,7 +17,7 @@ interface SlowZonesSegmentsWrapper {
   direction: Direction;
 }
 
-export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
+export const SlowZonesSegmentsWrapper: FC<SlowZonesSegmentsWrapper> = ({
   data,
   lineShort,
   linePath,

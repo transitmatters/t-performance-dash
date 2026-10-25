@@ -1,4 +1,5 @@
-import React from 'react';
+import { useState } from 'react';
+import type { CSSProperties, FC } from 'react';
 import dayjs from 'dayjs';
 import classNames from 'classnames';
 import { Calendar } from '../../ui/calendar';
@@ -20,7 +21,7 @@ interface DateFieldProps {
 }
 
 /** A single date field: a button showing the current date, opening a calendar to change it. */
-export const DateField: React.FC<DateFieldProps> = ({
+export const DateField: FC<DateFieldProps> = ({
   value,
   onChange,
   minDate,
@@ -29,7 +30,7 @@ export const DateField: React.FC<DateFieldProps> = ({
   placeholder = 'mm/dd/yyyy',
   className,
 }) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const selected = value ? dayjs(value).toDate() : undefined;
   const min = minDate ? dayjs(minDate).toDate() : undefined;
   const max = maxDate ? dayjs(maxDate).toDate() : undefined;
@@ -56,7 +57,7 @@ export const DateField: React.FC<DateFieldProps> = ({
             // color rather than adding a separate override for every possible line.
             '--primary': 'var(--line-color)',
             '--primary-foreground': needsDarkText ? 'var(--color-stone-900)' : '#fff',
-          } as React.CSSProperties
+          } as CSSProperties
         }
       >
         <Calendar

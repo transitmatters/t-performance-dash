@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+import type { FC } from 'react';
 import { Line } from '@chartjs-components';
 import { round } from '@lodash-utils';
 
@@ -36,7 +37,7 @@ interface FleetMixChartProps {
   showTitle?: boolean;
 }
 
-export const FleetMixChart: React.FC<FleetMixChartProps> = ({
+export const FleetMixChart: FC<FleetMixChartProps> = ({
   data,
   types,
   showShuttling,

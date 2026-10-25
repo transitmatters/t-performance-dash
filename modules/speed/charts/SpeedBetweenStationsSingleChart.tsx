@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import type { FC } from 'react';
 import type { SingleDayDataPoint } from '../../../common/types/charts';
 import { MetricFieldKeys, PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
@@ -13,7 +14,7 @@ interface SpeedBetweenStationsSingleChartProps {
   showLegend?: boolean;
 }
 
-export const SpeedBetweenStationsSingleChart: React.FC<SpeedBetweenStationsSingleChartProps> = ({
+export const SpeedBetweenStationsSingleChart: FC<SpeedBetweenStationsSingleChartProps> = ({
   traveltimes,
   toStation,
   fromStation,

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import classNames from 'classnames';
 import type { BusRoute, CommuterRailRoute, Line, FerryRoute } from '../../types/lines';
 import type { DateStoreSection } from '../../constants/pages';
@@ -20,7 +20,7 @@ interface MobileControlPanelProps {
   hasRouteSelector?: boolean;
 }
 
-export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
+export const MobileControlPanel: FC<MobileControlPanelProps> = ({
   dateStoreSection,
   line,
   busRoute,

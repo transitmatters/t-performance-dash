@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import type { FleetMetrics } from '../../common/types/dataPoints';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
@@ -16,7 +16,7 @@ interface FleetAgeGraphWrapperProps {
   endDate: string;
 }
 
-export const FleetAgeGraphWrapper: React.FC<FleetAgeGraphWrapperProps> = ({
+export const FleetAgeGraphWrapper: FC<FleetAgeGraphWrapperProps> = ({
   data,
   metric,
   showShuttling,

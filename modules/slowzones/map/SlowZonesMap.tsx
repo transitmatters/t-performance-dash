@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import type { ComponentProps, FC } from 'react';
 import type { SegmentLocation, SegmentLabel, TooltipSide } from '@transitmatters/stripmap';
 import { LineMap, createDefaultDiagramForLine } from '@transitmatters/stripmap';
 
@@ -15,7 +16,7 @@ import { segmentSlowZones } from './segment';
 import { SlowSegmentLabel } from './SlowSegmentLabel';
 import { SlowZonesTooltip } from './SlowZonesTooltip';
 
-interface SlowZonesMapProps extends Pick<React.ComponentProps<typeof LineMap>, 'direction'> {
+interface SlowZonesMapProps extends Pick<ComponentProps<typeof LineMap>, 'direction'> {
   slowZones: SlowZoneAllSlowResponse;
   speedRestrictions: SpeedRestriction[];
   lineName: SlowZonesLineName;
@@ -57,7 +58,7 @@ const getSegmentLabelOverrides = (
   return null;
 };
 
-export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
+export const SlowZonesMap: FC<SlowZonesMapProps> = ({
   lineName,
   slowZones,
   direction,

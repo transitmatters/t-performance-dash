@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import type { FC } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -12,7 +12,7 @@ import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 
 dayjs.extend(utc);
 
-export const SlowZonesWidget: React.FC = () => {
+export const SlowZonesWidget: FC = () => {
   const { line, query, lineShort } = useDelimitatedRoute();
   const delayTotals = useSlowzoneDelayTotalData();
   const { startDate } = OVERVIEW_OPTIONS[query.view ?? 'year'];

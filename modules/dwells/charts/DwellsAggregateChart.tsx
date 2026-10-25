@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import type { FC } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AggregateDataResponse, DayFilter } from '../../../common/types/charts';
@@ -15,7 +16,7 @@ interface DwellsAggregateChartProps {
   dayFilter?: DayFilter;
 }
 
-export const DwellsAggregateChart: React.FC<DwellsAggregateChartProps> = ({
+export const DwellsAggregateChart: FC<DwellsAggregateChartProps> = ({
   dwells,
   toStation,
   fromStation,

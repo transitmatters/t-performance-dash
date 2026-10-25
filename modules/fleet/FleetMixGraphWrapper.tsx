@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import type { FleetMetrics } from '../../common/types/dataPoints';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
@@ -16,7 +16,7 @@ interface FleetMixGraphWrapperProps {
   endDate: string;
 }
 
-export const FleetMixGraphWrapper: React.FC<FleetMixGraphWrapperProps> = ({
+export const FleetMixGraphWrapper: FC<FleetMixGraphWrapperProps> = ({
   data,
   types,
   showShuttling,

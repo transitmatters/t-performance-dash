@@ -1,11 +1,11 @@
-import React from 'react';
+import type { FC, ReactNode } from 'react';
 
 interface PageWrapperProps {
   pageTitle?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const PageWrapper: React.FC<PageWrapperProps> = ({ pageTitle, children }) => {
+export const PageWrapper: FC<PageWrapperProps> = ({ pageTitle, children }) => {
   return (
     <>
       <title>{`${pageTitle ? `${pageTitle} | ` : ''}Data Dashboard`}</title>

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import type { SpeedTripMetrics } from '../../common/types/dataPoints';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
@@ -12,7 +12,7 @@ interface SpeedGraphWrapperProps {
   endDate: string;
 }
 
-export const SpeedGraphWrapper: React.FC<SpeedGraphWrapperProps> = ({
+export const SpeedGraphWrapper: FC<SpeedGraphWrapperProps> = ({
   data,
   config,
   startDate,

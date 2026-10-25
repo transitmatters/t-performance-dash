@@ -1,9 +1,9 @@
-import React from 'react';
+import type { FC } from 'react';
 import { useDelimitatedRoute } from '../../utils/router';
 import { TODAY_STRING } from '../../constants/dates';
 import { Notice } from './Notice';
 
-export const SameDayNotice: React.FC = () => {
+export const SameDayNotice: FC = () => {
   const {
     query: { date, endDate },
   } = useDelimitatedRoute();

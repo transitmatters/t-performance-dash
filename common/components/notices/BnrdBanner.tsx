@@ -1,6 +1,6 @@
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import type { FunctionComponent } from 'react';
 import { BNRD, isBNRDRoute } from '../../constants/bnrd';
 import type { BusRoute } from '../../types/lines';
 
@@ -10,7 +10,7 @@ interface BnrdBannerProps {
 
 const BNRD_TEXT = 'This route was upgraded as part of Better Bus Network (Bus Network Redesign).';
 
-export const BnrdBanner: React.FunctionComponent<BnrdBannerProps> = ({ busRoute }) => {
+export const BnrdBanner: FunctionComponent<BnrdBannerProps> = ({ busRoute }) => {
   if (!busRoute) {
     return null;
   }

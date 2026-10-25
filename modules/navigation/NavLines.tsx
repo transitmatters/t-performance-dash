@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBus,
@@ -111,7 +111,7 @@ interface NavLinesProps {
   close?: () => void;
 }
 
-export const NavLines: React.FC<NavLinesProps> = ({ close }) => {
+export const NavLines: FC<NavLinesProps> = ({ close }) => {
   const route = useDelimitatedRoute();
 
   return (

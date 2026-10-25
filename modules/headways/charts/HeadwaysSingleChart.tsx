@@ -1,11 +1,12 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import type { FC } from 'react';
 import { SingleDayLineChart } from '../../../common/components/charts/SingleDayLineChart';
 import type { HeadwaysChartProps } from '../../../common/types/charts';
 import { BenchmarkFieldKeys, PointFieldKeys, MetricFieldKeys } from '../../../common/types/charts';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { getLocationDetails } from '../../../common/utils/stations';
 
-export const HeadwaysSingleChart: React.FC<HeadwaysChartProps> = ({
+export const HeadwaysSingleChart: FC<HeadwaysChartProps> = ({
   headways,
   toStation,
   fromStation,

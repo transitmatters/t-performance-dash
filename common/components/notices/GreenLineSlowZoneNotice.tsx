@@ -1,8 +1,8 @@
-import React from 'react';
+import type { FC } from 'react';
 import { useDelimitatedRoute } from '../../utils/router';
 import { Notice } from './Notice';
 
-export const GreenLineSlowZoneNotice: React.FC = () => {
+export const GreenLineSlowZoneNotice: FC = () => {
   const { line } = useDelimitatedRoute();
 
   if (line !== 'line-green') {

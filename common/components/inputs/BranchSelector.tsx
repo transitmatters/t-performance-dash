@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FunctionComponent } from 'react';
 import { ButtonGroup } from '../general/ButtonGroup';
 import type { LineRouteId } from '../../types/lines';
 import { useDelimitatedRoute } from '../../utils/router';
@@ -15,10 +15,7 @@ enum GreenLineBranchOptions {
   'Green-E' = 'E Branch',
 }
 
-export const BranchSelector: React.FunctionComponent<BranchSelectorProps> = ({
-  routeId,
-  setRouteId,
-}) => {
+export const BranchSelector: FunctionComponent<BranchSelectorProps> = ({ routeId, setRouteId }) => {
   const { line } = useDelimitatedRoute();
   const selectedIndex = Object.keys(GreenLineBranchOptions).findIndex((route) => route === routeId);
 

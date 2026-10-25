@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { Benchmark, Dataset } from '../../../common/components/charts/TimeSeriesChart';
 import { TimeSeriesChart } from '../../../common/components/charts/TimeSeriesChart';
 import { getLabelsForData } from '../../../common/components/charts/TimeSeriesChart/helpers';
@@ -18,7 +18,7 @@ interface ScorecardGraphProps {
 }
 
 /** One line per direction over time, against the Regional Rail target. */
-export const ScorecardGraph: React.FC<ScorecardGraphProps> = ({
+export const ScorecardGraph: FC<ScorecardGraphProps> = ({
   data,
   agg,
   startDate,

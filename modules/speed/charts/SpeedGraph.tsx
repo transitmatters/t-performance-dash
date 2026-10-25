@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+import type { FC } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -34,7 +35,7 @@ interface SpeedGraphProps {
   peakLineDashed?: boolean;
 }
 
-export const SpeedGraph: React.FC<SpeedGraphProps> = ({
+export const SpeedGraph: FC<SpeedGraphProps> = ({
   data,
   config,
   startDate,

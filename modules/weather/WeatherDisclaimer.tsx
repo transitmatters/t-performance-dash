@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import classNames from 'classnames';
 import type { WeatherHourly } from '../../common/types/weather';
 import {
@@ -22,7 +22,7 @@ const statusText = (hours: WeatherHourly[] | undefined, isLoading: boolean): str
   return `${significant} notable hour${significant === 1 ? '' : 's'}`;
 };
 
-export const WeatherDisclaimer: React.FC<WeatherDisclaimerProps> = ({ hours, isLoading }) => {
+export const WeatherDisclaimer: FC<WeatherDisclaimerProps> = ({ hours, isLoading }) => {
   const enabled = useWeatherStore((s) => s.enabled);
   const toggle = useWeatherStore((s) => s.toggle);
   const temperatureEnabled = useWeatherStore((s) => s.temperatureEnabled);

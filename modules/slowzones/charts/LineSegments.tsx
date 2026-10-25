@@ -1,5 +1,6 @@
 import 'chartjs-adapter-date-fns';
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
+import type { FC } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import minMax from 'dayjs/plugin/minMax';
@@ -41,7 +42,7 @@ interface LineSegmentsProps {
   direction: Direction;
 }
 
-export const LineSegments: React.FC<LineSegmentsProps> = ({
+export const LineSegments: FC<LineSegmentsProps> = ({
   data,
   linePath,
   startDateUTC,

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Link } from '../general/Link';
 import { useDelimitatedRoute } from '../../utils/router';
 
@@ -7,7 +7,7 @@ import { useDelimitatedRoute } from '../../utils/router';
  * and its known gaps. Renders as plain prose for embedding inside the
  * "About this data" accordion (see TripDataNotes).
  */
-export const BetaDataNotice: React.FC = () => {
+export const BetaDataNotice: FC = () => {
   const { line, linePath } = useDelimitatedRoute();
 
   if (line !== 'line-commuter-rail' && linePath !== 'commuter-rail') {

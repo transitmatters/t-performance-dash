@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+import type { FC } from 'react';
 
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
@@ -31,7 +32,7 @@ interface TotalSlowTimeProps {
   showTitle: boolean;
 }
 
-export const TotalSlowTime: React.FC<TotalSlowTimeProps> = ({
+export const TotalSlowTime: FC<TotalSlowTimeProps> = ({
   data,
   startDateUTC,
   endDateUTC,

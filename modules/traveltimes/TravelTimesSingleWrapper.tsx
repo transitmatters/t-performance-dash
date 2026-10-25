@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -15,7 +15,7 @@ interface TravelTimesSingleWrapperProps {
   fromStation: Station;
 }
 
-export const TravelTimesSingleWrapper: React.FC<TravelTimesSingleWrapperProps> = ({
+export const TravelTimesSingleWrapper: FC<TravelTimesSingleWrapperProps> = ({
   query,
   toStation,
   fromStation,

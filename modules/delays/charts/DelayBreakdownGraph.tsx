@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+import type { FC } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -29,7 +30,7 @@ interface DelayBreakdownGraphProps {
   agg?: 'daily' | 'weekly';
 }
 
-export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
+export const DelayBreakdownGraph: FC<DelayBreakdownGraphProps> = ({
   data,
   startDate,
   endDate,

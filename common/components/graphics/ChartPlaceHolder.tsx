@@ -1,5 +1,5 @@
 import type { UseQueryResult } from '@tanstack/react-query';
-import React from 'react';
+import type { FC } from 'react';
 import { ErrorNotice } from '../notices/ErrorNotice';
 import { ChartSkeleton } from './ChartSkeleton';
 
@@ -9,7 +9,7 @@ interface ChartPlaceHolder {
   isInverse?: boolean;
 }
 
-export const ChartPlaceHolder: React.FC<ChartPlaceHolder> = ({
+export const ChartPlaceHolder: FC<ChartPlaceHolder> = ({
   query,
   readyState,
   isInverse: inverse = false,

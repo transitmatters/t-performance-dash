@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import type { FC } from 'react';
 import { SingleDayLineChart } from '../../../common/components/charts/SingleDayLineChart';
 import type { SingleDayDataPoint } from '../../../common/types/charts';
 import { PointFieldKeys, MetricFieldKeys } from '../../../common/types/charts';
@@ -12,7 +13,7 @@ interface DwellsSingleChartProps {
   fromStation: Station;
 }
 
-export const DwellsSingleChart: React.FC<DwellsSingleChartProps> = ({
+export const DwellsSingleChart: FC<DwellsSingleChartProps> = ({
   dwells,
   toStation,
   fromStation,

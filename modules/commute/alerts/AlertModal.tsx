@@ -1,5 +1,4 @@
-import type { SetStateAction } from 'react';
-import React from 'react';
+import type { SetStateAction, Dispatch, ElementType, FC } from 'react';
 import classNames from 'classnames';
 import { AlertNames } from '../../../common/types/alerts';
 import { useDelimitatedRoute } from '../../../common/utils/router';
@@ -16,14 +15,14 @@ import {
 
 interface AlertModalProps {
   showModal: boolean;
-  setShowModal: React.Dispatch<SetStateAction<boolean>>;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
   header: string;
   description?: string;
-  Icon: React.ElementType;
+  Icon: ElementType;
   type: string;
 }
 
-export const AlertModal: React.FC<AlertModalProps> = ({
+export const AlertModal: FC<AlertModalProps> = ({
   showModal,
   setShowModal,
   header,

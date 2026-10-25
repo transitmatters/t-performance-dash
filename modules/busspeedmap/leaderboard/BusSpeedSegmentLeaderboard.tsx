@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import type { BusSpeedSegmentLeaderboardEntry } from '../types';
 
@@ -7,7 +7,7 @@ interface BusSpeedSegmentLeaderboardProps {
   onSelectSegment: (entry: BusSpeedSegmentLeaderboardEntry) => void;
 }
 
-export const BusSpeedSegmentLeaderboard: React.FC<BusSpeedSegmentLeaderboardProps> = ({
+export const BusSpeedSegmentLeaderboard: FC<BusSpeedSegmentLeaderboardProps> = ({
   data,
   onSelectSegment,
 }) => {

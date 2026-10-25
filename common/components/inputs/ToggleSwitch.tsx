@@ -1,4 +1,5 @@
-import React from 'react';
+import { useId } from 'react';
+import type { FC } from 'react';
 import { Switch } from '../ui/switch';
 import { Label } from '../ui/label';
 import { lineColorVar } from '../../styles/general';
@@ -10,9 +11,9 @@ interface ToggleSwitchProps {
   label: string;
 }
 
-export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, setEnabled, label }) => {
+export const ToggleSwitch: FC<ToggleSwitchProps> = ({ enabled, setEnabled, label }) => {
   const { line } = useDelimitatedRoute();
-  const id = React.useId();
+  const id = useId();
 
   return (
     <div className="inline-flex items-center gap-x-2">

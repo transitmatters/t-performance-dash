@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import { STATION_LINES } from '../constants';
 import type { BusStopProperties, StationProperties } from '../types';
@@ -12,7 +12,7 @@ const greenBranches = (routes: string[]): string =>
     .map((route) => route.slice('Green-'.length))
     .join(', ');
 
-export const StationPopupContent: React.FC<{ station: StationProperties }> = ({ station }) => {
+export const StationPopupContent: FC<{ station: StationProperties }> = ({ station }) => {
   const routes = splitList(station.routes);
   return (
     <div className="text-xs text-stone-900">
@@ -37,7 +37,7 @@ export const StationPopupContent: React.FC<{ station: StationProperties }> = ({ 
   );
 };
 
-export const BusStopPopupContent: React.FC<{ busStop: BusStopProperties }> = ({ busStop }) => {
+export const BusStopPopupContent: FC<{ busStop: BusStopProperties }> = ({ busStop }) => {
   const routes = splitList(busStop.routes).map(getBusRouteDisplayName);
   return (
     <div className="text-xs text-stone-900">

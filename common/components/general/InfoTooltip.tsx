@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 
@@ -9,7 +9,7 @@ interface InfoTooltipProps {
   className?: string;
 }
 
-export const InfoTooltip: React.FC<InfoTooltipProps> = ({ info, className }) => {
+export const InfoTooltip: FC<InfoTooltipProps> = ({ info, className }) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>

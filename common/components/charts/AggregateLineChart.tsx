@@ -2,7 +2,8 @@ import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
-import React, { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import type { FC } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
 import { prettyDate } from '../../utils/date';
@@ -65,7 +66,7 @@ const calculateTrendline = (data: AggregateDataPoint[], pointField: string, mult
   });
 };
 
-export const AggregateLineChart: React.FC<AggregateLineProps> = ({
+export const AggregateLineChart: FC<AggregateLineProps> = ({
   chartId,
   data,
   location,

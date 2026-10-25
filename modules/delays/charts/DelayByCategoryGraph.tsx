@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+import type { FC } from 'react';
 import { Bar } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -34,7 +35,7 @@ const sumArray = (array: number[][]) => {
   return newArray;
 };
 
-export const DelayByCategoryGraph: React.FC<DelayByCategoryGraphProps> = ({
+export const DelayByCategoryGraph: FC<DelayByCategoryGraphProps> = ({
   data,
   showTitle = false,
 }) => {

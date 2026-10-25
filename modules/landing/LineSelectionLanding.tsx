@@ -1,10 +1,10 @@
-import React from 'react';
+import type { FC } from 'react';
 import { faBus, faTrain, faTrainSubway, faTrainTram } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { LineButton } from './LineButton';
 
-export const LineSelectionLanding: React.FC = () => {
+export const LineSelectionLanding: FC = () => {
   return (
     <div className="flex w-full flex-col items-start px-4 pt-20 text-stone-900 md:items-center md:pt-32">
       <h2 className="text-5xl font-thin xl:text-7xl">Ready to learn more?</h2>

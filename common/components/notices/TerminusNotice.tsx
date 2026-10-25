@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { Station } from '../../types/stations';
 import { Notice } from './Notice';
 
@@ -7,7 +7,7 @@ interface TerminusNoticeProps {
   fromStation?: Station;
 }
 
-export const TerminusNotice: React.FC<TerminusNoticeProps> = ({ toStation, fromStation }) => {
+export const TerminusNotice: FC<TerminusNoticeProps> = ({ toStation, fromStation }) => {
   const isTerminus = toStation?.terminus || fromStation?.terminus;
 
   if (!isTerminus) {

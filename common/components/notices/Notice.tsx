@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC, ReactNode } from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -10,11 +10,11 @@ interface NoticeProps {
   /** `warning` for data that may be inaccurate/incomplete; `info` for neutral context. */
   variant?: NoticeVariant;
   /** Optional bold lead line above the body. */
-  title?: React.ReactNode;
+  title?: ReactNode;
   /** Override the variant's default icon. */
   icon?: IconDefinition;
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const VARIANTS: Record<
@@ -39,13 +39,7 @@ const VARIANTS: Record<
  * slot, one container treatment per variant — so a stack of notices reads as
  * one system instead of four ad-hoc footnotes.
  */
-export const Notice: React.FC<NoticeProps> = ({
-  variant = 'info',
-  title,
-  icon,
-  className,
-  children,
-}) => {
+export const Notice: FC<NoticeProps> = ({ variant = 'info', title, icon, className, children }) => {
   const styles = VARIANTS[variant];
   return (
     <div

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import classNames from 'classnames';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
 import { AlertBoxInner } from './AlertBoxInner';
@@ -8,7 +8,7 @@ interface StopClosureProps {
   type: UpcomingOrCurrent;
 }
 
-export const StopClosure: React.FC<StopClosureProps> = ({ alert, type }) => {
+export const StopClosure: FC<StopClosureProps> = ({ alert, type }) => {
   return (
     <AlertBoxInner
       header={alert.header}

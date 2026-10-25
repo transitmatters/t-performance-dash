@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -15,7 +15,7 @@ interface HeadwaysSingleWrapperProps {
   fromStation: Station;
 }
 
-export const HeadwaysSingleWrapper: React.FC<HeadwaysSingleWrapperProps> = ({
+export const HeadwaysSingleWrapper: FC<HeadwaysSingleWrapperProps> = ({
   query,
   toStation,
   fromStation,

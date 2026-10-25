@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useReliabilityData } from '../../common/api/hooks/reliability';
@@ -22,7 +22,7 @@ export function ReliabilityDetails() {
   } = useDelimitatedRoute();
   const isRide = line === 'line-RIDE';
   const routeId = isRide ? 'RIDE' : (crRoute ?? ALL_COMMUTER_RAIL);
-  const { agg } = React.useMemo(
+  const { agg } = useMemo(
     () => getSpeedGraphConfig(dayjs(startDate), dayjs(endDate)),
     [startDate, endDate]
   );

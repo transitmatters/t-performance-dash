@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import type { FC } from 'react';
 
 import type { DayKind, ScheduledService } from '../../common/types/dataPoints';
 import { ByHourHistogram } from '../../common/components/charts/ByHourHistogram';
@@ -11,7 +12,7 @@ interface Props {
   dayKind: DayKind;
 }
 
-export const DailyServiceHistogram: React.FC<Props> = (props) => {
+export const DailyServiceHistogram: FC<Props> = (props) => {
   const { scheduledService, dayKind } = props;
   const { color } = useDelimitatedRoute();
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
@@ -31,19 +31,19 @@ export function DelaysDetails() {
   // For commuter rail, use the crRoute from query params; otherwise use the default route ID
   const defaultRouteId =
     line === 'line-commuter-rail' && crRoute ? crRoute : lineToDefaultRouteId(line);
-  const [routeId, setRouteId] = React.useState<LineRouteId>(defaultRouteId);
-  const greenBranchToggle = React.useMemo(() => {
+  const [routeId, setRouteId] = useState<LineRouteId>(defaultRouteId);
+  const greenBranchToggle = useMemo(() => {
     return line === 'line-green' && <BranchSelector routeId={routeId} setRouteId={setRouteId} />;
   }, [line, routeId]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const newRouteId =
       line === 'line-commuter-rail' && crRoute ? crRoute : lineToDefaultRouteId(line);
     setRouteId(newRouteId);
   }, [line, crRoute]);
 
   // Determine whether to use daily or weekly data based on date range
-  const agg = React.useMemo(() => {
+  const agg = useMemo(() => {
     if (!startDate || !endDate) return 'weekly';
     const start = dayjs(startDate);
     const end = dayjs(endDate);

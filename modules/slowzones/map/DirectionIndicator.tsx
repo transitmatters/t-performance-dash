@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 
 import type { SlowZoneDirection } from './segment';
 
@@ -11,7 +11,7 @@ interface DirectionIndicatorProps {
   size?: number;
 }
 
-export const DirectionIndicator: React.FC<DirectionIndicatorProps> = ({
+export const DirectionIndicator: FC<DirectionIndicatorProps> = ({
   direction,
   color,
   isHorizontal,

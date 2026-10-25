@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC, ReactNode } from 'react';
 import {
   Table,
   TableBody,
@@ -25,10 +25,10 @@ import {
 } from './utils';
 import type { Tone } from './utils';
 
-const Toned: React.FC<{
+const Toned: FC<{
   value: number | undefined;
   tone: (value: number) => Tone;
-  children: React.ReactNode;
+  children: ReactNode;
 }> = ({ value, tone, children }) => (
   <TableCell className="text-right tabular-nums">
     <span className={cn('rounded-md px-1.5 py-0.5', value != null && TONE_CHIP[tone(value)])}>
@@ -37,7 +37,7 @@ const Toned: React.FC<{
   </TableCell>
 );
 
-const Swatch: React.FC<{ tone: Tone; children: React.ReactNode }> = ({ tone, children }) => (
+const Swatch: FC<{ tone: Tone; children: ReactNode }> = ({ tone, children }) => (
   <span className={cn('rounded-md px-1 py-0.5 font-medium', TONE_CHIP[tone])}>{children}</span>
 );
 
@@ -46,7 +46,7 @@ interface ScorecardTableProps {
 }
 
 /** Every line side by side, closest to Regional Rail first. */
-export const ScorecardTable: React.FC<ScorecardTableProps> = ({ data }) => {
+export const ScorecardTable: FC<ScorecardTableProps> = ({ data }) => {
   const rows = data
     // Lines the dashboard knows about; leaves out event-only service like Foxboro
     .filter((entry) => entry.routeId && entry.routeId in COMMUTER_RAIL_LINE_NAMES)

@@ -1,6 +1,6 @@
 'use client';
-
-import React, { useState } from 'react';
+import { useState } from 'react';
+import type { FC } from 'react';
 import { useBusSpeedLeaderboard } from '../../../common/api/hooks/busTripMetrics';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
@@ -22,7 +22,7 @@ interface BusSpeedRouteLeaderboardSectionProps {
   frequentRoutesOnly: boolean;
 }
 
-export const BusSpeedRouteLeaderboardSection: React.FC<BusSpeedRouteLeaderboardSectionProps> = ({
+export const BusSpeedRouteLeaderboardSection: FC<BusSpeedRouteLeaderboardSectionProps> = ({
   date,
   period,
   frequentRoutesOnly,

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC, ReactNode } from 'react';
 import classNames from 'classnames';
 import type { WidgetValueInterface } from '../../../types/basicWidgets';
 import { LoadingSpinner } from '../../graphics/LoadingSpinner';
@@ -8,13 +8,13 @@ type LayoutKind = 'total-and-delta' | 'delta-and-percent-change' | 'no-delta';
 type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';
 
 type WidgetForCarouselProps = {
-  analysis: React.ReactNode;
+  analysis: ReactNode;
   widgetValue: WidgetValueInterface;
   sentimentDirection?: SentimentDirection;
   layoutKind?: LayoutKind;
 };
 
-export const WidgetForCarousel: React.FC<WidgetForCarouselProps> = ({
+export const WidgetForCarousel: FC<WidgetForCarouselProps> = ({
   analysis,
   widgetValue,
   layoutKind = 'total-and-delta',

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { ChunkedAggregateQueryResult, TravelTimesUnit } from '../../types/charts';
 import type { Station } from '../../types/stations';
 import { ChartPlaceHolder } from '../graphics/ChartPlaceHolder';
@@ -16,7 +16,7 @@ interface AggregateChartWrapperProps {
   type: 'headways' | 'traveltimes' | 'dwells';
 }
 
-export const AggregateChartWrapper: React.FC<AggregateChartWrapperProps> = ({
+export const AggregateChartWrapper: FC<AggregateChartWrapperProps> = ({
   query,
   toStation,
   fromStation,

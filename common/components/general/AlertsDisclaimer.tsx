@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { getDateString } from '../../../modules/commute/alerts/AlertUtils';
 import type { AlertForModal } from '../../types/alerts';
 
@@ -6,7 +6,7 @@ interface AlertsDisclaimerProps {
   alerts: AlertForModal[];
 }
 
-export const AlertsDisclaimer: React.FC<AlertsDisclaimerProps> = ({ alerts }) => {
+export const AlertsDisclaimer: FC<AlertsDisclaimerProps> = ({ alerts }) => {
   return (
     <div>
       {alerts?.map((alert, index) => (

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
@@ -30,7 +30,7 @@ interface BusTripGraphsProps {
   line: Line | undefined;
 }
 
-export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
+export const BusTripGraphs: FC<BusTripGraphsProps> = ({
   fromStation,
   toStation,
   parameters,

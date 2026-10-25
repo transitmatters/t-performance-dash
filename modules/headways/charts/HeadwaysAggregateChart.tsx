@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import type { FC } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AggregateDataResponse, DayFilter } from '../../../common/types/charts';
@@ -15,7 +16,7 @@ interface HeadwaysAggregateChartProps {
   dayFilter?: DayFilter;
 }
 
-export const HeadwaysAggregateChart: React.FC<HeadwaysAggregateChartProps> = ({
+export const HeadwaysAggregateChart: FC<HeadwaysAggregateChartProps> = ({
   headways,
   toStation,
   fromStation,

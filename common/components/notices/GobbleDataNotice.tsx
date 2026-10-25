@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import dayjs from 'dayjs';
 import { Link } from '../general/Link';
 import { useDelimitatedRoute } from '../../utils/router';
@@ -11,7 +11,7 @@ import { BUS_MAX_DAY, LAMP_BUS_START_DAY } from '../../constants/dates';
  * LAMP, same as the rest of the system. Renders as plain prose for the "About this data"
  * accordion (see TripDataNotes). Commuter Rail attribution is owned by BetaDataNotice.
  */
-export const GobbleDataNotice: React.FC = () => {
+export const GobbleDataNotice: FC = () => {
   const {
     line,
     linePath,

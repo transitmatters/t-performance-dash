@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
@@ -28,7 +28,7 @@ interface FerryTripGraphsProps {
   line: Line | undefined;
 }
 
-export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
+export const FerryTripGraphs: FC<FerryTripGraphsProps> = ({
   fromStation,
   toStation,
   parameters,

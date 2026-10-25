@@ -1,9 +1,9 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { BasicWidgetDataLayoutProps } from './internal/BasicWidgetDataLayout';
 import { BasicWidgetDataLayout } from './internal/BasicWidgetDataLayout';
 import { WidgetDiv } from './WidgetDiv';
 
-export const BasicDataWidgetItem: React.FC<BasicWidgetDataLayoutProps> = ({
+export const BasicDataWidgetItem: FC<BasicWidgetDataLayoutProps> = ({
   title,
   analysis,
   widgetValue,

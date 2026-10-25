@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { useDelimitatedRoute } from '../../utils/router';
 import { DataNotes } from './DataNotes';
 import { BetaDataNotice } from './BetaDataNotice';
@@ -12,7 +12,7 @@ import { BusDataNotice } from './BusDataNotice';
  * TripExplorer). Only bus and Commuter Rail carry provenance notes today, so the
  * section is omitted entirely for other lines.
  */
-export const TripDataNotes: React.FC = () => {
+export const TripDataNotes: FC = () => {
   const { line, linePath } = useDelimitatedRoute();
   const isBus = line === 'line-bus' || linePath === 'bus';
   const isCommuterRail = line === 'line-commuter-rail' || linePath === 'commuter-rail';

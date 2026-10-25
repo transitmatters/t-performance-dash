@@ -1,4 +1,5 @@
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef, useCallback } from 'react';
+import type { FC } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import Color from 'color';
 
@@ -55,7 +56,7 @@ const stripZeroHoursAndRotateMidnightToEnd = (
   return { data: strippedDatasets, timeLabels };
 };
 
-export const ByHourHistogram: React.FC<Props> = (props) => {
+export const ByHourHistogram: FC<Props> = (props) => {
   const {
     data: dataWithZeros,
     valueAxis,
@@ -69,7 +70,7 @@ export const ByHourHistogram: React.FC<Props> = (props) => {
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
 
-  const tooltipFormat = React.useCallback(
+  const tooltipFormat = useCallback(
     ({ datasetIndex, dataIndex }: Context) => {
       const dataset = data[datasetIndex];
       const value = dataset.data[dataIndex];

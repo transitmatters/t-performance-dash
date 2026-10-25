@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import classNames from 'classnames';
 import type { DatePresetKey } from '../../../constants/dates';
 import type {
@@ -14,7 +14,7 @@ interface DatePickerPresetsProps {
   close: () => void;
 }
 
-export const DatePickerPresets: React.FC<DatePickerPresetsProps> = ({
+export const DatePickerPresets: FC<DatePickerPresetsProps> = ({
   preset,
   selectedOptions,
   handleSelection,

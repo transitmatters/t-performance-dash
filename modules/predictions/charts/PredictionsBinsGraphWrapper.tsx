@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import { PredictionsBinsGraph } from './PredictionsBinsGraph';
@@ -9,7 +9,7 @@ interface PredictionsBinsGraphWrapperProps {
   endDate: string;
 }
 
-export const PredictionsBinsGraphWrapper: React.FC<PredictionsBinsGraphWrapperProps> = ({
+export const PredictionsBinsGraphWrapper: FC<PredictionsBinsGraphWrapperProps> = ({
   data,
   startDate,
   endDate,

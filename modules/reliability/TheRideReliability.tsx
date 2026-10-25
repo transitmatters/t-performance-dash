@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
@@ -21,7 +21,7 @@ const mbtaOtp = (e: ReliabilityEntry) =>
     ? percent((e.onTime ?? 0) + e.noShows, (e.completed ?? 0) + e.missed + e.noShows)
     : undefined;
 
-export const TheRideReliability: React.FC<TheRideReliabilityProps> = ({
+export const TheRideReliability: FC<TheRideReliabilityProps> = ({
   reliability,
   agg,
   startDate,

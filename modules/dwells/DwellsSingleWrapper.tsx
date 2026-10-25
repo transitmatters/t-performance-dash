@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -15,7 +15,7 @@ interface DwellsSingleWrapperProps {
   fromStation: Station;
 }
 
-export const DwellsSingleWrapper: React.FC<DwellsSingleWrapperProps> = ({
+export const DwellsSingleWrapper: FC<DwellsSingleWrapperProps> = ({
   query,
   toStation,
   fromStation,

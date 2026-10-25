@@ -1,5 +1,5 @@
 import { CSVLink } from 'react-csv';
-import React from 'react';
+import type { FC } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileArrowDown } from '@fortawesome/free-solid-svg-icons';
 import type { Location } from '../../types/charts';
@@ -16,7 +16,7 @@ interface DownloadButtonProps {
   endDate?: string;
 }
 
-export const DownloadButton: React.FC<DownloadButtonProps> = ({
+export const DownloadButton: FC<DownloadButtonProps> = ({
   datasetName,
   data,
   includeBothStopsForLocation,

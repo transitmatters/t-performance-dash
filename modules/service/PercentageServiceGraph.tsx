@@ -1,4 +1,5 @@
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
+import type { FC } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -28,7 +29,7 @@ interface PercentageServiceGraphProps {
   showTitle?: boolean;
 }
 
-export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
+export const PercentageServiceGraph: FC<PercentageServiceGraphProps> = ({
   data,
   calculatedData,
   config,

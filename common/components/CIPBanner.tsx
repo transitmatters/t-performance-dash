@@ -1,8 +1,8 @@
-import React from 'react';
+import type { FC } from 'react';
 
 const CIP_EXPIRY = new Date('2026-05-02T00:00:00');
 
-export const CIPBanner: React.FC = () => {
+export const CIPBanner: FC = () => {
   if (new Date() >= CIP_EXPIRY) return null;
 
   return (

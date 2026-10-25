@@ -1,20 +1,20 @@
-import React from 'react';
+import type { Dispatch, FC, SetStateAction } from 'react';
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
 import { DAY_TYPES, DIRECTIONS, PERIODS, TIME_BANDS } from '../constants';
 import type { DayType, DirectionFilter, Period, TimeBand } from '../types';
 
 interface BusSpeedMapControlsProps {
   period: Period;
-  setPeriod: React.Dispatch<React.SetStateAction<Period>>;
+  setPeriod: Dispatch<SetStateAction<Period>>;
   dayType: DayType;
-  setDayType: React.Dispatch<React.SetStateAction<DayType>>;
+  setDayType: Dispatch<SetStateAction<DayType>>;
   timeBand: TimeBand;
-  setTimeBand: React.Dispatch<React.SetStateAction<TimeBand>>;
+  setTimeBand: Dispatch<SetStateAction<TimeBand>>;
   // Omitted by consumers with no notion of direction -- the segment leaderboard shows both
   // directions at once (direction_id is just a per-row label there), so it leaves these out
   // rather than wiring up a filter it doesn't use.
   direction?: DirectionFilter;
-  setDirection?: React.Dispatch<React.SetStateAction<DirectionFilter>>;
+  setDirection?: Dispatch<SetStateAction<DirectionFilter>>;
   // The merged leaderboard page reuses this same period/day-type/time-band control set for
   // its "by route" view too, which has no notion of day type or time-of-day bucketing at all
   // (the route API just sums over a date range) -- both default true so the map page, which
@@ -23,7 +23,7 @@ interface BusSpeedMapControlsProps {
   showTimeBand?: boolean;
 }
 
-export const BusSpeedMapControls: React.FC<BusSpeedMapControlsProps> = ({
+export const BusSpeedMapControls: FC<BusSpeedMapControlsProps> = ({
   period,
   setPeriod,
   dayType,

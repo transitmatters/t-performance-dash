@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { RidershipCount } from '../../../common/types/dataPoints';
 import { RidershipBaseline } from '../../../copy/landingCopy';
 import type { Line as LineType } from '../../../common/types/lines';
@@ -10,7 +10,7 @@ import { LandingPageChart } from './LandingPageChart';
 interface OverallRidershipChartProps {
   ridershipData: { [key in LineType]: RidershipCount[] };
 }
-export const OverallRidershipChart: React.FC<OverallRidershipChartProps> = ({ ridershipData }) => {
+export const OverallRidershipChart: FC<OverallRidershipChartProps> = ({ ridershipData }) => {
   const labels = LANDING_CHART_LABELS;
   const { data: baselines } = useHistoricalBaselines();
   const datasets = convertToRidershipDataset(ridershipData, labels, baselines);

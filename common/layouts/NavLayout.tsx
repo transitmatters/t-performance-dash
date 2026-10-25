@@ -1,14 +1,14 @@
-import React from 'react';
+import type { FC, ReactNode } from 'react';
 import { Link } from '../components/general/Link';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '../components/ui/sidebar';
 import { AppSidebar } from '../../modules/navigation/AppSidebar';
 import { useDelimitatedRoute } from '../utils/router';
 
 interface NavLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const NavLayout: React.FC<NavLayoutProps> = ({ children }) => {
+export const NavLayout: FC<NavLayoutProps> = ({ children }) => {
   // "The Living Map": the active line themes the whole shell (see [data-line] in globals.css).
   const { line } = useDelimitatedRoute();
   return (
