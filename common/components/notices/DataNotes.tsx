@@ -1,11 +1,11 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 
 interface DataNotesProps {
-  title?: React.ReactNode;
-  children: React.ReactNode;
+  title?: ReactNode;
+  children: ReactNode;
 }
 
 /**
@@ -13,7 +13,7 @@ interface DataNotesProps {
  * known gaps. One shell for every page so the notes read the same under Delays, Predictions and
  * the trip explorer alike.
  */
-export const DataNotes: React.FC<DataNotesProps> = ({ title = 'About this data', children }) => (
+export const DataNotes = ({ title = 'About this data', children }: DataNotesProps) => (
   <Accordion
     type="single"
     collapsible

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AggregateDataResponse, DayFilter } from '../../../common/types/charts';
@@ -15,12 +15,12 @@ interface DwellsAggregateChartProps {
   dayFilter?: DayFilter;
 }
 
-export const DwellsAggregateChart: React.FC<DwellsAggregateChartProps> = ({
+export const DwellsAggregateChart = ({
   dwells,
   toStation,
   fromStation,
   dayFilter = 'all',
-}) => {
+}: DwellsAggregateChartProps) => {
   const {
     query: { startDate, endDate },
   } = useDelimitatedRoute();

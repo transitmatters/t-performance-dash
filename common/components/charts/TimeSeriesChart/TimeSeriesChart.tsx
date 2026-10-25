@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Line as LineChart } from '@chartjs-components';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import Annotation from 'chartjs-plugin-annotation';

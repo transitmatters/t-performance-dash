@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { LineCard } from '../LineCard';
 import type { LineData, SummaryData } from '../types';

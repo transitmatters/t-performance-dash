@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useServiceAndRidershipDashboard } from '../../common/api/hooks/serviceAndRidership';
 

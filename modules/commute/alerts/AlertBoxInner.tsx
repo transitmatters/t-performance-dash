@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import type { ElementType, ReactNode } from 'react';
 import classNames from 'classnames';
 import type { FormattedAlert, UpcomingOrCurrent } from '../../../common/types/alerts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
@@ -7,15 +8,15 @@ import { CurrentTime, EffectiveTime, UpcomingTime } from './Time';
 
 interface AlertBoxInnerProps {
   header: string;
-  Icon: React.ElementType;
+  Icon: ElementType;
   alert: FormattedAlert;
   type: UpcomingOrCurrent;
-  children: React.ReactNode;
+  children: ReactNode;
   noShrink?: boolean;
   showEffectiveTime?: boolean;
 }
 
-export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
+export const AlertBoxInner = ({
   header,
   Icon,
   alert,
@@ -23,7 +24,7 @@ export const AlertBoxInner: React.FC<AlertBoxInnerProps> = ({
   noShrink,
   children,
   showEffectiveTime,
-}) => {
+}: AlertBoxInnerProps) => {
   const [showModal, setShowModal] = useState(false);
   const isMobile = !useBreakpoint('md');
   const _noShrink = noShrink || !isMobile;
