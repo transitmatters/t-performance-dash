@@ -139,26 +139,15 @@ def headways(start_date: date, stops, end_date: date | None = None):
     Args:
       start_date: date: Start date (used as single date if end_date is None).
       stops: List of stop IDs.
-      end_date: date | None: End date (inclusive). If None, uses start_date only.
+      end_date: date | None: End date (inclusive). If None, this is a single-day request for start_date.
 
     Returns:
       list[dict]: Headway event data.
     """
     if end_date is None:
-        return s3_historical.headways(stops, start_date, start_date)
+        return s3_historical.headways(stops, start_date, start_date, single_day=True)
 
     return s3_historical.headways(stops, start_date, end_date)
-
-
-# Transit days run 3:30am-3:30am local time
-def current_transit_day():
-    """Return today's transit day date, accounting for the 3:30 AM day boundary."""
-    bos_tz = pytz.timezone("America/New_York")
-    now = bos_tz.localize(datetime.datetime.now())
-    today = now.date()
-    if now >= now.replace(hour=0, minute=0) and now < now.replace(hour=3, minute=30):
-        today -= datetime.timedelta(days=1)
-    return today
 
 
 def travel_times(start_date: date, from_stops, to_stops, end_date: date | None = None):
@@ -168,13 +157,13 @@ def travel_times(start_date: date, from_stops, to_stops, end_date: date | None =
       start_date: date: Start date (used as single date if end_date is None).
       from_stops: List of origin stop IDs.
       to_stops: List of destination stop IDs.
-      end_date: date | None: End date (inclusive). If None, uses start_date only.
+      end_date: date | None: End date (inclusive). If None, this is a single-day request for start_date.
 
     Returns:
       list[dict]: Travel time event data.
     """
     if end_date is None:
-        return s3_historical.travel_times(from_stops, to_stops, start_date, start_date)
+        return s3_historical.travel_times(from_stops, to_stops, start_date, start_date, single_day=True)
 
     return s3_historical.travel_times(from_stops, to_stops, start_date, end_date)
 
@@ -185,13 +174,13 @@ def dwells(start_date, stops, end_date: date | None = None):
     Args:
       start_date: Start date (used as single date if end_date is None).
       stops: List of stop IDs.
-      end_date: date | None: End date (inclusive). If None, uses start_date only.
+      end_date: date | None: End date (inclusive). If None, this is a single-day request for start_date.
 
     Returns:
       list[dict]: Dwell time event data.
     """
     if end_date is None:
-        return s3_historical.dwells(stops, start_date, start_date)
+        return s3_historical.dwells(stops, start_date, start_date, single_day=True)
 
     return s3_historical.dwells(stops, start_date, end_date)
 
