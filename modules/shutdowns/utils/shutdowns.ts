@@ -137,9 +137,9 @@ const toRanges = (days: string[]): [string, string][] => {
   return ranges;
 };
 
-// An alert with no stops covers the whole line.
-const coversWholeLine = (stations: Station[], lineId: string) =>
-  stations.length === 0 ||
+// An alert with no stops covers the whole line. One whose stops are all on other lines doesn't.
+const coversWholeLine = (shutdown: Shutdown, stations: Station[], lineId: string) =>
+  shutdown.stops.length === 0 ||
   stations.length === new Set(stationsForLine(lineId).map((station) => station.station)).size;
 
 export const describeShutdowns = (shutdowns: Shutdown[], lineId: string): ShutdownView[] =>
@@ -149,7 +149,7 @@ export const describeShutdowns = (shutdowns: Shutdown[], lineId: string): Shutdo
       shutdown,
       stations,
       label: shutdownLabel(shutdown.effect, stations),
-      bandLabel: coversWholeLine(stations, lineId) ? 'Shutdown' : 'Partial shutdown',
+      bandLabel: coversWholeLine(shutdown, stations, lineId) ? 'Shutdown' : 'Partial shutdown',
       dayRanges: toRanges(shutdownDays(shutdown)),
     };
   });

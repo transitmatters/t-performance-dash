@@ -61,6 +61,15 @@ describe('describeShutdowns', () => {
     expect(whole.bandLabel).toBe('Shutdown');
   });
 
+  it('calls it partial when the listed stops are all on other lines', () => {
+    // A Franklin Line alert listing the Fairmount stops its trains ran via
+    const [view] = describeShutdowns(
+      [shutdown({ line: 'CR-Franklin', stops: ['DB-2205-01', 'DB-2222-01'] })],
+      'CR-Franklin'
+    );
+    expect(view.bandLabel).toBe('Partial shutdown');
+  });
+
   it('names closed stations', () => {
     const [view] = describeShutdowns(
       [shutdown({ effect: 'STATION_CLOSURE', stops: ['place-symcl'], line: 'Green' })],
