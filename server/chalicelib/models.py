@@ -135,7 +135,7 @@ class AlertDelaysByLineParams(BaseModel):
     Attributes:
         start_date: Start of date range (YYYY-MM-DD).
         end_date: End of date range (YYYY-MM-DD).
-        line: Line identifier (e.g., `Red`, `Orange`, `Green-B`).
+        line: Line identifier (e.g., `Red`, `Orange`, `Green-B`), or comma-separated bus route ids.
         agg: Aggregation level — `daily` or `weekly`. Defaults to `weekly`.
     """
 
@@ -145,7 +145,9 @@ class AlertDelaysByLineParams(BaseModel):
         description=(
             "MBTA line identifier. "
             "Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. "
-            "Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc."
+            "Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. "
+            "Bus: comma-separated GTFS route ids, summed (e.g. `1` or `114,116,117`; SL1 is `741`), "
+            "or `Bus` for all bus routes."
         )
     )
     agg: Literal["daily", "weekly"] = Field(default="weekly", description="Aggregation period: `daily` or `weekly`.")

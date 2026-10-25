@@ -14,6 +14,7 @@ import {
 } from '../../common/components/widgets/StatCard';
 import { BranchSelector } from '../../common/components/inputs/BranchSelector';
 import { lineToDefaultRouteId } from '../predictions/utils/utils';
+import { getBusRouteIds } from '../../common/constants/lines';
 import type { LineRouteId } from '../../common/types/lines';
 import { DataNotes } from '../../common/components/notices/DataNotes';
 import { getFormattedTimeString } from '../../common/utils/time';
@@ -25,7 +26,7 @@ import { TotalDelayGraph } from './charts/TotalDelayGraph';
 export function DelaysDetails() {
   const {
     line,
-    query: { startDate, endDate, crRoute },
+    query: { startDate, endDate, crRoute, busRoute },
   } = useDelimitatedRoute();
 
   // For commuter rail, use the crRoute from query params; otherwise use the default route ID
@@ -52,12 +53,17 @@ export function DelaysDetails() {
     return daysDiff <= 90 ? 'daily' : 'weekly';
   }, [startDate, endDate]);
 
+  // Bus delays are stored per GTFS route id; grouped labels (e.g. 114/116/117) are summed
+  // server-side, and "Bus" is every route together.
+  const delaysLine =
+    line === 'line-bus' ? (busRoute ? getBusRouteIds(busRoute).join(',') : 'Bus') : routeId;
+
   const enabled = Boolean(startDate && endDate && line);
   const alertDelays = useAlertDelays(
     {
       start_date: startDate,
       end_date: endDate,
-      line: routeId,
+      line: delaysLine,
       agg: agg,
     },
     enabled
@@ -140,6 +146,12 @@ export function DelaysDetails() {
             delayed. We collect these alerts and group them by general matching categories, and add
             up the total delay time to riders in a week.
           </p>
+          {line === 'line-bus' && (
+            <p>
+              Bus alerts are posted per route, and most of them cite traffic. A grouped route adds
+              up the alerts for each route in it, so an alert covering two of them counts twice.
+            </p>
+          )}
           <div>
             <h4 className="font-semibold">Example alerts</h4>
             <blockquote className="my-2 border-s-4 border-gray-300 bg-gray-50 p-4 dark:border-gray-500 dark:bg-gray-800">

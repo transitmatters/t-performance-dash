@@ -89,7 +89,8 @@ export type FetchBusSpeedLeaderboardOptions = {
 export type FetchAlertDelaysByLineOptions = {
   start_date?: string;
   end_date?: string;
-  line?: LineRouteId;
+  /** A rail line, comma-separated bus route ids (e.g. `114,116,117`), or `Bus` for every route. */
+  line?: string;
   agg?: 'daily' | 'weekly';
 };
 
