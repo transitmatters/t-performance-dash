@@ -7,6 +7,7 @@ interface NoDataNoticeProps {
   isWidget?: boolean;
   inverse?: boolean;
   isLineMetric?: boolean;
+  message?: string;
 }
 
 /**
@@ -19,6 +20,7 @@ export const NoDataNotice: React.FC<NoDataNoticeProps> = ({
   isWidget,
   inverse,
   isLineMetric: isLineWide = false,
+  message,
 }) => {
   return (
     <div className="relative flex h-60 w-full items-center justify-center">
@@ -38,7 +40,8 @@ export const NoDataNotice: React.FC<NoDataNoticeProps> = ({
           No data available
         </p>
         <p className={classNames('text-sm', inverse ? 'text-white/80' : 'text-muted-foreground')}>
-          {isLineWide ? 'Try another date range.' : 'Try another station pair or date range.'}
+          {message ??
+            (isLineWide ? 'Try another date range.' : 'Try another station pair or date range.')}
         </p>
       </div>
     </div>

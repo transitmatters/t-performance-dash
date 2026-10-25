@@ -4,6 +4,7 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
+import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -28,6 +29,8 @@ interface RidershipGraphProps {
   startDate: string;
   endDate: string;
   showTitle?: boolean;
+  serviceEnd?: string;
+  serviceDateBlocks?: AnnotationOptions<keyof AnnotationTypeRegistry>[];
 }
 
 export const RidershipGraph: React.FC<RidershipGraphProps> = ({
@@ -36,6 +39,8 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
   startDate,
   endDate,
   showTitle = false,
+  serviceEnd,
+  serviceDateBlocks = [],
 }) => {
   const {
     line,
@@ -135,8 +140,10 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                       borderWidth: 2,
                     },
                     ...getNoDataSinceLatestAnnotation(
-                      data.filter((point) => point.count !== null).map((point) => point.date)
+                      data.filter((point) => point.count !== null).map((point) => point.date),
+                      serviceEnd
                     ),
+                    ...serviceDateBlocks,
                   ],
                 },
               },
@@ -240,6 +247,8 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
     endDate,
     unit,
     tooltipFormat,
+    serviceEnd,
+    serviceDateBlocks,
   ]);
   return chart;
 };

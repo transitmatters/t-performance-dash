@@ -4,7 +4,12 @@ import type { Block } from '../../../common/components/charts/TimeSeriesChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AlertForModal } from '../../../common/types/alerts';
 import { hexWithAlpha } from '../../../common/utils/general';
-import { TODAY, OVERVIEW_TRAIN_MIN_DATE, DATE_FORMAT } from '../../../common/constants/dates';
+import {
+  TODAY,
+  OVERVIEW_TRAIN_MIN_DATE,
+  DATE_FORMAT,
+  PRETTY_DATE_FORMAT,
+} from '../../../common/constants/dates';
 
 const shuttlingAnnotationBlockStyle = {
   backgroundColor: CHART_COLORS.BLOCKS,
@@ -86,16 +91,56 @@ const getLatestDate = (dates: string[]) =>
 /*
  * A "No data" block from the latest datapoint through today, so data that lags behind
  * (weekly data especially) reads as not yet available rather than a line that just stops.
+ * Pass `until` to stop the block early, e.g. where a "Service ended" block takes over.
  */
-export const getNoDataSinceLatestAnnotation = (dates: string[]) => {
+export const getNoDataSinceLatestAnnotation = (dates: string[], until?: string) => {
   const latest = getLatestDate(dates);
-  return latest ? getRemainingBlockAnnotation(latest) : [];
+  if (!latest || (until && !dayjs(latest).isBefore(until))) return [];
+  return getRemainingBlockAnnotation(latest, until);
 };
 
 // The same block, for TimeSeriesChart.
 export const getNoDataSinceLatestBlock = (dates: string[]): Block[] => {
   const latest = getLatestDate(dates);
   return latest ? [{ from: latest, to: TODAY.format(DATE_FORMAT) }] : [];
+};
+
+/*
+ * This function returns ChartJS annotations covering the parts of a date range before a route's
+ * service started or after it ended, so those gaps read as expected rather than as missing data.
+ */
+export const getServiceDatesBlockAnnotations = (
+  startDate: string,
+  endDate: string,
+  serviceStart: string | undefined,
+  serviceEnd: string | undefined
+): AnnotationOptions<keyof AnnotationTypeRegistry>[] => {
+  const dateBlocks: AnnotationOptions<keyof AnnotationTypeRegistry>[] = [];
+  if (serviceStart && dayjs(serviceStart).isAfter(startDate)) {
+    dateBlocks.push({
+      type: 'box',
+      xMin: startDate,
+      xMax: dayjs(serviceStart).isBefore(endDate) ? serviceStart : endDate,
+      ...shuttlingAnnotationBlockStyle,
+      label: {
+        ...shuttlingAnnotationBlockStyle.label,
+        content: `Service began ${dayjs(serviceStart).format(PRETTY_DATE_FORMAT)}`,
+      },
+    });
+  }
+  if (serviceEnd && dayjs(serviceEnd).isBefore(endDate)) {
+    dateBlocks.push({
+      type: 'box',
+      xMin: dayjs(serviceEnd).isAfter(startDate) ? serviceEnd : startDate,
+      xMax: endDate,
+      ...shuttlingAnnotationBlockStyle,
+      label: {
+        ...shuttlingAnnotationBlockStyle.label,
+        content: `Service ended ${dayjs(serviceEnd).format(PRETTY_DATE_FORMAT)}`,
+      },
+    });
+  }
+  return dateBlocks;
 };
 
 export const getAlertAnnotations = (alerts: AlertForModal[], date: string) => {
