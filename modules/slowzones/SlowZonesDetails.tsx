@@ -29,7 +29,6 @@ import { GreenLineSlowZoneNotice } from '../../common/components/notices/GreenLi
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
-import { CopyEmbedButton } from './CopyEmbedButton';
 import { DirectionObject } from './constants/constants';
 import { getSlowZoneStats } from './utils';
 
@@ -131,7 +130,6 @@ export function SlowZonesDetails() {
               Time over baseline across the line
             </Link>
           }
-          action={<CopyEmbedButton line={linePath} startDate={startDate} endDate={endDate} />}
           ready={[delayTotals, line]}
         >
           {/* Children are built before Widget checks `ready`, so guard the data here too —
@@ -144,6 +142,7 @@ export function SlowZonesDetails() {
               line={line}
               lineShort={lineShort}
               showWidgetValue={false}
+              embedLine={linePath}
             />
           ) : (
             <NoDataNotice isLineMetric />
