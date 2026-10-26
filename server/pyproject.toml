@@ -7,7 +7,7 @@ requires-python = ">=3.12,<3.13"
 license = "MIT"
 dependencies = [
     "json-api-doc==0.15.0",
-    "requests~=2.32.5",
+    "requests~=2.33.0",
     "pytz~=2025.2",
     "boto3~=1.39.0",
     "numpy~=1.26.4",
