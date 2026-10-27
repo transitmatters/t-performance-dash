@@ -16,11 +16,11 @@ export const PEAK_SCHEDULED_SERVICE: { [key in Line | 'DEFAULT']: number } = {
 };
 
 export const PEAK_SPEED: { [key in Line | 'DEFAULT']: number } = {
-  'line-red': 24.9,
-  'line-orange': 20.6,
-  'line-blue': 22.7,
-  'line-green': 13.6,
-  'line-mattapan': 24.3,
+  'line-red': 21.2,
+  'line-orange': 19.9,
+  'line-blue': 20.6,
+  'line-green': 12.5,
+  'line-mattapan': 18.8,
   'line-commuter-rail': 0,
   'line-bus': 0,
   'line-ferry': 0,
