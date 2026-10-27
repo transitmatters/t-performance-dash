@@ -28,6 +28,7 @@ import type { ScorecardRow, MetricKey } from './types';
 interface MetricsScorecardProps {
   rows: ScorecardRow[];
   isLoading: boolean;
+  skeletonRows?: number;
   selectedMetric: MetricKey;
   onSelectMetric: (metric: MetricKey) => void;
 }
@@ -41,6 +42,7 @@ const badgeVariantFor = (sentiment: ScorecardRow['deltaSentiment']) => {
 export const MetricsScorecard = ({
   rows,
   isLoading,
+  skeletonRows = 4,
   selectedMetric,
   onSelectMetric,
 }: MetricsScorecardProps) => {
@@ -70,7 +72,7 @@ export const MetricsScorecard = ({
           </TableHeader>
           <TableBody role="radiogroup" aria-label="Select a metric to chart below">
             {isLoading
-              ? Array.from({ length: 4 }).map((_, i) => (
+              ? Array.from({ length: skeletonRows }).map((_, i) => (
                   <TableRow key={`skeleton-${i}`} className="hover:bg-transparent">
                     <TableCell className="pl-12">
                       <div className="flex flex-col gap-1.5">
