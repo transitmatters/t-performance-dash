@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import { Link } from '../../common/components/general/Link';
 import type { Line } from '../../common/types/lines';
@@ -7,11 +7,11 @@ import { LINE_OBJECTS } from '../../common/constants/lines';
 import { BUS_DEFAULTS, COMMUTER_RAIL_DEFAULTS } from '../../common/state/defaults/dateDefaults';
 
 interface LineButtonProps {
-  children: React.ReactNode;
+  children: ReactNode;
   line: Line;
 }
 
-export const LineButton: React.FC<LineButtonProps> = ({ children, line }) => {
+export const LineButton = ({ children, line }: LineButtonProps) => {
   const lineObject = LINE_OBJECTS[line];
 
   return (

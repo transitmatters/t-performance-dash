@@ -1,6 +1,6 @@
 export type DeltaSentiment = 'good' | 'bad' | 'flat';
 
-export type MetricKey = 'speed' | 'service' | 'slowzones' | 'ridership';
+export type MetricKey = 'speed' | 'service' | 'slowzones' | 'ridership' | 'delays';
 
 export interface ScorecardRow {
   key: MetricKey;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { TriangleAlert } from 'lucide-react';
 
 import {
@@ -14,14 +13,23 @@ import { Skeleton } from '../../../common/components/ui/skeleton';
 import { useAlertsData } from '../../../common/api/hooks/alerts';
 import { getRelevantAlerts } from '../../commute/alerts/AlertBox';
 import { UpcomingTime } from '../../commute/alerts/Time';
-import type { LineShort } from '../../../common/types/lines';
+import type { BusRoute, CommuterRailRoute, LineShort } from '../../../common/types/lines';
 
 interface ServiceAlertsCardProps {
   lineShort: LineShort;
+  busRoute?: BusRoute;
+  crRoute?: CommuterRailRoute;
+  /** What the alerts are for, as read in "No alerts for …", e.g. "the Red Line" or "Route 1". */
+  label: string;
 }
 
-export const ServiceAlertsCard: React.FC<ServiceAlertsCardProps> = ({ lineShort }) => {
-  const alerts = useAlertsData(lineShort);
+export const ServiceAlertsCard = ({
+  lineShort,
+  busRoute,
+  crRoute,
+  label,
+}: ServiceAlertsCardProps) => {
+  const alerts = useAlertsData(lineShort, busRoute, crRoute);
   const { isLoading } = alerts;
   const { isError } = alerts;
   const current = alerts.data ? getRelevantAlerts(alerts.data, 'current') : [];
@@ -91,9 +99,7 @@ export const ServiceAlertsCard: React.FC<ServiceAlertsCardProps> = ({ lineShort 
                 </div>
               ))}
               {!current.length && !upcoming.length && (
-                <p className="py-2 text-sm text-muted-foreground">
-                  No alerts for the {lineShort} Line.
-                </p>
+                <p className="py-2 text-sm text-muted-foreground">No alerts for {label}.</p>
               )}
             </div>
           </>

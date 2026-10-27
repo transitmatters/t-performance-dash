@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
+import type { ReactNode } from 'react';
 
 import {
   Accordion,
@@ -122,7 +123,7 @@ export const LineCard = (props: Props) => {
     ? 'Weekday ridership and service levels'
     : 'Weekday service levels (ridership not available)';
 
-  const renderSectionLabel = (title: string, rightElement: React.ReactNode = null) => {
+  const renderSectionLabel = (title: string, rightElement: ReactNode = null) => {
     return (
       <h3 className={styles.sectionLabel}>
         <div className="label">{title}</div>

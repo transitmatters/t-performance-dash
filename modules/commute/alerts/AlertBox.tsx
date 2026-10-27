@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import type {
   AlertsResponse,
   FormattedAlert,
@@ -64,7 +64,7 @@ const getAlertComponent = (
   }
 };
 
-export const AlertBox: React.FC<AlertBoxProps> = ({ alerts, lineShort, busRoute, type }) => {
+export const AlertBox = ({ alerts, lineShort, busRoute, type }: AlertBoxProps) => {
   const alertBox = useMemo(() => {
     const relevantAlerts = getRelevantAlerts(alerts, type);
 

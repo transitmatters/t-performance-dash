@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { faCheck, faLink } from '@fortawesome/free-solid-svg-icons';
@@ -38,13 +38,7 @@ interface CopyButtonProps {
   failedMessage: string;
 }
 
-export const CopyButton: React.FC<CopyButtonProps> = ({
-  getText,
-  label,
-  icon,
-  ariaLabel,
-  failedMessage,
-}) => {
+export const CopyButton = ({ getText, label, icon, ariaLabel, failedMessage }: CopyButtonProps) => {
   const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle');
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -77,7 +71,7 @@ const getCurrentUrl = () => window.location.href;
  * alongside a claim, so the link that backs the claim needs to be one click away — previously the
  * only way to share a view was to select the address bar by hand.
  */
-export const CopyLinkButton: React.FC = () => (
+export const CopyLinkButton = () => (
   <CopyButton
     getText={getCurrentUrl}
     label="Copy link"

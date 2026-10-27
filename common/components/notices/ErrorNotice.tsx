@@ -1,8 +1,9 @@
 import { faArrowsRotate, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import React from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
+import { getErrorCopy } from '../../api/utils/ApiError';
+import { useDelimitatedRoute } from '../../utils/router';
 import { Button } from '../ui/button';
 
 interface ErrorNoticeProps {
@@ -14,12 +15,15 @@ interface ErrorNoticeProps {
 /**
  * A failed chart is one card of four, so this is `role="status"` rather than `role="alert"` — four
  * simultaneous failures should not interrupt a screen reader four times. Every branch names the
- * problem and offers the recovery; `query.error.message` is only ever read to pick a branch, never
- * shown, so backend internals stay out of the UI.
+ * problem and offers the recovery; the error is only ever read to pick a branch (see
+ * `getErrorCopy`), never shown, so backend internals stay out of the UI.
  */
-export const ErrorNotice: React.FC<ErrorNoticeProps> = ({ isWidget, inverse, query }) => {
-  const errorMessage = query?.error?.['message'];
-  const timeout = errorMessage === 'network request failed';
+export const ErrorNotice = ({ isWidget, inverse, query }: ErrorNoticeProps) => {
+  const { query: params } = useDelimitatedRoute();
+  const { title, detail } = getErrorCopy(query?.error, {
+    isRange: Boolean(params.startDate),
+    isOnline: navigator.onLine,
+  });
   const canRetry = Boolean(query?.refetch);
 
   return (
@@ -37,12 +41,10 @@ export const ErrorNotice: React.FC<ErrorNoticeProps> = ({ isWidget, inverse, que
         aria-hidden
       />
       <p className={classNames('font-medium', inverse ? 'text-white' : 'text-card-foreground')}>
-        {timeout ? 'The response took too long' : "Couldn't load this chart"}
+        {title}
       </p>
       <p className={classNames('text-sm', inverse ? 'text-white/80' : 'text-muted-foreground')}>
-        {timeout
-          ? 'Try a shorter date range.'
-          : 'The data service did not respond. This is usually temporary.'}
+        {detail}
       </p>
       {canRetry && (
         <Button

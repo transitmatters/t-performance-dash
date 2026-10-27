@@ -1,4 +1,3 @@
-import React from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -15,14 +14,14 @@ interface HeadwaysSingleWrapperProps {
   fromStation: Station;
 }
 
-export const HeadwaysSingleWrapper: React.FC<HeadwaysSingleWrapperProps> = ({
+export const HeadwaysSingleWrapper = ({
   query,
   toStation,
   fromStation,
-}) => {
+}: HeadwaysSingleWrapperProps) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
-  if (query.data.length < 1) return <NoDataNotice />;
+  if (query.data.length < 1) return <NoDataNotice metric="headways" />;
   const widgetObjects = getSingleDayWidgets(query.data, 'headways');
 
   return (

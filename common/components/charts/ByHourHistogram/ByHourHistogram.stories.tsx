@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { COLORS } from '../../../constants/colors';
 import { ByHourHistogram } from './ByHourHistogram';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { cn } from '../../utils/cn';
 
 const SIZES = { sm: 'size-2.5', md: 'size-3.5', lg: 'size-4' } as const;
@@ -13,7 +12,7 @@ interface RouteBulletProps {
  * *which* line (a switcher row, a section title). Drawn in the current text color, so set it
  * with `text-primary` (active line) or an explicit `style={{ color }}`. Decorative.
  */
-export const RouteBullet: React.FC<RouteBulletProps> = ({ size = 'md', className }) => (
+export const RouteBullet = ({ size = 'md', className }: RouteBulletProps) => (
   <span
     aria-hidden="true"
     data-slot="route-bullet"

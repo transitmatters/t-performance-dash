@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -35,7 +35,7 @@ interface FleetShareChartProps {
   showTitle?: boolean;
 }
 
-export const FleetShareChart: React.FC<FleetShareChartProps> = ({
+export const FleetShareChart = ({
   data,
   metric,
   showShuttling,
@@ -43,7 +43,7 @@ export const FleetShareChart: React.FC<FleetShareChartProps> = ({
   startDate,
   endDate,
   showTitle = false,
-}) => {
+}: FleetShareChartProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef(null);

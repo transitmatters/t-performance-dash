@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -34,14 +34,14 @@ interface SpeedGraphProps {
   peakLineDashed?: boolean;
 }
 
-export const SpeedGraph: React.FC<SpeedGraphProps> = ({
+export const SpeedGraph = ({
   data,
   config,
   startDate,
   endDate,
   showTitle = false,
   peakLineDashed = false,
-}) => {
+}: SpeedGraphProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const peak = useSpeedBaseline(line);

@@ -1,4 +1,3 @@
-import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
@@ -20,7 +19,7 @@ interface SlowZonesEmbedProps {
 }
 
 /** The total slow time chart on its own, for iframing into articles. */
-export const SlowZonesEmbed: React.FC<SlowZonesEmbedProps> = ({ line }) => {
+export const SlowZonesEmbed = ({ line }: SlowZonesEmbedProps) => {
   const search = useQueryParams();
   const delayTotals = useSlowzoneDelayTotalData();
 

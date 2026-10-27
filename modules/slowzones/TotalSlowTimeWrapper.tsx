@@ -1,5 +1,4 @@
 import type dayjs from 'dayjs';
-import React from 'react';
 import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import type { DayDelayTotals } from '../../common/types/dataPoints';
 import type { LineShort, Line } from '../../common/types/lines';
@@ -23,7 +22,7 @@ interface TotalSlowTimeWrapperProps {
   embedLine?: SlowZonesEmbedLine;
 }
 
-export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
+export const TotalSlowTimeWrapper = ({
   data,
   startDateUTC,
   endDateUTC,
@@ -32,7 +31,7 @@ export const TotalSlowTimeWrapper: React.FC<TotalSlowTimeWrapperProps> = ({
   showTitle = false,
   showWidgetValue = true,
   embedLine,
-}) => {
+}: TotalSlowTimeWrapperProps) => {
   const filteredDelayTotals = useFilteredDelayTotals(data, startDateUTC, endDateUTC);
   const delayDelta = getSlowZoneDelayDelta(filteredDelayTotals, lineShort);
 

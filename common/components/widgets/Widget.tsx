@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import type { ReactNode } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import type { Href } from '../general/Link';
@@ -14,28 +15,30 @@ type ReadyState = 'ready' | 'waiting' | 'error';
 
 interface Props {
   ready?: ReadyDependency | ReadyDependency[];
-  title: React.ReactNode;
-  subtitle?: React.ReactNode;
+  title: ReactNode;
+  subtitle?: ReactNode;
   /** A control that acts on this card's chart — a view switch or a filter. */
-  action?: React.ReactNode;
+  action?: ReactNode;
   /** When set, the title becomes a chevron link to this page, colored by line. */
   tab?: Page;
   /** A pre-resolved chevron-link href, for cases where `tab` can't express the target (e.g. a route/date-specific link). */
   titleHref?: null | Href;
   line?: Line;
   /** Content rendered between the title and the ready-gated children, always shown. */
-  details?: React.ReactNode;
+  details?: ReactNode;
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const isUseQueryResult = (obj: unknown): obj is UseQueryResult => {
   return !!obj && typeof obj === 'object' && 'isLoading' in obj && 'isError' in obj;
 };
 
+const toArray = (ready: ReadyDependency | ReadyDependency[]) =>
+  Array.isArray(ready) ? ready : [ready];
+
 const getReadyState = (ready: ReadyDependency | ReadyDependency[]) => {
-  const readyArray = Array.isArray(ready) ? ready : [ready];
-  const eachState: ReadyState[] = readyArray.map((entry) =>
+  const eachState: ReadyState[] = toArray(ready).map((entry) =>
     isUseQueryResult(entry)
       ? entry.isError
         ? 'error'
@@ -55,7 +58,7 @@ const getReadyState = (ready: ReadyDependency | ReadyDependency[]) => {
   return 'ready';
 };
 
-export const Widget: React.FC<Props> = (props) => {
+export const Widget = (props: Props) => {
   const {
     title,
     subtitle,
@@ -75,6 +78,12 @@ export const Widget: React.FC<Props> = (props) => {
     : readyDependencies
       ? getReadyState(readyDependencies)
       : 'ready';
+  // Gives the error notice the failure to describe and a query to retry.
+  const failedQuery = readyDependencies
+    ? toArray(readyDependencies).find(
+        (entry): entry is UseQueryResult => isUseQueryResult(entry) && entry.isError
+      )
+    : undefined;
 
   return (
     <WidgetDiv className={className}>
@@ -93,7 +102,7 @@ export const Widget: React.FC<Props> = (props) => {
         </ErrorBoundary>
       ) : (
         <div className="relative flex h-full">
-          <ChartPlaceHolder readyState={readyState} />
+          <ChartPlaceHolder readyState={readyState} query={failedQuery} />
         </div>
       )}
     </WidgetDiv>

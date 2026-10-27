@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
@@ -20,12 +20,12 @@ const isNegligible = (comparison: WidgetComparison) =>
 const isOnTimeStat = (label: string) => label.toLowerCase().includes('on time');
 
 interface StatCellProps {
-  label: React.ReactNode;
-  children: React.ReactNode;
+  label: ReactNode;
+  children: ReactNode;
   valueClassName?: string;
 }
 
-const StatCell: React.FC<StatCellProps> = ({ label, children, valueClassName }) => (
+const StatCell = ({ label, children, valueClassName }: StatCellProps) => (
   // `bg-muted` rather than a fixed light grey: the figures inside inherit the card foreground, so a
   // cell pinned to stone-50 put near-white text on a near-white ground once the theme flipped.
   <div className="flex flex-col gap-y-1 bg-muted px-3.5 py-2.5">
@@ -43,7 +43,7 @@ const StatCell: React.FC<StatCellProps> = ({ label, children, valueClassName }) 
   </div>
 );
 
-const ComparisonArrow: React.FC<{ comparison: WidgetComparison }> = ({ comparison }) => {
+const ComparisonArrow = ({ comparison }: { comparison: WidgetComparison }) => {
   const negligible = isNegligible(comparison);
   return (
     <span
@@ -79,8 +79,8 @@ interface StatStripProps {
  * The summary numbers under a chart, as a hairline-separated strip. The 10th and 90th percentiles
  * read as one range rather than two unrelated figures, so they share a cell when both are present.
  */
-export const StatStrip: React.FC<StatStripProps> = ({ widgetObjects }) => {
-  const cells: React.ReactNode[] = [];
+export const StatStrip = ({ widgetObjects }: StatStripProps) => {
+  const cells: ReactNode[] = [];
 
   for (let index = 0; index < widgetObjects.length; index++) {
     const widget = widgetObjects[index];

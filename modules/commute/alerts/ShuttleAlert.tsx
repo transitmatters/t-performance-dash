@@ -1,4 +1,3 @@
-import React from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLeftRight } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +12,7 @@ interface ShuttleAlertProps {
   type: UpcomingOrCurrent;
   noShrink?: boolean;
 }
-export const ShuttleAlert: React.FC<ShuttleAlertProps> = ({ alert, lineShort, type, noShrink }) => {
+export const ShuttleAlert = ({ alert, lineShort, type, noShrink }: ShuttleAlertProps) => {
   const { min, max } = getStations(alert.stops, lineShort);
   return (
     <AlertBoxInner

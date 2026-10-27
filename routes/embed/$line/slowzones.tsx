@@ -1,4 +1,3 @@
-import React from 'react';
 import { createFileRoute, notFound } from '@tanstack/react-router';
 import { EMBED_SLOWZONES_LINES } from '../../../common/constants/staticRoutes';
 import { SlowZonesEmbed } from '../../../modules/slowzones/SlowZonesEmbed';

@@ -1,0 +1,57 @@
+name: deploy-beta
+
+# Deploys v5 to dashboard-beta.labs.transitmatters.org on every push.
+# Cost: Actions minutes are free for public repos. Each deploy adds a few MB of Lambda
+# packages to the beta S3 bucket and one CloudFront "/*" invalidation (1,000 free per month),
+# so even daily pushes come to well under $1/month.
+on:
+  push:
+    branches:
+      - v5
+
+# Two CloudFormation updates to the same stack can't overlap, so queue deploys instead of
+# cancelling one halfway through
+concurrency:
+  group: deploy-beta
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      AWS_PROFILE: transitmatters
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      TM_LABS_WILDCARD_CERT_ARN: ${{ secrets.TM_LABS_WILDCARD_CERT_ARN }}
+      MBTA_V3_API_KEY: ${{ secrets.MBTA_V3_API_KEY }}
+      DD_API_KEY: ${{ secrets.DD_API_KEY }}
+      DD_RUM_APPLICATION_ID: ${{ secrets.DD_RUM_APPLICATION_ID }}
+      DD_RUM_CLIENT_TOKEN: ${{ secrets.DD_RUM_CLIENT_TOKEN }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+        with:
+          fetch-tags: true
+      - name: Set up Node/Python via mise
+        uses: jdx/mise-action@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.2.0
+      - name: Install dependencies
+        run: cd server && uv sync --group dev && cd ..
+      - name: Check if package-lock.json is up to date
+        run: |
+          npx --yes package-lock-utd@1.1.0
+      - name: Generate AWS profile
+        run: |
+          mkdir ~/.aws
+          cat >> ~/.aws/credentials << EOF
+          [$AWS_PROFILE]
+          aws_access_key_id = $AWS_ACCESS_KEY_ID
+          aws_secret_access_key = $AWS_SECRET_ACCESS_KEY
+          EOF
+      - name: Run deploy shell script
+        run: |
+          npm ci
+          bash deploy.sh -c

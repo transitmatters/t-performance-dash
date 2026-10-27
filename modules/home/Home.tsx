@@ -1,4 +1,3 @@
-import React from 'react';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { DonateCallout } from './components/DonateCallout';
 import { HomeHero, HomeTitle } from './components/HomeHero';

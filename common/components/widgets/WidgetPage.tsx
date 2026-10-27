@@ -1,11 +1,11 @@
 import classNames from 'classnames';
-import React from 'react';
+import type { ReactNode } from 'react';
 
 interface WidgetPageProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
-export const WidgetPage: React.FC<WidgetPageProps> = ({ children }) => {
+export const WidgetPage = ({ children }: WidgetPageProps) => {
   return (
     <div className={classNames('flex w-full flex-1 flex-col items-center gap-y-2 lg:p-0')}>
       {children}

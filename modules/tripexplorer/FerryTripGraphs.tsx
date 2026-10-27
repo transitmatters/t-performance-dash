@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
@@ -28,14 +27,14 @@ interface FerryTripGraphsProps {
   line: Line | undefined;
 }
 
-export const FerryTripGraphs: React.FC<FerryTripGraphsProps> = ({
+export const FerryTripGraphs = ({
   fromStation,
   toStation,
   parameters,
   aggregate,
   enabled,
   line,
-}) => {
+}: FerryTripGraphsProps) => {
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,

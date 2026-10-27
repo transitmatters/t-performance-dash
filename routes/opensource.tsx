@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import licenses from '../common/constants/licenses/licenseInfos.json';
 import { Accordion } from '../common/components/accordion/Accordion';
@@ -16,7 +16,7 @@ function OpenSource() {
     })
     .filter((entry) => entry !== undefined) as {
     title: string;
-    content: string | React.ReactNode;
+    content: string | ReactNode;
   }[];
 
   return (

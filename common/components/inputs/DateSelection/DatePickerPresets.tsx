@@ -1,4 +1,3 @@
-import React from 'react';
 import classNames from 'classnames';
 import type { DatePresetKey } from '../../../constants/dates';
 import type {
@@ -14,12 +13,12 @@ interface DatePickerPresetsProps {
   close: () => void;
 }
 
-export const DatePickerPresets: React.FC<DatePickerPresetsProps> = ({
+export const DatePickerPresets = ({
   preset,
   selectedOptions,
   handleSelection,
   close,
-}) => {
+}: DatePickerPresetsProps) => {
   return (
     <div className="flex w-full flex-col">
       {selectedOptions.map((item) => (

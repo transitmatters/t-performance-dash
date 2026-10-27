@@ -1,14 +1,14 @@
-import React from 'react';
+import type { ComponentPropsWithoutRef, CSSProperties, ElementType, ReactNode } from 'react';
 
-type StarBorderProps<T extends React.ElementType> = React.ComponentPropsWithoutRef<T> & {
+type StarBorderProps<T extends ElementType> = ComponentPropsWithoutRef<T> & {
   as?: T;
   className?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
   color?: string;
-  speed?: React.CSSProperties['animationDuration'];
+  speed?: CSSProperties['animationDuration'];
 };
 
-export const StarBorder = <T extends React.ElementType = 'button'>({
+export const StarBorder = <T extends ElementType = 'button'>({
   as,
   className = '',
   color = 'white',

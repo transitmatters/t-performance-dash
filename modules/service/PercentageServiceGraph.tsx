@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -28,7 +28,7 @@ interface PercentageServiceGraphProps {
   showTitle?: boolean;
 }
 
-export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
+export const PercentageServiceGraph = ({
   data,
   calculatedData,
   config,
@@ -36,7 +36,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
   endDate,
   comparison,
   showTitle = false,
-}) => {
+}: PercentageServiceGraphProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
 
