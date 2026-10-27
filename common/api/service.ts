@@ -8,6 +8,7 @@ import type { ScheduledService } from '../types/dataPoints';
 import { APP_DATA_BASE_PATH } from '../utils/constants';
 import { withWeekStart } from '../utils/date';
 import { apiFetch } from './utils/fetch';
+import { fetchOrThrow } from './utils/ApiError';
 
 export const fetchScheduledService = async (
   options: FetchScheduledServiceOptions
@@ -30,7 +31,6 @@ export const fetchServiceHours = async (
   Object.keys(weekParams).forEach((paramKey) => {
     url.searchParams.append(paramKey, weekParams[paramKey]);
   });
-  const response = await fetch(url.toString());
-  if (!response.ok) throw new Error('Failed to fetch service hours');
+  const response = await fetchOrThrow(url.toString(), undefined, 'Failed to fetch service hours');
   return await response.json();
 };

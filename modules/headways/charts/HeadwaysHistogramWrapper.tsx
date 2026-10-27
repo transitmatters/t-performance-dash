@@ -18,7 +18,7 @@ export const HeadwaysHistogramWrapper = ({
 }: HeadwaysHistogramWrapperProps) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
-  if (query.data.length < 1) return <NoDataNotice shutdownScope="trip" />;
+  if (query.data.length < 1) return <NoDataNotice shutdownScope="trip" metric="headways" />;
   return (
     <HeadwaysHistogram headways={query.data} fromStation={fromStation} toStation={toStation} />
   );

@@ -1,6 +1,7 @@
 import type { FetchPredictionsParams } from '../types/api';
 import type { TimePredictionWeek } from '../types/dataPoints';
 import { APP_DATA_BASE_PATH } from '../utils/constants';
+import { fetchOrThrow } from './utils/ApiError';
 
 export const fetchPredictions = async (
   params: FetchPredictionsParams
@@ -10,8 +11,11 @@ export const fetchPredictions = async (
   Object.keys(params).forEach((paramKey) => {
     url.searchParams.append(paramKey, params[paramKey]);
   });
-  const response = await fetch(url.toString());
-  if (!response.ok) throw new Error('Failed to fetch time predictions');
+  const response = await fetchOrThrow(
+    url.toString(),
+    undefined,
+    'Failed to fetch time predictions'
+  );
 
   return await response.json();
 };

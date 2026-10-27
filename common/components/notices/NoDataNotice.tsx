@@ -1,12 +1,20 @@
 import { faMagnifyingGlassChart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
+import type { TripMetric } from '../../utils/dataCoverage';
+import { getNoDataReason } from '../../utils/dataCoverage';
+import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
+import { Button } from '../ui/button';
 import { usePageShutdowns, shutdownDates } from '../../../modules/shutdowns';
 
 interface NoDataNoticeProps {
   isWidget?: boolean;
   inverse?: boolean;
   isLineMetric?: boolean;
+  /** The query returned data, but the chart's day or peak filter removed all of it. */
+  filtered?: boolean;
+  /** Which trip chart this is, for coverage gaps that only affect some charts. */
+  metric?: TripMetric;
   /** Names the shutdowns on the page's line and dates that explain the missing data. */
   shutdownScope?: 'line' | 'trip';
 }
@@ -31,18 +39,33 @@ const ShutdownExplanation = ({ scope, inverse }: { scope: 'line' | 'trip'; inver
  * a chart-with-magnifier rather than the warning triangle `ErrorNotice` uses, so "nothing here" and
  * "something broke" stay visually distinct, and it is muted rather than line-colored — the line
  * colors are brand tokens tuned for fills, and bus yellow lands at 1.8:1 as 3x text on a card.
+ * The copy says why the chart is empty when we can tell (see `getNoDataReason`).
  */
 export const NoDataNotice = ({
   isWidget,
   inverse,
-  isLineMetric: isLineWide = false,
+  isLineMetric = false,
+  filtered = false,
+  metric,
   shutdownScope,
 }: NoDataNoticeProps) => {
+  const { tab, query } = useDelimitatedRoute();
+  const updateQueryParams = useUpdateQuery();
+  const { title, detail, jumpTo, jumpLabel } = getNoDataReason({
+    tab,
+    metric,
+    date: query.date,
+    startDate: query.startDate,
+    endDate: query.endDate,
+    isLineMetric,
+    filtered,
+  });
+
   return (
     <div className="relative flex h-60 w-full items-center justify-center">
       <div
         className={classNames(
-          'flex h-full flex-col content-center items-center justify-center gap-1 rounded-lg px-4 text-center',
+          'flex h-full max-w-md flex-col content-center items-center justify-center gap-1 rounded-lg px-4 text-center',
           isWidget ? 'bg-card p-2' : ''
         )}
       >
@@ -53,12 +76,24 @@ export const NoDataNotice = ({
           aria-hidden
         />
         <p className={classNames('font-medium', inverse ? 'text-white' : 'text-card-foreground')}>
-          No data available
+          {title}
         </p>
-        {shutdownScope && <ShutdownExplanation scope={shutdownScope} inverse={inverse} />}
+        {shutdownScope && !filtered && (
+          <ShutdownExplanation scope={shutdownScope} inverse={inverse} />
+        )}
         <p className={classNames('text-sm', inverse ? 'text-white/80' : 'text-muted-foreground')}>
-          {isLineWide ? 'Try another date range.' : 'Try another station pair or date range.'}
+          {detail}
         </p>
+        {jumpTo && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-2"
+            onClick={() => updateQueryParams(jumpTo, false)}
+          >
+            {jumpLabel}
+          </Button>
+        )}
       </div>
     </div>
   );
