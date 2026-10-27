@@ -21,7 +21,7 @@ export const DwellsSingleWrapper = ({
 }: DwellsSingleWrapperProps) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
-  if (query.data.length < 1) return <NoDataNotice metric="dwells" />;
+  if (query.data.length < 1) return <NoDataNotice shutdownScope="trip" metric="dwells" />;
   const widgetObjects = getSingleDayWidgets(query.data, 'dwells');
 
   return (

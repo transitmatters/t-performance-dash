@@ -24,7 +24,7 @@ describe('getScheduledAndDeliveredRoundTrips', () => {
     ]);
   });
 
-  it('dates a scheduled-only month at the first of the month', () => {
+  it('dates a scheduled-only month at the first of the month, with no point', () => {
     const result = getScheduledAndDeliveredRoundTrips(
       [delivered('2026-02-01', 190)],
       scheduled([
@@ -35,7 +35,7 @@ describe('getScheduledAndDeliveredRoundTrips', () => {
     );
 
     expect(result.map(({ date }) => date)).toEqual(['2026-02-01', '2026-03-01']);
-    expect(result[1]).toEqual({ date: '2026-03-01', scheduled: 0, delivered: 0 });
+    expect(result[1]).toEqual({ date: '2026-03-01', scheduled: NaN, delivered: NaN });
   });
 
   it('matches daily points by exact date', () => {
@@ -50,7 +50,7 @@ describe('getScheduledAndDeliveredRoundTrips', () => {
 
     expect(result).toEqual([
       { date: '2026-03-02', scheduled: 210, delivered: 200 },
-      { date: '2026-03-03', scheduled: 0, delivered: 0 },
+      { date: '2026-03-03', scheduled: NaN, delivered: NaN },
     ]);
   });
 });

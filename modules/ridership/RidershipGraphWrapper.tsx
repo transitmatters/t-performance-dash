@@ -44,6 +44,7 @@ export const RidershipGraphWrapper = ({
     return (
       <NoDataNotice
         isLineMetric
+        shutdownScope="line"
         message={getOutOfServiceMessage(startDate, endDate, serviceStart, serviceEnd)}
       />
     );

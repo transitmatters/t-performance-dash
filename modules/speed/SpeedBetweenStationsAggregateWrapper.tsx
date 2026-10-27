@@ -27,7 +27,7 @@ export const SpeedBetweenStationsAggregateWrapper = ({
     toStation.station,
     query.data.by_date.filter((datapoint) => datapoint.peak === 'all')
   );
-  if (traveltimesData.length < 1) return <NoDataNotice />;
+  if (traveltimesData.length < 1) return <NoDataNotice shutdownScope="trip" />;
   const widgetObjects = getAggDataWidgets(traveltimesData, 'speeds');
   return (
     <ChartStack>

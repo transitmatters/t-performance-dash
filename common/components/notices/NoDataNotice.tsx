@@ -5,6 +5,7 @@ import type { TripMetric } from '../../utils/dataCoverage';
 import { getNoDataReason } from '../../utils/dataCoverage';
 import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
 import { Button } from '../ui/button';
+import { usePageShutdowns, shutdownDates } from '../../../modules/shutdowns';
 
 interface NoDataNoticeProps {
   isWidget?: boolean;
@@ -14,9 +15,26 @@ interface NoDataNoticeProps {
   filtered?: boolean;
   /** Which trip chart this is, for coverage gaps that only affect some charts. */
   metric?: TripMetric;
+  /** Names the shutdowns on the page's line and dates that explain the missing data. */
+  shutdownScope?: 'line' | 'trip';
   /** Replaces the detail line when the caller knows better, e.g. the dates fall outside service. */
   message?: string;
 }
+
+const ShutdownExplanation = ({ scope, inverse }: { scope: 'line' | 'trip'; inverse?: boolean }) => {
+  const shutdowns = usePageShutdowns(scope);
+  if (shutdowns.length === 0) return null;
+  return (
+    <ul className={classNames('text-sm', inverse ? 'text-white' : 'text-card-foreground')}>
+      {shutdowns.slice(0, 2).map((view) => (
+        <li key={view.shutdown.alert_id}>
+          {view.label} · {shutdownDates(view)}
+        </li>
+      ))}
+      {shutdowns.length > 2 && <li>and {shutdowns.length - 2} more shutdowns</li>}
+    </ul>
+  );
+};
 
 /**
  * An empty result is not an error: the query worked, the T just ran nothing matching it. The icon is
@@ -31,6 +49,7 @@ export const NoDataNotice = ({
   isLineMetric = false,
   filtered = false,
   metric,
+  shutdownScope,
   message,
 }: NoDataNoticeProps) => {
   const { tab, query } = useDelimitatedRoute();
@@ -62,6 +81,9 @@ export const NoDataNotice = ({
         <p className={classNames('font-medium', inverse ? 'text-white' : 'text-card-foreground')}>
           {title}
         </p>
+        {shutdownScope && !filtered && (
+          <ShutdownExplanation scope={shutdownScope} inverse={inverse} />
+        )}
         <p className={classNames('text-sm', inverse ? 'text-white/80' : 'text-muted-foreground')}>
           {message ?? detail}
         </p>

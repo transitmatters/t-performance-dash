@@ -6,6 +6,7 @@ import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/
 import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
+import { explainGapBlocks, usePageShutdowns } from '../shutdowns';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
 import { getNoDataSinceLatestBlock, getShuttlingBlockAnnotations } from './utils/graphUtils';
 import { getScheduledAndDeliveredRoundTrips } from './utils/utils';
@@ -29,16 +30,18 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
     return [{ label, value: peak }];
   }, [peak]);
 
+  const shutdowns = usePageShutdowns('line', startDate, endDate);
+
   const blocks = useMemo(() => {
-    const shuttlingBlocks = getShuttlingBlockAnnotations(data);
+    const shuttlingBlocks = getShuttlingBlockAnnotations(data).map((block) => ({
+      from: block.xMin as string,
+      to: block.xMax as string,
+    }));
     return [
-      ...shuttlingBlocks.map((block) => ({
-        from: block.xMin as string,
-        to: block.xMax as string,
-      })),
+      ...explainGapBlocks(shuttlingBlocks, shutdowns, { startDate, endDate }),
       ...getNoDataSinceLatestBlock(data.map((point) => point.date)),
     ];
-  }, [data]);
+  }, [data, shutdowns, startDate, endDate]);
 
   const roundTrips = useMemo(
     () => getScheduledAndDeliveredRoundTrips(data, predictedData, config.agg),

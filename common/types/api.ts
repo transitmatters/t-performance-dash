@@ -155,6 +155,16 @@ export enum FetchWeatherParams {
   endDate = 'end_date',
 }
 
+export type FetchShutdownsOptions = {
+  [key in FetchShutdownsParams]?: string;
+};
+
+export enum FetchShutdownsParams {
+  startDate = 'start_date',
+  endDate = 'end_date',
+  line = 'line',
+}
+
 export type FetchSpeedRestrictionsOptions = {
   lineId: Line;
   date: string;

@@ -39,7 +39,7 @@ export const TravelTimesAggregateWrapper = ({
   if (!dataReady) return <ChartPlaceHolder query={query} />;
 
   if (traveltimesData.length < 1)
-    return <NoDataNotice metric="traveltimes" filtered={allData.length > 0} />;
+    return <NoDataNotice shutdownScope="trip" metric="traveltimes" filtered={allData.length > 0} />;
 
   const widgetObjects = getAggDataWidgets(traveltimesData, 'times', comparisonData);
 
