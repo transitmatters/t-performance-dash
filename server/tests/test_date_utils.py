@@ -1,8 +1,8 @@
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 
 import pytest
 
-from chalicelib.date_utils import EASTERN_TIME, parse_event_date
+from chalicelib.date_utils import EASTERN_TIME, current_service_date, parse_event_date
 
 
 @pytest.mark.parametrize(
@@ -19,3 +19,16 @@ from chalicelib.date_utils import EASTERN_TIME, parse_event_date
 )
 def test_parse_event_date(date_str, expected):
     assert parse_event_date(date_str) == expected
+
+
+@pytest.mark.parametrize(
+    "now, expected",
+    [
+        (datetime(2026, 10, 25, 3, 29, tzinfo=EASTERN_TIME), date(2026, 10, 24)),
+        (datetime(2026, 10, 25, 3, 30, tzinfo=EASTERN_TIME), date(2026, 10, 25)),
+        # 2am Eastern is 6am UTC, which is still the previous service day
+        (datetime(2026, 10, 25, 6, 0, tzinfo=timezone.utc), date(2026, 10, 24)),
+    ],
+)
+def test_current_service_date(now, expected):
+    assert current_service_date(now) == expected
