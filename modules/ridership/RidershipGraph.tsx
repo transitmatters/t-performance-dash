@@ -102,12 +102,24 @@ export const RidershipGraph = ({
                   position: 'nearest',
                   callbacks: {
                     ...callbacks,
-                    label: (context) => {
-                      if (!context.parsed.y) return '';
-                      return `${context.parsed.y.toLocaleString('en-us')} (${(
-                        (100 * context.parsed.y) /
-                        peak
-                      ).toFixed(1)}% of historical maximum)`;
+                    hoverCard: (items) => {
+                      const count = items.find((item) => item.datasetIndex === 0)?.parsed.y;
+                      if (!count) return null;
+                      return {
+                        hero: {
+                          value: count.toLocaleString('en-us'),
+                          unit: 'fare validations',
+                          color: lineColor,
+                        },
+                        meter:
+                          peak > 0
+                            ? {
+                                fraction: count / peak,
+                                label: `${((100 * count) / peak).toFixed(1)}% of historical maximum (${peak.toLocaleString('en-us')})`,
+                                color: lineColor,
+                              }
+                            : undefined,
+                      };
                     },
                   },
                 },
