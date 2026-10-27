@@ -23,10 +23,13 @@ export const getScheduledAndDeliveredRoundTrips = (
     const delivered = deliveredByPeriod.get(period);
     const scheduledCount = scheduledByPeriod.get(period);
     const anyDelivered = !!delivered?.miles_covered;
+    const date = delivered?.date ?? (agg === 'monthly' ? `${period}-01` : period);
+    // NaN rather than 0 leaves a gap, so periods without trips get no point under the gap's band
+    if (!anyDelivered) return { date, scheduled: Number.NaN, delivered: Number.NaN };
     return {
-      date: delivered?.date ?? (agg === 'monthly' ? `${period}-01` : period),
-      scheduled: scheduledCount && anyDelivered ? Math.round(scheduledCount) / 2 : 0,
-      delivered: anyDelivered ? Math.round(delivered.count) : 0,
+      date,
+      scheduled: scheduledCount ? Math.round(scheduledCount) / 2 : 0,
+      delivered: Math.round(delivered.count),
     };
   });
 };

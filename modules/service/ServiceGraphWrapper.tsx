@@ -21,7 +21,8 @@ export const ServiceGraphWrapper = ({
   startDate,
   endDate,
 }: ServiceGraphWrapperProps) => {
-  if (!data.some((datapoint) => datapoint.miles_covered)) return <NoDataNotice isLineMetric />;
+  if (!data.some((datapoint) => datapoint.miles_covered))
+    return <NoDataNotice isLineMetric shutdownScope="line" />;
 
   return (
     <ChartStack>

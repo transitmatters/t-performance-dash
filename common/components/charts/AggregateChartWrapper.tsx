@@ -40,7 +40,7 @@ export const AggregateChartWrapper = ({
       : (query.data.by_date ?? []).filter((datapoint) => datapoint.peak === 'all');
   if (plotted.length < 1) {
     const peakFilterEmptied = timeUnit === 'by_time' && Boolean(query.data.by_time?.length);
-    return <NoDataNotice metric={type} filtered={peakFilterEmptied} />;
+    return <NoDataNotice shutdownScope="trip" metric={type} filtered={peakFilterEmptied} />;
   }
 
   switch (type) {

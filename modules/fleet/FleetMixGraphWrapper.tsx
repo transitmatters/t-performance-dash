@@ -24,7 +24,7 @@ export const FleetMixGraphWrapper = ({
   endDate,
 }: FleetMixGraphWrapperProps) => {
   if (!data.some((datapoint) => hasFleetMix(datapoint, types))) {
-    return <NoDataNotice isLineMetric />;
+    return <NoDataNotice isLineMetric shutdownScope="line" />;
   }
   return (
     <ChartStack>
