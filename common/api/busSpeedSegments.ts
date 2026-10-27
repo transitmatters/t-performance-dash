@@ -92,9 +92,11 @@ export const fetchBusSpeedSegmentsUrl = async ({
 };
 
 /**
- * Unlike the pmtiles archive, the leaderboard file is small (~90-120KB) and meant to be
- * fetched and parsed whole -- a plain GET + response.json(), not a byte-range read. It's
- * served as ordinary application/json, not gzip/zlib-wrapped.
+ * Unlike the pmtiles archive, the leaderboard file is meant to be fetched and parsed whole -- a
+ * plain GET + response.json(), not a byte-range read. Its 500 rows per slice come to ~1.7MB of
+ * JSON for a month, so the pipeline stores it with `Content-Encoding: gzip` (~180KB on the
+ * wire; CloudFront doesn't compress this path). The browser inflates that itself, so there's
+ * nothing to unwrap here.
  */
 export const fetchBusSpeedSegmentLeaderboard = async ({
   date,
