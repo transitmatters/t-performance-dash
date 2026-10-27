@@ -8,7 +8,7 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { useMemo } from 'react';
 import type { Station } from '../types/stations';
 import type { DayDelayTotals, Direction, SlowZone, SlowZoneResponse } from '../types/dataPoints';
-import { TODAY_MIDNIGHT } from '../constants/dates';
+import { DATE_FORMAT, TODAY_MIDNIGHT } from '../constants/dates';
 import type { LineShort } from '../types/lines';
 import { getParentStationForStopId } from './stations';
 
@@ -206,5 +206,98 @@ export const getDateAxisConfig = (startDateUTC: dayjs.Dayjs, endDateUTC: dayjs.D
     },
     display: true,
     offset: true,
+  };
+};
+
+const sharesBranch = (station: Station, branches: string[] | null) =>
+  !branches || !station.branches || station.branches.some((branch) => branches.includes(branch));
+
+/** Whether a slow zone sits on the path from `from` to `to`, in the same direction. */
+export const isZoneOnTrip = (
+  zone: SlowZoneResponse,
+  from: Station,
+  to: Station,
+  lineShort: LineShort
+) => {
+  if (zone.color !== lineShort) return false;
+  const zoneFrom = getParentStationForStopId(zone.fr_id, lineShort);
+  const zoneTo = getParentStationForStopId(zone.to_id, lineShort);
+  if (!zoneFrom || !zoneTo) return false;
+  if (Math.sign(zoneTo.order - zoneFrom.order) !== Math.sign(to.order - from.order)) return false;
+
+  // Branch station orders restart in their own range (Red Braintree is 2xx, Green D is 3xx), so
+  // an order range alone would pull in zones from the other branch.
+  const tripBranches =
+    from.branches && to.branches ? from.branches.filter((b) => to.branches?.includes(b)) : null;
+  const low = Math.min(from.order, to.order);
+  const high = Math.max(from.order, to.order);
+  return [zoneFrom, zoneTo].every(
+    (station) =>
+      station.order >= low && station.order <= high && sharesBranch(station, tripBranches)
+  );
+};
+
+export interface TripSlowZoneSummary {
+  startDate: string;
+  /** The requested end date, pulled back to the last day with slow zone data. */
+  endDate: string;
+  startTotal: number;
+  endTotal: number;
+  endZones: number;
+  peakTotal: number;
+  peakDate: string;
+}
+
+/**
+ * Slow time on a trip for each day of a window, summing each active zone's median delay. Pass the
+ * same start and end date for a single day. Returns null when no slow zone on the trip overlaps
+ * the window.
+ */
+export const getTripSlowZoneSummary = (
+  data: SlowZoneResponse[],
+  from: Station,
+  to: Station,
+  lineShort: LineShort,
+  startDate: string,
+  endDate: string
+): TripSlowZoneSummary | null => {
+  const zones = data.map((zone) => ({
+    ...zone,
+    start: zone.start.slice(0, 10),
+    end: zone.end.slice(0, 10),
+  }));
+  const lastDataDate = zones.reduce((max, zone) => (zone.end > max ? zone.end : max), '');
+  const end = endDate > lastDataDate ? lastDataDate : endDate;
+  const start = startDate > end ? end : startDate;
+
+  const tripZones = zones.filter(
+    (zone) => zone.start <= end && zone.end >= start && isZoneOnTrip(zone, from, to, lineShort)
+  );
+  if (!tripZones.length) return null;
+
+  const activeOn = (date: string) =>
+    tripZones.filter((zone) => zone.start <= date && zone.end >= date);
+  const totalOn = (date: string) => activeOn(date).reduce((sum, zone) => sum + zone.delay, 0);
+
+  let peakTotal = 0;
+  let peakDate = start;
+  for (let day = dayjs(start); !day.isAfter(end, 'day'); day = day.add(1, 'day')) {
+    const date = day.format(DATE_FORMAT);
+    const total = totalOn(date);
+    if (total > peakTotal) {
+      peakTotal = total;
+      peakDate = date;
+    }
+  }
+  if (peakTotal <= 0) return null;
+
+  return {
+    startDate: start,
+    endDate: end,
+    startTotal: totalOn(start),
+    endTotal: totalOn(end),
+    endZones: activeOn(end).length,
+    peakTotal,
+    peakDate,
   };
 };

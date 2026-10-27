@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import type { ModeKind, SummaryData } from '../types';
 
 import { Widget } from '../../../common/components/widgets/Widget';

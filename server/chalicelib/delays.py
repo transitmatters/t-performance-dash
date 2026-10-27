@@ -11,13 +11,7 @@ from chalicelib import dynamo
 from datetime import date
 
 
-# Config map for daily vs weekly delay queries
-AGG_TO_CONFIG_MAP = {
-    "daily": {"table_name": "AlertDelaysDaily"},
-    "weekly": {"table_name": "AlertDelaysWeekly"},
-}
-
-RAIL_LINES = [
+VALID_LINES = [
     "Red",
     "Blue",
     "Orange",
@@ -40,6 +34,12 @@ RAIL_LINES = [
     "CR-Newburyport",
     "CR-Providence",
 ]
+
+# Config map for daily vs weekly delay queries
+AGG_TO_CONFIG_MAP = {
+    "daily": {"table_name": "AlertDelaysDaily"},
+    "weekly": {"table_name": "AlertDelaysWeekly"},
+}
 
 # All bus routes summed together
 BUS_AGGREGATE = "Bus"
@@ -90,7 +90,7 @@ def delay_time_by_line(params: AlertDelaysByLineParams):
             raise BadRequestError("Invalid aggregation type. Must be 'daily' or 'weekly'.")
     except KeyError:
         raise BadRequestError("Missing or invalid parameters.")
-    if line in RAIL_LINES:
+    if line in VALID_LINES:
         # Return the query from the appropriate table
         return dynamo.query_agg_trip_metrics(start_date, end_date, config["table_name"], line)
     if line == BUS_AGGREGATE:

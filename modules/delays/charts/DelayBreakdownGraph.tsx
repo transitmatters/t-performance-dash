@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -29,13 +29,13 @@ interface DelayBreakdownGraphProps {
   agg?: 'daily' | 'weekly';
 }
 
-export const DelayBreakdownGraph: React.FC<DelayBreakdownGraphProps> = ({
+export const DelayBreakdownGraph = ({
   data,
   startDate,
   endDate,
   showTitle = false,
   agg = 'weekly',
-}) => {
+}: DelayBreakdownGraphProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');

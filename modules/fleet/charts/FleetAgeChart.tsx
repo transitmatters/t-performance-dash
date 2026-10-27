@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -23,6 +23,7 @@ import {
   getShuttlingBlockAnnotations,
 } from '../../service/utils/graphUtils';
 import type { ParamsType } from '../../speed/constants/speeds';
+import { explainGaps, usePageShutdowns } from '../../shutdowns';
 import { hasFleetMetric, type FleetMetric } from '../constants/fleetTypes';
 
 interface FleetAgeChartProps {
@@ -35,7 +36,7 @@ interface FleetAgeChartProps {
   showTitle?: boolean;
 }
 
-export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
+export const FleetAgeChart = ({
   data,
   metric,
   showShuttling,
@@ -43,7 +44,7 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
   startDate,
   endDate,
   showTitle = false,
-}) => {
+}: FleetAgeChartProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef(null);
@@ -53,8 +54,16 @@ export const FleetAgeChart: React.FC<FleetAgeChartProps> = ({
   const lineColor = LINE_COLORS[line ?? 'default'];
   // Keyed off the fleet metric, not miles_covered: a partial shutdown zeroes the line's
   // service metrics while cars still ran (and were sampled) on the remaining branches.
+  const shutdowns = usePageShutdowns('line', startDate, endDate);
   const shuttlingBlocks = showShuttling
-    ? getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMetric(datapoint, metric.field))
+    ? explainGaps(
+        getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMetric(datapoint, metric.field)),
+        shutdowns,
+        {
+          startDate,
+          endDate,
+        }
+      )
     : [];
 
   return (

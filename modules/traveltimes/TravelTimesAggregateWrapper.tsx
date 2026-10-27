@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import type { ChunkedAggregateQueryResult, DayFilter } from '../../common/types/charts';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -17,12 +17,12 @@ interface TravelTimesAggregateWrapperProps {
   dayFilter: DayFilter;
 }
 
-export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperProps> = ({
+export const TravelTimesAggregateWrapper = ({
   query,
   toStation,
   fromStation,
   dayFilter,
-}) => {
+}: TravelTimesAggregateWrapperProps) => {
   const allData = useMemo(
     () => query.data?.by_date.filter((datapoint) => datapoint.peak === 'all') ?? [],
     [query.data]
@@ -38,7 +38,8 @@ export const TravelTimesAggregateWrapper: React.FC<TravelTimesAggregateWrapperPr
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
 
-  if (traveltimesData.length < 1) return <NoDataNotice />;
+  if (traveltimesData.length < 1)
+    return <NoDataNotice shutdownScope="trip" metric="traveltimes" filtered={allData.length > 0} />;
 
   const widgetObjects = getAggDataWidgets(traveltimesData, 'times', comparisonData);
 

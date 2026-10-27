@@ -141,6 +141,14 @@ def get_weather(query_params: dict):
     return []
 
 
+def get_shutdowns(query_params: dict):
+    """Return no shutdowns in static mode.
+
+    Shutdown bands are advisory visuals layered over other charts, like weather.
+    """
+    return []
+
+
 # Line delays static data
 def get_line_delays(query_params: dict):
     """Get line delays from static cache.

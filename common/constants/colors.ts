@@ -55,6 +55,11 @@ export const CHART_COLORS = {
   ANNOTATIONS: hexWithAlpha('#808080', 0.85),
   BLOCKS: hexWithAlpha('#202020', 0.2),
   BLOCKS_SOLID: '#d2d2d2',
+  // Amber, apart from the grey "No data" blocks and the yellow alert boxes. The band tints the
+  // series it covers; its outlined label reads over bars in either theme.
+  SHUTDOWN: hexWithAlpha('#f59e0b', 0.25),
+  SHUTDOWN_TEXT: '#92400e',
+  SHUTDOWN_TEXT_STROKE: '#ffffff',
   // Tints the side of a benchmark that meets the target; light enough for both plot surfaces
   TARGET_ZONE: hexWithAlpha('#64b96a', 0.15),
 };

@@ -241,6 +241,33 @@ def query_agg_trip_metrics(start_date: str | date, end_date: str | date, table_n
     return ddb_json.loads(response["Items"])
 
 
+def query_shutdowns(line: str, start_date: str | date, end_date: str | date) -> List[dict]:
+    """Query the Shutdowns table for one line's shutdowns that overlap a date range.
+
+    Args:
+      line: str: The line identifier (partition key), e.g. ``Red`` or ``Green-B``.
+      start_date: str | date: Start of date range (inclusive).
+      end_date: str | date: End of date range (inclusive).
+
+    Returns:
+      list[dict]: Deserialized shutdown records.
+    """
+    table = dynamodb.Table("Shutdowns")
+    query_kwargs = {
+        "KeyConditionExpression": Key("line").eq(line),
+        "FilterExpression": Attr("first_start").lte(str(end_date)) & Attr("last_end").gte(str(start_date)),
+    }
+    items = []
+    while True:
+        response = table.query(**query_kwargs)
+        items.extend(ddb_json.loads(response["Items"]))
+        last_evaluated_key = response.get("LastEvaluatedKey")
+        if not last_evaluated_key:
+            break
+        query_kwargs["ExclusiveStartKey"] = last_evaluated_key
+    return items
+
+
 def query_extended_trip_metrics(
     start_date: date,
     end_date: date,

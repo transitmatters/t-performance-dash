@@ -1,4 +1,3 @@
-import React from 'react';
 import type { ChunkedAggregateQueryResult, TravelTimesUnit } from '../../types/charts';
 import type { Station } from '../../types/stations';
 import { ChartPlaceHolder } from '../graphics/ChartPlaceHolder';
@@ -16,14 +15,14 @@ interface AggregateChartWrapperProps {
   type: 'headways' | 'traveltimes' | 'dwells';
 }
 
-export const AggregateChartWrapper: React.FC<AggregateChartWrapperProps> = ({
+export const AggregateChartWrapper = ({
   query,
   toStation,
   fromStation,
   timeUnit,
   peakTime,
   type,
-}) => {
+}: AggregateChartWrapperProps) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   // by_time comes from the newest chunk only, which may still be loading or may have failed.
@@ -39,7 +38,10 @@ export const AggregateChartWrapper: React.FC<AggregateChartWrapperProps> = ({
           (datapoint) => datapoint.is_peak_day === (peakTime ?? true)
         )
       : (query.data.by_date ?? []).filter((datapoint) => datapoint.peak === 'all');
-  if (plotted.length < 1) return <NoDataNotice />;
+  if (plotted.length < 1) {
+    const peakFilterEmptied = timeUnit === 'by_time' && Boolean(query.data.by_time?.length);
+    return <NoDataNotice shutdownScope="trip" metric={type} filtered={peakFilterEmptied} />;
+  }
 
   switch (type) {
     case 'traveltimes':

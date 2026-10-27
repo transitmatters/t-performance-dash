@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { useCrScorecard } from '../../../common/api/hooks/crScorecard';
@@ -89,7 +89,7 @@ export function CommuterRailService() {
     { paramKey: 'day' }
   );
   const byLine = scope === 'route' && Boolean(crRoute);
-  const { agg } = React.useMemo(
+  const { agg } = useMemo(
     () => getSpeedGraphConfig(dayjs(startDate), dayjs(endDate)),
     [startDate, endDate]
   );
@@ -118,7 +118,7 @@ export function CommuterRailService() {
   );
 
   // Stable between renders: a new array each time makes the chart redraw and keep resizing
-  const hourly = React.useMemo(
+  const hourly = useMemo(
     () =>
       DIRECTIONS.map(({ key, label }) => ({
         label,

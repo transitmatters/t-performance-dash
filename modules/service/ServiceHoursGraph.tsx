@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 import type { FetchServiceHoursResponse } from '../../common/types/api';
 import type { AggType } from '../speed/constants/speeds';
@@ -13,9 +13,7 @@ interface ServiceHoursGraphProps {
   endDate: string;
 }
 
-export const ServiceHoursGraph: React.FC<ServiceHoursGraphProps> = (
-  props: ServiceHoursGraphProps
-) => {
+export const ServiceHoursGraph = (props: ServiceHoursGraphProps) => {
   const { serviceHours, agg, startDate, endDate } = props;
 
   const scheduled = useMemo(() => {

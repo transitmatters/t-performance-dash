@@ -1,9 +1,8 @@
-import React from 'react';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { useTripMetricsForLanding } from '../../../common/api/hooks/tripmetrics';
 import { OverallServiceChart } from './OverallServiceChart';
 
-export const OverallServiceChartWrapper: React.FC = () => {
+export const OverallServiceChartWrapper = () => {
   const serviceData = useTripMetricsForLanding();
   const serviceDataReady = !serviceData.isLoading && !serviceData.isError && serviceData.data;
   if (!serviceDataReady) return <ChartPlaceHolder query={serviceData} />;

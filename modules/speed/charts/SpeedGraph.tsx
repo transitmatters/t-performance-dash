@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -24,6 +24,7 @@ import { DownloadButton } from '../../../common/components/buttons/DownloadButto
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { addMPHToSpeedData } from '../../../common/utils/csv';
 import type { ParamsType } from '../constants/speeds';
+import { explainGaps, usePageShutdowns } from '../../shutdowns';
 
 interface SpeedGraphProps {
   data: SpeedTripMetrics[];
@@ -34,21 +35,25 @@ interface SpeedGraphProps {
   peakLineDashed?: boolean;
 }
 
-export const SpeedGraph: React.FC<SpeedGraphProps> = ({
+export const SpeedGraph = ({
   data,
   config,
   startDate,
   endDate,
   showTitle = false,
   peakLineDashed = false,
-}) => {
+}: SpeedGraphProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const peak = useSpeedBaseline(line);
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
-  const shuttlingBlocks = getShuttlingBlockAnnotations(data);
+  const shutdowns = usePageShutdowns('line', startDate, endDate);
+  const shuttlingBlocks = explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
+    startDate,
+    endDate,
+  });
   const dataWithMPH = addMPHToSpeedData(data);
 
   return (
@@ -75,8 +80,11 @@ export const SpeedGraph: React.FC<SpeedGraphProps> = ({
                 spanGaps: false,
                 pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
                 pointBackgroundColor: LINE_COLORS[line ?? 'default'],
+                // Days with no trips are left out rather than plotted as 0 mph under the gap's band
                 data: data.map((datapoint) =>
-                  (datapoint.miles_covered / (datapoint.total_time / 3600)).toFixed(1)
+                  datapoint.miles_covered
+                    ? (datapoint.miles_covered / (datapoint.total_time / 3600)).toFixed(1)
+                    : null
                 ),
               },
               // No baseline is established for every line yet (PEAK_SPEED defaults to 0),

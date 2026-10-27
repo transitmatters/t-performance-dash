@@ -1,4 +1,4 @@
-import React from 'react';
+import type { JSX } from 'react';
 import type { LandingCharts } from '../modules/landing/types';
 
 const DESCRIPTION_STYLE = 'text-stone-900 text-lg';
@@ -45,7 +45,7 @@ const RidershipDescription = (
   </p>
 );
 
-export const LandingChartCopyMap: { [key in LandingCharts]: React.JSX.Element } = {
+export const LandingChartCopyMap: { [key in LandingCharts]: JSX.Element } = {
   Service: ServiceDescription,
   Speed: SpeedDescription,
   Ridership: RidershipDescription,

@@ -117,7 +117,7 @@ export const getV3RedirectHref = (pathname: string, search: URLSearchParams) => 
     if (resultParams && pathname.startsWith('/bus')) {
       const { queryParams, tripSection } = resultParams;
       return `/bus/trips/${tripSection}/?${queryParams.toString()}`;
-    } else if (pathname.startsWith('/bus')) {
+    } else if (pathname.startsWith('/bus') && !search.has('busRoute')) {
       return '/bus/trips/single/?busRoute=1';
     }
   }

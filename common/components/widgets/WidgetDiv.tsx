@@ -1,9 +1,9 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import { cn } from '../../utils/cn';
 import { Card } from '../ui/card';
 
 interface WidgetDivProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }
 
@@ -14,6 +14,6 @@ interface WidgetDivProps {
  * the two met. `Card` pads vertically via `--card-spacing`; the horizontal half is added here so
  * every child lines up without carrying padding of its own.
  */
-export const WidgetDiv: React.FC<WidgetDivProps> = ({ children, className }) => {
+export const WidgetDiv = ({ children, className }: WidgetDivProps) => {
   return <Card className={cn('h-full px-(--card-spacing)', className)}>{children}</Card>;
 };

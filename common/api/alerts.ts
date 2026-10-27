@@ -1,6 +1,7 @@
 import type { AlertsResponse, OldAlert } from '../types/alerts';
 import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from '../types/lines';
 import { getStationKeysFromStations } from '../utils/stations';
+import { getBusRouteIds } from '../constants/lines';
 import { apiFetch } from './utils/fetch';
 
 const alertsAPIConfig = {
@@ -19,10 +20,14 @@ type RouteOptions = {
 
 export const fetchAlerts = async (
   line: LineShort,
-  busRoute?: string
+  busRoute?: string,
+  crRoute?: CommuterRailRoute
 ): Promise<AlertsResponse[]> => {
   if (line === 'Bus' && busRoute) {
     return fetchAlertsForBus(busRoute);
+  }
+  if (line === 'Commuter Rail' && crRoute) {
+    return fetchAlertsForCommuterRail(crRoute);
   }
   return fetchAlertsForLine(line);
 };
@@ -48,13 +53,26 @@ const fetchAlertsForLine = async (line: LineShort): Promise<AlertsResponse[]> =>
 };
 
 const fetchAlertsForBus = async (busRoute: string): Promise<AlertsResponse[]> => {
-  const options: RouteOptions = { ...alertsAPIConfig, route: busRoute };
+  const options: RouteOptions = { ...alertsAPIConfig, route: getBusRouteIds(busRoute).join(',') };
   options['route_type'] = '3';
 
   return await apiFetch({
     path: '/api/alerts',
     options,
     errorMessage: `Failed to fetch alerts for bus route ${busRoute}`,
+  });
+};
+
+const fetchAlertsForCommuterRail = async (
+  crRoute: CommuterRailRoute
+): Promise<AlertsResponse[]> => {
+  // route_type 2 is commuter rail
+  const options: RouteOptions = { ...alertsAPIConfig, route: crRoute, route_type: '2' };
+
+  return await apiFetch({
+    path: '/api/alerts',
+    options,
+    errorMessage: `Failed to fetch alerts for commuter rail route ${crRoute}`,
   });
 };
 

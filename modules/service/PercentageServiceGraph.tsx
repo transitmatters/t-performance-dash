@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -14,6 +14,7 @@ import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import type { ParamsType } from '../speed/constants/speeds';
+import { explainGaps, usePageShutdowns } from '../shutdowns';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { getNoDataSinceLatestAnnotation, getShuttlingBlockAnnotations } from './utils/graphUtils';
@@ -28,7 +29,7 @@ interface PercentageServiceGraphProps {
   showTitle?: boolean;
 }
 
-export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
+export const PercentageServiceGraph = ({
   data,
   calculatedData,
   config,
@@ -36,17 +37,21 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
   endDate,
   comparison,
   showTitle = false,
-}) => {
+}: PercentageServiceGraphProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
 
   const isMobile = !useBreakpoint('md');
   const ref = useRef(null);
+  const shutdowns = usePageShutdowns('line', startDate, endDate);
 
   const chart = useMemo(() => {
     const labels = data.map((point) => point.date);
     const lineColor = LINE_COLORS[line ?? 'default'];
-    const shuttlingBlocks = getShuttlingBlockAnnotations(data);
+    const shuttlingBlocks = explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
+      startDate,
+      endDate,
+    });
     const compareToScheduled = comparison === 'Scheduled';
     return (
       <ChartStack>
@@ -214,6 +219,7 @@ export const PercentageServiceGraph: React.FC<PercentageServiceGraphProps> = ({
     );
   }, [
     data,
+    shutdowns,
     line,
     comparison,
     isMobile,

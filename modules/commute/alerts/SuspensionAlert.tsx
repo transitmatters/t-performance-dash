@@ -1,4 +1,3 @@
-import React from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLeftRight } from '@fortawesome/free-solid-svg-icons';
@@ -30,12 +29,7 @@ const getDescription = (alert: FormattedAlert, lineShort: LineShort) => {
   return <p className="mr-1">Detours on {lineShort} Line</p>;
 };
 
-export const SuspensionAlert: React.FC<SuspensionAlertProps> = ({
-  alert,
-  lineShort,
-  type,
-  noShrink,
-}) => {
+export const SuspensionAlert = ({ alert, lineShort, type, noShrink }: SuspensionAlertProps) => {
   return (
     <AlertBoxInner
       header={alert.header}

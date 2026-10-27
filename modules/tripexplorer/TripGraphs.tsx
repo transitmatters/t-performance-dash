@@ -1,9 +1,10 @@
-import React from 'react';
 import type { Station } from '../../common/types/stations';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { stopIdsForStations } from '../../common/utils/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { AggregateAPIParams, SingleDayAPIParams } from '../../common/types/api';
+import { TripSlowZonesCallout } from '../slowzones/TripSlowZonesCallout';
+import { isSlowZonesLine } from '../slowzones/types';
 import { BusTripGraphs } from './BusTripGraphs';
 import { SubwayTripGraphs } from './SubwayTripGraphs';
 import { CommuterRailTripGraphs } from './CommuterRailTripGraphs';
@@ -15,11 +16,13 @@ interface TripGraphsProps {
   toStation: Station;
 }
 
-export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }) => {
+export const TripGraphs = ({ fromStation, toStation }: TripGraphsProps) => {
   const {
     query: { startDate, endDate, date },
     tab,
     line,
+    linePath,
+    lineShort,
     page,
   } = useDelimitatedRoute();
 
@@ -81,14 +84,28 @@ export const TripGraphs: React.FC<TripGraphsProps> = ({ fromStation, toStation }
         line={line}
       />
     );
+  const [slowZoneStart, slowZoneEnd] = aggregate ? [startDate, endDate] : [date, date];
   return (
-    <SubwayTripGraphs
-      fromStation={fromStation}
-      toStation={toStation}
-      parameters={parameters}
-      aggregate={aggregate}
-      enabled={enabled}
-      line={line}
-    />
+    <>
+      {isSlowZonesLine(lineShort) && slowZoneStart && slowZoneEnd && (
+        <TripSlowZonesCallout
+          fromStation={fromStation}
+          toStation={toStation}
+          lineShort={lineShort}
+          line={line}
+          linePath={linePath}
+          startDate={slowZoneStart}
+          endDate={slowZoneEnd}
+        />
+      )}
+      <SubwayTripGraphs
+        fromStation={fromStation}
+        toStation={toStation}
+        parameters={parameters}
+        aggregate={aggregate}
+        enabled={enabled}
+        line={line}
+      />
+    </>
   );
 };
