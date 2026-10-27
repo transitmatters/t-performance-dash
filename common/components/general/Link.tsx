@@ -1,4 +1,4 @@
-import React from 'react';
+import type { AnchorHTMLAttributes, ComponentProps, Ref } from 'react';
 import { Link as RouterLink } from '@tanstack/react-router';
 import type { SearchObject } from '../../utils/searchParams';
 import { parseSearch, stringifySearch } from '../../utils/searchParams';
@@ -11,12 +11,12 @@ export const hrefToString = (href: Href) =>
 
 const isExternal = (href: string) => /^([a-z][a-z\d+.-]*:|\/\/)/i.test(href);
 
-type LinkProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
+type LinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
   href: Href;
-  ref?: React.Ref<HTMLAnchorElement>;
+  ref?: Ref<HTMLAnchorElement>;
 };
 
-export const Link: React.FC<LinkProps> = ({ href, ...props }) => {
+export const Link = ({ href, ...props }: LinkProps) => {
   const url = hrefToString(href);
   if (isExternal(url)) return <a href={url} {...props} />;
   // Split into to/search/hash rather than passing `href`: Link memoizes its destination on those,
@@ -26,6 +26,6 @@ export const Link: React.FC<LinkProps> = ({ href, ...props }) => {
     to: pathname,
     search: parseSearch(search),
     hash: hash ? hash.slice(1) : undefined,
-  } as unknown as React.ComponentProps<typeof RouterLink>;
+  } as unknown as ComponentProps<typeof RouterLink>;
   return <RouterLink {...routerProps} {...props} />;
 };

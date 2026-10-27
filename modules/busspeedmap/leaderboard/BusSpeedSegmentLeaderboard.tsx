@@ -1,4 +1,3 @@
-import React from 'react';
 import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import type { BusSpeedSegmentLeaderboardEntry } from '../types';
 
@@ -7,10 +6,10 @@ interface BusSpeedSegmentLeaderboardProps {
   onSelectSegment: (entry: BusSpeedSegmentLeaderboardEntry) => void;
 }
 
-export const BusSpeedSegmentLeaderboard: React.FC<BusSpeedSegmentLeaderboardProps> = ({
+export const BusSpeedSegmentLeaderboard = ({
   data,
   onSelectSegment,
-}) => {
+}: BusSpeedSegmentLeaderboardProps) => {
   return (
     <ol className="flex flex-col divide-y divide-stone-200">
       {data.map((entry, index) => (

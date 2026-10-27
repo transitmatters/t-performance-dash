@@ -55,7 +55,7 @@ def unique_everseen(iterable, key=None):
                 yield element
 
 
-def dwells(stop_ids: list, start_date: date, end_date: date):
+def dwells(stop_ids: list, start_date: date, end_date: date, single_day=False):
     """Calculate dwell times from raw arrival/departure event pairs.
 
     Matches consecutive ARR/DEP events for the same trip_id and computes
@@ -65,12 +65,13 @@ def dwells(stop_ids: list, start_date: date, end_date: date):
         stop_ids: Stop IDs to fetch event data for.
         start_date: Start of date range (inclusive).
         end_date: End of date range (inclusive).
+        single_day: Whether this is a single-day request, which reads LAMP first.
 
     Returns:
         List of dwell time records, each containing route_id, direction,
         arr_dt, dep_dt, dwell_time_sec, vehicle_consist, and vehicle_label.
     """
-    rows_by_time = s3.download_events(start_date, end_date, stop_ids)
+    rows_by_time = s3.download_events(start_date, end_date, stop_ids, single_day)
 
     dwells = []
     for maybe_an_arrival, maybe_a_departure in pairwise(rows_by_time):
@@ -101,7 +102,7 @@ def dwells(stop_ids: list, start_date: date, end_date: date):
     return dwells
 
 
-def headways(stop_ids: list, start_date: date, end_date: date):
+def headways(stop_ids: list, start_date: date, end_date: date, single_day=False):
     """Calculate headways from consecutive departure events.
 
     Computes the time between consecutive departures at a stop. Skips
@@ -112,13 +113,14 @@ def headways(stop_ids: list, start_date: date, end_date: date):
         stop_ids: Stop IDs to fetch event data for.
         start_date: Start of date range (inclusive).
         end_date: End of date range (inclusive).
+        single_day: Whether this is a single-day request, which reads LAMP first.
 
     Returns:
         List of headway records, each containing route_id, direction,
         current_dep_dt, headway_time_sec, benchmark_headway_time_sec,
         vehicle_consist, and vehicle_label.
     """
-    rows_by_time = s3.download_events(start_date, end_date, stop_ids)
+    rows_by_time = s3.download_events(start_date, end_date, stop_ids, single_day)
 
     only_departures = filter(lambda row: row["event_type"] in EVENT_DEPARTURE, rows_by_time)
 
@@ -145,7 +147,7 @@ def headways(stop_ids: list, start_date: date, end_date: date):
                 # Check for NaN or Infinity
                 if math.isnan(benchmark_headway) or math.isinf(benchmark_headway):
                     benchmark_headway = None
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 benchmark_headway = None
         else:
             benchmark_headway = None
@@ -168,7 +170,7 @@ def headways(stop_ids: list, start_date: date, end_date: date):
     return headways
 
 
-def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date):
+def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date, single_day=False):
     """Calculate travel times between two sets of stops.
 
     Matches departure events at origin stops to arrival events at destination
@@ -180,6 +182,7 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
         stops_b: Destination stop IDs.
         start_date: Start of date range (inclusive).
         end_date: End of date range (inclusive).
+        single_day: Whether this is a single-day request, which reads LAMP first.
 
     Returns:
         List of travel time records, each containing route_id, direction,
@@ -189,8 +192,8 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
     from concurrent.futures import ThreadPoolExecutor
 
     with ThreadPoolExecutor(max_workers=2) as executor:
-        fut_a = executor.submit(s3.download_events, start_date, end_date, stops_a)
-        fut_b = executor.submit(s3.download_events, start_date, end_date, stops_b)
+        fut_a = executor.submit(s3.download_events, start_date, end_date, stops_a, single_day)
+        fut_b = executor.submit(s3.download_events, start_date, end_date, stops_b, single_day)
         rows_by_time_a = fut_a.result()
         rows_by_time_b = fut_b.result()
 
@@ -237,7 +240,7 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date)
             # Check for NaN, Infinity, or invalid values
             if math.isnan(benchmark) or math.isinf(benchmark) or benchmark < 1:
                 benchmark = None
-        except (TypeError, ValueError):
+        except TypeError, ValueError:
             benchmark = None
 
         # not every vehicle will have vehicle_consist

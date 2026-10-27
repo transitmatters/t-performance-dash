@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay, faCalendarWeek } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -14,18 +14,18 @@ import { RANGE_PRESETS, SINGLE_PRESETS } from '../../../constants/dates';
 import { useDatePresetStore } from '../../../state/datePresetStore';
 import { checkForPreset, useSelectedPreset } from '../../../state/utils/datePresetUtils';
 import { ALL_PAGES } from '../../../constants/pages';
+import type { QueryTypeOptions } from '../../../types/router';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 import { DatePickers } from './DatePickers';
 import { DatePickerPresets } from './DatePickerPresets';
-import { RangeSelectionTab } from './RangeSelectionTab';
 
 interface DateSelectionProps {
-  type?: 'combo' | 'range' | 'single';
+  type: QueryTypeOptions;
 }
 
-export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) => {
+export const DateSelection = ({ type }: DateSelectionProps) => {
   const { line, page, tab, query } = useDelimitatedRoute();
-  const [range, setRange] = useState<boolean>(type !== 'single');
+  const range = type === 'range';
   const [open, setOpen] = useState<boolean>(false);
   const { dateStoreSection } = ALL_PAGES[page];
   const setDatePreset = useDatePresetStore((state) => state.setDatePreset);
@@ -36,13 +36,9 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
 
   const handleSelection = (datePresetKey: DatePresetKey) => {
     const selectedPreset = presets[datePresetKey];
-    if (selectedPreset?.input) updateQueryParams(selectedPreset.input, range, false);
+    if (selectedPreset?.input) updateQueryParams(selectedPreset.input, false);
     setDatePreset(datePresetKey, dateStoreSection, range);
   };
-
-  useEffect(() => {
-    setRange(type !== 'single');
-  }, [type]);
 
   const clearPreset = () => {
     setDatePreset('custom', dateStoreSection, range);
@@ -86,7 +82,6 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
           className="w-56 overflow-hidden p-0"
         >
           <div className="flex flex-col overflow-hidden leading-6">
-            {type === 'combo' && <RangeSelectionTab range={range} setRange={setRange} />}
             <DatePickerPresets
               preset={datePreset}
               selectedOptions={presetDateArray}
@@ -96,7 +91,7 @@ export const DateSelection: React.FC<DateSelectionProps> = ({ type = 'combo' }) 
           </div>
         </PopoverContent>
       </Popover>
-      <DatePickers clearPreset={clearPreset} setRange={setRange} range={range} type={type} />
+      <DatePickers clearPreset={clearPreset} type={type} />
     </div>
   );
 };

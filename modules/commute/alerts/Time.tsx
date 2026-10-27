@@ -1,4 +1,3 @@
-import React from 'react';
 import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faCalendar } from '@fortawesome/free-solid-svg-icons';
@@ -8,7 +7,7 @@ interface TimeProps {
   times: AlertTime[];
 }
 
-export const CurrentTime: React.FC<TimeProps> = ({ times }) => {
+export const CurrentTime = ({ times }: TimeProps) => {
   // Get end of service day (2 am)
   const dayEnd = dayjs().tz('America/New_York').add(1, 'day').set('hour', 2).set('minute', 0);
   const now = dayjs();
@@ -61,7 +60,7 @@ const getDateString = (times: AlertTime[]) => {
   return `${start.format('MMM DD')} - ${end.format('MMM DD')}`;
 };
 
-export const UpcomingTime: React.FC<TimeProps> = ({ times }) => {
+export const UpcomingTime = ({ times }: TimeProps) => {
   const timeString = getDateString(times);
   return (
     <>
@@ -71,7 +70,7 @@ export const UpcomingTime: React.FC<TimeProps> = ({ times }) => {
   );
 };
 
-export const EffectiveTime: React.FC<TimeProps> = ({ times }) => {
+export const EffectiveTime = ({ times }: TimeProps) => {
   const timeString = dayjs(times[0].start).format('MMM D YYYY');
   return (
     <>

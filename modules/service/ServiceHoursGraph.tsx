@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 import type { FetchServiceHoursResponse } from '../../common/types/api';
 import type { AggType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
+import { getNoDataSinceLatestBlock } from './utils/graphUtils';
 
 interface ServiceHoursGraphProps {
   serviceHours: FetchServiceHoursResponse;
@@ -12,9 +13,7 @@ interface ServiceHoursGraphProps {
   endDate: string;
 }
 
-export const ServiceHoursGraph: React.FC<ServiceHoursGraphProps> = (
-  props: ServiceHoursGraphProps
-) => {
+export const ServiceHoursGraph = (props: ServiceHoursGraphProps) => {
   const { serviceHours, agg, startDate, endDate } = props;
 
   const scheduled = useMemo(() => {
@@ -41,6 +40,7 @@ export const ServiceHoursGraph: React.FC<ServiceHoursGraphProps> = (
         endDate={endDate}
         agg={agg}
         valueAxisLabel="Service hours"
+        blocks={getNoDataSinceLatestBlock(serviceHours.map((sh) => sh.date))}
       />
     </ChartStack>
   );

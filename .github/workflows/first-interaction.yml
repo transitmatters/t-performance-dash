@@ -1,13 +1,24 @@
 name: first-contribution
 
 on:
-  pull_request:
+  issues:
+    types: [opened]
+  # pull_request_target so the greeting can be posted on PRs from forks
+  pull_request_target:
     branches: [main]
     types: [opened]
 
 jobs:
   check:
+    # Only greet real outside people: skip bots and org members/collaborators
+    if: >-
+      github.event.sender.type != 'Bot' &&
+      !contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'),
+        github.event.pull_request.author_association || github.event.issue.author_association)
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
     steps:
       - uses: actions/first-interaction@v3
         with:

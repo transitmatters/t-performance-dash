@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -18,8 +18,12 @@ import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
-import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
+import {
+  getNoDataSinceLatestAnnotation,
+  getShuttlingBlockAnnotations,
+} from '../../service/utils/graphUtils';
 import type { ParamsType } from '../../speed/constants/speeds';
+import { explainGaps, usePageShutdowns } from '../../shutdowns';
 import { hasFleetMetric, type FleetModeMetrics } from '../constants/fleetTypes';
 
 interface FleetShareChartProps {
@@ -32,7 +36,7 @@ interface FleetShareChartProps {
   showTitle?: boolean;
 }
 
-export const FleetShareChart: React.FC<FleetShareChartProps> = ({
+export const FleetShareChart = ({
   data,
   metric,
   showShuttling,
@@ -40,7 +44,7 @@ export const FleetShareChart: React.FC<FleetShareChartProps> = ({
   startDate,
   endDate,
   showTitle = false,
-}) => {
+}: FleetShareChartProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef(null);
@@ -51,8 +55,16 @@ export const FleetShareChart: React.FC<FleetShareChartProps> = ({
   // Keyed off the fleet metric, not miles_covered: a partial shutdown zeroes the line's
   // service metrics while cars still ran (and were sampled) on the remaining branches.
   // Checked against null rather than truthiness -- 0% is a real value.
+  const shutdowns = usePageShutdowns('line', startDate, endDate);
   const shuttlingBlocks = showShuttling
-    ? getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMetric(datapoint, metric.field))
+    ? explainGaps(
+        getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMetric(datapoint, metric.field)),
+        shutdowns,
+        {
+          startDate,
+          endDate,
+        }
+      )
     : [];
 
   return (
@@ -116,7 +128,7 @@ export const FleetShareChart: React.FC<FleetShareChartProps> = ({
                 text: '',
               },
               annotation: {
-                annotations: [...shuttlingBlocks],
+                annotations: [...shuttlingBlocks, ...getNoDataSinceLatestAnnotation(labels)],
               },
             },
             scales: {

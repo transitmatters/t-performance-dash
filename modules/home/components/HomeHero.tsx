@@ -1,4 +1,4 @@
-import React from 'react';
+import type { CSSProperties } from 'react';
 import dayjs from 'dayjs';
 import { RollingNumber } from '../../../common/components/motion/RollingNumber';
 import { cn } from '../../../common/utils/cn';
@@ -12,10 +12,14 @@ import { Placeholder } from './Placeholder';
 // The strip across the top: one segment per mode, in the T's own colors.
 const STRIPE = ['#da291c', '#ed8b00', '#003da5', '#00843d', '#80276c', '#ffc72c', '#008eaa'];
 
-const HeroValue: React.FC<{ config: HeroConfig; stat?: HeroStat; state: HomeState }> = ({
+const HeroValue = ({
   config,
   stat,
   state,
+}: {
+  config: HeroConfig;
+  stat?: HeroStat;
+  state: HomeState;
 }) => {
   const className = 'text-3xl font-semibold tracking-tight tabular-nums';
   if (stat && stat.value !== null) {
@@ -34,18 +38,23 @@ const HeroValue: React.FC<{ config: HeroConfig; stat?: HeroStat; state: HomeStat
   );
 };
 
-const HeroTile: React.FC<{
+const HeroTile = ({
+  config,
+  stat,
+  state,
+  index,
+}: {
   config: HeroConfig;
   stat?: HeroStat;
   state: HomeState;
   index: number;
-}> = ({ config, stat, state, index }) => {
+}) => {
   const trend = stat?.trend !== undefined ? formatTrend({ trend: stat.trend ?? null }) : null;
   const sentiment = trendSentiment(stat?.trend ?? null, config.direction);
   return (
     <div
       className="tm-reveal @container flex flex-col gap-1 rounded-xl border bg-card p-4"
-      style={{ '--reveal-index': index } as React.CSSProperties}
+      style={{ '--reveal-index': index } as CSSProperties}
     >
       <span className="text-xs font-medium text-muted-foreground">{config.label}</span>
       <HeroValue config={config} stat={stat} state={state} />
@@ -69,10 +78,7 @@ const HeroTile: React.FC<{
 };
 
 /** The page title and brand, shown whether or not the data has loaded. */
-export const HomeTitle: React.FC<{ generatedAt?: string; failed?: boolean }> = ({
-  generatedAt,
-  failed,
-}) => (
+export const HomeTitle = ({ generatedAt, failed }: { generatedAt?: string; failed?: boolean }) => (
   <header className="flex flex-col gap-4">
     <div className="flex h-1.5 overflow-hidden rounded-full" aria-hidden="true">
       {STRIPE.map((color) => (
@@ -115,7 +121,7 @@ export const HomeTitle: React.FC<{ generatedAt?: string; failed?: boolean }> = (
   </header>
 );
 
-export const HomeHero: React.FC<{ stats?: HeroStat[]; state: HomeState }> = ({ stats, state }) => (
+export const HomeHero = ({ stats, state }: { stats?: HeroStat[]; state: HomeState }) => (
   <section
     aria-label="The T at a glance"
     aria-busy={state === 'loading'}

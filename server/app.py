@@ -4,6 +4,7 @@ import json
 import os
 import subprocess
 import boto3
+from urllib.parse import unquote
 from chalice import BadRequestError, CORSConfig, ConflictError, Cron, Response, ConvertToMiddleware
 from chalice_spec import ChaliceWithSpec, PydanticPlugin, Docs, Resp
 from apispec import APISpec
@@ -26,6 +27,7 @@ from chalicelib import (
     scheduled_service,
     service_hours,
     service_ridership_dashboard,
+    shutdowns,
     speed,
     speed_restrictions,
     static_data,
@@ -89,7 +91,7 @@ def parse_user_date(user_date: str):
         date_split = user_date.split("-")
         [year, month, day] = [int(x) for x in date_split[0:3]]
         return date(year=year, month=month, day=day)
-    except (ValueError, IndexError):
+    except ValueError, IndexError:
         raise BadRequestError(f"Invalid date '{user_date}'. Expected format: YYYY-MM-DD.")
 
 
@@ -501,6 +503,32 @@ def get_delays_by_line():
 
 
 @app.route(
+    "/api/shutdowns",
+    cors=cors_config,
+    docs=Docs(request=models.ShutdownsParams, responses=[Resp(models.ShutdownsResponse), BAD_REQUEST]),
+)
+def get_shutdowns():
+    """Retrieve shuttles, suspensions, and station closures on a line that overlap a date range."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["line", "start_date", "end_date"])
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_shutdowns(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/shutdowns", query_params)
+    else:
+        start_date = parse_user_date(query_params["start_date"])
+        end_date = parse_user_date(query_params["end_date"])
+        data = shutdowns.get_shutdowns(query_params["line"], start_date, end_date)
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
     "/api/tripmetrics",
     cors=cors_config,
     docs=Docs(
@@ -630,7 +658,7 @@ def get_bus_speed_leaderboard():
 def get_scheduled_service():
     """Retrieve scheduled service counts for a route over a date range."""
     query_params = app.current_request.query_params or {}
-    validate_query_params(query_params, ["start_date", "end_date", "agg"])
+    validate_query_params(query_params, ["route_id", "start_date", "end_date", "agg"])
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -640,7 +668,7 @@ def get_scheduled_service():
     else:
         start_date = parse_user_date(query_params["start_date"])
         end_date = parse_user_date(query_params["end_date"])
-        route_id = query_params.get("route_id")
+        route_id = query_params["route_id"]
         agg = query_params["agg"]
         data = scheduled_service.get_scheduled_service_counts(
             start_date=start_date,
@@ -948,12 +976,15 @@ def get_stops(route_id):
     """Get the stop information for a specific route.
 
     Args:
-        route_id: The route ID to look up stops for.
+        route_id: The route ID to look up stops for. Combined bus routes contain
+            slashes ("SL4/SL5"), so callers must percent-encode them ("SL4%2FSL5").
 
     Returns:
         Response: JSON response containing station/stop data including names, IDs,
             and directions, or a 404 response if the route is not found.
     """
+    # API Gateway passes path parameters through without decoding %2F.
+    route_id = unquote(route_id)
     data = route_manifest.get_route_stops(route_id)
 
     if data is None:

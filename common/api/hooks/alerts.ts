@@ -22,11 +22,12 @@ export const useHistoricalAlertsData = (
 
 export const useAlertsData = (
   line: LineShort,
-  busRoute?: string
+  busRoute?: string,
+  crRoute?: CommuterRailRoute
 ): UseQueryResult<AlertsResponse[]> => {
   return useQuery({
-    queryKey: ['alerts', line, busRoute],
-    queryFn: () => fetchAlerts(line, busRoute),
+    queryKey: ['alerts', line, busRoute, crRoute],
+    queryFn: () => fetchAlerts(line, busRoute, crRoute),
     staleTime: ONE_MINUTE,
   });
 };

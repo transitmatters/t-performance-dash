@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useHistoricalAlertsData } from '../../common/api/hooks/alerts';
 import { findMatch } from '../../common/components/alerts/AlertFilter';
 import { AlertNotice } from '../../common/components/alerts/AlertNotice';
 import { SameDayNotice } from '../../common/components/notices/SameDayNotice';
+import { CoverageGapNotice } from '../../common/components/notices/CoverageGapNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
@@ -54,12 +55,13 @@ export const TripExplorer = () => {
               {`Showing ${fromStation.stop_name} to ${toStation.stop_name}${describeDates(date, startDate, endDate)}.`}
             </div>
             {alertsForModal?.length ? <AlertNotice count={alertsForModal.length} /> : null}
-            <PokeySchleppieAwardBanner busRoute={busRoute} />
+            {busRoute && <PokeySchleppieAwardBanner busRoute={busRoute} />}
             <BnrdBanner busRoute={busRoute} />
             {/* Urgent, per-view accuracy warnings stay visible with the charts. */}
             <div className="flex flex-col gap-2 empty:hidden">
               <CrBetaAccuracyNotice />
               <SameDayNotice />
+              <CoverageGapNotice />
               <TerminusNotice toStation={toStation} fromStation={fromStation} />
             </div>
             <TripGraphsBoundary>

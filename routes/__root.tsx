@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import type { ReactNode } from 'react';
 import { Outlet, createRootRoute, useMatches } from '@tanstack/react-router';
 import { useIsNotFound } from '../common/utils/router';
 import { Layouts } from '../common/layouts/Layouts';
@@ -10,8 +11,9 @@ import { useApplyTheme } from '../common/hooks/useApplyTheme';
 import { useGoatCounter } from '../common/hooks/useGoatCounter';
 import { BetaRumNotice } from '../common/components/notices/BetaRumNotice';
 import { initBetaRum } from '../common/utils/rum';
+import { redirectToCompleteDates } from '../common/utils/dateParams';
 
-const PassThroughLayout = ({ children }: { children?: React.ReactNode }) => <>{children}</>;
+const PassThroughLayout = ({ children }: { children?: ReactNode }) => <>{children}</>;
 
 const RootComponent = () => {
   useApplyTheme();
@@ -42,4 +44,7 @@ const RootComponent = () => {
   );
 };
 
-export const Route = createRootRoute({ component: RootComponent });
+export const Route = createRootRoute({
+  beforeLoad: redirectToCompleteDates,
+  component: RootComponent,
+});

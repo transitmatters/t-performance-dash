@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -20,6 +20,7 @@ import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../common/components/buttons/SaveChartImageButton';
+import { getNoDataSinceLatestAnnotation } from '../service/utils/graphUtils';
 
 interface RidershipGraphProps {
   data: RidershipCount[];
@@ -29,13 +30,13 @@ interface RidershipGraphProps {
   showTitle?: boolean;
 }
 
-export const RidershipGraph: React.FC<RidershipGraphProps> = ({
+export const RidershipGraph = ({
   data,
   config,
   startDate,
   endDate,
   showTitle = false,
-}) => {
+}: RidershipGraphProps) => {
   const {
     line,
     linePath,
@@ -133,6 +134,9 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
                       display: (ctx) => ctx.chart.isDatasetVisible(1),
                       borderWidth: 2,
                     },
+                    ...getNoDataSinceLatestAnnotation(
+                      data.filter((point) => point.count !== null).map((point) => point.date)
+                    ),
                   ],
                 },
               },

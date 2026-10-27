@@ -1,4 +1,3 @@
-import React from 'react';
 import classNames from 'classnames';
 import { Link } from '../../common/components/general/Link';
 import type { PageMetadata } from '../../common/constants/pages';
@@ -22,7 +21,7 @@ interface NavPageItemsProps {
  * Renders a group of pages as sidebar sub-items. Pages the current line doesn't support are
  * rendered as disabled rather than hidden, so the metrics stay in the same place per line.
  */
-export const NavPageItems: React.FC<NavPageItemsProps> = ({ pages, close }) => {
+export const NavPageItems = ({ pages, close }: NavPageItemsProps) => {
   const { line, page, query, linePath } = useDelimitatedRoute();
   const handlePageConfig = useHandleConfigStore();
   const generateHref = useGenerateHref();

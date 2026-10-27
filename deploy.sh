@@ -119,7 +119,7 @@ source ../devops/helpers.sh
 check_package_size
 aws cloudformation package --template-file cfn/sam.json --s3-bucket $BACKEND_BUCKET --output-template-file cfn/packaged.yaml
 aws cloudformation deploy --template-file cfn/packaged.yaml --s3-bucket $BACKEND_BUCKET --stack-name $CF_STACK_NAME --capabilities CAPABILITY_IAM \
-    --tags service=t-performance-dash env=$ENV_TAG version=$GIT_VERSION \
+    --tags service=t-performance-dash env=$ENV_TAG version=$GIT_VERSION team=tm-labs \
     --no-fail-on-empty-changeset \
     --parameter-overrides \
         TMFrontendHostname=$FRONTEND_HOSTNAME \

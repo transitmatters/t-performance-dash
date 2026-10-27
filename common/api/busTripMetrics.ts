@@ -1,6 +1,7 @@
 import type { FetchBusSpeedLeaderboardOptions, FetchBusTripMetricsOptions } from '../types/api';
 import { FetchBusTripMetricsParams } from '../types/api';
 import type { BusSpeedLeaderboardEntry, DeliveredTripMetricsBus } from '../types/dataPoints';
+import { withWeekStart } from '../utils/date';
 import { apiFetch } from './utils/fetch';
 
 export const fetchBusTripMetricsByRoute = async (
@@ -10,7 +11,7 @@ export const fetchBusTripMetricsByRoute = async (
 
   return await apiFetch({
     path: '/api/bustripmetrics',
-    options,
+    options: withWeekStart(options),
     errorMessage: 'Failed to fetch bus trip metrics',
   });
 };

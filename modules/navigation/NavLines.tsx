@@ -1,4 +1,3 @@
-import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBus,
@@ -32,11 +31,7 @@ import {
   NAV_TRIP_PAGES,
   OVERVIEW_PAGE,
 } from '../../common/constants/pages';
-import {
-  BUS_DEFAULTS,
-  COMMUTER_RAIL_DEFAULTS,
-  FERRY_DEFAULTS,
-} from '../../common/state/defaults/dateDefaults';
+import { FERRY_DEFAULTS } from '../../common/state/defaults/dateDefaults';
 import { lineColorVar } from '../../common/styles/general';
 import type { Line } from '../../common/types/lines';
 import { getLineSelectionItemHref, useDelimitatedRoute } from '../../common/utils/router';
@@ -95,9 +90,9 @@ const pagesForLine = (line: Line): PageMetadata[] => {
 const hrefForLine = (line: Line, route: ReturnType<typeof useDelimitatedRoute>) => {
   switch (line) {
     case 'line-bus':
-      return `/bus/trips/single?busRoute=1&date=${BUS_DEFAULTS.singleTripConfig.date}`;
+      return '/bus/?busRoute=1';
     case 'line-commuter-rail':
-      return `/commuter-rail/trips/single?crRoute=CR-Fairmount&date=${COMMUTER_RAIL_DEFAULTS.singleTripConfig.date}`;
+      return '/commuter-rail/?crRoute=CR-Fairmount';
     case 'line-ferry':
       return `/ferry/trips/single?ferryRoute=Boat-F6&date=${FERRY_DEFAULTS.singleTripConfig.date}`;
     case 'line-RIDE':
@@ -111,7 +106,7 @@ interface NavLinesProps {
   close?: () => void;
 }
 
-export const NavLines: React.FC<NavLinesProps> = ({ close }) => {
+export const NavLines = ({ close }: NavLinesProps) => {
   const route = useDelimitatedRoute();
 
   return (

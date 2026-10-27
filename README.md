@@ -15,10 +15,11 @@ This is the repository for the [TransitMatters Data Dashboard](https://dashboard
 - node 26.x and npm 11.x+ required
   - With `nvm` installed, use `nvm install && nvm use`
   - verify with `node -v`
-- Python 3.13 with recent uv (0.9.8 or later)
+- Python 3.14 with recent uv (0.9.8 or later)
   - Verify with `python --version && uv --version`
   - `uv self update` to update uv
 - With [mise](https://mise.jdx.dev) installed, `mise trust && mise install` sets up Node and Python (versions are pinned in `.nvmrc` / `.python-version`)
+- `wget`, used by `npm run get-data` (macOS doesn't ship it: `brew install wget`)
 
 ## 🧪 Local Development
 
@@ -114,6 +115,8 @@ To lint just frontend code, run `npm run lint-frontend` (or `npm run lint-fronte
 
 To lint just backend code, run `npm run lint-backend` (or `npm run lint-backend-fix` to auto-fix)
 
+To run frontend tests, run `npm test`
+
 To run backend tests, run `cd server && uv run pytest`
 
 Frontend code uses ESLint and oxfmt, enforced import ordering, and type imports (`import type { Foo }`). Backend code uses Ruff with a 120 character line length.
@@ -128,7 +131,7 @@ If you're using VSCode, `.vscode` contains a based default workspace setup. It a
 
 ### Updating historical backend data
 
-See `server/bus/gen_latest_bus_data.sh` for instructions.
+Historical data is processed in [mbta-performance](https://github.com/transitmatters/mbta-performance). See its [historic data runbook](https://github.com/transitmatters/mbta-performance/blob/main/mbta-performance/chalicelib/historic/README.md).
 
 GTFS archives used by the bus scripts are downloaded to `data/gtfs_archives/` by default. Set `GTFS_DATA_DIR` to share them with other TransitMatters repos (they'll go in `$GTFS_DATA_DIR/gtfs_archives`).
 

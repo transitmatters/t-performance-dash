@@ -31,5 +31,6 @@ describe('getV3RedirectHref', () => {
   it('leaves current URLs alone', () => {
     expect(redirect('/red/', 'view=year')).toBeUndefined();
     expect(redirect('/bus/', '')).toBeUndefined();
+    expect(redirect('/bus/', 'busRoute=1')).toBeUndefined();
   });
 });

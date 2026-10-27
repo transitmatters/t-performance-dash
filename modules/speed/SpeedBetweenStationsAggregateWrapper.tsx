@@ -1,24 +1,25 @@
-import React from 'react';
-import type { UseQueryResult } from '@tanstack/react-query';
-import type { AggregateDataResponse } from '../../common/types/charts';
+import type { ChunkedAggregateQueryResult } from '../../common/types/charts';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
+import { PartialDataNotice } from '../../common/components/notices/PartialDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { getAggDataWidgets } from '../../common/utils/widgets';
 import { convertToAggregateStationSpeedDataset } from '../landing/utils';
 import { SpeedBetweenStationsAggregateChart } from './charts/SpeedBetweenStationsAggregateChart';
 
 interface SpeedBetweenStationsAggregateWrapperProps {
-  query: UseQueryResult<AggregateDataResponse>;
+  query: ChunkedAggregateQueryResult;
   toStation: Station;
   fromStation: Station;
 }
 
-export const SpeedBetweenStationsAggregateWrapper: React.FC<
-  SpeedBetweenStationsAggregateWrapperProps
-> = ({ query, toStation, fromStation }) => {
+export const SpeedBetweenStationsAggregateWrapper = ({
+  query,
+  toStation,
+  fromStation,
+}: SpeedBetweenStationsAggregateWrapperProps) => {
   const dataReady = !query.isError && query.data && toStation && fromStation && query.data;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   const traveltimesData = convertToAggregateStationSpeedDataset(
@@ -26,7 +27,7 @@ export const SpeedBetweenStationsAggregateWrapper: React.FC<
     toStation.station,
     query.data.by_date.filter((datapoint) => datapoint.peak === 'all')
   );
-  if (traveltimesData.length < 1) return <NoDataNotice />;
+  if (traveltimesData.length < 1) return <NoDataNotice shutdownScope="trip" />;
   const widgetObjects = getAggDataWidgets(traveltimesData, 'speeds');
   return (
     <ChartStack>
@@ -36,7 +37,8 @@ export const SpeedBetweenStationsAggregateWrapper: React.FC<
         fromStation={fromStation}
         timeUnit={'by_date'}
       />
-      <StatStrip widgetObjects={widgetObjects} />
+      {!query.chunks?.pending && <StatStrip widgetObjects={widgetObjects} />}
+      <PartialDataNotice query={query} />
     </ChartStack>
   );
 };

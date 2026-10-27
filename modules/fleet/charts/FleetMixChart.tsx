@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Line } from '@chartjs-components';
 import { round } from '@lodash-utils';
 
@@ -18,8 +18,12 @@ import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
-import { getShuttlingBlockAnnotations } from '../../service/utils/graphUtils';
+import {
+  getNoDataSinceLatestAnnotation,
+  getShuttlingBlockAnnotations,
+} from '../../service/utils/graphUtils';
 import type { ParamsType } from '../../speed/constants/speeds';
+import { explainGaps, usePageShutdowns } from '../../shutdowns';
 import type { FleetType } from '../constants/fleetTypes';
 import { getFleetMixValue, hasFleetMix } from '../constants/fleetTypes';
 
@@ -33,7 +37,7 @@ interface FleetMixChartProps {
   showTitle?: boolean;
 }
 
-export const FleetMixChart: React.FC<FleetMixChartProps> = ({
+export const FleetMixChart = ({
   data,
   types,
   showShuttling,
@@ -41,7 +45,7 @@ export const FleetMixChart: React.FC<FleetMixChartProps> = ({
   startDate,
   endDate,
   showTitle = false,
-}) => {
+}: FleetMixChartProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef(null);
@@ -49,8 +53,16 @@ export const FleetMixChart: React.FC<FleetMixChartProps> = ({
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   const lineColor = LINE_COLORS[line ?? 'default'];
+  const shutdowns = usePageShutdowns('line', startDate, endDate);
   const shuttlingBlocks = showShuttling
-    ? getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMix(datapoint, types))
+    ? explainGaps(
+        getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMix(datapoint, types)),
+        shutdowns,
+        {
+          startDate,
+          endDate,
+        }
+      )
     : [];
 
   return (
@@ -119,7 +131,7 @@ export const FleetMixChart: React.FC<FleetMixChartProps> = ({
                 text: '',
               },
               annotation: {
-                annotations: [...shuttlingBlocks],
+                annotations: [...shuttlingBlocks, ...getNoDataSinceLatestAnnotation(labels)],
               },
             },
             scales: {

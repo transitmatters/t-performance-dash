@@ -1,4 +1,3 @@
-import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from '../../../common/components/general/Link';
 import { METRICS, definitionFor } from '../config';
@@ -14,7 +13,7 @@ interface CellDetailProps {
 }
 
 /** Everything behind one stop: the number, what it's judged against, and how the status is set. */
-export const CellDetail: React.FC<CellDetailProps> = ({ row, cell }) => {
+export const CellDetail = ({ row, cell }: CellDetailProps) => {
   const method = METRICS[cell.metric];
   const trend = formatTrend(cell);
   const definition = definitionFor(cell.metric, row.id);

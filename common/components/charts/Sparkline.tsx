@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface SparklineProps {
   values: number[];
   color: string;
@@ -9,13 +7,13 @@ interface SparklineProps {
 }
 
 /** A minimal inline-SVG trend line — no axes, legend, or Chart.js — for compact per-row use. */
-export const Sparkline: React.FC<SparklineProps> = ({
+export const Sparkline = ({
   values,
   color,
   width = 380,
   height = 32,
   className,
-}) => {
+}: SparklineProps) => {
   const finite = values.filter((value) => Number.isFinite(value));
   if (finite.length < 2) return null;
 

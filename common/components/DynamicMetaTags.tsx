@@ -1,4 +1,3 @@
-import React from 'react';
 import { useLocation } from '@tanstack/react-router';
 import { getMetaTagEntries, getMetaTags, lineShortFor } from '../utils/metaTags';
 import { useIsNotFound } from '../utils/router';
@@ -20,7 +19,7 @@ function getTripSummary(query: Record<string, unknown>, lineShort: string | unde
 }
 
 /** React 19 hoists these into <head>; the build prerenders the same tags for link crawlers. */
-export const DynamicMetaTags: React.FC = () => {
+export const DynamicMetaTags = () => {
   const { pathname, search, searchStr } = useLocation();
   const notFound = useIsNotFound();
   // A 404 carries the generic tags, as the prerendered 404.html does, whatever line the URL names.

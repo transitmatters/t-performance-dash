@@ -1,12 +1,12 @@
 import classNames from 'classnames';
-import React from 'react';
+import type { ReactNode } from 'react';
 
 interface ChartDivProps {
-  children: React.ReactNode;
+  children: ReactNode;
   isMobile?: boolean;
 }
 
-export const ChartDiv: React.FC<ChartDivProps> = ({ children, isMobile = false }) => {
+export const ChartDiv = ({ children, isMobile = false }: ChartDivProps) => {
   return (
     <div className={classNames(isMobile ? 'h-48' : 'h-60', 'flex w-full flex-row')}>{children}</div>
   );

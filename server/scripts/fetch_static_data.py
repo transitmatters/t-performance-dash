@@ -227,7 +227,7 @@ def should_skip_fetch():
             last_fetched = datetime.fromisoformat(CACHE_MARKER_FILE.read_text().strip())
             if last_fetched.date() == date.today():
                 return True, f"Cache already fetched today ({last_fetched.strftime('%Y-%m-%d %H:%M')})"
-        except (ValueError, OSError):
+        except ValueError, OSError:
             pass  # Invalid marker file, proceed with fetch
 
     return False, None

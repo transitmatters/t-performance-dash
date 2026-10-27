@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { CHART_COLORS, COLORS } from '../../../constants/colors';
 import { TimeSeriesChart } from './TimeSeriesChart';
 

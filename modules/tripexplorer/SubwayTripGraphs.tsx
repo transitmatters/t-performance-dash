@@ -1,5 +1,5 @@
-import React from 'react';
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
+import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
@@ -31,14 +31,14 @@ interface SubwayTripGraphsProps {
   line: Line | undefined;
 }
 
-export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
+export const SubwayTripGraphs = ({
   fromStation,
   toStation,
   parameters,
   aggregate,
   enabled,
   line,
-}) => {
+}: SubwayTripGraphsProps) => {
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,
@@ -157,6 +157,7 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
           <WidgetDiv className="flex flex-col justify-center">
             <WidgetTitle
               title="Travel times by hour"
+              subtitle={newestChunkSubtitle(traveltimes.chunks)}
               location={location}
               line={line}
               both

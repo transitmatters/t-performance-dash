@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
@@ -6,9 +6,10 @@ import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/
 import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
-import { indexByProperty } from '../../common/utils/array';
+import { explainGapBlocks, usePageShutdowns } from '../shutdowns';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
-import { getShuttlingBlockAnnotations } from './utils/graphUtils';
+import { getNoDataSinceLatestBlock, getShuttlingBlockAnnotations } from './utils/graphUtils';
+import { getScheduledAndDeliveredRoundTrips } from './utils/utils';
 
 interface ServiceGraphProps {
   config: ParamsType;
@@ -18,7 +19,7 @@ interface ServiceGraphProps {
   endDate: string;
 }
 
-export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphProps) => {
+export const ServiceGraph = (props: ServiceGraphProps) => {
   const { data, predictedData, startDate, endDate, config } = props;
   const { line } = useDelimitatedRoute();
 
@@ -29,35 +30,28 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
     return [{ label, value: peak }];
   }, [peak]);
 
+  const shutdowns = usePageShutdowns('line', startDate, endDate);
+
   const blocks = useMemo(() => {
-    const shuttlingBlocks = getShuttlingBlockAnnotations(data);
-    return shuttlingBlocks.map((block) => ({
+    const shuttlingBlocks = getShuttlingBlockAnnotations(data).map((block) => ({
       from: block.xMin as string,
       to: block.xMax as string,
     }));
-  }, [data]);
+    return [
+      ...explainGapBlocks(shuttlingBlocks, shutdowns, { startDate, endDate }),
+      ...getNoDataSinceLatestBlock(data.map((point) => point.date)),
+    ];
+  }, [data, shutdowns, startDate, endDate]);
 
-  const allDates = [
-    ...new Set([
-      ...predictedData.counts.map((point) => point.date),
-      ...data.map((point) => point.date),
-    ]),
-  ].sort((a, b) => (a > b ? 1 : -1));
-
-  const scheduledDataByDate = indexByProperty(predictedData.counts, 'date');
-  const deliveredDataByDate = indexByProperty(data, 'date');
+  const roundTrips = useMemo(
+    () => getScheduledAndDeliveredRoundTrips(data, predictedData, config.agg),
+    [data, predictedData, config.agg]
+  );
 
   const scheduled = useMemo(() => {
     return {
       label: 'Scheduled round trips',
-      data: allDates.map((date) => {
-        const scheduledToday = scheduledDataByDate[date];
-        const deliveredToday = deliveredDataByDate[date];
-        const anyDeliveredToday = deliveredToday && deliveredToday.miles_covered > 0;
-        const value =
-          scheduledToday?.count && anyDeliveredToday ? Math.round(scheduledToday?.count) / 2 : 0;
-        return { date, value };
-      }),
+      data: roundTrips.map(({ date, scheduled }) => ({ date, value: scheduled })),
       style: {
         fillPattern: 'striped' as const,
         tooltipLabel: (point) => {
@@ -66,16 +60,12 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
         },
       },
     };
-  }, [allDates, deliveredDataByDate, peak, scheduledDataByDate]);
+  }, [roundTrips, peak]);
 
   const delivered = useMemo(() => {
     return {
       label: 'Daily round trips',
-      data: allDates.map((date) => {
-        const deliveredToday = deliveredDataByDate[date];
-        const value = deliveredToday?.miles_covered ? Math.round(deliveredToday.count) : 0;
-        return { date, value };
-      }),
+      data: roundTrips.map(({ date, delivered }) => ({ date, value: delivered })),
       style: {
         tooltipLabel: (point) => {
           const percentOfPeak = `${((100 * point.value) / peak).toFixed(1)}%`;
@@ -83,7 +73,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
         },
       },
     };
-  }, [data, peak]);
+  }, [roundTrips, peak]);
 
   return (
     <ChartStack>

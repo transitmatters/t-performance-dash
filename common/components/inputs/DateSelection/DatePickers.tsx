@@ -1,144 +1,52 @@
-import { faArrowRight, faClose } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import dayjs from 'dayjs';
-import type { SetStateAction } from 'react';
-import React from 'react';
-import {
-  RANGE_PRESETS,
-  TODAY_STRING,
-  getDatePickerBounds,
-  getValidDateForRange,
-  isDateValid,
-} from '../../../constants/dates';
-import { ALL_PAGES } from '../../../constants/pages';
-import { getDefaultDates } from '../../../state/defaults/dateDefaults';
+import { getDatePickerBounds } from '../../../constants/dates';
 import { FOCUS_RING_ON_SURFACE } from '../../../styles/general';
+import type { QueryTypeOptions } from '../../../types/router';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
-import { getMinMaxDatesForRoute } from '../../../utils/stations';
 import { DateField } from './DateField';
-import { RangeButton } from './RangeButton';
 
 interface DatePickerProps {
-  range: boolean;
-  setRange: React.Dispatch<SetStateAction<boolean>>;
-  type: 'combo' | 'range' | 'single';
+  type: QueryTypeOptions;
   clearPreset: () => void;
 }
 
-export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, clearPreset }) => {
+/**
+ * The date fields themselves. They only ever edit dates that are already there: the router fills in
+ * and clamps missing or out-of-bounds dates before the page renders (see `redirectToCompleteDates`).
+ */
+export const DatePickers = ({ type, clearPreset }: DatePickerProps) => {
   const updateQueryParams = useUpdateQuery();
   const { query, line, tab, page } = useDelimitatedRoute();
-  const { startDate, endDate, date, busRoute } = query;
-  const endDateObject = dayjs(endDate);
-  const startDateObject = dayjs(startDate ?? date);
-  // Keyed off the picker's own mode rather than a page name, so any single-date page
-  // writes `date` instead of `startDate`. Equivalent today: `type` is only 'single' where
-  // the section is 'singleTrips'.
-  const isSingleDate = type === 'single';
-  const { minDate, maxDate } = getDatePickerBounds(tab, page, query.busRoute ?? query.crRoute);
-
-  const handleRangeToggle = () => {
-    if (range) {
-      updateQueryParams({ startDate: startDate }, !range, false);
-    } else if (startDate === TODAY_STRING) {
-      // If start date is today -> set range to past week. This prevents bugs with startDate === endDate
-      const weekPreset = RANGE_PRESETS[tab]?.week;
-      if (weekPreset) {
-        updateQueryParams(weekPreset.input, !range, false);
-      } else {
-        updateQueryParams(RANGE_PRESETS[0].input, !range, false);
-      }
-    } else {
-      updateQueryParams({ startDate: startDate }, !range, false);
-    }
-    setRange(!range);
-  };
+  const { startDate, endDate, date } = query;
+  const range = type === 'range';
+  const { minDate, maxDate } = getDatePickerBounds(
+    tab,
+    page,
+    query.busRoute ?? query.crRoute ?? query.ferryRoute
+  );
 
   const handleEndDateChange = (newDate: string) => {
-    const updatedDate = dayjs(newDate);
-    if (updatedDate.isSame(startDateObject)) {
-      if (type === 'combo') handleRangeToggle();
-      return;
-    }
-    if (updatedDate.isBefore(startDateObject)) {
-      // Swap start and end if new end < startDate
-      updateQueryParams({ startDate: newDate, endDate: startDate }, range, false);
-    } else {
-      updateQueryParams({ startDate: startDate, endDate: newDate }, range, false);
-    }
+    if (!startDate || newDate === startDate) return;
+    // Swap start and end if new end < startDate
+    if (newDate < startDate) updateQueryParams({ startDate: newDate, endDate: startDate }, false);
+    else updateQueryParams({ startDate, endDate: newDate }, false);
     clearPreset();
   };
 
   const handleStartDateChange = (newDate: string) => {
-    const updatedDate = dayjs(newDate);
-    if (updatedDate.isSame(endDateObject)) {
-      if (type === 'combo') handleRangeToggle();
-      return;
-    }
-    if (updatedDate.isAfter(endDateObject)) {
-      // Swap start and end if new start > endDate
-      updateQueryParams({ startDate: endDate, endDate: newDate }, range, false);
-    } else {
-      updateQueryParams({ startDate: newDate, endDate: endDate }, range, false);
-    }
+    if (!endDate || newDate === endDate) return;
+    // Swap start and end if new start > endDate
+    if (newDate > endDate) updateQueryParams({ startDate: endDate, endDate: newDate }, false);
+    else updateQueryParams({ startDate: newDate, endDate }, false);
     clearPreset();
   };
 
   const handleDateChange = (newDate: string) => {
-    updateQueryParams({ date: newDate }, false, false);
+    updateQueryParams({ date: newDate }, false);
     clearPreset();
   };
-
-  React.useEffect(() => {
-    if (tab && page) {
-      const pageObject = ALL_PAGES[page];
-      const { minDate, maxDate } = getMinMaxDatesForRoute(tab, busRoute);
-      const defaultDateParams = getDefaultDates(pageObject.dateStoreSection, tab);
-
-      // Update dates if none are set OR if current dates are outside valid range
-      if (!date && !startDate && !endDate) {
-        if (minDate || maxDate) {
-          if (range) {
-            if (minDate && maxDate) {
-              updateQueryParams({ startDate: minDate, endDate: maxDate }, true);
-            } else if (minDate) {
-              updateQueryParams({ startDate: minDate, endDate: TODAY_STRING }, true);
-            } else if (maxDate) {
-              const startDate = dayjs(maxDate).subtract(7, 'days').format('YYYY-MM-DD');
-              updateQueryParams({ startDate, endDate: maxDate }, true);
-            }
-          } else {
-            updateQueryParams({ date: maxDate || minDate }, false);
-          }
-        } else if (defaultDateParams) {
-          updateQueryParams(defaultDateParams, range);
-        }
-      } else if (minDate || maxDate) {
-        // Route change case - check if current dates are valid
-        if (range) {
-          const isStartValid = isDateValid(startDate, minDate, maxDate);
-          const isEndValid = isDateValid(endDate, minDate, maxDate);
-
-          if (!isStartValid || !isEndValid) {
-            updateQueryParams(
-              {
-                startDate: getValidDateForRange(startDate, minDate, maxDate, false),
-                endDate: getValidDateForRange(endDate, minDate, maxDate, true),
-              },
-              true
-            );
-          }
-        } else {
-          // Handle both date and startDate for single date mode
-          const currentDate = date || startDate;
-          if (currentDate && !isDateValid(currentDate, minDate, maxDate)) {
-            updateQueryParams({ date: getValidDateForRange(currentDate, minDate, maxDate) }, false);
-          }
-        }
-      }
-    }
-  }, [tab, page, startDate, endDate, updateQueryParams, date, busRoute, range]);
 
   const fieldClassName = classNames(
     'flex w-27 cursor-pointer border-none bg-transparent px-2 py-0 text-center text-sm text-stone-900',
@@ -149,12 +57,12 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
     <div className="-ml-px flex h-10 flex-row justify-center self-stretch rounded-r-[calc(var(--radius-md)-1px)] bg-white md:h-7">
       <div className={classNames('flex h-full flex-row items-center self-stretch')}>
         <DateField
-          value={startDate ?? date}
+          value={range ? startDate : date}
           minDate={minDate}
           maxDate={maxDate}
           line={line}
           className={fieldClassName}
-          onChange={isSingleDate ? handleDateChange : handleStartDateChange}
+          onChange={range ? handleStartDateChange : handleDateChange}
         />
         {range ? (
           <>
@@ -174,15 +82,6 @@ export const DatePickers: React.FC<DatePickerProps> = ({ range, setRange, type, 
             />
           </>
         ) : null}
-        {type === 'combo' && (
-          <RangeButton onClick={handleRangeToggle}>
-            {range ? (
-              <FontAwesomeIcon icon={faClose} className="h-4 w-4 text-black" />
-            ) : (
-              <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4 text-black" />
-            )}
-          </RangeButton>
-        )}
       </div>
     </div>
   );

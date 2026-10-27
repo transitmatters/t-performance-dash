@@ -1,4 +1,3 @@
-import React from 'react';
 import { Skeleton } from '../ui/skeleton';
 
 /**
@@ -6,7 +5,7 @@ import { Skeleton } from '../ui/skeleton';
  * matches the chart about to arrive says what is coming and holds its space, so the card does not
  * resize under the reader when data lands. Matches the redesigned pages, which already load this way.
  */
-export const ChartSkeleton: React.FC<{ isMobile?: boolean }> = ({ isMobile = false }) => {
+export const ChartSkeleton = ({ isMobile = false }: { isMobile?: boolean }) => {
   // Static, uneven heights: a plot silhouette rather than a row of identical bars.
   const bars = [45, 70, 38, 82, 56, 91, 64, 48, 75, 60, 86, 52];
 

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import type { SlowZoneAllSlowResponse } from '../../../common/types/dataPoints';
 import { SlowZonesMap } from './SlowZonesMap';
 

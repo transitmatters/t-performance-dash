@@ -1,5 +1,6 @@
 import type * as ReactQuery from '@tanstack/react-query';
 import { useQueries } from '@tanstack/react-query';
+import { useCallback, useMemo } from 'react';
 import { QUERIES, AggregateAPIParams, QueryNameKeys, SingleDayAPIParams } from '../types/api';
 import type {
   AggregateAPIOptions,
@@ -11,9 +12,16 @@ import type {
 } from '../types/api';
 import { APP_DATA_BASE_PATH } from '../utils/constants';
 import { getCurrentDate } from '../utils/date';
-import type { AggregateDataResponse, SingleDayDataPoint } from '../types/charts';
+import type {
+  AggregateDataResponse,
+  ChunkedAggregateQueryResult,
+  SingleDayDataPoint,
+} from '../types/charts';
 import { ONE_MINUTE } from '../constants/time';
 import { hasReliableCommuterRailBenchmarks } from '../constants/dates';
+import type { DateChunk } from '../utils/dateChunks';
+import { splitDateRange } from '../utils/dateChunks';
+import { fetchOrThrow } from './utils/ApiError';
 
 // Fetch data for all single day charts.
 export const fetchSingleDayData = async (
@@ -27,10 +35,7 @@ export const fetchSingleDayData = async (
     if (!(typeof value === 'string') && key !== 'date')
       value.forEach((subvalue) => url.searchParams.append(key, subvalue));
   });
-  const response = await fetch(url.toString());
-  if (!response.ok) {
-    throw new Error('network request failed');
-  }
+  const response = await fetchOrThrow(url.toString(), undefined, `Failed to fetch ${name}`);
   return await response.json();
 };
 
@@ -52,7 +57,8 @@ const singleDayQueryDependencies: { [key in QueryNameOptions]: SingleDayAPIParam
 // Fetch data for all aggregate charts except traveltimes.
 export const fetchAggregateData = async (
   name: QueryNameKeys,
-  options: PartialAggregateAPIOptions
+  options: PartialAggregateAPIOptions,
+  signal?: AbortSignal
 ): Promise<AggregateDataResponse> => {
   const method = name === QueryNameKeys.traveltimes ? 'traveltimes2' : name;
 
@@ -65,10 +71,11 @@ export const fetchAggregateData = async (
       url.searchParams.append(key, value.toString());
     }
   });
-  const response = await fetch(url.toString());
-  if (!response.ok) {
-    throw new Error('network request failed');
-  }
+  const response = await fetchOrThrow(
+    url.toString(),
+    { signal },
+    `Failed to fetch aggregate ${method}`
+  );
   const responseJson = await response.json();
   return name === QueryNameKeys.traveltimes ? responseJson : { by_date: responseJson, by_time: [] };
 };
@@ -83,6 +90,56 @@ const aggregateQueryDependencies: { [key in QueryNameKeys]: AggregateAPIParams[]
   ],
   headways: [AggregateAPIParams.stop, AggregateAPIParams.startDate, AggregateAPIParams.endDate],
   dwells: [AggregateAPIParams.stop, AggregateAPIParams.startDate, AggregateAPIParams.endDate],
+};
+
+// Combines one query's date-range chunks (newest first) into a single result. The chart renders as
+// soon as any chunk has rows; it only errors once nothing is pending and no rows came back.
+const mergeChunks = (
+  results: ReactQuery.UseQueryResult<AggregateDataResponse>[],
+  chunks: DateChunk[]
+): ChunkedAggregateQueryResult => {
+  const [newest] = results;
+  if (results.length === 1) return newest;
+
+  const loaded = results.filter((result) => result.data);
+  const failed = results.filter((result) => result.isError);
+  const pending = results.filter((result) => !result.data && !result.isError);
+  const merged = {
+    // Oldest chunk first keeps by_date in date order within each peak bucket.
+    by_date: [...results].reverse().flatMap((result) => result.data?.by_date ?? []),
+    by_time: newest.data?.by_time ?? [],
+  };
+  // Hold off on an empty result until the remaining chunks could still fill it.
+  const data =
+    loaded.length && (merged.by_date.length || (!pending.length && !failed.length))
+      ? merged
+      : undefined;
+  const isError = !data && !pending.length;
+  const isFetching = results.some((result) => result.isFetching);
+
+  return {
+    ...newest,
+    data,
+    error: isError ? failed[0].error : null,
+    isError,
+    isPending: !data && !isError,
+    isLoading: !data && !isError && isFetching,
+    isSuccess: Boolean(data),
+    status: data ? 'success' : isError ? 'error' : 'pending',
+    isFetching,
+    refetch: () =>
+      Promise.all((failed.length ? failed : results).map((result) => result.refetch())).then(
+        () => newest
+      ),
+    chunks: {
+      total: results.length,
+      loaded: loaded.length,
+      failed: failed.length,
+      pending: pending.length,
+      byTimeRange: chunks[0],
+      byTimeStatus: newest.data ? 'success' : newest.isError ? 'error' : 'pending',
+    },
+  } as ChunkedAggregateQueryResult;
 };
 
 // Overload call to specify type for single day queries
@@ -101,7 +158,7 @@ type UseQueriesOverload = {
     aggregate: true,
     enabled?: boolean
   ): {
-    [key in QueryNameKeys]: ReactQuery.UseQueryResult<AggregateDataResponse>;
+    [key in QueryNameKeys]: ChunkedAggregateQueryResult;
   };
 };
 
@@ -135,48 +192,56 @@ export const useTripExplorerQueries: UseQueriesOverload = (
     typeof date === 'string' &&
     !hasReliableCommuterRailBenchmarks(date);
 
-  // Create multiple queries.
-  const requests = useQueries({
-    queries: queryTypes.map((name) => {
-      return {
-        queryKey: [name, queries[name].params],
-        queryFn: () =>
-          aggregate
-            ? fetchAggregateData(name, queries[name].params)
-            : fetchSingleDayData(name, queries[name].params),
+  // Long aggregate ranges are fetched as several smaller requests so each one finishes in time.
+  const startDate = 'start_date' in parameters ? parameters.start_date : undefined;
+  const endDate = 'end_date' in parameters ? parameters.end_date : undefined;
+  const chunks = useMemo(
+    () =>
+      aggregate && typeof startDate === 'string' && typeof endDate === 'string'
+        ? splitDateRange(startDate, endDate)
+        : [],
+    [aggregate, startDate, endDate]
+  );
+  const chunkCount = Math.max(chunks.length, 1);
+
+  const combine = useCallback(
+    (results: ReactQuery.UseQueryResult[]) =>
+      Object.fromEntries(
+        queryTypes.map((name, i) => {
+          const queryResults = results.slice(i * chunkCount, (i + 1) * chunkCount);
+          return [
+            name,
+            aggregate
+              ? mergeChunks(
+                  queryResults as ReactQuery.UseQueryResult<AggregateDataResponse>[],
+                  chunks
+                )
+              : queryResults[0],
+          ];
+        })
+      ),
+    [queryTypes, chunkCount, aggregate, chunks]
+  );
+
+  // Create one query per name and chunk, grouped back by name in `combine`.
+  return useQueries({
+    queries: queryTypes.flatMap((name) => {
+      const chunkParams = chunks.length
+        ? chunks.map((chunk) => ({
+            ...queries[name].params,
+            start_date: chunk.startDate,
+            end_date: chunk.endDate,
+          }))
+        : [queries[name].params];
+      return chunkParams.map((params) => ({
+        queryKey: [name, params],
+        queryFn: ({ signal }: { signal: AbortSignal }) =>
+          aggregate ? fetchAggregateData(name, params, signal) : fetchSingleDayData(name, params),
         select: hideBenchmarks ? withoutBenchmarks : undefined,
         enabled,
         staleTime: ONE_MINUTE,
-      };
+      }));
     }),
+    combine,
   });
-
-  // Return each query.
-  if (routeType === 'bus') {
-    return {
-      [QueryNameKeys.traveltimes]: requests[0],
-      [QueryNameKeys.headways]: requests[1],
-    };
-  }
-
-  if (routeType === 'cr') {
-    return {
-      [QueryNameKeys.traveltimes]: requests[0],
-      [QueryNameKeys.headways]: requests[1],
-      [QueryNameKeys.dwells]: requests[2],
-    };
-  }
-
-  if (routeType === 'ferry') {
-    return {
-      [QueryNameKeys.traveltimes]: requests[0],
-      [QueryNameKeys.headways]: requests[1],
-    };
-  }
-
-  return {
-    [QueryNameKeys.traveltimes]: requests[0],
-    [QueryNameKeys.headways]: requests[1],
-    [QueryNameKeys.dwells]: requests[2],
-  };
 };
