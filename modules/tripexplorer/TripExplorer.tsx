@@ -3,6 +3,7 @@ import { useHistoricalAlertsData } from '../../common/api/hooks/alerts';
 import { findMatch } from '../../common/components/alerts/AlertFilter';
 import { AlertNotice } from '../../common/components/alerts/AlertNotice';
 import { SameDayNotice } from '../../common/components/notices/SameDayNotice';
+import { CoverageGapNotice } from '../../common/components/notices/CoverageGapNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
@@ -60,6 +61,7 @@ export const TripExplorer = () => {
             <div className="flex flex-col gap-2 empty:hidden">
               <CrBetaAccuracyNotice />
               <SameDayNotice />
+              <CoverageGapNotice />
               <TerminusNotice toStation={toStation} fromStation={fromStation} />
             </div>
             <TripGraphsBoundary>
