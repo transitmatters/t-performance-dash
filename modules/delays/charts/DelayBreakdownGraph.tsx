@@ -19,7 +19,7 @@ import { getFormattedTimeString } from '../../../common/utils/time';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
-import { filterOutZeroValueDatasets } from './utils';
+import { disabledVehicleLabel, filterOutZeroValueDatasets } from './utils';
 
 interface DelayBreakdownGraphProps {
   data: LineDelays[];
@@ -64,7 +64,7 @@ export const DelayBreakdownGraph = ({
             labels,
             datasets: filterOutZeroValueDatasets([
               {
-                label: `🚉 Disabled Train`,
+                label: disabledVehicleLabel(line),
                 borderColor: '#dc2626',
                 backgroundColor: hexWithAlpha('#dc2626', 0.8),
                 pointRadius: 0,

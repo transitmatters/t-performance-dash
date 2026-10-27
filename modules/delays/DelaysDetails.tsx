@@ -72,7 +72,7 @@ export function DelaysDetails() {
     return <p>Select a date range to load graphs.</p>;
   }
 
-  const stats = alertDelays.data ? getDelayStats(alertDelays.data, agg) : null;
+  const stats = alertDelays.data ? getDelayStats(alertDelays.data, agg, line) : null;
 
   const deltaFor = (delta: number) => {
     if (!Number.isFinite(delta)) return undefined;
