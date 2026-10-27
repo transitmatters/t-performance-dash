@@ -8,7 +8,7 @@ import type {
   SingleDateParams,
 } from '../components/inputs/DateSelection/types/DateSelectionTypes';
 
-import type { BusRoute, CommuterRailRoute } from '../types/lines';
+import type { BusRoute, CommuterRailRoute, FerryRoute } from '../types/lines';
 import type { Tab } from '../types/router';
 import { getMinMaxDatesForRoute } from '../utils/stations';
 import type { Page } from './pages';
@@ -39,6 +39,17 @@ const TRAIN_MIN_DATE = '2016-01-15';
 const BUS_MIN_DATE = '2018-08-01';
 const RIDE_MIN_DATE = '2017-02-16';
 const FERRY_MIN_DATE = '2018-11-01';
+/** Mirrors MAX_FERRY_MONTH_DATA_DATE in server/chalicelib/date_utils.py: the MBTA's monthly ferry archive ends here. */
+export const FERRY_ARCHIVE_MAX_DATE = '2026-03-31';
+/** TransitMatters' own ferry recording (Gobble) starts here, so ferry trip data has a gap between the two. */
+export const FERRY_LIVE_START_DATE = '2026-10-02';
+/** Ferries don't report arriving at a terminal, so Gobble only records the arrivals travel times need from here (gobble#147). */
+export const FERRY_ARRIVALS_START_DATE = '2026-10-12';
+// The archive files historic F2H trips under Boat-F1 and has nothing for F10, so their trip data starts with ours.
+const FERRY_ROUTE_TRIPS_MIN_DATES: Partial<Record<FerryRoute, string>> = {
+  'Boat-F2H': FERRY_LIVE_START_DATE,
+  'Boat-F10': FERRY_LIVE_START_DATE,
+};
 export const BUS_MAX_DATE = '2026-06-30';
 export const BUS_MAX_DAY = dayjs(BUS_MAX_DATE);
 /**
@@ -85,9 +96,16 @@ export const getESTDayjs = (date: string) => {
 export const getDatePickerBounds = (
   tab: Tab,
   page?: Page,
-  route?: CommuterRailRoute | BusRoute
+  route?: CommuterRailRoute | BusRoute | FerryRoute
 ): { minDate: string; maxDate: string } => {
-  const { minDate, maxDate } = getMinMaxDatesForRoute(tab, route);
+  const { minDate, maxDate } = getMinMaxDatesForRoute(tab, route as CommuterRailRoute | BusRoute);
+
+  if (tab === 'Ferry' && (page === 'singleTrips' || page === 'multiTrips')) {
+    return {
+      minDate: FERRY_ROUTE_TRIPS_MIN_DATES[route as FerryRoute] ?? FERRY_MIN_DATE,
+      maxDate: TODAY_STRING,
+    };
+  }
 
   // The speed map and the leaderboard's segment view read the LAMP-derived segment files,
   // which cover a different (and much shorter) window than the rest of the bus data, and are
