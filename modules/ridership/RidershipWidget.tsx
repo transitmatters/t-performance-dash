@@ -1,4 +1,3 @@
-import React from 'react';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -10,7 +9,7 @@ import { useRidershipData } from '../../common/api/hooks/ridership';
 import { getRidershipLineId } from '../../common/utils/ridership';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 
-export const RidershipWidget: React.FC = () => {
+export const RidershipWidget = () => {
   const { line, query } = useDelimitatedRoute();
   const { startDate } = OVERVIEW_OPTIONS[query.view ?? 'year'];
   const endDate = TODAY_STRING;

@@ -108,7 +108,8 @@ export default typescriptEslint.config(
       'react-hooks/refs': 'warn',
       'react-hooks/static-components': 'warn',
       'react-hooks/preserve-manual-memoization': 'warn',
-      'react/react-in-jsx-scope': 'error',
+      // JSX compiles with the automatic runtime (tsconfig "jsx": "react-jsx"), so files don't import React for it
+      'react/react-in-jsx-scope': 'off',
       'react/no-unused-prop-types': 'warn',
       'unused-imports/no-unused-imports': 'error',
       'no-console': 'error',
@@ -182,7 +183,6 @@ export default typescriptEslint.config(
   {
     files: ['common/components/ui/**/*.tsx'],
     rules: {
-      'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       'import-x/max-dependencies': 'off',
     },

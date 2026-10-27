@@ -1,4 +1,3 @@
-import React from 'react';
 import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
@@ -15,13 +14,13 @@ interface ServiceGraphWrapperProps {
 
 // The average/peak KPIs now live in the page's stat-card row (see ServiceDetails), so the chart
 // no longer carries an in-plot carousel value — just the graph.
-export const ServiceGraphWrapper: React.FC<ServiceGraphWrapperProps> = ({
+export const ServiceGraphWrapper = ({
   data,
   predictedData,
   config,
   startDate,
   endDate,
-}) => {
+}: ServiceGraphWrapperProps) => {
   if (!data.some((datapoint) => datapoint.miles_covered)) return <NoDataNotice isLineMetric />;
 
   return (

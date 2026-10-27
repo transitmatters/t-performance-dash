@@ -1,11 +1,11 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import { CIPBanner } from '../components/CIPBanner';
 
 interface LandingLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const LandingLayout: React.FC<LandingLayoutProps> = ({ children }) => {
+export const LandingLayout = ({ children }: LandingLayoutProps) => {
   return (
     <div className="flex flex-1 flex-col">
       <CIPBanner />

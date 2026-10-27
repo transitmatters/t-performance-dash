@@ -1,8 +1,7 @@
-import React from 'react';
 import { LandingLayout } from '../layouts/LandingLayout';
 import { Link } from './general/Link';
 
-export const NotFound: React.FC = () => (
+export const NotFound = () => (
   <LandingLayout>
     <div className="h-screen w-full">
       <title>Data Dashboard - 404</title>

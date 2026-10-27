@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -33,7 +33,7 @@ interface RidershipGraphProps {
   serviceDateBlocks?: AnnotationOptions<keyof AnnotationTypeRegistry>[];
 }
 
-export const RidershipGraph: React.FC<RidershipGraphProps> = ({
+export const RidershipGraph = ({
   data,
   config,
   startDate,
@@ -41,7 +41,7 @@ export const RidershipGraph: React.FC<RidershipGraphProps> = ({
   showTitle = false,
   serviceEnd,
   serviceDateBlocks = [],
-}) => {
+}: RidershipGraphProps) => {
   const {
     line,
     linePath,

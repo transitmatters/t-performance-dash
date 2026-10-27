@@ -1,11 +1,10 @@
-import React from 'react';
 import { useDelimitatedRoute } from '../../utils/router';
 
 /**
  * Bus coverage note. Renders as plain prose for the "About this data"
  * accordion (see TripDataNotes).
  */
-export const BusDataNotice: React.FC = () => {
+export const BusDataNotice = () => {
   const { line, linePath } = useDelimitatedRoute();
 
   if (line !== 'line-bus' && linePath !== 'bus') {

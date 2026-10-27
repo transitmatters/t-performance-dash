@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from '../../../common/components/general/Link';
 import type { BusSpeedLeaderboardEntry } from '../../../common/types/dataPoints';
 import { getBusSpeedMapRouteHref, useDelimitatedRoute } from '../../../common/utils/router';
@@ -7,7 +6,7 @@ interface BusSpeedRouteLeaderboardProps {
   data: BusSpeedLeaderboardEntry[];
 }
 
-export const BusSpeedRouteLeaderboard: React.FC<BusSpeedRouteLeaderboardProps> = ({ data }) => {
+export const BusSpeedRouteLeaderboard = ({ data }: BusSpeedRouteLeaderboardProps) => {
   const route = useDelimitatedRoute();
 
   return (

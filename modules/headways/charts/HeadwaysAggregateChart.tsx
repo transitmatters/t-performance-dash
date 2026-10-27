@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AggregateDataResponse, DayFilter } from '../../../common/types/charts';
@@ -15,12 +15,12 @@ interface HeadwaysAggregateChartProps {
   dayFilter?: DayFilter;
 }
 
-export const HeadwaysAggregateChart: React.FC<HeadwaysAggregateChartProps> = ({
+export const HeadwaysAggregateChart = ({
   headways,
   toStation,
   fromStation,
   dayFilter = 'all',
-}) => {
+}: HeadwaysAggregateChartProps) => {
   const {
     query: { startDate, endDate },
   } = useDelimitatedRoute();

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ChartPageDiv } from '../../../common/components/charts/ChartPageDiv';
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
 import { ToggleSwitch } from '../../../common/components/inputs/ToggleSwitch';

@@ -184,8 +184,8 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, 
         if ex.response["Error"]["Code"] == "NoSuchKey":
             # raise Exception(f"Data not available on S3 for key {key} ") from None
             print(f"WARNING: No data available on S3 for key: {key}")
-            # Only rapid transit has a second source to try; CR and ferry would request the same key again
-            if not use_gobble and is_rapid_transit(stop_id):
+            # LAMP lags a day behind, so fall back to Gobble (e.g. for today)
+            if key.startswith("Events-lamp/"):
                 return download_one_event_file(date, stop_id, use_gobble=True)
             return []
         else:

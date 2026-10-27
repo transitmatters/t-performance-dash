@@ -1,4 +1,3 @@
-import React from 'react';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useRidershipData } from '../../common/api/hooks/ridership';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';

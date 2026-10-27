@@ -52,7 +52,7 @@ def resample_and_aggregate(
     # Drop the first month if it is incomplete. An incomplete first week is dated before
     # start_date, so the range filter below drops it.
     start_date = df.index.min()
-    if agg == "monthly" and start_date.weekday() != 6:  # 6 is Sunday
+    if agg == "monthly" and start_date.day != 1:
         df_agg = df_agg.iloc[1:]
 
     df_agg = df_agg.reset_index()

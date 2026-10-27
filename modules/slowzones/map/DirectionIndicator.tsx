@@ -1,5 +1,3 @@
-import React from 'react';
-
 import type { SlowZoneDirection } from './segment';
 
 import styles from './DirectionIndicator.module.css';
@@ -11,12 +9,12 @@ interface DirectionIndicatorProps {
   size?: number;
 }
 
-export const DirectionIndicator: React.FC<DirectionIndicatorProps> = ({
+export const DirectionIndicator = ({
   direction,
   color,
   isHorizontal,
   size = 5,
-}) => {
+}: DirectionIndicatorProps) => {
   const rotation = isHorizontal ? (direction === '1' ? 90 : 270) : direction === '1' ? 180 : 0;
   return (
     <span

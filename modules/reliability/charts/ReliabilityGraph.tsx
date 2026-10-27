@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Benchmark, Dataset } from '../../../common/components/charts/TimeSeriesChart';
 import { TimeSeriesChart } from '../../../common/components/charts/TimeSeriesChart';
 import { getLabelsForData } from '../../../common/components/charts/TimeSeriesChart/helpers';
@@ -17,7 +16,7 @@ interface ReliabilityGraphProps {
 }
 
 /** A line chart of on-time percentages or per-day counts, one line per dataset. */
-export const ReliabilityGraph: React.FC<ReliabilityGraphProps> = ({
+export const ReliabilityGraph = ({
   data,
   agg,
   startDate,
@@ -25,7 +24,7 @@ export const ReliabilityGraph: React.FC<ReliabilityGraphProps> = ({
   kind,
   valueAxisLabel,
   benchmarks,
-}) => {
+}: ReliabilityGraphProps) => {
   if (data.every((dataset) => dataset.data.length === 0)) {
     return <NoDataNotice isLineMetric />;
   }

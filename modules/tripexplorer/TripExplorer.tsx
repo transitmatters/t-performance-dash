@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useHistoricalAlertsData } from '../../common/api/hooks/alerts';
 import { findMatch } from '../../common/components/alerts/AlertFilter';
 import { AlertNotice } from '../../common/components/alerts/AlertNotice';

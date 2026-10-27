@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -28,13 +28,13 @@ interface TotalDelayGraphProps {
   agg?: 'daily' | 'weekly';
 }
 
-export const TotalDelayGraph: React.FC<TotalDelayGraphProps> = ({
+export const TotalDelayGraph = ({
   data,
   startDate,
   endDate,
   showTitle = false,
   agg = 'weekly',
-}) => {
+}: TotalDelayGraphProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');

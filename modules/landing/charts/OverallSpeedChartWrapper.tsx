@@ -1,9 +1,8 @@
-import React from 'react';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { useTripMetricsForLanding } from '../../../common/api/hooks/tripmetrics';
 import { OverallSpeedChart } from './OverallSpeedChart';
 
-export const OverallSpeedChartWrapper: React.FC = () => {
+export const OverallSpeedChartWrapper = () => {
   const speedData = useTripMetricsForLanding();
   const speedDataReady = !speedData.isLoading && !speedData.isError && speedData.data;
   if (!speedDataReady) return <ChartPlaceHolder query={speedData} />;

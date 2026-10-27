@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -15,13 +15,13 @@ import { LocationTitle } from '../../../modules/dashboard/LocationTitle';
 import { CardDescription, CardHeader, CardTitle } from '../ui/card';
 
 interface WidgetTitle {
-  title: React.ReactNode;
-  subtitle?: React.ReactNode;
+  title: ReactNode;
+  subtitle?: ReactNode;
   location?: Location;
   both?: boolean;
   line?: Line;
   /** A control that acts on this card's chart — a view switch or a filter. */
-  action?: React.ReactNode;
+  action?: ReactNode;
   /** When set, the title becomes a chevron link to this page, colored by line — the homescreen card style. */
   tab?: Page;
   /** A pre-resolved chevron-link href, for targets `tab` can't express (e.g. a route/date-specific link). Takes precedence over `tab`. */
@@ -31,7 +31,7 @@ interface WidgetTitle {
 /** Type comes from CardTitle; only the wrapping behaviour is ours. */
 const titleClassName = 'text-balance md:whitespace-nowrap';
 
-export const WidgetTitle: React.FC<WidgetTitle> = ({
+export const WidgetTitle = ({
   title,
   subtitle,
   both = false,
@@ -40,7 +40,7 @@ export const WidgetTitle: React.FC<WidgetTitle> = ({
   action,
   tab,
   titleHref,
-}) => {
+}: WidgetTitle) => {
   const { page, query, linePath } = useDelimitatedRoute();
   const handlePageConfig = useHandleConfigStore();
   const generateHref = useGenerateHref();
