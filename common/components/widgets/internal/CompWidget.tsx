@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import { BigDelta } from './BigDelta';
 
 const getDescription = (value: number) => {
@@ -10,10 +10,10 @@ const getDescription = (value: number) => {
 
 interface CompWidgetProps {
   value: number;
-  text: React.ReactNode;
+  text: ReactNode;
 }
 
-export const CompWidget: React.FC<CompWidgetProps> = ({ value, text }) => {
+export const CompWidget = ({ value, text }: CompWidgetProps) => {
   return (
     <div className="flex w-full flex-row items-baseline rounded-md border-black/30 bg-black/[15%] px-4 py-2">
       <div className="flex flex-col gap-y-1 text-white/95">

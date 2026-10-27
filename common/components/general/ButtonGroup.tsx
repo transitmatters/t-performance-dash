@@ -1,6 +1,6 @@
 import classNames from 'classnames';
-import type { SetStateAction } from 'react';
-import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import type { SetStateAction, Dispatch, ReactElement } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
 import { lineColorVar } from '../../styles/general';
 import type { Line } from '../../types/lines';
@@ -9,7 +9,7 @@ import { readableOn } from '../../utils/general';
 
 interface ButtonGroupProps<K, T> {
   options: [K, T][];
-  pressFunction: React.Dispatch<SetStateAction<K>>;
+  pressFunction: Dispatch<SetStateAction<K>>;
   selectedIndex?: number;
   additionalDivClass?: string;
   additionalButtonClass?: string;
@@ -23,7 +23,7 @@ interface ButtonGroupProps<K, T> {
  */
 export const ButtonGroup: <T extends string, K extends string>(
   props: ButtonGroupProps<K, T>
-) => React.ReactElement<ButtonGroupProps<K, T>> = ({
+) => ReactElement<ButtonGroupProps<K, T>> = ({
   options,
   pressFunction,
   selectedIndex = 0,
@@ -36,8 +36,8 @@ export const ButtonGroup: <T extends string, K extends string>(
   // that tolerance here: track selection internally, syncing from the prop when it's actually
   // driven externally, so callers that never pass selectedIndex still update on click instead of
   // staying pinned to the first option.
-  const [internalIndex, setInternalIndex] = React.useState(selectedIndex);
-  React.useEffect(() => {
+  const [internalIndex, setInternalIndex] = useState(selectedIndex);
+  useEffect(() => {
     setInternalIndex(selectedIndex);
   }, [selectedIndex]);
 

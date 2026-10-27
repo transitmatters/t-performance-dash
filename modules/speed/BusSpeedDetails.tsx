@@ -1,7 +1,7 @@
 'use client';
 
 import dayjs from 'dayjs';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useBusTripMetrics } from '../../common/api/hooks/busTripMetrics';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { BusDataNotice } from '../../common/components/notices/BusDataNotice';

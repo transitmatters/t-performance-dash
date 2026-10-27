@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
@@ -6,10 +6,10 @@ import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/
 import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
-import { indexByProperty } from '../../common/utils/array';
 import { explainGapBlocks, usePageShutdowns } from '../shutdowns';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
 import { getNoDataSinceLatestBlock, getShuttlingBlockAnnotations } from './utils/graphUtils';
+import { getScheduledAndDeliveredRoundTrips } from './utils/utils';
 
 interface ServiceGraphProps {
   config: ParamsType;
@@ -19,7 +19,7 @@ interface ServiceGraphProps {
   endDate: string;
 }
 
-export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphProps) => {
+export const ServiceGraph = (props: ServiceGraphProps) => {
   const { data, predictedData, startDate, endDate, config } = props;
   const { line } = useDelimitatedRoute();
 
@@ -43,28 +43,15 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
     ];
   }, [data, shutdowns, startDate, endDate]);
 
-  const allDates = [
-    ...new Set([
-      ...predictedData.counts.map((point) => point.date),
-      ...data.map((point) => point.date),
-    ]),
-  ].sort((a, b) => (a > b ? 1 : -1));
-
-  const scheduledDataByDate = indexByProperty(predictedData.counts, 'date');
-  const deliveredDataByDate = indexByProperty(data, 'date');
+  const roundTrips = useMemo(
+    () => getScheduledAndDeliveredRoundTrips(data, predictedData, config.agg),
+    [data, predictedData, config.agg]
+  );
 
   const scheduled = useMemo(() => {
     return {
       label: 'Scheduled round trips',
-      data: allDates.map((date) => {
-        const scheduledToday = scheduledDataByDate[date];
-        const deliveredToday = deliveredDataByDate[date];
-        const anyDeliveredToday = deliveredToday && deliveredToday.miles_covered > 0;
-        // NaN rather than 0 leaves a gap, so days without trips get no point under the gap's band
-        if (!anyDeliveredToday) return { date, value: Number.NaN };
-        const value = scheduledToday?.count ? Math.round(scheduledToday.count) / 2 : 0;
-        return { date, value };
-      }),
+      data: roundTrips.map(({ date, scheduled }) => ({ date, value: scheduled })),
       style: {
         fillPattern: 'striped' as const,
         tooltipLabel: (point) => {
@@ -73,16 +60,12 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
         },
       },
     };
-  }, [allDates, deliveredDataByDate, peak, scheduledDataByDate]);
+  }, [roundTrips, peak]);
 
   const delivered = useMemo(() => {
     return {
       label: 'Daily round trips',
-      data: allDates.map((date) => {
-        const deliveredToday = deliveredDataByDate[date];
-        const value = deliveredToday?.miles_covered ? Math.round(deliveredToday.count) : Number.NaN;
-        return { date, value };
-      }),
+      data: roundTrips.map(({ date, delivered }) => ({ date, value: delivered })),
       style: {
         tooltipLabel: (point) => {
           const percentOfPeak = `${((100 * point.value) / peak).toFixed(1)}%`;
@@ -90,7 +73,7 @@ export const ServiceGraph: React.FC<ServiceGraphProps> = (props: ServiceGraphPro
         },
       },
     };
-  }, [data, peak]);
+  }, [roundTrips, peak]);
 
   return (
     <ChartStack>

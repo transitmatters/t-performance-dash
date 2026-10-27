@@ -1,7 +1,6 @@
 import { faMagnifyingGlassChart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import React from 'react';
 import { usePageShutdowns, shutdownDates } from '../../../modules/shutdowns';
 
 interface NoDataNoticeProps {
@@ -12,10 +11,7 @@ interface NoDataNoticeProps {
   shutdownScope?: 'line' | 'trip';
 }
 
-const ShutdownExplanation: React.FC<{ scope: 'line' | 'trip'; inverse?: boolean }> = ({
-  scope,
-  inverse,
-}) => {
+const ShutdownExplanation = ({ scope, inverse }: { scope: 'line' | 'trip'; inverse?: boolean }) => {
   const shutdowns = usePageShutdowns(scope);
   if (shutdowns.length === 0) return null;
   return (
@@ -36,12 +32,12 @@ const ShutdownExplanation: React.FC<{ scope: 'line' | 'trip'; inverse?: boolean 
  * "something broke" stay visually distinct, and it is muted rather than line-colored — the line
  * colors are brand tokens tuned for fills, and bus yellow lands at 1.8:1 as 3x text on a card.
  */
-export const NoDataNotice: React.FC<NoDataNoticeProps> = ({
+export const NoDataNotice = ({
   isWidget,
   inverse,
   isLineMetric: isLineWide = false,
   shutdownScope,
-}) => {
+}: NoDataNoticeProps) => {
   return (
     <div className="relative flex h-60 w-full items-center justify-center">
       <div

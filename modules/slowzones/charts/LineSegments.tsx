@@ -1,5 +1,5 @@
 import 'chartjs-adapter-date-fns';
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import minMax from 'dayjs/plugin/minMax';
@@ -41,13 +41,13 @@ interface LineSegmentsProps {
   direction: Direction;
 }
 
-export const LineSegments: React.FC<LineSegmentsProps> = ({
+export const LineSegments = ({
   data,
   linePath,
   startDateUTC,
   endDateUTC,
   direction,
-}) => {
+}: LineSegmentsProps) => {
   const ref = useRef(null);
   const chartRange = endDateUTC.diff(startDateUTC, 'day');
   const breakpoint = [

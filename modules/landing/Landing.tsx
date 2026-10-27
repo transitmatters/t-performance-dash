@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useCallback } from 'react';
+import { Suspense, lazy, useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 
 import classNames from 'classnames';

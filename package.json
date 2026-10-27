@@ -1,6 +1,6 @@
 {
   "name": "t-performance-dash",
-  "version": "4.3.0",
+  "version": "5.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -92,7 +92,9 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@babel/core": "^8.0.9",
     "@eslint/js": "^9.39.5",
+    "@rolldown/plugin-babel": "^0.2.4",
     "@storybook/addon-docs": "^10.6.2",
     "@storybook/addon-links": "^10.6.2",
     "@storybook/react": "^10.6.2",
@@ -107,6 +109,7 @@
     "@types/react-csv": "^1.1.10",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "babel-plugin-react-compiler": "^1.0.0",
     "baseline-browser-mapping": "^2.11.29",
     "concurrently": "^10.0.6",
     "eslint": "^9.39.5",

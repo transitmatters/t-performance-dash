@@ -1,7 +1,6 @@
 import { faArrowsRotate, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import React from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { Button } from '../ui/button';
 
@@ -17,7 +16,7 @@ interface ErrorNoticeProps {
  * problem and offers the recovery; `query.error.message` is only ever read to pick a branch, never
  * shown, so backend internals stay out of the UI.
  */
-export const ErrorNotice: React.FC<ErrorNoticeProps> = ({ isWidget, inverse, query }) => {
+export const ErrorNotice = ({ isWidget, inverse, query }: ErrorNoticeProps) => {
   const errorMessage = query?.error?.['message'];
   const timeout = errorMessage === 'network request failed';
   const canRetry = Boolean(query?.refetch);

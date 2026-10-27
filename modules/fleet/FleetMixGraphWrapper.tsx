@@ -1,4 +1,3 @@
-import React from 'react';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import type { FleetMetrics } from '../../common/types/dataPoints';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
@@ -16,14 +15,14 @@ interface FleetMixGraphWrapperProps {
   endDate: string;
 }
 
-export const FleetMixGraphWrapper: React.FC<FleetMixGraphWrapperProps> = ({
+export const FleetMixGraphWrapper = ({
   data,
   types,
   showShuttling,
   config,
   startDate,
   endDate,
-}) => {
+}: FleetMixGraphWrapperProps) => {
   if (!data.some((datapoint) => hasFleetMix(datapoint, types))) {
     return <NoDataNotice isLineMetric shutdownScope="line" />;
   }

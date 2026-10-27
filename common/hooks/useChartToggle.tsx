@@ -1,4 +1,5 @@
-import React from 'react';
+import { useCallback, useState } from 'react';
+import type { ReactNode } from 'react';
 import { ButtonGroup } from '../components/general/ButtonGroup';
 import {
   Select,
@@ -35,10 +36,10 @@ export const useChartToggle = <K extends string, T extends string>(
   initial: K,
   options: [K, T][],
   { variant, paramKey }: UseChartToggleOptions = {}
-): { value: K; control: React.ReactNode } => {
+): { value: K; control: ReactNode } => {
   const { line, query } = useDelimitatedRoute();
   const setQueryParam = useSetQueryParam();
-  const [localValue, setLocalValue] = React.useState<K>(initial);
+  const [localValue, setLocalValue] = useState<K>(initial);
 
   // An unrecognised param value (a hand-edited or stale link) falls back to the default rather
   // than putting the chart into a state its control cannot display.
@@ -47,7 +48,7 @@ export const useChartToggle = <K extends string, T extends string>(
     ? ((options.some(([key]) => key === fromQuery) ? fromQuery : initial) as K)
     : localValue;
 
-  const setValue = React.useCallback(
+  const setValue = useCallback(
     (next: K) => {
       if (paramKey) {
         setQueryParam(paramKey, next === initial ? undefined : next);

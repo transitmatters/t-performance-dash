@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Line } from '@chartjs-components';
 import { round } from '@lodash-utils';
 
@@ -37,7 +37,7 @@ interface FleetMixChartProps {
   showTitle?: boolean;
 }
 
-export const FleetMixChart: React.FC<FleetMixChartProps> = ({
+export const FleetMixChart = ({
   data,
   types,
   showShuttling,
@@ -45,7 +45,7 @@ export const FleetMixChart: React.FC<FleetMixChartProps> = ({
   startDate,
   endDate,
   showTitle = false,
-}) => {
+}: FleetMixChartProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef(null);

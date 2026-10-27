@@ -16,6 +16,7 @@ jobs:
         with:
           stale-issue-label: 'stale'
           stale-pr-label: 'stale'
+          exempt-issue-labels: 'good first issue,help wanted'
           days-before-stale: 180
           days-before-close: -1
           stale-issue-message: >

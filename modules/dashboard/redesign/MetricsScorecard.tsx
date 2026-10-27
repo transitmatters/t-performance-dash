@@ -1,4 +1,3 @@
-import React from 'react';
 import classNames from 'classnames';
 import { ChevronDown } from 'lucide-react';
 
@@ -39,12 +38,12 @@ const badgeVariantFor = (sentiment: ScorecardRow['deltaSentiment']) => {
   return 'outline' as const;
 };
 
-export const MetricsScorecard: React.FC<MetricsScorecardProps> = ({
+export const MetricsScorecard = ({
   rows,
   isLoading,
   selectedMetric,
   onSelectMetric,
-}) => {
+}: MetricsScorecardProps) => {
   return (
     <Card>
       <CardHeader>

@@ -1,4 +1,3 @@
-import React from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { SingleDayDataPoint } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
@@ -12,11 +11,11 @@ interface HeadwaysHistogramWrapperProps {
   fromStation: Station | undefined;
 }
 
-export const HeadwaysHistogramWrapper: React.FC<HeadwaysHistogramWrapperProps> = ({
+export const HeadwaysHistogramWrapper = ({
   query,
   toStation,
   fromStation,
-}) => {
+}: HeadwaysHistogramWrapperProps) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   if (query.data.length < 1) return <NoDataNotice shutdownScope="trip" />;

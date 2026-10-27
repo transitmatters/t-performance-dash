@@ -1738,7 +1738,7 @@
           "/api"
         ],
         "summary": "Get the stop information for a specific route.",
-        "description": "Args:\n    route_id: The route ID to look up stops for.\n\nReturns:\n    Response: JSON response containing station/stop data including names, IDs,\n        and directions, or a 404 response if the route is not found.",
+        "description": "Args:\n    route_id: The route ID to look up stops for. Combined bus routes contain\n        slashes (\"SL4/SL5\"), so callers must percent-encode them (\"SL4%2FSL5\").\n\nReturns:\n    Response: JSON response containing station/stop data including names, IDs,\n        and directions, or a 404 response if the route is not found.",
         "operationId": "getStopsForRoute"
       },
       "parameters": [
