@@ -38,7 +38,8 @@ export const DwellsAggregateWrapper = ({
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
 
-  if (dwellsData.length < 1) return <NoDataNotice metric="dwells" filtered={allData.length > 0} />;
+  if (dwellsData.length < 1)
+    return <NoDataNotice shutdownScope="trip" metric="dwells" filtered={allData.length > 0} />;
 
   const widgetObjects = getAggDataWidgets(dwellsData, 'times', comparisonData);
 

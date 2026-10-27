@@ -23,6 +23,7 @@ import {
   getShuttlingBlockAnnotations,
 } from '../../service/utils/graphUtils';
 import type { ParamsType } from '../../speed/constants/speeds';
+import { explainGaps, usePageShutdowns } from '../../shutdowns';
 import { hasFleetMetric, type FleetModeMetrics } from '../constants/fleetTypes';
 
 interface FleetShareChartProps {
@@ -54,8 +55,16 @@ export const FleetShareChart = ({
   // Keyed off the fleet metric, not miles_covered: a partial shutdown zeroes the line's
   // service metrics while cars still ran (and were sampled) on the remaining branches.
   // Checked against null rather than truthiness -- 0% is a real value.
+  const shutdowns = usePageShutdowns('line', startDate, endDate);
   const shuttlingBlocks = showShuttling
-    ? getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMetric(datapoint, metric.field))
+    ? explainGaps(
+        getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMetric(datapoint, metric.field)),
+        shutdowns,
+        {
+          startDate,
+          endDate,
+        }
+      )
     : [];
 
   return (

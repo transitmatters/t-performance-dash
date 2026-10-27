@@ -1,5 +1,6 @@
 import type { ChartDataset } from 'chart.js';
 import type { AggType } from '../../../../modules/speed/constants/speeds';
+import type { AnnotationTooltipContent } from '../annotationTooltip';
 
 export type DataPoint = ({ date: string } | { time: string }) & { value: number };
 
@@ -91,7 +92,11 @@ export type Benchmark = {
 export type Block = {
   from: string;
   to: string;
+  // Defaults to 'No data'; an empty string draws the block without a label
   label?: string;
   fillColor?: string;
   textColor?: string;
+  textStrokeColor?: string;
+  // Shown in a card when the block is hovered
+  tooltip?: AnnotationTooltipContent;
 };

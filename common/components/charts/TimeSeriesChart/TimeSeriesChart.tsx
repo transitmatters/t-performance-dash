@@ -23,6 +23,7 @@ import {
 } from '@chartjs-utils';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { ChartDiv } from '../ChartDiv';
+import { annotationTooltip } from '../annotationTooltip';
 import { CHART_COLORS, COLORS } from '../../../constants/colors';
 
 import { watermarkLayout } from '../../../constants/charts';
@@ -247,7 +248,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     });
 
     const blockAnnotations = blocks.map((block) => {
-      const { from, to, fillColor, textColor, label } = block;
+      const { from, to, fillColor, textColor, textStrokeColor, label, tooltip } = block;
       return {
         type: 'box' as const,
         xMin: from,
@@ -255,11 +256,14 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         backgroundColor: fillColor || CHART_COLORS.BLOCKS_SOLID,
         borderWidth: 0,
         label: {
-          content: label || 'No data',
+          content: label ?? 'No data',
           rotation: -90,
           color: textColor || 'white',
-          display: true,
+          textStrokeColor,
+          textStrokeWidth: textStrokeColor ? 3 : 0,
+          display: label !== '',
         },
+        ...(tooltip ? annotationTooltip(tooltip) : {}),
       };
     });
 
