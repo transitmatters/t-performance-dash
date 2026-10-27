@@ -1,4 +1,3 @@
-import React from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
@@ -22,12 +21,12 @@ interface CommuterRailReliabilityProps {
   endDate?: string;
 }
 
-export const CommuterRailReliability: React.FC<CommuterRailReliabilityProps> = ({
+export const CommuterRailReliability = ({
   reliability,
   agg,
   startDate,
   endDate,
-}) => {
+}: CommuterRailReliabilityProps) => {
   const data = reliability.data ?? [];
   const stats = reliability.data ? getCommuterRailStats(reliability.data) : null;
   const color = LINE_COLORS['line-commuter-rail'];

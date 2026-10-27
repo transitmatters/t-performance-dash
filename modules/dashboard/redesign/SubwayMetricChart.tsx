@@ -1,4 +1,3 @@
-import React from 'react';
 import dayjs from 'dayjs';
 
 import { useDelimitatedRoute } from '../../../common/utils/router';
@@ -17,7 +16,7 @@ import { RidershipGraph } from '../../ridership/RidershipGraph';
 import { CHART_FETCH_START, chartWindowStart, trimTrailingEmpty } from './scorecardUtils';
 import type { MetricKey } from './types';
 
-export const SubwayMetricChart: React.FC<{ metric: MetricKey }> = ({ metric }) => {
+export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
   const { line, lineShort } = useDelimitatedRoute();
   const endDate = TODAY_STRING;
   const startDate = CHART_FETCH_START;

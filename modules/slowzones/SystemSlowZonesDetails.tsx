@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Link } from '../../common/components/general/Link';
 import {

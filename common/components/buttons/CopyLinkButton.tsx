@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faLink } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../ui/button';
@@ -32,7 +32,7 @@ async function copyToClipboard(url: string) {
  * alongside a claim, so the link that backs the claim needs to be one click away — previously the
  * only way to share a view was to select the address bar by hand.
  */
-export const CopyLinkButton: React.FC = () => {
+export const CopyLinkButton = () => {
   const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle');
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 

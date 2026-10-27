@@ -27,3 +27,17 @@ class TestWeeklyResample:
         result = resample_and_aggregate(_daily(date(2026, 9, 7), 28), "weekly", "median")
 
         assert all(date.fromisoformat(day).weekday() == 0 for day in result)
+
+
+class TestMonthlyResample:
+    def test_first_of_month_start_keeps_first_month(self):
+        # 2026-01-01 is a Thursday.
+        result = resample_and_aggregate(_daily(date(2026, 1, 1), 59), "monthly", "median")
+
+        assert list(result) == ["2026-01-31", "2026-02-28"]
+        assert result["2026-01-31"] == 15
+
+    def test_midmonth_start_drops_partial_month(self):
+        result = resample_and_aggregate(_daily(date(2026, 1, 15), 45), "monthly", "median")
+
+        assert list(result) == ["2026-02-28"]

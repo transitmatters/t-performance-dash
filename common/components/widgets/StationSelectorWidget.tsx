@@ -1,7 +1,7 @@
 import { faArrowRight, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
-import React from 'react';
+import { useEffect } from 'react';
 import { Button } from '../inputs/Button';
 import { StationSelector } from '../inputs/StationSelector';
 import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
@@ -24,12 +24,12 @@ interface StationSelectorWidgetProps {
   ferryRoute: FerryRoute | undefined;
 }
 
-export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
+export const StationSelectorWidget = ({
   line,
   busRoute,
   crRoute,
   ferryRoute,
-}) => {
+}: StationSelectorWidgetProps) => {
   const updateQueryParams = useUpdateQuery();
   const lineShort = LINE_OBJECTS[line].short;
   const {
@@ -41,7 +41,7 @@ export const StationSelectorWidget: React.FC<StationSelectorWidgetProps> = ({
   const toStation = to ? getParentStationForStopId(to, lineShort) : defaultTo;
   const fromStation = from ? getParentStationForStopId(from, lineShort) : defaultFrom;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (fromStation && toStation && fromStation.station === toStation.station) {
       const nextValidStation = findNextValidStation(fromStation, stations);
       if (nextValidStation) {

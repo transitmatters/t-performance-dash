@@ -1,4 +1,3 @@
-import React from 'react';
 import type { BusRoute, CommuterRailRoute, Line, FerryRoute } from '../../types/lines';
 import type { DateStoreSection } from '../../constants/pages';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
@@ -26,12 +25,12 @@ const hasDateControl = (dateStoreSection: DateStoreSection) =>
   dateStoreSection === 'system';
 
 /** Route and date: the controls that sit on the title row. */
-export const PrimaryControls: React.FC<ControlPanelProps> = ({
+export const PrimaryControls = ({
   dateStoreSection,
   line,
   hasStationStore,
   hasRouteSelector = true,
-}) => {
+}: ControlPanelProps) => {
   if (!hasDateControl(dateStoreSection)) return null;
   const queryType = dateStoreSection === 'singleTrips' ? 'single' : 'range';
   return (
@@ -48,14 +47,14 @@ export const PrimaryControls: React.FC<ControlPanelProps> = ({
 };
 
 /** Origin and destination: their own row, since station names run long. */
-export const StationControls: React.FC<ControlPanelProps> = ({
+export const StationControls = ({
   dateStoreSection,
   line,
   busRoute,
   crRoute,
   ferryRoute,
   hasStationStore,
-}) => {
+}: ControlPanelProps) => {
   // Pages can share the single-date section without being about a pair of stops — the bus
   // speed map covers the whole network — so the picker follows the page's own hasStationStore
   // rather than the section it stores dates under.
@@ -72,7 +71,7 @@ export const StationControls: React.FC<ControlPanelProps> = ({
   );
 };
 
-export const ControlPanel: React.FC<ControlPanelProps> = (props) => {
+export const ControlPanel = (props: ControlPanelProps) => {
   return (
     <div className="flex w-full shrink flex-col items-end justify-end gap-y-2 overflow-visible p-3 pl-0 text-stone-900 lg:max-w-2xl">
       <PrimaryControls {...props} />

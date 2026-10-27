@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import dayjs from 'dayjs';
 
 import { useBusTripMetrics } from '../../../common/api/hooks/busTripMetrics';
@@ -68,10 +68,7 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
   return { rows, isLoading: tripMetrics.isLoading || ridership.isLoading };
 };
 
-export const BusMetricChart: React.FC<{ metric: MetricKey; busRoute: BusRoute }> = ({
-  metric,
-  busRoute,
-}) => {
+export const BusMetricChart = ({ metric, busRoute }: { metric: MetricKey; busRoute: BusRoute }) => {
   const config = getSpeedGraphConfig(dayjs(CHART_FETCH_START), dayjs(TODAY_STRING));
 
   const tripMetrics = useBusTripMetrics(

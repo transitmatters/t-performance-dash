@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import type { WidgetValueInterface } from '../../../types/basicWidgets';
 import { LoadingSpinner } from '../../graphics/LoadingSpinner';
@@ -8,20 +8,20 @@ export type LayoutKind = 'total-and-delta' | 'delta-and-percent-change' | 'no-de
 export type SentimentDirection = 'positiveOnIncrease' | 'negativeOnIncrease';
 
 export type BasicWidgetDataLayoutProps = {
-  title: React.ReactNode;
-  analysis: React.ReactNode;
+  title: ReactNode;
+  analysis: ReactNode;
   widgetValue: WidgetValueInterface;
   sentimentDirection?: SentimentDirection;
   layoutKind?: LayoutKind;
 };
 
-export const BasicWidgetDataLayout: React.FC<BasicWidgetDataLayoutProps> = ({
+export const BasicWidgetDataLayout = ({
   title,
   analysis,
   widgetValue,
   layoutKind = 'total-and-delta',
   sentimentDirection = 'negativeOnIncrease',
-}) => {
+}: BasicWidgetDataLayoutProps) => {
   return (
     <>
       <div className={classNames('relative flex')}>

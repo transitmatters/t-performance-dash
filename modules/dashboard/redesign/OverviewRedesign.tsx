@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import type { ReactNode } from 'react';
 
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { COMMUTER_RAIL_LINE_NAMES } from '../../../common/types/lines';
@@ -19,11 +20,11 @@ interface OverviewLayoutProps {
   skeletonRows?: number;
   selectedMetric: MetricKey;
   onSelectMetric: (metric: MetricKey) => void;
-  chart: React.ReactNode;
-  cards: React.ReactNode;
+  chart: ReactNode;
+  cards: ReactNode;
 }
 
-const OverviewLayout: React.FC<OverviewLayoutProps> = ({ chart, cards, ...scorecard }) => (
+const OverviewLayout = ({ chart, cards, ...scorecard }: OverviewLayoutProps) => (
   <div className="flex w-full flex-col gap-6 md:gap-8">
     <div className="flex flex-col gap-4">
       <MetricsScorecard {...scorecard} />
@@ -33,7 +34,7 @@ const OverviewLayout: React.FC<OverviewLayoutProps> = ({ chart, cards, ...scorec
   </div>
 );
 
-const SubwayOverview: React.FC<{ lineShort: LineShort }> = ({ lineShort }) => {
+const SubwayOverview = ({ lineShort }: { lineShort: LineShort }) => {
   const { line } = useDelimitatedRoute();
   const { rows, isLoading } = useSubwayScorecardRows(line, lineShort);
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>('speed');
@@ -55,7 +56,7 @@ const SubwayOverview: React.FC<{ lineShort: LineShort }> = ({ lineShort }) => {
   );
 };
 
-const BusOverview: React.FC = () => {
+const BusOverview = () => {
   const { query } = useDelimitatedRoute();
   const busRoute = query.busRoute ?? '1';
   const { rows, isLoading } = useBusScorecardRows(busRoute);
@@ -74,7 +75,7 @@ const BusOverview: React.FC = () => {
   );
 };
 
-const CommuterRailOverview: React.FC = () => {
+const CommuterRailOverview = () => {
   const { query } = useDelimitatedRoute();
   const crRoute = query.crRoute ?? 'CR-Fairmount';
   const { rows, isLoading } = useCrScorecardRows(crRoute);
@@ -101,7 +102,7 @@ const CommuterRailOverview: React.FC = () => {
 
 /** Design-doc option 2b: verdict + scorecard + one chart, replacing the 4-card grid.
  * Each mode picks its own scorecard rows and charts; the layout is shared. */
-export const OverviewRedesign: React.FC = () => {
+export const OverviewRedesign = () => {
   const { tab, lineShort } = useDelimitatedRoute();
 
   if (tab === 'Bus') return <BusOverview />;

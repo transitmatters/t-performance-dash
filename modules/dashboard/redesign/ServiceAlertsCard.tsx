@@ -1,4 +1,3 @@
-import React from 'react';
 import { TriangleAlert } from 'lucide-react';
 
 import {
@@ -24,12 +23,12 @@ interface ServiceAlertsCardProps {
   label: string;
 }
 
-export const ServiceAlertsCard: React.FC<ServiceAlertsCardProps> = ({
+export const ServiceAlertsCard = ({
   lineShort,
   busRoute,
   crRoute,
   label,
-}) => {
+}: ServiceAlertsCardProps) => {
   const alerts = useAlertsData(lineShort, busRoute, crRoute);
   const { isLoading } = alerts;
   const { isError } = alerts;

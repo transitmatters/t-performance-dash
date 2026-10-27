@@ -1,4 +1,3 @@
-import React from 'react';
 import classNames from 'classnames';
 import type { BusRoute, CommuterRailRoute, Line, FerryRoute } from '../../types/lines';
 import type { DateStoreSection } from '../../constants/pages';
@@ -20,7 +19,7 @@ interface MobileControlPanelProps {
   hasRouteSelector?: boolean;
 }
 
-export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
+export const MobileControlPanel = ({
   dateStoreSection,
   line,
   busRoute,
@@ -28,7 +27,7 @@ export const MobileControlPanel: React.FC<MobileControlPanelProps> = ({
   ferryRoute,
   hasStationStore,
   hasRouteSelector = true,
-}) => {
+}: MobileControlPanelProps) => {
   const singleDate = dateStoreSection === 'singleTrips';
   // Bus yellow and the other light line colors can't carry white text.
   const needsDarkText = readableOn(LINE_COLORS[line ?? 'default']) === 'dark';

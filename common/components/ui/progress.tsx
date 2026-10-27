@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { ComponentProps } from 'react';
 import { Progress as ProgressPrimitive } from 'radix-ui';
 
 import { cn } from '@/common/utils/cn';
@@ -8,7 +8,7 @@ function Progress({
   value,
   indicatorClassName,
   ...props
-}: React.ComponentProps<typeof ProgressPrimitive.Root> & { indicatorClassName?: string }) {
+}: ComponentProps<typeof ProgressPrimitive.Root> & { indicatorClassName?: string }) {
   return (
     <ProgressPrimitive.Root
       data-slot="progress"

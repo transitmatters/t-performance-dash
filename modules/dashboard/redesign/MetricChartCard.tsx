@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 
 import {
   Card,
@@ -11,7 +11,7 @@ import type { MetricKey } from './types';
 
 interface MetricChartCardProps {
   metric: MetricKey;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const METRIC_COPY: Record<MetricKey, { title: string; subtitle: string }> = {
@@ -23,7 +23,7 @@ const METRIC_COPY: Record<MetricKey, { title: string; subtitle: string }> = {
 };
 
 /** The single chart the scorecard drives — clicking a row swaps which metric renders here. */
-export const MetricChartCard: React.FC<MetricChartCardProps> = ({ metric, children }) => {
+export const MetricChartCard = ({ metric, children }: MetricChartCardProps) => {
   const { title, subtitle } = METRIC_COPY[metric];
   return (
     <Card>

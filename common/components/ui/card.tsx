@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { ComponentProps, ElementType } from 'react';
 
 import { cn } from '@/common/utils/cn';
 
@@ -6,7 +6,7 @@ function Card({
   className,
   size = 'default',
   ...props
-}: React.ComponentProps<'div'> & { size?: 'default' | 'sm' }) {
+}: ComponentProps<'div'> & { size?: 'default' | 'sm' }) {
   return (
     <div
       data-slot="card"
@@ -20,7 +20,7 @@ function Card({
   );
 }
 
-function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
+function CardHeader({ className, ...props }: ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-header"
@@ -37,7 +37,7 @@ function CardTitle({
   className,
   as: Comp = 'div',
   ...props
-}: React.ComponentProps<'div'> & { as?: React.ElementType }) {
+}: ComponentProps<'div'> & { as?: ElementType }) {
   return (
     <Comp
       data-slot="card-title"
@@ -51,7 +51,7 @@ function CardTitle({
   );
 }
 
-function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
+function CardDescription({ className, ...props }: ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-description"
@@ -61,7 +61,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function CardAction({ className, ...props }: React.ComponentProps<'div'>) {
+function CardAction({ className, ...props }: ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-action"
@@ -71,13 +71,13 @@ function CardAction({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function CardContent({ className, ...props }: React.ComponentProps<'div'>) {
+function CardContent({ className, ...props }: ComponentProps<'div'>) {
   return (
     <div data-slot="card-content" className={cn('px-(--card-spacing)', className)} {...props} />
   );
 }
 
-function CardFooter({ className, ...props }: React.ComponentProps<'div'>) {
+function CardFooter({ className, ...props }: ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-footer"

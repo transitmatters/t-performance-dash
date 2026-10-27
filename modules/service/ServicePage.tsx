@@ -1,6 +1,4 @@
 'use client';
-
-import React from 'react';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ServiceDetails } from './ServiceDetails';
 import { CommuterRailService } from './regionalRail/CommuterRailService';

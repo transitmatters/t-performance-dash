@@ -1,15 +1,15 @@
-import React, { Children, cloneElement, useCallback, useMemo, useState } from 'react';
+import { Children, cloneElement, useCallback, useMemo, useState } from 'react';
 import classNames from 'classnames';
-import type { ComponentProps, FC, ReactElement } from 'react';
+import type { ComponentProps, ReactElement, ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 
 interface WidgetCarouselProps {
-  children: React.ReactNode;
+  children: ReactNode;
   isSingleWidget?: boolean;
 }
 
-export const WidgetCarousel: FC<WidgetCarouselProps> = ({ children, isSingleWidget = false }) => {
+export const WidgetCarousel = ({ children, isSingleWidget = false }: WidgetCarouselProps) => {
   const [activeItem, setActiveItem] = useState(0);
   const items = useMemo(
     () =>

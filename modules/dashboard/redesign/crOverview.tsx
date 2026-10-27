@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import dayjs from 'dayjs';
 
 import { useAlertDelays } from '../../../common/api/hooks/delays';
@@ -65,9 +65,12 @@ export const useCrScorecardRows = (crRoute: CommuterRailRoute) => {
   return { rows, isLoading: ridership.isLoading || delays.isLoading };
 };
 
-export const CrMetricChart: React.FC<{ metric: MetricKey; crRoute: CommuterRailRoute }> = ({
+export const CrMetricChart = ({
   metric,
   crRoute,
+}: {
+  metric: MetricKey;
+  crRoute: CommuterRailRoute;
 }) => {
   // Same queries as the scorecard rows, so they're already cached. CR ridership lags by months,
   // so the chart windows to the last 30 days with data rather than the last 30 calendar days.

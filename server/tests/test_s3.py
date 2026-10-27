@@ -88,6 +88,39 @@ def test_single_day_after_monthly_cutoff_is_unchanged(fake_s3):
     assert requested == [lamp_recent]
 
 
+BUS_STOP = "1-0-102"
+BUS_LAMP_KEY = f"Events-lamp/bus-daily-data/{BUS_STOP}/Year=2026/Month=10/Day=23/events.csv"
+BUS_GOBBLE_KEY = f"Events-live/daily-bus-data/{BUS_STOP}/Year=2026/Month=10/Day=23/events.csv.gz"
+BUS_ROW = "2026-10-23,1,t1,0,102,DEP,2026-10-23 05:01:50-04:00,1234"
+
+
+def test_bus_after_lamp_start_reads_lamp(fake_s3):
+    files, requested = fake_s3
+    files[BUS_LAMP_KEY] = _csv(BUS_ROW)
+    files[BUS_GOBBLE_KEY] = _csv(BUS_ROW)
+
+    s3.download_events(date(2026, 10, 23), date(2026, 10, 23), [BUS_STOP])
+
+    assert requested == [BUS_LAMP_KEY]
+
+
+def test_bus_falls_back_to_gobble_when_lamp_missing(fake_s3):
+    files, requested = fake_s3
+    files[BUS_GOBBLE_KEY] = _csv(BUS_ROW)
+
+    rows = s3.download_events(date(2026, 10, 23), date(2026, 10, 23), [BUS_STOP])
+
+    assert requested == [BUS_LAMP_KEY, BUS_GOBBLE_KEY]
+    assert len(rows) == 1
+
+
+def test_missing_bus_day_stops_after_gobble(fake_s3):
+    _, requested = fake_s3
+
+    assert s3.download_events(date(2026, 10, 23), date(2026, 10, 23), [BUS_STOP]) == []
+    assert requested == [BUS_LAMP_KEY, BUS_GOBBLE_KEY]
+
+
 CR_STOP = "CR-Fairmount_0_DB-2205-01"
 
 

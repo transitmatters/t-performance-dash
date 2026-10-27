@@ -1,4 +1,3 @@
-import React from 'react';
 import { XIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useBetaNoticeStore } from '../../state/betaNoticeStore';
@@ -8,7 +7,7 @@ import { Notice } from './Notice';
 export const BETA_RUM_TEXT =
   'This is our internal beta. It collects extra usage and performance data with Datadog to help us find bugs. The public dashboard doesn’t.';
 
-export const BetaRumNotice: React.FC = () => {
+export const BetaRumNotice = () => {
   const { rumNoticeDismissed, dismissRumNotice } = useBetaNoticeStore();
 
   if (!isBetaHost() || rumNoticeDismissed) return null;
