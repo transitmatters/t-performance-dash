@@ -68,40 +68,39 @@ export const LINE_OBJECTS: LineObject = {
 };
 
 /**
- * MBTA's "Frequent Bus Routes" -- routes held to the frequent-service standard under the Bus
- * Network Redesign. These are raw GTFS route_ids, the granularity bus trip-metrics data
- * (e.g. the speed leaderboard) is keyed by -- NOT the dashboard's curated BusRoute labels,
- * which group some routes into composites. SL2 appears under its GTFS id, '742'.
+ * MBTA's "Frequent Bus Routes" -- every route whose GTFS route_desc is "Frequent Bus". These are
+ * raw GTFS route_ids, the granularity bus trip-metrics data (e.g. the speed leaderboard) is
+ * keyed by -- NOT the dashboard's curated BusRoute labels, which group some routes into
+ * composites. The Silver Line appears under its GTFS ids: 741/742/743/746 (SL1/SL2/SL3/SLW) and
+ * 749/751 (SL5/SL4). Keep in step with the line-level FREQUENT_BUS_LINE_IDS in
+ * modules/home/config.ts.
  */
 export const FREQUENT_BUS_ROUTE_IDS: string[] = [
-  '11',
-  '14',
-  '24',
-  '30',
-  '40',
-  '50',
-  '60',
-  '62',
-  '64',
-  '67',
-  '76',
-  '78',
-  '85',
-  '93',
-  '99',
+  '1',
+  '9',
+  '15',
+  '22',
+  '23',
+  '28',
+  '31',
+  '32',
+  '39',
+  '57',
+  '66',
+  '71',
+  '73',
+  '77',
+  '104',
+  '109',
   '110',
   '111',
-  '112',
-  '222',
-  '236',
-  '245',
-  '411',
-  '428',
-  '429',
-  '430',
-  '441',
-  '442',
+  '116',
+  '741',
   '742',
+  '743',
+  '746',
+  '749',
+  '751',
 ];
 
 /**
