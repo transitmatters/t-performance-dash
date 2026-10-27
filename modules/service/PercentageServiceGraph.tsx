@@ -114,9 +114,17 @@ export const PercentageServiceGraph = ({
                   position: 'nearest',
                   callbacks: {
                     ...callbacks,
-                    label: (context) => {
-                      if (!context.parsed.y) return '';
-                      return `${round(context.parsed.y, 1)}% of ${comparison}`;
+                    hoverCard: (items) => {
+                      const percent = items.find((item) => item.datasetIndex === 0)?.parsed.y;
+                      if (!percent) return null;
+                      return {
+                        hero: { value: `${round(percent, 1)}%`, color: lineColor },
+                        meter: {
+                          fraction: percent / 100,
+                          label: `of ${comparison.toLowerCase()}`,
+                          color: lineColor,
+                        },
+                      };
                     },
                   },
                 },
