@@ -1,6 +1,5 @@
 'use client';
-
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { BusSpeedDataUnavailableError } from '../../../common/api/busSpeedSegments';
 import { useBusSpeedSegmentsUrl } from '../../../common/api/hooks/busSpeedSegments';
@@ -26,14 +25,14 @@ interface BusSpeedSegmentMapDialogProps {
   onClose: () => void;
 }
 
-export const BusSpeedSegmentMapDialog: React.FC<BusSpeedSegmentMapDialogProps> = ({
+export const BusSpeedSegmentMapDialog = ({
   entry,
   date,
   period,
   dayType,
   timeBand,
   onClose,
-}) => {
+}: BusSpeedSegmentMapDialogProps) => {
   const open = Boolean(entry);
 
   // Radix keeps the dialog mounted through its closing animation, but `entry` itself goes

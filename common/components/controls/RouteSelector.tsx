@@ -1,4 +1,4 @@
-import React from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faChevronDown } from '@fortawesome/free-solid-svg-icons';
@@ -42,13 +42,13 @@ const optionsForLine = (line: Line): { key: string; label: string }[] => {
  * dropdown in this app already relies on without issue, and Command's list is a plain fixed-height
  * cmdk list with no positioning logic of its own — nothing here for either to fight over.
  */
-export const RouteSelector: React.FC = () => {
+export const RouteSelector = () => {
   const route = useDelimitatedRoute();
   const navigate = useNavigate();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const { line } = route;
-  const options = React.useMemo(() => (line ? optionsForLine(line) : []), [line]);
+  const options = useMemo(() => (line ? optionsForLine(line) : []), [line]);
 
   if (!line || options.length === 0) return null;
 

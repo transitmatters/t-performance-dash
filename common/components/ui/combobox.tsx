@@ -1,6 +1,6 @@
 'use client';
-
-import * as React from 'react';
+import { useRef } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 
 import { ChevronDownIcon, XIcon, CheckIcon } from 'lucide-react';
@@ -207,7 +207,7 @@ function ComboboxSeparator({ className, ...props }: ComboboxPrimitive.Separator.
 function ComboboxChips({
   className,
   ...props
-}: React.ComponentPropsWithRef<typeof ComboboxPrimitive.Chips> & ComboboxPrimitive.Chips.Props) {
+}: ComponentPropsWithRef<typeof ComboboxPrimitive.Chips> & ComboboxPrimitive.Chips.Props) {
   return (
     <ComboboxPrimitive.Chips
       data-slot="combobox-chips"
@@ -262,7 +262,7 @@ function ComboboxChipsInput({ className, ...props }: ComboboxPrimitive.Input.Pro
 }
 
 function useComboboxAnchor() {
-  return React.useRef<HTMLDivElement | null>(null);
+  return useRef<HTMLDivElement | null>(null);
 }
 
 export {

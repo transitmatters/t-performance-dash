@@ -1,5 +1,4 @@
 import type dayjs from 'dayjs';
-import React from 'react';
 import type { Direction, SlowZoneResponse } from '../../common/types/dataPoints';
 import type { LinePath, LineShort } from '../../common/types/lines';
 import { useFilteredAllSlow, useFormatSegments } from '../../common/utils/slowZoneUtils';
@@ -17,14 +16,14 @@ interface SlowZonesSegmentsWrapper {
   direction: Direction;
 }
 
-export const SlowZonesSegmentsWrapper: React.FC<SlowZonesSegmentsWrapper> = ({
+export const SlowZonesSegmentsWrapper = ({
   data,
   lineShort,
   linePath,
   endDateUTC,
   startDateUTC,
   direction,
-}) => {
+}: SlowZonesSegmentsWrapper) => {
   const filteredAllSlow = useFilteredAllSlow(data, startDateUTC, endDateUTC, lineShort);
   const allSlowGraphData = useFormatSegments(filteredAllSlow, startDateUTC, direction);
   const isMobile = !useBreakpoint('sm');

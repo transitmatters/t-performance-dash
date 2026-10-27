@@ -3,7 +3,8 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import type { Plugin } from 'vite';
 import { defineConfig, runnerImport } from 'vite';
-import react from '@vitejs/plugin-react';
+import react, { reactCompilerPreset } from '@vitejs/plugin-react';
+import babel from '@rolldown/plugin-babel';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import svgr from 'vite-plugin-svgr';
@@ -73,6 +74,8 @@ export default defineConfig(() => {
         autoCodeSplitting: true,
       }),
       react(),
+      // React Compiler memoizes components and hooks at build time (https://react.dev/learn/react-compiler)
+      babel({ presets: [reactCompilerPreset()] }),
       tailwindcss(),
       svgr(),
       prerenderMetaTags(),

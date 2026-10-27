@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -25,12 +25,12 @@ interface PredictionsBinsGraphProps {
   showTitle?: boolean;
 }
 
-export const PredictionsBinsGraph: React.FC<PredictionsBinsGraphProps> = ({
+export const PredictionsBinsGraph = ({
   data,
   startDate,
   endDate,
   showTitle = false,
-}) => {
+}: PredictionsBinsGraphProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');

@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import type { ComponentProps } from 'react';
 import type { SegmentLocation, SegmentLabel, TooltipSide } from '@transitmatters/stripmap';
 import { LineMap, createDefaultDiagramForLine } from '@transitmatters/stripmap';
 
@@ -11,11 +12,12 @@ import type { SlowZonesLineName } from '../types';
 import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { TODAY_STRING } from '../../../common/constants/dates';
+import { useThemeStore } from '../../../common/state/themeStore';
 import { segmentSlowZones } from './segment';
 import { SlowSegmentLabel } from './SlowSegmentLabel';
 import { SlowZonesTooltip } from './SlowZonesTooltip';
 
-interface SlowZonesMapProps extends Pick<React.ComponentProps<typeof LineMap>, 'direction'> {
+interface SlowZonesMapProps extends Pick<ComponentProps<typeof LineMap>, 'direction'> {
   slowZones: SlowZoneAllSlowResponse;
   speedRestrictions: SpeedRestriction[];
   lineName: SlowZonesLineName;
@@ -57,12 +59,12 @@ const getSegmentLabelOverrides = (
   return null;
 };
 
-export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
+export const SlowZonesMap = ({
   lineName,
   slowZones,
   direction,
   speedRestrictions,
-}) => {
+}: SlowZonesMapProps) => {
   const line = useMemo(
     () => Object.values(LINE_OBJECTS).find((obj) => obj.short === lineName)!,
     [lineName]
@@ -71,6 +73,9 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
   const diagram = useMemo(() => {
     return createDefaultDiagramForLine(lineName, { pxPerStation: 15, direction });
   }, [lineName, direction]);
+
+  const isDark = useThemeStore((state) => state.theme === 'dark');
+  const isHorizontal = direction === 'horizontal';
 
   const { query } = useDelimitatedRoute();
   const { endDate } = query;
@@ -182,6 +187,18 @@ export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({
       getSegments={getSegmentsForSlowZones}
       getStationLabel={abbreviateStationName}
       tooltip={{ snapToSegment: true, maxDistance: 20, render: renderSlowZonesTooltip }}
+      watermark={{
+        // Vertical maps end at a terminal label in the bottom-right corner
+        position: isHorizontal ? 'bottom-right' : 'bottom-left',
+        opacity: 0.2,
+        content: (
+          <img
+            src={isDark ? '/Logo_wordmark_white.png' : '/Logo_wordmark.png'}
+            alt="TransitMatters"
+            width={isHorizontal ? 160 : 120}
+          />
+        ),
+      }}
     />
   );
 };

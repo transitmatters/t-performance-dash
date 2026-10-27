@@ -1,4 +1,3 @@
-import React from 'react';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -10,7 +9,7 @@ import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';
 
-export const ServiceWidget: React.FC = () => {
+export const ServiceWidget = () => {
   const { line, query, lineShort } = useDelimitatedRoute();
   const { startDate, agg } = OVERVIEW_OPTIONS[query.view ?? 'year'];
   const endDate = TODAY_STRING;

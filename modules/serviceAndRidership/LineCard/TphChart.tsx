@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import type { ComponentProps } from 'react';
 import { Chart, Filler, Legend } from '@chartjs-utils';
 import Color from 'color';
 import { Line } from '@chartjs-components';
@@ -54,7 +55,7 @@ export const TphChart = (props: Props) => {
 
   const { datasets } = data;
 
-  const chartJsOptions: React.ComponentProps<typeof Line>['options'] = useMemo(() => {
+  const chartJsOptions: ComponentProps<typeof Line>['options'] = useMemo(() => {
     return {
       maintainAspectRatio: false,
       plugins: {

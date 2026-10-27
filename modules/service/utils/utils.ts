@@ -1,41 +1,35 @@
 import type { DeliveredTripMetrics, ScheduledService } from '../../../common/types/dataPoints';
 import type { AggType } from '../../speed/constants/speeds';
 
-export const getServiceWidgetValues = (
-  deliveredTripMetrics: DeliveredTripMetrics[],
-  predictedData: ScheduledService
-) => {
-  const totals = deliveredTripMetrics.reduce(
-    (totals, datapoint, index) => {
-      const predictedDatapoint = predictedData.counts[index];
-      if (datapoint.count && predictedDatapoint?.count) {
-        return {
-          actual: totals.actual + datapoint.count,
-          scheduled: totals.scheduled + predictedDatapoint.count,
-        };
-      }
-      return { actual: totals.actual, scheduled: totals.scheduled };
-    },
-    { actual: 0, scheduled: 0 }
-  );
-  const percentDelivered = totals.actual / totals.scheduled;
-  const datapointsCount = deliveredTripMetrics.filter(
-    (datapoint) => datapoint.miles_covered
-  ).length;
-  const current = deliveredTripMetrics[deliveredTripMetrics.length - 1].count;
-  const delta = current - deliveredTripMetrics[0].count;
-  const average =
-    deliveredTripMetrics.reduce((sum, speed) => sum + speed.count, 0) / datapointsCount;
-  const peak = deliveredTripMetrics.reduce(
-    (max, speed) => (speed.count > max.count ? speed : max),
-    deliveredTripMetrics[0]
-  );
-  return { current, delta, average, peak, percentDelivered };
-};
-
 // Monthly trip metrics are dated the first of the month but scheduled service the last,
 // and the two series can start in different months, so match them by period, not index.
 const getPeriodKey = (date: string, agg: AggType) => (agg === 'monthly' ? date.slice(0, 7) : date);
+
+/** Scheduled and delivered round trips per period, dated like the delivered trip metrics. */
+export const getScheduledAndDeliveredRoundTrips = (
+  data: DeliveredTripMetrics[],
+  predictedData: ScheduledService,
+  agg: AggType
+) => {
+  const scheduledByPeriod = new Map(
+    predictedData.counts.map(({ date, count }) => [getPeriodKey(date, agg), count])
+  );
+  const deliveredByPeriod = new Map(
+    data.map((datapoint) => [getPeriodKey(datapoint.date, agg), datapoint])
+  );
+  const periods = [...new Set([...deliveredByPeriod.keys(), ...scheduledByPeriod.keys()])].sort();
+
+  return periods.map((period) => {
+    const delivered = deliveredByPeriod.get(period);
+    const scheduledCount = scheduledByPeriod.get(period);
+    const anyDelivered = !!delivered?.miles_covered;
+    return {
+      date: delivered?.date ?? (agg === 'monthly' ? `${period}-01` : period),
+      scheduled: scheduledCount && anyDelivered ? Math.round(scheduledCount) / 2 : 0,
+      delivered: anyDelivered ? Math.round(delivered.count) : 0,
+    };
+  });
+};
 
 export const getPercentageData = (
   data: DeliveredTripMetrics[],

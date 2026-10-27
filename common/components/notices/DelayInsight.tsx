@@ -1,4 +1,4 @@
-import React from 'react';
+import { useMemo } from 'react';
 import dayjs from 'dayjs';
 import type { SingleDayDataPoint, BenchmarkFieldKeys, MetricFieldKeys } from '../../types/charts';
 import { PointFieldKeys } from '../../types/charts';
@@ -32,14 +32,14 @@ interface DelayInsightProps {
  * A one-line read of the day, above the charts: how many trips ran well behind their benchmark and
  * when they clustered. Renders nothing when there is no benchmark data or nothing worth flagging.
  */
-export const DelayInsight: React.FC<DelayInsightProps> = ({
+export const DelayInsight = ({
   data,
   metricField,
   benchmarkField,
   subject,
   line,
-}) => {
-  const insight = React.useMemo(() => {
+}: DelayInsightProps) => {
+  const insight = useMemo(() => {
     const behind = data.filter((point) => {
       const benchmark = point[benchmarkField];
       const value = point[metricField];

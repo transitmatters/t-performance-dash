@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { getFormattedTimeValue, getTimeUnit } from '../utils/time';
@@ -13,7 +13,7 @@ export interface WidgetValueInterface {
   readonly percentChange?: number;
 
   getUnits: () => string;
-  getFormattedValue: (isLarge?: boolean) => React.ReactNode;
+  getFormattedValue: (isLarge?: boolean) => ReactNode;
   getFormattedDelta: () => string;
   getFormattedPercentChange: () => string;
 }

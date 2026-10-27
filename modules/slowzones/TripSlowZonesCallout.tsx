@@ -1,4 +1,4 @@
-import React from 'react';
+import { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { useSlowzoneAllData } from '../../common/api/hooks/slowzones';
 import { Link } from '../../common/components/general/Link';
@@ -25,7 +25,7 @@ interface TripSlowZonesCalloutProps {
  * How much time slow zones added between the trip's two stops, above the trip charts. Renders
  * nothing when the segment had no slow zones in the selected dates.
  */
-export const TripSlowZonesCallout: React.FC<TripSlowZonesCalloutProps> = ({
+export const TripSlowZonesCallout = ({
   fromStation,
   toStation,
   lineShort,
@@ -33,9 +33,9 @@ export const TripSlowZonesCallout: React.FC<TripSlowZonesCalloutProps> = ({
   linePath,
   startDate,
   endDate,
-}) => {
+}: TripSlowZonesCalloutProps) => {
   const { data } = useSlowzoneAllData();
-  const summary = React.useMemo(
+  const summary = useMemo(
     () =>
       data &&
       getTripSlowZoneSummary(data.data, fromStation, toStation, lineShort, startDate, endDate),
