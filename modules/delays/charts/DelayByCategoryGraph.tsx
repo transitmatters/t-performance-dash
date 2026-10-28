@@ -36,7 +36,7 @@ const sumArray = (array: number[][]) => {
 };
 
 export const DelayByCategoryGraph = ({ data, showTitle = false }: DelayByCategoryGraphProps) => {
-  const { linePath } = useDelimitatedRoute();
+  const { line, linePath } = useDelimitatedRoute();
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
 
@@ -61,7 +61,8 @@ export const DelayByCategoryGraph = ({ data, showTitle = false }: DelayByCategor
           datapoint.other,
         ];
       })
-    )
+    ),
+    line
   );
 
   return (
