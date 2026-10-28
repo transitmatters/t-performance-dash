@@ -36,7 +36,9 @@ import bus_43 from './bus_constants/43.json';
 import bus_44 from './bus_constants/44.json';
 import bus_45 from './bus_constants/45.json';
 import bus_47 from './bus_constants/47.json';
+import bus_40 from './bus_constants/40.json';
 import bus_40_50 from './bus_constants/40-50.json';
+import bus_50 from './bus_constants/50.json';
 import bus_52_59 from './bus_constants/52-59.json';
 import bus_51 from './bus_constants/51.json';
 import bus_55 from './bus_constants/55.json';
@@ -113,8 +115,11 @@ import bus_502_504 from './bus_constants/502-504.json';
 import bus_505_553_554 from './bus_constants/505-553-554.json';
 import bus_556_558 from './bus_constants/556-558.json';
 import bus_712_713 from './bus_constants/712-713.json';
+import bus_714 from './bus_constants/714.json';
+import bus_716 from './bus_constants/716.json';
 import bus_104_109 from './bus_constants/104-109.json';
 import bus_61_70_170 from './bus_constants/61-70-170.json';
+import bus_114 from './bus_constants/114.json';
 import bus_114_116_117 from './bus_constants/114-116-117.json';
 import bus_220_221_222 from './bus_constants/220-221-222.json';
 import legacy_220_221_222 from './bus_constants/220-221-222-legacy.json';
@@ -186,6 +191,9 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_44,
   ...bus_45,
   ...bus_47,
+  ...bus_40,
+  ...bus_50,
+  // 40/50 combined pattern discontinued during the Spring 2026 Better Bus Network changes
   ...bus_40_50,
   ...bus_51,
   ...bus_52_59,
@@ -236,6 +244,7 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_110,
   ...bus_111,
   ...bus_112,
+  ...bus_114,
   ...bus_114_116_117,
   ...bus_116,
   ...bus_119,
@@ -275,6 +284,8 @@ export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_505_553_554,
   ...bus_556_558,
   ...bus_712_713,
+  ...bus_714,
+  ...bus_716,
   ...bus_ct2,
   ...bus_ct3_171,
   ...bus_SL1SL2SL3SLW,

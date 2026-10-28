@@ -171,6 +171,7 @@ export const getStationForInvalidFromSelection = (
   if (line === 'line-red') return getParentStationForStopId('70076'); // Park St.
   if (line === 'line-bus') {
     if (busRoute === '17/19') return getParentStationForStopId('17-1-323');
+    if (busRoute === '34') return getParentStationForStopId('34-1-10642'); // Forest Hills
     if (busRoute === '24/27/33') return getParentStationForStopId('24-1-185'); // Mattapan Station
     if (busRoute === '40/50') return getParentStationForStopId('40-1-36466'); // Cleary Square
     // 52/59 have no overlaps
