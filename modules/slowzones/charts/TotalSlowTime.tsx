@@ -17,6 +17,8 @@ import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { getFormattedTimeString } from '../../../common/utils/time';
+import type { SlowZonesEmbedLine } from '../embed';
+import { TotalSlowTimeActions } from '../TotalSlowTimeActions';
 
 dayjs.extend(utc);
 dayjs.extend(duration);
@@ -29,6 +31,10 @@ interface TotalSlowTimeProps {
   lineShort?: LineShort;
   line?: TrainLine;
   showTitle: boolean;
+  /** Fill the parent's height instead of the fixed card height, as the embed does. */
+  fill?: boolean;
+  /** Shows the PNG and embed buttons under the chart, embedding this line's chart. */
+  embedLine?: SlowZonesEmbedLine;
 }
 
 export const TotalSlowTime = ({
@@ -38,6 +44,8 @@ export const TotalSlowTime = ({
   lineShort,
   line,
   showTitle,
+  fill = false,
+  embedLine,
 }: TotalSlowTimeProps) => {
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
@@ -99,8 +107,8 @@ export const TotalSlowTime = ({
         },
       ];
   return (
-    <ChartStack>
-      <ChartDiv isMobile={isMobile}>
+    <ChartStack className={fill ? 'h-full' : undefined}>
+      <ChartDiv isMobile={isMobile} fill={fill}>
         <Line
           ref={ref}
           id={`total-slow-time${line !== undefined ? `-${lineShort}` : ''}`}
@@ -198,6 +206,14 @@ export const TotalSlowTime = ({
           ]}
         />
       </ChartDiv>
+      {embedLine && (
+        <TotalSlowTimeActions
+          chartRef={ref}
+          line={embedLine}
+          startDate={startDateUTC.format('YYYY-MM-DD')}
+          endDate={endDateUTC.format('YYYY-MM-DD')}
+        />
+      )}
     </ChartStack>
   );
 };

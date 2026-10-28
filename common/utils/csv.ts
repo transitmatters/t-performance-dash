@@ -27,7 +27,10 @@ function getBaseFilename(options: GetCsvFilenameOptions) {
   const dir = location && directionAbbrs[location.direction];
 
   //Location does not exist on all widgets - in that case, 'where' will just be the name of the line
-  const where = location ? `${fromStop}-${includeBothStopsForLocation ? toStop : dir}` : line;
+  // Systemwide pages have no line.
+  const where = location
+    ? `${fromStop}-${includeBothStopsForLocation ? toStop : dir}`
+    : (line ?? 'system');
   const what = datasetName;
   const date1 = startDate.replaceAll('-', '');
   const date2 = endDate ? `-${endDate.replaceAll('-', '')}` : '';

@@ -20,11 +20,17 @@ export const useGoatCounter = () => {
 
   useEffect(() => {
     if (window.location.hostname !== PRODUCTION) return;
-    window.localStorage.setItem('siteUrl', SITE_URL.replace(/\/count$/, ''));
+    try {
+      window.localStorage.setItem('siteUrl', SITE_URL.replace(/\/count$/, ''));
+    } catch {
+      // Storage can be blocked inside a third-party iframe (embeds); counting still works.
+    }
     const script = document.createElement('script');
     script.async = true;
     script.src = '//gc.zgo.at/count.js';
     script.dataset.goatcounter = SITE_URL;
+    // count.js skips framed pages unless told otherwise; embeds are meant to be framed.
+    script.dataset.goatcounterSettings = JSON.stringify({ allow_frame: true });
     document.body.appendChild(script);
   }, []);
 
