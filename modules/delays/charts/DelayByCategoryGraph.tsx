@@ -13,6 +13,7 @@ import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import type { LineDelays } from '../../../common/types/delays';
 import { getFormattedTimeString } from '../../../common/utils/time';
+import { hideZeroUnlessAllZero } from '../../../common/components/charts/hoverCard/external';
 import { filterOutZeroValues } from './utils';
 
 interface DelayByCategoryGraphProps {
@@ -99,11 +100,11 @@ export const DelayByCategoryGraph = ({ data, showTitle = false }: DelayByCategor
               tooltip: {
                 mode: 'index',
                 position: 'nearest',
+                filter: hideZeroUnlessAllZero,
                 callbacks: {
                   label: (tooltipItem) => {
-                    if (!tooltipItem.parsed.y) return '';
                     return `${tooltipItem.label} total delay: ${getFormattedTimeString(
-                      tooltipItem.parsed.y,
+                      tooltipItem.parsed.y ?? 0,
                       'minutes'
                     )}`;
                   },

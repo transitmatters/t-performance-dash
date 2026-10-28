@@ -19,6 +19,7 @@ import { getFormattedTimeString } from '../../../common/utils/time';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
+import { hideZeroUnlessAllZero } from '../../../common/components/charts/hoverCard/external';
 import { disabledVehicleLabel, filterOutZeroValueDatasets } from './utils';
 
 interface DelayBreakdownGraphProps {
@@ -247,14 +248,14 @@ export const DelayBreakdownGraph = ({
               tooltip: {
                 mode: 'index',
                 position: 'nearest',
+                filter: hideZeroUnlessAllZero,
                 callbacks: {
                   title: (context) => {
                     return agg === 'weekly' ? `Week of ${context[0].label}` : `${context[0].label}`;
                   },
                   label: (tooltipItem) => {
-                    if (!tooltipItem.parsed.y) return '';
                     return `${tooltipItem.dataset.label}: ${getFormattedTimeString(
-                      tooltipItem.parsed.y,
+                      tooltipItem.parsed.y ?? 0,
                       'minutes'
                     )}`;
                   },
