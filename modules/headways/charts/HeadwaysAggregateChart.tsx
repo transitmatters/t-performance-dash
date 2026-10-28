@@ -1,11 +1,28 @@
 import { useMemo } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
-import type { AggregateDataResponse, DayFilter } from '../../../common/types/charts';
+import type { HoverCardRow } from '../../../common/components/charts/hoverCard/types';
+import type {
+  AggregateDataPoint,
+  AggregateDataResponse,
+  DayFilter,
+} from '../../../common/types/charts';
 import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
+import { SEVERITY_COLORS } from '../../../common/utils/chartTheme';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { getLocationDetails } from '../../../common/utils/stations';
+
+const formatShare = (part: number, total: number) => `${Math.round((part / total) * 100)}%`;
+
+/** The day's share of the Bunched and On time stats under the chart. */
+const bunchingRows = ({ count, bunched, on_time }: AggregateDataPoint): HoverCardRow[] => {
+  if (!count || bunched == null || on_time == null) return [];
+  return [
+    { label: 'Bunched', value: formatShare(bunched, count), color: SEVERITY_COLORS.off50 },
+    { label: 'On time', value: formatShare(on_time, count), color: SEVERITY_COLORS.onTime },
+  ];
+};
 
 interface HeadwaysAggregateChartProps {
   headways: AggregateDataResponse;
@@ -53,6 +70,7 @@ export const HeadwaysAggregateChart = ({
         includeBothStopsForLocation={false}
         fname="headways"
         yUnit="Minutes"
+        hoverRows={bunchingRows}
       />
     );
   }, [headways.by_date, startDate, endDate, fromStation, toStation, dayFilter]);
