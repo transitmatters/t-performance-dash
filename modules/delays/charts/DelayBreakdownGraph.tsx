@@ -14,7 +14,7 @@ import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
-import type { LineDelays } from '../../../common/types/delays';
+import type { DisplayedDelays } from '../../../common/types/delays';
 import { getFormattedTimeString } from '../../../common/utils/time';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
@@ -23,7 +23,7 @@ import { hideZeroUnlessAllZero } from '../../../common/components/charts/hoverCa
 import { disabledVehicleLabel, filterOutZeroValueDatasets } from './utils';
 
 interface DelayBreakdownGraphProps {
-  data: LineDelays[];
+  data: DisplayedDelays[];
   startDate: string;
   endDate: string;
   showTitle?: boolean;

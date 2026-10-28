@@ -11,6 +11,7 @@ import { getRidershipLineId } from '../../../common/utils/ridership';
 import { getSpeedGraphConfig } from '../../speed/constants/speeds';
 import { RidershipGraph } from '../../ridership/RidershipGraph';
 import { TotalDelayGraph } from '../../delays/charts/TotalDelayGraph';
+import { toDisplayedDelays } from '../../delays/charts/utils';
 import {
   CHART_FETCH_START,
   WINDOW_START,
@@ -88,7 +89,7 @@ export const CrMetricChart = ({
     const delaysEnd = delays.data[delays.data.length - 1]?.date ?? TODAY_STRING;
     return (
       <TotalDelayGraph
-        data={delays.data}
+        data={toDisplayedDelays(delays.data).delays}
         startDate={chartWindowStart(delaysEnd)}
         endDate={delaysEnd}
         agg="daily"
