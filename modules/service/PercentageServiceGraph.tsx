@@ -14,6 +14,7 @@ import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import type { ParamsType } from '../speed/constants/speeds';
+import { explainGaps, usePageShutdowns } from '../shutdowns';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { getNoDataSinceLatestAnnotation, getShuttlingBlockAnnotations } from './utils/graphUtils';
@@ -42,11 +43,15 @@ export const PercentageServiceGraph = ({
 
   const isMobile = !useBreakpoint('md');
   const ref = useRef(null);
+  const shutdowns = usePageShutdowns('line', startDate, endDate);
 
   const chart = useMemo(() => {
     const labels = data.map((point) => point.date);
     const lineColor = LINE_COLORS[line ?? 'default'];
-    const shuttlingBlocks = getShuttlingBlockAnnotations(data);
+    const shuttlingBlocks = explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
+      startDate,
+      endDate,
+    });
     const compareToScheduled = comparison === 'Scheduled';
     return (
       <ChartStack>
@@ -109,9 +114,17 @@ export const PercentageServiceGraph = ({
                   position: 'nearest',
                   callbacks: {
                     ...callbacks,
-                    label: (context) => {
-                      if (!context.parsed.y) return '';
-                      return `${round(context.parsed.y, 1)}% of ${comparison}`;
+                    hoverCard: (items) => {
+                      const percent = items.find((item) => item.datasetIndex === 0)?.parsed.y;
+                      if (!percent) return null;
+                      return {
+                        hero: { value: `${round(percent, 1)}%`, color: lineColor },
+                        meter: {
+                          fraction: percent / 100,
+                          label: `of ${comparison.toLowerCase()}`,
+                          color: lineColor,
+                        },
+                      };
                     },
                   },
                 },
@@ -214,6 +227,7 @@ export const PercentageServiceGraph = ({
     );
   }, [
     data,
+    shutdowns,
     line,
     comparison,
     isMobile,

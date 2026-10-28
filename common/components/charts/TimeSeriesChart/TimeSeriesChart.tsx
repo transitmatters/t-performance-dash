@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import type { TooltipItem } from 'chart.js';
 import { Line as LineChart } from '@chartjs-components';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import Annotation from 'chartjs-plugin-annotation';
@@ -23,6 +24,8 @@ import {
 } from '@chartjs-utils';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { ChartDiv } from '../ChartDiv';
+import { annotationTooltip } from '../annotationTooltip';
+import type { HoverCardContent } from '../hoverCard/types';
 import { CHART_COLORS, COLORS } from '../../../constants/colors';
 
 import { watermarkLayout } from '../../../constants/charts';
@@ -73,6 +76,8 @@ interface Props<Data extends Dataset[]> {
   timeAxis?: Partial<ProvidedTimeAxis>;
   valueAxis: ValueAxis;
   height?: number;
+  // Structured hover card content; without it the card is built from each style's tooltipLabel
+  hoverCard?: (items: TooltipItem<'line'>[]) => HoverCardContent | null;
 }
 
 export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
@@ -86,6 +91,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     grid = { zIndex: 0 },
     legend = { visible: true },
     height,
+    hoverCard,
   } = props;
 
   const isMobile = !useBreakpoint('md');
@@ -247,7 +253,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     });
 
     const blockAnnotations = blocks.map((block) => {
-      const { from, to, fillColor, textColor, label } = block;
+      const { from, to, fillColor, textColor, textStrokeColor, label, tooltip } = block;
       return {
         type: 'box' as const,
         xMin: from,
@@ -255,11 +261,14 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         backgroundColor: fillColor || CHART_COLORS.BLOCKS_SOLID,
         borderWidth: 0,
         label: {
-          content: label || 'No data',
+          content: label ?? 'No data',
           rotation: -90,
           color: textColor || 'white',
-          display: true,
+          textStrokeColor,
+          textStrokeWidth: textStrokeColor ? 3 : 0,
+          display: label !== '',
         },
+        ...(tooltip ? annotationTooltip(tooltip) : {}),
       };
     });
 
@@ -279,6 +288,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
           mode: 'index' as const,
           position: 'nearest' as const,
           callbacks: {
+            hoverCard,
             title: (datasets) => {
               const { label } = datasets[0];
               if (timeAxis.granularity === 'week') {
@@ -321,6 +331,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     legend.visible,
     appliedStyles,
     isMobile,
+    hoverCard,
   ]);
 
   const chartJsPlugins = useMemo(() => {

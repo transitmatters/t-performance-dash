@@ -135,7 +135,7 @@ class AlertDelaysByLineParams(BaseModel):
     Attributes:
         start_date: Start of date range (YYYY-MM-DD).
         end_date: End of date range (YYYY-MM-DD).
-        line: Line identifier (e.g., `Red`, `Orange`, `Green-B`).
+        line: Line identifier (e.g., `Red`, `Orange`, `Green-B`), or comma-separated bus route ids.
         agg: Aggregation level — `daily` or `weekly`. Defaults to `weekly`.
     """
 
@@ -145,10 +145,32 @@ class AlertDelaysByLineParams(BaseModel):
         description=(
             "MBTA line identifier. "
             "Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. "
-            "Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc."
+            "Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc. "
+            "Bus: comma-separated GTFS route ids, summed (e.g. `1` or `114,116,117`; SL1 is `741`), "
+            "or `Bus` for all bus routes."
         )
     )
     agg: Literal["daily", "weekly"] = Field(default="weekly", description="Aggregation period: `daily` or `weekly`.")
+
+
+class ShutdownsParams(BaseModel):
+    """Parameters for the `/api/shutdowns` endpoint.
+
+    Attributes:
+        start_date: Start of date range (YYYY-MM-DD).
+        end_date: End of date range (YYYY-MM-DD).
+        line: Line identifier (e.g., `Red`, `Green`, `Green-B`, `CR-Worcester`).
+    """
+
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+    line: str = Field(
+        description=(
+            "MBTA line identifier. "
+            "Rapid transit: `Red`, `Orange`, `Blue`, `Green` (every branch), `Green-B`-`Green-E`, `Mattapan`. "
+            "Commuter rail: `CR-Fairmount`, `CR-Lowell`, etc."
+        )
+    )
 
 
 class TripMetricsByLineParams(BaseModel):
@@ -817,6 +839,50 @@ class LineDelayEntry(BaseModel):
 
 class LineDelaysResponse(RootModel[List[LineDelayEntry]]):
     """Response for `/api/linedelays`: alert-based delays per day or week, depending on `agg`."""
+
+
+class ShutdownPeriod(BaseModel):
+    """When a shutdown was in effect.
+
+    Attributes:
+        start: Start, as an ISO 8601 timestamp with offset.
+        end: End, as an ISO 8601 timestamp with offset. Cut short if the alert was taken down early.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    start: str
+    end: str
+
+
+class ShutdownEntry(BaseModel):
+    """A shuttle, suspension, or station closure alert that ran at least 3 hours.
+
+    Attributes:
+        line: Line as requested (e.g. `Red`, `Green`, `CR-Worcester`).
+        alert_id: MBTA alert ID.
+        effect: Alert effect: `SHUTTLE`, `SUSPENSION`, or `STATION_CLOSURE`.
+        cause: Alert cause (e.g. `MAINTENANCE`, `CONSTRUCTION`), if given.
+        header: Alert header text.
+        stops: Stop and station IDs the alert lists on this line.
+        periods: When the shutdown was in effect, in order.
+        first_start: Service date of the first period's start (`YYYY-MM-DD`).
+        last_end: Service date of the last period's end (`YYYY-MM-DD`).
+    """
+
+    model_config = ConfigDict(extra="allow")
+    line: str
+    alert_id: str
+    effect: str
+    cause: str | None = None
+    header: str
+    stops: List[str]
+    periods: List[ShutdownPeriod]
+    first_start: str
+    last_end: str
+
+
+class ShutdownsResponse(RootModel[List[ShutdownEntry]]):
+    """Response for `/api/shutdowns`: shutdowns overlapping the date range, sorted by start date."""
 
 
 class TripMetricsEntry(BaseModel):

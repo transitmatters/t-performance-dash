@@ -1,9 +1,14 @@
+import { useMemo } from 'react';
 import type { RidershipCount } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import type { BusRoute, CommuterRailRoute, FerryRoute, Line } from '../../common/types/lines';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
+import { useDelimitatedRoute } from '../../common/utils/router';
+import { getMinMaxDatesForRoute } from '../../common/utils/stations';
+import { getServiceDatesBlockAnnotations } from '../service/utils/graphUtils';
 import { RidershipGraph } from './RidershipGraph';
+import { getOutOfServiceMessage } from './utils/utils';
 
 interface RidershipGraphWrapperProps {
   data: RidershipCount[];
@@ -20,15 +25,40 @@ interface RidershipGraphWrapperProps {
 // the chart no longer carries an in-plot carousel value — just the graph.
 export const RidershipGraphWrapper = ({
   data,
+  busRoute,
+  crRoute,
   config,
   startDate,
   endDate,
 }: RidershipGraphWrapperProps) => {
-  if (!data.some((datapoint) => datapoint.count !== null)) return <NoDataNotice isLineMetric />;
+  const { tab } = useDelimitatedRoute();
+  const { minDate: serviceStart, maxDate: serviceEnd } = getMinMaxDatesForRoute(
+    tab,
+    busRoute ?? crRoute
+  );
+  const serviceDateBlocks = useMemo(
+    () => getServiceDatesBlockAnnotations(startDate, endDate, serviceStart, serviceEnd),
+    [startDate, endDate, serviceStart, serviceEnd]
+  );
+  if (!data.some((datapoint) => datapoint.count !== null))
+    return (
+      <NoDataNotice
+        isLineMetric
+        shutdownScope="line"
+        message={getOutOfServiceMessage(startDate, endDate, serviceStart, serviceEnd)}
+      />
+    );
 
   return (
     <ChartStack>
-      <RidershipGraph config={config} data={data} startDate={startDate} endDate={endDate} />
+      <RidershipGraph
+        config={config}
+        data={data}
+        startDate={startDate}
+        endDate={endDate}
+        serviceEnd={serviceEnd}
+        serviceDateBlocks={serviceDateBlocks}
+      />
     </ChartStack>
   );
 };

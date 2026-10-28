@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import type { ComponentProps } from 'react';
 
 import type { Benchmark, Block, Dataset } from '../../common/components/charts/TimeSeriesChart';
 import { TimeSeriesChart } from '../../common/components/charts/TimeSeriesChart';
@@ -15,11 +16,21 @@ interface ScheduledAndDeliveredGraphProps {
   agg: AggType;
   benchmarks?: Benchmark[];
   blocks?: Block[];
+  hoverCard?: ComponentProps<typeof TimeSeriesChart>['hoverCard'];
 }
 
 export const ScheduledAndDeliveredGraph = (props: ScheduledAndDeliveredGraphProps) => {
-  const { scheduled, delivered, valueAxisLabel, agg, startDate, endDate, benchmarks, blocks } =
-    props;
+  const {
+    scheduled,
+    delivered,
+    valueAxisLabel,
+    agg,
+    startDate,
+    endDate,
+    benchmarks,
+    blocks,
+    hoverCard,
+  } = props;
   const data = useMemo(() => [scheduled, delivered], [scheduled, delivered]);
   const { line } = useDelimitatedRoute();
   const color = LINE_COLORS[line ?? 'default'];
@@ -32,6 +43,7 @@ export const ScheduledAndDeliveredGraph = (props: ScheduledAndDeliveredGraphProp
       style={{ color, stepped: true, fill: true }}
       benchmarks={benchmarks}
       blocks={blocks}
+      hoverCard={hoverCard}
     />
   );
 };

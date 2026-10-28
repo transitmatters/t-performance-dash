@@ -21,7 +21,7 @@ export const HeadwaysSingleWrapper = ({
 }: HeadwaysSingleWrapperProps) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
-  if (query.data.length < 1) return <NoDataNotice />;
+  if (query.data.length < 1) return <NoDataNotice shutdownScope="trip" metric="headways" />;
   const widgetObjects = getSingleDayWidgets(query.data, 'headways');
 
   return (

@@ -21,7 +21,11 @@ export const DatePickers = ({ type, clearPreset }: DatePickerProps) => {
   const { query, line, tab, page } = useDelimitatedRoute();
   const { startDate, endDate, date } = query;
   const range = type === 'range';
-  const { minDate, maxDate } = getDatePickerBounds(tab, page, query.busRoute ?? query.crRoute);
+  const { minDate, maxDate } = getDatePickerBounds(
+    tab,
+    page,
+    query.busRoute ?? query.crRoute ?? query.ferryRoute
+  );
 
   const handleEndDateChange = (newDate: string) => {
     if (!startDate || newDate === startDate) return;

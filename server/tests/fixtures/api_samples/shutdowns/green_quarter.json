@@ -1,0 +1,43 @@
+[
+  {
+    "alert_id": "632100",
+    "cause": "MAINTENANCE",
+    "effect": "SHUTTLE",
+    "first_start": "2026-07-11",
+    "last_end": "2026-07-12",
+    "header": "Shuttle buses replace Green Line B, C, and D branch service between Kenmore and Boston College, Cleveland Circle, and Riverside the weekend of July 11-12.",
+    "line": "Green",
+    "periods": [
+      {
+        "start": "2026-07-11T03:00:00-04:00",
+        "end": "2026-07-13T03:00:00-04:00"
+      }
+    ],
+    "stops": [
+      "place-bccl",
+      "place-clmnl",
+      "place-kencl",
+      "place-river"
+    ]
+  },
+  {
+    "alert_id": "640511",
+    "cause": "CONSTRUCTION",
+    "effect": "STATION_CLOSURE",
+    "first_start": "2026-08-03",
+    "last_end": "2026-08-07",
+    "header": "Symphony is closed while crews make accessibility upgrades. Green Line E branch trains will bypass the station.",
+    "line": "Green",
+    "periods": [
+      {
+        "start": "2026-08-03T03:00:00-04:00",
+        "end": "2026-08-08T03:00:00-04:00"
+      }
+    ],
+    "stops": [
+      "70241",
+      "70242",
+      "place-symcl"
+    ]
+  }
+]

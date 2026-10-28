@@ -89,7 +89,8 @@ export type FetchBusSpeedLeaderboardOptions = {
 export type FetchAlertDelaysByLineOptions = {
   start_date?: string;
   end_date?: string;
-  line?: LineRouteId;
+  /** A rail line, comma-separated bus route ids (e.g. `114,116,117`), or `Bus` for every route. */
+  line?: string;
   agg?: 'daily' | 'weekly';
 };
 
@@ -153,6 +154,16 @@ export type FetchWeatherOptions = {
 export enum FetchWeatherParams {
   startDate = 'start_date',
   endDate = 'end_date',
+}
+
+export type FetchShutdownsOptions = {
+  [key in FetchShutdownsParams]?: string;
+};
+
+export enum FetchShutdownsParams {
+  startDate = 'start_date',
+  endDate = 'end_date',
+  line = 'line',
 }
 
 export type FetchSpeedRestrictionsOptions = {

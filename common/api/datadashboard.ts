@@ -21,6 +21,7 @@ import { ONE_MINUTE } from '../constants/time';
 import { hasReliableCommuterRailBenchmarks } from '../constants/dates';
 import type { DateChunk } from '../utils/dateChunks';
 import { splitDateRange } from '../utils/dateChunks';
+import { fetchOrThrow } from './utils/ApiError';
 
 // Fetch data for all single day charts.
 export const fetchSingleDayData = async (
@@ -34,10 +35,7 @@ export const fetchSingleDayData = async (
     if (!(typeof value === 'string') && key !== 'date')
       value.forEach((subvalue) => url.searchParams.append(key, subvalue));
   });
-  const response = await fetch(url.toString());
-  if (!response.ok) {
-    throw new Error('network request failed');
-  }
+  const response = await fetchOrThrow(url.toString(), undefined, `Failed to fetch ${name}`);
   return await response.json();
 };
 
@@ -73,14 +71,11 @@ export const fetchAggregateData = async (
       url.searchParams.append(key, value.toString());
     }
   });
-  const response = await fetch(url.toString(), { signal }).catch((error) => {
-    // API Gateway's timeout response has no CORS headers, so the browser reports it as a TypeError.
-    if (error instanceof TypeError) throw new Error('network request failed');
-    throw error;
-  });
-  if (!response.ok) {
-    throw new Error('network request failed');
-  }
+  const response = await fetchOrThrow(
+    url.toString(),
+    { signal },
+    `Failed to fetch aggregate ${method}`
+  );
   const responseJson = await response.json();
   return name === QueryNameKeys.traveltimes ? responseJson : { by_date: responseJson, by_time: [] };
 };

@@ -28,7 +28,7 @@ export const ScorecardGraph = ({
   benchmark,
 }: ScorecardGraphProps) => {
   if (data.every((dataset) => dataset.data.length === 0)) {
-    return <NoDataNotice isLineMetric />;
+    return <NoDataNotice isLineMetric shutdownScope="line" />;
   }
   return (
     <TimeSeriesChart

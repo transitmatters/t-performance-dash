@@ -121,7 +121,16 @@ export const ALL_PAGES: PageMap = {
     key: 'overview',
     path: '/',
     name: 'Line overview',
-    lines: ['line-red', 'line-blue', 'line-green', 'line-orange', 'line-mattapan'],
+    lines: [
+      'line-red',
+      'line-blue',
+      'line-green',
+      'line-orange',
+      'line-mattapan',
+      'line-bus',
+      'line-commuter-rail',
+    ],
+    defaultBusRoute: '1',
     dateStoreSection: 'overview',
     icon: faTableColumns,
   },
@@ -177,6 +186,7 @@ export const ALL_PAGES: PageMap = {
       'line-green',
       'line-mattapan',
       'line-commuter-rail',
+      'line-bus',
     ],
     icon: faCalendarXmark,
     dateStoreSection: 'line',
@@ -269,14 +279,16 @@ export const TRIP_PAGES = [ALL_PAGES.singleTrips, ALL_PAGES.multiTrips];
 export const NAV_TRIP_PAGES = [ALL_PAGES.singleTrips];
 
 export const BUS_OVERVIEW = [
+  ALL_PAGES.overview,
   ALL_PAGES.ridership,
   ALL_PAGES.speed,
   ALL_PAGES.fleet,
+  ALL_PAGES.delays,
   ALL_PAGES.speedmap,
   ALL_PAGES.leaderboard,
 ];
 
-export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.ridership];
+export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.overview, ALL_PAGES.ridership];
 
 export const FERRY_OVERVIEW = [ALL_PAGES.ridership];
 

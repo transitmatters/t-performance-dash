@@ -15,6 +15,9 @@ import {
 } from 'chart.js';
 import Annotation from 'chartjs-plugin-annotation';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { annotationHoverCardPlugin } from '../components/charts/annotationTooltip';
+import { hoverHighlightPlugin } from '../components/charts/hoverCard/hoverHighlightPlugin';
+import { externalHoverCard, hoverCardCleanupPlugin } from '../components/charts/hoverCard/external';
 
 ChartJS.register(
   BarController,
@@ -30,8 +33,15 @@ ChartJS.register(
   Filler,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  hoverHighlightPlugin,
+  annotationHoverCardPlugin,
+  hoverCardCleanupPlugin
 );
+
+// Hovers render in the shared HTML card (ChartHoverCard) instead of Chart.js's canvas tooltip.
+ChartJS.defaults.plugins.tooltip.enabled = false;
+ChartJS.defaults.plugins.tooltip.external = externalHoverCard;
 
 // Vertical gridlines add noise without helping anyone compare values, so drop them for every
 // chart at once rather than per-config — the x axis is a time or category scale throughout.
