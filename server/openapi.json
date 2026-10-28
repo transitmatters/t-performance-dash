@@ -1662,6 +1662,30 @@
               "type": "string"
             },
             "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs."
+          },
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "default": null,
+              "nullable": true,
+              "format": "date",
+              "type": "string"
+            },
+            "description": "Keep only weeks starting on or after this date (YYYY-MM-DD). Omit it for the full history."
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "default": null,
+              "nullable": true,
+              "format": "date",
+              "type": "string"
+            },
+            "description": "Keep only weeks starting on or before this date (YYYY-MM-DD). Omit it for the full history."
           }
         ],
         "operationId": "getTimePredictions"
@@ -2754,11 +2778,27 @@
         "type": "array"
       },
       "TimePredictionParams": {
-        "description": "Parameters for the `/api/time_predictions` endpoint.\n\nAttributes:\n    route_id: Route identifier (e.g., `Red`, `CR-Fairmount`).",
+        "description": "Parameters for the `/api/time_predictions` endpoint.\n\nAttributes:\n    route_id: Route identifier (e.g., `Red`, `CR-Fairmount`).\n    start_date: Optional start of the range of weeks to return.\n    end_date: Optional end of the range of weeks to return.",
         "properties": {
           "route_id": {
             "description": "MBTA route ID. Rapid transit: `Red`, `Orange`, `Blue`, `Green-B`-`Green-E`, `Mattapan`. Bus: numeric string (e.g. `1`, `66`). Commuter rail: `CR-{line}` (e.g. `CR-Fairmount`). Ferry: `Boat-F1`, `Boat-F4`, etc. Use `/api/routes` to list all valid route IDs.",
             "title": "Route Id",
+            "type": "string"
+          },
+          "start_date": {
+            "default": null,
+            "description": "Keep only weeks starting on or after this date (YYYY-MM-DD). Omit it for the full history.",
+            "title": "Start Date",
+            "nullable": true,
+            "format": "date",
+            "type": "string"
+          },
+          "end_date": {
+            "default": null,
+            "description": "Keep only weeks starting on or before this date (YYYY-MM-DD). Omit it for the full history.",
+            "title": "End Date",
+            "nullable": true,
+            "format": "date",
             "type": "string"
           }
         },
