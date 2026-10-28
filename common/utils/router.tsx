@@ -95,9 +95,13 @@ export const parseRoutePath = (pathname: string) => {
   };
 };
 
+/** An embed's path is its dashboard page's path under `/embed`, so its charts read the same line. */
+const withoutEmbedPrefix = (pathname: string) =>
+  pathname.startsWith('/embed/') ? pathname.slice('/embed'.length) : pathname;
+
 export const useDelimitatedRoute = (): Route => {
   const { pathname, search } = useLocation();
-  const { pathItems, tab, page, line } = parseRoutePath(pathname);
+  const { pathItems, tab, page, line } = parseRoutePath(withoutEmbedPrefix(pathname));
   const newParams = getParams(search);
 
   return {

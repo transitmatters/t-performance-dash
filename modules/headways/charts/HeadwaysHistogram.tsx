@@ -13,8 +13,9 @@ import { useChartTheme } from '../../../common/utils/chartTheme';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { getFormattedTimeString } from '../../../common/utils/time';
+import { TripEmbedButton } from '../../tripexplorer/TripEmbedButton';
 
-export const HeadwaysHistogram = ({ headways }: HeadwaysChartProps) => {
+export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps) => {
   const { line, linePath, lineShort } = useDelimitatedRoute();
 
   const ref = useRef(null);
@@ -58,8 +59,8 @@ export const HeadwaysHistogram = ({ headways }: HeadwaysChartProps) => {
 
   const histogram = useMemo(() => {
     return (
-      <ChartStack>
-        <ChartDiv isMobile={isMobile}>
+      <ChartStack className={fill ? 'h-full' : undefined}>
+        <ChartDiv isMobile={isMobile} fill={fill}>
           <Bar
             id={`headways-histogram-${linePath}`}
             ref={ref}
@@ -164,9 +165,15 @@ export const HeadwaysHistogram = ({ headways }: HeadwaysChartProps) => {
             plugins={[ChartjsPluginWatermark]}
           />
         </ChartDiv>
+        {!fill && (
+          <div className="-mr-2.5 flex flex-row justify-end">
+            <TripEmbedButton chart="headway-distribution" />
+          </div>
+        )}
       </ChartStack>
     );
   }, [
+    fill,
     dataObject,
     isMobile,
     line,

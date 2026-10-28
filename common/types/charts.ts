@@ -1,5 +1,6 @@
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { TimeUnit } from 'chart.js';
+import type { TripEmbedChart } from '../constants/staticRoutes';
 import type { Station } from './stations';
 
 export interface SingleDayDataPoint {
@@ -134,6 +135,10 @@ export interface SingleDayLineProps extends LineProps {
   benchmarkField?: BenchmarkField;
   tmBenchmarkField?: BenchmarkField;
   units: 'Minutes' | 'MPH';
+  /** Fill the parent's height and leave out the toggles and buttons under the chart, as an embed does. */
+  fill?: boolean;
+  /** Adds an Embed button that copies an `<iframe>` of this trip chart. */
+  embedChart?: TripEmbedChart;
 }
 
 export interface HeadwayHistogramProps {
@@ -153,6 +158,10 @@ export interface HeadwaysChartProps {
   fromStation: Station;
   toStation: Station;
   showLegend?: boolean;
+  /** The day shown; defaults to the URL's `date`. */
+  date?: string;
+  /** Fill the parent's height and leave out the buttons under the chart, as an embed does. */
+  fill?: boolean;
 }
 
 // additional data for rendering headway tooltip

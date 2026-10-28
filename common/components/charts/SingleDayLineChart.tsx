@@ -20,6 +20,7 @@ import { prettyDate } from '../../utils/date';
 import { DownloadButton } from '../buttons/DownloadButton';
 import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
 import { CopyLinkButton } from '../buttons/CopyLinkButton';
+import { TripEmbedButton } from '../../../modules/tripexplorer/TripEmbedButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { SEVERITY_COLORS, severityForRatio, useChartTheme } from '../../utils/chartTheme';
@@ -64,6 +65,8 @@ export const SingleDayLineChart = ({
   showLegend = true,
   showUnderRatio = false,
   chartTitle,
+  fill = false,
+  embedChart,
 }: SingleDayLineProps) => {
   const ref = useRef(null);
   const chartTheme = useChartTheme();
@@ -73,7 +76,8 @@ export const SingleDayLineChart = ({
   const tempEnabled = useWeatherStore((s) => s.temperatureEnabled);
   const { data: weather, isLoading: isWeatherLoading } = useWeatherData(
     { start_date: date, end_date: date },
-    Boolean(date)
+    // An embed has no weather toggle, so it skips the request.
+    Boolean(date) && !fill
   );
   const weatherAnnotations = weatherEnabled
     ? getWeatherAnnotations(weather ?? [], { granularity: 'hourly' })
@@ -179,8 +183,8 @@ export const SingleDayLineChart = ({
   }
 
   return (
-    <ChartStack>
-      <ChartDiv isMobile={isMobile}>
+    <ChartStack className={fill ? 'h-full' : undefined}>
+      <ChartDiv isMobile={isMobile} fill={fill}>
         <Line
           id={chartId}
           ref={ref}
@@ -359,15 +363,15 @@ export const SingleDayLineChart = ({
         />
       </ChartDiv>
       <div className="flex flex-col">
-        {alerts && <AlertsDisclaimer alerts={alerts} />}
-        {date && <WeatherDisclaimer hours={weather} isLoading={isWeatherLoading} />}
+        {!fill && alerts && <AlertsDisclaimer alerts={alerts} />}
+        {!fill && date && <WeatherDisclaimer hours={weather} isLoading={isWeatherLoading} />}
         <div className="flex flex-row flex-wrap items-end justify-between gap-x-6 gap-y-2">
           {showLegend && benchmarkField ? (
             <LegendSingleDay showUnderRatio={showUnderRatio} usingTmBenchmark={usingTmBenchmark} />
           ) : (
             <div className="w-full" />
           )}
-          {date && (
+          {date && !fill && (
             <div className="-mr-2.5 ml-auto flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
               <CopyLinkButton />
               <SaveChartImageButton
@@ -385,6 +389,7 @@ export const SingleDayLineChart = ({
                 includeBothStopsForLocation={includeBothStopsForLocation}
                 startDate={date}
               />
+              {embedChart && <TripEmbedButton chart={embedChart} />}
             </div>
           )}
         </div>

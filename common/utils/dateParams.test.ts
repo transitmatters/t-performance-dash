@@ -176,6 +176,7 @@ describe('getDateRedirectHref', () => {
   it('leaves embeds alone, so one without dates keeps showing the latest range', () => {
     expect(getDateRedirectHref('/embed/red/slowzones/', {})).toBeUndefined();
     expect(getDateRedirectHref('/embed/system/slowzones/', {})).toBeUndefined();
+    expect(getDateRedirectHref('/embed/red/trips/single/traveltimes/', {})).toBeUndefined();
   });
 
   it('is idempotent', () => {

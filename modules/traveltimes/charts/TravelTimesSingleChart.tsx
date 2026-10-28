@@ -11,6 +11,9 @@ interface TravelTimesSingleChartProps {
   toStation: Station;
   fromStation: Station;
   showLegend?: boolean;
+  /** The day shown; defaults to the URL's `date`. */
+  date?: string;
+  fill?: boolean;
 }
 
 export const TravelTimesSingleChart = ({
@@ -18,11 +21,11 @@ export const TravelTimesSingleChart = ({
   toStation,
   fromStation,
   showLegend = true,
+  date: dateProp,
+  fill = false,
 }: TravelTimesSingleChartProps) => {
-  const {
-    linePath,
-    query: { date },
-  } = useDelimitatedRoute();
+  const { linePath, query } = useDelimitatedRoute();
+  const date = dateProp ?? query.date;
 
   const anyTravelBenchmarks =
     Array.isArray(traveltimes) &&
@@ -43,9 +46,11 @@ export const TravelTimesSingleChart = ({
         location={getLocationDetails(fromStation, toStation)}
         fname={'traveltimes'}
         showLegend={showLegend && anyTravelBenchmarks}
+        fill={fill}
+        embedChart="traveltimes"
       />
     );
-  }, [linePath, traveltimes, date, fromStation, toStation, showLegend, anyTravelBenchmarks]);
+  }, [linePath, traveltimes, date, fromStation, toStation, showLegend, anyTravelBenchmarks, fill]);
 
   return chart;
 };
