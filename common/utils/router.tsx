@@ -23,7 +23,7 @@ import { LINE_COLORS } from '../constants/colors';
 import type { SearchObject } from './searchParams';
 import { stringifySearch } from './searchParams';
 
-const linePathToKeyMap: Record<LinePath, Line> = {
+export const linePathToKeyMap: Record<LinePath, Line> = {
   red: 'line-red',
   orange: 'line-orange',
   green: 'line-green',

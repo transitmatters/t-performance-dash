@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import type { TooltipItem } from 'chart.js';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
@@ -7,6 +8,9 @@ import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
 import { explainGapBlocks, usePageShutdowns } from '../shutdowns';
+import { LINE_COLORS } from '../../common/constants/colors';
+import { hexWithAlpha } from '../../common/utils/general';
+import type { HoverCardContent } from '../../common/components/charts/hoverCard/types';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
 import { getNoDataSinceLatestBlock, getShuttlingBlockAnnotations } from './utils/graphUtils';
 import { getScheduledAndDeliveredRoundTrips } from './utils/utils';
@@ -22,6 +26,7 @@ interface ServiceGraphProps {
 export const ServiceGraph = (props: ServiceGraphProps) => {
   const { data, predictedData, startDate, endDate, config } = props;
   const { line } = useDelimitatedRoute();
+  const lineColor = LINE_COLORS[line ?? 'default'];
 
   const peak = useScheduledServiceBaseline(line);
 
@@ -31,6 +36,42 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
   }, [peak]);
 
   const shutdowns = usePageShutdowns('line', startDate, endDate);
+
+  const hoverCard = useCallback(
+    (items: TooltipItem<'line'>[]): HoverCardContent | null => {
+      const valueOf = (datasetIndex: number) =>
+        items.find((item) => item.datasetIndex === datasetIndex)?.parsed.y ?? undefined;
+      const scheduledValue = valueOf(0);
+      const deliveredValue = valueOf(1);
+      if (!deliveredValue && !scheduledValue) return null;
+      const percentOfPeak = (value: number) => `${((100 * value) / peak).toFixed(1)}%`;
+      return {
+        hero: deliveredValue
+          ? { value: `${deliveredValue}`, unit: 'round trips', color: lineColor }
+          : undefined,
+        meter:
+          deliveredValue && peak > 0
+            ? {
+                fraction: deliveredValue / peak,
+                label: `${percentOfPeak(deliveredValue)} of historical maximum (${peak})`,
+                color: lineColor,
+              }
+            : undefined,
+        rows: scheduledValue
+          ? [
+              {
+                label: 'Scheduled',
+                value: `${scheduledValue}`,
+                detail: peak > 0 ? `${percentOfPeak(scheduledValue)} of max` : undefined,
+                color: hexWithAlpha(lineColor, 0.4),
+                borderColor: lineColor,
+              },
+            ]
+          : [],
+      };
+    },
+    [peak, lineColor]
+  );
 
   const blocks = useMemo(() => {
     const shuttlingBlocks = getShuttlingBlockAnnotations(data).map((block) => ({
@@ -83,6 +124,7 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
         delivered={delivered}
         blocks={blocks}
         benchmarks={benchmarks}
+        hoverCard={hoverCard}
         startDate={startDate}
         endDate={endDate}
         agg={config.agg}
