@@ -22,7 +22,7 @@ CACHE_MARKER_FILE = OUTPUT_DIR / ".last_fetched"
 RAPID_TRANSIT_LINES = ["line-red", "line-blue", "line-orange", "line-green", "line-mattapan"]
 RAPID_TRANSIT_LINES_RIDERSHIP = ["line-Red", "line-Blue", "line-Orange", "line-Green", "line-Mattapan"]
 ROUTE_IDS = ["Red", "Blue", "Orange", "Green-B", "Green-C", "Green-D", "Green-E", "Mattapan"]
-DELAY_LINES = ["Red", "Blue", "Orange", "Green-B", "Green-C", "Green-D", "Green-E", "Mattapan"]
+DELAY_LINES = ["Red", "Blue", "Orange", "Green-B", "Green-C", "Green-D", "Green-E", "Mattapan", "CommuterRail"]
 AGG_TYPES = ["daily", "weekly", "monthly"]
 
 # Date ranges for sample data (last 90 days)
