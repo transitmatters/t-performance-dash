@@ -12,3 +12,6 @@ export const THREE_HOURS = 3 * ONE_HOUR;
 export const FOUR_HOURS = 4 * ONE_HOUR;
 export const TWELVE_HOURS = 12 * ONE_HOUR;
 export const ONE_DAY = 24 * ONE_HOUR;
+
+// The MBTA service day starts around 3 AM; trips after midnight belong to the day before.
+export const SERVICE_DAY_START_HOUR = 3;

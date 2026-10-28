@@ -22,10 +22,12 @@ import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
 import { CopyLinkButton } from '../buttons/CopyLinkButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
-import { SEVERITY_COLORS, useChartTheme } from '../../utils/chartTheme';
+import { SEVERITY_COLORS, severityForRatio, useChartTheme } from '../../utils/chartTheme';
+import { CHART_COLORS } from '../../constants/colors';
 import { getFormattedTimeString } from '../../utils/time';
 import { AlertsDisclaimer } from '../general/AlertsDisclaimer';
 import { FIVE_MINUTES } from '../../constants/time';
+import type { HoverCardContent } from './hoverCard/types';
 import { LegendSingleDay } from './Legend';
 import { ChartDiv } from './ChartDiv';
 import { ChartStack } from './ChartStack';
@@ -39,63 +41,12 @@ const pointColors = (
 ) => {
   return data.map((point: DataPoint, idx: number) => {
     const benchmarkValue = effectiveBenchmark[idx];
-    // Check for null, undefined, NaN, or other invalid values
-    if (
-      benchmarkValue === null ||
-      benchmarkValue === undefined ||
-      typeof benchmarkValue !== 'number' ||
-      !Number.isFinite(benchmarkValue)
-    ) {
-      return neutralColor;
+    if (typeof benchmarkValue !== 'number' || !Number.isFinite(benchmarkValue)) {
+      return neutralColor; // no benchmark to judge this point against
     }
-    const ratio = point[metric_field] / benchmarkValue;
-    if (!Number.isFinite(ratio)) {
-      return neutralColor;
-    } else if (ratio <= 0.05 && showUnderRatio) {
-      // Not actually 100% off, but we want to show it as an extreme
-      return SEVERITY_COLORS.off100;
-    } else if (ratio <= 0.5 && showUnderRatio) {
-      return SEVERITY_COLORS.off50;
-    } else if (ratio <= 0.75 && showUnderRatio) {
-      return SEVERITY_COLORS.off25;
-    } else if (ratio <= 1.25) {
-      return SEVERITY_COLORS.onTime;
-    } else if (ratio <= 1.5) {
-      return SEVERITY_COLORS.off25;
-    } else if (ratio <= 2.0) {
-      return SEVERITY_COLORS.off50;
-    } else if (ratio > 2.0) {
-      return SEVERITY_COLORS.off100;
-    }
-    return neutralColor; // no benchmark to judge this point against
+    const severity = severityForRatio(point[metric_field] / benchmarkValue, showUnderRatio);
+    return severity ? SEVERITY_COLORS[severity.tone] : neutralColor;
   });
-};
-
-const departureFromNormalString = (
-  metric: number,
-  benchmark: number,
-  showUnderRatio?: boolean,
-  referenceWord: 'schedule' | 'benchmark' = 'schedule'
-) => {
-  // Handle invalid benchmark values
-  if (!benchmark || typeof benchmark !== 'number' || !Number.isFinite(benchmark)) {
-    return '';
-  }
-  const ratio = metric / benchmark;
-  if (showUnderRatio && ratio <= 0.5) {
-    return `50%+ under ${referenceWord}`;
-  } else if (showUnderRatio && ratio <= 0.75) {
-    return `25%+ under ${referenceWord}`;
-  } else if (!isFinite(ratio) || ratio <= 1.25) {
-    return '';
-  } else if (ratio <= 1.5) {
-    return `25%+ over ${referenceWord}`;
-  } else if (ratio <= 2.0) {
-    return `50%+ over ${referenceWord}`;
-  } else if (ratio > 2.0) {
-    return `100%+ over ${referenceWord}`;
-  }
-  return '';
 };
 
 export const SingleDayLineChart = ({
@@ -250,79 +201,80 @@ export const SingleDayLineChart = ({
                 mode: 'index',
                 position: 'nearest',
                 callbacks: {
-                  label: (tooltipItem) => {
-                    const datasetLabel = tooltipItem.dataset.label ?? '';
-                    const isBenchmark =
-                      datasetLabel === 'MBTA Benchmark' ||
-                      datasetLabel === 'TransitMatters Benchmark';
-                    if (!tooltipItem.parsed.y || (tooltipItem.parsed.y === 0 && isBenchmark)) {
-                      return '';
-                    }
-                    if ((tooltipItem.dataset as { yAxisID?: string }).yAxisID === 'yTemp') {
-                      return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y} °F`;
-                    }
-                    // Per-point label: a chart in "TM mode" can still have
-                    // individual points that fell back to MBTA; name each
-                    // point's benchmark source honestly.
-                    const displayLabel = isBenchmark
-                      ? tmBenchmarkData[tooltipItem.dataIndex] != null
-                        ? 'TransitMatters Benchmark'
-                        : 'MBTA Benchmark'
-                      : datasetLabel;
-                    return `${displayLabel}: ${
+                  hoverCard: (items) => {
+                    const actual = items.find((item) => item.dataset.label === 'Actual');
+                    const benchmark = items.find(
+                      (item) =>
+                        item.dataset.label === 'MBTA Benchmark' ||
+                        item.dataset.label === 'TransitMatters Benchmark'
+                    );
+                    const temperature = items.find(
+                      (item) => (item.dataset as { yAxisID?: string }).yAxisID === 'yTemp'
+                    );
+                    const format = (value: number) =>
                       units === 'Minutes'
-                        ? getFormattedTimeString(tooltipItem.parsed.y, 'minutes')
-                        : `${tooltipItem.parsed.y} ${units}`
-                    }`;
-                  },
-                  afterBody: (tooltipItems) => {
-                    const result: string[] = [];
+                        ? getFormattedTimeString(value, 'minutes')
+                        : `${Number(value.toFixed(1))} ${units}`;
+                    const content: HoverCardContent = { rows: [] };
 
-                    // Add departure from normal information
-                    const actualItem = tooltipItems.find((t) => t.dataset.label === 'Actual');
-                    const benchmarkItem = tooltipItems.find(
-                      (t) =>
-                        t.dataset.label === 'MBTA Benchmark' ||
-                        t.dataset.label === 'TransitMatters Benchmark'
-                    );
-                    const departureInfo = departureFromNormalString(
-                      actualItem?.parsed.y ?? 0,
-                      benchmarkItem?.parsed.y ?? 0,
-                      showUnderRatio,
-                      usingTmBenchmark ? 'benchmark' : 'schedule'
-                    );
-                    if (departureInfo) {
-                      result.push(departureInfo);
+                    const actualValue = actual?.parsed.y;
+                    const benchmarkValue = benchmark?.parsed.y;
+                    const severity =
+                      actualValue && benchmarkValue
+                        ? severityForRatio(actualValue / benchmarkValue, showUnderRatio)
+                        : null;
+                    if (actualValue) {
+                      content.hero = {
+                        value: format(actualValue),
+                        caption: 'Actual',
+                        color: severity ? SEVERITY_COLORS[severity.tone] : chartTheme.neutralPoint,
+                      };
                     }
-
-                    // Add vehicle consist information if available
-                    const { dataIndex } = actualItem ?? tooltipItems[0];
-                    const dataPoint = data[dataIndex];
-                    if (dataPoint?.vehicle_consist) {
-                      const arrNums = dataPoint.vehicle_consist.split('|').map(Number);
-                      if (arrNums.length > 1) {
-                        result.push(
-                          `Vehicle Numbers: ${dataPoint.vehicle_consist.replaceAll('|', ', ')}`
-                        );
-                      } else {
-                        result.push(`Vehicle Number: ${dataPoint.vehicle_consist}`);
+                    if (benchmark && benchmarkValue) {
+                      // A chart in "TM mode" can still have points that fell back to MBTA, so
+                      // name each point's benchmark source honestly.
+                      const referenceWord = usingTmBenchmark ? 'benchmark' : 'schedule';
+                      content.rows?.push({
+                        label:
+                          tmBenchmarkData[benchmark.dataIndex] != null
+                            ? 'TransitMatters Benchmark'
+                            : 'MBTA Benchmark',
+                        value: format(benchmarkValue),
+                        color: CHART_COLORS.ANNOTATIONS,
+                      });
+                      if (actualValue && severity) {
+                        const delta = actualValue - benchmarkValue;
+                        const deltaText = `${delta < 0 ? '−' : '+'}${format(Math.abs(delta))}`;
+                        content.badge = {
+                          tone: severity.tone,
+                          text: severity.label
+                            ? `${deltaText} · ${severity.label} ${referenceWord}`
+                            : `${deltaText} vs ${referenceWord}`,
+                        };
                       }
                     }
-                    if (dataPoint?.vehicle_label) {
-                      if (dataPoint?.vehicle_consist) {
-                        const arrNums = dataPoint.vehicle_consist.split('|').map(Number);
-                        const consistHead = arrNums[0];
-                        if (consistHead === parseInt(dataPoint.vehicle_label)) {
-                          //pass
-                        } else {
-                          result.push(`Vehicle Label: ${dataPoint.vehicle_label}`);
-                        }
-                      } else {
-                        result.push(`Vehicle Label: ${dataPoint.vehicle_label}`);
-                      }
+                    if (temperature?.parsed.y) {
+                      content.rows?.push({
+                        label: 'Temperature',
+                        value: `${temperature.parsed.y} °F`,
+                        color: TEMPERATURE_LINE_COLOR,
+                      });
                     }
 
-                    return result;
+                    const dataPoint = data[(actual ?? items[0]).dataIndex];
+                    const consist = dataPoint?.vehicle_consist?.split('|') ?? [];
+                    if (consist.length > 0) {
+                      content.chips = {
+                        label: consist.length > 1 ? 'Vehicles' : 'Vehicle',
+                        values: consist,
+                      };
+                    }
+                    // The label usually just repeats the lead car's number
+                    const label = dataPoint?.vehicle_label;
+                    if (label && Number(consist[0]) !== parseInt(label)) {
+                      content.notes = [`Vehicle label: ${label}`];
+                    }
+                    return content;
                   },
                 },
               },

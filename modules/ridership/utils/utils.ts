@@ -1,4 +1,6 @@
+import dayjs from 'dayjs';
 import type { RidershipCount } from '../../../common/types/dataPoints';
+import { PRETTY_DATE_FORMAT } from '../../../common/constants/dates';
 
 const mean = (values: number[]) =>
   values.length ? values.reduce((sum, v) => sum + v, 0) / values.length : NaN;
@@ -28,4 +30,19 @@ export const getRidershipStats = (ridership: RidershipCount[], peakRidership: nu
     peakCount: peak?.count,
     peakDate: peak?.date,
   };
+};
+
+export const getOutOfServiceMessage = (
+  startDate: string,
+  endDate: string,
+  serviceStart: string | undefined,
+  serviceEnd: string | undefined
+) => {
+  if (serviceEnd && !dayjs(serviceEnd).isAfter(startDate)) {
+    return `Service ended ${dayjs(serviceEnd).format(PRETTY_DATE_FORMAT)}.`;
+  }
+  if (serviceStart && !dayjs(serviceStart).isBefore(endDate)) {
+    return `Service began ${dayjs(serviceStart).format(PRETTY_DATE_FORMAT)}.`;
+  }
+  return undefined;
 };

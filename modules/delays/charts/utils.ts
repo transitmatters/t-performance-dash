@@ -1,4 +1,9 @@
 import type { ChartDataset } from 'chart.js';
+import type { Line } from '../../../common/types/lines';
+
+// Bus alerts cite disabled buses, not trains
+export const disabledVehicleLabel = (line?: Line) =>
+  line === 'line-bus' ? '🚌 Disabled Bus' : '🚉 Disabled Train';
 
 const labels = [
   '🚉 Disabled Train',
@@ -36,13 +41,15 @@ const backgroundColors = [
   '#6b7280',
 ];
 
-export const filterOutZeroValues = (delayTotals: number[]) => {
+export const filterOutZeroValues = (delayTotals: number[], line?: Line) => {
   const populatedDelayTotalIdxs = delayTotals.map((delayTotal, idx) => {
     return delayTotal > 0 ? idx : -1;
   });
 
   return {
-    labels: labels.filter((_, idx) => populatedDelayTotalIdxs[idx] !== -1),
+    labels: [disabledVehicleLabel(line), ...labels.slice(1)].filter(
+      (_, idx) => populatedDelayTotalIdxs[idx] !== -1
+    ),
     backgroundColors: backgroundColors.filter((_, idx) => populatedDelayTotalIdxs[idx] !== -1),
     delayTotals: delayTotals.filter((_, idx) => populatedDelayTotalIdxs[idx] !== -1),
   };

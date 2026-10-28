@@ -1,41 +1,54 @@
-import type { EventContext } from 'chartjs-plugin-annotation';
+import type { Plugin } from 'chart.js';
+import Annotation from 'chartjs-plugin-annotation';
 
-const TOOLTIP_ID = 'tm-annotation-tooltip';
+import { hideHoverCard, showHoverCard, useHoverCardStore } from './hoverCard/hoverCardStore';
 
 export type AnnotationTooltipContent = { title: string; lines: string[] };
 
+type Hook = () => void;
+
+const cards = new WeakMap<Hook, AnnotationTooltipContent>();
+
 /**
- * Hover handlers for a Chart.js box annotation that show a small card above it. The card is a plain
- * element on the page rather than React state, so hovering doesn't re-render the chart under it.
+ * Gives a box annotation a hover card, shown by annotationHoverCardPlugin. The annotation plugin's
+ * own enter/leave can't drive it: they inherit each chart's `interaction`, and with the usual
+ * `intersect: false` a box counts as hovered anywhere on the plot, so its card never closed.
  */
-export const annotationTooltip = ({ title, lines }: AnnotationTooltipContent) => ({
-  enter: ({ chart, element }: EventContext) => {
-    const canvas = chart.canvas.getBoundingClientRect();
-    let tooltip = document.getElementById(TOOLTIP_ID);
-    if (!tooltip) {
-      tooltip = document.createElement('div');
-      tooltip.id = TOOLTIP_ID;
-      tooltip.setAttribute('role', 'tooltip');
-      tooltip.className =
-        'pointer-events-none fixed z-50 max-w-xs -translate-x-1/2 -translate-y-full rounded-md border border-border bg-popover p-2 text-xs text-popover-foreground shadow-md';
-      document.body.appendChild(tooltip);
+export const annotationTooltip = (content: AnnotationTooltipContent) => {
+  // Annotation elements drop unknown options but keep their event hooks as-is, so the hook doubles
+  // as the key to this box's card
+  const enter: Hook = () => {};
+  cards.set(enter, content);
+  return { enter };
+};
+
+/** Shows the card for whichever annotation box is under the pointer. */
+export const annotationHoverCardPlugin: Plugin = {
+  id: 'annotationHoverCard',
+  afterEvent: (chart, { event }) => {
+    const { x, y } = event;
+    const hit =
+      event.type === 'mousemove' && x !== null && y !== null
+        ? Annotation.getAnnotations(chart).find(
+            (element) =>
+              cards.has(element.options.enter as Hook) &&
+              (element as unknown as { inRange: (x: number, y: number) => boolean }).inRange(x, y)
+          )
+        : undefined;
+    const content = hit && cards.get(hit.options.enter as Hook);
+    if (!hit || !content) {
+      hideHoverCard('annotation', chart);
+      return;
     }
-    const heading = document.createElement('p');
-    heading.className = 'font-medium';
-    heading.textContent = title;
-    tooltip.replaceChildren(
-      heading,
-      ...lines.map((line) => {
-        const p = document.createElement('p');
-        p.className = 'text-muted-foreground';
-        p.textContent = line;
-        return p;
-      })
-    );
-    tooltip.style.left = `${canvas.left + element.centerX}px`;
-    tooltip.style.top = `${canvas.top + element.y - 4}px`;
+    const canvas = chart.canvas.getBoundingClientRect();
+    const anchor = { x: canvas.left + hit.centerX, y: canvas.top + hit.y };
+    const current = useHoverCardStore.getState().annotation;
+    if (current?.owner === chart && current.x === anchor.x && current.y === anchor.y) return;
+    showHoverCard('annotation', {
+      content: { title: content.title, notes: content.lines },
+      ...anchor,
+      placement: 'above',
+      owner: chart,
+    });
   },
-  leave: () => {
-    document.getElementById(TOOLTIP_ID)?.remove();
-  },
-});
+};

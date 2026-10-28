@@ -120,11 +120,21 @@ export const SpeedGraph = ({
                 position: 'nearest',
                 callbacks: {
                   ...callbacks,
-                  label: (context) => {
-                    if (!context.parsed.y) return '';
-                    return `${context.parsed.y} (${((100 * context.parsed.y) / peak).toFixed(
-                      1
-                    )}% of historical maximum)`;
+                  hoverCard: (items) => {
+                    const mph = items.find((item) => item.datasetIndex === 0)?.parsed.y;
+                    if (!mph) return null;
+                    const color = LINE_COLORS[line ?? 'default'];
+                    return {
+                      hero: { value: `${mph}`, unit: 'mph', color },
+                      meter:
+                        peak > 0
+                          ? {
+                              fraction: mph / peak,
+                              label: `${((100 * mph) / peak).toFixed(1)}% of historical maximum (${peak} mph)`,
+                              color,
+                            }
+                          : undefined,
+                    };
                   },
                 },
               },

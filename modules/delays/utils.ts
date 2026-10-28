@@ -1,4 +1,6 @@
 import type { LineDelays } from '../../common/types/delays';
+import type { Line } from '../../common/types/lines';
+import { disabledVehicleLabel } from './charts/utils';
 
 const REASON_LABELS: Record<string, string> = {
   disabled_vehicle: '🚉 Disabled Train',
@@ -26,13 +28,13 @@ const halves = <T>(values: T[]): [T[], T[]] => {
   return [values.slice(0, mid), values.slice(mid)];
 };
 
-export const getDelayStats = (data: LineDelays[], agg: 'daily' | 'weekly') => {
+export const getDelayStats = (data: LineDelays[], agg: 'daily' | 'weekly', line?: Line) => {
   const totals = data.map((point) => point.total_delay_time);
   const totalDelay = totals.reduce((sum, v) => sum + v, 0);
   const [leading, trailing] = halves(totals);
 
   const reasonSums = Object.entries(REASON_LABELS).map(([key, label]) => ({
-    label,
+    label: key === 'disabled_vehicle' ? disabledVehicleLabel(line) : label,
     total: data.reduce((sum, point) => sum + (point[key as keyof LineDelays] as number), 0),
   }));
   const topReason = reasonSums.reduce((max, reason) => (reason.total > max.total ? reason : max), {
