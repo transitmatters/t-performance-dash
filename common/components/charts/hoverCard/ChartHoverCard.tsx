@@ -24,23 +24,15 @@ const Dot = ({ color, borderColor }: { color?: string; borderColor?: string }) =
   />
 );
 
-// Wraps onto a second row past this many cars (long Commuter Rail consists)
-const CARS_PER_ROW = 6;
-
 const TrainConsist = ({ train }: { train: NonNullable<HoverCardContent['train']> }) => {
   const { label, cars, legend } = train;
   const lastIndex = cars.length - 1;
   return (
     <div className="flex flex-col gap-1">
       <span className="text-muted-foreground">{label}</span>
-      <div
-        className="grid gap-x-0.75 gap-y-1"
-        style={{
-          gridTemplateColumns: `repeat(${Math.min(cars.length, CARS_PER_ROW)}, minmax(2.5rem, 1fr))`,
-        }}
-      >
+      <div className="grid auto-cols-fr grid-flow-col gap-0.75">
         {cars.map((car, index) => (
-          <div key={car.id} className="flex flex-col items-center gap-0.5">
+          <div key={car.id} className="flex min-w-10 flex-col items-center gap-0.5">
             <div
               className={cn(
                 'relative flex h-6 w-full items-center justify-center overflow-hidden rounded-[3px] text-[10px] font-medium tabular-nums',

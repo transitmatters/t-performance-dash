@@ -22,6 +22,10 @@ describe('parseConsist', () => {
     ]);
   });
 
+  it('has no cars for a blank consist', () => {
+    expect(parseConsist({ vehicle_consist: '' })).toEqual([]);
+  });
+
   it('keeps the cars when no car reported', () => {
     expect(parseConsist({ vehicle_consist: '0700|0701', occupancy_status: null })).toEqual([
       { id: '0700', level: null, notBoarding: false, percentage: null },

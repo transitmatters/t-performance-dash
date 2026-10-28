@@ -33,18 +33,20 @@ const isLevel = (status: string): status is OccupancyLevel => status in LEVELS;
 export const parseConsist = (
   point?: Pick<SingleDayDataPoint, 'vehicle_consist' | 'occupancy_status' | 'occupancy_percentage'>
 ): CarOccupancy[] => {
-  const ids = point?.vehicle_consist?.split('|').filter(Boolean) ?? [];
+  // The API passes the event files' pipe-joined columns through as-is, e.g. `1932|1933`, so a
+  // blank consist arrives as an empty string rather than null.
+  const ids = point?.vehicle_consist ? point.vehicle_consist.split('|') : [];
   const statuses = point?.occupancy_status?.split('|') ?? [];
   const percentages = point?.occupancy_percentage?.split('|') ?? [];
   return ids.map((id, index) => {
     const status = statuses[index] ?? '';
     const level = isLevel(status) ? status : null;
-    const percentage = percentages[index] ? Number(percentages[index]) : NaN;
     return {
       id,
       level,
       notBoarding: status === NOT_BOARDING,
-      percentage: level && Number.isFinite(percentage) ? percentage : null,
+      // A car without a reading has an empty slot
+      percentage: level && percentages[index] ? Number(percentages[index]) : null,
     };
   });
 };
