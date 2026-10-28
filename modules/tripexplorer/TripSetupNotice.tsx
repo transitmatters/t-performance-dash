@@ -2,6 +2,8 @@ import { faCalendarDay, faLocationDot } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import { useDelimitatedRoute } from '../../common/utils/router';
+import { stopNoun } from '../../common/utils/stations';
 
 interface TripSetupNoticeProps {
   /** What the page is still waiting on before it can run a query. */
@@ -15,6 +17,7 @@ interface TripSetupNoticeProps {
  */
 export const TripSetupNotice = ({ missing }: TripSetupNoticeProps) => {
   const isMobile = !useBreakpoint('md');
+  const noun = stopNoun(useDelimitatedRoute().lineShort);
   // The controls live in the sticky header on desktop and in the docked panel on mobile, so point
   // at whichever one the reader is actually looking at.
   const where = isMobile ? 'in the panel at the bottom of the screen' : 'in the bar above';
@@ -23,8 +26,8 @@ export const TripSetupNotice = ({ missing }: TripSetupNoticeProps) => {
     missing === 'stations'
       ? {
           icon: faLocationDot,
-          title: 'Choose a start and end station',
-          body: `Pick the two stops you want to travel between ${where}, and this page will show travel times, headways and dwells for that trip.`,
+          title: `Choose a start and end ${noun}`,
+          body: `Pick the two ${noun}s you want to travel between ${where}, and this page will show travel times, headways and dwells for that trip.`,
         }
       : {
           icon: faCalendarDay,
@@ -32,7 +35,7 @@ export const TripSetupNotice = ({ missing }: TripSetupNoticeProps) => {
           body:
             missing === 'dateRange'
               ? `Pick a start and end date ${where} to see how this trip performed over time.`
-              : `Pick a date ${where} to see every trip that ran between these two stations.`,
+              : `Pick a date ${where} to see every trip that ran between these two ${noun}s.`,
         };
 
   return (

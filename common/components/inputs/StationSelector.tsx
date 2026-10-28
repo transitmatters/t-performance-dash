@@ -4,7 +4,7 @@ import { faBicycle, faChevronDown, faWheelchair } from '@fortawesome/free-solid-
 import classNames from 'classnames';
 import type { Station } from '../../types/stations';
 import { useDelimitatedRoute } from '../../utils/router';
-import { optionsForField, stopIdsForStations } from '../../utils/stations';
+import { optionsForField, stopIdsForStations, stopNoun } from '../../utils/stations';
 import { lineColorVar } from '../../styles/general';
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from '../ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
@@ -31,6 +31,7 @@ export const StationSelector = ({ type, fromStation, toStation, setStation }: St
   } = useDelimitatedRoute();
   const [open, setOpen] = useState(false);
   const station = type === 'from' ? fromStation : toStation;
+  const noun = stopNoun(lineShort);
   const stationOptions = optionsForField(
     type,
     lineShort,
@@ -53,7 +54,7 @@ export const StationSelector = ({ type, fromStation, toStation, setStation }: St
       <PopoverTrigger asChild>
         <Button
           additionalClasses="justify-between grow min-w-0 overflow-hidden h-10 md:h-7"
-          aria-label={`${type === 'from' ? 'Start' : 'End'} station: ${station.stop_name}. Change it.`}
+          aria-label={`${type === 'from' ? 'Start' : 'End'} ${noun}: ${station.stop_name}. Change it.`}
         >
           <p className="items-center gap-x-1 truncate text-sm font-semibold">{station.stop_name}</p>
           <FontAwesomeIcon icon={faChevronDown} className="h-4 w-4 pl-2" aria-hidden />
@@ -61,9 +62,9 @@ export const StationSelector = ({ type, fromStation, toStation, setStation }: St
       </PopoverTrigger>
       <PopoverContent align="start" style={lineColorVar(line)} className="w-[min(22rem,90vw)] p-0">
         <Command>
-          <CommandInput placeholder="Search stations..." />
+          <CommandInput placeholder={`Search ${noun}s...`} />
           <CommandList>
-            <CommandEmpty>No matching station.</CommandEmpty>
+            <CommandEmpty>No matching {noun}.</CommandEmpty>
             {stationOptions?.map((option) => {
               const disabled = isDisabled(option);
               return (
