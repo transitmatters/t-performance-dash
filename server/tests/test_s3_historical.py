@@ -35,6 +35,8 @@ def events(monkeypatch):
     """Serve the same event rows for every stop list."""
     rows = []
     monkeypatch.setattr(s3_historical.s3, "download_events", lambda *args, **kwargs: rows)
+    # Reads the TM benchmarks archive from S3
+    monkeypatch.setattr(s3_historical.tm_benchmarks, "resolve_travel_time_benchmark", lambda *args: None)
     return rows
 
 
