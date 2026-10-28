@@ -179,10 +179,9 @@ export const TotalSlowTime = ({
                     return `${tooltipItems[0].label.split(',').slice(0, 2).join(',')}`;
                   },
                   label: (tooltipItem) => {
-                    if (!tooltipItem.parsed.y) return '';
                     return `${
-                      !isLinePage ? `${tooltipItem.dataset.label} slow time:` : 'Total slow time: '
-                    } ${getFormattedTimeString(tooltipItem.parsed.y, 'minutes')}`;
+                      !isLinePage ? `${tooltipItem.dataset.label} slow time:` : 'Total slow time:'
+                    } ${getFormattedTimeString(tooltipItem.parsed.y ?? 0, 'minutes')}`;
                   },
                 },
               },

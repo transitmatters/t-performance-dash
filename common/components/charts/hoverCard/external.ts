@@ -46,6 +46,16 @@ export const contentFromTooltipModel = (tooltip: TooltipText): HoverCardContent 
   return content;
 };
 
+/**
+ * Tooltip `filter` for multi-series charts that drops series at zero to keep the card short, but
+ * keeps them all when every series is zero so the card still opens.
+ */
+export const hideZeroUnlessAllZero = (
+  item: { parsed: { y: number | null } },
+  _index: number,
+  items: { parsed: { y: number | null } }[]
+) => item.parsed.y !== 0 || items.every(({ parsed }) => parsed.y === 0);
+
 /** Chart.js `external` tooltip handler that hands the hover to the shared HTML card. */
 export const externalHoverCard = ({
   chart,
