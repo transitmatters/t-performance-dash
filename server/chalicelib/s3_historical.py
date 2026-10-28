@@ -55,6 +55,18 @@ def unique_everseen(iterable, key=None):
                 yield element
 
 
+def occupancy(row: dict):
+    """Per-car occupancy from a LAMP event row, or None for each field when no car reported.
+
+    A DEP row carries the reading taken on arrival at the next stop, so it describes how full the
+    train left this stop.
+    """
+    return {
+        "occupancy_status": row.get("occupancy_status") or None,
+        "occupancy_percentage": row.get("occupancy_percentage") or None,
+    }
+
+
 def dwells(stop_ids: list, start_date: date, end_date: date, single_day=False):
     """Calculate dwell times from raw arrival/departure event pairs.
 
@@ -69,7 +81,7 @@ def dwells(stop_ids: list, start_date: date, end_date: date, single_day=False):
 
     Returns:
         List of dwell time records, each containing route_id, direction,
-        arr_dt, dep_dt, dwell_time_sec, vehicle_consist, and vehicle_label.
+        arr_dt, dep_dt, dwell_time_sec, vehicle_consist, occupancy_status, occupancy_percentage, and vehicle_label.
     """
     rows_by_time = s3.download_events(start_date, end_date, stop_ids, single_day)
 
@@ -85,7 +97,7 @@ def dwells(stop_ids: list, start_date: date, end_date: date, single_day=False):
             arr_dt = date_utils.parse_event_date(maybe_an_arrival["event_time"])
             delta = dep_dt - arr_dt
 
-            # not every vehicle will have vehicle_consist
+            # not every vehicle will have vehicle_consist or occupancy
             vehicle_consist = maybe_a_departure.get("vehicle_consist")
             dwells.append(
                 {
@@ -95,6 +107,7 @@ def dwells(stop_ids: list, start_date: date, end_date: date, single_day=False):
                     "dep_dt": date_utils.return_formatted_date(dep_dt),
                     "dwell_time_sec": delta.total_seconds(),
                     "vehicle_consist": vehicle_consist,
+                    **occupancy(maybe_a_departure),
                     "vehicle_label": maybe_a_departure["vehicle_label"],
                 }
             )
@@ -118,7 +131,7 @@ def headways(stop_ids: list, start_date: date, end_date: date, single_day=False)
     Returns:
         List of headway records, each containing route_id, direction,
         current_dep_dt, headway_time_sec, benchmark_headway_time_sec,
-        vehicle_consist, and vehicle_label.
+        vehicle_consist, occupancy_status, occupancy_percentage, and vehicle_label.
     """
     rows_by_time = s3.download_events(start_date, end_date, stop_ids, single_day)
 
@@ -152,7 +165,7 @@ def headways(stop_ids: list, start_date: date, end_date: date, single_day=False)
         else:
             benchmark_headway = None
 
-        # not every vehicle will have vehicle_consist
+        # not every vehicle will have vehicle_consist or occupancy
         vehicle_consist = this.get("vehicle_consist")
 
         headways.append(
@@ -163,6 +176,7 @@ def headways(stop_ids: list, start_date: date, end_date: date, single_day=False)
                 "headway_time_sec": headway_time_sec,
                 "benchmark_headway_time_sec": benchmark_headway,
                 "vehicle_consist": vehicle_consist,
+                **occupancy(this),
                 "vehicle_label": this["vehicle_label"],
             }
         )
@@ -187,7 +201,7 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date,
     Returns:
         List of travel time records, each containing route_id, direction,
         dep_dt, arr_dt, travel_time_sec, benchmark_travel_time_sec,
-        vehicle_consist, and vehicle_label.
+        vehicle_consist, occupancy_status, occupancy_percentage, and vehicle_label.
     """
     from concurrent.futures import ThreadPoolExecutor
 
@@ -243,7 +257,7 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date,
         except TypeError, ValueError:
             benchmark = None
 
-        # not every vehicle will have vehicle_consist
+        # not every vehicle will have vehicle_consist or occupancy
         vehicle_consist = departure.get("vehicle_consist")
         travel_times.append(
             {
@@ -255,6 +269,7 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date,
                 "benchmark_travel_time_sec": benchmark,
                 "tm_benchmark_travel_time_sec": tm_benchmark,
                 "vehicle_consist": vehicle_consist,
+                **occupancy(departure),
                 "vehicle_label": departure["vehicle_label"],
             }
         )
