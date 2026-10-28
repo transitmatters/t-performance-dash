@@ -1,7 +1,6 @@
+import { SERVICE_DAY_START_HOUR } from '../../../common/constants/time';
 import type { LineData, ServiceDay, ServiceRegime } from '../../serviceAndRidership/types';
 
-// The MBTA service day starts around 3 AM; trips after midnight belong to the day before.
-const SERVICE_DAY_START_HOUR = 3;
 const DAY_WEIGHTS: Record<ServiceDay, number> = { weekday: 5, saturday: 1, sunday: 1 };
 
 export interface GoalCoverage {

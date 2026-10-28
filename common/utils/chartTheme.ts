@@ -67,3 +67,26 @@ export const SEVERITY_COLORS = {
   off50: CHART_COLORS.RED,
   off100: CHART_COLORS.PURPLE,
 };
+
+export type SeverityTone = keyof typeof SEVERITY_COLORS;
+
+/**
+ * Buckets a value's ratio to its benchmark. `label` names how far off it ran and is null within
+ * the normal band; `showUnderRatio` also flags values well under the benchmark (headways bunching).
+ */
+export const severityForRatio = (
+  ratio: number,
+  showUnderRatio = false
+): { tone: SeverityTone; label: string | null } | null => {
+  if (!Number.isFinite(ratio)) return null;
+  if (showUnderRatio) {
+    // Not actually 100% off, but shown as an extreme
+    if (ratio <= 0.05) return { tone: 'off100', label: '50%+ under' };
+    if (ratio <= 0.5) return { tone: 'off50', label: '50%+ under' };
+    if (ratio <= 0.75) return { tone: 'off25', label: '25%+ under' };
+  }
+  if (ratio <= 1.25) return { tone: 'onTime', label: null };
+  if (ratio <= 1.5) return { tone: 'off25', label: '25%+ over' };
+  if (ratio <= 2.0) return { tone: 'off50', label: '50%+ over' };
+  return { tone: 'off100', label: '100%+ over' };
+};

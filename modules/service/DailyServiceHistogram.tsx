@@ -45,6 +45,7 @@ export const DailyServiceHistogram = (props: Props) => {
           style={{ color }}
           valueAxis={{ title: 'Scheduled round trips', tooltipItemLabel: 'round trips' }}
           datasetRoundTrips
+          compareDatasets
         />
       </ChartStack>
     </>

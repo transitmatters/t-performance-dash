@@ -117,81 +117,108 @@ def get_lamp_folder(stop_id: str):
     return "bus-daily-data" if is_bus(stop_id) else "daily-data"
 
 
-def is_rapid_transit(stop_id: str):
-    """Check if a stop ID belongs to a rapid transit (subway) route."""
-    return not (is_bus(stop_id) or is_cr(stop_id) or is_ferry(stop_id))
+def _historic_key(date: pd.Timestamp, stop_id: str):
+    """S3 key for the stop's monthly archive covering ``date``, or None if there isn't one."""
+    if is_cr(stop_id):
+        return None
+    if is_ferry(stop_id):
+        if date.date() > date_utils.get_max_ferry_monthly_data_date():
+            return None
+        folder = "monthly-ferry-data"
+    else:
+        if date.date() > date_utils.get_max_monthly_data_date():
+            return None
+        folder = "monthly-bus-data" if is_bus(stop_id) else "monthly-data"
+    return f"Events/{folder}/{stop_id}/Year={date.year}/Month={date.month}/events.csv.gz"
 
 
-def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, route_context=None, prefer_lamp=False):
-    """Download and parse a single day's event CSV for a stop from S3.
+def _lamp_key(date: pd.Timestamp, stop_id: str):
+    """S3 key for the stop's LAMP file on ``date``, or None if LAMP can't have it."""
+    # Commuter Rail LAMP doesn't exist yet; add it here when it does
+    if is_cr(stop_id) or is_ferry(stop_id):
+        return None
+    if is_bus(stop_id):
+        # Bus LAMP is published a day late, so today always comes from Gobble
+        if date.date() < date_utils.get_lamp_bus_start_date() or date.date() >= date_utils.current_service_date():
+            return None
+    folder = get_lamp_folder(stop_id)
+    return f"Events-lamp/{folder}/{stop_id}/Year={date.year}/Month={date.month}/Day={date.day}/events.csv"
 
-    Selects the appropriate S3 path based on the stop's mode (bus, CR, ferry, rapid
-    transit) and data recency (monthly archives vs. daily LAMP/Gobble feeds). Bus
-    stops use LAMP for dates on/after ``LAMP_BUS_START_DATE`` and Gobble before that.
-    Falls back to Gobble data if the LAMP key is not found.
+
+def _gobble_key(date: pd.Timestamp, stop_id: str):
+    """S3 key for the stop's Gobble file on ``date``."""
+    folder = get_gobble_folder(stop_id)
+    return f"Events-live/{folder}/{stop_id}/Year={date.year}/Month={date.month}/Day={date.day}/events.csv.gz"
+
+
+SINGLE_DAY_SOURCES = (_lamp_key, _historic_key, _gobble_key)
+DAILY_FALLBACK_SOURCES = (_lamp_key, _gobble_key)
+
+
+def _download_first(keys):
+    """Download and parse the first of ``keys`` that exists, skipping Nones.
+
+    Returns:
+      list[dict] | None: Rows sorted by event_time, or None if no key exists.
+    """
+    for key in keys:
+        if key is None:
+            continue
+        try:
+            return _parse_events(download(key, "ascii", key.endswith(".gz")))
+        except ClientError as ex:
+            if ex.response["Error"]["Code"] != "NoSuchKey":
+                raise
+            print(f"WARNING: No data available on S3 for key: {key}")
+    return None
+
+
+def download_one_event_file(date: pd.Timestamp, stop_id: str):
+    """Download a single day's events for a stop, for single-day (trip view) requests.
+
+    Tries LAMP first for the most detail, then the monthly archive, then Gobble.
 
     Args:
       date: pd.Timestamp: The date to fetch events for.
       stop_id: str: The stop identifier.
-      use_gobble: Force using Gobble data instead of LAMP. (Default value = False)
-      route_context: Unused, reserved for future use. (Default value = None)
-      prefer_lamp: For rapid transit, try LAMP before the monthly archive, which is less
-        detailed. Used for single-day requests. (Default value = False)
 
     Returns:
       list[dict]: Rows of event data sorted by event_time, or empty list if unavailable.
     """
-    year, month, day = date.year, date.month, date.day
+    return _download_first(source(date, stop_id) for source in SINGLE_DAY_SOURCES) or []
 
-    if prefer_lamp and is_rapid_transit(stop_id) and date.date() <= date_utils.get_max_monthly_data_date():
-        lamp_key = f"Events-lamp/{get_lamp_folder(stop_id)}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv"
-        try:
-            return _parse_events(download(lamp_key, "ascii", False))
-        except ClientError as ex:
-            if ex.response["Error"]["Code"] != "NoSuchKey":
-                raise
-        return download_one_event_file(date, stop_id, use_gobble, route_context)
 
-    if is_cr(stop_id):
-        folder = get_gobble_folder(stop_id)
-        key = f"Events-live/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
-    elif is_ferry(stop_id):
-        if date.date() > date_utils.get_max_ferry_monthly_data_date():
-            folder = get_gobble_folder(stop_id)
-            key = f"Events-live/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
-        else:
-            folder = "monthly-ferry-data"
-            key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
-    # if current date is newer than the max monthly data date, use LAMP
-    elif date.date() > date_utils.get_max_monthly_data_date():
-        # bus dates before LAMP_BUS_START_DATE still come from Gobble
-        bus_pre_lamp = is_bus(stop_id) and date.date() < date_utils.get_lamp_bus_start_date()
-        if use_gobble or bus_pre_lamp:
-            folder = get_gobble_folder(stop_id)
-            key = f"Events-live/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv.gz"
-        else:
-            folder = get_lamp_folder(stop_id)
-            key = f"Events-lamp/{folder}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv"
+def download_range_event_file(date: pd.Timestamp, stop_id: str, start_date: date, end_date: date):
+    """Download one ``parallel.s3_date_range`` entry for a stop, for ranged (aggregate) requests.
+
+    Reads the monthly archive first since it's the most complete. If the stop has no
+    archive for that month, or the date is past the archive, each day falls back to
+    LAMP and then Gobble.
+
+    Args:
+      date: pd.Timestamp: A month-end date (monthly archive) or a single day.
+      stop_id: str: The stop identifier.
+      start_date: date: Start of the requested range, to limit the daily fallback.
+      end_date: date: End of the requested range, to limit the daily fallback.
+
+    Returns:
+      list[dict]: Rows of event data, or empty list if unavailable.
+    """
+    historic_key = _historic_key(date, stop_id)
+    if historic_key is None:
+        days = [date]
     else:
-        folder = "monthly-bus-data" if is_bus(stop_id) else "monthly-data"
-        key = f"Events/{folder}/{stop_id}/Year={year}/Month={month}/events.csv.gz"
+        rows = _download_first([historic_key])
+        if rows is not None:
+            return rows
+        month_start = date.replace(day=1)
+        month_end = month_start + pd.offsets.MonthEnd(0)
+        days = pd.date_range(max(month_start, pd.Timestamp(start_date)), min(month_end, pd.Timestamp(end_date)))
 
-    # Download events from S3
-    try:
-        decompressed = download(key, "ascii", ".gz" in key)
-
-    except ClientError as ex:
-        if ex.response["Error"]["Code"] == "NoSuchKey":
-            # raise Exception(f"Data not available on S3 for key {key} ") from None
-            print(f"WARNING: No data available on S3 for key: {key}")
-            # LAMP lags a day behind, so fall back to Gobble (e.g. for today)
-            if key.startswith("Events-lamp/"):
-                return download_one_event_file(date, stop_id, use_gobble=True)
-            return []
-        else:
-            raise
-
-    return _parse_events(decompressed)
+    rows = []
+    for day in days:
+        rows.extend(_download_first(source(day, stop_id) for source in DAILY_FALLBACK_SOURCES) or [])
+    return rows
 
 
 def _parse_events(csv_text: str):
@@ -200,41 +227,46 @@ def _parse_events(csv_text: str):
 
 
 @parallel.make_parallel
-def parallel_download_events(datestop: itertools.product, prefer_lamp=False):
+def parallel_download_events(datestop: itertools.product, single_day=False, start_date=None, end_date=None):
     """Download event data for a single (date, stop) pair. Parallelized via @make_parallel.
 
     Args:
       datestop: A (date, stop_id) tuple from an itertools.product iterator.
-      prefer_lamp: Passed through to ``download_one_event_file``. (Default value = False)
+      single_day: Use the single-day source order instead of the ranged one. (Default value = False)
+      start_date: Start of the requested range, for ranged requests. (Default value = None)
+      end_date: End of the requested range, for ranged requests. (Default value = None)
 
     Returns:
       list[dict]: Event rows for the given date and stop.
     """
     (date, stop) = datestop
-    return download_one_event_file(date, stop, prefer_lamp=prefer_lamp)
+    if single_day:
+        return download_one_event_file(date, stop)
+    return download_range_event_file(date, stop, start_date, end_date)
 
 
-def download_events(start_date: date, end_date: date, stops: list):
+def download_events(start_date: date, end_date: date, stops: list, single_day=False):
     """Download event data for multiple stops over a date range, in parallel.
 
-    Fetches all combinations of dates and stops, then filters to the exact date range
-    and sorts by event time.
+    Single-day requests (trip views) read LAMP, then the monthly archive, then Gobble.
+    Ranged requests (aggregates) read the monthly archive, then LAMP, then Gobble.
+    Each source falls back to the next when a stop's file is missing.
 
     Args:
       start_date: date: Start of the date range (inclusive).
       end_date: date: End of the date range (inclusive).
       stops: list: List of stop IDs to fetch data for.
+      single_day: Whether this is a single-day request. (Default value = False)
 
     Returns:
       list[dict]: All event rows sorted by event_time.
     """
-    if start_date == end_date:
-        # Single day: fetch that exact date (not its month file) so rapid transit can read LAMP first
+    if single_day:
         datestops = [(pd.Timestamp(start_date), stop) for stop in stops]
-        result = parallel_download_events(datestops, prefer_lamp=True)
+        result = parallel_download_events(datestops, single_day=True)
     else:
         datestops = itertools.product(parallel.s3_date_range(start_date, end_date, stops), stops)
-        result = parallel_download_events(datestops)
+        result = parallel_download_events(datestops, start_date=start_date, end_date=end_date)
     result = filter(
         lambda row: start_date.strftime("%Y-%m-%d") <= row["service_date"] <= end_date.strftime("%Y-%m-%d"), result
     )

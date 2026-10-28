@@ -8,7 +8,7 @@ const ALL_MODES = [...RAIL_LINES, 'bus', 'commuter-rail', 'ferry'];
  */
 export const LINE_PAGE_LINES = {
   '': ALL_MODES,
-  delays: [...RAIL_LINES, 'commuter-rail'],
+  delays: [...RAIL_LINES, 'bus', 'commuter-rail'],
   fleet: [...RAIL_LINES, 'bus', 'commuter-rail'],
   leaderboard: ['bus'],
   predictions: RAIL_LINES,

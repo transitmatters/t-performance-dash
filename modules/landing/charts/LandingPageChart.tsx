@@ -61,10 +61,22 @@ export const LandingPageChart = ({ datasets, labels, id }: LandingPageChartsProp
               tooltip: {
                 position: 'nearest',
                 callbacks: {
-                  label: (value) =>
-                    `${value.formattedValue}% of historical maximum (${
-                      LINE_OBJECTS[LANDING_RAIL_LINES[value.datasetIndex]].name
-                    })`,
+                  hoverCard: ([item]) => {
+                    if (!item) return null;
+                    const color = item.dataset.borderColor;
+                    return {
+                      hero: {
+                        value: `${item.formattedValue}%`,
+                        caption: LINE_OBJECTS[LANDING_RAIL_LINES[item.datasetIndex]].name,
+                        color: typeof color === 'string' ? color : undefined,
+                      },
+                      meter: {
+                        fraction: (item.parsed.y ?? 0) / 100,
+                        label: 'of historical maximum',
+                        color: typeof color === 'string' ? color : undefined,
+                      },
+                    };
+                  },
                   title: (value) => {
                     const startDay = dayjs(value[0].label);
                     const endDay = startDay.add(6, 'days');

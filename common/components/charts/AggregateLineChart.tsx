@@ -282,18 +282,53 @@ export const AggregateLineChart = ({
                 mode: 'index',
                 position: 'nearest',
                 callbacks: {
-                  label: (tooltipItem) => {
-                    if (!tooltipItem.parsed.y) return '';
-                    const isTemp =
-                      (tooltipItem.dataset as { yAxisID?: string }).yAxisID === 'yTemp';
-                    if (isTemp) {
-                      return `${tooltipItem.dataset.label}: ${tooltipItem.parsed.y} °F`;
-                    }
-                    return `${tooltipItem.dataset.label}: ${
+                  hoverCard: (items) => {
+                    const valueOf = (label: string) =>
+                      items.find((item) => item.dataset.label === label)?.parsed.y || undefined;
+                    const format = (value: number) =>
                       yUnit === 'Minutes'
-                        ? getFormattedTimeString(tooltipItem.parsed.y, 'minutes')
-                        : `${tooltipItem.parsed.y} ${yUnit}`
-                    }`;
+                        ? getFormattedTimeString(value, 'minutes')
+                        : `${Number(value.toFixed(1))} ${yUnit}`;
+                    const median = valueOf(seriesName);
+                    const p25 = valueOf('25th percentile');
+                    const p75 = valueOf('75th percentile');
+                    const trend = valueOf('Trend');
+                    const tempMean = valueOf('Daily mean');
+                    const tempLow = valueOf('Daily low');
+                    const tempHigh = valueOf('Daily high');
+
+                    return {
+                      hero: median
+                        ? {
+                            value: format(median),
+                            caption: seriesName,
+                            color: chartTheme.neutralPoint,
+                          }
+                        : undefined,
+                      rows: [
+                        ...(p75
+                          ? [{ label: '75th percentile', value: format(p75), color: fillColor }]
+                          : []),
+                        ...(p25
+                          ? [{ label: '25th percentile', value: format(p25), color: fillColor }]
+                          : []),
+                        ...(trend
+                          ? [{ label: 'Trend', value: format(trend), color: CHART_COLORS.RED }]
+                          : []),
+                        ...(tempMean
+                          ? [
+                              {
+                                label: 'Temperature',
+                                value:
+                                  tempLow && tempHigh
+                                    ? `${tempMean} °F (${tempLow}–${tempHigh})`
+                                    : `${tempMean} °F`,
+                                color: TEMPERATURE_LINE_COLOR,
+                              },
+                            ]
+                          : []),
+                      ],
+                    };
                   },
                 },
               },

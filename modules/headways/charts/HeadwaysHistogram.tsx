@@ -3,7 +3,7 @@ import 'chartjs-adapter-date-fns';
 import { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { LINE_COLORS } from '../../../common/constants/colors';
+import { CHART_COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { HeadwayTooltipData, HeadwaysChartProps } from '../../../common/types/charts';
 import { MetricFieldKeys } from '../../../common/types/charts';
 import type { HeadwayPoint } from '../../../common/types/dataPoints';
@@ -115,31 +115,40 @@ export const HeadwaysHistogram = ({ headways }: HeadwaysChartProps) => {
                 tooltip: {
                   mode: 'index',
                   callbacks: {
-                    title: (items) => {
-                      if (!items.length) {
-                        return '';
-                      }
-                      const item = items[0];
-                      const { x } = item.parsed;
-                      if (!x) return '';
-                      const min = x - 0.5;
-                      const max = x + 0.5;
-                      const tooltip = [`${min} - ${max} min.`];
-
-                      const tooltipData = headwayBucketPercentages[x.toString()];
-                      const vehicleType =
+                    hoverCard: ([item]) => {
+                      const x = item?.parsed.x;
+                      if (!x) return null;
+                      const [vehicle, vehicles] =
                         lineShort === 'Bus'
-                          ? 'buses'
+                          ? ['bus', 'buses']
                           : lineShort === 'Ferry'
-                            ? 'ferries'
-                            : 'trains';
-                      tooltip.push(`${tooltipData.pct_trains}% of ${vehicleType}`);
-                      if (!Number.isNaN(benchmarkTime) && benchmarkTime > 0) {
-                        tooltip.push(
-                          `Benchmark: ${getFormattedTimeString(benchmarkTime, 'seconds')}`
-                        );
-                      }
-                      return tooltip;
+                            ? ['ferry', 'ferries']
+                            : ['train', 'trains'];
+                      const count = item.parsed.y ?? 0;
+                      const { pct_trains } = headwayBucketPercentages[x.toString()];
+                      return {
+                        title: `${x - 0.5}–${x + 0.5} min headways`,
+                        hero: {
+                          value: count.toLocaleString(),
+                          unit: count === 1 ? vehicle : vehicles,
+                          color: LINE_COLORS[line ?? 'default'],
+                        },
+                        meter: {
+                          fraction: pct_trains / 100,
+                          label: `${pct_trains}% of ${vehicles}`,
+                          color: LINE_COLORS[line ?? 'default'],
+                        },
+                        rows:
+                          !Number.isNaN(benchmarkTime) && benchmarkTime > 0
+                            ? [
+                                {
+                                  label: 'Benchmark headway',
+                                  value: getFormattedTimeString(benchmarkTime, 'seconds'),
+                                  color: CHART_COLORS.ANNOTATIONS,
+                                },
+                              ]
+                            : [],
+                      };
                     },
                   },
                 },
