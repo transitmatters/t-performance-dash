@@ -17,11 +17,13 @@ import { lineToDefaultRouteId } from '../predictions/utils/utils';
 import { getBusRouteIds } from '../../common/constants/lines';
 import type { LineRouteId } from '../../common/types/lines';
 import { DataNotes } from '../../common/components/notices/DataNotes';
+import { Link } from '../../common/components/general/Link';
 import { getFormattedTimeString } from '../../common/utils/time';
 import { getDelayStats } from './utils';
 import { DelayByCategoryGraph } from './charts/DelayByCategoryGraph';
 import { DelayBreakdownGraph } from './charts/DelayBreakdownGraph';
 import { TotalDelayGraph } from './charts/TotalDelayGraph';
+import { toDisplayedDelays } from './charts/utils';
 
 export function DelaysDetails() {
   const {
@@ -68,11 +70,16 @@ export function DelaysDetails() {
     },
     enabled
   );
+  // The actual delay (time alerts were active) where the line has it, else the stated delay
+  const { delays, isActual } = useMemo(
+    () => toDisplayedDelays(alertDelays.data ?? []),
+    [alertDelays.data]
+  );
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
   }
 
-  const stats = alertDelays.data ? getDelayStats(alertDelays.data, agg, line) : null;
+  const stats = alertDelays.data ? getDelayStats(delays, agg, line) : null;
 
   const deltaFor = (delta: number) => {
     if (!Number.isFinite(delta)) return undefined;
@@ -107,12 +114,17 @@ export function DelaysDetails() {
         )}
         <Widget
           title="Total time delayed"
-          subtitle={`Per ${agg === 'weekly' ? 'week' : 'day'}, from rider alerts`}
+          subtitle={
+            isActual
+              ? `Per ${agg === 'weekly' ? 'week' : 'day'}: how long delay alerts were up, vs. the delay they stated`
+              : `Per ${agg === 'weekly' ? 'week' : 'day'}, from rider alerts`
+          }
           ready={[alertDelays]}
           action={greenBranchToggle}
         >
           <TotalDelayGraph
-            data={alertDelays.data!}
+            data={delays}
+            isActual={isActual}
             startDate={startDate}
             endDate={endDate}
             agg={agg}
@@ -124,12 +136,7 @@ export function DelaysDetails() {
           ready={[alertDelays]}
           action={greenBranchToggle}
         >
-          <DelayBreakdownGraph
-            data={alertDelays.data!}
-            startDate={startDate}
-            endDate={endDate}
-            agg={agg}
-          />
+          <DelayBreakdownGraph data={delays} startDate={startDate} endDate={endDate} agg={agg} />
         </Widget>
         <Widget
           title="Delay time by reason"
@@ -137,14 +144,15 @@ export function DelaysDetails() {
           ready={[alertDelays]}
           action={greenBranchToggle}
         >
-          <DelayByCategoryGraph data={alertDelays.data!} />
+          <DelayByCategoryGraph data={delays} />
         </Widget>
         <DataNotes>
           <p>
             When there's a delay on the T, the MBTA sends out an alert to riders. These alerts
             almost always include a reason for the delay, and an estimate of how long trains may be
-            delayed. We collect these alerts and group them by general matching categories, and add
-            up the total delay time to riders in a week.
+            delayed: "delays of about 15 minutes" on the subway, or "operating 10-20 minutes behind
+            schedule" for a Commuter Rail train. We collect these alerts, group them by general
+            matching categories, and add up the delay time for each day or week.
           </p>
           {line === 'line-bus' && (
             <p>
@@ -196,6 +204,41 @@ export function DelaysDetails() {
               </span>{' '}
               between riverside and kenmore.
             </blockquote>
+          </div>
+          <div>
+            <h4 className="font-semibold">How we measure delay time</h4>
+            <p>
+              On subway lines and bus routes, delay time is how long the delay alerts were actually
+              up, from when the MBTA posted each one until it was taken down. Overlapping alerts are
+              only counted once, and an alert is counted for at most 3 hours, since longer ones were
+              almost always left up by mistake.
+            </p>
+            <p className="mt-2">
+              The top chart compares this with the delay the alerts stated. Alerts usually stay up
+              longer than the delay they state, because they cover the time it takes service to
+              recover: a "15 minute" subway alert is typically up for about 35 minutes. When an
+              alert is updated, its final stated delay is counted once.
+            </p>
+            <p className="mt-2">
+              Commuter Rail alerts are about individual trains and stay up until that train finishes
+              its trip, so for Commuter Rail we use the stated delay, which is how far behind
+              schedule the train ran.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-semibold">Where this data comes from</h4>
+            <p>
+              Alerts come from the MBTA&apos;s{' '}
+              <Link
+                href="https://performancedata.mbta.com/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                LAMP
+              </Link>{' '}
+              archive, which keeps every version of every alert since September 2019. The most
+              recent day uses alerts we collect live, and is filled in from LAMP the next morning.
+            </p>
           </div>
         </DataNotes>
       </ChartPageDiv>
