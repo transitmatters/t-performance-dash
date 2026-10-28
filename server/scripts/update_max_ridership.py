@@ -2,10 +2,34 @@
 from chalicelib.dynamo import query_historic_max_ridership
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
+import json
+import pathlib
 import sys
 import os
 
-# To run  cd /home/andrew/transitmatters/t-performance-dash/server && PYTHONPATH=. poetry run python scripts/update_max_ridership.py
+BUS_CONSTANTS = pathlib.Path(__file__).resolve().parents[2] / "common" / "constants" / "bus_constants"
+# Mirrors getRidershipLineId in common/utils/ridership.ts
+BUS_RIDERSHIP_ALIASES = {
+    "34": "3434E",
+    "57": "5757A",
+    "CT2": "747",
+    "CT3/171": "171708",
+    "SL1/SL2/SL3/SLW": "SLWaterfront",
+    "SL4/SL5": "SLWashington",
+}
+
+
+def current_bus_routes() -> list[str]:
+    """Dashboard bus route keys (e.g. '1', '114/116/117') that are still running, from the station manifests."""
+    routes = []
+    for path in sorted(BUS_CONSTANTS.glob("*.json")):
+        for key, route in json.loads(path.read_text()).items():
+            if not route.get("service_end") and not key.endswith("-legacy"):
+                routes.append(key)
+    return routes
+
+
+# To run: cd server && PYTHONPATH=. uv run python scripts/update_max_ridership.py
 
 
 def get_max_ridership_by_lineId(line_id: str, start_date: date, end_date: date):
@@ -29,12 +53,8 @@ def get_line_id(line_id: str) -> str:
     if line_id.startswith("CR-"):
         line_id = line_id.replace("CR-", "line-")
         return line_id
-    # Check if first character is digit, if so then it is a bus
-    if line_id[0].isdigit():
-        if line_id == "57":
-            line_id = "5757A"
-        line_id = "line-" + line_id
-        return line_id
+    if line_id in BUS_ROUTES:
+        return "line-" + BUS_RIDERSHIP_ALIASES.get(line_id, line_id.replace("/", ""))
     # This is meant for Red, Blue, Orange, Green, and Mattapan
     if line_id in [
         "line-red",
@@ -47,6 +67,8 @@ def get_line_id(line_id: str) -> str:
         return line_id
 
 
+BUS_ROUTES = current_bus_routes()
+
 if __name__ == "__main__":
     # Example: Get max ridership for all lines
     lines = [
@@ -55,73 +77,7 @@ if __name__ == "__main__":
         "line-blue",
         "line-green",
         "line-mattapan",
-        "1",
-        "4",
-        "7",
-        "8",
-        "9",
-        "10",
-        "11",
-        "14",
-        "15",
-        "16",
-        "1719",
-        "18",
-        "21",
-        "22",
-        "23",
-        "26",
-        "28",
-        "29",
-        "30",
-        "31",
-        "32",
-        "34",
-        "35",
-        "36",
-        "37",
-        "38",
-        "39",
-        "41",
-        "42",
-        "43",
-        "44",
-        "45",
-        "47",
-        "51",
-        "55",
-        "57",
-        "6170170",
-        "66",
-        "69",
-        "71",
-        "73",
-        "77",
-        "80",
-        "83",
-        "85",
-        "86-legacy",
-        "86",
-        "87",
-        "88",
-        "89",
-        "90",
-        "91",
-        "92",
-        "93",
-        "94",
-        "95",
-        "96",
-        "97",
-        "99",
-        "104",
-        "109",
-        "104109",
-        "110",
-        "111",
-        "116",
-        "114116117",
-        "220221222",
+        *BUS_ROUTES,
         "CR-Fitchburg",
         "CR-Franklin",
         "CR-Greenbush",
@@ -152,7 +108,7 @@ if __name__ == "__main__":
                 line_id = get_line_id(line)
                 try:
                     max_ridership = get_max_ridership_by_lineId(line_id, start_date, end_date)
-                    peak_ridership[line] = max_ridership
+                    peak_ridership[line.replace("/", "")] = max_ridership
 
                 except Exception as e:
                     print(f"Error getting ridership for {line}: {e}")
@@ -177,7 +133,7 @@ if __name__ == "__main__":
                 line_id = get_line_id(line)
                 try:
                     max_ridership = get_max_ridership_by_lineId(line_id, start_date, end_date)
-                    peak_ridership[line] = max_ridership
+                    peak_ridership[line.replace("/", "")] = max_ridership
 
                 except Exception as e:
                     print(f"Error getting ridership for {line}: {e}")

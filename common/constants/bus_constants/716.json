@@ -1,0 +1,91 @@
+{
+  "716": {
+    "type": "bus",
+    "direction": {
+      "0": "outbound",
+      "1": "inbound"
+    },
+    "stations": [
+      {
+        "stop_name": "Cobbs Corner (Canton)",
+        "branches": null,
+        "station": "cobcr",
+        "order": 1,
+        "stops": {
+          "1": ["716-1-71601"],
+          "0": ["716-0-71601"]
+        }
+      },
+      {
+        "stop_name": "Canton Center",
+        "branches": null,
+        "station": "cancr",
+        "order": 2,
+        "stops": {
+          "1": ["716-1-71605"],
+          "0": ["716-0-71645"]
+        }
+      },
+      {
+        "stop_name": "Canton Junction Station",
+        "branches": null,
+        "station": "canjs",
+        "order": 3,
+        "stops": {
+          "1": ["716-1-16133"],
+          "0": ["716-0-16133"]
+        }
+      },
+      {
+        "stop_name": "Washington Street",
+        "branches": null,
+        "station": "ctnhs",
+        "order": 4,
+        "stops": {
+          "1": ["716-1-71607"],
+          "0": ["716-0-71643"]
+        }
+      },
+      {
+        "stop_name": "Houghton Pond",
+        "branches": null,
+        "station": "hpond",
+        "order": 5,
+        "stops": {
+          "1": ["716-1-122015"],
+          "0": ["716-0-122015"]
+        }
+      },
+      {
+        "stop_name": "Royall St & Trailside Museum",
+        "branches": null,
+        "station": "mspnr",
+        "order": 6,
+        "stops": {
+          "1": ["716-1-71616"],
+          "0": ["716-0-71635"]
+        }
+      },
+      {
+        "stop_name": "Curry College (Milton)",
+        "branches": null,
+        "station": "crclg",
+        "order": 7,
+        "stops": {
+          "1": ["716-1-121019"],
+          "0": ["716-0-71633"]
+        }
+      },
+      {
+        "stop_name": "Mattapan Station",
+        "branches": null,
+        "station": "matpn",
+        "order": 8,
+        "stops": {
+          "1": ["716-1-185"],
+          "0": ["716-0-185"]
+        }
+      }
+    ]
+  }
+}
