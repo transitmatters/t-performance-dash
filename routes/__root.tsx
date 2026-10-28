@@ -11,7 +11,7 @@ import { useApplyTheme } from '../common/hooks/useApplyTheme';
 import { useGoatCounter } from '../common/hooks/useGoatCounter';
 import { BetaRumNotice } from '../common/components/notices/BetaRumNotice';
 import { initBetaRum } from '../common/utils/rum';
-import { redirectToCompleteDates } from '../common/utils/dateParams';
+import { redirectToCanonicalSearch } from '../common/utils/dateParams';
 
 const PassThroughLayout = ({ children }: { children?: ReactNode }) => <>{children}</>;
 
@@ -55,6 +55,6 @@ const RootComponent = () => {
 };
 
 export const Route = createRootRoute({
-  beforeLoad: redirectToCompleteDates,
+  beforeLoad: redirectToCanonicalSearch,
   component: RootComponent,
 });

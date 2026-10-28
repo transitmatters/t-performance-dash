@@ -14,7 +14,7 @@ interface DatePickerProps {
 
 /**
  * The date fields themselves. They only ever edit dates that are already there: the router fills in
- * and clamps missing or out-of-bounds dates before the page renders (see `redirectToCompleteDates`).
+ * and clamps missing or out-of-bounds dates before the page renders (see `redirectToCanonicalSearch`).
  */
 export const DatePickers = ({ type, clearPreset }: DatePickerProps) => {
   const updateQueryParams = useUpdateQuery();
