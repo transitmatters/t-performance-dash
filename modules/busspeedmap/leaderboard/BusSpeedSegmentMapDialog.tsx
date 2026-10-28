@@ -15,6 +15,7 @@ import {
 import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import { BusSpeedMapViewLazy } from '../map/BusSpeedMapViewLazy';
 import type { BusSpeedSegmentLeaderboardEntry, DayType, Period, TimeBand } from '../types';
+import { segmentDistanceAndTime } from '../utils';
 
 interface BusSpeedSegmentMapDialogProps {
   entry: BusSpeedSegmentLeaderboardEntry | undefined;
@@ -97,7 +98,8 @@ export const BusSpeedSegmentMapDialog = ({
               <span className="font-semibold text-stone-900">
                 {lastEntry.p50_speed_mph.toFixed(1)} mph
               </span>{' '}
-              · Median of {lastEntry.n_traversals} trips
+              {segmentDistanceAndTime(lastEntry) && `· ${segmentDistanceAndTime(lastEntry)} `}·
+              Median of {lastEntry.n_traversals} trips
               {lastEntry.n_interpolated > 0 &&
                 `, ${lastEntry.n_interpolated} with an interpolated stop time`}
             </p>

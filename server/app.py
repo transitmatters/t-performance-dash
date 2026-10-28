@@ -907,6 +907,10 @@ def get_time_predictions():
     """Retrieve time prediction accuracy data for a route."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["route_id"])
+    start_date = parse_user_date(query_params["start_date"]) if "start_date" in query_params else None
+    end_date = parse_user_date(query_params["end_date"]) if "end_date" in query_params else None
+    if start_date and end_date and start_date > end_date:
+        raise BadRequestError("start_date must be on or before end_date.")
 
     if config.BACKEND_SOURCE == "static":
         data = static_data.get_time_predictions(query_params)
@@ -916,6 +920,8 @@ def get_time_predictions():
         route_id = query_params["route_id"]
         data = predictions.query_time_predictions(
             route_id=route_id,
+            start_date=start_date,
+            end_date=end_date,
         )
 
     return Response(

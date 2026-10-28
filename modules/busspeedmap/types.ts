@@ -84,6 +84,10 @@ export interface FetchBusSpeedSegmentsUrlOptions extends FetchBusSpeedSegmentsOp
  * geometry. `time_band`/`day_type` aren't repeated per row: they're the key you looked the
  * row array up under (see BusSpeedSegmentLeaderboardResponse), same as they're absent from
  * daily pmtiles features. Already sorted slowest-first and capped server-side.
+ *
+ * `p50_speed_mph` is `segment_length_m` over `p50_total_time_seconds`, so the time is the same
+ * arrival-to-arrival measure, dwell at the from-stop included. Both are missing from files
+ * published before the pipeline started writing them.
  */
 export interface BusSpeedSegmentLeaderboardEntry {
   route_id: string;
@@ -93,6 +97,8 @@ export interface BusSpeedSegmentLeaderboardEntry {
   p50_speed_mph: number;
   n_traversals: number;
   n_interpolated: number;
+  segment_length_m?: number;
+  p50_total_time_seconds?: number;
 }
 
 /** A daily leaderboard file, keyed straight by time_band. */

@@ -96,6 +96,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
               startDateUTC={startDateUTC}
               endDateUTC={endDateUTC}
               showTitle={showTitle}
+              embedLine="system"
             />
           )}
         </Widget>

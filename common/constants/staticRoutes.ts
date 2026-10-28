@@ -40,3 +40,11 @@ export const STATIC_PATHS: string[] = [
     lines.map((line) => `/${line}/${page ? `${page}/` : ''}`)
   ),
 ];
+
+/** Lines with an iframe-able total slow time chart; `system` draws every line on one chart. */
+export const EMBED_SLOWZONES_LINES = [...RAIL_LINES, 'system'];
+
+/** Prerendered like STATIC_PATHS so S3 serves them, but they get no link-preview card. */
+export const EMBED_PATHS: string[] = EMBED_SLOWZONES_LINES.map(
+  (line) => `/embed/${line}/slowzones/`
+);

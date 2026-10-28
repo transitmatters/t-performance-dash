@@ -232,9 +232,19 @@ class TimePredictionParams(BaseModel):
 
     Attributes:
         route_id: Route identifier (e.g., `Red`, `CR-Fairmount`).
+        start_date: Optional start of the range of weeks to return.
+        end_date: Optional end of the range of weeks to return.
     """
 
     route_id: str = Field(description=_ROUTE_ID_DESC)
+    start_date: date | None = Field(
+        default=None,
+        description="Keep only weeks starting on or after this date (YYYY-MM-DD). Omit it for the full history.",
+    )
+    end_date: date | None = Field(
+        default=None,
+        description="Keep only weeks starting on or before this date (YYYY-MM-DD). Omit it for the full history.",
+    )
 
 
 class SpeedRestrictionsParams(BaseModel):
@@ -819,10 +829,18 @@ class DwellsAggregateResponse(RootModel[List[AggregateByDate]]):
 class LineDelayEntry(BaseModel):
     """Alert-reported delay on a line for one day or week, in minutes, by cause.
 
+    The per-cause fields add up the delay each alert *stated* ("delays of about 15
+    minutes"). For subway lines and bus routes, `delay_alert_minutes` is how long those
+    same alerts were actually up; per-cause versions are returned as
+    `delay_alert_minutes_<cause>` (e.g. `delay_alert_minutes_signal_problem`). Commuter
+    Rail has stated delay only.
+
     Attributes:
         date: Day, or the Monday starting the week (`YYYY-MM-DD`).
         line: Line as requested (e.g. `Red`, `Green-B`, `CR-Fairmount`).
-        total_delay_time: Total delay.
+        total_delay_time: Total stated delay.
+        delay_alert_minutes: Minutes at least one delay alert was up (subway and bus only;
+            absent for days without alert history).
         brake_problem: Delay attributed to brake problems.
         car_traffic: Delay attributed to car traffic.
         disabled_vehicle: Delay attributed to disabled vehicles.
@@ -844,6 +862,7 @@ class LineDelayEntry(BaseModel):
     date: str
     line: str
     total_delay_time: int
+    delay_alert_minutes: int | None = None
     brake_problem: int
     car_traffic: int
     disabled_vehicle: int

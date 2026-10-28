@@ -27,7 +27,7 @@ import { BusSpeedSegmentLeaderboard } from './BusSpeedSegmentLeaderboard';
 import { BusSpeedSegmentMapDialog } from './BusSpeedSegmentMapDialog';
 
 const FREQUENT_BUS_ROUTES = new Set(FREQUENT_BUS_ROUTE_IDS);
-const LEADERBOARD_PREVIEW_SIZE = 25;
+const LEADERBOARD_PREVIEW_SIZE = 50;
 const ALL_ROUTES = 'all';
 
 interface BusSpeedSegmentLeaderboardSectionProps {
@@ -80,7 +80,8 @@ export const BusSpeedSegmentLeaderboardSection = ({
 
     // Entries are pre-filtered server-side to >=20 traversals in this slice, so a thin time
     // band (early_am/late_night especially, on a single day) can come back genuinely empty
-    // rather than always ~100 rows.
+    // rather than always ~500 rows. The frequent/route filters below only narrow that capped
+    // slice, which is why it runs so much deeper than the 50 rows shown at first.
     const bandEntries = selectSegmentLeaderboardEntries(
       leaderboard.data,
       period,

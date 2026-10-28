@@ -173,6 +173,11 @@ describe('getDateRedirectHref', () => {
     expect(getDateRedirectHref('/red/leaderboard/', {})).toBeUndefined();
   });
 
+  it('leaves embeds alone, so one without dates keeps showing the latest range', () => {
+    expect(getDateRedirectHref('/embed/red/slowzones/', {})).toBeUndefined();
+    expect(getDateRedirectHref('/embed/system/slowzones/', {})).toBeUndefined();
+  });
+
   it('is idempotent', () => {
     const href = getDateRedirectHref('/red/speed/', { startDate: '2025-01-01' })!;
     const [pathname, query] = href.split('?');
