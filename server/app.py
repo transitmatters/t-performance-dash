@@ -525,6 +525,12 @@ def get_trips_by_line():
     )
 
 
+@app.route("/api/tripmetrics/segment", cors=cors_config)
+def get_trips_by_segment():
+    response = speed.query_speed_segment(app.current_request.query_params)
+    return json.dumps(response, indent=4, sort_keys=True)
+
+
 @app.route(
     "/api/bustripmetrics",
     cors=cors_config,

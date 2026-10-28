@@ -1,4 +1,4 @@
-import type { Diagram, SegmentLocation } from '@transitmatters/stripmap';
+import type { Diagram, SegmentLabel, SegmentLocation } from '@transitmatters/stripmap';
 
 import dayjs from 'dayjs';
 import type {
@@ -7,24 +7,23 @@ import type {
   SpeedRestriction,
 } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
-import type { Station } from '../../../common/types/stations';
 import { getParentStationForStopId, getStationById } from '../../../common/utils/stations';
-
-export const DIRECTIONS = ['1', '0'] as const;
-
-export type SlowZoneDirection = '0' | '1';
-
-export type ByDirection<T> = Record<SlowZoneDirection, T>;
+import {
+  filterActiveElements,
+  indexByDirection,
+  locateIntoSegments,
+  matchSegmentLocations,
+} from '../../../common/utils/mapSegments';
+import type {
+  ByDirection,
+  SegmentationResult,
+  WithSegmentLocation,
+} from '../../../common/types/map';
 
 export type SlowZonesSegment = {
   segmentLocation: SegmentLocation;
   slowZones: ByDirection<SlowZoneResponse[]>;
   speedRestrictions: ByDirection<SpeedRestriction[]>;
-};
-
-type SegmentationResult = {
-  segments: SlowZonesSegment[];
-  effectiveDate: Date;
 };
 
 type SegmentSlowZonesOptions = {
@@ -33,12 +32,6 @@ type SegmentSlowZonesOptions = {
   speedRestrictions: SpeedRestriction[];
   slowZones: SlowZoneAllSlowResponse;
   lineName: LineShort;
-};
-
-type WithSegmentLocation<T> = {
-  segmentLocation: SegmentLocation;
-  direction: SlowZoneDirection;
-  value: T;
 };
 
 /**
@@ -50,62 +43,6 @@ const getEffectiveDate = (desiredDate: Date, slowZones: SlowZoneAllSlowResponse)
     return maxEndDate;
   }
   return dayjs(desiredDate).startOf('day').toDate();
-};
-
-const filterActiveElements = <T extends Record<string, unknown>>(
-  records: T[],
-  targetLine: LineShort,
-  targetDate: Date,
-  getRecordDateRange: (t: T) => [Date, Date],
-  getRecordLine: (t: T) => LineShort
-) => {
-  return records.filter((record) => {
-    const [startDate, endDate] = getRecordDateRange(record);
-    return (
-      startDate.valueOf() <= targetDate.valueOf() &&
-      endDate.valueOf() >= targetDate.valueOf() &&
-      getRecordLine(record) === targetLine
-    );
-  });
-};
-
-const locateIntoSegments = <T extends Record<string, unknown>>(
-  records: T[],
-  getFromStation: (t: T) => null | Station,
-  getToStation: (t: T) => null | Station
-) => {
-  const located: WithSegmentLocation<T>[] = [];
-  for (const record of records) {
-    const fromStation = getFromStation(record);
-    const toStation = getToStation(record);
-    if (fromStation && toStation) {
-      const fromComesFirst = fromStation.order < toStation.order;
-      const direction: SlowZoneDirection = fromComesFirst ? '0' : '1';
-      located.push({
-        direction,
-        segmentLocation: {
-          fromStationId: fromStation.station,
-          toStationId: toStation.station,
-        },
-        value: record,
-      });
-    }
-  }
-  return located;
-};
-
-const matchSegmentLocations = (first: SegmentLocation, second: SegmentLocation) => {
-  return (
-    (first.fromStationId === second.fromStationId && first.toStationId === second.toStationId) ||
-    (first.toStationId === second.fromStationId && first.fromStationId === second.toStationId)
-  );
-};
-
-const indexByDirection = <T>(records: WithSegmentLocation<T>[]): ByDirection<T[]> => {
-  return {
-    '0': records.filter((r) => r.direction === '0').map((r) => r.value),
-    '1': records.filter((r) => r.direction === '1').map((r) => r.value),
-  };
 };
 
 const mergeByLocation = (
@@ -130,7 +67,9 @@ const mergeByLocation = (
   return mergeResult;
 };
 
-export const segmentSlowZones = (options: SegmentSlowZonesOptions): SegmentationResult => {
+export const segmentSlowZones = (
+  options: SegmentSlowZonesOptions
+): SegmentationResult<SlowZonesSegment> => {
   const { date: desiredDate, slowZones, speedRestrictions, lineName, diagram } = options;
   const effectiveDate = getEffectiveDate(desiredDate, slowZones);
   const activeSlowZones = locateIntoSegments(
@@ -159,4 +98,25 @@ export const segmentSlowZones = (options: SegmentSlowZonesOptions): Segmentation
     effectiveDate,
     segments: mergeByLocation(activeSlowZones, activeSpeedRestrictions, diagram),
   };
+};
+
+export const getSegmentLabelOverrides = (
+  segmentLocation: SegmentLocation,
+  isHorizontal: boolean
+): null | Partial<SegmentLabel> => {
+  const { toStationId } = segmentLocation;
+  // JFK to Savin Hill — on a steep curve
+  if (toStationId === 'place-shmnl') {
+    return {
+      mapSide: '1' as const,
+      offset: isHorizontal ? { x: -12, y: -5 } : { x: 0, y: 0 },
+    };
+  }
+  // Shawmut to Ashmont — obscured by "North Quincy" label
+  if (!isHorizontal && toStationId === 'place-asmnl') {
+    return {
+      mapSide: '1' as const,
+    };
+  }
+  return null;
 };
