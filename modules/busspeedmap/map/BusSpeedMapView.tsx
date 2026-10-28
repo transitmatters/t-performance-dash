@@ -9,6 +9,7 @@ import type {
   DataDrivenPropertyValueSpecification,
   FilterSpecification,
   MapGeoJSONFeature,
+  Map as MaplibreMap,
 } from 'maplibre-gl';
 import { useBusSpeedStops } from '../../../common/api/hooks/busSpeedSegments';
 import { getBusRouteDisplayName, getBusRouteIds } from '../../../common/constants/lines';
@@ -82,6 +83,8 @@ const registerStopsArchive = (buffer: ArrayBuffer): string => {
 const BASEMAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
 
 const SOURCE_ID = 'bus-speed-segments';
+const ARROWS_LAYER_ID = 'bus-speed-direction-arrows';
+const ARROW_IMAGE_ID = 'bus-speed-direction-arrow';
 const HITBOX_LAYER_ID = 'bus-speed-hitbox';
 const CASING_LAYER_ID = 'bus-speed-casing';
 const STOPS_SOURCE_ID = 'bus-speed-stops';
@@ -117,6 +120,53 @@ const zoomWidth = (
 const lineWidth = zoomWidth(1.5, 3.5, 6);
 const casingWidth = zoomWidth(3.5, 5.5, 8);
 const hoverHaloWidth = zoomWidth(7, 11, 16);
+
+/** Below this the segments are too short and dense for arrows to read as anything but noise. */
+const ARROWS_MIN_ZOOM = 13;
+const arrowSize = [
+  'interpolate',
+  ['linear'],
+  ['zoom'],
+  ARROWS_MIN_ZOOM,
+  0.7,
+  16,
+  1,
+  // The leaderboard dialog zooms to 18 on a single segment, where the arrow is the point.
+  18,
+  1.3,
+] as unknown as DataDrivenPropertyValueSpecification<number>;
+
+/**
+ * A right-pointing chevron, drawn here rather than shipped as a file. A line-placed symbol's
+ * icon is rotated so its +x axis follows the line's own drawing order, and every segment is
+ * cut from its pattern's shape from-stop to to-stop, so this points the way the bus travels.
+ * White on a dark edge, so it reads against every colour on the speed ramp.
+ */
+const addArrowImage = (map: MaplibreMap) => {
+  if (map.hasImage(ARROW_IMAGE_ID)) return;
+  const pixelRatio = 2;
+  const size = 16 * pixelRatio;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const context = canvas.getContext('2d');
+  if (!context) return;
+
+  context.lineCap = 'round';
+  context.lineJoin = 'round';
+  context.beginPath();
+  context.moveTo(size * 0.3, size * 0.18);
+  context.lineTo(size * 0.68, size * 0.5);
+  context.lineTo(size * 0.3, size * 0.82);
+  context.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+  context.lineWidth = 5 * pixelRatio;
+  context.stroke();
+  context.strokeStyle = '#ffffff';
+  context.lineWidth = 2.5 * pixelRatio;
+  context.stroke();
+
+  map.addImage(ARROW_IMAGE_ID, context.getImageData(0, 0, size, size), { pixelRatio });
+};
 
 /**
  * Single-line stations take their line's colour. Stations on more than one line (`lines` is
@@ -222,6 +272,9 @@ export const BusSpeedMapView = ({
   segmentStops,
 }: BusSpeedMapViewProps) => {
   const [hovered, setHovered] = useState<Hovered | undefined>();
+  // The arrow layer only mounts once its image exists: maplibre drops a symbol whose icon is
+  // missing when its tile is laid out, and wouldn't lay that tile out again just for the image.
+  const [arrowImageReady, setArrowImageReady] = useState(false);
   const mapRef = useRef<MapRef>(null);
   const routeFilterClause = useMemo<FilterSpecification | undefined>(
     () =>
@@ -444,7 +497,11 @@ export const BusSpeedMapView = ({
       // dialog mounts with its focus already fixed and so gets no later focusKey change to
       // retry on. On the ordinary route page it flies to a route selected via the URL (e.g. from
       // the leaderboard), or just re-eases to the default view nothing has moved from yet.
-      onLoad={runFocusFlight}
+      onLoad={(event) => {
+        addArrowImage(event.target);
+        setArrowImageReady(true);
+        runFocusFlight();
+      }}
     >
       <NavigationControl position="top-right" showCompass={false} />
       <Source id={SOURCE_ID} type="vector" url={`pmtiles://${pmtilesUrl}`}>
@@ -478,6 +535,29 @@ export const BusSpeedMapView = ({
           layout={{ 'line-cap': 'round', 'line-join': 'round' }}
           paint={{ 'line-color': speedColor, 'line-width': lineWidth }}
         />
+        {/* Direction of travel, only once a route is picked: unfiltered, many routes share each
+            street and one route's inbound can run against another's, so arrows there would be
+            noise. Mounts after the image (see arrowImageReady), so beforeId keeps it just above
+            the lines rather than on top of the stops. */}
+        {arrowImageReady && routeFilterClause && (
+          <Layer
+            id={ARROWS_LAYER_ID}
+            type="symbol"
+            source-layer={PMTILES_SOURCE_LAYER}
+            filter={filter}
+            minzoom={ARROWS_MIN_ZOOM}
+            beforeId={HITBOX_LAYER_ID}
+            layout={{
+              'symbol-placement': 'line',
+              'symbol-spacing': 80,
+              'icon-image': ARROW_IMAGE_ID,
+              'icon-size': arrowSize,
+              'icon-rotation-alignment': 'map',
+              'icon-allow-overlap': true,
+              'icon-ignore-placement': true,
+            }}
+          />
+        )}
         {/* Invisible and deliberately fat: the drawn segments are a few pixels wide, which
             is far too fine a target to hover reliably. */}
         <Layer

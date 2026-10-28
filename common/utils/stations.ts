@@ -22,6 +22,10 @@ const isRapidTransitLine = (
 ): line is Exclude<LineShort, 'Bus' | 'Commuter Rail' | 'Ferry'> =>
   !isBusLine(line) && !isCommuterRailLine(line) && !isFerryLine(line);
 
+/** What riders call the places a line serves: buses and ferries have stops, rail has stations. */
+export const stopNoun = (line: LineShort | undefined): 'stop' | 'station' =>
+  line && (isBusLine(line) || isFerryLine(line)) ? 'stop' : 'station';
+
 // Helper function to safely get stations for a line
 const getStationsForLine = (
   line: LineShort,

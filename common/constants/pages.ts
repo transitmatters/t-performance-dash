@@ -186,6 +186,7 @@ export const ALL_PAGES: PageMap = {
       'line-green',
       'line-mattapan',
       'line-commuter-rail',
+      'line-bus',
     ],
     icon: faCalendarXmark,
     dateStoreSection: 'line',
@@ -282,6 +283,7 @@ export const BUS_OVERVIEW = [
   ALL_PAGES.ridership,
   ALL_PAGES.speed,
   ALL_PAGES.fleet,
+  ALL_PAGES.delays,
   ALL_PAGES.speedmap,
   ALL_PAGES.leaderboard,
 ];

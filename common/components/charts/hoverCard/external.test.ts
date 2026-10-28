@@ -1,6 +1,20 @@
 import { describe, expect, it } from 'vitest';
 
-import { contentFromTooltipModel } from './external';
+import { contentFromTooltipModel, hideZeroUnlessAllZero } from './external';
+
+describe('hideZeroUnlessAllZero', () => {
+  const items = (...ys: (number | null)[]) => ys.map((y) => ({ parsed: { y } }));
+  const kept = (all: ReturnType<typeof items>) =>
+    all.filter((item, index) => hideZeroUnlessAllZero(item, index, all)).map((i) => i.parsed.y);
+
+  it('drops zero series when another series has a value', () => {
+    expect(kept(items(0, 3.5, 0))).toEqual([3.5]);
+  });
+
+  it('keeps every series when all are zero', () => {
+    expect(kept(items(0, 0))).toEqual([0, 0]);
+  });
+});
 
 const model = (
   lines: string[][],

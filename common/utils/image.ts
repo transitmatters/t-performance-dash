@@ -58,6 +58,7 @@ const CHART_SUBTITLES: Record<string, string> = {
   dwells: 'Time spent at station',
   speeds: 'Average speed between stops',
   speed: 'Average speed between stops',
+  slowtime: 'Time over baseline',
 };
 
 export function getChartTitle(datasetName: string): string {

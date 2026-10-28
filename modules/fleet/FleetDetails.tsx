@@ -8,6 +8,11 @@ import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { useBusTripMetrics } from '../../common/api/hooks/busTripMetrics';
 import { useCrTripMetrics } from '../../common/api/hooks/crTripMetrics';
 import { Widget } from '../../common/components/widgets';
+import {
+  StatCard,
+  StatCardGrid,
+  type StatSentiment,
+} from '../../common/components/widgets/StatCard';
 import { getBusRouteIds } from '../../common/constants/lines';
 import { useChartToggle } from '../../common/hooks/useChartToggle';
 import { COMMUTER_RAIL_LINE_NAMES } from '../../common/types/lines';
@@ -16,6 +21,7 @@ import { FleetAgeGraphWrapper } from './FleetAgeGraphWrapper';
 import { FleetShareGraphWrapper } from './FleetShareGraphWrapper';
 import { FleetMixGraphWrapper } from './FleetMixGraphWrapper';
 import { FLEET_TYPES, getFleetModeMetrics } from './constants/fleetTypes';
+import { getFleetStats } from './utils/fleetStats';
 
 dayjs.extend(utc);
 
@@ -80,10 +86,62 @@ export function FleetDetails() {
     return <p>Select a date range to load graphs.</p>;
   }
 
+  const stats = fleetMetrics.data
+    ? getFleetStats(fleetMetrics.data, metrics.share, metrics.age, fleetTypes)
+    : null;
+  const percent = (value: number | undefined) =>
+    value !== undefined && Number.isFinite(value) ? `${Math.round(value)}%` : '—';
+  // Shares are 0-100, so a percentage-point delta is the raw difference.
+  const shareDelta = (delta: number | undefined) => {
+    if (delta === undefined || !Number.isFinite(delta)) return undefined;
+    const sentiment: StatSentiment = Math.abs(delta) < 0.5 ? 'flat' : delta > 0 ? 'good' : 'bad';
+    return { label: `${delta > 0 ? '+' : ''}${Math.round(delta)}pp`, sentiment };
+  };
+  // Younger is better, so a falling average age reads as good.
+  const ageDelta = (delta: number) => {
+    if (!Number.isFinite(delta)) return undefined;
+    const sentiment: StatSentiment = Math.abs(delta) < 0.1 ? 'flat' : delta < 0 ? 'good' : 'bad';
+    const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'newer' : 'older';
+    return { label: `${delta > 0 ? '+' : ''}${delta.toFixed(1)} yrs · ${word}`, sentiment };
+  };
+  const shareStat = stats?.share ?? stats?.newestType;
+  const shareLabel = metrics.share
+    ? metrics.share.axisLabel
+    : `Trips by ${stats?.newestType?.type.label ?? 'newest'} cab cars`;
+  const mostCommonLabel = isBus
+    ? 'Most common propulsion'
+    : isCommuterRail
+      ? 'Most common cab car'
+      : 'Most common car type';
+
   return (
     <PageWrapper pageTitle={'Fleet'}>
       <ChartPageDiv>
         {!isRail && selectedRoute && <div className="flex justify-end">{scopeControl}</div>}
+        {stats && Number.isFinite(stats.age.value) && (
+          <StatCardGrid>
+            {shareStat && (
+              <StatCard
+                label={shareLabel}
+                value={percent(shareStat.value)}
+                delta={shareDelta(shareStat.delta)}
+              />
+            )}
+            <StatCard
+              label={metrics.age.title}
+              value={stats.age.value.toFixed(1)}
+              unit="years"
+              delta={ageDelta(stats.age.delta)}
+            />
+            {stats.mostCommon && (
+              <StatCard
+                label={mostCommonLabel}
+                value={stats.mostCommon.type.label}
+                unit={`${percent(stats.mostCommon.value)} of ${isRail ? 'cars' : 'trips'}`}
+              />
+            )}
+          </StatCardGrid>
+        )}
         {metrics.share && (
           <Widget
             title={metrics.share.title}

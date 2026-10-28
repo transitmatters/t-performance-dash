@@ -140,6 +140,7 @@ export function SlowZonesDetails() {
               line={line}
               lineShort={lineShort}
               showWidgetValue={false}
+              embedLine={linePath}
             />
           ) : (
             <NoDataNotice isLineMetric />
