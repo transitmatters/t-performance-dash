@@ -16,18 +16,26 @@ export const BnrdBanner = ({ busRoute }: BnrdBannerProps) => {
 
   const getUrl = (): string => {
     switch (busRoute) {
+      case '15':
+      case '62/76':
+        return BNRD[2].url;
+      case '40':
+      case '50':
       case '40/50':
       case '85':
+      case '85-legacy':
       case 'CT2':
       case '87':
       case '350/351':
-        return BNRD[2].url;
+        return BNRD[3].url;
       case '65':
       case '60/65-legacy':
       case '220/221/222':
+      case '220/221/222-legacy':
       case '434/435/436':
+      case '434/435/436-legacy':
       case '465':
-        return BNRD[3].url;
+        return BNRD[4].url;
       default:
         return BNRD[1].url;
     }
@@ -35,15 +43,29 @@ export const BnrdBanner = ({ busRoute }: BnrdBannerProps) => {
 
   const getText = (): string => {
     switch (busRoute) {
+      case '15':
+        return 'All Route 15 trips now extend to Fields Corner, with buses every 15 minutes or better.';
+      case '62/76':
+        return 'Routes 62 and 76 now run separately with more frequent service. The combined 62/76 pattern, including service on Hartwell Ave in Lexington, was discontinued.';
+      case '40':
+        return 'All Route 40 trips now run between Georgetowne and Forest Hills, with more service replacing the discontinued combined Route 40/50.';
+      case '50':
+        return 'All Route 50 trips now run between Cleary Square and Forest Hills, with more service replacing the discontinued combined Route 40/50.';
       case '40/50':
-        return 'The combined Route 40/50 that runs on weekday evenings, Saturday evenings, and Sunday will be discontinued.';
+        return 'This reflects the combined Route 40/50 before Apr. 5, 2026, when the combined evening and weekend pattern was discontinued; see Routes 40 and 50 for present-day service.';
       case '85':
       case 'CT2':
-        return 'The CT2 and 85 will combine to be the new Route 85, with new service extending to Assembly.';
+        return 'The CT2 and 85 were combined into the new Route 85, with new service extending to Assembly.';
+      case '85-legacy':
+        return 'This reflects Route 85 before Apr. 5, 2026, when it was combined with the CT2 and extended to Assembly; see the current Route 85 for present-day service.';
       case '86':
         return 'This route was shortened to run between Reservoir and Harvard Square, with improved midday, evening, and weekend service.';
       case '87':
-        return 'All Route 87 trips will travel between Lechmere and Arlington Center. The route pattern that ends at Clarendon Hill will be discontinued.';
+        return 'All Route 87 trips now travel between Lechmere and Arlington Center. The route pattern that ended at Clarendon Hill was discontinued.';
+      case '104/109':
+        return 'This reflects the combined Routes 104/109 before Dec. 15, 2024; see Routes 104 and 109 for present-day service.';
+      case '114/116/117':
+        return 'This reflects the combined Routes 114/116/117 before Dec. 15, 2024, when Routes 116 and 117 were combined into Route 116; see Routes 114 and 116 for present-day service.';
       case '104':
         return 'This route now offers new crosstown service between Malden Center and Logan Airport, with buses every 15 minutes or better.';
       case '109':
@@ -53,7 +75,7 @@ export const BnrdBanner = ({ busRoute }: BnrdBannerProps) => {
       case '116':
         return 'This route now combines former Routes 116/117 with improved frequency, running every 15 minutes or better.';
       case '350/351':
-        return 'All Route 350 trips will now serve Burlington Mall Rd.';
+        return 'All Route 350 trips now serve Burlington Mall Rd.';
       case '65':
         return 'Route 65 was restructured to run between Brighton Center and Ruggles via the Longwood Medical Area, replacing its former Kenmore terminus, with improved frequency and span of service.';
       case '60/65-legacy':

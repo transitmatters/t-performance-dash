@@ -13,16 +13,23 @@ export const BNRD: Record<
     date: new Date('12-15-2024'),
     new_routes: [104, 109, 110, 116],
     changed_routes: [86],
-    legacy_routes: ['104-109', '114-116-117'],
+    legacy_routes: ['104/109', '114/116/117'],
   },
   2: {
+    url: 'https://www.mbta.com/service-changes/fall-2025-bus-service-changes',
+    date: new Date('08-24-2025'),
+    new_routes: [],
+    changed_routes: [15, 62, 76],
+    legacy_routes: [],
+  },
+  3: {
     url: 'https://www.mbta.com/service-changes/spring-2026-better-bus-network-service-changes',
     date: new Date('04-05-2026'),
     new_routes: [],
-    changed_routes: [85, 87, 350],
+    changed_routes: [40, 50, 85, 87, 350],
     legacy_routes: ['CT2', '40/50'],
   },
-  3: {
+  4: {
     url: 'https://www.mbta.com/service-changes/fall-2026-better-bus-network-service-changes',
     date: new Date('09-06-2026'),
     new_routes: [465],

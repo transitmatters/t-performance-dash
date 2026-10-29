@@ -232,9 +232,19 @@ class TimePredictionParams(BaseModel):
 
     Attributes:
         route_id: Route identifier (e.g., `Red`, `CR-Fairmount`).
+        start_date: Optional start of the range of weeks to return.
+        end_date: Optional end of the range of weeks to return.
     """
 
     route_id: str = Field(description=_ROUTE_ID_DESC)
+    start_date: date | None = Field(
+        default=None,
+        description="Keep only weeks starting on or after this date (YYYY-MM-DD). Omit it for the full history.",
+    )
+    end_date: date | None = Field(
+        default=None,
+        description="Keep only weeks starting on or before this date (YYYY-MM-DD). Omit it for the full history.",
+    )
 
 
 class SpeedRestrictionsParams(BaseModel):
