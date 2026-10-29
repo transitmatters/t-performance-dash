@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import type { Route } from '../types/router';
-import { getLineSelectionItemHref, parseRoutePath, stripForeignRouteParams } from './router';
+import {
+  getBusRouteSelectionItemHref,
+  getLineSelectionItemHref,
+  parseRoutePath,
+  stripForeignRouteParams,
+} from './router';
 
 describe('parseRoutePath', () => {
   it('resolves each mode root to its overview', () => {
@@ -45,5 +50,39 @@ describe('getLineSelectionItemHref', () => {
     expect(getLineSelectionItemHref('line-orange', ferryRoute)).toBe(
       '/orange/trips/single?date=2025-01-01'
     );
+  });
+
+  it("doesn't touch the query it's given, which is the router's own search object", () => {
+    const query = Object.freeze({ ferryRoute: 'Boat-F1', date: '2025-01-01', from: 'a', to: 'b' });
+    const route: Route = {
+      line: 'line-ferry',
+      linePath: 'ferry',
+      lineShort: 'Ferry',
+      page: 'singleTrips',
+      tab: 'Ferry',
+      query,
+      color: '',
+    };
+    expect(() => getLineSelectionItemHref('line-orange', route)).not.toThrow();
+    expect(query).toEqual({ ferryRoute: 'Boat-F1', date: '2025-01-01', from: 'a', to: 'b' });
+  });
+});
+
+describe('getBusRouteSelectionItemHref', () => {
+  it('swaps the route and drops stations without mutating the query', () => {
+    const query = Object.freeze({ busRoute: '1', date: '2025-01-01', from: 'a', to: 'b' });
+    const route = {
+      line: 'line-bus',
+      linePath: 'bus',
+      lineShort: 'Bus',
+      page: 'singleTrips',
+      tab: 'Bus',
+      query,
+      color: '',
+    } as Route;
+    expect(getBusRouteSelectionItemHref('77', route)).toBe(
+      '/bus/trips/single?date=2025-01-01&busRoute=77'
+    );
+    expect(query.from).toBe('a');
   });
 });

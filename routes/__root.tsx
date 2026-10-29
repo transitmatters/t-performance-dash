@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { Outlet, createRootRoute, useMatches } from '@tanstack/react-router';
-import { useIsNotFound, useQueryParams } from '../common/utils/router';
+import { useDelimitatedRoute, useIsNotFound } from '../common/utils/router';
 import { Layouts } from '../common/layouts/Layouts';
 import { Layout } from '../common/layouts/PrimaryLayout';
 import { NavLayout } from '../common/layouts/NavLayout';
@@ -22,7 +22,7 @@ const RootComponent = () => {
     select: (matches) => matches[matches.length - 1]?.staticData ?? {},
   });
   // An embed's host page picks its theme (light unless `?theme=dark`), not the visitor's preference.
-  const { theme } = useQueryParams();
+  const { theme } = useDelimitatedRoute().query;
   useApplyTheme(embed ? (theme === 'dark' ? 'dark' : 'light') : undefined);
   useGoatCounter();
   useEffect(() => {

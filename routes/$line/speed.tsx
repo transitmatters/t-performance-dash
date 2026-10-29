@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { Layout } from '../../common/layouts/layoutTypes';
 import { requireLine } from '../../common/utils/lineRoute';
 import { useDelimitatedRoute } from '../../common/utils/router';
+import { validateSpeedSearch } from '../../common/utils/searchSchemas';
 import { BusSpeedDetails } from '../../modules/speed/BusSpeedDetails';
 import { SpeedDetails } from '../../modules/speed/SpeedDetails';
 
@@ -13,6 +14,7 @@ function SpeedPage() {
 }
 
 export const Route = createFileRoute('/$line/speed')({
+  validateSearch: validateSpeedSearch,
   beforeLoad: requireLine('speed'),
   staticData: { layout: Layout.Dashboard },
   component: SpeedPage,
