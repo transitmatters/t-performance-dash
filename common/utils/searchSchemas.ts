@@ -117,6 +117,13 @@ export const validateEmbedSearch = (search: RawSearch) => ({
   theme: oneOf(['dark', 'light'])(search.theme),
 });
 
+/** A trip chart embed carries the trip it shows, but not the page's view toggles. */
+export const validateTripEmbedSearch = (search: RawSearch) => ({
+  ...validateEmbedSearch(search),
+  ...stationSearch(search),
+  ...routeSearch(search),
+});
+
 /**
  * Every param any route declares. Shared components (the sidebar, date controls) read the search
  * through this rather than a route's match: they render outside the matched route, and a match's

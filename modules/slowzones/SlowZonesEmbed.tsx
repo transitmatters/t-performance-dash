@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
 import { useSlowzoneDelayTotalData } from '../../common/api/hooks/slowzones';
-import { Link } from '../../common/components/general/Link';
+import { EmbedFrame } from '../../common/components/embed/EmbedFrame';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { PRETTY_DATE_FORMAT } from '../../common/constants/dates';
@@ -38,42 +38,26 @@ export const SlowZonesEmbed = ({ line }: SlowZonesEmbedProps) => {
   const endDate = dates.endDate as string;
   const startDateUTC = dayjs.utc(startDate).startOf('day');
   const endDateUTC = dayjs.utc(endDate).startOf('day');
-  const title = getSlowZonesEmbedTitle(line);
 
   return (
-    <div className="flex h-full flex-col gap-2 bg-card p-3 text-card-foreground">
-      <title>{`${title} | Data Dashboard`}</title>
-      <meta name="robots" content="noindex" />
-      <div className="flex flex-col gap-0.5">
-        <h1 className="text-base leading-snug font-semibold">{title}</h1>
-        <p className="text-[13px] leading-tight text-muted-foreground">
-          Time over baseline · {startDateUTC.format(PRETTY_DATE_FORMAT)} –{' '}
-          {endDateUTC.format(PRETTY_DATE_FORMAT)}
-        </p>
-      </div>
-      <div className="min-h-0 flex-1">
-        {delayTotals.data ? (
-          <TotalSlowTime
-            data={Array.isArray(delayTotals.data) ? delayTotals.data : delayTotals.data.data}
-            startDateUTC={startDateUTC}
-            endDateUTC={endDateUTC}
-            line={lineKey}
-            lineShort={lineKey ? LINE_OBJECTS[lineKey].short : undefined}
-            showTitle={false}
-            fill
-          />
-        ) : (
-          <ChartPlaceHolder query={delayTotals} />
-        )}
-      </div>
-      <Link
-        href={getSlowZonesPageUrl(line, { startDate, endDate })}
-        target="_blank"
-        rel="noopener"
-        className="self-end text-xs text-muted-foreground hover:underline"
-      >
-        View on the TransitMatters Data Dashboard ↗
-      </Link>
-    </div>
+    <EmbedFrame
+      title={getSlowZonesEmbedTitle(line)}
+      subtitle={`Time over baseline · ${startDateUTC.format(PRETTY_DATE_FORMAT)} – ${endDateUTC.format(PRETTY_DATE_FORMAT)}`}
+      href={getSlowZonesPageUrl(line, { startDate, endDate })}
+    >
+      {delayTotals.data ? (
+        <TotalSlowTime
+          data={Array.isArray(delayTotals.data) ? delayTotals.data : delayTotals.data.data}
+          startDateUTC={startDateUTC}
+          endDateUTC={endDateUTC}
+          line={lineKey}
+          lineShort={lineKey ? LINE_OBJECTS[lineKey].short : undefined}
+          showTitle={false}
+          fill
+        />
+      ) : (
+        <ChartPlaceHolder query={delayTotals} />
+      )}
+    </EmbedFrame>
   );
 };

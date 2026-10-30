@@ -10,11 +10,11 @@ export const HeadwaysSingleChart = ({
   toStation,
   fromStation,
   showLegend = true,
+  date: dateProp,
+  fill = false,
 }: HeadwaysChartProps) => {
-  const {
-    linePath,
-    query: { date },
-  } = useDelimitatedRoute();
+  const { linePath, query } = useDelimitatedRoute();
+  const date = dateProp ?? query.date;
 
   const anyHeadwayBenchmarks = headways.some(
     (e) => e.benchmark_headway_time_sec && e.benchmark_headway_time_sec > 0
@@ -34,9 +34,11 @@ export const HeadwaysSingleChart = ({
         units={'Minutes'}
         showLegend={showLegend && anyHeadwayBenchmarks}
         showUnderRatio={true}
+        fill={fill}
+        embedChart="headways"
       />
     );
-  }, [linePath, headways, date, fromStation, toStation, showLegend, anyHeadwayBenchmarks]);
+  }, [linePath, headways, date, fromStation, toStation, showLegend, anyHeadwayBenchmarks, fill]);
 
   return chart;
 };

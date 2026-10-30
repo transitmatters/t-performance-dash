@@ -1,5 +1,6 @@
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import type { LinePath } from '../../common/types/lines';
+import { getEmbedSnippet } from '../../common/utils/embed';
 import { linePathToKeyMap } from '../../common/utils/router';
 import { stringifySearch } from '../../common/utils/searchParams';
 
@@ -11,8 +12,6 @@ interface DateRange {
   endDate?: string;
 }
 
-const EMBED_HEIGHT = 360;
-
 export const getSlowZonesEmbedTitle = (line: SlowZonesEmbedLine) =>
   `${line === 'system' ? 'MBTA subway' : LINE_OBJECTS[linePathToKeyMap[line]].name} total slow time`;
 
@@ -20,8 +19,8 @@ export const getSlowZonesEmbedTitle = (line: SlowZonesEmbedLine) =>
 export const getSlowZonesPageUrl = (line: SlowZonesEmbedLine, dates: DateRange) =>
   `${window.location.origin}/${line}/slowzones/${stringifySearch({ ...dates })}`;
 
-export const getSlowZonesEmbedSnippet = (line: SlowZonesEmbedLine, dates: DateRange) => {
-  const src = `${window.location.origin}/embed/${line}/slowzones/${stringifySearch({ ...dates })}`;
-  const title = `${getSlowZonesEmbedTitle(line)} — TransitMatters`;
-  return `<iframe src="${src}" title="${title}" width="100%" height="${EMBED_HEIGHT}" style="border:0" loading="lazy"></iframe>`;
-};
+export const getSlowZonesEmbedSnippet = (line: SlowZonesEmbedLine, dates: DateRange) =>
+  getEmbedSnippet(
+    `/embed/${line}/slowzones/${stringifySearch({ ...dates })}`,
+    getSlowZonesEmbedTitle(line)
+  );
