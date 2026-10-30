@@ -100,14 +100,11 @@ export default typescriptEslint.config(
       'react/no-unescaped-entities': 'off',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      // eslint-plugin-react-hooks v7 adds a batch of new React Compiler
-      // readiness rules; downgraded to warn for now so existing patterns
-      // don't fail CI while they get addressed incrementally.
-      'react-hooks/set-state-in-effect': 'warn',
-      'react-hooks/immutability': 'warn',
-      'react-hooks/refs': 'warn',
-      'react-hooks/static-components': 'warn',
-      'react-hooks/preserve-manual-memoization': 'warn',
+      'react-hooks/set-state-in-effect': 'error',
+      'react-hooks/immutability': 'error',
+      'react-hooks/refs': 'error',
+      'react-hooks/static-components': 'error',
+      'react-hooks/preserve-manual-memoization': 'error',
       // JSX compiles with the automatic runtime (tsconfig "jsx": "react-jsx"), so files don't import React for it
       'react/react-in-jsx-scope': 'off',
       'react/no-unused-prop-types': 'warn',
