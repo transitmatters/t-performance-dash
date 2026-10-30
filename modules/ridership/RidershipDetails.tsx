@@ -108,26 +108,6 @@ export function RidershipDetails() {
             />
           </StatCardGrid>
         )}
-        {hasStationMap && (
-          <Widget
-            title="Station ridership"
-            subtitle="Average weekday fare validations at each gated station. Select a station to chart it."
-            ready={[stationRidership, startDate, endDate]}
-          >
-            {Object.keys(stationAverages).length > 0 ? (
-              <StationRidershipMap
-                key={lineShort}
-                lineName={lineShort}
-                averages={stationAverages}
-                direction={isDesktop ? 'horizontal' : 'vertical'}
-                selectedStationId={selectedStationId}
-                onSelectStation={selectStation}
-              />
-            ) : (
-              <NoDataNotice isLineMetric />
-            )}
-          </Widget>
-        )}
         <Widget
           title={
             selectedStationName ? `Weekday ridership · ${selectedStationName}` : 'Weekday ridership'
@@ -155,6 +135,26 @@ export function RidershipDetails() {
             ferryRoute={ferryRoute}
           />
         </Widget>
+        {hasStationMap && (
+          <Widget
+            title="Station ridership"
+            subtitle="Average weekday fare validations at each gated station. Select a station to chart it above."
+            ready={[stationRidership, startDate, endDate]}
+          >
+            {Object.keys(stationAverages).length > 0 ? (
+              <StationRidershipMap
+                key={lineShort}
+                lineName={lineShort}
+                averages={stationAverages}
+                direction={isDesktop ? 'horizontal' : 'vertical'}
+                selectedStationId={selectedStationId}
+                onSelectStation={selectStation}
+              />
+            ) : (
+              <NoDataNotice isLineMetric />
+            )}
+          </Widget>
+        )}
       </ChartPageDiv>
     </PageWrapper>
   );
