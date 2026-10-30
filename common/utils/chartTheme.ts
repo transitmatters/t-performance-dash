@@ -71,6 +71,14 @@ export const SEVERITY_COLORS = {
 export type SeverityTone = keyof typeof SEVERITY_COLORS;
 
 /**
+ * A headway at or under half its scheduled headway is bunched. These match `headways_over_time` in
+ * server/chalicelib/aggregation.py, which counts the same thresholds for multi-day ranges.
+ */
+export const BUNCHED_RATIO = 0.5;
+
+export const isOnTimeHeadwayRatio = (ratio: number) => ratio > 0.75 && ratio < 1.25;
+
+/**
  * Buckets a value's ratio to its benchmark. `label` names how far off it ran and is null within
  * the normal band; `showUnderRatio` also flags values well under the benchmark (headways bunching).
  */
@@ -81,8 +89,8 @@ export const severityForRatio = (
   if (!Number.isFinite(ratio)) return null;
   if (showUnderRatio) {
     // Not actually 100% off, but shown as an extreme
-    if (ratio <= 0.05) return { tone: 'off100', label: '50%+ under' };
-    if (ratio <= 0.5) return { tone: 'off50', label: '50%+ under' };
+    if (ratio <= 0.05) return { tone: 'off100', label: 'Bunched' };
+    if (ratio <= BUNCHED_RATIO) return { tone: 'off50', label: 'Bunched' };
     if (ratio <= 0.75) return { tone: 'off25', label: '25%+ under' };
   }
   if (ratio <= 1.25) return { tone: 'onTime', label: null };

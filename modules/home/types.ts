@@ -1,7 +1,7 @@
 import type { Line } from '../../common/types/lines';
 
-// Shaped like the planned static/landing/home.json (schemaVersion 1) so the page can switch from
-// building this in the browser to fetching it once data-ingestion publishes it.
+// The shape of static/landing/overview.json (schemaVersion 1), built daily by data-ingestion
+// (chalicelib/overview).
 
 export type MetricId = 'service' | 'frequency' | 'speed' | 'slowZones' | 'fleet';
 
@@ -22,9 +22,12 @@ export interface Cell {
   value: number | null;
   unit: Unit;
   unitLabel?: string;
-  /** Set when the cell is judged differently from its column (e.g. Commuter Rail electrification). */
+  /** How `score` is judged: set on every cell with a status other than `na`. */
   direction?: Direction;
+  /** Cut-offs for win / good / room on `score`; anything worse is a problem. */
   thresholds?: [number, number, number];
+  /** The unit of `score` and `thresholds`, which can differ from `unit` (e.g. speed in mph). */
+  scoreUnit?: Unit;
   /** What `value` is compared against, e.g. "Best: 24.9 mph (Oct 2019)". */
   baselineLabel?: string;
   /** Last 2 weeks vs the 12-week window, as a fraction (0.05 = 5% higher). */

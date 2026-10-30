@@ -8,6 +8,7 @@ import {
   MetricFieldKeys,
 } from '../types/charts';
 import type { DataPoint } from '../types/dataPoints';
+import { BUNCHED_RATIO, isOnTimeHeadwayRatio } from './chartTheme';
 
 const getAverage = (data: (number | undefined)[]) => {
   // Filter out undefined, null, NaN, and non-finite values
@@ -26,7 +27,7 @@ const getBunchedPercentage = (data: SingleDayDataPoint[]) => {
   const bunchedPoints = data.map((point: DataPoint) => {
     const ratio =
       point[MetricFieldKeys.headwayTimeSec] / point[BenchmarkFieldKeys.benchmarkHeadwayTimeSec];
-    if (ratio <= 0.5) {
+    if (ratio <= BUNCHED_RATIO) {
       return 1;
     }
     return 0;
@@ -38,7 +39,7 @@ const getOnTimePercentage = (data: SingleDayDataPoint[]) => {
   const onTimePoints = data.map((point: DataPoint) => {
     const ratio =
       point[MetricFieldKeys.headwayTimeSec] / point[BenchmarkFieldKeys.benchmarkHeadwayTimeSec];
-    if (ratio > 0.75 && ratio < 1.25) {
+    if (isOnTimeHeadwayRatio(ratio)) {
       return 1;
     }
     return 0;
@@ -228,13 +229,13 @@ export const getAggHeadwayDataWidgets = (
       comparison: comp ? makeComparison(max, comp.max, label, 'time') : undefined,
     },
     {
-      text: 'Bunched Trips',
+      text: 'Bunched',
       widgetValue: new PercentageWidgetValue(bunched),
       type: 'data',
       comparison: comp ? makeComparison(bunched, comp.bunched, label, 'percentage') : undefined,
     },
     {
-      text: 'On Time Trips',
+      text: 'On time',
       widgetValue: new PercentageWidgetValue(onTime),
       type: 'data',
       comparison: comp ? makeComparison(onTime, comp.onTime, label, 'percentage') : undefined,
@@ -302,12 +303,12 @@ export const getSingleDayWidgets = (
 
   if (type === 'headways' && data.some((point) => point.benchmark_headway_time_sec)) {
     widgets.push({
-      text: 'On Time Trips',
+      text: 'On time',
       widgetValue: new PercentageWidgetValue(onTimePercentage),
       type: 'data',
     });
     widgets.push({
-      text: 'Bunched Trips',
+      text: 'Bunched',
       widgetValue: new PercentageWidgetValue(bunchedPercentage),
       type: 'data',
     });

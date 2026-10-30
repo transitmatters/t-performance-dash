@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
@@ -31,19 +31,19 @@ export function DelaysDetails() {
     query: { startDate, endDate, crRoute, busRoute },
   } = useDelimitatedRoute();
 
-  // For commuter rail, use the crRoute from query params; otherwise use the default route ID
-  const defaultRouteId =
-    line === 'line-commuter-rail' && crRoute ? crRoute : lineToDefaultRouteId(line);
-  const [routeId, setRouteId] = useState<LineRouteId>(defaultRouteId);
+  const [greenRouteId, setGreenRouteId] = useState<LineRouteId>(lineToDefaultRouteId('line-green'));
+  // Green picks its branch from the toggle; commuter rail uses the crRoute from query params.
+  const routeId =
+    line === 'line-green'
+      ? greenRouteId
+      : line === 'line-commuter-rail' && crRoute
+        ? crRoute
+        : lineToDefaultRouteId(line);
   const greenBranchToggle = useMemo(() => {
-    return line === 'line-green' && <BranchSelector routeId={routeId} setRouteId={setRouteId} />;
+    return (
+      line === 'line-green' && <BranchSelector routeId={routeId} setRouteId={setGreenRouteId} />
+    );
   }, [line, routeId]);
-
-  useEffect(() => {
-    const newRouteId =
-      line === 'line-commuter-rail' && crRoute ? crRoute : lineToDefaultRouteId(line);
-    setRouteId(newRouteId);
-  }, [line, crRoute]);
 
   // Determine whether to use daily or weekly data based on date range
   const agg = useMemo(() => {

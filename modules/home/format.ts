@@ -1,5 +1,5 @@
-import type { MetricMethod } from './config';
-import type { Cell, Status, Unit } from './types';
+import { NEGLIGIBLE_TREND } from './config';
+import type { Cell, Direction, Status, Unit } from './types';
 
 const round = (value: number, digits = 0) => {
   const factor = 10 ** digits;
@@ -57,15 +57,19 @@ const formatThreshold = (value: number, unit: Unit) =>
       ? `${value} s`
       : `${value} yr`;
 
-export const formatThresholds = (
-  method: MetricMethod,
-  thresholds = method.thresholds,
-  direction = method.direction,
-  unit = method.scoreUnit
-) => {
+/** "Win ≥100% · Good ≥92% · Room to grow ≥80%", or undefined for a cell that isn't judged. */
+export const formatThresholds = ({ thresholds, direction, scoreUnit }: Cell) => {
+  if (!thresholds || !direction || !scoreUnit) return undefined;
   const op = direction === 'higher' ? '≥' : '≤';
-  const [win, good, room] = thresholds.map((t) => formatThreshold(t, unit));
+  const [win, good, room] = thresholds.map((t) => formatThreshold(t, scoreUnit));
   return `Win ${op}${win} · Good ${op}${good} · Room to grow ${op}${room}`;
+};
+
+export type TrendSentiment = 'good' | 'bad' | 'flat';
+
+export const trendSentiment = (trend: number | null, direction: Direction): TrendSentiment => {
+  if (trend === null || Math.abs(trend) < NEGLIGIBLE_TREND) return 'flat';
+  return trend > 0 === (direction === 'higher') ? 'good' : 'bad';
 };
 
 export const STATUS_TONE: Record<Status, string> = {
