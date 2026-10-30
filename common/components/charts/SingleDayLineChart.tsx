@@ -31,6 +31,7 @@ import {
 } from '../../utils/chartTheme';
 import { CHART_COLORS } from '../../constants/colors';
 import { getFormattedTimeString } from '../../utils/time';
+import { consistHoverContent } from '../../utils/occupancy';
 import { AlertsDisclaimer } from '../general/AlertsDisclaimer';
 import { FIVE_MINUTES } from '../../constants/time';
 import type { HoverCardContent } from './hoverCard/types';
@@ -283,16 +284,14 @@ export const SingleDayLineChart = ({
                     }
 
                     const dataPoint = data[(actual ?? items[0]).dataIndex];
-                    const consist = dataPoint?.vehicle_consist?.split('|') ?? [];
-                    if (consist.length > 0) {
-                      content.chips = {
-                        label: consist.length > 1 ? 'Vehicles' : 'Vehicle',
-                        values: consist,
-                      };
-                    }
+                    const { train, chips, load } = consistHoverContent(dataPoint);
+                    if (load) content.rows?.push(load);
+                    content.train = train;
+                    content.chips = chips;
                     // The label usually just repeats the lead car's number
                     const label = dataPoint?.vehicle_label;
-                    if (label && Number(consist[0]) !== parseInt(label)) {
+                    const leadCar = dataPoint?.vehicle_consist?.split('|')[0];
+                    if (label && Number(leadCar) !== parseInt(label)) {
                       content.notes = [...(content.notes ?? []), `Vehicle label: ${label}`];
                     }
                     return content;

@@ -2947,7 +2947,7 @@
       },
       "HeadwayEvent": {
         "additionalProperties": true,
-        "description": "The time between two consecutive departures from the requested stop(s).\n\nTimes are local (Eastern) wall-clock times formatted as `YYYY-MM-DDTHH:MM:SS`, with no offset.\n\nAttributes:\n    route_id: Route of the departing trip (e.g. `Red`, `28`, `CR-Fairmount`).\n    direction: Direction ID as a string (`\"0\"` or `\"1\"`). Dwells and travel times use integers.\n    current_dep_dt: Departure time.\n    headway_time_sec: Seconds since the previous departure.\n    benchmark_headway_time_sec: Scheduled headway in seconds, or `null` when unavailable.\n    vehicle_consist: Car numbers separated by `|` (e.g. `1850|1851`), or `null` when unavailable.\n    vehicle_label: Vehicle label; may be empty.",
+        "description": "The time between two consecutive departures from the requested stop(s).\n\nTimes are local (Eastern) wall-clock times formatted as `YYYY-MM-DDTHH:MM:SS`, with no offset.\n\nAttributes:\n    route_id: Route of the departing trip (e.g. `Red`, `28`, `CR-Fairmount`).\n    direction: Direction ID as a string (`\"0\"` or `\"1\"`). Dwells and travel times use integers.\n    current_dep_dt: Departure time.\n    headway_time_sec: Seconds since the previous departure.\n    benchmark_headway_time_sec: Scheduled headway in seconds, or `null` when unavailable.\n    vehicle_consist: Car numbers separated by `|` (e.g. `1850|1851`), or `null` when unavailable.\n    occupancy_status: GTFS-RT occupancy status of each car, separated by `|` in `vehicle_consist` order\n        (e.g. `MANY_SEATS_AVAILABLE|STANDING_ROOM_ONLY`). A car without a reading is `NO_DATA_AVAILABLE`.\n        `null` when no car reported, which covers everything but Red and Orange Line cars with sensors and\n        any day before 2026-10-22. Read on arrival at the next stop, so it shows how full the train left this one.\n    occupancy_percentage: Occupancy percentage of each car, separated by `|` in the same order, with an\n        empty slot for a car without a reading (e.g. `6.0||4.0`), or `null` when no car reported.\n    vehicle_label: Vehicle label; may be empty.",
         "properties": {
           "route_id": {
             "title": "Route Id",
@@ -2977,6 +2977,18 @@
             "nullable": true,
             "type": "string"
           },
+          "occupancy_status": {
+            "default": null,
+            "title": "Occupancy Status",
+            "nullable": true,
+            "type": "string"
+          },
+          "occupancy_percentage": {
+            "default": null,
+            "title": "Occupancy Percentage",
+            "nullable": true,
+            "type": "string"
+          },
           "vehicle_label": {
             "title": "Vehicle Label",
             "type": "string"
@@ -2994,7 +3006,7 @@
       },
       "DwellEvent": {
         "additionalProperties": true,
-        "description": "The time a vehicle spent stopped at the requested stop(s).\n\nTimes are local (Eastern) wall-clock times formatted as `YYYY-MM-DDTHH:MM:SS`, with no offset.\n\nAttributes:\n    route_id: Route of the trip (e.g. `Red`, `1`, `CR-Fairmount`).\n    direction: Direction ID (`0` or `1`).\n    arr_dt: Arrival time.\n    dep_dt: Departure time.\n    dwell_time_sec: Seconds between arrival and departure.\n    vehicle_consist: Car numbers separated by `|`, or `null` when unavailable.\n    vehicle_label: Vehicle label; may be empty.",
+        "description": "The time a vehicle spent stopped at the requested stop(s).\n\nTimes are local (Eastern) wall-clock times formatted as `YYYY-MM-DDTHH:MM:SS`, with no offset.\n\nAttributes:\n    route_id: Route of the trip (e.g. `Red`, `1`, `CR-Fairmount`).\n    direction: Direction ID (`0` or `1`).\n    arr_dt: Arrival time.\n    dep_dt: Departure time.\n    dwell_time_sec: Seconds between arrival and departure.\n    vehicle_consist: Car numbers separated by `|`, or `null` when unavailable.\n    occupancy_status: GTFS-RT occupancy status of each car, separated by `|` in `vehicle_consist` order\n        (e.g. `MANY_SEATS_AVAILABLE|STANDING_ROOM_ONLY`). A car without a reading is `NO_DATA_AVAILABLE`.\n        `null` when no car reported, which covers everything but Red and Orange Line cars with sensors and\n        any day before 2026-10-22. Read on arrival at the next stop, so it shows how full the train left this one.\n    occupancy_percentage: Occupancy percentage of each car, separated by `|` in the same order, with an\n        empty slot for a car without a reading (e.g. `6.0||4.0`), or `null` when no car reported.\n    vehicle_label: Vehicle label; may be empty.",
         "properties": {
           "route_id": {
             "title": "Route Id",
@@ -3022,6 +3034,18 @@
             "nullable": true,
             "type": "string"
           },
+          "occupancy_status": {
+            "default": null,
+            "title": "Occupancy Status",
+            "nullable": true,
+            "type": "string"
+          },
+          "occupancy_percentage": {
+            "default": null,
+            "title": "Occupancy Percentage",
+            "nullable": true,
+            "type": "string"
+          },
           "vehicle_label": {
             "title": "Vehicle Label",
             "type": "string"
@@ -3040,7 +3064,7 @@
       },
       "TravelTimeEvent": {
         "additionalProperties": true,
-        "description": "A trip's travel time between the requested origin and destination stops.\n\nTimes are local (Eastern) wall-clock times formatted as `YYYY-MM-DDTHH:MM:SS`, with no offset.\n\nAttributes:\n    route_id: Route of the trip (e.g. `Red`, `28`, `CR-Fairmount`).\n    direction: Direction ID (`0` or `1`).\n    dep_dt: Departure time from the origin.\n    arr_dt: Arrival time at the destination.\n    travel_time_sec: Travel time in seconds.\n    benchmark_travel_time_sec: Scheduled travel time in seconds, or `null` when unavailable.\n    tm_benchmark_travel_time_sec: TransitMatters benchmark travel time in seconds for the stop pair\n        (the same on every event), or `null` when there is none (bus, commuter rail, ferry).\n    vehicle_consist: Car numbers separated by `|`, or `null` when unavailable.\n    vehicle_label: Vehicle label; may be empty.",
+        "description": "A trip's travel time between the requested origin and destination stops.\n\nTimes are local (Eastern) wall-clock times formatted as `YYYY-MM-DDTHH:MM:SS`, with no offset.\n\nAttributes:\n    route_id: Route of the trip (e.g. `Red`, `28`, `CR-Fairmount`).\n    direction: Direction ID (`0` or `1`).\n    dep_dt: Departure time from the origin.\n    arr_dt: Arrival time at the destination.\n    travel_time_sec: Travel time in seconds.\n    benchmark_travel_time_sec: Scheduled travel time in seconds, or `null` when unavailable.\n    tm_benchmark_travel_time_sec: TransitMatters benchmark travel time in seconds for the stop pair\n        (the same on every event), or `null` when there is none (bus, commuter rail, ferry).\n    vehicle_consist: Car numbers separated by `|`, or `null` when unavailable.\n    occupancy_status: GTFS-RT occupancy status of each car, separated by `|` in `vehicle_consist` order\n        (e.g. `MANY_SEATS_AVAILABLE|STANDING_ROOM_ONLY`). A car without a reading is `NO_DATA_AVAILABLE`.\n        `null` when no car reported, which covers everything but Red and Orange Line cars with sensors and\n        any day before 2026-10-22. Read on arrival at the next stop, so it shows how full the train left this one.\n    occupancy_percentage: Occupancy percentage of each car, separated by `|` in the same order, with an\n        empty slot for a car without a reading (e.g. `6.0||4.0`), or `null` when no car reported.\n    vehicle_label: Vehicle label; may be empty.",
         "properties": {
           "route_id": {
             "title": "Route Id",
@@ -3077,6 +3101,18 @@
           "vehicle_consist": {
             "default": null,
             "title": "Vehicle Consist",
+            "nullable": true,
+            "type": "string"
+          },
+          "occupancy_status": {
+            "default": null,
+            "title": "Occupancy Status",
+            "nullable": true,
+            "type": "string"
+          },
+          "occupancy_percentage": {
+            "default": null,
+            "title": "Occupancy Percentage",
             "nullable": true,
             "type": "string"
           },

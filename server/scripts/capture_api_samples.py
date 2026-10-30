@@ -34,6 +34,8 @@ KEPT_MAP_KEYS = 10
 
 DAY = "2026-10-07"
 ARCHIVE_DAY = "2026-06-03"
+# The first service day with per-car occupancy in LAMP
+OCCUPANCY_DAY = "2026-10-23"
 MONTH = {"start_date": "2026-09-01", "end_date": "2026-09-30"}
 QUARTER = {"start_date": "2026-06-01", "end_date": "2026-09-30"}
 WEEK = {"start_date": "2026-09-01", "end_date": "2026-09-07"}
@@ -49,11 +51,14 @@ SAMPLES = [
     ("headways/bus_without_benchmark", f"/api/headways/{DAY}", {"stop": ["1-0-93"]}, 200),
     ("headways/bus_monthly_archive", f"/api/headways/{ARCHIVE_DAY}", {"stop": ["28-1-1728"]}, 200),
     ("headways/commuter_rail", f"/api/headways/{DAY}", {"stop": ["CR-Fairmount_1_FB-0095-04"]}, 200),
+    ("headways/rapid_transit_occupancy", f"/api/headways/{OCCUPANCY_DAY}", {"stop": ["70036"]}, 200),
     ("headways/empty", f"/api/headways/{DAY}", {"stop": ["unknown-stop"]}, 200),
     ("dwells/rapid_transit", f"/api/dwells/{DAY}", {"stop": ["70063"]}, 200),
+    ("dwells/rapid_transit_occupancy", f"/api/dwells/{OCCUPANCY_DAY}", {"stop": ["70063"]}, 200),
     ("dwells/bus", f"/api/dwells/{DAY}", {"stop": ["1-0-93"]}, 200),
     ("dwells/commuter_rail", f"/api/dwells/{DAY}", {"stop": ["CR-Fairmount_1_DB-2240-02"]}, 200),
     ("traveltimes/rapid_transit", f"/api/traveltimes/{DAY}", RT_TRAVEL, 200),
+    ("traveltimes/rapid_transit_occupancy", f"/api/traveltimes/{OCCUPANCY_DAY}", RT_TRAVEL, 200),
     ("traveltimes/bus", f"/api/traveltimes/{DAY}", BUS_TRAVEL, 200),
     ("traveltimes/bus_monthly_archive", f"/api/traveltimes/{ARCHIVE_DAY}", BUS_TRAVEL, 200),
     ("traveltimes/commuter_rail", f"/api/traveltimes/{DAY}", CR_TRAVEL, 200),

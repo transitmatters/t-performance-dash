@@ -24,9 +24,74 @@ const Dot = ({ color, borderColor }: { color?: string; borderColor?: string }) =
   />
 );
 
+const TrainConsist = ({ train }: { train: NonNullable<HoverCardContent['train']> }) => {
+  const { label, cars, legend } = train;
+  const lastIndex = cars.length - 1;
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="text-muted-foreground">{label}</span>
+      <div className="grid auto-cols-fr grid-flow-col gap-0.75">
+        {cars.map((car, index) => (
+          <div key={car.id} className="flex min-w-10 flex-col items-center gap-0.5">
+            <div
+              className={cn(
+                'relative flex h-6 w-full items-center justify-center overflow-hidden rounded-[3px] text-[10px] font-medium tabular-nums',
+                // Rounder outer ends make the strip read as one train
+                index === 0 && 'rounded-l-[10px]',
+                index === lastIndex && 'rounded-r-[10px]',
+                car.noReading
+                  ? 'border border-dashed border-muted-foreground/50 text-muted-foreground'
+                  : !car.color && 'bg-muted'
+              )}
+              style={
+                car.color
+                  ? { backgroundColor: `color-mix(in oklab, ${car.color} 24%, transparent)` }
+                  : undefined
+              }
+            >
+              {car.id}
+              {car.color && (
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-0 h-0.75"
+                  style={{ backgroundColor: car.color }}
+                />
+              )}
+            </div>
+            {car.detail && (
+              <span className="text-[10px] leading-none text-muted-foreground tabular-nums">
+                {car.detail}
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+      {legend && legend.length > 0 && (
+        <div className="flex flex-wrap gap-x-2.5 gap-y-0.5 text-muted-foreground">
+          {legend.map((entry) => (
+            <span key={entry.label} className="inline-flex items-center gap-1">
+              {entry.color ? (
+                <Dot color={entry.color} />
+              ) : (
+                <span
+                  aria-hidden
+                  className="inline-block size-2 shrink-0 rounded-full border border-dashed border-muted-foreground/70"
+                />
+              )}
+              {entry.label}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 export const HoverCardBody = ({ content }: { content: HoverCardContent }) => {
-  const { title, hero, badge, meter, rows, chips, notes } = content;
-  const hasDetail = Boolean(hero || badge || meter || rows?.length || chips?.values.length);
+  const { title, hero, badge, meter, rows, chips, train, notes } = content;
+  const hasDetail = Boolean(
+    hero || badge || meter || rows?.length || chips?.values.length || train?.cars.length
+  );
   // Under the headline when there is one, otherwise a summary of the rows above it
   const badgeElement = badge && (
     <span className="inline-flex w-fit items-center gap-1.5 rounded-md border border-border px-1.5 py-0.5 font-medium">
@@ -100,6 +165,7 @@ export const HoverCardBody = ({ content }: { content: HoverCardContent }) => {
           </div>
         </div>
       )}
+      {train && train.cars.length > 0 && <TrainConsist train={train} />}
       {notes && notes.length > 0 && (
         <div
           className={cn(

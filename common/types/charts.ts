@@ -19,6 +19,8 @@ export interface SingleDayDataPoint {
   speed_mph?: number;
   benchmark_speed_mph?: number;
   vehicle_consist?: string;
+  occupancy_status?: string | null;
+  occupancy_percentage?: string | null;
   vehicle_label?: string;
 }
 

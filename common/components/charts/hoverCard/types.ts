@@ -25,7 +25,19 @@ export interface HoverCardContent {
   meter?: { fraction: number; label: string; color?: string };
   rows?: HoverCardRow[];
   chips?: { label: string; values: string[] };
+  // A consist drawn as connected cars, lead car first
+  train?: { label: string; cars: HoverCardCar[]; legend?: { label: string; color?: string }[] };
   notes?: string[];
+}
+
+export interface HoverCardCar {
+  id: string;
+  // Tints the car; a car without one is drawn plain
+  color?: string;
+  // Drawn dashed: the train reports occupancy but this car didn't
+  noReading?: boolean;
+  // Under the car, e.g. its occupancy percentage
+  detail?: string;
 }
 
 export type ResolvedHoverCardContent = HoverCardContent & { title: string };

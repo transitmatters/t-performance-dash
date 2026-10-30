@@ -154,6 +154,11 @@
     "status": 200,
     "captured_at": "2026-10-14T18:52:05+00:00"
   },
+  "dwells/rapid_transit_occupancy": {
+    "url": "http://127.0.0.1:5000/api/dwells/2026-10-23?stop=70063",
+    "status": 200,
+    "captured_at": "2026-10-28T00:18:14+00:00"
+  },
   "errors/aggregate_headways_missing_dates": {
     "url": "https://dashboard-api.labs.transitmatters.org/api/aggregate/headways?stop=70061",
     "status": 400,
@@ -218,6 +223,11 @@
     "url": "https://dashboard-api.labs.transitmatters.org/api/headways/2026-10-07?stop=70061",
     "status": 200,
     "captured_at": "2026-10-14T18:52:03+00:00"
+  },
+  "headways/rapid_transit_occupancy": {
+    "url": "http://127.0.0.1:5000/api/headways/2026-10-23?stop=70036",
+    "status": 200,
+    "captured_at": "2026-10-28T00:18:13+00:00"
   },
   "healthcheck/pass": {
     "url": "https://dashboard-api.labs.transitmatters.org/api/healthcheck",
@@ -383,6 +393,11 @@
     "url": "https://dashboard-api.labs.transitmatters.org/api/traveltimes/2026-10-07?from_stop=70061&to_stop=70105",
     "status": 200,
     "captured_at": "2026-10-14T18:52:06+00:00"
+  },
+  "traveltimes/rapid_transit_occupancy": {
+    "url": "http://127.0.0.1:5000/api/traveltimes/2026-10-23?from_stop=70061&to_stop=70105",
+    "status": 200,
+    "captured_at": "2026-10-28T00:18:28+00:00"
   },
   "tripmetrics/green_monthly": {
     "url": "https://dashboard-api.labs.transitmatters.org/api/tripmetrics?start_date=2026-01-01&end_date=2026-09-30&line=line-green&agg=monthly",
