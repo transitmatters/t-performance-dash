@@ -721,6 +721,37 @@ def get_ridership():
 
 
 @app.route(
+    "/api/station_ridership",
+    cors=cors_config,
+    docs=Docs(request=models.StationRidershipParams, responses=[Resp(models.StationRidershipResponse), BAD_REQUEST]),
+)
+def get_station_ridership():
+    """Retrieve weekly ridership at each gated station on a rapid transit line over a date range."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["start_date", "end_date", "line_id"])
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_station_ridership(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/station_ridership", query_params)
+    else:
+        data = ridership.get_station_ridership(
+            start_date=parse_user_date(query_params["start_date"]),
+            end_date=parse_user_date(query_params["end_date"]),
+            line_id=query_params["line_id"],
+        )
+
+    return Response(
+        body=json.dumps(data),
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": f"public, max-age={cache_max_age}",
+        },
+    )
+
+
+@app.route(
     "/api/reliability",
     cors=cors_config,
     docs=Docs(request=models.ReliabilityParams, responses=[Resp(models.ReliabilityResponse), BAD_REQUEST]),

@@ -130,6 +130,21 @@ def get_ridership(query_params: dict):
     return data or []
 
 
+def get_station_ridership(query_params: dict):
+    """Get station ridership data from static cache.
+
+    Args:
+        query_params: Dict of query parameters. Recognized keys:
+            ``line_id`` (default ``"line-Red"``).
+
+    Returns:
+        A list of weekly station ridership records, or an empty list if no data is found.
+    """
+    line_id = query_params.get("line_id", "line-Red")
+    data = _load_static_json(f"station_ridership/{line_id}.json")
+    return data or []
+
+
 # Weather static data
 def get_weather(query_params: dict):
     """Return empty weather data in static mode.

@@ -339,6 +339,11 @@
     "status": 200,
     "captured_at": "2026-10-14T18:52:26+00:00"
   },
+  "station_ridership/rapid_transit": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/station_ridership?start_date=2026-06-01&end_date=2026-09-30&line_id=line-Blue",
+    "status": 200,
+    "captured_at": null
+  },
   "stops/bus": {
     "url": "https://dashboard-api.labs.transitmatters.org/api/stops/1",
     "status": 200,

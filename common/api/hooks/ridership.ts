@@ -1,12 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 import type { FetchRidershipOptions } from '../../types/api';
-import { fetchLandingRidership, fetchRidership } from '../ridership';
+import { fetchLandingRidership, fetchRidership, fetchStationRidership } from '../ridership';
 import { ONE_HOUR } from '../../constants/time';
 
 export const useRidershipData = (options: FetchRidershipOptions, enabled?: boolean) => {
   return useQuery({
     queryKey: ['trips', options],
     queryFn: () => fetchRidership(options),
+    enabled: enabled,
+    staleTime: ONE_HOUR,
+  });
+};
+
+export const useStationRidershipData = (options: FetchRidershipOptions, enabled?: boolean) => {
+  return useQuery({
+    queryKey: ['station-ridership', options],
+    queryFn: () => fetchStationRidership(options),
     enabled: enabled,
     staleTime: ONE_HOUR,
   });

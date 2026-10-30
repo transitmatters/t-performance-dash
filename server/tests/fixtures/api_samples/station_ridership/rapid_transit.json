@@ -1,0 +1,308 @@
+[
+  {
+    "date": "2026-06-01",
+    "stations": {
+      "place-aport": 7284,
+      "place-aqucl": 4403,
+      "place-bmmnl": 3115,
+      "place-bomnl": 1883,
+      "place-gover": 6155,
+      "place-mvbcl": 9072,
+      "place-orhte": 4049,
+      "place-rbmnl": 3038,
+      "place-sdmnl": 659,
+      "place-state": 9636,
+      "place-wimnl": 1773,
+      "place-wondl": 4944
+    }
+  },
+  {
+    "date": "2026-06-08",
+    "stations": {
+      "place-aport": 7429,
+      "place-aqucl": 4389,
+      "place-bmmnl": 3085,
+      "place-bomnl": 1852,
+      "place-gover": 6730,
+      "place-mvbcl": 9184,
+      "place-orhte": 4021,
+      "place-rbmnl": 2996,
+      "place-sdmnl": 599,
+      "place-state": 9929,
+      "place-wimnl": 1755,
+      "place-wondl": 4915
+    }
+  },
+  {
+    "date": "2026-06-15",
+    "stations": {
+      "place-aport": 7512,
+      "place-aqucl": 4693,
+      "place-bmmnl": 3298,
+      "place-bomnl": 1887,
+      "place-gover": 9016,
+      "place-mvbcl": 9918,
+      "place-orhte": 4082,
+      "place-rbmnl": 3108,
+      "place-sdmnl": 651,
+      "place-state": 11026,
+      "place-wimnl": 1786,
+      "place-wondl": 5278
+    }
+  },
+  {
+    "date": "2026-06-22",
+    "stations": {
+      "place-aport": 7353,
+      "place-aqucl": 4691,
+      "place-bmmnl": 2623,
+      "place-bomnl": 1884,
+      "place-gover": 8987,
+      "place-mvbcl": 9650,
+      "place-orhte": 3652,
+      "place-rbmnl": 2547,
+      "place-sdmnl": 551,
+      "place-state": 10758,
+      "place-wimnl": 1666,
+      "place-wondl": 4379
+    }
+  },
+  {
+    "date": "2026-06-29",
+    "stations": {
+      "place-aport": 6718,
+      "place-aqucl": 4320,
+      "place-bmmnl": 2870,
+      "place-bomnl": 1804,
+      "place-gover": 6298,
+      "place-mvbcl": 9066,
+      "place-orhte": 3678,
+      "place-rbmnl": 2829,
+      "place-sdmnl": 578,
+      "place-state": 9484,
+      "place-wimnl": 1545,
+      "place-wondl": 4774
+    }
+  },
+  {
+    "date": "2026-07-06",
+    "stations": {
+      "place-aport": 6995,
+      "place-aqucl": 4408,
+      "place-bmmnl": 2853,
+      "place-bomnl": 1800,
+      "place-gover": 6339,
+      "place-mvbcl": 9147,
+      "place-orhte": 3771,
+      "place-rbmnl": 2707,
+      "place-sdmnl": 599,
+      "place-state": 9793,
+      "place-wimnl": 1686,
+      "place-wondl": 4789
+    }
+  },
+  {
+    "date": "2026-07-13",
+    "stations": {
+      "place-aport": 7142,
+      "place-aqucl": 5310,
+      "place-bmmnl": 2943,
+      "place-bomnl": 1840,
+      "place-gover": 6823,
+      "place-mvbcl": 9676,
+      "place-orhte": 3866,
+      "place-rbmnl": 3122,
+      "place-sdmnl": 601,
+      "place-state": 10320,
+      "place-wimnl": 1634,
+      "place-wondl": 5207
+    }
+  },
+  {
+    "date": "2026-07-20",
+    "stations": {
+      "place-aport": 6481,
+      "place-aqucl": 4697,
+      "place-bmmnl": 2400,
+      "place-bomnl": 2021,
+      "place-gover": 7748,
+      "place-mvbcl": 8020,
+      "place-orhte": 3793,
+      "place-rbmnl": 2275,
+      "place-sdmnl": 498,
+      "place-state": 10291,
+      "place-wimnl": 1457,
+      "place-wondl": 4024
+    }
+  },
+  {
+    "date": "2026-07-27",
+    "stations": {
+      "place-aport": 6967,
+      "place-aqucl": 4413,
+      "place-bmmnl": 2852,
+      "place-bomnl": 1994,
+      "place-gover": 7048,
+      "place-mvbcl": 8778,
+      "place-orhte": 3686,
+      "place-rbmnl": 2564,
+      "place-sdmnl": 583,
+      "place-state": 9976,
+      "place-wimnl": 1569,
+      "place-wondl": 4685
+    }
+  },
+  {
+    "date": "2026-08-03",
+    "stations": {
+      "place-aport": 7121,
+      "place-aqucl": 4775,
+      "place-bmmnl": 2895,
+      "place-bomnl": 1822,
+      "place-gover": 6388,
+      "place-mvbcl": 8892,
+      "place-orhte": 3779,
+      "place-rbmnl": 2732,
+      "place-sdmnl": 591,
+      "place-state": 9877,
+      "place-wimnl": 1600,
+      "place-wondl": 4873
+    }
+  },
+  {
+    "date": "2026-08-10",
+    "stations": {
+      "place-aport": 6668,
+      "place-aqucl": 4121,
+      "place-bmmnl": 2692,
+      "place-bomnl": 1952,
+      "place-gover": 2315,
+      "place-mvbcl": 8591,
+      "place-orhte": 3614,
+      "place-rbmnl": 2628,
+      "place-sdmnl": 577,
+      "place-state": 11545,
+      "place-wimnl": 1493,
+      "place-wondl": 4601
+    }
+  },
+  {
+    "date": "2026-08-17",
+    "stations": {
+      "place-aport": 5952,
+      "place-aqucl": 4275,
+      "place-bmmnl": 2820,
+      "place-bomnl": 1801,
+      "place-gover": 6533,
+      "place-mvbcl": 8565,
+      "place-orhte": 3578,
+      "place-rbmnl": 2546,
+      "place-sdmnl": 563,
+      "place-state": 6716,
+      "place-wimnl": 1543,
+      "place-wondl": 4671
+    }
+  },
+  {
+    "date": "2026-08-24",
+    "stations": {
+      "place-aport": 6579,
+      "place-aqucl": 4179,
+      "place-bmmnl": 2917,
+      "place-bomnl": 1842,
+      "place-gover": 7714,
+      "place-mvbcl": 8204,
+      "place-orhte": 3552,
+      "place-rbmnl": 2656,
+      "place-sdmnl": 573,
+      "place-state": 5278,
+      "place-wimnl": 1490,
+      "place-wondl": 4823
+    }
+  },
+  {
+    "date": "2026-08-31",
+    "stations": {
+      "place-aport": 6599,
+      "place-aqucl": 3872,
+      "place-bmmnl": 2870,
+      "place-bomnl": 1750,
+      "place-gover": 5696,
+      "place-mvbcl": 8357,
+      "place-orhte": 3511,
+      "place-rbmnl": 2675,
+      "place-sdmnl": 540,
+      "place-state": 8765,
+      "place-wimnl": 1550,
+      "place-wondl": 4537
+    }
+  },
+  {
+    "date": "2026-09-07",
+    "stations": {
+      "place-aport": 7271,
+      "place-aqucl": 3917,
+      "place-bmmnl": 3148,
+      "place-bomnl": 1826,
+      "place-gover": 6522,
+      "place-mvbcl": 9114,
+      "place-orhte": 3840,
+      "place-rbmnl": 2858,
+      "place-sdmnl": 614,
+      "place-state": 9041,
+      "place-wimnl": 1612,
+      "place-wondl": 5061
+    }
+  },
+  {
+    "date": "2026-09-14",
+    "stations": {
+      "place-aport": 7377,
+      "place-aqucl": 3876,
+      "place-bmmnl": 3223,
+      "place-bomnl": 1920,
+      "place-gover": 6144,
+      "place-mvbcl": 9370,
+      "place-orhte": 3894,
+      "place-rbmnl": 2884,
+      "place-sdmnl": 645,
+      "place-state": 9451,
+      "place-wimnl": 1685,
+      "place-wondl": 5001
+    }
+  },
+  {
+    "date": "2026-09-21",
+    "stations": {
+      "place-aport": 7692,
+      "place-aqucl": 3846,
+      "place-bmmnl": 3160,
+      "place-bomnl": 1896,
+      "place-gover": 6219,
+      "place-mvbcl": 9262,
+      "place-orhte": 3908,
+      "place-rbmnl": 2809,
+      "place-sdmnl": 612,
+      "place-state": 9940,
+      "place-wimnl": 1677,
+      "place-wondl": 5181
+    }
+  },
+  {
+    "date": "2026-09-28",
+    "stations": {
+      "place-aport": 7247,
+      "place-aqucl": 3585,
+      "place-bmmnl": 3009,
+      "place-bomnl": 1979,
+      "place-gover": 2587,
+      "place-mvbcl": 9178,
+      "place-orhte": 3887,
+      "place-rbmnl": 2563,
+      "place-sdmnl": 594,
+      "place-state": 11778,
+      "place-wimnl": 1558,
+      "place-wondl": 4742
+    }
+  }
+]

@@ -1,0 +1,58 @@
+.tooltip {
+  display: flex;
+  align-items: center;
+  user-select: none;
+  /* Leave the station dot visible */
+  margin: 0 10px;
+}
+
+.reverse {
+  flex-direction: row-reverse;
+}
+
+.horizontal {
+  flex-direction: column-reverse;
+  margin: 0 0 10px;
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid var(--tooltip-background);
+}
+
+.reverse .triangle {
+  transform: scaleX(-1);
+}
+
+.horizontal .triangle {
+  border-top: 8px solid var(--tooltip-background);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: none;
+}
+
+.content {
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--tooltip-background);
+  width: max-content;
+  max-width: 240px;
+}
+
+.title {
+  font-weight: 500;
+  padding: 6px 10px;
+  background: var(--tooltip-accent-color);
+  color: white;
+  white-space: nowrap;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 10px 8px;
+}

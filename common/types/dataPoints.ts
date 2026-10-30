@@ -242,6 +242,12 @@ export type RidershipCount = {
   count: number;
 };
 
+/** One week of average weekday fare validations at each gated station on a line, by parent stop ID */
+export type StationRidershipWeek = {
+  date: string;
+  stations: Record<string, number>;
+};
+
 export type ReliabilityCounts = {
   otpNumerator: number;
   otpDenominator: number;

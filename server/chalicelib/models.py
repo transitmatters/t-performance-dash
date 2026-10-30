@@ -227,6 +227,22 @@ class RidershipParams(BaseModel):
     )
 
 
+class StationRidershipParams(BaseModel):
+    """Parameters for the `/api/station_ridership` endpoint.
+
+    Attributes:
+        start_date: Start of date range.
+        end_date: End of date range.
+        line_id: Rapid transit line identifier.
+    """
+
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+    line_id: str = Field(
+        description="Rapid transit line identifier: `line-Red`, `line-Orange`, `line-Blue` or `line-Green`.",
+    )
+
+
 class TimePredictionParams(BaseModel):
     """Parameters for the `/api/time_predictions` endpoint.
 
@@ -1111,6 +1127,24 @@ class RidershipEntry(BaseModel):
 
 class RidershipResponse(RootModel[List[RidershipEntry]]):
     """Response for `/api/ridership`: ridership counts over the date range."""
+
+
+class StationRidershipEntry(BaseModel):
+    """Ridership at each gated station on a line for one week.
+
+    Fare validations at a transfer station count riders for every line there.
+
+    Attributes:
+        date: Week start date (`YYYY-MM-DD`).
+        stations: Average weekday (non-holiday) fare validations, keyed by parent stop ID (e.g. `place-pktrm`).
+    """
+
+    date: str
+    stations: Dict[str, int]
+
+
+class StationRidershipResponse(RootModel[List[StationRidershipEntry]]):
+    """Response for `/api/station_ridership`: weekly ridership by station over the date range."""
 
 
 # Reliability
