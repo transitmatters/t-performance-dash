@@ -49,8 +49,12 @@ export const TripChartEmbed = ({ chart }: TripChartEmbedProps) => {
   const route = useDelimitatedRoute();
   const { tab, lineShort, query } = route;
   // Fills in a missing or out-of-range day without rewriting the URL, as the slow zone embed does.
-  const date = (normalizeDateParams({ section: 'singleTrips', tab, page: 'singleTrips', search: query })
-    ?.date ?? query.date) as string;
+  const date = (normalizeDateParams({
+    section: 'singleTrips',
+    tab,
+    page: 'singleTrips',
+    search: query,
+  })?.date ?? query.date) as string;
 
   const fromStation = query.from ? getParentStationForStopId(query.from, lineShort) : undefined;
   const toStation = query.to ? getParentStationForStopId(query.to, lineShort) : undefined;
